@@ -18,11 +18,14 @@ tractable for future agents.
 - `src/lib.rs`: ordered extractor registry and download orchestration.
 - `src/info.rs`: typed subset of upstream video info fields.
 - `src/extractor/`: independent extractors, generic fallback last.
+- `src/extractor/html5.rs`: generic response dispatch and single-source HTML5 parsing;
+  direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
 - `src/download.rs`: streaming HTTP transfer and no-clobber publication.
 - `src/output.rs`: template rendering and filename-component sanitization.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
 - `upstream/manifest.json`: upstream revision and component coverage ledger.
 - `tools/upstream_report.py`: machine-readable input for an update agent.
+- `tools/compare_html5.py`: saved-fixture upstream/Rust metadata comparison.
 
 The initial implementation uses blocking reqwest with Rustls. It runs one URL at
 a time; the extractor trait is synchronous. Async/concurrent execution should be
@@ -38,6 +41,9 @@ variants before adding those behaviors.
 2. **Compatibility harness and generic web extraction.** Saved HTML/HTTP fixtures,
    normalized upstream-vs-Rust metadata comparison, HTML5 media extraction,
    format/playlist result types, and an explicit option compatibility inventory.
+   Single-source HTML5 audio/video, a three-fixture comparison harness, and the
+   option inventory are implemented. Multiple sources/elements are rejected;
+   typed format/playlist results and their selection/orchestration remain open.
 3. **Resilient transport and media protocols.** Retry policy, range/resume with
    validator checks, HLS/DASH parsing and fragments, format selection, ffmpeg
    integration, and download progress/cancellation. Do not label manifest text

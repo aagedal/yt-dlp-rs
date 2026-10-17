@@ -7,7 +7,7 @@ pub mod output;
 pub use error::{Error, Result};
 pub use info::VideoInfo;
 
-use extractor::{DirectHttp, Extractor};
+use extractor::{Extractor, GenericHttp};
 use reqwest::blocking::Client;
 use std::{path::Path, time::Duration};
 use url::Url;
@@ -24,10 +24,12 @@ impl YoutubeDl {
             .connect_timeout(Duration::from_secs(15))
             .timeout(Duration::from_secs(300))
             .redirect(reqwest::redirect::Policy::limited(10))
+            // Preserve an HTML5 page's explicit referrer across media redirects.
+            .referer(false)
             .build()?;
         Ok(Self {
             client,
-            extractors: vec![Box::new(DirectHttp)],
+            extractors: vec![Box::new(GenericHttp)],
         })
     }
 
