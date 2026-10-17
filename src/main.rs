@@ -8,7 +8,7 @@ use yt_dlp_rs::{
 #[derive(Parser)]
 #[command(
     version,
-    about = "Native Rust yt-dlp adaptation (currently direct HTTP media only)"
+    about = "Native Rust yt-dlp adaptation (direct HTTP and single-source HTML5 media)"
 )]
 struct Args {
     #[arg(required = true)]

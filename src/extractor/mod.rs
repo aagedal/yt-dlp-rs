@@ -1,6 +1,9 @@
 mod direct;
+mod html5;
 
 pub use direct::DirectHttp;
+pub(crate) use direct::from_response as direct_media_info;
+pub use html5::GenericHttp;
 
 use crate::{Result, VideoInfo};
 use reqwest::blocking::Client;

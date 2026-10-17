@@ -1,9 +1,9 @@
 # yt-dlp-rs
 
 An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-dlp).
-The first milestone is a working direct HTTP media downloader and a foundation
-for porting extractors and tracking upstream changes. This is an early prototype;
-YouTube and other website extractors are not implemented yet.
+It downloads direct HTTP media and a limited subset of HTML5 media pages, with
+a foundation for porting extractors and tracking upstream changes. This is an
+early prototype; YouTube and other site-specific extractors are not implemented.
 
 Requires stable Rust with edition 2024 support. Python 3.10+ and Git are needed
 only for the upstream development tools. The Rust binary does not invoke Python
@@ -25,6 +25,12 @@ Supported today:
 - HTTP(S) media identified by recognized audio/video MIME types, with a known
   file-extension fallback for absent or `application/octet-stream` content types.
 - Redirects, percent-decoded URL filenames, query strings, and streamed downloads.
+- UTF-8 HTML pages with exactly one `<video>` or `<audio>` element and one
+  `src` or direct child `<source src>`. Relative sources, the first `<base href>`,
+  HTML entities, page redirects, and page referrers are supported. The media
+  response must pass the same MIME/extension checks as a direct URL.
+- HTML5 IDs and titles use upstream's `-1` and ` (1)` suffixes. Titles prefer
+  Open Graph `og:title`, then `<title>`, then the page URL filename stem.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.
@@ -32,18 +38,23 @@ Supported today:
   of existing destinations. A failed URL sets a nonzero exit status while later
   URLs still run. JSON goes to stdout; diagnostics go to stderr.
 
-HTML pages, YouTube, HLS/DASH, playlists, format selection, cookies/authentication,
+Other HTML pages, YouTube, HLS/DASH, playlists, format selection, cookies/authentication,
 resume/retries, subtitles, and ffmpeg postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
 
-Extraction makes a streaming GET and inspects headers without consuming the body.
-A download makes a second GET. There is a 15-second connection timeout and a
-five-minute total timeout per request. Simulation and JSON extraction still make
+Direct extraction makes a streaming GET and inspects headers without consuming
+the body. HTML5 extraction reads at most 2 MiB of uncompressed UTF-8/ASCII HTML,
+then probes the selected media. Multiple media elements or sources are errors;
+JavaScript players, lazy-loading attributes, and embedded site players are not
+supported. A download makes another GET. There is a 15-second connection timeout
+and a five-minute total timeout per request. Simulation and JSON extraction still make
 network requests. MIME identification is not media-container verification.
 
 The library exposes `YoutubeDl`, `VideoInfo`, and an `Extractor` interface. See
 [the roadmap](docs/ROADMAP.md) for architecture and upcoming milestones.
+The [compatibility inventory](docs/COMPATIBILITY.md) records the exact subset and
+the saved-fixture upstream comparison command.
 
 To verify locally:
 

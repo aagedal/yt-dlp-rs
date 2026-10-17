@@ -6,8 +6,14 @@ pub enum Error {
     InvalidUrl(#[from] url::ParseError),
     #[error("unsupported URL scheme: {0}; expected http or https")]
     UnsupportedScheme(String),
-    #[error("no extractor supports {0}; this version supports direct HTTP media only")]
+    #[error(
+        "no extractor supports {0}; expected direct HTTP media or a single-source HTML5 media page"
+    )]
     UnsupportedUrl(String),
+    #[error("unsupported HTML5 media: {0}")]
+    UnsupportedHtml5(String),
+    #[error("HTML page exceeds the {0}-byte extraction limit")]
+    HtmlTooLarge(u64),
     #[error("HTTP request failed: {0}")]
     Http(#[from] reqwest::Error),
     #[error("server returned an unsolicited partial response; full media was requested")]

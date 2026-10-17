@@ -7,23 +7,23 @@
     {
       "name": "generic-extraction",
       "status": "partial",
-      "upstream": ["yt_dlp/extractor/generic.py"],
-      "rust": ["src/extractor/direct.rs", "tests/http.rs"],
-      "scope": "Direct HTTP media only; no HTML, embedded players or manifests"
+      "upstream": ["yt_dlp/extractor/generic.py", "yt_dlp/extractor/genericembeds.py", "yt_dlp/extractor/common.py", "test/test_InfoExtractor.py"],
+      "rust": ["src/extractor/direct.rs", "src/extractor/html5.rs", "tests/http.rs", "tests/fixtures/html5/", "tools/compare_html5.py", "tools/test_compare_html5.py", "docs/COMPATIBILITY.md"],
+      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with one audio/video and one progressive HTTP source; no embedded players, multiple formats/elements or manifests"
     },
     {
       "name": "extractor-contract",
       "status": "partial",
       "upstream": ["yt_dlp/extractor/common.py"],
       "rust": ["src/extractor/mod.rs", "src/info.rs", "src/lib.rs"],
-      "scope": "Small typed video info subset and ordered extractor registry"
+      "scope": "Small typed video info subset, ordered extractor registry, shared direct response inspection; no typed format/playlist results"
     },
     {
       "name": "http-downloader",
       "status": "partial",
       "upstream": ["yt_dlp/downloader/http.py", "yt_dlp/downloader/common.py", "test/test_downloader_http.py"],
       "rust": ["src/download.rs", "tests/http.rs"],
-      "scope": "Streaming whole-file transfers, no-clobber publication; no resume or retries"
+      "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication; no resume or retries"
     },
     {
       "name": "orchestration-and-output",
