@@ -1,7 +1,7 @@
 use clap::Parser;
 use std::io::{self, Write};
 use yt_dlp_rs::{
-    YoutubeDl,
+    DownloadOptions, YoutubeDl,
     output::{DEFAULT_TEMPLATE, render_template},
 };
 
@@ -22,6 +22,9 @@ struct Args {
     /// Select one literal HTML5 source ID (zero-based declaration index)
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
+    /// Retry transient download failures this many times (0 disables retries; extraction is not retried)
+    #[arg(long, default_value_t = 3)]
+    retries: u8,
     /// Filename template: %(title)s, %(id)s, %(ext)s, %(extractor)s, and %%
     #[arg(short, long, default_value = DEFAULT_TEMPLATE)]
     output: String,
@@ -51,7 +54,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 } else {
                     let path = render_template(&args.output, &info)?;
                     eprintln!("[download] Destination: {}", path.display());
-                    let bytes = downloader.download(&info, &path)?;
+                    let bytes = downloader.download_with_options(
+                        &info,
+                        &path,
+                        DownloadOptions {
+                            retries: args.retries,
+                        },
+                    )?;
                     eprintln!("[download] Downloaded {bytes} bytes");
                 }
                 Ok(())

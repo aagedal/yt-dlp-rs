@@ -4,6 +4,7 @@ pub mod extractor;
 mod info;
 pub mod output;
 
+pub use download::DownloadOptions;
 pub use error::{Error, Result};
 pub use info::{ExtractResult, PlaylistInfo, VideoFormat, VideoInfo};
 
@@ -73,6 +74,16 @@ impl YoutubeDl {
     }
 
     pub fn download(&self, info: &VideoInfo, destination: impl AsRef<Path>) -> Result<u64> {
-        download::download(&self.client, info, destination.as_ref())
+        self.download_with_options(info, destination, DownloadOptions::default())
+    }
+
+    /// Download with bounded retries. Each retry starts a new whole-file transfer.
+    pub fn download_with_options(
+        &self,
+        info: &VideoInfo,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+    ) -> Result<u64> {
+        download::download(&self.client, info, destination.as_ref(), options)
     }
 }

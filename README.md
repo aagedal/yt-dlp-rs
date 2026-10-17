@@ -42,9 +42,12 @@ Supported today:
 - Same-directory temporary files, cleanup on transfer failure, and no overwrite
   of existing destinations. A failed entry or URL sets a nonzero exit status while later
   entries and URLs still run. JSON goes to stdout; diagnostics go to stderr.
+- Bounded whole-file download retries for selected transient HTTP statuses,
+  connection/timeouts, and interrupted bodies. `--retries N` sets additional
+  attempts (default 3, 0 disables, maximum 255); extraction requests are not retried.
 
 Other HTML pages, YouTube, HLS/DASH, site playlists, automatic format ranking, selector
-expressions, cookies/authentication, resume/retries, subtitles, and ffmpeg
+expressions, cookies/authentication, range/resume, subtitles, and ffmpeg
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
@@ -58,11 +61,13 @@ and a five-minute total timeout per request. Simulation and JSON extraction stil
 network requests. MIME identification is not media-container verification.
 
 The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
-`VideoFormat`, and an `Extractor` interface. Use `extract_result` or
+`VideoFormat`, `DownloadOptions`, and an `Extractor` interface. Use `extract_result` or
 `extract_result_with_format(url, Some("1"))` for video/playlist results. A format
 ID applies to every playlist entry independently; each must offer that ID.
 The existing `extract_info` methods accept single videos and reject playlists.
-`--dump-json` emits one video object per entry. See
+`--dump-json` emits one video object per entry.
+`download_with_options(info, path, DownloadOptions { retries: 0 })` disables
+download retries for a library call; `download` uses the default policy. See
 [the roadmap](docs/ROADMAP.md) for architecture and upcoming milestones.
 The [compatibility inventory](docs/COMPATIBILITY.md) records the exact subset and
 the saved-fixture upstream comparison command.
