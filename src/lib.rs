@@ -92,15 +92,13 @@ impl YoutubeDl {
                     return Ok(info);
                 }
                 Err(error) => {
-                    let retryable = match &error {
-                        Error::Http(error) => retry::transient_request(error),
-                        Error::ExtractionRead(_) => true,
-                        _ => false,
+                    let Some(delay) = retry::failure_delay(&error) else {
+                        return Err(error);
                     };
-                    if !retryable || attempt == options.retries {
+                    if attempt == options.retries {
                         return Err(error);
                     }
-                    retry::backoff(attempt);
+                    retry::backoff(attempt, delay);
                 }
             }
         }

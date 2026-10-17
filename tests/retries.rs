@@ -824,7 +824,10 @@ fn transient_range_status_retains_offset_and_validator() {
     let server = Server::start(|_, count| match count {
         1 => Response::media(),
         2 => interrupted(),
-        3 => Response::status(503),
+        3 => Response {
+            headers: "Retry-After: 0\r\n",
+            ..Response::status(503)
+        },
         _ => remainder(),
     });
     let downloader = YoutubeDl::new().unwrap();
@@ -1234,4 +1237,131 @@ fn extraction_retry_restarts_previously_visited_custom_extractors() {
         *calls.lock().unwrap(),
         ["declining", "failing", "declining", "failing"]
     );
+}
+
+#[test]
+fn retry_after_delays_extraction_and_download_recovery() {
+    for extraction in [true, false] {
+        let server = Server::start(move |_, count| {
+            if count == if extraction { 1 } else { 2 } {
+                Response {
+                    headers: "Retry-After: 1\r\n",
+                    ..Response::status(429)
+                }
+            } else {
+                Response::media()
+            }
+        });
+        let downloader = YoutubeDl::new().unwrap();
+        let directory = tempfile::tempdir().unwrap();
+        let start = std::time::Instant::now();
+        let info = downloader
+            .extract_result_with_options(
+                &server.url("/clip.mp4"),
+                None,
+                ExtractionOptions { retries: 1 },
+            )
+            .unwrap()
+            .into_video()
+            .unwrap();
+        if !extraction {
+            let destination = directory.path().join("clip.mp4");
+            downloader
+                .download_with_options(&info, &destination, DownloadOptions { retries: 1 })
+                .unwrap();
+            assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
+        }
+        assert!(start.elapsed() >= Duration::from_secs(1));
+        assert_eq!(
+            server.requests_for("/clip.mp4").len(),
+            if extraction { 2 } else { 3 }
+        );
+    }
+}
+
+#[test]
+fn retry_after_respects_exhausted_budgets_and_permanent_statuses() {
+    for extraction in [true, false] {
+        for status in [503, 404] {
+            let server = Server::start(move |_, count| {
+                if !extraction && count == 1 {
+                    Response::media()
+                } else {
+                    Response {
+                        headers: "Retry-After: 999999999999999999999999\r\n",
+                        ..Response::status(status)
+                    }
+                }
+            });
+            let downloader = YoutubeDl::new().unwrap();
+            let directory = tempfile::tempdir().unwrap();
+            let retries = if status == 404 { 2 } else { 0 };
+            let error = if extraction {
+                downloader
+                    .extract_result_with_options(
+                        &server.url("/clip.mp4"),
+                        None,
+                        ExtractionOptions { retries },
+                    )
+                    .unwrap_err()
+            } else {
+                let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+                downloader
+                    .download_with_options(
+                        &info,
+                        directory.path().join("clip.mp4"),
+                        DownloadOptions { retries },
+                    )
+                    .unwrap_err()
+            };
+            if status == 503 {
+                match error {
+                    Error::HttpRetryAfter {
+                        source,
+                        retry_after,
+                    } => {
+                        assert_eq!(source.status().unwrap().as_u16(), 503);
+                        assert_eq!(retry_after, Duration::from_secs(60));
+                    }
+                    error => panic!("unexpected error: {error}"),
+                }
+            } else {
+                assert!(matches!(error, Error::Http(_)));
+            }
+            assert_eq!(
+                server.requests_for("/clip.mp4").len(),
+                if extraction { 1 } else { 2 }
+            );
+            assert!(directory_names(directory.path()).is_empty());
+        }
+    }
+}
+
+#[test]
+fn unsupported_retry_after_values_keep_transient_failures_retryable() {
+    for headers in [
+        "Retry-After: nonsense\r\n",
+        "Retry-After: Wed, 21 Oct 2015 07:28:00 GMT\r\n",
+        "Retry-After: 60\r\nRetry-After: 60\r\n",
+    ] {
+        let server = Server::start(move |_, count| {
+            if count == 1 {
+                Response {
+                    headers,
+                    ..Response::status(503)
+                }
+            } else {
+                Response::media()
+            }
+        });
+        YoutubeDl::new()
+            .unwrap()
+            .extract_result_with_options(
+                &server.url("/clip.mp4"),
+                None,
+                ExtractionOptions { retries: 1 },
+            )
+            .unwrap();
+        assert_eq!(server.requests_for("/clip.mp4").len(), 2);
+    }
 }

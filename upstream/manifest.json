@@ -16,21 +16,21 @@
       "status": "partial",
       "upstream": ["yt_dlp/extractor/common.py"],
       "rust": ["src/extractor/mod.rs", "src/info.rs", "src/lib.rs", "src/error.rs", "src/retry.rs", "tests/retries.rs"],
-      "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, explicit selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries; no nested playlists or unresolved URL results"
+      "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, explicit selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds; no nested playlists or unresolved URL results"
     },
     {
       "name": "http-downloader",
       "status": "partial",
       "upstream": ["yt_dlp/downloader/http.py", "yt_dlp/downloader/common.py", "test/test_downloader_http.py"],
       "rust": ["src/download.rs", "src/retry.rs", "tests/http.rs", "tests/retries.rs", "docs/COMPATIBILITY.md"],
-      "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication, bounded download retries for selected transient HTTP statuses and connection/body failures, in-invocation range resume guarded by strong ETags, known lengths and response validation; shared transient HTTP classification/backoff with extraction; no persistent resume, Last-Modified validators or Retry-After handling"
+      "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication, bounded download retries for selected transient HTTP statuses and connection/body failures, in-invocation range resume guarded by strong ETags, known lengths and response validation; shared transient HTTP classification/backoff with extraction; bounded Retry-After delay-seconds shared with extraction; no persistent resume, Last-Modified validators or HTTP-date Retry-After handling"
     },
     {
       "name": "orchestration-and-output",
       "status": "partial",
       "upstream": ["yt_dlp/YoutubeDL.py", "yt_dlp/options.py", "yt_dlp/__init__.py", "test/test_YoutubeDL.py"],
       "rust": ["src/lib.rs", "src/main.rs", "src/output.rs", "src/info.rs", "tests/http.rs", "tests/retries.rs"],
-      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, basic output templates, literal HTML5 source-ID selection applied to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget; no general option parity"
+      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, basic output templates, literal HTML5 source-ID selection applied to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds; no general option parity"
     },
     {
       "name": "youtube",

@@ -121,8 +121,19 @@ implemented.
 The offset/length checks also apply when a 206 body omits Content-Length.
 
 Backoff is 100, 200, 400, 800, then 1000 milliseconds between attempts, capped
-at one second thereafter; Retry-After headers are not interpreted. These are
-native subset policies, not upstream retry-default or HTTP-status parity.
+at one second thereafter. For the selected transient HTTP statuses, a single
+`Retry-After` delay-seconds value extends this backoff, capped at 60 seconds.
+ASCII digits with optional surrounding spaces/tabs are accepted; oversized
+integer values saturate to the cap. Missing, malformed, duplicated, comma-list,
+and HTTP-date values use ordinary backoff. A zero hint cannot shorten backoff.
+Headers on successful or permanent-error responses do not introduce delays;
+exhausted/disabled retry budgets never sleep or gain extra attempts. The same
+rules apply to HTML pages, source probes, and full/range download requests.
+These are native subset policies, not upstream retry-default or HTTP-status parity.
+Library failures with a supported hint use `Error::HttpRetryAfter { source,
+retry_after }`, retaining the reqwest status error and capped duration; other
+HTTP failures retain `Error::Http`. Neither error variant retries automatically
+outside the orchestration APIs.
 
 Every attempt repeats response validation and preserves the HTML5 page referrer.
 Other HTTP statuses (including 401, 404, and 501), unsolicited 206 responses,
@@ -162,8 +173,8 @@ Existing extraction methods retain zero retries. Call `into_video()` on the
 result when a single video is required; playlists still fail at that boundary.
 
 Retry HTTP 408, 429, 500, 502, 503, and 504, connection/timeouts, and HTML
-response body read failures. Use the same bounded 100–1000 ms backoff as download
-retries. A new attempt runs the extractor registry from the start, re-fetching
+response body read failures. Use the same bounded backoff and delay-seconds
+Retry-After policy as download retries. A new attempt runs the extractor registry from the start, re-fetching
 pages and repeating earlier source probes, with the page referrer preserved.
 This is a per-input budget, shared by all entries and sources; there is no
 per-request budget and no reuse of partial HTML or extracted entries. Custom
@@ -185,8 +196,12 @@ not advance the pinned baseline or claim general `--extractor-retries` parity.
 `tests/retries.rs` covers status recovery/exhaustion, interrupted HTML, full
 playlist restart after source-probe failures, referrers, CLI modes and budget
 isolation, permanent error boundaries, and custom extractor filesystem errors.
-Persistent resume, Retry-After, cancellation, and an overall extraction deadline
-remain unimplemented.
+The Retry-After extension is a native policy on this existing retry slice;
+it does not advance the upstream baseline. Pure unit tests cover parsing and
+delay bounds without sleeping; local HTTP tests cover recovery delays, exhausted
+budgets, permanent failures, unsupported hints, and preserved range state.
+Persistent resume, HTTP-date Retry-After values, cancellation, and an overall
+extraction deadline remain unimplemented.
 
 ## Source and differential fixtures
 
