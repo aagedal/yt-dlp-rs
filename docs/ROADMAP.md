@@ -52,9 +52,12 @@ remain outside the current result contract.
    validator checks, HLS/DASH parsing and fragments, format selection, ffmpeg
    integration, and download progress/cancellation. Do not label manifest text
    as a successfully downloaded video.
-   Bounded whole-file download retries are implemented for selected transient
+   Bounded download retries are implemented for selected transient
    statuses, connection/timeouts, and body read/truncation failures, with CLI and
-   library configuration. Extraction retries, range/resume with validators,
+   library configuration. Interrupted transfers resume within a download call using
+   strong ETags, known lengths, and strictly validated ranges, with whole-file
+   fallback when validators are unavailable or the server returns a full response.
+   Extraction retries, persistent resume across invocations,
    manifest protocols, progress, and cancellation remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,

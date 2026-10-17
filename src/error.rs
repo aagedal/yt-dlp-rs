@@ -20,6 +20,8 @@ pub enum Error {
     Http(#[from] reqwest::Error),
     #[error("server returned an unsolicited partial response; full media was requested")]
     PartialResponse,
+    #[error("server returned an invalid or changed range response")]
+    InvalidRangeResponse,
     #[error("filesystem error: {0}")]
     Io(#[from] std::io::Error),
     #[error("output already exists: {0}")]

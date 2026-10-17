@@ -16,6 +16,7 @@ struct Response {
     mime: &'static str,
     body: &'static str,
     length: usize,
+    headers: &'static str,
 }
 
 impl Response {
@@ -25,6 +26,7 @@ impl Response {
             mime: "video/mp4",
             body: "complete media",
             length: 14,
+            headers: "",
         }
     }
 
@@ -90,9 +92,14 @@ impl Server {
                         .count()
                 };
                 let response = respond(&path, count);
+                let length = if response.length == usize::MAX {
+                    String::new()
+                } else {
+                    format!("Content-Length: {}\r\n", response.length)
+                };
                 let wire = format!(
-                    "HTTP/1.1 {} Fixture\r\nContent-Type: {}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
-                    response.status, response.mime, response.length, response.body
+                    "HTTP/1.1 {} Fixture\r\nContent-Type: {}\r\n{}{}Connection: close\r\n\r\n{}",
+                    response.status, response.mime, length, response.headers, response.body
                 );
                 let _ = stream.write_all(wire.as_bytes());
             }
@@ -482,5 +489,390 @@ fn cli_one_retry_recovers_from_transient_download_failure() {
         std::fs::read(directory.path().join("clip.mp4")).unwrap(),
         b"complete media"
     );
+    assert_eq!(directory_names(directory.path()), ["clip.mp4"]);
+}
+
+fn interrupted() -> Response {
+    Response {
+        body: "comp",
+        headers: "ETag: \"version-one\"\r\n",
+        ..Response::media()
+    }
+}
+
+fn remainder() -> Response {
+    Response {
+        status: 206,
+        body: "lete media",
+        length: 10,
+        headers: "ETag: \"version-one\"\r\nContent-Range: bytes 4-13/14\r\n",
+        ..Response::media()
+    }
+}
+
+#[test]
+fn interrupted_download_resumes_with_download_validator_and_html5_referrer() {
+    for html5 in [false, true] {
+        let server = Server::start(|path, count| {
+            if path == "/page.html" {
+                let body = "<video src='/clip.mp4'></video>";
+                Response {
+                    mime: "text/html",
+                    body,
+                    length: body.len(),
+                    ..Response::media()
+                }
+            } else {
+                match count {
+                    1 => Response {
+                        headers: "ETag: \"probe-only\"\r\n",
+                        ..Response::media()
+                    },
+                    2 => interrupted(),
+                    _ => remainder(),
+                }
+            }
+        });
+        let downloader = YoutubeDl::new().unwrap();
+        let input = server.url(if html5 { "/page.html" } else { "/clip.mp4" });
+        let info = downloader.extract_info(&input).unwrap();
+        let directory = tempfile::tempdir().unwrap();
+        let destination = directory.path().join("clip.mp4");
+        assert_eq!(
+            downloader
+                .download_with_options(&info, &destination, DownloadOptions { retries: 1 })
+                .unwrap(),
+            14
+        );
+        assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
+        let requests = server.requests_for("/clip.mp4");
+        assert_eq!(requests.len(), 3);
+        let retry = requests[2].to_ascii_lowercase();
+        assert!(retry.contains("\r\nrange: bytes=4-\r\n"));
+        assert!(retry.contains("\r\nif-range: \"version-one\"\r\n"));
+        assert!(retry.contains("\r\naccept-encoding: identity\r\n"));
+        if html5 {
+            assert!(retry.contains(&format!("\r\nreferer: {input}\r\n")));
+        }
+        assert_eq!(directory_names(directory.path()), ["clip.mp4"]);
+    }
+}
+
+#[test]
+fn interrupted_ranges_advance_offsets_and_share_retry_budget() {
+    for retries in [1, 2] {
+        let server = Server::start(|_, count| match count {
+            1 => Response::media(),
+            2 => interrupted(),
+            3 => Response {
+                body: "let",
+                ..remainder()
+            },
+            _ => Response {
+                body: "e media",
+                length: 7,
+                headers: "ETag: \"version-one\"\r\nContent-Range: bytes 7-13/14\r\n",
+                ..remainder()
+            },
+        });
+        let downloader = YoutubeDl::new().unwrap();
+        let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+        let directory = tempfile::tempdir().unwrap();
+        let destination = directory.path().join("clip.mp4");
+        let result =
+            downloader.download_with_options(&info, &destination, DownloadOptions { retries });
+        let requests = server.requests_for("/clip.mp4");
+        assert_eq!(requests.len(), retries as usize + 2);
+        if retries == 2 {
+            assert_eq!(result.unwrap(), 14);
+            assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
+            assert!(requests[3].contains("range: bytes=7-\r\n"));
+        } else {
+            assert!(result.is_err());
+            assert!(directory_names(directory.path()).is_empty());
+        }
+    }
+}
+
+#[test]
+fn full_response_to_range_replaces_partial_bytes() {
+    let server = Server::start(|_, count| match count {
+        1 => Response::media(),
+        2 => interrupted(),
+        _ => Response {
+            body: "new",
+            length: 3,
+            headers: "ETag: \"new\"\r\n",
+            ..Response::media()
+        },
+    });
+    let downloader = YoutubeDl::new().unwrap();
+    let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let destination = directory.path().join("clip.mp4");
+    assert_eq!(
+        downloader
+            .download_with_options(&info, &destination, DownloadOptions { retries: 1 })
+            .unwrap(),
+        3
+    );
+    assert_eq!(std::fs::read(destination).unwrap(), b"new");
+}
+
+#[test]
+fn unsafe_partial_responses_fail_without_publishing_or_retrying() {
+    for headers in [
+        "ETag: \"version-one\"\r\n",
+        "ETag: \"changed\"\r\nContent-Range: bytes 4-13/14\r\n",
+        "Content-Range: bytes 4-13/14\r\n",
+        "ETag: W/\"version-one\"\r\nContent-Range: bytes 4-13/14\r\n",
+        "ETag: \"version-one\"\r\nContent-Range: bytes 3-12/14\r\n",
+        "ETag: \"version-one\"\r\nContent-Range: bytes 4-12/14\r\n",
+        "ETag: \"version-one\"\r\nContent-Range: bytes 4-13/15\r\n",
+        "ETag: \"version-one\"\r\nContent-Range: bytes 4-13/*\r\n",
+        "ETag: \"version-one\"\r\nContent-Range: bytes +4-13/14\r\n",
+        "ETag: \"version-one\"\r\nContent-Range: bytes 4-18446744073709551616/14\r\n",
+        "ETag: \"version-one\"\r\nContent-Range: bytes 4-13/14\r\nContent-Encoding: gzip\r\n",
+        "ETag: \"version-one\"\r\nContent-Range: bytes 4-13/14\r\nContent-Range: bytes 4-13/14\r\n",
+    ] {
+        let server = Server::start(move |_, count| match count {
+            1 => Response::media(),
+            2 => interrupted(),
+            _ => Response {
+                headers,
+                ..remainder()
+            },
+        });
+        let downloader = YoutubeDl::new().unwrap();
+        let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+        let directory = tempfile::tempdir().unwrap();
+        let error = downloader
+            .download_with_options(
+                &info,
+                directory.path().join("clip.mp4"),
+                DownloadOptions { retries: 2 },
+            )
+            .unwrap_err();
+        assert!(
+            matches!(error, yt_dlp_rs::Error::InvalidRangeResponse),
+            "{headers}: {error}"
+        );
+        assert_eq!(server.requests_for("/clip.mp4").len(), 3);
+        assert!(directory_names(directory.path()).is_empty());
+    }
+}
+
+#[test]
+fn weak_or_malformed_etags_and_encoded_bodies_restart_from_zero() {
+    for headers in [
+        "",
+        "ETag: W/\"weak\"\r\n",
+        "ETag: unquoted\r\n",
+        "ETag: \"has space\"\r\n",
+        "ETag: \"one\"\r\nETag: \"one\"\r\n",
+        "ETag: \"one\"\r\nContent-Encoding: gzip\r\n",
+        "Last-Modified: Wed, 21 Oct 2015 07:28:00 GMT\r\n",
+    ] {
+        let server = Server::start(move |_, count| {
+            if count == 2 {
+                Response {
+                    headers,
+                    ..interrupted()
+                }
+            } else {
+                Response::media()
+            }
+        });
+        let downloader = YoutubeDl::new().unwrap();
+        let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+        let directory = tempfile::tempdir().unwrap();
+        let destination = directory.path().join("clip.mp4");
+        downloader
+            .download_with_options(&info, &destination, DownloadOptions { retries: 1 })
+            .unwrap();
+        assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
+        let requests = server.requests_for("/clip.mp4");
+        assert_eq!(requests.len(), 3);
+        assert!(!requests[2].contains("range:"));
+    }
+}
+
+#[test]
+fn range_length_mismatch_or_416_is_not_accepted_as_complete() {
+    for status in [206, 416] {
+        let server = Server::start(move |_, count| match count {
+            1 => Response::media(),
+            2 => interrupted(),
+            _ => Response {
+                status,
+                length: 9,
+                ..remainder()
+            },
+        });
+        let downloader = YoutubeDl::new().unwrap();
+        let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+        let directory = tempfile::tempdir().unwrap();
+        assert!(
+            downloader
+                .download_with_options(
+                    &info,
+                    directory.path().join("clip.mp4"),
+                    DownloadOptions { retries: 2 }
+                )
+                .is_err()
+        );
+        assert_eq!(server.requests_for("/clip.mp4").len(), 3);
+        assert!(directory_names(directory.path()).is_empty());
+    }
+}
+
+#[test]
+fn range_redirect_to_different_resource_is_rejected() {
+    let server = Server::start(|path, count| {
+        if path == "/other.mp4" {
+            remainder()
+        } else {
+            match count {
+                1 => Response::media(),
+                2 => interrupted(),
+                _ => Response {
+                    status: 302,
+                    headers: "Location: /other.mp4\r\n",
+                    ..Response::media()
+                },
+            }
+        }
+    });
+    let downloader = YoutubeDl::new().unwrap();
+    let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let error = downloader
+        .download_with_options(
+            &info,
+            directory.path().join("clip.mp4"),
+            DownloadOptions { retries: 1 },
+        )
+        .unwrap_err();
+    assert!(matches!(error, yt_dlp_rs::Error::InvalidRangeResponse));
+    assert!(directory_names(directory.path()).is_empty());
+}
+
+#[test]
+fn unknown_initial_length_restarts_even_with_a_strong_etag() {
+    let server = Server::start(|_, count| {
+        if count == 2 {
+            // Incomplete chunk framing forces a network read failure, while
+            // deliberately withholding a total representation length.
+            Response {
+                body: "4\r\ncomp\r\n",
+                length: usize::MAX,
+                headers: "ETag: \"version-one\"\r\nTransfer-Encoding: chunked\r\n",
+                ..Response::media()
+            }
+        } else {
+            Response::media()
+        }
+    });
+    let downloader = YoutubeDl::new().unwrap();
+    let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let destination = directory.path().join("clip.mp4");
+    downloader
+        .download_with_options(&info, &destination, DownloadOptions { retries: 1 })
+        .unwrap();
+    assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
+    let requests = server.requests_for("/clip.mp4");
+    assert_eq!(requests.len(), 3);
+    assert!(!requests[2].contains("range:"));
+}
+
+#[test]
+fn range_body_without_content_length_is_checked_against_content_range() {
+    for body in ["lete media", "too much data"] {
+        let server = Server::start(move |_, count| match count {
+            1 => Response::media(),
+            2 => interrupted(),
+            _ => Response {
+                body,
+                length: usize::MAX,
+                ..remainder()
+            },
+        });
+        let downloader = YoutubeDl::new().unwrap();
+        let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+        let directory = tempfile::tempdir().unwrap();
+        let destination = directory.path().join("clip.mp4");
+        let result =
+            downloader.download_with_options(&info, &destination, DownloadOptions { retries: 1 });
+        if body == "lete media" {
+            assert_eq!(result.unwrap(), 14);
+            assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
+        } else {
+            assert!(matches!(
+                result,
+                Err(yt_dlp_rs::Error::InvalidRangeResponse)
+            ));
+            assert!(directory_names(directory.path()).is_empty());
+        }
+    }
+}
+
+#[test]
+fn transient_range_status_retains_offset_and_validator() {
+    let server = Server::start(|_, count| match count {
+        1 => Response::media(),
+        2 => interrupted(),
+        3 => Response::status(503),
+        _ => remainder(),
+    });
+    let downloader = YoutubeDl::new().unwrap();
+    let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let destination = directory.path().join("clip.mp4");
+    downloader
+        .download_with_options(&info, &destination, DownloadOptions { retries: 2 })
+        .unwrap();
+    assert_eq!(std::fs::read(destination).unwrap(), b"complete media");
+    let requests = server.requests_for("/clip.mp4");
+    assert_eq!(requests.len(), 4);
+    for request in &requests[2..] {
+        assert!(request.contains("range: bytes=4-\r\n"));
+        assert!(request.contains("if-range: \"version-one\"\r\n"));
+    }
+}
+
+#[test]
+fn interrupted_full_replacement_resumes_using_new_validator_and_length() {
+    let server = Server::start(|_, count| match count {
+        1 => Response::media(),
+        2 => interrupted(),
+        3 => Response {
+            body: "new",
+            length: 10,
+            headers: "ETag: \"replacement\"\r\n",
+            ..Response::media()
+        },
+        _ => Response {
+            body: " media!",
+            length: 7,
+            headers: "ETag: \"replacement\"\r\nContent-Range: bytes 3-9/10\r\n",
+            ..remainder()
+        },
+    });
+    let downloader = YoutubeDl::new().unwrap();
+    let info = downloader.extract_info(&server.url("/clip.mp4")).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let destination = directory.path().join("clip.mp4");
+    assert_eq!(
+        downloader
+            .download_with_options(&info, &destination, DownloadOptions { retries: 2 })
+            .unwrap(),
+        10
+    );
+    assert_eq!(std::fs::read(destination).unwrap(), b"new media!");
+    let requests = server.requests_for("/clip.mp4");
+    assert_eq!(requests.len(), 4);
+    assert!(requests[3].contains("range: bytes=3-\r\n"));
+    assert!(requests[3].contains("if-range: \"replacement\"\r\n"));
     assert_eq!(directory_names(directory.path()), ["clip.mp4"]);
 }
