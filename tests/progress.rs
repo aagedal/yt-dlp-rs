@@ -94,11 +94,17 @@ impl Server {
                     "HTTP/1.1 {} Fixture\r\nContent-Type: video/mp4\r\n{}{}Connection: close\r\n\r\n",
                     response.status, length, response.headers
                 );
-                let _ = stream.write_all(wire.as_bytes());
                 if count > 1 && !body_delay.is_zero() {
+                    let _ = stream.write_all(wire.as_bytes());
                     thread::sleep(body_delay);
+                    let _ = stream.write_all(response.body.as_bytes());
+                } else {
+                    // Extraction probes drop the response without reading its body.
+                    // Send ordinary responses together so that close cannot race a
+                    // second write and turn the fixture response into a Windows reset.
+                    let wire = format!("{wire}{}", response.body);
+                    let _ = stream.write_all(wire.as_bytes());
                 }
-                let _ = stream.write_all(response.body.as_bytes());
             }
         });
         Self {
