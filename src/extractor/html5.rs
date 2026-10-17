@@ -1,7 +1,7 @@
 //! Deliberately narrow HTML5 subset of upstream GenericIE and
 //! HTML5MediaEmbedIE / InfoExtractor._parse_html5_media_entries at the pinned revision.
 use super::{Extractor, direct};
-use crate::{Error, Result, VideoInfo};
+use crate::{Error, Result, VideoFormat, VideoInfo};
 use percent_encoding::percent_decode_str;
 use reqwest::{
     blocking::Client,
@@ -16,7 +16,7 @@ pub struct GenericHttp;
 const MAX_HTML_BYTES: u64 = 2 * 1024 * 1024;
 
 struct Html5Media {
-    url: Url,
+    urls: Vec<Url>,
     id: String,
     title: String,
 }
@@ -46,8 +46,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Media>> {
         ));
     }
 
-    // Count all declared alternatives, including manifests, before selecting.
-    // Silently filtering alternatives would pretend to implement format selection.
+    // Validate every alternative, including unselected manifests.
     let mut sources = Vec::new();
     if let Some(src) = nonempty(element.value().attr("src")) {
         sources.push((src, element.value().attr("type")));
@@ -59,31 +58,33 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Media>> {
             sources.push((src, child.value().attr("type")));
         }
     }
-    let (source, hint) = match sources.as_slice() {
-        [] => return Ok(None),
-        [source] => *source,
-        _ => return Err(unsupported("multiple sources require format selection")),
-    };
+    if sources.is_empty() {
+        return Ok(None);
+    }
     let base = document
         .select(&selector("base[href]"))
         .next()
         .map(|base| page_url.join(base.value().attr("href").unwrap_or("")))
         .transpose()?
         .unwrap_or_else(|| page_url.clone());
-    let url = base.join(source)?;
-    if !matches!(url.scheme(), "http" | "https") {
-        return Err(Error::UnsupportedScheme(url.scheme().into()));
-    }
-    let path = url.path().to_ascii_lowercase();
-    let hint = hint.unwrap_or("").to_ascii_lowercase();
-    if path.ends_with(".m3u8")
-        || path.ends_with(".mpd")
-        || hint.contains("mpegurl")
-        || hint.contains("dash+xml")
-    {
-        return Err(unsupported(
-            "HLS/DASH sources require a manifest downloader",
-        ));
+    let mut urls = Vec::new();
+    for (source, hint) in sources {
+        let url = base.join(source)?;
+        if !matches!(url.scheme(), "http" | "https") {
+            return Err(Error::UnsupportedScheme(url.scheme().into()));
+        }
+        let path = url.path().to_ascii_lowercase();
+        let hint = hint.unwrap_or("").to_ascii_lowercase();
+        if path.ends_with(".m3u8")
+            || path.ends_with(".mpd")
+            || hint.contains("mpegurl")
+            || hint.contains("dash+xml")
+        {
+            return Err(unsupported(
+                "HLS/DASH sources require a manifest downloader",
+            ));
+        }
+        urls.push(url);
     }
     let title = document
         .select(&selector("meta[property='og:title']"))
@@ -111,7 +112,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Media>> {
     let id = if id.is_empty() { "video".into() } else { id };
     let title = if title.is_empty() { &id } else { &title };
     Ok(Some(Html5Media {
-        url,
+        urls,
         id: format!("{id}-1"),
         title: format!("{title} (1)"),
     }))
@@ -173,9 +174,22 @@ impl Extractor for GenericHttp {
         let Some(media) = parse_page(&page_url, html)? else {
             return Ok(None);
         };
-        let response = direct::request(client, &media.url, Some(&page_url))?;
-        let mut info = direct::from_response(&response, &media.url)
-            .ok_or_else(|| unsupported("source does not serve supported direct HTTP media"))?;
+        let mut formats = Vec::new();
+        let mut first_info = None;
+        for (index, url) in media.urls.iter().enumerate() {
+            let response = direct::request(client, url, Some(&page_url))?;
+            let info = direct::from_response(&response, url)
+                .ok_or_else(|| unsupported("source does not serve supported direct HTTP media"))?;
+            formats.push(VideoFormat {
+                format_id: index.to_string(),
+                url: info.url.clone(),
+                ext: info.ext.clone(),
+                filesize: info.filesize,
+            });
+            first_info.get_or_insert(info);
+        }
+        let mut info = first_info.expect("parsed HTML5 media has at least one source");
+        info.formats = formats;
         info.id = media.id;
         info.title = media.title;
         info.webpage_url = page_url;

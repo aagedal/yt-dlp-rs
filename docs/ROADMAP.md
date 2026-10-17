@@ -18,7 +18,7 @@ tractable for future agents.
 - `src/lib.rs`: ordered extractor registry and download orchestration.
 - `src/info.rs`: typed subset of upstream video info fields.
 - `src/extractor/`: independent extractors, generic fallback last.
-- `src/extractor/html5.rs`: generic response dispatch and single-source HTML5 parsing;
+- `src/extractor/html5.rs`: generic response dispatch and progressive HTML5 source parsing;
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
 - `src/download.rs`: streaming HTTP transfer and no-clobber publication.
 - `src/output.rs`: template rendering and filename-component sanitization.
@@ -31,8 +31,8 @@ The initial implementation uses blocking reqwest with Rustls. It runs one URL at
 a time; the extractor trait is synchronous. Async/concurrent execution should be
 introduced when playlist/fragment workflows need it, with explicit cancellation
 and bounded concurrency. The initial info structure intentionally does not
-pretend to model every upstream field. Introduce typed format/playlist/result
-variants before adding those behaviors.
+pretend to model every upstream field. `VideoFormat` models probed progressive
+sources; introduce typed playlist/result variants before adding those behaviors.
 
 ## Milestones
 
@@ -41,9 +41,10 @@ variants before adding those behaviors.
 2. **Compatibility harness and generic web extraction.** Saved HTML/HTTP fixtures,
    normalized upstream-vs-Rust metadata comparison, HTML5 media extraction,
    format/playlist result types, and an explicit option compatibility inventory.
-   Single-source HTML5 audio/video, a three-fixture comparison harness, and the
-   option inventory are implemented. Multiple sources/elements are rejected;
-   typed format/playlist results and their selection/orchestration remain open.
+   HTML5 audio/video with typed progressive formats, explicit source-ID selection,
+   a four-fixture comparison harness, and the option inventory are implemented.
+   Multiple media elements are rejected; typed playlist results, automatic format
+   ranking, and general selector expressions remain open.
 3. **Resilient transport and media protocols.** Retry policy, range/resume with
    validator checks, HLS/DASH parsing and fragments, format selection, ffmpeg
    integration, and download progress/cancellation. Do not label manifest text

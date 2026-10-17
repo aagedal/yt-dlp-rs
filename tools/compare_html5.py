@@ -2,7 +2,7 @@
 """Compare the supported HTML5 subset with an explicit upstream checkout.
 
 Development tooling only: neither executable uses the other as a runtime fallback.
-Only saved video/audio/source HTML fixtures and fixed media bytes are served, on
+Only saved video/audio/source/formats HTML fixtures and fixed media bytes are served, on
 localhost. Upstream is restricted to GenericIE and its HTML5MediaEmbedIE helper.
 Compare id, title, ext, url, webpage_url, extractor, extractor_key
 exactly. The sole normalization removes this server's origin from url and
@@ -22,13 +22,14 @@ from urllib.parse import urlsplit
 
 
 FIELDS = ("id", "title", "ext", "url", "webpage_url", "extractor", "extractor_key")
-FIXTURES = ("video", "audio", "source")
+FIXTURES = ("video", "audio", "source", "formats")
 UPSTREAM_WORKER = """
 import json, sys
 sys.path.insert(0, sys.argv[1])
 from yt_dlp import YoutubeDL
 with YoutubeDL({'quiet': True, 'no_warnings': True, 'skip_download': True,
-                'allowed_extractors': ['generic', 'html5'], 'cachedir': False}) as ydl:
+                'allowed_extractors': ['generic', 'html5'], 'cachedir': False,
+                **({'format': sys.argv[3]} if len(sys.argv) > 3 else {})}) as ydl:
     print(json.dumps(ydl.sanitize_info(ydl.extract_info(sys.argv[2], download=False))))
 """
 
@@ -64,6 +65,7 @@ def fixture_server(directory):
     }
     pages.update({
         "/media/clip.mp4": ("video/mp4", b"media bytes"),
+        "/media/clip.webm": ("video/webm", b"webm"),
         "/media/tone.mp3": ("audio/mpeg", b"audio"),
     })
 
@@ -119,15 +121,19 @@ def main():
         with fixture_server(fixtures) as origin:
             for name in FIXTURES:
                 url = f"{origin}/{name}.html"
-                expected = run_json([sys.executable, "-c", UPSTREAM_WORKER, str(upstream), url])
-                actual = run_json([str(binary), "-j", url])
-                try:
-                    compare(expected, actual, origin)
-                except ValueError as error:
-                    mismatches = True
-                    print(f"{name}: {error}", file=sys.stderr)
-                else:
-                    print(f"{name}: metadata matches")
+                selections = ("0", "1") if name == "formats" else (None,)
+                for selection in selections:
+                    upstream_args = [selection] if selection is not None else []
+                    rust_args = ["-f", selection] if selection is not None else []
+                    expected = run_json([sys.executable, "-c", UPSTREAM_WORKER, str(upstream), url, *upstream_args])
+                    actual = run_json([str(binary), "-j", *rust_args, url])
+                    try:
+                        compare(expected, actual, origin)
+                    except ValueError as error:
+                        mismatches = True
+                        print(f"{name} ({selection}): {error}", file=sys.stderr)
+                    else:
+                        print(f"{name} ({selection}): metadata matches")
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         print(f"comparison failed: {error}", file=sys.stderr)
         if isinstance(error, subprocess.CalledProcessError) and error.stderr:

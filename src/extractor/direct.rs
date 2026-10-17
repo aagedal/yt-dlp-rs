@@ -119,6 +119,8 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
         extractor: "generic".into(),
         extractor_key: "Generic".into(),
         direct: true,
+        formats: Vec::new(),
+        format_id: None,
         filesize: response.content_length(),
     })
 }
