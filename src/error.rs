@@ -8,6 +8,8 @@ pub enum Error {
     UnsupportedScheme(String),
     #[error("no extractor supports {0}; expected direct HTTP media or a HTML5 media page")]
     UnsupportedUrl(String),
+    #[error("unsupported YouTube behavior: {0}")]
+    UnsupportedYoutube(String),
     #[error("unsupported HTML5 media: {0}")]
     UnsupportedHtml5(String),
     #[error("playlist result requires extract_result or extract_result_with_format")]

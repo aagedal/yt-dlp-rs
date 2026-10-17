@@ -10,7 +10,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Positional URLs | One or more HTTP(S) URLs, processed sequentially; continue after errors, return failure if any URL fails |
 | `-j`, `--dump-json` | One supported `VideoInfo` JSON object per video, including each HTML5 playlist entry; extract without downloading |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
-| `-f`, `--format` | Default/`best` selects highest declared resolution, `worst` lowest, or a literal zero-based HTML5 source ID per element; applies independently to each playlist entry; no expressions, merging, or direct-URL format IDs |
+| `-f`, `--format` | Default/`best` selects highest declared resolution, `worst` lowest, or a literal zero-based HTML5 source ID per element / YouTube itag; applies independently to each playlist entry; no expressions, merging, or direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
@@ -19,6 +19,57 @@ All extraction and downloads run in Rust. Python is development tooling only.
 
 Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
+
+## YouTube watch-page subset
+
+The built-in `Youtube` extractor runs before the generic HTTP fallback. Exact
+`youtube.com`, `www.youtube.com`, `m.youtube.com`, `music.youtube.com`, `youtu.be`,
+`www.youtu.be`, `youtube-nocookie.com`, and `www.youtube-nocookie.com` hosts are
+claimed. Accept watch URLs with one `v` parameter, short links, `/shorts/`,
+`/embed/`, and `/live/` paths with exactly an 11-character video ID. All requests
+use the canonical HTTPS watch URL. Reject channels, playlists, malformed IDs,
+and URLs containing `list=` before making a request. `/live/` is a URL shape;
+live, upcoming, and post-live player responses remain unsupported.
+
+Watch pages must be uncompressed UTF-8/ASCII `text/html`, at most 2 MiB. Parse
+JSON assigned to `ytInitialPlayerResponse` in a script, including quoted window
+property assignments. Require `playabilityStatus.status=OK`, the requested video
+ID, and a nonempty title. No JavaScript runs. Authentication, age/consent gates,
+player API/client fallback, cookies, and token acquisition are unsupported.
+
+Expose only `streamingData.formats` entries with direct HTTP(S) URLs, MP4/WebM
+MIME types, and recognized audio **and** video codecs. Preserve numeric itags as
+format IDs and positive declared dimensions. Skip encrypted signatures/ciphers,
+`n` challenge URLs, DRM, OTF/fragments, and live fragments; reject player responses
+with DRM license information. Adaptive formats and manifest URLs are ignored.
+If no supported progressive format remains, return an explicit unsupported error.
+Supported alternatives retain declaration order and use the existing resolution
+ranking or literal itag selection, not upstream's full sorter. Every eligible
+URL must pass a direct media probe; a failing probe fails the entire extraction,
+including when a different format was requested. Filesizes and final URLs come
+from those probes. Token-protected formats can therefore prevent extraction even
+if another format might work. Metadata uses `youtube` / `Youtube`, `direct=false`,
+and the canonical watch page. The shared downloader sends that page as referrer.
+
+This is fixture-tested groundwork, not general live-site YouTube support. Modern
+YouTube may require API clients, PO tokens, signatures, `n` challenges, SABR,
+manifest protocols, or separate adaptive audio/video merging; none is implemented.
+An unsupported page cannot fall through to generic HTML5 and appear successful.
+The deterministic Rust tests cover URL dispatch, player response validation,
+format rejection, source probes, selection, and a local download. The optional
+upstream parser comparison uses the same saved response and expected metadata:
+
+```sh
+python3 tools/compare_youtube.py --upstream /path/to/yt-dlp
+```
+
+Only ID, title, extractor identity, canonical webpage URL, and ordered formats'
+itag, extension, dimensions, URL, and filesize are compared. Normalize only the
+exact fixture origin to `{{ORIGIN}}`; all other compared values remain exact.
+The harness bypasses upstream network/client acquisition and allows missing PO
+tokens for fixture parsing. It verifies response parsing, not request/client
+parity, token policy, full ranking, or live-site usability. See
+[the implementation brief](../upstream/notes/youtube-watch-page.md).
 
 ## HTML5 extraction
 

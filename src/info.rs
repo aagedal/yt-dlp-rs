@@ -55,7 +55,7 @@ impl ExtractResult {
     }
 }
 
-/// A probed progressive HTTP source. IDs are zero-based HTML declaration indices.
+/// A probed progressive HTTP source. IDs are HTML declaration indices or YouTube itags.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoFormat {
     pub format_id: String,

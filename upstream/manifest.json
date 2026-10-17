@@ -34,10 +34,10 @@
     },
     {
       "name": "youtube",
-      "status": "planned",
-      "upstream": ["yt_dlp/extractor/youtube/", "yt_dlp/extractor/youtube.py"],
-      "rust": [],
-      "scope": "Not implemented"
+      "status": "partial",
+      "upstream": ["yt_dlp/extractor/youtube/", "yt_dlp/extractor/youtube.py", "test/test_youtube_misc.py"],
+      "rust": ["src/extractor/youtube.rs", "src/extractor/mod.rs", "src/lib.rs", "src/error.rs", "tests/fixtures/youtube/", "tools/compare_youtube.py", "tools/test_compare_youtube.py", "docs/COMPATIBILITY.md", "upstream/notes/youtube-watch-page.md"],
+      "scope": "Strict single-video URL dispatch and bounded watch-page initial player response parsing; playable matching ID, direct muxed MP4/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; fixture parser comparison only, no live-site reliability claim; no player API/client fallback, JS/signature/n solving, PO tokens, authentication, live, adaptive merging, manifests, SABR or playlists"
     },
     {
       "name": "manifest-downloaders",
