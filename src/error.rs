@@ -18,6 +18,8 @@ pub enum Error {
     HtmlTooLarge(u64),
     #[error("HTTP request failed: {0}")]
     Http(#[from] reqwest::Error),
+    #[error("extraction response body failed: {0}")]
+    ExtractionRead(#[source] std::io::Error),
     #[error("server returned an unsolicited partial response; full media was requested")]
     PartialResponse,
     #[error("server returned an invalid or changed range response")]

@@ -1,7 +1,7 @@
 use clap::Parser;
 use std::io::{self, Write};
 use yt_dlp_rs::{
-    DownloadOptions, YoutubeDl,
+    DownloadOptions, ExtractionOptions, YoutubeDl,
     output::{DEFAULT_TEMPLATE, render_template},
 };
 
@@ -22,9 +22,12 @@ struct Args {
     /// Select one literal HTML5 source ID (zero-based declaration index)
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
-    /// Retry transient download failures this many times (0 disables retries; extraction is not retried)
+    /// Retry transient download failures this many times (0 disables retries)
     #[arg(long, default_value_t = 3)]
     retries: u8,
+    /// Retry the entire extraction after transient network failures (0 disables retries)
+    #[arg(long, default_value_t = 0)]
+    extractor_retries: u8,
     /// Filename template: %(title)s, %(id)s, %(ext)s, %(extractor)s, and %%
     #[arg(short, long, default_value = DEFAULT_TEMPLATE)]
     output: String,
@@ -36,7 +39,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in args.urls {
-        let extracted = match downloader.extract_result_with_format(&url, args.format.as_deref()) {
+        let extracted = match downloader.extract_result_with_options(
+            &url,
+            args.format.as_deref(),
+            ExtractionOptions {
+                retries: args.extractor_retries,
+            },
+        ) {
             Ok(result) => result,
             Err(error) => {
                 eprintln!("ERROR: {url}: {error}");

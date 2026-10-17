@@ -46,7 +46,10 @@ Supported today:
   connection/timeouts, and interrupted bodies. Interrupted transfers can resume
   within the same invocation with a strong ETag, known length, and validated range.
   `--retries N` sets additional
-  attempts (default 3, 0 disables, maximum 255); extraction requests are not retried.
+  attempts (default 3, 0 disables, maximum 255).
+- Opt-in whole-extraction retries with `--extractor-retries N` (default 0, maximum
+  255), independent of download retries. Transient page/source request failures
+  and interrupted HTML reads restart extraction before any output is emitted.
 
 Other HTML pages, YouTube, HLS/DASH, site playlists, automatic format ranking, selector
 expressions, cookies/authentication, persistent resume, subtitles, and ffmpeg
@@ -63,13 +66,16 @@ and a five-minute total timeout per request. Simulation and JSON extraction stil
 network requests. MIME identification is not media-container verification.
 
 The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
-`VideoFormat`, `DownloadOptions`, and an `Extractor` interface. Use `extract_result` or
+`VideoFormat`, `DownloadOptions`, `ExtractionOptions`, and an `Extractor` interface.
+Use `extract_result` or
 `extract_result_with_format(url, Some("1"))` for video/playlist results. A format
 ID applies to every playlist entry independently; each must offer that ID.
 The existing `extract_info` methods accept single videos and reject playlists.
 `--dump-json` emits one video object per entry.
 `download_with_options(info, path, DownloadOptions { retries: 0 })` disables
-download retries for a library call; `download` uses the default policy. See
+download retries for a library call; `download` uses the default policy.
+`extract_result_with_options(url, None, ExtractionOptions { retries: 2 })` enables
+whole-extraction retries; existing extraction methods keep retries disabled. See
 [the roadmap](docs/ROADMAP.md) for architecture and upcoming milestones.
 The [compatibility inventory](docs/COMPATIBILITY.md) records the exact subset and
 the saved-fixture upstream comparison command.

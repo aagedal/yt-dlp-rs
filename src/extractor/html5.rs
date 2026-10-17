@@ -170,7 +170,10 @@ impl Extractor for GenericHttp {
         }
         let page_url = response.url().clone();
         let mut bytes = Vec::new();
-        response.take(MAX_HTML_BYTES + 1).read_to_end(&mut bytes)?;
+        response
+            .take(MAX_HTML_BYTES + 1)
+            .read_to_end(&mut bytes)
+            .map_err(Error::ExtractionRead)?;
         if bytes.len() as u64 > MAX_HTML_BYTES {
             return Err(Error::HtmlTooLarge(MAX_HTML_BYTES));
         }

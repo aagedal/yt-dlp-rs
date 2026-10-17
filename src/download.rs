@@ -7,10 +7,9 @@ use std::{
     fs,
     io::{Read, Seek, SeekFrom, Write},
     path::Path,
-    time::Duration,
 };
 
-/// Download retry policy. Extraction requests are not retried.
+/// Download retry policy, independent of `ExtractionOptions`.
 #[derive(Debug, Clone, Copy)]
 pub struct DownloadOptions {
     /// Additional attempts after a transient failure, from zero to 255.
@@ -52,11 +51,7 @@ impl AttemptFailure {
     }
 
     fn request(error: reqwest::Error) -> Self {
-        let retryable = error.is_connect()
-            || error.is_timeout()
-            || error
-                .status()
-                .is_some_and(|status| matches!(status.as_u16(), 408 | 429 | 500 | 502 | 503 | 504));
+        let retryable = crate::retry::transient_request(&error);
         Self {
             error: Error::Http(error),
             retryable,
@@ -180,9 +175,7 @@ pub fn download(
                 return Ok(actual);
             }
             Err(failure) if failure.retryable && attempt < options.retries => {
-                // Bounded exponential backoff: 100, 200, 400, 800, then 1000 ms.
-                let delay_ms = (100_u64 << attempt.min(4)).min(1000);
-                std::thread::sleep(Duration::from_millis(delay_ms));
+                crate::retry::backoff(attempt);
             }
             Err(failure) => return Err(failure.error),
         }
