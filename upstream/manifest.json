@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/yt-dlp/yt-dlp.git",
+  "baseline": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+  "upstream_version": "2026.08.19",
+  "components": [
+    {
+      "name": "generic-extraction",
+      "status": "partial",
+      "upstream": ["yt_dlp/extractor/generic.py"],
+      "rust": ["src/extractor/direct.rs", "tests/http.rs"],
+      "scope": "Direct HTTP media only; no HTML, embedded players or manifests"
+    },
+    {
+      "name": "extractor-contract",
+      "status": "partial",
+      "upstream": ["yt_dlp/extractor/common.py"],
+      "rust": ["src/extractor/mod.rs", "src/info.rs", "src/lib.rs"],
+      "scope": "Small typed video info subset and ordered extractor registry"
+    },
+    {
+      "name": "http-downloader",
+      "status": "partial",
+      "upstream": ["yt_dlp/downloader/http.py", "yt_dlp/downloader/common.py", "test/test_downloader_http.py"],
+      "rust": ["src/download.rs", "tests/http.rs"],
+      "scope": "Streaming whole-file transfers, no-clobber publication; no resume or retries"
+    },
+    {
+      "name": "orchestration-and-output",
+      "status": "partial",
+      "upstream": ["yt_dlp/YoutubeDL.py", "yt_dlp/options.py", "yt_dlp/__init__.py", "test/test_YoutubeDL.py"],
+      "rust": ["src/lib.rs", "src/main.rs", "src/output.rs", "src/info.rs", "tests/http.rs"],
+      "scope": "Multiple URLs, simulate, JSON, basic output templates; no general option parity"
+    },
+    {
+      "name": "youtube",
+      "status": "planned",
+      "upstream": ["yt_dlp/extractor/youtube/", "yt_dlp/extractor/youtube.py"],
+      "rust": [],
+      "scope": "Not implemented"
+    },
+    {
+      "name": "manifest-downloaders",
+      "status": "planned",
+      "upstream": ["yt_dlp/downloader/hls.py", "yt_dlp/downloader/dash.py", "yt_dlp/downloader/fragment.py"],
+      "rust": [],
+      "scope": "Not implemented"
+    }
+  ]
+}
