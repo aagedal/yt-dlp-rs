@@ -12,6 +12,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
 | `-f`, `--format` | Literal zero-based HTML5 source ID per element; applies to every playlist entry and must exist in each; required for multiple sources; no expressions, ranking, merging, or direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
+| `--retries` | Additional whole-file download attempts, integer 0–255, default 3; no `infinite` value or extraction retries |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | All other flags | Rejected; aliases such as `--skip-download` and `--print` are not implemented |
 
@@ -87,6 +88,42 @@ simulation diagnostics, or sequential downloads; it exposes no playlist wrapper
 JSON option, playlist selection, nested playlists, or unresolved URL results.
 
 MIME checks identify supported responses; they do not verify media containers.
+
+## Download retries
+
+The default download policy permits three additional attempts after HTTP 408,
+429, 500, 502, 503, or 504, connection/timeouts, response body read errors, or
+Content-Length mismatches. `--retries 0` disables retries; values through 255
+are accepted. The library exposes `DownloadOptions { retries }` through
+`YoutubeDl::download_with_options`; `download` uses the default policy.
+After the retry budget is exhausted, return the final attempt's error.
+
+Retries start the whole file from byte zero with a fresh same-directory temporary
+file. Failed attempts are removed before waiting. No Range header, saved partial
+file, validator-based resume, or cross-invocation recovery is implemented.
+Backoff is 100, 200, 400, 800, then 1000 milliseconds between attempts, capped
+at one second thereafter; Retry-After headers are not interpreted. These are
+native subset policies, not upstream retry-default or HTTP-status parity.
+
+Every attempt repeats response validation and preserves the HTML5 page referrer.
+Other HTTP statuses (including 401, 404, and 501), unsolicited 206 responses,
+unsupported HTML5 media responses, output collisions, and filesystem failures
+fail immediately. Network reads and filesystem writes are handled separately so
+a local write failure cannot trigger another network transfer. The final file
+is published only after a complete successful attempt and is never overwritten.
+Extraction, page reads, and source probes are not retried, including under
+`--simulate` or `--dump-json`. The per-request timeouts still apply to each
+attempt; there is no overall download deadline or cancellation API.
+
+This slice is based on the same pinned revision
+**897341241f2bfb2439fe0367f4c7c9ccd29a3828**, specifically
+`yt_dlp/downloader/http.py`'s `RetryDownload`/`RetryManager` control flow,
+transport-read failures, and Content-Length validation. Its range-resume and
+broader 5xx retry handling are outside this slice. The baseline's
+`test/test_downloader_http.py` was reviewed for its localhost HTTP fixture,
+known/unknown length, and chunk/range cases; `tests/retries.rs` adds independent
+deterministic failure/recovery coverage. This ports a transport slice from the
+existing baseline and does not advance it.
 
 ## Source and differential fixtures
 

@@ -22,15 +22,15 @@
       "name": "http-downloader",
       "status": "partial",
       "upstream": ["yt_dlp/downloader/http.py", "yt_dlp/downloader/common.py", "test/test_downloader_http.py"],
-      "rust": ["src/download.rs", "tests/http.rs"],
-      "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication; no resume or retries"
+      "rust": ["src/download.rs", "tests/http.rs", "tests/retries.rs", "docs/COMPATIBILITY.md"],
+      "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication, bounded whole-file download retries for selected transient HTTP statuses and connection/body failures; no extraction retries, range/resume or Retry-After handling"
     },
     {
       "name": "orchestration-and-output",
       "status": "partial",
       "upstream": ["yt_dlp/YoutubeDL.py", "yt_dlp/options.py", "yt_dlp/__init__.py", "test/test_YoutubeDL.py"],
       "rust": ["src/lib.rs", "src/main.rs", "src/output.rs", "src/info.rs", "tests/http.rs"],
-      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, basic output templates, literal HTML5 source-ID selection applied to each entry; no general option parity"
+      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, basic output templates, literal HTML5 source-ID selection applied to each entry, bounded --retries download option; no general option parity"
     },
     {
       "name": "youtube",
