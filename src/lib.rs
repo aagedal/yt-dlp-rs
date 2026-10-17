@@ -3,6 +3,7 @@ mod error;
 pub mod extractor;
 mod info;
 pub mod output;
+mod retry;
 
 pub use download::DownloadOptions;
 pub use error::{Error, Result};
@@ -12,6 +13,14 @@ use extractor::{Extractor, GenericHttp};
 use reqwest::blocking::Client;
 use std::{path::Path, time::Duration};
 use url::Url;
+
+/// Whole-extraction retry policy, independent of download retries.
+/// Defaults to no retries to preserve existing library behavior.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct ExtractionOptions {
+    /// Additional attempts after transient HTTP or HTML body read failures.
+    pub retries: u8,
+}
 
 pub struct YoutubeDl {
     client: Client,
@@ -60,17 +69,51 @@ impl YoutubeDl {
         input: &str,
         format: Option<&str>,
     ) -> Result<ExtractResult> {
+        self.extract_result_with_options(input, format, ExtractionOptions::default())
+    }
+
+    /// Retry the entire extractor registry after transient network failures.
+    /// Earlier page reads and source probes repeat; no partial result is returned.
+    /// Format selection and unsupported behavior are never retried.
+    pub fn extract_result_with_options(
+        &self,
+        input: &str,
+        format: Option<&str>,
+        options: ExtractionOptions,
+    ) -> Result<ExtractResult> {
         let url = Url::parse(input)?;
         if !matches!(url.scheme(), "http" | "https") {
             return Err(Error::UnsupportedScheme(url.scheme().into()));
         }
+        for attempt in 0..=options.retries {
+            match self.extract_once(&url) {
+                Ok(mut info) => {
+                    info.select_format(format)?;
+                    return Ok(info);
+                }
+                Err(error) => {
+                    let retryable = match &error {
+                        Error::Http(error) => retry::transient_request(error),
+                        Error::ExtractionRead(_) => true,
+                        _ => false,
+                    };
+                    if !retryable || attempt == options.retries {
+                        return Err(error);
+                    }
+                    retry::backoff(attempt);
+                }
+            }
+        }
+        unreachable!("the final attempt returns success or an error")
+    }
+
+    fn extract_once(&self, url: &Url) -> Result<ExtractResult> {
         for extractor in &self.extractors {
-            if let Some(mut info) = extractor.extract_result(&self.client, &url)? {
-                info.select_format(format)?;
+            if let Some(info) = extractor.extract_result(&self.client, url)? {
                 return Ok(info);
             }
         }
-        Err(Error::UnsupportedUrl(input.into()))
+        Err(Error::UnsupportedUrl(url.to_string()))
     }
 
     pub fn download(&self, info: &VideoInfo, destination: impl AsRef<Path>) -> Result<u64> {

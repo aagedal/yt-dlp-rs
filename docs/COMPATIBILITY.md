@@ -12,7 +12,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
 | `-f`, `--format` | Literal zero-based HTML5 source ID per element; applies to every playlist entry and must exist in each; required for multiple sources; no expressions, ranking, merging, or direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
-| `--retries` | Additional download attempts, integer 0–255, default 3; no `infinite` value or extraction retries |
+| `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
+| `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | All other flags | Rejected; aliases such as `--skip-download` and `--print` are not implemented |
 
@@ -130,9 +131,9 @@ fail immediately. Network reads and filesystem writes are handled separately so
 a local write failure cannot trigger another network transfer. The final file
 is published only after the complete representation has been received and is
 never overwritten.
-Extraction, page reads, and source probes are not retried, including under
-`--simulate` or `--dump-json`. The per-request timeouts still apply to each
-attempt; there is no overall download deadline or cancellation API.
+Download retries do not affect extraction, page reads, or source probes.
+The per-request timeouts still apply to each attempt; there is no overall
+download deadline or cancellation API.
 
 This slice is based on the same pinned revision
 **897341241f2bfb2439fe0367f4c7c9ccd29a3828**, specifically
@@ -151,6 +152,41 @@ deterministic failure/recovery coverage for validated 206 responses, repeated
 interruptions, range rejection, changed representations, unknown lengths, and
 validator boundaries. This ports a transport slice from the
 existing baseline and does not advance it.
+
+## Extraction retries
+
+`--extractor-retries N` opts into up to N additional whole-extraction attempts
+(default 0, maximum 255). The library exposes the same policy through
+`extract_result_with_options(url, format, ExtractionOptions { retries: N })`.
+Existing extraction methods retain zero retries. Call `into_video()` on the
+result when a single video is required; playlists still fail at that boundary.
+
+Retry HTTP 408, 429, 500, 502, 503, and 504, connection/timeouts, and HTML
+response body read failures. Use the same bounded 100–1000 ms backoff as download
+retries. A new attempt runs the extractor registry from the start, re-fetching
+pages and repeating earlier source probes, with the page referrer preserved.
+This is a per-input budget, shared by all entries and sources; there is no
+per-request budget and no reuse of partial HTML or extracted entries. Custom
+extractors opting into this API must tolerate repeated calls. They can report
+network body read failures with `Error::ExtractionRead`; ordinary `Error::Io`
+remains a permanent failure so local filesystem errors cannot cause retries.
+
+Format selection, unsupported content/schemes, invalid URLs, HTML size and encoding
+limits, unsolicited 206 responses, and permanent HTTP statuses fail without
+another attempt. After exhaustion return the final error. No partial playlist
+metadata or downloads are emitted. The CLI continues to later input URLs and
+returns a failing exit status if any input fails. The policy also applies under
+`--simulate` and `--dump-json`; `--retries` controls downloads independently.
+Standalone `Extractor` calls do not retry automatically.
+
+This is a native transport policy extension of the existing supported subset,
+not a port of upstream's extractor-specific retry semantics or defaults. It does
+not advance the pinned baseline or claim general `--extractor-retries` parity.
+`tests/retries.rs` covers status recovery/exhaustion, interrupted HTML, full
+playlist restart after source-probe failures, referrers, CLI modes and budget
+isolation, permanent error boundaries, and custom extractor filesystem errors.
+Persistent resume, Retry-After, cancellation, and an overall extraction deadline
+remain unimplemented.
 
 ## Source and differential fixtures
 

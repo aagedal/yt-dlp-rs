@@ -21,6 +21,7 @@ tractable for future agents.
 - `src/extractor/html5.rs`: generic response dispatch and progressive HTML5 source parsing;
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
 - `src/download.rs`: streaming HTTP transfer and no-clobber publication.
+- `src/retry.rs`: shared transient HTTP classification and bounded backoff.
 - `src/output.rs`: template rendering and filename-component sanitization.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
 - `upstream/manifest.json`: upstream revision and component coverage ledger.
@@ -57,7 +58,9 @@ remain outside the current result contract.
    library configuration. Interrupted transfers resume within a download call using
    strong ETags, known lengths, and strictly validated ranges, with whole-file
    fallback when validators are unavailable or the server returns a full response.
-   Extraction retries, persistent resume across invocations,
+   Opt-in whole-extraction retries cover transient page/source HTTP failures and
+   interrupted HTML reads, rebuilding every entry before output; extraction and
+   download retry budgets are independent. Persistent resume across invocations,
    manifest protocols, progress, and cancellation remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,

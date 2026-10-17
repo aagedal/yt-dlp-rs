@@ -9,7 +9,7 @@ use std::{
     thread,
     time::Duration,
 };
-use yt_dlp_rs::{DownloadOptions, YoutubeDl};
+use yt_dlp_rs::{DownloadOptions, Error, ExtractionOptions, YoutubeDl};
 
 struct Response {
     status: u16,
@@ -322,7 +322,7 @@ fn html5_page_referrer_is_preserved_on_every_retry() {
 }
 
 #[test]
-fn extraction_failures_are_not_retried() {
+fn extraction_failures_are_not_retried_by_default() {
     let server = Server::start(|_, _| Response::status(503));
     assert!(
         YoutubeDl::new()
@@ -389,20 +389,22 @@ fn cli_zero_retries_fails_once_and_continues_to_the_next_url() {
 
 #[test]
 fn cli_rejects_retry_values_outside_bounded_integer_range() {
-    for value in ["-1", "256", "infinity", "1.5"] {
-        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-            .args([
-                &format!("--retries={value}"),
-                "http://127.0.0.1:1/unused.mp4",
-            ])
-            .output()
-            .unwrap();
-        assert_eq!(
-            output.status.code(),
-            Some(2),
-            "value {value}: {}",
-            String::from_utf8_lossy(&output.stderr)
-        );
+    for option in ["--retries", "--extractor-retries"] {
+        for value in ["-1", "256", "infinity", "1.5"] {
+            let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+                .args([
+                    &format!("{option}={value}"),
+                    "http://127.0.0.1:1/unused.mp4",
+                ])
+                .output()
+                .unwrap();
+            assert_eq!(
+                output.status.code(),
+                Some(2),
+                "{option} value {value}: {}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+        }
     }
 }
 
@@ -875,4 +877,361 @@ fn interrupted_full_replacement_resumes_using_new_validator_and_length() {
     assert!(requests[3].contains("range: bytes=3-\r\n"));
     assert!(requests[3].contains("if-range: \"replacement\"\r\n"));
     assert_eq!(directory_names(directory.path()), ["clip.mp4"]);
+}
+
+fn page(body: &'static str) -> Response {
+    Response {
+        mime: "text/html",
+        body,
+        length: body.len(),
+        ..Response::media()
+    }
+}
+
+#[test]
+fn extraction_retries_selected_transient_statuses() {
+    for status in [408, 429, 500, 502, 503, 504] {
+        let server = Server::start(move |_, count| {
+            if count == 1 {
+                Response::status(status)
+            } else {
+                Response::media()
+            }
+        });
+        let result = YoutubeDl::new()
+            .unwrap()
+            .extract_result_with_options(
+                &server.url("/clip.mp4"),
+                None,
+                ExtractionOptions { retries: 1 },
+            )
+            .unwrap();
+        assert_eq!(result.into_video().unwrap().ext, "mp4");
+        assert_eq!(server.requests_for("/clip.mp4").len(), 2, "{status}");
+    }
+}
+
+#[test]
+fn extraction_budget_is_bounded_and_returns_final_error() {
+    assert_eq!(ExtractionOptions::default().retries, 0);
+    for retries in [0, 2] {
+        let server = Server::start(|_, count| Response::status(if count == 1 { 503 } else { 429 }));
+        let error = YoutubeDl::new()
+            .unwrap()
+            .extract_result_with_options(
+                &server.url("/clip.mp4"),
+                None,
+                ExtractionOptions { retries },
+            )
+            .unwrap_err();
+        let Error::Http(error) = error else {
+            panic!("{error}")
+        };
+        assert_eq!(
+            error.status().unwrap().as_u16(),
+            if retries == 0 { 503 } else { 429 }
+        );
+        assert_eq!(
+            server.requests_for("/clip.mp4").len(),
+            usize::from(retries) + 1
+        );
+    }
+}
+
+#[test]
+fn extraction_restarts_truncated_html_without_reusing_partial_bytes() {
+    let server = Server::start(|path, count| {
+        if path == "/page.html" {
+            if count == 1 {
+                Response {
+                    length: 200,
+                    ..page("<video src='/wrong.mp4'>")
+                }
+            } else {
+                page("<video src='/clip.mp4'></video>")
+            }
+        } else {
+            Response::media()
+        }
+    });
+    let info = YoutubeDl::new()
+        .unwrap()
+        .extract_result_with_options(
+            &server.url("/page.html"),
+            None,
+            ExtractionOptions { retries: 1 },
+        )
+        .unwrap()
+        .into_video()
+        .unwrap();
+    assert_eq!(info.url.as_str(), server.url("/clip.mp4"));
+    assert_eq!(server.requests_for("/page.html").len(), 2);
+    assert!(server.requests_for("/wrong.mp4").is_empty());
+    assert_eq!(server.requests_for("/clip.mp4").len(), 1);
+}
+
+#[test]
+fn source_probe_failure_restarts_entire_playlist_and_preserves_referrer() {
+    let server = Server::start(|path, count| match path {
+        "/page.html" => page("<video src='/first.mp4'></video><audio src='/second.mp4'></audio>"),
+        "/second.mp4" if count == 1 => Response::status(503),
+        _ => Response::media(),
+    });
+    let result = YoutubeDl::new()
+        .unwrap()
+        .extract_result_with_options(
+            &server.url("/page.html"),
+            None,
+            ExtractionOptions { retries: 1 },
+        )
+        .unwrap();
+    assert_eq!(result.into_entries().len(), 2);
+    for path in ["/page.html", "/first.mp4", "/second.mp4"] {
+        assert_eq!(server.requests_for(path).len(), 2, "{path}");
+    }
+    for path in ["/first.mp4", "/second.mp4"] {
+        assert!(server.requests_for(path).iter().all(|request| {
+            request
+                .to_ascii_lowercase()
+                .contains(&format!("\r\nreferer: {}\r\n", server.url("/page.html")))
+        }));
+    }
+}
+
+#[test]
+fn extraction_does_not_retry_permanent_statuses_or_unsupported_pages() {
+    for status in [200, 206, 401, 404, 416, 501] {
+        let server = Server::start(move |_, _| Response {
+            status,
+            ..page("<video src='/manifest.m3u8'></video>")
+        });
+        assert!(
+            YoutubeDl::new()
+                .unwrap()
+                .extract_result_with_options(
+                    &server.url("/page.html"),
+                    None,
+                    ExtractionOptions { retries: 2 },
+                )
+                .is_err()
+        );
+        assert_eq!(server.requests_for("/page.html").len(), 1, "{status}");
+        assert!(server.requests_for("/manifest.m3u8").is_empty());
+    }
+}
+
+#[test]
+fn extraction_does_not_retry_format_selection_or_oversized_html() {
+    let server = Server::start(|path, _| {
+        if path == "/large.html" {
+            Response {
+                length: 3 * 1024 * 1024,
+                ..page("")
+            }
+        } else {
+            Response::media()
+        }
+    });
+    let downloader = YoutubeDl::new().unwrap();
+    assert!(matches!(
+        downloader.extract_result_with_options(
+            &server.url("/clip.mp4"),
+            Some("best"),
+            ExtractionOptions { retries: 2 },
+        ),
+        Err(Error::FormatSelection(_))
+    ));
+    assert!(matches!(
+        downloader.extract_result_with_options(
+            &server.url("/large.html"),
+            None,
+            ExtractionOptions { retries: 2 },
+        ),
+        Err(Error::HtmlTooLarge(_))
+    ));
+    assert_eq!(server.requests_for("/clip.mp4").len(), 1);
+    assert_eq!(server.requests_for("/large.html").len(), 1);
+}
+
+#[test]
+fn cli_extraction_retries_apply_to_json_and_simulation_without_downloads() {
+    for mode in ["--dump-json", "--simulate"] {
+        let server = Server::start(|_, count| {
+            if count == 1 {
+                Response::status(503)
+            } else {
+                Response::media()
+            }
+        });
+        let directory = tempfile::tempdir().unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args([
+                mode,
+                "--extractor-retries",
+                "1",
+                "--retries",
+                "0",
+                &server.url("/clip.mp4"),
+            ])
+            .current_dir(directory.path())
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert_eq!(server.requests_for("/clip.mp4").len(), 2);
+        assert!(directory_names(directory.path()).is_empty());
+        if mode == "--dump-json" {
+            let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+            assert_eq!(info["ext"], "mp4");
+        } else {
+            assert!(output.stdout.is_empty());
+        }
+    }
+}
+
+#[test]
+fn cli_exhausted_extraction_emits_no_partial_playlist_and_continues() {
+    let server = Server::start(|path, _| match path {
+        "/page.html" => page("<video src='/first.mp4'></video><video src='/failed.mp4'></video>"),
+        "/failed.mp4" => Response::status(503),
+        _ => Response::media(),
+    });
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "-j",
+            "--extractor-retries",
+            "1",
+            &server.url("/page.html"),
+            &server.url("/next.mp4"),
+        ])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(info["id"], "next");
+    assert_eq!(server.requests_for("/page.html").len(), 2);
+    assert_eq!(server.requests_for("/first.mp4").len(), 2);
+    assert_eq!(server.requests_for("/failed.mp4").len(), 2);
+    assert_eq!(server.requests_for("/next.mp4").len(), 1);
+}
+
+#[test]
+fn cli_download_retry_budget_does_not_enable_extraction_retries() {
+    for options in [vec![], vec!["--retries", "2"]] {
+        let server = Server::start(|_, _| Response::status(503));
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(options)
+            .args(["-j", &server.url("/clip.mp4")])
+            .output()
+            .unwrap();
+        assert!(!output.status.success());
+        assert!(output.stdout.is_empty());
+        assert_eq!(server.requests_for("/clip.mp4").len(), 1);
+    }
+}
+
+#[test]
+fn custom_extractor_filesystem_errors_are_not_retried() {
+    use std::sync::atomic::AtomicUsize;
+    use yt_dlp_rs::{Result, VideoInfo, extractor::Extractor};
+
+    struct FailingExtractor(Arc<AtomicUsize>);
+    impl Extractor for FailingExtractor {
+        fn key(&self) -> &'static str {
+            "Failing"
+        }
+        fn extract(
+            &self,
+            _: &reqwest::blocking::Client,
+            _: &url::Url,
+        ) -> Result<Option<VideoInfo>> {
+            self.0.fetch_add(1, Ordering::Relaxed);
+            Err(Error::Io(std::io::Error::other("local fixture failure")))
+        }
+    }
+    let calls = Arc::new(AtomicUsize::new(0));
+    let mut downloader = YoutubeDl::new().unwrap();
+    downloader.register_extractor(Box::new(FailingExtractor(calls.clone())));
+    let error = downloader
+        .extract_result_with_options(
+            "http://127.0.0.1:1/unused.mp4",
+            None,
+            ExtractionOptions { retries: 2 },
+        )
+        .unwrap_err();
+    assert!(matches!(error, Error::Io(_)));
+    assert_eq!(calls.load(Ordering::Relaxed), 1);
+}
+
+#[test]
+fn exhausted_html_read_retries_return_final_read_error() {
+    let server = Server::start(|_, _| Response {
+        length: 100,
+        ..page("<video")
+    });
+    let error = YoutubeDl::new()
+        .unwrap()
+        .extract_result_with_options(
+            &server.url("/page.html"),
+            None,
+            ExtractionOptions { retries: 2 },
+        )
+        .unwrap_err();
+    assert!(matches!(error, Error::ExtractionRead(_)), "{error}");
+    assert_eq!(server.requests_for("/page.html").len(), 3);
+}
+
+#[test]
+fn extraction_retry_restarts_previously_visited_custom_extractors() {
+    use yt_dlp_rs::{Result, VideoInfo, extractor::Extractor};
+
+    struct RecordingExtractor {
+        name: &'static str,
+        fail: bool,
+        calls: Arc<Mutex<Vec<&'static str>>>,
+    }
+    impl Extractor for RecordingExtractor {
+        fn key(&self) -> &'static str {
+            self.name
+        }
+        fn extract(
+            &self,
+            _: &reqwest::blocking::Client,
+            _: &url::Url,
+        ) -> Result<Option<VideoInfo>> {
+            self.calls.lock().unwrap().push(self.name);
+            if self.fail {
+                Err(Error::ExtractionRead(std::io::Error::other(
+                    "fixture network read",
+                )))
+            } else {
+                Ok(None)
+            }
+        }
+    }
+    let calls = Arc::new(Mutex::new(Vec::new()));
+    let mut downloader = YoutubeDl::new().unwrap();
+    // Registration prepends, so the declining extractor runs before the failing one.
+    for (name, fail) in [("failing", true), ("declining", false)] {
+        downloader.register_extractor(Box::new(RecordingExtractor {
+            name,
+            fail,
+            calls: calls.clone(),
+        }));
+    }
+    let error = downloader
+        .extract_result_with_options(
+            "http://127.0.0.1:1/unused.mp4",
+            None,
+            ExtractionOptions { retries: 1 },
+        )
+        .unwrap_err();
+    assert!(matches!(error, Error::ExtractionRead(_)));
+    assert_eq!(
+        *calls.lock().unwrap(),
+        ["declining", "failing", "declining", "failing"]
+    );
 }
