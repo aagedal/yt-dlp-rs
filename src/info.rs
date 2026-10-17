@@ -1,6 +1,60 @@
 use serde::{Deserialize, Serialize};
 use url::Url;
 
+/// Fully extracted results; playlists contain videos, never unresolved URLs.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "_type", rename_all = "lowercase")]
+pub enum ExtractResult {
+    Video(VideoInfo),
+    Playlist(PlaylistInfo),
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PlaylistInfo {
+    pub id: String,
+    pub title: String,
+    pub webpage_url: Url,
+    pub extractor: String,
+    pub extractor_key: String,
+    pub entries: Vec<VideoInfo>,
+}
+
+impl ExtractResult {
+    /// Preserve the single-video API's explicit boundary instead of dropping entries.
+    pub fn into_video(self) -> crate::Result<VideoInfo> {
+        match self {
+            Self::Video(info) => Ok(info),
+            Self::Playlist(_) => Err(crate::Error::PlaylistRequiresResult),
+        }
+    }
+
+    pub fn into_entries(self) -> Vec<VideoInfo> {
+        match self {
+            Self::Video(info) => vec![info],
+            Self::Playlist(info) => info.entries,
+        }
+    }
+
+    pub(crate) fn select_format(&mut self, requested: Option<&str>) -> crate::Result<()> {
+        match self {
+            Self::Video(info) => info.select_format(requested),
+            Self::Playlist(info) => {
+                for entry in &mut info.entries {
+                    entry
+                        .select_format(requested)
+                        .map_err(|error| match error {
+                            crate::Error::FormatSelection(message) => {
+                                crate::Error::FormatSelection(format!("{}: {message}", entry.id))
+                            }
+                            other => other,
+                        })?;
+                }
+                Ok(())
+            }
+        }
+    }
+}
+
 /// A probed progressive HTTP source. IDs are zero-based HTML declaration indices.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoFormat {

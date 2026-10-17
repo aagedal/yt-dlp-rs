@@ -9,10 +9,25 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
-use yt_dlp_rs::{Error, YoutubeDl, output::render_template};
+use yt_dlp_rs::{Error, ExtractResult, YoutubeDl, output::render_template};
 
 fn html_fixture(path: &str) -> Option<&'static str> {
     Some(match path {
+        "/playlist.html" => include_str!("fixtures/html5/playlist.html"),
+        "/playlist-formats.html" => include_str!("fixtures/html5/playlist-formats.html"),
+        "/playlist-one.html" => {
+            "<video></video><audio src='/audio'></audio><video src=' '></video>"
+        }
+        "/playlist-invalid.html" => "<video src='/clip.mp4'></video><audio src='/missing'></audio>",
+        "/playlist-manifest.html" => {
+            "<video src='/clip.mp4'></video><audio src='/playlist.m3u8'></audio>"
+        }
+        "/playlist-mixed-formats.html" => {
+            "<video><source src='/clip.mp4'><source src='/audio'></video><audio src='/audio'></audio>"
+        }
+        "/playlist-changing.html" => {
+            "<video src='/changing.mp4'></video><audio src='/audio'></audio>"
+        }
         "/formats-progressive.html" => include_str!("fixtures/html5/formats.html"),
         "/video.html" => include_str!("fixtures/html5/video.html"),
         "/audio.html" => include_str!("fixtures/html5/audio.html"),
@@ -115,6 +130,13 @@ impl Server {
                     String::new()
                 };
                 let (status, mime, body, extra, length) = match path {
+                    "/playlist-redirect" => (
+                        "302 Found",
+                        "text/plain",
+                        "",
+                        "Location: /playlist.html\r\n",
+                        0,
+                    ),
                     "/compressed.html" => {
                         ("200 OK", "text/html", "", "Content-Encoding: gzip\r\n", 0)
                     }
@@ -383,7 +405,6 @@ fn html5_rejects_unsupported_sources_and_ambiguous_selection() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     for path in [
-        "/multiple.html",
         "/formats.html",
         "/manifest.html",
         "/manifest-hint.html",
@@ -669,11 +690,7 @@ fn format_ids_are_literal_and_src_precedes_child_sources() {
 fn selecting_supported_source_does_not_hide_unsupported_alternatives() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
-    for page in [
-        "/formats.html",
-        "/invalid-alternative.html",
-        "/multiple.html",
-    ] {
+    for page in ["/formats.html", "/invalid-alternative.html"] {
         assert!(
             matches!(
                 dl.extract_info_with_format(&server.url(page), Some("0")),
@@ -686,6 +703,290 @@ fn selecting_supported_source_does_not_hide_unsupported_alternatives() {
         dl.extract_info_with_format(&server.url("/blob-alternative.html"), Some("0")),
         Err(Error::UnsupportedScheme(_))
     ));
+}
+
+#[test]
+fn html5_playlist_metadata_order_and_legacy_boundary() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    let page = server.url("/playlist.html");
+    let result = dl.extract_result(&page).unwrap();
+    let serialized = serde_json::to_value(&result).unwrap();
+    assert_eq!(serialized["_type"], "playlist");
+    let decoded: ExtractResult = serde_json::from_value(serialized).unwrap();
+    let ExtractResult::Playlist(playlist) = decoded else {
+        panic!("expected playlist");
+    };
+    assert_eq!(playlist.id, "playlist");
+    assert_eq!(playlist.title, "Playlist fixture");
+    assert_eq!(playlist.webpage_url.as_str(), page);
+    assert_eq!(playlist.extractor, "generic");
+    assert_eq!(playlist.extractor_key, "Generic");
+    assert_eq!(playlist.entries.len(), 2);
+    let redirected = dl
+        .extract_result(&server.url("/playlist-redirect"))
+        .unwrap();
+    let ExtractResult::Playlist(redirected) = redirected else {
+        panic!("expected redirected playlist");
+    };
+    assert_eq!(redirected.webpage_url.as_str(), page);
+    assert_eq!(redirected.id, "playlist");
+    for (index, (entry, ext)) in playlist.entries.iter().zip(["mp4", "mp3"]).enumerate() {
+        assert_eq!(entry.id, format!("playlist-{}", index + 1));
+        assert_eq!(entry.title, format!("Playlist fixture ({})", index + 1));
+        assert_eq!(entry.ext, ext);
+        assert_eq!(entry.webpage_url.as_str(), page);
+        assert_eq!(entry.extractor, "html5");
+        assert_eq!(entry.extractor_key, "HTML5MediaEmbed");
+        assert_eq!(entry.format_id.as_deref(), Some("0"));
+        assert!(!entry.direct);
+    }
+    assert!(matches!(
+        dl.extract_info(&page),
+        Err(Error::PlaylistRequiresResult)
+    ));
+    assert!(matches!(
+        dl.extract_info_with_format(&page, Some("0")),
+        Err(Error::PlaylistRequiresResult)
+    ));
+    let generic = yt_dlp_rs::extractor::GenericHttp;
+    assert!(matches!(
+        yt_dlp_rs::extractor::Extractor::extract(
+            &generic,
+            &reqwest::blocking::Client::new(),
+            &page.parse().unwrap()
+        ),
+        Err(Error::PlaylistRequiresResult)
+    ));
+    for request in server
+        .requests
+        .lock()
+        .unwrap()
+        .iter()
+        .filter(|r| r.starts_with("GET /media/"))
+    {
+        assert!(request.contains(&format!("referer: {page}\r\n")));
+    }
+}
+
+#[test]
+fn html5_result_cardinality_and_title_fallback() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    let ExtractResult::Video(info) = dl
+        .extract_result(&server.url("/playlist-one.html"))
+        .unwrap()
+    else {
+        panic!("empty elements should not force a playlist");
+    };
+    assert_eq!(info.id, "playlist-one-1");
+    assert_eq!(info.title, "playlist-one (1)");
+    let serialized = serde_json::to_value(ExtractResult::Video(info)).unwrap();
+    assert_eq!(serialized["_type"], "video");
+    let decoded: ExtractResult = serde_json::from_value(serialized).unwrap();
+    assert_eq!(decoded.into_video().unwrap().id, "playlist-one-1");
+    assert!(dl.extract_info(&server.url("/playlist-one.html")).is_ok());
+    assert!(matches!(
+        dl.extract_result(&server.url("/empty.html")),
+        Err(Error::UnsupportedUrl(_))
+    ));
+    let ExtractResult::Playlist(info) = dl.extract_result(&server.url("/multiple.html")).unwrap()
+    else {
+        panic!("expected playlist");
+    };
+    assert_eq!(info.id, "multiple");
+    assert_eq!(info.title, "video");
+    assert_eq!(info.entries[0].title, "multiple (1)");
+}
+
+#[test]
+fn html5_playlist_selection_and_validation_are_atomic() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    let page = server.url("/playlist-formats.html");
+    assert!(matches!(
+        dl.extract_result(&page),
+        Err(Error::FormatSelection(_))
+    ));
+    for id in ["0", "1"] {
+        let entries = dl
+            .extract_result_with_format(&page, Some(id))
+            .unwrap()
+            .into_entries();
+        assert_eq!(entries.len(), 2);
+        for entry in entries {
+            assert_eq!(entry.formats.len(), 2);
+            assert_eq!(entry.format_id.as_deref(), Some(id));
+            assert_eq!(entry.ext, if id == "0" { "mp4" } else { "webm" });
+        }
+    }
+    let error = dl
+        .extract_result_with_format(&server.url("/playlist-mixed-formats.html"), Some("1"))
+        .unwrap_err();
+    assert!(matches!(error, Error::FormatSelection(_)));
+    assert!(error.to_string().contains("playlist-mixed-formats-2"));
+    assert!(matches!(
+        dl.extract_result(&server.url("/playlist-invalid.html")),
+        Err(Error::Http(_))
+    ));
+    assert!(matches!(
+        dl.extract_result_with_format(&server.url("/playlist-manifest.html"), Some("0")),
+        Err(Error::UnsupportedHtml5(_))
+    ));
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .current_dir(directory.path())
+        .args(["-f", "1", &server.url("/playlist-mixed-formats.html")])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .current_dir(directory.path())
+        .args(["-f", "1", "-o", "%(id)s.%(ext)s", &page])
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    for id in ["playlist-formats-1", "playlist-formats-2"] {
+        assert_eq!(
+            std::fs::read(directory.path().join(format!("{id}.webm"))).unwrap(),
+            b"webm"
+        );
+    }
+}
+
+#[test]
+fn cli_playlist_json_simulation_and_downloads() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    let page = server.url("/playlist.html");
+    for flag in ["-j", "-s"] {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .current_dir(directory.path())
+            .args([flag, &page])
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+        if flag == "-j" {
+            let entries: Vec<serde_json::Value> = String::from_utf8(output.stdout)
+                .unwrap()
+                .lines()
+                .map(|line| serde_json::from_str(line).unwrap())
+                .collect();
+            assert_eq!(entries.len(), 2);
+            assert_eq!(entries[0]["id"], "playlist-1");
+            assert_eq!(entries[1]["id"], "playlist-2");
+        } else {
+            assert!(output.stdout.is_empty());
+        }
+    }
+    // Only page requests and header probes, no transfer requests.
+    assert_eq!(server.requests.lock().unwrap().len(), 6);
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .current_dir(directory.path())
+        .arg(&page)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        std::fs::read(
+            directory
+                .path()
+                .join("Playlist fixture (1) [playlist-1].mp4")
+        )
+        .unwrap(),
+        b"media bytes"
+    );
+    assert_eq!(
+        std::fs::read(
+            directory
+                .path()
+                .join("Playlist fixture (2) [playlist-2].mp3")
+        )
+        .unwrap(),
+        b"audio"
+    );
+    for request in server
+        .requests
+        .lock()
+        .unwrap()
+        .iter()
+        .filter(|r| r.starts_with("GET /media/"))
+    {
+        assert!(request.contains(&format!("referer: {page}\r\n")));
+    }
+}
+
+#[test]
+fn cli_playlist_download_failures_continue_to_later_entries_and_urls() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .current_dir(directory.path())
+        .args([
+            "-o",
+            "%(id)s.%(ext)s",
+            &server.url("/playlist-changing.html"),
+            &server.url("/clip.mp4"),
+        ])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("playlist-changing-1"));
+    assert!(!directory.path().join("playlist-changing-1.mp4").exists());
+    assert_eq!(
+        std::fs::read(directory.path().join("playlist-changing-2.mp3")).unwrap(),
+        b"audio"
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("clip.mp4")).unwrap(),
+        b"media bytes"
+    );
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 2);
+}
+
+#[test]
+fn existing_video_extractors_use_the_default_typed_adapter() {
+    use yt_dlp_rs::{
+        Result, VideoInfo,
+        extractor::{DirectHttp, Extractor},
+    };
+    struct Custom;
+    impl Extractor for Custom {
+        fn key(&self) -> &'static str {
+            "Custom"
+        }
+        fn extract(
+            &self,
+            client: &reqwest::blocking::Client,
+            url: &url::Url,
+        ) -> Result<Option<VideoInfo>> {
+            let mut info = DirectHttp.extract(client, url)?.unwrap();
+            info.extractor = "custom".into();
+            Ok(Some(info))
+        }
+    }
+    let server = Server::start();
+    let mut dl = YoutubeDl::new().unwrap();
+    dl.register_extractor(Box::new(Custom));
+    let ExtractResult::Video(info) = dl.extract_result(&server.url("/clip.mp4")).unwrap() else {
+        panic!("expected video")
+    };
+    assert_eq!(info.extractor, "custom");
+    assert_eq!(server.requests.lock().unwrap().len(), 1);
 }
 
 #[test]

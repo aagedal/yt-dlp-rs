@@ -2,12 +2,15 @@
 """Compare the supported HTML5 subset with an explicit upstream checkout.
 
 Development tooling only: neither executable uses the other as a runtime fallback.
-Only saved video/audio/source/formats HTML fixtures and fixed media bytes are served, on
+Only saved HTML fixtures and fixed media bytes are served, on
 localhost. Upstream is restricted to GenericIE and its HTML5MediaEmbedIE helper.
 Compare id, title, ext, url, webpage_url, extractor, extractor_key
 exactly. The sole normalization removes this server's origin from url and
 webpage_url; query strings, fragments, paths, titles and all other fields remain
 unchanged. Volatile and unsupported fields are excluded by this explicit allowlist.
+For playlists, compare every ordered entry and the exact entry count. The Rust
+CLI emits one NDJSON video per entry, so playlist wrapper fields cannot be
+compared through this harness; library integration tests cover the typed wrapper.
 """
 
 import argparse
@@ -22,7 +25,7 @@ from urllib.parse import urlsplit
 
 
 FIELDS = ("id", "title", "ext", "url", "webpage_url", "extractor", "extractor_key")
-FIXTURES = ("video", "audio", "source", "formats")
+FIXTURES = ("video", "audio", "source", "formats", "playlist", "playlist-formats")
 UPSTREAM_WORKER = """
 import json, sys
 sys.path.insert(0, sys.argv[1])
@@ -54,6 +57,31 @@ def compare(upstream, rust, origin):
             for field in FIELDS if expected[field] != actual[field]
         }
         raise ValueError("metadata mismatch: " + json.dumps(differences, sort_keys=True))
+    return actual
+
+
+def compare_entries(upstream, rust, origin):
+    """Compare a video/playlist result with the CLI's ordered video records."""
+    if not isinstance(upstream, dict):
+        raise ValueError("upstream result must be an object")
+    if upstream.get("_type") == "playlist":
+        expected = upstream.get("entries")
+        if not isinstance(expected, list):
+            raise ValueError("upstream playlist entries must be a list")
+    else:
+        expected = [upstream]
+    if not isinstance(rust, list):
+        raise ValueError("Rust entries must be a list")
+    if len(expected) != len(rust):
+        raise ValueError(f"entry count mismatch: upstream={len(expected)}, rust={len(rust)}")
+    actual = []
+    for index, (upstream_entry, rust_entry) in enumerate(zip(expected, rust), start=1):
+        if not isinstance(upstream_entry, dict) or not isinstance(rust_entry, dict):
+            raise ValueError(f"entry {index} must be an object")
+        try:
+            actual.append(compare(upstream_entry, rust_entry, origin))
+        except ValueError as error:
+            raise ValueError(f"entry {index}: {error}") from error
     return actual
 
 
@@ -99,8 +127,10 @@ def fixture_server(directory):
         worker.join()
 
 
-def run_json(command):
+def run_json(command, *, ndjson=False):
     completed = subprocess.run(command, capture_output=True, text=True, timeout=30, check=True)
+    if ndjson:
+        return [json.loads(line) for line in completed.stdout.splitlines()]
     return json.loads(completed.stdout)
 
 
@@ -121,14 +151,14 @@ def main():
         with fixture_server(fixtures) as origin:
             for name in FIXTURES:
                 url = f"{origin}/{name}.html"
-                selections = ("0", "1") if name == "formats" else (None,)
+                selections = ("0", "1") if name in ("formats", "playlist-formats") else (None,)
                 for selection in selections:
                     upstream_args = [selection] if selection is not None else []
                     rust_args = ["-f", selection] if selection is not None else []
                     expected = run_json([sys.executable, "-c", UPSTREAM_WORKER, str(upstream), url, *upstream_args])
-                    actual = run_json([str(binary), "-j", *rust_args, url])
+                    actual = run_json([str(binary), "-j", *rust_args, url], ndjson=True)
                     try:
-                        compare(expected, actual, origin)
+                        compare_entries(expected, actual, origin)
                     except ValueError as error:
                         mismatches = True
                         print(f"{name} ({selection}): {error}", file=sys.stderr)

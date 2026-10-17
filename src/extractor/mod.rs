@@ -5,7 +5,7 @@ pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use html5::GenericHttp;
 
-use crate::{Result, VideoInfo};
+use crate::{ExtractResult, Result, VideoInfo};
 use reqwest::blocking::Client;
 use url::Url;
 
@@ -15,4 +15,9 @@ use url::Url;
 pub trait Extractor: Send + Sync {
     fn key(&self) -> &'static str;
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>>;
+
+    /// Override to support playlists. Existing video-only extractors need no changes.
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        Ok(self.extract(client, url)?.map(ExtractResult::Video))
+    }
 }

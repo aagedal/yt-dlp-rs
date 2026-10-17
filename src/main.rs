@@ -13,7 +13,7 @@ use yt_dlp_rs::{
 struct Args {
     #[arg(required = true)]
     urls: Vec<String>,
-    /// Print one JSON info object per URL without downloading
+    /// Print one JSON info object per video (including playlist entries) without downloading
     #[arg(short = 'j', long)]
     dump_json: bool,
     /// Extract metadata without writing media
@@ -33,24 +33,33 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in args.urls {
-        let result = (|| -> Result<(), Box<dyn std::error::Error>> {
-            let info = downloader.extract_info_with_format(&url, args.format.as_deref())?;
-            if args.dump_json {
-                serde_json::to_writer(&mut stdout, &info)?;
-                writeln!(stdout)?;
-            } else if args.simulate {
-                eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
-            } else {
-                let path = render_template(&args.output, &info)?;
-                eprintln!("[download] Destination: {}", path.display());
-                let bytes = downloader.download(&info, &path)?;
-                eprintln!("[download] Downloaded {bytes} bytes");
+        let extracted = match downloader.extract_result_with_format(&url, args.format.as_deref()) {
+            Ok(result) => result,
+            Err(error) => {
+                eprintln!("ERROR: {url}: {error}");
+                failed = true;
+                continue;
             }
-            Ok(())
-        })();
-        if let Err(error) = result {
-            eprintln!("ERROR: {url}: {error}");
-            failed = true;
+        };
+        for info in extracted.into_entries() {
+            let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+                if args.dump_json {
+                    serde_json::to_writer(&mut stdout, &info)?;
+                    writeln!(stdout)?;
+                } else if args.simulate {
+                    eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
+                } else {
+                    let path = render_template(&args.output, &info)?;
+                    eprintln!("[download] Destination: {}", path.display());
+                    let bytes = downloader.download(&info, &path)?;
+                    eprintln!("[download] Downloaded {bytes} bytes");
+                }
+                Ok(())
+            })();
+            if let Err(error) = result {
+                eprintln!("ERROR: {url}: {}: {error}", info.id);
+                failed = true;
+            }
         }
     }
     Ok(!failed)
