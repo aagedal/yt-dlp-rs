@@ -16,10 +16,24 @@ pub struct GenericHttp;
 const MAX_HTML_BYTES: u64 = 2 * 1024 * 1024;
 
 struct Html5Page {
-    sources: Vec<Vec<Url>>,
+    sources: Vec<Vec<Html5Source>>,
     id: String,
     title: String,
     playlist_title: String,
+}
+
+struct Html5Source {
+    url: Url,
+    width: Option<u32>,
+    height: Option<u32>,
+}
+
+fn dimension(value: Option<&str>) -> Option<u32> {
+    let value = value?.trim();
+    if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+        return None;
+    }
+    value.parse().ok().filter(|&value| value > 0)
 }
 
 fn unsupported(reason: &str) -> Error {
@@ -47,20 +61,27 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
         // Validate every alternative, including unselected manifests.
         let mut sources = Vec::new();
         if let Some(src) = nonempty(element.value().attr("src")) {
-            sources.push((src, element.value().attr("type")));
+            // Media element dimensions describe the player, not its source.
+            sources.push((src, element.value().attr("type"), None, None));
         }
         for child in element.children().filter_map(scraper::ElementRef::wrap) {
             if child.value().name() == "source"
                 && let Some(src) = nonempty(child.value().attr("src"))
             {
-                sources.push((src, child.value().attr("type")));
+                sources.push((
+                    src,
+                    child.value().attr("type"),
+                    dimension(child.value().attr("width")),
+                    dimension(child.value().attr("height"))
+                        .or_else(|| dimension(child.value().attr("res"))),
+                ));
             }
         }
         if sources.is_empty() {
             continue;
         }
         let mut urls = Vec::new();
-        for (source, hint) in sources {
+        for (source, hint, width, height) in sources {
             let url = base.join(source)?;
             if !matches!(url.scheme(), "http" | "https") {
                 return Err(Error::UnsupportedScheme(url.scheme().into()));
@@ -76,7 +97,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                     "HLS/DASH sources require a manifest downloader",
                 ));
             }
-            urls.push(url);
+            urls.push(Html5Source { url, width, height });
         }
         entries.push(urls);
     }
@@ -186,7 +207,8 @@ impl Extractor for GenericHttp {
         for (index, sources) in media.sources.iter().enumerate() {
             let mut formats = Vec::new();
             let mut first_info = None;
-            for (index, url) in sources.iter().enumerate() {
+            for (index, source) in sources.iter().enumerate() {
+                let url = &source.url;
                 let response = direct::request(client, url, Some(&page_url))?;
                 let info = direct::from_response(&response, url).ok_or_else(|| {
                     unsupported("source does not serve supported direct HTTP media")
@@ -196,6 +218,8 @@ impl Extractor for GenericHttp {
                     url: info.url.clone(),
                     ext: info.ext.clone(),
                     filesize: info.filesize,
+                    width: source.width,
+                    height: source.height,
                 });
                 first_info.get_or_insert(info);
             }

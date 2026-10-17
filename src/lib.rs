@@ -52,7 +52,8 @@ impl YoutubeDl {
         self.extract_info_with_format(input, None)
     }
 
-    /// Extract and select a literal format ID; no selector expressions are supported.
+    /// Extract and select default/best, worst, or a literal source ID.
+    /// General selector expressions and full upstream ranking are unsupported.
     pub fn extract_info_with_format(&self, input: &str, format: Option<&str>) -> Result<VideoInfo> {
         self.extract_result_with_format(input, format)?.into_video()
     }
@@ -62,7 +63,7 @@ impl YoutubeDl {
         self.extract_result_with_format(input, None)
     }
 
-    /// A literal source ID applies independently to every video in a playlist.
+    /// Default/best, worst, or a literal source ID applies independently per entry.
     /// Extraction or selection failure in any entry fails the whole result.
     pub fn extract_result_with_format(
         &self,

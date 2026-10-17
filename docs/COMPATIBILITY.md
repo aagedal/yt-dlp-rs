@@ -10,7 +10,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Positional URLs | One or more HTTP(S) URLs, processed sequentially; continue after errors, return failure if any URL fails |
 | `-j`, `--dump-json` | One supported `VideoInfo` JSON object per video, including each HTML5 playlist entry; extract without downloading |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
-| `-f`, `--format` | Literal zero-based HTML5 source ID per element; applies to every playlist entry and must exist in each; required for multiple sources; no expressions, ranking, merging, or direct-URL format IDs |
+| `-f`, `--format` | Default/`best` selects highest declared resolution, `worst` lowest, or a literal zero-based HTML5 source ID per element; applies independently to each playlist entry; no expressions, merging, or direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
@@ -47,15 +47,32 @@ literal zero-based strings assigned to nonempty declarations: the media element'
 `src` first, then direct child sources in document order. Duplicate URLs remain
 separate declarations. Source IDs restart at `0` for each element. These IDs are
 Rust-specific; upstream's label/title IDs,
-format sorting, and fallback expressions are not implemented.
+full format sorting, and fallback expressions are not implemented.
 
-A single source is selected automatically. Multiple sources require `-f ID`;
-omitting it or requesting an unavailable ID returns an error listing available
-IDs. `best`, `worst`, filters, merge and fallback expressions are errors. Direct
-HTTP results expose no format IDs, so an explicit `-f` on them fails. The library's
-`extract_info_with_format` performs the same selection; standalone extractor
-callers must call `VideoInfo::select_format` to resolve candidates before download.
-Selection updates top-level `url`, `ext`, `filesize`, and `format_id` together.
+Default selection and `-f best` choose the highest resolution source; `-f worst`
+chooses the lowest. Child `<source>` attributes `width`, `height`, and fallback
+`res` (for height) supply optional positive `u32` dimensions, with surrounding
+whitespace allowed. Zero, signed, overflowing, unit-suffixed, and other malformed
+values are ignored; an invalid height still allows `res` fallback. Media element
+width/height describe the player and are not inherited, including by inline `src`.
+Label/title resolution parsing is not implemented.
+
+Resolution rank is the smaller known dimension, or the only known dimension;
+unknown resolution ranks below known resolution. Portrait sources are therefore
+ranked by their shorter side. On equal ranks best/default selects the last
+declaration and worst the first. File size, extension, codecs, bitrate, frame
+rate, and audio/video distinctions do not break ties. This is an explicit native
+policy for the supported progressive subset, not full upstream best/worst parity
+or a guarantee of perceptual quality. Format lists and source IDs retain declaration
+order. Literal IDs override ranking; unavailable IDs return an error listing IDs.
+Filters, merge/fallback expressions, and selectors such as `bestvideo` remain errors.
+Direct HTTP results accept default/`best`/`worst` as their sole representation,
+without adding format IDs; explicit IDs fail.
+The library's `extract_info_with_format` performs the same selection; standalone
+extractor callers must call `VideoInfo::select_format` to resolve candidates before
+download. Selection updates top-level `url`, `ext`, `filesize`, `width`, `height`,
+and `format_id` together. Optional dimension fields deserialize as absent for older
+metadata. Each playlist entry is ranked independently.
 The selected source is downloaded with the page referrer. If the download
 response changes to HTML or a manifest, fail without publishing it as media.
 
@@ -63,7 +80,7 @@ HTML bodies are limited to 2 MiB, including responses without Content-Length.
 Only uncompressed UTF-8/ASCII HTML is supported. Other encodings are rejected
 when declared in HTTP Content-Type; invalid UTF-8 is rejected. HTML meta charset
 sniffing, compressed responses, XHTML, JavaScript, nonstandard lazy-loading
-attributes, subtitles, posters, durations, codecs, dimensions, authentication,
+attributes, subtitles, posters, durations, codecs, inferred dimensions, authentication,
 and general embedded-player extraction are not implemented. HLS/DASH URLs/type
 hints and non-HTTP sources fail explicitly, even
 when another supported source was explicitly selected. Unselected source probe
@@ -240,7 +257,7 @@ cargo build --locked
 python3 tools/compare_html5.py --upstream .upstream/yt-dlp --binary target/debug/yt-dlp-rs
 ```
 
-The harness serves `tests/fixtures/html5/{video,audio,source,formats,playlist,playlist-formats}.html` and fixed media
+The harness serves `tests/fixtures/html5/{video,audio,source,formats,playlist,playlist-formats,ranked}.html` and fixed media
 bytes on localhost. It invokes upstream with only Generic and HTML5MediaEmbed
 enabled and compares `id`, `title`, `ext`, `url`, `webpage_url`, `extractor`, and
 `extractor_key` exactly. The sole URL normalization removes the fixture server's
@@ -263,6 +280,26 @@ upstream metadata allowlist. The multi-source fixture uses page-relative URLs;
 pinned upstream HTML5 embed path does not apply it in this fixture.
 
 The comparison needs upstream source and is optional; required tests need no
-upstream checkout, Python runtime integration, or live sites. Six fixtures do
+upstream checkout, Python runtime integration, or live sites. Seven fixtures do
 not establish broad extractor parity. Site playlists, playlist selection, and
 recursive result processing remain unimplemented.
+
+## Progressive automatic selection source slice
+
+This slice uses the existing pinned source commit
+**897341241f2bfb2439fe0367f4c7c9ccd29a3828** and leaves the global baseline unchanged.
+`InfoExtractor._parse_html5_media_entries` in `yt_dlp/extractor/common.py` supplies
+source width/height/res handling; its corresponding dimension examples in
+`test/test_InfoExtractor.py` were reviewed. `FormatSorter` in
+`yt_dlp/utils/_utils.py` supplies the shorter-known-dimension resolution concept,
+and `YoutubeDL.build_format_selector` in `yt_dlp/YoutubeDL.py` supplies best/worst
+selection direction. Other upstream ordering fields, stream eligibility, label
+parsing, and format expressions remain outside this slice. Declaration-order ties
+are a native policy; upstream may choose differently for equal resolution.
+
+The saved `ranked.html` fixture compares default, `best`, `worst`, and literal-ID
+normalized selected metadata with upstream through `tools/compare_html5.py`.
+All alternatives use the same progressive media type and distinct declared
+resolutions to isolate the supported ranking criterion. Dimension metadata,
+unknown/tie behavior, invalid attributes, explicit overrides, CLI transfers, and
+independent playlist selection are covered by deterministic Rust tests.

@@ -9,14 +9,14 @@
       "status": "partial",
       "upstream": ["yt_dlp/extractor/generic.py", "yt_dlp/extractor/genericembeds.py", "yt_dlp/extractor/common.py", "test/test_InfoExtractor.py"],
       "rust": ["src/extractor/direct.rs", "src/extractor/html5.rs", "tests/http.rs", "tests/fixtures/html5/", "tools/compare_html5.py", "tools/test_compare_html5.py", "docs/COMPATIBILITY.md"],
-      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; no embedded players, automatic ranking, nested/site playlists or manifests"
+      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; optional positive source width/height/res attributes and bounded resolution-based default/best/worst ranking; no embedded players, full upstream ranking, nested/site playlists or manifests"
     },
     {
       "name": "extractor-contract",
       "status": "partial",
       "upstream": ["yt_dlp/extractor/common.py"],
       "rust": ["src/extractor/mod.rs", "src/info.rs", "src/lib.rs", "src/error.rs", "src/retry.rs", "tests/retries.rs"],
-      "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, explicit selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds/preferred HTTP-date; no nested playlists or unresolved URL results"
+      "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, literal-ID and bounded resolution-based default/best/worst selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds/preferred HTTP-date; no nested playlists or unresolved URL results"
     },
     {
       "name": "http-downloader",
@@ -28,9 +28,9 @@
     {
       "name": "orchestration-and-output",
       "status": "partial",
-      "upstream": ["yt_dlp/YoutubeDL.py", "yt_dlp/options.py", "yt_dlp/__init__.py", "test/test_YoutubeDL.py"],
+      "upstream": ["yt_dlp/YoutubeDL.py", "yt_dlp/utils/_utils.py", "yt_dlp/options.py", "yt_dlp/__init__.py", "test/test_YoutubeDL.py"],
       "rust": ["src/lib.rs", "src/main.rs", "src/output.rs", "src/info.rs", "tests/http.rs", "tests/retries.rs"],
-      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, basic output templates, literal HTML5 source-ID selection applied to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds/preferred HTTP-date; no general option parity"
+      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, basic output templates, literal HTML5 source-ID or bounded resolution-based default/best/worst selection applied independently to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds/preferred HTTP-date; no general option parity"
     },
     {
       "name": "youtube",
