@@ -33,7 +33,9 @@ a time; the extractor trait is synchronous. Async/concurrent execution should be
 introduced when playlist/fragment workflows need it, with explicit cancellation
 and bounded concurrency. The initial info structure intentionally does not
 pretend to model every upstream field. `VideoFormat` models probed progressive
-sources. `ExtractResult` distinguishes a video from a fully extracted HTML5
+sources and optional declared dimensions. Default/`best`/`worst` selection ranks
+by the smaller known dimension, with declaration-order ties; it does not reproduce
+upstream's full sorter. `ExtractResult` distinguishes a video from a fully extracted HTML5
 `PlaylistInfo`; unresolved URL results, nested playlists, and site playlists
 remain outside the current result contract.
 
@@ -45,9 +47,10 @@ remain outside the current result contract.
    normalized upstream-vs-Rust metadata comparison, HTML5 media extraction,
    format/playlist result types, and an explicit option compatibility inventory.
    HTML5 audio/video with typed progressive formats, explicit source-ID selection,
-   a six-fixture comparison harness, typed HTML5 playlist results for multiple media
+   a seven-fixture comparison harness, typed HTML5 playlist results for multiple media
    elements, sequential entry downloads, and the option inventory are implemented.
-   Automatic format ranking and general selector expressions remain open. Site
+   Bounded automatic resolution ranking and `best`/`worst` selection are implemented;
+   full upstream ranking and general selector expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.
 3. **Resilient transport and media protocols.** Retry policy, range/resume with
    validator checks, HLS/DASH parsing and fragments, format selection, ffmpeg

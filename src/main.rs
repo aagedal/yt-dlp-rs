@@ -19,7 +19,7 @@ struct Args {
     /// Extract metadata without writing media
     #[arg(short = 's', long)]
     simulate: bool,
-    /// Select one literal HTML5 source ID (zero-based declaration index)
+    /// Select best (default), worst, or a literal HTML5 source ID
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
     /// Retry transient download failures this many times (0 disables retries)

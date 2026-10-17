@@ -63,6 +63,10 @@ pub struct VideoFormat {
     pub ext: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub filesize: Option<u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub width: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub height: Option<u32>,
 }
 
 /// Small, explicitly supported subset of yt-dlp's info dictionary.
@@ -82,15 +86,21 @@ pub struct VideoInfo {
     pub format_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub filesize: Option<u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub width: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub height: Option<u32>,
 }
 
 impl VideoInfo {
-    /// Resolve a literal format ID. Multiple sources require an explicit choice;
-    /// this port does not yet implement upstream's automatic format ranking.
+    /// Select a literal ID, or rank progressive sources for default/best/worst.
+    /// Resolution is the smaller declared dimension (or the only known one).
+    /// Unknown resolution sorts below known resolution; ties use declaration order.
+    /// This is a bounded native policy, not upstream's full format sorter.
     pub fn select_format(&mut self, requested: Option<&str>) -> crate::Result<()> {
         if self.formats.is_empty() {
             return match requested {
-                None => Ok(()),
+                None | Some("best" | "worst") => Ok(()),
                 Some(id) => Err(crate::Error::FormatSelection(format!(
                     "format {id:?} is unavailable; this result exposes no formats"
                 ))),
@@ -102,14 +112,14 @@ impl VideoInfo {
             .map(|f| f.format_id.as_str())
             .collect::<Vec<_>>()
             .join(", ");
+        let resolution = |format: &VideoFormat| match (format.width, format.height) {
+            (Some(width), Some(height)) => Some(width.min(height)),
+            (width, height) => width.or(height),
+        };
         let selected = match requested {
+            None | Some("best") => self.formats.iter().max_by_key(|f| resolution(f)),
+            Some("worst") => self.formats.iter().min_by_key(|f| resolution(f)),
             Some(id) => self.formats.iter().find(|f| f.format_id == id),
-            None if self.formats.len() == 1 => self.formats.first(),
-            None => {
-                return Err(crate::Error::FormatSelection(format!(
-                    "multiple sources require --format ID; available IDs: {available}"
-                )));
-            }
         }
         .ok_or_else(|| {
             crate::Error::FormatSelection(format!(
@@ -119,6 +129,8 @@ impl VideoInfo {
         self.url = selected.url.clone();
         self.ext = selected.ext.clone();
         self.filesize = selected.filesize;
+        self.width = selected.width;
+        self.height = selected.height;
         self.format_id = Some(selected.format_id.clone());
         Ok(())
     }

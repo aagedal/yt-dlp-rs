@@ -122,5 +122,7 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
         formats: Vec::new(),
         format_id: None,
         filesize: response.content_length(),
+        width: None,
+        height: None,
     })
 }

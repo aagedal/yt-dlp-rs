@@ -13,6 +13,10 @@ use yt_dlp_rs::{Error, ExtractResult, YoutubeDl, output::render_template};
 
 fn html_fixture(path: &str) -> Option<&'static str> {
     Some(match path {
+        "/dimension-boundaries.html" => {
+            "<video src='/clip.mp4' width='3840' height='2160'><source src='/clip.mp4' width='-1' height='0' res='480'><source src='/clip.mp4' width='4294967296' height='720p' label='1080p'><source src='/clip.mp4' width=' 1280 ' height='+720'></video>"
+        }
+        "/ranked.html" => include_str!("fixtures/html5/ranked.html"),
         "/playlist.html" => include_str!("fixtures/html5/playlist.html"),
         "/playlist-formats.html" => include_str!("fixtures/html5/playlist-formats.html"),
         "/playlist-one.html" => {
@@ -160,9 +164,11 @@ impl Server {
                         "Location: /nested/relative.html\r\n",
                         0,
                     ),
-                    "/media/clip.mp4?one=1&two=2" | "/media/clip.mp4" | "/nested/clip.mp4" => {
-                        ("200 OK", "video/mp4", "media bytes", "", 11)
-                    }
+                    "/media/clip.mp4?one=1&two=2"
+                    | "/media/clip.mp4"
+                    | "/media/clip.mp4?portrait=1"
+                    | "/media/clip.mp4?low=1"
+                    | "/nested/clip.mp4" => ("200 OK", "video/mp4", "media bytes", "", 11),
                     "/media/clip.webm" => ("200 OK", "video/webm", "webm", "", 4),
                     "/media/tone.mp3" => ("200 OK", "audio/mpeg", "audio", "", 5),
                     "/referrer.mp4"
@@ -401,7 +407,7 @@ fn html5_source_changing_to_html_cannot_be_published_as_media() {
 }
 
 #[test]
-fn html5_rejects_unsupported_sources_and_ambiguous_selection() {
+fn html5_rejects_unsupported_sources() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     for path in [
@@ -608,13 +614,14 @@ fn cli_simulate_and_download() {
 }
 
 #[test]
-fn html5_formats_require_explicit_selection_and_download_selected_bytes() {
+fn html5_formats_select_automatically_and_download_explicit_sources() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     let page = server.url("/formats-progressive.html");
-    let error = dl.extract_info(&page).unwrap_err();
-    assert!(matches!(error, Error::FormatSelection(_)));
-    assert!(error.to_string().contains("available IDs: 0, 1"));
+    assert_eq!(
+        dl.extract_info(&page).unwrap().format_id.as_deref(),
+        Some("1")
+    );
     for (id, ext, size, path, bytes) in [
         (
             "0",
@@ -660,14 +667,14 @@ fn format_ids_are_literal_and_src_precedes_child_sources() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     let page = server.url("/src-and-source.html");
-    assert!(matches!(
-        dl.extract_info(&page),
-        Err(Error::FormatSelection(_))
-    ));
+    assert_eq!(
+        dl.extract_info(&page).unwrap().format_id.as_deref(),
+        Some("1")
+    );
     let info = dl.extract_info_with_format(&page, Some("1")).unwrap();
     assert_eq!(info.ext, "mp3");
     assert_eq!(info.url.as_str(), server.url("/audio"));
-    for id in ["", "2", "01", "best", "0/1", "0+1", "[ext=mp4]"] {
+    for id in ["", "2", "01", "bestvideo", "0/1", "0+1", "[ext=mp4]"] {
         assert!(
             matches!(
                 dl.extract_info_with_format(&page, Some(id)),
@@ -804,10 +811,9 @@ fn html5_playlist_selection_and_validation_are_atomic() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     let page = server.url("/playlist-formats.html");
-    assert!(matches!(
-        dl.extract_result(&page),
-        Err(Error::FormatSelection(_))
-    ));
+    for entry in dl.extract_result(&page).unwrap().into_entries() {
+        assert_eq!(entry.format_id.as_deref(), Some("1"));
+    }
     for id in ["0", "1"] {
         let entries = dl
             .extract_result_with_format(&page, Some(id))
@@ -1027,7 +1033,7 @@ fn cli_format_selection_json_download_and_failure() {
         b"webm"
     );
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-        .args(["-j", "-f", "best", &page])
+        .args(["-j", "-f", "best/worst", &page])
         .output()
         .unwrap();
     assert!(!output.status.success());
@@ -1071,4 +1077,111 @@ fn cli_continues_after_a_format_selection_error() {
     let info: serde_json::Value = serde_json::from_str(text.trim()).unwrap();
     assert_eq!(info["format_id"], "1");
     assert!(String::from_utf8_lossy(&output.stderr).contains("format selection failed"));
+}
+
+#[test]
+fn automatic_resolution_selection_reaches_cli_json_and_downloads() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    let page = server.url("/ranked.html");
+    for (selection, id, width, height, path) in [
+        (None, "0", Some(1920), Some(1080), "/media/clip.mp4"),
+        (Some("best"), "0", Some(1920), Some(1080), "/media/clip.mp4"),
+        (Some("worst"), "2", None, Some(360), "/media/clip.mp4?low=1"),
+        (
+            Some("1"),
+            "1",
+            Some(720),
+            Some(1280),
+            "/media/clip.mp4?portrait=1",
+        ),
+    ] {
+        let info = dl.extract_info_with_format(&page, selection).unwrap();
+        assert_eq!(info.format_id.as_deref(), Some(id));
+        assert_eq!((info.width, info.height), (width, height));
+        assert_eq!(info.url.as_str(), server.url(path));
+        assert_eq!(info.filesize, Some(11));
+        let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+        command.arg("-j");
+        if let Some(selection) = selection {
+            command.args(["-f", selection]);
+        }
+        let output = command.arg(&page).output().unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+        assert_eq!(json["format_id"], id);
+        assert_eq!(json["height"], height.unwrap());
+        assert_eq!(json["formats"][1]["width"], 720);
+        let directory = tempfile::tempdir().unwrap();
+        let target = directory.path().join("selected.mp4");
+        let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+        command.args(["-o", target.to_str().unwrap()]);
+        if let Some(selection) = selection {
+            command.args(["-f", selection]);
+        }
+        let output = command.arg(&page).output().unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert_eq!(std::fs::read(target).unwrap(), b"media bytes");
+        assert!(
+            server
+                .requests
+                .lock()
+                .unwrap()
+                .last()
+                .unwrap()
+                .starts_with(&format!("GET {path} HTTP/1.1"))
+        );
+    }
+    for selector in [None, Some("best"), Some("worst")] {
+        let direct = dl
+            .extract_info_with_format(&server.url("/clip.mp4"), selector)
+            .unwrap();
+        assert!(direct.format_id.is_none());
+        assert!(direct.width.is_none());
+        let entries = dl
+            .extract_result_with_format(&server.url("/playlist-mixed-formats.html"), selector)
+            .unwrap()
+            .into_entries();
+        assert_eq!(
+            entries[0].format_id.as_deref(),
+            Some(if selector == Some("worst") { "0" } else { "1" })
+        );
+        assert_eq!(entries[1].format_id.as_deref(), Some("0"));
+    }
+}
+
+#[test]
+fn source_dimensions_ignore_invalid_values_and_player_size() {
+    // Keep this parsing boundary covered through real extraction and JSON metadata.
+    let server = Server::start();
+    let mut info = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/dimension-boundaries.html"))
+        .unwrap();
+    assert_eq!(info.format_id.as_deref(), Some("3"));
+    let dimensions: Vec<_> = info.formats.iter().map(|f| (f.width, f.height)).collect();
+    assert_eq!(
+        dimensions,
+        vec![
+            (None, None),
+            (None, Some(480)),
+            (None, None),
+            (Some(1280), None)
+        ]
+    );
+    info.select_format(Some("worst")).unwrap();
+    assert_eq!(info.format_id.as_deref(), Some("0"));
+    assert_eq!((info.width, info.height), (None, None));
+    info.select_format(Some("1")).unwrap();
+    assert_eq!((info.width, info.height), (None, Some(480)));
+    info.select_format(None).unwrap();
+    assert_eq!((info.width, info.height), (Some(1280), None));
 }

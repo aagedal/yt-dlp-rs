@@ -25,7 +25,7 @@ from urllib.parse import urlsplit
 
 
 FIELDS = ("id", "title", "ext", "url", "webpage_url", "extractor", "extractor_key")
-FIXTURES = ("video", "audio", "source", "formats", "playlist", "playlist-formats")
+FIXTURES = ("video", "audio", "source", "formats", "playlist", "playlist-formats", "ranked")
 UPSTREAM_WORKER = """
 import json, sys
 sys.path.insert(0, sys.argv[1])
@@ -151,7 +151,12 @@ def main():
         with fixture_server(fixtures) as origin:
             for name in FIXTURES:
                 url = f"{origin}/{name}.html"
-                selections = ("0", "1") if name in ("formats", "playlist-formats") else (None,)
+                if name in ("formats", "playlist-formats"):
+                    selections = ("0", "1")
+                elif name == "ranked":
+                    selections = (None, "best", "worst", "1")
+                else:
+                    selections = (None,)
                 for selection in selections:
                     upstream_args = [selection] if selection is not None else []
                     rust_args = ["-f", selection] if selection is not None else []

@@ -1039,7 +1039,7 @@ fn extraction_does_not_retry_format_selection_or_oversized_html() {
     assert!(matches!(
         downloader.extract_result_with_options(
             &server.url("/clip.mp4"),
-            Some("best"),
+            Some("unavailable"),
             ExtractionOptions { retries: 2 },
         ),
         Err(Error::FormatSelection(_))

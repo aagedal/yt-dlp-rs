@@ -27,15 +27,20 @@ Supported today:
   file-extension fallback for absent or `application/octet-stream` content types.
 - Redirects, percent-decoded URL filenames, query strings, and streamed downloads.
 - UTF-8 HTML pages with `<video>`/`<audio>` elements and nonempty
-  `src` or direct child `<source src>` elements. Multiple progressive sources require
-  an explicit `-f/--format` source ID (`0`, `1`, … in declaration order per element). Relative
+  `src` or direct child `<source src>` elements. Progressive sources default to
+  the highest declared resolution;
+  `-f/--format` accepts `best`, `worst`, or a source ID (`0`, `1`, … in declaration order per element). Relative
   sources, the first `<base href>`, HTML entities, page redirects, and page referrers are supported. The media
   response must pass the same MIME/extension checks as a direct URL.
 - Multiple nonempty media elements form an HTML5 playlist, processed in document
   order. Empty elements are skipped. IDs and titles use upstream's numbered
   `-1` / ` (1)`, `-2` / ` (2)` suffixes. Titles prefer
   Open Graph `og:title`, then `<title>`, then the page URL filename stem.
-- Typed progressive source metadata (`formats`, selected `format_id`) for HTML5.
+- Typed progressive source metadata (`formats`, selected `format_id`, optional
+  `width`/`height`) for HTML5. Child source dimensions come from positive integer
+  `width`, `height`, and fallback `res` attributes. Ranking uses the smaller known
+  dimension, or the only known one; unknown resolution sorts lowest. Ties select
+  the last declaration for best/default and the first for worst.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.
@@ -54,7 +59,7 @@ Supported today:
   and interrupted HTML reads restart extraction before any output is emitted,
   using the same bounded `Retry-After` policy.
 
-Other HTML pages, YouTube, HLS/DASH, site playlists, automatic format ranking, selector
+Other HTML pages, YouTube, HLS/DASH, site playlists, full upstream format ranking, selector
 expressions, cookies/authentication, persistent resume, subtitles, and ffmpeg
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
