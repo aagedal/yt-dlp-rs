@@ -47,7 +47,8 @@ Supported today:
   within the same invocation with a strong ETag, known length, and validated range.
   `--retries N` sets additional
   attempts (default 3, 0 disables, maximum 255). Transient HTTP failures honor
-  a single `Retry-After` delay-seconds value, capped at 60 seconds.
+  a single `Retry-After` delay-seconds or preferred HTTP-date value, capped at
+  60 seconds.
 - Opt-in whole-extraction retries with `--extractor-retries N` (default 0, maximum
   255), independent of download retries. Transient page/source request failures
   and interrupted HTML reads restart extraction before any output is emitted,

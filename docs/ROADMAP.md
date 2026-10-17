@@ -21,7 +21,7 @@ tractable for future agents.
 - `src/extractor/html5.rs`: generic response dispatch and progressive HTML5 source parsing;
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
 - `src/download.rs`: streaming HTTP transfer and no-clobber publication.
-- `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds.
+- `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
 - `src/output.rs`: template rendering and filename-component sanitization.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
 - `upstream/manifest.json`: upstream revision and component coverage ledger.
@@ -61,7 +61,8 @@ remain outside the current result contract.
    Opt-in whole-extraction retries cover transient page/source HTTP failures and
    interrupted HTML reads, rebuilding every entry before output; extraction and
    download retry budgets are independent. Both honor a single Retry-After
-   delay-seconds value with a 60-second cap; HTTP-date hints remain unsupported.
+   delay-seconds or preferred HTTP-date value with a 60-second cap. Obsolete
+   HTTP-date formats remain unsupported.
    Persistent resume across invocations,
    manifest protocols, progress, and cancellation remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,

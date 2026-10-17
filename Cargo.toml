@@ -7,6 +7,7 @@ description = "An incremental, native Rust adaptation of yt-dlp"
 
 [dependencies]
 clap = { version = "4.6", features = ["derive"] }
+httpdate = "1"
 percent-encoding = "2.3"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
 scraper = { version = "0.24", default-features = false }
