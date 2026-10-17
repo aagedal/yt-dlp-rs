@@ -9,7 +9,7 @@ pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
 pub use info::{ExtractResult, PlaylistInfo, VideoFormat, VideoInfo};
 
-use extractor::{Extractor, GenericHttp};
+use extractor::{Extractor, GenericHttp, Youtube};
 use reqwest::blocking::Client;
 use std::{path::Path, time::Duration};
 use url::Url;
@@ -39,7 +39,7 @@ impl YoutubeDl {
             .build()?;
         Ok(Self {
             client,
-            extractors: vec![Box::new(GenericHttp)],
+            extractors: vec![Box::new(Youtube), Box::new(GenericHttp)],
         })
     }
 

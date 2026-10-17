@@ -3,7 +3,7 @@
 An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 It downloads direct HTTP media and a limited subset of HTML5 media pages, with
 a foundation for porting extractors and tracking upstream changes. This is an
-early prototype; YouTube and other site-specific extractors are not implemented.
+early prototype; YouTube has a narrow watch-page subset, described below.
 
 Requires stable Rust with edition 2024 support. Python 3.10+ and Git are needed
 only for the upstream development tools. The Rust binary does not invoke Python
@@ -41,6 +41,12 @@ Supported today:
   `width`, `height`, and fallback `res` attributes. Ranking uses the smaller known
   dimension, or the only known one; unknown resolution sorts lowest. Ties select
   the last declaration for best/default and the first for worst.
+- YouTube single-video watch, short-link, Shorts, embed, and live URL shapes
+  canonicalized to a watch page (actual live content is rejected). Only direct
+  combined audio/video MP4/WebM formats in `ytInitialPlayerResponse` are eligible;
+  format IDs are YouTube itags. This is fixture-tested groundwork, not general
+  live-site support. Signatures, `n` challenges, player API/client fallback, tokens,
+  adaptive streams, and playlists are unsupported; many current videos will fail.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.
@@ -62,7 +68,7 @@ Supported today:
   and interrupted HTML reads restart extraction before any output is emitted,
   using the same bounded `Retry-After` policy.
 
-Other HTML pages, YouTube, HLS/DASH, site playlists, full upstream format ranking, selector
+Other HTML pages, general YouTube support, HLS/DASH, site playlists, full upstream format ranking, selector
 expressions, cookies/authentication, persistent resume, subtitles, and ffmpeg
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
@@ -72,7 +78,7 @@ Direct extraction makes a streaming GET and inspects headers without consuming
 the body. HTML5 extraction reads at most 2 MiB of uncompressed UTF-8/ASCII HTML,
 then probes every declared media source. Extraction and format selection must
 succeed for every entry before any media is downloaded or JSON emitted. JavaScript
-players, lazy-loading attributes, and embedded site players are not supported. A download makes another GET. There is a 15-second connection timeout
+players, lazy-loading attributes, and embedded site players are not supported by the generic extractor. A download makes another GET. There is a 15-second connection timeout
 and a five-minute total timeout per request. Simulation and JSON extraction still make
 network requests. MIME identification is not media-container verification.
 

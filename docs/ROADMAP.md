@@ -20,6 +20,8 @@ tractable for future agents.
 - `src/extractor/`: independent extractors, generic fallback last.
 - `src/extractor/html5.rs`: generic response dispatch and progressive HTML5 source parsing;
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
+- `src/extractor/youtube.rs`: narrow watch-page initial player response extraction,
+  direct muxed formats only, with unsupported challenge/access handling errors.
 - `src/download.rs`: streaming HTTP transfer, byte-progress/cancellation checkpoints, and no-clobber publication.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
 - `src/output.rs`: template rendering and filename-component sanitization.
@@ -76,6 +78,15 @@ remain outside the current result contract.
    playlist handling, and end-to-end validation. Split request/client machinery
    from site response parsing. Investigate upstream runtime dependencies before
    choosing a JavaScript engine or external runtime boundary.
+   The first watch-page slice is implemented: strict video URL recognition,
+   initial player response parsing, playable/identity checks, direct muxed
+   MP4/WebM formats, itag selection, media probes, and local fixture downloads.
+   A saved-response upstream comparison covers the parsed metadata subset.
+   This does not establish current live-site reliability. Next: add isolated
+   player API request/client fixtures and a token policy, then choose the
+   JavaScript challenge boundary; adaptive media requires explicit stream types
+   and merging, while manifests remain milestone 3 work. Upstream's challenge
+   providers use EJS and a supported JS runtime; Python remains development-only.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
    authentication, cookies, subtitles, archives, and postprocessors explicitly.
