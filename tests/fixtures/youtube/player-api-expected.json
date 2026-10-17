@@ -1,0 +1,17 @@
+{
+  "id": "BaW_jenozKc",
+  "title": "Fixture } ; & video",
+  "extractor": "youtube",
+  "extractor_key": "Youtube",
+  "webpage_url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+  "formats": [
+    {
+      "format_id": "18",
+      "ext": "mp4",
+      "width": 640,
+      "height": 360,
+      "url": "{{ORIGIN}}/media/low.mp4",
+      "filesize": 5
+    }
+  ]
+}
