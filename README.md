@@ -13,11 +13,12 @@ or an installed yt-dlp.
 cargo build --locked
 cargo run --locked -- 'https://example.com/video.mp4'
 cargo run --locked -- --dump-json 'https://example.com/video.mp4'
+cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
 ```
 
-The example URLs illustrate syntax; replace them with an actual direct media URL.
+The example URLs illustrate syntax; replace them with actual media or supported HTML5 page URLs.
 Install locally with `cargo install --locked --path .` to use `yt-dlp-rs` directly.
 
 Supported today:
@@ -25,12 +26,14 @@ Supported today:
 - HTTP(S) media identified by recognized audio/video MIME types, with a known
   file-extension fallback for absent or `application/octet-stream` content types.
 - Redirects, percent-decoded URL filenames, query strings, and streamed downloads.
-- UTF-8 HTML pages with exactly one `<video>` or `<audio>` element and one
-  `src` or direct child `<source src>`. Relative sources, the first `<base href>`,
-  HTML entities, page redirects, and page referrers are supported. The media
+- UTF-8 HTML pages with exactly one `<video>` or `<audio>` element and nonempty
+  `src` or direct child `<source src>` elements. Multiple progressive sources require
+  an explicit `-f/--format` source ID (`0`, `1`, … in declaration order). Relative
+  sources, the first `<base href>`, HTML entities, page redirects, and page referrers are supported. The media
   response must pass the same MIME/extension checks as a direct URL.
 - HTML5 IDs and titles use upstream's `-1` and ` (1)` suffixes. Titles prefer
   Open Graph `og:title`, then `<title>`, then the page URL filename stem.
+- Typed progressive source metadata (`formats`, selected `format_id`) for HTML5.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.
@@ -38,20 +41,22 @@ Supported today:
   of existing destinations. A failed URL sets a nonzero exit status while later
   URLs still run. JSON goes to stdout; diagnostics go to stderr.
 
-Other HTML pages, YouTube, HLS/DASH, playlists, format selection, cookies/authentication,
-resume/retries, subtitles, and ffmpeg postprocessing remain unimplemented.
+Other HTML pages, YouTube, HLS/DASH, playlists, automatic format ranking, selector
+expressions, cookies/authentication, resume/retries, subtitles, and ffmpeg
+postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
 
 Direct extraction makes a streaming GET and inspects headers without consuming
 the body. HTML5 extraction reads at most 2 MiB of uncompressed UTF-8/ASCII HTML,
-then probes the selected media. Multiple media elements or sources are errors;
+then probes every declared media source. Multiple media elements are errors;
 JavaScript players, lazy-loading attributes, and embedded site players are not
 supported. A download makes another GET. There is a 15-second connection timeout
 and a five-minute total timeout per request. Simulation and JSON extraction still make
 network requests. MIME identification is not media-container verification.
 
-The library exposes `YoutubeDl`, `VideoInfo`, and an `Extractor` interface. See
+The library exposes `YoutubeDl`, `VideoInfo`, `VideoFormat`, and an `Extractor`
+interface. Use `extract_info_with_format(url, Some("1"))` to select an HTML5 source. See
 [the roadmap](docs/ROADMAP.md) for architecture and upcoming milestones.
 The [compatibility inventory](docs/COMPATIBILITY.md) records the exact subset and
 the saved-fixture upstream comparison command.

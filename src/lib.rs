@@ -5,7 +5,7 @@ mod info;
 pub mod output;
 
 pub use error::{Error, Result};
-pub use info::VideoInfo;
+pub use info::{VideoFormat, VideoInfo};
 
 use extractor::{Extractor, GenericHttp};
 use reqwest::blocking::Client;
@@ -39,12 +39,18 @@ impl YoutubeDl {
     }
 
     pub fn extract_info(&self, input: &str) -> Result<VideoInfo> {
+        self.extract_info_with_format(input, None)
+    }
+
+    /// Extract and select a literal format ID; no selector expressions are supported.
+    pub fn extract_info_with_format(&self, input: &str, format: Option<&str>) -> Result<VideoInfo> {
         let url = Url::parse(input)?;
         if !matches!(url.scheme(), "http" | "https") {
             return Err(Error::UnsupportedScheme(url.scheme().into()));
         }
         for extractor in &self.extractors {
-            if let Some(info) = extractor.extract(&self.client, &url)? {
+            if let Some(mut info) = extractor.extract(&self.client, &url)? {
+                info.select_format(format)?;
                 return Ok(info);
             }
         }

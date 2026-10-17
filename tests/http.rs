@@ -13,6 +13,7 @@ use yt_dlp_rs::{Error, YoutubeDl, output::render_template};
 
 fn html_fixture(path: &str) -> Option<&'static str> {
     Some(match path {
+        "/formats-progressive.html" => include_str!("fixtures/html5/formats.html"),
         "/video.html" => include_str!("fixtures/html5/video.html"),
         "/audio.html" => include_str!("fixtures/html5/audio.html"),
         "/source.html" => include_str!("fixtures/html5/source.html"),
@@ -24,11 +25,20 @@ fn html_fixture(path: &str) -> Option<&'static str> {
         "/untitled.html" => "<audio src='/audio'></audio>",
         "/referrer.html" => "<video src='/referrer.mp4'></video>",
         "/changing.html" => "<video src='/changing.mp4'></video>",
+        "/formats-redirect.html" => {
+            "<video><source src='/clip.mp4'><source src='/media-redirect'></video>"
+        }
         "/source-redirect.html" => "<video src='/media-redirect'></video>",
         "/manifest-source.html" => "<video src='/stream'></video>",
         "/multiple.html" => "<video src='/clip.mp4'></video><audio src='/audio'></audio>",
         "/formats.html" => "<video><source src='/clip.mp4'><source src='/playlist.m3u8'></video>",
         "/src-and-source.html" => "<video src='/clip.mp4'><source src='/audio'></video>",
+        "/invalid-alternative.html" => {
+            "<video><source src='/clip.mp4'><source src='/page.mp4'></video>"
+        }
+        "/blob-alternative.html" => {
+            "<video><source src='/clip.mp4'><source src='blob:https://example.invalid/id'></video>"
+        }
         "/manifest.html" => "<video src='/playlist.m3u8'></video>",
         "/manifest-hint.html" => "<video src='/clip.mp4' type='application/dash+xml'></video>",
         "/blob.html" => "<video src='blob:https://example.invalid/id'></video>",
@@ -131,6 +141,7 @@ impl Server {
                     "/media/clip.mp4?one=1&two=2" | "/media/clip.mp4" | "/nested/clip.mp4" => {
                         ("200 OK", "video/mp4", "media bytes", "", 11)
                     }
+                    "/media/clip.webm" => ("200 OK", "video/webm", "webm", "", 4),
                     "/media/tone.mp3" => ("200 OK", "audio/mpeg", "audio", "", 5),
                     "/referrer.mp4"
                         if request.contains(&format!(
@@ -138,6 +149,9 @@ impl Server {
                             stream.local_addr().unwrap()
                         )) || request.contains(&format!(
                             "referer: http://{}/source-redirect.html\r\n",
+                            stream.local_addr().unwrap()
+                        )) || request.contains(&format!(
+                            "referer: http://{}/formats-redirect.html\r\n",
                             stream.local_addr().unwrap()
                         )) =>
                     {
@@ -283,6 +297,8 @@ fn extracts_saved_html5_fixtures_and_downloads_media() {
     ] {
         let page_url = server.url(&format!("/{page}.html"));
         let info = dl.extract_info(&page_url).unwrap();
+        assert_eq!(info.format_id.as_deref(), Some("0"));
+        assert_eq!(info.formats.len(), 1);
         assert_eq!(info.id, format!("{page}-1"));
         assert_eq!(info.title, format!("{title} (1)"));
         assert_eq!(info.ext, ext);
@@ -369,7 +385,6 @@ fn html5_rejects_unsupported_sources_and_ambiguous_selection() {
     for path in [
         "/multiple.html",
         "/formats.html",
-        "/src-and-source.html",
         "/manifest.html",
         "/manifest-hint.html",
         "/source-is-html.html",
@@ -569,4 +584,190 @@ fn cli_simulate_and_download() {
         .unwrap();
     assert!(downloaded.status.success());
     assert_eq!(std::fs::read(target).unwrap(), b"media bytes");
+}
+
+#[test]
+fn html5_formats_require_explicit_selection_and_download_selected_bytes() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    let page = server.url("/formats-progressive.html");
+    let error = dl.extract_info(&page).unwrap_err();
+    assert!(matches!(error, Error::FormatSelection(_)));
+    assert!(error.to_string().contains("available IDs: 0, 1"));
+    for (id, ext, size, path, bytes) in [
+        (
+            "0",
+            "mp4",
+            11,
+            "/media/clip.mp4?one=1&two=2",
+            b"media bytes".as_slice(),
+        ),
+        ("1", "webm", 4, "/media/clip.webm", b"webm".as_slice()),
+    ] {
+        let info = dl.extract_info_with_format(&page, Some(id)).unwrap();
+        assert_eq!(info.formats.len(), 2);
+        assert_eq!(info.formats[0].format_id, "0");
+        assert_eq!(info.formats[1].format_id, "1");
+        assert_eq!(info.format_id.as_deref(), Some(id));
+        assert_eq!(info.ext, ext);
+        assert_eq!(info.filesize, Some(size));
+        assert_eq!(info.url.as_str(), server.url(path));
+        assert_eq!(info.title, "Format fixture (1)");
+        let directory = tempfile::tempdir().unwrap();
+        let destination = render_template(
+            directory.path().join("%(title)s.%(ext)s").to_str().unwrap(),
+            &info,
+        )
+        .unwrap();
+        dl.download(&info, &destination).unwrap();
+        assert_eq!(std::fs::read(destination).unwrap(), bytes);
+    }
+    // Every probe and transfer uses the page referrer, including the second source.
+    for request in server
+        .requests
+        .lock()
+        .unwrap()
+        .iter()
+        .filter(|r| r.starts_with("GET /media/"))
+    {
+        assert!(request.contains(&format!("referer: {page}\r\n")));
+    }
+}
+
+#[test]
+fn format_ids_are_literal_and_src_precedes_child_sources() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    let page = server.url("/src-and-source.html");
+    assert!(matches!(
+        dl.extract_info(&page),
+        Err(Error::FormatSelection(_))
+    ));
+    let info = dl.extract_info_with_format(&page, Some("1")).unwrap();
+    assert_eq!(info.ext, "mp3");
+    assert_eq!(info.url.as_str(), server.url("/audio"));
+    for id in ["", "2", "01", "best", "0/1", "0+1", "[ext=mp4]"] {
+        assert!(
+            matches!(
+                dl.extract_info_with_format(&page, Some(id)),
+                Err(Error::FormatSelection(_))
+            ),
+            "{id}"
+        );
+    }
+    assert!(
+        dl.extract_info_with_format(&server.url("/video.html"), Some("0"))
+            .is_ok()
+    );
+    assert!(matches!(
+        dl.extract_info_with_format(&server.url("/clip.mp4"), Some("0")),
+        Err(Error::FormatSelection(_))
+    ));
+}
+
+#[test]
+fn selecting_supported_source_does_not_hide_unsupported_alternatives() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    for page in [
+        "/formats.html",
+        "/invalid-alternative.html",
+        "/multiple.html",
+    ] {
+        assert!(
+            matches!(
+                dl.extract_info_with_format(&server.url(page), Some("0")),
+                Err(Error::UnsupportedHtml5(_))
+            ),
+            "{page}"
+        );
+    }
+    assert!(matches!(
+        dl.extract_info_with_format(&server.url("/blob-alternative.html"), Some("0")),
+        Err(Error::UnsupportedScheme(_))
+    ));
+}
+
+#[test]
+fn cli_format_selection_json_download_and_failure() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    let target = directory.path().join("selected.%(ext)s");
+    let page = server.url("/formats-progressive.html");
+    for flag in ["--dump-json", "--simulate"] {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args([flag, "--format", "1", "-o", target.to_str().unwrap(), &page])
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+        if flag == "--dump-json" {
+            let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+            assert_eq!(info["format_id"], "1");
+            assert_eq!(info["formats"].as_array().unwrap().len(), 2);
+            assert_eq!(info["ext"], "webm");
+        }
+    }
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-f", "1", "-o", target.to_str().unwrap(), &page])
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("selected.webm")).unwrap(),
+        b"webm"
+    );
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-j", "-f", "best", &page])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("available IDs: 0, 1"));
+}
+
+#[test]
+fn redirected_alternative_records_final_url_and_preserves_referrer() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    let info = dl
+        .extract_info_with_format(&server.url("/formats-redirect.html"), Some("1"))
+        .unwrap();
+    assert_eq!(info.url.as_str(), server.url("/referrer.mp4"));
+    assert_eq!(info.formats[1].url, info.url);
+    let directory = tempfile::tempdir().unwrap();
+    assert_eq!(
+        dl.download(&info, directory.path().join("media.mp4"))
+            .unwrap(),
+        11
+    );
+}
+
+#[test]
+fn cli_continues_after_a_format_selection_error() {
+    let server = Server::start();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "-j",
+            "-f",
+            "1",
+            &server.url("/clip.mp4"),
+            &server.url("/formats-progressive.html"),
+        ])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    let text = String::from_utf8(output.stdout).unwrap();
+    assert_eq!(text.lines().count(), 1);
+    let info: serde_json::Value = serde_json::from_str(text.trim()).unwrap();
+    assert_eq!(info["format_id"], "1");
+    assert!(String::from_utf8_lossy(&output.stderr).contains("format selection failed"));
 }
