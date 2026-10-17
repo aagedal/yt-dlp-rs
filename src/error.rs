@@ -18,6 +18,13 @@ pub enum Error {
     HtmlTooLarge(u64),
     #[error("HTTP request failed: {0}")]
     Http(#[from] reqwest::Error),
+    /// A transient HTTP status with a supported, bounded Retry-After hint.
+    #[error("HTTP request failed: {source}")]
+    HttpRetryAfter {
+        #[source]
+        source: reqwest::Error,
+        retry_after: std::time::Duration,
+    },
     #[error("extraction response body failed: {0}")]
     ExtractionRead(#[source] std::io::Error),
     #[error("server returned an unsolicited partial response; full media was requested")]

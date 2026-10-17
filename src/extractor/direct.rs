@@ -14,7 +14,7 @@ pub(crate) fn request(client: &Client, url: &Url, referer: Option<&Url>) -> Resu
     if let Some(referer) = referer {
         request = request.header(REFERER, referer.as_str());
     }
-    let response = request.send()?.error_for_status()?;
+    let response = crate::retry::check_response(request.send()?)?;
     if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
         return Err(Error::PartialResponse);
     }

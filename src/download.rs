@@ -25,6 +25,7 @@ impl Default for DownloadOptions {
 struct AttemptFailure {
     error: Error,
     retryable: bool,
+    retry_after: std::time::Duration,
 }
 
 impl From<Error> for AttemptFailure {
@@ -32,6 +33,7 @@ impl From<Error> for AttemptFailure {
         Self {
             error,
             retryable: false,
+            retry_after: std::time::Duration::ZERO,
         }
     }
 }
@@ -47,14 +49,16 @@ impl AttemptFailure {
         Self {
             error,
             retryable: true,
+            retry_after: std::time::Duration::ZERO,
         }
     }
 
-    fn request(error: reqwest::Error) -> Self {
-        let retryable = crate::retry::transient_request(&error);
+    fn request(error: Error) -> Self {
+        let delay = crate::retry::failure_delay(&error);
         Self {
-            error: Error::Http(error),
-            retryable,
+            error,
+            retryable: delay.is_some(),
+            retry_after: delay.unwrap_or_default(),
         }
     }
 }
@@ -175,7 +179,7 @@ pub fn download(
                 return Ok(actual);
             }
             Err(failure) if failure.retryable && attempt < options.retries => {
-                crate::retry::backoff(attempt);
+                crate::retry::backoff(attempt, failure.retry_after);
             }
             Err(failure) => return Err(failure.error),
         }
@@ -206,7 +210,8 @@ fn download_attempt(
     }
     let mut response = request
         .send()
-        .and_then(|response| response.error_for_status())
+        .map_err(Error::Http)
+        .and_then(crate::retry::check_response)
         .map_err(AttemptFailure::request)?;
     let expected = if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
         let resume = resume.ok_or(Error::PartialResponse)?;
