@@ -8,9 +8,9 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Option | Current behavior |
 | --- | --- |
 | Positional URLs | One or more HTTP(S) URLs, processed sequentially; continue after errors, return failure if any URL fails |
-| `-j`, `--dump-json` | One supported `VideoInfo` JSON object per successful input; extract without downloading |
+| `-j`, `--dump-json` | One supported `VideoInfo` JSON object per video, including each HTML5 playlist entry; extract without downloading |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
-| `-f`, `--format` | Literal zero-based HTML5 source ID; required for multiple sources; no expressions, ranking, merging, or direct-URL format IDs |
+| `-f`, `--format` | Literal zero-based HTML5 source ID per element; applies to every playlist entry and must exist in each; required for multiple sources; no expressions, ranking, merging, or direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | All other flags | Rejected; aliases such as `--skip-download` and `--print` are not implemented |
@@ -24,11 +24,18 @@ The generic fallback dispatches a single response to direct-media inspection or
 HTML5 parsing. Site extractors registered through `Extractor` run first. The
 standalone `DirectHttp` extractor remains available for direct-only callers.
 
-For `text/html`, accept exactly one `video`/`audio` element with nonempty
+For `text/html`, accept `video`/`audio` elements with nonempty
 `src` and/or direct child `source[src]` declarations. Resolve URLs against the
 final page URL and first `base[href]`; decode HTML entities using an HTML5 parser. Prefer Open Graph
 title, then document title, then page filename stem; collapse title whitespace.
-Append `-1` to the ID and ` (1)` to the title, as upstream HTML5MediaEmbedIE does.
+Skip elements without nonempty `src` or direct child `source[src]` declarations. One retained element is a
+video; two or more form an HTML5 playlist in document order. Append `-1`, `-2`, …
+to entry IDs and ` (1)`, ` (2)`, … to titles, as upstream HTML5MediaEmbedIE does.
+Number retained entries contiguously, ignoring empty elements. All-empty pages
+fail as unsupported. The playlist wrapper has the unsuffixed page ID/title,
+`generic` / `Generic` extractor identity, and the final page `webpage_url`.
+Without a page title the wrapper title is `video`, while entry titles use the
+page filename stem. Subtitle-only elements remain outside the supported subset.
 Metadata identifies `html5` / `HTML5MediaEmbed` with `direct: false` and the final
 page URL as `webpage_url`. Every source is probed with the page referrer and must
 serve supported direct HTTP media. Redirected source URLs and response-derived
@@ -36,7 +43,8 @@ extensions/filesizes are recorded in typed `VideoFormat` entries. HTML5 JSON add
 `formats` and the selected `format_id`, including for a single source. IDs are
 literal zero-based strings assigned to nonempty declarations: the media element's
 `src` first, then direct child sources in document order. Duplicate URLs remain
-separate declarations. These IDs are Rust-specific; upstream's label/title IDs,
+separate declarations. Source IDs restart at `0` for each element. These IDs are
+Rust-specific; upstream's label/title IDs,
 format sorting, and fallback expressions are not implemented.
 
 A single source is selected automatically. Multiple sources require `-f ID`;
@@ -54,21 +62,43 @@ Only uncompressed UTF-8/ASCII HTML is supported. Other encodings are rejected
 when declared in HTTP Content-Type; invalid UTF-8 is rejected. HTML meta charset
 sniffing, compressed responses, XHTML, JavaScript, nonstandard lazy-loading
 attributes, subtitles, posters, durations, codecs, dimensions, authentication,
-and general embedded-player extraction are not implemented. Multiple media
-elements, HLS/DASH URLs/type hints, and non-HTTP sources fail explicitly, even
+and general embedded-player extraction are not implemented. HLS/DASH URLs/type
+hints and non-HTTP sources fail explicitly, even
 when another supported source was explicitly selected. Unselected source probe
 failures also fail extraction rather than hiding unsupported alternatives.
+Every entry and alternative is validated before a result is returned. A failed
+probe or format selection fails the whole input before downloads or JSON output;
+selection errors identify the entry. A failed transfer or output-path collision
+sets a nonzero CLI exit status while later entries and input URLs continue.
+Fixed output paths may therefore collide; the default template includes each
+entry's distinct ID. Existing files are never overwritten.
+
+The library exposes `ExtractResult::Video(VideoInfo)` and
+`ExtractResult::Playlist(PlaylistInfo)` through `extract_result` and
+`extract_result_with_format`. Serde encodes the result enum using `_type: video`
+or `_type: playlist`; playlist entries are ordinary `VideoInfo` objects.
+`extract_info` / `extract_info_with_format` still return single videos. They
+reject playlists rather than silently choosing the first entry; extraction and
+format-selection errors can precede that boundary error. Existing custom
+`Extractor::extract` implementations use the default `extract_result` adapter;
+playlist-capable extractors override it. Standalone extractor callers must resolve
+format selection themselves. The CLI flattens results into per-video NDJSON,
+simulation diagnostics, or sequential downloads; it exposes no playlist wrapper
+JSON option, playlist selection, nested playlists, or unresolved URL results.
+
 MIME checks identify supported responses; they do not verify media containers.
 
 ## Source and differential fixtures
 
 This slice uses the existing baseline, **897341241f2bfb2439fe0367f4c7c9ccd29a3828**:
 
-- `yt_dlp/extractor/generic.py`: response dispatch and HTML embed orchestration.
-- `yt_dlp/extractor/genericembeds.py`, `HTML5MediaEmbedIE`: single-entry metadata.
+- `yt_dlp/extractor/generic.py`: response dispatch, HTML embed orchestration, and single-vs-playlist dispatch.
+- `yt_dlp/extractor/genericembeds.py`, `HTML5MediaEmbedIE`: numbered entry metadata for single videos and playlists.
 - `yt_dlp/extractor/common.py`, `_parse_html5_media_entries`: media/source parsing.
 - `test/test_InfoExtractor.py`, `test_parse_html5_media_entries`: inline video,
   nested sources, multiple formats, relative URLs, and manifest examples reviewed.
+- `yt_dlp/YoutubeDL.py`: playlist entry processing and per-entry JSON output
+  reviewed for the bounded sequential orchestration subset.
 
 The full upstream helpers support many behaviors outside this Rust subset.
 This is a new port slice from the pinned revision, not an upstream update; the
@@ -81,7 +111,7 @@ cargo build --locked
 python3 tools/compare_html5.py --upstream .upstream/yt-dlp --binary target/debug/yt-dlp-rs
 ```
 
-The harness serves `tests/fixtures/html5/{video,audio,source,formats}.html` and fixed media
+The harness serves `tests/fixtures/html5/{video,audio,source,formats,playlist,playlist-formats}.html` and fixed media
 bytes on localhost. It invokes upstream with only Generic and HTML5MediaEmbed
 enabled and compares `id`, `title`, `ext`, `url`, `webpage_url`, `extractor`, and
 `extractor_key` exactly. The sole URL normalization removes the fixture server's
@@ -89,16 +119,21 @@ exact origin. Query strings, fragments, paths, titles, and suffixes are preserve
 Other fields (including upstream timestamps and fields outside VideoInfo) are
 excluded by this explicit allowlist. No volatile-value masking is applied within
 the compared fields. Rust-specific boundary behavior is covered by `tests/http.rs`.
+For playlists the
+harness compares every entry in order and requires the exact entry count. The
+CLI emits per-entry NDJSON, so wrapper fields are covered by library integration
+tests rather than this differential harness.
 
-The multi-source fixture has explicit upstream labels `0` and `1` so each
+The multi-source fixtures have explicit upstream labels `0` and `1` so each
 implementation can request the same source without equating their general ID
-assignment rules. Both selections are compared. The format list, probe sizes,
+assignment rules. Both selections are compared, including for every playlist
+entry. The format list, probe sizes,
 and Rust-specific IDs are covered by deterministic Rust tests rather than the
 upstream metadata allowlist. The multi-source fixture uses page-relative URLs;
 `base[href]` resolution remains a separately tested Rust behavior because the
 pinned upstream HTML5 embed path does not apply it in this fixture.
 
 The comparison needs upstream source and is optional; required tests need no
-upstream checkout, Python runtime integration, or live sites. Four fixtures do
-not establish broad extractor parity. Playlist result types remain a prerequisite
-for supporting multiple media elements.
+upstream checkout, Python runtime integration, or live sites. Six fixtures do
+not establish broad extractor parity. Site playlists, playlist selection, and
+recursive result processing remain unimplemented.

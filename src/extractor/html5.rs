@@ -1,7 +1,7 @@
 //! Deliberately narrow HTML5 subset of upstream GenericIE and
 //! HTML5MediaEmbedIE / InfoExtractor._parse_html5_media_entries at the pinned revision.
 use super::{Extractor, direct};
-use crate::{Error, Result, VideoFormat, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use percent_encoding::percent_decode_str;
 use reqwest::{
     blocking::Client,
@@ -15,10 +15,11 @@ pub struct GenericHttp;
 
 const MAX_HTML_BYTES: u64 = 2 * 1024 * 1024;
 
-struct Html5Media {
-    urls: Vec<Url>,
+struct Html5Page {
+    sources: Vec<Vec<Url>>,
     id: String,
     title: String,
+    playlist_title: String,
 }
 
 fn unsupported(reason: &str) -> Error {
@@ -33,58 +34,54 @@ fn nonempty(value: Option<&str>) -> Option<&str> {
     value.map(str::trim).filter(|value| !value.is_empty())
 }
 
-fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Media>> {
+fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
     let document = Html::parse_document(html);
-    let media_selector = selector("video, audio");
-    let mut elements = document.select(&media_selector);
-    let Some(element) = elements.next() else {
-        return Ok(None);
-    };
-    if elements.next().is_some() {
-        return Err(unsupported(
-            "multiple media elements require playlist support",
-        ));
-    }
-
-    // Validate every alternative, including unselected manifests.
-    let mut sources = Vec::new();
-    if let Some(src) = nonempty(element.value().attr("src")) {
-        sources.push((src, element.value().attr("type")));
-    }
-    for child in element.children().filter_map(scraper::ElementRef::wrap) {
-        if child.value().name() == "source"
-            && let Some(src) = nonempty(child.value().attr("src"))
-        {
-            sources.push((src, child.value().attr("type")));
-        }
-    }
-    if sources.is_empty() {
-        return Ok(None);
-    }
     let base = document
         .select(&selector("base[href]"))
         .next()
         .map(|base| page_url.join(base.value().attr("href").unwrap_or("")))
         .transpose()?
         .unwrap_or_else(|| page_url.clone());
-    let mut urls = Vec::new();
-    for (source, hint) in sources {
-        let url = base.join(source)?;
-        if !matches!(url.scheme(), "http" | "https") {
-            return Err(Error::UnsupportedScheme(url.scheme().into()));
+    let mut entries = Vec::new();
+    for element in document.select(&selector("video, audio")) {
+        // Validate every alternative, including unselected manifests.
+        let mut sources = Vec::new();
+        if let Some(src) = nonempty(element.value().attr("src")) {
+            sources.push((src, element.value().attr("type")));
         }
-        let path = url.path().to_ascii_lowercase();
-        let hint = hint.unwrap_or("").to_ascii_lowercase();
-        if path.ends_with(".m3u8")
-            || path.ends_with(".mpd")
-            || hint.contains("mpegurl")
-            || hint.contains("dash+xml")
-        {
-            return Err(unsupported(
-                "HLS/DASH sources require a manifest downloader",
-            ));
+        for child in element.children().filter_map(scraper::ElementRef::wrap) {
+            if child.value().name() == "source"
+                && let Some(src) = nonempty(child.value().attr("src"))
+            {
+                sources.push((src, child.value().attr("type")));
+            }
         }
-        urls.push(url);
+        if sources.is_empty() {
+            continue;
+        }
+        let mut urls = Vec::new();
+        for (source, hint) in sources {
+            let url = base.join(source)?;
+            if !matches!(url.scheme(), "http" | "https") {
+                return Err(Error::UnsupportedScheme(url.scheme().into()));
+            }
+            let path = url.path().to_ascii_lowercase();
+            let hint = hint.unwrap_or("").to_ascii_lowercase();
+            if path.ends_with(".m3u8")
+                || path.ends_with(".mpd")
+                || hint.contains("mpegurl")
+                || hint.contains("dash+xml")
+            {
+                return Err(unsupported(
+                    "HLS/DASH sources require a manifest downloader",
+                ));
+            }
+            urls.push(url);
+        }
+        entries.push(urls);
+    }
+    if entries.is_empty() {
+        return Ok(None);
     }
     let title = document
         .select(&selector("meta[property='og:title']"))
@@ -110,11 +107,13 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Media>> {
     let stem = filename.rsplit_once('.').map_or(filename, |(stem, _)| stem);
     let id = percent_decode_str(stem).decode_utf8_lossy().into_owned();
     let id = if id.is_empty() { "video".into() } else { id };
+    let playlist_title = if title.is_empty() { "video" } else { &title }.to_owned();
     let title = if title.is_empty() { &id } else { &title };
-    Ok(Some(Html5Media {
-        urls,
-        id: format!("{id}-1"),
-        title: format!("{title} (1)"),
+    Ok(Some(Html5Page {
+        sources: entries,
+        title: title.to_owned(),
+        playlist_title,
+        id,
     }))
 }
 
@@ -124,10 +123,16 @@ impl Extractor for GenericHttp {
     }
 
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        self.extract_result(client, url)?
+            .map(ExtractResult::into_video)
+            .transpose()
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         // Dispatch a single response so direct media does not need two probes.
         let response = direct::request(client, url, None)?;
         if direct::response_mime(&response) != "text/html" {
-            return Ok(direct::from_response(&response, url));
+            return Ok(direct::from_response(&response, url).map(ExtractResult::Video));
         }
         if response
             .content_length()
@@ -174,28 +179,43 @@ impl Extractor for GenericHttp {
         let Some(media) = parse_page(&page_url, html)? else {
             return Ok(None);
         };
-        let mut formats = Vec::new();
-        let mut first_info = None;
-        for (index, url) in media.urls.iter().enumerate() {
-            let response = direct::request(client, url, Some(&page_url))?;
-            let info = direct::from_response(&response, url)
-                .ok_or_else(|| unsupported("source does not serve supported direct HTTP media"))?;
-            formats.push(VideoFormat {
-                format_id: index.to_string(),
-                url: info.url.clone(),
-                ext: info.ext.clone(),
-                filesize: info.filesize,
-            });
-            first_info.get_or_insert(info);
+        let mut entries = Vec::new();
+        for (index, sources) in media.sources.iter().enumerate() {
+            let mut formats = Vec::new();
+            let mut first_info = None;
+            for (index, url) in sources.iter().enumerate() {
+                let response = direct::request(client, url, Some(&page_url))?;
+                let info = direct::from_response(&response, url).ok_or_else(|| {
+                    unsupported("source does not serve supported direct HTTP media")
+                })?;
+                formats.push(VideoFormat {
+                    format_id: index.to_string(),
+                    url: info.url.clone(),
+                    ext: info.ext.clone(),
+                    filesize: info.filesize,
+                });
+                first_info.get_or_insert(info);
+            }
+            let mut info = first_info.expect("parsed HTML5 media has at least one source");
+            info.formats = formats;
+            info.id = format!("{}-{}", media.id, index + 1);
+            info.title = format!("{} ({})", media.title, index + 1);
+            info.webpage_url = page_url.clone();
+            info.direct = false;
+            info.extractor = "html5".into();
+            info.extractor_key = "HTML5MediaEmbed".into();
+            entries.push(info);
         }
-        let mut info = first_info.expect("parsed HTML5 media has at least one source");
-        info.formats = formats;
-        info.id = media.id;
-        info.title = media.title;
-        info.webpage_url = page_url;
-        info.direct = false;
-        info.extractor = "html5".into();
-        info.extractor_key = "HTML5MediaEmbed".into();
-        Ok(Some(info))
+        if entries.len() == 1 {
+            return Ok(entries.pop().map(ExtractResult::Video));
+        }
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: media.id,
+            title: media.playlist_title,
+            webpage_url: page_url,
+            extractor: "generic".into(),
+            extractor_key: "Generic".into(),
+            entries,
+        })))
     }
 }

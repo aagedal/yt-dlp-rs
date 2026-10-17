@@ -10,6 +10,8 @@ pub enum Error {
     UnsupportedUrl(String),
     #[error("unsupported HTML5 media: {0}")]
     UnsupportedHtml5(String),
+    #[error("playlist result requires extract_result or extract_result_with_format")]
+    PlaylistRequiresResult,
     #[error("format selection failed: {0}")]
     FormatSelection(String),
     #[error("HTML page exceeds the {0}-byte extraction limit")]
