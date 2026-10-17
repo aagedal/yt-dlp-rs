@@ -6,8 +6,63 @@ use reqwest::{
 use std::{
     fs,
     io::{Read, Seek, SeekFrom, Write},
+    ops::ControlFlow,
     path::Path,
+    time::{Duration, Instant},
 };
+
+/// Checkpoints at which a synchronous download observer can cancel.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DownloadPhase {
+    Requesting,
+    Downloading,
+    WaitingToRetry,
+    Publishing,
+}
+
+/// Bytes stored for the current representation, rather than cumulative traffic.
+/// A full-response retry can reset the byte count and change the total.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DownloadProgress {
+    /// One-based attempt number, including the initial request (maximum 256).
+    pub attempt: u16,
+    pub downloaded_bytes: u64,
+    /// Total from validated download response headers, absent when unknown.
+    pub total_bytes: Option<u64>,
+    pub phase: DownloadPhase,
+}
+
+struct Reporter<'a> {
+    callback: &'a mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+    attempt: u16,
+    total: Option<u64>,
+}
+
+impl Reporter<'_> {
+    fn report(&mut self, phase: DownloadPhase, downloaded_bytes: u64) -> Result<()> {
+        match (self.callback)(DownloadProgress {
+            attempt: self.attempt,
+            downloaded_bytes,
+            total_bytes: self.total,
+            phase,
+        }) {
+            ControlFlow::Continue(()) => Ok(()),
+            ControlFlow::Break(()) => Err(Error::DownloadCancelled),
+        }
+    }
+
+    fn wait(&mut self, duration: Duration, actual: u64) -> Result<()> {
+        let start = Instant::now();
+        loop {
+            self.report(DownloadPhase::WaitingToRetry, actual)?;
+            let remaining = duration.saturating_sub(start.elapsed());
+            if remaining.is_zero() {
+                return Ok(());
+            }
+            std::thread::sleep(remaining.min(Duration::from_millis(100)));
+        }
+    }
+}
 
 /// Download retry policy, independent of `ExtractionOptions`.
 #[derive(Debug, Clone, Copy)]
@@ -143,6 +198,7 @@ pub fn download(
     info: &VideoInfo,
     destination: &Path,
     options: DownloadOptions,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
     if destination.exists() {
         return Err(Error::OutputExists(destination.into()));
@@ -158,17 +214,26 @@ pub fn download(
         .tempfile_in(parent)?;
     let mut state = None;
     let mut actual = 0;
+    let mut reporter = Reporter {
+        callback,
+        attempt: 1,
+        total: None,
+    };
     for attempt in 0..=options.retries {
+        reporter.attempt = u16::from(attempt) + 1;
+        reporter.report(DownloadPhase::Requesting, actual)?;
         match download_attempt(
             client,
             info,
             temporary.as_file_mut(),
             &mut state,
             &mut actual,
+            &mut reporter,
         ) {
             Ok(()) => {
                 temporary.flush()?;
                 temporary.as_file().sync_all()?;
+                reporter.report(DownloadPhase::Publishing, actual)?;
                 temporary.persist_noclobber(destination).map_err(|e| {
                     if e.error.kind() == std::io::ErrorKind::AlreadyExists {
                         Error::OutputExists(destination.into())
@@ -179,7 +244,7 @@ pub fn download(
                 return Ok(actual);
             }
             Err(failure) if failure.retryable && attempt < options.retries => {
-                crate::retry::backoff(attempt, failure.retry_after);
+                reporter.wait(crate::retry::delay(attempt, failure.retry_after), actual)?;
             }
             Err(failure) => return Err(failure.error),
         }
@@ -193,6 +258,7 @@ fn download_attempt(
     temporary: &mut fs::File,
     state: &mut Option<ResumeState>,
     actual: &mut u64,
+    reporter: &mut Reporter<'_>,
 ) -> std::result::Result<(), AttemptFailure> {
     let resume = state
         .as_ref()
@@ -232,6 +298,8 @@ fn download_attempt(
         )
         .into());
     }
+    reporter.total = expected;
+    reporter.report(DownloadPhase::Downloading, *actual)?;
     let mut buffer = [0; 64 * 1024];
     loop {
         // Separate network reads from filesystem writes: only the former retry.
@@ -249,6 +317,7 @@ fn download_attempt(
         }
         temporary.write_all(&buffer[..count])?;
         *actual = next;
+        reporter.report(DownloadPhase::Downloading, *actual)?;
     }
     if let Some(expected) = expected
         && *actual != expected

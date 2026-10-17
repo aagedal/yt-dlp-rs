@@ -31,6 +31,8 @@ pub enum Error {
     PartialResponse,
     #[error("server returned an invalid or changed range response")]
     InvalidRangeResponse,
+    #[error("download cancelled")]
+    DownloadCancelled,
     #[error("filesystem error: {0}")]
     Io(#[from] std::io::Error),
     #[error("output already exists: {0}")]

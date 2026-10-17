@@ -1,7 +1,11 @@
 use clap::Parser;
 use std::io::{self, Write};
+use std::{
+    ops::ControlFlow,
+    time::{Duration, Instant},
+};
 use yt_dlp_rs::{
-    DownloadOptions, ExtractionOptions, YoutubeDl,
+    DownloadOptions, DownloadPhase, ExtractionOptions, YoutubeDl,
     output::{DEFAULT_TEMPLATE, render_template},
 };
 
@@ -63,11 +67,31 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 } else {
                     let path = render_template(&args.output, &info)?;
                     eprintln!("[download] Destination: {}", path.display());
-                    let bytes = downloader.download_with_options(
+                    let mut last_progress = Instant::now();
+                    let bytes = downloader.download_with_progress(
                         &info,
                         &path,
                         DownloadOptions {
                             retries: args.retries,
+                        },
+                        |progress| {
+                            if progress.phase == DownloadPhase::Downloading
+                                && last_progress.elapsed() >= Duration::from_secs(1)
+                            {
+                                if let Some(total) = progress.total_bytes {
+                                    eprintln!(
+                                        "[download] {} / {total} bytes (attempt {})",
+                                        progress.downloaded_bytes, progress.attempt
+                                    );
+                                } else {
+                                    eprintln!(
+                                        "[download] {} bytes (attempt {})",
+                                        progress.downloaded_bytes, progress.attempt
+                                    );
+                                }
+                                last_progress = Instant::now();
+                            }
+                            ControlFlow::Continue(())
                         },
                     )?;
                     eprintln!("[download] Downloaded {bytes} bytes");

@@ -54,6 +54,9 @@ Supported today:
   attempts (default 3, 0 disables, maximum 255). Transient HTTP failures honor
   a single `Retry-After` delay-seconds or preferred HTTP-date value, capped at
   60 seconds.
+- Download byte progress on stderr, at most once per second during transfers.
+  Library observers can cancel at transfer checkpoints and during retry waits,
+  cleaning up the private temporary file before publication.
 - Opt-in whole-extraction retries with `--extractor-retries N` (default 0, maximum
   255), independent of download retries. Transient page/source request failures
   and interrupted HTML reads restart extraction before any output is emitted,
@@ -74,7 +77,8 @@ and a five-minute total timeout per request. Simulation and JSON extraction stil
 network requests. MIME identification is not media-container verification.
 
 The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
-`VideoFormat`, `DownloadOptions`, `ExtractionOptions`, and an `Extractor` interface.
+`VideoFormat`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
+`ExtractionOptions`, and an `Extractor` interface.
 Use `extract_result` or
 `extract_result_with_format(url, Some("1"))` for video/playlist results. A format
 ID applies to every playlist entry independently; each must offer that ID.
@@ -82,6 +86,11 @@ The existing `extract_info` methods accept single videos and reject playlists.
 `--dump-json` emits one video object per entry.
 `download_with_options(info, path, DownloadOptions { retries: 0 })` disables
 download retries for a library call; `download` uses the default policy.
+`download_with_progress(info, path, options, callback)` reports one-based attempts,
+stored bytes, optional total bytes, and the current phase. Return
+`std::ops::ControlFlow::Continue(())` to continue or `Break(())` to cancel.
+Cancellation is cooperative: it cannot interrupt an in-flight blocking request,
+read, or filesystem operation. See the compatibility inventory for checkpoints.
 `extract_result_with_options(url, None, ExtractionOptions { retries: 2 })` enables
 whole-extraction retries; existing extraction methods keep retries disabled. See
 [the roadmap](docs/ROADMAP.md) for architecture and upcoming milestones.

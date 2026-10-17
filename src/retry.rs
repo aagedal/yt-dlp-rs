@@ -64,7 +64,7 @@ pub(crate) fn failure_delay(error: &Error) -> Option<Duration> {
     }
 }
 
-fn delay(attempt: u8, retry_after: Duration) -> Duration {
+pub(crate) fn delay(attempt: u8, retry_after: Duration) -> Duration {
     let delay_ms = (100_u64 << attempt.min(4)).min(1000);
     Duration::from_millis(delay_ms).max(retry_after.min(MAX_RETRY_AFTER))
 }
