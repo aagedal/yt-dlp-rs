@@ -1,6 +1,6 @@
 use std::{
     io::{Read, Write},
-    net::TcpListener,
+    net::{Shutdown, TcpListener},
     ops::ControlFlow,
     sync::{
         Arc, Mutex,
@@ -64,6 +64,9 @@ impl Server {
                     Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
                     Err(error) => panic!("fixture accept failed: {error}"),
                 };
+                // Accepted sockets can inherit the listener's nonblocking mode
+                // on Windows; requests and responses below require blocking I/O.
+                stream.set_nonblocking(false).unwrap();
                 stream
                     .set_read_timeout(Some(Duration::from_secs(2)))
                     .unwrap();
@@ -104,6 +107,14 @@ impl Server {
                     // second write and turn the fixture response into a Windows reset.
                     let wire = format!("{wire}{}", response.body);
                     let _ = stream.write_all(wire.as_bytes());
+                }
+                // Deliver EOF before closing the socket, and let the client close
+                // its side so queued response bytes are not lost to a TCP reset.
+                let _ = stream.shutdown(Shutdown::Write);
+                while let Ok(count) = stream.read(&mut buffer) {
+                    if count == 0 {
+                        break;
+                    }
                 }
             }
         });
