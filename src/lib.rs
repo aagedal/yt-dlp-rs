@@ -5,7 +5,7 @@ mod info;
 pub mod output;
 mod retry;
 
-pub use download::DownloadOptions;
+pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
 pub use info::{ExtractResult, PlaylistInfo, VideoFormat, VideoInfo};
 
@@ -126,6 +126,32 @@ impl YoutubeDl {
         destination: impl AsRef<Path>,
         options: DownloadOptions,
     ) -> Result<u64> {
-        download::download(&self.client, info, destination.as_ref(), options)
+        self.download_with_progress(info, destination, options, |_| {
+            std::ops::ControlFlow::Continue(())
+        })
+    }
+
+    /// Observe download checkpoints; return `ControlFlow::Break(())` to cancel.
+    /// Cancellation removes the private temporary file and never retries or publishes.
+    /// Callbacks run synchronously before requests, after validated headers and each
+    /// written chunk, during retry waits (at intervals of at most 100 ms of sleep),
+    /// and immediately before publication. `Publishing` is not a success event;
+    /// only an `Ok` return confirms publication. Blocking requests, reads, and disk
+    /// operations cannot be interrupted; existing request timeouts still apply.
+    /// Byte counts may reset on whole-file retries. No callback follows publication.
+    pub fn download_with_progress(
+        &self,
+        info: &VideoInfo,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+        mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<u64> {
+        download::download(
+            &self.client,
+            info,
+            destination.as_ref(),
+            options,
+            &mut callback,
+        )
     }
 }

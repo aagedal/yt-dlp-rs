@@ -167,7 +167,7 @@ is published only after the complete representation has been received and is
 never overwritten.
 Download retries do not affect extraction, page reads, or source probes.
 The per-request timeouts still apply to each attempt; there is no overall
-download deadline or cancellation API.
+download deadline. Cooperative download cancellation is described below.
 
 This slice is based on the same pinned revision
 **897341241f2bfb2439fe0367f4c7c9ccd29a3828**, specifically
@@ -231,8 +231,57 @@ forms. Fixed-clock unit tests cover future/past dates, fractional delays, caps,
 invalid dates, duplicate hints, and independence from the response Date header.
 Local HTTP regressions cover expired-hint recovery and capped future hints on
 exhausted budgets and permanent statuses for extraction and downloads.
-Persistent resume, obsolete HTTP-date Retry-After formats, cancellation, and an overall
-extraction deadline remain unimplemented.
+Persistent resume, obsolete HTTP-date Retry-After formats, extraction cancellation,
+and an overall extraction deadline remain unimplemented.
+
+## Download progress and cooperative cancellation
+
+`YoutubeDl::download_with_progress(info, path, options, callback)` extends the
+existing download policy with a synchronous `FnMut(DownloadProgress) ->
+ControlFlow<()>` observer. Existing `download` and `download_with_options` methods
+keep their signatures and use a continuing observer. `DownloadProgress` contains
+`attempt` (one-based, up to 256), `downloaded_bytes`, `total_bytes`, and `phase`.
+
+Checkpoints run before each request (`Requesting`), after validated response
+headers and each successfully written chunk (`Downloading`), during retry waits
+(`WaitingToRetry`), and after flush/sync immediately before no-clobber publication
+(`Publishing`). Retry waits sleep at most 100 ms between callbacks; scheduling
+and callback runtime can add latency. Waiting events describe the failed attempt,
+with the next `Requesting` event advancing the attempt number. Permanent or
+exhausted failures do not emit waiting or publication events. Preflight output
+collisions and filesystem errors may return before any callback.
+
+Byte counts describe the current temporary file, not cumulative network traffic.
+Totals come from download response headers, never extraction metadata; missing
+lengths remain `None`. During `Requesting` and `WaitingToRetry`, the last known
+count/total is retained (initially zero/`None`). A validated range response retains
+the offset and original total. A full replacement response resets the byte count
+to zero and updates the total before the next `Downloading` event. A transfer
+with unknown length can still succeed; its final total remains `None`.
+
+Return `ControlFlow::Break(())` at any checkpoint to get
+`Error::DownloadCancelled`. Cancellation never retries, never publishes, and
+removes the private temporary file, including when cancelling after the last
+chunk or at `Publishing`. Created parent directories may remain. A callback can
+inspect a caller-owned cancellation flag; there is no separate token type.
+Callbacks execute on the caller's thread. Cancellation cannot interrupt blocking
+requests, reads, flushes, or syncs; request timeouts still apply. Extraction has
+no cancellation observer. `Publishing` does not guarantee success: only the
+method's `Ok(bytes)` return confirms successful publication. No callback runs
+after publication, and existing destinations remain protected even if created
+by a callback immediately before publication.
+
+The CLI reports stored bytes and the known total, when available, plus the
+attempt number on stderr at most once per second at downloading checkpoints.
+Fast downloads can emit only the existing destination/completion diagnostics.
+JSON and simulation do not download and emit no download progress. The CLI does
+not install signal handlers or expose cancellation flags.
+
+This is a native extension of the transport milestone, not a port of upstream's
+progress-hook contract or CLI cancellation behavior. The pinned baseline remains
+**897341241f2bfb2439fe0367f4c7c9ccd29a3828**. Deterministic local HTTP tests in
+`tests/progress.rs` cover observer events, response-derived/unknown totals,
+resumed and restarted counters, cancellation cleanup, and retry-wait polling.
 
 ## Source and differential fixtures
 
