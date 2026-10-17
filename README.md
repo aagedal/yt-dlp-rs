@@ -42,12 +42,14 @@ Supported today:
 - Same-directory temporary files, cleanup on transfer failure, and no overwrite
   of existing destinations. A failed entry or URL sets a nonzero exit status while later
   entries and URLs still run. JSON goes to stdout; diagnostics go to stderr.
-- Bounded whole-file download retries for selected transient HTTP statuses,
-  connection/timeouts, and interrupted bodies. `--retries N` sets additional
+- Bounded download retries for selected transient HTTP statuses,
+  connection/timeouts, and interrupted bodies. Interrupted transfers can resume
+  within the same invocation with a strong ETag, known length, and validated range.
+  `--retries N` sets additional
   attempts (default 3, 0 disables, maximum 255); extraction requests are not retried.
 
 Other HTML pages, YouTube, HLS/DASH, site playlists, automatic format ranking, selector
-expressions, cookies/authentication, range/resume, subtitles, and ffmpeg
+expressions, cookies/authentication, persistent resume, subtitles, and ffmpeg
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.

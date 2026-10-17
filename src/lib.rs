@@ -77,7 +77,7 @@ impl YoutubeDl {
         self.download_with_options(info, destination, DownloadOptions::default())
     }
 
-    /// Download with bounded retries. Each retry starts a new whole-file transfer.
+    /// Download with bounded retries. Interrupted transfers may resume with a strong ETag and known length.
     pub fn download_with_options(
         &self,
         info: &VideoInfo,

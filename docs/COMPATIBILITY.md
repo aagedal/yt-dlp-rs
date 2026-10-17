@@ -12,7 +12,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
 | `-f`, `--format` | Literal zero-based HTML5 source ID per element; applies to every playlist entry and must exist in each; required for multiple sources; no expressions, ranking, merging, or direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
-| `--retries` | Additional whole-file download attempts, integer 0–255, default 3; no `infinite` value or extraction retries |
+| `--retries` | Additional download attempts, integer 0–255, default 3; no `infinite` value or extraction retries |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | All other flags | Rejected; aliases such as `--skip-download` and `--print` are not implemented |
 
@@ -98,9 +98,27 @@ are accepted. The library exposes `DownloadOptions { retries }` through
 `YoutubeDl::download_with_options`; `download` uses the default policy.
 After the retry budget is exhausted, return the final attempt's error.
 
-Retries start the whole file from byte zero with a fresh same-directory temporary
-file. Failed attempts are removed before waiting. No Range header, saved partial
-file, validator-based resume, or cross-invocation recovery is implemented.
+After a body interruption, a retry can reuse bytes already written in the same
+private temporary file. This requires a known Content-Length and a valid strong
+ETag from the **download** response, an identity-encoded body, and a nonzero
+stored offset below the total. The retry sends `Range: bytes=N-` and `If-Range`
+with that ETag. A 206 response is accepted only with the same final URL and ETag,
+identity encoding, and a single valid Content-Range covering exactly `N` through
+`total - 1` with the original total. Content-Length, when present, must match the
+remaining length; the received body is also checked against that length. Further
+interruptions advance the offset and consume the same retry budget. Transient
+HTTP errors preserve the offset without appending their bodies.
+
+A full response to a range request replaces the temporary contents from byte
+zero, including when the representation changes. Missing/weak/malformed ETags,
+unknown initial lengths, and encoded responses use whole-file retries instead.
+Last-Modified alone is not used as a validator. Invalid/changed partial responses
+and HTTP 416 fail explicitly, without publishing a file or guessing completion.
+Temporary files are removed on final failure. Resume across invocations, saved
+partial files, multipart ranges, and fixed-size range chunk downloading are not
+implemented.
+The offset/length checks also apply when a 206 body omits Content-Length.
+
 Backoff is 100, 200, 400, 800, then 1000 milliseconds between attempts, capped
 at one second thereafter; Retry-After headers are not interpreted. These are
 native subset policies, not upstream retry-default or HTTP-status parity.
@@ -110,7 +128,8 @@ Other HTTP statuses (including 401, 404, and 501), unsolicited 206 responses,
 unsupported HTML5 media responses, output collisions, and filesystem failures
 fail immediately. Network reads and filesystem writes are handled separately so
 a local write failure cannot trigger another network transfer. The final file
-is published only after a complete successful attempt and is never overwritten.
+is published only after the complete representation has been received and is
+never overwritten.
 Extraction, page reads, and source probes are not retried, including under
 `--simulate` or `--dump-json`. The per-request timeouts still apply to each
 attempt; there is no overall download deadline or cancellation API.
@@ -118,11 +137,19 @@ attempt; there is no overall download deadline or cancellation API.
 This slice is based on the same pinned revision
 **897341241f2bfb2439fe0367f4c7c9ccd29a3828**, specifically
 `yt_dlp/downloader/http.py`'s `RetryDownload`/`RetryManager` control flow,
-transport-read failures, and Content-Length validation. Its range-resume and
-broader 5xx retry handling are outside this slice. The baseline's
+transport-read failures, and Content-Length validation. Its broader 5xx retry
+handling remains outside this slice.
+The range slice additionally references `establish_connection`, `retry`, and
+`download` in that file: range requests, Content-Range checks, retained byte
+counts after interrupted reads, and short-response retries. Strong ETag/If-Range
+and final-URL checks are stricter native policies; upstream does not implement
+these guards. Upstream's heuristic HTTP 416 completion and persistent partial
+files are deliberately excluded. The baseline's
 `test/test_downloader_http.py` was reviewed for its localhost HTTP fixture,
 known/unknown length, and chunk/range cases; `tests/retries.rs` adds independent
-deterministic failure/recovery coverage. This ports a transport slice from the
+deterministic failure/recovery coverage for validated 206 responses, repeated
+interruptions, range rejection, changed representations, unknown lengths, and
+validator boundaries. This ports a transport slice from the
 existing baseline and does not advance it.
 
 ## Source and differential fixtures
