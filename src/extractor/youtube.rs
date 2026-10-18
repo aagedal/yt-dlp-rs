@@ -164,7 +164,7 @@ fn player_response(html: &str) -> Result<Value> {
 fn parse_candidates(
     player: &Value,
     id: &str,
-    allow_n: bool,
+    allow_challenges: bool,
     api: bool,
 ) -> Result<(String, Vec<Candidate>)> {
     if player
@@ -210,35 +210,35 @@ fn parse_candidates(
     }
     let mut formats = Vec::new();
     for source in streaming["formats"].as_array().into_iter().flatten() {
-        if [
-            "signatureCipher",
-            "cipher",
-            "drmFamilies",
-            "drmTrackType",
-            "targetDurationSec",
-        ]
-        .iter()
-        .any(|key| source.get(*key).is_some_and(|v| !v.is_null()))
+        if ["drmFamilies", "drmTrackType", "targetDurationSec"]
+            .iter()
+            .any(|key| source.get(*key).is_some_and(|v| !v.is_null()))
             || source.get("type").is_some_and(|value| {
                 !value.is_null() && value.as_str() != Some("FORMAT_STREAM_TYPE_NORMAL")
             })
         {
             continue;
         }
-        let Some(raw) = source["url"].as_str() else {
+        let Some(itag) = source["itag"].as_u64().filter(|i| *i > 0) else {
             continue;
         };
-        let Ok(url) = Url::parse(raw) else {
-            continue;
-        };
-        if !matches!(url.scheme(), "http" | "https") {
+        if api && itag != 18 {
             continue;
         }
-        let url_source = serde_json::json!({"url":raw});
+        let fields: serde_json::Map<_, _> = ["url", "signatureCipher", "cipher"]
+            .into_iter()
+            .filter_map(|key| {
+                source
+                    .get(key)
+                    .filter(|value| !value.is_null())
+                    .map(|value| (key.to_owned(), value.clone()))
+            })
+            .collect();
+        let url_source = Value::Object(fields);
         let Ok(challenged) = challenge::has_challenges(&url_source) else {
             continue;
         };
-        if challenged && !allow_n {
+        if challenged && !allow_challenges {
             continue;
         }
         let Some(mime) = source["mimeType"].as_str() else {
@@ -271,12 +271,6 @@ fn parse_candidates(
         if !video || !audio {
             continue;
         }
-        let Some(itag) = source["itag"].as_u64().filter(|i| *i > 0) else {
-            continue;
-        };
-        if api && itag != 18 {
-            continue;
-        }
         if formats
             .iter()
             .any(|f: &Candidate| f.format_id == itag.to_string())
@@ -299,7 +293,7 @@ fn parse_candidates(
     }
     if formats.is_empty() {
         return Err(unsupported(
-            "no eligible combined audio/video formats; URL n challenges require an explicit runtime; signatures, adaptive streams, manifests, SABR, and DRM are unsupported",
+            "no eligible combined audio/video formats; signature/n URL challenges require an explicit runtime; adaptive streams, manifests, SABR, and DRM are unsupported",
         ));
     }
     Ok((title, formats))

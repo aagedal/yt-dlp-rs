@@ -90,7 +90,8 @@ remain outside the current result contract.
    fixtures cover it. The
    [JavaScript runtime decision](../upstream/notes/youtube-challenge-runtime.md)
    selects an opt-in external Deno process with pinned offline EJS assets;
-   query `n` solving is now integrated behind explicit runtime configuration. The full EJS 0.8.0
+   query `n` and encrypted-signature solving are integrated behind explicit runtime
+   configuration. The full EJS 0.8.0
    assets, saved player vectors, private typed protocol, bounded Deno 2.9.7 runner,
    and a dedicated offline runtime CI matrix are now implemented; see the
    [runner slice](../upstream/notes/youtube-challenge-runner.md). Local saved-player
@@ -100,9 +101,10 @@ remain outside the current result contract.
    see the [n extraction slice](../upstream/notes/youtube-n-extraction.md). Strict bounded player acquisition,
    pure URL rewriting, and a saved-player-to-media private pipeline test are now
    implemented; see the [player challenge slice](../upstream/notes/youtube-player-challenges.md).
-   Encrypted signature extraction is the next integration step.
-   Adaptive media requires
-   explicit stream types and merging, while manifests remain milestone 3 work. Upstream's challenge
+   Encrypted signature/default/custom-sp and combined-n extraction/download
+   fixtures now pass, including an actual offline upstream EJS permutation-path
+   comparison; see the [signature slice](../upstream/notes/youtube-signature-extraction.md).
+   Next: adaptive media requires explicit stream types and merging, while manifests remain milestone 3 work. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand

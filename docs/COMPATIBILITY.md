@@ -13,7 +13,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-f`, `--format` | Default/`best` selects highest declared resolution, `worst` lowest, or a literal zero-based HTML5 source ID per element / YouTube itag; applies independently to each playlist entry; no expressions, merging, or direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
-| `--youtube-js-runtime PATH` | Opt into YouTube query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
+| `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | All other flags | Rejected; aliases such as `--skip-download` and `--print` are not implemented |
@@ -35,7 +35,8 @@ live, upcoming, and post-live player responses remain unsupported.
 Watch pages must be uncompressed UTF-8/ASCII `text/html`, at most 2 MiB. Parse
 JSON assigned to `ytInitialPlayerResponse` in a script, including quoted window
 property assignments. Require `playabilityStatus.status=OK`, the requested video
-ID, and a nonempty title. JavaScript runs only for eligible query-n formats when an explicit runtime is configured. Authentication, age/consent gates,
+ID, and a nonempty title. JavaScript runs only for eligible signature/query-n formats when an explicit
+runtime is configured. Authentication, age/consent gates,
 additional API clients, cookies, and token acquisition are unsupported.
 
 Only when the initial response is absent, make one WEB player API POST to the
@@ -60,11 +61,12 @@ only itag 18 before any media probe; no surviving format is an unsupported error
 This policy does not acquire tokens or assert that exempt URLs always work.
 The original initial-response path retains its prior token/probe behavior.
 
-Expose only `streamingData.formats` entries with direct HTTP(S) URLs, MP4/WebM
-MIME types, and recognized audio **and** video codecs. Preserve numeric itags as
-format IDs and positive declared dimensions. Skip encrypted signatures/ciphers, DRM, OTF/fragments, and live fragments;
-query-n URLs require explicit `--youtube-js-runtime PATH` or library configuration; reject player responses
-with DRM license information. Adaptive formats and manifest URLs are ignored.
+Expose only `streamingData.formats` entries resolving to direct HTTP(S) media,
+with MP4/WebM MIME types, and recognized audio **and** video codecs. Preserve numeric itags as
+format IDs and positive declared dimensions. Skip DRM, OTF/fragments, unknown
+source types and live fragments. Encrypted `signatureCipher`/legacy `cipher` and
+query-n URLs require explicit `--youtube-js-runtime PATH` or library configuration;
+reject player responses with DRM license information. Adaptive formats and manifest URLs are ignored.
 If no supported progressive format remains, return an explicit unsupported error.
 Supported alternatives retain declaration order and use the existing resolution
 ranking or literal itag selection, not upstream's full sorter. Every eligible
@@ -75,11 +77,10 @@ if another format might work. Metadata uses `youtube` / `Youtube`, `direct=false
 and the canonical watch page. The shared downloader sends that page as referrer.
 
 This is fixture-tested groundwork, not general live-site YouTube support. Modern
-YouTube may require other API clients, PO tokens, encrypted signatures,
-SABR, manifest protocols, or separate adaptive audio/video merging; those remain
+YouTube may require other API clients, PO tokens, SABR, manifest protocols, or separate adaptive audio/video merging; those remain
 unimplemented.
 
-An optional offline EJS/Deno pipeline now solves query-n challenges during public
+An optional offline EJS/Deno pipeline solves encrypted signatures and query-n challenges during public
 extraction with `--youtube-js-runtime PATH` or
 `YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path) })`.
 The explicit executable must be Deno 2.9.7. Configuration is inert until an
@@ -89,7 +90,11 @@ and complete-batch validation precedes every media probe. Player network failure
 retain whole-extraction retry policy; runtime/protocol failures are permanent.
 The [n extraction slice](../upstream/notes/youtube-n-extraction.md) records exact
 behavior, cross-platform runtime evidence and deterministic extraction tests.
-Encrypted signature extraction remains unsupported even with configuration.
+The [signature slice](../upstream/notes/youtube-signature-extraction.md) adds
+exact cipher/default/custom-sp/combined-n extraction and download tests. The
+optional comparison also accepts `--deno PATH` to run upstream's actual offline
+EJS signature-permutation path against the same saved fixture. Without that flag,
+the signature case is explicitly skipped.
 
 An unsupported page cannot fall through to generic HTML5 and appear successful.
 The deterministic Rust tests cover URL dispatch, player response validation,

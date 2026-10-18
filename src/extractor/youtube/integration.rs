@@ -79,6 +79,20 @@ fn reply(path: &str, mime: &'static str, body: impl Into<String>) -> Reply {
 fn format(itag: u64, url: &str) -> Value {
     json!({"itag":itag,"url":url,"mimeType":"video/mp4; codecs=\"avc1.42001E, mp4a.40.2\"","width":1280,"height":720})
 }
+fn cipher_format(itag: u64, url: &str, parameter: Option<&str>, legacy: bool) -> Value {
+    let mut source = format(itag, url);
+    source.as_object_mut().unwrap().remove("url");
+    let mut cipher = url::form_urlencoded::Serializer::new(String::new());
+    cipher.append_pair("url", url).append_pair("s", "secret");
+    if let Some(parameter) = parameter {
+        cipher.append_pair("sp", parameter);
+    }
+    source[if legacy { "cipher" } else { "signatureCipher" }] = cipher
+        .finish()
+        .replace("%7B%7BORIGIN%7D%7D", "{{ORIGIN}}")
+        .into();
+    source
+}
 fn response(formats: Vec<Value>) -> Value {
     json!({"playabilityStatus":{"status":"OK"},"videoDetails":{"videoId":ID,"title":"Challenge fixture"},"streamingData":{"formats":formats}})
 }
@@ -504,4 +518,201 @@ fn real_saved_player_extracts_challenged_progressive_metadata() {
     for (key, value) in expected.as_object().unwrap() {
         assert_eq!(&actual[key], value, "{key}");
     }
+}
+
+#[test]
+fn signatures_and_combined_n_challenges_use_the_existing_complete_batch_boundary() {
+    for (legacy, parameter, url, target) in [
+        (
+            false,
+            None,
+            "{{ORIGIN}}/media.mp4",
+            "/media.mp4?signature=signature-value",
+        ),
+        (
+            true,
+            None,
+            "{{ORIGIN}}/media.mp4?keep=%2f",
+            "/media.mp4?keep=%2f&signature=signature-value",
+        ),
+        (
+            false,
+            Some("lsig"),
+            "{{ORIGIN}}/media.mp4?keep=%2f&n=challenge&bare#fragment",
+            "/media.mp4?keep=%2f&n=solved&bare&lsig=signature-value",
+        ),
+    ] {
+        let fake = Fake::new("solver");
+        let runtime = challenge::Runtime::new(fake.path.clone());
+        let server = Server::new(vec![
+            reply(
+                WATCH,
+                "text/html",
+                page(Some(response(vec![cipher_format(
+                    18, url, parameter, legacy,
+                )]))),
+            ),
+            reply(SCRIPT, "text/javascript", "const fake=true;"),
+            reply(target, "video/mp4", "media"),
+            {
+                let mut download = reply(target, "video/mp4", "media");
+                download.canonical_referrer = true;
+                download
+            },
+        ]);
+        let mut info = extract(&server, Some(&runtime)).unwrap();
+        info.select_format(Some("18")).unwrap();
+        // Metadata records the final probe URL; HTTP transport drops fragments.
+        let expected = format!("{}{target}", server.origin.as_str().trim_end_matches('/'));
+        assert_eq!(info.url.as_str(), expected);
+        assert_eq!(info.filesize, Some(5));
+        assert_eq!(fake.log(), "version\nsolve\n");
+        let directory = tempfile::tempdir().unwrap();
+        let target = directory.path().join("signed.mp4");
+        assert_eq!(
+            crate::YoutubeDl::new()
+                .unwrap()
+                .download(&info, &target)
+                .unwrap(),
+            5
+        );
+        assert_eq!(std::fs::read(target).unwrap(), b"media");
+    }
+}
+
+#[test]
+fn api_cipher_token_policy_and_default_runtime_boundary_are_preserved() {
+    let fake = Fake::new("solver");
+    let runtime = challenge::Runtime::new(fake.path.clone());
+    let mut protected = cipher_format(22, "{{ORIGIN}}/protected.mp4", None, false);
+    protected["signatureCipher"] = "invalid-protected-cipher".into();
+    let server = Server::new(vec![
+        reply(WATCH, "text/html", page(None)),
+        reply(
+            "/youtubei/v1/player?prettyPrint=false",
+            "application/json",
+            response(vec![
+                cipher_format(18, "{{ORIGIN}}/media.mp4", Some("sig"), false),
+                protected,
+            ])
+            .to_string(),
+        ),
+        reply(SCRIPT, "text/javascript", "const fake=true;"),
+        reply("/media.mp4?sig=signature-value", "video/mp4", "media"),
+    ]);
+    let info = extract(&server, Some(&runtime)).unwrap();
+    assert_eq!(info.formats.len(), 1);
+    assert_eq!(info.formats[0].format_id, "18");
+    assert_eq!(fake.log(), "version\nsolve\n");
+    let server = Server::new(vec![reply(
+        WATCH,
+        "text/html",
+        page(Some(response(vec![cipher_format(
+            18,
+            "{{ORIGIN}}/media.mp4",
+            None,
+            false,
+        )]))),
+    )]);
+    assert!(extract(&server, None).is_err());
+}
+
+#[test]
+fn malformed_or_ambiguous_ciphers_never_reach_runtime_or_media() {
+    let fake = Fake::new("solver");
+    let runtime = challenge::Runtime::new(fake.path.clone());
+    let mut ambiguous = cipher_format(18, "{{ORIGIN}}/media.mp4", None, false);
+    ambiguous["url"] = "{{ORIGIN}}/direct.mp4".into();
+    let mut missing = cipher_format(18, "{{ORIGIN}}/media.mp4", None, false);
+    missing["signatureCipher"] = "url=https%3A%2F%2Fexample.invalid%2Fv".into();
+    for source in [
+        ambiguous,
+        missing,
+        cipher_format(18, "{{ORIGIN}}/media.mp4?sig=existing", Some("sig"), false),
+        cipher_format(18, "{{ORIGIN}}/media.mp4", Some("n"), false),
+        cipher_format(18, "{{ORIGIN}}/n/path/media.mp4", None, false),
+    ] {
+        let server = Server::new(vec![reply(
+            WATCH,
+            "text/html",
+            page(Some(response(vec![source]))),
+        )]);
+        assert!(extract(&server, Some(&runtime)).is_err());
+    }
+    assert_eq!(fake.log(), "");
+}
+
+#[test]
+fn incomplete_signature_batch_cannot_probe_unchallenged_alternatives() {
+    let fake = Fake::new("missing");
+    let runtime = challenge::Runtime::new(fake.path.clone());
+    let server = Server::new(vec![
+        reply(
+            WATCH,
+            "text/html",
+            page(Some(response(vec![
+                format(18, "{{ORIGIN}}/plain.mp4"),
+                cipher_format(22, "{{ORIGIN}}/media.mp4?n=challenge", Some("sig"), false),
+            ]))),
+        ),
+        reply(SCRIPT, "text/javascript", "const fake=true;"),
+    ]);
+    let error = extract(&server, Some(&runtime)).unwrap_err();
+    assert!(matches!(error, Error::UnsupportedYoutube(_)));
+    assert_eq!(crate::retry::failure_delay(&error), None);
+}
+
+#[test]
+fn real_saved_player_signature_and_n_extraction_match_upstream_metadata_and_download() {
+    let Some(path) = std::env::var_os("YT_DLP_RS_TEST_DENO") else {
+        return;
+    };
+    let runtime = challenge::Runtime::new(path.into());
+    let fixture: Value = serde_json::from_str(include_str!(
+        "../../../tests/fixtures/youtube/signature-extraction.json"
+    ))
+    .unwrap();
+    let expected: Value = serde_json::from_str(include_str!(
+        "../../../tests/fixtures/youtube/signature-extraction-expected.json"
+    ))
+    .unwrap();
+    let media_path = expected["formats"][0]["url"]
+        .as_str()
+        .unwrap()
+        .strip_prefix("{{ORIGIN}}")
+        .unwrap();
+    let mut download = reply(media_path, "video/mp4", "media");
+    download.canonical_referrer = true;
+    let server = Server::new(vec![
+        reply(WATCH, "text/html", page(Some(fixture))),
+        reply(
+            SCRIPT,
+            "text/javascript",
+            include_str!("../../../tests/fixtures/youtube/challenges/player-74edf1a3.js"),
+        ),
+        reply(media_path, "video/mp4", "media"),
+        download,
+    ]);
+    let mut info = extract(&server, Some(&runtime)).unwrap();
+    info.select_format(Some("18")).unwrap();
+    let expected: Value = serde_json::from_str(
+        &expected
+            .to_string()
+            .replace("{{ORIGIN}}", server.origin.as_str().trim_end_matches('/')),
+    )
+    .unwrap();
+    let actual = serde_json::to_value(&info).unwrap();
+    for (key, value) in expected.as_object().unwrap() {
+        assert_eq!(&actual[key], value, "{key}");
+    }
+    let directory = tempfile::tempdir().unwrap();
+    let target = directory.path().join("signed.mp4");
+    assert_eq!(
+        crate::YoutubeDl::new()
+            .unwrap()
+            .download(&info, &target)
+            .unwrap(),
+        5
+    );
+    assert_eq!(std::fs::read(target).unwrap(), b"media");
 }

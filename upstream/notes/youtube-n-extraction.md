@@ -1,5 +1,9 @@
 # Opt-in YouTube n challenge extraction
 
+Current status: the subsequent [signature extraction slice](youtube-signature-extraction.md)
+adds encrypted signatures and combined signature/n URLs. The n-only descriptions
+below record this first public integration step.
+
 The public YouTube progressive extractor can now solve query `n` challenges when
 an explicit Deno executable is configured. This connects the previously private
 player/EJS pipeline to extraction. Encrypted signatures remain a separate port
