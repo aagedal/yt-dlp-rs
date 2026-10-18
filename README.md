@@ -47,8 +47,11 @@ Supported today:
   when that response is absent, one anonymous WEB player API request can supply
   token-exempt itag 18 using literal page client configuration.
   Format IDs are YouTube itags. This is fixture-tested groundwork, not general
-  live-site support. Signatures, `n` challenges, additional clients, token acquisition,
-  adaptive streams, and playlists are unsupported; many current videos will fail.
+  live-site support. `--youtube-js-runtime PATH` opts into bounded offline query
+  `n` solving using explicitly installed Deno 2.9.7 and pinned bundled EJS assets.
+  Challenge-free extraction never inspects or launches that runtime. Signatures,
+  additional clients, token acquisition, adaptive streams, and playlists remain
+  unsupported; many current videos will fail.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.
@@ -86,7 +89,9 @@ network requests. MIME identification is not media-container verification.
 
 The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
 `VideoFormat`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
-`ExtractionOptions`, and an `Extractor` interface.
+`ExtractionOptions`, `YoutubeOptions`, and an `Extractor` interface.
+`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path) })`
+configures optional YouTube n solving; `YoutubeDl::new()` keeps it disabled.
 Use `extract_result` or
 `extract_result_with_format(url, Some("1"))` for video/playlist results. A format
 ID applies to every playlist entry independently; each must offer that ID.

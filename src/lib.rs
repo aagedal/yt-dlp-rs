@@ -7,6 +7,7 @@ mod retry;
 
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
+pub use extractor::YoutubeOptions;
 pub use info::{ExtractResult, PlaylistInfo, VideoFormat, VideoInfo};
 
 use extractor::{Extractor, GenericHttp, Youtube};
@@ -29,6 +30,12 @@ pub struct YoutubeDl {
 
 impl YoutubeDl {
     pub fn new() -> Result<Self> {
+        Self::with_youtube_options(YoutubeOptions::default())
+    }
+
+    /// Configure YouTube extraction. The runtime path is inspected only when a
+    /// YouTube player challenge needs solving; construction does not launch it.
+    pub fn with_youtube_options(options: YoutubeOptions) -> Result<Self> {
         let client = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
             .connect_timeout(Duration::from_secs(15))
@@ -39,7 +46,10 @@ impl YoutubeDl {
             .build()?;
         Ok(Self {
             client,
-            extractors: vec![Box::new(Youtube), Box::new(GenericHttp)],
+            extractors: vec![
+                Box::new(Youtube::with_options(options)),
+                Box::new(GenericHttp),
+            ],
         })
     }
 

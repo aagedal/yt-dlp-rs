@@ -1,10 +1,7 @@
 //! Narrow watch-page slice of YoutubeIE at the pinned upstream revision.
-//! One bounded WEB API fallback; no JavaScript or manifest fallback.
-// The offline boundary is tested independently before extraction integration.
-#[allow(dead_code)]
+//! Bounded WEB API fallback and explicit offline JS runtime; no manifest fallback.
 mod challenge;
 mod client;
-#[allow(dead_code)]
 mod player;
 use super::{Extractor, direct};
 use crate::{Error, Result, VideoFormat, VideoInfo};
@@ -14,10 +11,52 @@ use reqwest::{
 };
 use scraper::{Html, Selector};
 use serde_json::Value;
-use std::io::Read;
+use std::{io::Read, path::PathBuf};
 use url::Url;
 
 pub struct Youtube;
+
+/// Opt-in YouTube challenge runtime. Defaults to challenge-free extraction.
+#[derive(Debug, Clone, Default)]
+pub struct YoutubeOptions {
+    /// Explicit Deno 2.9.7 executable path; never discovered or installed.
+    /// Inspected only when an eligible format has a supported URL challenge.
+    pub js_runtime: Option<PathBuf>,
+}
+
+struct ConfiguredYoutube {
+    runtime: Option<challenge::Runtime>,
+}
+
+impl Youtube {
+    pub fn with_options(options: YoutubeOptions) -> impl Extractor {
+        ConfiguredYoutube {
+            runtime: options.js_runtime.map(challenge::Runtime::new),
+        }
+    }
+}
+
+struct Candidate {
+    format_id: String,
+    source: Value,
+    ext: String,
+    width: Option<u32>,
+    height: Option<u32>,
+}
+
+impl Candidate {
+    fn into_format(self, url: Url) -> VideoFormat {
+        VideoFormat {
+            format_id: self.format_id,
+            url,
+            ext: self.ext,
+            filesize: None,
+            width: self.width,
+            height: self.height,
+        }
+    }
+}
+
 const MAX_PAGE_BYTES: u64 = 2 * 1024 * 1024;
 
 fn unsupported(reason: &str) -> Error {
@@ -122,7 +161,12 @@ fn player_response(html: &str) -> Result<Value> {
     initial_player_response(html)?.ok_or_else(|| unsupported("no initial player response"))
 }
 
-fn parse_formats(player: &Value, id: &str) -> Result<(String, Vec<VideoFormat>)> {
+fn parse_candidates(
+    player: &Value,
+    id: &str,
+    allow_n: bool,
+    api: bool,
+) -> Result<(String, Vec<Candidate>)> {
     if player
         .pointer("/playabilityStatus/status")
         .and_then(Value::as_str)
@@ -175,7 +219,9 @@ fn parse_formats(player: &Value, id: &str) -> Result<(String, Vec<VideoFormat>)>
         ]
         .iter()
         .any(|key| source.get(*key).is_some_and(|v| !v.is_null()))
-            || source["type"].as_str() == Some("FORMAT_STREAM_TYPE_OTF")
+            || source.get("type").is_some_and(|value| {
+                !value.is_null() && value.as_str() != Some("FORMAT_STREAM_TYPE_NORMAL")
+            })
         {
             continue;
         }
@@ -185,10 +231,14 @@ fn parse_formats(player: &Value, id: &str) -> Result<(String, Vec<VideoFormat>)>
         let Ok(url) = Url::parse(raw) else {
             continue;
         };
-        if !matches!(url.scheme(), "http" | "https")
-            || url.query_pairs().any(|(key, _)| key == "n")
-            || url.path().contains("/n/")
-        {
+        if !matches!(url.scheme(), "http" | "https") {
+            continue;
+        }
+        let url_source = serde_json::json!({"url":raw});
+        let Ok(challenged) = challenge::has_challenges(&url_source) else {
+            continue;
+        };
+        if challenged && !allow_n {
             continue;
         }
         let Some(mime) = source["mimeType"].as_str() else {
@@ -224,9 +274,12 @@ fn parse_formats(player: &Value, id: &str) -> Result<(String, Vec<VideoFormat>)>
         let Some(itag) = source["itag"].as_u64().filter(|i| *i > 0) else {
             continue;
         };
+        if api && itag != 18 {
+            continue;
+        }
         if formats
             .iter()
-            .any(|f: &VideoFormat| f.format_id == itag.to_string())
+            .any(|f: &Candidate| f.format_id == itag.to_string())
         {
             continue;
         }
@@ -236,24 +289,47 @@ fn parse_formats(player: &Value, id: &str) -> Result<(String, Vec<VideoFormat>)>
                 .and_then(|n| u32::try_from(n).ok())
                 .filter(|n| *n > 0)
         };
-        formats.push(VideoFormat {
+        formats.push(Candidate {
             format_id: itag.to_string(),
-            url,
+            source: url_source,
             ext: ext.into(),
-            filesize: None,
             width: dimension("width"),
             height: dimension("height"),
         });
     }
     if formats.is_empty() {
         return Err(unsupported(
-            "no supported direct combined audio/video formats; signatures, n challenges, adaptive streams, manifests, SABR, and DRM are not implemented",
+            "no eligible combined audio/video formats; URL n challenges require an explicit runtime; signatures, adaptive streams, manifests, SABR, and DRM are unsupported",
         ));
     }
     Ok((title, formats))
 }
 
+#[cfg(test)]
+fn parse_formats(player: &Value, id: &str) -> Result<(String, Vec<VideoFormat>)> {
+    let (title, candidates) = parse_candidates(player, id, false, false)?;
+    let formats = candidates
+        .into_iter()
+        .map(|candidate| {
+            let url = Url::parse(candidate.source["url"].as_str().unwrap())?;
+            Ok(candidate.into_format(url))
+        })
+        .collect::<Result<_>>()?;
+    Ok((title, formats))
+}
+
+#[cfg(test)]
 fn extract_watch_page(client: &Client, page: &Url, id: &str) -> Result<VideoInfo> {
+    extract_watch_page_with_runtime(client, page, id, None, None)
+}
+
+fn extract_watch_page_with_runtime(
+    client: &Client,
+    page: &Url,
+    id: &str,
+    runtime: Option<&challenge::Runtime>,
+    player_source: Option<&player::PlayerSource>,
+) -> Result<VideoInfo> {
     let response = direct::request(client, page, None)?;
     if direct::response_mime(&response) != "text/html" {
         return Err(unsupported("watch page is not HTML"));
@@ -307,17 +383,23 @@ fn extract_watch_page(client: &Client, page: &Url, id: &str) -> Result<VideoInfo
         Some(player) => (player, false),
         None => (client::fetch_player(client, page, html, id)?, true),
     };
-    let (title, mut formats) = parse_formats(&player, id)?;
-    if api {
-        // WEB HTTPS GVS requires a PO token except for itag 18 at the pinned
-        // source revision. No token acquisition or missing-token override.
-        formats.retain(|format| format.format_id == "18");
-        if formats.is_empty() {
-            return Err(unsupported(
-                "WEB API formats require an unsupported GVS PO token; no token-free itag 18",
-            ));
-        }
-    }
+    // Eligibility and WEB API token policy precede challenge solving and every
+    // media probe. No token-protected/DRM/live/adaptive source reaches EJS.
+    let (title, candidates) = parse_candidates(&player, id, runtime.is_some(), api)?;
+    let sources: Vec<_> = candidates
+        .iter()
+        .map(|candidate| candidate.source.clone())
+        .collect();
+    let urls = if let Some(source) = player_source {
+        challenge::resolve_urls_with_source(&sources, html, runtime, Some(source))?
+    } else {
+        challenge::resolve_urls(&sources, html, runtime)?
+    };
+    let mut formats: Vec<_> = candidates
+        .into_iter()
+        .zip(urls)
+        .map(|(candidate, url)| candidate.into_format(url))
+        .collect();
     for format in &mut formats {
         let response = direct::request(client, &format.url, Some(page))?;
         let media = direct::from_response(&response, &format.url)
@@ -357,9 +439,25 @@ impl Extractor for Youtube {
             return Ok(None);
         };
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        extract_watch_page(client, &page, &id).map(Some)
+        extract_watch_page_with_runtime(client, &page, &id, None, None).map(Some)
     }
 }
+
+impl Extractor for ConfiguredYoutube {
+    fn key(&self) -> &'static str {
+        "Youtube"
+    }
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        let Some(id) = video_id(url)? else {
+            return Ok(None);
+        };
+        let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
+        extract_watch_page_with_runtime(client, &page, &id, self.runtime.as_ref(), None).map(Some)
+    }
+}
+
+#[cfg(test)]
+mod integration;
 
 #[cfg(test)]
 mod tests {

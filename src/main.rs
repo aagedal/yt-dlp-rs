@@ -2,10 +2,11 @@ use clap::Parser;
 use std::io::{self, Write};
 use std::{
     ops::ControlFlow,
+    path::PathBuf,
     time::{Duration, Instant},
 };
 use yt_dlp_rs::{
-    DownloadOptions, DownloadPhase, ExtractionOptions, YoutubeDl,
+    DownloadOptions, DownloadPhase, ExtractionOptions, YoutubeDl, YoutubeOptions,
     output::{DEFAULT_TEMPLATE, render_template},
 };
 
@@ -32,6 +33,9 @@ struct Args {
     /// Retry the entire extraction after transient network failures (0 disables retries)
     #[arg(long, default_value_t = 0)]
     extractor_retries: u8,
+    /// Explicit path to Deno 2.9.7 for YouTube player challenges (no runtime discovery or installation)
+    #[arg(long, value_name = "PATH")]
+    youtube_js_runtime: Option<PathBuf>,
     /// Filename template: %(title)s, %(id)s, %(ext)s, %(extractor)s, and %%
     #[arg(short, long, default_value = DEFAULT_TEMPLATE)]
     output: String,
@@ -39,7 +43,9 @@ struct Args {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
-    let downloader = YoutubeDl::new()?;
+    let downloader = YoutubeDl::with_youtube_options(YoutubeOptions {
+        js_runtime: args.youtube_js_runtime,
+    })?;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in args.urls {

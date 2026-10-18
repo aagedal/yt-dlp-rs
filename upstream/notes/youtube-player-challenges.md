@@ -1,5 +1,9 @@
 # Player acquisition and progressive URL challenge preparation
 
+Current status: the later [n extraction slice](youtube-n-extraction.md) connects
+query-n solving to public extraction behind explicit runtime configuration.
+The private-only descriptions below record this slice's original boundary.
+
 This slice connects the private player transport, EJS runner, and URL challenge
 rewriter in deterministic tests. It does not yet enable challenge solving in the
 public extractor or add CLI/library runtime options. Public YouTube extraction

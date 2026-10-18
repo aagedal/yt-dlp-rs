@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from unittest import mock
 
-from compare_youtube import ORIGIN, compare, main, normalize
+from compare_youtube import FIXTURE_CASES, ORIGIN, compare, main, normalize
 
 
 class YoutubeComparisonTest(unittest.TestCase):
@@ -52,10 +52,27 @@ class YoutubeComparisonTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "metadata mismatch"):
             compare(info, expected)
 
-    def test_command_compares_both_response_sources(self):
+    def test_n_fixture_expects_rewritten_challenge_and_preserves_metadata(self):
+        fixtures = Path(__file__).resolve().parents[1] / "tests/fixtures/youtube"
+        response = json.loads((fixtures / "n-extraction.json").read_text())
+        expected = json.loads((fixtures / "n-extraction-expected.json").read_text())
+        self.assertEqual(response["assets"]["js"],
+                         "https://www.youtube.com/s/player/74edf1a3/player_ias.vflset/en_US/base.js")
+        original, = response["streamingData"]["formats"]
+        rewritten, = expected["formats"]
+        self.assertEqual(original["itag"], 18)
+        self.assertEqual(original["url"], "{{ORIGIN}}/media.mp4?n=IlLiA21ny7gqA2m4p37")
+        self.assertEqual(rewritten["url"], "{{ORIGIN}}/media.mp4?n=9nRTxrbM1f0yHg")
+        info = json.loads(json.dumps(expected).replace("{{ORIGIN}}", ORIGIN))
+        self.assertEqual(compare(info, expected), expected)
+        info["formats"][0]["url"] = original["url"].replace("{{ORIGIN}}", ORIGIN)
+        with self.assertRaisesRegex(ValueError, "metadata mismatch"):
+            compare(info, expected)
+
+    def test_command_compares_all_saved_cases(self):
         fixtures = Path(__file__).resolve().parents[1] / "tests/fixtures/youtube"
         results = [subprocess.CompletedProcess([], 0, (fixtures / name).read_text(), "")
-                   for name in ("expected.json", "player-api-expected.json")]
+                   for _, name, _ in FIXTURE_CASES]
         with tempfile.TemporaryDirectory() as directory:
             upstream = Path(directory)
             module = upstream / "yt_dlp/extractor/youtube/_video.py"
@@ -65,9 +82,9 @@ class YoutubeComparisonTest(unittest.TestCase):
                     mock.patch("compare_youtube.subprocess.run", side_effect=results) as run, \
                     contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(main(), 0)
-            self.assertEqual(run.call_count, 2)
+            self.assertEqual(run.call_count, 3)
             self.assertEqual([call.args[0][-1] for call in run.call_args_list],
-                             ["watch-page", "player-api"])
+                             ["watch-page", "player-api", "n-extraction"])
 
 
 if __name__ == "__main__":

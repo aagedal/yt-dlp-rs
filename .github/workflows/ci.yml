@@ -39,4 +39,4 @@ jobs:
       - name: Require the pinned runtime for offline challenge tests
         shell: bash
         run: deno eval 'console.log("YT_DLP_RS_TEST_DENO=" + Deno.execPath())' >> "$GITHUB_ENV"
-      - run: cargo test --locked --lib extractor::youtube::challenge
+      - run: cargo test --locked --lib extractor::youtube

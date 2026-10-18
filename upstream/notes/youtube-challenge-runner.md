@@ -1,5 +1,9 @@
 # Offline YouTube challenge runner
 
+Current status: the later [n extraction slice](youtube-n-extraction.md) connects
+query-n solving to public extraction behind explicit runtime configuration.
+The private-only descriptions below record this slice's original boundary.
+
 This slice implements the private offline EJS protocol and Deno process boundary
 selected in [the runtime decision](youtube-challenge-runtime.md). It does **not**
 connect that runner to extraction, fetch player scripts at runtime, rewrite media

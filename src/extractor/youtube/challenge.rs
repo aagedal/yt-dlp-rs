@@ -217,11 +217,11 @@ impl Solutions {
 /// Resolve a batch of already-eligible progressive format URL fields. This
 /// private entry point deliberately does not decide DRM/client/token eligibility.
 /// All URLs are prepared and all solutions validated before any are returned.
-fn resolve_urls_with_source(
+pub(super) fn resolve_urls_with_source(
     sources: &[serde_json::Value],
     html: &str,
-    runtime: Option<&std::path::Path>,
-    player_source: &super::player::PlayerSource,
+    runtime: Option<&Runtime>,
+    player_source: Option<&super::player::PlayerSource>,
 ) -> crate::Result<Vec<url::Url>> {
     let prepared: Vec<_> = sources
         .iter()
@@ -235,14 +235,22 @@ fn resolve_urls_with_source(
     let solutions = if challenges.is_empty() {
         Solutions(Vec::new())
     } else {
-        let executable = runtime.ok_or_else(|| {
+        let runtime = runtime.ok_or_else(|| {
             super::unsupported(
                 "YouTube URL challenges require an explicitly configured Deno 2.9.7 executable",
             )
         })?;
+        let owned_source;
+        let player_source = if let Some(source) = player_source {
+            source
+        } else {
+            owned_source = super::player::PlayerSource::new()?;
+            &owned_source
+        };
         let player_url = player_source.discover(html)?;
-        let runtime =
-            runtime::DenoRuntime::new(executable).map_err(|error| super::unsupported(&error))?;
+        let runtime = runtime
+            .checked()
+            .map_err(|error| super::unsupported(&error))?;
         let player = player_source.fetch(&player_url)?;
         let batch = Batch::new(&player, &challenges).map_err(|error| super::unsupported(&error))?;
         runtime
@@ -263,9 +271,35 @@ fn resolve_urls_with_source(
 pub(super) fn resolve_urls(
     sources: &[serde_json::Value],
     html: &str,
-    runtime: Option<&std::path::Path>,
+    runtime: Option<&Runtime>,
 ) -> crate::Result<Vec<url::Url>> {
-    resolve_urls_with_source(sources, html, runtime, &super::player::PlayerSource::new()?)
+    resolve_urls_with_source(sources, html, runtime, None)
+}
+
+/// Configuration is inert until an eligible URL actually needs a solution.
+/// Canonical executable resolution and version validation happen once, lazily.
+pub(super) struct Runtime {
+    path: std::path::PathBuf,
+    checked: std::sync::OnceLock<Result<runtime::DenoRuntime>>,
+}
+
+impl Runtime {
+    pub(super) fn new(path: std::path::PathBuf) -> Self {
+        Self {
+            path,
+            checked: std::sync::OnceLock::new(),
+        }
+    }
+    fn checked(&self) -> Result<&runtime::DenoRuntime> {
+        self.checked
+            .get_or_init(|| runtime::DenoRuntime::new(&self.path))
+            .as_ref()
+            .map_err(Clone::clone)
+    }
+}
+
+pub(super) fn has_challenges(source: &serde_json::Value) -> Result<bool> {
+    Ok(!urls::Prepared::new(source)?.challenges().is_empty())
 }
 
 #[cfg(test)]
@@ -278,7 +312,7 @@ mod tests {
         let urls = resolve_urls(
             &[json!({"url":"https://media.example/video.mp4?x=%2f"})],
             "<script>ytcfg.set(malformed)</script>",
-            Some(std::path::Path::new("/nonexistent-deno")),
+            Some(&Runtime::new("/nonexistent-deno".into())),
         )
         .unwrap();
         assert_eq!(urls[0].as_str(), "https://media.example/video.mp4?x=%2f");
@@ -296,7 +330,7 @@ mod tests {
                 json!({"url":"file:///media"}),
             ],
             "",
-            Some(std::path::Path::new("/nonexistent-deno")),
+            Some(&Runtime::new("/nonexistent-deno".into())),
         )
         .unwrap_err();
         assert!(error.to_string().contains("media URL"));
@@ -396,8 +430,8 @@ mod tests {
         let urls = resolve_urls_with_source(
             &[json!({"signatureCipher":encrypted})],
             html,
-            Some(std::path::Path::new(&executable)),
-            &player_source,
+            Some(&Runtime::new(executable.into())),
+            Some(&player_source),
         )
         .unwrap();
         assert_eq!(urls[0].as_str(), expected_url);

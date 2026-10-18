@@ -2,7 +2,10 @@
 """Compare saved YouTube player-response metadata with an upstream checkout.
 
 Development-only parser parity check: no requests, player API acquisition,
-JavaScript, token acquisition, or download occurs. Rust fixture tests independently
+JavaScript, token acquisition, or download occurs. For the n challenge case, a
+typed fixed solver response supplies the separately verified saved EJS vector;
+this checks normalized metadata with that solved vector, not solver or player
+acquisition parity. Rust fixture tests independently
 consume the same expected JSON files. This does not establish live-site or client
 request parity: the saved API response is injected after acquisition.
 Only FIELDS and FORMAT_FIELDS are compared, preserving ordered formats. The sole
@@ -27,6 +30,7 @@ FORMAT_FIELDS = ("format_id", "ext", "width", "height", "url", "filesize")
 FIXTURE_CASES = (
     ("progressive.html", "expected.json", "watch-page"),
     ("player-api.json", "player-api-expected.json", "player-api"),
+    ("n-extraction.json", "n-extraction-expected.json", "n-extraction"),
 )
 UPSTREAM_WORKER = r'''
 import json, socket, sys
@@ -35,6 +39,8 @@ sys.path.insert(0, sys.argv[1])
 from yt_dlp import YoutubeDL
 from yt_dlp.extractor.youtube import YoutubeIE
 from yt_dlp.extractor.youtube import _video
+from yt_dlp.extractor.youtube.jsc.provider import (
+    JsChallengeResponse, JsChallengeType, NChallengeInput, NChallengeOutput)
 
 def forbidden(*args, **kwargs):
     raise AssertionError('Network access forbidden in saved YouTube comparison')
@@ -43,6 +49,23 @@ socket.create_connection = forbidden
 socket.socket = forbidden
 page = Path(sys.argv[2]).read_text().replace('{{ORIGIN}}', sys.argv[3])
 is_api = sys.argv[4] == 'player-api'
+is_n = sys.argv[4] == 'n-extraction'
+player_url = 'https://www.youtube.com/s/player/74edf1a3/player_ias.vflset/en_US/base.js'
+solves = []
+
+def fixed_n_solution(requests):
+    assert is_n, 'Unexpected JavaScript challenge in non-challenge fixture'
+    assert len(requests) == 1
+    request, = requests
+    assert request.type == JsChallengeType.N
+    assert isinstance(request.input, NChallengeInput)
+    assert request.video_id == 'BaW_jenozKc'
+    assert request.input.player_url == player_url
+    assert request.input.challenges == ['IlLiA21ny7gqA2m4p37']
+    solves.append(request)
+    yield request, JsChallengeResponse(
+        type=JsChallengeType.N,
+        output=NChallengeOutput(results={'IlLiA21ny7gqA2m4p37': '9nRTxrbM1f0yHg'}))
 
 class FixtureYoutubeIE(YoutubeIE):
     _request_webpage = forbidden
@@ -52,7 +75,7 @@ class FixtureYoutubeIE(YoutubeIE):
         return YoutubeIE.ie_key()
 
     def _initial_extract(self, url, smuggled_data, webpage_url, webpage_client, video_id):
-        response = json.loads(page) if is_api else self._search_json(
+        response = json.loads(page) if is_api or is_n else self._search_json(
             self._YT_INITIAL_PLAYER_RESPONSE_RE, page, 'saved player response', video_id)
         response['streamingData'].update({
             _video.STREAMING_DATA_CLIENT_NAME: 'web',
@@ -61,14 +84,18 @@ class FixtureYoutubeIE(YoutubeIE):
             _video.STREAMING_DATA_IS_PREMIUM_SUBSCRIBER: False,
             _video.STREAMING_DATA_AVAILABLE_AT_TIMESTAMP: None,
         })
-        return '' if is_api else page, {}, {}, False, [response], None
+        return '' if is_api or is_n else page, {}, {}, False, [response], player_url if is_n else None
 
 with YoutubeDL({'quiet': True, 'no_warnings': True, 'cachedir': False,
                 'skip_download': True, 'extractor_args': {'youtube': {
-                    'player_skip': ['js'], 'formats': [] if is_api else ['missing_pot'],
+                    'player_skip': [] if is_n else ['js'],
+                    'formats': ['missing_pot'] if not (is_api or is_n) else [],
                     'skip': ['hls', 'dash', 'translated_subs']}}}) as ydl:
     ie = FixtureYoutubeIE(ydl)
+    ie.initialize()
+    ie._jsc_director.bulk_solve = fixed_n_solution
     info = ie._real_extract('https://www.youtube.com/watch?v=BaW_jenozKc')
+    assert len(solves) == int(is_n), 'Expected exactly one saved n challenge request'
     info.update(extractor=ie.IE_NAME, extractor_key=ie.ie_key())
     print(json.dumps(info))
 '''
@@ -120,7 +147,8 @@ def main():
         if isinstance(error, subprocess.CalledProcessError) and error.stderr:
             print(error.stderr, file=sys.stderr)
         return 1
-    print("YouTube saved watch-page and API metadata match (parser/token policy parity only)")
+    print("YouTube saved watch-page, API, and fixed n-vector metadata match "
+          "(parser/token policy and normalized solved metadata only)")
     return 0
 
 

@@ -9,7 +9,7 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
-use yt_dlp_rs::{Error, ExtractResult, YoutubeDl, output::render_template};
+use yt_dlp_rs::{Error, ExtractResult, YoutubeDl, YoutubeOptions, output::render_template};
 
 fn html_fixture(path: &str) -> Option<&'static str> {
     Some(match path {
@@ -611,6 +611,74 @@ fn cli_simulate_and_download() {
         .unwrap();
     assert!(downloaded.status.success());
     assert_eq!(std::fs::read(target).unwrap(), b"media bytes");
+}
+
+#[test]
+fn youtube_runtime_configuration_is_lazy_for_generic_extraction() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    let runtime = directory.path().join("nonexistent-deno");
+    let dl = YoutubeDl::with_youtube_options(YoutubeOptions {
+        js_runtime: Some(runtime.clone()),
+    })
+    .unwrap();
+    for (path, extractor) in [("/clip.mp4", "generic"), ("/video.html", "html5")] {
+        let info = dl.extract_info(&server.url(path)).unwrap();
+        assert_eq!(info.filesize, Some(11));
+        assert_eq!(info.extractor, extractor);
+    }
+    assert!(!runtime.exists());
+}
+
+#[test]
+fn cli_explicit_youtube_runtime_preserves_generic_json_simulation_and_download() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    let runtime = directory.path().join("nonexistent-deno");
+    for (index, path) in ["/clip.mp4", "/video.html"].into_iter().enumerate() {
+        let url = server.url(path);
+        let target = directory.path().join(format!("output-{index}.mp4"));
+        for mode in [Some("-j"), Some("-s"), None] {
+            let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+            command.arg("--youtube-js-runtime").arg(&runtime);
+            if let Some(mode) = mode {
+                command.arg(mode);
+            }
+            let output = command.arg("-o").arg(&target).arg(&url).output().unwrap();
+            assert!(
+                output.status.success(),
+                "{path} {mode:?}: {}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+            match mode {
+                Some("-j") => {
+                    let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+                    assert_eq!(json["filesize"], 11);
+                    assert!(!target.exists());
+                }
+                Some("-s") => {
+                    assert!(output.stdout.is_empty());
+                    assert!(!target.exists());
+                }
+                None => assert_eq!(std::fs::read(&target).unwrap(), b"media bytes"),
+                _ => unreachable!(),
+            }
+        }
+    }
+    assert!(!runtime.exists());
+}
+
+#[test]
+fn cli_youtube_runtime_requires_a_path() {
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["http://example.invalid/video.mp4", "--youtube-js-runtime"])
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+    let error = String::from_utf8(output.stderr).unwrap();
+    assert!(error.contains("--youtube-js-runtime <PATH>"), "{error}");
+    assert!(error.contains("a value is required"), "{error}");
 }
 
 #[test]
