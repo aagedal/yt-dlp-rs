@@ -33,16 +33,21 @@ pub enum InfoJsonWrite {
 /// extension when it matches `ext` (or any extension when `ext` is absent),
 /// otherwise append. Extension splitting follows Python's `os.path.splitext`.
 pub fn info_json_path(path: &Path, ext: Option<&str>) -> PathBuf {
-    let Some(name) = path.file_name().and_then(|name| name.to_str()) else {
+    let Some(text) = path.to_str() else {
         let mut name = path.as_os_str().to_owned();
         name.push(".info.json");
         return name.into();
     };
+    // Split the text directly so literal template separators are preserved.
+    let start = text
+        .rfind(|c| std::path::is_separator(c))
+        .map_or(0, |index| index + 1);
+    let name = &text[start..];
     let stem = match splitext(name) {
         Some((stem, real)) if ext.is_none_or(|ext| real == ext) => stem,
         _ => name,
     };
-    path.with_file_name(format!("{stem}.info.json"))
+    format!("{}{stem}.info.json", &text[..start]).into()
 }
 
 /// Python `splitext` on one component: the last dot preceded by a non-dot.
@@ -200,6 +205,7 @@ mod tests {
             ("..foo", Some("foo"), "..foo.info.json"),
             ("a..mp4", Some("mp4"), "a..info.json"),
             ("dir.d/name", None, "dir.d/name.info.json"),
+            ("dir/", None, "dir/.info.json"),
         ];
         for (path, ext, expected) in cases {
             assert_eq!(
