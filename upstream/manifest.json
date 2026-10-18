@@ -264,7 +264,7 @@
         "tools/test_compare_archive.py",
         "upstream/notes/download-archive.md"
       ],
-      "scope": "Explicit UTF-8 regular-file archive with lowercase extractor_key and case-sensitive id; cached membership after full extraction and before atomic remaining-entry selection; no writes in metadata/listing/simulation; record only after successful final download/merge publication; bounded shared/exclusive file locks, locked reread/dedup, missing-newline repair and append/sync failure rollback; --no-download-archive, --break-on-existing (truncate then cancel with exit 101), --break-per-input resets and --force-write-archive for simulated/skipped videos; no early URL-ID skip, legacy IDs, ie_key/URL guessing or full upstream archive parity"
+      "scope": "Explicit UTF-8 regular-file archive with lowercase extractor_key and case-sensitive id; cached membership after full extraction and before atomic remaining-entry selection; no writes in metadata/listing/simulation; record only after successful final download/merge publication; bounded shared/exclusive file locks, locked reread/dedup, missing-newline repair and append/sync failure rollback; --no-download-archive, --break-on-existing (truncate then cancel with exit 101), --break-per-input resets and --force-write-archive for simulated/skipped videos; -q/--no-quiet (implied by getting) and --no-warnings gate native stderr screen/warning lines; no early URL-ID skip, legacy IDs, ie_key/URL guessing or full upstream archive parity"
     },
     {
       "name": "playlist-item-selection",

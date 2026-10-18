@@ -12,6 +12,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-j`, `--dump-json` | One selected `VideoInfo` JSON object per video, including each HTML5 playlist entry; no downloads; with `-F`, a table precedes JSON |
 | `-J`, `--dump-single-json` | One JSON object per URL after selection: the `-j` object for videos; playlists add `_type`, `playlist_count`, `requested_entries` and selected `entries`; implies quiet simulation; native field shape like `-j`, not upstream `sanitize_info` output |
 | `-F`, `--list-formats` | List eligible alternatives without selection or downloads; combined `-j`/`-s` retain normal selection; native table styling |
+| `-q`, `--quiet`, `--no-quiet` | Suppress informational `[...]` stderr lines (upstream `to_screen`); implied by printing/JSON unless `--no-quiet`; errors and warnings remain; last flag wins |
+| `--no-warnings` | Suppress `WARNING:` lines |
 | `-s`, `--simulate`, `--no-simulate` | Extract metadata, write diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
 | `-O`, `--print [video:]TEMPLATE` | Print a field list or unsanitized output template per selected video; implies quiet simulation; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-filename` | Hidden upstream aliases printing title, ID, selected URLs and prepared filename after `--print` lines; imply quiet simulation |
@@ -59,7 +61,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | All other flags | Rejected; general option parity is not implemented |
 
-Simulation and JSON still make network requests. This inventory does not claim
+Informational lines go to stderr natively (upstream writes them to stdout
+unless quiet). Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
 
 ## YouTube watch-page subset

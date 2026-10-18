@@ -171,3 +171,45 @@ fn filesize_limits_skip_media_without_error_or_archive() {
     assert!(!invalid.status.success());
     assert!(stderr(&invalid).contains("invalid min filesize \"1KiB\" given"));
 }
+
+#[test]
+fn quiet_and_no_warnings_suppress_screen_and_warning_lines() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("/a.mp4");
+    let output = cli(&["-q", &url], directory.path(), None);
+    assert!(output.status.success());
+    assert_eq!(stderr(&output), "");
+    assert!(directory.path().join("a [a].mp4").exists());
+    // Errors are still reported when quiet.
+    let output = cli(&["-q", &server.url("/missing.txt")], directory.path(), None);
+    assert!(!output.status.success());
+    assert!(stderr(&output).contains("ERROR:"));
+    // --no-quiet restores messages; the last flag wins.
+    let output = cli(
+        &["-q", "--no-quiet", "--force-overwrites", &url],
+        directory.path(),
+        None,
+    );
+    assert!(stderr(&output).contains("[download] Destination:"));
+    let output = cli(
+        &[
+            "--no-warnings",
+            "--remux-video",
+            "mp4",
+            "--recode-video",
+            "mkv",
+            "-s",
+            &url,
+        ],
+        directory.path(),
+        None,
+    );
+    assert!(!stderr(&output).contains("WARNING:"), "{}", stderr(&output));
+    let output = cli(
+        &["--remux-video", "mp4", "--recode-video", "mkv", "-s", &url],
+        directory.path(),
+        None,
+    );
+    assert!(stderr(&output).contains("WARNING: --remux-video is ignored"));
+}

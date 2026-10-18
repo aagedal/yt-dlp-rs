@@ -1,5 +1,6 @@
 use clap::Parser;
 use std::io::{self, Write};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
     ops::ControlFlow,
     path::PathBuf,
@@ -15,6 +16,27 @@ use yt_dlp_rs::{
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
     validate_format_selector, video_info_json, write_info_json_with,
 };
+
+/// `-q`: suppress informational `[...]` screen lines (upstream `to_screen`).
+static QUIET: AtomicBool = AtomicBool::new(false);
+/// `--no-warnings`: suppress `WARNING:` lines.
+static NO_WARNINGS: AtomicBool = AtomicBool::new(false);
+
+macro_rules! screen {
+    ($($arg:tt)*) => {
+        if !QUIET.load(Ordering::Relaxed) {
+            eprintln!($($arg)*);
+        }
+    };
+}
+
+macro_rules! warning {
+    ($($arg:tt)*) => {
+        if !NO_WARNINGS.load(Ordering::Relaxed) {
+            eprintln!($($arg)*);
+        }
+    };
+}
 
 #[derive(Parser)]
 #[command(
@@ -37,6 +59,15 @@ struct Args {
     /// Print one JSON object per URL; playlists include their selected entries (implies simulation)
     #[arg(short = 'J', long)]
     dump_single_json: bool,
+    /// Activate quiet mode: suppress informational messages
+    #[arg(short = 'q', long, overrides_with_all = ["quiet", "no_quiet"])]
+    quiet: bool,
+    /// Deactivate quiet mode (default unless printing or JSON output imply it)
+    #[arg(long, overrides_with_all = ["quiet", "no_quiet"])]
+    no_quiet: bool,
+    /// Ignore warnings
+    #[arg(long)]
+    no_warnings: bool,
     /// Extract metadata without writing media
     #[arg(short = 's', long, overrides_with_all = ["simulate", "no_simulate"])]
     simulate: bool,
@@ -304,10 +335,17 @@ impl Args {
         } else {
             None
         };
+        let quiet = if self.quiet {
+            Some(true)
+        } else if self.no_quiet {
+            Some(false)
+        } else {
+            None
+        };
         Simulation {
             simulate: explicit.unwrap_or(getting || listing),
             list_only: explicit.is_none() && !getting && listing,
-            quiet: getting,
+            quiet: quiet.unwrap_or(getting),
         }
     }
 }
@@ -422,14 +460,16 @@ fn size_option(name: &str, value: Option<&str>) -> Result<Option<u64>, String> {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut args = Args::parse();
+    QUIET.store(args.simulation().quiet, Ordering::Relaxed);
+    NO_WARNINGS.store(args.no_warnings, Ordering::Relaxed);
     if args.no_download_archive {
         args.download_archive = None;
     }
     // Like upstream get_urls: batch URLs precede positional URLs, all stripped.
     let mut urls = match args.batch_file.as_deref().filter(|_| !args.no_batch_file) {
         Some(spec) => {
-            if spec == "-" {
-                // Upstream prints this unless -q, which is not implemented here.
+            // Upstream checks only an explicit -q here, before implied quiet.
+            if spec == "-" && !args.quiet {
                 eprintln!("Reading URLs from STDIN - EOF (Ctrl+D) to end:");
             }
             yt_dlp_rs::batch::load_batch_file(spec)
@@ -465,10 +505,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
     // Like upstream, printing implies quiet simulation unless --no-simulate.
     let printing = !print_templates.is_empty();
+    // `quiet` was applied to screen output at startup.
     let Simulation {
         simulate,
         list_only,
-        quiet,
+        ..
     } = args.simulation();
     let listing = args.list_formats || args.list_subs;
     let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
@@ -486,7 +527,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .map(|format| VideoOptions::from_cli(format, VideoMode::Recode))
         .transpose()?;
     if remux.is_some() && recode.is_some() {
-        eprintln!("WARNING: --remux-video is ignored since --recode-video was given");
+        warning!("WARNING: --remux-video is ignored since --recode-video was given");
     }
     let processors = PostprocessOptions {
         audio: args.extract_audio.then_some(audio_options),
@@ -523,7 +564,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if args.playlist_items.is_some()
         && (args.playlist_start != 1 || args.playlist_end.is_some_and(|end| end != -1 && end != 0))
     {
-        eprintln!(
+        warning!(
             "WARNING: Ignoring --playlist-start and --playlist-end because --playlist-items was given"
         );
     }
@@ -631,7 +672,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             args.write_auto_subs,
                         )?;
                         for warning in selection.warnings {
-                            eprintln!("WARNING: {}: {warning}", info.id);
+                            warning!("WARNING: {}: {warning}", info.id);
                         }
                         info.requested_subtitles = ((write_subs && !info.subtitles.is_empty())
                             || (args.write_auto_subs && !info.automatic_captions.is_empty()))
@@ -744,7 +785,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
                     for (pair, (path, line)) in print_files.iter().zip(writes) {
                         if !printing {
-                            eprintln!(
+                            screen!(
                                 "[info] Writing {:?} to: {}",
                                 pair.template(),
                                 path.display()
@@ -767,8 +808,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                 };
                 if simulate {
-                    if !quiet {
-                        eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
+                    // Native simulation summary; never alongside printed/JSON output.
+                    if !printing && !args.dump_json && !args.dump_single_json {
+                        screen!("[{}] {}: {}", info.extractor, info.id, info.title);
                     }
                     force_record(&info)?;
                 } else {
@@ -784,7 +826,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                     let path = prepare_media(&templates, &info, &template_options)?;
                     if !template_options.paths.is_empty() && path_is_absolute_template(&templates) {
-                        eprintln!(
+                        warning!(
                             "WARNING: --paths is ignored since an absolute path is given in output template"
                         );
                     }
@@ -809,7 +851,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             Some(base) => subtitle_paths(&info, &base)?,
                             None => {
                                 if has_subtitles {
-                                    eprintln!("[info] Skipping writing video subtitles");
+                                    screen!("[info] Skipping writing video subtitles");
                                 }
                                 Vec::new()
                             }
@@ -880,7 +922,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             && std::fs::symlink_metadata(&subtitle_path).is_ok()
                             && std::fs::metadata(&subtitle_path)?.is_file()
                         {
-                            eprintln!(
+                            screen!(
                                 "[download] Deleting existing file {}",
                                 subtitle_path.display()
                             );
@@ -888,7 +930,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                         match std::fs::symlink_metadata(&subtitle_path) {
                             Ok(_) if std::fs::metadata(&subtitle_path)?.is_file() => {
-                                eprintln!(
+                                screen!(
                                     "[info] Subtitle {} is already present",
                                     subtitle_path.display()
                                 );
@@ -901,7 +943,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 .into());
                             }
                             Err(error) if error.kind() == io::ErrorKind::NotFound => {
-                                eprintln!(
+                                screen!(
                                     "[info] Writing {language:?} subtitles to: {}",
                                     subtitle_path.display()
                                 );
@@ -930,13 +972,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 conversion,
                             )?;
                             for warning in converted.warnings {
-                                eprintln!("WARNING: {warning}");
+                                warning!("WARNING: {warning}");
                             }
                             if converted.converted {
                                 // The source converter replaces the subtitle's
                                 // metadata entry and drops its original name.
                                 embedded_file.name = None;
-                                eprintln!(
+                                screen!(
                                     "[SubtitlesConvertor] Destination: {}",
                                     converted.path.display()
                                 );
@@ -959,10 +1001,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                     if existing_media {
                         if overwrites == Some(true) {
-                            eprintln!("[download] Deleting existing file {}", path.display());
+                            screen!("[download] Deleting existing file {}", path.display());
                             std::fs::remove_file(&path)?;
                         } else {
-                            eprintln!("[download] {} has already been downloaded", path.display());
+                            screen!("[download] {} has already been downloaded", path.display());
                             if let Some(archive) = &mut archive {
                                 archive
                                     .record(&info)
@@ -971,21 +1013,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             return Ok(());
                         }
                     }
-                    eprintln!("[download] Destination: {}", path.display());
+                    screen!("[download] Destination: {}", path.display());
                     let mut last_progress = Instant::now();
                     let progress = |progress: yt_dlp_rs::DownloadProgress| {
                         if progress.phase == DownloadPhase::Downloading
                             && last_progress.elapsed() >= Duration::from_secs(1)
                         {
                             if let Some(total) = progress.total_bytes {
-                                eprintln!(
+                                screen!(
                                     "[download] {} / {total} bytes (attempt {})",
-                                    progress.downloaded_bytes, progress.attempt
+                                    progress.downloaded_bytes,
+                                    progress.attempt
                                 );
                             } else {
-                                eprintln!(
+                                screen!(
                                     "[download] {} bytes (attempt {})",
-                                    progress.downloaded_bytes, progress.attempt
+                                    progress.downloaded_bytes,
+                                    progress.attempt
                                 );
                             }
                             last_progress = Instant::now();
@@ -1015,9 +1059,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             progress,
                         )?;
                         for warning in result.warnings {
-                            eprintln!("WARNING: {warning}");
+                            warning!("WARNING: {warning}");
                         }
-                        eprintln!("[postprocess] Destination: {}", result.path.display());
+                        screen!("[postprocess] Destination: {}", result.path.display());
                         let mut paths = vec![result.path];
                         paths.extend(result.kept_files);
                         (result.bytes, paths)
@@ -1064,7 +1108,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             format!("download completed, but archive update failed: {error}")
                         })?;
                     }
-                    eprintln!("[download] Downloaded {bytes} bytes");
+                    screen!("[download] Downloaded {bytes} bytes");
                 }
                 Ok(())
             })();
@@ -1073,7 +1117,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 Err(error) => match error.downcast_ref::<yt_dlp_rs::Error>() {
                     // Upstream skips the transfer without an error or archive record.
                     Some(yt_dlp_rs::Error::FileSizeLimit(message)) => {
-                        eprintln!("[download] {message}");
+                        screen!("[download] {message}");
                         true
                     }
                     _ => {
@@ -1117,7 +1161,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     for warning in downloader.cookie_jar().take_warnings() {
-        eprintln!("WARNING: {warning}");
+        warning!("WARNING: {warning}");
     }
     if let Some(path) = &args.cookies {
         let cookies = downloader.cookie_jar();
@@ -1162,11 +1206,11 @@ impl std::error::Error for Cancel {}
 /// Report a cancellation like `__download_wrapper`; with `--break-per-input`
 /// it only ends the current input (returns `None`).
 fn cancel(reason: Cancel, per_input: bool) -> Option<Cancel> {
-    eprintln!("[info] {reason}");
+    screen!("[info] {reason}");
     if per_input {
         None
     } else {
-        eprintln!("Aborting remaining downloads");
+        screen!("Aborting remaining downloads");
         Some(reason)
     }
 }
@@ -1180,7 +1224,7 @@ fn epoch() -> u64 {
 fn report_info_json(label: &str, path: &std::path::Path, written: InfoJsonWrite) {
     match written {
         InfoJsonWrite::Written => {
-            eprintln!(
+            screen!(
                 "[info] Writing {label} metadata as JSON to: {}",
                 path.display()
             )
@@ -1188,7 +1232,7 @@ fn report_info_json(label: &str, path: &std::path::Path, written: InfoJsonWrite)
         InfoJsonWrite::AlreadyPresent => {
             let mut title = label.to_owned();
             title[..1].make_ascii_uppercase();
-            eprintln!("[info] {title} metadata is already present")
+            screen!("[info] {title} metadata is already present")
         }
     }
 }
@@ -1227,9 +1271,10 @@ fn filter_archived(
     let keep = |info: &yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<bool> {
         let recorded = archive.contains(info)?;
         if recorded {
-            eprintln!(
+            screen!(
                 "[download] {}: {} has already been recorded in the archive",
-                info.id, info.title
+                info.id,
+                info.title
             );
         }
         Ok(!recorded)

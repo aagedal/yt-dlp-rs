@@ -132,6 +132,7 @@ Supported today:
   Names follow upstream extension replacement; existing files follow the
   overwrite options and `-j`/`-s`/listing never write. Content covers the
   represented metadata subset; `_version` and `--load-info-json` are not implemented.
+- `-q/--quiet`, `--no-quiet` and `--no-warnings` gate informational and warning lines.
 - `--break-on-existing`, `--break-per-input`, `--force-write-archive` and
   `--no-download-archive` follow upstream archive control.
 - `--max-downloads NUMBER` (exit 101) and `--min-filesize`/`--max-filesize SIZE`

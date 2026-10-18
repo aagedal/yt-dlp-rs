@@ -189,6 +189,50 @@
    "simulate": true,
    "list_only": false,
    "quiet": true
+  },
+  {
+   "args": [
+    "-q"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "--no-quiet"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-j",
+    "--no-quiet"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-q",
+    "--no-quiet"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "--no-quiet",
+    "-q",
+    "-F"
+   ],
+   "simulate": true,
+   "list_only": true,
+   "quiet": true
   }
  ]
 }
