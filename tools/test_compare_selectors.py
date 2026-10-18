@@ -18,6 +18,7 @@ class SelectorExpressionComparisonTests(unittest.TestCase):
             "matches": [{"name": case["name"], "selected_ids": case["expected_ids"]}
                         for case in self.fixture["cases"]],
             "syntax_errors": [case["name"] for case in self.fixture["invalid_cases"]],
+            "index_limit_errors": [case["selector"] for case in self.fixture["excluded_index_cases"]],
         }
 
     def test_exact_output_order_and_pair_order_are_compared_without_mutation(self):
@@ -74,6 +75,47 @@ class SelectorExpressionComparisonTests(unittest.TestCase):
         self.assertEqual(self.fixture["upstream_commit"], PINNED_UPSTREAM)
         self.assertTrue(all(case["selector"].startswith("b/") for case in self.fixture["invalid_cases"]))
 
+    def test_indexed_aliases_choose_nth_in_supplied_order_after_filters(self):
+        cases = {case["selector"]: case["expected_ids"] for case in self.fixture["cases"]}
+        for base in ("best", "worst", "b", "w"):
+            best = base in ("best", "b")
+            for suffix in ("", "video", "v", "audio", "a"):
+                ranked = (["mux-high", "mux-low"] if not suffix else
+                          ["video-high", "video-mid", "video-low"] if suffix in ("video", "v") else
+                          ["audio-high", "audio-low"])
+                if not best:
+                    ranked = ranked[::-1]
+                for index in (1, 2, 3, 9):
+                    self.assertEqual(cases[f"{base}{suffix}.{index}"],
+                                     ranked[index - 1:index] if index <= len(ranked) else [])
+        self.assertEqual(cases["bv.2[height<=720]"], ["video-low"])
+        self.assertEqual(cases["bv.2[height>=720]"], ["video-mid"])
+        self.assertEqual(cases["bv.2[height<720]"], [])
+        self.assertEqual(cases["(bv.2+ba.2)/b"], ["video-mid", "audio-low"])
+        self.assertEqual(cases["ba.2+bv.2"], ["audio-low", "video-mid"])
+        self.assertEqual(cases["(bv.2+ba.2/b)[height<=?720]"], ["video-low", "audio-low"])
+        self.assertEqual(cases["(bv.2+ba.2/b)[height<=720]"], ["mux-high"])
+
+    def test_invalid_index_spellings_are_literal_ids_and_reference_limit_errors_are_separate(self):
+        cases = {case["selector"]: case["expected_ids"] for case in self.fixture["cases"]}
+        for selector in ("bv.0", "bv.01", "bv.x"):
+            self.assertEqual(cases[selector], [])
+        self.assertEqual(cases["bv.0/bv"], ["video-high"])
+        self.assertEqual(cases["bv.01/bv.2"], ["video-mid"])
+        self.assertEqual(cases["bv.x/bv.3"], ["video-low"])
+        self.assertEqual(cases["b.1000000000000000000"], [])
+        self.assertEqual(cases["b.9223372036854775807"], [])
+        excluded = self.fixture["excluded_index_cases"]
+        self.assertEqual(len(excluded), 4)
+        for case in excluded:
+            self.assertNotIn(case["selector"], cases)
+            self.assertIn("ValueError", case["upstream_behavior"])
+            self.assertIn("parse error", case["native_policy"])
+        changed = copy.deepcopy(self.result)
+        changed["index_limit_errors"].pop()
+        with self.assertRaisesRegex(ValueError, "selector expression mismatch"):
+            compare(changed, self.fixture)
+
     def test_command_uses_actual_worker_with_exact_fixture_at_pinned_revision(self):
         with tempfile.TemporaryDirectory() as directory:
             upstream = Path(directory)
@@ -91,7 +133,8 @@ class SelectorExpressionComparisonTests(unittest.TestCase):
                              ["git", "-C", str(upstream.resolve()), "rev-parse", "HEAD"])
             self.assertEqual(json.loads(run.call_args.kwargs["input"]), self.fixture)
             self.assertEqual(run.call_args.kwargs["encoding"], "utf-8")
-            self.assertIn("51 saved selector expressions and 4 syntax failures", stdout.getvalue())
+            self.assertIn(f"{len(self.fixture['cases'])} saved selector expressions and 4 syntax failures", stdout.getvalue())
+            self.assertIn("4 separate upstream index-limit errors", stdout.getvalue())
 
     def test_wrong_checkout_revision_fails_before_worker(self):
         with tempfile.TemporaryDirectory() as directory:

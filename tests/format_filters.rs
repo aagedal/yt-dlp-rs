@@ -445,3 +445,124 @@ fn grouped_bare_filters_preserve_direct_metadata_and_no_format_id() {
     assert!(!output.status.success());
     assert!(output.stdout.is_empty());
 }
+
+#[test]
+fn indexed_best_and_worst_rank_after_filters_and_download_the_selected_bytes() {
+    let server = Server::new();
+    let second_best = server.json("/formats.html", "best.2[height>=360][ext=mp4]");
+    assert_eq!(second_best["format_id"], "1");
+    assert_eq!(second_best["height"], 720);
+    let second_worst = server.json("/formats.html", "worst.2[height>=360][ext=mp4]");
+    assert_eq!(second_worst["format_id"], "1");
+    let directory = tempfile::tempdir().unwrap();
+    let target = directory.path().join("second.mp4");
+    let output = server.cli(
+        "/formats.html",
+        &[
+            "-f",
+            "b.2[height>=360][ext=mp4]",
+            "-o",
+            target.to_str().unwrap(),
+        ],
+    );
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(std::fs::read(target).unwrap(), b"medium");
+    assert_eq!(server.count("/medium.mp4"), 4);
+    assert_eq!(server.count("/low.mp4"), 3);
+    assert_eq!(server.count("/high.mp4"), 3);
+}
+
+#[test]
+fn indexed_hls_audio_follows_existing_default_first_ranking_without_merger_launch() {
+    let server = Server::new();
+    for (index, expected_id, language) in [(1, "hls-audio-0", "en"), (2, "hls-audio-1", "nb")] {
+        let selector = format!("bv.1+ba.{index}");
+        let output = server.cli(
+            "/master.m3u8",
+            &[
+                "-j",
+                "-s",
+                "--ffmpeg-location",
+                "/nonexistent-index-test-ffmpeg",
+                "-f",
+                &selector,
+            ],
+        );
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let info: Value = serde_json::from_slice(&output.stdout).unwrap();
+        assert_eq!(info["format_id"], format!("hls-0+{expected_id}"));
+        assert_eq!(info["requested_formats"][1]["language"], language);
+        assert_eq!(
+            info["requested_formats"][1]["audio_default"]
+                .as_bool()
+                .unwrap_or(false),
+            index == 1
+        );
+    }
+    assert_eq!(server.count("/init.mp4"), 0);
+    assert_eq!(server.count("/segment.m4s"), 0);
+    assert_eq!(server.requests.lock().unwrap().len(), 8);
+}
+
+#[test]
+fn indexed_out_of_range_can_fall_back_inside_filtered_groups() {
+    let server = Server::new();
+    let info = server.json("/formats.html", "(b.4/b.2)[height>=360][ext=mp4]");
+    assert_eq!(info["format_id"], "1");
+    let unavailable = server.cli(
+        "/formats.html",
+        &["-j", "-s", "-f", "b.4[height>=360][ext=mp4]"],
+    );
+    assert!(!unavailable.status.success());
+    assert!(unavailable.stdout.is_empty());
+    let filtered = server.json("/formats.html", "(b.2/b.1)[height<=360][ext=mp4]");
+    assert_eq!(filtered["format_id"], "0");
+}
+
+#[test]
+fn indexed_playlist_failure_is_atomic_before_json_and_downloads() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let template = directory.path().join("%(id)s.%(ext)s");
+    for mode in [vec!["-j", "-s"], Vec::new()] {
+        let mut args = mode;
+        args.extend([
+            "-f",
+            "(b.2/w.2)[height>=360]",
+            "-o",
+            template.to_str().unwrap(),
+        ]);
+        let output = server.cli("/playlist.html", &args);
+        assert!(!output.status.success());
+        assert!(output.stdout.is_empty());
+        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    }
+    for path in ["/low.mp4", "/medium.mp4", "/high.mp4"] {
+        assert_eq!(
+            server.count(path),
+            2,
+            "unexpected download before playlist index failure: {path}"
+        );
+    }
+}
+
+#[test]
+fn implicit_direct_metadata_exposes_only_the_first_index_without_synthetic_id() {
+    let server = Server::new();
+    for selector in ["b.1[ext=mp4]", "b.2/w.1", "(b.2/[filesize=6])"] {
+        let info = server.json("/medium.mp4", selector);
+        assert_eq!(info["filesize"], 6);
+        assert!(info.get("format_id").is_none_or(Value::is_null));
+    }
+    let output = server.cli("/medium.mp4", &["-j", "-s", "-f", "b.2"]);
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty());
+}

@@ -1,6 +1,6 @@
 # Shared bounded selector expressions
 
-`expressions.json` supplies a native `VideoInfo` dictionary and 51 expressions
+`expressions.json` supplies a native `VideoInfo` dictionary and 156 expressions
 with expected ordered selected IDs (one format, two requested formats, or no
 match). Four malformed late fallback branches must raise syntax errors during
 construction, even though their first branch would otherwise succeed.
@@ -38,6 +38,28 @@ merge/fallback precedence, ordered pair output and unavailable branches.
 
 Comparison preserves selected/requested format IDs and their order. It excludes
 native ranking, rendition-group compatibility, merge metadata/container policy,
-implicit audio-only fallback differences, star selectors, numbered selectors,
+implicit audio-only fallback differences, star selectors,
 extension selectors, commas/all and merges above two streams. No full selector
 compatibility claim follows from successful comparison.
+
+Positive `.N` indices are compared for all 20 aliases, using first/second/third
+and unavailable positions. Filtering precedes indexed ranking, including group
+filters before indexed children; indexed merge/fallback and reverse pair order
+are covered. Spellings such as `bv.0`, `bv.01` and `bv.x` remain literal IDs and
+are unavailable in this input, rather than syntax errors.
+
+The fixture also verifies a large finite unavailable index and the 64-bit
+`isize::MAX` index. Four values above that cap are listed separately in
+`excluded_index_cases`: actual pinned upstream evaluation raises `ValueError`
+inside `LazyList.__getitem__` (`utils/_utils.py:2277`) when `itertools.islice`
+receives a stop above `sys.maxsize`. The reference tool verifies those errors
+separately, never converting them to empty selections. Native rejects indices
+above `isize::MAX` while parsing the entire expression, including unreachable
+fallback branches; that is explicit native policy, not equivalent error timing.
+Python's fallback for extremely long integer strings is outside this comparison.
+
+These aligned inputs have no incompatible rendition groups. Native indexed
+selectors choose the requested ranked candidate before checking group
+compatibility, while native unindexed pairs may search for a compatible pair;
+those broader behaviors are tested independently rather than hidden by this
+ordered-reference fixture.

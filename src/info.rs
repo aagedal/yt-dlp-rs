@@ -272,6 +272,7 @@ impl VideoInfo {
         match expression {
             Expression::Atom(atom) => {
                 matches!(atom.name.as_str(), "best" | "worst")
+                    && atom.index.is_none_or(|index| index == 1)
                     && self.stream_kind != StreamKind::VideoOnly
                     && atom.matches_info(self)
             }
@@ -426,6 +427,14 @@ impl VideoInfo {
         formats.sort_by(compare);
         if !worst {
             formats.reverse();
+        }
+        if let Some(index) = atom.index {
+            return index
+                .checked_sub(1)
+                .and_then(|index| usize::try_from(index).ok())
+                .and_then(|index| formats.get(index).copied())
+                .into_iter()
+                .collect();
         }
         formats
     }
@@ -1138,7 +1147,12 @@ mod tests {
                 assert_eq!(actual, expected, "{expression}");
             }
         }
-        for case in fixture["invalid_cases"].as_array().unwrap() {
+        for case in fixture["invalid_cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .chain(fixture["excluded_index_cases"].as_array().unwrap())
+        {
             let mut info = original.clone();
             let before = snapshot(&info);
             let expression = case["selector"].as_str().unwrap();
@@ -1147,6 +1161,69 @@ mod tests {
                 "{expression}"
             );
             assert_eq!(snapshot(&info), before, "{expression}");
+        }
+    }
+
+    #[test]
+    fn indexed_atoms_choose_after_filters_and_keep_rank_ties_and_fallbacks() {
+        let mut video = adaptive();
+        video.select_format(Some("bv.2+ba.2")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v1+a1"));
+        video.select_format(Some("wv.2+wa.2")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v2+a2"));
+        video
+            .select_format(Some("bv.2[height<=720]/bv.1[height<=720]"))
+            .unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v1"));
+        video.formats.push(source(
+            "tie",
+            StreamKind::VideoOnly,
+            "mp4",
+            Some(1080),
+            None,
+            Some(2000.0),
+        ));
+        video.select_format(Some("bv.2")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v2"));
+        video.select_format(Some("(bv/ba).2")).unwrap_err();
+    }
+
+    #[test]
+    fn explicit_index_pins_candidate_before_native_pair_compatibility() {
+        let mut video = adaptive();
+        video.formats[0].audio_group = Some("one".into());
+        video.formats[1].audio_group = Some("two".into());
+        video.formats[2].audio_group = Some("one".into());
+        video.formats[3].audio_group = Some("one".into());
+        video.select_format(Some("bv+ba")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v1+a2"));
+        let before = snapshot(&video);
+        assert!(video.select_format(Some("bv.1+ba")).is_err());
+        assert_eq!(snapshot(&video), before);
+        video.select_format(Some("(bv.1+ba)/(bv.2+ba.2)")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v1+a1"));
+    }
+
+    #[test]
+    fn implicit_indexes_and_dotted_literal_ids_preserve_metadata_boundaries() {
+        let mut direct = info(Vec::new());
+        direct.select_format(Some("(b.1/w.1)[ext=mp4]")).unwrap();
+        let before = snapshot(&direct);
+        assert!(direct.select_format(Some("best.2")).is_err());
+        assert_eq!(snapshot(&direct), before);
+        direct.select_format(Some("b.2/w.1")).unwrap();
+        assert_eq!(direct.format_id, None);
+        for id in ["bv.0", "bv.01", "bv.x", "format.2"] {
+            let mut video = info(vec![source(
+                id,
+                StreamKind::Standalone,
+                "mp4",
+                Some(720),
+                None,
+                None,
+            )]);
+            video.select_format(Some(id)).unwrap();
+            assert_eq!(video.format_id.as_deref(), Some(id));
         }
     }
 }

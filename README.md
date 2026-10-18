@@ -82,6 +82,8 @@ Supported today:
   Parenthesized groups and aliases (`b`, `bv`, `ba`, `w`, `wv`, `wa`) are supported,
   as are bare filters such as `[height<=720]` (implicit `best`). For example,
   `(bv[height<=720]+ba)/b` preserves the fallback around the complete pair.
+  Positive rank suffixes such as `bv.2`, `ba.2` and `worst.2` choose the Nth
+  candidate after filters and native ranking; out-of-range ranks allow fallback.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.

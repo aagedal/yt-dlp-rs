@@ -60,7 +60,8 @@ remain outside the current result contract.
    Bounded automatic resolution ranking and `best`/`worst` selection are implemented;
    Chained numeric/text format filters now constrain existing atoms, pairs and
    fallbacks before native ranking. Parenthesized groups, best/worst shorthand
-   aliases and bare-filter selectors are implemented. Full upstream ranking and general selector
+   aliases, bare-filter selectors and positive indexed ranks are implemented.
+   Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.
 3. **Resilient transport and media protocols.** Retry policy, range/resume with

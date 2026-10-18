@@ -12,7 +12,8 @@ the best/worst alias regex around 2590 and the final filter wrapper around 2641.
 Relevant `test/test_YoutubeDL.py` format selection/filter tests cover the source
 areas. These mapped files also implement comma/all selections, stream
 deduplication, starred/indexed/extension selectors and full sorting outside this
-slice. There are no intervening unmapped changes to classify.
+slice. Positive indexed ranks are added by the subsequent
+[indexed-selector slice](selector-index.md). There are no intervening unmapped changes to classify.
 
 The native parser now returns an explicit bounded expression tree. Groups,
 ordered choices, two-input merges and filtered atoms remain separate; it does

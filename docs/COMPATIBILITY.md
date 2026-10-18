@@ -884,8 +884,7 @@ retain their absent format ID. Selection failures remain atomic.
 
 The entire expression is parsed before selection. Empty/unbalanced/adjacent
 groups, malformed later branches and any possible branch with more than two
-streams fail, even when an earlier branch is available. Stars, indexed `.N`
-selectors, extension selectors, comma/all selections and multistream merging
+streams fail, even when an earlier branch is available. Stars, extension selectors, comma/all selections and multistream merging
 remain outside the supported grammar. Literal extension-shaped IDs retain their
 existing ID meaning; they do not request an extension automatically.
 
@@ -901,3 +900,41 @@ python3 tools/compare_selectors.py --upstream /path/to/yt-dlp
 ```
 
 See [the source slice](../upstream/notes/selector-groups.md).
+
+
+## Indexed selector ranks
+
+Best/worst selectors and their aliases accept a positive one-based `.N` suffix:
+`best.2`, `worst.2`, `bv.2`, `ba.2` and their long forms. Apply atom and enclosing
+group predicates first, choose the represented stream kind, apply native ranking
+and then select Nth from that order. Existing declaration ties still apply.
+
+```sh
+-f 'bv.2[height<=1080]+ba.2/b'
+-f '(b.3/b.2/b)[ext=mp4]'
+```
+
+A rank beyond the available matching formats is unavailable, so the enclosing
+fallback can try its next branch. Explicit indexing pins an atom to one candidate
+before native rendition-group/container validation. It does not silently move to
+a different ranked format to form a pair. Unindexed atoms retain the existing
+compatible-pair search policy; this is a native group-policy distinction outside
+the upstream comparison. An indexed selector remains a selector and cannot use
+the two-literal-ID group override.
+
+An implicit direct result has one represented source: `b.1` and `w.1` can match
+known metadata, while `.2` is unavailable and no format ID is invented. Rank
+syntax starts with ASCII 1–9 and continues with digits. Names such as `bv.0`,
+`bv.01`, `bv.x` and non-selector dotted IDs retain literal-ID meaning, matching
+the pinned alias regex rather than being reinterpreted as a rank.
+
+Indexes above the platform signed index maximum fail explicitly during complete
+expression parsing, including later branches; no integer wrapping, huge allocation
+or implicit best fallback occurs. Pinned upstream's oversized iterator errors and
+very-long-integer conversion fallback are not emulated. Group suffix ranks such
+as `(bv/ba).2`, stars, multiselection and full sorting remain unsupported.
+
+The saved expression comparison includes indexed aliases, filtered/grouped ranks,
+ordered pairs and unavailable ranks within the supported range. Native tests
+separately verify ties, direct metadata, dotted literal IDs, compatibility failure
+and oversized-index errors. See [the source slice](../upstream/notes/selector-index.md).

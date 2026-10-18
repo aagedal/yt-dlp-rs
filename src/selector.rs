@@ -5,6 +5,7 @@ use std::cmp::Ordering;
 #[derive(Debug)]
 pub(crate) struct Atom {
     pub name: String,
+    pub index: Option<u64>,
     filters: Vec<Filter>,
 }
 impl Atom {
@@ -443,7 +444,7 @@ impl Expression {
     }
 }
 
-fn canonical_name(name: &str) -> Result<String> {
+fn canonical_name(name: &str) -> Result<(String, Option<u64>)> {
     fn alias(name: &str) -> Option<String> {
         for prefix in ["best", "worst", "b", "w"] {
             if let Some(tail) = name.strip_prefix(prefix) {
@@ -466,14 +467,25 @@ fn canonical_name(name: &str) -> Result<String> {
         None
     }
     if let Some(name) = alias(name) {
-        return Ok(name);
+        return Ok((name, None));
     }
     if let Some((prefix, index)) = name.rsplit_once('.')
-        && alias(prefix).is_some()
-        && !index.is_empty()
+        && let Some(canonical) = alias(prefix)
+        && index
+            .as_bytes()
+            .first()
+            .is_some_and(|first| (b'1'..=b'9').contains(first))
         && index.bytes().all(|b| b.is_ascii_digit())
     {
-        return Err(invalid("indexed format selectors are unsupported"));
+        // Upstream's lazy sequence is bounded by the platform's signed index.
+        // Reject oversized indices during the full parse, including fallbacks,
+        // rather than silently turning a runtime error into another selection.
+        let index = index
+            .parse::<u64>()
+            .ok()
+            .filter(|index| *index <= isize::MAX as u64)
+            .ok_or_else(|| invalid("format selector index exceeds the platform index limit"))?;
+        return Ok((canonical, Some(index)));
     }
     if name.is_empty()
         || matches!(name, "all" | "mergeall")
@@ -483,7 +495,7 @@ fn canonical_name(name: &str) -> Result<String> {
     {
         return Err(invalid("unsupported or malformed format atom"));
     }
-    Ok(name.into())
+    Ok((name.into(), None))
 }
 
 struct Parser<'a> {
@@ -565,6 +577,7 @@ impl Parser<'_> {
                 inner: Box::new(inner),
                 filter: Atom {
                     name: "best".into(),
+                    index: None,
                     filters,
                 },
             });
@@ -573,14 +586,18 @@ impl Parser<'_> {
             .rest()
             .find(|c: char| c.is_whitespace() || matches!(c, '[' | '+' | '/' | '(' | ')'))
             .unwrap_or(self.rest().len());
-        let name = if end == 0 && self.rest().starts_with('[') {
-            "best".into()
+        let (name, index) = if end == 0 && self.rest().starts_with('[') {
+            ("best".into(), None)
         } else {
             canonical_name(&self.rest()[..end])?
         };
         self.position += end;
         let filters = self.filters()?;
-        self.node(Expression::Atom(Atom { name, filters }))
+        self.node(Expression::Atom(Atom {
+            name,
+            index,
+            filters,
+        }))
     }
     fn merge(&mut self, depth: usize) -> Result<Expression> {
         let mut expression = self.primary(depth)?;
@@ -980,17 +997,7 @@ mod tests {
             assert_eq!(atom.name, expected);
             assert!(atom.is_selector());
         }
-        for expression in [
-            "bv*",
-            "bestvideo.2",
-            "bv.0",
-            "worst.1",
-            "bestvideo*/worst",
-            "best/bv.2",
-            "a,b",
-            "all",
-            "mergeall",
-        ] {
+        for expression in ["bv*", "bestvideo*/worst", "a,b", "all", "mergeall"] {
             assert!(parse(expression).is_err(), "{expression}");
         }
         let Expression::Atom(atom) = parse("file.1").unwrap() else {
@@ -999,6 +1006,65 @@ mod tests {
         assert_eq!(atom.name, "file.1");
         assert!(!atom.is_selector());
     }
+    #[test]
+    fn indexed_aliases_are_positive_one_based_and_invalid_index_spellings_stay_literal() {
+        for (name, canonical, index) in [
+            ("bv.2", "bestvideo", 2),
+            ("ba.3", "bestaudio", 3),
+            ("best.1", "best", 1),
+            ("b.4", "best", 4),
+            ("w.2", "worst", 2),
+            ("wv.3", "worstvideo", 3),
+            ("worsta.12", "worstaudio", 12),
+        ] {
+            let Expression::Atom(atom) = parse(name).unwrap() else {
+                panic!("expected indexed atom")
+            };
+            assert_eq!(atom.name, canonical);
+            assert_eq!(atom.index, Some(index));
+            assert!(atom.is_selector());
+        }
+        for name in [
+            "bv.0",
+            "bv.01",
+            "bv.x",
+            "bv.-1",
+            "bestvideo.",
+            "file.2",
+            "18.2",
+            "bestfoo.2",
+        ] {
+            let Expression::Atom(atom) = parse(name).unwrap() else {
+                panic!("expected literal atom")
+            };
+            assert_eq!(atom.name, name);
+            assert_eq!(atom.index, None);
+            assert!(!atom.is_selector());
+        }
+        let Expression::Atom(atom) = parse(&format!("bv.{}", isize::MAX)).unwrap() else {
+            panic!("expected bounded platform index")
+        };
+        assert_eq!(atom.name, "bestvideo");
+        assert_eq!(atom.index, Some(isize::MAX as u64));
+        for index in [
+            (isize::MAX as u64 + 1).to_string(),
+            u64::MAX.to_string(),
+            "18446744073709551616".into(),
+            "9".repeat(8189),
+        ] {
+            assert!(parse(&format!("bv.{index}")).is_err(), "{index}");
+        }
+        assert!(parse(&format!("best/bv.{}", isize::MAX as u64 + 1)).is_err());
+        let Expression::Group { filter, .. } = parse("(bv.2)[height>=720]").unwrap() else {
+            panic!("expected group")
+        };
+        assert_eq!(filter.index, None);
+        let Expression::Atom(atom) = parse("[height>=720]").unwrap() else {
+            panic!("expected implicit atom")
+        };
+        assert_eq!(atom.index, None);
+    }
+
     #[test]
     fn recursive_groups_have_global_bounds_and_no_path_can_request_three_streams() {
         for expression in ["a+(b/c)", "(a+b)/(c+d)", "(a/b)+(c/d)", "((a))"] {

@@ -9,11 +9,17 @@ Codec flags accompanying native stream_kind are reference-only fixture metadata.
 
 Compare only a selected format ID or ordered requested_formats IDs, and empty
 results for unavailable expressions. Group filters apply to context before child
-selection. Group/fallback parsing and alias/bare-filter behavior are tested, not
+selection. Positive .N selects after per-kind ordering and filtering. Group/
+fallback parsing and alias/bare-filter behavior are tested, not
 native ranking, rendition-group compatibility, merge metadata/container policy,
 multi-stream output or complete upstream grammar. Late malformed fallback syntax
 must fail construction even when the first branch would succeed. Regex, stars,
-.N, extension selectors, commas/all and merges above two streams are excluded.
+extension selectors, commas/all and merges above two streams are excluded.
+Indices up to 64-bit sys.maxsize are compared. Above that limit, pinned upstream
+raises ValueError inside LazyList/islice; those reference errors are verified
+separately and never normalized to unavailable IDs. Native explicitly rejects
+above-isize::MAX indices during whole-expression parsing. Python's >4300-digit
+integer fallback behavior is outside this comparison.
 No IDs, order, predicate values or error acceptance are normalized away.
 """
 import argparse
@@ -57,7 +63,15 @@ with YoutubeDL({'quiet': True, 'no_warnings': True, 'cachedir': False,
             errors.append(case['name'])
         else:
             raise AssertionError('Expected invalid selector syntax: ' + case['selector'])
-    print(json.dumps({'matches': matches, 'syntax_errors': errors}))
+    index_errors = []
+    for case in fixture.get('excluded_index_cases', []):
+        try:
+            list(ydl.build_format_selector(case['selector'])(copy.deepcopy(ctx)))
+        except ValueError:
+            index_errors.append(case['selector'])
+        else:
+            raise AssertionError('Expected reference index evaluation error: ' + case['selector'])
+    print(json.dumps({'matches': matches, 'syntax_errors': errors, 'index_limit_errors': index_errors}))
 '''
 
 
@@ -66,6 +80,7 @@ def compare(result, fixture):
         "matches": [{"name": case["name"], "selected_ids": case["expected_ids"]}
                     for case in fixture["cases"]],
         "syntax_errors": [case["name"] for case in fixture["invalid_cases"]],
+        "index_limit_errors": [case["selector"] for case in fixture.get("excluded_index_cases", [])],
     }
     if result != expected:
         raise ValueError("selector expression mismatch: " + json.dumps(
@@ -101,6 +116,9 @@ def main():
     print(f"All {len(fixture['cases'])} saved selector expressions and "
           f"{len(fixture['invalid_cases'])} syntax failures match pinned upstream "
           "(selected IDs only; explicit input order; no ranking/full-grammar parity claim)")
+    if fixture.get("excluded_index_cases"):
+        print(f"Verified {len(fixture['excluded_index_cases'])} separate upstream index-limit errors; "
+              "native whole-expression bounds remain explicit policy")
     return 0
 
 
