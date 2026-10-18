@@ -25,7 +25,11 @@ from urllib.parse import urlsplit
 
 
 FIELDS = ("id", "title", "ext", "url", "webpage_url", "extractor", "extractor_key")
-FIXTURES = ("video", "audio", "source", "formats", "playlist", "playlist-formats", "ranked")
+# Optional poster metadata: missing values compare as null; thumbnail URLs use
+# the same origin normalization.
+OPTIONAL_FIELDS = ("thumbnail", "thumbnails")
+FIXTURES = ("video", "audio", "source", "formats", "playlist", "playlist-formats", "ranked",
+            "poster")
 UPSTREAM_WORKER = """
 import json, sys
 sys.path.insert(0, sys.argv[1])
@@ -40,11 +44,19 @@ with YoutubeDL({'quiet': True, 'no_warnings': True, 'skip_download': True,
 def normalize(info, origin):
     """Select comparison fields, removing only the exact local fixture origin."""
     result = {field: info[field] for field in FIELDS}
-    for field in ("url", "webpage_url"):
-        value = result[field]
+    result.update({field: info.get(field) for field in OPTIONAL_FIELDS})
+
+    def local(value):
         parsed = urlsplit(value)
-        if f"{parsed.scheme}://{parsed.netloc}" == origin:
-            result[field] = value[len(origin):]
+        return value[len(origin):] if f"{parsed.scheme}://{parsed.netloc}" == origin else value
+
+    for field in ("url", "webpage_url"):
+        result[field] = local(result[field])
+    if result["thumbnail"]:
+        result["thumbnail"] = local(result["thumbnail"])
+    if result["thumbnails"]:
+        result["thumbnails"] = [{**thumbnail, "url": local(thumbnail["url"])}
+                                for thumbnail in result["thumbnails"]]
     return result
 
 
@@ -54,7 +66,7 @@ def compare(upstream, rust, origin):
     if expected != actual:
         differences = {
             field: {"upstream": expected[field], "rust": actual[field]}
-            for field in FIELDS if expected[field] != actual[field]
+            for field in (*FIELDS, *OPTIONAL_FIELDS) if expected[field] != actual[field]
         }
         raise ValueError("metadata mismatch: " + json.dumps(differences, sort_keys=True))
     return actual

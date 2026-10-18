@@ -289,7 +289,7 @@ mod tests {
                 .replace("{{ORIGIN}}", &page.origin().ascii_serialization()),
         )
         .unwrap();
-        let actual = serde_json::to_value(&info).unwrap();
+        let actual = super::super::comparable_info(&info);
         for (key, value) in expected.as_object().unwrap() {
             assert_eq!(&actual[key], value, "{key}");
         }

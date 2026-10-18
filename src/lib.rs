@@ -34,8 +34,8 @@ pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
 pub use http::HttpOptions;
 pub use info::{
-    ByteRange, ExtractResult, Fragment, HlsAes128, Metadata, PlaylistInfo, StreamKind, VideoFormat,
-    VideoInfo,
+    ByteRange, ExtractResult, Fragment, HlsAes128, Metadata, PlaylistInfo, StreamKind, Thumbnail,
+    VideoFormat, VideoInfo,
 };
 pub use info_json::{
     InfoJsonWrite, info_json_path, playlist_info_json, to_python_json, video_info_json,
@@ -319,7 +319,16 @@ impl YoutubeDl {
 
     fn extract_once(&self, url: &Url) -> Result<ExtractResult> {
         for extractor in &self.extractors {
-            if let Some(info) = extractor.extract_result(&self.client, url)? {
+            if let Some(mut info) = extractor.extract_result(&self.client, url)? {
+                // Upstream `process_video_result` sanitizes thumbnails per video.
+                match &mut info {
+                    ExtractResult::Video(video) => video.metadata.sanitize_thumbnails(),
+                    ExtractResult::Playlist(playlist) => {
+                        for entry in &mut playlist.entries {
+                            entry.metadata.sanitize_thumbnails();
+                        }
+                    }
+                }
                 return Ok(info);
             }
         }
@@ -408,6 +417,21 @@ impl YoutubeDl {
             destination.as_ref(),
             options,
             &mut callback,
+        )
+    }
+
+    /// Copy a thumbnail URL to `destination` without overwriting it.
+    pub fn download_thumbnail(
+        &self,
+        url: &str,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+    ) -> Result<u64> {
+        download::download_thumbnail(
+            &self.client,
+            &Url::parse(url)?,
+            destination.as_ref(),
+            options,
         )
     }
 

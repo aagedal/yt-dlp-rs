@@ -140,6 +140,8 @@ Supported today:
   `--max-sleep-interval` and `--sleep-subtitles` pause before downloads.
 - `--max-downloads NUMBER` (exit 101) and `--min-filesize`/`--max-filesize SIZE`
   for whole-file HTTP media follow upstream.
+- `--list-thumbnails`, `--write-thumbnail` and `--write-all-thumbnails` use YouTube
+  thumbnails and HTML5 `poster` images (no conversion or embedding).
 - `--write-description` writes `.description` files; `--no-write-playlist-metafiles`
   disables playlist metadata files.
 - `-w/--no-overwrites`, `--force-overwrites` and the default follow upstream:

@@ -614,6 +614,26 @@ impl Extractor for ConfiguredYoutube {
     }
 }
 
+/// JSON for saved-fixture comparisons: thumbnails sanitized and sorted like
+/// orchestration does, without the sanitizer-assigned `id`/`resolution`.
+#[cfg(test)]
+pub(crate) fn comparable_info(info: &VideoInfo) -> Value {
+    let mut info = info.clone();
+    info.metadata.sanitize_thumbnails();
+    let mut value = serde_json::to_value(&info).unwrap();
+    if let Some(thumbnails) = value.get_mut("thumbnails").and_then(Value::as_array_mut) {
+        for thumbnail in thumbnails {
+            let object = thumbnail.as_object_mut().unwrap();
+            object.remove("id");
+            object.remove("resolution");
+            for key in ["width", "height", "preference"] {
+                object.entry(key).or_insert(Value::Null);
+            }
+        }
+    }
+    value
+}
+
 #[cfg(test)]
 mod integration;
 
@@ -997,7 +1017,7 @@ mod tests {
                 .replace("{{ORIGIN}}", &origin),
         )
         .unwrap();
-        let actual = serde_json::to_value(&info).unwrap();
+        let actual = comparable_info(&info);
         for (key, value) in expected.as_object().unwrap() {
             assert_eq!(&actual[key], value, "{key}");
         }

@@ -184,9 +184,128 @@ fn upload_time(value: &str) -> (Option<String>, Option<i64>) {
     )
 }
 
+/// Upstream `url_or_none` scheme check.
+fn url_or_none(url: &str) -> Option<&str> {
+    let url = url.trim();
+    let rest = &url[..url.find("//")?];
+    let scheme = rest.strip_suffix(':').unwrap_or(rest);
+    let known = [
+        "", "http", "https", "rtmp", "rtmpt", "rtmpe", "rtmps", "rtmpte", "rtmpts", "rtmfp",
+        "rtsp", "rtsps", "rtspu", "mms", "ftp", "ftps", "ws", "wss",
+    ];
+    (known.contains(&scheme.to_ascii_lowercase().as_str())
+        && (rest.is_empty() || rest.ends_with(':')))
+    .then_some(url)
+}
+
+const THUMBNAIL_NAMES: [&str; 19] = [
+    "maxresdefault",
+    "hq720",
+    "sddefault",
+    "hqdefault",
+    "0",
+    "mqdefault",
+    "default",
+    "sd1",
+    "sd2",
+    "sd3",
+    "hq1",
+    "hq2",
+    "hq3",
+    "mq1",
+    "mq2",
+    "mq3",
+    "1",
+    "2",
+    "3",
+];
+
+/// Upstream thumbnail candidates: saved `videoDetails`/microformat thumbnails,
+/// then generated `i.ytimg.com` names, with preferences and URL deduplication.
+/// Returns the deduplicated list and the best saved thumbnail URL.
+fn thumbnails(player: &Value, id: &str) -> (Vec<crate::Thumbnail>, Option<String>) {
+    let mut saved = Vec::new();
+    for root in [
+        "/videoDetails/thumbnail/thumbnails",
+        "/microformat/playerMicroformatRenderer/thumbnail/thumbnails",
+    ] {
+        for thumbnail in player
+            .pointer(root)
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+        {
+            let Some(url) = thumbnail
+                .get("url")
+                .and_then(Value::as_str)
+                .and_then(url_or_none)
+            else {
+                continue;
+            };
+            let url = if url.contains("maxresdefault") {
+                url.split('?').next().unwrap_or(url)
+            } else {
+                url
+            };
+            let dimension = |key: &str| {
+                thumbnail
+                    .get(key)
+                    .and_then(int)
+                    .and_then(|v| u32::try_from(v).ok())
+            };
+            saved.push(crate::Thumbnail {
+                url: url.to_owned(),
+                width: dimension("width"),
+                height: dimension("height"),
+                ..Default::default()
+            });
+        }
+    }
+    let preference = |url: &str| {
+        let index = THUMBNAIL_NAMES
+            .iter()
+            .position(|name| url.contains(&format!("/{id}/{name}")))
+            .unwrap_or(THUMBNAIL_NAMES.len()) as i64;
+        i64::from(if url.contains(".webp") { 0 } else { -1 }) - 2 * index
+    };
+    for thumbnail in &mut saved {
+        thumbnail.preference = Some(preference(&thumbnail.url));
+    }
+    let mut best = saved.clone();
+    // `_sort_thumbnails` on the saved copy: the last is the best known thumbnail.
+    best.sort_by(|a, b| {
+        let key = |t: &crate::Thumbnail| {
+            (
+                t.preference.unwrap_or(-1),
+                t.width.map_or(-1, i64::from),
+                t.height.map_or(-1, i64::from),
+            )
+        };
+        key(a).cmp(&key(b)).then_with(|| a.url.cmp(&b.url))
+    });
+    let thumbnail = best.last().map(|t| t.url.clone());
+    let mut all = saved;
+    for name in THUMBNAIL_NAMES {
+        for ext in ["webp", "jpg"] {
+            let webp = if ext == "webp" { "_webp" } else { "" };
+            let url = format!("https://i.ytimg.com/vi{webp}/{id}/{name}.{ext}");
+            all.push(crate::Thumbnail {
+                preference: Some(preference(&url)),
+                url,
+                ..Default::default()
+            });
+        }
+    }
+    let mut seen = std::collections::HashSet::new();
+    all.retain(|thumbnail| seen.insert(thumbnail.url.clone()));
+    (all, thumbnail)
+}
+
 /// Metadata for the supported (non-live) player responses.
 pub(super) fn parse(player: &Value) -> Metadata {
     let details = &player["videoDetails"];
+    let id = details["videoId"].as_str().unwrap_or_default();
+    let (thumbnails, thumbnail) = thumbnails(player, id);
     let micro = player
         .pointer("/microformat/playerMicroformatRenderer")
         .unwrap_or(&Value::Null);
@@ -277,6 +396,8 @@ pub(super) fn parse(player: &Value) -> Metadata {
         upload_date,
         timestamp,
         availability: availability.map(str::to_owned),
+        thumbnail,
+        thumbnails,
     }
 }
 

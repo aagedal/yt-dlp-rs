@@ -300,6 +300,33 @@ pub(crate) fn download_subtitle(
     )
 }
 
+/// Copy a thumbnail with the whole-file transport (no page referrer, no media
+/// MIME check), publishing without overwriting.
+pub(crate) fn download_thumbnail(
+    client: &Client,
+    url: &url::Url,
+    destination: &Path,
+    options: DownloadOptions,
+) -> Result<u64> {
+    if !matches!(url.scheme(), "http" | "https") {
+        return Err(Error::UnsupportedScheme(url.scheme().into()));
+    }
+    download_resource(
+        client,
+        &HttpResource {
+            url,
+            referrer: None,
+            validate_media: false,
+            subtitle: false,
+            limits: (None, None),
+            rate_limit: None,
+        },
+        destination,
+        options,
+        &mut |_| ControlFlow::Continue(()),
+    )
+}
+
 struct HttpResource<'a> {
     url: &'a url::Url,
     referrer: Option<&'a url::Url>,

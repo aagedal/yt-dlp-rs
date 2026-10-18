@@ -175,7 +175,7 @@ pub(super) fn output_path(
 }
 
 /// Python `replace_extension(filename, ext, expected_real_ext)` on path text.
-pub(super) fn replace_extension(filename: &str, ext: &str, expected: Option<&str>) -> String {
+pub fn replace_extension(filename: &str, ext: &str, expected: Option<&str>) -> String {
     let start = filename.rfind('/').map_or(0, |index| index + 1);
     let name = &filename[start..];
     // `splitext`: the last dot, if a non-dot character precedes it.

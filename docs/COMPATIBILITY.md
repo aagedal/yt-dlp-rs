@@ -41,6 +41,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--sleep-interval`/`--min-sleep-interval`, `--max-sleep-interval`, `--sleep-subtitles SECONDS` | Upstream validation messages; sleep a uniform random interval (time-seeded, not Python's RNG) before each media stream download after existing-file checks, and before each subtitle download; `--sleep-requests` is not implemented |
 | `--min-filesize SIZE`, `--max-filesize SIZE` | Upstream `parse_bytes` sizes (`50k`, `44.6M`); whole-file HTTP media transfers with a declared length outside the limits are skipped with upstream's `[download]` message, no error and no archive record; fragment/HLS/DASH transfers are not checked |
 | `--write-description`, `--no-write-description` | Write the represented description to the `description` output type (`.description`) before subtitles; upstream messages for missing/present descriptions; follows overwrite options; playlists report no description |
+| `--list-thumbnails` | Upstream `[info] Available thumbnails for ID:` table (ID/Width/Height/URL) or `ID has no thumbnails`; implies list-only simulation like other listings |
+| `--write-thumbnail`, `--no-write-thumbnail`, `--write-all-thumbnails` | Upstream flag folding; try thumbnails best-first until one is written (all with `--write-all-thumbnails`, named `ID.EXT` when several), before info JSON; upstream messages, 404 skip, overwrite options; raw bytes, no conversion or embedding |
 | `--write-playlist-metafiles`, `--no-write-playlist-metafiles` | Enable (default) or disable playlist info JSON/description files |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
@@ -91,7 +93,12 @@ handle), `view_count`, `average_rating`, `age_limit`, `categories`, `tags`,
 `playable_in_embed`, `live_status`, `media_type`, `upload_date`/`timestamp`
 (microformat `uploadDate` with zone) and `availability` (without initial-data
 badges). `ytInitialData`-derived fields (`uploader`, `channel`, likes, comments,
-chapters), watch-page meta fallbacks and thumbnails are not extracted. These
+chapters) and watch-page meta fallbacks are not extracted. Thumbnails follow
+upstream: saved `videoDetails`/microformat thumbnails, 38 generated `i.ytimg.com`
+candidates with name/WebP preferences, URL deduplication and the best saved
+thumbnail as `thumbnail`. HTML5 media `poster` attributes become thumbnails.
+All videos then get upstream `_sanitize_thumbnails` ordering, IDs, resolutions
+and `thumbnail` finalization (no `--check-formats` URL testing). These
 fields appear in JSON, info JSON, match filters and (scalar ones) output
 templates; see [the source slice](../upstream/notes/youtube-metadata.md).
 

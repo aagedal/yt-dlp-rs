@@ -21,7 +21,7 @@ class YoutubeComparisonTest(unittest.TestCase):
 
     def test_exact_fixture_matches_without_mutating_input(self):
         original = copy.deepcopy(self.info)
-        self.info["thumbnail"] = "x"  # Outside the explicit comparison subset.
+        self.info["fulltitle"] = "x"  # Outside the explicit comparison subset.
         self.assertEqual(compare(self.info, self.expected), self.expected)
         self.assertEqual(self.info["formats"], original["formats"])
 

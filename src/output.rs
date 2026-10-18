@@ -4,11 +4,13 @@ mod print;
 mod sanitize;
 mod subtitles;
 mod template;
-pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths};
+mod thumbnails;
+pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths, replace_extension};
 pub use formats::render_formats;
 pub use print::{PrintTemplate, PrintToFile};
 pub use sanitize::{FilenameMode, force_sanitize_path, sanitize_filename};
 pub use subtitles::{render_automatic_captions, render_subtitles};
+pub use thumbnails::render_thumbnails;
 
 use crate::{PlaylistCounts, PlaylistInfo, Result, VideoInfo};
 use std::path::PathBuf;

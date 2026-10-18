@@ -27,6 +27,8 @@ struct Html5Page {
 struct Html5Entry {
     sources: Vec<Html5Source>,
     subtitles: Subtitles,
+    /// `absolute_url(poster)`.
+    thumbnail: Option<String>,
 }
 
 // Match the pinned determine_ext URL suffix rules, without MIME requests.
@@ -112,6 +114,25 @@ fn unsupported(reason: &str) -> Error {
 
 fn selector(value: &str) -> Selector {
     Selector::parse(value).expect("static HTML selector")
+}
+
+/// `(?:[a-zA-Z][a-zA-Z0-9+-.]*:)?//` at the start (upstream `urljoin` keeps these).
+fn scheme_relative(value: &str) -> bool {
+    let rest = match value.find(':') {
+        Some(colon)
+            if value[..colon]
+                .chars()
+                .next()
+                .is_some_and(|c| c.is_ascii_alphabetic())
+                && value[..colon]
+                    .chars()
+                    .all(|c| c.is_ascii_alphanumeric() || ('+'..='.').contains(&c)) =>
+        {
+            &value[colon + 1..]
+        }
+        _ => value,
+    };
+    rest.starts_with("//")
 }
 
 fn nonempty(value: Option<&str>) -> Option<&str> {
@@ -210,9 +231,17 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                 subtitles.entries.push((language, vec![format]));
             }
         }
+        // Upstream `urljoin`: empty values are absent, scheme/protocol-relative
+        // URLs are kept verbatim, and others resolve against the base.
+        let thumbnail = match element.value().attr("poster") {
+            None | Some("") => None,
+            Some(poster) if scheme_relative(poster) => Some(poster.to_owned()),
+            Some(poster) => base.join(poster).ok().map(String::from),
+        };
         entries.push(Html5Entry {
             sources: urls,
             subtitles,
+            thumbnail,
         });
     }
     if entries.is_empty() {
@@ -386,6 +415,7 @@ impl Extractor for GenericHttp {
             let mut info = first_info.expect("parsed HTML5 media has at least one source");
             info.formats = formats;
             info.subtitles = entry.subtitles.clone();
+            info.metadata.thumbnail = entry.thumbnail.clone();
             info.id = format!("{}-{}", media.id, index + 1);
             info.title = format!("{} ({})", media.title, index + 1);
             info.webpage_url = page_url.clone();

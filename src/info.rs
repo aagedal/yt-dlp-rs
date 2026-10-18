@@ -138,6 +138,43 @@ pub struct VideoFormat {
     pub height: Option<u32>,
 }
 
+/// One upstream thumbnail dictionary.
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct Thumbnail {
+    pub url: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub width: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub height: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub preference: Option<i64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolution: Option<String>,
+}
+
+/// Upstream `sanitize_url`: protocol-relative URLs use `http:` and common
+/// scheme typos are repaired.
+pub fn sanitize_url(url: &str) -> String {
+    if url.starts_with("//") {
+        return format!("http:{url}");
+    }
+    if let Some(rest) = url.strip_prefix("httpss://") {
+        return format!("https://{rest}");
+    }
+    for (typo, fixed) in [
+        ("rmtp://", "rtmp://"),
+        ("rmtpe://", "rtmpe://"),
+        ("rmtps://", "rtmps://"),
+    ] {
+        if let Some(rest) = url.strip_prefix(typo) {
+            return format!("{fixed}{rest}");
+        }
+    }
+    url.to_owned()
+}
+
 /// Represented descriptive metadata; every field is optional and omitted when
 /// unknown. Field names and types follow the upstream info dictionary.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -178,6 +215,68 @@ pub struct Metadata {
     pub timestamp: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub availability: Option<String>,
+    /// The best thumbnail known to exist, as upstream extractors report it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub thumbnail: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub thumbnails: Vec<Thumbnail>,
+}
+
+impl Metadata {
+    /// Upstream `YoutubeDL._sanitize_thumbnails` (without `--check-formats`):
+    /// fall back to `thumbnail`, sort ascending by preference/width/height/
+    /// id/url, assign index IDs and resolutions and sanitize URLs.
+    pub fn sanitize_thumbnails(&mut self) {
+        if self.thumbnails.is_empty() {
+            match &self.thumbnail {
+                Some(url) if !url.is_empty() => self.thumbnails.push(Thumbnail {
+                    url: url.clone(),
+                    ..Default::default()
+                }),
+                _ => return self.finish_thumbnail(),
+            }
+        }
+        self.thumbnails.sort_by(|a, b| {
+            let key = |t: &Thumbnail| {
+                (
+                    t.preference.unwrap_or(-1),
+                    t.width.map_or(-1, i64::from),
+                    t.height.map_or(-1, i64::from),
+                )
+            };
+            key(a)
+                .cmp(&key(b))
+                .then_with(|| {
+                    a.id.as_deref()
+                        .unwrap_or("")
+                        .cmp(b.id.as_deref().unwrap_or(""))
+                })
+                .then_with(|| a.url.cmp(&b.url))
+        });
+        for (index, thumbnail) in self.thumbnails.iter_mut().enumerate() {
+            thumbnail.id.get_or_insert_with(|| index.to_string());
+            if let (Some(width), Some(height)) = (thumbnail.width, thumbnail.height)
+                && width != 0
+                && height != 0
+            {
+                thumbnail.resolution = Some(format!("{width}x{height}"));
+            }
+            thumbnail.url = sanitize_url(&thumbnail.url);
+        }
+        self.finish_thumbnail();
+    }
+
+    /// `process_video_result`: sanitize `thumbnail`, or use the best of `thumbnails`.
+    fn finish_thumbnail(&mut self) {
+        match &self.thumbnail {
+            Some(url) if !url.is_empty() => self.thumbnail = Some(sanitize_url(url)),
+            _ => {
+                if let Some(best) = self.thumbnails.last() {
+                    self.thumbnail = Some(best.url.clone());
+                }
+            }
+        }
+    }
 }
 
 /// Small, explicitly supported subset of yt-dlp's info dictionary.

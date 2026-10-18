@@ -515,7 +515,7 @@ fn real_saved_player_extracts_challenged_progressive_metadata() {
             .replace("{{ORIGIN}}", server.origin.as_str().trim_end_matches('/')),
     )
     .unwrap();
-    let actual = serde_json::to_value(&info).unwrap();
+    let actual = super::comparable_info(&info);
     for (key, value) in expected.as_object().unwrap() {
         assert_eq!(&actual[key], value, "{key}");
     }
@@ -702,7 +702,7 @@ fn real_saved_player_signature_and_n_extraction_match_upstream_metadata_and_down
             .replace("{{ORIGIN}}", server.origin.as_str().trim_end_matches('/')),
     )
     .unwrap();
-    let actual = serde_json::to_value(&info).unwrap();
+    let actual = super::comparable_info(&info);
     for (key, value) in expected.as_object().unwrap() {
         assert_eq!(&actual[key], value, "{key}");
     }
@@ -835,7 +835,7 @@ fn saved_player_metadata_matches_the_upstream_normalized_fields() {
             .replace("{{ORIGIN}}", server.origin.as_str().trim_end_matches('/')),
     )
     .unwrap();
-    let actual = serde_json::to_value(&info).unwrap();
+    let actual = super::comparable_info(&info);
     for (key, value) in expected.as_object().unwrap() {
         if key != "formats" {
             assert_eq!(&actual[key], value, "{key}");

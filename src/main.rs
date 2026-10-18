@@ -104,6 +104,18 @@ struct Args {
     /// List available subtitle languages/formats without downloading
     #[arg(long)]
     list_subs: bool,
+    /// Write the best available thumbnail image
+    #[arg(long, action = clap::ArgAction::Count)]
+    write_thumbnail: u8,
+    /// Do not write thumbnail images (default)
+    #[arg(long, action = clap::ArgAction::Count)]
+    no_write_thumbnail: u8,
+    /// Write all thumbnail images
+    #[arg(long, action = clap::ArgAction::Count)]
+    write_all_thumbnails: u8,
+    /// List available thumbnails without downloading
+    #[arg(long)]
+    list_thumbnails: bool,
     /// Write selected subtitle sidecars before downloading media
     #[arg(long, alias = "write-srt", overrides_with = "no_write_subs")]
     write_subs: bool,
@@ -383,7 +395,7 @@ impl Args {
             || self.get_id
             || self.get_url
             || self.get_filename;
-        let listing = self.list_formats || self.list_subs;
+        let listing = self.list_formats || self.list_subs || self.list_thumbnails;
         let explicit = if self.simulate {
             Some(true)
         } else if self.no_simulate {
@@ -619,6 +631,31 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .map(|(_, value)| value.clone())
             .collect()
     };
+    // Upstream `writethumbnail`: --write-thumbnail keeps an earlier "all",
+    // --no-write-thumbnail clears it, --write-all-thumbnails sets "all".
+    let thumbnail_mode = {
+        let mut events: Vec<(usize, u8)> = Vec::new();
+        for (id, kind) in [
+            ("write_thumbnail", 1),
+            ("no_write_thumbnail", 0),
+            ("write_all_thumbnails", 2),
+        ] {
+            if matches.value_source(id) == Some(clap::parser::ValueSource::CommandLine) {
+                events.extend(
+                    matches
+                        .indices_of(id)
+                        .into_iter()
+                        .flatten()
+                        .map(|i| (i, kind)),
+                );
+            }
+        }
+        events.sort();
+        events.into_iter().fold(0u8, |state, (_, kind)| match kind {
+            1 => state.max(1),
+            other => other,
+        })
+    };
     let match_filters = MatchFilters::parse(
         &after_reset("match_filters", "no_match_filters"),
         &after_reset("break_match_filters", "no_break_match_filters"),
@@ -674,7 +711,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         list_only,
         ..
     } = args.simulation();
-    let listing = args.list_formats || args.list_subs;
+    let listing = args.list_formats || args.list_subs || args.list_thumbnails;
     let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
     let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
     audio_options.keep_video = args.keep_video;
@@ -808,6 +845,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // Like upstream, simulation never writes info JSON.
     let writes_info_json = args.write_info_json && !simulate;
     let writes_description = args.write_description && !simulate;
+    let writes_thumbnails = thumbnail_mode != 0 && !simulate;
     let playlist_files = !args.no_write_playlist_metafiles;
     let sleep = SleepPolicy::from_cli(
         args.sleep_interval,
@@ -942,6 +980,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 continue;
             }
         }
+        if let (ExtractResult::Playlist(playlist), true) =
+            (&extracted, args.list_thumbnails && playlist_files)
+        {
+            // Playlist results carry no represented thumbnails.
+            writeln!(stdout, "{} has no thumbnails", playlist.id)?;
+        }
         let single_json = args
             .dump_single_json
             .then(|| single_json(&extracted, counts))
@@ -951,6 +995,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             let mut counted = false;
             let mut entry_cancel = None;
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+                // Upstream lists thumbnails, then subtitles, then formats.
+                if args.list_thumbnails {
+                    write!(stdout, "{}", yt_dlp_rs::output::render_thumbnails(&info))?;
+                }
                 if args.list_subs {
                     if !info.automatic_captions.is_empty() {
                         write!(stdout, "{}", render_automatic_captions(&info))?;
@@ -1035,6 +1083,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     if args.skip_download
                         && !writes_info_json
                         && !writes_description
+                        && !writes_thumbnails
                         && info
                             .requested_subtitles
                             .as_ref()
@@ -1214,6 +1263,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             embedded_file.ext = converted.ext;
                         }
                         embedding_files.push(embedded_file);
+                    }
+                    // Upstream writes thumbnails after subtitles and before info JSON.
+                    if writes_thumbnails {
+                        write_thumbnails(
+                            &downloader,
+                            &info,
+                            templates.prepare(&info, Some("thumbnail"), &template_options)?,
+                            thumbnail_mode == 2,
+                            overwrites,
+                            args.retries,
+                        )?;
                     }
                     // Upstream writes info JSON after subtitles and before media.
                     if let Some(info_json) = &info_json {
@@ -1463,6 +1523,124 @@ fn epoch() -> u64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .map_or(0, |elapsed| elapsed.as_secs())
+}
+
+/// Upstream `determine_ext(url, 'jpg')`.
+fn determine_ext(url: &str) -> String {
+    const KNOWN: &[&str] = &[
+        "3g2", "3gp", "f4v", "mk3d", "divx", "mpg", "ogv", "m4v", "wmv", "avi", "flv", "mkv",
+        "mov", "mp4", "webm", "aac", "ape", "asf", "f4a", "f4b", "m4b", "m4r", "oga", "ogx", "spx",
+        "vorbis", "wma", "weba", "aiff", "alac", "flac", "m4a", "mka", "mp3", "ogg", "opus", "wav",
+        "f4f", "f4m", "m3u8", "smil", "mpd",
+    ];
+    if !url.contains('.') {
+        return "jpg".into();
+    }
+    let path = url.split('?').next().unwrap_or("");
+    let guess = path.rsplit_once('.').map_or(path, |(_, guess)| guess);
+    if !guess.is_empty() && guess.bytes().all(|b| b.is_ascii_alphanumeric()) {
+        guess.into()
+    } else if KNOWN.contains(&guess.trim_end_matches('/')) {
+        guess.trim_end_matches('/').into()
+    } else {
+        "jpg".into()
+    }
+}
+
+/// Upstream `_write_thumbnails` for a video: try thumbnails from best to worst
+/// until one is written (or all of them with `write_all`).
+fn write_thumbnails(
+    downloader: &YoutubeDl,
+    info: &yt_dlp_rs::VideoInfo,
+    base: Option<PathBuf>,
+    write_all: bool,
+    overwrites: Option<bool>,
+    retries: u8,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let thumbnails = &info.metadata.thumbnails;
+    if thumbnails.is_empty() {
+        screen!("[info] There are no video thumbnails to download");
+        return Ok(());
+    }
+    let Some(base) = base else {
+        return Ok(());
+    };
+    let multiple = write_all && thumbnails.len() > 1;
+    let base = base.to_string_lossy();
+    let mut written = false;
+    for thumbnail in thumbnails.iter().rev() {
+        let id = thumbnail.id.as_deref().unwrap_or("None");
+        let mut ext = determine_ext(&thumbnail.url);
+        if multiple {
+            ext = format!("{id}.{ext}");
+        }
+        let display = format!("video thumbnail {id}");
+        let path = PathBuf::from(yt_dlp_rs::output::replace_extension(
+            &base,
+            &ext,
+            Some(&info.ext),
+        ));
+        if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
+            std::fs::create_dir_all(parent)?;
+        }
+        if path_exists(&path)? {
+            if overwrites == Some(false) {
+                let label = if multiple {
+                    display.clone()
+                } else {
+                    "video thumbnail".into()
+                };
+                let mut chars = label.chars();
+                let capitalized: String = chars
+                    .next()
+                    .map(|c| {
+                        c.to_uppercase()
+                            .chain(chars.flat_map(char::to_lowercase))
+                            .collect()
+                    })
+                    .unwrap_or_default();
+                screen!("[info] {capitalized} is already present");
+                written = true;
+                if !write_all {
+                    break;
+                }
+                continue;
+            }
+            screen!("[download] Deleting existing file {}", path.display());
+            std::fs::remove_file(&path)?;
+        }
+        screen!("[info] Downloading {display} ...");
+        let options = DownloadOptions {
+            retries,
+            ..Default::default()
+        };
+        match downloader.download_thumbnail(&thumbnail.url, &path, options) {
+            Ok(_) => {
+                screen!("[info] Writing {display} to: {}", path.display());
+                written = true;
+            }
+            Err(yt_dlp_rs::Error::Http(error))
+                if error.status() == Some(reqwest::StatusCode::NOT_FOUND) =>
+            {
+                let title: Vec<String> = display
+                    .split(' ')
+                    .map(|word| {
+                        let mut chars = word.chars();
+                        chars
+                            .next()
+                            .map(|c| c.to_uppercase().chain(chars).collect())
+                            .unwrap_or_default()
+                    })
+                    .collect();
+                screen!("[info] {} does not exist", title.join(" "));
+            }
+            Err(error) => warning!("WARNING: Unable to download {display}: {error}"),
+        }
+        if written && !write_all {
+            break;
+        }
+    }
+    Ok(())
 }
 
 /// Upstream `_write_description` for a video.

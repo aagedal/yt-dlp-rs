@@ -37,8 +37,20 @@ FIELDS = ("id", "title", "extractor", "extractor_key", "webpage_url")
 METADATA_FIELDS = (
     "description", "duration", "channel_id", "channel_url", "uploader_id", "uploader_url",
     "view_count", "average_rating", "age_limit", "categories", "tags", "playable_in_embed",
-    "live_status", "media_type", "upload_date", "timestamp", "availability",
+    "live_status", "media_type", "upload_date", "timestamp", "availability", "thumbnail",
 )
+THUMBNAIL_FIELDS = ("url", "width", "height", "preference")
+
+
+def sorted_thumbnails(thumbnails):
+    """Upstream `_sort_thumbnails` order (before ID assignment), compared fields only."""
+    ordered = sorted(thumbnails or [], key=lambda t: (
+        t.get("preference") if t.get("preference") is not None else -1,
+        t.get("width") if t.get("width") is not None else -1,
+        t.get("height") if t.get("height") is not None else -1,
+        t.get("id") if t.get("id") is not None else "",
+        t.get("url")))
+    return [{field: t.get(field) for field in THUMBNAIL_FIELDS} for t in ordered]
 FORMAT_FIELDS = ("format_id", "ext", "width", "height", "url", "filesize")
 FIXTURE_CASES = (
     ("progressive.html", "expected.json", "watch-page"),
@@ -161,6 +173,11 @@ def normalize(info, origin=ORIGIN, *, adaptive=False):
     """Select explicit fields; map adaptive codec flags/rates and fixture origin."""
     result = {field: info[field] for field in FIELDS}
     result.update({field: info.get(field) for field in METADATA_FIELDS})
+    result["thumbnails"] = sorted_thumbnails(info.get("thumbnails"))
+    # `process_video_result` finalization: keep the extractor's best thumbnail,
+    # otherwise use the best sorted candidate (sanitize_url is a no-op here).
+    if not result["thumbnail"] and result["thumbnails"]:
+        result["thumbnail"] = result["thumbnails"][-1]["url"]
     result["formats"] = [
         {field: entry[field] for field in FORMAT_FIELDS}
         for entry in info["formats"]
