@@ -1,0 +1,39 @@
+{
+  "id": "BaW_jenozKc",
+  "title": "Metadata fixture",
+  "extractor": "youtube",
+  "extractor_key": "Youtube",
+  "webpage_url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+  "description": "Line one\nLine two & more",
+  "duration": 597,
+  "channel_id": "UCSMOQeBJ2RAnuFungnQOxLg",
+  "channel_url": "https://www.youtube.com/channel/UCSMOQeBJ2RAnuFungnQOxLg",
+  "uploader_id": "@BlenderOfficial",
+  "uploader_url": "https://www.youtube.com/@BlenderOfficial",
+  "view_count": 12345,
+  "average_rating": 4.75,
+  "age_limit": 18,
+  "categories": [
+    "Film & Animation"
+  ],
+  "tags": [
+    "blender",
+    "open movie"
+  ],
+  "playable_in_embed": true,
+  "live_status": "not_live",
+  "media_type": "short",
+  "upload_date": "20080529",
+  "timestamp": 1212044400,
+  "availability": "needs_auth",
+  "formats": [
+    {
+      "format_id": "18",
+      "ext": "mp4",
+      "width": 640,
+      "height": 360,
+      "url": "{{ORIGIN}}/media/low.mp4",
+      "filesize": 5
+    }
+  ]
+}

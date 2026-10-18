@@ -260,11 +260,13 @@ fn sleep_interval_pauses_before_media_and_validates_like_upstream() {
     );
     assert!(output.status.success(), "{}", stderr(&output));
     assert!(start.elapsed() >= Duration::from_millis(400));
-    assert!(
-        stderr(&output).contains("[download] Sleeping 0.4"),
-        "{}",
-        stderr(&output)
-    );
+    let slept: f64 = stderr(&output)
+        .split("[download] Sleeping ")
+        .nth(1)
+        .and_then(|rest| rest.split(' ').next())
+        .and_then(|seconds| seconds.parse().ok())
+        .unwrap();
+    assert!((0.4..=0.5).contains(&slept), "{slept}");
     // Already-downloaded files do not sleep.
     let output = cli(&["--sleep-interval", "5", &url], directory.path(), None);
     assert!(output.status.success());

@@ -10,7 +10,7 @@ this checks normalized metadata with that solved vector, not solver or player
 acquisition parity. Rust fixture tests independently
 consume the same expected JSON files. This does not establish live-site or client
 request parity: the saved API response is injected after acquisition.
-Only FIELDS and FORMAT_FIELDS are compared, preserving ordered formats. Adaptive
+Only FIELDS, METADATA_FIELDS and FORMAT_FIELDS are compared, preserving ordered formats. Adaptive
 metadata additionally compares stream_kind, tbr and abr: upstream acodec/vcodec
 flags map to stream kind, and audio-only total bitrate maps to audio bitrate
 (as upstream format processing does). The URL normalization replaces the exact
@@ -32,12 +32,20 @@ from urllib.parse import urlsplit
 ORIGIN = "http://127.0.0.1:43210"
 PINNED_UPSTREAM = "897341241f2bfb2439fe0367f4c7c9ccd29a3828"
 FIELDS = ("id", "title", "extractor", "extractor_key", "webpage_url")
+# Descriptive fields derived from the player response alone (no ytInitialData,
+# meta tags or thumbnails); missing values compare as null.
+METADATA_FIELDS = (
+    "description", "duration", "channel_id", "channel_url", "uploader_id", "uploader_url",
+    "view_count", "average_rating", "age_limit", "categories", "tags", "playable_in_embed",
+    "live_status", "media_type", "upload_date", "timestamp", "availability",
+)
 FORMAT_FIELDS = ("format_id", "ext", "width", "height", "url", "filesize")
 FIXTURE_CASES = (
     ("progressive.html", "expected.json", "watch-page"),
     ("player-api.json", "player-api-expected.json", "player-api"),
     ("n-extraction.json", "n-extraction-expected.json", "n-extraction"),
     ("adaptive.json", "adaptive-expected.json", "adaptive"),
+    ("metadata.json", "metadata-expected.json", "metadata"),
 )
 SIGNATURE_CASE = ("signature-extraction.json", "signature-extraction-expected.json",
                   "signature-extraction")
@@ -64,7 +72,8 @@ is_api = sys.argv[4] == 'player-api'
 is_n = sys.argv[4] == 'n-extraction'
 is_signature = sys.argv[4] == 'signature-extraction'
 is_adaptive = sys.argv[4] == 'adaptive'
-is_json = is_api or is_n or is_signature or is_adaptive
+is_metadata = sys.argv[4] == 'metadata'
+is_json = is_api or is_n or is_signature or is_adaptive or is_metadata
 has_player = is_n or is_signature
 player_url = 'https://www.youtube.com/s/player/74edf1a3/player_ias.vflset/en_US/base.js'
 solves = []
@@ -151,6 +160,7 @@ with YoutubeDL({'quiet': True, 'no_warnings': True, 'cachedir': False,
 def normalize(info, origin=ORIGIN, *, adaptive=False):
     """Select explicit fields; map adaptive codec flags/rates and fixture origin."""
     result = {field: info[field] for field in FIELDS}
+    result.update({field: info.get(field) for field in METADATA_FIELDS})
     result["formats"] = [
         {field: entry[field] for field in FORMAT_FIELDS}
         for entry in info["formats"]

@@ -818,3 +818,28 @@ fn adaptive_without_standalone_requires_explicit_stream_or_configured_merge() {
 mod manifests;
 
 mod captions;
+
+#[test]
+fn saved_player_metadata_matches_the_upstream_normalized_fields() {
+    let saved: Value = serde_json::from_str(include_str!(
+        "../../../tests/fixtures/youtube/metadata.json"
+    ))
+    .unwrap();
+    let server = Server::new(vec![
+        reply(WATCH, "text/html", page(Some(saved))),
+        reply("/media/low.mp4", "video/mp4", "media"),
+    ]);
+    let info = extract_watch_page(&Client::new(), &server.watch(), ID).unwrap();
+    let expected: Value = serde_json::from_str(
+        &include_str!("../../../tests/fixtures/youtube/metadata-expected.json")
+            .replace("{{ORIGIN}}", server.origin.as_str().trim_end_matches('/')),
+    )
+    .unwrap();
+    let actual = serde_json::to_value(&info).unwrap();
+    for (key, value) in expected.as_object().unwrap() {
+        if key != "formats" {
+            assert_eq!(&actual[key], value, "{key}");
+        }
+    }
+    assert_eq!(info.formats.len(), 1);
+}

@@ -138,6 +138,8 @@
         "tools/test_compare_youtube.py",
         "docs/COMPATIBILITY.md",
         "upstream/notes/youtube-watch-page.md",
+        "src/extractor/youtube/metadata.rs",
+        "upstream/notes/youtube-metadata.md",
         "upstream/notes/youtube-player-api.md",
         "upstream/notes/youtube-challenge-runtime.md",
         "upstream/notes/youtube-n-extraction.md",
@@ -153,7 +155,7 @@
         "tools/test_compare_youtube_captions.py",
         "upstream/notes/youtube-captions.md"
       ],
-      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API direct formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; native finite HLS VOD discovery for initial/anonymous WEB responses under optional HLS token policy, shared path-n and direct URL challenge batch, native hls format IDs/groups; no other API clients, token acquisition, authentication, live, fragmented direct adaptive delivery, DASH discovery, SABR or playlists; bounded manual/ASR caption URL/name metadata, translation/original aliases and audio-language inference under WEB subtitle token policy; no caption token acquisition or URL deciphering"
+      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API direct formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; native finite HLS VOD discovery for initial/anonymous WEB responses under optional HLS token policy, shared path-n and direct URL challenge batch, native hls format IDs/groups; no other API clients, token acquisition, authentication, live, fragmented direct adaptive delivery, DASH discovery, SABR or playlists; bounded manual/ASR caption URL/name metadata, translation/original aliases and audio-language inference under WEB subtitle token policy; no caption token acquisition or URL deciphering; player-response descriptive metadata (description, duration, channel/uploader IDs/URLs, views, rating, age limit, categories, tags, embed/live/media type, upload date/timestamp, availability without badges) compared against upstream for six saved cases; no ytInitialData, meta-tag or thumbnail metadata"
     },
     {
       "name": "youtube-challenge-runtime",

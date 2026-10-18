@@ -72,6 +72,20 @@ const FIELDS: &[&str] = &[
     "playlist_count",
     "n_entries",
     "direct",
+    "description",
+    "duration",
+    "channel_id",
+    "channel_url",
+    "uploader_id",
+    "uploader_url",
+    "view_count",
+    "age_limit",
+    "playable_in_embed",
+    "live_status",
+    "media_type",
+    "upload_date",
+    "timestamp",
+    "availability",
 ];
 
 fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
@@ -132,6 +146,25 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
         "playlist_count" => info.playlist_count.map(|n| Integer(n as u64)),
         "n_entries" => info.n_entries.map(|n| Integer(n as u64)),
         "direct" => Some(Boolean(info.direct)),
+        "description" => info.metadata.description.as_deref().map(Text),
+        "duration" => info.metadata.duration.map(Integer),
+        "channel_id" => info.metadata.channel_id.as_deref().map(Text),
+        "channel_url" => info.metadata.channel_url.as_deref().map(Text),
+        "uploader_id" => info.metadata.uploader_id.as_deref().map(Text),
+        "uploader_url" => info.metadata.uploader_url.as_deref().map(Text),
+        "view_count" => info.metadata.view_count.map(Integer),
+        "age_limit" => info.metadata.age_limit.map(|n| Integer(n.into())),
+        "playable_in_embed" => info.metadata.playable_in_embed.map(Boolean),
+        "live_status" => info.metadata.live_status.as_deref().map(Text),
+        "media_type" => info.metadata.media_type.as_deref().map(Text),
+        "upload_date" => info.metadata.upload_date.as_deref().map(Text),
+        // Negative timestamps are not representable by the typed renderer.
+        "timestamp" => info
+            .metadata
+            .timestamp
+            .and_then(|t| u64::try_from(t).ok())
+            .map(Integer),
+        "availability" => info.metadata.availability.as_deref().map(Text),
         _ => return Err(invalid(format!("unknown or unsupported field {name:?}"))),
     })
 }

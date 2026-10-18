@@ -34,7 +34,8 @@ pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
 pub use http::HttpOptions;
 pub use info::{
-    ByteRange, ExtractResult, Fragment, HlsAes128, PlaylistInfo, StreamKind, VideoFormat, VideoInfo,
+    ByteRange, ExtractResult, Fragment, HlsAes128, Metadata, PlaylistInfo, StreamKind, VideoFormat,
+    VideoInfo,
 };
 pub use info_json::{
     InfoJsonWrite, info_json_path, playlist_info_json, to_python_json, video_info_json,

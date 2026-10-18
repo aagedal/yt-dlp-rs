@@ -138,9 +138,53 @@ pub struct VideoFormat {
     pub height: Option<u32>,
 }
 
+/// Represented descriptive metadata; every field is optional and omitted when
+/// unknown. Field names and types follow the upstream info dictionary.
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct Metadata {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration: Option<u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub channel_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub channel_url: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub uploader_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub uploader_url: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub view_count: Option<u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub average_rating: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub age_limit: Option<u8>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub categories: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tags: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub playable_in_embed: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub live_status: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub media_type: Option<String>,
+    /// `YYYYMMDD`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub upload_date: Option<String>,
+    /// UNIX seconds.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub timestamp: Option<i64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub availability: Option<String>,
+}
+
 /// Small, explicitly supported subset of yt-dlp's info dictionary.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoInfo {
+    #[serde(flatten)]
+    pub metadata: Metadata,
     #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
     pub automatic_captions: crate::Subtitles,
     #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
@@ -532,6 +576,7 @@ mod tests {
 
     fn info(formats: Vec<VideoFormat>) -> VideoInfo {
         VideoInfo {
+            metadata: Default::default(),
             automatic_captions: Default::default(),
             subtitles: Default::default(),
             requested_subtitles: None,

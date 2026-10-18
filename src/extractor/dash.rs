@@ -105,6 +105,7 @@ pub(crate) fn from_response(
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem }.to_owned();
     Ok(Some(VideoInfo {
+        metadata: Default::default(),
         automatic_captions: Default::default(),
         subtitles: Default::default(),
         requested_subtitles: None,

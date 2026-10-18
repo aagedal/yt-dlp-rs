@@ -21,7 +21,7 @@ class YoutubeComparisonTest(unittest.TestCase):
 
     def test_exact_fixture_matches_without_mutating_input(self):
         original = copy.deepcopy(self.info)
-        self.info["duration"] = 10  # Outside the explicit comparison subset.
+        self.info["thumbnail"] = "x"  # Outside the explicit comparison subset.
         self.assertEqual(compare(self.info, self.expected), self.expected)
         self.assertEqual(self.info["formats"], original["formats"])
 
@@ -123,11 +123,11 @@ class YoutubeComparisonTest(unittest.TestCase):
                     contextlib.redirect_stdout(io.StringIO()) as stdout:
                 self.assertEqual(main(), 0)
             self.assertIn("Signature comparison skipped", stdout.getvalue())
-            self.assertEqual(run.call_count, 5)
+            self.assertEqual(run.call_count, 6)
             self.assertEqual(run.call_args_list[0].args[0],
                              ["git", "-C", str(upstream.resolve()), "rev-parse", "HEAD"])
             self.assertEqual([call.args[0][-3] for call in run.call_args_list[1:]],
-                             ["watch-page", "player-api", "n-extraction", "adaptive"])
+                             ["watch-page", "player-api", "n-extraction", "adaptive", "metadata"])
 
     def test_signature_fixture_contains_real_cipher_and_exact_saved_solution(self):
         fixtures = Path(__file__).resolve().parents[1] / "tests/fixtures/youtube"
@@ -165,7 +165,7 @@ class YoutubeComparisonTest(unittest.TestCase):
                     mock.patch("compare_youtube.subprocess.run", side_effect=results) as run, \
                     contextlib.redirect_stdout(io.StringIO()) as stdout:
                 self.assertEqual(main(), 0)
-            self.assertEqual(run.call_count, 6)
+            self.assertEqual(run.call_count, 7)
             self.assertEqual(run.call_args.args[0][-3], "signature-extraction")
             self.assertEqual(run.call_args.args[0][-1], str(deno.resolve()))
             self.assertEqual(run.call_args.kwargs["encoding"], "utf-8")

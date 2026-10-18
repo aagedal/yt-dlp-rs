@@ -3,6 +3,7 @@
 mod captions;
 mod challenge;
 mod client;
+mod metadata;
 mod player;
 use super::{Extractor, direct, hls};
 use crate::{Error, Result, StreamKind, VideoFormat, VideoInfo};
@@ -551,6 +552,7 @@ fn extract_watch_page_with_caption_options(
     }
     let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
+        metadata: metadata::parse(&player),
         automatic_captions: captions.automatic,
         subtitles: captions.subtitles,
         requested_subtitles: None,

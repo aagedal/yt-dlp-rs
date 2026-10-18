@@ -82,6 +82,17 @@ use the canonical HTTPS watch URL. Reject channels, playlists, malformed IDs,
 and URLs containing `list=` before making a request. `/live/` is a URL shape;
 live, upcoming, and post-live player responses remain unsupported.
 
+Descriptive metadata follows upstream `_real_extract` for fields derivable from
+the player response alone: `description` (original before microformat text),
+`duration`, `channel_id`/`channel_url`, `uploader_id`/`uploader_url` (owner
+handle), `view_count`, `average_rating`, `age_limit`, `categories`, `tags`,
+`playable_in_embed`, `live_status`, `media_type`, `upload_date`/`timestamp`
+(microformat `uploadDate` with zone) and `availability` (without initial-data
+badges). `ytInitialData`-derived fields (`uploader`, `channel`, likes, comments,
+chapters), watch-page meta fallbacks and thumbnails are not extracted. These
+fields appear in JSON, info JSON, match filters and (scalar ones) output
+templates; see [the source slice](../upstream/notes/youtube-metadata.md).
+
 Watch pages must be uncompressed UTF-8/ASCII `text/html`, at most 2 MiB. Parse
 JSON assigned to `ytInitialPlayerResponse` in a script, including quoted window
 property assignments. Require `playabilityStatus.status=OK`, the requested video
