@@ -294,6 +294,20 @@ struct Args {
     /// Maximum download rate in bytes per second, e.g. 50K or 4.2M
     #[arg(short = 'r', long, aliases = ["rate-limit"], value_name = "RATE")]
     limit_rate: Option<String>,
+    /// Seconds to sleep before each download (the minimum with --max-sleep-interval)
+    #[arg(
+        long,
+        alias = "min-sleep-interval",
+        value_name = "SECONDS",
+        allow_hyphen_values = true
+    )]
+    sleep_interval: Option<f64>,
+    /// Maximum seconds to sleep before each download; requires --min-sleep-interval
+    #[arg(long, value_name = "SECONDS", allow_hyphen_values = true)]
+    max_sleep_interval: Option<f64>,
+    /// Seconds to sleep before each subtitle download
+    #[arg(long, value_name = "SECONDS", allow_hyphen_values = true)]
+    sleep_subtitles: Option<f64>,
     /// Skip media downloads smaller than SIZE, e.g. 50k or 44.6M
     #[arg(long, value_name = "SIZE")]
     min_filesize: Option<String>,
@@ -434,6 +448,91 @@ fn single_json(
             object.insert("entries".into(), entries.unwrap_or_default());
             Ok(value)
         }
+    }
+}
+
+/// Python `str(float)` for ordinary values (`1.0`, `0.5`, `nan`, `inf`).
+fn py_float(value: f64) -> String {
+    if value.is_nan() {
+        "nan".into()
+    } else if value.is_infinite() {
+        if value > 0.0 { "inf" } else { "-inf" }.into()
+    } else if value.fract() == 0.0 && value.abs() < 1e16 {
+        format!("{value:.1}")
+    } else {
+        format!("{value}")
+    }
+}
+
+/// Upstream download/subtitle sleep intervals (`__init__` validation and
+/// `FileDownloader.download`).
+struct SleepPolicy {
+    min: f64,
+    max: f64,
+    subtitles: f64,
+}
+
+impl SleepPolicy {
+    fn from_cli(
+        min: Option<f64>,
+        max: Option<f64>,
+        subtitles: Option<f64>,
+    ) -> Result<Self, String> {
+        for (name, value) in [
+            ("subtitles sleep interval", subtitles),
+            ("sleep interval", min),
+            ("max sleep interval", max),
+        ] {
+            if let Some(value) = value
+                && !(value >= 0.0 && value.is_finite())
+            {
+                return Err(format!(
+                    "{name} \"{}\" must be positive or 0",
+                    py_float(value)
+                ));
+            }
+        }
+        let max = match (min, max) {
+            (None, Some(_)) => {
+                return Err(
+                    "min sleep interval must be specified; use --min-sleep-interval".into(),
+                );
+            }
+            (Some(min), Some(max)) if max < min => {
+                return Err(format!(
+                    "max sleep interval \"{}\" must be must be greater than or equal to min sleep interval \"{}\"",
+                    py_float(max),
+                    py_float(min)
+                ));
+            }
+            (min, max) => max.or(min).unwrap_or(0.0),
+        };
+        Ok(Self {
+            min: min.unwrap_or(0.0),
+            max,
+            subtitles: subtitles.unwrap_or(0.0),
+        })
+    }
+
+    fn pause(seconds: f64) {
+        if seconds > 0.0 {
+            screen!("[download] Sleeping {seconds:.2} seconds ...");
+            std::thread::sleep(Duration::from_secs_f64(seconds));
+        }
+    }
+
+    /// `random.uniform(min, max or min)`.
+    fn media(&self) {
+        let max = if self.max == 0.0 { self.min } else { self.max };
+        let unit = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0, |elapsed| elapsed.subsec_nanos()) as f64
+            / 1e9;
+        Self::pause(self.min + (max - self.min) * unit);
+    }
+
+    fn subtitle(&self) {
+        Self::pause(self.subtitles);
     }
 }
 
@@ -662,6 +761,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     };
     // Like upstream, simulation never writes info JSON.
     let writes_info_json = args.write_info_json && !simulate;
+    let sleep = SleepPolicy::from_cli(
+        args.sleep_interval,
+        args.max_sleep_interval,
+        args.sleep_subtitles,
+    )?;
     let min_filesize = size_option("min filesize", args.min_filesize.as_deref())?;
     let max_filesize = size_option("max filesize", args.max_filesize.as_deref())?;
     // Upstream validates the rate limit as strictly positive.
@@ -980,6 +1084,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     "[info] Writing {language:?} subtitles to: {}",
                                     subtitle_path.display()
                                 );
+                                sleep.subtitle();
                                 downloader.download_subtitle_with_options(
                                     &info,
                                     &subtitle,
@@ -1047,6 +1152,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                     }
                     screen!("[download] Destination: {}", path.display());
+                    // Upstream sleeps before each stream's FileDownloader.download.
+                    for _ in 0..info.requested_formats.len().max(1) {
+                        sleep.media();
+                    }
                     let mut last_progress = Instant::now();
                     let progress = |progress: yt_dlp_rs::DownloadProgress| {
                         if progress.phase == DownloadPhase::Downloading

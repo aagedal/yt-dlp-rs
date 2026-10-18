@@ -135,7 +135,8 @@ Supported today:
 - `-q/--quiet`, `--no-quiet` and `--no-warnings` gate informational and warning lines.
 - `--break-on-existing`, `--break-per-input`, `--force-write-archive` and
   `--no-download-archive` follow upstream archive control.
-- `-r/--limit-rate RATE` throttles media transfers like upstream.
+- `-r/--limit-rate RATE` throttles media transfers like upstream; `--sleep-interval`,
+  `--max-sleep-interval` and `--sleep-subtitles` pause before downloads.
 - `--max-downloads NUMBER` (exit 101) and `--min-filesize`/`--max-filesize SIZE`
   for whole-file HTTP media follow upstream.
 - `-w/--no-overwrites`, `--force-overwrites` and the default follow upstream:

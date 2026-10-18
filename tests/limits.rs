@@ -240,3 +240,53 @@ fn limit_rate_slows_media_transfers_and_rejects_zero() {
     assert!(!zero.status.success());
     assert!(stderr(&zero).contains("rate limit \"0\" must be positive"));
 }
+
+#[test]
+fn sleep_interval_pauses_before_media_and_validates_like_upstream() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("/a.mp4");
+    let start = std::time::Instant::now();
+    let output = cli(
+        &[
+            "--min-sleep-interval",
+            "0.4",
+            "--max-sleep-interval",
+            "0.5",
+            &url,
+        ],
+        directory.path(),
+        None,
+    );
+    assert!(output.status.success(), "{}", stderr(&output));
+    assert!(start.elapsed() >= Duration::from_millis(400));
+    assert!(
+        stderr(&output).contains("[download] Sleeping 0.4"),
+        "{}",
+        stderr(&output)
+    );
+    // Already-downloaded files do not sleep.
+    let output = cli(&["--sleep-interval", "5", &url], directory.path(), None);
+    assert!(output.status.success());
+    assert!(!stderr(&output).contains("Sleeping"));
+    for (args, message) in [
+        (
+            vec!["--max-sleep-interval", "1"],
+            "min sleep interval must be specified",
+        ),
+        (
+            vec!["--sleep-interval", "2", "--max-sleep-interval", "1"],
+            "max sleep interval \"1.0\" must be must be greater than or equal to min sleep interval \"2.0\"",
+        ),
+        (
+            vec!["--sleep-subtitles", "-1"],
+            "subtitles sleep interval \"-1.0\" must be positive or 0",
+        ),
+    ] {
+        let mut all = args.clone();
+        all.push(&url);
+        let output = cli(&all, directory.path(), None);
+        assert!(!output.status.success());
+        assert!(stderr(&output).contains(message), "{}", stderr(&output));
+    }
+}
