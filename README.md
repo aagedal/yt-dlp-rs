@@ -140,6 +140,8 @@ Supported today:
   `--max-sleep-interval` and `--sleep-subtitles` pause before downloads.
 - `--max-downloads NUMBER` (exit 101) and `--min-filesize`/`--max-filesize SIZE`
   for whole-file HTTP media follow upstream.
+- `--write-description` writes `.description` files; `--no-write-playlist-metafiles`
+  disables playlist metadata files.
 - `-w/--no-overwrites`, `--force-overwrites` and the default follow upstream:
   existing media is "already downloaded" by default while sidecars are rewritten.
 - `--download-archive FILE` skips recorded extractor/video IDs before selection and

@@ -150,6 +150,18 @@ struct Args {
     /// Write cleaned video and playlist metadata to .info.json files (existing files are kept)
     #[arg(long, overrides_with = "no_write_info_json")]
     write_info_json: bool,
+    /// Write the video description to a .description file
+    #[arg(long, overrides_with_all = ["write_description", "no_write_description"])]
+    write_description: bool,
+    /// Do not write the video description (default)
+    #[arg(long, overrides_with_all = ["write_description", "no_write_description"])]
+    no_write_description: bool,
+    /// Write playlist metadata files with --write-info-json/--write-description (default)
+    #[arg(long, overrides_with_all = ["write_playlist_metafiles", "no_write_playlist_metafiles"])]
+    write_playlist_metafiles: bool,
+    /// Do not write playlist metadata files
+    #[arg(long, overrides_with_all = ["write_playlist_metafiles", "no_write_playlist_metafiles"])]
+    no_write_playlist_metafiles: bool,
     /// Disable info JSON writing
     #[arg(long, overrides_with = "write_info_json")]
     no_write_info_json: bool,
@@ -795,6 +807,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     };
     // Like upstream, simulation never writes info JSON.
     let writes_info_json = args.write_info_json && !simulate;
+    let writes_description = args.write_description && !simulate;
+    let playlist_files = !args.no_write_playlist_metafiles;
     let sleep = SleepPolicy::from_cli(
         args.sleep_interval,
         args.max_sleep_interval,
@@ -891,25 +905,35 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 continue;
             }
         };
-        if let (ExtractResult::Playlist(playlist), Some(counts), true) =
-            (&extracted, counts, writes_info_json)
-        {
+        if let (ExtractResult::Playlist(playlist), Some(counts), true) = (
+            &extracted,
+            counts,
+            playlist_files && (writes_info_json || writes_description),
+        ) {
             // Upstream writes playlist metadata before processing any entry,
             // and a failed write skips the playlist.
             let written = (|| -> Result<(), Box<dyn std::error::Error>> {
-                let Some(path) = templates.prepare_playlist(
-                    playlist,
-                    counts,
-                    "pl_infojson",
-                    &template_options,
-                )?
-                else {
-                    return Ok(());
-                };
-                reject_reserved(&path, [&archive_path, &args.cookies])?;
-                let value = playlist_info_json(playlist, counts, epoch())?;
-                let written = write_info_json_with(&path, &value, overwrites != Some(false))?;
-                report_info_json("playlist", &path, written);
+                if writes_info_json
+                    && let Some(path) = templates.prepare_playlist(
+                        playlist,
+                        counts,
+                        "pl_infojson",
+                        &template_options,
+                    )?
+                {
+                    reject_reserved(&path, [&archive_path, &args.cookies])?;
+                    let value = playlist_info_json(playlist, counts, epoch())?;
+                    let written = write_info_json_with(&path, &value, overwrites != Some(false))?;
+                    report_info_json("playlist", &path, written);
+                }
+                if writes_description
+                    && templates
+                        .prepare_playlist(playlist, counts, "pl_description", &template_options)?
+                        .is_some()
+                {
+                    // Playlist results carry no represented description.
+                    screen!("[info] There's no playlist description to write");
+                }
                 Ok(())
             })();
             if let Err(error) = written {
@@ -1010,6 +1034,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 } else {
                     if args.skip_download
                         && !writes_info_json
+                        && !writes_description
                         && info
                             .requested_subtitles
                             .as_ref()
@@ -1034,6 +1059,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             path.display()
                         ))
                         .into());
+                    }
+                    // Upstream writes the description before subtitles and info JSON.
+                    if writes_description
+                        && let Some(path) =
+                            templates.prepare(&info, Some("description"), &template_options)?
+                    {
+                        write_description(&path, &info, overwrites)?;
                     }
                     // Plan source, intermediate and final names before subtitle I/O.
                     let has_subtitles = info
@@ -1433,6 +1465,26 @@ fn epoch() -> u64 {
         .map_or(0, |elapsed| elapsed.as_secs())
 }
 
+/// Upstream `_write_description` for a video.
+fn write_description(
+    path: &std::path::Path,
+    info: &yt_dlp_rs::VideoInfo,
+    overwrites: Option<bool>,
+) -> io::Result<()> {
+    if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
+        std::fs::create_dir_all(parent)?;
+    }
+    if overwrites == Some(false) && path.exists() {
+        screen!("[info] Video description is already present");
+    } else if let Some(description) = &info.metadata.description {
+        screen!("[info] Writing video description to: {}", path.display());
+        std::fs::write(path, description)?;
+    } else {
+        screen!("[info] There's no video description to write");
+    }
+    Ok(())
+}
+
 fn report_info_json(label: &str, path: &std::path::Path, written: InfoJsonWrite) {
     match written {
         InfoJsonWrite::Written => {
@@ -1574,6 +1626,35 @@ fn main() -> std::process::ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn descriptions_follow_upstream_overwrite_and_missing_rules() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("sub/video.description");
+        let mut info: yt_dlp_rs::VideoInfo = serde_json::from_value(serde_json::json!({
+            "id": "v", "title": "t", "ext": "mp4", "url": "https://example.invalid/v.mp4",
+            "webpage_url": "https://example.invalid/", "extractor": "generic",
+            "extractor_key": "Generic", "direct": true, "description": "Line one\nLine two",
+        }))
+        .unwrap();
+        write_description(&path, &info, None).unwrap();
+        assert_eq!(
+            std::fs::read_to_string(&path).unwrap(),
+            "Line one\nLine two"
+        );
+        info.metadata.description = Some("changed".into());
+        write_description(&path, &info, Some(false)).unwrap();
+        assert_eq!(
+            std::fs::read_to_string(&path).unwrap(),
+            "Line one\nLine two"
+        );
+        write_description(&path, &info, None).unwrap();
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), "changed");
+        info.metadata.description = None;
+        let missing = directory.path().join("none.description");
+        write_description(&missing, &info, None).unwrap();
+        assert!(!missing.exists());
+    }
 
     #[test]
     fn parse_bytes_matches_upstream_vectors() {

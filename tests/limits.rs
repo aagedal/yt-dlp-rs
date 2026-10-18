@@ -368,3 +368,25 @@ fn match_filters_skip_or_break_like_upstream() {
     assert!(!invalid.status.success());
     assert!(stderr(&invalid).contains("Invalid filter part"));
 }
+
+#[test]
+fn write_description_reports_missing_descriptions_without_files() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("/a.mp4");
+    let output = cli(
+        &["--write-description", "--skip-download", &url],
+        directory.path(),
+        None,
+    );
+    assert!(output.status.success());
+    assert!(stderr(&output).contains("[info] There's no video description to write"));
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    // Simulation never writes descriptions; the last flag wins.
+    let output = cli(
+        &["--write-description", "--no-write-description", &url],
+        directory.path(),
+        None,
+    );
+    assert!(!stderr(&output).contains("description"));
+}
