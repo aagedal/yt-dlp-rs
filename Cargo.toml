@@ -16,6 +16,7 @@ httpdate = "1"
 icu_normalizer = "2.3"
 icu_properties = "2.3"
 percent-encoding = "2.3"
+regex = "1"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "cookies", "socks"] }
 roxmltree = "0.21"
 scraper = { version = "0.24", default-features = false }

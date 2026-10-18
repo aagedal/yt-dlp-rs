@@ -53,6 +53,8 @@ pub enum Error {
     FileSizeLimit(String),
     #[error("postprocessing failed: {0}")]
     Postprocess(String),
+    #[error("match filter failed: {0}")]
+    MatchFilter(String),
     #[error("info JSON failed: {0}")]
     InfoJson(String),
     #[error("download archive failed: {0}")]

@@ -1,4 +1,4 @@
-use clap::Parser;
+use clap::{CommandFactory, FromArgMatches, Parser};
 use std::io::{self, Write};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
@@ -9,9 +9,9 @@ use std::{
 };
 use yt_dlp_rs::{
     AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult,
-    ExtractionOptions, HttpOptions, InfoJsonWrite, PlaylistCounts, PlaylistSelection,
-    PostprocessOptions, SubtitleConversion, SubtitleEmbedding, SubtitleFile, SubtitleOptions,
-    VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
+    ExtractionOptions, HttpOptions, InfoJsonWrite, MatchFilters, MatchOutcome, PlaylistCounts,
+    PlaylistSelection, PostprocessOptions, SubtitleConversion, SubtitleEmbedding, SubtitleFile,
+    SubtitleOptions, VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
     output::{OutputTemplates, PrintTemplate, PrintToFile, TemplateOptions, render_formats},
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
     validate_format_selector, video_info_json, write_info_json_with,
@@ -288,6 +288,18 @@ struct Args {
     /// Do not overwrite the video, but overwrite related files (default)
     #[arg(long, overrides_with_all = ["no_overwrites", "force_overwrites", "no_force_overwrites"])]
     no_force_overwrites: bool,
+    /// Generic video filter: FIELD comparisons/presence joined by &; repeat for OR
+    #[arg(long, value_name = "FILTER", allow_hyphen_values = true)]
+    match_filters: Vec<String>,
+    /// Discard earlier --match-filters
+    #[arg(long, action = clap::ArgAction::Count)]
+    no_match_filters: u8,
+    /// Like --match-filters, but stop the download process when a video is rejected
+    #[arg(long, value_name = "FILTER", allow_hyphen_values = true)]
+    break_match_filters: Vec<String>,
+    /// Discard earlier --break-match-filters
+    #[arg(long, action = clap::ArgAction::Count)]
+    no_break_match_filters: u8,
     /// Abort after processing NUMBER videos (0 means no limit)
     #[arg(long, value_name = "NUMBER", allow_hyphen_values = true)]
     max_downloads: Option<i64>,
@@ -576,7 +588,29 @@ fn size_option(name: &str, value: Option<&str>) -> Result<Option<u64>, String> {
 }
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
-    let mut args = Args::parse();
+    let matches = Args::command().get_matches();
+    let mut args = Args::from_arg_matches(&matches)?;
+    // `--no-match-filters` resets values given before it (optparse store_const).
+    let after_reset = |values: &str, reset: &str| -> Vec<String> {
+        // Defaulted flags also report an index, so require a command-line source.
+        let last_reset = (matches.value_source(reset)
+            == Some(clap::parser::ValueSource::CommandLine))
+        .then(|| matches.indices_of(reset).and_then(|indices| indices.max()))
+        .flatten()
+        .unwrap_or(0);
+        matches
+            .indices_of(values)
+            .into_iter()
+            .flatten()
+            .zip(matches.get_many::<String>(values).into_iter().flatten())
+            .filter(|(index, _)| *index > last_reset)
+            .map(|(_, value)| value.clone())
+            .collect()
+    };
+    let match_filters = MatchFilters::parse(
+        &after_reset("match_filters", "no_match_filters"),
+        &after_reset("break_match_filters", "no_break_match_filters"),
+    )?;
     QUIET.store(args.simulation().quiet, Ordering::Relaxed);
     NO_WARNINGS.store(args.no_warnings, Ordering::Relaxed);
     if args.no_download_archive {
@@ -783,22 +817,28 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         let options = ExtractionOptions {
             retries: args.extractor_retries,
         };
-        let mut existing_reached = false;
+        let mut pending: Option<Cancel> = None;
         let extracted =
             (|| -> yt_dlp_rs::Result<Option<(ExtractResult, Option<PlaylistCounts>)>> {
                 let mut result =
                     downloader.extract_result_unselected_with_options(&url, options)?;
                 let counts = playlist_selection.apply(&mut result);
-                let mut result = if let Some(archive) = &archive {
+                let result = if let Some(archive) = &archive {
                     let (result, reached) =
                         filter_archived(result, archive, args.break_on_existing)?;
-                    existing_reached = reached;
+                    if reached {
+                        pending = Some(Cancel::Existing);
+                    }
                     let Some(result) = result else {
                         return Ok(None);
                     };
                     result
                 } else {
                     result
+                };
+                // Upstream `_match_entry` before selection: format fields are incomplete.
+                let Some(mut result) = prefilter(result, &match_filters, &mut pending)? else {
+                    return Ok(None);
                 };
                 if write_subs || args.write_auto_subs {
                     let select = |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
@@ -832,16 +872,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             })();
         let (extracted, counts) = match extracted {
             Ok(Some(result)) => result,
-            Ok(None) if existing_reached => match cancel(Cancel::Existing, args.break_per_input) {
-                Some(cancel) => {
-                    cancelled = Some(cancel);
-                    break;
+            Ok(None) if pending.is_some() => {
+                match cancel(pending.take().unwrap(), args.break_per_input) {
+                    Some(cancel) => {
+                        cancelled = Some(cancel);
+                        break;
+                    }
+                    None => {
+                        processed = 0;
+                        continue;
+                    }
                 }
-                None => {
-                    processed = 0;
-                    continue;
-                }
-            },
+            }
             Ok(None) => continue,
             Err(error) => {
                 eprintln!("ERROR: {url}: {error}");
@@ -883,6 +925,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         let mut url_cancelled = false;
         for info in extracted.into_entries() {
             let mut counted = false;
+            let mut entry_cancel = None;
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 if args.list_subs {
                     if !info.automatic_captions.is_empty() {
@@ -895,6 +938,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 if listing && !args.dump_json && !printing && simulate {
                     return Ok(());
+                }
+                // Upstream `process_info` rechecks complete metadata before counting.
+                if !match_filters.is_empty() {
+                    match match_filters.check(&info, false)? {
+                        MatchOutcome::Pass => {}
+                        MatchOutcome::Reject(reason) => {
+                            screen!("[download] {reason}");
+                            return Ok(());
+                        }
+                        MatchOutcome::Break(reason) => {
+                            entry_cancel = Some(Cancel::Rejected(reason));
+                            return Ok(());
+                        }
+                    }
                 }
                 // Upstream `process_info` counts every processed video.
                 counted = true;
@@ -1271,6 +1328,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                 },
             };
+            if let Some(reason) = entry_cancel {
+                cancelled = cancel(reason, args.break_per_input);
+                if cancelled.is_none() {
+                    processed = 0;
+                }
+                url_cancelled = true;
+                break;
+            }
             if counted {
                 processed += 1;
             }
@@ -1287,9 +1352,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         if cancelled.is_some() {
             break;
         }
-        if existing_reached && !url_cancelled {
-            // Entries before the archived one were processed; stop now.
-            cancelled = cancel(Cancel::Existing, args.break_per_input);
+        if let Some(reason) = pending.take().filter(|_| !url_cancelled) {
+            // Entries before the archived/rejected one were processed; stop now.
+            cancelled = cancel(reason, args.break_per_input);
             if cancelled.is_some() {
                 break;
             }
@@ -1326,10 +1391,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
 }
 
 /// Upstream `DownloadCancelled` reasons; uncaught ones exit with 101.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 enum Cancel {
     MaxDownloads,
     Existing,
+    /// A `--break-match-filters` rejection reason.
+    Rejected(String),
 }
 
 impl std::fmt::Display for Cancel {
@@ -1341,6 +1408,7 @@ impl std::fmt::Display for Cancel {
             Cancel::Existing => {
                 "Encountered a video that is already in the archive, stopping due to --break-on-existing"
             }
+            Cancel::Rejected(reason) => reason,
         })
     }
 }
@@ -1402,6 +1470,48 @@ fn paths_alias(left: &std::path::Path, right: &std::path::Path) -> io::Result<bo
             .ok()
             .zip(std::fs::canonicalize(right).ok())
             .is_some_and(|(left, right)| left == right))
+}
+
+/// Apply match filters before selection: rejected entries are skipped, and a
+/// breaking rejection truncates entries and records the pending cancellation.
+fn prefilter(
+    result: ExtractResult,
+    filters: &MatchFilters,
+    pending: &mut Option<Cancel>,
+) -> yt_dlp_rs::Result<Option<ExtractResult>> {
+    if filters.is_empty() {
+        return Ok(Some(result));
+    }
+    let mut keep = |info: &yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<Option<bool>> {
+        Ok(match filters.check(info, true)? {
+            MatchOutcome::Pass => Some(true),
+            MatchOutcome::Reject(reason) => {
+                screen!("[download] {reason}");
+                Some(false)
+            }
+            MatchOutcome::Break(reason) => {
+                *pending = Some(Cancel::Rejected(reason));
+                None
+            }
+        })
+    };
+    match result {
+        ExtractResult::Video(info) => {
+            Ok((keep(&info)? == Some(true)).then_some(ExtractResult::Video(info)))
+        }
+        ExtractResult::Playlist(mut playlist) => {
+            let mut kept = Vec::new();
+            for info in playlist.entries {
+                match keep(&info)? {
+                    Some(true) => kept.push(info),
+                    Some(false) => {}
+                    None => break,
+                }
+            }
+            playlist.entries = kept;
+            Ok(Some(ExtractResult::Playlist(playlist)))
+        }
+    }
 }
 
 /// Drop archived entries. With `break_on_existing`, entries stop at the first

@@ -290,3 +290,79 @@ fn sleep_interval_pauses_before_media_and_validates_like_upstream() {
         assert!(stderr(&output).contains(message), "{}", stderr(&output));
     }
 }
+
+#[test]
+fn match_filters_skip_or_break_like_upstream() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let (a, b, c) = (
+        server.url("/a.mp4"),
+        server.url("/b.mp4"),
+        server.url("/c.mp4"),
+    );
+    let ids = |output: &Output| String::from_utf8_lossy(&output.stdout).into_owned();
+    let output = cli(
+        &["--match-filters", "title=a", "-O", "id", &a, &b],
+        directory.path(),
+        None,
+    );
+    assert!(output.status.success());
+    assert_eq!(ids(&output), "a\n");
+    // Printing is quiet; the skip reason is a screen message.
+    let output = cli(
+        &["--match-filters", "title=a", "-s", &b],
+        directory.path(),
+        None,
+    );
+    assert!(stderr(&output).contains("[download] b does not pass filter (title=a), skipping .."));
+    // Repeated filters are alternatives; --no-match-filters discards earlier ones.
+    let output = cli(
+        &[
+            "--match-filters",
+            "title=a",
+            "--match-filters",
+            "id=c",
+            "-O",
+            "id",
+            &a,
+            &b,
+            &c,
+        ],
+        directory.path(),
+        None,
+    );
+    assert_eq!(ids(&output), "a\nc\n");
+    let output = cli(
+        &[
+            "--match-filters",
+            "title=a",
+            "--no-match-filters",
+            "-O",
+            "id",
+            &a,
+            &b,
+        ],
+        directory.path(),
+        None,
+    );
+    assert_eq!(ids(&output), "a\nb\n");
+    // Format fields pass before selection and are checked once complete.
+    let output = cli(
+        &["--match-filters", "filesize>4 & !height", "-O", "id", &a],
+        directory.path(),
+        None,
+    );
+    assert_eq!(ids(&output), "a\n", "{}", stderr(&output));
+    let output = cli(
+        &["--break-match-filters", "id!=b", &a, &b, &c],
+        directory.path(),
+        None,
+    );
+    assert_eq!(output.status.code(), Some(101), "{}", stderr(&output));
+    assert!(stderr(&output).contains("[info] b does not pass filter (id!=b), skipping .."));
+    assert!(directory.path().join("a [a].mp4").exists());
+    assert!(!directory.path().join("c [c].mp4").exists());
+    let invalid = cli(&["--match-filters", "x ?? 5", &a], directory.path(), None);
+    assert!(!invalid.status.success());
+    assert!(stderr(&invalid).contains("Invalid filter part"));
+}
