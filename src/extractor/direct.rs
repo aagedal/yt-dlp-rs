@@ -111,6 +111,7 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem };
     Some(VideoInfo {
+        fragments: Vec::new(),
         id: title.to_owned(),
         title: title.to_owned(),
         ext: ext.to_owned(),

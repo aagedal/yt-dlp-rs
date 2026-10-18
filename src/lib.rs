@@ -1,6 +1,8 @@
 mod download;
 mod error;
 pub mod extractor;
+mod fragment;
+mod hls;
 mod info;
 mod merge;
 pub mod output;
@@ -9,7 +11,9 @@ mod retry;
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
-pub use info::{ExtractResult, PlaylistInfo, StreamKind, VideoFormat, VideoInfo};
+pub use info::{
+    ByteRange, ExtractResult, Fragment, PlaylistInfo, StreamKind, VideoFormat, VideoInfo,
+};
 
 use extractor::{Extractor, GenericHttp, Youtube};
 use reqwest::blocking::Client;
@@ -162,7 +166,8 @@ impl YoutubeDl {
     /// and immediately before publication. `Publishing` is not a success event;
     /// only an `Ok` return confirms publication. Blocking requests, reads, and disk
     /// operations cannot be interrupted; existing request timeouts still apply.
-    /// Byte counts may reset on whole-file retries. No callback follows publication.
+    /// Byte counts may reset on whole-file/fragment retries or selected stream changes.
+    /// No callback follows publication.
     pub fn download_with_progress(
         &self,
         info: &VideoInfo,
@@ -172,6 +177,15 @@ impl YoutubeDl {
     ) -> Result<u64> {
         if !info.requested_formats.is_empty() {
             return self.download_merged(info, destination.as_ref(), options, &mut callback);
+        }
+        if !info.fragments.is_empty() {
+            return fragment::download(
+                &self.client,
+                info,
+                destination.as_ref(),
+                options,
+                &mut callback,
+            );
         }
         download::download(
             &self.client,
@@ -257,6 +271,7 @@ impl YoutubeDl {
                 .path()
                 .join(format!("input-{index}.{}", stream.ext));
             let mut part = info.clone();
+            part.fragments = stream.fragments.clone();
             part.requested_formats.clear();
             part.formats.clear();
             part.url = stream.url.clone();
@@ -266,15 +281,19 @@ impl YoutubeDl {
             part.filesize = stream.filesize;
             part.width = stream.width;
             part.height = stream.height;
-            let bytes =
-                download::download(&self.client, &part, &path, options, &mut |mut progress| {
+            let bytes = self.download_with_progress(
+                &part,
+                &path,
+                options,
+                |mut progress: DownloadProgress| {
                     if progress.phase == DownloadPhase::Publishing {
                         return ControlFlow::Continue(());
                     }
                     progress.stream_index = Some(index as u8 + 1);
                     progress.stream_count = Some(2);
                     callback(progress)
-                })?;
+                },
+            )?;
             stored = stored
                 .checked_add(bytes)
                 .ok_or_else(|| Error::Postprocess("combined stream byte count overflow".into()))?;
@@ -301,6 +320,8 @@ impl YoutubeDl {
                     phase: DownloadPhase::Merging,
                     stream_index: None,
                     stream_count: Some(2),
+                    fragment_index: None,
+                    fragment_count: None,
                 })
             },
         )?;
@@ -316,6 +337,8 @@ impl YoutubeDl {
             phase: DownloadPhase::Publishing,
             stream_index: None,
             stream_count: Some(2),
+            fragment_index: None,
+            fragment_count: None,
         })
         .is_break()
         {

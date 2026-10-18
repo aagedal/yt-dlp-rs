@@ -6,10 +6,12 @@ pub enum Error {
     InvalidUrl(#[from] url::ParseError),
     #[error("unsupported URL scheme: {0}; expected http or https")]
     UnsupportedScheme(String),
-    #[error("no extractor supports {0}; expected direct HTTP media or a HTML5 media page")]
+    #[error("no extractor supports {0}; expected direct HTTP media, a HTML5 media page, or supported HLS VOD")]
     UnsupportedUrl(String),
     #[error("unsupported YouTube behavior: {0}")]
     UnsupportedYoutube(String),
+    #[error("unsupported manifest: {0}")]
+    UnsupportedManifest(String),
     #[error("unsupported HTML5 media: {0}")]
     UnsupportedHtml5(String),
     #[error("playlist result requires extract_result or extract_result_with_format")]

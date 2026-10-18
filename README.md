@@ -33,6 +33,10 @@ Supported today:
   `-f/--format` accepts `best`, `worst`, or a source ID (`0`, `1`, … in declaration order per element). Relative
   sources, the first `<base href>`, HTML entities, page redirects, and page referrers are supported. The media
   response must pass the same MIME/extension checks as a direct URL.
+- Native unencrypted HLS VOD downloads from direct playlist URLs or HTML5 sources:
+  master selection, MPEG-TS/AAC segments, one fMP4 initialization map, and exact
+  byte ranges. JSON/simulation fetch manifests but never segment bodies.
+  Live, encrypted, discontinuous and external-rendition streams remain unsupported.
 - Multiple nonempty media elements form an HTML5 playlist, processed in document
   order. Empty elements are skipped. IDs and titles use upstream's numbered
   `-1` / ` (1)`, `-2` / ` (2)` suffixes. Titles prefer
@@ -80,7 +84,7 @@ Supported today:
   and interrupted HTML reads restart extraction before any output is emitted,
   using the same bounded `Retry-After` policy.
 
-Other HTML pages, general YouTube support, HLS/DASH, site playlists, full upstream format ranking, general selector
+Other HTML pages, general YouTube support, DASH, broader HLS delivery, site playlists, full upstream format ranking, general selector
 expressions, cookies/authentication, persistent resume, subtitles, and other
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
@@ -95,7 +99,7 @@ and a five-minute total timeout per request. Simulation and JSON extraction stil
 network requests. MIME identification is not media-container verification.
 
 The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
-`VideoFormat`, `StreamKind`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
+`VideoFormat`, `StreamKind`, `Fragment`, `ByteRange`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
 `ExtractionOptions`, `YoutubeOptions`, and an `Extractor` interface.
 `YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path) })`
 configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it disabled.
@@ -108,7 +112,8 @@ The existing `extract_info` methods accept single videos and reject playlists.
 `download_with_options(info, path, DownloadOptions { retries: 0 })` disables
 download retries for a library call; `download` uses the default policy.
 `download_with_progress(info, path, options, callback)` reports one-based attempts,
-stored bytes, optional total bytes, and the current phase. Return
+stored bytes, optional total bytes, and the current phase. Fragment downloads also report one-based fragment indexes
+and counts, with cumulative assembled bytes and a per-fragment attempt number. Return
 `std::ops::ControlFlow::Continue(())` to continue or `Break(())` to cancel.
 Cancellation is cooperative: it cannot interrupt an in-flight blocking request,
 read, or filesystem operation. See the compatibility inventory for checkpoints.

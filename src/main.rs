@@ -13,7 +13,7 @@ use yt_dlp_rs::{
 #[derive(Parser)]
 #[command(
     version,
-    about = "Native Rust yt-dlp adaptation (direct HTTP and HTML5 media)"
+    about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS VOD)"
 )]
 struct Args {
     #[arg(required = true)]

@@ -50,6 +50,7 @@ struct Candidate {
 impl Candidate {
     fn into_format(self, url: Url) -> VideoFormat {
         VideoFormat {
+            fragments: Vec::new(),
             format_id: self.format_id,
             url,
             ext: self.ext,
@@ -447,6 +448,7 @@ fn extract_watch_page_with_runtime(
     }
     let first = &formats[0];
     Ok(VideoInfo {
+        fragments: Vec::new(),
         id: id.into(),
         title,
         ext: first.ext.clone(),

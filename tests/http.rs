@@ -423,7 +423,7 @@ fn html5_rejects_unsupported_sources() {
         assert!(
             matches!(
                 dl.extract_info(&server.url(path)),
-                Err(Error::UnsupportedHtml5(_))
+                Err(Error::UnsupportedHtml5(_) | Error::UnsupportedManifest(_))
             ),
             "{path}"
         );
@@ -505,7 +505,7 @@ fn rejects_pages_manifests_errors_and_non_http_urls() {
     for path in ["/page.mp4", "/playlist.m3u8"] {
         assert!(matches!(
             dl.extract_info(&server.url(path)),
-            Err(Error::UnsupportedUrl(_))
+            Err(Error::UnsupportedUrl(_) | Error::UnsupportedManifest(_))
         ));
     }
     assert!(matches!(
@@ -769,7 +769,7 @@ fn selecting_supported_source_does_not_hide_unsupported_alternatives() {
         assert!(
             matches!(
                 dl.extract_info_with_format(&server.url(page), Some("0")),
-                Err(Error::UnsupportedHtml5(_))
+                Err(Error::UnsupportedHtml5(_) | Error::UnsupportedManifest(_))
             ),
             "{page}"
         );
@@ -905,7 +905,7 @@ fn html5_playlist_selection_and_validation_are_atomic() {
     ));
     assert!(matches!(
         dl.extract_result_with_format(&server.url("/playlist-manifest.html"), Some("0")),
-        Err(Error::UnsupportedHtml5(_))
+        Err(Error::UnsupportedManifest(_))
     ));
     let directory = tempfile::tempdir().unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))

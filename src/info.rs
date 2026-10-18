@@ -3,6 +3,8 @@ use url::Url;
 
 /// Fully extracted results; playlists contain videos, never unresolved URLs.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+// Preserve the public unboxed Video(VideoInfo) constructor while metadata grows.
+#[allow(clippy::large_enum_variant)]
 #[serde(tag = "_type", rename_all = "lowercase")]
 pub enum ExtractResult {
     Video(VideoInfo),
@@ -79,9 +81,26 @@ impl StreamKind {
     }
 }
 
-/// A probed direct HTTP source. IDs are HTML declaration indices or YouTube itags.
+/// A finite byte interval of a media resource.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ByteRange {
+    pub offset: u64,
+    pub length: u64,
+}
+
+/// An ordered whole-resource or byte-range media fragment.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Fragment {
+    pub url: Url,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub byte_range: Option<ByteRange>,
+}
+
+/// A direct source or finite manifest plan, with an extractor-assigned format ID.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoFormat {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub fragments: Vec<Fragment>,
     pub format_id: String,
     #[serde(default, skip_serializing_if = "StreamKind::is_standalone")]
     pub stream_kind: StreamKind,
@@ -102,6 +121,8 @@ pub struct VideoFormat {
 /// Small, explicitly supported subset of yt-dlp's info dictionary.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoInfo {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub fragments: Vec<Fragment>,
     pub id: String,
     pub title: String,
     pub ext: String,
@@ -197,6 +218,7 @@ impl VideoInfo {
             self.width = width;
             self.height = height;
             self.stream_kind = StreamKind::Standalone;
+            self.fragments.clear();
             self.requested_formats = selected;
             return Ok(());
         }
@@ -220,6 +242,7 @@ impl VideoInfo {
     }
 
     fn apply_single(&mut self, selected: &VideoFormat) {
+        self.fragments = selected.fragments.clone();
         self.url = selected.url.clone();
         self.ext = selected.ext.clone();
         self.filesize = selected.filesize;
@@ -322,6 +345,7 @@ mod tests {
         tbr: Option<f64>,
     ) -> VideoFormat {
         VideoFormat {
+            fragments: Vec::new(),
             format_id: id.into(),
             stream_kind: kind,
             abr,
@@ -336,6 +360,7 @@ mod tests {
 
     fn info(formats: Vec<VideoFormat>) -> VideoInfo {
         VideoInfo {
+            fragments: Vec::new(),
             id: "test".into(),
             title: "Test".into(),
             ext: "mp4".into(),

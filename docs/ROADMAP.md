@@ -21,10 +21,13 @@ tractable for future agents.
 - `src/extractor/html5.rs`: generic response dispatch and progressive HTML5 source parsing;
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
 - `src/extractor/youtube.rs`: narrow watch-page/player response extraction,
-  direct muxed formats only, with unsupported challenge/access handling errors.
+  direct standalone/separate formats with opt-in offline signature/n solving.
 - `src/extractor/youtube/client.rs`: isolated anonymous WEB player API request
   fallback and explicit token-exempt itag 18 policy.
 - `src/download.rs`: streaming HTTP transfer, byte-progress/cancellation checkpoints, and no-clobber publication.
+- `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
+- `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
+- `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
 - `src/output.rs`: template rendering and filename-component sanitization.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
@@ -73,8 +76,10 @@ remain outside the current result contract.
    Download byte-progress observers and cooperative cancellation are implemented,
    with polling during retry waits and cancellation before publication; the CLI
    emits throttled byte progress on stderr. Blocking requests/reads are not
-   interruptible. Persistent resume across invocations, manifest protocols,
-   extraction cancellation, and CLI signal handling remain open.
+   interruptible. Native unencrypted HLS VOD master/media selection, MPEG-TS/AAC/fMP4
+   assembly, explicit/implicit media ranges, fragment retries and cancellation are
+   implemented. DASH, encrypted/live HLS, external renditions, discontinuities,
+   persistent resume across invocations, extraction cancellation, and CLI signal handling remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,
    playlist handling, and end-to-end validation. Split request/client machinery

@@ -35,6 +35,9 @@ pub struct DownloadProgress {
     /// One-based selected input stream, present only for merged downloads.
     pub stream_index: Option<u8>,
     pub stream_count: Option<u8>,
+    /// One-based fragment position in the finite selected playlist.
+    pub fragment_index: Option<u32>,
+    pub fragment_count: Option<u32>,
 }
 
 struct Reporter<'a> {
@@ -52,6 +55,8 @@ impl Reporter<'_> {
             phase,
             stream_index: None,
             stream_count: None,
+            fragment_index: None,
+            fragment_count: None,
         }) {
             ControlFlow::Continue(()) => Ok(()),
             ControlFlow::Break(()) => Err(Error::DownloadCancelled),

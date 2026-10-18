@@ -122,8 +122,8 @@ boundaries, whole-extraction retries, and token filtering before probes. See
 
 ## HTML5 extraction
 
-The generic fallback dispatches a single response to direct-media inspection or
-HTML5 parsing. Site extractors registered through `Extractor` run first. The
+The generic fallback dispatches a single response to HLS parsing, direct-media
+inspection or HTML5 parsing. Site extractors registered through `Extractor` run first. The
 standalone `DirectHttp` extractor remains available for direct-only callers.
 
 For `text/html`, accept `video`/`audio` elements with nonempty
@@ -140,7 +140,7 @@ Without a page title the wrapper title is `video`, while entry titles use the
 page filename stem. Subtitle-only elements remain outside the supported subset.
 Metadata identifies `html5` / `HTML5MediaEmbed` with `direct: false` and the final
 page URL as `webpage_url`. Every source is probed with the page referrer and must
-serve supported direct HTTP media. Redirected source URLs and response-derived
+serve supported direct HTTP media or a supported finite HLS manifest. Redirected source URLs and response-derived
 extensions/filesizes are recorded in typed `VideoFormat` entries. HTML5 JSON adds
 `formats` and the selected `format_id`, including for a single source. IDs are
 literal zero-based strings assigned to nonempty declarations: the media element's
@@ -509,3 +509,73 @@ Optional real-tool regression: set both `YT_DLP_RS_TEST_FFMPEG` and
 The generated local media fixtures verify that copied output retains audio and
 video tracks; this is not a claim that every FFmpeg version or codec pair works.
 See [source and fixture provenance](../upstream/notes/youtube-adaptive-merge.md).
+
+
+## Native HLS VOD and fragment transport
+
+Direct HLS playlist URLs and HTML5 HLS sources support a finite unencrypted VOD
+subset. Recognize MPEGURL MIME types, final `.m3u8` URL paths, and explicit HTML5
+HLS type hints. A conflicting media MIME must not cause a manifest to be saved as
+one media file. Read at most 2 MiB of uncompressed UTF-8/ASCII manifest text;
+ambiguous encoding/content-type headers fail. URLs resolve against each final
+redirected manifest URL. HTML5 page referrers propagate to manifests and segments.
+
+Master playlists expose declaration-ordered `hls-N` format IDs, positive declared
+bandwidth in kbps, optional resolution and codec-derived stream kinds. HTML5 master
+sources flatten to `sourceIndex-hls-N`; a media playlist retains its ordinary
+source index. Existing standalone selection retains resolution/declaration-order
+ranking, not upstream's full bandwidth/codec sorter. Every variant manifest is
+read before selection; segment bodies are not probed. One master level, at most
+256 variants and 10000 retained fragments across a master are supported.
+
+Media playlists require `EXT-X-ENDLIST`, nonempty positive-duration segments and
+HTTP(S) URLs. A nonzero media sequence is permitted for a completed VOD. Without
+an initialization map, `.aac` segments produce AAC and other ordinary/extensionless
+segment URLs default to MPEG-TS (`ts`); clear nested manifests/HTML and MP4 media
+without initialization are rejected. One initial `EXT-X-MAP` produces fragmented
+MP4 (`mp4`). This is manifest interpretation, not a universal container probe.
+Native assembly preserves the segment bytes; TS is not silently labeled MP4 or
+remuxed. FFmpeg is unnecessary for this download path.
+
+`EXT-X-BYTERANGE` supports explicit offsets and implicit continuation only after
+an immediately preceding media range on the same URL. Map byte ranges require
+an explicit offset. All ranges are positive with checked arithmetic. Unsupported
+state is an error: live playlists without ENDLIST, encrypted keys (including
+AES-128), discontinuities, gaps, low-latency tags, variables, changing maps,
+external or unresolved rendition groups, nested masters and unknown EXT tags.
+In-band rendition references without external resources are supported. Plain
+comments and recognized informational metadata do not change assembly.
+
+`VideoInfo.fragments` and each format's `fragments` contain ordered `Fragment`
+values, including initialization when needed. Each has a URL and optional
+`ByteRange { offset, length }`; absent fields deserialize to empty/default values.
+Selection copies the chosen plan; a merge plan retains each child's fragments.
+Extraction snapshots these plans, and downloads do not refetch manifests.
+
+The fragment downloader retries each whole failed fragment using `--retries`,
+retains earlier complete fragments, and truncates the failed fragment before
+retrying. It never skips a failed segment. Exact ranges require matching 206,
+Content-Range, known resource bounds, validated length and identity encoding;
+ignored ranges, unsolicited partials, HTML/manifests and empty fragments fail.
+Private temporary output is removed on errors/cancellation; final publication
+uses the same no-clobber race protection as direct downloads.
+
+Progress adds `fragment_index` and `fragment_count` with one-based positions;
+bytes count the assembled output so far, including initialization, and can reset
+to the previous complete prefix on retry. Attempt numbers restart per fragment.
+Total bytes remain unknown. Observers can cancel before requests, after writes,
+during retry waits and before final publication. Blocking reads retain normal
+request timeouts. These new public fields require updating Rust struct literals.
+
+The saved TS, fMP4 and byte-range media tests verify exact bytes and optionally
+FFprobe audio/video tracks using `YT_DLP_RS_TEST_FFPROBE`. The offline differential
+harness compares actual pinned upstream HlsFD fragment order, URLs and ranges:
+
+```sh
+python3 tools/compare_hls.py --upstream /path/to/yt-dlp --binary target/debug/yt-dlp-rs
+```
+
+Only the exact ephemeral localhost origin and upstream exclusive range end are
+normalized. Container naming/remux behavior, live/encrypted delivery and general
+HLS parity are not inferred. YouTube HLS responses remain unsupported by its
+extractor. See [the source slice](../upstream/notes/hls-vod.md).

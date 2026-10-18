@@ -1019,7 +1019,10 @@ fn extraction_does_not_retry_permanent_statuses_or_unsupported_pages() {
                 .is_err()
         );
         assert_eq!(server.requests_for("/page.html").len(), 1, "{status}");
-        assert!(server.requests_for("/manifest.m3u8").is_empty());
+        assert_eq!(
+            server.requests_for("/manifest.m3u8").len(),
+            usize::from(status == 200)
+        );
     }
 }
 
