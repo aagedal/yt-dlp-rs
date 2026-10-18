@@ -15,28 +15,34 @@ const MAX_PLAYER_BYTES: u64 = 8 * 1024 * 1024;
 const MAX_REDIRECTS: usize = 10;
 
 /// A fixed origin and transport with automatic redirects disabled. Page-supplied
-/// hosts, client credentials and the general media client's policy are not used.
+/// hosts and the general media client's redirect policy are not used. Explicit
+/// global HTTP defaults apply only within the validated canonical origin.
 pub(super) struct PlayerSource {
     origin: Url,
     client: Client,
 }
 
 impl PlayerSource {
-    pub(super) fn new() -> Result<Self> {
-        Self::with_origin(Url::parse("https://www.youtube.com/")?, false)
+    pub(super) fn new(headers: reqwest::header::HeaderMap) -> Result<Self> {
+        Self::with_origin(Url::parse("https://www.youtube.com/")?, false, headers)
     }
 
     #[cfg(test)]
     pub(super) fn local(origin: Url) -> Result<Self> {
         assert_eq!(origin.scheme(), "http");
         assert_eq!(origin.host_str(), Some("127.0.0.1"));
-        Self::with_origin(origin, true)
+        Self::with_origin(origin, true, reqwest::header::HeaderMap::new())
     }
 
     // Origin substitution is private; only tests supply loopback HTTP origins.
-    fn with_origin(origin: Url, no_proxy: bool) -> Result<Self> {
+    fn with_origin(
+        origin: Url,
+        no_proxy: bool,
+        headers: reqwest::header::HeaderMap,
+    ) -> Result<Self> {
         let mut builder = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
+            .default_headers(headers)
             .connect_timeout(Duration::from_secs(15))
             .timeout(Duration::from_secs(300))
             .redirect(Policy::none())
@@ -268,7 +274,7 @@ mod tests {
 
     #[test]
     fn discovers_config_urls_with_precedence_and_literal_json_escapes() {
-        let source = PlayerSource::new().unwrap();
+        let source = PlayerSource::new(reqwest::header::HeaderMap::new()).unwrap();
         for value in [
             serde_json::json!({"PLAYER_JS_URL": PATH}),
             serde_json::json!({"PLAYER_JS_URL": format!("https://www.youtube.com{PATH}")}),
@@ -296,7 +302,7 @@ mod tests {
 
     #[test]
     fn never_evaluates_or_guesses_missing_or_ambiguous_configuration() {
-        let source = PlayerSource::new().unwrap();
+        let source = PlayerSource::new(reqwest::header::HeaderMap::new()).unwrap();
         for page in [
             "<p>ytcfg.set({\"PLAYER_JS_URL\":\"ignored\"})</p>".to_owned(),
             format!("<script src='{PATH}'></script>"),
@@ -320,7 +326,7 @@ mod tests {
 
     #[test]
     fn recognized_variants_and_strict_player_url_boundaries() {
-        let source = PlayerSource::new().unwrap();
+        let source = PlayerSource::new(reqwest::header::HeaderMap::new()).unwrap();
         for variant in [
             "player_ias.vflset/en_US/base.js",
             "player_ias_tcc.vflset/en_US/base.js",
@@ -407,10 +413,18 @@ mod tests {
     }
 
     fn serve(replies: Vec<Reply>) -> (PlayerSource, thread::JoinHandle<()>) {
+        serve_with_headers(replies, reqwest::header::HeaderMap::new())
+    }
+
+    fn serve_with_headers(
+        replies: Vec<Reply>,
+        headers: reqwest::header::HeaderMap,
+    ) -> (PlayerSource, thread::JoinHandle<()>) {
+        let expected_headers = headers.clone();
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         listener.set_nonblocking(true).unwrap();
         let origin = Url::parse(&format!("http://{}/", listener.local_addr().unwrap())).unwrap();
-        let source = PlayerSource::with_origin(origin, true).unwrap();
+        let source = PlayerSource::with_origin(origin, true, headers).unwrap();
         let worker = thread::spawn(move || {
             for reply in replies {
                 let deadline = Instant::now() + Duration::from_secs(5);
@@ -441,11 +455,22 @@ mod tests {
                 );
                 let lower = headers.to_ascii_lowercase();
                 assert!(lower.contains("accept-encoding: identity\r\n"));
-                assert!(
-                    !lower.contains("cookie:")
-                        && !lower.contains("authorization:")
-                        && !lower.contains("referer:")
-                );
+                assert!(!lower.contains("cookie:"));
+                for name in ["authorization", "referer"] {
+                    assert_eq!(
+                        lower.contains(&format!("{name}:")),
+                        expected_headers.contains_key(name)
+                    );
+                }
+                for (name, value) in &expected_headers {
+                    if name.as_str() != "accept-encoding" {
+                        assert!(headers.contains(&format!(
+                            "{}: {}\r\n",
+                            name.as_str(),
+                            value.to_str().unwrap()
+                        )));
+                    }
+                }
                 let length = reply
                     .length
                     .map(|n| format!("Content-Length: {n}\r\n"))
@@ -474,6 +499,39 @@ mod tests {
         let (source, worker) = serve(vec![Reply::script(SAVED.as_bytes())]);
         assert_eq!(source.fetch(&url(&source)).unwrap(), SAVED);
         worker.join().unwrap();
+    }
+
+    #[test]
+    fn explicit_http_defaults_apply_within_the_validated_player_origin() {
+        let headers = crate::HttpOptions {
+            user_agent: Some("FixturePlayer/1".into()),
+            referer: Some("https://example.test/explicit".into()),
+            headers: vec![
+                ("x-test".into(), "player".into()),
+                ("authorization".into(), "Bearer fixture".into()),
+                ("accept-encoding".into(), "gzip".into()),
+            ],
+        }
+        .header_map()
+        .unwrap();
+        let (source, worker) = serve_with_headers(
+            vec![
+                Reply::redirect(PATH, PATH),
+                Reply::script(b"const player = true;"),
+            ],
+            headers.clone(),
+        );
+        assert_eq!(source.fetch(&url(&source)).unwrap(), "const player = true;");
+        worker.join().unwrap();
+        let trap = TcpListener::bind("127.0.0.1:0").unwrap();
+        trap.set_nonblocking(true).unwrap();
+        let location = format!("http://{}{PATH}", trap.local_addr().unwrap());
+        let (source, worker) = serve_with_headers(vec![Reply::redirect(PATH, &location)], headers);
+        assert!(source.fetch(&url(&source)).is_err());
+        worker.join().unwrap();
+        assert!(
+            matches!(trap.accept(), Err(error) if error.kind() == std::io::ErrorKind::WouldBlock)
+        );
     }
 
     #[test]

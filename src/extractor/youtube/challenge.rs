@@ -264,7 +264,7 @@ pub(super) fn resolve_media_and_manifests(
         let player_source = if let Some(source) = player_source {
             source
         } else {
-            owned_source = super::player::PlayerSource::new()?;
+            owned_source = super::player::PlayerSource::new(runtime.headers.clone())?;
             &owned_source
         };
         let player_url = player_source.discover(html)?;
@@ -302,13 +302,23 @@ pub(super) fn resolve_urls(
 /// Configuration is inert until an eligible URL actually needs a solution.
 /// Canonical executable resolution and version validation happen once, lazily.
 pub(super) struct Runtime {
+    headers: reqwest::header::HeaderMap,
     path: std::path::PathBuf,
     checked: std::sync::OnceLock<Result<runtime::DenoRuntime>>,
 }
 
 impl Runtime {
+    #[cfg(test)]
     pub(super) fn new(path: std::path::PathBuf) -> Self {
+        Self::with_headers(path, reqwest::header::HeaderMap::new())
+    }
+
+    pub(super) fn with_headers(
+        path: std::path::PathBuf,
+        headers: reqwest::header::HeaderMap,
+    ) -> Self {
         Self {
+            headers,
             path,
             checked: std::sync::OnceLock::new(),
         }

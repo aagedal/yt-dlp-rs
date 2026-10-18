@@ -347,6 +347,31 @@
         "upstream/notes/youtube-captions.md"
       ],
       "scope": "Single supported WEB player response manual/ASR captions, exact ordered seven server-side formats/names/queries, gated manual translations, ASR original aliases/translations and inferred audio language; required subtitle token skips remaining response tracks; manual-preferred combined selection/listing and native sidecars; no token acquisition, additional clients, URL deciphering, conversion/embedding or live-site reliability claim"
+    },
+    {
+      "name": "http-request-configuration",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/utils/networking.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/networking/"
+      ],
+      "rust": [
+        "src/http.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "src/extractor/youtube.rs",
+        "src/extractor/youtube/challenge.rs",
+        "src/extractor/youtube/player.rs",
+        "tests/headers.rs",
+        "tests/fixtures/headers/",
+        "tools/compare_headers.py",
+        "tools/test_compare_headers.py",
+        "upstream/notes/http-headers.md"
+      ],
+      "scope": "Bounded global header defaults, repeated add-headers and explicit singular alias, convenience User-Agent/Referer normalization, extractor/transport request precedence across native clients/transfers, local retry/redirect propagation; explicit raw Cookie rejection; no scoped cookies, general authentication/proxy/impersonation/default browser headers or upstream redirect/legacy-byte parity"
     }
   ]
 }

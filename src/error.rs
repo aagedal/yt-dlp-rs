@@ -26,6 +26,8 @@ pub enum Error {
     FormatSelection(String),
     #[error("HTML page exceeds the {0}-byte extraction limit")]
     HtmlTooLarge(u64),
+    #[error("invalid HTTP configuration: {0}")]
+    HttpConfiguration(String),
     #[error("HTTP request failed: {0}")]
     Http(#[from] reqwest::Error),
     /// A transient HTTP status with a supported, bounded Retry-After hint.

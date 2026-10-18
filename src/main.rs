@@ -6,7 +6,7 @@ use std::{
     time::{Duration, Instant},
 };
 use yt_dlp_rs::{
-    DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions,
+    DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions, HttpOptions,
     PlaylistSelection, SubtitleOptions, YoutubeDl, YoutubeOptions,
     output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
     render_automatic_captions, render_subtitles, subtitle_paths, validate_format_selector,
@@ -75,6 +75,15 @@ struct Args {
     /// Retry the entire extraction after transient network failures (0 disables retries)
     #[arg(long, default_value_t = 0)]
     extractor_retries: u8,
+    /// Custom HTTP header FIELD:VALUE (repeatable; last name wins)
+    #[arg(long, alias = "add-header", value_name = "FIELD:VALUE")]
+    add_headers: Vec<String>,
+    /// Override the HTTP User-Agent
+    #[arg(long, value_name = "UA", overrides_with = "user_agent")]
+    user_agent: Option<String>,
+    /// Default HTTP Referer (extractor request headers can override it)
+    #[arg(long, value_name = "URL", overrides_with = "referer")]
+    referer: Option<String>,
     /// Explicit path to Deno 2.9.7 for YouTube player challenges (no runtime discovery or installation)
     #[arg(long, value_name = "PATH")]
     youtube_js_runtime: Option<PathBuf>,
@@ -129,10 +138,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let subtitle_languages = (!args.sub_langs.is_empty()).then(|| args.sub_langs.join(","));
     let subtitle_options = SubtitleOptions::new(subtitle_languages.as_deref(), &args.sub_format)?;
-    let mut downloader = YoutubeDl::with_youtube_options(YoutubeOptions {
-        js_runtime: args.youtube_js_runtime,
-        include_translated_subtitles: args.write_auto_subs || args.list_subs,
-    })?;
+    let http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
+    let mut downloader = YoutubeDl::with_options(
+        YoutubeOptions {
+            js_runtime: args.youtube_js_runtime,
+            include_translated_subtitles: args.write_auto_subs || args.list_subs,
+        },
+        http_options,
+    )?;
     if let Some(path) = args.ffmpeg_location {
         downloader = downloader.with_ffmpeg(path);
     }

@@ -48,8 +48,10 @@ locale characters where applicable. URL text is at most 4096 bytes and contains
 no whitespace, control characters, or backslashes. Unlike upstream's default
 main-variant override, this boundary retains the actual validated path.
 
-The player client has automatic redirects disabled, no cookie/auth state, the
-existing user agent/timeouts, and `Accept-Encoding: identity`. It manually follows
+The player client has automatic redirects disabled, no implicit cookie/auth state,
+the existing user agent/timeouts, and `Accept-Encoding: identity`. Explicit global
+HTTP defaults now apply within this validated boundary; see
+[request configuration](http-headers.md). It manually follows
 at most ten HTTP 301/302/303/307/308 redirects. Every target is validated before
 requesting it and must retain origin and player identity; changing a locale or
 known variant with the same ID is allowed. Reject missing/duplicate/invalid

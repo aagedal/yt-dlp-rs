@@ -23,6 +23,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--skip-download`, `--no-download` | Skip media while allowing selected sidecars; never record a completed media archive entry |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
+| `--add-headers FIELD:VALUE`, `--add-header` | Repeated custom HTTP defaults; case-insensitive last custom value wins |
+| `--user-agent UA`, `--referer URL` | Convenience HTTP defaults override matching custom options; extractor/transport headers can override them |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
 | `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging; no PATH discovery, directory lookup, installation, transcoding or other postprocessors |
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
@@ -1341,3 +1343,56 @@ This does not establish live-site reliability, token/authentication support,
 compressed captions, regex selection, payload parsing, conversion or embedding.
 See [the source slice](../upstream/notes/youtube-captions.md) and
 [fixture reference](../tests/fixtures/youtube/captions/README.md).
+
+
+## HTTP request defaults
+
+`--add-headers FIELD:VALUE` (also `--add-header`) is repeatable. Split the first
+colon only; trim surrounding value whitespace and retain internal spaces/tabs
+and colons. Names are case-insensitive and the last custom value wins. Empty
+values remain explicit. CLI field names accept ASCII letters/digits/underscore/
+hyphen; arbitrary option abbreviations and Unicode field names are unsupported.
+`--user-agent` and `--referer` use their last supplied values and override matching
+custom headers regardless of argument order, preserving pinned normalization.
+The native default User-Agent remains `yt-dlp-rs/VERSION`; upstream's randomized
+browser User-Agent is not reproduced.
+
+Global headers are defaults for the shared HTTP client across direct/HTML5/
+YouTube pages, anonymous player API calls, media probes/downloads, HLS/DASH
+manifests, fragment initialization/segments, AES keys, subtitle sidecars and
+retries. Explicit per-request headers win: HTML5/YouTube media and sidecars retain
+page Referer; transfers use identity encoding and transport-owned range headers;
+player API Origin/client/version headers retain extractor values. Direct inputs
+without an extractor Referer use the global Referer. Validation does not make
+unsupported authentication or delivery protocols supported.
+
+Explicit global defaults also reach the isolated YouTube player-script client.
+The client still validates canonical origin/path and every redirect before
+requesting it; custom headers do not authorize page-supplied origins or arbitrary
+player redirects. Its identity encoding and bounded MIME/body validation remain
+in force. Challenge-free extraction does not construct or launch the runtime.
+General HTTP redirects use reqwest's existing ten-redirect policy: ordinary custom
+headers persist; Authorization is removed on a change of host/port. This is a
+native tested policy, not a claim of full upstream redirect/header parity.
+Credentials placed in arbitrary custom header names follow that ordinary policy.
+
+Construct `YoutubeDl::with_options(youtube_options, HttpOptions { headers,
+user_agent, referer })` for library use. Existing constructors retain defaults.
+Library header pairs allow valid HTTP token names; `HttpOptions::from_cli`
+applies the CLI name grammar as well. Validation occurs before client creation,
+network requests, archive loading or output writes. Errors omit supplied header
+values. Names are bounded to 256 bytes; at most 256 custom entries, 16 KiB per
+value and 64 KiB total supplied names/values, including overwritten entries.
+CR/LF and other controls except horizontal tabs are rejected before trimming.
+Header values are UTF-8 bytes; arbitrary upstream legacy-byte encoding is not
+established by the fixtures. Raw Cookie headers are explicitly unsupported until
+scoped cookie storage is implemented; they are never silently forwarded.
+
+The actual pinned option/container/header-merge comparison covers 21 option
+configurations, seven merges and seven grammar rejections, with three source-only
+inputs and a separate Cookie-removal merge exclusion. Only header names are
+lowercased for comparison; values stay exact. Native local tests establish actual
+request bytes, precedence, redirects, retries, protocol/sidecar propagation and
+preflight rejection independently of that pure source comparison.
+See [source applicability](../upstream/notes/http-headers.md) and
+[fixture provenance](../tests/fixtures/headers/README.md).

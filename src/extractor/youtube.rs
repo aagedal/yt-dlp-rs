@@ -35,9 +35,18 @@ struct ConfiguredYoutube {
 
 impl Youtube {
     pub fn with_options(options: YoutubeOptions) -> impl Extractor {
+        Self::with_http_headers(options, reqwest::header::HeaderMap::new())
+    }
+
+    pub(crate) fn with_http_headers(
+        options: YoutubeOptions,
+        headers: reqwest::header::HeaderMap,
+    ) -> impl Extractor {
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,
-            runtime: options.js_runtime.map(challenge::Runtime::new),
+            runtime: options
+                .js_runtime
+                .map(|path| challenge::Runtime::with_headers(path, headers)),
         }
     }
 }

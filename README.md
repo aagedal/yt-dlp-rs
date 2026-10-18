@@ -23,6 +23,7 @@ cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/
 cargo run --locked -- -I '3,1:2' --playlist-reverse -o '%(playlist_index)03d-%(title)s.%(ext)s' 'https://example.com/multiple-videos.html'
 cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
+cargo run --locked -- --user-agent 'My media client' --add-headers 'X-Media-Key:example' 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
 ```
 
@@ -112,6 +113,10 @@ Supported today:
 - `--download-archive FILE` skips recorded extractor/video IDs before selection and
   records only successfully published downloads. Metadata/listing/simulation never
   write the archive. Extraction still makes normal requests for recorded inputs.
+- Global `--add-headers FIELD:VALUE` (repeatable), `--user-agent` and `--referer`
+  defaults across extraction, downloads, fragments, keys and subtitles. Explicit
+  extractor/transport headers take precedence, including page referrers and identity
+  encoding. Cookie headers require scoped cookie support and remain unsupported.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Typed output fields include IDs/titles, dimensions, filesize and playlist indices,
   with string `s`, integer `d/i/u` and fixed-point `f/F` width/precision formatting.
@@ -160,6 +165,11 @@ configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it dis
 `include_translated_subtitles: true` additionally exposes translated manual captions
 in `automatic_captions`; the CLI enables this with `--write-auto-subs` or `--list-subs`.
 ASR translations are discovered independently, without fetching their payloads.
+`YoutubeDl::with_options(YoutubeOptions::default(), HttpOptions {
+user_agent: Some("My media client".into()), ..Default::default()
+})` configures HTTP defaults; `HttpOptions.headers` holds name/value pairs.
+`HttpOptions::from_cli(user_agent, referer, &headers)` parses repeated FIELD:VALUE
+strings with the same normalization and validation as the binary.
 `YoutubeDl::new()?.with_ffmpeg(path)` configures optional local merging.
 `extract_result_unselected` / `extract_result_unselected_with_options` expose all
 eligible alternatives without library selection; `select_result` applies configured

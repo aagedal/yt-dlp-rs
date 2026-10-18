@@ -6,6 +6,7 @@ mod error;
 pub mod extractor;
 mod fragment;
 mod hls;
+mod http;
 mod info;
 mod merge;
 pub mod output;
@@ -18,6 +19,7 @@ pub use archive::{DownloadArchive, archive_id};
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
+pub use http::HttpOptions;
 pub use info::{
     ByteRange, ExtractResult, Fragment, HlsAes128, PlaylistInfo, StreamKind, VideoFormat, VideoInfo,
 };
@@ -63,8 +65,16 @@ impl YoutubeDl {
     /// Configure YouTube extraction. The runtime path is inspected only when a
     /// YouTube player challenge needs solving; construction does not launch it.
     pub fn with_youtube_options(options: YoutubeOptions) -> Result<Self> {
+        Self::with_options(options, HttpOptions::default())
+    }
+
+    /// Configure global HTTP defaults together with YouTube extraction.
+    /// Per-request extractor and transport headers override these defaults.
+    pub fn with_options(youtube: YoutubeOptions, http: HttpOptions) -> Result<Self> {
+        let headers = http.header_map()?;
         let client = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
+            .default_headers(headers.clone())
             .connect_timeout(Duration::from_secs(15))
             .timeout(Duration::from_secs(300))
             .redirect(reqwest::redirect::Policy::limited(10))
@@ -75,7 +85,7 @@ impl YoutubeDl {
             client,
             ffmpeg: None,
             extractors: vec![
-                Box::new(Youtube::with_options(options)),
+                Box::new(Youtube::with_http_headers(youtube, headers)),
                 Box::new(GenericHttp),
             ],
         })
