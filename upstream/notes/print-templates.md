@@ -45,6 +45,12 @@ created and lines appended with `\n`. It is not part of `any_getting`, so it doe
 not imply simulation. Native difference: all pairs render before any append.
 Covered by one unit test and two localhost CLI tests.
 
+`--no-simulate` follow-up (`__init__` `simulate` wiring and `list_only` in
+`process_video_result`): `-s`/`--no-simulate` share one destination so the last
+wins; printing/`-j` imply simulation only when it is unset, and listing downloads
+afterwards when it is false. Native difference: download diagnostics on stderr
+are not silenced by the implied quiet mode. Covered by one localhost CLI test.
+
 ```sh
 python3 tools/compare_print.py --upstream /path/to/yt-dlp
 ```

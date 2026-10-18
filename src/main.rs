@@ -32,8 +32,11 @@ struct Args {
     #[arg(short = 'j', long)]
     dump_json: bool,
     /// Extract metadata without writing media
-    #[arg(short = 's', long)]
+    #[arg(short = 's', long, overrides_with = "no_simulate")]
     simulate: bool,
+    /// Download even when printing, JSON dumping or listing would otherwise simulate
+    #[arg(long, overrides_with = "simulate")]
+    no_simulate: bool,
     /// Print a video field list or output template per video, optionally prefixed with video: (implies simulation; repeatable)
     #[arg(
         short = 'O',
@@ -240,9 +243,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .iter()
         .map(|[spec, file]| PrintToFile::parse(spec, file))
         .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
-    // Like upstream, printing implies quiet simulation (no --no-simulate here).
+    // Like upstream, printing and JSON dumping imply simulation unless
+    // --no-simulate is given; the last of -s/--no-simulate wins.
     let printing = !print_templates.is_empty();
-    let simulate = args.simulate || printing;
+    let simulate = !args.no_simulate && (args.simulate || printing || args.dump_json);
     let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
     let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
     audio_options.keep_video = args.keep_video;
@@ -342,13 +346,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
     };
-    let list_only = (args.list_formats || args.list_subs) && !args.dump_json && !simulate;
-    // Like upstream, simulation, JSON printing and listing never write info JSON.
-    let writes_info_json = args.write_info_json
-        && !args.dump_json
-        && !simulate
-        && !args.list_formats
-        && !args.list_subs;
+    // Upstream lists without processing only when simulation is unset.
+    let list_only = (args.list_formats || args.list_subs) && !simulate && !args.no_simulate;
+    // Like upstream, simulation and listing-only runs never write info JSON.
+    let writes_info_json = args.write_info_json && !simulate && !list_only;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in args.urls {
@@ -442,7 +443,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 if args.list_formats {
                     write!(stdout, "{}", render_formats(&info))?;
                 }
-                if (args.list_formats || args.list_subs) && !args.dump_json && !printing {
+                if (args.list_formats || args.list_subs)
+                    && !args.dump_json
+                    && !printing
+                    && !args.no_simulate
+                {
                     return Ok(());
                 }
                 if printing {
@@ -483,11 +488,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 if args.dump_json {
                     serde_json::to_writer(&mut stdout, &info)?;
                     writeln!(stdout)?;
-                } else if simulate {
-                    if printing {
-                        return Ok(());
+                }
+                if simulate {
+                    if !printing && !args.dump_json {
+                        eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
                     }
-                    eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
                 } else {
                     if args.skip_download
                         && !writes_info_json
