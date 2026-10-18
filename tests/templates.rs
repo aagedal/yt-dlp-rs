@@ -341,7 +341,7 @@ fn readonly_modes_leave_invalid_template_and_placeholder_configuration_inert() {
 }
 
 #[test]
-fn no_clobber_error_continues_to_later_typed_filename_and_records_only_success() {
+fn existing_typed_filename_is_already_downloaded_and_later_inputs_continue() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
     std::fs::write(directory.path().join("NA.mp4"), b"keep").unwrap();
@@ -356,7 +356,7 @@ fn no_clobber_error_continues_to_later_typed_filename_and_records_only_success()
         ],
         directory.path(),
     );
-    assert!(!output.status.success());
+    success(&output);
     assert_eq!(
         std::fs::read(directory.path().join("NA.mp4")).unwrap(),
         b"keep"
@@ -365,7 +365,10 @@ fn no_clobber_error_continues_to_later_typed_filename_and_records_only_success()
         std::fs::read(directory.path().join("012.mp4")).unwrap(),
         b"numeric"
     );
-    assert_eq!(std::fs::read_to_string(archive).unwrap(), "generic 12.5\n");
+    assert_eq!(
+        std::fs::read_to_string(archive).unwrap(),
+        "generic one\ngeneric 12.5\n"
+    );
     assert_eq!(server.count("/one.mp4"), 1);
     assert_eq!(server.count("/12.5.mp4"), 2);
 }

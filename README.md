@@ -129,9 +129,11 @@ Supported today:
   manifest/other-site subtitles remain unsupported.
 - `--write-info-json` writes upstream-cleaned video metadata beside the media
   name (after subtitles, before media) and playlist metadata before entries.
-  Names follow upstream extension replacement; existing files are kept and
-  `-j`/`-s`/listing never write. Content covers the represented metadata subset;
-  `_version`, overwrite options and `--load-info-json` are not implemented.
+  Names follow upstream extension replacement; existing files follow the
+  overwrite options and `-j`/`-s`/listing never write. Content covers the
+  represented metadata subset; `_version` and `--load-info-json` are not implemented.
+- `-w/--no-overwrites`, `--force-overwrites` and the default follow upstream:
+  existing media is "already downloaded" by default while sidecars are rewritten.
 - `--download-archive FILE` skips recorded extractor/video IDs before selection and
   records only successfully published downloads. Metadata/listing/simulation never
   write the archive. Extraction still makes normal requests for recorded inputs.

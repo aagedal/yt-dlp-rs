@@ -176,15 +176,25 @@ fn skip_download_writes_only_info_json_and_keeps_existing_files() {
     assert_eq!(names(&dir.path().join("out")), ["one.info.json"]);
     assert_eq!(read(&path).1["id"], "one");
     fs::write(&path, "kept").unwrap();
-    let stderr = run(&server.cli(dir.path(), "/one.mp4", &args));
+    let mut keep = args.to_vec();
+    keep.push("-w");
+    let stderr = run(&server.cli(dir.path(), "/one.mp4", &keep));
     assert!(
         stderr.contains("[info] Video metadata is already present"),
         "{stderr}"
     );
     assert_eq!(fs::read_to_string(&path).unwrap(), "kept");
+    // By default upstream overwrites metadata files.
+    let stderr = run(&server.cli(dir.path(), "/one.mp4", &args));
+    assert!(
+        stderr.contains("[info] Writing video metadata as JSON to:"),
+        "{stderr}"
+    );
+    assert_eq!(read(&path).1["id"], "one");
+    assert_eq!(names(&dir.path().join("out")), ["one.info.json"]);
     assert_eq!(
         server.count("/one.mp4"),
-        2,
+        3,
         "probes only, no media download"
     );
 }

@@ -13,7 +13,7 @@ use yt_dlp_rs::{
     VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
     output::{OutputTemplates, PrintTemplate, PrintToFile, TemplateOptions, render_formats},
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
-    validate_format_selector, video_info_json, write_info_json,
+    validate_format_selector, video_info_json, write_info_json_with,
 };
 
 #[derive(Parser)]
@@ -209,6 +209,15 @@ struct Args {
     /// Filename template: represented metadata with s/d/i/u/f/F conversions and %%
     #[arg(short, long, value_name = "[TYPES:]TEMPLATE")]
     output: Vec<String>,
+    /// Do not overwrite any files
+    #[arg(short = 'w', long, overrides_with_all = ["no_overwrites", "force_overwrites", "no_force_overwrites"])]
+    no_overwrites: bool,
+    /// Overwrite all video and metadata files
+    #[arg(long, alias = "yes-overwrites", overrides_with_all = ["no_overwrites", "force_overwrites", "no_force_overwrites"])]
+    force_overwrites: bool,
+    /// Do not overwrite the video, but overwrite related files (default)
+    #[arg(long, overrides_with_all = ["no_overwrites", "force_overwrites", "no_force_overwrites"])]
+    no_force_overwrites: bool,
     /// Output directories: [TYPES:]PATH with home (default) or an output type such as subtitle/infojson
     #[arg(short = 'P', long, value_name = "[TYPES:]PATH")]
     paths: Vec<String>,
@@ -261,6 +270,17 @@ fn prepare_media(
 /// Upstream warns when an absolute media template makes `--paths` irrelevant.
 fn path_is_absolute_template(templates: &OutputTemplates) -> bool {
     std::path::Path::new(&yt_dlp_rs::batch::expand_path_text(templates.get(None))).is_absolute()
+}
+
+/// Whether a regular file exists; other existing entries (including dangling
+/// symlinks, which upstream would write through) are refused natively.
+fn path_exists(path: &std::path::Path) -> yt_dlp_rs::Result<bool> {
+    match std::fs::symlink_metadata(path) {
+        Ok(_) if std::fs::metadata(path).is_ok_and(|metadata| metadata.is_file()) => Ok(true),
+        Ok(_) => Err(yt_dlp_rs::Error::OutputExists(path.into())),
+        Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(false),
+        Err(error) => Err(error.into()),
+    }
 }
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
@@ -409,6 +429,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     } else {
         None
     };
+    // Upstream `overwrites`: None (default), Some(false) for -w, Some(true) forced.
+    let overwrites = if args.force_overwrites {
+        Some(true)
+    } else if args.no_overwrites {
+        Some(false)
+    } else {
+        None
+    };
     let templates = OutputTemplates::parse(&args.output, args.restrict_filenames);
     let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
@@ -500,7 +528,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 };
                 reject_reserved(&path, [&archive_path, &args.cookies])?;
                 let value = playlist_info_json(playlist, counts, epoch())?;
-                report_info_json("playlist", &path, write_info_json(&path, &value)?);
+                let written = write_info_json_with(&path, &value, overwrites != Some(false))?;
+                report_info_json("playlist", &path, written);
                 Ok(())
             })();
             if let Err(error) = written {
@@ -580,12 +609,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             "WARNING: --paths is ignored since an absolute path is given in output template"
                         );
                     }
-                    if !args.skip_download {
-                        match std::fs::symlink_metadata(&path) {
-                            Ok(_) => return Err(yt_dlp_rs::Error::OutputExists(path).into()),
-                            Err(error) if error.kind() == io::ErrorKind::NotFound => {}
-                            Err(error) => return Err(error.into()),
-                        }
+                    let processing =
+                        processors.audio.is_some() || processors.video.is_some() || args.embed_subs;
+                    let existing_media = !args.skip_download && path_exists(&path)?;
+                    if existing_media && overwrites != Some(true) && processing {
+                        // Upstream would rerun postprocessors on the existing file.
+                        return Err(yt_dlp_rs::Error::Postprocess(format!(
+                            "{} already exists; postprocessing an existing download is unsupported (use --force-overwrites)",
+                            path.display()
+                        ))
+                        .into());
                     }
                     // Plan source, intermediate and final names before subtitle I/O.
                     let has_subtitles = info
@@ -658,7 +691,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                     }
                     let mut embedding_files = Vec::new();
+                    let planned_sidecars: Vec<_> = sidecars
+                        .iter()
+                        .map(|(_, subtitle, source)| (subtitle.ext.clone(), source.clone()))
+                        .collect();
                     for (language, subtitle, subtitle_path) in sidecars {
+                        // Related files are overwritten unless --no-overwrites.
+                        if overwrites != Some(false)
+                            && std::fs::symlink_metadata(&subtitle_path).is_ok()
+                            && std::fs::metadata(&subtitle_path)?.is_file()
+                        {
+                            eprintln!(
+                                "[download] Deleting existing file {}",
+                                subtitle_path.display()
+                            );
+                            std::fs::remove_file(&subtitle_path)?;
+                        }
                         match std::fs::symlink_metadata(&subtitle_path) {
                             Ok(_) if std::fs::metadata(&subtitle_path)?.is_file() => {
                                 eprintln!(
@@ -721,10 +769,26 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     // Upstream writes info JSON after subtitles and before media.
                     if let Some(info_json) = &info_json {
                         let value = video_info_json(&info, epoch())?;
-                        report_info_json("video", info_json, write_info_json(info_json, &value)?);
+                        let written =
+                            write_info_json_with(info_json, &value, overwrites != Some(false))?;
+                        report_info_json("video", info_json, written);
                     }
                     if args.skip_download {
                         return Ok(());
+                    }
+                    if existing_media {
+                        if overwrites == Some(true) {
+                            eprintln!("[download] Deleting existing file {}", path.display());
+                            std::fs::remove_file(&path)?;
+                        } else {
+                            eprintln!("[download] {} has already been downloaded", path.display());
+                            if let Some(archive) = &mut archive {
+                                archive
+                                    .record(&info)
+                                    .map_err(|error| format!("archive update failed: {error}"))?;
+                            }
+                            return Ok(());
+                        }
                     }
                     eprintln!("[download] Destination: {}", path.display());
                     let mut last_progress = Instant::now();
@@ -787,13 +851,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     };
                     let mut published_paths = published_paths;
                     published_paths.extend(info_json);
-                    for (_, subtitle, source) in subtitle_paths(&info, &path)? {
-                        published_paths.push(source.clone());
+                    for (ext, source) in planned_sidecars {
                         if let Some(conversion) = &subtitle_conversion {
-                            published_paths.push(conversion.output_path(&source, &subtitle.ext)?);
-                            published_paths
-                                .extend(conversion.intermediate_path(&source, &subtitle.ext));
+                            published_paths.push(conversion.output_path(&source, &ext)?);
+                            published_paths.extend(conversion.intermediate_path(&source, &ext));
                         }
+                        published_paths.push(source);
                     }
                     if let Some(archive_path) = &archive_path {
                         for output in &published_paths {

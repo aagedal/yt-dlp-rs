@@ -151,7 +151,14 @@ impl serde_json::ser::Formatter for PythonFormatter {
 /// are created, data is synced in a sibling temporary file, and publication
 /// never replaces a concurrently created destination.
 pub fn write_info_json(path: &Path, value: &Value) -> Result<InfoJsonWrite> {
+    write_info_json_with(path, value, false)
+}
+
+/// Like [`write_info_json`]; with `overwrite`, an existing regular file is
+/// atomically replaced (upstream's default `overwrites` for metadata files).
+pub fn write_info_json_with(path: &Path, value: &Value, overwrite: bool) -> Result<InfoJsonWrite> {
     match std::fs::symlink_metadata(path) {
+        Ok(metadata) if overwrite && metadata.is_file() => {}
         Ok(_) if std::fs::metadata(path).is_ok_and(|metadata| metadata.is_file()) => {
             return Ok(InfoJsonWrite::AlreadyPresent);
         }
@@ -178,6 +185,10 @@ pub fn write_info_json(path: &Path, value: &Value) -> Result<InfoJsonWrite> {
     let mut temporary = builder.tempfile_in(parent)?;
     temporary.write_all(&bytes)?;
     temporary.as_file().sync_all()?;
+    if overwrite {
+        temporary.persist(path).map_err(|error| error.error)?;
+        return Ok(InfoJsonWrite::Written);
+    }
     match temporary.persist_noclobber(path) {
         Ok(_) => Ok(InfoJsonWrite::Written),
         Err(error) if error.error.kind() == io::ErrorKind::AlreadyExists => {

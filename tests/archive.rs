@@ -182,11 +182,7 @@ fn simulation_json_and_listing_never_create_or_append_archives() {
 
 #[test]
 fn failed_download_existing_destination_and_invalid_template_are_not_recorded() {
-    for (path, existing, template) in [
-        ("/changing.mp4", false, false),
-        ("/low.mp4", true, false),
-        ("/low.mp4", false, true),
-    ] {
+    for (path, existing, template) in [("/changing.mp4", false, false), ("/low.mp4", false, true)] {
         let server = Server::new();
         let directory = tempfile::tempdir().unwrap();
         let archive = directory.path().join("archive.txt");
@@ -217,6 +213,21 @@ fn failed_download_existing_destination_and_invalid_template_are_not_recorded() 
             assert!(!target.exists());
         }
     }
+    // Like upstream, an existing destination counts as already downloaded:
+    // it is kept and recorded.
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let archive = directory.path().join("archive.txt");
+    let target = directory.path().join("out.mp4");
+    std::fs::write(&target, b"keep").unwrap();
+    let output = server.cli(&archive, &["-o", target.to_str().unwrap()], &["/low.mp4"]);
+    assert!(output.status.success());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("has already been downloaded"));
+    assert_eq!(std::fs::read(&target).unwrap(), b"keep");
+    assert_eq!(
+        std::fs::read_to_string(&archive).unwrap().lines().count(),
+        1
+    );
 }
 
 #[test]

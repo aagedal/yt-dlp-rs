@@ -38,7 +38,7 @@ tractable for future agents.
   `ttml.rs` ports bounded native text/timing/styles and `ffmpeg.rs` converts local sidecars.
 - `src/embed_subtitles.rs`: local subtitle eligibility and language/stream metadata;
   its bounded FFmpeg runner feeds the final stage of `src/postprocess.rs`.
-- `src/info_json.rs`: cleaned video/playlist info JSON values, `.info.json` naming and keep-existing atomic writes.
+- `src/info_json.rs`: cleaned video/playlist info JSON values, `.info.json` naming and keep-existing or replacing atomic writes.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/audio.rs`, `src/audio/ffmpeg.rs`: pure audio plans and bounded local
@@ -90,7 +90,8 @@ remain outside the current result contract.
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
    destinations without implying simulation. Other print stages remain open.
-   `-a/--batch-file` URL lists follow upstream `get_urls` parsing.
+   `-a/--batch-file` URL lists follow upstream `get_urls` parsing, and the
+   `-w`/`--force-overwrites` modes follow upstream existing-file decisions.
    Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.

@@ -27,10 +27,11 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--convert-subs`, `--convert-sub`, `--convert-subtitles` | Convert written sidecars to one of srt/vtt/ass/lrc; `none` disables; no implied subtitle writing |
 | `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
 | `--skip-download`, `--no-download` | Skip media while allowing selected subtitle and info JSON sidecars; never record a completed media archive entry |
-| `--write-info-json`, `--no-write-info-json` | Write cleaned video/playlist `.info.json` files before media/entries; keep existing files; never with JSON/simulation/listing; last flag wins; see [info JSON](../upstream/notes/info-json.md) |
+| `--write-info-json`, `--no-write-info-json` | Write cleaned video/playlist `.info.json` files before media/entries; existing files are replaced unless `-w`; never with JSON/simulation/listing; last flag wins; see [info JSON](../upstream/notes/info-json.md) |
 | `--restrict-filenames`, `--no-restrict-filenames` | ASCII-only upstream sanitization and space-free default template; last flag wins |
 | `--windows-filenames`, `--no-windows-filenames` | Force upstream path sanitization, or minimal `/`-only sanitization outside Windows; last flag wins |
 | `--trim-filenames`, `--trim-file-names LENGTH` | Trim rendered names excluding the last two dot-separated parts; 0 disables |
+| `-w`, `--no-overwrites`, `--force-overwrites`, `--yes-overwrites`, `--no-force-overwrites` | Upstream overwrite modes for media, info JSON and subtitles; last flag wins; see [overwrite options](#overwrite-options) |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--proxy URL` | Explicit HTTP/HTTPS/SOCKS route; empty string forces direct connections, last value wins |
@@ -1205,8 +1206,8 @@ and selected text/default input and final expanded output to 64 KiB each. A
 selected oversized string fails even if precision could truncate it. Bounds are
 explicit errors before large formatting allocations; host filesystem filename
 limits can still reject a rendered path. Empty final paths and stdout `-` remain
-unsupported. Existing destination files remain untouched, failed renders never
-record archives, and later entries/inputs still continue.
+unsupported. Existing media follows the overwrite options below, failed renders
+never record archives, and later entries/inputs still continue.
 
 Rendering occurs only on actual download paths after extraction and selection,
 or for `--print` lines that refer to `filename`. Other metadata, simulation and
@@ -1337,9 +1338,11 @@ filesystems. Unknown languages fail planning. Literal template directories remai
 user-controlled; metadata cannot add directories. This is not upstream unsafe
 filename/platform byte parity.
 
-The CLI reuses existing regular sidecars without overwrite. Nonregular or dangling
-sidecar entries fail before fetching them. An existing media destination, including
-a dangling symlink, fails before sidecar I/O unless media is skipped. Complete
+Existing regular sidecars are deleted and fetched again by default and with
+`--force-overwrites`, and reused with `-w`. Nonregular or dangling sidecar
+entries fail before fetching them. A nonregular or dangling media destination
+fails before sidecar I/O unless media is skipped; an existing regular media file
+follows the [overwrite options](#overwrite-options). Complete
 sidecars are published before media. A sidecar failure prevents that entry's media
 and archive record; earlier complete sidecars remain. Later entries/inputs continue.
 Media/merge failure also leaves completed sidecars without an archive record.
@@ -1873,3 +1876,23 @@ replacement of existing subtitle tracks. See [source applicability](../upstream/
 and [fixture provenance](../tests/fixtures/subtitle_embedding/README.md). This does
 not establish every FFmpeg codec/container combination, arbitrary postprocessor
 arguments or broader subtitle acquisition.
+
+## Overwrite options
+
+Ported from upstream `existing_file`, `FileDownloader.download`,
+`_write_info_json` and `_write_subtitles` (see
+[the source slice](../upstream/notes/overwrites.md)). By default
+(`--no-force-overwrites`) an existing regular media file is reported as
+`[download] FILE has already been downloaded`, not downloaded again, and
+recorded in the archive, while info JSON and subtitle sidecars are rewritten.
+`-w/--no-overwrites` also keeps existing info JSON and subtitles.
+`--force-overwrites`/`--yes-overwrites` deletes and replaces every existing
+output (`[download] Deleting existing file FILE`). Sidecars are still written
+before the media check, as upstream does.
+
+Native boundaries: when audio/video conversion or subtitle embedding is
+requested, an existing media file without `--force-overwrites` is an explicit
+error, because upstream would rerun postprocessors on it. Converted-extension
+candidates (`final_ext`), `--no-continue`/`--no-part` resume semantics and
+`--no-post-overwrites` are not implemented; nonregular and dangling-symlink
+destinations are refused instead of written through.

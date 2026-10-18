@@ -424,13 +424,13 @@ fn skip_download_aliases_write_sidecars_without_media_download_or_archive() {
 }
 
 #[test]
-fn existing_sidecar_is_reused_and_existing_media_refusal_precedes_sidecar_io() {
+fn existing_sidecars_follow_overwrite_modes_and_existing_media_is_already_downloaded() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
     std::fs::write(directory.path().join("video.custom.nb.vtt"), b"keep").unwrap();
     success(&server.cli(
         &["/ok.html"],
-        &["--write-subs", "-o", "video.custom"],
+        &["--write-subs", "-w", "-o", "video.custom"],
         directory.path(),
     ));
     assert_eq!(
@@ -442,17 +442,48 @@ fn existing_sidecar_is_reused_and_existing_media_refusal_precedes_sidecar_io() {
         b"media"
     );
     assert_eq!(server.count("/nb.vtt"), 0);
-    let blocked = Server::new();
+    // By default related files are overwritten.
+    success(&server.cli(
+        &["/ok.html"],
+        &["--write-subs", "-o", "video.custom"],
+        directory.path(),
+    ));
+    assert_eq!(
+        std::fs::read(directory.path().join("video.custom.nb.vtt")).unwrap(),
+        VTT.as_bytes()
+    );
+    assert_eq!(server.count("/nb.vtt"), 1);
+    // Existing media is kept as already downloaded after sidecars are written.
+    let existing = Server::new();
     let directory = tempfile::tempdir().unwrap();
     std::fs::write(directory.path().join("video.mp4"), b"existing").unwrap();
-    let output = blocked.cli(
+    let output = existing.cli(
         &["/ok.html"],
         &["--write-subs", "-o", "video.mp4"],
         directory.path(),
     );
-    assert!(!output.status.success());
-    assert_eq!(blocked.count("/nb.vtt"), 0);
-    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+    success(&output);
+    assert!(String::from_utf8_lossy(&output.stderr).contains("has already been downloaded"));
+    assert_eq!(
+        std::fs::read(directory.path().join("video.mp4")).unwrap(),
+        b"existing"
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("video.nb.vtt")).unwrap(),
+        VTT.as_bytes()
+    );
+    // --force-overwrites replaces the media.
+    let output = existing.cli(
+        &["/ok.html"],
+        &["--force-overwrites", "-o", "video.mp4"],
+        directory.path(),
+    );
+    success(&output);
+    assert!(String::from_utf8_lossy(&output.stderr).contains("Deleting existing file video.mp4"));
+    assert_eq!(
+        std::fs::read(directory.path().join("video.mp4")).unwrap(),
+        b"media"
+    );
 }
 
 #[test]
@@ -768,5 +799,49 @@ fn automatic_flags_are_independent_last_wins_and_never_select_normal_tracks_alon
         assert_eq!(server.count("/nb.vtt"), usize::from(writes));
         assert_eq!(server.count("/media.mp4"), 1);
         assert!(!directory.path().join("video.mp4").exists());
+    }
+}
+
+#[test]
+fn saved_upstream_overwrite_modes_match_published_files() {
+    let fixture: serde_json::Value =
+        serde_json::from_str(include_str!("fixtures/overwrites/cases.json")).unwrap();
+    for case in fixture["cases"].as_array().unwrap() {
+        let server = Server::new();
+        let directory = tempfile::tempdir().unwrap();
+        for name in case["existing"].as_array().unwrap() {
+            std::fs::write(directory.path().join(name.as_str().unwrap()), b"old").unwrap();
+        }
+        let archive = directory.path().join("archive.txt");
+        let mut args: Vec<&str> = case["args"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|arg| arg.as_str().unwrap())
+            .collect();
+        args.extend([
+            "--write-subs",
+            "--write-info-json",
+            "--download-archive",
+            archive.to_str().unwrap(),
+            "-o",
+            "video.%(ext)s",
+        ]);
+        success(&server.cli(&["/ok.html"], &args, directory.path()));
+        let name = case["name"].as_str().unwrap();
+        assert_eq!(
+            server.count("/media.mp4") == 2,
+            case["media_downloaded"].as_bool().unwrap(),
+            "{name}"
+        );
+        for (file, state) in case["files"].as_object().unwrap() {
+            let bytes = std::fs::read(directory.path().join(file)).unwrap();
+            assert_eq!(bytes == b"old", state == "old", "{name} {file}");
+        }
+        assert_eq!(
+            archive.exists(),
+            case["archived"].as_bool().unwrap(),
+            "{name}"
+        );
     }
 }

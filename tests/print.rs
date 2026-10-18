@@ -278,9 +278,10 @@ fn print_to_file_appends_before_downloading_without_implying_simulation() {
         std::fs::read(directory.path().join("page-1.mp4")).unwrap(),
         b"media"
     );
-    // A second run appends; the existing media now fails after the write.
+    // A second run appends; the existing media is then already downloaded.
     let output = server.cli(&["/page.html"], &args, directory.path());
-    assert!(!output.status.success());
+    success(&output);
+    assert!(String::from_utf8_lossy(&output.stderr).contains("has already been downloaded"));
     let read = |name: &str| std::fs::read_to_string(directory.path().join(name)).unwrap();
     assert_eq!(read("lists/html5.txt"), "page-1\n1280\npage-1\n1280\n");
     assert_eq!(read("names.txt"), "page-1.mp4\npage-1.mp4\n");
