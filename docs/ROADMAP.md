@@ -86,9 +86,14 @@ remain outside the current result contract.
    A saved-response upstream comparison covers the parsed metadata subset.
    This does not establish current live-site reliability. An isolated anonymous
    WEB API fallback is implemented for missing initial responses, with literal
-   page client configuration and token-exempt itag 18 only; local request/response fixtures cover it. Next: choose the
-   JavaScript challenge boundary; adaptive media requires explicit stream types
-   and merging, while manifests remain milestone 3 work. Upstream's challenge
+   page client configuration and token-exempt itag 18 only; local request/response
+   fixtures cover it. The
+   [JavaScript runtime decision](../upstream/notes/youtube-challenge-runtime.md)
+   selects an opt-in external Deno process with pinned offline EJS assets;
+   challenge solving remains unimplemented. Next: import and verify the full
+   EJS assets and saved challenge vectors, then implement the bounded runner
+   before integrating one challenge kind at a time. Adaptive media requires
+   explicit stream types and merging, while manifests remain milestone 3 work. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
