@@ -14,9 +14,11 @@ mod info;
 mod merge;
 pub mod output;
 mod playlist;
+mod postprocess;
 mod retry;
 mod selector;
 mod subtitles;
+mod video;
 
 pub use archive::{DownloadArchive, archive_id};
 pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
@@ -30,10 +32,12 @@ pub use info::{
 };
 pub use output::{render_automatic_captions, render_subtitles};
 pub use playlist::PlaylistSelection;
+pub use postprocess::{PostprocessOptions, ProcessedDownload};
 pub use subtitles::{
     RequestedSubtitles, SubtitleFormat, SubtitleMap, SubtitleOptions, SubtitleSelection, Subtitles,
     subtitle_paths,
 };
+pub use video::{VideoMode, VideoOptions};
 
 use extractor::{Extractor, GenericHttp, Youtube};
 use reqwest::blocking::Client;
@@ -158,6 +162,40 @@ impl YoutubeDl {
             destination.as_ref(),
             options,
             audio,
+            &mut callback,
+        )
+    }
+
+    /// Download, then extract audio and/or remux/recode local media in order.
+    pub fn download_processed_with_options(
+        &self,
+        info: &VideoInfo,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+        processors: &PostprocessOptions,
+    ) -> Result<ProcessedDownload> {
+        self.download_processed_with_progress(info, destination, options, processors, |_| {
+            std::ops::ControlFlow::Continue(())
+        })
+    }
+
+    /// Observe/cancel downloads and local processors before final publication.
+    /// A processing failure preserves its latest completed input; keep-video also
+    /// retains earlier stages. Multiple retained/final publications can partially succeed.
+    pub fn download_processed_with_progress(
+        &self,
+        info: &VideoInfo,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+        processors: &PostprocessOptions,
+        mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<ProcessedDownload> {
+        postprocess::download(
+            self,
+            info,
+            destination.as_ref(),
+            options,
+            processors,
             &mut callback,
         )
     }

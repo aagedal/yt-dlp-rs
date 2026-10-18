@@ -441,6 +441,7 @@
         "src/audio.rs",
         "src/audio/ffmpeg.rs",
         "src/audio_download.rs",
+        "src/postprocess.rs",
         "src/main.rs",
         "src/lib.rs",
         "tests/audio.rs",
@@ -452,6 +453,33 @@
         "upstream/notes/audio-extraction.md"
       ],
       "scope": "Explicit extract-audio mappings, codec inspection and copy/conversion to MP3/AAC/M4A/Opus/Vorbis/FLAC/ALAC/WAV; bounded native quality and process policies, lazy tools, source retention, cancellation and no-clobber final publication; no discovery, FDK selection, arbitrary postprocessors, embedding, video conversion or general format ranking parity"
+    },
+    {
+      "name": "video-remux-and-recode",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/utils/_utils.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/video.rs",
+        "src/video/ffmpeg.rs",
+        "src/postprocess.rs",
+        "src/audio_download.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "tests/video.rs",
+        "tests/helpers/video_runtime.rs",
+        "tests/helpers/video_pipeline.rs",
+        "tests/fixtures/video/",
+        "tools/compare_video.py",
+        "tools/test_compare_video.py",
+        "upstream/notes/video-processing.md"
+      ],
+      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio\u2192video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
     }
   ]
 }

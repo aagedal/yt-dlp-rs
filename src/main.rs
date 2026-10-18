@@ -8,13 +8,15 @@ use std::{
 };
 use yt_dlp_rs::{
     AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult,
-    ExtractionOptions, HttpOptions, PlaylistSelection, SubtitleOptions, YoutubeDl, YoutubeOptions,
+    ExtractionOptions, HttpOptions, PlaylistSelection, PostprocessOptions, SubtitleOptions,
+    VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
     output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
     render_automatic_captions, render_subtitles, subtitle_paths, validate_format_selector,
 };
 
 #[derive(Parser)]
 #[command(
+    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video"]).multiple(true)),
     version,
     about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
 )]
@@ -111,15 +113,21 @@ struct Args {
         allow_hyphen_values = true
     )]
     audio_quality: String,
-    /// Keep the downloaded source after audio extraction
+    /// Remux media to FORMAT or ordered SOURCE>TARGET/TARGET rules (stream copy)
+    #[arg(long, value_name = "FORMAT", overrides_with = "remux_video")]
+    remux_video: Option<String>,
+    /// Re-encode media to FORMAT or ordered SOURCE>TARGET/TARGET rules
+    #[arg(long, value_name = "FORMAT", overrides_with = "recode_video")]
+    recode_video: Option<String>,
+    /// Keep downloaded source and completed processing intermediates
     #[arg(
         short = 'k',
         long,
-        requires = "extract_audio",
+        requires = "processing",
         overrides_with = "no_keep_video"
     )]
     keep_video: bool,
-    /// Remove the source after successful audio extraction (default)
+    /// Remove processing sources after success (default)
     #[arg(long, overrides_with = "keep_video")]
     no_keep_video: bool,
     /// Explicit ffprobe executable for audio inspection (otherwise beside ffmpeg)
@@ -160,6 +168,25 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
     let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
     audio_options.keep_video = args.keep_video;
+    // Source validation applies to both values even when recode takes precedence.
+    let remux = args
+        .remux_video
+        .as_deref()
+        .map(|format| VideoOptions::from_cli(format, VideoMode::Remux))
+        .transpose()?;
+    let recode = args
+        .recode_video
+        .as_deref()
+        .map(|format| VideoOptions::from_cli(format, VideoMode::Recode))
+        .transpose()?;
+    if remux.is_some() && recode.is_some() {
+        eprintln!("WARNING: --remux-video is ignored since --recode-video was given");
+    }
+    let processors = PostprocessOptions {
+        audio: args.extract_audio.then_some(audio_options),
+        video: recode.or(remux),
+        keep_video: args.keep_video,
+    };
     let format = args
         .format
         .as_deref()
@@ -378,31 +405,32 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                         ControlFlow::Continue(())
                     };
-                    let (bytes, published_paths) = if args.extract_audio {
-                        let result = downloader.download_audio_with_progress(
-                            &info,
-                            &path,
-                            DownloadOptions {
-                                retries: args.retries,
-                            },
-                            &audio_options,
-                            progress,
-                        )?;
-                        eprintln!("[ExtractAudio] Destination: {}", result.path.display());
-                        let mut paths = vec![result.path];
-                        paths.extend(result.kept_video);
-                        (result.bytes, paths)
-                    } else {
-                        let bytes = downloader.download_with_progress(
-                            &info,
-                            &path,
-                            DownloadOptions {
-                                retries: args.retries,
-                            },
-                            progress,
-                        )?;
-                        (bytes, vec![path.clone()])
-                    };
+                    let (bytes, published_paths) =
+                        if processors.audio.is_some() || processors.video.is_some() {
+                            let result = downloader.download_processed_with_progress(
+                                &info,
+                                &path,
+                                DownloadOptions {
+                                    retries: args.retries,
+                                },
+                                &processors,
+                                progress,
+                            )?;
+                            eprintln!("[postprocess] Destination: {}", result.path.display());
+                            let mut paths = vec![result.path];
+                            paths.extend(result.kept_files);
+                            (result.bytes, paths)
+                        } else {
+                            let bytes = downloader.download_with_progress(
+                                &info,
+                                &path,
+                                DownloadOptions {
+                                    retries: args.retries,
+                                },
+                                progress,
+                            )?;
+                            (bytes, vec![path.clone()])
+                        };
                     if let Some(archive_path) = &archive_path {
                         for output in &published_paths {
                             let identical =

@@ -53,9 +53,14 @@ jobs:
         env:
           YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
           YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
-        run: cargo test --locked --test merge --test hls_media --test dash_media --test audio
+        run: cargo test --locked --test merge --test hls_media --test dash_media --test audio --test video
       - name: Verify local audio target encoders and bounded processing
         env:
           YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
           YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
         run: cargo test --locked --lib audio::ffmpeg
+      - name: Verify local video remux and conversion process
+        env:
+          YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
+          YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
+        run: cargo test --locked --lib video::ffmpeg

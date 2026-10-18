@@ -25,6 +25,7 @@ cargo run --locked -- --download-archive downloaded.txt 'https://example.com/vid
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
 cargo run --locked -- --cookies cookies.txt 'https://example.com/video.mp4'
 cargo run --locked -- -x --audio-format mp3 --ffmpeg-location /path/to/ffmpeg 'https://example.com/video.mp4'
+cargo run --locked -- --remux-video mkv --ffmpeg-location /path/to/ffmpeg 'https://example.com/video.mp4'
 cargo run --locked -- --proxy 'socks5://127.0.0.1:1080' 'https://example.com/video.mp4'
 cargo run --locked -- --user-agent 'My media client' --add-headers 'X-Media-Key:example' 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
@@ -137,9 +138,15 @@ Supported today:
   `--audio-format` accepts ordered `SOURCE>TARGET/TARGET` rules;
   `--audio-quality` accepts VBR 0..10 or a bitrate such as `128K`.
   FFprobe defaults to the sibling of `--ffmpeg-location`, or use
-  `--ffprobe-location PATH`. `-k` / `--keep-video` requires `-x` and retains the
-  source. [Audio limits and publication behavior](docs/COMPATIBILITY.md#audio-extraction)
+  `--ffprobe-location PATH`. `-k` / `--keep-video` retains processing sources and
+  intermediates. [Audio limits and publication behavior](docs/COMPATIBILITY.md#audio-extraction)
   are explicit; no tool discovery or installation is performed.
+- `--remux-video FORMAT` copies streams into a new container;
+  `--recode-video FORMAT` re-encodes with FFmpeg defaults (AVI uses Xvid).
+  Both accept ordered source/target mappings. Audio extraction runs first when
+  combined; recode takes precedence when both video options are supplied.
+  Same-extension/unmatched mappings skip FFmpeg. Container/codec incompatibility
+  remains an error. See [video processing limits](docs/COMPATIBILITY.md#video-remuxing-and-conversion).
 - Same-directory temporary files, cleanup on transfer failure, and no overwrite
   of existing destinations. A failed entry or URL sets a nonzero exit status while later
   entries and URLs still run. JSON goes to stdout; diagnostics go to stderr.

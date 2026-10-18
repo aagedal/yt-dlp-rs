@@ -28,14 +28,18 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--add-headers FIELD:VALUE`, `--add-header` | Repeated custom HTTP defaults; case-insensitive last custom value wins |
 | `--user-agent UA`, `--referer URL` | Convenience HTTP defaults override matching custom options; extractor/transport headers can override them |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
-| `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging and extract-audio conversion; no PATH discovery, directory lookup or installation |
+| `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging, audio extraction and video processing; no PATH discovery, directory lookup or installation |
+| `-x`, `--extract-audio`, `--audio-format`, `--audio-quality` | Ordered audio extraction mappings and bounded quality settings; see audio extraction below |
+| `--remux-video`, `--recode-video` | Ordered video target mappings; stream copying or container-default re-encoding; recode wins |
+| `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates; requires audio/video processing; last flag wins |
+| `--ffprobe-location PATH` | Explicit audio probe executable; otherwise inferred beside explicit FFmpeg |
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
 | `--playlist-start NUMBER`, `--playlist-end NUMBER` | Inclusive one-based defaults 1 through end, end -1 unbounded; items option overrides after validation |
 | `--playlist-reverse` | Reverse selected request order after deduplication |
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection, record only after successful download/merge publication; no writes in metadata/listing/simulation |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
-| All other flags | Rejected; `--print`, `--write-auto-subs` and general option parity are not implemented |
+| All other flags | Rejected; `--print` and general option parity are not implemented |
 
 Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
@@ -1563,8 +1567,8 @@ appends the target suffix. AAC target retains the pinned `.m4a` naming quirk:
 AAC codec copy uses ADTS while AAC encoding uses the M4A container. Vorbis uses
 `.ogg`, ALAC uses `.m4a`. Byte-identical FFmpeg output is not claimed.
 
-Final files are published without overwriting. `-k` / `--keep-video` currently
-requires `-x`; it retains the source, using `.orig` before the last suffix if the
+Final files are published without overwriting. `-k` / `--keep-video` requires audio or video processing; it retains the source,
+using `.orig` before the last suffix if the
 conversion keeps its filename. `--no-keep-video` reverses that option. A completed
 source is preserved after processing failure; cancellation cleans the private
 workspace. If publishing audio fails after the retained source was published,
@@ -1585,3 +1589,73 @@ FFmpeg/FFprobe verify all target encoders and actual MP3/WAV/ALAC downloads.
 See [source classification](../upstream/notes/audio-extraction.md) and
 [reference rules](../tests/fixtures/audio/README.md). General postprocessor
 chains, discovery, fixups, timestamp preservation and embedding remain open.
+
+
+## Video remuxing and conversion
+
+`--remux-video FORMAT` runs local stream copying; `--recode-video FORMAT` runs
+local re-encoding. Each accepts an ordered `SOURCE>TARGET/TARGET` mapping.
+Targets match the pinned option vocabulary: avi, flv, gif, mkv, mov, mp4, webm,
+aac, aiff, alac, flac, m4a, mka, mp3, ogg, opus, vorbis and wav. Active `alac`
+and `vorbis` targets fail explicitly: those literal suffixes do not identify an
+output muxer in the pinned source path. Use `-x --audio-format alac/vorbis` for
+those codecs and their proper container names. Same-extension or unmatched
+mappings are successful skips, including these tags, and never inspect tools.
+CLI targets are lowercase; source conditions are ASCII words. Library
+`VideoOptions::new` case-folds mappings. Mapping limits are 16 KiB/1024 branches.
+
+Both modes map all input streams, discard data streams and ignore unknown stream
+types. Remuxing requests `-c copy`. Recoding leaves codec choice to FFmpeg's
+container defaults; AVI explicitly requests `libxvid` and the `XVID` video tag.
+No video quality/preset option is invented. Outputs receive `+faststart` as in
+upstream. Native explicit muxer names replace filename-based FFmpeg inference;
+codec/container compatibility and encoder availability still determine success.
+Converting a mixed-stream input to an audio-only container can fail, just as a
+remux to an incompatible container can fail. These are processing errors.
+
+`--ffmpeg-location PATH` is required only when processing actually runs. Video
+processing uses no FFprobe. Inputs are private local files with fixed demuxers
+for MP4/M4A/MOV, Matroska/WebM, AVI, FLV, GIF, AAC, AIFF, FLAC, MP3, Ogg/Opus,
+WAV, MPEG-TS, MPEG and ASF/WMA/WMV; other input containers fail. The runner uses
+file-only protocols, closed stdin, bounded pipes, a ten-minute total execution
+budget including version validation, cancellation checkpoints and child cleanup.
+Read-only and skip-download modes run no processors.
+
+Recode takes precedence over remux regardless of argument order and emits the
+pinned warning. With `-x`, audio extraction runs first, then the video mapping
+matches the updated extension. A same-extension video target skips re-encoding.
+The existing format-selection policy still applies; the option does not add
+formats or imply upstream sorter parity. A selected separate-stream pair merges
+before this processing chain.
+
+Final filename substitution uses the current stage's extension, lowercased for
+video processing, and only replaces a matching literal suffix. For example,
+`movie.WEBM` with metadata extension `WEBM` becomes `movie.WEBM.mp4`. Successful
+processing publishes only the final result unless `-k` is enabled. With `-k`,
+completed source/intermediate files are also published in processing order;
+conflicting earlier stage filenames receive `.orig` before their final suffix.
+Returning to an earlier container can therefore keep `out.orig.mp4`,
+`out.m4a` and final `out.mp4`. Separate pre-merge input files are not retained.
+
+A failed processor preserves its latest completed input; `-k` also preserves
+earlier stages. Cancellation cleans the private workspace. Publication of
+retained files and final output is not one transaction: earlier published files
+remain after a later collision or failure. Existing destinations are never
+overwritten. Existing sidecars retain their original stem; archives record only
+successful final publication and cannot alias any published retained/final file.
+
+Library callers use `PostprocessOptions` with optional `AudioOptions` and
+`VideoOptions`, then `download_processed_with_options` or
+`download_processed_with_progress`. `ProcessedDownload.path` and `.bytes`
+describe the final result; `.kept_files` lists all retained media, and
+`.kept_video` identifies the original source when retained. The global keep flag
+or the contained audio keep flag enables retention. Existing audio-only APIs
+continue to use this shared orchestration.
+
+The saved comparison invokes actual pinned option parsing and video processor
+runs for 70 shared plans, one source-only Unicode mapping and eight invalid
+options. Portable subprocess tests and local HTTP pipeline tests cover actual
+execution/publication separately. Optional real FFmpeg/FFprobe verify stream-copy
+H.264 retention in MKV and AVI recoding to MPEG-4. This does not establish every
+FFmpeg build/codec/container combination. See [source applicability and remaining
+scope](../upstream/notes/video-processing.md) and [fixture provenance](../tests/fixtures/video/README.md).

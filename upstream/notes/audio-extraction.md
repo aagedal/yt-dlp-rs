@@ -50,8 +50,9 @@ an explicit guard against appending archive records to final/retained media path
 Remaining scope: arbitrary postprocessor chains, video conversion, metadata and
 thumbnail embedding, subtitle conversion, fixups, timestamp preservation,
 installation/discovery, additional containers/codecs, general retention options
-and whole-project parity. `-k` currently requires `-x` rather than implying
-unsupported retention of separate merge inputs.
+and whole-project parity. The later [video processing slice](video-processing.md)
+allows `-k` with video processing too and shares ordered processing/retention;
+separate pre-merge input retention remains unsupported.
 
 ```sh
 python3 tools/compare_audio.py --upstream /path/to/yt-dlp
