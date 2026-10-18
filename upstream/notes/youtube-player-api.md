@@ -76,5 +76,7 @@ bypassed: this verifies parser/token-policy subset parity, not API request parit
 or current endpoint usability. The original watch-page comparison still uses its
 documented missing-token override. Python remains development-only.
 
-Next: review and choose the JavaScript challenge runtime boundary before expanding
-challenge handling. No Python runtime extraction/download fallback is allowed.
+The subsequent [runtime decision](youtube-challenge-runtime.md) selects an
+opt-in external Deno process with pinned offline EJS assets and records the
+implementation gates. Challenge solving remains unimplemented. No Python runtime
+extraction/download fallback is allowed.
