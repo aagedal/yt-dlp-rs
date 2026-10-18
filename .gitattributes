@@ -1,3 +1,12 @@
 # Hash-pinned solver/player artifacts must retain their original LF bytes.
 /vendor/ejs/* text eol=lf
 /tests/fixtures/youtube/challenges/* text eol=lf
+
+# Generated media and raw AES keys are binary even when a small file has no NUL.
+/tests/fixtures/**/*.aac binary
+/tests/fixtures/**/*.ts binary
+/tests/fixtures/**/*.mp4 binary
+/tests/fixtures/**/*.m4a binary
+/tests/fixtures/**/*.m4s binary
+/tests/fixtures/**/*.webm binary
+/tests/fixtures/**/*.key binary
