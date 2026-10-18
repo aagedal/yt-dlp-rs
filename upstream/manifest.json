@@ -289,6 +289,36 @@
         "upstream/notes/typed-output-templates.md"
       ],
       "scope": "Whitelist of represented root string/integer/boolean filename fields; s/d/i/u/f/F flags-width-precision and inert length modifiers, known-field alternatives/literal defaults/global NA option, upstream float numeric casting and exact bare-s playlist padding before archive filtering; bounded grammar/output, native component sanitizer and explicit unsupported errors; no arbitrary metadata/traversal/math/date/replacement/custom conversions or platform filename parity"
+    },
+    {
+      "name": "html5-subtitles",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/common.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "yt_dlp/downloader/http.py",
+        "test/test_YoutubeDL.py",
+        "test/test_InfoExtractor.py"
+      ],
+      "rust": [
+        "src/extractor/html5.rs",
+        "src/subtitles.rs",
+        "src/output/subtitles.rs",
+        "src/output.rs",
+        "src/info.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "src/download.rs",
+        "src/error.rs",
+        "tests/subtitles.rs",
+        "tests/fixtures/subtitles/",
+        "tools/compare_subtitles.py",
+        "tools/test_compare_subtitles.py",
+        "upstream/notes/html5-subtitles.md"
+      ],
+      "scope": "Direct-child HTML5 subtitle/caption track metadata with ordered optional-language groups, pinned URL sanitation/extension completion; native listing, literal/all/exclusion language selection and ordered format preferences; sidecar-only skip-download and native HTTP identity-byte sidecars with referrers/retries/cancellation/no-clobber publication before media; sanitized collision-safe paths and explicit unknown-language errors; no general regex, automatic/site/manifest subtitles, conversion/embedding, decompression or full filename/timing parity"
     }
   ]
 }

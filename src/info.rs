@@ -141,6 +141,10 @@ pub struct VideoFormat {
 /// Small, explicitly supported subset of yt-dlp's info dictionary.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoInfo {
+    #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
+    pub subtitles: crate::Subtitles,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub requested_subtitles: Option<crate::RequestedSubtitles>,
     /// Selected maximum original index, used for legacy string-template padding.
     /// Internal rendering context is accepted on input but omitted from JSON output.
     #[serde(default, rename = "__last_playlist_index", skip_serializing)]
@@ -526,6 +530,8 @@ mod tests {
 
     fn info(formats: Vec<VideoFormat>) -> VideoInfo {
         VideoInfo {
+            subtitles: Default::default(),
+            requested_subtitles: None,
             last_playlist_index: None,
             playlist_index: None,
             playlist_autonumber: None,

@@ -1,14 +1,16 @@
 //! Deliberately narrow HTML5 subset of upstream GenericIE and
 //! HTML5MediaEmbedIE / InfoExtractor._parse_html5_media_entries at the pinned revision.
 use super::{Extractor, dash, direct, hls};
-use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
+use crate::{
+    Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo,
+};
 use percent_encoding::percent_decode_str;
 use reqwest::{
     blocking::Client,
     header::{CONTENT_ENCODING, CONTENT_TYPE},
 };
 use scraper::{Html, Selector};
-use std::io::Read;
+use std::{collections::HashMap, io::Read};
 use url::Url;
 
 pub struct GenericHttp;
@@ -16,10 +18,76 @@ pub struct GenericHttp;
 const MAX_HTML_BYTES: u64 = 2 * 1024 * 1024;
 
 struct Html5Page {
-    sources: Vec<Vec<Html5Source>>,
+    entries: Vec<Html5Entry>,
     id: String,
     title: String,
     playlist_title: String,
+}
+
+struct Html5Entry {
+    sources: Vec<Html5Source>,
+    subtitles: Subtitles,
+}
+
+// Match the pinned determine_ext URL suffix rules, without MIME requests.
+fn subtitle_extension(url: &Url) -> String {
+    let url = url.as_str().split('?').next().unwrap_or("");
+    let Some((_, guess)) = url.rsplit_once('.') else {
+        return "unknown_video".into();
+    };
+    if !guess.is_empty() && guess.bytes().all(|b| b.is_ascii_alphanumeric()) {
+        return guess.to_ascii_lowercase();
+    }
+    let trimmed = guess.trim_end_matches('/');
+    if matches!(
+        trimmed,
+        "3g2"
+            | "3gp"
+            | "f4v"
+            | "mk3d"
+            | "divx"
+            | "mpg"
+            | "ogv"
+            | "m4v"
+            | "wmv"
+            | "avi"
+            | "flv"
+            | "mkv"
+            | "mov"
+            | "mp4"
+            | "webm"
+            | "aac"
+            | "ape"
+            | "asf"
+            | "f4a"
+            | "f4b"
+            | "m4b"
+            | "m4r"
+            | "oga"
+            | "ogx"
+            | "spx"
+            | "vorbis"
+            | "wma"
+            | "weba"
+            | "aiff"
+            | "alac"
+            | "flac"
+            | "m4a"
+            | "mka"
+            | "mp3"
+            | "ogg"
+            | "opus"
+            | "wav"
+            | "f4f"
+            | "f4m"
+            | "m3u8"
+            | "smil"
+            | "mpd"
+    ) {
+        trimmed.into()
+    } else {
+        "unknown_video".into()
+    }
 }
 
 struct Html5Source {
@@ -97,7 +165,54 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                 dash_hint: hint.contains("dash+xml"),
             });
         }
-        entries.push(urls);
+        let mut subtitles = Subtitles::default();
+        let mut language_indices = HashMap::<Option<String>, usize>::new();
+        for track in element.children().filter_map(scraper::ElementRef::wrap) {
+            if track.value().name() != "track"
+                || !matches!(
+                    track.value().attr("kind"),
+                    None | Some("" | "subtitles" | "captions")
+                )
+            {
+                continue;
+            }
+            let Some(src) = nonempty(track.value().attr("src")) else {
+                continue;
+            };
+            // Source postprocessing sanitizes protocol-relative subtitle URLs to
+            // HTTP and repairs the httpss typo before completing extensions.
+            let url = if src.starts_with("//") {
+                Url::parse(&format!("http:{src}"))?
+            } else if let Some(rest) = src.strip_prefix("httpss://") {
+                Url::parse(&format!("https://{rest}"))?
+            } else {
+                base.join(src)?
+            };
+            if !matches!(url.scheme(), "http" | "https") {
+                return Err(Error::UnsupportedScheme(url.scheme().into()));
+            }
+            let language = track
+                .value()
+                .attr("srclang")
+                .filter(|lang| !lang.is_empty())
+                .or_else(|| track.value().attr("lang").filter(|lang| !lang.is_empty()))
+                .or_else(|| track.value().attr("label"))
+                .map(str::to_owned);
+            let format = SubtitleFormat {
+                ext: subtitle_extension(&url),
+                url,
+            };
+            if let Some(&index) = language_indices.get(&language) {
+                subtitles.entries[index].1.push(format);
+            } else {
+                language_indices.insert(language.clone(), subtitles.entries.len());
+                subtitles.entries.push((language, vec![format]));
+            }
+        }
+        entries.push(Html5Entry {
+            sources: urls,
+            subtitles,
+        });
     }
     if entries.is_empty() {
         return Ok(None);
@@ -129,7 +244,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
     let playlist_title = if title.is_empty() { "video" } else { &title }.to_owned();
     let title = if title.is_empty() { &id } else { &title };
     Ok(Some(Html5Page {
-        sources: entries,
+        entries,
         title: title.to_owned(),
         playlist_title,
         id,
@@ -215,10 +330,10 @@ impl Extractor for GenericHttp {
             return Ok(None);
         };
         let mut entries = Vec::new();
-        for (index, sources) in media.sources.iter().enumerate() {
+        for (index, entry) in media.entries.iter().enumerate() {
             let mut formats = Vec::new();
             let mut first_info = None;
-            for (index, source) in sources.iter().enumerate() {
+            for (index, source) in entry.sources.iter().enumerate() {
                 let url = &source.url;
                 let response = direct::request(client, url, Some(&page_url))?;
                 let direct = direct::from_response(&response, url);
@@ -269,6 +384,7 @@ impl Extractor for GenericHttp {
             }
             let mut info = first_info.expect("parsed HTML5 media has at least one source");
             info.formats = formats;
+            info.subtitles = entry.subtitles.clone();
             info.id = format!("{}-{}", media.id, index + 1);
             info.title = format!("{} ({})", media.title, index + 1);
             info.webpage_url = page_url.clone();
@@ -288,5 +404,47 @@ impl Extractor for GenericHttp {
             extractor_key: "Generic".into(),
             entries,
         })))
+    }
+}
+
+#[cfg(test)]
+mod subtitle_tests {
+    use super::*;
+    #[test]
+    fn saved_html_tracks_match_actual_upstream_parser_and_extension_rules() {
+        let fixture: serde_json::Value =
+            serde_json::from_str(include_str!("../../tests/fixtures/subtitles/cases.json"))
+                .unwrap();
+        for case in fixture["html_cases"].as_array().unwrap() {
+            let page = parse_page(
+                &Url::parse(case["page_url"].as_str().unwrap()).unwrap(),
+                case["html"].as_str().unwrap(),
+            )
+            .unwrap()
+            .unwrap();
+            let actual: Vec<_> = page.entries.iter().map(|entry| {
+                let groups: Vec<_> = entry.subtitles.entries.iter().map(|(language, formats)| serde_json::json!({"language":language,"formats":formats})).collect();
+                serde_json::json!({"subtitles":groups})
+            }).collect();
+            assert_eq!(
+                serde_json::json!({"entries":actual}),
+                case["expected"],
+                "{}",
+                case["name"]
+            );
+        }
+    }
+    #[test]
+    fn subtitle_extension_keeps_pinned_fragment_query_and_trailing_slash_quirks() {
+        for (url, ext) in [
+            ("https://example.test/a.VTT?token=1#f", "vtt"),
+            ("https://example.test/a.vtt#f", "unknown_video"),
+            ("https://example.test/a.vtt/", "unknown_video"),
+            ("https://example.test/a.mp4/", "mp4"),
+            ("https://example.test/a.MP4/", "unknown_video"),
+            ("https://example.test/no-ext", "unknown_video"),
+        ] {
+            assert_eq!(subtitle_extension(&Url::parse(url).unwrap()), ext);
+        }
     }
 }

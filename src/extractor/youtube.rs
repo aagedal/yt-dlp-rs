@@ -507,6 +507,8 @@ fn extract_watch_page_with_runtime(
     }
     let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
+        subtitles: Default::default(),
+        requested_subtitles: None,
         last_playlist_index: None,
         playlist_index: None,
         playlist_autonumber: None,

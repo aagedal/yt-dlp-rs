@@ -14,6 +14,8 @@ cargo build --locked
 cargo run --locked -- 'https://example.com/video.mp4'
 cargo run --locked -- --dump-json 'https://example.com/video.mp4'
 cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sources.html'
+cargo run --locked -- --list-subs 'https://example.com/video-with-tracks.html'
+cargo run --locked -- --write-subs --sub-langs all --skip-download 'https://example.com/video-with-tracks.html'
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
@@ -96,6 +98,12 @@ Supported today:
   requested order and deduplicating overlaps. `--playlist-start`, `--playlist-end`
   and `--playlist-reverse` are supported for fully extracted HTML5 playlists.
   Original indices and selected order are exposed in playlist entry JSON.
+- HTML5 direct-child subtitle/caption `<track>` metadata, `--list-subs`, and
+  `--write-subs` sidecars selected with literal `--sub-langs` tags/all/exclusions
+  and ordered `--sub-format` preferences. `--skip-download` writes requested
+  sidecars without media or archive records. Sidecars use native HTTP retries,
+  referrers, temporary cleanup and no overwrite; automatic captions, regex
+  languages, conversion/embedding and site/manifest subtitles remain unsupported.
 - `--download-archive FILE` skips recorded extractor/video IDs before selection and
   records only successfully published downloads. Metadata/listing/simulation never
   write the archive. Extraction still makes normal requests for recorded inputs.
@@ -125,7 +133,7 @@ Supported today:
   using the same bounded `Retry-After` policy.
 
 Other HTML pages, general YouTube support, broader DASH/HLS delivery, site playlists, full upstream format ranking, general selector
-expressions, cookies/authentication, persistent resume, subtitles, and other
+expressions, cookies/authentication, persistent resume, broader subtitle acquisition, and other
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
@@ -159,6 +167,11 @@ ID applies to every playlist entry independently; each must offer that ID.
 `apply` filters/reorders fully extracted playlist entries and annotates their
 original index/count and selected order/count. Single videos are unaffected.
 Library extraction methods do not implicitly apply CLI playlist options.
+`SubtitleOptions::new(languages, format)?.select(&info.subtitles)` returns selected
+subtitle metadata and warnings. `subtitle_paths` plans sanitized sidecar names;
+`download_subtitle_with_options` / `download_subtitle_with_progress` copy one
+resource with the normal retry/cancellation policy. Selection, writing and archive
+recording remain explicit library operations.
 `DownloadArchive::load`, `contains` and `record` expose persistence separately;
 library callers choose when to filter and record, after successful publication.
 `archive_id` returns the supported lowercase extractor-key plus case-sensitive ID.

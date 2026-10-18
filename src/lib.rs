@@ -12,6 +12,7 @@ pub mod output;
 mod playlist;
 mod retry;
 mod selector;
+mod subtitles;
 
 pub use archive::{DownloadArchive, archive_id};
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
@@ -20,7 +21,12 @@ pub use extractor::YoutubeOptions;
 pub use info::{
     ByteRange, ExtractResult, Fragment, HlsAes128, PlaylistInfo, StreamKind, VideoFormat, VideoInfo,
 };
+pub use output::render_subtitles;
 pub use playlist::PlaylistSelection;
+pub use subtitles::{
+    RequestedSubtitles, SubtitleFormat, SubtitleMap, SubtitleOptions, SubtitleSelection, Subtitles,
+    subtitle_paths,
+};
 
 use extractor::{Extractor, GenericHttp, Youtube};
 use reqwest::blocking::Client;
@@ -228,6 +234,39 @@ impl YoutubeDl {
             &mut callback,
         )
     }
+    /// Copy a selected HTTP subtitle resource using the native whole-file transport.
+    /// Caption bytes are not parsed or converted; the page referrer is preserved.
+    pub fn download_subtitle_with_options(
+        &self,
+        info: &VideoInfo,
+        subtitle: &SubtitleFormat,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+    ) -> Result<u64> {
+        self.download_subtitle_with_progress(info, subtitle, destination, options, |_| {
+            std::ops::ControlFlow::Continue(())
+        })
+    }
+
+    /// Observe/cancel a subtitle transfer at the same checkpoints as whole-file media.
+    pub fn download_subtitle_with_progress(
+        &self,
+        info: &VideoInfo,
+        subtitle: &SubtitleFormat,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+        mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<u64> {
+        download::download_subtitle(
+            &self.client,
+            info,
+            subtitle,
+            destination.as_ref(),
+            options,
+            &mut callback,
+        )
+    }
+
     fn download_merged(
         &self,
         info: &VideoInfo,

@@ -14,6 +14,8 @@ pub enum Error {
     UnsupportedYoutube(String),
     #[error("unsupported manifest: {0}")]
     UnsupportedManifest(String),
+    #[error("subtitle operation failed: {0}")]
+    Subtitle(String),
     #[error("unsupported HTML5 media: {0}")]
     UnsupportedHtml5(String),
     #[error("playlist result requires extract_result or extract_result_with_format")]

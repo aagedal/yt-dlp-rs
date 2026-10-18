@@ -29,6 +29,7 @@ tractable for future agents.
 - `src/dash.rs` and `src/extractor/dash.rs`: bounded static single-period MPD parsing and generic/HTML5 acquisition.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
 - `src/playlist.rs`: playlist item/range parsing, ordered index deduplication and fully extracted entry selection.
+- `src/subtitles.rs`: ordered subtitle metadata, language/format selection and sidecar name planning; `src/output/subtitles.rs` renders inventories.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
@@ -142,6 +143,10 @@ remain outside the current result contract.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
    authentication, cookies, subtitles, archives, and postprocessors explicitly.
+   HTML5 subtitle/caption track discovery, listing, literal language/all/exclusion
+   selection, format preferences and native HTTP sidecars are implemented.
+   Skip-download permits sidecar-only writes without archive records; automatic,
+   site/manifest subtitles, regex languages, conversion and embedding remain open.
    Basic download archives are implemented: cached extractor-key/ID membership,
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive

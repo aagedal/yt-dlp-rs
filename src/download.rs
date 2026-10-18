@@ -212,6 +212,59 @@ pub fn download(
     options: DownloadOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
+    download_resource(
+        client,
+        &HttpResource {
+            url: &info.url,
+            referrer: (!info.direct).then_some(&info.webpage_url),
+            validate_media: !info.direct,
+            subtitle: false,
+        },
+        destination,
+        options,
+        callback,
+    )
+}
+
+pub(crate) fn download_subtitle(
+    client: &Client,
+    info: &VideoInfo,
+    subtitle: &crate::SubtitleFormat,
+    destination: &Path,
+    options: DownloadOptions,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    if !matches!(subtitle.url.scheme(), "http" | "https") {
+        return Err(Error::UnsupportedScheme(subtitle.url.scheme().into()));
+    }
+    download_resource(
+        client,
+        &HttpResource {
+            url: &subtitle.url,
+            referrer: Some(&info.webpage_url),
+            validate_media: false,
+            subtitle: true,
+        },
+        destination,
+        options,
+        callback,
+    )
+}
+
+struct HttpResource<'a> {
+    url: &'a url::Url,
+    referrer: Option<&'a url::Url>,
+    validate_media: bool,
+    subtitle: bool,
+}
+
+fn download_resource(
+    client: &Client,
+    resource: &HttpResource<'_>,
+    destination: &Path,
+    options: DownloadOptions,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
     if destination.exists() {
         return Err(Error::OutputExists(destination.into()));
     }
@@ -236,7 +289,7 @@ pub fn download(
         reporter.report(DownloadPhase::Requesting, actual)?;
         match download_attempt(
             client,
-            info,
+            resource,
             temporary.as_file_mut(),
             &mut state,
             &mut actual,
@@ -266,7 +319,7 @@ pub fn download(
 
 fn download_attempt(
     client: &Client,
-    info: &VideoInfo,
+    resource: &HttpResource<'_>,
     temporary: &mut fs::File,
     state: &mut Option<ResumeState>,
     actual: &mut u64,
@@ -276,21 +329,30 @@ fn download_attempt(
         .as_ref()
         .filter(|state| *actual > 0 && *actual < state.total);
     let mut request = client
-        .get(info.url.clone())
+        .get(resource.url.clone())
         .header(ACCEPT_ENCODING, "identity");
     if let Some(state) = resume {
         request = request
             .header(RANGE, format!("bytes={actual}-"))
             .header(IF_RANGE, state.etag.clone());
     }
-    if !info.direct {
-        request = request.header(REFERER, info.webpage_url.as_str());
+    if let Some(referrer) = resource.referrer {
+        request = request.header(REFERER, referrer.as_str());
     }
     let mut response = request
         .send()
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)
         .map_err(AttemptFailure::request)?;
+    if resource.subtitle
+        && !response
+            .headers()
+            .get_all(CONTENT_ENCODING)
+            .iter()
+            .all(|value| value.as_bytes().eq_ignore_ascii_case(b"identity"))
+    {
+        return Err(Error::Subtitle("compressed subtitle responses are unsupported".into()).into());
+    }
     let expected = if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
         let resume = resume.ok_or(Error::PartialResponse)?;
         validate_range(&response, resume, *actual)?;
@@ -304,7 +366,9 @@ fn download_attempt(
         *state = resume_state(&response);
         response.content_length()
     };
-    if !info.direct && crate::extractor::direct_media_info(&response, &info.url).is_none() {
+    if resource.validate_media
+        && crate::extractor::direct_media_info(&response, resource.url).is_none()
+    {
         return Err(Error::UnsupportedHtml5(
             "source no longer serves supported direct HTTP media".into(),
         )

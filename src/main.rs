@@ -7,9 +7,9 @@ use std::{
 };
 use yt_dlp_rs::{
     DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions,
-    PlaylistSelection, YoutubeDl, YoutubeOptions,
+    PlaylistSelection, SubtitleOptions, YoutubeDl, YoutubeOptions,
     output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
-    validate_format_selector,
+    render_subtitles, subtitle_paths, validate_format_selector,
 };
 
 #[derive(Parser)]
@@ -29,6 +29,29 @@ struct Args {
     /// List available formats (selection still applies with -j or -s; no downloads)
     #[arg(short = 'F', long = "list-formats")]
     list_formats: bool,
+    /// List available subtitle languages/formats without downloading
+    #[arg(long)]
+    list_subs: bool,
+    /// Write selected subtitle sidecars before downloading media
+    #[arg(long, alias = "write-srt", overrides_with = "no_write_subs")]
+    write_subs: bool,
+    /// Disable subtitle sidecar writing
+    #[arg(long, alias = "no-write-srt", overrides_with = "write_subs")]
+    no_write_subs: bool,
+    /// Comma-separated literal subtitle languages, all and -exclusions (no regex)
+    #[arg(
+        long,
+        alias = "srt-langs",
+        value_name = "LANGS",
+        allow_hyphen_values = true
+    )]
+    sub_langs: Vec<String>,
+    /// Ordered subtitle extension preferences separated by / (default best)
+    #[arg(long, default_value = "best", value_name = "FORMAT")]
+    sub_format: String,
+    /// Skip media downloads while allowing requested subtitle sidecars
+    #[arg(long, alias = "no-download")]
+    skip_download: bool,
     /// Format ID or indexed/grouped selector with filters, + pairs and / fallbacks
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
@@ -90,6 +113,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             "WARNING: Ignoring --playlist-start and --playlist-end because --playlist-items was given"
         );
     }
+    let subtitle_languages = (!args.sub_langs.is_empty()).then(|| args.sub_langs.join(","));
+    let subtitle_options = SubtitleOptions::new(subtitle_languages.as_deref(), &args.sub_format)?;
     let mut downloader = YoutubeDl::with_youtube_options(YoutubeOptions {
         js_runtime: args.youtube_js_runtime,
     })?;
@@ -103,7 +128,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
     };
-    let list_only = args.list_formats && !args.dump_json && !args.simulate;
+    let list_only = (args.list_formats || args.list_subs) && !args.dump_json && !args.simulate;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in args.urls {
@@ -121,6 +146,25 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             } else {
                 result
             };
+            if args.write_subs {
+                let select = |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
+                    let selection = subtitle_options.select(&info.subtitles)?;
+                    for warning in selection.warnings {
+                        eprintln!("WARNING: {}: {warning}", info.id);
+                    }
+                    info.requested_subtitles =
+                        (!info.subtitles.is_empty()).then_some(selection.requested);
+                    Ok(())
+                };
+                match &mut result {
+                    ExtractResult::Video(info) => select(info)?,
+                    ExtractResult::Playlist(playlist) => {
+                        for info in &mut playlist.entries {
+                            select(info)?;
+                        }
+                    }
+                }
+            }
             if !list_only {
                 downloader.select_result(&mut result, args.format.as_deref())?;
             }
@@ -137,11 +181,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         };
         for info in extracted.into_entries() {
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+                if args.list_subs {
+                    write!(stdout, "{}", render_subtitles(&info))?;
+                }
                 if args.list_formats {
                     write!(stdout, "{}", render_formats(&info))?;
-                    if !args.dump_json {
-                        return Ok(());
-                    }
+                }
+                if (args.list_formats || args.list_subs) && !args.dump_json {
+                    return Ok(());
                 }
                 if args.dump_json {
                     serde_json::to_writer(&mut stdout, &info)?;
@@ -149,8 +196,59 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 } else if args.simulate {
                     eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
                 } else {
+                    if args.skip_download
+                        && info
+                            .requested_subtitles
+                            .as_ref()
+                            .is_none_or(|subtitles| subtitles.is_empty())
+                    {
+                        return Ok(());
+                    }
                     let path =
                         render_template_with_options(&args.output, &info, &template_options)?;
+                    if !args.skip_download {
+                        match std::fs::symlink_metadata(&path) {
+                            Ok(_) => return Err(yt_dlp_rs::Error::OutputExists(path).into()),
+                            Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+                            Err(error) => return Err(error.into()),
+                        }
+                    }
+                    // Plan all names before I/O, including language sanitation collisions.
+                    for (language, subtitle, subtitle_path) in subtitle_paths(&info, &path)? {
+                        match std::fs::symlink_metadata(&subtitle_path) {
+                            Ok(_) if std::fs::metadata(&subtitle_path)?.is_file() => {
+                                eprintln!(
+                                    "[info] Subtitle {} is already present",
+                                    subtitle_path.display()
+                                );
+                            }
+                            Ok(_) => {
+                                return Err(yt_dlp_rs::Error::Subtitle(format!(
+                                    "subtitle destination is not a regular file: {}",
+                                    subtitle_path.display()
+                                ))
+                                .into());
+                            }
+                            Err(error) if error.kind() == io::ErrorKind::NotFound => {
+                                eprintln!(
+                                    "[info] Writing {language:?} subtitles to: {}",
+                                    subtitle_path.display()
+                                );
+                                downloader.download_subtitle_with_options(
+                                    &info,
+                                    &subtitle,
+                                    &subtitle_path,
+                                    DownloadOptions {
+                                        retries: args.retries,
+                                    },
+                                )?;
+                            }
+                            Err(error) => return Err(error.into()),
+                        }
+                    }
+                    if args.skip_download {
+                        return Ok(());
+                    }
                     eprintln!("[download] Destination: {}", path.display());
                     let mut last_progress = Instant::now();
                     let bytes = downloader.download_with_progress(

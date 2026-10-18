@@ -1,13 +1,15 @@
 mod formats;
+mod subtitles;
 mod template;
 pub use formats::render_formats;
+pub use subtitles::render_subtitles;
 
 use crate::{Result, VideoInfo};
 use std::path::PathBuf;
 
 pub const DEFAULT_TEMPLATE: &str = "%(title)s [%(id)s].%(ext)s";
 
-fn safe_component(value: &str) -> String {
+pub(crate) fn safe_component(value: &str) -> String {
     let value: String = value
         .chars()
         .map(|c| {

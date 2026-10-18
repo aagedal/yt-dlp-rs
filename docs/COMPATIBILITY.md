@@ -13,6 +13,12 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
 | `-o`, `--output` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; no overwrite |
+| `--list-subs` | Native language/format inventory; list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
+| `--write-subs`, `--write-srt` | Select normal subtitles and write sidecars before actual media downloads; JSON/simulation/listing only expose selection |
+| `--no-write-subs`, `--no-write-srt` | Disable subtitle writing; last write/no-write flag wins |
+| `--sub-langs`, `--srt-langs` | Repeated comma-separated literal tags, `all` and `-` exclusions; trimmed tokens, case-insensitive matching; no regex |
+| `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
+| `--skip-download`, `--no-download` | Skip media while allowing selected sidecars; never record a completed media archive entry |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
@@ -23,7 +29,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection, record only after successful download/merge publication; no writes in metadata/listing/simulation |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
-| All other flags | Rejected; aliases such as `--skip-download` and `--print` are not implemented |
+| All other flags | Rejected; `--print`, `--write-auto-subs` and general option parity are not implemented |
 
 Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
@@ -1186,3 +1192,98 @@ sanitization mode on portable fields. Native safety/resource cases are separate;
 unsafe-character output is not normalized to hide policy differences. Six
 source-only cases record unsupported behavior. See
 [the source slice](../upstream/notes/typed-output-templates.md).
+
+
+## HTML5 subtitles and sidecars
+
+HTML5 media entries discover direct child `<track>` elements after validating the
+media alternatives. Accept absent/empty `kind` or exact lowercase `subtitles` and
+`captions`; ignore other kinds. Nonempty `src` is stripped and resolved against
+the effective page/base URL with HTML entities decoded. Only HTTP(S) resources
+are supported; an unsupported eligible track URL fails extraction even if another
+language would be selected. No caption request or probe occurs during extraction.
+Track-only elements without a supported media source remain unsupported.
+
+Group formats by `srclang or lang or label`, preserving declaration order,
+attribute case/whitespace and a final empty label. Missing all language attributes
+remains unknown rather than inventing `und`. Metadata is a language-keyed
+`subtitles` object with ordered URL/ext arrays. Python's unknown-language JSON key
+is the string `null`; JSON round trips cannot distinguish it from a literal tag
+named `null`. The library map retains `Option<String>` keys before serialization.
+Empty subtitle objects are omitted from native metadata.
+
+As in pinned postprocessing, protocol-relative track URLs acquire `http:` even
+with an HTTPS page base, and `httpss://` is repaired to HTTPS. Extension completion
+uses the URL suffix, lowercased, with `unknown_video` for unknown suffixes. It
+retains source query/fragment and trailing-slash quirks; MIME hints do not infer
+extensions and no WebVTT/SRT payload is parsed. This does not add subtitle
+acquisition from HLS/DASH, YouTube or other sites, automatic captions, embedded
+streams, conversion or embedding. Native direct-child DOM ownership and malformed
+HTML behavior differ from upstream regex parsing.
+
+Without explicit language options, writing prefers exact `en`, then the first
+case-sensitive `en` prefix, then the first declared language. An unknown-language
+entry encountered during the default prefix search produces an explicit error,
+matching the source's unsupported path without propagating a Python exception.
+An exact `en` shortcut can still succeed. `all` preserves unknown entries in
+requested metadata; actual sidecar planning rejects unknown languages before I/O.
+Listing and ordinary metadata remain available without writing or guessing a tag.
+
+Explicit language flags append in command-line order. Trim comma-separated
+tokens; literal matches are case-insensitive, `all` expands declaration order,
+exclusions remove earlier matches and re-additions append again. Missing literals
+select nothing without a warning. General regex syntax is rejected before HTTP;
+simple Unicode lowercase matching is not full Python regex case-fold parity.
+Option strings are bounded to 16 KiB and 1024 entries, with controls/empty language
+tokens rejected. Format preferences are case-sensitive and slash-separated;
+`best` chooses the last declaration. Choose the last matching extension for the
+first available preference, or last available with a warning. Empty format queries
+are valid fallback requests. Requested metadata is exposed with `--write-subs`
+even in JSON/simulation, without caption downloads.
+
+`--list-subs` renders a native inventory of declared languages/extensions, with
+no URLs or resource inspection. Cells/captions escape controls, line/bidirectional
+controls and are bounded to 128/256 characters, with at most 1024 rows. List-only
+mode bypasses media format availability; adding `-j` or `-s` retains selection.
+Tables/JSON wait for all retained entries to extract and select successfully.
+Listing, JSON and simulation never write sidecars or render output paths.
+`--no-simulate` and upstream table styling remain unsupported.
+
+Actual downloads plan sanitized sidecars before I/O, replacing a final matching
+media extension with `.LANG.EXT`, or appending that suffix otherwise. Language and
+extension components use native filename sanitation. An ASCII case-insensitive
+collision is an explicit error before any sidecar I/O, even on case-sensitive
+filesystems. Unknown languages fail planning. Literal template directories remain
+user-controlled; metadata cannot add directories. This is not upstream unsafe
+filename/platform byte parity.
+
+The CLI reuses existing regular sidecars without overwrite. Nonregular or dangling
+sidecar entries fail before fetching them. An existing media destination, including
+a dangling symlink, fails before sidecar I/O unless media is skipped. Complete
+sidecars are published before media. A sidecar failure prevents that entry's media
+and archive record; earlier complete sidecars remain. Later entries/inputs continue.
+Media/merge failure also leaves completed sidecars without an archive record.
+These native preflight/partial-publication rules are explicit, rather than a claim
+of identical upstream error timing or a transaction spanning all outputs.
+
+Sidecars share native whole-file HTTP transport, page referrers, identity requests,
+transient retries/Retry-After, guarded in-invocation range recovery, cancellation,
+same-directory temporary cleanup and no-clobber publication. They accept raw
+response bytes without a media MIME check, but reject compressed responses because
+no caption decompression is implemented. Byte copying does not validate subtitle
+syntax or encoding. `--skip-download --write-subs` writes only sidecars and never
+records the video archive; plain skip-download creates no outputs. It still needs
+normal extraction and format selection. Archive filtering precedes subtitle
+selection; successful actual media publication remains the only archive-record
+trigger. Native library extraction/download methods do not implicitly write
+sidecars.
+
+Library types are `SubtitleFormat`, ordered `SubtitleMap<T>`, `Subtitles`,
+`RequestedSubtitles`, `SubtitleOptions` and `SubtitleSelection`. Call `select`,
+assign `requested_subtitles`, then `subtitle_paths`; copy selected resources with
+`YoutubeDl::download_subtitle_with_options` or `download_subtitle_with_progress`.
+The latter has the same cooperative cancellation limits as media transfers.
+`output::render_subtitles` is also re-exported at crate root. Shared comparisons
+cover seven HTML metadata, 29 selection, five filenames, six option flows and
+three source-only cases; payload/timing/cancellation tests use local HTTP fixtures.
+See [the source slice](../upstream/notes/html5-subtitles.md).
