@@ -10,6 +10,11 @@ fn main() {
         return;
     }
     let mode = args.first().unwrap().as_str();
+    // Isolate output-budget tests from stdin failure races: a reader hitting
+    // its cap can close the pipe and make the helper exit before stdin drains.
+    if matches!(mode, "stdout-flood" | "stderr-flood") {
+        std::io::copy(&mut std::io::stdin(), &mut std::io::sink()).unwrap();
+    }
     match mode {
         "blocked-input" => std::thread::sleep(Duration::from_secs(30)),
         "drained-input-hang" => {
