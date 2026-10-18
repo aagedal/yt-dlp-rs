@@ -53,7 +53,7 @@ jobs:
         env:
           YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
           YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
-        run: cargo test --locked --test merge --test hls_media --test dash_media --test audio --test video
+        run: cargo test --locked --test merge --test hls_media --test dash_media --test audio --test video --test subtitle_conversion
       - name: Verify local audio target encoders and bounded processing
         env:
           YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
@@ -64,3 +64,8 @@ jobs:
           YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
           YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
         run: cargo test --locked --lib video::ffmpeg
+      - name: Verify local subtitle conversion formats and native TTML
+        env:
+          YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
+          YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
+        run: cargo test --locked --lib subtitle_convert

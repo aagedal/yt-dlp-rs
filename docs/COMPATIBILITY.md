@@ -19,6 +19,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--no-write-auto-subs`, `--no-write-automatic-subs` | Disable automatic writing; last automatic write/no-write flag wins |
 | `--no-write-subs`, `--no-write-srt` | Disable subtitle writing; last write/no-write flag wins |
 | `--sub-langs`, `--srt-langs` | Repeated comma-separated literal tags, `all` and `-` exclusions; trimmed tokens, case-insensitive matching; no regex |
+| `--convert-subs`, `--convert-sub`, `--convert-subtitles` | Convert written sidecars to one of srt/vtt/ass/lrc; `none` disables; no implied subtitle writing |
 | `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
 | `--skip-download`, `--no-download` | Skip media while allowing selected sidecars; never record a completed media archive entry |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
@@ -31,7 +32,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging, audio extraction and video processing; no PATH discovery, directory lookup or installation |
 | `-x`, `--extract-audio`, `--audio-format`, `--audio-quality` | Ordered audio extraction mappings and bounded quality settings; see audio extraction below |
 | `--remux-video`, `--recode-video` | Ordered video target mappings; stream copying or container-default re-encoding; recode wins |
-| `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates; requires audio/video processing; last flag wins |
+| `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates; requires an audio/video/subtitle processing option; last flag wins |
 | `--ffprobe-location PATH` | Explicit audio probe executable; otherwise inferred beside explicit FFmpeg |
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
 | `--playlist-start NUMBER`, `--playlist-end NUMBER` | Inclusive one-based defaults 1 through end, end -1 unbounded; items option overrides after validation |
@@ -1567,7 +1568,7 @@ appends the target suffix. AAC target retains the pinned `.m4a` naming quirk:
 AAC codec copy uses ADTS while AAC encoding uses the M4A container. Vorbis uses
 `.ogg`, ALAC uses `.m4a`. Byte-identical FFmpeg output is not claimed.
 
-Final files are published without overwriting. `-k` / `--keep-video` requires audio or video processing; it retains the source,
+Final files are published without overwriting. `-k` / `--keep-video` requires a processing option; it retains the source,
 using `.orig` before the last suffix if the
 conversion keeps its filename. `--no-keep-video` reverses that option. A completed
 source is preserved after processing failure; cancellation cleans the private
@@ -1659,3 +1660,74 @@ execution/publication separately. Optional real FFmpeg/FFprobe verify stream-cop
 H.264 retention in MKV and AVI recoding to MPEG-4. This does not establish every
 FFmpeg build/codec/container combination. See [source applicability and remaining
 scope](../upstream/notes/video-processing.md) and [fixture provenance](../tests/fixtures/video/README.md).
+
+
+## Subtitle conversion
+
+`--convert-subs FORMAT` accepts one lowercase target: `srt`, `vtt`, `ass`, `lrc`
+or `none` (disabled). `--convert-sub` and `--convert-subtitles` are aliases; the
+last value wins. The option does not imply `--write-subs` or `--write-auto-subs`.
+Conversion follows selected sidecar downloads before media downloads and therefore
+works with `--skip-download`. JSON, simulation and format/subtitle listing fetch
+no subtitle payloads and launch no conversion tools. Existing format/language
+selection determines the input; conversion does not request another server format.
+
+Same-extension and literal `json` subtitles skip conversion. The JSON skip keeps
+its original bytes and reports that conversion is unavailable. `json3`, YouTube
+XML server formats and other unrepresented input formats remain explicit errors
+when active; the source's literal `json` branch does not include `json3`.
+
+DFXP/TTML/TT first becomes SRT through a native port of `dfxp2srt`. It covers the
+pinned timing grammar, duration fallback, skipped invalid timings/index gaps,
+legacy/current/no namespaces, body/div/default and inherited styles, inline
+spans/breaks, entities and whitespace. UTF-8/ASCII and UTF-16LE/BE are supported,
+including the source's precise single-quoted UTF-8-mislabel workaround. All-invalid
+paragraph times can produce a successful empty SRT; absent paragraphs error.
+Style conversion is lossy, as upstream warns. Other targets pass this native SRT
+to FFmpeg. It does not implement arbitrary TTML standards or additional encodings.
+
+Native TTML limits are 8 MiB input, 16 MiB decoded XML/SRT, 100000 XML nodes,
+64 nested elements, 10000 paragraphs and 1000000 style-resolution steps. DTDs,
+custom entities, unresolved/cyclic style parents and unbounded/nonfinite numeric
+times fail explicitly. Numeric timing syntax is ASCII; Unicode digits are not a
+compatibility claim. The saved source's observable cross-cue style behavior and
+millisecond truncation are preserved by exact text fixtures.
+
+Ordinary local inputs support SRT, VTT, ASS/SSA and LRC through explicit
+`--ffmpeg-location PATH`. No FFprobe or discovery is needed. The fixed local
+demuxer and first-subtitle map feed explicit SRT/WebVTT/ASS/LRC muxers, with
+source faststart output flags. The native first-subtitle map is deliberate;
+these inputs are single subtitle sidecars. Tools use file-only protocols, closed
+stdin, bounded output pipes, a 60-second overall version/conversion deadline and
+cooperative cancellation. Inputs and produced UTF-8 files are capped at 16 MiB;
+output growth is monitored while the child runs. Missing tools, diagnostics,
+invalid UTF-8 and empty FFmpeg outputs fail.
+
+Active conversions reject symlink/nonregular sources and any existing converted
+or intermediate destination. Final names replace the last suffix, even when it
+differs from metadata. The CLI preflights all source/intermediate/converted paths,
+sanitation collisions and cookie/archive aliases before subtitle I/O. A fresh
+conversion never overwrites an already converted sidecar; reruns can leave a new
+source sidecar when a later failure occurs. Existing source-sidecar reuse remains
+available, subject to active conversion's regular-file requirement.
+
+Successful conversion removes the source unless `-k` retains it. TTML to another
+format can retain original TTML, intermediate SRT and the final file. Source files
+remain after failures; a completed native SRT is also preserved if a later FFmpeg
+step fails and its destination is available. Cancellation leaves public sources
+untouched and removes private files. Source metadata/version checks detect ordinary
+changes before publication/removal; a changed source is retained. Publishing,
+source deletion, sidecars, media and archives are not one transaction. A converted
+sidecar can remain after a later media failure; no media archive record is written.
+
+Library `SubtitleConversion::new`, `YoutubeDl::convert_subtitle_with_options` and
+`convert_subtitle_with_progress` expose this flow. `ConvertedSubtitle` reports the
+final path/extension/bytes, whether conversion ran, warnings, retained original
+and intermediates. Progress uses Postprocessing and Publishing checkpoints.
+
+15 exact TTML text fixtures (including four upstream tests) and 42 saved option/
+postprocessor plans are compared with actual pinned source, alongside one
+source-only JSON3 plan and five invalid options. Native tests separately exercise
+local files/processes and CLI behavior; real FFmpeg tests verify cues/timing and
+representable styles across all four targets. See [source applicability](../upstream/notes/subtitle-conversion.md)
+and [fixture provenance](../tests/fixtures/subtitle_conversion/README.md).

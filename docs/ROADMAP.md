@@ -34,6 +34,8 @@ tractable for future agents.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
 - `src/playlist.rs`: playlist item/range parsing, ordered index deduplication and fully extracted entry selection.
 - `src/subtitles.rs`: ordered subtitle metadata, language/format selection and sidecar name planning; `src/output/subtitles.rs` renders inventories.
+- `src/subtitle_convert.rs`: subtitle conversion publication/retention; nested
+  `ttml.rs` ports bounded native text/timing/styles and `ffmpeg.rs` converts local sidecars.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/audio.rs`, `src/audio/ffmpeg.rs`: pure audio plans and bounded local
@@ -164,7 +166,10 @@ remain outside the current result contract.
    Skip-download permits sidecar-only writes without archive records. The supported
    YouTube WEB response subset also exposes manual/automatic captions, translations,
    original aliases, token gating and independent automatic sidecar selection.
-   Other-site/manifest subtitles, regex languages, conversion and embedding remain open.
+   Subtitle conversion to SRT/VTT/ASS/LRC, including native TTML/DFXP preprocessing,
+   now follows sidecar acquisition before media downloads, with bounded local
+   tools, no-clobber publication and original/intermediate retention.
+   Other-site/manifest subtitles, regex languages and embedding remain open.
    Basic download archives are implemented: cached extractor-key/ID membership,
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive

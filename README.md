@@ -16,6 +16,7 @@ cargo run --locked -- --dump-json 'https://example.com/video.mp4'
 cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --list-subs 'https://example.com/video-with-tracks.html'
 cargo run --locked -- --write-subs --sub-langs all --skip-download 'https://example.com/video-with-tracks.html'
+cargo run --locked -- --write-subs --convert-subs srt --ffmpeg-location /path/to/ffmpeg 'https://example.com/video-with-tracks.html'
 cargo run --locked -- --write-auto-subs --sub-langs en --skip-download 'https://www.youtube.com/watch?v=VIDEO_ID'
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
@@ -113,7 +114,12 @@ Supported today:
   aliases and names. `--write-auto-subs` enables automatic sidecars independently;
   manual tracks win shared languages when both writing flags are enabled.
   Caption PO-token restrictions are preserved; no token acquisition is implemented.
-  Regex languages, conversion/embedding and manifest/other-site subtitles remain unsupported.
+  `--convert-subs FORMAT` accepts `srt`, `vtt`, `ass` or `lrc` for written sidecars
+  before media, including with `--skip-download`. Native TTML/DFXP-to-SRT needs
+  no FFmpeg; other supported conversions use the explicit local executable.
+  `none` disables conversion; `-k` retains originals and intermediate SRT.
+  [Conversion limits](docs/COMPATIBILITY.md#subtitle-conversion) are documented.
+  Regex languages, embedding and manifest/other-site subtitles remain unsupported.
 - `--download-archive FILE` skips recorded extractor/video IDs before selection and
   records only successfully published downloads. Metadata/listing/simulation never
   write the archive. Extraction still makes normal requests for recorded inputs.

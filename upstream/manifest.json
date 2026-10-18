@@ -480,6 +480,35 @@
         "upstream/notes/video-processing.md"
       ],
       "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio\u2192video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
+    },
+    {
+      "name": "subtitle-conversion",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/YoutubeDL.py",
+        "test/test_utils.py",
+        "test/test_subtitles.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/subtitle_convert.rs",
+        "src/subtitle_convert/ttml.rs",
+        "src/subtitle_convert/ffmpeg.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "tests/subtitle_conversion.rs",
+        "tests/helpers/subtitle_runtime.rs",
+        "tests/helpers/subtitle_pipeline.rs",
+        "tests/fixtures/subtitle_conversion/",
+        "tools/compare_subtitle_conversion.py",
+        "tools/test_compare_subtitle_conversion.py",
+        "upstream/notes/subtitle-conversion.md"
+      ],
+      "scope": "Before-media selected sidecar conversion to SRT/VTT/ASS/LRC, aliases/none and same-extension/literal-JSON skips, native bounded pinned TTML/DFXP timing/style conversion and fixed local FFmpeg sidecar conversion; skip-download/lazy metadata modes, no-clobber original/intermediate retention and cancellation; no embedding, general TTML standards, DTD/custom entities, extra encodings, JSON3/server XML conversion or arbitrary postprocessor arguments"
     }
   ]
 }

@@ -17,6 +17,7 @@ mod playlist;
 mod postprocess;
 mod retry;
 mod selector;
+mod subtitle_convert;
 mod subtitles;
 mod video;
 
@@ -33,6 +34,7 @@ pub use info::{
 pub use output::{render_automatic_captions, render_subtitles};
 pub use playlist::PlaylistSelection;
 pub use postprocess::{PostprocessOptions, ProcessedDownload};
+pub use subtitle_convert::{ConvertedSubtitle, SubtitleConversion};
 pub use subtitles::{
     RequestedSubtitles, SubtitleFormat, SubtitleMap, SubtitleOptions, SubtitleSelection, Subtitles,
     subtitle_paths,
@@ -198,6 +200,29 @@ impl YoutubeDl {
             processors,
             &mut callback,
         )
+    }
+
+    /// Convert a local subtitle sidecar, preserving its source on failure.
+    pub fn convert_subtitle_with_options(
+        &self,
+        source: impl AsRef<Path>,
+        source_ext: &str,
+        options: &SubtitleConversion,
+    ) -> Result<ConvertedSubtitle> {
+        self.convert_subtitle_with_progress(source, source_ext, options, |_| {
+            std::ops::ControlFlow::Continue(())
+        })
+    }
+
+    /// Observe/cancel subtitle processing before no-clobber final publication.
+    pub fn convert_subtitle_with_progress(
+        &self,
+        source: impl AsRef<Path>,
+        source_ext: &str,
+        options: &SubtitleConversion,
+        mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<ConvertedSubtitle> {
+        subtitle_convert::convert(self, source.as_ref(), source_ext, options, &mut callback)
     }
 
     /// Insert a site extractor before the generic fallback.

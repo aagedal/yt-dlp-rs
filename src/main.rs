@@ -8,15 +8,15 @@ use std::{
 };
 use yt_dlp_rs::{
     AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult,
-    ExtractionOptions, HttpOptions, PlaylistSelection, PostprocessOptions, SubtitleOptions,
-    VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
+    ExtractionOptions, HttpOptions, PlaylistSelection, PostprocessOptions, SubtitleConversion,
+    SubtitleOptions, VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
     output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
     render_automatic_captions, render_subtitles, subtitle_paths, validate_format_selector,
 };
 
 #[derive(Parser)]
 #[command(
-    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video"]).multiple(true)),
+    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video", "convert_subs"]).multiple(true)),
     version,
     about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
 )]
@@ -66,6 +66,9 @@ struct Args {
     /// Ordered subtitle extension preferences separated by / (default best)
     #[arg(long, default_value = "best", value_name = "FORMAT")]
     sub_format: String,
+    /// Convert written subtitles to srt, vtt, ass or lrc; none disables conversion
+    #[arg(long, aliases = ["convert-sub", "convert-subtitles"], value_name = "FORMAT", overrides_with = "convert_subs")]
+    convert_subs: Option<String>,
     /// Skip media downloads while allowing requested subtitle sidecars
     #[arg(long, alias = "no-download")]
     skip_download: bool,
@@ -187,6 +190,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         video: recode.or(remux),
         keep_video: args.keep_video,
     };
+    let mut subtitle_conversion = args
+        .convert_subs
+        .as_deref()
+        .map(SubtitleConversion::new)
+        .transpose()?
+        .filter(SubtitleConversion::is_enabled);
+    if let Some(conversion) = &mut subtitle_conversion {
+        conversion.keep_original = args.keep_video;
+    }
     let format = args
         .format
         .as_deref()
@@ -348,8 +360,49 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             Err(error) => return Err(error.into()),
                         }
                     }
-                    // Plan all names before I/O, including language sanitation collisions.
-                    for (language, subtitle, subtitle_path) in subtitle_paths(&info, &path)? {
+                    // Plan source, intermediate and final names before subtitle I/O.
+                    let sidecars = subtitle_paths(&info, &path)?;
+                    let mut seen = std::collections::HashSet::new();
+                    for (_, subtitle, source) in &sidecars {
+                        let mut paths = vec![source.clone()];
+                        if let Some(conversion) = &subtitle_conversion {
+                            let target = conversion.output_path(source, &subtitle.ext)?;
+                            if target != *source {
+                                paths.push(target);
+                            }
+                            if let Some(intermediate) =
+                                conversion.intermediate_path(source, &subtitle.ext)
+                            {
+                                paths.push(intermediate);
+                            }
+                        }
+                        for (index, sidecar) in paths.iter().enumerate() {
+                            if !seen.insert(sidecar.as_os_str().to_ascii_lowercase()) {
+                                return Err(yt_dlp_rs::Error::Subtitle(
+                                    "subtitle conversion filenames collide".into(),
+                                )
+                                .into());
+                            }
+                            for reserved in [&archive_path, &args.cookies].into_iter().flatten() {
+                                if paths_alias(sidecar, reserved)? {
+                                    return Err(yt_dlp_rs::Error::Subtitle("subtitle path collides with cookie file or download archive".into()).into());
+                                }
+                            }
+                            if index != 0 {
+                                match std::fs::symlink_metadata(sidecar) {
+                                    Ok(_) => {
+                                        return Err(yt_dlp_rs::Error::OutputExists(
+                                            sidecar.clone(),
+                                        )
+                                        .into());
+                                    }
+                                    Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+                                    Err(error) => return Err(error.into()),
+                                }
+                            }
+                        }
+                    }
+                    for (language, subtitle, subtitle_path) in sidecars {
                         match std::fs::symlink_metadata(&subtitle_path) {
                             Ok(_) if std::fs::metadata(&subtitle_path)?.is_file() => {
                                 eprintln!(
@@ -379,6 +432,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 )?;
                             }
                             Err(error) => return Err(error.into()),
+                        }
+                        if let Some(conversion) = &subtitle_conversion {
+                            let converted = downloader.convert_subtitle_with_options(
+                                &subtitle_path,
+                                &subtitle.ext,
+                                conversion,
+                            )?;
+                            for warning in converted.warnings {
+                                eprintln!("WARNING: {warning}");
+                            }
+                            if converted.converted {
+                                eprintln!(
+                                    "[SubtitlesConvertor] Destination: {}",
+                                    converted.path.display()
+                                );
+                            }
                         }
                     }
                     if args.skip_download {
@@ -431,6 +500,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             )?;
                             (bytes, vec![path.clone()])
                         };
+                    let mut published_paths = published_paths;
+                    for (_, subtitle, source) in subtitle_paths(&info, &path)? {
+                        published_paths.push(source.clone());
+                        if let Some(conversion) = &subtitle_conversion {
+                            published_paths.push(conversion.output_path(&source, &subtitle.ext)?);
+                            published_paths
+                                .extend(conversion.intermediate_path(&source, &subtitle.ext));
+                        }
+                    }
                     if let Some(archive_path) = &archive_path {
                         for output in &published_paths {
                             let identical =
@@ -480,6 +558,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     Ok(!failed)
 }
 
+fn paths_alias(left: &std::path::Path, right: &std::path::Path) -> io::Result<bool> {
+    Ok(std::path::absolute(left)? == std::path::absolute(right)?
+        || std::fs::canonicalize(left)
+            .ok()
+            .zip(std::fs::canonicalize(right).ok())
+            .is_some_and(|(left, right)| left == right))
+}
+
 fn filter_archived(
     result: ExtractResult,
     archive: &DownloadArchive,
@@ -526,6 +612,44 @@ fn main() -> std::process::ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn saved_subtitle_conversion_options_match_pinned_targets_and_alias_precedence() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../tests/fixtures/subtitle_conversion/cases.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let flags = case["args"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|v| v.as_str().unwrap());
+            let args = Args::try_parse_from(
+                std::iter::once("yt-dlp-rs")
+                    .chain(flags)
+                    .chain(std::iter::once("https://example.test/video.mp4")),
+            )
+            .unwrap();
+            let target = args
+                .convert_subs
+                .as_deref()
+                .filter(|target| *target != "none");
+            assert_eq!(
+                target,
+                case["expected"]["target"].as_str(),
+                "{}",
+                case["name"]
+            );
+            if let Some(format) = args.convert_subs {
+                assert!(SubtitleConversion::new(&format).is_ok());
+            }
+            assert_eq!(
+                args.skip_download,
+                case["expected"]["skip_download"].as_bool().unwrap()
+            );
+        }
+    }
 
     #[test]
     fn automatic_caption_flags_override_in_argument_order() {
