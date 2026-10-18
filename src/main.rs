@@ -190,8 +190,26 @@ struct Args {
     #[arg(long, value_name = "PATH")]
     ffmpeg_location: Option<PathBuf>,
     /// Skip recorded extractor/video IDs and record only completed downloads
-    #[arg(long, value_name = "FILE")]
+    #[arg(long, value_name = "FILE", overrides_with_all = ["download_archive", "no_download_archive"])]
     download_archive: Option<PathBuf>,
+    /// Do not use an archive file (default)
+    #[arg(long, overrides_with_all = ["download_archive", "no_download_archive"])]
+    no_download_archive: bool,
+    /// Stop when encountering a video that is in the download archive
+    #[arg(long, overrides_with_all = ["break_on_existing", "no_break_on_existing"])]
+    break_on_existing: bool,
+    /// Do not stop at archived videos (default)
+    #[arg(long, overrides_with_all = ["break_on_existing", "no_break_on_existing"])]
+    no_break_on_existing: bool,
+    /// Make --max-downloads and --break-on-existing reset per input URL
+    #[arg(long, overrides_with_all = ["break_per_input", "no_break_per_input"])]
+    break_per_input: bool,
+    /// Let --max-downloads and --break-on-existing stop the whole queue (default)
+    #[arg(long, overrides_with_all = ["break_per_input", "no_break_per_input"])]
+    no_break_per_input: bool,
+    /// Record archive entries even when simulating or skipping downloads
+    #[arg(long, aliases = ["force-write-download-archive", "force-download-archive"])]
+    force_write_archive: bool,
     /// Comma-separated playlist indices or inclusive START:STOP:STEP ranges
     #[arg(
         short = 'I',
@@ -404,6 +422,9 @@ fn size_option(name: &str, value: Option<&str>) -> Result<Option<u64>, String> {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut args = Args::parse();
+    if args.no_download_archive {
+        args.download_archive = None;
+    }
     // Like upstream get_urls: batch URLs precede positional URLs, all stripped.
     let mut urls = match args.batch_file.as_deref().filter(|_| !args.no_batch_file) {
         Some(spec) => {
@@ -577,20 +598,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // Upstream compares against `float(max_downloads or 'inf')`.
     let max_downloads = args.max_downloads.filter(|&limit| limit != 0);
     let mut processed: i64 = 0;
-    let mut max_reached = false;
+    let mut cancelled: Option<Cancel> = None;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in urls {
         let options = ExtractionOptions {
             retries: args.extractor_retries,
         };
+        let mut existing_reached = false;
         let extracted =
             (|| -> yt_dlp_rs::Result<Option<(ExtractResult, Option<PlaylistCounts>)>> {
                 let mut result =
                     downloader.extract_result_unselected_with_options(&url, options)?;
                 let counts = playlist_selection.apply(&mut result);
                 let mut result = if let Some(archive) = &archive {
-                    let Some(result) = filter_archived(result, archive)? else {
+                    let (result, reached) =
+                        filter_archived(result, archive, args.break_on_existing)?;
+                    existing_reached = reached;
+                    let Some(result) = result else {
                         return Ok(None);
                     };
                     result
@@ -629,6 +654,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             })();
         let (extracted, counts) = match extracted {
             Ok(Some(result)) => result,
+            Ok(None) if existing_reached => match cancel(Cancel::Existing, args.break_per_input) {
+                Some(cancel) => {
+                    cancelled = Some(cancel);
+                    break;
+                }
+                None => {
+                    processed = 0;
+                    continue;
+                }
+            },
             Ok(None) => continue,
             Err(error) => {
                 eprintln!("ERROR: {url}: {error}");
@@ -667,6 +702,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .dump_single_json
             .then(|| single_json(&extracted, counts))
             .transpose()?;
+        let mut url_cancelled = false;
         for info in extracted.into_entries() {
             let mut counted = false;
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
@@ -721,10 +757,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     serde_json::to_writer(&mut stdout, &info)?;
                     writeln!(stdout)?;
                 }
+                // --force-write-archive records simulated or skipped videos.
+                let mut force_record = |info: &yt_dlp_rs::VideoInfo| -> Result<(), String> {
+                    match &mut archive {
+                        Some(archive) if args.force_write_archive => archive
+                            .record(info)
+                            .map_err(|error| format!("archive update failed: {error}")),
+                        _ => Ok(()),
+                    }
+                };
                 if simulate {
                     if !quiet {
                         eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
                     }
+                    force_record(&info)?;
                 } else {
                     if args.skip_download
                         && !writes_info_json
@@ -733,6 +779,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             .as_ref()
                             .is_none_or(|subtitles| subtitles.is_empty())
                     {
+                        force_record(&info)?;
                         return Ok(());
                     }
                     let path = prepare_media(&templates, &info, &template_options)?;
@@ -907,6 +954,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         report_info_json("video", info_json, written);
                     }
                     if args.skip_download {
+                        force_record(&info)?;
                         return Ok(());
                     }
                     if existing_media {
@@ -1039,16 +1087,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 processed += 1;
             }
             if succeeded && counted && max_downloads.is_some_and(|limit| processed >= limit) {
-                eprintln!(
-                    "[info] Maximum number of downloads reached, stopping due to --max-downloads"
-                );
-                eprintln!("Aborting remaining downloads");
-                max_reached = true;
+                cancelled = cancel(Cancel::MaxDownloads, args.break_per_input);
+                if cancelled.is_none() {
+                    processed = 0;
+                }
+                // The rest of this input is skipped either way.
+                url_cancelled = true;
                 break;
             }
         }
-        if max_reached {
+        if cancelled.is_some() {
             break;
+        }
+        if existing_reached && !url_cancelled {
+            // Entries before the archived one were processed; stop now.
+            cancelled = cancel(Cancel::Existing, args.break_per_input);
+            if cancelled.is_some() {
+                break;
+            }
+            processed = 0;
+            continue;
+        }
+        if url_cancelled {
+            continue;
         }
         if let Some(value) = single_json {
             serde_json::to_writer(&mut stdout, &value)?;
@@ -1070,23 +1131,45 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             failed = true;
         }
     }
-    if max_reached {
-        return Err(Box::new(MaxDownloads));
+    if let Some(cancel) = cancelled {
+        return Err(Box::new(cancel));
     }
     Ok(!failed)
 }
 
-/// Upstream exits with 101 after `--max-downloads` cancels remaining work.
-#[derive(Debug)]
-struct MaxDownloads;
+/// Upstream `DownloadCancelled` reasons; uncaught ones exit with 101.
+#[derive(Debug, Clone, Copy)]
+enum Cancel {
+    MaxDownloads,
+    Existing,
+}
 
-impl std::fmt::Display for MaxDownloads {
+impl std::fmt::Display for Cancel {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("maximum number of downloads reached")
+        f.write_str(match self {
+            Cancel::MaxDownloads => {
+                "Maximum number of downloads reached, stopping due to --max-downloads"
+            }
+            Cancel::Existing => {
+                "Encountered a video that is already in the archive, stopping due to --break-on-existing"
+            }
+        })
     }
 }
 
-impl std::error::Error for MaxDownloads {}
+impl std::error::Error for Cancel {}
+
+/// Report a cancellation like `__download_wrapper`; with `--break-per-input`
+/// it only ends the current input (returns `None`).
+fn cancel(reason: Cancel, per_input: bool) -> Option<Cancel> {
+    eprintln!("[info] {reason}");
+    if per_input {
+        None
+    } else {
+        eprintln!("Aborting remaining downloads");
+        Some(reason)
+    }
+}
 
 fn epoch() -> u64 {
     std::time::SystemTime::now()
@@ -1133,32 +1216,46 @@ fn paths_alias(left: &std::path::Path, right: &std::path::Path) -> io::Result<bo
             .is_some_and(|(left, right)| left == right))
 }
 
+/// Drop archived entries. With `break_on_existing`, entries stop at the first
+/// archived one and the returned flag requests cancellation after the earlier
+/// entries are processed (upstream processes entries lazily in order).
 fn filter_archived(
     result: ExtractResult,
     archive: &DownloadArchive,
-) -> yt_dlp_rs::Result<Option<ExtractResult>> {
+    break_on_existing: bool,
+) -> yt_dlp_rs::Result<(Option<ExtractResult>, bool)> {
     let keep = |info: &yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<bool> {
         let recorded = archive.contains(info)?;
         if recorded {
             eprintln!(
-                "[download] {} has already been recorded in the archive",
-                info.id
+                "[download] {}: {} has already been recorded in the archive",
+                info.id, info.title
             );
         }
         Ok(!recorded)
     };
     match result {
-        ExtractResult::Video(info) => Ok(keep(&info)?.then_some(ExtractResult::Video(info))),
+        ExtractResult::Video(info) => {
+            let kept = keep(&info)?;
+            Ok((
+                kept.then_some(ExtractResult::Video(info)),
+                !kept && break_on_existing,
+            ))
+        }
         ExtractResult::Playlist(mut playlist) => {
             let mut pending = Vec::new();
+            let mut reached = false;
             for info in playlist.entries {
                 if keep(&info)? {
                     pending.push(info);
+                } else if break_on_existing {
+                    reached = true;
+                    break;
                 }
             }
             // An all-archived playlist is still processed for playlist-level files.
             playlist.entries = pending;
-            Ok(Some(ExtractResult::Playlist(playlist)))
+            Ok((Some(ExtractResult::Playlist(playlist)), reached))
         }
     }
 }
@@ -1167,7 +1264,7 @@ fn main() -> std::process::ExitCode {
     match run() {
         Ok(true) => std::process::ExitCode::SUCCESS,
         Ok(false) => std::process::ExitCode::FAILURE,
-        Err(error) if error.is::<MaxDownloads>() => std::process::ExitCode::from(101),
+        Err(error) if error.is::<Cancel>() => std::process::ExitCode::from(101),
         Err(error) => {
             eprintln!("ERROR: {error}");
             std::process::ExitCode::FAILURE

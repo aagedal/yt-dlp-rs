@@ -187,8 +187,9 @@ remain outside the current result contract.
    Basic download archives are implemented: cached extractor-key/ID membership,
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive
-   reference fixture are covered; early URL-ID skips, alternate legacy IDs,
-   force-write options and broader archive option parity remain open.
+   reference fixture are covered, as are break-on-existing, per-input breaks,
+   force-write and archive disabling; early URL-ID skips, alternate legacy IDs
+   and broader archive option parity remain open.
    Audio extraction now supports bounded format mappings, quality plans and local
    FFprobe/FFmpeg copy/conversion for eight target formats, source retention,
    cancellation and archive-after-final-publication. Video remux/recode now follows

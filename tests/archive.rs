@@ -433,3 +433,73 @@ fn archive_is_written_only_after_successful_merge_and_final_publication() {
         }
     }
 }
+
+#[test]
+fn break_on_existing_processes_earlier_entries_then_cancels() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let archive = directory.path().join("archive.txt");
+    std::fs::write(&archive, "html5mediaembed three-2\n").unwrap();
+    let template = directory.path().join("%(id)s.%(ext)s");
+    let template = template.to_str().unwrap();
+    let output = server.cli(
+        &archive,
+        &["--break-on-existing", "-o", template],
+        &["/three.html", "/high.mp4"],
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(output.status.code(), Some(101), "{stderr}");
+    assert!(
+        stderr.contains("three-2: ") && stderr.contains("has already been recorded in the archive")
+    );
+    assert!(stderr.contains(
+        "[info] Encountered a video that is already in the archive, stopping due to --break-on-existing"
+    ));
+    assert!(directory.path().join("three-1.mp4").exists());
+    assert!(!directory.path().join("three-3.mp4").exists());
+    // The playlist probes its third source; the later input is never extracted.
+    assert_eq!(server.count("/high.mp4"), 1);
+    // --break-per-input only ends the current input.
+    let output = server.cli(
+        &archive,
+        &["--break-on-existing", "--break-per-input", "-o", template],
+        &["/three.html", "/high.mp4"],
+    );
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(!directory.path().join("three-3.mp4").exists());
+    assert!(directory.path().join("high.mp4").exists());
+}
+
+#[test]
+fn force_write_archive_records_simulated_videos_and_no_download_archive_disables() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let archive = directory.path().join("archive.txt");
+    let output = server.cli(&archive, &["-s", "--force-write-archive"], &["/low.mp4"]);
+    assert!(output.status.success());
+    assert_eq!(
+        std::fs::read_to_string(&archive).unwrap().lines().count(),
+        1
+    );
+    // Without forcing, simulation never records.
+    let other = directory.path().join("other.txt");
+    assert!(server.cli(&other, &["-s"], &["/low.mp4"]).status.success());
+    assert!(!other.exists());
+    // A later --no-download-archive disables the archive entirely.
+    let template = directory.path().join("%(id)s.%(ext)s");
+    let output = server.cli(
+        &archive,
+        &["--no-download-archive", "-o", template.to_str().unwrap()],
+        &["/low.mp4"],
+    );
+    assert!(output.status.success());
+    assert!(directory.path().join("low.mp4").exists());
+    assert_eq!(
+        std::fs::read_to_string(&archive).unwrap().lines().count(),
+        1
+    );
+}
