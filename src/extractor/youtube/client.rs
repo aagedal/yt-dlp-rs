@@ -151,6 +151,8 @@ mod tests {
                         Err(error) => panic!("{error}"),
                     }
                 };
+                // Windows accepted sockets can inherit the listener's mode.
+                stream.set_nonblocking(false).unwrap();
                 stream
                     .set_read_timeout(Some(Duration::from_secs(5)))
                     .unwrap();
