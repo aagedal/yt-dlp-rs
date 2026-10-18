@@ -12,7 +12,7 @@ use yt_dlp_rs::{
     PostprocessOptions, SubtitleConversion, SubtitleEmbedding, SubtitleFile, SubtitleOptions,
     VideoMode, VideoOptions, YoutubeDl, YoutubeOptions, info_json_path,
     output::{
-        DEFAULT_TEMPLATE, PrintTemplate, TemplateOptions, render_formats,
+        DEFAULT_TEMPLATE, PrintTemplate, PrintToFile, TemplateOptions, render_formats,
         render_playlist_template_with_options, render_template_with_options,
     },
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
@@ -42,6 +42,14 @@ struct Args {
         allow_hyphen_values = true
     )]
     print: Vec<String>,
+    /// Append a video-stage print template to a file named by an output template (repeatable; does not imply simulation)
+    #[arg(
+        long,
+        num_args = 2,
+        value_names = ["[WHEN:]TEMPLATE", "FILE"],
+        allow_hyphen_values = true
+    )]
+    print_to_file: Vec<String>,
     #[arg(short = 'g', long, hide = true)]
     get_url: bool,
     #[arg(short = 'e', long, hide = true)]
@@ -200,6 +208,18 @@ struct Args {
     output: String,
 }
 
+/// Append one UTF-8 line, creating parent directories like upstream.
+fn append_line(path: &std::path::Path, line: &str) -> io::Result<()> {
+    if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
+        std::fs::create_dir_all(parent)?;
+    }
+    let mut file = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(path)?;
+    file.write_all(format!("{line}\n").as_bytes())
+}
+
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
     let mut print_templates = args
@@ -213,6 +233,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.get_url,
         args.get_filename,
     ));
+    let print_files = args
+        .print_to_file
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|[spec, file]| PrintToFile::parse(spec, file))
+        .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
     // Like upstream, printing implies quiet simulation (no --no-simulate here).
     let printing = !print_templates.is_empty();
     let simulate = args.simulate || printing;
@@ -431,6 +458,26 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
                     for line in lines {
                         writeln!(stdout, "{line}")?;
+                    }
+                }
+                if !print_files.is_empty() {
+                    let filename =
+                        render_template_with_options(&args.output, &info, &template_options)
+                            .map(|path| path.to_string_lossy().into_owned());
+                    // Render every destination and line before appending any.
+                    let writes = print_files
+                        .iter()
+                        .map(|pair| pair.render(&info, filename.as_deref(), &template_options))
+                        .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
+                    for (pair, (path, line)) in print_files.iter().zip(writes) {
+                        if !printing {
+                            eprintln!(
+                                "[info] Writing {:?} to: {}",
+                                pair.template(),
+                                path.display()
+                            );
+                        }
+                        append_line(&path, &line)?;
                     }
                 }
                 if args.dump_json {
