@@ -331,8 +331,13 @@ fn invalid_archive_inputs_fail_before_any_network_request() {
     let directory = tempfile::tempdir().unwrap();
     let invalid = directory.path().join("invalid.txt");
     std::fs::write(&invalid, [0xff]).unwrap();
-    for archive in [invalid.as_path(), directory.path()] {
-        let output = server.cli(archive, &["-j"], &["/low.mp4"]);
+    for archive in [
+        invalid.clone(),
+        directory.path().to_path_buf(),
+        invalid.join("child"),
+        invalid.join("child/grandchild/archive"),
+    ] {
+        let output = server.cli(&archive, &["-j"], &["/low.mp4"]);
         assert!(!output.status.success());
         assert!(output.stdout.is_empty());
     }

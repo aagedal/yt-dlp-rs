@@ -56,3 +56,20 @@ python3 tools/compare_archive.py --upstream /path/to/yt-dlp
 ```
 
 See [the compatibility contract](../../docs/COMPATIBILITY.md#download-archives).
+
+
+Lock-lifetime follow-up: concurrent offline runtime tests exposed a retained Unix
+flock after the archive-local descriptor closed. A duplicated or briefly inherited
+fork/exec descriptor shares the open file description. Archive load/record now
+use an owning guard that explicitly unlocks before closing on success, duplicate
+fast paths and errors. A deterministic Unix regression retains a duplicate
+through guard drop and verifies an independent writer can immediately lock; this
+covers the lifetime issue without depending on a subprocess scheduling race.
+
+
+Windows CI also exposed that metadata lookup below a regular-file ancestor can
+report NotFound instead of Unix NotADirectory. Native missing-path handling now
+checks the nearest existing ancestor is a directory, giving a consistent error
+for invalid/child and deeper paths. Genuinely missing directory trees remain lazy
+until recording; they are never created. This is explicit native path validation,
+not a cross-platform equivalence claim for all upstream filesystem errors.

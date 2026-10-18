@@ -4,6 +4,7 @@ use std::{
     collections::HashSet,
     fs::{self, File, OpenOptions, TryLockError},
     io::{BufRead, BufReader, Seek, SeekFrom, Write},
+    ops::{Deref, DerefMut},
     path::{Path, PathBuf},
     time::{Duration, Instant},
 };
@@ -46,9 +47,9 @@ impl DownloadArchive {
     fn load_with_timeout(path: PathBuf, lock_timeout: Duration) -> Result<Self> {
         let entries = if regular_path(&path)? {
             match File::open(&path) {
-                Ok(mut file) => {
+                Ok(file) => {
                     regular_file(&file, &path)?;
-                    lock(&file, false, lock_timeout, &path)?;
+                    let mut file = LockedFile::acquire(file, false, lock_timeout, &path)?;
                     read(&mut file, &path)?.0
                 }
                 Err(error) if error.kind() == std::io::ErrorKind::NotFound => HashSet::new(),
@@ -75,10 +76,10 @@ impl DownloadArchive {
     pub fn record(&mut self, info: &VideoInfo) -> Result<()> {
         let identity = archive_id(info)?;
         regular_path(&self.path)?;
-        let mut file = open_record(&self.path)
+        let file = open_record(&self.path)
             .map_err(|error| io_error("open for append", &self.path, error))?;
         regular_file(&file, &self.path)?;
-        lock(&file, true, self.lock_timeout, &self.path)?;
+        let mut file = LockedFile::acquire(file, true, self.lock_timeout, &self.path)?;
         let (entries, separator) = read(&mut file, &self.path)?;
         self.entries = entries;
         if self.entries.contains(&identity) {
@@ -98,6 +99,40 @@ impl DownloadArchive {
         Ok(())
     }
 }
+// Closing one descriptor does not necessarily release a Unix flock: a descriptor
+// duplicated by try_clone or inherited briefly across fork/exec shares its open
+// file description. Explicitly unlock before closing on every return path.
+struct LockedFile(File);
+
+impl LockedFile {
+    fn acquire(file: File, exclusive: bool, timeout: Duration, path: &Path) -> Result<Self> {
+        lock(&file, exclusive, timeout, path)?;
+        Ok(Self(file))
+    }
+}
+
+impl Deref for LockedFile {
+    type Target = File;
+
+    fn deref(&self) -> &File {
+        &self.0
+    }
+}
+
+impl DerefMut for LockedFile {
+    fn deref_mut(&mut self) -> &mut File {
+        &mut self.0
+    }
+}
+
+impl Drop for LockedFile {
+    fn drop(&mut self) {
+        // Drop must also run while unwinding an I/O error. Closing remains the
+        // fallback if the OS rejects unlocking; there is no fallible Drop API.
+        let _ = self.0.unlock();
+    }
+}
+
 fn open_record(path: &Path) -> std::io::Result<File> {
     let mut options = OpenOptions::new();
     options.read(true).create(true);
@@ -147,10 +182,37 @@ fn regular_path(path: &Path) -> Result<bool> {
         Ok(_) => Err(Error::Archive(format!(
             "archive {path:?} is not a regular file"
         ))),
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(false),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            validate_missing_ancestors(path)?;
+            Ok(false)
+        }
         Err(error) => Err(io_error("inspect", path, error)),
     }
 }
+// Windows can report NotFound rather than NotADirectory for file/child.
+// Distinguish a genuinely missing path from an existing non-directory ancestor
+// without creating directories or rejecting ordinary missing parent directories.
+fn validate_missing_ancestors(path: &Path) -> Result<()> {
+    for ancestor in path.ancestors().skip(1) {
+        let ancestor = if ancestor.as_os_str().is_empty() {
+            Path::new(".")
+        } else {
+            ancestor
+        };
+        match fs::metadata(ancestor) {
+            Ok(metadata) if metadata.is_dir() => return Ok(()),
+            Ok(_) => {
+                return Err(Error::Archive(format!(
+                    "archive {path:?} has a non-directory ancestor {ancestor:?}"
+                )));
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => continue,
+            Err(error) => return Err(io_error("inspect ancestor", ancestor, error)),
+        }
+    }
+    Ok(())
+}
+
 fn regular_file(file: &File, path: &Path) -> Result<()> {
     if !file
         .metadata()
@@ -400,6 +462,43 @@ mod tests {
         held.try_lock().unwrap();
         held.unlock().unwrap();
     }
+    #[cfg(unix)]
+    #[test]
+    fn explicit_unlock_releases_lock_even_when_a_duplicate_descriptor_survives() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("archive");
+        fs::write(&path, "test original\n").unwrap();
+        for exclusive in [false, true] {
+            // A duplicated descriptor shares the flock, like a descriptor
+            // inherited by another thread's fork before the child execs.
+            let file = LockedFile::acquire(open(&path), exclusive, LOCK_TIMEOUT, &path).unwrap();
+            let duplicate = file.try_clone().unwrap();
+            let contender = open(&path);
+            assert!(matches!(
+                contender.try_lock(),
+                Err(TryLockError::WouldBlock)
+            ));
+            drop(file);
+            contender.try_lock().unwrap();
+            contender.unlock().unwrap();
+            drop(duplicate);
+        }
+        // The same guarantee applies to an early error while holding the lock.
+        fs::write(&path, [0xff]).unwrap();
+        let mut file = LockedFile::acquire(open(&path), true, LOCK_TIMEOUT, &path).unwrap();
+        let duplicate = file.try_clone().unwrap();
+        let result = (|| -> Result<()> {
+            read(&mut file, &path)?;
+            Ok(())
+        })();
+        assert!(result.is_err());
+        drop(file);
+        let contender = open(&path);
+        contender.try_lock().unwrap();
+        contender.unlock().unwrap();
+        drop(duplicate);
+    }
+
     #[test]
     fn partial_write_and_failed_sync_roll_back_only_our_append_under_lock() {
         let directory = tempfile::tempdir().unwrap();
@@ -458,8 +557,10 @@ mod tests {
         fs::write(&invalid, [0xff, b'\n']).unwrap();
         assert!(DownloadArchive::load(&invalid).is_err());
         assert_eq!(fs::read(&invalid).unwrap(), [0xff, b'\n']);
-        assert!(DownloadArchive::load(invalid.join("child")).is_err());
-        let missing = directory.path().join("missing/child");
+        for suffix in ["child", "child/grandchild", "child/grandchild/archive"] {
+            assert!(DownloadArchive::load(invalid.join(suffix)).is_err());
+        }
+        let missing = directory.path().join("missing/child/grandchild/archive");
         let mut archive = DownloadArchive::load(missing.clone()).unwrap();
         assert!(archive.record(&info("Test", "id")).is_err());
         assert!(!directory.path().join("missing").exists());
