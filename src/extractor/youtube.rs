@@ -4,6 +4,8 @@
 #[allow(dead_code)]
 mod challenge;
 mod client;
+#[allow(dead_code)]
+mod player;
 use super::{Extractor, direct};
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use reqwest::{

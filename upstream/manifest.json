@@ -42,9 +42,9 @@
     {
       "name": "youtube-challenge-runtime",
       "status": "partial",
-      "upstream": ["yt_dlp/extractor/youtube/jsc/", "test/test_jsc/"],
-      "rust": ["src/extractor/youtube/challenge.rs", "src/extractor/youtube/challenge/runtime.rs", "tests/helpers/challenge_runtime.rs", "tests/fixtures/youtube/challenges/", "vendor/ejs/", "tools/compare_ejs.py", "tools/test_compare_ejs.py", "tools/test_ejs_assets.py", "upstream/notes/youtube-challenge-runner.md"],
-      "scope": "Private offline EJS 0.8.0 assets/protocol and bounded explicit-path Deno 2.9.7 runner, exact saved-player n/signature vectors, strict complete JSON validation and process/pipe budgets; dedicated runtime CI matrix configured; no extraction integration, runtime player acquisition, URL rewriting, public runtime options, other runtimes, caches or live-site support"
+      "upstream": ["yt_dlp/extractor/youtube/jsc/", "yt_dlp/extractor/youtube/_video.py", "test/test_jsc/"],
+      "rust": ["src/extractor/youtube/challenge.rs", "src/extractor/youtube/challenge/runtime.rs", "src/extractor/youtube/challenge/urls.rs", "src/extractor/youtube/player.rs", "src/extractor/youtube/client.rs", "tests/helpers/challenge_runtime.rs", "tests/fixtures/youtube/challenges/", "vendor/ejs/", "tools/compare_ejs.py", "tools/test_compare_ejs.py", "tools/test_ejs_assets.py", "upstream/notes/youtube-challenge-runner.md", "upstream/notes/youtube-player-challenges.md"],
+      "scope": "Private offline EJS 0.8.0 assets/protocol and bounded explicit-path Deno 2.9.7 runner, exact saved-player n/signature vectors, strict complete JSON validation and process/pipe budgets; canonical-origin bounded player discovery/acquisition with validated redirects and pure progressive n/signature URL rewriting, saved-player-to-media private pipeline; dedicated runtime CI matrix configured; no public extraction integration or runtime options, other runtimes, caches or live-site support"
     },
     {
       "name": "manifest-downloaders",

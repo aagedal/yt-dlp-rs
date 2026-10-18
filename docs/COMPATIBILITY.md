@@ -82,6 +82,9 @@ A private offline EJS/Deno runner now passes saved `n` and signature vectors.
 It is not connected to extraction and has no public runtime options; unresolved
 challenge URLs remain unsupported. See the [runner slice](../upstream/notes/youtube-challenge-runner.md)
 for asset provenance, limits, offline comparisons, and remaining integration gates.
+Strict player acquisition and URL rewriting are also tested as a private pipeline;
+see the [player challenge slice](../upstream/notes/youtube-player-challenges.md).
+Public extraction still does not call this pipeline.
 
 An unsupported page cannot fall through to generic HTML5 and appear successful.
 The deterministic Rust tests cover URL dispatch, player response validation,

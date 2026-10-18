@@ -95,7 +95,10 @@ remain outside the current result contract.
    and a dedicated offline runtime CI matrix are now implemented; see the
    [runner slice](../upstream/notes/youtube-challenge-runner.md). Local saved-player
    `n`/signature comparisons pass. Next: confirm the cross-platform CI gates,
-   then add bounded player acquisition and integrate one challenge kind at a time.
+   then integrate one challenge kind at a time. Strict bounded player acquisition,
+   pure URL rewriting, and a saved-player-to-media private pipeline test are now
+   implemented; see the [player challenge slice](../upstream/notes/youtube-player-challenges.md).
+   Public extractor integration and runtime options remain open.
    Adaptive media requires
    explicit stream types and merging, while manifests remain milestone 3 work. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.

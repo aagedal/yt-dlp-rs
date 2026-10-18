@@ -105,9 +105,9 @@ checks every remaining response/key/value exactly. `--check-rust` also runs the
 Rust saved-vector test. All solver execution is offline; Python is reference
 tooling only.
 
-Before extraction integration: confirm the dedicated CI matrix, define strict
-player URL/redirect acquisition with bounded local HTTP fixtures, then implement
-one challenge kind at a time with exact URL encoding/custom signature-parameter
-coverage. Preserve token filtering, live/DRM/adaptive restrictions, and rejection
+Strict player URL/redirect acquisition and URL transformation are now implemented
+and tested privately by the [player challenge slice](youtube-player-challenges.md).
+Before public extraction integration, confirm the dedicated CI matrix, then
+connect one challenge kind at a time to eligible progressive formats. Preserve token filtering, live/DRM/adaptive restrictions, and rejection
 of unresolved challenge URLs before any media probe. Only working extraction
 integration should introduce public runtime options or expand supported claims.
