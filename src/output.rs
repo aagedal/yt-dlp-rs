@@ -1,3 +1,6 @@
+mod formats;
+pub use formats::render_formats;
+
 use crate::{Error, Result, VideoInfo};
 use std::path::PathBuf;
 

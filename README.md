@@ -13,6 +13,7 @@ or an installed yt-dlp.
 cargo build --locked
 cargo run --locked -- 'https://example.com/video.mp4'
 cargo run --locked -- --dump-json 'https://example.com/video.mp4'
+cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
@@ -84,6 +85,11 @@ Supported today:
   `(bv[height<=720]+ba)/b` preserves the fallback around the complete pair.
   Positive rank suffixes such as `bv.2`, `ba.2` and `worst.2` choose the Nth
   candidate after filters and native ranking; out-of-range ranks allow fallback.
+- `-F/--list-formats` lists all eligible formats without choosing a source or
+  downloading media, including separate-only presentations without FFmpeg.
+  Tables show IDs, containers, dimensions, stream kind, size, bitrate and language.
+  With `-j` or `-s`, normal selection still applies; `-F -j` prints a table followed
+  by selected JSON. Table styling is native, not byte-for-byte upstream output.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.
@@ -125,6 +131,10 @@ The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
 `YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path) })`
 configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it disabled.
 `YoutubeDl::new()?.with_ffmpeg(path)` configures optional local merging.
+`extract_result_unselected` / `extract_result_unselected_with_options` expose all
+eligible alternatives without library selection; select before downloading.
+`output::render_formats` renders their inventory, while `validate_format_selector`
+checks supported syntax without network or availability checks.
 Use `extract_result` or
 `extract_result_with_format(url, Some("1"))` for video/playlist results. A format
 ID applies to every playlist entry independently; each must offer that ID.

@@ -30,7 +30,7 @@ tractable for future agents.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
-- `src/output.rs`: template rendering and filename-component sanitization.
+- `src/output.rs`: template rendering and filename-component sanitization; `src/output/formats.rs` renders format inventories.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
 - `upstream/manifest.json`: upstream revision and component coverage ledger.
 - `tools/upstream_report.py`: machine-readable input for an update agent.
@@ -61,6 +61,8 @@ remain outside the current result contract.
    Chained numeric/text format filters now constrain existing atoms, pairs and
    fallbacks before native ranking. Parenthesized groups, best/worst shorthand
    aliases, bare-filter selectors and positive indexed ranks are implemented.
+   Format listing and unselected extraction expose eligible alternatives before
+   selection, including separate-only presentations without a merger.
    Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.

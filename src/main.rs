@@ -7,7 +7,8 @@ use std::{
 };
 use yt_dlp_rs::{
     DownloadOptions, DownloadPhase, ExtractionOptions, YoutubeDl, YoutubeOptions,
-    output::{DEFAULT_TEMPLATE, render_template},
+    output::{DEFAULT_TEMPLATE, render_formats, render_template},
+    validate_format_selector,
 };
 
 #[derive(Parser)]
@@ -24,6 +25,9 @@ struct Args {
     /// Extract metadata without writing media
     #[arg(short = 's', long)]
     simulate: bool,
+    /// List available formats (selection still applies with -j or -s; no downloads)
+    #[arg(short = 'F', long = "list-formats")]
+    list_formats: bool,
     /// Format ID or indexed/grouped selector with filters, + pairs and / fallbacks
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
@@ -46,6 +50,11 @@ struct Args {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
+    if args.list_formats
+        && let Some(format) = &args.format
+    {
+        validate_format_selector(format)?;
+    }
     let mut downloader = YoutubeDl::with_youtube_options(YoutubeOptions {
         js_runtime: args.youtube_js_runtime,
     })?;
@@ -55,13 +64,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in args.urls {
-        let extracted = match downloader.extract_result_with_options(
-            &url,
-            args.format.as_deref(),
-            ExtractionOptions {
-                retries: args.extractor_retries,
-            },
-        ) {
+        let options = ExtractionOptions {
+            retries: args.extractor_retries,
+        };
+        let extracted = if args.list_formats && !args.dump_json && !args.simulate {
+            downloader.extract_result_unselected_with_options(&url, options)
+        } else {
+            downloader.extract_result_with_options(&url, args.format.as_deref(), options)
+        };
+        let extracted = match extracted {
             Ok(result) => result,
             Err(error) => {
                 eprintln!("ERROR: {url}: {error}");
@@ -71,6 +82,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         };
         for info in extracted.into_entries() {
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+                if args.list_formats {
+                    write!(stdout, "{}", render_formats(&info))?;
+                    if !args.dump_json {
+                        return Ok(());
+                    }
+                }
                 if args.dump_json {
                     serde_json::to_writer(&mut stdout, &info)?;
                     writeln!(stdout)?;

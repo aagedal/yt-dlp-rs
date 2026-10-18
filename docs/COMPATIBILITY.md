@@ -8,7 +8,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Option | Current behavior |
 | --- | --- |
 | Positional URLs | One or more HTTP(S) URLs, processed sequentially; continue after errors, return failure if any URL fails |
-| `-j`, `--dump-json` | One supported `VideoInfo` JSON object per video, including each HTML5 playlist entry; extract without downloading |
+| `-j`, `--dump-json` | One selected `VideoInfo` JSON object per video, including each HTML5 playlist entry; no downloads; with `-F`, a table precedes JSON |
+| `-F`, `--list-formats` | List eligible alternatives without selection or downloads; combined `-j`/`-s` retain normal selection; native table styling |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
@@ -938,3 +939,54 @@ The saved expression comparison includes indexed aliases, filtered/grouped ranks
 ordered pairs and unavailable ranks within the supported range. Native tests
 separately verify ties, direct metadata, dotted literal IDs, compatibility failure
 and oversized-index errors. See [the source slice](../upstream/notes/selector-index.md).
+
+
+## Available format inventory
+
+`-F` / `--list-formats` alone extracts all eligible alternatives and prints a
+format table for each video. It bypasses library selection, so separate-only HLS,
+DASH or supported direct adaptive presentations can be inspected without a merger.
+A valid `-f` argument does not filter listing-only output or require that its ID
+exists; its supported grammar is still validated before any requests.
+
+As in pinned upstream control flow, adding `-j` or `-s` retains normal selection.
+`-F -j` prints the complete table followed by selected JSON; this combined stdout
+is human text plus JSON, rather than plain NDJSON. `-F -s` selects and prints the
+table without downloading. Existing native selection/default/group policies apply,
+so a separate-only combined mode may require an explicit pair selector or merger
+configuration. `--no-simulate` and upstream listing-style toggles remain unsupported;
+listing never downloads in this CLI subset.
+
+Tables retain extractor declaration order and show ID, extension, resolution,
+stream kind, exact declared/probed filesize in bytes, declared kbps rates, language
+and rendition notes/default/autoselect flags. Missing fields display `-`; sizes
+and codecs are not inferred from fragments. Standalone means independently usable
+or unknown composition, not a claim that both audio and video exist. An implicit
+source without a formats array has one row with `-` as its non-selectable ID.
+Resource URL and encryption fields are not rendered. Table layout, number/size
+formatting and order follow native metadata policy, not upstream sorter or table
+byte parity. Unicode is preserved with character-count alignment; terminal-width
+alignment for all scripts is not claimed.
+
+Controls and line/bidirectional control characters are visibly escaped before
+alignment. Cells are limited to 128 characters and captions to 256, with an
+ellipsis for truncation. Full metadata remains available in JSON. Listing output
+is rendered only after every entry in the input extracts successfully (and, for
+combined modes, selects successfully). This preserves native playlist atomicity;
+upstream may print a table before a later selection failure.
+
+Extraction uses normal probes, bounded manifest reads, eligibility and optional
+challenge solving. Listing does not fetch segment bodies, initialization resources
+or AES keys, inspect FFmpeg, render output paths or create media files. Independent
+`--extractor-retries` still restarts the full extraction after transient failures;
+format/rendering failures are not extraction retries. Multiple inputs retain the
+usual error continuation and nonzero final status on any failure.
+
+The library exposes `extract_result_unselected` and
+`extract_result_unselected_with_options` for inspection without selection. Their
+metadata contains the extractor's representative fields; call selection before
+download. Existing extraction methods still select every entry. The pure
+`output::render_formats` has no acquisition or selection effects, and
+`validate_format_selector` validates syntax without checking format availability.
+See [the source slice](../upstream/notes/list-formats.md) for reference probes and
+rendering comparison limits.

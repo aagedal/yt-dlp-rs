@@ -26,6 +26,11 @@ use std::{
 };
 use url::Url;
 
+/// Validate the supported selector grammar without extraction or availability checks.
+pub fn validate_format_selector(expression: &str) -> Result<()> {
+    selector::parse(expression).map(|_| ())
+}
+
 /// Whole-extraction retry policy, independent of download retries.
 /// Defaults to no retries to preserve existing library behavior.
 #[derive(Debug, Clone, Copy, Default)]
@@ -113,16 +118,32 @@ impl YoutubeDl {
         format: Option<&str>,
         options: ExtractionOptions,
     ) -> Result<ExtractResult> {
+        let mut info = self.extract_result_unselected_with_options(input, options)?;
+        info.select_format_with_merge(format, self.ffmpeg.is_some())?;
+        Ok(info)
+    }
+
+    /// Extract all supported alternatives without applying library format selection.
+    /// Useful for inspection, including separate-only presentations without a merger.
+    /// Metadata retains the extractor's representative fields; select before downloading.
+    pub fn extract_result_unselected(&self, input: &str) -> Result<ExtractResult> {
+        self.extract_result_unselected_with_options(input, ExtractionOptions::default())
+    }
+
+    /// Retry whole extraction independently of format selection and output rendering.
+    /// All playlist entries must extract successfully before a result is returned.
+    pub fn extract_result_unselected_with_options(
+        &self,
+        input: &str,
+        options: ExtractionOptions,
+    ) -> Result<ExtractResult> {
         let url = Url::parse(input)?;
         if !matches!(url.scheme(), "http" | "https") {
             return Err(Error::UnsupportedScheme(url.scheme().into()));
         }
         for attempt in 0..=options.retries {
             match self.extract_once(&url) {
-                Ok(mut info) => {
-                    info.select_format_with_merge(format, self.ffmpeg.is_some())?;
-                    return Ok(info);
-                }
+                Ok(info) => return Ok(info),
                 Err(error) => {
                     let Some(delay) = retry::failure_delay(&error) else {
                         return Err(error);
