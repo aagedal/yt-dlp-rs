@@ -1,0 +1,467 @@
+{
+  "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+  "normalization": "No ID or order normalization. Reference formats supplied in this explicit best-last order; no upstream sorting invoked. Compare selected ID or requested_formats IDs only. Native ranking/group compatibility and merge metadata differ outside these deliberately aligned cases. Context flags reflect full initial formats and are preserved by group filters as upstream does.",
+  "info": {
+    "id": "selector-fixture",
+    "title": "Synthetic selector presentation",
+    "url": "http://example.invalid/presentation",
+    "ext": "mp4",
+    "webpage_url": "http://example.invalid/page",
+    "extractor": "fixture",
+    "extractor_key": "Fixture",
+    "direct": false,
+    "formats": [
+      {
+        "format_id": "audio-low",
+        "url": "http://example.invalid/audio-low",
+        "ext": "m4a",
+        "stream_kind": "audio_only",
+        "tbr": 64,
+        "acodec": "mp4a.40.2",
+        "vcodec": "none",
+        "abr": 64
+      },
+      {
+        "format_id": "audio-high",
+        "url": "http://example.invalid/audio-high",
+        "ext": "m4a",
+        "stream_kind": "audio_only",
+        "tbr": 128,
+        "acodec": "mp4a.40.2",
+        "vcodec": "none",
+        "abr": 128
+      },
+      {
+        "format_id": "video-low",
+        "url": "http://example.invalid/video-low",
+        "ext": "mp4",
+        "stream_kind": "video_only",
+        "tbr": 400,
+        "acodec": "none",
+        "vcodec": "avc1.42001e",
+        "height": 360,
+        "width": 640
+      },
+      {
+        "format_id": "mux-low",
+        "url": "http://example.invalid/mux-low",
+        "ext": "mp4",
+        "stream_kind": "standalone",
+        "tbr": 500,
+        "acodec": "mp4a.40.2",
+        "vcodec": "avc1.42001e",
+        "height": 360,
+        "width": 640
+      },
+      {
+        "format_id": "video-mid",
+        "url": "http://example.invalid/video-mid",
+        "ext": "mp4",
+        "stream_kind": "video_only",
+        "tbr": 900,
+        "acodec": "none",
+        "vcodec": "avc1.42001e",
+        "height": 720,
+        "width": 1280
+      },
+      {
+        "format_id": "mux-high",
+        "url": "http://example.invalid/mux-high",
+        "ext": "mp4",
+        "stream_kind": "standalone",
+        "tbr": 1000,
+        "acodec": "mp4a.40.2",
+        "vcodec": "avc1.42001e",
+        "height": 720,
+        "width": 1280
+      },
+      {
+        "format_id": "video-high",
+        "url": "http://example.invalid/video-high",
+        "ext": "mp4",
+        "stream_kind": "video_only",
+        "tbr": 2000,
+        "acodec": "none",
+        "vcodec": "avc1.42001e",
+        "height": 1080,
+        "width": 1920
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "alias-best-muxed",
+      "selector": "best",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "alias-best-video",
+      "selector": "bestvideo",
+      "expected_ids": [
+        "video-high"
+      ]
+    },
+    {
+      "name": "alias-best-v",
+      "selector": "bestv",
+      "expected_ids": [
+        "video-high"
+      ]
+    },
+    {
+      "name": "alias-best-audio",
+      "selector": "bestaudio",
+      "expected_ids": [
+        "audio-high"
+      ]
+    },
+    {
+      "name": "alias-best-a",
+      "selector": "besta",
+      "expected_ids": [
+        "audio-high"
+      ]
+    },
+    {
+      "name": "alias-worst-muxed",
+      "selector": "worst",
+      "expected_ids": [
+        "mux-low"
+      ]
+    },
+    {
+      "name": "alias-worst-video",
+      "selector": "worstvideo",
+      "expected_ids": [
+        "video-low"
+      ]
+    },
+    {
+      "name": "alias-worst-v",
+      "selector": "worstv",
+      "expected_ids": [
+        "video-low"
+      ]
+    },
+    {
+      "name": "alias-worst-audio",
+      "selector": "worstaudio",
+      "expected_ids": [
+        "audio-low"
+      ]
+    },
+    {
+      "name": "alias-worst-a",
+      "selector": "worsta",
+      "expected_ids": [
+        "audio-low"
+      ]
+    },
+    {
+      "name": "alias-b-muxed",
+      "selector": "b",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "alias-b-video",
+      "selector": "bvideo",
+      "expected_ids": [
+        "video-high"
+      ]
+    },
+    {
+      "name": "alias-b-v",
+      "selector": "bv",
+      "expected_ids": [
+        "video-high"
+      ]
+    },
+    {
+      "name": "alias-b-audio",
+      "selector": "baudio",
+      "expected_ids": [
+        "audio-high"
+      ]
+    },
+    {
+      "name": "alias-b-a",
+      "selector": "ba",
+      "expected_ids": [
+        "audio-high"
+      ]
+    },
+    {
+      "name": "alias-w-muxed",
+      "selector": "w",
+      "expected_ids": [
+        "mux-low"
+      ]
+    },
+    {
+      "name": "alias-w-video",
+      "selector": "wvideo",
+      "expected_ids": [
+        "video-low"
+      ]
+    },
+    {
+      "name": "alias-w-v",
+      "selector": "wv",
+      "expected_ids": [
+        "video-low"
+      ]
+    },
+    {
+      "name": "alias-w-audio",
+      "selector": "waudio",
+      "expected_ids": [
+        "audio-low"
+      ]
+    },
+    {
+      "name": "alias-w-a",
+      "selector": "wa",
+      "expected_ids": [
+        "audio-low"
+      ]
+    },
+    {
+      "name": "merge",
+      "selector": "bv+ba",
+      "expected_ids": [
+        "video-high",
+        "audio-high"
+      ]
+    },
+    {
+      "name": "reverse-merge",
+      "selector": "ba+bv",
+      "expected_ids": [
+        "audio-high",
+        "video-high"
+      ]
+    },
+    {
+      "name": "merge-before-fallback",
+      "selector": "bv+ba/b",
+      "expected_ids": [
+        "video-high",
+        "audio-high"
+      ]
+    },
+    {
+      "name": "grouped-merge-fallback",
+      "selector": "(bv+ba)/b",
+      "expected_ids": [
+        "video-high",
+        "audio-high"
+      ]
+    },
+    {
+      "name": "choice-before-unused-group",
+      "selector": "bv/(ba+b)",
+      "expected_ids": [
+        "video-high"
+      ]
+    },
+    {
+      "name": "group-choice-then-merge",
+      "selector": "(missing/bv)+ba",
+      "expected_ids": [
+        "video-high",
+        "audio-high"
+      ]
+    },
+    {
+      "name": "nested-choice-then-merge",
+      "selector": "((missing/bv)+ba)/b",
+      "expected_ids": [
+        "video-high",
+        "audio-high"
+      ]
+    },
+    {
+      "name": "failed-group-then-fallback",
+      "selector": "((missing/absent)+ba)/b",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "literal-group-choice",
+      "selector": "(video-low/video-high)+audio-low",
+      "expected_ids": [
+        "video-low",
+        "audio-low"
+      ]
+    },
+    {
+      "name": "group-filter-before-merge-choice",
+      "selector": "(bv+ba/b)[height<=720]",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "group-filter-before-explicit-choice",
+      "selector": "((bv+ba)/b)[height<=720]",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "group-filter-keeps-missing-audio",
+      "selector": "(bv+ba)[height<=?720]",
+      "expected_ids": [
+        "video-mid",
+        "audio-high"
+      ]
+    },
+    {
+      "name": "local-audio-filter",
+      "selector": "bv+ba[height<=720]",
+      "expected_ids": []
+    },
+    {
+      "name": "local-video-filter",
+      "selector": "bv[height<=720]+ba",
+      "expected_ids": [
+        "video-mid",
+        "audio-high"
+      ]
+    },
+    {
+      "name": "group-fallback-filter",
+      "selector": "(bv/b)[height<=720]",
+      "expected_ids": [
+        "video-mid"
+      ]
+    },
+    {
+      "name": "group-literal-fallback-filter",
+      "selector": "(missing/b)[height<=360]",
+      "expected_ids": [
+        "mux-low"
+      ]
+    },
+    {
+      "name": "bare-filter",
+      "selector": "[height<=720]",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "grouped-bare-filter",
+      "selector": "([height<=360])",
+      "expected_ids": [
+        "mux-low"
+      ]
+    },
+    {
+      "name": "nested-bare-filter-context",
+      "selector": "([height<=720]/b)[tbr<600]",
+      "expected_ids": [
+        "mux-low"
+      ]
+    },
+    {
+      "name": "fallback-to-audio",
+      "selector": "(bv[height>1080]/ba)",
+      "expected_ids": [
+        "audio-high"
+      ]
+    },
+    {
+      "name": "reversed-fallback-merge",
+      "selector": "(bv[height>1080]/ba)+bv",
+      "expected_ids": [
+        "audio-high",
+        "video-high"
+      ]
+    },
+    {
+      "name": "nested-filtered-fallback-merge",
+      "selector": "((bv[height>1080]/ba)+bv)[height<=?720]",
+      "expected_ids": [
+        "audio-high",
+        "video-mid"
+      ]
+    },
+    {
+      "name": "merge-failure-outer-fallback",
+      "selector": "(bv[height>1080]/ba)+bv[height>1080]/b",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "missing-pair-outer-fallback",
+      "selector": "((missing/bv)+absent)/b",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "group-mime-context",
+      "selector": "(b/w)[ext=mp4]",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "group-filter-removes-audio",
+      "selector": "((bv+ba)/b)[ext=mp4]",
+      "expected_ids": [
+        "mux-high"
+      ]
+    },
+    {
+      "name": "all-branches-unavailable",
+      "selector": "(missing/absent)",
+      "expected_ids": []
+    },
+    {
+      "name": "no-video-or-muxed-above-bound",
+      "selector": "bv[height>1080]+ba/b[height>1080]",
+      "expected_ids": []
+    },
+    {
+      "name": "no-group-candidates",
+      "selector": "(bv+ba)[height<1]",
+      "expected_ids": []
+    },
+    {
+      "name": "no-bare-candidates",
+      "selector": "([height<1])",
+      "expected_ids": []
+    },
+    {
+      "name": "no-group-choice-candidates",
+      "selector": "(bv/ba)[height<1]",
+      "expected_ids": []
+    }
+  ],
+  "invalid_cases": [
+    {
+      "name": "late-dangling-merge",
+      "selector": "b/(bv+)"
+    },
+    {
+      "name": "late-unclosed-group",
+      "selector": "b/(bv"
+    },
+    {
+      "name": "late-malformed-numeric-filter",
+      "selector": "b/(bv+ba)[height>>720]"
+    },
+    {
+      "name": "late-empty-numeric-filter",
+      "selector": "b/(bv+ba)[height<]"
+    }
+  ]
+}

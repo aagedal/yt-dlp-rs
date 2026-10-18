@@ -79,6 +79,9 @@ Supported today:
   text before ranking. For example, `bestvideo[height<=720]+bestaudio[abr>=128]/best`
   and `best[filesize<10MiB]`; `<=?` includes unknown values. This is a bounded
   selector subset; filters do not add metadata that an extractor did not expose.
+  Parenthesized groups and aliases (`b`, `bv`, `ba`, `w`, `wv`, `wa`) are supported,
+  as are bare filters such as `[height<=720]` (implicit `best`). For example,
+  `(bv[height<=720]+ba)/b` preserves the fallback around the complete pair.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.

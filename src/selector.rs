@@ -420,9 +420,77 @@ fn string_value(text: &str) -> Result<String> {
     }
     Ok(text.into())
 }
+/// Groups retain their filter context: evaluate the inner expression only after
+/// narrowing its available formats with `filter`, rather than filtering output.
+#[derive(Debug)]
+pub(crate) enum Expression {
+    Atom(Atom),
+    First(Vec<Expression>),
+    Merge(Box<Expression>, Box<Expression>),
+    Group {
+        inner: Box<Expression>,
+        filter: Atom,
+    },
+}
+impl Expression {
+    fn streams(&self) -> usize {
+        match self {
+            Self::Atom(_) => 1,
+            Self::First(branches) => branches.iter().map(Self::streams).max().unwrap_or(0),
+            Self::Merge(first, second) => first.streams() + second.streams(),
+            Self::Group { inner, .. } => inner.streams(),
+        }
+    }
+}
+
+fn canonical_name(name: &str) -> Result<String> {
+    fn alias(name: &str) -> Option<String> {
+        for prefix in ["best", "worst", "b", "w"] {
+            if let Some(tail) = name.strip_prefix(prefix) {
+                let kind = match tail {
+                    "" => "",
+                    "video" | "v" => "video",
+                    "audio" | "a" => "audio",
+                    _ => continue,
+                };
+                return Some(format!(
+                    "{}{kind}",
+                    if prefix.starts_with('b') {
+                        "best"
+                    } else {
+                        "worst"
+                    }
+                ));
+            }
+        }
+        None
+    }
+    if let Some(name) = alias(name) {
+        return Ok(name);
+    }
+    if let Some((prefix, index)) = name.rsplit_once('.')
+        && alias(prefix).is_some()
+        && !index.is_empty()
+        && index.bytes().all(|b| b.is_ascii_digit())
+    {
+        return Err(invalid("indexed format selectors are unsupported"));
+    }
+    if name.is_empty()
+        || matches!(name, "all" | "mergeall")
+        || !name
+            .bytes()
+            .all(|v| v.is_ascii_alphanumeric() || b"_.-".contains(&v))
+    {
+        return Err(invalid("unsupported or malformed format atom"));
+    }
+    Ok(name.into())
+}
+
 struct Parser<'a> {
     text: &'a str,
     position: usize,
+    nodes: usize,
+    fallbacks: usize,
 }
 impl Parser<'_> {
     fn rest(&self) -> &str {
@@ -431,27 +499,19 @@ impl Parser<'_> {
     fn whitespace(&mut self) {
         self.position += self.rest().len() - self.rest().trim_start().len();
     }
-    fn atom(&mut self) -> Result<Atom> {
-        self.whitespace();
-        let end = self
-            .rest()
-            .find(|c: char| c.is_whitespace() || matches!(c, '[' | '+' | '/'))
-            .unwrap_or(self.rest().len());
-        let name = self.rest()[..end].to_owned();
-        if name.is_empty()
-            || name == "all"
-            || !name
-                .bytes()
-                .all(|v| v.is_ascii_alphanumeric() || b"_.-".contains(&v))
-        {
-            return Err(invalid("unsupported or malformed format atom"));
+    fn node(&mut self, expression: Expression) -> Result<Expression> {
+        self.nodes += 1;
+        if self.nodes > 128 {
+            return Err(invalid("format expression exceeds 128 AST nodes"));
         }
-        self.position += end;
+        Ok(expression)
+    }
+    fn filters(&mut self) -> Result<Vec<Filter>> {
         self.whitespace();
         let mut filters = Vec::new();
         while self.rest().starts_with('[') {
             if filters.len() == 16 {
-                return Err(invalid("format atom exceeds 16 filters"));
+                return Err(invalid("format node exceeds 16 filters"));
             }
             self.position += 1;
             let start = self.position;
@@ -485,37 +545,93 @@ impl Parser<'_> {
             self.position = start + end + 1;
             self.whitespace();
         }
-        Ok(Atom { name, filters })
+        Ok(filters)
+    }
+    fn primary(&mut self, depth: usize) -> Result<Expression> {
+        self.whitespace();
+        if self.rest().starts_with('(') {
+            if depth >= 16 {
+                return Err(invalid("format groups exceed nesting depth 16"));
+            }
+            self.position += 1;
+            let inner = self.expression(depth + 1)?;
+            self.whitespace();
+            if !self.rest().starts_with(')') {
+                return Err(invalid("unbalanced format group"));
+            }
+            self.position += 1;
+            let filters = self.filters()?;
+            return self.node(Expression::Group {
+                inner: Box::new(inner),
+                filter: Atom {
+                    name: "best".into(),
+                    filters,
+                },
+            });
+        }
+        let end = self
+            .rest()
+            .find(|c: char| c.is_whitespace() || matches!(c, '[' | '+' | '/' | '(' | ')'))
+            .unwrap_or(self.rest().len());
+        let name = if end == 0 && self.rest().starts_with('[') {
+            "best".into()
+        } else {
+            canonical_name(&self.rest()[..end])?
+        };
+        self.position += end;
+        let filters = self.filters()?;
+        self.node(Expression::Atom(Atom { name, filters }))
+    }
+    fn merge(&mut self, depth: usize) -> Result<Expression> {
+        let mut expression = self.primary(depth)?;
+        while self.rest().starts_with('+') {
+            self.position += 1;
+            let right = self.primary(depth)?;
+            expression = self.node(Expression::Merge(Box::new(expression), Box::new(right)))?;
+        }
+        Ok(expression)
+    }
+    fn expression(&mut self, depth: usize) -> Result<Expression> {
+        let first = self.merge(depth)?;
+        let mut branches = vec![first];
+        while self.rest().starts_with('/') {
+            self.fallbacks += 1;
+            if self.fallbacks > 15 {
+                return Err(invalid(
+                    "format expression exceeds 16 global fallback choices",
+                ));
+            }
+            self.position += 1;
+            branches.push(self.merge(depth)?);
+        }
+        if branches.len() == 1 {
+            Ok(branches.pop().expect("one branch"))
+        } else {
+            self.node(Expression::First(branches))
+        }
     }
 }
-pub(crate) fn parse(expression: &str) -> Result<Vec<Vec<Atom>>> {
+pub(crate) fn parse(expression: &str) -> Result<Expression> {
     if expression.is_empty() || expression.len() > 8192 {
         return Err(invalid("format expression must contain 1..8192 bytes"));
     }
     let mut parser = Parser {
         text: expression,
         position: 0,
+        nodes: 0,
+        fallbacks: 0,
     };
-    let mut branches = Vec::new();
-    loop {
-        if branches.len() == 16 {
-            return Err(invalid("format expression exceeds 16 fallback branches"));
-        }
-        let mut branch = vec![parser.atom()?];
-        if parser.rest().starts_with('+') {
-            parser.position += 1;
-            branch.push(parser.atom()?);
-        }
-        branches.push(branch);
-        if parser.rest().is_empty() {
-            break;
-        }
-        if !parser.rest().starts_with('/') {
-            return Err(invalid("unsupported or malformed format expression"));
-        }
-        parser.position += 1;
+    let result = parser.expression(0)?;
+    parser.whitespace();
+    if !parser.rest().is_empty() {
+        return Err(invalid("unsupported or malformed format expression"));
     }
-    Ok(branches)
+    if result.streams() > 2 {
+        return Err(invalid(
+            "format expression may select at most two streams on any path",
+        ));
+    }
+    Ok(result)
 }
 
 #[cfg(test)]
@@ -526,21 +642,36 @@ mod tests {
         serde_json::from_value(json!({"format_id":"video-x", "url":"https://example.com/video.mp4", "ext":"mp4", "width":1280, "height":720, "filesize":1024, "tbr":2000.0, "abr":128.5, "language":"en-US", "format_note":"Main / [720p]+audio", "audio_group":"group-a"})).unwrap()
     }
     fn atom(predicate: &str) -> Atom {
-        parse(&format!("best[{predicate}]"))
-            .unwrap()
-            .remove(0)
-            .remove(0)
+        let Expression::Atom(atom) = parse(&format!("best[{predicate}]")).unwrap() else {
+            panic!("expected atom")
+        };
+        atom
     }
     #[test]
     fn quoted_delimiters_and_chained_filters_do_not_split_the_expression() {
         let ast = parse(r#"bestvideo[format_note*="/ [720p]+audio"][height>=720]+bestaudio[language='en-US']/18[ext=mp4]"#).unwrap();
-        assert_eq!(ast.len(), 2);
-        assert_eq!(ast[0].len(), 2);
-        assert_eq!(ast[0][0].name, "bestvideo");
-        assert!(ast[0][0].is_selector());
-        assert!(ast[0][0].matches(&sample()));
-        assert_eq!(ast[1][0].name, "18");
-        assert!(!ast[1][0].is_selector());
+        let Expression::First(branches) = ast else {
+            panic!("expected fallback")
+        };
+        assert_eq!(branches.len(), 2);
+        let Expression::Merge(first, second) = &branches[0] else {
+            panic!("expected merge")
+        };
+        let Expression::Atom(first) = first.as_ref() else {
+            panic!("expected first atom")
+        };
+        let Expression::Atom(second) = second.as_ref() else {
+            panic!("expected second atom")
+        };
+        assert_eq!(first.name, "bestvideo");
+        assert_eq!(second.name, "bestaudio");
+        assert!(first.is_selector());
+        assert!(first.matches(&sample()));
+        let Expression::Atom(last) = &branches[1] else {
+            panic!("expected fallback atom")
+        };
+        assert_eq!(last.name, "18");
+        assert!(!last.is_selector());
     }
     #[test]
     fn numeric_operators_and_question_unknown_semantics() {
@@ -701,8 +832,6 @@ mod tests {
             "best+",
             "best+best+best",
             "best,(worst)",
-            "best/(worst)",
-            "[height>1]",
             "best/all",
             "best*/worst",
             "best[height>1",
@@ -783,13 +912,127 @@ mod tests {
 
     #[test]
     fn parser_resource_limits_are_exact_and_allow_bounded_whitespace() {
-        assert_eq!(parse(&["best"; 16].join("/")).unwrap().len(), 16);
+        assert!(
+            matches!(parse(&["best"; 16].join("/")).unwrap(), Expression::First(branches) if branches.len() == 16)
+        );
         assert!(parse(&["best"; 17].join("/")).is_err());
         assert!(parse(&format!("best{}", "[ext=mp4]".repeat(16))).is_ok());
         assert!(parse(&format!("best{}", "[ext=mp4]".repeat(17))).is_err());
         assert!(parse(&"x".repeat(8193)).is_err());
         assert!(parse("  best [ height <= ? 720 ] + bestaudio [ language = 'en' ] / 18  ").is_ok());
     }
+    #[test]
+    fn grouping_precedence_and_postfix_filters_are_explicit_in_the_ast() {
+        let Expression::First(branches) = parse("a+b/c+d").unwrap() else {
+            panic!("expected fallback")
+        };
+        assert!(
+            branches
+                .iter()
+                .all(|branch| matches!(branch, Expression::Merge(_, _)))
+        );
+        let Expression::Merge(first, second) = parse("(a/b)+c").unwrap() else {
+            panic!("expected merge")
+        };
+        let Expression::Group { inner, filter } = first.as_ref() else {
+            panic!("expected group")
+        };
+        assert!(matches!(inner.as_ref(), Expression::First(_)));
+        assert!(filter.matches(&sample()));
+        assert!(matches!(second.as_ref(), Expression::Atom(_)));
+        let Expression::Group { inner, filter } =
+            parse("(best/worst)[height>=720][ext=mp4]").unwrap()
+        else {
+            panic!("expected filtered group")
+        };
+        assert!(matches!(inner.as_ref(), Expression::First(_)));
+        assert!(filter.matches(&sample()));
+        let mut format = sample();
+        format.height = Some(360);
+        assert!(!filter.matches(&format));
+        let Expression::Atom(atom) = parse("[height>=720][ext=mp4]").unwrap() else {
+            panic!("expected implicit best")
+        };
+        assert_eq!(atom.name, "best");
+        assert!(atom.matches(&sample()));
+    }
+    #[test]
+    fn aliases_canonicalize_exact_upstream_short_forms_without_guessing_modifiers() {
+        for (alias, expected) in [
+            ("b", "best"),
+            ("bv", "bestvideo"),
+            ("ba", "bestaudio"),
+            ("bestv", "bestvideo"),
+            ("besta", "bestaudio"),
+            ("bvideo", "bestvideo"),
+            ("baudio", "bestaudio"),
+            ("w", "worst"),
+            ("wv", "worstvideo"),
+            ("wa", "worstaudio"),
+            ("worstv", "worstvideo"),
+            ("worsta", "worstaudio"),
+            ("wvideo", "worstvideo"),
+            ("waudio", "worstaudio"),
+        ] {
+            let Expression::Atom(atom) = parse(alias).unwrap() else {
+                panic!("expected alias atom")
+            };
+            assert_eq!(atom.name, expected);
+            assert!(atom.is_selector());
+        }
+        for expression in [
+            "bv*",
+            "bestvideo.2",
+            "bv.0",
+            "worst.1",
+            "bestvideo*/worst",
+            "best/bv.2",
+            "a,b",
+            "all",
+            "mergeall",
+        ] {
+            assert!(parse(expression).is_err(), "{expression}");
+        }
+        let Expression::Atom(atom) = parse("file.1").unwrap() else {
+            panic!("expected literal ID")
+        };
+        assert_eq!(atom.name, "file.1");
+        assert!(!atom.is_selector());
+    }
+    #[test]
+    fn recursive_groups_have_global_bounds_and_no_path_can_request_three_streams() {
+        for expression in ["a+(b/c)", "(a+b)/(c+d)", "(a/b)+(c/d)", "((a))"] {
+            assert!(parse(expression).is_ok(), "{expression}");
+        }
+        for expression in [
+            "()",
+            "( )",
+            "(a",
+            "a)",
+            "(a)(b)",
+            "a(b)",
+            "(a/)",
+            "(/a)",
+            "(a)+",
+            "a+(b+c)",
+            "(a+b)+(c/d)",
+            "best/(a+b+c)",
+            "best/(worst[unknown=1])",
+        ] {
+            assert!(parse(expression).is_err(), "{expression}");
+        }
+        assert!(parse(&format!("{}best{}", "(".repeat(16), ")".repeat(16))).is_ok());
+        assert!(parse(&format!("{}best{}", "(".repeat(17), ")".repeat(17))).is_err());
+        assert!(parse(&format!("({})/worst", ["best"; 16].join("/"))).is_err());
+        let node = |groups| format!("{}best{}", "(".repeat(groups), ")".repeat(groups));
+        let mut bounded = vec![node(7); 15];
+        bounded.push(node(6));
+        assert!(parse(&bounded.join("/")).is_ok()); // 128 expression nodes.
+        assert!(parse(&vec![node(7); 16].join("/")).is_err()); // 129 nodes.
+        assert!(parse(&format!("(best){}", "[ext=mp4]".repeat(16))).is_ok());
+        assert!(parse(&format!("(best){}", "[ext=mp4]".repeat(17))).is_err());
+    }
+
     #[test]
     fn saved_predicate_fixture_matches_actual_pinned_upstream_results() {
         let fixture: serde_json::Value =

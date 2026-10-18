@@ -289,3 +289,159 @@ fn text_predicates_chain_and_literal_id_filters_can_fall_back() {
     assert_eq!(info["ext"], "mp4");
     server.assert_one_probe_per_progressive_source();
 }
+
+#[test]
+fn grouped_filters_narrow_candidates_before_nested_fallbacks_and_ranking() {
+    let server = Server::new();
+    for selector in [
+        "(b/0)[height<=720][ext=mp4]",
+        "((2/(1/0)))[height<=720][ext=mp4]",
+    ] {
+        let info = server.json("/formats.html", selector);
+        assert_eq!(info["format_id"], "1", "{selector}");
+        assert_eq!(info["height"], 720);
+    }
+    for path in [
+        "/low.mp4",
+        "/medium.mp4",
+        "/high.mp4",
+        "/unknown.mp4",
+        "/clip.webm",
+    ] {
+        assert_eq!(
+            server.count(path),
+            2,
+            "only extraction probes expected for {path}"
+        );
+    }
+}
+
+#[test]
+fn bare_filter_download_and_short_alias_json_use_existing_media_selection() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let target = directory.path().join("bare.mp4");
+    let output = server.cli(
+        "/formats.html",
+        &[
+            "-f",
+            "[height<=720][ext=mp4]",
+            "-o",
+            target.to_str().unwrap(),
+        ],
+    );
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(std::fs::read(target).unwrap(), b"medium");
+    assert_eq!(server.count("/medium.mp4"), 2);
+    let best = server.json("/formats.html", "b[ext=mp4]");
+    assert_eq!(best["format_id"], "2");
+    let worst = server.json("/formats.html", "w[height>=360][ext=mp4]");
+    assert_eq!(worst["format_id"], "0");
+    assert_eq!(server.count("/medium.mp4"), 4);
+    assert_eq!(server.count("/high.mp4"), 3);
+}
+
+#[test]
+fn nested_hls_pair_groups_filter_audio_before_fallback_without_launching_ffmpeg() {
+    let server = Server::new();
+    let output = server.cli(
+        "/master.m3u8",
+        &[
+            "-j",
+            "-s",
+            "--ffmpeg-location",
+            "/nonexistent-filter-test-ffmpeg",
+            "-f",
+            "((bv[height<100]/bv)+(ba[language=xx]/wa)[format_note='English/+Main'])/b",
+        ],
+    );
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let info: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(info["format_id"], "hls-0+hls-audio-0");
+    assert_eq!(info["requested_formats"][1]["language"], "en");
+    assert_eq!(info["requested_formats"][0]["height"], 720);
+    assert_eq!(
+        info["requested_formats"][1]["fragments"]
+            .as_array()
+            .unwrap()
+            .len(),
+        2
+    );
+    assert_eq!(server.requests.lock().unwrap().len(), 4);
+    assert_eq!(server.count("/init.mp4"), 0);
+    assert_eq!(server.count("/segment.m4s"), 0);
+}
+
+#[test]
+fn malformed_grouped_later_branches_fail_before_json_or_downloads() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let target = directory.path().join("never.mp4");
+    for selector in [
+        "b/(w[ext=mp4]",
+        "b/()",
+        "b/(w/)",
+        "b/(w)[unknown=1]",
+        "b/(b+b+b)",
+        "b/(b+(b+b))",
+        "b/(b,w)",
+    ] {
+        let output = server.cli("/formats.html", &["-j", "-s", "-f", selector]);
+        assert!(!output.status.success(), "{selector}");
+        assert!(output.stdout.is_empty(), "{selector}");
+    }
+    let output = server.cli(
+        "/formats.html",
+        &["-f", "b/(w)[unknown=1]", "-o", target.to_str().unwrap()],
+    );
+    assert!(!output.status.success());
+    assert!(!target.exists());
+}
+
+#[test]
+fn grouped_playlist_selection_keeps_all_entries_atomic() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let template = directory.path().join("%(id)s.%(ext)s");
+    for mode in [vec!["-j", "-s"], Vec::new()] {
+        let mut args = mode;
+        args.extend([
+            "-f",
+            "((b/0)[height<=720])",
+            "-o",
+            template.to_str().unwrap(),
+        ]);
+        let output = server.cli("/playlist.html", &args);
+        assert!(!output.status.success());
+        assert!(output.stdout.is_empty());
+        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    }
+    for path in ["/low.mp4", "/medium.mp4", "/high.mp4"] {
+        assert_eq!(
+            server.count(path),
+            2,
+            "no download after a later entry fails: {path}"
+        );
+    }
+}
+
+#[test]
+fn grouped_bare_filters_preserve_direct_metadata_and_no_format_id() {
+    let server = Server::new();
+    let info = server.json("/medium.mp4", "(b[ext=webm]/[filesize>=6])[ext=mp4]");
+    assert!(info.get("format_id").is_none_or(Value::is_null));
+    assert_eq!(info["filesize"], 6);
+    assert_eq!(info["ext"], "mp4");
+    assert!(info["formats"].as_array().is_none_or(Vec::is_empty));
+    let output = server.cli("/medium.mp4", &["-j", "-s", "-f", "(b/w)[filesize<6]"]);
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty());
+}

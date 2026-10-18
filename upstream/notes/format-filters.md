@@ -22,8 +22,10 @@ Direct results without alternative formats evaluate only known top-level metadat
 missing IDs, rates and rendition text remain unknown. Transport is unchanged.
 
 Numeric predicates cover width, height, filesize, tbr and abr; text predicates
-cover extension, ID, language, note and audio group. Unknown fields, regexes,
-filter-only selectors, groups and comma/all selections remain explicit errors.
+cover extension, ID, language, note and audio group. This predicate slice left unknown fields, regexes, filter-only selectors, groups
+and comma/all selections as explicit errors. The subsequent
+[grouped-selector slice](selector-groups.md) adds groups and bare predicates;
+unknown fields, regexes and comma/all selections remain errors.
 Numeric-first unquoted text equality, unknown inclusion, text negation,
 quote/backslash handling and decimal/binary
 unit conventions are recorded in

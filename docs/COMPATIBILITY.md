@@ -10,7 +10,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Positional URLs | One or more HTTP(S) URLs, processed sequentially; continue after errors, return failure if any URL fails |
 | `-j`, `--dump-json` | One supported `VideoInfo` JSON object per video, including each HTML5 playlist entry; extract without downloading |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
-| `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs and `/` fallbacks; see selection policy below; chained numeric/text filters; no direct-URL format IDs |
+| `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
@@ -169,7 +169,7 @@ rate, and audio/video distinctions do not break ties. This is an explicit native
 policy for the supported progressive subset, not full upstream best/worst parity
 or a guarantee of perceptual quality. Format lists and source IDs retain declaration
 order. Literal IDs override ranking; unavailable IDs return an error listing IDs.
-Parentheses, comma selections, more than two merged streams, and
+Comma selections, more than two merged streams, and
 upstream selector modifiers remain errors. See the bounded adaptive policy below.
 Direct HTTP results accept default/`best`/`worst` as their sole representation,
 without adding format IDs; explicit IDs fail.
@@ -466,7 +466,7 @@ independent playlist selection are covered by deterministic Rust tests.
 and `audio_only`. Generic sources retain standalone classification because their
 track composition is unknown. Optional `tbr`/`abr` are positive finite declared
 kilobits per second, not measured quality. YouTube uses averageBitrate then bitrate.
-The anonymous WEB API still accepts only itag 18; adaptive support does not bypass
+The anonymous WEB API direct-format path still accepts only itag 18; adaptive support does not bypass
 that token policy.
 
 `best`/`worst` choose standalone sources; an audio-only fallback is allowed only
@@ -652,7 +652,8 @@ One literal ID constrains the other generic selector to its group. Two literal
 IDs explicitly override group matching, for example `-f hls-0+hls-audio-1`.
 Best audio ranks DEFAULT, then AUTOSELECT, then declared audio/total bitrate;
 worst reverses that ordering. Declaration ties retain existing rules. There is
-no language-filter grammar or full upstream preference/sorting parity.
+no full upstream preference/sorting parity. Explicit language predicates are
+available through the shared format-filter grammar.
 
 HTML5 master format IDs and audio groups both receive the source index prefix,
 so equal group names from independent source masters cannot pair automatically.
@@ -846,8 +847,57 @@ parsed before selection, so a malformed later fallback cannot be hidden by an
 earlier successful branch. Selection still follows extraction of all alternatives;
 filters do not reduce extraction probes or manifest acquisition.
 
-The grammar is bounded to 8 KiB, 16 fallback branches, two atoms per pair and 16
-predicates per atom. Bare filter-only selectors, regex predicates, parentheses,
-comma/all selections and other upstream modifiers remain unsupported. Predicate
+The grammar is bounded to 8 KiB, 16 global fallback choices, 16 group levels,
+128 syntax nodes, two streams on any possible branch and 16 predicates per atom
+or group. Regex predicates, comma/all selections and other unsupported upstream
+modifiers remain errors. Predicate
 support does not imply full upstream selection/sorting parity. See
 [the source slice](../upstream/notes/format-filters.md) and the shared saved cases.
+
+
+## Grouped selector expressions
+
+Parentheses scope fallback and merge expressions, with `+` binding more tightly
+than `/`. Supported aliases combine `best`, `worst`, `b` or `w` with an optional
+`video`/`v` or `audio`/`a`: `b`, `bv`, `ba`, `w`, `wv`, `wa`, `bestv`, `worsta`
+and their long equivalents use the same native selectors. Bare filters imply
+`best`, so `[height<=720]` equals `best[height<=720]`.
+
+```sh
+-f '(bv[height<=720]+ba)/b'
+-f '(b/w)[ext=mp4]'
+-f 'bv+(ba[language=en]/ba)'
+```
+
+A filter after a group narrows its input formats before evaluating the group's
+children. For example, `(bv+ba/b)[height<=720]` removes unknown-height audio before
+trying the pair, while `bv[height<=720]+ba` filters only video. Use `<=?` to retain
+unknown heights where intended. A group does not filter the combined output.
+
+Fallbacks retain their scope. If an inner fallback selects an available branch,
+a surrounding merge does not revisit later inner branches when the chosen source
+cannot form a supported pair. Put the fallback outside the full merge when that
+behavior is desired. Existing native compatible-group pair search still applies;
+literal ID provenance survives groups, preserving the deliberate override for
+two explicit IDs. Direct results evaluate grouped filters on known metadata and
+retain their absent format ID. Selection failures remain atomic.
+
+The entire expression is parsed before selection. Empty/unbalanced/adjacent
+groups, malformed later branches and any possible branch with more than two
+streams fail, even when an earlier branch is available. Stars, indexed `.N`
+selectors, extension selectors, comma/all selections and multistream merging
+remain outside the supported grammar. Literal extension-shaped IDs retain their
+existing ID meaning; they do not request an extension automatically.
+
+The shared expression fixtures compare selected IDs against actual pinned
+`YoutubeDL.build_format_selector` with an explicitly ordered format list and
+context flags. No upstream sorter runs. They cover groups, precedence, aliases,
+bare/group filters and unavailable branches; they do not establish full ranking,
+codec/modifier, incomplete-format fallback, stream deduplication or container parity.
+Native pair/group policy remains documented separately. Source and command:
+
+```sh
+python3 tools/compare_selectors.py --upstream /path/to/yt-dlp
+```
+
+See [the source slice](../upstream/notes/selector-groups.md).

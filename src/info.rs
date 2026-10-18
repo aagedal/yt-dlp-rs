@@ -1,4 +1,4 @@
-use crate::selector::{self, Atom};
+use crate::selector::{self, Atom, Expression};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -167,13 +167,21 @@ pub struct VideoInfo {
     pub height: Option<u32>,
 }
 
+enum Pick<'a> {
+    Single {
+        format: &'a VideoFormat,
+        literal: bool,
+    },
+    Pair(&'a VideoFormat, &'a VideoFormat),
+}
+
 impl VideoInfo {
     /// Select a supported source or explicit pair without implicit merger preference.
     pub fn select_format(&mut self, requested: Option<&str>) -> crate::Result<()> {
         self.select_format_with_merge(requested, false)
     }
 
-    /// Bounded native selector grammar: filtered atoms, two-stream `+`, and `/` fallback.
+    /// Bounded native selector grammar: filtered groups/atoms, two-stream `+`, and `/` fallback.
     /// Only the implicit default considers `prefer_merge`; explicit `best` remains
     /// an independently playable source. Selection failures preserve all fields.
     pub(crate) fn select_format_with_merge(
@@ -186,14 +194,9 @@ impl VideoInfo {
         } else {
             "best"
         });
-        let branches = selector::parse(expression)?;
+        let expression = selector::parse(expression)?;
         if self.formats.is_empty() {
-            return if branches.iter().any(|branch| {
-                branch.len() == 1
-                    && matches!(branch[0].name.as_str(), "best" | "worst")
-                    && branch[0].matches_info(self)
-            }) && self.stream_kind != StreamKind::VideoOnly
-            {
+            return if self.matches_implicit(&expression) {
                 self.requested_formats.clear();
                 Ok(())
             } else {
@@ -202,38 +205,36 @@ impl VideoInfo {
                 ))
             };
         }
-        for branch in branches {
-            if branch.len() == 1 {
-                let Some(first) = self.select_atom(&branch[0]) else {
-                    continue;
-                };
-                let first = first.clone();
-                self.apply_single(&first);
-                return Ok(());
+        let context: Vec<_> = self.formats.iter().collect();
+        if let Some(selected) = self.evaluate(&expression, &context).into_iter().next() {
+            match selected {
+                Pick::Single { format, .. } => {
+                    let format = format.clone();
+                    self.apply_single(&format);
+                }
+                Pick::Pair(first, second) => {
+                    let (video, audio) = if first.stream_kind == StreamKind::VideoOnly {
+                        (first, second)
+                    } else {
+                        (second, first)
+                    };
+                    let ext = merge_extension(video, audio).expect("selected compatible pair");
+                    let selected = vec![first.clone(), second.clone()];
+                    let (width, height) = (video.width, video.height);
+                    self.url = selected[0].url.clone();
+                    self.format_id = Some(format!(
+                        "{}+{}",
+                        selected[0].format_id, selected[1].format_id
+                    ));
+                    self.ext = ext.into();
+                    self.filesize = None;
+                    self.width = width;
+                    self.height = height;
+                    self.stream_kind = StreamKind::Standalone;
+                    self.fragments.clear();
+                    self.requested_formats = selected;
+                }
             }
-            let Some((first, second)) = self.select_pair(&branch[0], &branch[1]) else {
-                continue;
-            };
-            let (video, audio) = if first.stream_kind == StreamKind::VideoOnly {
-                (first, second)
-            } else {
-                (second, first)
-            };
-            let ext = merge_extension(video, audio).expect("selected compatible pair");
-            let selected = vec![first.clone(), second.clone()];
-            let (width, height) = (video.width, video.height);
-            self.url = selected[0].url.clone();
-            self.format_id = Some(format!(
-                "{}+{}",
-                selected[0].format_id, selected[1].format_id
-            ));
-            self.ext = ext.into();
-            self.filesize = None;
-            self.width = width;
-            self.height = height;
-            self.stream_kind = StreamKind::Standalone;
-            self.fragments.clear();
-            self.requested_formats = selected;
             return Ok(());
         }
         let merge_hint = if self
@@ -267,16 +268,83 @@ impl VideoInfo {
         self.requested_formats.clear();
     }
 
-    fn select_atom(&self, atom: &Atom) -> Option<&VideoFormat> {
-        self.ranked_atom(atom).into_iter().next()
+    fn matches_implicit(&self, expression: &Expression) -> bool {
+        match expression {
+            Expression::Atom(atom) => {
+                matches!(atom.name.as_str(), "best" | "worst")
+                    && self.stream_kind != StreamKind::VideoOnly
+                    && atom.matches_info(self)
+            }
+            Expression::First(choices) => {
+                choices.iter().any(|choice| self.matches_implicit(choice))
+            }
+            Expression::Merge(..) => false,
+            Expression::Group { inner, filter } => {
+                filter.matches_info(self) && self.matches_implicit(inner)
+            }
+        }
     }
 
-    fn select_pair(&self, first: &Atom, second: &Atom) -> Option<(&VideoFormat, &VideoFormat)> {
-        let first_formats = self.ranked_atom(first);
-        let second_formats = self.ranked_atom(second);
+    fn evaluate<'a>(
+        &'a self,
+        expression: &Expression,
+        context: &[&'a VideoFormat],
+    ) -> Vec<Pick<'a>> {
+        match expression {
+            Expression::Atom(atom) => Self::ranked_atom(atom, context)
+                .into_iter()
+                .map(|format| Pick::Single {
+                    format,
+                    literal: !atom.is_selector(),
+                })
+                .collect(),
+            Expression::First(choices) => {
+                for choice in choices {
+                    let selected = self.evaluate(choice, context);
+                    if !selected.is_empty() {
+                        return selected;
+                    }
+                }
+                Vec::new()
+            }
+            Expression::Merge(first, second) => {
+                let first = self.evaluate(first, context);
+                let second = self.evaluate(second, context);
+                self.select_pair_candidates(&first, &second)
+                    .into_iter()
+                    .map(|(first, second)| Pick::Pair(first, second))
+                    .collect()
+            }
+            Expression::Group { inner, filter } => {
+                let narrowed: Vec<_> = context
+                    .iter()
+                    .copied()
+                    .filter(|f| filter.matches(f))
+                    .collect();
+                self.evaluate(inner, &narrowed)
+            }
+        }
+    }
+
+    fn select_pair_candidates<'a>(
+        &self,
+        first: &[Pick<'a>],
+        second: &[Pick<'a>],
+    ) -> Option<(&'a VideoFormat, &'a VideoFormat)> {
+        let singles = |candidates: &[Pick<'a>]| {
+            candidates
+                .iter()
+                .filter_map(|pick| match pick {
+                    Pick::Single { format, literal } => Some((*format, *literal)),
+                    Pick::Pair(..) => None,
+                })
+                .collect::<Vec<_>>()
+        };
+        let first_formats = singles(first);
+        let second_formats = singles(second);
         let reversed = match (
-            first_formats.first()?.stream_kind,
-            second_formats.first()?.stream_kind,
+            first_formats.first()?.0.stream_kind,
+            second_formats.first()?.0.stream_kind,
         ) {
             (StreamKind::VideoOnly, StreamKind::AudioOnly) => false,
             (StreamKind::AudioOnly, StreamKind::VideoOnly) => true,
@@ -287,12 +355,11 @@ impl VideoInfo {
         } else {
             (&first_formats, &second_formats)
         };
-        let manual_pair = !first.is_selector() && !second.is_selector();
         // A video's rendition group determines its compatible audio. Evaluate
         // videos first even when the expression puts the audio atom first.
-        for video in videos {
-            for audio in audios {
-                if (manual_pair || video.audio_group == audio.audio_group)
+        for &(video, video_literal) in videos {
+            for &(audio, audio_literal) in audios {
+                if (video_literal && audio_literal || video.audio_group == audio.audio_group)
                     && merge_extension(video, audio).is_some()
                 {
                     return Some(if reversed {
@@ -306,9 +373,13 @@ impl VideoInfo {
         None
     }
 
-    fn ranked_atom(&self, atom: &Atom) -> Vec<&VideoFormat> {
+    fn ranked_atom<'a>(atom: &Atom, context: &[&'a VideoFormat]) -> Vec<&'a VideoFormat> {
         // Predicates narrow the candidate set before kind fallback and ranking.
-        let candidates: Vec<_> = self.formats.iter().filter(|f| atom.matches(f)).collect();
+        let candidates: Vec<_> = context
+            .iter()
+            .copied()
+            .filter(|f| atom.matches(f))
+            .collect();
         let (kind, worst) = match atom.name.as_str() {
             "best" | "worst" => {
                 let kind = if candidates
@@ -723,7 +794,7 @@ mod tests {
             "v1+a1+a2",
             "v1/",
             "/v1",
-            "v1/(a1)",
+            "v1/(a1,)",
             "v1/a1[unsupported_field>10]",
             "v1,a1",
             "v1/a1|a2",
@@ -909,7 +980,7 @@ mod tests {
         let mut video = info(Vec::new());
         video.select_format(Some("missing/best")).unwrap();
         let before = snapshot(&video);
-        assert!(video.select_format(Some("best/(bad)")).is_err());
+        assert!(video.select_format(Some("best/(bad,)")).is_err());
         assert_eq!(snapshot(&video), before);
         video.stream_kind = StreamKind::VideoOnly;
         assert!(video.select_format(None).is_err());
@@ -1006,6 +1077,76 @@ mod tests {
         ] {
             assert!(video.select_format(Some(expression)).is_err());
             assert_eq!(snapshot(&video), before);
+        }
+    }
+
+    #[test]
+    fn grouped_fallbacks_keep_boundaries_and_literal_group_override() {
+        let mut video = adaptive();
+        for format in &mut video.formats {
+            format.audio_group = Some(
+                if format.stream_kind == StreamKind::VideoOnly {
+                    "video"
+                } else {
+                    "audio"
+                }
+                .into(),
+            );
+        }
+        video.select_format(Some("(v1/bv)+a1")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v1+a1"));
+        let before = snapshot(&video);
+        assert!(video.select_format(Some("(bv/v1)+a1")).is_err());
+        assert_eq!(snapshot(&video), before);
+        video.select_format(Some("((bv/v1)+a1)/(v1+a1)")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v1+a1"));
+    }
+
+    #[test]
+    fn saved_grouped_selector_expressions_match_pinned_upstream_ids() {
+        let fixture: Value =
+            serde_json::from_str(include_str!("../tests/fixtures/selectors/expressions.json"))
+                .unwrap();
+        let original: VideoInfo = serde_json::from_value(fixture["info"].clone()).unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let expression = case["selector"].as_str().unwrap();
+            let mut info = original.clone();
+            let before = snapshot(&info);
+            let expected: Vec<_> = case["expected_ids"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|id| id.as_str().unwrap())
+                .collect();
+            let selected = info.select_format(Some(expression));
+            if expected.is_empty() {
+                assert!(
+                    matches!(selected, Err(crate::Error::FormatSelection(_))),
+                    "{expression}"
+                );
+                assert_eq!(snapshot(&info), before, "{expression}");
+            } else {
+                selected.unwrap_or_else(|error| panic!("{expression}: {error}"));
+                let actual: Vec<_> = if info.requested_formats.is_empty() {
+                    vec![info.format_id.as_deref().unwrap()]
+                } else {
+                    info.requested_formats
+                        .iter()
+                        .map(|format| format.format_id.as_str())
+                        .collect()
+                };
+                assert_eq!(actual, expected, "{expression}");
+            }
+        }
+        for case in fixture["invalid_cases"].as_array().unwrap() {
+            let mut info = original.clone();
+            let before = snapshot(&info);
+            let expression = case["selector"].as_str().unwrap();
+            assert!(
+                info.select_format(Some(expression)).is_err(),
+                "{expression}"
+            );
+            assert_eq!(snapshot(&info), before, "{expression}");
         }
     }
 }

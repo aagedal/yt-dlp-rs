@@ -24,7 +24,7 @@ struct Args {
     /// Extract metadata without writing media
     #[arg(short = 's', long)]
     simulate: bool,
-    /// Format ID or selector with filters, two-stream + pairs and / fallbacks
+    /// Format ID or grouped selector with filters, two-stream + pairs and / fallbacks
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
     /// Retry transient download failures this many times (0 disables retries)
