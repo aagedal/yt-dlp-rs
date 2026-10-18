@@ -164,7 +164,10 @@ fn success_reports_download_headers_bytes_and_publication_order() {
         .download_with_progress(
             &info,
             &destination,
-            DownloadOptions { retries: 0 },
+            DownloadOptions {
+                retries: 0,
+                ..Default::default()
+            },
             |event| {
                 // Even Publishing is cancellable before the final path appears.
                 assert!(!destination.exists());
@@ -217,7 +220,10 @@ fn unknown_download_length_does_not_reuse_extraction_length() {
             .download_with_progress(
                 &info,
                 directory.path().join("clip.mp4"),
-                DownloadOptions { retries: 0 },
+                DownloadOptions {
+                    retries: 0,
+                    ..Default::default()
+                },
                 |event| {
                     events.push(event);
                     ControlFlow::Continue(())
@@ -246,7 +252,10 @@ fn cancellation_before_request_after_bytes_and_before_publication_cleans_output(
             .download_with_progress(
                 &info,
                 directory.path().join("clip.mp4"),
-                DownloadOptions { retries: 2 },
+                DownloadOptions {
+                    retries: 2,
+                    ..Default::default()
+                },
                 |event| {
                     assert!(!cancelled, "callback invoked after cancellation");
                     if event.phase == phase
@@ -296,7 +305,10 @@ fn cancellation_during_retry_after_wait_prevents_the_retry() {
         .download_with_progress(
             &info,
             directory.path().join("clip.mp4"),
-            DownloadOptions { retries: 1 },
+            DownloadOptions {
+                retries: 1,
+                ..Default::default()
+            },
             |event| {
                 if event.phase == DownloadPhase::WaitingToRetry {
                     waits += 1;
@@ -343,7 +355,10 @@ fn resumed_retry_keeps_offsets_and_original_total() {
             .download_with_progress(
                 &info,
                 &destination,
-                DownloadOptions { retries: 1 },
+                DownloadOptions {
+                    retries: 1,
+                    ..Default::default()
+                },
                 |event| {
                     events.push(event);
                     ControlFlow::Continue(())
@@ -397,7 +412,10 @@ fn full_response_to_range_retry_resets_bytes_and_total() {
             .download_with_progress(
                 &info,
                 &destination,
-                DownloadOptions { retries: 1 },
+                DownloadOptions {
+                    retries: 1,
+                    ..Default::default()
+                },
                 |event| {
                     events.push(event);
                     ControlFlow::Continue(())
@@ -463,7 +481,10 @@ fn destination_created_during_publication_is_preserved_and_temp_is_removed() {
         .download_with_progress(
             &info,
             &destination,
-            DownloadOptions { retries: 2 },
+            DownloadOptions {
+                retries: 2,
+                ..Default::default()
+            },
             |event| {
                 assert!(!publishing, "callback invoked after publication attempt");
                 if event.phase == DownloadPhase::Publishing {

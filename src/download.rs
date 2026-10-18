@@ -82,11 +82,21 @@ impl Reporter<'_> {
 pub struct DownloadOptions {
     /// Additional attempts after a transient failure, from zero to 255.
     pub retries: u8,
+    /// `--min-filesize`: abort a whole-file media transfer whose declared
+    /// length is smaller (upstream HTTP downloader check).
+    pub min_filesize: Option<u64>,
+    /// `--max-filesize`: abort a whole-file media transfer whose declared
+    /// length is larger.
+    pub max_filesize: Option<u64>,
 }
 
 impl Default for DownloadOptions {
     fn default() -> Self {
-        Self { retries: 3 }
+        Self {
+            retries: 3,
+            min_filesize: None,
+            max_filesize: None,
+        }
     }
 }
 
@@ -220,6 +230,7 @@ pub fn download(
             referrer: (!info.direct).then_some(&info.webpage_url),
             validate_media: !info.direct,
             subtitle: false,
+            limits: (options.min_filesize, options.max_filesize),
         },
         destination,
         options,
@@ -245,6 +256,7 @@ pub(crate) fn download_subtitle(
             referrer: Some(&info.webpage_url),
             validate_media: false,
             subtitle: true,
+            limits: (None, None),
         },
         destination,
         options,
@@ -257,6 +269,8 @@ struct HttpResource<'a> {
     referrer: Option<&'a url::Url>,
     validate_media: bool,
     subtitle: bool,
+    /// Minimum/maximum declared total length in bytes.
+    limits: (Option<u64>, Option<u64>),
 }
 
 fn download_resource(
@@ -374,6 +388,23 @@ fn download_attempt(
             "source no longer serves supported direct HTTP media".into(),
         )
         .into());
+    }
+    if let Some(total) = expected {
+        match resource.limits {
+            (Some(min), _) if total < min => {
+                return Err(Error::FileSizeLimit(format!(
+                    "File is smaller than min-filesize ({total} bytes < {min} bytes). Aborting."
+                ))
+                .into());
+            }
+            (_, Some(max)) if total > max => {
+                return Err(Error::FileSizeLimit(format!(
+                    "File is larger than max-filesize ({total} bytes > {max} bytes). Aborting."
+                ))
+                .into());
+            }
+            _ => {}
+        }
     }
     reporter.total = expected;
     reporter.report(DownloadPhase::Downloading, *actual)?;

@@ -215,7 +215,10 @@ fn subtitle_source_preference_and_actual_sidecar_preserve_raw_caption_n_and_cano
             &info,
             selected,
             &path,
-            crate::DownloadOptions { retries: 0 },
+            crate::DownloadOptions {
+                retries: 0,
+                ..Default::default()
+            },
             |progress| {
                 publication_seen |= progress.phase == crate::DownloadPhase::Publishing;
                 std::ops::ControlFlow::Continue(())

@@ -47,6 +47,10 @@ pub enum Error {
     InvalidRangeResponse,
     #[error("download cancelled")]
     DownloadCancelled,
+    /// A `--min-filesize`/`--max-filesize` limit skipped the transfer; upstream
+    /// reports this without an error or archive record.
+    #[error("{0}")]
+    FileSizeLimit(String),
     #[error("postprocessing failed: {0}")]
     Postprocess(String),
     #[error("info JSON failed: {0}")]

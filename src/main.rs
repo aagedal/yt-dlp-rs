@@ -224,6 +224,15 @@ struct Args {
     /// Do not overwrite the video, but overwrite related files (default)
     #[arg(long, overrides_with_all = ["no_overwrites", "force_overwrites", "no_force_overwrites"])]
     no_force_overwrites: bool,
+    /// Abort after processing NUMBER videos (0 means no limit)
+    #[arg(long, value_name = "NUMBER", allow_hyphen_values = true)]
+    max_downloads: Option<i64>,
+    /// Skip media downloads smaller than SIZE, e.g. 50k or 44.6M
+    #[arg(long, value_name = "SIZE")]
+    min_filesize: Option<String>,
+    /// Skip media downloads larger than SIZE, e.g. 50k or 44.6M
+    #[arg(long, value_name = "SIZE")]
+    max_filesize: Option<String>,
     /// Output directories: [TYPES:]PATH with home (default) or an output type such as subtitle/infojson
     #[arg(short = 'P', long, value_name = "[TYPES:]PATH")]
     paths: Vec<String>,
@@ -352,6 +361,45 @@ fn single_json(
             Ok(value)
         }
     }
+}
+
+/// Upstream `parse_bytes`: `NUMBER[.DIGITS][ ]UNIT` with binary K..Y units,
+/// rounded half to even. Non-ASCII digits are not accepted natively.
+fn parse_bytes(value: &str) -> Option<u64> {
+    let upper = value.to_uppercase();
+    let digits = upper
+        .find(|c: char| !c.is_ascii_digit())
+        .unwrap_or(upper.len());
+    if digits == 0 {
+        return None;
+    }
+    let mut end = digits;
+    if let Some(fraction) = upper[end..].strip_prefix('.') {
+        let length = fraction
+            .find(|c: char| !c.is_ascii_digit())
+            .unwrap_or(fraction.len());
+        if length == 0 {
+            return None;
+        }
+        end += 1 + length;
+    }
+    let number: f64 = upper[..end].parse().ok()?;
+    let rest = &upper[end..];
+    let unit = rest.trim_start_matches(yt_dlp_rs::batch::is_py_space);
+    let power = match unit {
+        // `\b` after an empty unit cannot follow consumed whitespace.
+        "" if unit.len() == rest.len() => 0,
+        "" => return None,
+        unit => "KMGTPEZY".find(unit).filter(|_| unit.len() == 1)? as i32 + 1,
+    };
+    let bytes = (number * 1024f64.powi(power)).round_ties_even();
+    (bytes.is_finite() && bytes <= u64::MAX as f64).then_some(bytes as u64)
+}
+
+fn size_option(name: &str, value: Option<&str>) -> Result<Option<u64>, String> {
+    value
+        .map(|value| parse_bytes(value).ok_or_else(|| format!("invalid {name} \"{value}\" given")))
+        .transpose()
 }
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
@@ -524,6 +572,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     };
     // Like upstream, simulation never writes info JSON.
     let writes_info_json = args.write_info_json && !simulate;
+    let min_filesize = size_option("min filesize", args.min_filesize.as_deref())?;
+    let max_filesize = size_option("max filesize", args.max_filesize.as_deref())?;
+    // Upstream compares against `float(max_downloads or 'inf')`.
+    let max_downloads = args.max_downloads.filter(|&limit| limit != 0);
+    let mut processed: i64 = 0;
+    let mut max_reached = false;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in urls {
@@ -614,6 +668,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .then(|| single_json(&extracted, counts))
             .transpose()?;
         for info in extracted.into_entries() {
+            let mut counted = false;
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 if args.list_subs {
                     if !info.automatic_captions.is_empty() {
@@ -627,6 +682,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 if listing && !args.dump_json && !printing && simulate {
                     return Ok(());
                 }
+                // Upstream `process_info` counts every processed video.
+                counted = true;
                 if printing {
                     let filename = prepare_media(&templates, &info, &template_options)
                         .map(|path| path.to_string_lossy().into_owned());
@@ -807,6 +864,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     &subtitle_path,
                                     DownloadOptions {
                                         retries: args.retries,
+                                        ..Default::default()
                                     },
                                 )?;
                             }
@@ -902,6 +960,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             &path,
                             DownloadOptions {
                                 retries: args.retries,
+                                min_filesize,
+                                max_filesize,
                             },
                             &processors,
                             progress,
@@ -919,6 +979,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             &path,
                             DownloadOptions {
                                 retries: args.retries,
+                                min_filesize,
+                                max_filesize,
                             },
                             progress,
                         )?;
@@ -958,10 +1020,35 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 Ok(())
             })();
-            if let Err(error) = result {
-                eprintln!("ERROR: {url}: {}: {error}", info.id);
-                failed = true;
+            let succeeded = match result {
+                Ok(()) => true,
+                Err(error) => match error.downcast_ref::<yt_dlp_rs::Error>() {
+                    // Upstream skips the transfer without an error or archive record.
+                    Some(yt_dlp_rs::Error::FileSizeLimit(message)) => {
+                        eprintln!("[download] {message}");
+                        true
+                    }
+                    _ => {
+                        eprintln!("ERROR: {url}: {}: {error}", info.id);
+                        failed = true;
+                        false
+                    }
+                },
+            };
+            if counted {
+                processed += 1;
             }
+            if succeeded && counted && max_downloads.is_some_and(|limit| processed >= limit) {
+                eprintln!(
+                    "[info] Maximum number of downloads reached, stopping due to --max-downloads"
+                );
+                eprintln!("Aborting remaining downloads");
+                max_reached = true;
+                break;
+            }
+        }
+        if max_reached {
+            break;
         }
         if let Some(value) = single_json {
             serde_json::to_writer(&mut stdout, &value)?;
@@ -983,8 +1070,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             failed = true;
         }
     }
+    if max_reached {
+        return Err(Box::new(MaxDownloads));
+    }
     Ok(!failed)
 }
+
+/// Upstream exits with 101 after `--max-downloads` cancels remaining work.
+#[derive(Debug)]
+struct MaxDownloads;
+
+impl std::fmt::Display for MaxDownloads {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("maximum number of downloads reached")
+    }
+}
+
+impl std::error::Error for MaxDownloads {}
 
 fn epoch() -> u64 {
     std::time::SystemTime::now()
@@ -1065,6 +1167,7 @@ fn main() -> std::process::ExitCode {
     match run() {
         Ok(true) => std::process::ExitCode::SUCCESS,
         Ok(false) => std::process::ExitCode::FAILURE,
+        Err(error) if error.is::<MaxDownloads>() => std::process::ExitCode::from(101),
         Err(error) => {
             eprintln!("ERROR: {error}");
             std::process::ExitCode::FAILURE
@@ -1075,6 +1178,38 @@ fn main() -> std::process::ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn parse_bytes_matches_upstream_vectors() {
+        // Pinned upstream `parse_bytes`; values beyond u64 are rejected natively.
+        let cases: &[(&str, Option<u64>)] = &[
+            ("50k", Some(51200)),
+            ("44.6M", Some(46766490)),
+            ("1.5", Some(2)),
+            ("2.5", Some(2)),
+            ("10 k", Some(10240)),
+            ("10\tK", Some(10240)),
+            ("1e3", None),
+            (".5k", None),
+            ("5.k", None),
+            ("0", Some(0)),
+            ("-1", None),
+            ("1KiB", None),
+            ("1b", None),
+            ("1_0", None),
+            ("10 ", None),
+            ("1g", Some(1073741824)),
+            ("3y", None),
+            ("1.25K", Some(1280)),
+            ("0.5", Some(0)),
+            ("k", None),
+            ("12345678901234567890", Some(12345678901234567168)),
+            ("1KK", None),
+        ];
+        for (value, expected) in cases {
+            assert_eq!(parse_bytes(value), *expected, "{value:?}");
+        }
+    }
 
     #[test]
     fn saved_upstream_simulation_resolution() {

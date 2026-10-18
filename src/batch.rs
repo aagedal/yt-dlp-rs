@@ -7,7 +7,7 @@ use std::{
 
 /// Python `str.isspace`: Rust's White_Space set plus the ASCII separators
 /// U+001C..=U+001F, which Python also treats as whitespace.
-fn is_py_space(c: char) -> bool {
+pub fn is_py_space(c: char) -> bool {
     c.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&c)
 }
 

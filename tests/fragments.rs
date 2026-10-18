@@ -197,7 +197,10 @@ fn retries_discard_partial_fragment_without_repeating_previous_fragments() {
         .download_with_progress(
             &server.whole(),
             &output,
-            DownloadOptions { retries: 1 },
+            DownloadOptions {
+                retries: 1,
+                ..Default::default()
+            },
             |event| {
                 progress.push(event);
                 ControlFlow::Continue(())
@@ -241,7 +244,10 @@ fn transient_status_retries_and_cancelled_retry_wait_cleans_output() {
         let result = YoutubeDl::new().unwrap().download_with_progress(
             &server.whole(),
             &output,
-            DownloadOptions { retries: 1 },
+            DownloadOptions {
+                retries: 1,
+                ..Default::default()
+            },
             |event| {
                 if cancel && event.phase == DownloadPhase::WaitingToRetry {
                     ControlFlow::Break(())
@@ -491,7 +497,14 @@ fn exhausted_partial_fragment_retries_remove_the_assembled_prefix() {
     assert!(
         YoutubeDl::new()
             .unwrap()
-            .download_with_options(&server.whole(), &output, DownloadOptions { retries: 1 })
+            .download_with_options(
+                &server.whole(),
+                &output,
+                DownloadOptions {
+                    retries: 1,
+                    ..Default::default()
+                }
+            )
             .is_err()
     );
     assert_eq!(server.requests().len(), 3);
