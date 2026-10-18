@@ -1,6 +1,6 @@
 //! Bounded, pure HLS VOD parsing. Transport and playlist traversal live elsewhere.
 use crate::{ByteRange, Error, Fragment, HlsAes128, Result, StreamKind};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use url::Url;
 
 const MAX_FRAGMENTS: usize = 10_000;
@@ -8,7 +8,10 @@ const MAX_VARIANTS: usize = 256;
 
 #[derive(Debug)]
 pub(crate) enum Playlist {
-    Master(Vec<Variant>),
+    Master {
+        variants: Vec<Variant>,
+        audio: Vec<AudioRendition>,
+    },
     Media {
         fragments: Vec<Fragment>,
         ext: String,
@@ -23,6 +26,17 @@ pub(crate) struct Variant {
     pub width: Option<u32>,
     pub height: Option<u32>,
     pub stream_kind: StreamKind,
+    pub audio_group: Option<String>,
+}
+
+#[derive(Debug)]
+pub(crate) struct AudioRendition {
+    pub url: Url,
+    pub group_id: String,
+    pub name: String,
+    pub language: Option<String>,
+    pub default: bool,
+    pub autoselect: bool,
 }
 
 fn invalid(message: impl Into<String>) -> Error {
@@ -218,7 +232,7 @@ fn variant(
     url: Url,
     groups: &BTreeMap<(&str, &str), bool>,
 ) -> Result<Variant> {
-    for group_type in ["AUDIO", "SUBTITLES", "VIDEO", "CLOSED-CAPTIONS"] {
+    for group_type in ["SUBTITLES", "VIDEO", "CLOSED-CAPTIONS"] {
         if let Some(group) = values.get(group_type).filter(|group| **group != "NONE")
             && groups.get(&(group_type, *group)) != Some(&false)
         {
@@ -227,6 +241,14 @@ fn variant(
             ));
         }
     }
+    let audio_group = values.get("AUDIO").filter(|group| **group != "NONE");
+    let external_audio = if let Some(group) = audio_group {
+        *groups
+            .get(&("AUDIO", *group))
+            .ok_or_else(|| invalid("unresolved HLS audio rendition group"))?
+    } else {
+        false
+    };
     let bandwidth = |name| {
         values
             .get(name)
@@ -245,7 +267,7 @@ fn variant(
     } else {
         (None, None)
     };
-    let stream_kind = if let Some(codecs) = values.get("CODECS") {
+    let mut stream_kind = if let Some(codecs) = values.get("CODECS") {
         let mut video = false;
         let mut audio = false;
         for codec in codecs.split(',').map(str::trim) {
@@ -265,12 +287,21 @@ fn variant(
     } else {
         StreamKind::Standalone
     };
+    if external_audio {
+        if !values.contains_key("CODECS") || stream_kind == StreamKind::AudioOnly {
+            return Err(invalid(
+                "external HLS audio requires known video CODECS on its variant",
+            ));
+        }
+        stream_kind = StreamKind::VideoOnly;
+    }
     Ok(Variant {
         url,
         bandwidth: bandwidth("AVERAGE-BANDWIDTH").or_else(|| bandwidth("BANDWIDTH")),
         width,
         height,
         stream_kind,
+        audio_group: audio_group.map(|group| (*group).to_owned()),
     })
 }
 
@@ -285,6 +316,10 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         return Err(invalid("missing HLS EXTM3U header"));
     }
     let mut groups = BTreeMap::new();
+    let mut audio = Vec::new();
+    let mut audio_names = BTreeSet::new();
+    let mut default_groups = BTreeSet::new();
+    let mut rendition_count = 0usize;
     for line in &lines {
         if let Some(value) = line.strip_prefix("#EXT-X-MEDIA:") {
             let attrs = attributes(value)?;
@@ -299,6 +334,55 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 return Err(invalid("unsupported HLS rendition type"));
             }
             let external = attrs.contains_key("URI");
+            rendition_count += 1;
+            if rendition_count > MAX_VARIANTS {
+                return Err(invalid("HLS variant/rendition limit exceeded"));
+            }
+            if *kind == "AUDIO" {
+                if groups
+                    .get(&(*kind, *group))
+                    .is_some_and(|previous| *previous != external)
+                {
+                    return Err(invalid(
+                        "mixed external and inband HLS audio group is unsupported",
+                    ));
+                }
+                let name = attrs
+                    .get("NAME")
+                    .filter(|name| !name.is_empty())
+                    .ok_or_else(|| invalid("HLS audio rendition has no NAME"))?;
+                if !audio_names.insert((*group, *name)) {
+                    return Err(invalid("duplicate HLS audio rendition group/name"));
+                }
+                let flag = |name| match attrs.get(name) {
+                    None | Some(&"NO") => Ok(false),
+                    Some(&"YES") => Ok(true),
+                    _ => Err(invalid("HLS audio rendition flag must be YES or NO")),
+                };
+                let default = flag("DEFAULT")?;
+                let autoselect = flag("AUTOSELECT")?;
+                if default && !default_groups.insert(*group) {
+                    return Err(invalid(
+                        "multiple default HLS audio renditions in one group",
+                    ));
+                }
+                if default && attrs.get("AUTOSELECT") == Some(&"NO") {
+                    return Err(invalid(
+                        "default HLS audio rendition cannot disable AUTOSELECT",
+                    ));
+                }
+                let language = attrs.get("LANGUAGE").map(|language| (*language).to_owned());
+                if let Some(uri) = attrs.get("URI") {
+                    audio.push(AudioRendition {
+                        url: absolute(base, uri)?,
+                        group_id: (*group).to_owned(),
+                        name: (*name).to_owned(),
+                        language,
+                        default,
+                        autoselect,
+                    });
+                }
+            }
             groups
                 .entry((*kind, *group))
                 .and_modify(|value| *value |= external)
@@ -439,7 +523,7 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         } else {
             let url = absolute(base, line)?;
             if let Some(attrs) = pending_variant.take() {
-                if variants.len() == MAX_VARIANTS {
+                if variants.len() + rendition_count == MAX_VARIANTS {
                     return Err(invalid("HLS variant limit exceeded"));
                 }
                 variants.push(variant(&attrs, url, &groups)?);
@@ -505,11 +589,11 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
     if pending_variant.is_some() || pending_duration || pending_range.is_some() {
         return Err(invalid("incomplete HLS playlist"));
     }
-    if !variants.is_empty() {
+    if !variants.is_empty() || !audio.is_empty() {
         if media_seen {
             return Err(invalid("mixed HLS master/media playlist"));
         }
-        return Ok(Playlist::Master(variants));
+        return Ok(Playlist::Master { variants, audio });
     }
     if !endlist {
         return Err(invalid("live HLS without ENDLIST is unsupported"));
@@ -562,7 +646,7 @@ mod tests {
     }
     #[test]
     fn master_quoted_codecs_dimensions_bandwidth_and_audio_kind() {
-        let Playlist::Master(variants) = parse("#EXTM3U\n#EXT-X-INDEPENDENT-SEGMENTS\n#EXT-X-STREAM-INF:BANDWIDTH=900000,AVERAGE-BANDWIDTH=800000,RESOLUTION=1280x720,CODECS=\"avc1.64001F,mp4a.40.2\"\nvideo/playlist.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=128000,CODECS=\"mp4a.40.2\"\naudio.m3u8", &base()).unwrap() else { panic!() };
+        let Playlist::Master { variants, .. } = parse("#EXTM3U\n#EXT-X-INDEPENDENT-SEGMENTS\n#EXT-X-STREAM-INF:BANDWIDTH=900000,AVERAGE-BANDWIDTH=800000,RESOLUTION=1280x720,CODECS=\"avc1.64001F,mp4a.40.2\"\nvideo/playlist.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=128000,CODECS=\"mp4a.40.2\"\naudio.m3u8", &base()).unwrap() else { panic!() };
         assert_eq!(variants.len(), 2);
         assert_eq!(
             variants[0].url.as_str(),
@@ -579,9 +663,76 @@ mod tests {
     }
     #[test]
     fn master_inband_groups_are_resolved_even_when_declared_later() {
-        let Playlist::Master(variants) = parse("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,AUDIO=\"a\",CLOSED-CAPTIONS=NONE,CODECS=\"avc1.4,mp4a.40.2\"\nv.m3u8\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Audio, original\"", &base()).unwrap() else { panic!() };
+        let Playlist::Master { variants, .. } = parse("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,AUDIO=\"a\",CLOSED-CAPTIONS=NONE,CODECS=\"avc1.4,mp4a.40.2\"\nv.m3u8\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Audio, original\"", &base()).unwrap() else { panic!() };
         assert_eq!(variants[0].stream_kind, StreamKind::Standalone);
     }
+    #[test]
+    fn external_audio_metadata_classifies_referencing_video_and_allows_audio_only_master() {
+        let text = "#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"English, main\",LANGUAGE=\"en\",DEFAULT=YES,AUTOSELECT=YES,URI=\"en.m3u8\"\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Norsk\",LANGUAGE=\"nb\",DEFAULT=NO,AUTOSELECT=YES,URI=\"nb.m3u8\"\n#EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS=\"avc1.4,mp4a.40.2\",AUDIO=\"a\"\nv.m3u8";
+        let Playlist::Master { variants, audio } = parse(text, &base()).unwrap() else {
+            panic!()
+        };
+        assert_eq!(variants[0].stream_kind, StreamKind::VideoOnly);
+        assert_eq!(variants[0].audio_group.as_deref(), Some("a"));
+        assert_eq!(audio.len(), 2);
+        assert_eq!(audio[0].name, "English, main");
+        assert_eq!(audio[0].language.as_deref(), Some("en"));
+        assert_eq!(audio[0].url.as_str(), "https://example.com/path/en.m3u8");
+        assert!(audio[0].default && audio[0].autoselect);
+        assert!(!audio[1].default);
+        let only_audio = text.split("#EXT-X-STREAM-INF").next().unwrap();
+        assert!(
+            matches!(parse(only_audio, &base()).unwrap(), Playlist::Master { variants, audio } if variants.is_empty() && audio.len() == 2)
+        );
+    }
+
+    #[test]
+    fn audio_groups_reject_ambiguous_metadata_and_unclassifiable_video() {
+        let rendition = "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Main\",URI=\"a.m3u8\"";
+        for extra in [
+            ",DEFAULT=maybe",
+            ",AUTOSELECT=yes",
+            ",DEFAULT=YES,AUTOSELECT=NO",
+        ] {
+            assert!(
+                parse(&format!("#EXTM3U\n{rendition}{extra}"), &base()).is_err(),
+                "{extra}"
+            );
+        }
+        for second in [
+            rendition.to_owned(),
+            "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Other\"".into(),
+            format!("{rendition},DEFAULT=YES"),
+        ] {
+            let first = format!("{rendition},DEFAULT=YES");
+            assert!(parse(&format!("#EXTM3U\n{first}\n{second}"), &base()).is_err());
+        }
+        for codec in ["", ",CODECS=\"mp4a.40.2\""] {
+            let text = format!(
+                "#EXTM3U\n{rendition}\n#EXT-X-STREAM-INF:BANDWIDTH=1000,AUDIO=\"a\"{codec}\nv.m3u8"
+            );
+            assert!(parse(&text, &base()).is_err());
+        }
+        for uri in ["", "file:///audio.m3u8", "audio.m3u8#fragment"] {
+            assert!(parse(&format!("#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Main\",URI=\"{uri}\""), &base()).is_err());
+        }
+        let declarations = (0..MAX_VARIANTS)
+            .map(|index| {
+                format!("#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"{index}\",URI=\"a.m3u8\"\n")
+            })
+            .collect::<String>();
+        assert!(parse(&format!("#EXTM3U\n{declarations}"), &base()).is_ok());
+        assert!(
+            parse(
+                &format!(
+                    "#EXTM3U\n{declarations}#EXT-X-STREAM-INF:CODECS=\"avc1.4\",AUDIO=\"a\"\nv.m3u8"
+                ),
+                &base()
+            )
+            .is_err()
+        );
+    }
+
     #[test]
     fn fmp4_map_precedes_explicit_and_implicit_ranges() {
         let (fragments, ext) = media(

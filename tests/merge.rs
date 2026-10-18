@@ -327,22 +327,29 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
     let webm_video: &'static [u8] = include_bytes!("fixtures/merge/video.webm");
     let m4a_audio: &'static [u8] = include_bytes!("fixtures/merge/audio.m4a");
     let webm_audio: &'static [u8] = include_bytes!("fixtures/merge/audio.webm");
+    let ts_video: &'static [u8] = include_bytes!("fixtures/hls/audio-video/video/segment-0.ts");
+    let aac_audio: &'static [u8] = include_bytes!("fixtures/hls/audio-video/audio/segment-0.aac");
+    let ts_audio: &'static [u8] = include_bytes!("fixtures/hls/audio-video/audio/track.ts");
     for (video, audio, video_ext, audio_ext, output_ext, video_codec, audio_codec) in [
         (mp4_video, m4a_audio, "mp4", "m4a", "mp4", "h264", "aac"),
         (
             webm_video, webm_audio, "webm", "webm", "webm", "vp9", "opus",
         ),
         (mp4_video, webm_audio, "mp4", "webm", "mkv", "h264", "opus"),
+        (ts_video, aac_audio, "ts", "aac", "mp4", "h264", "aac"),
+        (ts_video, m4a_audio, "ts", "m4a", "mp4", "h264", "aac"),
+        (ts_video, ts_audio, "ts", "ts", "mp4", "h264", "aac"),
     ] {
-        let video_mime = if video_ext == "webm" {
-            "video/webm"
-        } else {
-            "video/mp4"
+        let video_mime = match video_ext {
+            "webm" => "video/webm",
+            "ts" => "video/mp2t",
+            _ => "video/mp4",
         };
-        let audio_mime = if audio_ext == "webm" {
-            "audio/webm"
-        } else {
-            "audio/mp4"
+        let audio_mime = match audio_ext {
+            "webm" => "audio/webm",
+            "ts" => "video/mp2t",
+            "aac" => "audio/aac",
+            _ => "audio/mp4",
         };
         let server = Server::with_bodies(video, audio, video_mime, audio_mime);
         let mut info = server.info(true);
@@ -350,6 +357,16 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
         // Reversed selection must still map the video to the first output track.
         info.requested_formats[0].ext = audio_ext.into();
         info.requested_formats[1].ext = video_ext.into();
+        // TS files exercise the fragment route used by HLS extraction.
+        for format in &mut info.requested_formats {
+            if format.ext == "ts" {
+                format.fragments = vec![yt_dlp_rs::Fragment {
+                    url: format.url.clone(),
+                    byte_range: None,
+                    encryption: None,
+                }];
+            }
+        }
         let directory = tempfile::tempdir().unwrap();
         let name = format!("out.{output_ext}");
         let output = directory.path().join(&name);
@@ -365,7 +382,7 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
                 "-v",
                 "error",
                 "-show_entries",
-                "stream=codec_name,codec_type:format=format_name",
+                "stream=codec_name,codec_type,extradata_size:format=format_name",
                 "-of",
                 "json",
             ])
@@ -385,6 +402,15 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
         assert_eq!(streams[0]["codec_name"], video_codec);
         assert_eq!(streams[1]["codec_type"], "audio");
         assert_eq!(streams[1]["codec_name"], audio_codec);
+        if output_ext == "mp4" && audio_codec == "aac" {
+            // FFmpeg's MP4 muxer automatically inserts aac_adtstoasc for ADTS
+            // AAC copied from elementary AAC or MPEG-TS inputs.
+            assert!(
+                streams[1]["extradata_size"]
+                    .as_u64()
+                    .is_some_and(|size| size > 0)
+            );
+        }
         let format = info["format"]["format_name"].as_str().unwrap();
         assert!(
             if output_ext == "mp4" {

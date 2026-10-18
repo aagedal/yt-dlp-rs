@@ -29,3 +29,17 @@ encrypted fMP4 resources and declares exact ciphertext ranges.
 Required tests decrypt and compare the exact original clear fixture bytes; the
 same FFprobe option verifies tracks in all three encrypted outputs. OpenSSL and
 Python are regeneration tools only and are unnecessary at runtime or in tests.
+
+The `audio-video` directory contains separate original video-only H.264 TS and
+audio-only AAC/ADTS resources generated with FFmpeg 9.0.2. Its handwritten master
+references the audio group `main`, NAME English, LANGUAGE en and DEFAULT/AUTOSELECT
+YES. Regenerate the resources from the repository root:
+
+```sh
+ffmpeg -nostdin -hide_banner -loglevel error -f lavfi -i color=c=blue:s=32x32:r=10:d=1.8 -an -c:v libx264 -pix_fmt yuv420p -g 6 -threads 1 -hls_time 0.6 -hls_list_size 0 -hls_segment_filename tests/fixtures/hls/audio-video/video/segment-%d.ts -y tests/fixtures/hls/audio-video/video/index.m3u8
+ffmpeg -nostdin -hide_banner -loglevel error -f lavfi -i sine=frequency=440:sample_rate=48000:duration=1.8 -vn -c:a aac -b:a 32k -threads 1 -f segment -segment_time 0.6 -segment_list_type m3u8 -segment_list tests/fixtures/hls/audio-video/audio/index.m3u8 -y tests/fixtures/hls/audio-video/audio/segment-%d.aac
+ffmpeg -nostdin -hide_banner -loglevel error -f lavfi -i sine=frequency=440:sample_rate=48000:duration=1.8 -vn -c:a aac -b:a 32k -threads 1 -f mpegts -y tests/fixtures/hls/audio-video/audio/track.ts
+```
+
+The standalone AAC-in-TS asset additionally verifies the local TS audio demuxer.
+The real merged MP4 tests check H.264 and AAC tracks with AAC codec extradata.

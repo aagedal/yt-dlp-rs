@@ -138,8 +138,8 @@ pub(crate) fn from_response(
             info.ext = ext;
             info.fragments = fragments;
         }
-        Playlist::Master(variants) => {
-            if variants.len() > MAX_VARIANTS {
+        Playlist::Master { variants, audio } => {
+            if variants.len() + audio.len() > MAX_VARIANTS {
                 return Err(unsupported(
                     "HLS master exceeds the 256-variant extraction limit",
                 ));
@@ -162,15 +162,56 @@ pub(crate) fn from_response(
                 info.formats.push(VideoFormat {
                     format_id: format!("hls-{index}"),
                     stream_kind: variant.stream_kind,
+                    audio_group: variant.audio_group,
+                    language: None,
+                    format_note: None,
+                    audio_default: false,
+                    audio_autoselect: false,
                     abr: (variant.stream_kind == StreamKind::AudioOnly)
                         .then_some(variant.bandwidth)
                         .flatten(),
                     tbr: variant.bandwidth,
                     url,
-                    ext,
+                    ext: if variant.stream_kind == StreamKind::AudioOnly && ext == "mp4" {
+                        "m4a".into()
+                    } else {
+                        ext
+                    },
                     filesize: None,
                     width: variant.width,
                     height: variant.height,
+                    fragments,
+                });
+            }
+            for (index, rendition) in audio.into_iter().enumerate() {
+                let response = direct::request(client, &rendition.url, referer)?;
+                let (url, playlist) = read_playlist(response)?;
+                let Playlist::Media { fragments, ext } = playlist else {
+                    return Err(unsupported("nested HLS master playlists are not supported"));
+                };
+                total_fragments = total_fragments
+                    .checked_add(fragments.len())
+                    .ok_or_else(|| unsupported("HLS master fragment count overflow"))?;
+                if total_fragments > MAX_TOTAL_FRAGMENTS {
+                    return Err(unsupported(
+                        "HLS master exceeds the 10000-fragment extraction limit",
+                    ));
+                }
+                info.formats.push(VideoFormat {
+                    format_id: format!("hls-audio-{index}"),
+                    stream_kind: StreamKind::AudioOnly,
+                    audio_group: Some(rendition.group_id),
+                    language: rendition.language,
+                    format_note: Some(rendition.name),
+                    audio_default: rendition.default,
+                    audio_autoselect: rendition.autoselect,
+                    abr: None,
+                    tbr: None,
+                    url,
+                    ext: if ext == "mp4" { "m4a".into() } else { ext },
+                    filesize: None,
+                    width: None,
+                    height: None,
                     fragments,
                 });
             }

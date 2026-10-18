@@ -37,8 +37,10 @@ Supported today:
   master selection, MPEG-TS/AAC segments, one fMP4 initialization map, and exact
   byte ranges. JSON/simulation fetch manifests but never segment bodies.
   Native AES-128 CBC decryption supports identity keys, explicit/sequence IVs and
-  key rotation. Live, SAMPLE-AES/DRM, discontinuous and external-rendition
-  streams remain unsupported.
+  key rotation. External audio renditions retain group, language, name and
+  default/autoselect metadata; automatic merging stays within the declared audio
+  group. Live, SAMPLE-AES/DRM, discontinuous and external video/subtitle
+  renditions remain unsupported.
 - Multiple nonempty media elements form an HTML5 playlist, processed in document
   order. Empty elements are skipped. IDs and titles use upstream's numbered
   `-1` / ` (1)`, `-2` / ` (2)` suffixes. Titles prefer

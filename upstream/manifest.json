@@ -163,9 +163,13 @@
         "src/crypto.rs",
         "tests/hls_aes.rs",
         "tools/generate_hls_aes_fixtures.py",
-        "upstream/notes/hls-aes128.md"
+        "upstream/notes/hls-aes128.md",
+        "tests/hls_audio.rs",
+        "tools/compare_hls_audio.py",
+        "tools/test_compare_hls_audio.py",
+        "upstream/notes/hls-audio.md"
       ],
-      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; no DASH, SAMPLE-AES/DRM, live, discontinuities, external renditions, nested masters or remux parity"
+      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; external AUDIO rendition groups with language/name/default metadata, compatible automatic pair selection, audio-only masters and copy merging; no DASH, SAMPLE-AES/DRM, live, discontinuities, external video/subtitle renditions, nested masters or remux parity"
     },
     {
       "name": "direct-stream-merging",
@@ -186,7 +190,7 @@
         "tests/fixtures/merge/",
         "upstream/notes/youtube-adaptive-merge.md"
       ],
-      "scope": "Explicit executable local two-input stream-copy merging, MP4/M4A to MP4, WebM to WebM and mixed to Matroska, bounded process/pipe execution, cancellation and no-clobber publication; no discovery, installation, transcoding, multistream, fixups or other postprocessing"
+      "scope": "Explicit executable local two-input stream-copy merging, MP4/TS video and M4A/AAC/TS audio to MP4, WebM to WebM and mixed to Matroska, bounded process/pipe execution, cancellation and no-clobber publication; no discovery, installation, transcoding, multistream, fixups or other postprocessing"
     }
   ]
 }

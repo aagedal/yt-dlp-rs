@@ -481,8 +481,8 @@ An explicit pair can be inspected with JSON/simulation without installing FFmpeg
 
 A merge plan carries `requested_formats` in expression order and a joined
 `format_id`. Top-level `url` represents the first source, not a merged HTTP URL;
-callers must honor the plan. MP4 video + M4A audio yields MP4, WebM + WebM yields
-WebM, and mixed containers yield Matroska (`mkv`). The selected video's dimensions
+callers must honor the plan. MP4/TS video + M4A/AAC/TS audio yields MP4, WebM + WebM yields
+WebM, and mixed supported containers yield Matroska (`mkv`). The selected video's dimensions
 are retained; merged filesize is unknown until download. Added serde fields have
 defaults for older metadata, but Rust struct literals must supply the new fields.
 
@@ -542,7 +542,8 @@ an immediately preceding media range on the same URL. Map byte ranges require
 an explicit offset. All ranges are positive with checked arithmetic. Unsupported
 state is an error: live playlists without ENDLIST, SAMPLE-AES/DRM or unsupported
 key formats, discontinuities, gaps, low-latency tags, variables, changing maps,
-external or unresolved rendition groups, nested masters and unknown EXT tags.
+external video/subtitle or unresolved rendition groups, mixed inband/external
+audio groups, nested masters and unknown EXT tags.
 In-band rendition references without external resources are supported. Plain
 comments and recognized informational metadata do not change assembly.
 
@@ -620,3 +621,53 @@ are compared without masking this difference.
 SAMPLE-AES, DRM key formats, session keys, custom key overrides and live/key
 refresh across playlist reloads remain unsupported. See the
 [AES source slice](../upstream/notes/hls-aes128.md).
+
+
+### External HLS audio renditions
+
+`EXT-X-MEDIA:TYPE=AUDIO` declarations with HTTP(S) playlist URIs now expose
+`hls-audio-N` formats after the existing `hls-N` variants. Per-format metadata
+contains `audio_group`, optional `language` and `format_note` (NAME), and true
+`audio_default` / `audio_autoselect` flags. Missing flags are false. Empty/duplicate
+names in a group, multiple default renditions, invalid flag values, and explicit
+DEFAULT=YES with AUTOSELECT=NO fail. Audio-only rendition masters are supported.
+
+A variant that references an external audio group must declare recognized video
+CODECS. It becomes video-only even when CODECS describes both tracks. Missing or
+audio-only CODECS on such a variant fails instead of guessing a complete stream.
+Inband groups retain the existing standalone behavior. Both variant and rendition
+declarations count toward the combined limit of 256; every child playlist is
+read with the existing aggregate 10000-fragment cap. JSON/simulation fetch neither
+segments nor encryption keys. Audio-only fMP4 is labeled M4A; raw AAC and TS retain
+their containers.
+
+Automatic pair selectors choose a complete compatible pair in video rank order,
+then rank audio within that video's group. Both absent groups also match.
+Expression order is preserved in the plan even for `bestaudio+bestvideo`.
+One literal ID constrains the other generic selector to its group. Two literal
+IDs explicitly override group matching, for example `-f hls-0+hls-audio-1`.
+Best audio ranks DEFAULT, then AUTOSELECT, then declared audio/total bitrate;
+worst reverses that ordering. Declaration ties retain existing rules. There is
+no language-filter grammar or full upstream preference/sorting parity.
+
+HTML5 master format IDs and audio groups both receive the source index prefix,
+so equal group names from independent source masters cannot pair automatically.
+Without FFmpeg configuration, implicit default selection fails when only separate
+video/audio formats exist. An explicit pair may still be inspected with JSON.
+With FFmpeg, implicit default prefers a compatible pair and downloads both native
+fragment plans before merging. TS video and AAC/TS audio use fixed local demuxers;
+MP4 muxing relies on FFmpeg's AAC ADTS-to-ASC handling. No transcoding is introduced.
+
+Local tests cover group/default selection, explicit overrides, audio-only masters,
+validation, HTML namespaces, headers and no-segment simulation. Original separate
+H.264 TS and AAC fixtures exercise the complete native-download/FFmpeg path and
+verify both tracks and AAC codec metadata. The optional pinned-parser comparison:
+
+```sh
+python3 tools/compare_hls_audio.py --upstream /path/to/yt-dlp --binary target/debug/yt-dlp-rs
+```
+
+It compares URL-keyed stream kind, language/name, dimensions and total bitrate.
+Format IDs/order, native group/flag fields, selection, ext/remuxing and download
+behavior are explicitly excluded from that comparison. Only the exact local
+origin is normalized. See [the source slice](../upstream/notes/hls-audio.md).

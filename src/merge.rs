@@ -46,11 +46,14 @@ fn merge_with_deadline(
     let started = Instant::now();
     let video_demuxer = match video_ext {
         "mp4" => "mov",
+        "ts" => "mpegts",
         "webm" => "matroska",
         _ => return Err(failure("unsupported video container")),
     };
     let audio_demuxer = match audio_ext {
         "m4a" => "mov",
+        "aac" => "aac",
+        "ts" => "mpegts",
         "webm" => "matroska",
         _ => return Err(failure("unsupported audio container")),
     };
@@ -275,21 +278,31 @@ mod tests {
         deadline: Duration,
         callback: &mut dyn FnMut() -> ControlFlow<()>,
     ) -> Result<Vec<u8>> {
+        run_containers(mode, "mp4", "m4a", "mp4", deadline, callback)
+    }
+    fn run_containers(
+        mode: &str,
+        video_ext: &str,
+        audio_ext: &str,
+        output_ext: &str,
+        deadline: Duration,
+        callback: &mut dyn FnMut() -> ControlFlow<()>,
+    ) -> Result<Vec<u8>> {
         let directory = tempfile::tempdir().unwrap();
-        let video = directory.path().join("video.mp4");
-        let audio = directory.path().join("audio.m4a");
-        let output = directory.path().join("output.mp4");
+        let video = directory.path().join(format!("video.{video_ext}"));
+        let audio = directory.path().join(format!("audio.{audio_ext}"));
+        let output = directory.path().join(format!("output.{output_ext}"));
         std::fs::write(directory.path().join("mode"), mode).unwrap();
         std::fs::write(&video, b"video").unwrap();
         std::fs::write(&audio, b"audio").unwrap();
         merge_with_deadline(
             fake(),
             &video,
-            "mp4",
+            video_ext,
             &audio,
-            "m4a",
+            audio_ext,
             &output,
-            "mp4",
+            output_ext,
             callback,
             deadline,
         )?;
@@ -304,6 +317,29 @@ mod tests {
             .unwrap(),
             b"merged"
         );
+    }
+    #[test]
+    fn hls_containers_use_fixed_local_demuxers_and_explicit_muxers() {
+        for (video, audio, output) in [
+            ("ts", "aac", "mp4"),
+            ("ts", "m4a", "mp4"),
+            ("ts", "ts", "mp4"),
+            ("mp4", "aac", "mp4"),
+            ("webm", "ts", "mkv"),
+        ] {
+            assert_eq!(
+                run_containers(
+                    &format!("success-{video}-{audio}"),
+                    video,
+                    audio,
+                    output,
+                    Duration::from_secs(5),
+                    &mut || ControlFlow::Continue(())
+                )
+                .unwrap(),
+                b"merged"
+            );
+        }
     }
     #[test]
     fn bounded_failures_join_pipes_and_reap_process() {

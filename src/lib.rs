@@ -226,14 +226,8 @@ impl YoutubeDl {
         };
         let video_ext = streams[video].ext.as_str();
         let audio_ext = streams[audio].ext.as_str();
-        if !matches!(video_ext, "mp4" | "webm") || !matches!(audio_ext, "m4a" | "webm") {
-            return Err(Error::Postprocess("unsupported stream containers".into()));
-        }
-        let output_ext = match (video_ext, audio_ext) {
-            ("mp4", "m4a") => "mp4",
-            ("webm", "webm") => "webm",
-            _ => "mkv",
-        };
+        let output_ext = info::merge_extension(&streams[video], &streams[audio])
+            .ok_or_else(|| Error::Postprocess("unsupported stream containers".into()))?;
         if info.ext != output_ext {
             return Err(Error::Postprocess(
                 "merge output container disagrees with selected streams".into(),

@@ -108,6 +108,16 @@ pub struct Fragment {
 /// A direct source or finite manifest plan, with an extractor-assigned format ID.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoFormat {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub audio_group: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub language: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub format_note: Option<String>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub audio_default: bool,
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub audio_autoselect: bool,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub fragments: Vec<Fragment>,
     pub format_id: String,
@@ -189,32 +199,23 @@ impl VideoInfo {
             };
         }
         for branch in branches {
-            let Some(first) = self.select_atom(branch[0]) else {
-                continue;
-            };
             if branch.len() == 1 {
+                let Some(first) = self.select_atom(branch[0]) else {
+                    continue;
+                };
                 let first = first.clone();
                 self.apply_single(&first);
                 return Ok(());
             }
-            let Some(second) = self.select_atom(branch[1]) else {
+            let Some((first, second)) = self.select_pair(branch[0], branch[1]) else {
                 continue;
             };
-            let (video, audio) = match (first.stream_kind, second.stream_kind) {
-                (StreamKind::VideoOnly, StreamKind::AudioOnly) => (first, second),
-                (StreamKind::AudioOnly, StreamKind::VideoOnly) => (second, first),
-                _ => continue,
+            let (video, audio) = if first.stream_kind == StreamKind::VideoOnly {
+                (first, second)
+            } else {
+                (second, first)
             };
-            if !matches!(video.ext.as_str(), "mp4" | "webm")
-                || !matches!(audio.ext.as_str(), "m4a" | "webm")
-            {
-                continue;
-            }
-            let ext = match (video.ext.as_str(), audio.ext.as_str()) {
-                ("mp4", "m4a") => "mp4",
-                ("webm", "webm") => "webm",
-                _ => "mkv",
-            };
+            let ext = merge_extension(video, audio).expect("selected compatible pair");
             let selected = vec![first.clone(), second.clone()];
             let (width, height) = (video.width, video.height);
             self.url = selected[0].url.clone();
@@ -263,6 +264,45 @@ impl VideoInfo {
     }
 
     fn select_atom(&self, atom: &str) -> Option<&VideoFormat> {
+        self.ranked_atom(atom).into_iter().next()
+    }
+
+    fn select_pair(&self, first: &str, second: &str) -> Option<(&VideoFormat, &VideoFormat)> {
+        let first_formats = self.ranked_atom(first);
+        let second_formats = self.ranked_atom(second);
+        let reversed = match (
+            first_formats.first()?.stream_kind,
+            second_formats.first()?.stream_kind,
+        ) {
+            (StreamKind::VideoOnly, StreamKind::AudioOnly) => false,
+            (StreamKind::AudioOnly, StreamKind::VideoOnly) => true,
+            _ => return None,
+        };
+        let (videos, audios) = if reversed {
+            (&second_formats, &first_formats)
+        } else {
+            (&first_formats, &second_formats)
+        };
+        let manual_pair = !is_selector(first) && !is_selector(second);
+        // A video's rendition group determines its compatible audio. Evaluate
+        // videos first even when the expression puts the audio atom first.
+        for video in videos {
+            for audio in audios {
+                if (manual_pair || video.audio_group == audio.audio_group)
+                    && merge_extension(video, audio).is_some()
+                {
+                    return Some(if reversed {
+                        (audio, video)
+                    } else {
+                        (video, audio)
+                    });
+                }
+            }
+        }
+        None
+    }
+
+    fn ranked_atom(&self, atom: &str) -> Vec<&VideoFormat> {
         let (kind, worst) = match atom {
             "best" | "worst" => {
                 let kind = if self
@@ -276,7 +316,7 @@ impl VideoInfo {
                     .iter()
                     .any(|f| f.stream_kind == StreamKind::VideoOnly)
                 {
-                    return None;
+                    return Vec::new();
                 } else {
                     StreamKind::AudioOnly
                 };
@@ -284,24 +324,66 @@ impl VideoInfo {
             }
             "bestaudio" | "worstaudio" => (StreamKind::AudioOnly, atom == "worstaudio"),
             "bestvideo" | "worstvideo" => (StreamKind::VideoOnly, atom == "worstvideo"),
-            id => return self.formats.iter().find(|f| f.format_id == id),
+            id => {
+                return self
+                    .formats
+                    .iter()
+                    .find(|f| f.format_id == id)
+                    .into_iter()
+                    .collect();
+            }
         };
         let compare = |a: &&VideoFormat, b: &&VideoFormat| match kind {
             StreamKind::Standalone => resolution(a).cmp(&resolution(b)),
             StreamKind::VideoOnly => resolution(a)
                 .cmp(&resolution(b))
                 .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr))),
-            StreamKind::AudioOnly => bitrate(a.abr)
-                .total_cmp(&bitrate(b.abr))
+            StreamKind::AudioOnly => a
+                .audio_default
+                .cmp(&b.audio_default)
+                .then_with(|| a.audio_autoselect.cmp(&b.audio_autoselect))
+                .then_with(|| bitrate(a.abr).total_cmp(&bitrate(b.abr)))
                 .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr))),
         };
-        let formats = self.formats.iter().filter(|f| f.stream_kind == kind);
-        if worst {
-            formats.min_by(compare)
-        } else {
-            formats.max_by(compare)
+        let mut formats: Vec<_> = self
+            .formats
+            .iter()
+            .filter(|f| f.stream_kind == kind)
+            .collect();
+        formats.sort_by(compare);
+        if !worst {
+            formats.reverse();
         }
+        formats
     }
+}
+
+fn is_false(value: &bool) -> bool {
+    !value
+}
+
+fn is_selector(atom: &str) -> bool {
+    matches!(
+        atom,
+        "best" | "worst" | "bestaudio" | "worstaudio" | "bestvideo" | "worstvideo"
+    )
+}
+
+/// Shared selection/download container policy. Group matching belongs to selection;
+/// two explicit format IDs may deliberately override rendition-group matching.
+pub(crate) fn merge_extension(video: &VideoFormat, audio: &VideoFormat) -> Option<&'static str> {
+    if video.stream_kind != StreamKind::VideoOnly
+        || audio.stream_kind != StreamKind::AudioOnly
+        || !matches!(video.ext.as_str(), "mp4" | "webm" | "ts")
+        || !matches!(audio.ext.as_str(), "m4a" | "webm" | "aac" | "ts")
+    {
+        return None;
+    }
+    Some(match (video.ext.as_str(), audio.ext.as_str()) {
+        ("mp4" | "ts", "m4a" | "aac" | "ts") => "mp4",
+        ("webm", "webm") => "webm",
+        _ => "mkv",
+    })
 }
 
 fn resolution(format: &VideoFormat) -> Option<u32> {
@@ -354,6 +436,11 @@ mod tests {
         tbr: Option<f64>,
     ) -> VideoFormat {
         VideoFormat {
+            audio_group: None,
+            language: None,
+            format_note: None,
+            audio_default: false,
+            audio_autoselect: false,
             fragments: Vec::new(),
             format_id: id.into(),
             stream_kind: kind,
@@ -674,6 +761,173 @@ mod tests {
             );
             assert_eq!(snapshot(&video), before, "{expression}");
         }
+    }
+
+    fn grouped(mut format: VideoFormat, group: &str) -> VideoFormat {
+        format.audio_group = Some(group.into());
+        format
+    }
+
+    fn grouped_info() -> VideoInfo {
+        info(vec![
+            grouped(
+                source(
+                    "v-a",
+                    StreamKind::VideoOnly,
+                    "ts",
+                    Some(1080),
+                    None,
+                    Some(2000.0),
+                ),
+                "a",
+            ),
+            grouped(
+                source(
+                    "v-b",
+                    StreamKind::VideoOnly,
+                    "ts",
+                    Some(720),
+                    None,
+                    Some(1000.0),
+                ),
+                "b",
+            ),
+            grouped(
+                source("a-a", StreamKind::AudioOnly, "aac", None, Some(64.0), None),
+                "a",
+            ),
+            grouped(
+                source("a-b", StreamKind::AudioOnly, "aac", None, Some(192.0), None),
+                "b",
+            ),
+        ])
+    }
+
+    #[test]
+    fn automatic_pairs_rank_video_before_audio_in_both_expression_orders() {
+        let mut video = grouped_info();
+        video.select_format(Some("bestvideo+bestaudio")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v-a+a-a"));
+        assert_eq!(video.ext, "mp4");
+        video.select_format(Some("bestaudio+bestvideo")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("a-a+v-a"));
+        assert_eq!(video.url, video.requested_formats[0].url);
+        video.formats.retain(|format| format.format_id != "a-a");
+        video.select_format_with_merge(None, true).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v-b+a-b"));
+    }
+
+    #[test]
+    fn one_literal_requires_compatible_group_two_literals_can_override() {
+        let mut video = grouped_info();
+        for (expression, expected) in [
+            ("v-b+bestaudio", "v-b+a-b"),
+            ("bestaudio+v-b", "a-b+v-b"),
+            ("a-b+bestvideo", "a-b+v-b"),
+            ("bestvideo+a-b", "v-b+a-b"),
+            ("v-a+a-b", "v-a+a-b"),
+        ] {
+            video.select_format(Some(expression)).unwrap();
+            assert_eq!(video.format_id.as_deref(), Some(expected));
+        }
+        video.formats.retain(|format| format.format_id != "a-a");
+        let before = snapshot(&video);
+        assert!(video.select_format(Some("v-a+bestaudio")).is_err());
+        assert_eq!(snapshot(&video), before);
+        video
+            .select_format(Some("v-a+bestaudio/v-b+bestaudio"))
+            .unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v-b+a-b"));
+    }
+
+    #[test]
+    fn missing_group_never_matches_a_named_group_automatically() {
+        let mut video = grouped_info();
+        video.formats.retain(|format| format.format_id != "a-a");
+        video.formats.push(source(
+            "ungrouped",
+            StreamKind::AudioOnly,
+            "aac",
+            None,
+            Some(256.0),
+            None,
+        ));
+        video.select_format(Some("bestvideo+bestaudio")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v-b+a-b"));
+        video.formats[0].audio_group = None;
+        video.select_format(Some("bestvideo+bestaudio")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v-a+ungrouped"));
+    }
+
+    #[test]
+    fn audio_rendition_defaults_then_autoselect_precede_bitrate() {
+        let mut video = grouped_info();
+        video.formats.push(grouped(
+            source(
+                "autoselect",
+                StreamKind::AudioOnly,
+                "aac",
+                None,
+                Some(32.0),
+                None,
+            ),
+            "a",
+        ));
+        video.formats.last_mut().unwrap().audio_autoselect = true;
+        video.select_format(Some("v-a+bestaudio")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v-a+autoselect"));
+        video.formats.push(grouped(
+            source(
+                "default",
+                StreamKind::AudioOnly,
+                "aac",
+                None,
+                Some(16.0),
+                None,
+            ),
+            "a",
+        ));
+        let default = video.formats.last_mut().unwrap();
+        default.audio_default = true;
+        default.language = Some("en".into());
+        default.format_note = Some("English original".into());
+        video.select_format(Some("v-a+bestaudio")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v-a+default"));
+        video.select_format(Some("v-a+a-a")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v-a+a-a"));
+        let roundtrip: VideoInfo = serde_json::from_value(snapshot(&video)).unwrap();
+        assert_eq!(
+            roundtrip.formats.last().unwrap().language.as_deref(),
+            Some("en")
+        );
+        assert_eq!(
+            roundtrip.formats.last().unwrap().format_note.as_deref(),
+            Some("English original")
+        );
+        assert!(roundtrip.formats.last().unwrap().audio_default);
+    }
+
+    #[test]
+    fn shared_merge_policy_validates_kinds_and_all_container_combinations() {
+        for video_ext in ["mp4", "ts", "webm"] {
+            for audio_ext in ["m4a", "aac", "ts", "webm"] {
+                let video = source("v", StreamKind::VideoOnly, video_ext, None, None, None);
+                let audio = source("a", StreamKind::AudioOnly, audio_ext, None, None, None);
+                let expected = match (video_ext, audio_ext) {
+                    ("mp4" | "ts", "m4a" | "aac" | "ts") => "mp4",
+                    ("webm", "webm") => "webm",
+                    _ => "mkv",
+                };
+                assert_eq!(merge_extension(&video, &audio), Some(expected));
+                assert_eq!(merge_extension(&audio, &video), None);
+            }
+        }
+        let video = source("v", StreamKind::Standalone, "mp4", None, None, None);
+        let audio = source("a", StreamKind::AudioOnly, "aac", None, None, None);
+        assert_eq!(merge_extension(&video, &audio), None);
+        let video = source("v", StreamKind::VideoOnly, "ts", None, None, None);
+        let audio = source("a", StreamKind::AudioOnly, "mp3", None, None, None);
+        assert_eq!(merge_extension(&video, &audio), None);
     }
 
     #[test]

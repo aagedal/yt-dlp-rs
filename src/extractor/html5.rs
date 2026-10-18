@@ -232,6 +232,8 @@ impl Extractor for GenericHttp {
                 if !info.formats.is_empty() {
                     formats.extend(info.formats.iter().cloned().map(|mut format| {
                         format.format_id = format!("{index}-{}", format.format_id);
+                        format.audio_group =
+                            format.audio_group.map(|group| format!("{index}-{group}"));
                         format
                     }));
                     first_info.get_or_insert(info);
@@ -240,6 +242,11 @@ impl Extractor for GenericHttp {
                 formats.push(VideoFormat {
                     format_id: index.to_string(),
                     stream_kind: info.stream_kind,
+                    audio_group: None,
+                    language: None,
+                    format_note: None,
+                    audio_default: false,
+                    audio_autoselect: false,
                     abr: None,
                     tbr: None,
                     url: info.url.clone(),

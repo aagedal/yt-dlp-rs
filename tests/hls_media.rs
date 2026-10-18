@@ -61,6 +61,8 @@ impl Server {
                     "application/vnd.apple.mpegurl"
                 } else if path.ends_with("key") {
                     "application/octet-stream"
+                } else if path.ends_with("aac") {
+                    "audio/aac"
                 } else if path.ends_with("ts") {
                     "video/mp2t"
                 } else {
@@ -193,4 +195,87 @@ fn saved_transport_stream_and_fragmented_mp4_assemble_exact_media() {
             );
         }
     }
+}
+
+#[test]
+fn real_external_audio_rendition_merges_complete_native_fragment_downloads() {
+    let (ffmpeg, ffprobe) = match (
+        std::env::var_os("YT_DLP_RS_TEST_FFMPEG"),
+        std::env::var_os("YT_DLP_RS_TEST_FFPROBE"),
+    ) {
+        (None, _) => return,
+        (Some(ffmpeg), Some(ffprobe)) => (ffmpeg, ffprobe),
+        _ => panic!("YT_DLP_RS_TEST_FFMPEG requires YT_DLP_RS_TEST_FFPROBE"),
+    };
+    let server = Server::new();
+    let dl = YoutubeDl::new().unwrap().with_ffmpeg(ffmpeg);
+    let info = dl
+        .extract_info(&format!("{}/audio-video/master.m3u8", server.origin))
+        .unwrap();
+    assert_eq!(info.format_id.as_deref(), Some("hls-0+hls-audio-0"));
+    assert_eq!(info.ext, "mp4");
+    assert_eq!(
+        info.requested_formats[0].audio_group.as_deref(),
+        Some("main")
+    );
+    assert_eq!(
+        info.requested_formats[1].audio_group.as_deref(),
+        Some("main")
+    );
+    assert_eq!(info.requested_formats[1].language.as_deref(), Some("en"));
+    assert_eq!(info.requested_formats[0].fragments.len(), 3);
+    assert_eq!(info.requested_formats[1].fragments.len(), 4);
+    let directory = tempfile::tempdir().unwrap();
+    let output = directory.path().join("grouped.mp4");
+    let mut events = Vec::new();
+    let bytes = dl
+        .download_with_progress(
+            &info,
+            &output,
+            yt_dlp_rs::DownloadOptions::default(),
+            |event| {
+                events.push(event);
+                std::ops::ControlFlow::Continue(())
+            },
+        )
+        .unwrap();
+    assert_eq!(bytes, std::fs::metadata(&output).unwrap().len());
+    for index in [1, 2] {
+        assert!(
+            events
+                .iter()
+                .any(|event| event.stream_index == Some(index) && event.fragment_index.is_some())
+        );
+    }
+    assert_eq!(
+        events
+            .iter()
+            .filter(|event| event.phase == yt_dlp_rs::DownloadPhase::Publishing)
+            .count(),
+        1
+    );
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+    let result = Command::new(ffprobe)
+        .args(["-v", "error", "-show_streams", "-of", "json"])
+        .arg(&output)
+        .output()
+        .unwrap();
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    let data: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
+    let tracks = data["streams"].as_array().unwrap();
+    assert_eq!(tracks.len(), 2);
+    assert!(
+        tracks
+            .iter()
+            .any(|track| track["codec_type"] == "video" && track["codec_name"] == "h264")
+    );
+    assert!(
+        tracks
+            .iter()
+            .any(|track| track["codec_type"] == "audio" && track["codec_name"] == "aac")
+    );
 }

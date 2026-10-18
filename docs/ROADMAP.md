@@ -80,7 +80,10 @@ remain outside the current result contract.
    assembly, explicit/implicit media ranges, fragment retries and cancellation are
    implemented. Identity AES-128 CBC keys, sequence/explicit IVs, rotation and
    streaming decryption are implemented with exact local media fixtures.
-   DASH, SAMPLE-AES/DRM and live HLS, external renditions, discontinuities,
+   External audio groups, metadata and compatible video/audio selection now
+   feed native fragment downloads and explicit FFmpeg copy merging, including
+   MPEG-TS video and AAC/TS audio. DASH, SAMPLE-AES/DRM and live HLS,
+   external video/subtitle renditions, discontinuities,
    persistent resume across invocations, extraction cancellation, and CLI signal handling remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,

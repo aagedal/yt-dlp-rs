@@ -1,5 +1,5 @@
 //! Portable process fixture for the bounded FFmpeg runner.
-use std::{io::Write, path::Path, time::Duration};
+use std::{io::Write, time::Duration};
 fn main() {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
     let mode = std::fs::read_to_string("mode").unwrap();
@@ -22,6 +22,16 @@ fn main() {
     }
     // Match the runner's canonical paths, including Windows verbatim prefixes.
     let directory = std::env::current_dir().unwrap().canonicalize().unwrap();
+    let (video_ext, video_demuxer, audio_ext, audio_demuxer, output_ext, muxer) =
+        match mode.as_str() {
+            "success-ts-aac" => ("ts", "mpegts", "aac", "aac", "mp4", "mp4"),
+            "success-ts-m4a" => ("ts", "mpegts", "m4a", "mov", "mp4", "mp4"),
+            "success-ts-ts" => ("ts", "mpegts", "ts", "mpegts", "mp4", "mp4"),
+            "success-mp4-aac" => ("mp4", "mov", "aac", "aac", "mp4", "mp4"),
+            "success-webm-ts" => ("webm", "matroska", "ts", "mpegts", "mkv", "matroska"),
+            _ => ("mp4", "mov", "m4a", "mov", "mp4", "mp4"),
+        };
+    let output = directory.join(format!("output.{output_ext}"));
     let expected: Vec<std::ffi::OsString> = [
         "-nostdin",
         "-hide_banner",
@@ -29,7 +39,7 @@ fn main() {
         "error",
         "-y",
         "-f",
-        "mov",
+        video_demuxer,
         "-protocol_whitelist",
         "file",
         "-i",
@@ -37,24 +47,26 @@ fn main() {
     .into_iter()
     .map(Into::into)
     .chain(std::iter::once(
-        directory.join("video.mp4").into_os_string(),
+        directory
+            .join(format!("video.{video_ext}"))
+            .into_os_string(),
     ))
     .chain(
-        ["-f", "mov", "-protocol_whitelist", "file", "-i"]
+        ["-f", audio_demuxer, "-protocol_whitelist", "file", "-i"]
             .into_iter()
             .map(Into::into),
     )
     .chain(std::iter::once(
-        directory.join("audio.m4a").into_os_string(),
+        directory
+            .join(format!("audio.{audio_ext}"))
+            .into_os_string(),
     ))
     .chain(
-        ["-map", "0:v:0", "-map", "1:a:0", "-c", "copy", "-f", "mp4"]
+        ["-map", "0:v:0", "-map", "1:a:0", "-c", "copy", "-f", muxer]
             .into_iter()
             .map(Into::into),
     )
-    .chain(std::iter::once(
-        directory.join("output.mp4").into_os_string(),
-    ))
+    .chain(std::iter::once(output.clone().into_os_string()))
     .collect();
     assert_eq!(args, expected);
     // Stdin must be closed rather than a potentially blocking writer pipe.
@@ -66,13 +78,14 @@ fn main() {
         "stderr" => eprintln!("fixture diagnostic"),
         "exit" => std::process::exit(3),
         "empty" => {
-            std::fs::write("output.mp4", []).unwrap();
+            std::fs::write(&output, []).unwrap();
         }
         "missing" => {}
         "stdout-flood" => flood(std::io::stdout()),
         "stderr-flood" => flood(std::io::stderr()),
         "hang" => hang(),
-        "success" => std::fs::write(Path::new("output.mp4"), b"merged").unwrap(),
+        "success" | "success-ts-aac" | "success-ts-m4a" | "success-ts-ts" | "success-mp4-aac"
+        | "success-webm-ts" => std::fs::write(&output, b"merged").unwrap(),
         _ => panic!("unknown fixture mode"),
     }
 }

@@ -50,6 +50,11 @@ struct Candidate {
 impl Candidate {
     fn into_format(self, url: Url) -> VideoFormat {
         VideoFormat {
+            audio_group: None,
+            language: None,
+            format_note: None,
+            audio_default: false,
+            audio_autoselect: false,
             fragments: Vec::new(),
             format_id: self.format_id,
             url,
