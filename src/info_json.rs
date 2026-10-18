@@ -40,7 +40,7 @@ pub fn info_json_path(path: &Path, ext: Option<&str>) -> PathBuf {
     };
     // Split the text directly so literal template separators are preserved.
     let start = text
-        .rfind(|c| std::path::is_separator(c))
+        .rfind(std::path::is_separator)
         .map_or(0, |index| index + 1);
     let name = &text[start..];
     let stem = match splitext(name) {
