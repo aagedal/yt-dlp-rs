@@ -58,7 +58,9 @@ remain outside the current result contract.
    a seven-fixture comparison harness, typed HTML5 playlist results for multiple media
    elements, sequential entry downloads, and the option inventory are implemented.
    Bounded automatic resolution ranking and `best`/`worst` selection are implemented;
-   full upstream ranking and general selector expressions remain open. Site
+   Chained numeric/text format filters now constrain existing atoms, pairs and
+   fallbacks before native ranking. Full upstream ranking and general selector
+   expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.
 3. **Resilient transport and media protocols.** Retry policy, range/resume with
    validator checks, HLS/DASH parsing and fragments, format selection, ffmpeg

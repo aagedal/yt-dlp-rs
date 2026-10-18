@@ -9,6 +9,7 @@ mod info;
 mod merge;
 pub mod output;
 mod retry;
+mod selector;
 
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};

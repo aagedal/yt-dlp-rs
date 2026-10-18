@@ -1,3 +1,4 @@
+use crate::selector::{self, Atom};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -172,7 +173,7 @@ impl VideoInfo {
         self.select_format_with_merge(requested, false)
     }
 
-    /// Bounded native selector grammar: atoms, two-stream `+`, and `/` fallback.
+    /// Bounded native selector grammar: filtered atoms, two-stream `+`, and `/` fallback.
     /// Only the implicit default considers `prefer_merge`; explicit `best` remains
     /// an independently playable source. Selection failures preserve all fields.
     pub(crate) fn select_format_with_merge(
@@ -185,29 +186,32 @@ impl VideoInfo {
         } else {
             "best"
         });
-        let branches = parse_selector(expression)?;
+        let branches = selector::parse(expression)?;
         if self.formats.is_empty() {
-            return if branches
-                .iter()
-                .any(|branch| branch.len() == 1 && matches!(branch[0], "best" | "worst"))
-                && self.stream_kind != StreamKind::VideoOnly
+            return if branches.iter().any(|branch| {
+                branch.len() == 1
+                    && matches!(branch[0].name.as_str(), "best" | "worst")
+                    && branch[0].matches_info(self)
+            }) && self.stream_kind != StreamKind::VideoOnly
             {
                 self.requested_formats.clear();
                 Ok(())
             } else {
-                Err(selection_error("this result exposes no formats"))
+                Err(selection_error(
+                    "requested format is unavailable for this result metadata",
+                ))
             };
         }
         for branch in branches {
             if branch.len() == 1 {
-                let Some(first) = self.select_atom(branch[0]) else {
+                let Some(first) = self.select_atom(&branch[0]) else {
                     continue;
                 };
                 let first = first.clone();
                 self.apply_single(&first);
                 return Ok(());
             }
-            let Some((first, second)) = self.select_pair(branch[0], branch[1]) else {
+            let Some((first, second)) = self.select_pair(&branch[0], &branch[1]) else {
                 continue;
             };
             let (video, audio) = if first.stream_kind == StreamKind::VideoOnly {
@@ -263,11 +267,11 @@ impl VideoInfo {
         self.requested_formats.clear();
     }
 
-    fn select_atom(&self, atom: &str) -> Option<&VideoFormat> {
+    fn select_atom(&self, atom: &Atom) -> Option<&VideoFormat> {
         self.ranked_atom(atom).into_iter().next()
     }
 
-    fn select_pair(&self, first: &str, second: &str) -> Option<(&VideoFormat, &VideoFormat)> {
+    fn select_pair(&self, first: &Atom, second: &Atom) -> Option<(&VideoFormat, &VideoFormat)> {
         let first_formats = self.ranked_atom(first);
         let second_formats = self.ranked_atom(second);
         let reversed = match (
@@ -283,7 +287,7 @@ impl VideoInfo {
         } else {
             (&first_formats, &second_formats)
         };
-        let manual_pair = !is_selector(first) && !is_selector(second);
+        let manual_pair = !first.is_selector() && !second.is_selector();
         // A video's rendition group determines its compatible audio. Evaluate
         // videos first even when the expression puts the audio atom first.
         for video in videos {
@@ -302,17 +306,17 @@ impl VideoInfo {
         None
     }
 
-    fn ranked_atom(&self, atom: &str) -> Vec<&VideoFormat> {
-        let (kind, worst) = match atom {
+    fn ranked_atom(&self, atom: &Atom) -> Vec<&VideoFormat> {
+        // Predicates narrow the candidate set before kind fallback and ranking.
+        let candidates: Vec<_> = self.formats.iter().filter(|f| atom.matches(f)).collect();
+        let (kind, worst) = match atom.name.as_str() {
             "best" | "worst" => {
-                let kind = if self
-                    .formats
+                let kind = if candidates
                     .iter()
                     .any(|f| f.stream_kind == StreamKind::Standalone)
                 {
                     StreamKind::Standalone
-                } else if self
-                    .formats
+                } else if candidates
                     .iter()
                     .any(|f| f.stream_kind == StreamKind::VideoOnly)
                 {
@@ -320,14 +324,13 @@ impl VideoInfo {
                 } else {
                     StreamKind::AudioOnly
                 };
-                (kind, atom == "worst")
+                (kind, atom.name == "worst")
             }
-            "bestaudio" | "worstaudio" => (StreamKind::AudioOnly, atom == "worstaudio"),
-            "bestvideo" | "worstvideo" => (StreamKind::VideoOnly, atom == "worstvideo"),
+            "bestaudio" | "worstaudio" => (StreamKind::AudioOnly, atom.name == "worstaudio"),
+            "bestvideo" | "worstvideo" => (StreamKind::VideoOnly, atom.name == "worstvideo"),
             id => {
-                return self
-                    .formats
-                    .iter()
+                return candidates
+                    .into_iter()
                     .find(|f| f.format_id == id)
                     .into_iter()
                     .collect();
@@ -345,9 +348,8 @@ impl VideoInfo {
                 .then_with(|| bitrate(a.abr).total_cmp(&bitrate(b.abr)))
                 .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr))),
         };
-        let mut formats: Vec<_> = self
-            .formats
-            .iter()
+        let mut formats: Vec<_> = candidates
+            .into_iter()
             .filter(|f| f.stream_kind == kind)
             .collect();
         formats.sort_by(compare);
@@ -360,13 +362,6 @@ impl VideoInfo {
 
 fn is_false(value: &bool) -> bool {
     !value
-}
-
-fn is_selector(atom: &str) -> bool {
-    matches!(
-        atom,
-        "best" | "worst" | "bestaudio" | "worstaudio" | "bestvideo" | "worstvideo"
-    )
 }
 
 /// Shared selection/download container policy. Group matching belongs to selection;
@@ -399,27 +394,6 @@ fn bitrate(value: Option<f64>) -> f64 {
 
 fn selection_error(message: impl Into<String>) -> crate::Error {
     crate::Error::FormatSelection(message.into())
-}
-
-fn parse_selector(expression: &str) -> crate::Result<Vec<Vec<&str>>> {
-    expression
-        .split('/')
-        .map(|branch| {
-            let atoms: Vec<_> = branch.split('+').map(str::trim).collect();
-            if atoms.len() > 2
-                || atoms.iter().any(|atom| {
-                    atom.is_empty()
-                        || !atom
-                            .bytes()
-                            .all(|c| c.is_ascii_alphanumeric() || b"_.-".contains(&c))
-                })
-            {
-                Err(selection_error("unsupported or malformed format selector"))
-            } else {
-                Ok(atoms)
-            }
-        })
-        .collect()
 }
 
 #[cfg(test)]
@@ -750,7 +724,7 @@ mod tests {
             "v1/",
             "/v1",
             "v1/(a1)",
-            "v1/a1[abr>10]",
+            "v1/a1[unsupported_field>10]",
             "v1,a1",
             "v1/a1|a2",
             "",
@@ -962,5 +936,76 @@ mod tests {
             .unwrap_err();
         assert!(error.to_string().contains("second"));
         assert_eq!(serde_json::to_value(&playlist).unwrap(), before);
+    }
+
+    #[test]
+    fn filters_narrow_candidates_before_ranking_kind_fallback_and_pairing() {
+        let mut video = adaptive();
+        video
+            .select_format(Some("bestvideo[height<=720]+bestaudio[abr>=128]"))
+            .unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v1+a2"));
+        video
+            .select_format(Some("bestvideo[height<100]+bestaudio/bestaudio[ext=m4a]"))
+            .unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("a2"));
+        video.formats.push(source(
+            "muxed",
+            StreamKind::Standalone,
+            "webm",
+            Some(2160),
+            None,
+            None,
+        ));
+        video.select_format(Some("best[ext=m4a]")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("a2"));
+        video.select_format(Some("best[height<=?720]")).unwrap_err();
+    }
+
+    #[test]
+    fn filtered_literal_pairs_keep_explicit_group_override_and_failures_are_atomic() {
+        let mut video = adaptive();
+        video.formats[0].audio_group = Some("one".into());
+        video.formats[2].audio_group = Some("two".into());
+        video
+            .select_format(Some("v1[height<=720]+a1[ext=m4a]"))
+            .unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v1+a1"));
+        let before = snapshot(&video);
+        for expression in [
+            "v1[height>720]+a1",
+            "v1[width>=1]/best[unknown=1]",
+            "v1/best[ext~=mp4]",
+        ] {
+            assert!(
+                video.select_format(Some(expression)).is_err(),
+                "{expression}"
+            );
+            assert_eq!(snapshot(&video), before);
+        }
+    }
+
+    #[test]
+    fn implicit_format_filters_use_known_metadata_and_keep_missing_fields_unknown() {
+        let mut video = info(Vec::new());
+        video.filesize = Some(1024);
+        video.ext = "mp4".into();
+        video
+            .select_format(Some("best[filesize<=1KiB][ext=mp4]"))
+            .unwrap();
+        assert_eq!(video.format_id, None);
+        assert!(video.formats.is_empty());
+        video
+            .select_format(Some("best[height<=?720][format_id!=?x]"))
+            .unwrap();
+        let before = snapshot(&video);
+        for expression in [
+            "best[height<=720]",
+            "best[format_id!=x]",
+            "best[filesize<1024]",
+        ] {
+            assert!(video.select_format(Some(expression)).is_err());
+            assert_eq!(snapshot(&video), before);
+        }
     }
 }

@@ -14,6 +14,7 @@ cargo build --locked
 cargo run --locked -- 'https://example.com/video.mp4'
 cargo run --locked -- --dump-json 'https://example.com/video.mp4'
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
+cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
@@ -73,7 +74,11 @@ Supported today:
   `--ffmpeg-location PATH` configures an explicit FFmpeg executable for local
   stream copying; default selection then prefers a video/audio pair. Without it,
   default selection requires an independently playable source. `-f best` always
-  selects an independently playable source. This is a bounded selector subset.
+  selects an independently playable source. Chained format filters constrain
+  dimensions, filesize, audio/total bitrate, extension, IDs and language/rendition
+  text before ranking. For example, `bestvideo[height<=720]+bestaudio[abr>=128]/best`
+  and `best[filesize<10MiB]`; `<=?` includes unknown values. This is a bounded
+  selector subset; filters do not add metadata that an extractor did not expose.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.

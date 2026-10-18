@@ -10,7 +10,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Positional URLs | One or more HTTP(S) URLs, processed sequentially; continue after errors, return failure if any URL fails |
 | `-j`, `--dump-json` | One supported `VideoInfo` JSON object per video, including each HTML5 playlist entry; extract without downloading |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
-| `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs and `/` fallbacks; see selection policy below; no filters or direct-URL format IDs |
+| `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs and `/` fallbacks; see selection policy below; chained numeric/text filters; no direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
@@ -169,7 +169,7 @@ rate, and audio/video distinctions do not break ties. This is an explicit native
 policy for the supported progressive subset, not full upstream best/worst parity
 or a guarantee of perceptual quality. Format lists and source IDs retain declaration
 order. Literal IDs override ranking; unavailable IDs return an error listing IDs.
-Filters, parentheses, comma selections, more than two merged streams, and
+Parentheses, comma selections, more than two merged streams, and
 upstream selector modifiers remain errors. See the bounded adaptive policy below.
 Direct HTTP results accept default/`best`/`worst` as their sole representation,
 without adding format IDs; explicit IDs fail.
@@ -801,3 +801,53 @@ fragment, transport and selection behavior have separate native tests.
 See [the source slice](../upstream/notes/youtube-hls.md) for source applicability,
 fixture provenance and offline comparison exclusions. Saved fixtures establish
 this bounded extraction behavior, not current live-site availability.
+
+
+## Format predicates
+
+Selector atoms and literal format IDs accept chained `[field operator value]`
+predicates before `+` pairing and `/` fallback. For example:
+
+```sh
+-f 'best[height<=720][ext=mp4]/best'
+-f 'bestvideo[height<=1080]+bestaudio[abr>=128]/best'
+-f 'best[filesize<10MiB]'
+-f 'bestaudio[language^=en][format_note*="English / main"]'
+```
+
+Numeric fields are `width`, `height`, `filesize`, `tbr` and `abr`; bitrate values
+are kbps. Operators are `<`, `<=`, `>`, `>=`, `=`, `!=`. Nonnegative decimals and
+pinned upstream filesize-style decimal/binary unit suffixes are supported.
+Unit suffixes preserve upstream case-dependent multipliers and rounding; bare
+filesize comparisons retain exact integer/rational precision rather than casting
+large byte counts to floating point. Native large-integer guarantees are tested
+separately from upstream's floating-point thresholds.
+
+Text fields are `ext`, `format_id`, `language`, `format_note` and `audio_group`.
+Support equality `=`, prefix `^=`, suffix `$=`, substring `*=` and their negations
+`!=`, `!^=`, `!$=`, `!*=`. Quoted strings can contain spaces, brackets and selector
+delimiters; quote/backslash escapes follow the supported upstream string syntax.
+Comparisons are case-sensitive. Preserve upstream numeric-first equality parsing:
+unquoted numeric-looking text values compare as numbers against strings, so
+`[format_id=18]` does not match the string ID `18`; use `[format_id="18"]` for
+text equality. Quoted numeric values on numeric fields remain unsupported.
+Numeric and text operators may append `?` to
+include unknown values, such as `[height<=?720]`; unknown values otherwise fail,
+including negated predicates. Numeric fields cannot use text operators or vice
+versa. Unsupported fields fail explicitly rather than being treated as absent.
+
+All predicates are ANDed and applied before stream-kind fallback and native
+ranking. Literal IDs must also pass their predicates. Existing group matching
+still applies to automatic pairs; two literal IDs retain their explicit override.
+Direct results without format alternatives evaluate their available top-level
+metadata without inventing a format ID or bitrate/language fields. Failed
+selection preserves the result, including all playlist entries. Every branch is
+parsed before selection, so a malformed later fallback cannot be hidden by an
+earlier successful branch. Selection still follows extraction of all alternatives;
+filters do not reduce extraction probes or manifest acquisition.
+
+The grammar is bounded to 8 KiB, 16 fallback branches, two atoms per pair and 16
+predicates per atom. Bare filter-only selectors, regex predicates, parentheses,
+comma/all selections and other upstream modifiers remain unsupported. Predicate
+support does not imply full upstream selection/sorting parity. See
+[the source slice](../upstream/notes/format-filters.md) and the shared saved cases.
