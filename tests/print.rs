@@ -150,7 +150,7 @@ fn print_templates_and_get_aliases_print_in_upstream_order_without_writing() {
     assert_eq!(
         stdout,
         format!(
-            "page-1\n1280\n{title}|00720|0|\"Fixture: \\\"A/B\\\" Épisode (1)\"\next = \"mp4\"\n{title}\npage-1\n{}\nout/Fixture_ _A_B_ Épisode (1).mp4\n",
+            "page-1\n1280\n{title}|00720|0|\"Fixture: \\\"A/B\\\" Épisode (1)\"\next = \"mp4\"\n{title}\npage-1\n{}\nout/Fixture： ＂A⧸B＂ Épisode (1).mp4\n",
             server.url("/media.mp4")
         )
     );

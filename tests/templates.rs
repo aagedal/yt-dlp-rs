@@ -267,7 +267,7 @@ fn sanitize_before_precision_keeps_metadata_and_defaults_inside_literal_director
         directory.path(),
     ));
     assert_eq!(
-        std::fs::read(directory.path().join("literal-dir/al-_fallback.mp4")).unwrap(),
+        std::fs::read(directory.path().join("literal-dir/..-..⧸fallback.mp4")).unwrap(),
         b"media"
     );
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
@@ -277,6 +277,19 @@ fn sanitize_before_precision_keeps_metadata_and_defaults_inside_literal_director
             .count(),
         1
     );
+    // Metadata alone cannot form a `..` path component.
+    success(&server.cli(
+        &["/unsafe.html"],
+        &["-o", "%(title).2s/%(id)s.%(ext)s"],
+        directory.path(),
+    ));
+    assert_eq!(
+        std::fs::read_dir(directory.path().join("_"))
+            .unwrap()
+            .count(),
+        1
+    );
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 2);
 }
 
 #[test]
@@ -355,4 +368,65 @@ fn no_clobber_error_continues_to_later_typed_filename_and_records_only_success()
     assert_eq!(std::fs::read_to_string(archive).unwrap(), "generic 12.5\n");
     assert_eq!(server.count("/one.mp4"), 1);
     assert_eq!(server.count("/12.5.mp4"), 2);
+}
+
+#[test]
+fn filename_option_flags_select_upstream_sanitization_and_trimming() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let filename = |args: &[&str]| {
+        let mut all = vec!["-O", "filename"];
+        all.extend_from_slice(args);
+        let output = server.cli(&["/unsafe.html"], &all, directory.path());
+        success(&output);
+        String::from_utf8(output.stdout).unwrap()
+    };
+    let id = filename(&["-o", "%(id)s"]);
+    let id = id.trim_end();
+    assert_eq!(
+        filename(&["-o", "%(title)s.%(ext)s"]),
+        "..alpha⧸..⧸..⧸escape (1).mp4\n"
+    );
+    assert_eq!(
+        filename(&["--restrict-filenames"]),
+        format!("..alpha_.._.._escape_1-[{id}].mp4\n")
+    );
+    // Last flag wins, and an explicit template keeps its spaces.
+    assert_eq!(
+        filename(&[
+            "--restrict-filenames",
+            "--no-restrict-filenames",
+            "-o",
+            "a b.%(ext)s"
+        ]),
+        "a b.mp4\n"
+    );
+    assert_eq!(
+        filename(&["--windows-filenames", "-o", "x/./y/../%(title).7s?.%(ext)s"]),
+        "x/..alpha#.mp4\n"
+    );
+    assert_eq!(
+        filename(&["--trim-file-names", "4", "-o", "%(title)s.%(ext)s"]),
+        "..al.⧸escape (1).mp4\n"
+    );
+    if !cfg!(windows) {
+        assert_eq!(
+            filename(&["--no-windows-filenames", "-o", "%(title)s?.%(ext)s"]),
+            "..alpha⧸..⧸..⧸escape (1)?.mp4\n"
+        );
+    }
+    success(&server.cli(
+        &["/unsafe.html"],
+        &["--restrict-filenames", "--trim-filenames", "7"],
+        directory.path(),
+    ));
+    assert_eq!(
+        std::fs::read(
+            directory
+                .path()
+                .join(format!("..alpha._escape_1-[{id}].mp4"))
+        )
+        .unwrap(),
+        b"media"
+    );
 }

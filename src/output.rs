@@ -1,15 +1,26 @@
 mod formats;
 mod print;
+mod sanitize;
 mod subtitles;
 mod template;
 pub use formats::render_formats;
 pub use print::{PrintTemplate, PrintToFile};
+pub use sanitize::{FilenameMode, force_sanitize_path, sanitize_filename};
 pub use subtitles::{render_automatic_captions, render_subtitles};
 
 use crate::{PlaylistCounts, PlaylistInfo, Result, VideoInfo};
 use std::path::PathBuf;
 
 pub const DEFAULT_TEMPLATE: &str = "%(title)s [%(id)s].%(ext)s";
+
+/// Upstream `_parse_outtmpl`: restricted names remove spaces in the default template.
+pub fn default_template(restricted: bool) -> String {
+    if restricted {
+        DEFAULT_TEMPLATE.replace(" - ", " ").replace(' ', "-")
+    } else {
+        DEFAULT_TEMPLATE.into()
+    }
+}
 
 pub(crate) fn safe_component(value: &str) -> String {
     let value: String = value
@@ -35,12 +46,34 @@ pub(crate) fn safe_component(value: &str) -> String {
 pub struct TemplateOptions {
     /// Used for unavailable metadata or failed numeric conversion.
     pub na_placeholder: String,
+    /// Metadata sanitization (`--restrict-filenames`/`--no-windows-filenames`).
+    pub filename_mode: FilenameMode,
+    /// `--windows-filenames`: force upstream Windows path sanitization.
+    pub windows_filenames: bool,
+    /// `--trim-filenames`: Python-slice length excluding extensions; 0 disables.
+    pub trim_file_name: i64,
+}
+
+impl TemplateOptions {
+    /// Resolve upstream's restrict/windows filename options for this platform.
+    pub fn filename_mode(restrict: bool, windows: Option<bool>) -> FilenameMode {
+        if restrict {
+            FilenameMode::Restricted
+        } else if !cfg!(windows) && windows == Some(false) {
+            FilenameMode::Minimal
+        } else {
+            FilenameMode::Default
+        }
+    }
 }
 
 impl Default for TemplateOptions {
     fn default() -> Self {
         Self {
             na_placeholder: "NA".into(),
+            filename_mode: FilenameMode::Default,
+            windows_filenames: false,
+            trim_file_name: 0,
         }
     }
 }

@@ -160,7 +160,10 @@ Supported today:
   For example, `%(playlist_index)03d-%(title).80s.%(ext)s`. Known-field alternatives
   and defaults such as `%(width,height|unknown)s` are supported;
   `--output-na-placeholder TEXT` changes the default `NA`. Literal `%%` is supported.
-  Metadata cannot introduce directories; literal template paths can.
+  Metadata is sanitized like upstream (full-width look-alikes for reserved
+  characters); `--restrict-filenames`, `--windows-filenames`/`--no-windows-filenames`
+  and `--trim-filenames LENGTH` follow upstream. Metadata cannot introduce
+  directories or `..` components; literal template paths can.
 - `-x` / `--extract-audio` supports `best`, MP3, AAC, M4A, Opus, Vorbis,
   FLAC, ALAC and WAV through explicitly configured local FFmpeg/FFprobe.
   `--audio-format` accepts ordered `SOURCE>TARGET/TARGET` rules;

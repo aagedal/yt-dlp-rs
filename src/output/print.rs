@@ -340,6 +340,7 @@ mod tests {
             let info: VideoInfo = serde_json::from_value(case["info"].clone()).unwrap();
             let options = TemplateOptions {
                 na_placeholder: case["na_placeholder"].as_str().unwrap().into(),
+                ..Default::default()
             };
             let lines: Vec<_> = templates(case["args"].as_array().unwrap())
                 .unwrap()
@@ -373,7 +374,7 @@ mod tests {
         let (path, line) = pair
             .render(&info(), Ok("f.mp4"), &TemplateOptions::default())
             .unwrap();
-        assert_eq!(path, PathBuf::from("lists/Épisode_ _1__.txt"));
+        assert_eq!(path, PathBuf::from("lists/Épisode： ＂1＂.txt"));
         assert_eq!(line, "a/b\nmp4");
         assert!(PrintToFile::parse("playlist:id", "x.txt").is_err());
         assert!(PrintToFile::parse("id", "%(missing)s.txt").is_err());

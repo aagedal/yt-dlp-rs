@@ -288,6 +288,7 @@ mod tests {
             };
             let options = crate::output::TemplateOptions {
                 na_placeholder: case["na_placeholder"].as_str().unwrap().into(),
+                ..Default::default()
             };
             let name = crate::output::render_playlist_template_with_options(
                 case["template"].as_str().unwrap(),

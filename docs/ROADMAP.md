@@ -84,8 +84,9 @@ remain outside the current result contract.
    Selection precedes archive filtering and format selection but does not make
    extraction lazy. Typed filename templates support represented root fields,
    string/integer/fixed-point conversions, width/precision/flags, alternatives and
-   missing-value defaults; full template expressions, conversions and platform
-   filename parity remain open. `--print` video-stage field lists/templates and
+   missing-value defaults with upstream filename sanitization, restricted/Windows/
+   minimal modes and name trimming; full template expressions, conversions and
+   Windows-host path sanitization remain open. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
    destinations without implying simulation. Other print stages remain open.

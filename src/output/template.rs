@@ -308,11 +308,11 @@ fn substitution(
         } else if print {
             bounded(value).map(str::to_owned)
         } else {
-            sanitize(value)
+            sanitize(value, options)
         }
     };
     let Some(value) = chosen else {
-        return Ok((safe_substitution(default()?, print), consumed));
+        return Ok((default()?, consumed));
     };
     if &spec[..consumed] == "s" {
         let size = match last_field {
@@ -351,7 +351,7 @@ fn substitution(
     } else if format.conversion == 's' {
         let value = match value {
             Value::Text(s) if print => bounded(s)?.to_owned(),
-            Value::Text(s) => sanitize(s)?,
+            Value::Text(s) => sanitize(s, options)?,
             Value::Integer(n) => n.to_string(),
             Value::Boolean(b) => if b { "True" } else { "False" }.into(),
         };
@@ -367,17 +367,27 @@ fn substitution(
             None => default()?,
         }
     };
-    Ok((safe_substitution(result, print), consumed))
+    Ok((result, consumed))
 }
 
-fn safe_substitution(value: String, print: bool) -> String {
-    // Precision can expose a dot/space-only component that the initial sanitizer
-    // had removed. Preserve normal padding, but do not substitute path aliases.
-    if !print && !value.is_empty() && value.trim_matches([' ', '.']).is_empty() {
-        "video".into()
-    } else {
-        value
-    }
+/// Native containment guard: metadata cannot form a `.`/`..` (or, for Windows,
+/// dot/space-only) path component that is not literally in the template.
+/// Substitutions cannot contain `/`, so components align with the template's.
+fn guard_components(output: &str, template: &str) -> String {
+    let literal: Vec<&str> = template.split('/').collect();
+    output
+        .split('/')
+        .enumerate()
+        .map(|(index, component)| {
+            let alias = !component.is_empty() && component.trim_matches([' ', '.']).is_empty();
+            if alias && literal.get(index) != Some(&component) {
+                "_"
+            } else {
+                component
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("/")
 }
 
 fn bounded(value: &str) -> Result<&str> {
@@ -387,8 +397,34 @@ fn bounded(value: &str) -> Result<&str> {
     Ok(value)
 }
 
-fn sanitize(value: &str) -> Result<String> {
-    Ok(super::safe_component(bounded(value)?))
+fn sanitize(value: &str, options: &super::TemplateOptions) -> Result<String> {
+    Ok(super::sanitize::sanitize_component(
+        bounded(value)?,
+        options.filename_mode,
+    ))
+}
+
+/// `_prepare_filename` `trim_file_name`: keep up to two dot-separated
+/// extensions and slice the remaining text like Python `no_ext[:length]`.
+fn trim_file_name(filename: &str, length: i64) -> String {
+    if length == 0 {
+        return filename.to_owned();
+    }
+    let mut parts: Vec<&str> = filename.rsplitn(3, '.').collect();
+    parts.reverse();
+    let (no_ext, extensions) = parts.split_first().unwrap();
+    let count = no_ext.chars().count() as i64;
+    let keep = if length < 0 {
+        (count + length).max(0)
+    } else {
+        length.min(count)
+    };
+    let trimmed: String = no_ext.chars().take(keep as usize).collect();
+    std::iter::once(trimmed.as_str())
+        .chain(extensions.iter().copied())
+        .filter(|part| !part.is_empty())
+        .collect::<Vec<_>>()
+        .join(".")
 }
 
 /// Python `json.dumps` for a string, with or without `ensure_ascii`.
@@ -434,6 +470,16 @@ pub(super) fn render(
     if output.is_empty() || output == "-" {
         return Err(invalid("empty paths and stdout output are unsupported"));
     }
+    let output = guard_components(&trim_file_name(&output, options.trim_file_name), template);
+    if output.is_empty() {
+        return Err(invalid("empty paths and stdout output are unsupported"));
+    }
+    // Like upstream get_output_path, forced Windows names sanitize the whole path.
+    let output = if options.windows_filenames {
+        super::sanitize::force_sanitize_path(&output)
+    } else {
+        output
+    };
     Ok(output.into())
 }
 
@@ -537,6 +583,7 @@ mod tests {
         assert_eq!(output("%(format_id,playlist_index)s", &info), "0003");
         let options = super::super::TemplateOptions {
             na_placeholder: String::new(),
+            ..Default::default()
         };
         assert_eq!(
             render("%(format_id)s-file", Source::Video(&info), &options).unwrap(),
@@ -550,12 +597,60 @@ mod tests {
         info.title = "../../bad\\name\n%(id)s".into();
         assert_eq!(
             output("directory/%(title)s.%(ext)s", &info),
-            "directory/_.._bad_name_%(id)s.mp4"
+            "directory/..⧸..⧸bad⧹name %(id)s.mp4"
         );
-        assert_eq!(output("%(format_id|../../bad)s", &info), "_.._bad");
+        assert_eq!(output("%(format_id|../../bad)s", &info), "..⧸..⧸bad");
         info.title = ". .x".into();
-        assert_eq!(output("%(title).2s-file", &info), "video-file");
+        assert_eq!(output("%(title).2s-file", &info), ". -file");
+        assert_eq!(output("%(title).2s/%(title).1s/./x", &info), "_/_/./x");
         assert_eq!(output("%(title).0s-file", &info), "-file");
+    }
+
+    #[test]
+    fn filename_modes_trimming_and_forced_windows_paths() {
+        use super::super::{FilenameMode, TemplateOptions};
+        let mut info = info();
+        info.title = "Épisode: a/b <c>".into();
+        let render_with = |template: &str, options: &TemplateOptions| {
+            render(template, Source::Video(&info), options)
+                .unwrap()
+                .to_string_lossy()
+                .into_owned()
+        };
+        let mut options = TemplateOptions {
+            filename_mode: FilenameMode::Restricted,
+            ..Default::default()
+        };
+        assert_eq!(
+            render_with("%(title)s.%(ext)s", &options),
+            "Episode_-_a_b_c.mp4"
+        );
+        options.filename_mode = FilenameMode::Minimal;
+        assert_eq!(
+            render_with("%(title)s.%(ext)s", &options),
+            "Épisode: a⧸b <c>.mp4"
+        );
+        options.windows_filenames = true;
+        assert_eq!(
+            render_with("x/./%(title)s.%(ext)s", &options),
+            "x/Épisode# a⧸b #c#.mp4"
+        );
+        options = TemplateOptions {
+            trim_file_name: 3,
+            ..Default::default()
+        };
+        assert_eq!(
+            render_with("%(title)s.%(id)s.%(ext)s", &options),
+            "Épi.42.mp4"
+        );
+        options.trim_file_name = -2;
+        assert_eq!(render_with("abcd.%(ext)s", &options), "ab.mp4");
+        options.trim_file_name = 2;
+        assert_eq!(render_with("abcd", &options), "ab");
+        assert_eq!(
+            super::super::default_template(true),
+            "%(title)s-[%(id)s].%(ext)s"
+        );
     }
 
     #[test]
@@ -591,6 +686,7 @@ mod tests {
             let info: VideoInfo = serde_json::from_value(case["info"].clone()).unwrap();
             let options = super::super::TemplateOptions {
                 na_placeholder: case["na_placeholder"].as_str().unwrap().into(),
+                ..Default::default()
             };
             match render(
                 case["template"].as_str().unwrap(),

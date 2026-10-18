@@ -12,7 +12,7 @@ use yt_dlp_rs::{
     PostprocessOptions, SubtitleConversion, SubtitleEmbedding, SubtitleFile, SubtitleOptions,
     VideoMode, VideoOptions, YoutubeDl, YoutubeOptions, info_json_path,
     output::{
-        DEFAULT_TEMPLATE, PrintTemplate, PrintToFile, TemplateOptions, render_formats,
+        PrintTemplate, PrintToFile, TemplateOptions, render_formats,
         render_playlist_template_with_options, render_template_with_options,
     },
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
@@ -210,8 +210,29 @@ struct Args {
     #[arg(long, default_value = "NA", value_name = "TEXT")]
     output_na_placeholder: String,
     /// Filename template: represented metadata with s/d/i/u/f/F conversions and %%
-    #[arg(short, long, default_value = DEFAULT_TEMPLATE)]
-    output: String,
+    #[arg(short, long, value_name = "TEMPLATE", overrides_with = "output")]
+    output: Option<String>,
+    /// Restrict filenames to ASCII and avoid "&" and spaces
+    #[arg(long, overrides_with = "no_restrict_filenames")]
+    restrict_filenames: bool,
+    /// Allow Unicode characters, "&" and spaces in filenames (default)
+    #[arg(long, overrides_with = "restrict_filenames")]
+    no_restrict_filenames: bool,
+    /// Force Windows-compatible filenames
+    #[arg(long, overrides_with = "no_windows_filenames")]
+    windows_filenames: bool,
+    /// Sanitize filenames only minimally (outside Windows)
+    #[arg(long, overrides_with = "windows_filenames")]
+    no_windows_filenames: bool,
+    /// Limit the filename length (excluding extension) to LENGTH characters
+    #[arg(
+        long,
+        alias = "trim-file-names",
+        value_name = "LENGTH",
+        default_value_t = 0,
+        allow_hyphen_values = true
+    )]
+    trim_filenames: i64,
 }
 
 /// Append one UTF-8 line, creating parent directories like upstream.
@@ -365,8 +386,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .download_archive
         .map(DownloadArchive::load)
         .transpose()?;
+    let windows_filenames = if args.windows_filenames {
+        Some(true)
+    } else if args.no_windows_filenames {
+        Some(false)
+    } else {
+        None
+    };
+    let output_template = args
+        .output
+        .clone()
+        .unwrap_or_else(|| yt_dlp_rs::output::default_template(args.restrict_filenames));
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
+        filename_mode: TemplateOptions::filename_mode(args.restrict_filenames, windows_filenames),
+        windows_filenames: windows_filenames == Some(true),
+        trim_file_name: args.trim_filenames,
     };
     let list_only = (args.list_formats || args.list_subs) && !args.dump_json && !simulate;
     // Like upstream, simulation, JSON printing and listing never write info JSON.
@@ -440,7 +475,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             // and a failed write skips the playlist.
             let written = (|| -> Result<(), Box<dyn std::error::Error>> {
                 let path = render_playlist_template_with_options(
-                    &args.output,
+                    &output_template,
                     playlist,
                     counts,
                     &template_options,
@@ -473,7 +508,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 if printing {
                     let filename =
-                        render_template_with_options(&args.output, &info, &template_options)
+                        render_template_with_options(&output_template, &info, &template_options)
                             .map(|path| path.to_string_lossy().into_owned());
                     // Render every line first so a failure prints nothing partial.
                     let lines = print_templates
@@ -488,7 +523,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 if !print_files.is_empty() {
                     let filename =
-                        render_template_with_options(&args.output, &info, &template_options)
+                        render_template_with_options(&output_template, &info, &template_options)
                             .map(|path| path.to_string_lossy().into_owned());
                     // Render every destination and line before appending any.
                     let writes = print_files
@@ -525,7 +560,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         return Ok(());
                     }
                     let path =
-                        render_template_with_options(&args.output, &info, &template_options)?;
+                        render_template_with_options(&output_template, &info, &template_options)?;
                     if !args.skip_download {
                         match std::fs::symlink_metadata(&path) {
                             Ok(_) => return Err(yt_dlp_rs::Error::OutputExists(path).into()),

@@ -15,7 +15,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-O`, `--print [video:]TEMPLATE` | Print a field list or unsanitized output template per selected video; implies quiet simulation; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-filename` | Hidden upstream aliases printing title, ID, selected URLs and prepared filename after `--print` lines; imply quiet simulation |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
-| `-o`, `--output` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; no overwrite |
+| `-o`, `--output` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; upstream metadata sanitization; no overwrite |
 | `--list-subs` | Native language/format inventory; list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
 | `--write-subs`, `--write-srt` | Select normal subtitles and write sidecars before actual media downloads; JSON/simulation/listing only expose selection |
 | `--write-auto-subs`, `--write-automatic-subs` | Select automatic captions independently; manual tracks win shared languages when both writing flags are enabled |
@@ -27,6 +27,9 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
 | `--skip-download`, `--no-download` | Skip media while allowing selected subtitle and info JSON sidecars; never record a completed media archive entry |
 | `--write-info-json`, `--no-write-info-json` | Write cleaned video/playlist `.info.json` files before media/entries; keep existing files; never with JSON/simulation/listing; last flag wins; see [info JSON](../upstream/notes/info-json.md) |
+| `--restrict-filenames`, `--no-restrict-filenames` | ASCII-only upstream sanitization and space-free default template; last flag wins |
+| `--windows-filenames`, `--no-windows-filenames` | Force upstream path sanitization, or minimal `/`-only sanitization outside Windows; last flag wins |
+| `--trim-filenames`, `--trim-file-names LENGTH` | Trim rendered names excluding the last two dot-separated parts; 0 disables |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--proxy URL` | Explicit HTTP/HTTPS/SOCKS route; empty string forces direct connections, last value wins |
@@ -1176,15 +1179,25 @@ rendering; its internal maximum-index context is accepted as
 `__last_playlist_index` on input but omitted from JSON output. Explicit widths
 avoid depending on that context after a JSON round trip.
 
-String values/defaults use existing native component sanitation before width or
-precision: control and `/\<>:"|?*` characters become underscores, edge whitespace
-and dots are trimmed, and an empty sanitized component becomes `video`. A
-post-format dot/space-only component also becomes `video`; ordinary alignment
-padding is preserved. Precision cannot turn metadata into a parent-directory
-alias. Only literal template text can introduce directories. Neither metadata nor
-defaults trigger environment, home-directory or template expansion. URLs therefore
-render as sanitized components rather than paths. This remains a native policy,
-not upstream platform-specific filename sanitation parity.
+String values/defaults use upstream `sanitize_filename` (default `is_id`) before
+width or precision. By default `"*:<>?|` become full-width look-alikes, `/` and
+`\` become `⧸`/`⧹`, newlines become spaces, other controls are removed and
+`H:MM:SS`-style timestamps use `_`. `--restrict-filenames` applies NFKC, accent
+transliteration, ASCII-only `_` substitutes with upstream collapsing/stripping
+and removes spaces from the default template (`%(title)s-[%(id)s].%(ext)s`).
+`--no-windows-filenames` (outside Windows) only replaces `/` and removes NUL.
+`--windows-filenames` additionally applies upstream's forced non-Windows
+`sanitize_path` to the whole rendered path (drop `.`/empty parts, fold `..`
+lexically, `#` for reserved characters and a trailing space/dot).
+`--trim-filenames`/`--trim-file-names LENGTH` slices the rendered text before
+its last two dot-separated parts like Python `[:LENGTH]` (negative values cut
+from the end). Native containment guard: a path component that is `.`, `..` or
+otherwise dot/space-only and is not literally present at the same position in
+the template becomes `_`, so metadata never traverses directories (upstream can
+produce `../x.mp4`). Only literal template text can introduce directories.
+Neither metadata nor defaults trigger environment, home-directory or template
+expansion. On Windows hosts upstream's Windows `sanitize_path` is not ported.
+See [filename sanitization](../upstream/notes/filename-sanitization.md).
 
 Specs are limited to 16 KiB and 256 percent tokens, widths/precisions to 4096,
 and selected text/default input and final expanded output to 64 KiB each. A
@@ -1198,7 +1211,8 @@ Rendering occurs only on actual download paths after extraction and selection,
 or for `--print` lines that refer to `filename`. Other metadata, simulation and
 listing paths leave output templates inert, including invalid ones; this
 existing native timing is not general upstream option-normalization parity. Library `output::render_template` uses default options;
-`render_template_with_options` accepts `TemplateOptions { na_placeholder }`.
+`render_template_with_options` accepts `TemplateOptions` with `na_placeholder`,
+`filename_mode`, `windows_filenames` and `trim_file_name`.
 Object traversal, arithmetic/dates, replacements, arbitrary fields, scientific/
 general/hex/octal/repr/custom conversions, autonumber state, environment expansion
 and full filename/platform compatibility remain open.
