@@ -142,6 +142,8 @@ pub struct VideoFormat {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoInfo {
     #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
+    pub automatic_captions: crate::Subtitles,
+    #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
     pub subtitles: crate::Subtitles,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub requested_subtitles: Option<crate::RequestedSubtitles>,
@@ -530,6 +532,7 @@ mod tests {
 
     fn info(formats: Vec<VideoFormat>) -> VideoInfo {
         VideoInfo {
+            automatic_captions: Default::default(),
             subtitles: Default::default(),
             requested_subtitles: None,
             last_playlist_index: None,

@@ -748,6 +748,7 @@ fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
             reply("/media/audio.webm", "audio/webm", "wb"),
         ]);
         let mut ydl = crate::YoutubeDl::with_youtube_options(YoutubeOptions {
+            include_translated_subtitles: false,
             js_runtime: Some(PathBuf::from("unused-adaptive-runtime")),
         })
         .unwrap();
@@ -815,3 +816,5 @@ fn adaptive_without_standalone_requires_explicit_stream_or_configured_merge() {
 }
 
 mod manifests;
+
+mod captions;

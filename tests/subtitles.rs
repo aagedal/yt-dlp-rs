@@ -735,3 +735,38 @@ fn dangling_media_or_sidecar_symlinks_are_preserved_and_refused_before_caption_r
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
     }
 }
+
+#[test]
+fn automatic_flags_are_independent_last_wins_and_never_select_normal_tracks_alone() {
+    for (flags, writes) in [
+        (vec!["--write-auto-subs"], false),
+        (vec!["--write-automatic-subs", "--write-subs"], true),
+        (
+            vec!["--write-subs", "--write-auto-subs", "--no-write-subs"],
+            false,
+        ),
+        (
+            vec![
+                "--write-subs",
+                "--write-automatic-subs",
+                "--no-write-automatic-subs",
+            ],
+            true,
+        ),
+        (vec!["--no-write-auto-subs", "--write-auto-subs"], false),
+    ] {
+        let server = Server::new();
+        let directory = tempfile::tempdir().unwrap();
+        let mut flags = flags;
+        flags.extend(["--skip-download", "-o", "video.mp4"]);
+        success(&server.cli(&["/ok.html"], &flags, directory.path()));
+        assert_eq!(
+            directory.path().join("video.nb.vtt").exists(),
+            writes,
+            "{flags:?}"
+        );
+        assert_eq!(server.count("/nb.vtt"), usize::from(writes));
+        assert_eq!(server.count("/media.mp4"), 1);
+        assert!(!directory.path().join("video.mp4").exists());
+    }
+}

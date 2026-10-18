@@ -15,6 +15,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-o`, `--output` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; no overwrite |
 | `--list-subs` | Native language/format inventory; list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
 | `--write-subs`, `--write-srt` | Select normal subtitles and write sidecars before actual media downloads; JSON/simulation/listing only expose selection |
+| `--write-auto-subs`, `--write-automatic-subs` | Select automatic captions independently; manual tracks win shared languages when both writing flags are enabled |
+| `--no-write-auto-subs`, `--no-write-automatic-subs` | Disable automatic writing; last automatic write/no-write flag wins |
 | `--no-write-subs`, `--no-write-srt` | Disable subtitle writing; last write/no-write flag wins |
 | `--sub-langs`, `--srt-langs` | Repeated comma-separated literal tags, `all` and `-` exclusions; trimmed tokens, case-insensitive matching; no regex |
 | `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
@@ -100,7 +102,7 @@ unimplemented.
 
 An optional offline EJS/Deno pipeline solves encrypted signatures and query-n challenges during public
 extraction with `--youtube-js-runtime PATH` or
-`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path) })`.
+`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path), ..Default::default() })`.
 The explicit executable must be Deno 2.9.7. Configuration is inert until an
 eligible challenge needs solving; canonical path/version validation is cached
 once per configured extractor. Token/live/DRM/format filtering precedes solving,
@@ -1217,8 +1219,8 @@ with an HTTPS page base, and `httpss://` is repaired to HTTPS. Extension complet
 uses the URL suffix, lowercased, with `unknown_video` for unknown suffixes. It
 retains source query/fragment and trailing-slash quirks; MIME hints do not infer
 extensions and no WebVTT/SRT payload is parsed. This does not add subtitle
-acquisition from HLS/DASH, YouTube or other sites, automatic captions, embedded
-streams, conversion or embedding. Native direct-child DOM ownership and malformed
+acquisition from HLS/DASH or other sites, embedded streams, conversion or embedding.
+The separate YouTube caption subset is described below. Native direct-child DOM ownership and malformed
 HTML behavior differ from upstream regex parsing.
 
 Without explicit language options, writing prefers exact `en`, then the first
@@ -1287,3 +1289,55 @@ The latter has the same cooperative cancellation limits as media transfers.
 cover seven HTML metadata, 29 selection, five filenames, six option flows and
 three source-only cases; payload/timing/cancellation tests use local HTTP fixtures.
 See [the source slice](../upstream/notes/html5-subtitles.md).
+
+
+## YouTube manual and automatic captions
+
+The supported initial/anonymous WEB player response subset reads caption metadata
+without fetching caption resources. Manual tracks populate `subtitles`; ASR tracks,
+translations and original aliases populate `automatic_captions`. Formats preserve
+upstream order (`json3`, `srv1`, `srv2`, `srv3`, `ttml`, `srt`, `vtt`), names and URL
+query behavior, including duplicate grouping, blank-value dropping, `fmt` replacement
+and `xosf` removal. Formats are server-side URLs; no local conversion is performed.
+`vssId` supplies language keys before languageCode. Missing manual language is
+skipped, without inventing a tag. Eligible ASR original language fills missing
+language metadata on audio-bearing formats, leaving video-only formats untouched.
+
+ASR translations are discovered independently. Translated manual tracks are added
+to automatic metadata when `--write-auto-subs` or `--list-subs` is active; the
+library equivalent is `YoutubeOptions.include_translated_subtitles`. The upstream
+`und` special case and language-suffixed translated manual keys/queries are retained.
+`--write-subs` and `--write-auto-subs` independently enable selection. Normal tracks
+win shared language keys. Default selection searches normal exact/prefix English,
+then all exact/prefix English, then first normal/available language. Existing
+literal/all/exclusion and extension preference rules apply to the combined map.
+`SubtitleOptions::select_sources` exposes this explicitly to library callers.
+
+`--list-subs` prints automatic captions first when present, then normal subtitles;
+optional names use the same escaped/bounded cell policy. Pure
+`render_automatic_captions` is exported alongside `render_subtitles`. JSON retains
+both maps and optional selected metadata. Listing, JSON and simulation do not
+fetch caption bytes. The existing native subtitle transport and path planning
+handle actual sidecar writes and `--skip-download` without media archive records.
+
+WEB ordinarily has optional subtitle PO tokens, but exact decoded `exp=xpe` or
+`exp=xpv` requires an unavailable token. Preserve earlier tracks, warn and skip
+remaining tracks for that response. Existing URL `pot` values do not substitute
+for provider acquisition. No token acquisition, additional client policies or
+caption URL deciphering is implemented. Caption query `n` is preserved without
+launching Deno. Native skip diagnostics consistently warn; upstream can report
+this as a client notice depending on enabled options. Media token policies remain
+separate, including the anonymous WEB direct itag18 restriction.
+
+Native parser limits are 1000 tracks/translations each, 100000 generated formats,
+64 MiB cumulative URL/name output, 16 KiB base URLs and 4 KiB names. Malformed
+truthy metadata and unsupported URL schemes return explicit errors. Bounds and
+strict URL/shape validation do not claim upstream malformed-input parity.
+Twenty shared actual-source response cases and five selection cases compare exact
+ordered metadata; one missing-language case is also recorded as source-only.
+Ten local pipeline tests cover API/watch discovery, token gates, audio language,
+malformed URL timing and actual sidecar bytes/referrers/progress without live sites.
+This does not establish live-site reliability, token/authentication support,
+compressed captions, regex selection, payload parsing, conversion or embedding.
+See [the source slice](../upstream/notes/youtube-captions.md) and
+[fixture reference](../tests/fixtures/youtube/captions/README.md).

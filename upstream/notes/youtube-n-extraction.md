@@ -45,6 +45,7 @@ CLI: `--youtube-js-runtime PATH`. Library:
 use yt_dlp_rs::{YoutubeDl, YoutubeOptions};
 let downloader = YoutubeDl::with_youtube_options(YoutubeOptions {
     js_runtime: Some("/absolute/path/to/deno".into()),
+    ..Default::default()
 })?;
 # Ok::<(), yt_dlp_rs::Error>(())
 ```

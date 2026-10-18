@@ -199,6 +199,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                 .or_else(|| track.value().attr("label"))
                 .map(str::to_owned);
             let format = SubtitleFormat {
+                name: None,
                 ext: subtitle_extension(&url),
                 url,
             };

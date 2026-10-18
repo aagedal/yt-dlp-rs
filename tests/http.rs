@@ -623,6 +623,7 @@ fn youtube_runtime_configuration_is_lazy_for_generic_extraction() {
     let directory = tempfile::tempdir().unwrap();
     let runtime = directory.path().join("nonexistent-deno");
     let dl = YoutubeDl::with_youtube_options(YoutubeOptions {
+        include_translated_subtitles: false,
         js_runtime: Some(runtime.clone()),
     })
     .unwrap();

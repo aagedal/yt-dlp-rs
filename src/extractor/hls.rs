@@ -116,6 +116,7 @@ pub(crate) fn from_response(
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem }.to_owned();
     let mut info = VideoInfo {
+        automatic_captions: Default::default(),
         subtitles: Default::default(),
         requested_subtitles: None,
         last_playlist_index: None,

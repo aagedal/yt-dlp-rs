@@ -1,5 +1,6 @@
 //! Narrow watch-page slice of YoutubeIE at the pinned upstream revision.
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
+mod captions;
 mod challenge;
 mod client;
 mod player;
@@ -22,15 +23,20 @@ pub struct YoutubeOptions {
     /// Explicit Deno 2.9.7 executable path; never discovered or installed.
     /// Inspected only when an eligible format has a supported URL challenge.
     pub js_runtime: Option<PathBuf>,
+    /// Include translated manual captions in automatic-caption metadata.
+    /// Original ASR captions/translations are always discovered without fetching.
+    pub include_translated_subtitles: bool,
 }
 
 struct ConfiguredYoutube {
+    include_translated_subtitles: bool,
     runtime: Option<challenge::Runtime>,
 }
 
 impl Youtube {
     pub fn with_options(options: YoutubeOptions) -> impl Extractor {
         ConfiguredYoutube {
+            include_translated_subtitles: options.include_translated_subtitles,
             runtime: options.js_runtime.map(challenge::Runtime::new),
         }
     }
@@ -417,6 +423,17 @@ fn extract_watch_page_with_runtime(
     runtime: Option<&challenge::Runtime>,
     player_source: Option<&player::PlayerSource>,
 ) -> Result<VideoInfo> {
+    extract_watch_page_with_caption_options(client, page, id, runtime, player_source, false)
+}
+
+fn extract_watch_page_with_caption_options(
+    client: &Client,
+    page: &Url,
+    id: &str,
+    runtime: Option<&challenge::Runtime>,
+    player_source: Option<&player::PlayerSource>,
+    translated_manual: bool,
+) -> Result<VideoInfo> {
     let response = direct::request(client, page, None)?;
     if direct::response_mime(&response) != "text/html" {
         return Err(unsupported("watch page is not HTML"));
@@ -479,6 +496,10 @@ fn extract_watch_page_with_runtime(
     if candidates.is_empty() && manifests.is_empty() {
         return Err(no_formats());
     }
+    let captions = captions::parse(&player, translated_manual)?;
+    for warning in &captions.warnings {
+        eprintln!("WARNING: {id}: {warning}");
+    }
     let sources: Vec<_> = candidates
         .iter()
         .map(|candidate| candidate.source.clone())
@@ -505,9 +526,17 @@ fn extract_watch_page_with_runtime(
     for manifest in manifests {
         formats.extend(manifest_formats(client, &manifest, page)?);
     }
+    if let Some(language) = &captions.audio_language {
+        for format in &mut formats {
+            if format.stream_kind != StreamKind::VideoOnly && format.language.is_none() {
+                format.language = Some(language.clone());
+            }
+        }
+    }
     let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
-        subtitles: Default::default(),
+        automatic_captions: captions.automatic,
+        subtitles: captions.subtitles,
         requested_subtitles: None,
         last_playlist_index: None,
         playlist_index: None,
@@ -555,7 +584,15 @@ impl Extractor for ConfiguredYoutube {
             return Ok(None);
         };
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        extract_watch_page_with_runtime(client, &page, &id, self.runtime.as_ref(), None).map(Some)
+        extract_watch_page_with_caption_options(
+            client,
+            &page,
+            &id,
+            self.runtime.as_ref(),
+            None,
+            self.include_translated_subtitles,
+        )
+        .map(Some)
     }
 }
 

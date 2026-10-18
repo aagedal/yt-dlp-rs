@@ -1,5 +1,5 @@
 //! Pure subtitle inventory rendering; never selects or inspects resources.
-use crate::VideoInfo;
+use crate::{Subtitles, VideoInfo};
 
 fn visible(value: &str, limit: usize) -> String {
     if limit == 0 {
@@ -34,12 +34,31 @@ fn visible(value: &str, limit: usize) -> String {
 /// Render declared language/format metadata without resource URLs or selection.
 /// Cells are capped at 128 characters, the caption at 256 and rows at 1024.
 pub fn render_subtitles(info: &VideoInfo) -> String {
-    let prefix = "[info] Available subtitles for ";
+    render(info, &info.subtitles, "[info] Available subtitles for ")
+}
+
+/// Render automatic caption metadata, with the same bounds as normal subtitles.
+pub fn render_automatic_captions(info: &VideoInfo) -> String {
+    render(
+        info,
+        &info.automatic_captions,
+        "[info] Available automatic captions for ",
+    )
+}
+
+fn render(info: &VideoInfo, subtitles: &Subtitles, prefix: &str) -> String {
+    let names = subtitles.entries.iter().take(1024).any(|(_, formats)| {
+        formats
+            .iter()
+            .take(1024)
+            .any(|format| format.name.is_some())
+    });
     let mut output = format!(
-        "{prefix}{}:\nLANGUAGE  FORMATS\n",
-        visible(&info.id, 256 - prefix.len() - 1)
+        "{prefix}{}:\nLANGUAGE  {}FORMATS\n",
+        visible(&info.id, 256 - prefix.len() - 1),
+        if names { "NAME  " } else { "" }
     );
-    for (language, formats) in info.subtitles.entries.iter().take(1024) {
+    for (language, formats) in subtitles.entries.iter().take(1024) {
         let language = visible(language.as_deref().unwrap_or("null"), 128);
         let mut extensions = String::new();
         for format in formats.iter().take(1024) {
@@ -53,10 +72,19 @@ pub fn render_subtitles(info: &VideoInfo) -> String {
         }
         output.push_str(&language);
         output.push_str("  ");
+        if names {
+            let name = formats
+                .iter()
+                .take(1024)
+                .find_map(|format| format.name.as_deref())
+                .unwrap_or("");
+            output.push_str(&visible(name, 128));
+            output.push_str("  ");
+        }
         output.push_str(&visible(&extensions, 128));
         output.push('\n');
     }
-    if info.subtitles.entries.len() > 1024 {
+    if subtitles.entries.len() > 1024 {
         output.push_str("…\n");
     }
     output

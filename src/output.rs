@@ -2,7 +2,7 @@ mod formats;
 mod subtitles;
 mod template;
 pub use formats::render_formats;
-pub use subtitles::render_subtitles;
+pub use subtitles::{render_automatic_captions, render_subtitles};
 
 use crate::{Result, VideoInfo};
 use std::path::PathBuf;

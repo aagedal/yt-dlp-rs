@@ -123,9 +123,14 @@
         "src/extractor/youtube/integration/manifests.rs",
         "tools/compare_youtube_hls.py",
         "tools/test_compare_youtube_hls.py",
-        "upstream/notes/youtube-hls.md"
+        "upstream/notes/youtube-hls.md",
+        "src/extractor/youtube/captions.rs",
+        "src/extractor/youtube/integration/captions.rs",
+        "tools/compare_youtube_captions.py",
+        "tools/test_compare_youtube_captions.py",
+        "upstream/notes/youtube-captions.md"
       ],
-      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API direct formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; native finite HLS VOD discovery for initial/anonymous WEB responses under optional HLS token policy, shared path-n and direct URL challenge batch, native hls format IDs/groups; no other API clients, token acquisition, authentication, live, fragmented direct adaptive delivery, DASH discovery, SABR or playlists"
+      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API direct formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; native finite HLS VOD discovery for initial/anonymous WEB responses under optional HLS token policy, shared path-n and direct URL challenge batch, native hls format IDs/groups; no other API clients, token acquisition, authentication, live, fragmented direct adaptive delivery, DASH discovery, SABR or playlists; bounded manual/ASR caption URL/name metadata, translation/original aliases and audio-language inference under WEB subtitle token policy; no caption token acquisition or URL deciphering"
     },
     {
       "name": "youtube-challenge-runtime",
@@ -318,7 +323,30 @@
         "tools/test_compare_subtitles.py",
         "upstream/notes/html5-subtitles.md"
       ],
-      "scope": "Direct-child HTML5 subtitle/caption track metadata with ordered optional-language groups, pinned URL sanitation/extension completion; native listing, literal/all/exclusion language selection and ordered format preferences; sidecar-only skip-download and native HTTP identity-byte sidecars with referrers/retries/cancellation/no-clobber publication before media; sanitized collision-safe paths and explicit unknown-language errors; no general regex, automatic/site/manifest subtitles, conversion/embedding, decompression or full filename/timing parity"
+      "scope": "Direct-child HTML5 subtitle/caption track metadata with ordered optional-language groups, pinned URL sanitation/extension completion; native listing, literal/all/exclusion language selection and ordered format preferences; sidecar-only skip-download and native HTTP identity-byte sidecars with referrers/retries/cancellation/no-clobber publication before media; sanitized collision-safe paths and explicit unknown-language errors; normal/automatic source selection with manual precedence and independent automatic write flags; no general regex, other-site/manifest subtitles, conversion/embedding, decompression or full filename/timing parity"
+    },
+    {
+      "name": "youtube-captions",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/youtube/_video.py",
+        "yt_dlp/extractor/youtube/_base.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py"
+      ],
+      "rust": [
+        "src/extractor/youtube/captions.rs",
+        "src/extractor/youtube/integration/captions.rs",
+        "src/subtitles.rs",
+        "src/main.rs",
+        "src/output/subtitles.rs",
+        "tests/fixtures/youtube/captions/",
+        "tools/compare_youtube_captions.py",
+        "tools/test_compare_youtube_captions.py",
+        "upstream/notes/youtube-captions.md"
+      ],
+      "scope": "Single supported WEB player response manual/ASR captions, exact ordered seven server-side formats/names/queries, gated manual translations, ASR original aliases/translations and inferred audio language; required subtitle token skips remaining response tracks; manual-preferred combined selection/listing and native sidecars; no token acquisition, additional clients, URL deciphering, conversion/embedding or live-site reliability claim"
     }
   ]
 }

@@ -9,7 +9,7 @@ use yt_dlp_rs::{
     DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions,
     PlaylistSelection, SubtitleOptions, YoutubeDl, YoutubeOptions,
     output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
-    render_subtitles, subtitle_paths, validate_format_selector,
+    render_automatic_captions, render_subtitles, subtitle_paths, validate_format_selector,
 };
 
 #[derive(Parser)]
@@ -38,6 +38,20 @@ struct Args {
     /// Disable subtitle sidecar writing
     #[arg(long, alias = "no-write-srt", overrides_with = "write_subs")]
     no_write_subs: bool,
+    /// Write selected automatically generated caption sidecars
+    #[arg(
+        long,
+        alias = "write-automatic-subs",
+        overrides_with = "no_write_auto_subs"
+    )]
+    write_auto_subs: bool,
+    /// Disable automatic caption sidecar writing
+    #[arg(
+        long,
+        alias = "no-write-automatic-subs",
+        overrides_with = "write_auto_subs"
+    )]
+    no_write_auto_subs: bool,
     /// Comma-separated literal subtitle languages, all and -exclusions (no regex)
     #[arg(
         long,
@@ -117,6 +131,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let subtitle_options = SubtitleOptions::new(subtitle_languages.as_deref(), &args.sub_format)?;
     let mut downloader = YoutubeDl::with_youtube_options(YoutubeOptions {
         js_runtime: args.youtube_js_runtime,
+        include_translated_subtitles: args.write_auto_subs || args.list_subs,
     })?;
     if let Some(path) = args.ffmpeg_location {
         downloader = downloader.with_ffmpeg(path);
@@ -146,14 +161,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             } else {
                 result
             };
-            if args.write_subs {
+            if args.write_subs || args.write_auto_subs {
                 let select = |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
-                    let selection = subtitle_options.select(&info.subtitles)?;
+                    let selection = subtitle_options.select_sources(
+                        &info.subtitles,
+                        &info.automatic_captions,
+                        args.write_subs,
+                        args.write_auto_subs,
+                    )?;
                     for warning in selection.warnings {
                         eprintln!("WARNING: {}: {warning}", info.id);
                     }
-                    info.requested_subtitles =
-                        (!info.subtitles.is_empty()).then_some(selection.requested);
+                    info.requested_subtitles = ((args.write_subs && !info.subtitles.is_empty())
+                        || (args.write_auto_subs && !info.automatic_captions.is_empty()))
+                    .then_some(selection.requested);
                     Ok(())
                 };
                 match &mut result {
@@ -182,6 +203,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         for info in extracted.into_entries() {
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 if args.list_subs {
+                    if !info.automatic_captions.is_empty() {
+                        write!(stdout, "{}", render_automatic_captions(&info))?;
+                    }
                     write!(stdout, "{}", render_subtitles(&info))?;
                 }
                 if args.list_formats {
@@ -335,5 +359,26 @@ fn main() -> std::process::ExitCode {
             eprintln!("ERROR: {error}");
             std::process::ExitCode::FAILURE
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn automatic_caption_flags_override_in_argument_order() {
+        let parse = |flags: &[&str]| {
+            Args::try_parse_from(
+                std::iter::once("yt-dlp-rs")
+                    .chain(flags.iter().copied())
+                    .chain(std::iter::once("https://example.test/video.mp4")),
+            )
+            .unwrap()
+        };
+        assert!(!parse(&["--write-auto-subs", "--no-write-automatic-subs"]).write_auto_subs);
+        assert!(parse(&["--no-write-auto-subs", "--write-automatic-subs"]).write_auto_subs);
+        let both = parse(&["--write-subs", "--write-auto-subs"]);
+        assert!(both.write_subs && both.write_auto_subs);
     }
 }

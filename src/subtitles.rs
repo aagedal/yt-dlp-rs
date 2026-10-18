@@ -6,7 +6,7 @@ use serde::{
     ser::SerializeMap,
 };
 use std::{
-    collections::HashSet,
+    collections::{HashMap, HashSet},
     fmt,
     marker::PhantomData,
     path::{Path, PathBuf},
@@ -73,6 +73,8 @@ impl<'de, T: Deserialize<'de>> Deserialize<'de> for SubtitleMap<T> {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SubtitleFormat {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
     pub url: Url,
     pub ext: String,
 }
@@ -113,7 +115,48 @@ impl SubtitleOptions {
         })
     }
     pub fn select(&self, subtitles: &Subtitles) -> Result<SubtitleSelection> {
+        self.select_sources(subtitles, &Subtitles::default(), true, false)
+    }
+
+    /// Select enabled normal/automatic sources, preferring normal tracks for a
+    /// shared language and normal English variants before automatic English.
+    pub fn select_sources(
+        &self,
+        normal: &Subtitles,
+        automatic: &Subtitles,
+        write_normal: bool,
+        write_automatic: bool,
+    ) -> Result<SubtitleSelection> {
         validate_options(self.languages.as_deref(), &self.format)?;
+        let mut available = SubtitleMap::<&[SubtitleFormat]>::default();
+        let mut positions = HashMap::<Option<String>, usize>::new();
+        if write_normal {
+            for (language, formats) in &normal.entries {
+                if let Some(&index) = positions.get(language) {
+                    available.entries[index].1 = formats;
+                } else {
+                    positions.insert(language.clone(), available.entries.len());
+                    available.entries.push((language.clone(), formats));
+                }
+            }
+        }
+        let normal_count = available.entries.len();
+        if write_automatic {
+            for (language, formats) in &automatic.entries {
+                if !positions.contains_key(language) {
+                    positions.insert(language.clone(), available.entries.len());
+                    available.entries.push((language.clone(), formats));
+                }
+            }
+        }
+        self.select_available(&available, normal_count)
+    }
+
+    fn select_available(
+        &self,
+        subtitles: &SubtitleMap<&[SubtitleFormat]>,
+        normal_count: usize,
+    ) -> Result<SubtitleSelection> {
         let mut requested = Vec::new();
         if let Some(languages) = &self.languages {
             for token in languages.split(',') {
@@ -137,24 +180,25 @@ impl SubtitleOptions {
                 }
             }
         } else if !subtitles.is_empty() {
-            let index = if let Some(index) = subtitles
-                .entries
-                .iter()
-                .position(|(tag, _)| tag.as_deref() == Some("en"))
-            {
-                index
-            } else {
-                let mut english = None;
-                for (index, (tag, _)) in subtitles.entries.iter().enumerate() {
-                    let tag = tag.as_deref().ok_or_else(|| {
-                        error("cannot choose a default subtitle language from an unknown language")
-                    })?;
-                    if tag.starts_with("en") {
-                        english = Some(index);
-                        break;
+            let english =
+                |entries: &[(Option<String>, &[SubtitleFormat])]| -> Result<Option<usize>> {
+                    if let Some(index) = entries
+                        .iter()
+                        .position(|(tag, _)| tag.as_deref() == Some("en"))
+                    {
+                        return Ok(Some(index));
                     }
-                }
-                english.unwrap_or(0)
+                    for (index, (tag, _)) in entries.iter().enumerate() {
+                        let tag = tag.as_deref().ok_or_else(|| error("cannot choose a default subtitle language from an unknown language"))?;
+                        if tag.starts_with("en") {
+                            return Ok(Some(index));
+                        }
+                    }
+                    Ok(None)
+                };
+            let index = match english(&subtitles.entries[..normal_count])? {
+                Some(index) => index,
+                None => english(&subtitles.entries)?.unwrap_or(0),
             };
             requested.push(index);
         }
@@ -265,6 +309,7 @@ mod tests {
 
     fn format(ext: &str, id: &str) -> SubtitleFormat {
         SubtitleFormat {
+            name: None,
             url: format!("https://example.test/{id}.{ext}").parse().unwrap(),
             ext: ext.into(),
         }
@@ -292,6 +337,71 @@ mod tests {
             .iter()
             .map(|(tag, _)| tag.as_deref())
             .collect()
+    }
+
+    #[test]
+    fn pinned_normal_and_automatic_selection() {
+        let fixture: Value = serde_json::from_str(include_str!(
+            "../tests/fixtures/youtube/captions/cases.json"
+        ))
+        .unwrap();
+        for case in fixture["selection_cases"].as_array().unwrap() {
+            let map = |field: &str| -> Subtitles {
+                Subtitles {
+                    entries: case[field]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|group| {
+                            (
+                                group["language"].as_str().map(str::to_owned),
+                                serde_json::from_value(group["formats"].clone()).unwrap(),
+                            )
+                        })
+                        .collect(),
+                }
+            };
+            let selection =
+                SubtitleOptions::new(case["languages"].as_str(), case["format"].as_str().unwrap())
+                    .unwrap()
+                    .select_sources(
+                        &map("subtitles"),
+                        &map("automatic_captions"),
+                        case["write_manual"].as_bool().unwrap(),
+                        case["write_auto"].as_bool().unwrap(),
+                    )
+                    .unwrap();
+            let selected: Vec<Value> = selection.requested.entries.iter().map(|(language, format)| json!({
+                "language": language, "url": format.url, "ext": format.ext, "name": format.name,
+            })).collect();
+            assert_eq!(
+                json!(selected),
+                case["expected"]["selected"],
+                "{}",
+                case["name"]
+            );
+            assert_eq!(
+                !selection.warnings.is_empty(),
+                case["expected"]["warning"].as_bool().unwrap()
+            );
+        }
+    }
+
+    #[test]
+    fn automatic_inventory_names_are_bounded_and_escaped() {
+        let mut info = info();
+        let mut caption = format("vtt", "secret-url");
+        caption.name = Some(format!("English\n\u{202e}{}", "é".repeat(200)));
+        info.automatic_captions
+            .insert(Some("en".into()), vec![caption]);
+        let output = crate::render_automatic_captions(&info);
+        assert!(output.contains("Available automatic captions for test"));
+        assert!(output.contains("LANGUAGE  NAME  FORMATS"));
+        assert!(output.contains("English\\u{a}\\u{202e}"));
+        assert!(!output.contains("secret-url"));
+        assert_eq!(output.lines().count(), 3);
+        assert!(output.lines().last().unwrap().chars().count() < 145);
+        assert!(!render_subtitles(&info).contains("NAME"));
     }
 
     #[test]
@@ -583,6 +693,7 @@ mod tests {
                 entries: vec![(
                     case["language"].as_str().map(str::to_owned),
                     SubtitleFormat {
+                        name: None,
                         url: "https://example.test/sub".parse().unwrap(),
                         ext: case["ext"].as_str().unwrap().into(),
                     },

@@ -22,6 +22,7 @@ tractable for future agents.
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
 - `src/extractor/youtube.rs`: narrow watch-page/player response extraction,
   direct standalone/separate formats with opt-in offline signature/n solving.
+- `src/extractor/youtube/captions.rs`: bounded manual/ASR caption metadata and translation URL planning with WEB subtitle token policy.
 - `src/extractor/youtube/client.rs`: isolated anonymous WEB player API request
   fallback and explicit token-exempt itag 18 policy.
 - `src/download.rs`: streaming HTTP transfer, byte-progress/cancellation checkpoints, and no-clobber publication.
@@ -145,8 +146,10 @@ remain outside the current result contract.
    authentication, cookies, subtitles, archives, and postprocessors explicitly.
    HTML5 subtitle/caption track discovery, listing, literal language/all/exclusion
    selection, format preferences and native HTTP sidecars are implemented.
-   Skip-download permits sidecar-only writes without archive records; automatic,
-   site/manifest subtitles, regex languages, conversion and embedding remain open.
+   Skip-download permits sidecar-only writes without archive records. The supported
+   YouTube WEB response subset also exposes manual/automatic captions, translations,
+   original aliases, token gating and independent automatic sidecar selection.
+   Other-site/manifest subtitles, regex languages, conversion and embedding remain open.
    Basic download archives are implemented: cached extractor-key/ID membership,
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive

@@ -16,6 +16,7 @@ cargo run --locked -- --dump-json 'https://example.com/video.mp4'
 cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --list-subs 'https://example.com/video-with-tracks.html'
 cargo run --locked -- --write-subs --sub-langs all --skip-download 'https://example.com/video-with-tracks.html'
+cargo run --locked -- --write-auto-subs --sub-langs en --skip-download 'https://www.youtube.com/watch?v=VIDEO_ID'
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
@@ -102,8 +103,12 @@ Supported today:
   `--write-subs` sidecars selected with literal `--sub-langs` tags/all/exclusions
   and ordered `--sub-format` preferences. `--skip-download` writes requested
   sidecars without media or archive records. Sidecars use native HTTP retries,
-  referrers, temporary cleanup and no overwrite; automatic captions, regex
-  languages, conversion/embedding and site/manifest subtitles remain unsupported.
+  referrers, temporary cleanup and no overwrite. The supported YouTube response
+  subset also discovers manual and automatic captions, translations, original
+  aliases and names. `--write-auto-subs` enables automatic sidecars independently;
+  manual tracks win shared languages when both writing flags are enabled.
+  Caption PO-token restrictions are preserved; no token acquisition is implemented.
+  Regex languages, conversion/embedding and manifest/other-site subtitles remain unsupported.
 - `--download-archive FILE` skips recorded extractor/video IDs before selection and
   records only successfully published downloads. Metadata/listing/simulation never
   write the archive. Extraction still makes normal requests for recorded inputs.
@@ -150,8 +155,11 @@ network requests. MIME identification is not media-container verification.
 The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
 `VideoFormat`, `StreamKind`, `Fragment`, `ByteRange`, `HlsAes128`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
 `ExtractionOptions`, `YoutubeOptions`, and an `Extractor` interface.
-`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path) })`
+`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path), ..Default::default() })`
 configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it disabled.
+`include_translated_subtitles: true` additionally exposes translated manual captions
+in `automatic_captions`; the CLI enables this with `--write-auto-subs` or `--list-subs`.
+ASR translations are discovered independently, without fetching their payloads.
 `YoutubeDl::new()?.with_ffmpeg(path)` configures optional local merging.
 `extract_result_unselected` / `extract_result_unselected_with_options` expose all
 eligible alternatives without library selection; `select_result` applies configured
@@ -168,7 +176,9 @@ ID applies to every playlist entry independently; each must offer that ID.
 original index/count and selected order/count. Single videos are unaffected.
 Library extraction methods do not implicitly apply CLI playlist options.
 `SubtitleOptions::new(languages, format)?.select(&info.subtitles)` returns selected
-subtitle metadata and warnings. `subtitle_paths` plans sanitized sidecar names;
+subtitle metadata and warnings. `select_sources(&info.subtitles,
+&info.automatic_captions, write_normal, write_automatic)` selects enabled sources
+with manual precedence. `subtitle_paths` plans sanitized sidecar names;
 `download_subtitle_with_options` / `download_subtitle_with_progress` copy one
 resource with the normal retry/cancellation policy. Selection, writing and archive
 recording remain explicit library operations.

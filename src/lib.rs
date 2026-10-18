@@ -21,7 +21,7 @@ pub use extractor::YoutubeOptions;
 pub use info::{
     ByteRange, ExtractResult, Fragment, HlsAes128, PlaylistInfo, StreamKind, VideoFormat, VideoInfo,
 };
-pub use output::render_subtitles;
+pub use output::{render_automatic_captions, render_subtitles};
 pub use playlist::PlaylistSelection;
 pub use subtitles::{
     RequestedSubtitles, SubtitleFormat, SubtitleMap, SubtitleOptions, SubtitleSelection, Subtitles,
