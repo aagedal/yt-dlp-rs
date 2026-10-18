@@ -321,3 +321,30 @@ fn print_to_file_runs_under_print_simulation_and_validates_at_startup() {
     }
     assert_eq!(server.count("/page.html"), 0);
 }
+
+#[test]
+fn no_simulate_downloads_after_printing_json_and_listing() {
+    for (flags, stdout_check) in [
+        (vec!["-O", "id"], "page-1\n"),
+        (vec!["-j"], "\"id\":\"page-1\""),
+        (vec!["-F"], "ID"),
+        (vec!["-s", "--no-simulate"], ""),
+    ] {
+        let server = Server::new();
+        let directory = tempfile::tempdir().unwrap();
+        let mut args = flags.clone();
+        args.extend(["--no-simulate", "-o", "%(id)s.%(ext)s"]);
+        let output = server.cli(&["/page.html"], &args, directory.path());
+        assert!(success(&output).contains(stdout_check), "{flags:?}");
+        assert_eq!(
+            std::fs::read(directory.path().join("page-1.mp4")).unwrap(),
+            b"media",
+            "{flags:?}"
+        );
+    }
+    // A later -s wins over --no-simulate.
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    success(&server.cli(&["/page.html"], &["--no-simulate", "-s"], directory.path()));
+    assert_eq!(entries(directory.path()), 0);
+}

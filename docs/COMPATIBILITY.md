@@ -12,7 +12,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-j`, `--dump-json` | One selected `VideoInfo` JSON object per video, including each HTML5 playlist entry; no downloads; with `-F`, a table precedes JSON |
 | `-J`, `--dump-single-json` | One JSON object per URL after selection: the `-j` object for videos; playlists add `_type`, `playlist_count`, `requested_entries` and selected `entries`; implies quiet simulation; native field shape like `-j`, not upstream `sanitize_info` output |
 | `-F`, `--list-formats` | List eligible alternatives without selection or downloads; combined `-j`/`-s` retain normal selection; native table styling |
-| `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
+| `-s`, `--simulate`, `--no-simulate` | Extract metadata, write diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
 | `-O`, `--print [video:]TEMPLATE` | Print a field list or unsanitized output template per selected video; implies quiet simulation; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-filename` | Hidden upstream aliases printing title, ID, selected URLs and prepared filename after `--print` lines; imply quiet simulation |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
@@ -51,7 +51,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection, record only after successful download/merge publication; no writes in metadata/listing/simulation |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
-| All other flags | Rejected; `--no-simulate` and general option parity are not implemented |
+| All other flags | Rejected; general option parity is not implemented |
 
 Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
@@ -987,8 +987,8 @@ As in pinned upstream control flow, adding `-j` or `-s` retains normal selection
 is human text plus JSON, rather than plain NDJSON. `-F -s` selects and prints the
 table without downloading. Existing native selection/default/group policies apply,
 so a separate-only combined mode may require an explicit pair selector or merger
-configuration. `--no-simulate` and upstream listing-style toggles remain unsupported;
-listing never downloads in this CLI subset.
+configuration. With `--no-simulate`, listing keeps normal selection and then
+downloads; upstream listing-style toggles remain unsupported.
 
 Tables retain extractor declaration order and show ID, extension, resolution,
 stream kind, exact declared/probed filesize in bytes, declared kbps rates, language
@@ -1258,8 +1258,8 @@ regardless of argument order. `--get-thumbnail`, `--get-description`,
 represented. With `-j`, printed lines precede each JSON object.
 
 Printing and `--get-*` imply quiet simulation: no media, subtitle, info JSON or
-archive writes, and no `[extractor] id: title` stderr line. `--no-simulate`
-is not implemented. Listing options still print their tables and then keep
+archive writes, and no `[extractor] id: title` stderr line, unless
+`--no-simulate` is given, which prints and then downloads. Listing options still print their tables and then keep
 normal selection, as with `-j`/`-s`. All lines for a video are rendered before
 any is written, so a render failure prints nothing for that video, reports an
 error and continues with later inputs. A failed `-o` render fails only videos
@@ -1328,8 +1328,8 @@ no URLs or resource inspection. Cells/captions escape controls, line/bidirection
 controls and are bounded to 128/256 characters, with at most 1024 rows. List-only
 mode bypasses media format availability; adding `-j` or `-s` retains selection.
 Tables/JSON wait for all retained entries to extract and select successfully.
-Listing, JSON and simulation never write sidecars or render output paths.
-`--no-simulate` and upstream table styling remain unsupported.
+Without `--no-simulate`, listing, JSON and simulation never write sidecars or render output paths.
+Upstream table styling remains unsupported.
 
 Actual downloads plan sanitized sidecars before I/O, replacing a final matching
 media extension with `.LANG.EXT`, or appending that suffix otherwise. Language and

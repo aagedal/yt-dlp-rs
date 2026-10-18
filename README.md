@@ -155,8 +155,8 @@ Supported today:
   or unsanitized output templates per selected video, including `j` JSON values,
   `filename` and selected `urls`; `-e`, `--get-id`, `-g` and `--get-filename` are
   supported aliases. Printing implies quiet simulation. `--print-to-file` appends
-  video-stage lines without implying simulation. Other print stages and
-  `--no-simulate` are not implemented; see
+  video-stage lines without implying simulation; `--no-simulate` downloads after
+  printing. Other print stages are not implemented; see
   [print templates](docs/COMPATIBILITY.md#print-templates).
 - Typed output fields include IDs/titles, dimensions, filesize and playlist indices,
   with string `s`, integer `d/i/u` and fixed-point `f/F` width/precision formatting.

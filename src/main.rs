@@ -38,8 +38,11 @@ struct Args {
     #[arg(short = 'J', long)]
     dump_single_json: bool,
     /// Extract metadata without writing media
-    #[arg(short = 's', long)]
+    #[arg(short = 's', long, overrides_with_all = ["simulate", "no_simulate"])]
     simulate: bool,
+    /// Download even when printing, JSON or listing options would simulate
+    #[arg(long, overrides_with_all = ["simulate", "no_simulate"])]
+    no_simulate: bool,
     /// Print a video field list or output template per video, optionally prefixed with video: (implies simulation; repeatable)
     #[arg(
         short = 'O',
@@ -247,6 +250,41 @@ struct Args {
     trim_filenames: i64,
 }
 
+/// Upstream `simulate`/`quiet` resolution (`__init__` and `YoutubeDL.__init__`).
+#[derive(Debug, PartialEq, Eq)]
+struct Simulation {
+    simulate: bool,
+    /// `simulate == 'list_only'`: listing without format selection.
+    list_only: bool,
+    quiet: bool,
+}
+
+impl Args {
+    fn simulation(&self) -> Simulation {
+        // "any getting" and video-stage print templates imply quiet simulation.
+        let getting = self.dump_json
+            || self.dump_single_json
+            || !self.print.is_empty()
+            || self.get_title
+            || self.get_id
+            || self.get_url
+            || self.get_filename;
+        let listing = self.list_formats || self.list_subs;
+        let explicit = if self.simulate {
+            Some(true)
+        } else if self.no_simulate {
+            Some(false)
+        } else {
+            None
+        };
+        Simulation {
+            simulate: explicit.unwrap_or(getting || listing),
+            list_only: explicit.is_none() && !getting && listing,
+            quiet: getting,
+        }
+    }
+}
+
 /// Append one UTF-8 line, creating parent directories like upstream.
 fn append_line(path: &std::path::Path, line: &str) -> io::Result<()> {
     if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
@@ -356,11 +394,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .iter()
         .map(|[spec, file]| PrintToFile::parse(spec, file))
         .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
-    // Like upstream, printing implies quiet simulation (no --no-simulate here).
+    // Like upstream, printing implies quiet simulation unless --no-simulate.
     let printing = !print_templates.is_empty();
-    // -J, like printing, is quiet and implies simulation.
-    let quiet = printing || args.dump_single_json;
-    let simulate = args.simulate || quiet;
+    let Simulation {
+        simulate,
+        list_only,
+        quiet,
+    } = args.simulation();
+    let listing = args.list_formats || args.list_subs;
     let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
     let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
     audio_options.keep_video = args.keep_video;
@@ -481,13 +522,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         trim_file_name: args.trim_filenames,
         paths: output_paths,
     };
-    let list_only = (args.list_formats || args.list_subs) && !args.dump_json && !simulate;
-    // Like upstream, simulation, JSON printing and listing never write info JSON.
-    let writes_info_json = args.write_info_json
-        && !args.dump_json
-        && !simulate
-        && !args.list_formats
-        && !args.list_subs;
+    // Like upstream, simulation never writes info JSON.
+    let writes_info_json = args.write_info_json && !simulate;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in urls {
@@ -588,7 +624,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 if args.list_formats {
                     write!(stdout, "{}", render_formats(&info))?;
                 }
-                if (args.list_formats || args.list_subs) && !args.dump_json && !printing {
+                if listing && !args.dump_json && !printing && simulate {
                     return Ok(());
                 }
                 if printing {
@@ -627,11 +663,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 if args.dump_json {
                     serde_json::to_writer(&mut stdout, &info)?;
                     writeln!(stdout)?;
-                } else if simulate {
-                    if quiet {
-                        return Ok(());
+                }
+                if simulate {
+                    if !quiet {
+                        eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
                     }
-                    eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
                 } else {
                     if args.skip_download
                         && !writes_info_json
@@ -1039,6 +1075,30 @@ fn main() -> std::process::ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn saved_upstream_simulation_resolution() {
+        let fixture: serde_json::Value =
+            serde_json::from_str(include_str!("../tests/fixtures/simulate/cases.json")).unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let mut argv = vec!["yt-dlp-rs".to_owned()];
+            argv.extend(
+                case["args"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|arg| arg.as_str().unwrap().to_owned()),
+            );
+            argv.push("https://example.invalid/".into());
+            let simulation = Args::try_parse_from(&argv).unwrap().simulation();
+            let expected = Simulation {
+                simulate: case["simulate"].as_bool().unwrap(),
+                list_only: case["list_only"].as_bool().unwrap(),
+                quiet: case["quiet"].as_bool().unwrap(),
+            };
+            assert_eq!(simulation, expected, "{argv:?}");
+        }
+    }
 
     #[test]
     fn saved_embedding_flags_preserve_implied_writing_and_retention_precedence() {

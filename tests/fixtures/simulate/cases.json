@@ -1,0 +1,194 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "args": [],
+   "simulate": false,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-s"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "--no-simulate"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-s",
+    "--no-simulate"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "--no-simulate",
+    "-s"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-j"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-J"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-O",
+    "id"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-e"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "--get-id"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-g"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "--get-filename"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-F"
+   ],
+   "simulate": true,
+   "list_only": true,
+   "quiet": false
+  },
+  {
+   "args": [
+    "--list-subs"
+   ],
+   "simulate": true,
+   "list_only": true,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-F",
+    "-j"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-F",
+    "-O",
+    "id"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-F",
+    "--no-simulate"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-F",
+    "-s"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-j",
+    "--no-simulate"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-O",
+    "id",
+    "--no-simulate"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "--print-to-file",
+    "id",
+    "f.txt"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-F",
+    "--list-subs",
+    "-J"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  }
+ ]
+}
