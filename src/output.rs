@@ -1,8 +1,10 @@
+mod filename;
 mod formats;
 mod print;
 mod sanitize;
 mod subtitles;
 mod template;
+pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths};
 pub use formats::render_formats;
 pub use print::{PrintTemplate, PrintToFile};
 pub use sanitize::{FilenameMode, force_sanitize_path, sanitize_filename};
@@ -52,6 +54,8 @@ pub struct TemplateOptions {
     pub windows_filenames: bool,
     /// `--trim-filenames`: Python-slice length excluding extensions; 0 disables.
     pub trim_file_name: i64,
+    /// `--paths`: `home` and output-type directories joined before names.
+    pub paths: std::collections::BTreeMap<String, String>,
 }
 
 impl TemplateOptions {
@@ -74,6 +78,7 @@ impl Default for TemplateOptions {
             filename_mode: FilenameMode::Default,
             windows_filenames: false,
             trim_file_name: 0,
+            paths: Default::default(),
         }
     }
 }

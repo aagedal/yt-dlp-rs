@@ -15,7 +15,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-O`, `--print [video:]TEMPLATE` | Print a field list or unsanitized output template per selected video; implies quiet simulation; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-filename` | Hidden upstream aliases printing title, ID, selected URLs and prepared filename after `--print` lines; imply quiet simulation |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
-| `-o`, `--output` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; upstream metadata sanitization; no overwrite |
+| `-o`, `--output [TYPES:]TEMPLATE` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; upstream metadata sanitization; typed `subtitle`/`infojson`/`pl_infojson` templates (empty skips that file), `~`/`$VAR` template expansion; no overwrite; see [output paths](../upstream/notes/output-paths.md) |
+| `-P`, `--paths [TYPES:]PATH` | `home` (default) and output-type directories joined like upstream `get_output_path`; absolute templates ignore them with a warning; `temp:` is rejected |
 | `--list-subs` | Native language/format inventory; list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
 | `--write-subs`, `--write-srt` | Select normal subtitles and write sidecars before actual media downloads; JSON/simulation/listing only expose selection |
 | `--write-auto-subs`, `--write-automatic-subs` | Select automatic captions independently; manual tracks win shared languages when both writing flags are enabled |
@@ -1196,7 +1197,7 @@ otherwise dot/space-only and is not literally present at the same position in
 the template becomes `_`, so metadata never traverses directories (upstream can
 produce `../x.mp4`). Only literal template text can introduce directories.
 Neither metadata nor defaults trigger environment, home-directory or template
-expansion. On Windows hosts upstream's Windows `sanitize_path` is not ported.
+expansion; the literal template and `--paths` values do (`~`, `$NAME`, `${NAME}`). On Windows hosts upstream's Windows `sanitize_path` is not ported.
 See [filename sanitization](../upstream/notes/filename-sanitization.md).
 
 Specs are limited to 16 KiB and 256 percent tokens, widths/precisions to 4096,

@@ -10,11 +10,8 @@ use yt_dlp_rs::{
     AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult,
     ExtractionOptions, HttpOptions, InfoJsonWrite, PlaylistCounts, PlaylistSelection,
     PostprocessOptions, SubtitleConversion, SubtitleEmbedding, SubtitleFile, SubtitleOptions,
-    VideoMode, VideoOptions, YoutubeDl, YoutubeOptions, info_json_path,
-    output::{
-        PrintTemplate, PrintToFile, TemplateOptions, render_formats,
-        render_playlist_template_with_options, render_template_with_options,
-    },
+    VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
+    output::{OutputTemplates, PrintTemplate, PrintToFile, TemplateOptions, render_formats},
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
     validate_format_selector, video_info_json, write_info_json,
 };
@@ -210,8 +207,11 @@ struct Args {
     #[arg(long, default_value = "NA", value_name = "TEXT")]
     output_na_placeholder: String,
     /// Filename template: represented metadata with s/d/i/u/f/F conversions and %%
-    #[arg(short, long, value_name = "TEMPLATE", overrides_with = "output")]
-    output: Option<String>,
+    #[arg(short, long, value_name = "[TYPES:]TEMPLATE")]
+    output: Vec<String>,
+    /// Output directories: [TYPES:]PATH with home (default) or an output type such as subtitle/infojson
+    #[arg(short = 'P', long, value_name = "[TYPES:]PATH")]
+    paths: Vec<String>,
     /// Restrict filenames to ASCII and avoid "&" and spaces
     #[arg(long, overrides_with = "no_restrict_filenames")]
     restrict_filenames: bool,
@@ -245,6 +245,22 @@ fn append_line(path: &std::path::Path, line: &str) -> io::Result<()> {
         .append(true)
         .open(path)?;
     file.write_all(format!("{line}\n").as_bytes())
+}
+
+/// The media filename (`prepare_filename(info)`); the default template is never empty.
+fn prepare_media(
+    templates: &OutputTemplates,
+    info: &yt_dlp_rs::VideoInfo,
+    options: &TemplateOptions,
+) -> yt_dlp_rs::Result<PathBuf> {
+    Ok(templates
+        .prepare(info, None, options)?
+        .expect("default output template is non-empty"))
+}
+
+/// Upstream warns when an absolute media template makes `--paths` irrelevant.
+fn path_is_absolute_template(templates: &OutputTemplates) -> bool {
+    std::path::Path::new(&yt_dlp_rs::batch::expand_path_text(templates.get(None))).is_absolute()
 }
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
@@ -393,15 +409,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     } else {
         None
     };
-    let output_template = args
-        .output
-        .clone()
-        .unwrap_or_else(|| yt_dlp_rs::output::default_template(args.restrict_filenames));
+    let templates = OutputTemplates::parse(&args.output, args.restrict_filenames);
+    let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
         filename_mode: TemplateOptions::filename_mode(args.restrict_filenames, windows_filenames),
         windows_filenames: windows_filenames == Some(true),
         trim_file_name: args.trim_filenames,
+        paths: output_paths,
     };
     let list_only = (args.list_formats || args.list_subs) && !args.dump_json && !simulate;
     // Like upstream, simulation, JSON printing and listing never write info JSON.
@@ -474,13 +489,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             // Upstream writes playlist metadata before processing any entry,
             // and a failed write skips the playlist.
             let written = (|| -> Result<(), Box<dyn std::error::Error>> {
-                let path = render_playlist_template_with_options(
-                    &output_template,
+                let Some(path) = templates.prepare_playlist(
                     playlist,
                     counts,
+                    "pl_infojson",
                     &template_options,
-                )?;
-                let path = info_json_path(&path, None);
+                )?
+                else {
+                    return Ok(());
+                };
                 reject_reserved(&path, [&archive_path, &args.cookies])?;
                 let value = playlist_info_json(playlist, counts, epoch())?;
                 report_info_json("playlist", &path, write_info_json(&path, &value)?);
@@ -507,9 +524,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     return Ok(());
                 }
                 if printing {
-                    let filename =
-                        render_template_with_options(&output_template, &info, &template_options)
-                            .map(|path| path.to_string_lossy().into_owned());
+                    let filename = prepare_media(&templates, &info, &template_options)
+                        .map(|path| path.to_string_lossy().into_owned());
                     // Render every line first so a failure prints nothing partial.
                     let lines = print_templates
                         .iter()
@@ -522,9 +538,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                 }
                 if !print_files.is_empty() {
-                    let filename =
-                        render_template_with_options(&output_template, &info, &template_options)
-                            .map(|path| path.to_string_lossy().into_owned());
+                    let filename = prepare_media(&templates, &info, &template_options)
+                        .map(|path| path.to_string_lossy().into_owned());
                     // Render every destination and line before appending any.
                     let writes = print_files
                         .iter()
@@ -559,8 +574,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     {
                         return Ok(());
                     }
-                    let path =
-                        render_template_with_options(&output_template, &info, &template_options)?;
+                    let path = prepare_media(&templates, &info, &template_options)?;
+                    if !template_options.paths.is_empty() && path_is_absolute_template(&templates) {
+                        eprintln!(
+                            "WARNING: --paths is ignored since an absolute path is given in output template"
+                        );
+                    }
                     if !args.skip_download {
                         match std::fs::symlink_metadata(&path) {
                             Ok(_) => return Err(yt_dlp_rs::Error::OutputExists(path).into()),
@@ -569,10 +588,26 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                     }
                     // Plan source, intermediate and final names before subtitle I/O.
-                    let sidecars = subtitle_paths(&info, &path)?;
+                    let has_subtitles = info
+                        .requested_subtitles
+                        .as_ref()
+                        .is_some_and(|subtitles| !subtitles.is_empty());
+                    let sidecars =
+                        match templates.prepare(&info, Some("subtitle"), &template_options)? {
+                            Some(base) => subtitle_paths(&info, &base)?,
+                            None => {
+                                if has_subtitles {
+                                    eprintln!("[info] Skipping writing video subtitles");
+                                }
+                                Vec::new()
+                            }
+                        };
                     let mut seen = std::collections::HashSet::new();
-                    let info_json =
-                        writes_info_json.then(|| info_json_path(&path, Some(&info.ext)));
+                    let info_json = if writes_info_json {
+                        templates.prepare(&info, Some("infojson"), &template_options)?
+                    } else {
+                        None
+                    };
                     if let Some(info_json) = &info_json {
                         seen.insert(info_json.as_os_str().to_ascii_lowercase());
                         if paths_alias(info_json, &path)? {

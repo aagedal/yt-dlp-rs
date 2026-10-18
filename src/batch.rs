@@ -83,6 +83,11 @@ pub fn read_batch_urls(bytes: &[u8]) -> Vec<String> {
 /// `${NAME}` (ASCII word names) expand from the environment; unknown
 /// variables are kept. `~user` forms and a missing `HOME` leave `~` unchanged.
 pub fn expand_path(path: &str) -> PathBuf {
+    PathBuf::from(expand_path_text(path))
+}
+
+/// [`expand_path`] as text, for templates and `--paths` values.
+pub fn expand_path_text(path: &str) -> String {
     let path = match (path.strip_prefix('~'), std::env::var("HOME")) {
         (Some(rest), Ok(home)) if rest.is_empty() || rest.starts_with('/') => {
             let expanded = format!("{}{rest}", home.trim_end_matches('/'));
@@ -94,7 +99,7 @@ pub fn expand_path(path: &str) -> PathBuf {
         }
         _ => path.to_owned(),
     };
-    PathBuf::from(expand_vars(&path))
+    expand_vars(&path)
 }
 
 fn expand_vars(path: &str) -> String {

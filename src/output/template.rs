@@ -461,19 +461,42 @@ fn append(output: &mut String, value: &str) -> Result<()> {
     Ok(())
 }
 
+/// Render an explicit filename template (upstream `prepare_filename(outtmpl=...)`).
 pub(super) fn render(
     template: &str,
     info: Source<'_>,
     options: &super::TemplateOptions,
 ) -> Result<PathBuf> {
-    let output = expand(template, info, options)?;
+    render_kind(template, info, options, None)
+}
+
+/// Upstream `prepare_filename`: `kind` is an output type (`None` for media or
+/// an explicit template). Expands `~`/`$VAR` in the template, renders sanitized
+/// metadata, forces the type extension, trims, guards metadata path components,
+/// joins `--paths` and optionally forces Windows path sanitization.
+pub(super) fn render_kind(
+    template: &str,
+    info: Source<'_>,
+    options: &super::TemplateOptions,
+    kind: Option<&str>,
+) -> Result<PathBuf> {
+    let template = crate::batch::expand_path_text(template);
+    let mut output = expand(&template, info, options)?;
     if output.is_empty() || output == "-" {
         return Err(invalid("empty paths and stdout output are unsupported"));
     }
-    let output = guard_components(&trim_file_name(&output, options.trim_file_name), template);
+    if let Some(ext) = kind.and_then(super::filename::forced_extension) {
+        let real = match info {
+            Source::Video(info) | Source::Print { info, .. } => Some(info.ext.as_str()),
+            Source::Playlist { .. } => None,
+        };
+        output = super::filename::replace_extension(&output, ext, real);
+    }
+    let output = guard_components(&trim_file_name(&output, options.trim_file_name), &template);
     if output.is_empty() {
         return Err(invalid("empty paths and stdout output are unsupported"));
     }
+    let output = super::filename::output_path(options, kind, &output);
     // Like upstream get_output_path, forced Windows names sanitize the whole path.
     let output = if options.windows_filenames {
         super::sanitize::force_sanitize_path(&output)

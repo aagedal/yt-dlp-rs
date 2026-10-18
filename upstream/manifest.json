@@ -308,9 +308,14 @@
         "tests/fixtures/sanitize/",
         "tools/compare_sanitize.py",
         "tools/test_compare_sanitize.py",
-        "upstream/notes/filename-sanitization.md"
+        "upstream/notes/filename-sanitization.md",
+        "src/output/filename.rs",
+        "tests/fixtures/paths/",
+        "tools/compare_paths.py",
+        "tools/test_compare_paths.py",
+        "upstream/notes/output-paths.md"
       ],
-      "scope": "Whitelist of represented root string/integer/boolean filename fields; s/d/i/u/f/F flags-width-precision and inert length modifiers, known-field alternatives/literal defaults/global NA option, upstream float numeric casting and exact bare-s playlist padding before archive filtering; bounded grammar/output, upstream default/restricted/minimal sanitize_filename with NFKC/accents, forced non-Windows sanitize_path, trim_file_name and restricted default template, native dot-only path-component guard and explicit unsupported errors; no arbitrary metadata/traversal/math/date/replacement/custom conversions, S conversion, filename-sanitization compat option or Windows-host sanitize_path"
+      "scope": "Whitelist of represented root string/integer/boolean filename fields; s/d/i/u/f/F flags-width-precision and inert length modifiers, known-field alternatives/literal defaults/global NA option, upstream float numeric casting and exact bare-s playlist padding before archive filtering; bounded grammar/output, upstream default/restricted/minimal sanitize_filename with NFKC/accents, forced non-Windows sanitize_path, trim_file_name and restricted default template, native dot-only path-component guard, typed -o subtitle/infojson/pl_infojson templates with forced extensions and empty-template skips, -P home/type paths with posix join and ~/$VAR template/path expansion, and explicit unsupported errors; no -P temp relocation; no arbitrary metadata/traversal/math/date/replacement/custom conversions, S conversion, filename-sanitization compat option or Windows-host sanitize_path"
     },
     {
       "name": "html5-subtitles",

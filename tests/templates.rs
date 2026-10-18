@@ -430,3 +430,72 @@ fn filename_option_flags_select_upstream_sanitization_and_trimming() {
         b"media"
     );
 }
+
+#[test]
+fn paths_and_typed_templates_place_media_and_info_json() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    success(&server.cli(
+        &["/typed.html"],
+        &[
+            "-P",
+            " out ",
+            "-P",
+            "infojson:meta",
+            "-o",
+            "%(title)s.%(ext)s",
+            "-o",
+            "INFOJSON:j/%(title)s",
+            "--write-info-json",
+        ],
+        directory.path(),
+    ));
+    let out = directory.path().join("out");
+    assert_eq!(std::fs::read(out.join("Typed (1).mp4")).unwrap(), b"media");
+    let json: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(out.join("meta/j/Typed (1).info.json")).unwrap())
+            .unwrap();
+    assert_eq!(json["title"], "Typed (1)");
+    // An empty typed template skips that file, as upstream does.
+    let skipped = tempfile::tempdir().unwrap();
+    success(&server.cli(
+        &["/typed.html"],
+        &["-o", "infojson:", "--write-info-json"],
+        skipped.path(),
+    ));
+    assert_eq!(std::fs::read_dir(skipped.path()).unwrap().count(), 1);
+    assert!(
+        server
+            .cli(&["/typed.html"], &["-P", "temp:t"], skipped.path())
+            .stderr
+            .windows(11)
+            .any(|window| window == b"unsupported")
+    );
+}
+
+#[test]
+fn templates_and_paths_expand_home_and_variables_before_rendering() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "-O",
+            "filename",
+            "-P",
+            "~/v",
+            "-o",
+            "$YTDLP_RS_DIR/${YTDLP_RS_DIR}/$YTDLP_RS_UNSET/%(title)s.%(ext)s",
+        ])
+        .arg(server.url("/typed.html"))
+        .current_dir(directory.path())
+        .env("HOME", "/home/fixture")
+        .env("YTDLP_RS_DIR", "vars")
+        .env_remove("YTDLP_RS_UNSET")
+        .output()
+        .unwrap();
+    success(&output);
+    assert_eq!(
+        String::from_utf8(output.stdout).unwrap(),
+        "/home/fixture/v/vars/vars/$YTDLP_RS_UNSET/Typed (1).mp4\n"
+    );
+}
