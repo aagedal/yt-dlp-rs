@@ -41,6 +41,8 @@ pub enum Error {
     DownloadCancelled,
     #[error("postprocessing failed: {0}")]
     Postprocess(String),
+    #[error("download archive failed: {0}")]
+    Archive(String),
     #[error("filesystem error: {0}")]
     Io(#[from] std::io::Error),
     #[error("output already exists: {0}")]

@@ -28,6 +28,7 @@ tractable for future agents.
 - `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
 - `src/dash.rs` and `src/extractor/dash.rs`: bounded static single-period MPD parsing and generic/HTML5 acquisition.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
+- `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
 - `src/output.rs`: template rendering and filename-component sanitization; `src/output/formats.rs` renders format inventories.
@@ -133,6 +134,11 @@ remain outside the current result contract.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
    authentication, cookies, subtitles, archives, and postprocessors explicitly.
+   Basic download archives are implemented: cached extractor-key/ID membership,
+   filtering before selection and recording only after successful final publication.
+   Bounded cooperating-writer locks, append rollback and a pinned offline archive
+   reference fixture are covered; early URL-ID skips, alternate legacy IDs,
+   force-write options and broader archive option parity remain open.
 6. **Agent-maintained updates.** Upstream delta reports, bounded implementation
    briefs, differential regression fixtures, reviewable PRs, and staged releases.
    Measure extraction coverage and compatibility before enabling unattended merges.

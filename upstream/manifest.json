@@ -219,6 +219,28 @@
         "upstream/notes/youtube-adaptive-merge.md"
       ],
       "scope": "Explicit executable local two-input stream-copy merging, MP4/TS video and M4A/AAC/TS audio to MP4, WebM to WebM and mixed to Matroska, bounded process/pipe execution, cancellation and no-clobber publication; no discovery, installation, transcoding, multistream, fixups or other postprocessing"
+    },
+    {
+      "name": "download-archive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "test/test_YoutubeDL.py"
+      ],
+      "rust": [
+        "src/archive.rs",
+        "src/main.rs",
+        "src/lib.rs",
+        "src/error.rs",
+        "tests/archive.rs",
+        "tests/fixtures/archive/",
+        "tools/compare_archive.py",
+        "tools/test_compare_archive.py",
+        "upstream/notes/download-archive.md"
+      ],
+      "scope": "Explicit UTF-8 regular-file archive with lowercase extractor_key and case-sensitive id; cached membership after full extraction and before atomic remaining-entry selection; no writes in metadata/listing/simulation; record only after successful final download/merge publication; bounded shared/exclusive file locks, locked reread/dedup, missing-newline repair and append/sync failure rollback; no early URL-ID skip, legacy IDs, ie_key/URL guessing, force-write options or full upstream archive parity"
     }
   ]
 }

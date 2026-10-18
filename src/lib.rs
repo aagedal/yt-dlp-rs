@@ -1,3 +1,4 @@
+mod archive;
 mod crypto;
 mod dash;
 mod download;
@@ -11,6 +12,7 @@ pub mod output;
 mod retry;
 mod selector;
 
+pub use archive::{DownloadArchive, archive_id};
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
@@ -119,8 +121,13 @@ impl YoutubeDl {
         options: ExtractionOptions,
     ) -> Result<ExtractResult> {
         let mut info = self.extract_result_unselected_with_options(input, options)?;
-        info.select_format_with_merge(format, self.ffmpeg.is_some())?;
+        self.select_result(&mut info, format)?;
         Ok(info)
+    }
+
+    /// Apply a requested or configured default selector atomically to an extracted result.
+    pub fn select_result(&self, result: &mut ExtractResult, format: Option<&str>) -> Result<()> {
+        result.select_format_with_merge(format, self.ffmpeg.is_some())
     }
 
     /// Extract all supported alternatives without applying library format selection.

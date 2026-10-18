@@ -5,7 +5,7 @@ It downloads direct HTTP media and a limited subset of HTML5 media pages, with
 a foundation for porting extractors and tracking upstream changes. This is an
 early prototype; YouTube has a narrow watch-page subset, described below.
 
-Requires stable Rust with edition 2024 support. Python 3.10+ and Git are needed
+Requires current stable Rust (including standard-library file locking). Python 3.10+ and Git are needed
 only for the upstream development tools. The Rust binary does not invoke Python
 or an installed yt-dlp.
 
@@ -17,6 +17,7 @@ cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sou
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
+cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
 ```
@@ -90,6 +91,9 @@ Supported today:
   Tables show IDs, containers, dimensions, stream kind, size, bitrate and language.
   With `-j` or `-s`, normal selection still applies; `-F -j` prints a table followed
   by selected JSON. Table styling is native, not byte-for-byte upstream output.
+- `--download-archive FILE` skips recorded extractor/video IDs before selection and
+  records only successfully published downloads. Metadata/listing/simulation never
+  write the archive. Extraction still makes normal requests for recorded inputs.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.
@@ -119,8 +123,9 @@ implement yt-dlp's platform-specific filename compatibility rules.
 
 Direct extraction makes a streaming GET and inspects headers without consuming
 the body. HTML5 extraction reads at most 2 MiB of uncompressed UTF-8/ASCII HTML,
-then probes every declared media source. Extraction and format selection must
-succeed for every entry before any media is downloaded or JSON emitted. JavaScript
+then probes every declared media source. Extraction must succeed for every entry.
+All entries remaining after archive filtering must select successfully before any
+media is downloaded or JSON emitted. JavaScript
 players, lazy-loading attributes, and embedded site players are not supported by the generic extractor. A download makes another GET. There is a 15-second connection timeout
 and a five-minute total timeout per request. Simulation and JSON extraction still make
 network requests. MIME identification is not media-container verification.
@@ -132,12 +137,16 @@ The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
 configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it disabled.
 `YoutubeDl::new()?.with_ffmpeg(path)` configures optional local merging.
 `extract_result_unselected` / `extract_result_unselected_with_options` expose all
-eligible alternatives without library selection; select before downloading.
+eligible alternatives without library selection; `select_result` applies configured
+selection atomically before downloading.
 `output::render_formats` renders their inventory, while `validate_format_selector`
 checks supported syntax without network or availability checks.
 Use `extract_result` or
 `extract_result_with_format(url, Some("1"))` for video/playlist results. A format
 ID applies to every playlist entry independently; each must offer that ID.
+`DownloadArchive::load`, `contains` and `record` expose persistence separately;
+library callers choose when to filter and record, after successful publication.
+`archive_id` returns the supported lowercase extractor-key plus case-sensitive ID.
 The existing `extract_info` methods accept single videos and reject playlists.
 `--dump-json` emits one video object per entry.
 `download_with_options(info, path, DownloadOptions { retries: 0 })` disables

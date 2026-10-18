@@ -16,6 +16,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
 | `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging; no PATH discovery, directory lookup, installation, transcoding or other postprocessors |
+| `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection, record only after successful download/merge publication; no writes in metadata/listing/simulation |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | All other flags | Rejected; aliases such as `--skip-download` and `--print` are not implemented |
@@ -990,3 +991,57 @@ download. Existing extraction methods still select every entry. The pure
 `validate_format_selector` validates syntax without checking format availability.
 See [the source slice](../upstream/notes/list-formats.md) for reference probes and
 rendering comparison limits.
+
+
+## Download archives
+
+`--download-archive FILE` loads a regular UTF-8 archive before processing inputs.
+Missing files are empty and are created only when a completed download is recorded.
+Each record is lowercase `extractor_key`, one space and the case-sensitive `id`.
+Both metadata fields must be nonempty, with no controls or surrounding whitespace;
+Unicode and internal spaces are preserved. Loading strips surrounding whitespace
+and recognizes LF, CRLF and lone CR. Existing unrelated records are preserved.
+No URL disambiguation is added: filename-derived generic IDs can collide across
+URLs, so archive identity is only as specific as the extractor's key and ID.
+
+Filtering follows complete extraction, including normal page/API/manifest requests,
+challenge solving and media probes, then precedes format selection. A recorded
+entry can skip even when its requested format is unavailable. Extraction errors
+still fail; no early URL-ID skip is implemented. Remaining playlist entries must
+all select successfully before output/download begins. Metadata, listing and
+simulation filter recorded entries too, but never append or create archives.
+Malformed selectors still fail syntax preflight even if every entry is recorded.
+
+Record only after successful final media publication, including merge success.
+Extraction, selection, template, transport, merge, cancellation and existing-output
+errors do not record. Duplicate inputs in one invocation skip after the first
+successful record. If the media succeeds but recording fails, keep the completed
+media, report the archive error, continue later entries/inputs and return failure.
+Parent directories are never created; a missing archive parent fails on the first
+record after media publication. Invalid UTF-8/nonregular existing paths fail before
+any input request. Archives have no artificial size cap and are trusted local input.
+
+Readers take a shared standard-library file lock; recording takes an exclusive
+lock with a five-second deadline. Each append rereads the locked file and avoids
+an existing ID, preserving previous bytes and inserting an LF separator if the
+last record lacks CR/LF. Writes use LF, synchronize before success, and on write
+or synchronization failure attempt to truncate only this append under the lock.
+Rollback failure is explicitly reported. Crashes and noncooperating writers are
+outside this transaction guarantee; compatibility with upstream Python locks on
+every filesystem is not established.
+
+Membership is cached at load and refreshed during this instance's recording.
+Concurrent invocations can download the same media; only cooperating archive
+updates are locked/deduplicated, not the entire download. Filesystem locking errors
+are explicit. Upstream's blocking lock, blind append and missing-newline behavior
+are intentionally not reproduced.
+
+The library exposes `DownloadArchive::{load, contains, record}` and `archive_id`;
+callers explicitly filter unselected results, call `YoutubeDl::select_result`,
+download, then record after success. Extraction/download APIs do not implicitly
+manage an archive. `ie_key`/URL-derived identity fallback, legacy alternate IDs,
+`--force-write-archive`, `--no-download-archive`, in-memory set CLI input and general
+archive option parity remain unsupported. The shared fixture compares twelve
+identities/file-and-set membership checks, logical recording and four upstream
+control flows. Native tests separately cover failure timing, concurrency and
+append rollback. See [the source slice](../upstream/notes/download-archive.md).

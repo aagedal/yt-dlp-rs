@@ -6,7 +6,8 @@ use std::{
     time::{Duration, Instant},
 };
 use yt_dlp_rs::{
-    DownloadOptions, DownloadPhase, ExtractionOptions, YoutubeDl, YoutubeOptions,
+    DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions, YoutubeDl,
+    YoutubeOptions,
     output::{DEFAULT_TEMPLATE, render_formats, render_template},
     validate_format_selector,
 };
@@ -43,6 +44,9 @@ struct Args {
     /// Explicit ffmpeg executable for merging separate video/audio streams
     #[arg(long, value_name = "PATH")]
     ffmpeg_location: Option<PathBuf>,
+    /// Skip recorded extractor/video IDs and record only completed downloads
+    #[arg(long, value_name = "FILE")]
+    download_archive: Option<PathBuf>,
     /// Filename template: %(title)s, %(id)s, %(ext)s, %(extractor)s, and %%
     #[arg(short, long, default_value = DEFAULT_TEMPLATE)]
     output: String,
@@ -50,7 +54,7 @@ struct Args {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
-    if args.list_formats
+    if (args.list_formats || args.download_archive.is_some())
         && let Some(format) = &args.format
     {
         validate_format_selector(format)?;
@@ -61,19 +65,35 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if let Some(path) = args.ffmpeg_location {
         downloader = downloader.with_ffmpeg(path);
     }
+    let mut archive = args
+        .download_archive
+        .map(DownloadArchive::load)
+        .transpose()?;
+    let list_only = args.list_formats && !args.dump_json && !args.simulate;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in args.urls {
         let options = ExtractionOptions {
             retries: args.extractor_retries,
         };
-        let extracted = if args.list_formats && !args.dump_json && !args.simulate {
-            downloader.extract_result_unselected_with_options(&url, options)
-        } else {
-            downloader.extract_result_with_options(&url, args.format.as_deref(), options)
-        };
+        let extracted = (|| -> yt_dlp_rs::Result<Option<ExtractResult>> {
+            let result = downloader.extract_result_unselected_with_options(&url, options)?;
+            let mut result = if let Some(archive) = &archive {
+                let Some(result) = filter_archived(result, archive)? else {
+                    return Ok(None);
+                };
+                result
+            } else {
+                result
+            };
+            if !list_only {
+                downloader.select_result(&mut result, args.format.as_deref())?;
+            }
+            Ok(Some(result))
+        })();
         let extracted = match extracted {
-            Ok(result) => result,
+            Ok(Some(result)) => result,
+            Ok(None) => continue,
             Err(error) => {
                 eprintln!("ERROR: {url}: {error}");
                 failed = true;
@@ -123,6 +143,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             ControlFlow::Continue(())
                         },
                     )?;
+                    if let Some(archive) = &mut archive {
+                        archive.record(&info).map_err(|error| {
+                            format!("download completed, but archive update failed: {error}")
+                        })?;
+                    }
                     eprintln!("[download] Downloaded {bytes} bytes");
                 }
                 Ok(())
@@ -134,6 +159,38 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     Ok(!failed)
+}
+
+fn filter_archived(
+    result: ExtractResult,
+    archive: &DownloadArchive,
+) -> yt_dlp_rs::Result<Option<ExtractResult>> {
+    let keep = |info: &yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<bool> {
+        let recorded = archive.contains(info)?;
+        if recorded {
+            eprintln!(
+                "[download] {} has already been recorded in the archive",
+                info.id
+            );
+        }
+        Ok(!recorded)
+    };
+    match result {
+        ExtractResult::Video(info) => Ok(keep(&info)?.then_some(ExtractResult::Video(info))),
+        ExtractResult::Playlist(mut playlist) => {
+            let mut pending = Vec::new();
+            for info in playlist.entries {
+                if keep(&info)? {
+                    pending.push(info);
+                }
+            }
+            if pending.is_empty() {
+                return Ok(None);
+            }
+            playlist.entries = pending;
+            Ok(Some(ExtractResult::Playlist(playlist)))
+        }
+    }
 }
 
 fn main() -> std::process::ExitCode {
