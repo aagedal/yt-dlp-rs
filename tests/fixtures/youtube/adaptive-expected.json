@@ -1,0 +1,75 @@
+{
+  "id": "BaW_jenozKc",
+  "title": "Saved adaptive fixture",
+  "extractor": "youtube",
+  "extractor_key": "Youtube",
+  "webpage_url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+  "formats": [
+    {
+      "format_id": "18",
+      "ext": "mp4",
+      "width": 640,
+      "height": 360,
+      "url": "{{ORIGIN}}/media/muxed.mp4",
+      "filesize": 5,
+      "stream_kind": "standalone",
+      "tbr": 400.0,
+      "abr": null
+    },
+    {
+      "format_id": "137",
+      "ext": "mp4",
+      "width": 1920,
+      "height": 1080,
+      "url": "{{ORIGIN}}/media/video.mp4",
+      "filesize": 7,
+      "stream_kind": "video_only",
+      "tbr": 2000.0,
+      "abr": null
+    },
+    {
+      "format_id": "139",
+      "ext": "m4a",
+      "width": null,
+      "height": null,
+      "url": "{{ORIGIN}}/media/audio-low.m4a",
+      "filesize": 3,
+      "stream_kind": "audio_only",
+      "tbr": 48.0,
+      "abr": 48.0
+    },
+    {
+      "format_id": "140",
+      "ext": "m4a",
+      "width": null,
+      "height": null,
+      "url": "{{ORIGIN}}/media/audio.m4a",
+      "filesize": 4,
+      "stream_kind": "audio_only",
+      "tbr": 128.0,
+      "abr": 128.0
+    },
+    {
+      "format_id": "248",
+      "ext": "webm",
+      "width": 1280,
+      "height": 720,
+      "url": "{{ORIGIN}}/media/video.webm",
+      "filesize": 6,
+      "stream_kind": "video_only",
+      "tbr": 1000.0,
+      "abr": null
+    },
+    {
+      "format_id": "251",
+      "ext": "webm",
+      "width": null,
+      "height": null,
+      "url": "{{ORIGIN}}/media/audio.webm",
+      "filesize": 2,
+      "stream_kind": "audio_only",
+      "tbr": 96.0,
+      "abr": 96.0
+    }
+  ]
+}

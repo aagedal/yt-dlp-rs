@@ -12,7 +12,7 @@ use url::Url;
 
 // Only read literal configuration objects; never evaluate page JavaScript or
 // accept a page-supplied API host, client family, credentials, or request body.
-fn web_context(html: &str) -> Result<Value> {
+pub(super) fn literal_config(html: &str) -> Result<serde_json::Map<String, Value>> {
     let document = Html::parse_document(html);
     let scripts = Selector::parse("script").expect("static selector");
     let mut config = serde_json::Map::new();
@@ -33,6 +33,11 @@ fn web_context(html: &str) -> Result<Value> {
             config.extend(value);
         }
     }
+    Ok(config)
+}
+
+fn web_context(html: &str) -> Result<Value> {
+    let config = literal_config(html)?;
     let client = &config.get("INNERTUBE_CONTEXT").unwrap_or(&Value::Null)["client"];
     if client["clientName"].as_str() != Some("WEB") {
         return Err(unsupported(

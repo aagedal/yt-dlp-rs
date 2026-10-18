@@ -5,7 +5,7 @@ It downloads direct HTTP media and a limited subset of HTML5 media pages, with
 a foundation for porting extractors and tracking upstream changes. This is an
 early prototype; YouTube has a narrow watch-page subset, described below.
 
-Requires stable Rust with edition 2024 support. Python 3.10+ and Git are needed
+Requires current stable Rust (including standard-library file locking). Python 3.10+ and Git are needed
 only for the upstream development tools. The Rust binary does not invoke Python
 or an installed yt-dlp.
 
@@ -13,8 +13,23 @@ or an installed yt-dlp.
 cargo build --locked
 cargo run --locked -- 'https://example.com/video.mp4'
 cargo run --locked -- --dump-json 'https://example.com/video.mp4'
+cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sources.html'
+cargo run --locked -- --list-subs 'https://example.com/video-with-tracks.html'
+cargo run --locked -- --write-subs --sub-langs all --skip-download 'https://example.com/video-with-tracks.html'
+cargo run --locked -- --write-subs --convert-subs srt --ffmpeg-location /path/to/ffmpeg 'https://example.com/video-with-tracks.html'
+cargo run --locked -- --embed-subs --ffmpeg-location /path/to/ffmpeg 'https://example.com/video-with-tracks.html'
+cargo run --locked -- --write-auto-subs --sub-langs en --skip-download 'https://www.youtube.com/watch?v=VIDEO_ID'
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
+cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
+cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
+cargo run --locked -- -I '3,1:2' --playlist-reverse -o '%(playlist_index)03d-%(title)s.%(ext)s' 'https://example.com/multiple-videos.html'
+cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
+cargo run --locked -- --cookies cookies.txt 'https://example.com/video.mp4'
+cargo run --locked -- -x --audio-format mp3 --ffmpeg-location /path/to/ffmpeg 'https://example.com/video.mp4'
+cargo run --locked -- --remux-video mkv --ffmpeg-location /path/to/ffmpeg 'https://example.com/video.mp4'
+cargo run --locked -- --proxy 'socks5://127.0.0.1:1080' 'https://example.com/video.mp4'
+cargo run --locked -- --user-agent 'My media client' --add-headers 'X-Media-Key:example' 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
 ```
 
@@ -32,6 +47,18 @@ Supported today:
   `-f/--format` accepts `best`, `worst`, or a source ID (`0`, `1`, … in declaration order per element). Relative
   sources, the first `<base href>`, HTML entities, page redirects, and page referrers are supported. The media
   response must pass the same MIME/extension checks as a direct URL.
+- Native HLS VOD downloads from direct playlist URLs or HTML5 sources:
+  master selection, MPEG-TS/AAC segments, one fMP4 initialization map, and exact
+  byte ranges. JSON/simulation fetch manifests but never segment bodies.
+  Native AES-128 CBC decryption supports identity keys, explicit/sequence IVs and
+  key rotation. External audio renditions retain group, language, name and
+  default/autoselect metadata; automatic merging stays within the declared audio
+  group. Live, SAMPLE-AES/DRM, discontinuous and external video/subtitle
+  renditions remain unsupported.
+- Static single-period DASH MPDs from direct URLs and HTML5 sources: inherited
+  BaseURLs, numbered/time templates, finite timelines, SegmentLists and exact byte
+  ranges. Native fragment downloads feed explicit audio/video merging. Dynamic,
+  DRM, multi-period and SegmentBase/SIDX presentations remain unsupported.
 - Multiple nonempty media elements form an HTML5 playlist, processed in document
   order. Empty elements are skipped. IDs and titles use upstream's numbered
   `-1` / ` (1)`, `-2` / ` (2)` suffixes. Titles prefer
@@ -42,16 +69,102 @@ Supported today:
   dimension, or the only known one; unknown resolution sorts lowest. Ties select
   the last declaration for best/default and the first for worst.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes
-  canonicalized to a watch page (actual live content is rejected). Only direct
-  combined audio/video MP4/WebM formats in `ytInitialPlayerResponse` are eligible;
+  canonicalized to a watch page (actual live content is rejected). Direct combined or separate audio/video MP4/M4A/WebM formats in
+  `ytInitialPlayerResponse` are eligible;
   when that response is absent, one anonymous WEB player API request can supply
   token-exempt itag 18 using literal page client configuration.
   Format IDs are YouTube itags. This is fixture-tested groundwork, not general
-  live-site support. Signatures, `n` challenges, additional clients, token acquisition,
-  adaptive streams, and playlists are unsupported; many current videos will fail.
+  live-site support. `--youtube-js-runtime PATH` opts into bounded offline solving
+  of encrypted signatures and query `n` challenges using explicitly installed
+  Deno 2.9.7 and pinned bundled EJS assets. Challenge-free extraction never inspects
+  or launches that runtime. Initial and anonymous WEB responses can also expose
+  native finite HLS VOD, including path-n solving in the same challenge batch.
+  WEB DASH discovery remains excluded without GVS tokens. Additional clients,
+  token acquisition, fragmented direct adaptive streams and playlists remain
+  unsupported; many current videos will fail.
+- Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
+  `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.
+  `--ffmpeg-location PATH` configures an explicit FFmpeg executable for local
+  stream copying; default selection then prefers a video/audio pair. Without it,
+  default selection requires an independently playable source. `-f best` always
+  selects an independently playable source. Chained format filters constrain
+  dimensions, filesize, audio/total bitrate, extension, IDs and language/rendition
+  text before ranking. For example, `bestvideo[height<=720]+bestaudio[abr>=128]/best`
+  and `best[filesize<10MiB]`; `<=?` includes unknown values. This is a bounded
+  selector subset; filters do not add metadata that an extractor did not expose.
+  Parenthesized groups and aliases (`b`, `bv`, `ba`, `w`, `wv`, `wa`) are supported,
+  as are bare filters such as `[height<=720]` (implicit `best`). For example,
+  `(bv[height<=720]+ba)/b` preserves the fallback around the complete pair.
+  Positive rank suffixes such as `bv.2`, `ba.2` and `worst.2` choose the Nth
+  candidate after filters and native ranking; out-of-range ranks allow fallback.
+- `-F/--list-formats` lists all eligible formats without choosing a source or
+  downloading media, including separate-only presentations without FFmpeg.
+  Tables show IDs, containers, dimensions, stream kind, size, bitrate and language.
+  With `-j` or `-s`, normal selection still applies; `-F -j` prints a table followed
+  by selected JSON. Table styling is native, not byte-for-byte upstream output.
+- `-I/--playlist-items` selects inclusive ranges, signed indices and steps, preserving
+  requested order and deduplicating overlaps. `--playlist-start`, `--playlist-end`
+  and `--playlist-reverse` are supported for fully extracted HTML5 playlists.
+  Original indices and selected order are exposed in playlist entry JSON.
+- HTML5 direct-child subtitle/caption `<track>` metadata, `--list-subs`, and
+  `--write-subs` sidecars selected with literal `--sub-langs` tags/all/exclusions
+  and ordered `--sub-format` preferences. `--skip-download` writes requested
+  sidecars without media or archive records. Sidecars use native HTTP retries,
+  referrers, temporary cleanup and no overwrite. The supported YouTube response
+  subset also discovers manual and automatic captions, translations, original
+  aliases and names. `--write-auto-subs` enables automatic sidecars independently;
+  manual tracks win shared languages when both writing flags are enabled.
+  Caption PO-token restrictions are preserved; no token acquisition is implemented.
+  `--convert-subs FORMAT` accepts `srt`, `vtt`, `ass` or `lrc` for written sidecars
+  before media, including with `--skip-download`. Native TTML/DFXP-to-SRT needs
+  no FFmpeg; other supported conversions use the explicit local executable.
+  `none` disables conversion; `-k` retains originals and intermediate SRT.
+  [Conversion limits](docs/COMPATIBILITY.md#subtitle-conversion) are documented.
+  `--embed-subs` embeds selected sidecars after media processing for
+  MP4/MOV/M4A/WebM/Matroska; WebM requires WebVTT. It implies manual subtitle
+  acquisition unless automatic writing is enabled. Explicit `--write-subs` keeps
+  embedded sidecars; embed-only removes eligible sidecars after successful final
+  publication. `-k` also keeps them. [Embedding policies](docs/COMPATIBILITY.md#subtitle-embedding)
+  cover automatic tracks, skipped formats and metadata. Regex languages and
+  manifest/other-site subtitles remain unsupported.
+- `--write-info-json` writes upstream-cleaned video metadata beside the media
+  name (after subtitles, before media) and playlist metadata before entries.
+  Names follow upstream extension replacement; existing files are kept and
+  `-j`/`-s`/listing never write. Content covers the represented metadata subset;
+  `_version`, overwrite options and `--load-info-json` are not implemented.
+- `--download-archive FILE` skips recorded extractor/video IDs before selection and
+  records only successfully published downloads. Metadata/listing/simulation never
+  write the archive. Extraction still makes normal requests for recorded inputs.
+- Global `--add-headers FIELD:VALUE` (repeatable), `--user-agent` and `--referer`
+  defaults across extraction, downloads, fragments, keys and subtitles. Explicit
+  extractor/transport headers take precedence, including page referrers and identity
+  encoding. A shared in-memory cookie jar learns scoped response cookies. `--cookies FILE` loads/saves Netscape cookies, including session cookies; `--no-cookies`
+  disables file persistence. Raw Cookie headers remain unsupported.
+- Explicit `--proxy URL` for HTTP/HTTPS or SOCKS4/4a/5/5h routing across the
+  native HTTP clients. `--proxy ''` forces direct connections. Pinned SOCKS5
+  compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.
+  HTTPS proxy and CONNECT transfers retain certificate validation.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
-- Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
+- Typed output fields include IDs/titles, dimensions, filesize and playlist indices,
+  with string `s`, integer `d/i/u` and fixed-point `f/F` width/precision formatting.
+  For example, `%(playlist_index)03d-%(title).80s.%(ext)s`. Known-field alternatives
+  and defaults such as `%(width,height|unknown)s` are supported;
+  `--output-na-placeholder TEXT` changes the default `NA`. Literal `%%` is supported.
   Metadata cannot introduce directories; literal template paths can.
+- `-x` / `--extract-audio` supports `best`, MP3, AAC, M4A, Opus, Vorbis,
+  FLAC, ALAC and WAV through explicitly configured local FFmpeg/FFprobe.
+  `--audio-format` accepts ordered `SOURCE>TARGET/TARGET` rules;
+  `--audio-quality` accepts VBR 0..10 or a bitrate such as `128K`.
+  FFprobe defaults to the sibling of `--ffmpeg-location`, or use
+  `--ffprobe-location PATH`. `-k` / `--keep-video` retains processing sources and
+  intermediates. [Audio limits and publication behavior](docs/COMPATIBILITY.md#audio-extraction)
+  are explicit; no tool discovery or installation is performed.
+- `--remux-video FORMAT` copies streams into a new container;
+  `--recode-video FORMAT` re-encodes with FFmpeg defaults (AVI uses Xvid).
+  Both accept ordered source/target mappings. Audio extraction runs first when
+  combined; recode takes precedence when both video options are supplied.
+  Same-extension/unmatched mappings skip FFmpeg. Container/codec incompatibility
+  remains an error. See [video processing limits](docs/COMPATIBILITY.md#video-remuxing-and-conversion).
 - Same-directory temporary files, cleanup on transfer failure, and no overwrite
   of existing destinations. A failed entry or URL sets a nonzero exit status while later
   entries and URLs still run. JSON goes to stdout; diagnostics go to stderr.
@@ -70,32 +183,74 @@ Supported today:
   and interrupted HTML reads restart extraction before any output is emitted,
   using the same bounded `Retry-After` policy.
 
-Other HTML pages, general YouTube support, HLS/DASH, site playlists, full upstream format ranking, selector
-expressions, cookies/authentication, persistent resume, subtitles, and ffmpeg
+Other HTML pages, general YouTube support, broader DASH/HLS delivery, site playlists, full upstream format ranking, general selector
+expressions, browser-cookie extraction/broader authentication, persistent resume, broader subtitle acquisition, and other
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
 
 Direct extraction makes a streaming GET and inspects headers without consuming
 the body. HTML5 extraction reads at most 2 MiB of uncompressed UTF-8/ASCII HTML,
-then probes every declared media source. Extraction and format selection must
-succeed for every entry before any media is downloaded or JSON emitted. JavaScript
+then probes every declared media source. Extraction must succeed for every entry.
+All entries remaining after archive filtering must select successfully before any
+media is downloaded or JSON emitted. JavaScript
 players, lazy-loading attributes, and embedded site players are not supported by the generic extractor. A download makes another GET. There is a 15-second connection timeout
 and a five-minute total timeout per request. Simulation and JSON extraction still make
 network requests. MIME identification is not media-container verification.
 
 The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
-`VideoFormat`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
-`ExtractionOptions`, and an `Extractor` interface.
+`VideoFormat`, `StreamKind`, `Fragment`, `ByteRange`, `HlsAes128`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
+`ExtractionOptions`, `YoutubeOptions`, and an `Extractor` interface.
+`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path), ..Default::default() })`
+configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it disabled.
+`include_translated_subtitles: true` additionally exposes translated manual captions
+in `automatic_captions`; the CLI enables this with `--write-auto-subs` or `--list-subs`.
+ASR translations are discovered independently, without fetching their payloads.
+`YoutubeDl::with_options(YoutubeOptions::default(), HttpOptions {
+user_agent: Some("My media client".into()), ..Default::default()
+})` configures HTTP defaults; `HttpOptions.headers` holds name/value pairs.
+`HttpOptions::from_cli(user_agent, referer, &headers)` parses repeated FIELD:VALUE
+strings with the same normalization and validation as the binary.
+`CookieJar::load(path)` and `save(path)` expose explicit Netscape persistence;
+`HttpOptions.cookies` accepts a shared `Arc<CookieJar>`, or the client creates a
+fresh in-memory jar. `YoutubeDl::cookie_jar()` returns it for reuse or saving.
+`HttpOptions.proxy` accepts an explicit URL or empty string for direct routing;
+`None` preserves the existing reqwest environment/system routing policy.
+`HttpOptions::validate()` checks configuration without network/DNS requests.
+Cookie files are credential state: an explicit `--cookies` path is updated after
+requests even in JSON/listing/simulation modes and after extraction failures.
+`YoutubeDl::new()?.with_ffmpeg(path)` configures optional local merging.
+`extract_result_unselected` / `extract_result_unselected_with_options` expose all
+eligible alternatives without library selection; `select_result` applies configured
+selection atomically before downloading.
+`output::render_template_with_options` accepts `TemplateOptions` for the missing-value
+placeholder; `render_template` keeps the default `NA`.
+`output::render_formats` renders their inventory, while `validate_format_selector`
+checks supported syntax without network or availability checks.
 Use `extract_result` or
 `extract_result_with_format(url, Some("1"))` for video/playlist results. A format
 ID applies to every playlist entry independently; each must offer that ID.
+`PlaylistSelection::new(items, start, end, reverse)` parses item selection;
+`apply` filters/reorders fully extracted playlist entries and annotates their
+original index/count and selected order/count. Single videos are unaffected.
+Library extraction methods do not implicitly apply CLI playlist options.
+`SubtitleOptions::new(languages, format)?.select(&info.subtitles)` returns selected
+subtitle metadata and warnings. `select_sources(&info.subtitles,
+&info.automatic_captions, write_normal, write_automatic)` selects enabled sources
+with manual precedence. `subtitle_paths` plans sanitized sidecar names;
+`download_subtitle_with_options` / `download_subtitle_with_progress` copy one
+resource with the normal retry/cancellation policy. Selection, writing and archive
+recording remain explicit library operations.
+`DownloadArchive::load`, `contains` and `record` expose persistence separately;
+library callers choose when to filter and record, after successful publication.
+`archive_id` returns the supported lowercase extractor-key plus case-sensitive ID.
 The existing `extract_info` methods accept single videos and reject playlists.
 `--dump-json` emits one video object per entry.
 `download_with_options(info, path, DownloadOptions { retries: 0 })` disables
 download retries for a library call; `download` uses the default policy.
 `download_with_progress(info, path, options, callback)` reports one-based attempts,
-stored bytes, optional total bytes, and the current phase. Return
+stored bytes, optional total bytes, and the current phase. Fragment downloads also report one-based fragment indexes
+and counts, with cumulative assembled bytes and a per-fragment attempt number. Return
 `std::ops::ControlFlow::Continue(())` to continue or `Break(())` to cancel.
 Cancellation is cooperative: it cannot interrupt an in-flight blocking request,
 read, or filesystem operation. See the compatibility inventory for checkpoints.

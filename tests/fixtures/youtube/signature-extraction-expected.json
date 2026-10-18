@@ -1,0 +1,17 @@
+{
+  "id": "BaW_jenozKc",
+  "title": "Fixture } ; & video",
+  "extractor": "youtube",
+  "extractor_key": "Youtube",
+  "webpage_url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+  "formats": [
+    {
+      "format_id": "18",
+      "ext": "mp4",
+      "width": 640,
+      "height": 360,
+      "url": "{{ORIGIN}}/media.mp4?n=9nRTxrbM1f0yHg&keep=fixture&lsig=NJAJEij0EwRgIhAI0KExTgjfPk-MPM9MAdzyyPRt%3DBM8-XO5tm5hzMCSVpAiEAv7eP3CURqZNSPow8BXXAoazVoXgeMP7gH9BdylHCwgw%3Dgwzl",
+      "filesize": 5
+    }
+  ]
+}

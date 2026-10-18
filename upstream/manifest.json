@@ -7,44 +7,559 @@
     {
       "name": "generic-extraction",
       "status": "partial",
-      "upstream": ["yt_dlp/extractor/generic.py", "yt_dlp/extractor/genericembeds.py", "yt_dlp/extractor/common.py", "test/test_InfoExtractor.py"],
-      "rust": ["src/extractor/direct.rs", "src/extractor/html5.rs", "tests/http.rs", "tests/fixtures/html5/", "tools/compare_html5.py", "tools/test_compare_html5.py", "docs/COMPATIBILITY.md"],
-      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; optional positive source width/height/res attributes and bounded resolution-based default/best/worst ranking; no embedded players, full upstream ranking, nested/site playlists or manifests"
+      "upstream": [
+        "yt_dlp/extractor/generic.py",
+        "yt_dlp/extractor/genericembeds.py",
+        "yt_dlp/extractor/common.py",
+        "test/test_InfoExtractor.py"
+      ],
+      "rust": [
+        "src/extractor/direct.rs",
+        "src/extractor/html5.rs",
+        "tests/http.rs",
+        "tests/fixtures/html5/",
+        "tools/compare_html5.py",
+        "tools/test_compare_html5.py",
+        "docs/COMPATIBILITY.md"
+      ],
+      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; optional positive source width/height/res attributes and bounded resolution-based default/best/worst ranking; no embedded players, full upstream ranking, nested/site playlists; bounded static single-period DASH and finite clear/identity-AES-128 HLS VOD sources supported through dedicated parser/transport"
     },
     {
       "name": "extractor-contract",
       "status": "partial",
-      "upstream": ["yt_dlp/extractor/common.py"],
-      "rust": ["src/extractor/mod.rs", "src/info.rs", "src/lib.rs", "src/error.rs", "src/retry.rs", "tests/retries.rs"],
-      "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, literal-ID and bounded resolution-based default/best/worst selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds/preferred HTTP-date; no nested playlists or unresolved URL results"
+      "upstream": [
+        "yt_dlp/extractor/common.py"
+      ],
+      "rust": [
+        "src/extractor/mod.rs",
+        "src/info.rs",
+        "src/lib.rs",
+        "src/error.rs",
+        "src/retry.rs",
+        "tests/retries.rs"
+      ],
+      "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, literal-ID and bounded resolution-based default/best/worst selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds/preferred HTTP-date; no nested playlists or unresolved URL results; bounded audio/video selectors, two-stream + pairs and / fallbacks with explicit native ranking policy; predicate filtering of represented metadata before kind fallback, ranking and atomic pair/playlist selection; unselected result API shares whole-extraction retries and leaves library selection to the caller"
     },
     {
       "name": "http-downloader",
       "status": "partial",
-      "upstream": ["yt_dlp/downloader/http.py", "yt_dlp/downloader/common.py", "test/test_downloader_http.py"],
-      "rust": ["src/download.rs", "src/retry.rs", "tests/http.rs", "tests/retries.rs", "tests/progress.rs", "docs/COMPATIBILITY.md"],
+      "upstream": [
+        "yt_dlp/downloader/http.py",
+        "yt_dlp/downloader/common.py",
+        "test/test_downloader_http.py"
+      ],
+      "rust": [
+        "src/download.rs",
+        "src/retry.rs",
+        "tests/http.rs",
+        "tests/retries.rs",
+        "tests/progress.rs",
+        "docs/COMPATIBILITY.md"
+      ],
       "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication, bounded download retries for selected transient HTTP statuses and connection/body failures, in-invocation range resume guarded by strong ETags, known lengths and response validation; shared transient HTTP classification/backoff with extraction; bounded Retry-After delay-seconds/preferred HTTP-date shared with extraction; byte-progress observers and cooperative cancellation checkpoints including retry-wait polling; no persistent resume, Last-Modified validators or obsolete HTTP-date Retry-After formats"
     },
     {
       "name": "orchestration-and-output",
       "status": "partial",
-      "upstream": ["yt_dlp/YoutubeDL.py", "yt_dlp/utils/_utils.py", "yt_dlp/options.py", "yt_dlp/__init__.py", "test/test_YoutubeDL.py"],
-      "rust": ["src/lib.rs", "src/main.rs", "src/output.rs", "src/info.rs", "tests/http.rs", "tests/retries.rs", "tests/progress.rs"],
-      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, basic output templates, literal HTML5 source-ID or bounded resolution-based default/best/worst selection applied independently to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds/preferred HTTP-date; throttled CLI download byte progress on stderr; no CLI cancellation/signal handling or general option parity"
+      "upstream": [
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "test/test_YoutubeDL.py"
+      ],
+      "rust": [
+        "src/lib.rs",
+        "src/main.rs",
+        "src/output.rs",
+        "src/info.rs",
+        "tests/http.rs",
+        "tests/retries.rs",
+        "tests/progress.rs",
+        "src/selector.rs",
+        "tests/format_filters.rs",
+        "tests/fixtures/selectors/",
+        "tools/compare_filters.py",
+        "tools/test_compare_filters.py",
+        "upstream/notes/format-filters.md",
+        "tools/compare_selectors.py",
+        "tools/test_compare_selectors.py",
+        "upstream/notes/selector-groups.md",
+        "upstream/notes/selector-index.md",
+        "src/output/formats.rs",
+        "tests/list_formats.rs",
+        "tests/fixtures/listing/",
+        "tools/compare_listing.py",
+        "tools/test_compare_listing.py",
+        "upstream/notes/list-formats.md"
+      ],
+      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, bounded typed output templates with primitive metadata, alternatives/defaults and selected-context padding, literal HTML5 source-ID or bounded resolution-based default/best/worst selection applied independently to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds/preferred HTTP-date; throttled CLI download byte progress on stderr; no CLI cancellation/signal handling or general option parity; bounded audio/video selectors, two-stream + pairs and / fallbacks with explicit native ranking policy; chained typed numeric/text format predicates with unknown inclusion, quoted delimiters and upstream unit conventions before native ranking; parenthesized choices/merges, group input filters, best/worst aliases and bare-filter selectors through a bounded expression AST; positive one-based indexed best/worst aliases after native filtered ranking; no regexes, arbitrary metadata filters, starred/extension selectors or multiselection; -F eligible format inventories through unselected extraction, combined -j/-s normal selection, pure bounded native table renderer and selector syntax preflight; no upstream table/sorter parity or no-simulate listing downloads"
     },
     {
       "name": "youtube",
       "status": "partial",
-      "upstream": ["yt_dlp/extractor/youtube/", "yt_dlp/extractor/youtube.py", "test/test_youtube_misc.py"],
-      "rust": ["src/extractor/youtube.rs", "src/extractor/youtube/client.rs", "src/extractor/mod.rs", "src/lib.rs", "src/error.rs", "tests/fixtures/youtube/", "tools/compare_youtube.py", "tools/test_compare_youtube.py", "docs/COMPATIBILITY.md", "upstream/notes/youtube-watch-page.md", "upstream/notes/youtube-player-api.md", "upstream/notes/youtube-challenge-runtime.md"],
-      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct muxed MP4/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; no other API clients, JS/signature/n solving, token acquisition, authentication, live, adaptive merging, manifests, SABR or playlists"
+      "upstream": [
+        "yt_dlp/extractor/youtube/",
+        "yt_dlp/extractor/youtube.py",
+        "test/test_youtube_misc.py"
+      ],
+      "rust": [
+        "src/extractor/youtube.rs",
+        "src/extractor/youtube/client.rs",
+        "src/extractor/youtube/integration.rs",
+        "src/extractor/mod.rs",
+        "src/lib.rs",
+        "src/error.rs",
+        "tests/fixtures/youtube/",
+        "tools/compare_youtube.py",
+        "tools/test_compare_youtube.py",
+        "docs/COMPATIBILITY.md",
+        "upstream/notes/youtube-watch-page.md",
+        "upstream/notes/youtube-player-api.md",
+        "upstream/notes/youtube-challenge-runtime.md",
+        "upstream/notes/youtube-n-extraction.md",
+        "upstream/notes/youtube-signature-extraction.md",
+        "upstream/notes/youtube-adaptive-merge.md",
+        "src/extractor/youtube/integration/manifests.rs",
+        "tools/compare_youtube_hls.py",
+        "tools/test_compare_youtube_hls.py",
+        "upstream/notes/youtube-hls.md",
+        "src/extractor/youtube/captions.rs",
+        "src/extractor/youtube/integration/captions.rs",
+        "tools/compare_youtube_captions.py",
+        "tools/test_compare_youtube_captions.py",
+        "upstream/notes/youtube-captions.md"
+      ],
+      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API direct formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; native finite HLS VOD discovery for initial/anonymous WEB responses under optional HLS token policy, shared path-n and direct URL challenge batch, native hls format IDs/groups; no other API clients, token acquisition, authentication, live, fragmented direct adaptive delivery, DASH discovery, SABR or playlists; bounded manual/ASR caption URL/name metadata, translation/original aliases and audio-language inference under WEB subtitle token policy; no caption token acquisition or URL deciphering"
+    },
+    {
+      "name": "youtube-challenge-runtime",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/youtube/jsc/",
+        "yt_dlp/extractor/youtube/_video.py",
+        "test/test_jsc/"
+      ],
+      "rust": [
+        "src/extractor/youtube/challenge.rs",
+        "src/extractor/youtube/challenge/runtime.rs",
+        "src/extractor/youtube/challenge/urls.rs",
+        "src/extractor/youtube/player.rs",
+        "src/extractor/youtube/client.rs",
+        "tests/helpers/challenge_runtime.rs",
+        "tests/helpers/youtube_runtime.rs",
+        "src/extractor/youtube/integration.rs",
+        "tests/fixtures/youtube/challenges/",
+        "vendor/ejs/",
+        "tools/compare_ejs.py",
+        "tools/test_compare_ejs.py",
+        "tools/test_ejs_assets.py",
+        "upstream/notes/youtube-challenge-runner.md",
+        "upstream/notes/youtube-player-challenges.md",
+        "upstream/notes/youtube-n-extraction.md",
+        "upstream/notes/youtube-signature-extraction.md"
+      ],
+      "scope": "Private offline EJS 0.8.0 assets/protocol and bounded explicit-path Deno 2.9.7 runner, exact saved-player n/signature vectors, strict complete JSON validation and process/pipe budgets; canonical-origin bounded player discovery/acquisition with validated redirects and pure progressive n/signature URL rewriting, saved-player-to-media private pipeline; prerequisite runtime CI matrix passed on Linux/macOS/Windows; opt-in signature/query-n and HLS path-n extraction with shared complete batches and explicit lazy runtime configuration; no other runtimes, caches or live-site support"
     },
     {
       "name": "manifest-downloaders",
-      "status": "planned",
-      "upstream": ["yt_dlp/downloader/hls.py", "yt_dlp/downloader/dash.py", "yt_dlp/downloader/fragment.py"],
-      "rust": [],
-      "scope": "Not implemented"
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/downloader/hls.py",
+        "yt_dlp/downloader/dash.py",
+        "yt_dlp/downloader/fragment.py",
+        "yt_dlp/extractor/common.py",
+        "test/test_InfoExtractor.py",
+        "yt_dlp/aes.py",
+        "test/test_aes.py"
+      ],
+      "rust": [
+        "src/hls.rs",
+        "src/extractor/hls.rs",
+        "src/fragment.rs",
+        "src/info.rs",
+        "tests/hls.rs",
+        "tests/fragments.rs",
+        "tests/hls_media.rs",
+        "tests/fixtures/hls/",
+        "tools/compare_hls.py",
+        "tools/test_compare_hls.py",
+        "upstream/notes/hls-vod.md",
+        "src/crypto.rs",
+        "tests/hls_aes.rs",
+        "tools/generate_hls_aes_fixtures.py",
+        "upstream/notes/hls-aes128.md",
+        "tests/hls_audio.rs",
+        "tools/compare_hls_audio.py",
+        "tools/test_compare_hls_audio.py",
+        "upstream/notes/hls-audio.md",
+        "src/dash.rs",
+        "src/extractor/dash.rs",
+        "tests/dash.rs",
+        "tests/dash_media.rs",
+        "tests/fixtures/dash/",
+        "tools/compare_dash.py",
+        "tools/test_compare_dash.py",
+        "upstream/notes/dash-static.md"
+      ],
+      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; external AUDIO rendition groups with language/name/default metadata, compatible automatic pair selection, audio-only masters and copy merging; static single-period DASH BaseURL inheritance, templates/timelines, lists/ranges, explicit resources and native fragment representation downloads/merging; no dynamic/multi-period/SIDX/DRM DASH, SAMPLE-AES/DRM, live, discontinuities, external video/subtitle renditions, nested masters or remux parity"
+    },
+    {
+      "name": "direct-stream-merging",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/YoutubeDL.py",
+        "test/test_YoutubeDL.py"
+      ],
+      "rust": [
+        "src/merge.rs",
+        "src/lib.rs",
+        "src/info.rs",
+        "src/download.rs",
+        "src/main.rs",
+        "tests/merge.rs",
+        "tests/helpers/ffmpeg_runtime.rs",
+        "tests/fixtures/merge/",
+        "upstream/notes/youtube-adaptive-merge.md"
+      ],
+      "scope": "Explicit executable local two-input stream-copy merging, MP4/TS video and M4A/AAC/TS audio to MP4, WebM to WebM and mixed to Matroska, bounded process/pipe execution, cancellation and no-clobber publication; no discovery, installation, transcoding, multistream, fixups or other postprocessing"
+    },
+    {
+      "name": "download-archive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "test/test_YoutubeDL.py"
+      ],
+      "rust": [
+        "src/archive.rs",
+        "src/main.rs",
+        "src/lib.rs",
+        "src/error.rs",
+        "tests/archive.rs",
+        "tests/fixtures/archive/",
+        "tools/compare_archive.py",
+        "tools/test_compare_archive.py",
+        "upstream/notes/download-archive.md"
+      ],
+      "scope": "Explicit UTF-8 regular-file archive with lowercase extractor_key and case-sensitive id; cached membership after full extraction and before atomic remaining-entry selection; no writes in metadata/listing/simulation; record only after successful final download/merge publication; bounded shared/exclusive file locks, locked reread/dedup, missing-newline repair and append/sync failure rollback; no early URL-ID skip, legacy IDs, ie_key/URL guessing, force-write options or full upstream archive parity"
+    },
+    {
+      "name": "playlist-item-selection",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "test/test_YoutubeDL.py"
+      ],
+      "rust": [
+        "src/playlist.rs",
+        "src/main.rs",
+        "src/info.rs",
+        "src/error.rs",
+        "src/lib.rs",
+        "tests/playlist.rs",
+        "tests/fixtures/playlist/",
+        "tools/compare_playlist.py",
+        "tools/test_compare_playlist.py",
+        "upstream/notes/playlist-items.md"
+      ],
+      "scope": "Fully extracted HTML5 playlist inclusive signed item/range/step selection, legacy start/end and reverse; ordered first-index deduplication, phase-preserving out-of-range clipping and original index/count versus selected order/count metadata before archive filtering and atomic format selection; explicit signed-64-bit/spec bounds; no lazy/paged/nested/site playlists, full metadata or general output-template parity"
+    },
+    {
+      "name": "typed-output-templates",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "test/test_YoutubeDL.py"
+      ],
+      "rust": [
+        "src/output.rs",
+        "src/output/template.rs",
+        "src/main.rs",
+        "src/info.rs",
+        "src/playlist.rs",
+        "tests/templates.rs",
+        "tests/fixtures/templates/",
+        "tests/http.rs",
+        "tools/compare_templates.py",
+        "tools/test_compare_templates.py",
+        "upstream/notes/typed-output-templates.md"
+      ],
+      "scope": "Whitelist of represented root string/integer/boolean filename fields; s/d/i/u/f/F flags-width-precision and inert length modifiers, known-field alternatives/literal defaults/global NA option, upstream float numeric casting and exact bare-s playlist padding before archive filtering; bounded grammar/output, native component sanitizer and explicit unsupported errors; no arbitrary metadata/traversal/math/date/replacement/custom conversions or platform filename parity"
+    },
+    {
+      "name": "html5-subtitles",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/common.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "yt_dlp/downloader/http.py",
+        "test/test_YoutubeDL.py",
+        "test/test_InfoExtractor.py"
+      ],
+      "rust": [
+        "src/extractor/html5.rs",
+        "src/subtitles.rs",
+        "src/output/subtitles.rs",
+        "src/output.rs",
+        "src/info.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "src/download.rs",
+        "src/error.rs",
+        "tests/subtitles.rs",
+        "tests/fixtures/subtitles/",
+        "tools/compare_subtitles.py",
+        "tools/test_compare_subtitles.py",
+        "upstream/notes/html5-subtitles.md"
+      ],
+      "scope": "Direct-child HTML5 subtitle/caption track metadata with ordered optional-language groups, pinned URL sanitation/extension completion; native listing, literal/all/exclusion language selection and ordered format preferences; sidecar-only skip-download and native HTTP identity-byte sidecars with referrers/retries/cancellation/no-clobber publication before media; sanitized collision-safe paths and explicit unknown-language errors; normal/automatic source selection with manual precedence and independent automatic write flags; no general regex, other-site/manifest subtitles, conversion/embedding, decompression or full filename/timing parity"
+    },
+    {
+      "name": "youtube-captions",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/youtube/_video.py",
+        "yt_dlp/extractor/youtube/_base.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py"
+      ],
+      "rust": [
+        "src/extractor/youtube/captions.rs",
+        "src/extractor/youtube/integration/captions.rs",
+        "src/subtitles.rs",
+        "src/main.rs",
+        "src/output/subtitles.rs",
+        "tests/fixtures/youtube/captions/",
+        "tools/compare_youtube_captions.py",
+        "tools/test_compare_youtube_captions.py",
+        "upstream/notes/youtube-captions.md"
+      ],
+      "scope": "Single supported WEB player response manual/ASR captions, exact ordered seven server-side formats/names/queries, gated manual translations, ASR original aliases/translations and inferred audio language; required subtitle token skips remaining response tracks; manual-preferred combined selection/listing and native sidecars; no token acquisition, additional clients, URL deciphering, conversion/embedding or live-site reliability claim"
+    },
+    {
+      "name": "http-request-configuration",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/utils/networking.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/networking/"
+      ],
+      "rust": [
+        "src/http.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "src/extractor/youtube.rs",
+        "src/extractor/youtube/challenge.rs",
+        "src/extractor/youtube/player.rs",
+        "tests/headers.rs",
+        "tests/fixtures/headers/",
+        "tools/compare_headers.py",
+        "tools/test_compare_headers.py",
+        "upstream/notes/http-headers.md"
+      ],
+      "scope": "Bounded global header defaults, repeated add-headers and explicit singular alias, convenience User-Agent/Referer normalization, extractor/transport request precedence across native clients/transfers, local retry/redirect propagation; explicit raw Cookie rejection; scoped cookies tracked separately; no general authentication/proxy/impersonation/default browser headers or upstream redirect/legacy-byte parity"
+    },
+    {
+      "name": "http-cookies",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/cookies.py",
+        "yt_dlp/options.py",
+        "yt_dlp/YoutubeDL.py",
+        "test/test_cookies.py",
+        "yt_dlp/networking/"
+      ],
+      "rust": [
+        "src/cookies.rs",
+        "src/http.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "src/extractor/youtube.rs",
+        "src/extractor/youtube/challenge.rs",
+        "src/extractor/youtube/player.rs",
+        "tests/cookies.rs",
+        "tests/fixtures/cookies/",
+        "tools/compare_cookies.py",
+        "tools/test_compare_cookies.py",
+        "upstream/notes/http-cookies.md"
+      ],
+      "scope": "Shared bounded RFC6265-scoped in-memory response cookies across native clients and explicit Netscape import/atomic save, session/expiry/domain/path/Secure/HttpOnly and nameless values, last-wins cookies/no-cookies CLI persistence including metadata/failures; strict host-only and malformed-file native policies, no raw Cookie compatibility, browser-cookie extraction/decryption, PSL snapshot, SameSite/browser-context enforcement or account-specific YouTube authentication"
+    },
+    {
+      "name": "http-proxy-configuration",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/options.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/networking.py",
+        "yt_dlp/networking/_helper.py",
+        "yt_dlp/socks.py",
+        "test/test_networking.py"
+      ],
+      "rust": [
+        "src/http.rs",
+        "src/http/proxy.rs",
+        "src/http/proxy/tls.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "src/extractor/youtube.rs",
+        "src/extractor/youtube/challenge.rs",
+        "src/extractor/youtube/player.rs",
+        "tests/proxies.rs",
+        "tests/fixtures/proxies/",
+        "tools/compare_proxies.py",
+        "tools/test_compare_proxies.py",
+        "upstream/notes/http-proxies.md"
+      ],
+      "scope": "Explicit shared HTTP/HTTPS/SOCKS4/4a/5/5h routing, empty direct override, pinned aliases/default ports and SOCKS5 remote DNS/auth gating; HTTP proxy Basic credentials, verified CONNECT/HTTPS-proxy transport and bounded-player routing; reject unsupported SOCKS4 user IDs and legacy per-request headers; existing reqwest environment/system routing retained without full upstream discovery/bypass/PAC, geo-verification or per-extractor proxy parity"
+    },
+    {
+      "name": "audio-extraction",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/utils/_utils.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/audio.rs",
+        "src/audio/ffmpeg.rs",
+        "src/audio_download.rs",
+        "src/postprocess.rs",
+        "src/main.rs",
+        "src/lib.rs",
+        "tests/audio.rs",
+        "tests/helpers/audio_runtime.rs",
+        "tests/helpers/audio_pipeline.rs",
+        "tests/fixtures/audio/",
+        "tools/compare_audio.py",
+        "tools/test_compare_audio.py",
+        "upstream/notes/audio-extraction.md"
+      ],
+      "scope": "Explicit extract-audio mappings, codec inspection and copy/conversion to MP3/AAC/M4A/Opus/Vorbis/FLAC/ALAC/WAV; bounded native quality and process policies, lazy tools, source retention, cancellation and no-clobber final publication; no discovery, FDK selection, arbitrary postprocessors, embedding, video conversion or general format ranking parity"
+    },
+    {
+      "name": "video-remux-and-recode",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/utils/_utils.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/video.rs",
+        "src/video/ffmpeg.rs",
+        "src/postprocess.rs",
+        "src/audio_download.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "tests/video.rs",
+        "tests/helpers/video_runtime.rs",
+        "tests/helpers/video_pipeline.rs",
+        "tests/fixtures/video/",
+        "tools/compare_video.py",
+        "tools/test_compare_video.py",
+        "upstream/notes/video-processing.md"
+      ],
+      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio→video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
+    },
+    {
+      "name": "subtitle-conversion",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/YoutubeDL.py",
+        "test/test_utils.py",
+        "test/test_subtitles.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/subtitle_convert.rs",
+        "src/subtitle_convert/ttml.rs",
+        "src/subtitle_convert/ffmpeg.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "tests/subtitle_conversion.rs",
+        "tests/helpers/subtitle_runtime.rs",
+        "tests/helpers/subtitle_pipeline.rs",
+        "tests/fixtures/subtitle_conversion/",
+        "tools/compare_subtitle_conversion.py",
+        "tools/test_compare_subtitle_conversion.py",
+        "upstream/notes/subtitle-conversion.md"
+      ],
+      "scope": "Before-media selected sidecar conversion to SRT/VTT/ASS/LRC, aliases/none and same-extension/literal-JSON skips, native bounded pinned TTML/DFXP timing/style conversion and fixed local FFmpeg sidecar conversion; skip-download/lazy metadata modes, no-clobber original/intermediate retention and cancellation; no embedding, general TTML standards, DTD/custom entities, extra encodings, JSON3/server XML conversion or arbitrary postprocessor arguments"
+    },
+    {
+      "name": "subtitle-embedding",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/YoutubeDL.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/embed_subtitles.rs",
+        "src/embed_subtitles/ffmpeg.rs",
+        "src/embed_subtitles/languages.rs",
+        "src/postprocess.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "tests/subtitle_embedding.rs",
+        "tests/helpers/embed_runtime.rs",
+        "tests/helpers/embed_pipeline.rs",
+        "tests/fixtures/subtitle_embedding/",
+        "tools/compare_subtitle_embedding.py",
+        "tools/test_compare_subtitle_embedding.py",
+        "upstream/notes/subtitle-embedding.md"
+      ],
+      "scope": "Final private media-stage embedding for MP4/MOV/M4A/WebM/MKV/MKA; source eligibility/maps/timed-text and ISO639/name metadata, implied acquisition and explicit manual/global keep retention, skip/lazy paths, bounded local FFmpeg and postpublication sidecar cleanup; no network FFmpeg, arbitrary arguments, extra active subtitle formats or broad acquisition/container guarantees"
+    },
+    {
+      "name": "info-json",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py"
+      ],
+      "rust": [
+        "src/info_json.rs",
+        "src/output.rs",
+        "src/output/template.rs",
+        "src/playlist.rs",
+        "src/main.rs",
+        "tests/info_json.rs",
+        "tests/fixtures/info_json/",
+        "tools/compare_info_json.py",
+        "tools/test_compare_info_json.py",
+        "upstream/notes/info-json.md"
+      ],
+      "scope": "--write-info-json/--no-write-info-json video and playlist sidecars with default clean filtering, replace_extension naming, playlist template context, Python json.dump bytes, keep-existing default and ordering before media/entries; no overwrite options, --no-clean-info-json, --load-info-json, embedding, typed infojson templates or unmodeled upstream fields"
     }
   ]
 }

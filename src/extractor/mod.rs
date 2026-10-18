@@ -1,11 +1,13 @@
+mod dash;
 mod direct;
+mod hls;
 mod html5;
 mod youtube;
 
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use html5::GenericHttp;
-pub use youtube::Youtube;
+pub use youtube::{Youtube, YoutubeOptions};
 
 use crate::{ExtractResult, Result, VideoInfo};
 use reqwest::blocking::Client;

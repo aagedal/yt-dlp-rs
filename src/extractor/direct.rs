@@ -111,6 +111,15 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem };
     Some(VideoInfo {
+        automatic_captions: Default::default(),
+        subtitles: Default::default(),
+        requested_subtitles: None,
+        last_playlist_index: None,
+        playlist_index: None,
+        playlist_autonumber: None,
+        playlist_count: None,
+        n_entries: None,
+        fragments: Vec::new(),
         id: title.to_owned(),
         title: title.to_owned(),
         ext: ext.to_owned(),
@@ -120,6 +129,8 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
         extractor_key: "Generic".into(),
         direct: true,
         formats: Vec::new(),
+        stream_kind: crate::StreamKind::Standalone,
+        requested_formats: Vec::new(),
         format_id: None,
         filesize: response.content_length(),
         width: None,

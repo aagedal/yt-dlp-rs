@@ -9,7 +9,7 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
-use yt_dlp_rs::{Error, ExtractResult, YoutubeDl, output::render_template};
+use yt_dlp_rs::{Error, ExtractResult, YoutubeDl, YoutubeOptions, output::render_template};
 
 fn html_fixture(path: &str) -> Option<&'static str> {
     Some(match path {
@@ -423,7 +423,7 @@ fn html5_rejects_unsupported_sources() {
         assert!(
             matches!(
                 dl.extract_info(&server.url(path)),
-                Err(Error::UnsupportedHtml5(_))
+                Err(Error::UnsupportedHtml5(_) | Error::UnsupportedManifest(_))
             ),
             "{path}"
         );
@@ -505,7 +505,7 @@ fn rejects_pages_manifests_errors_and_non_http_urls() {
     for path in ["/page.mp4", "/playlist.m3u8"] {
         assert!(matches!(
             dl.extract_info(&server.url(path)),
-            Err(Error::UnsupportedUrl(_))
+            Err(Error::UnsupportedUrl(_) | Error::UnsupportedManifest(_))
         ));
     }
     assert!(matches!(
@@ -567,7 +567,11 @@ fn templates_are_explicit_and_metadata_cannot_inject_paths_or_fields() {
             .unwrap(),
         "downloads/%-_folder_%(id)s.mp4"
     );
-    for invalid in ["%(unknown)s", "%(title)d", "%", "", "-"] {
+    assert_eq!(
+        render_template("%(title)03d", &info).unwrap(),
+        std::path::PathBuf::from("NA")
+    );
+    for invalid in ["%(unknown)s", "%(title)q", "%", "", "-"] {
         assert!(render_template(invalid, &info).is_err(), "{invalid}");
     }
 }
@@ -611,6 +615,75 @@ fn cli_simulate_and_download() {
         .unwrap();
     assert!(downloaded.status.success());
     assert_eq!(std::fs::read(target).unwrap(), b"media bytes");
+}
+
+#[test]
+fn youtube_runtime_configuration_is_lazy_for_generic_extraction() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    let runtime = directory.path().join("nonexistent-deno");
+    let dl = YoutubeDl::with_youtube_options(YoutubeOptions {
+        include_translated_subtitles: false,
+        js_runtime: Some(runtime.clone()),
+    })
+    .unwrap();
+    for (path, extractor) in [("/clip.mp4", "generic"), ("/video.html", "html5")] {
+        let info = dl.extract_info(&server.url(path)).unwrap();
+        assert_eq!(info.filesize, Some(11));
+        assert_eq!(info.extractor, extractor);
+    }
+    assert!(!runtime.exists());
+}
+
+#[test]
+fn cli_explicit_youtube_runtime_preserves_generic_json_simulation_and_download() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    let runtime = directory.path().join("nonexistent-deno");
+    for (index, path) in ["/clip.mp4", "/video.html"].into_iter().enumerate() {
+        let url = server.url(path);
+        let target = directory.path().join(format!("output-{index}.mp4"));
+        for mode in [Some("-j"), Some("-s"), None] {
+            let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+            command.arg("--youtube-js-runtime").arg(&runtime);
+            if let Some(mode) = mode {
+                command.arg(mode);
+            }
+            let output = command.arg("-o").arg(&target).arg(&url).output().unwrap();
+            assert!(
+                output.status.success(),
+                "{path} {mode:?}: {}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+            match mode {
+                Some("-j") => {
+                    let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+                    assert_eq!(json["filesize"], 11);
+                    assert!(!target.exists());
+                }
+                Some("-s") => {
+                    assert!(output.stdout.is_empty());
+                    assert!(!target.exists());
+                }
+                None => assert_eq!(std::fs::read(&target).unwrap(), b"media bytes"),
+                _ => unreachable!(),
+            }
+        }
+    }
+    assert!(!runtime.exists());
+}
+
+#[test]
+fn cli_youtube_runtime_requires_a_path() {
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["http://example.invalid/video.mp4", "--youtube-js-runtime"])
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+    let error = String::from_utf8(output.stderr).unwrap();
+    assert!(error.contains("--youtube-js-runtime <PATH>"), "{error}");
+    assert!(error.contains("a value is required"), "{error}");
 }
 
 #[test]
@@ -674,7 +747,7 @@ fn format_ids_are_literal_and_src_precedes_child_sources() {
     let info = dl.extract_info_with_format(&page, Some("1")).unwrap();
     assert_eq!(info.ext, "mp3");
     assert_eq!(info.url.as_str(), server.url("/audio"));
-    for id in ["", "2", "01", "bestvideo", "0/1", "0+1", "[ext=mp4]"] {
+    for id in ["", "2", "01", "bestvideo", "0//1", "0+1"] {
         assert!(
             matches!(
                 dl.extract_info_with_format(&page, Some(id)),
@@ -701,7 +774,7 @@ fn selecting_supported_source_does_not_hide_unsupported_alternatives() {
         assert!(
             matches!(
                 dl.extract_info_with_format(&server.url(page), Some("0")),
-                Err(Error::UnsupportedHtml5(_))
+                Err(Error::UnsupportedHtml5(_) | Error::UnsupportedManifest(_))
             ),
             "{page}"
         );
@@ -837,7 +910,7 @@ fn html5_playlist_selection_and_validation_are_atomic() {
     ));
     assert!(matches!(
         dl.extract_result_with_format(&server.url("/playlist-manifest.html"), Some("0")),
-        Err(Error::UnsupportedHtml5(_))
+        Err(Error::UnsupportedManifest(_))
     ));
     let directory = tempfile::tempdir().unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
@@ -1033,12 +1106,12 @@ fn cli_format_selection_json_download_and_failure() {
         b"webm"
     );
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-        .args(["-j", "-f", "best/worst", &page])
+        .args(["-j", "-f", "missing/best", &page])
         .output()
         .unwrap();
-    assert!(!output.status.success());
-    assert!(output.stdout.is_empty());
-    assert!(String::from_utf8_lossy(&output.stderr).contains("available IDs: 0, 1"));
+    assert!(output.status.success());
+    let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(info["format_id"], "1");
 }
 
 #[test]

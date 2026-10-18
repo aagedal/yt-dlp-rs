@@ -197,8 +197,11 @@ only. A future extraction cancellation API must also stop and reap the runner.
    no media probe of unresolved challenge URLs, selection, and output. Only then
    add runtime options and update compatibility claims/source mappings.
 
-Steps 1–4 remain unimplemented. No runtime assets or new extractor capabilities
-are introduced by this decision. Adaptive merging, signature timestamp API
+The decision itself introduced no runtime assets or extractor capabilities.
+Steps 1–2 and local real-runtime vectors are now implemented by the
+[offline runner slice](youtube-challenge-runner.md), with a dedicated CI matrix
+added for step 3. Cross-platform results and extraction integration (step 4)
+remain acceptance gates. Adaptive merging, signature timestamp API
 changes, new clients, PO tokens, manifests, persistent caches, and live-site
 reliability remain separate work.
 

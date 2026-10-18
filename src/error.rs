@@ -6,18 +6,30 @@ pub enum Error {
     InvalidUrl(#[from] url::ParseError),
     #[error("unsupported URL scheme: {0}; expected http or https")]
     UnsupportedScheme(String),
-    #[error("no extractor supports {0}; expected direct HTTP media or a HTML5 media page")]
+    #[error(
+        "no extractor supports {0}; expected direct HTTP media, a HTML5 media page, or supported HLS/DASH VOD"
+    )]
     UnsupportedUrl(String),
     #[error("unsupported YouTube behavior: {0}")]
     UnsupportedYoutube(String),
+    #[error("unsupported manifest: {0}")]
+    UnsupportedManifest(String),
+    #[error("subtitle operation failed: {0}")]
+    Subtitle(String),
     #[error("unsupported HTML5 media: {0}")]
     UnsupportedHtml5(String),
     #[error("playlist result requires extract_result or extract_result_with_format")]
     PlaylistRequiresResult,
+    #[error("playlist selection failed: {0}")]
+    PlaylistSelection(String),
     #[error("format selection failed: {0}")]
     FormatSelection(String),
     #[error("HTML page exceeds the {0}-byte extraction limit")]
     HtmlTooLarge(u64),
+    #[error("cookie operation failed: {0}")]
+    Cookies(String),
+    #[error("invalid HTTP configuration: {0}")]
+    HttpConfiguration(String),
     #[error("HTTP request failed: {0}")]
     Http(#[from] reqwest::Error),
     /// A transient HTTP status with a supported, bounded Retry-After hint.
@@ -35,6 +47,12 @@ pub enum Error {
     InvalidRangeResponse,
     #[error("download cancelled")]
     DownloadCancelled,
+    #[error("postprocessing failed: {0}")]
+    Postprocess(String),
+    #[error("info JSON failed: {0}")]
+    InfoJson(String),
+    #[error("download archive failed: {0}")]
+    Archive(String),
     #[error("filesystem error: {0}")]
     Io(#[from] std::io::Error),
     #[error("output already exists: {0}")]

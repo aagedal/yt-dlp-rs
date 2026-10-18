@@ -21,12 +21,32 @@ tractable for future agents.
 - `src/extractor/html5.rs`: generic response dispatch and progressive HTML5 source parsing;
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
 - `src/extractor/youtube.rs`: narrow watch-page/player response extraction,
-  direct muxed formats only, with unsupported challenge/access handling errors.
+  direct standalone/separate formats with opt-in offline signature/n solving.
+- `src/extractor/youtube/captions.rs`: bounded manual/ASR caption metadata and translation URL planning with WEB subtitle token policy.
 - `src/extractor/youtube/client.rs`: isolated anonymous WEB player API request
   fallback and explicit token-exempt itag 18 policy.
+- `src/cookies.rs`: scoped response cookies and bounded Netscape import/atomic persistence.
+- `src/http/proxy.rs`: pure explicit proxy validation and shared client routing.
+- `src/http.rs`: validated global request headers and User-Agent/Referer defaults, shared by normal and bounded player clients.
 - `src/download.rs`: streaming HTTP transfer, byte-progress/cancellation checkpoints, and no-clobber publication.
+- `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
+- `src/dash.rs` and `src/extractor/dash.rs`: bounded static single-period MPD parsing and generic/HTML5 acquisition.
+- `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
+- `src/playlist.rs`: playlist item/range parsing, ordered index deduplication and fully extracted entry selection.
+- `src/subtitles.rs`: ordered subtitle metadata, language/format selection and sidecar name planning; `src/output/subtitles.rs` renders inventories.
+- `src/subtitle_convert.rs`: subtitle conversion publication/retention; nested
+  `ttml.rs` ports bounded native text/timing/styles and `ffmpeg.rs` converts local sidecars.
+- `src/embed_subtitles.rs`: local subtitle eligibility and language/stream metadata;
+  its bounded FFmpeg runner feeds the final stage of `src/postprocess.rs`.
+- `src/info_json.rs`: cleaned video/playlist info JSON values, `.info.json` naming and keep-existing atomic writes.
+- `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
+- `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
+- `src/audio.rs`, `src/audio/ffmpeg.rs`: pure audio plans and bounded local
+  inspection/conversion; `src/audio_download.rs` adapts the audio-only API.
+- `src/video.rs`, `src/video/ffmpeg.rs`: video mappings and bounded local remux/recode;
+  `src/postprocess.rs` shares ordered processing, retention and publication.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
-- `src/output.rs`: template rendering and filename-component sanitization.
+- `src/output.rs`: template rendering and filename-component sanitization; `src/output/formats.rs` renders format inventories and `src/output/template.rs` handles bounded typed filename templates.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
 - `upstream/manifest.json`: upstream revision and component coverage ledger.
 - `tools/upstream_report.py`: machine-readable input for an update agent.
@@ -54,7 +74,20 @@ remain outside the current result contract.
    a seven-fixture comparison harness, typed HTML5 playlist results for multiple media
    elements, sequential entry downloads, and the option inventory are implemented.
    Bounded automatic resolution ranking and `best`/`worst` selection are implemented;
-   full upstream ranking and general selector expressions remain open. Site
+   Chained numeric/text format filters now constrain existing atoms, pairs and
+   fallbacks before native ranking. Parenthesized groups, best/worst shorthand
+   aliases, bare-filter selectors and positive indexed ranks are implemented.
+   Format listing and unselected extraction expose eligible alternatives before
+   selection, including separate-only presentations without a merger.
+   Playlist item/range selection, legacy start/end, reverse ordering and original
+   index/selected-order metadata are implemented for fully extracted HTML5 lists.
+   Selection precedes archive filtering and format selection but does not make
+   extraction lazy. Typed filename templates support represented root fields,
+   string/integer/fixed-point conversions, width/precision/flags, alternatives and
+   missing-value defaults; full template expressions, conversions and platform
+   filename parity remain open.
+   Full upstream ranking and general selector
+   expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.
 3. **Resilient transport and media protocols.** Retry policy, range/resume with
    validator checks, HLS/DASH parsing and fragments, format selection, ffmpeg
@@ -73,8 +106,25 @@ remain outside the current result contract.
    Download byte-progress observers and cooperative cancellation are implemented,
    with polling during retry waits and cancellation before publication; the CLI
    emits throttled byte progress on stderr. Blocking requests/reads are not
-   interruptible. Persistent resume across invocations, manifest protocols,
-   extraction cancellation, and CLI signal handling remain open.
+   interruptible. Native HLS VOD master/media selection, MPEG-TS/AAC/fMP4
+   assembly, explicit/implicit media ranges, fragment retries and cancellation are
+   implemented. Identity AES-128 CBC keys, sequence/explicit IVs, rotation and
+   streaming decryption are implemented with exact local media fixtures.
+   External audio groups, metadata and compatible video/audio selection now
+   feed native fragment downloads and explicit FFmpeg copy merging, including
+   MPEG-TS video and AAC/TS audio. Static single-period DASH templates/timelines/lists/ranges and native
+   representation downloads are implemented; explicit FFmpeg merges separate
+   tracks. Dynamic/multi-period/SIDX DASH, SAMPLE-AES/DRM and live HLS,
+   external video/subtitle renditions, discontinuities,
+   persistent resume across invocations, extraction cancellation, and CLI signal handling remain open.
+   Global custom headers and User-Agent/Referer options apply across extraction,
+   transfers, fragments, keys, subtitles and validated player acquisition with
+   request-specific precedence. Shared in-memory cookies and explicit Netscape
+   file persistence now cover the native HTTP clients; browser-cookie extraction,
+   account-specific authentication and broader request configuration remain open.
+   Explicit HTTP/HTTPS/SOCKS proxies and direct overrides now route all native
+   clients, including verified HTTPS proxy/CONNECT transport. SOCKS4 user IDs,
+   full upstream environment discovery/bypass and per-extractor proxy policies remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,
    playlist handling, and end-to-end validation. Split request/client machinery
@@ -90,14 +140,55 @@ remain outside the current result contract.
    fixtures cover it. The
    [JavaScript runtime decision](../upstream/notes/youtube-challenge-runtime.md)
    selects an opt-in external Deno process with pinned offline EJS assets;
-   challenge solving remains unimplemented. Next: import and verify the full
-   EJS assets and saved challenge vectors, then implement the bounded runner
-   before integrating one challenge kind at a time. Adaptive media requires
-   explicit stream types and merging, while manifests remain milestone 3 work. Upstream's challenge
+   query `n` and encrypted-signature solving are integrated behind explicit runtime
+   configuration. The full EJS 0.8.0
+   assets, saved player vectors, private typed protocol, bounded Deno 2.9.7 runner,
+   and a dedicated offline runtime CI matrix are now implemented; see the
+   [runner slice](../upstream/notes/youtube-challenge-runner.md). Local saved-player
+   `n`/signature comparisons and the prerequisite runtime CI matrix pass on all
+   three platforms. Query-n extraction, eligibility/token filtering before solving,
+   lazy runtime configuration and local extraction/download fixtures are implemented;
+   see the [n extraction slice](../upstream/notes/youtube-n-extraction.md). Strict bounded player acquisition,
+   pure URL rewriting, and a saved-player-to-media private pipeline test are now
+   implemented; see the [player challenge slice](../upstream/notes/youtube-player-challenges.md).
+   Encrypted signature/default/custom-sp and combined-n extraction/download
+   fixtures now pass, including an actual offline upstream EJS permutation-path
+   comparison; see the [signature slice](../upstream/notes/youtube-signature-extraction.md).
+   Direct adaptive audio/video types, bounded pair/fallback selection and explicit
+   FFmpeg stream-copy merging are implemented with local fixtures; see the
+   [adaptive slice](../upstream/notes/youtube-adaptive-merge.md). Fragmented direct
+   adaptive delivery and DASH discovery remain open. Initial/anonymous WEB HLS
+   discovery now feeds native finite VOD plans, with path-n solving shared with
+   direct URL challenges. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
    authentication, cookies, subtitles, archives, and postprocessors explicitly.
+   HTML5 subtitle/caption track discovery, listing, literal language/all/exclusion
+   selection, format preferences and native HTTP sidecars are implemented.
+   Skip-download permits sidecar-only writes without archive records. The supported
+   YouTube WEB response subset also exposes manual/automatic captions, translations,
+   original aliases, token gating and independent automatic sidecar selection.
+   Subtitle conversion to SRT/VTT/ASS/LRC, including native TTML/DFXP preprocessing,
+   now follows sidecar acquisition before media downloads, with bounded local
+   tools, no-clobber publication and original/intermediate retention.
+   Subtitle embedding now follows audio/video processing for MP4/MOV/M4A/WebM/
+   Matroska, preserving source container/language policies and sidecar retention.
+   Other-site/manifest subtitles and regex languages remain open.
+   Video/playlist `--write-info-json` sidecars follow upstream clean filtering,
+   naming and ordering for the represented metadata subset; loading info JSON,
+   overwrite options and info JSON embedding remain open.
+   Basic download archives are implemented: cached extractor-key/ID membership,
+   filtering before selection and recording only after successful final publication.
+   Bounded cooperating-writer locks, append rollback and a pinned offline archive
+   reference fixture are covered; early URL-ID skips, alternate legacy IDs,
+   force-write options and broader archive option parity remain open.
+   Audio extraction now supports bounded format mappings, quality plans and local
+   FFprobe/FFmpeg copy/conversion for eight target formats, source retention,
+   cancellation and archive-after-final-publication. Video remux/recode now follows
+   audio extraction in the shared pipeline, with source/intermediate retention and
+   latest-completed-stage preservation after failure. General postprocessor chains,
+   metadata/thumbnail embedding and fixups remain open.
 6. **Agent-maintained updates.** Upstream delta reports, bounded implementation
    briefs, differential regression fixtures, reviewable PRs, and staged releases.
    Measure extraction coverage and compatibility before enabling unattended merges.

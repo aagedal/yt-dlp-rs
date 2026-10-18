@@ -24,3 +24,53 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m unittest discover -s tools -p 'test_*.py' -v
+  youtube-challenges:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.9.7
+      - name: Require the pinned runtime for offline challenge tests
+        shell: bash
+        run: deno eval 'console.log("YT_DLP_RS_TEST_DENO=" + Deno.execPath())' >> "$GITHUB_ENV"
+      - run: cargo test --locked --lib extractor::youtube
+
+  direct-adaptive-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install real local merge tools
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Verify copied audio and video tracks from local fixtures
+        env:
+          YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
+          YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
+        run: cargo test --locked --test merge --test hls_media --test dash_media --test audio --test video --test subtitle_conversion --test subtitle_embedding
+      - name: Verify local audio target encoders and bounded processing
+        env:
+          YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
+          YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
+        run: cargo test --locked --lib audio::ffmpeg
+      - name: Verify local video remux and conversion process
+        env:
+          YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
+          YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
+        run: cargo test --locked --lib video::ffmpeg
+      - name: Verify local subtitle conversion formats and native TTML
+        env:
+          YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
+          YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
+        run: cargo test --locked --lib subtitle_convert
+      - name: Verify local subtitle embedding containers and metadata
+        env:
+          YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
+          YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
+        run: cargo test --locked --lib embed_subtitles
