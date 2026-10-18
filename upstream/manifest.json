@@ -103,9 +103,13 @@
         "upstream/notes/youtube-challenge-runtime.md",
         "upstream/notes/youtube-n-extraction.md",
         "upstream/notes/youtube-signature-extraction.md",
-        "upstream/notes/youtube-adaptive-merge.md"
+        "upstream/notes/youtube-adaptive-merge.md",
+        "src/extractor/youtube/integration/manifests.rs",
+        "tools/compare_youtube_hls.py",
+        "tools/test_compare_youtube_hls.py",
+        "upstream/notes/youtube-hls.md"
       ],
-      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; no other API clients, token acquisition, authentication, live, fragmented adaptive delivery, manifests, SABR or playlists"
+      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API direct formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; native finite HLS VOD discovery for initial/anonymous WEB responses under optional HLS token policy, shared path-n and direct URL challenge batch, native hls format IDs/groups; no other API clients, token acquisition, authentication, live, fragmented direct adaptive delivery, DASH discovery, SABR or playlists"
     },
     {
       "name": "youtube-challenge-runtime",
@@ -134,7 +138,7 @@
         "upstream/notes/youtube-n-extraction.md",
         "upstream/notes/youtube-signature-extraction.md"
       ],
-      "scope": "Private offline EJS 0.8.0 assets/protocol and bounded explicit-path Deno 2.9.7 runner, exact saved-player n/signature vectors, strict complete JSON validation and process/pipe budgets; canonical-origin bounded player discovery/acquisition with validated redirects and pure progressive n/signature URL rewriting, saved-player-to-media private pipeline; prerequisite runtime CI matrix passed on Linux/macOS/Windows; opt-in signature/query-n extraction with explicit lazy runtime configuration; no other runtimes, caches or live-site support"
+      "scope": "Private offline EJS 0.8.0 assets/protocol and bounded explicit-path Deno 2.9.7 runner, exact saved-player n/signature vectors, strict complete JSON validation and process/pipe budgets; canonical-origin bounded player discovery/acquisition with validated redirects and pure progressive n/signature URL rewriting, saved-player-to-media private pipeline; prerequisite runtime CI matrix passed on Linux/macOS/Windows; opt-in signature/query-n and HLS path-n extraction with shared complete batches and explicit lazy runtime configuration; no other runtimes, caches or live-site support"
     },
     {
       "name": "manifest-downloaders",

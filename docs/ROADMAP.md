@@ -119,8 +119,10 @@ remain outside the current result contract.
    comparison; see the [signature slice](../upstream/notes/youtube-signature-extraction.md).
    Direct adaptive audio/video types, bounded pair/fallback selection and explicit
    FFmpeg stream-copy merging are implemented with local fixtures; see the
-   [adaptive slice](../upstream/notes/youtube-adaptive-merge.md). Fragmented adaptive
-   delivery and manifests remain milestone 3 work. Upstream's challenge
+   [adaptive slice](../upstream/notes/youtube-adaptive-merge.md). Fragmented direct
+   adaptive delivery and DASH discovery remain open. Initial/anonymous WEB HLS
+   discovery now feeds native finite VOD plans, with path-n solving shared with
+   direct URL challenges. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand

@@ -1,5 +1,5 @@
 //! Pure preparation and rewriting of individual HTTPS/HTTP format URLs.
-//! Mirrors YoutubeIE's signatureCipher/sp and query n flow, without manifests.
+//! Mirrors YoutubeIE's signatureCipher/sp, query n and manifest path n flow.
 use super::{Kind, MAX_CHALLENGE, Result, Solutions};
 use serde_json::Value;
 use url::Url;
@@ -12,6 +12,7 @@ pub(super) struct Prepared {
     url: String,
     n: Option<(usize, String)>,
     signature: Option<(String, String)>,
+    manifest_n: Option<(std::ops::Range<usize>, String)>,
 }
 
 impl Prepared {
@@ -62,6 +63,12 @@ impl Prepared {
             (url.to_owned(), Some((sp.to_owned(), sig.to_owned())))
         };
         validate_url(&url)?;
+        if decode(raw_path(&url).1, false)?
+            .split('/')
+            .any(|s| s == "n")
+        {
+            return Err("manifest path n challenges require manifest preparation".into());
+        }
         let query = raw_query(&url);
         let mut n = None;
         if let Some(query) = query {
@@ -78,7 +85,76 @@ impl Prepared {
                 }
             }
         }
-        Ok(Self { url, n, signature })
+        Ok(Self {
+            url,
+            n,
+            signature,
+            manifest_n: None,
+        })
+    }
+
+    /// Manifest challenges use the exact raw token, as upstream's path regex
+    /// does. Percent escapes must still decode as UTF-8 without path delimiters.
+    /// Escaped marker names, dot segments, fragments and query n are rejected
+    /// rather than normalizing an ambiguous challenge location.
+    pub(super) fn manifest(url: &str) -> Result<Self> {
+        bounded(url, MAX_URL, "manifest URL")?;
+        validate_url(url)?;
+        if url.contains('#') {
+            return Err("manifest URL fragments are unsupported".into());
+        }
+        if let Some(query) = raw_query(url)
+            && form_fields(query)?.iter().any(|(key, _)| key == "n")
+        {
+            return Err("manifest query n challenges are unsupported".into());
+        }
+        let (path_start, path) = raw_path(url);
+        let parts: Vec<_> = path.split('/').collect();
+        let mut offset = path_start;
+        let mut manifest_n = None;
+        let mut token_index = None;
+        for (index, part) in parts.iter().enumerate() {
+            let decoded = decode(part, false)?;
+            if decoded.contains(['/', '\\'])
+                || decoded.chars().any(char::is_control)
+                || matches!(decoded.as_str(), "." | "..")
+            {
+                return Err("ambiguous manifest path segment".into());
+            }
+            // A captured challenge is a value, even when its bytes spell a
+            // control marker. Continue validating its escapes and delimiters.
+            if token_index == Some(index) {
+                offset += part.len() + 1;
+                continue;
+            }
+            if matches!(decoded.as_str(), "n" | "s") && decoded != *part {
+                return Err("escaped manifest challenge marker is unsupported".into());
+            }
+            if *part == "s" {
+                return Err("encrypted manifest signatures are unsupported".into());
+            }
+            if *part == "n" {
+                if manifest_n.is_some() {
+                    return Err("duplicate manifest path n challenge".into());
+                }
+                let token = parts.get(index + 1).ok_or("missing manifest n challenge")?;
+                bounded(token, MAX_CHALLENGE, "manifest n challenge")?;
+                // Match upstream /n/([^/]+)/ exactly, including the final slash.
+                if parts.get(index + 2).is_none() {
+                    return Err("manifest n challenge requires a trailing slash".into());
+                }
+                let start = offset + part.len() + 1;
+                manifest_n = Some((start..start + token.len(), (*token).to_owned()));
+                token_index = Some(index + 1);
+            }
+            offset += part.len() + 1;
+        }
+        Ok(Self {
+            url: url.to_owned(),
+            n: None,
+            signature: None,
+            manifest_n,
+        })
     }
 
     pub(super) fn challenges(&self) -> Vec<(Kind, &str)> {
@@ -86,6 +162,7 @@ impl Prepared {
             .iter()
             .map(|(_, s)| (Kind::Sig, s.as_str()))
             .chain(self.n.iter().map(|(_, n)| (Kind::N, n.as_str())))
+            .chain(self.manifest_n.iter().map(|(_, n)| (Kind::N, n.as_str())))
             .collect()
     }
 
@@ -102,6 +179,18 @@ impl Prepared {
                 let solution = lookup(kind, challenge).ok_or("missing URL challenge solution")?;
                 bounded(solution, MAX_CHALLENGE, "URL challenge solution")
             };
+        if let Some((range, challenge)) = &self.manifest_n {
+            let solution = solve(&mut lookup, Kind::N, challenge)?;
+            // Encode every non-unreserved byte; dots are rejected to prevent
+            // URL parsers treating a solved token as a dot path segment.
+            if matches!(solution, "." | "..") {
+                return Err("manifest n solution is a dot path segment".into());
+            }
+            let mut output = self.url.clone();
+            output.replace_range(range.clone(), &encode_path_segment(solution));
+            bounded(&output, MAX_URL, "rewritten manifest URL")?;
+            return Ok(output);
+        }
         let (base, fragment) = self
             .url
             .split_once('#')
@@ -172,11 +261,28 @@ fn validate_url(input: &str) -> Result<()> {
     {
         return Err("media URL requires HTTP(S) without credentials".into());
     }
-    let path = decode(parsed.path(), false)?;
-    if path.split('/').any(|segment| segment == "n") {
-        return Err("manifest path n challenges are unsupported".into());
-    }
     Ok(())
+}
+
+fn raw_path(url: &str) -> (usize, &str) {
+    let authority_start = url.find("://").expect("validated authority") + 3;
+    let rest = &url[authority_start..];
+    let start = authority_start + rest.find(['/', '?', '#']).unwrap_or(rest.len());
+    let end = start + url[start..].find(['?', '#']).unwrap_or(url.len() - start);
+    (start, &url[start..end])
+}
+
+fn encode_path_segment(input: &str) -> String {
+    let mut result = String::new();
+    for byte in input.bytes() {
+        if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.' | b'~') {
+            result.push(byte as char);
+        } else {
+            use std::fmt::Write;
+            write!(result, "%{byte:02X}").expect("writing to string");
+        }
+    }
+    result
 }
 
 fn raw_query(url: &str) -> Option<&str> {
@@ -246,6 +352,70 @@ mod tests {
             assert!(prepared.challenges().is_empty());
             assert_eq!(prepared.apply_with(|_, _| None).unwrap(), url);
         }
+    }
+
+    #[test]
+    fn manifest_path_rewrite_is_exact_and_encodes_solutions_as_one_segment() {
+        for token in ["abc+def", "%61bc%2Bdef", "n", "s", "%6e", "%73"] {
+            let original = format!(
+                "https://MEDIA.example:443/api/n/{token}/x%2eY/file/index.m3u8?x=%2f&&x=+&bare"
+            );
+            let prepared = Prepared::manifest(&original).unwrap();
+            assert_eq!(prepared.challenges(), vec![(Kind::N, token)]);
+            assert!(prepared.apply_with(|_, _| None).is_err());
+            assert_eq!(
+                prepared.apply_with(|_, _| Some("a/b +?#%é")).unwrap(),
+                "https://MEDIA.example:443/api/n/a%2Fb%20%2B%3F%23%25%C3%A9/x%2eY/file/index.m3u8?x=%2f&&x=+&bare"
+            );
+            assert!(prepared.apply_with(|_, _| Some("..")).is_err());
+        }
+        for original in [
+            "https://e.test/index.m3u8?x=%2f&&bare",
+            "http://e.test/path/index.m3u8",
+            "https://e.test/index.m3u8?",
+            "https://e.test",
+            "https://e.test?x=%2f",
+        ] {
+            let prepared = Prepared::manifest(original).unwrap();
+            assert!(prepared.challenges().is_empty());
+            assert_eq!(prepared.apply_with(|_, _| None).unwrap(), original);
+        }
+        assert_eq!(raw_path("https://e.test"), (14, ""));
+        assert_eq!(raw_path("https://e.test?x=1"), (14, ""));
+    }
+
+    #[test]
+    fn malformed_or_ambiguous_manifest_challenges_are_rejected() {
+        for original in [
+            "https://e.test/n/abc/n/def/index.m3u8",
+            "https://e.test/n//index.m3u8",
+            "https://e.test/n",
+            "https://e.test/n/abc",
+            "https://e.test/%6e/abc/index.m3u8",
+            "https://e.test/n/a%2Fb/index.m3u8",
+            "https://e.test/n/a%5Cb/index.m3u8",
+            "https://e.test/n/%00/index.m3u8",
+            "https://e.test/n/%ff/index.m3u8",
+            "https://e.test/n/%/index.m3u8",
+            "https://e.test/a/../n/abc/index.m3u8",
+            "https://e.test/n/abc/index.m3u8#fragment",
+            "https://e.test/n/abc/index.m3u8#",
+            "https://e.test/index.m3u8?%6e=abc",
+            "https://e.test/index.m3u8?n=",
+            "https://e.test/s/encrypted/index.m3u8",
+            "https://e.test/%73/encrypted/index.m3u8",
+            "ftp://e.test/index.m3u8",
+            "https://user@e.test/index.m3u8",
+        ] {
+            assert!(Prepared::manifest(original).is_err(), "{original}");
+        }
+        assert!(
+            Prepared::manifest(&format!(
+                "https://e.test/n/{}/index.m3u8",
+                "x".repeat(MAX_CHALLENGE + 1)
+            ))
+            .is_err()
+        );
     }
 
     #[test]

@@ -56,9 +56,11 @@ identity/playability/format validation. Malformed or unsupported initial
 responses never invoke fallback. API errors fail explicitly; opt-in extraction
 retries restart the whole page/API sequence after transient status/read failures.
 
-WEB player requests need no PLAYER PO token at the pinned baseline. Its media
-URLs require a GVS PO token except itag 18. API-derived formats therefore retain
-only itag 18 before any media probe; no surviving format is an unsupported error.
+WEB player requests need no PLAYER PO token at the pinned baseline. Its direct
+HTTPS and DASH media require a GVS PO token except direct itag 18; HLS tokens are
+optional. API-derived direct formats therefore retain only itag 18 before any
+media probe; eligible HLS is considered independently. No surviving format is an
+unsupported error.
 This policy does not acquire tokens or assert that exempt URLs always work.
 The original initial-response path retains its prior token/probe behavior.
 
@@ -68,10 +70,12 @@ and/or video codecs. Classify sources as standalone, video-only or audio-only. P
 format IDs and positive declared dimensions. Skip DRM, OTF/fragments, unknown
 source types and live fragments. Encrypted `signatureCipher`/legacy `cipher` and
 query-n URLs require explicit `--youtube-js-runtime PATH` or library configuration;
-reject player responses with DRM license information. Manifest URLs are ignored.
-If no supported direct format remains, return an explicit unsupported error.
+reject player responses with DRM license information. Eligible HLS manifests
+are expanded through the native VOD pipeline described below. DASH discovery
+remains disabled because the WEB GVS token is unavailable.
+If no supported direct or HLS format remains, return an explicit unsupported error.
 Supported alternatives retain declaration order and use the existing resolution
-ranking or literal itag selection, not upstream's full sorter. Every eligible
+ranking or literal itag selection, not upstream's full sorter. Every eligible direct
 URL must pass a direct media probe; a failing probe fails the entire extraction,
 including when a different format was requested. Filesizes and final URLs come
 from those probes. Token-protected formats can therefore prevent extraction even
@@ -79,7 +83,7 @@ if another format might work. Metadata uses `youtube` / `Youtube`, `direct=false
 and the canonical watch page. The shared downloader sends that page as referrer.
 
 This is fixture-tested groundwork, not general live-site YouTube support. Modern
-YouTube may require other API clients, PO tokens, SABR, manifest protocols, or fragmented adaptive delivery; those remain
+YouTube may require other API clients, PO tokens, SABR, DASH discovery, or fragmented direct adaptive delivery; those remain
 unimplemented.
 
 An optional offline EJS/Deno pipeline solves encrypted signatures and query-n challenges during public
@@ -140,7 +144,7 @@ Without a page title the wrapper title is `video`, while entry titles use the
 page filename stem. Subtitle-only elements remain outside the supported subset.
 Metadata identifies `html5` / `HTML5MediaEmbed` with `direct: false` and the final
 page URL as `webpage_url`. Every source is probed with the page referrer and must
-serve supported direct HTTP media or a supported finite HLS manifest. Redirected source URLs and response-derived
+serve supported direct HTTP media or a supported finite HLS/static DASH manifest. Redirected source URLs and response-derived
 extensions/filesizes are recorded in typed `VideoFormat` entries. HTML5 JSON adds
 `formats` and the selected `format_id`, including for a single source. IDs are
 literal zero-based strings assigned to nonempty declarations: the media element's
@@ -182,8 +186,8 @@ Only uncompressed UTF-8/ASCII HTML is supported. Other encodings are rejected
 when declared in HTTP Content-Type; invalid UTF-8 is rejected. HTML meta charset
 sniffing, compressed responses, XHTML, JavaScript, nonstandard lazy-loading
 attributes, subtitles, posters, durations, codecs, inferred dimensions, authentication,
-and general embedded-player extraction are not implemented. HLS/DASH URLs/type
-hints and non-HTTP sources fail explicitly, even
+and general embedded-player extraction are not implemented. Unsupported HLS/DASH
+features and non-HTTP sources fail explicitly, even
 when another supported source was explicitly selected. Unselected source probe
 failures also fail extraction rather than hiding unsupported alternatives.
 Every entry and alternative is validated before a result is returned. A failed
@@ -578,8 +582,8 @@ python3 tools/compare_hls.py --upstream /path/to/yt-dlp --binary target/debug/yt
 
 Only the exact ephemeral localhost origin and upstream exclusive range end are
 normalized. Container naming/remux behavior, live/encrypted delivery and general
-HLS parity are not inferred. YouTube HLS responses remain unsupported by its
-extractor. See [the source slice](../upstream/notes/hls-vod.md).
+HLS parity are not inferred. YouTube HLS discovery uses this same bounded VOD
+pipeline. See [the source slice](../upstream/notes/hls-vod.md).
 
 
 ### HLS AES-128
@@ -745,3 +749,55 @@ explicit mappings. Pinned upstream ignores SegmentList ranges and does not expan
 negative repeats or apply presentationTimeOffset: native range expectations are
 checked independently, and those timing behaviors are excluded from upstream
 parity claims. See [the source slice](../upstream/notes/dash-static.md).
+
+
+## YouTube HLS discovery
+
+Playable matching single-video initial responses and the anonymous WEB API
+fallback may supply `streamingData.hlsManifestUrl`. The pinned WEB GVS policy makes
+HLS tokens optional; it requires a token for DASH. DASH URLs are excluded before
+preparation, solving and requests. This adds no token acquisition, authentication,
+client selection or live/post-live support.
+
+Direct URL query-n/signature and HLS `/n/{token}/` path challenges share one
+complete offline solver batch before media probes or manifest requests. An explicit
+Deno runtime is required for eligible challenged sources; without one those
+sources are skipped. Challenge-free HLS never inspects runtime/player configuration.
+Path tokens retain their raw spelling for upstream EJS matching; solved values
+are encoded as a single URL segment. Strict URL preparation rejects ambiguous
+or duplicate path markers, invalid escapes, fragments, query-n manifests and
+legacy encrypted `/s/` paths. The latter two are unsupported native cases; the
+pinned upstream manifest branch does not solve them.
+
+HLS formats follow eligible direct formats, with native `hls-N` / `hls-audio-N`
+IDs and `youtube-hls:` audio group namespaces. Direct numeric itags are unchanged.
+A media-only playlist forms `hls-0`; master formats retain dimensions, bandwidth,
+language and rendition metadata from the existing native HLS parser. Selection
+uses native ranking and pair rules, with explicit FFmpeg configuration for merging.
+Representative fragments are retained even before library selection. Container
+extensions follow native TS/AAC/fMP4 assembly rather than upstream's default MP4
+remux label. No upstream format-ID or sorter parity is implied.
+
+Only eligible direct formats are probed as media. HLS acquisition reads the master
+and its media playlists; extraction/JSON/simulation never fetch initialization,
+segments or AES keys. Downloads use the canonical watch-page referrer and existing
+fragment transport. Every retained manifest must parse within the supported VOD
+contract; an unsupported or failing retained manifest fails extraction even when
+another direct format could work. Existing extraction retries can restart the
+whole page/API/manifest sequence after a transient acquisition failure.
+
+Offline source comparison:
+
+```sh
+python3 tools/compare_youtube_hls.py --upstream /path/to/yt-dlp
+```
+
+The actual pinned YoutubeIE and master parser run with network blocked and no
+GVS token or missing_pot override. Plain and path-n saved responses compare
+metadata and URLs against the same expected JSON consumed by Rust tests. A fixed
+typed n solution checks path replacement; it does not execute EJS. Container,
+fragment, transport and selection behavior have separate native tests.
+
+See [the source slice](../upstream/notes/youtube-hls.md) for source applicability,
+fixture provenance and offline comparison exclusions. Saved fixtures establish
+this bounded extraction behavior, not current live-site availability.

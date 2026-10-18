@@ -63,8 +63,11 @@ Supported today:
   live-site support. `--youtube-js-runtime PATH` opts into bounded offline solving
   of encrypted signatures and query `n` challenges using explicitly installed
   Deno 2.9.7 and pinned bundled EJS assets. Challenge-free extraction never inspects
-  or launches that runtime. Additional clients, token acquisition, fragmented adaptive streams,
-  and playlists remain unsupported; many current videos will fail.
+  or launches that runtime. Initial and anonymous WEB responses can also expose
+  native finite HLS VOD, including path-n solving in the same challenge batch.
+  WEB DASH discovery remains excluded without GVS tokens. Additional clients,
+  token acquisition, fragmented direct adaptive streams and playlists remain
+  unsupported; many current videos will fail.
 - Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
   `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.
   `--ffmpeg-location PATH` configures an explicit FFmpeg executable for local

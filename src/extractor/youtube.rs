@@ -1,9 +1,9 @@
 //! Narrow watch-page slice of YoutubeIE at the pinned upstream revision.
-//! Bounded WEB API fallback and explicit offline JS runtime; no manifest fallback.
+//! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
 mod challenge;
 mod client;
 mod player;
-use super::{Extractor, direct};
+use super::{Extractor, direct, hls};
 use crate::{Error, Result, StreamKind, VideoFormat, VideoInfo};
 use reqwest::{
     blocking::Client,
@@ -336,17 +336,65 @@ fn parse_candidates(
             height: dimension("height"),
         });
     }
-    if formats.is_empty() {
-        return Err(unsupported(
-            "no eligible direct media formats; signature/n URL challenges require an explicit runtime; fragmented manifests, SABR, and DRM are unsupported",
-        ));
-    }
     Ok((title, formats))
+}
+
+fn no_formats() -> Error {
+    unsupported(
+        "no eligible media formats; signature/n URL challenges require an explicit runtime; WEB DASH requires a GVS token; SABR, live and DRM are unsupported",
+    )
+}
+
+// WEB HLS has an optional GVS token in the pinned upstream policy, unlike DASH.
+// No DASH URL is prepared, solved or requested without token acquisition support.
+fn hls_manifest(player: &Value, allow_challenges: bool) -> Option<String> {
+    let url = player.pointer("/streamingData/hlsManifestUrl")?.as_str()?;
+    let challenged = challenge::has_manifest_challenges(url).ok()?;
+    if challenged && !allow_challenges {
+        return None;
+    }
+    Some(url.to_owned())
+}
+
+fn manifest_formats(client: &Client, url: &Url, page: &Url) -> Result<Vec<VideoFormat>> {
+    let response = direct::request(client, url, Some(page))?;
+    let info = hls::from_response(client, response, url, Some(page), true)?
+        .ok_or_else(|| unsupported("HLS manifest could not be parsed"))?;
+    let mut formats = if info.formats.is_empty() {
+        vec![VideoFormat {
+            format_id: "hls-0".into(),
+            url: info.url,
+            ext: info.ext,
+            filesize: info.filesize,
+            width: info.width,
+            height: info.height,
+            stream_kind: info.stream_kind,
+            abr: None,
+            tbr: None,
+            audio_group: None,
+            language: None,
+            format_note: None,
+            audio_default: false,
+            audio_autoselect: false,
+            fragments: info.fragments,
+        }]
+    } else {
+        info.formats
+    };
+    for format in &mut formats {
+        if let Some(group) = &mut format.audio_group {
+            *group = format!("youtube-hls:{group}");
+        }
+    }
+    Ok(formats)
 }
 
 #[cfg(test)]
 fn parse_formats(player: &Value, id: &str) -> Result<(String, Vec<VideoFormat>)> {
     let (title, candidates) = parse_candidates(player, id, false, false)?;
+    if candidates.is_empty() {
+        return Err(no_formats());
+    }
     let formats = candidates
         .into_iter()
         .map(|candidate| {
@@ -422,18 +470,21 @@ fn extract_watch_page_with_runtime(
         Some(player) => (player, false),
         None => (client::fetch_player(client, page, html, id)?, true),
     };
-    // Eligibility and WEB API token policy precede challenge solving and every
-    // media probe. No token-protected/DRM/live/fragmented source reaches EJS.
+    // Eligibility and WEB API token policy precede solving and all media/manifest
+    // requests. The same complete batch resolves direct and HLS path challenges.
     let (title, candidates) = parse_candidates(&player, id, runtime.is_some(), api)?;
+    let manifests: Vec<_> = hls_manifest(&player, runtime.is_some())
+        .into_iter()
+        .collect();
+    if candidates.is_empty() && manifests.is_empty() {
+        return Err(no_formats());
+    }
     let sources: Vec<_> = candidates
         .iter()
         .map(|candidate| candidate.source.clone())
         .collect();
-    let urls = if let Some(source) = player_source {
-        challenge::resolve_urls_with_source(&sources, html, runtime, Some(source))?
-    } else {
-        challenge::resolve_urls(&sources, html, runtime)?
-    };
+    let (urls, manifests) =
+        challenge::resolve_media_and_manifests(&sources, &manifests, html, runtime, player_source)?;
     let mut formats: Vec<_> = candidates
         .into_iter()
         .zip(urls)
@@ -451,9 +502,12 @@ fn extract_watch_page_with_runtime(
         format.url = media.url;
         format.filesize = media.filesize;
     }
-    let first = &formats[0];
+    for manifest in manifests {
+        formats.extend(manifest_formats(client, &manifest, page)?);
+    }
+    let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
-        fragments: Vec::new(),
+        fragments: first.fragments.clone(),
         id: id.into(),
         title,
         ext: first.ext.clone(),

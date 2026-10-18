@@ -217,17 +217,37 @@ impl Solutions {
 /// Resolve a batch of already-eligible progressive format URL fields. This
 /// private entry point deliberately does not decide DRM/client/token eligibility.
 /// All URLs are prepared and all solutions validated before any are returned.
+#[cfg(test)]
 pub(super) fn resolve_urls_with_source(
     sources: &[serde_json::Value],
     html: &str,
     runtime: Option<&Runtime>,
     player_source: Option<&super::player::PlayerSource>,
 ) -> crate::Result<Vec<url::Url>> {
-    let prepared: Vec<_> = sources
+    resolve_media_and_manifests(sources, &[], html, runtime, player_source).map(|(media, _)| media)
+}
+
+/// Solve eligible media and manifest URLs as one complete batch. No URL is
+/// returned until every input and every solver response has been validated.
+pub(super) fn resolve_media_and_manifests(
+    sources: &[serde_json::Value],
+    manifests: &[String],
+    html: &str,
+    runtime: Option<&Runtime>,
+    player_source: Option<&super::player::PlayerSource>,
+) -> crate::Result<(Vec<url::Url>, Vec<url::Url>)> {
+    let mut prepared: Vec<_> = sources
         .iter()
         .map(urls::Prepared::new)
         .collect::<Result<_>>()
         .map_err(|error| super::unsupported(&error))?;
+    prepared.extend(
+        manifests
+            .iter()
+            .map(|url| urls::Prepared::manifest(url))
+            .collect::<Result<Vec<_>>>()
+            .map_err(|error| super::unsupported(&error))?,
+    );
     let challenges: Vec<_> = prepared
         .iter()
         .flat_map(urls::Prepared::challenges)
@@ -257,7 +277,7 @@ pub(super) fn resolve_urls_with_source(
             .solve(&batch)
             .map_err(|error| super::unsupported(&error))?
     };
-    prepared
+    let mut resolved: Vec<_> = prepared
         .iter()
         .map(|prepared| {
             let raw = prepared
@@ -265,9 +285,12 @@ pub(super) fn resolve_urls_with_source(
                 .map_err(|error| super::unsupported(&error))?;
             Ok(url::Url::parse(&raw)?)
         })
-        .collect()
+        .collect::<crate::Result<_>>()?;
+    let manifests = resolved.split_off(sources.len());
+    Ok((resolved, manifests))
 }
 
+#[cfg(test)]
 pub(super) fn resolve_urls(
     sources: &[serde_json::Value],
     html: &str,
@@ -302,10 +325,86 @@ pub(super) fn has_challenges(source: &serde_json::Value) -> Result<bool> {
     Ok(!urls::Prepared::new(source)?.challenges().is_empty())
 }
 
+pub(super) fn has_manifest_challenges(url: &str) -> Result<bool> {
+    Ok(!urls::Prepared::manifest(url)?.challenges().is_empty())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn manifest_challenges_share_media_batch_order_and_validation() {
+        let media = urls::Prepared::new(&json!({"signatureCipher":
+            "url=https%3A%2F%2Fe.test%2Fv%3Fn%3Dshared&s=signature"}))
+        .unwrap();
+        let manifest = urls::Prepared::manifest("https://e.test/n/shared/index.m3u8").unwrap();
+        let second = urls::Prepared::manifest("https://e.test/n/second/index.m3u8").unwrap();
+        let inputs: Vec<_> = [&media, &manifest, &second]
+            .into_iter()
+            .flat_map(urls::Prepared::challenges)
+            .collect();
+        let batch = Batch::new("player", &inputs).unwrap();
+        assert_eq!(
+            serde_json::to_value(&batch.requests).unwrap(),
+            json!([
+                {"type":"sig","challenges":["signature"]},
+                {"type":"n","challenges":["shared","second"]}
+            ])
+        );
+        // Responses are positional by kind; reject swapped response maps.
+        assert!(batch.validate(br#"{"type":"result","responses":[{"type":"result","data":{"shared":"ok","second":"ok2"}},{"type":"result","data":{"signature":"sig"}}]}"#).is_err());
+        assert!(batch.validate(br#"{"type":"result","responses":[{"type":"result","data":{"signature":"sig"}},{"type":"result","data":{"shared":"ok"}}]}"#).is_err());
+        let solved = batch.validate(br#"{"type":"result","responses":[{"type":"result","data":{"signature":"sig"}},{"type":"result","data":{"shared":"ok","second":"ok2"}}]}"#).unwrap();
+        assert_eq!(
+            media.apply(&solved).unwrap(),
+            "https://e.test/v?n=ok&signature=sig"
+        );
+        assert_eq!(
+            manifest.apply(&solved).unwrap(),
+            "https://e.test/n/ok/index.m3u8"
+        );
+        assert_eq!(
+            second.apply(&solved).unwrap(),
+            "https://e.test/n/ok2/index.m3u8"
+        );
+    }
+
+    #[test]
+    fn mixed_manifest_batch_requires_runtime_only_for_valid_challenges() {
+        assert!(has_manifest_challenges("https://e.test/n/challenge/index.m3u8").unwrap());
+        assert!(!has_manifest_challenges("https://e.test/index.m3u8").unwrap());
+        let (media, manifests) = resolve_media_and_manifests(
+            &[json!({"url":"https://e.test/v?x=%2f"})],
+            &["https://e.test/index.m3u8?x=%2f".into()],
+            "malformed page",
+            Some(&Runtime::new("/nonexistent-deno".into())),
+            None,
+        )
+        .unwrap();
+        assert_eq!(media[0].as_str(), "https://e.test/v?x=%2f");
+        assert_eq!(manifests[0].as_str(), "https://e.test/index.m3u8?x=%2f");
+        let error = resolve_media_and_manifests(
+            &[],
+            &["https://e.test/n/challenge/index.m3u8".into()],
+            "",
+            None,
+            None,
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("explicitly configured Deno"));
+        assert_eq!(crate::retry::failure_delay(&error), None);
+        let error = resolve_media_and_manifests(
+            &[json!({"url":"https://e.test/v?n=challenge"})],
+            &["https://e.test/n//index.m3u8".into()],
+            "",
+            None,
+            None,
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("manifest n challenge"));
+    }
 
     #[test]
     fn challenge_free_urls_never_inspect_page_or_launch_configured_runtime() {
@@ -427,14 +526,19 @@ mod tests {
         });
         let player_source = super::super::player::PlayerSource::local(origin).unwrap();
         let html = r#"<script>ytcfg.set({"PLAYER_JS_URL":"/s/player/74edf1a3/player_ias.vflset/en_US/base.js"});</script>"#;
-        let urls = resolve_urls_with_source(
+        let (urls, manifests) = resolve_media_and_manifests(
             &[json!({"signatureCipher":encrypted})],
+            &["https://manifest.example/n/IlLiA21ny7gqA2m4p37/file/index.m3u8?keep=%2f".into()],
             html,
             Some(&Runtime::new(executable.into())),
             Some(&player_source),
         )
         .unwrap();
         assert_eq!(urls[0].as_str(), expected_url);
+        assert_eq!(
+            manifests[0].as_str(),
+            "https://manifest.example/n/9nRTxrbM1f0yHg/file/index.m3u8?keep=%2f"
+        );
         let client = reqwest::blocking::Client::builder()
             .no_proxy()
             .timeout(Duration::from_secs(5))

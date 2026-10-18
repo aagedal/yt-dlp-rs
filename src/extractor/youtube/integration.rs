@@ -813,3 +813,5 @@ fn adaptive_without_standalone_requires_explicit_stream_or_configured_merge() {
     info.select_format_with_merge(None, true).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("137+140"));
 }
+
+mod manifests;
