@@ -26,12 +26,14 @@ impl PlayerSource {
     pub(super) fn new(
         headers: reqwest::header::HeaderMap,
         cookies: std::sync::Arc<crate::CookieJar>,
+        proxy: &crate::http::ProxyConfig,
     ) -> Result<Self> {
-        Self::with_origin(
+        Self::with_origin_and_proxy(
             Url::parse("https://www.youtube.com/")?,
             false,
             headers,
             cookies,
+            proxy,
         )
     }
 
@@ -48,11 +50,22 @@ impl PlayerSource {
     }
 
     // Origin substitution is private; only tests supply loopback HTTP origins.
+    #[cfg(test)]
     fn with_origin(
         origin: Url,
         no_proxy: bool,
         headers: reqwest::header::HeaderMap,
         cookies: std::sync::Arc<crate::CookieJar>,
+    ) -> Result<Self> {
+        Self::with_origin_and_proxy(origin, no_proxy, headers, cookies, &Default::default())
+    }
+
+    fn with_origin_and_proxy(
+        origin: Url,
+        no_proxy: bool,
+        headers: reqwest::header::HeaderMap,
+        cookies: std::sync::Arc<crate::CookieJar>,
+        proxy: &crate::http::ProxyConfig,
     ) -> Result<Self> {
         let mut builder = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
@@ -62,6 +75,7 @@ impl PlayerSource {
             .timeout(Duration::from_secs(300))
             .redirect(Policy::none())
             .referer(false);
+        builder = proxy.apply(builder)?;
         if no_proxy {
             builder = builder.no_proxy();
         }
@@ -289,8 +303,12 @@ mod tests {
 
     #[test]
     fn discovers_config_urls_with_precedence_and_literal_json_escapes() {
-        let source =
-            PlayerSource::new(reqwest::header::HeaderMap::new(), Default::default()).unwrap();
+        let source = PlayerSource::new(
+            reqwest::header::HeaderMap::new(),
+            Default::default(),
+            &Default::default(),
+        )
+        .unwrap();
         for value in [
             serde_json::json!({"PLAYER_JS_URL": PATH}),
             serde_json::json!({"PLAYER_JS_URL": format!("https://www.youtube.com{PATH}")}),
@@ -318,8 +336,12 @@ mod tests {
 
     #[test]
     fn never_evaluates_or_guesses_missing_or_ambiguous_configuration() {
-        let source =
-            PlayerSource::new(reqwest::header::HeaderMap::new(), Default::default()).unwrap();
+        let source = PlayerSource::new(
+            reqwest::header::HeaderMap::new(),
+            Default::default(),
+            &Default::default(),
+        )
+        .unwrap();
         for page in [
             "<p>ytcfg.set({\"PLAYER_JS_URL\":\"ignored\"})</p>".to_owned(),
             format!("<script src='{PATH}'></script>"),
@@ -343,8 +365,12 @@ mod tests {
 
     #[test]
     fn recognized_variants_and_strict_player_url_boundaries() {
-        let source =
-            PlayerSource::new(reqwest::header::HeaderMap::new(), Default::default()).unwrap();
+        let source = PlayerSource::new(
+            reqwest::header::HeaderMap::new(),
+            Default::default(),
+            &Default::default(),
+        )
+        .unwrap();
         for variant in [
             "player_ias.vflset/en_US/base.js",
             "player_ias_tcc.vflset/en_US/base.js",
@@ -520,6 +546,76 @@ mod tests {
     }
 
     #[test]
+    fn explicit_proxy_routes_player_requests_without_relaxing_redirect_validation() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        listener.set_nonblocking(true).unwrap();
+        let proxy = crate::http::ProxyConfig::parse(Some(&format!(
+            "http://user:pass@{}",
+            listener.local_addr().unwrap()
+        )))
+        .unwrap();
+        let origin = Url::parse("http://127.0.0.1:9/").unwrap();
+        let source = PlayerSource::with_origin_and_proxy(
+            origin,
+            false,
+            reqwest::header::HeaderMap::new(),
+            Default::default(),
+            &proxy,
+        )
+        .unwrap();
+        let next = PATH.replace("en_US", "nb_NO");
+        let worker = thread::spawn(move || {
+            for (path, status, extra, body) in [
+                (PATH.to_owned(), 302, format!("Location: {next}\r\n"), ""),
+                (next, 200, String::new(), "const player = 1;"),
+                (
+                    PATH.to_owned(),
+                    302,
+                    "Location: http://evil.invalid/steal.js\r\n".into(),
+                    "",
+                ),
+            ] {
+                let deadline = Instant::now() + Duration::from_secs(5);
+                let mut stream = loop {
+                    match listener.accept() {
+                        Ok((stream, _)) => break stream,
+                        Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
+                            assert!(Instant::now() < deadline, "player proxy was bypassed");
+                            thread::sleep(Duration::from_millis(2));
+                        }
+                        Err(error) => panic!("{error}"),
+                    }
+                };
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(5)))
+                    .unwrap();
+                let mut request = Vec::new();
+                while !request.ends_with(b"\r\n\r\n") {
+                    let mut byte = [0];
+                    assert_eq!(stream.read(&mut byte).unwrap(), 1);
+                    request.push(byte[0]);
+                }
+                let request = String::from_utf8(request).unwrap().to_ascii_lowercase();
+                assert!(request.starts_with(
+                    &format!("get http://127.0.0.1:9{path} http/1.1\r\n").to_ascii_lowercase()
+                ));
+                assert!(request.contains("proxy-authorization: basic dxnlcjpwyxnz\r\n"));
+                write!(stream, "HTTP/1.1 {status} Fixture\r\nContent-Type: text/javascript\r\nContent-Length: {}\r\n{extra}Connection: close\r\n\r\n{body}", body.len()).unwrap();
+            }
+            thread::sleep(Duration::from_millis(20));
+            assert!(
+                matches!(listener.accept(), Err(error) if error.kind() == std::io::ErrorKind::WouldBlock)
+            );
+        });
+        assert_eq!(source.fetch(&url(&source)).unwrap(), "const player = 1;");
+        assert!(matches!(
+            source.fetch(&url(&source)),
+            Err(Error::UnsupportedYoutube(_))
+        ));
+        worker.join().unwrap();
+    }
+
+    #[test]
     fn player_acquisition_uses_the_shared_scoped_cookie_jar() {
         use reqwest::cookie::CookieStore;
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
@@ -563,6 +659,7 @@ mod tests {
     #[test]
     fn explicit_http_defaults_apply_within_the_validated_player_origin() {
         let headers = crate::HttpOptions {
+            proxy: None,
             cookies: None,
             user_agent: Some("FixturePlayer/1".into()),
             referer: Some("https://example.test/explicit".into()),

@@ -23,6 +23,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--skip-download`, `--no-download` | Skip media while allowing selected sidecars; never record a completed media archive entry |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
+| `--proxy URL` | Explicit HTTP/HTTPS/SOCKS route; empty string forces direct connections, last value wins |
 | `--cookies FILE`, `--no-cookies` | Load/save a scoped Netscape jar, including metadata modes; last flag wins, response cookies remain in memory |
 | `--add-headers FIELD:VALUE`, `--add-header` | Repeated custom HTTP defaults; case-insensitive last custom value wins |
 | `--user-agent UA`, `--referer URL` | Convenience HTTP defaults override matching custom options; extractor/transport headers can override them |
@@ -1458,3 +1459,68 @@ follow platform temporary-file behavior. No public-suffix snapshot or browser
 SameSite/partitioned/prefix policy is supplied. The local pipeline tests establish
 request propagation and failure/persistence behavior separately. See [source applicability](../upstream/notes/http-cookies.md)
 and [fixture provenance](../tests/fixtures/cookies/README.md).
+
+
+## Explicit proxy routing
+
+`--proxy URL` (last value wins) configures one route for all supported HTTP and
+HTTPS requests. `--proxy ''` forces direct connections; the pinned
+`__noproxy__` sentinel is also recognized. Explicit routes override ambient proxy
+and NO_PROXY settings. Without an option, the existing reqwest environment/system
+routing policy is preserved. This does not reproduce all Python platform discovery,
+HTTP-to-HTTPS environment fallback, bypass suffix or PAC behavior. The six saved
+omitted-option environment cases establish source behavior only; native tests use
+isolated subprocess environments for basic inheritance and explicit direct bypass.
+
+Proxy URLs support HTTP, HTTPS, SOCKS4, SOCKS4a, SOCKS5 and SOCKS5h. Missing schemes
+and scheme-relative values become HTTP. HTTP/HTTPS default to ports 80/443; SOCKS
+defaults to 1080. Pinned aliases map `socks` to SOCKS4 and `socks5` to SOCKS5h:
+SOCKS4 resolves destination addresses locally, SOCKS4a and SOCKS5(h) ask the proxy.
+Remote-DNS tests use unresolved synthetic hostnames and inspect SOCKS domain
+fields, without contacting DNS or live origins. SOCKS4 user-ID credentials are
+explicitly unsupported because the current backend cannot send them. SOCKS5
+username/password authentication is offered only when both fields are nonempty,
+matching source handshake behavior; incomplete credentials use no-auth negotiation.
+
+Percent-encoded UTF-8 URL credentials are decoded for proxy authentication. HTTP
+Basic authentication natively preserves user-only and empty fields, and applies
+only to proxy requests/CONNECT. This is an explicit native policy: upstream
+backends can omit authentication for incomplete or empty fields. Proxy credentials are omitted from configuration errors
+and video metadata. The tests separately verify that authenticated CONNECT keeps
+Proxy-Authorization outside the origin TLS HTTP stream. HTTPS proxy connections
+and HTTPS origin tunnels retain normal certificate verification; custom trusted
+roots are used only inside offline TLS fixtures. Proxy authentication does not add
+origin login support or disable existing extraction/token eligibility rules.
+
+The shared policy covers page/player API requests, media probes/downloads,
+HLS/DASH manifests, keys/initialization/fragments, subtitle sidecars, retries and
+redirects. Bounded player-script acquisition uses the same explicit route while
+still validating every redirect target before requesting it. An off-origin player
+redirect is rejected before another proxy request. Optional FFmpeg operations
+remain local stream copies and do not perform network transfers.
+
+Library `HttpOptions.proxy` has the same `None`/empty/URL meanings.
+`HttpOptions::validate` validates without DNS/network requests; client construction
+validates again. The CLI validates before cookie-file loading/archive/output I/O.
+URLs are bounded to 16 KiB; controls, whitespace, backslashes, malformed percent
+credentials, non-UTF-8 decoded credentials, zero ports, unsupported schemes,
+non-root paths, queries and fragments are explicit errors. SOCKS credential fields
+are capped at 255 decoded bytes. Legacy Ytdl-Request-Proxy/Ytdl-Socks-Proxy custom
+headers are rejected; per-request and geo-verification proxy features remain open.
+Untrusted environment settings use the pre-existing backend handling rather than
+this explicit-URL validator. No fallback to a direct connection is configured when
+an explicit proxy fails.
+
+The offline pinned source comparison covers 50 source configurations and eight
+source-only validation/legacy cases. Native unit tests compare 39 explicit endpoint
+projections, reject five SOCKS4 credential cases and retain six omitted-option
+cases only as environment-mode markers. Scheme/host/port/decoded credentials and
+remote DNS flags are compared without claiming identical raw URL formatting.
+Eleven local integration cases cover HTTP/SOCKS routing, credentials, empty fields,
+headers/cookies, protocol resources, retries, redirects, direct override and
+rejection before requests. Three saved-certificate TLS tests cover verified
+CONNECT, HTTPS proxy transport and untrusted-origin rejection. A bounded-player
+proxy test preserves redirect gates independently. See
+[source applicability](../upstream/notes/http-proxies.md),
+[configuration fixtures](../tests/fixtures/proxies/README.md) and
+[TLS provenance](../tests/fixtures/proxies/tls/README.md).

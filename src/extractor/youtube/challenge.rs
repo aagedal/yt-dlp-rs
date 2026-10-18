@@ -264,8 +264,11 @@ pub(super) fn resolve_media_and_manifests(
         let player_source = if let Some(source) = player_source {
             source
         } else {
-            owned_source =
-                super::player::PlayerSource::new(runtime.headers.clone(), runtime.cookies.clone())?;
+            owned_source = super::player::PlayerSource::new(
+                runtime.headers.clone(),
+                runtime.cookies.clone(),
+                &runtime.proxy,
+            )?;
             &owned_source
         };
         let player_url = player_source.discover(html)?;
@@ -305,6 +308,7 @@ pub(super) fn resolve_urls(
 pub(super) struct Runtime {
     headers: reqwest::header::HeaderMap,
     cookies: std::sync::Arc<crate::CookieJar>,
+    proxy: crate::http::ProxyConfig,
     path: std::path::PathBuf,
     checked: std::sync::OnceLock<Result<runtime::DenoRuntime>>,
 }
@@ -312,17 +316,24 @@ pub(super) struct Runtime {
 impl Runtime {
     #[cfg(test)]
     pub(super) fn new(path: std::path::PathBuf) -> Self {
-        Self::with_http_options(path, reqwest::header::HeaderMap::new(), Default::default())
+        Self::with_http_options(
+            path,
+            reqwest::header::HeaderMap::new(),
+            Default::default(),
+            Default::default(),
+        )
     }
 
     pub(super) fn with_http_options(
         path: std::path::PathBuf,
         headers: reqwest::header::HeaderMap,
         cookies: std::sync::Arc<crate::CookieJar>,
+        proxy: crate::http::ProxyConfig,
     ) -> Self {
         Self {
             headers,
             cookies,
+            proxy,
             path,
             checked: std::sync::OnceLock::new(),
         }

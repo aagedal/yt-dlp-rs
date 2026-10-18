@@ -1964,6 +1964,7 @@ name = "yt-dlp-rs"
 version = "0.1.0"
 dependencies = [
  "aes",
+ "base64 0.22.1",
  "cbc",
  "clap",
  "cookie",
@@ -1972,6 +1973,7 @@ dependencies = [
  "percent-encoding",
  "reqwest",
  "roxmltree",
+ "rustls",
  "scraper",
  "serde",
  "serde_json",

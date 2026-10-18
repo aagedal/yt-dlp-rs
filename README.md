@@ -24,6 +24,7 @@ cargo run --locked -- -I '3,1:2' --playlist-reverse -o '%(playlist_index)03d-%(t
 cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
 cargo run --locked -- --cookies cookies.txt 'https://example.com/video.mp4'
+cargo run --locked -- --proxy 'socks5://127.0.0.1:1080' 'https://example.com/video.mp4'
 cargo run --locked -- --user-agent 'My media client' --add-headers 'X-Media-Key:example' 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
 ```
@@ -119,6 +120,10 @@ Supported today:
   extractor/transport headers take precedence, including page referrers and identity
   encoding. A shared in-memory cookie jar learns scoped response cookies. `--cookies FILE` loads/saves Netscape cookies, including session cookies; `--no-cookies`
   disables file persistence. Raw Cookie headers remain unsupported.
+- Explicit `--proxy URL` for HTTP/HTTPS or SOCKS4/4a/5/5h routing across the
+  native HTTP clients. `--proxy ''` forces direct connections. Pinned SOCKS5
+  compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.
+  HTTPS proxy and CONNECT transfers retain certificate validation.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Typed output fields include IDs/titles, dimensions, filesize and playlist indices,
   with string `s`, integer `d/i/u` and fixed-point `f/F` width/precision formatting.
@@ -175,6 +180,9 @@ strings with the same normalization and validation as the binary.
 `CookieJar::load(path)` and `save(path)` expose explicit Netscape persistence;
 `HttpOptions.cookies` accepts a shared `Arc<CookieJar>`, or the client creates a
 fresh in-memory jar. `YoutubeDl::cookie_jar()` returns it for reuse or saving.
+`HttpOptions.proxy` accepts an explicit URL or empty string for direct routing;
+`None` preserves the existing reqwest environment/system routing policy.
+`HttpOptions::validate()` checks configuration without network/DNS requests.
 Cookie files are credential state: an explicit `--cookies` path is updated after
 requests even in JSON/listing/simulation modes and after extraction failures.
 `YoutubeDl::new()?.with_ffmpeg(path)` configures optional local merging.

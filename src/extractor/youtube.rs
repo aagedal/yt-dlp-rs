@@ -39,6 +39,7 @@ impl Youtube {
             options,
             reqwest::header::HeaderMap::new(),
             Default::default(),
+            Default::default(),
         )
     }
 
@@ -46,12 +47,13 @@ impl Youtube {
         options: YoutubeOptions,
         headers: reqwest::header::HeaderMap,
         cookies: std::sync::Arc<crate::CookieJar>,
+        proxy: crate::http::ProxyConfig,
     ) -> impl Extractor {
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,
             runtime: options
                 .js_runtime
-                .map(|path| challenge::Runtime::with_http_options(path, headers, cookies)),
+                .map(|path| challenge::Runtime::with_http_options(path, headers, cookies, proxy)),
         }
     }
 }

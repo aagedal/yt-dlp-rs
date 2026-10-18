@@ -398,6 +398,34 @@
         "upstream/notes/http-cookies.md"
       ],
       "scope": "Shared bounded RFC6265-scoped in-memory response cookies across native clients and explicit Netscape import/atomic save, session/expiry/domain/path/Secure/HttpOnly and nameless values, last-wins cookies/no-cookies CLI persistence including metadata/failures; strict host-only and malformed-file native policies, no raw Cookie compatibility, browser-cookie extraction/decryption, PSL snapshot, SameSite/browser-context enforcement or account-specific YouTube authentication"
+    },
+    {
+      "name": "http-proxy-configuration",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/options.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/networking.py",
+        "yt_dlp/networking/_helper.py",
+        "yt_dlp/socks.py",
+        "test/test_networking.py"
+      ],
+      "rust": [
+        "src/http.rs",
+        "src/http/proxy.rs",
+        "src/http/proxy/tls.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "src/extractor/youtube.rs",
+        "src/extractor/youtube/challenge.rs",
+        "src/extractor/youtube/player.rs",
+        "tests/proxies.rs",
+        "tests/fixtures/proxies/",
+        "tools/compare_proxies.py",
+        "tools/test_compare_proxies.py",
+        "upstream/notes/http-proxies.md"
+      ],
+      "scope": "Explicit shared HTTP/HTTPS/SOCKS4/4a/5/5h routing, empty direct override, pinned aliases/default ports and SOCKS5 remote DNS/auth gating; HTTP proxy Basic credentials, verified CONNECT/HTTPS-proxy transport and bounded-player routing; reject unsupported SOCKS4 user IDs and legacy per-request headers; existing reqwest environment/system routing retained without full upstream discovery/bypass/PAC, geo-verification or per-extractor proxy parity"
     }
   ]
 }

@@ -76,6 +76,9 @@ struct Args {
     /// Retry the entire extraction after transient network failures (0 disables retries)
     #[arg(long, default_value_t = 0)]
     extractor_retries: u8,
+    /// HTTP/HTTPS/SOCKS proxy URL; an empty value forces direct connections
+    #[arg(long, value_name = "URL", overrides_with = "proxy")]
+    proxy: Option<String>,
     /// Read and save scoped cookies in Netscape format (including metadata modes)
     #[arg(long, value_name = "FILE", overrides_with_all = ["no_cookies", "cookies"])]
     cookies: Option<PathBuf>,
@@ -160,6 +163,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let cookie_file_was_missing = args.cookies.as_ref().is_some_and(|path| !path.exists());
     let mut http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
+    http_options.proxy = args.proxy;
+    http_options.validate()?;
     if let Some(path) = &args.cookies {
         http_options.cookies = Some(Arc::new(CookieJar::load(path)?));
     }

@@ -76,8 +76,9 @@ impl YoutubeDl {
     /// Per-request extractor and transport headers override these defaults.
     pub fn with_options(youtube: YoutubeOptions, http: HttpOptions) -> Result<Self> {
         let headers = http.header_map()?;
+        let proxy = http.proxy_config()?;
         let cookies = http.cookies.unwrap_or_default();
-        let client = Client::builder()
+        let builder = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
             .default_headers(headers.clone())
             .cookie_provider(cookies.clone())
@@ -85,8 +86,8 @@ impl YoutubeDl {
             .timeout(Duration::from_secs(300))
             .redirect(reqwest::redirect::Policy::limited(10))
             // Preserve an HTML5 page's explicit referrer across media redirects.
-            .referer(false)
-            .build()?;
+            .referer(false);
+        let client = proxy.apply(builder)?.build()?;
         Ok(Self {
             client,
             ffmpeg: None,
@@ -96,6 +97,7 @@ impl YoutubeDl {
                     youtube,
                     headers,
                     cookies.clone(),
+                    proxy,
                 )),
                 Box::new(GenericHttp),
             ],

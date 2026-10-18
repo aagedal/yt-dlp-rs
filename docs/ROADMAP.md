@@ -26,6 +26,7 @@ tractable for future agents.
 - `src/extractor/youtube/client.rs`: isolated anonymous WEB player API request
   fallback and explicit token-exempt itag 18 policy.
 - `src/cookies.rs`: scoped response cookies and bounded Netscape import/atomic persistence.
+- `src/http/proxy.rs`: pure explicit proxy validation and shared client routing.
 - `src/http.rs`: validated global request headers and User-Agent/Referer defaults, shared by normal and bounded player clients.
 - `src/download.rs`: streaming HTTP transfer, byte-progress/cancellation checkpoints, and no-clobber publication.
 - `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
@@ -112,6 +113,9 @@ remain outside the current result contract.
    request-specific precedence. Shared in-memory cookies and explicit Netscape
    file persistence now cover the native HTTP clients; browser-cookie extraction,
    account-specific authentication and broader request configuration remain open.
+   Explicit HTTP/HTTPS/SOCKS proxies and direct overrides now route all native
+   clients, including verified HTTPS proxy/CONNECT transport. SOCKS4 user IDs,
+   full upstream environment discovery/bypass and per-extractor proxy policies remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,
    playlist handling, and end-to-end validation. Split request/client machinery

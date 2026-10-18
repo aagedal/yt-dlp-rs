@@ -1,5 +1,7 @@
 //! Validated global HTTP defaults, separate from extractor-owned request headers.
+mod proxy;
 use crate::{CookieJar, Error, Result};
+pub(crate) use proxy::ProxyConfig;
 use reqwest::header::{COOKIE, HeaderMap, HeaderName, HeaderValue, REFERER, USER_AGENT};
 use std::sync::Arc;
 
@@ -7,6 +9,8 @@ use std::sync::Arc;
 /// Raw Cookie headers are unsupported; use the scoped cookie jar instead.
 #[derive(Clone, Default)]
 pub struct HttpOptions {
+    /// None inherits system routing; an empty string forces direct connections.
+    pub proxy: Option<String>,
     /// Shared cookie state; None creates a fresh in-memory jar.
     pub cookies: Option<Arc<CookieJar>>,
     pub headers: Vec<(String, String)>,
@@ -32,6 +36,7 @@ impl HttpOptions {
         }
         let mut options = Self {
             cookies: None,
+            proxy: None,
             headers: Vec::with_capacity(headers.len()),
             user_agent,
             referer,
@@ -54,6 +59,17 @@ impl HttpOptions {
         Ok(options)
     }
 
+    /// Validate request configuration without network requests or DNS resolution.
+    pub fn validate(&self) -> Result<()> {
+        self.header_map()?;
+        self.proxy_config()?;
+        Ok(())
+    }
+
+    pub(crate) fn proxy_config(&self) -> Result<ProxyConfig> {
+        ProxyConfig::parse(self.proxy.as_deref())
+    }
+
     pub(crate) fn header_map(&self) -> Result<HeaderMap> {
         if self.headers.len() > 256 {
             return Err(error("more than 256 custom headers"));
@@ -70,6 +86,11 @@ impl HttpOptions {
             // Check before trimming: outer CR/LF must not hide injection attempts.
             if raw.chars().any(|c| c.is_control() && c != '\t') {
                 return Err(error("header value contains unsupported controls"));
+            }
+            if matches!(name.as_str(), "ytdl-request-proxy" | "ytdl-socks-proxy") {
+                return Err(error(
+                    "legacy per-request proxy headers are unsupported; use --proxy",
+                ));
             }
             if name == COOKIE {
                 return Err(error(
@@ -113,6 +134,8 @@ mod tests {
         for (name, value) in [
             ("bad name", "secret"),
             ("Cookie", "secret"),
+            ("Ytdl-Request-Proxy", "secret"),
+            ("Ytdl-Socks-Proxy", "secret"),
             ("x-key", "secret\r\nInjected: yes"),
             ("x-key", "secret\0"),
         ] {
