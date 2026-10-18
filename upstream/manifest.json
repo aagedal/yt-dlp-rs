@@ -479,7 +479,7 @@
         "tools/test_compare_video.py",
         "upstream/notes/video-processing.md"
       ],
-      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio\u2192video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
+      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio→video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
     },
     {
       "name": "subtitle-conversion",
@@ -537,6 +537,29 @@
         "upstream/notes/subtitle-embedding.md"
       ],
       "scope": "Final private media-stage embedding for MP4/MOV/M4A/WebM/MKV/MKA; source eligibility/maps/timed-text and ISO639/name metadata, implied acquisition and explicit manual/global keep retention, skip/lazy paths, bounded local FFmpeg and postpublication sidecar cleanup; no network FFmpeg, arbitrary arguments, extra active subtitle formats or broad acquisition/container guarantees"
+    },
+    {
+      "name": "info-json",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py"
+      ],
+      "rust": [
+        "src/info_json.rs",
+        "src/output.rs",
+        "src/output/template.rs",
+        "src/playlist.rs",
+        "src/main.rs",
+        "tests/info_json.rs",
+        "tests/fixtures/info_json/",
+        "tools/compare_info_json.py",
+        "tools/test_compare_info_json.py",
+        "upstream/notes/info-json.md"
+      ],
+      "scope": "--write-info-json/--no-write-info-json video and playlist sidecars with default clean filtering, replace_extension naming, playlist template context, Python json.dump bytes, keep-existing default and ordering before media/entries; no overwrite options, --no-clean-info-json, --load-info-json, embedding, typed infojson templates or unmodeled upstream fields"
     }
   ]
 }

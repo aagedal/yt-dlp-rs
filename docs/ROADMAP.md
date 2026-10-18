@@ -38,6 +38,7 @@ tractable for future agents.
   `ttml.rs` ports bounded native text/timing/styles and `ffmpeg.rs` converts local sidecars.
 - `src/embed_subtitles.rs`: local subtitle eligibility and language/stream metadata;
   its bounded FFmpeg runner feeds the final stage of `src/postprocess.rs`.
+- `src/info_json.rs`: cleaned video/playlist info JSON values, `.info.json` naming and keep-existing atomic writes.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/audio.rs`, `src/audio/ffmpeg.rs`: pure audio plans and bounded local
@@ -174,6 +175,9 @@ remain outside the current result contract.
    Subtitle embedding now follows audio/video processing for MP4/MOV/M4A/WebM/
    Matroska, preserving source container/language policies and sidecar retention.
    Other-site/manifest subtitles and regex languages remain open.
+   Video/playlist `--write-info-json` sidecars follow upstream clean filtering,
+   naming and ordering for the represented metadata subset; loading info JSON,
+   overwrite options and info JSON embedding remain open.
    Basic download archives are implemented: cached extractor-key/ID membership,
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive

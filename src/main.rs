@@ -8,11 +8,15 @@ use std::{
 };
 use yt_dlp_rs::{
     AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult,
-    ExtractionOptions, HttpOptions, PlaylistSelection, PostprocessOptions, SubtitleConversion,
-    SubtitleEmbedding, SubtitleFile, SubtitleOptions, VideoMode, VideoOptions, YoutubeDl,
-    YoutubeOptions,
-    output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
-    render_automatic_captions, render_subtitles, subtitle_paths, validate_format_selector,
+    ExtractionOptions, HttpOptions, InfoJsonWrite, PlaylistCounts, PlaylistSelection,
+    PostprocessOptions, SubtitleConversion, SubtitleEmbedding, SubtitleFile, SubtitleOptions,
+    VideoMode, VideoOptions, YoutubeDl, YoutubeOptions, info_json_path,
+    output::{
+        DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_playlist_template_with_options,
+        render_template_with_options,
+    },
+    playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
+    validate_format_selector, video_info_json, write_info_json,
 };
 
 #[derive(Parser)]
@@ -76,9 +80,15 @@ struct Args {
     /// Convert written subtitles to srt, vtt, ass or lrc; none disables conversion
     #[arg(long, aliases = ["convert-sub", "convert-subtitles"], value_name = "FORMAT", overrides_with = "convert_subs")]
     convert_subs: Option<String>,
-    /// Skip media downloads while allowing requested subtitle sidecars
+    /// Skip media downloads while allowing requested subtitle and info JSON sidecars
     #[arg(long, alias = "no-download")]
     skip_download: bool,
+    /// Write cleaned video and playlist metadata to .info.json files (existing files are kept)
+    #[arg(long, overrides_with = "no_write_info_json")]
+    write_info_json: bool,
+    /// Disable info JSON writing
+    #[arg(long, overrides_with = "write_info_json")]
+    no_write_info_json: bool,
     /// Format ID or indexed/grouped selector with filters, + pairs and / fallbacks
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
@@ -276,54 +286,62 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         na_placeholder: args.output_na_placeholder,
     };
     let list_only = (args.list_formats || args.list_subs) && !args.dump_json && !args.simulate;
+    // Like upstream, simulation, JSON printing and listing never write info JSON.
+    let writes_info_json = args.write_info_json
+        && !args.dump_json
+        && !args.simulate
+        && !args.list_formats
+        && !args.list_subs;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in args.urls {
         let options = ExtractionOptions {
             retries: args.extractor_retries,
         };
-        let extracted = (|| -> yt_dlp_rs::Result<Option<ExtractResult>> {
-            let mut result = downloader.extract_result_unselected_with_options(&url, options)?;
-            playlist_selection.apply(&mut result);
-            let mut result = if let Some(archive) = &archive {
-                let Some(result) = filter_archived(result, archive)? else {
-                    return Ok(None);
+        let extracted =
+            (|| -> yt_dlp_rs::Result<Option<(ExtractResult, Option<PlaylistCounts>)>> {
+                let mut result =
+                    downloader.extract_result_unselected_with_options(&url, options)?;
+                let counts = playlist_selection.apply(&mut result);
+                let mut result = if let Some(archive) = &archive {
+                    let Some(result) = filter_archived(result, archive)? else {
+                        return Ok(None);
+                    };
+                    result
+                } else {
+                    result
                 };
-                result
-            } else {
-                result
-            };
-            if write_subs || args.write_auto_subs {
-                let select = |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
-                    let selection = subtitle_options.select_sources(
-                        &info.subtitles,
-                        &info.automatic_captions,
-                        write_subs,
-                        args.write_auto_subs,
-                    )?;
-                    for warning in selection.warnings {
-                        eprintln!("WARNING: {}: {warning}", info.id);
-                    }
-                    info.requested_subtitles = ((write_subs && !info.subtitles.is_empty())
-                        || (args.write_auto_subs && !info.automatic_captions.is_empty()))
-                    .then_some(selection.requested);
-                    Ok(())
-                };
-                match &mut result {
-                    ExtractResult::Video(info) => select(info)?,
-                    ExtractResult::Playlist(playlist) => {
-                        for info in &mut playlist.entries {
-                            select(info)?;
+                if write_subs || args.write_auto_subs {
+                    let select = |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
+                        let selection = subtitle_options.select_sources(
+                            &info.subtitles,
+                            &info.automatic_captions,
+                            write_subs,
+                            args.write_auto_subs,
+                        )?;
+                        for warning in selection.warnings {
+                            eprintln!("WARNING: {}: {warning}", info.id);
+                        }
+                        info.requested_subtitles = ((write_subs && !info.subtitles.is_empty())
+                            || (args.write_auto_subs && !info.automatic_captions.is_empty()))
+                        .then_some(selection.requested);
+                        Ok(())
+                    };
+                    match &mut result {
+                        ExtractResult::Video(info) => select(info)?,
+                        ExtractResult::Playlist(playlist) => {
+                            for info in &mut playlist.entries {
+                                select(info)?;
+                            }
                         }
                     }
                 }
-            }
-            if !list_only {
-                downloader.select_result(&mut result, format)?;
-            }
-            Ok(Some(result))
-        })();
-        let extracted = match extracted {
+                if !list_only {
+                    downloader.select_result(&mut result, format)?;
+                }
+                Ok(Some((result, counts)))
+            })();
+        let (extracted, counts) = match extracted {
             Ok(Some(result)) => result,
             Ok(None) => continue,
             Err(error) => {
@@ -332,6 +350,30 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 continue;
             }
         };
+        if let (ExtractResult::Playlist(playlist), Some(counts), true) =
+            (&extracted, counts, writes_info_json)
+        {
+            // Upstream writes playlist metadata before processing any entry,
+            // and a failed write skips the playlist.
+            let written = (|| -> Result<(), Box<dyn std::error::Error>> {
+                let path = render_playlist_template_with_options(
+                    &args.output,
+                    playlist,
+                    counts,
+                    &template_options,
+                )?;
+                let path = info_json_path(&path, None);
+                reject_reserved(&path, [&archive_path, &args.cookies])?;
+                let value = playlist_info_json(playlist, counts, epoch())?;
+                report_info_json("playlist", &path, write_info_json(&path, &value)?);
+                Ok(())
+            })();
+            if let Err(error) = written {
+                eprintln!("ERROR: {url}: {error}");
+                failed = true;
+                continue;
+            }
+        }
         for info in extracted.into_entries() {
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 if args.list_subs {
@@ -353,6 +395,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
                 } else {
                     if args.skip_download
+                        && !writes_info_json
                         && info
                             .requested_subtitles
                             .as_ref()
@@ -372,6 +415,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     // Plan source, intermediate and final names before subtitle I/O.
                     let sidecars = subtitle_paths(&info, &path)?;
                     let mut seen = std::collections::HashSet::new();
+                    let info_json =
+                        writes_info_json.then(|| info_json_path(&path, Some(&info.ext)));
+                    if let Some(info_json) = &info_json {
+                        seen.insert(info_json.as_os_str().to_ascii_lowercase());
+                        if paths_alias(info_json, &path)? {
+                            return Err(yt_dlp_rs::Error::InfoJson(
+                                "info JSON path collides with media output".into(),
+                            )
+                            .into());
+                        }
+                        reject_reserved(info_json, [&archive_path, &args.cookies])?;
+                    }
                     for (_, subtitle, source) in &sidecars {
                         let mut paths = vec![source.clone()];
                         if let Some(conversion) = &subtitle_conversion {
@@ -388,7 +443,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         for (index, sidecar) in paths.iter().enumerate() {
                             if !seen.insert(sidecar.as_os_str().to_ascii_lowercase()) {
                                 return Err(yt_dlp_rs::Error::Subtitle(
-                                    "subtitle conversion filenames collide".into(),
+                                    "subtitle conversion or info JSON filenames collide".into(),
                                 )
                                 .into());
                             }
@@ -472,6 +527,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                         embedding_files.push(embedded_file);
                     }
+                    // Upstream writes info JSON after subtitles and before media.
+                    if let Some(info_json) = &info_json {
+                        let value = video_info_json(&info, epoch())?;
+                        report_info_json("video", info_json, write_info_json(info_json, &value)?);
+                    }
                     if args.skip_download {
                         return Ok(());
                     }
@@ -535,6 +595,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         (bytes, vec![path.clone()])
                     };
                     let mut published_paths = published_paths;
+                    published_paths.extend(info_json);
                     for (_, subtitle, source) in subtitle_paths(&info, &path)? {
                         published_paths.push(source.clone());
                         if let Some(conversion) = &subtitle_conversion {
@@ -592,6 +653,43 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     Ok(!failed)
 }
 
+fn epoch() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |elapsed| elapsed.as_secs())
+}
+
+fn report_info_json(label: &str, path: &std::path::Path, written: InfoJsonWrite) {
+    match written {
+        InfoJsonWrite::Written => {
+            eprintln!(
+                "[info] Writing {label} metadata as JSON to: {}",
+                path.display()
+            )
+        }
+        InfoJsonWrite::AlreadyPresent => {
+            let mut title = label.to_owned();
+            title[..1].make_ascii_uppercase();
+            eprintln!("[info] {title} metadata is already present")
+        }
+    }
+}
+
+fn reject_reserved<const N: usize>(
+    path: &std::path::Path,
+    reserved: [&Option<PathBuf>; N],
+) -> Result<(), Box<dyn std::error::Error>> {
+    for reserved in reserved.into_iter().flatten() {
+        if paths_alias(path, reserved)? {
+            return Err(yt_dlp_rs::Error::InfoJson(
+                "info JSON path collides with cookie file or download archive".into(),
+            )
+            .into());
+        }
+    }
+    Ok(())
+}
+
 fn paths_alias(left: &std::path::Path, right: &std::path::Path) -> io::Result<bool> {
     Ok(std::path::absolute(left)? == std::path::absolute(right)?
         || std::fs::canonicalize(left)
@@ -623,9 +721,7 @@ fn filter_archived(
                     pending.push(info);
                 }
             }
-            if pending.is_empty() {
-                return Ok(None);
-            }
+            // An all-archived playlist is still processed for playlist-level files.
             playlist.entries = pending;
             Ok(Some(ExtractResult::Playlist(playlist)))
         }

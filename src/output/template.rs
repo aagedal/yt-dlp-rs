@@ -1,6 +1,19 @@
 //! Bounded named printf templates for the represented root metadata fields.
-use crate::{Error, Result, VideoInfo};
+use crate::{Error, PlaylistInfo, Result, VideoInfo};
 use std::path::PathBuf;
+
+/// Metadata available to a template: a video, or a playlist with the
+/// upstream playlist-file extras (`playlist_index` 0 and selected counts).
+#[derive(Clone, Copy)]
+pub(super) enum Source<'a> {
+    Video(&'a VideoInfo),
+    Playlist {
+        info: &'a PlaylistInfo,
+        playlist_count: usize,
+        n_entries: usize,
+        last_playlist_index: usize,
+    },
+}
 
 const MAX_SPEC: usize = 16 * 1024;
 const MAX_OUTPUT: usize = 64 * 1024;
@@ -28,8 +41,54 @@ enum Value<'a> {
     Boolean(bool),
 }
 
-fn field<'a>(name: &str, info: &'a VideoInfo) -> Result<Option<Value<'a>>> {
+/// Every represented root field; playlists expose a subset.
+const FIELDS: &[&str] = &[
+    "id",
+    "title",
+    "ext",
+    "extractor",
+    "extractor_key",
+    "format_id",
+    "url",
+    "webpage_url",
+    "width",
+    "height",
+    "filesize",
+    "playlist_index",
+    "playlist_autonumber",
+    "playlist_count",
+    "n_entries",
+    "direct",
+];
+
+fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
     use Value::*;
+    let info = match source {
+        Source::Video(info) => info,
+        Source::Playlist {
+            info,
+            playlist_count,
+            n_entries,
+            ..
+        } => {
+            // Fields absent from upstream's playlist dict fall back to defaults,
+            // while unknown names still fail as they do for videos.
+            if !FIELDS.contains(&name) {
+                return Err(invalid(format!("unknown or unsupported field {name:?}")));
+            }
+            return Ok(match name {
+                "id" => Some(Text(&info.id)),
+                "title" => Some(Text(&info.title)),
+                "extractor" => Some(Text(&info.extractor)),
+                "extractor_key" => Some(Text(&info.extractor_key)),
+                "webpage_url" => Some(Text(info.webpage_url.as_str())),
+                "playlist_index" => Some(Integer(0)),
+                "playlist_count" => Some(Integer(playlist_count as u64)),
+                "n_entries" => Some(Integer(n_entries as u64)),
+                _ => None,
+            });
+        }
+    };
     Ok(match name {
         "id" => Some(Text(&info.id)),
         "title" => Some(Text(&info.title)),
@@ -192,7 +251,7 @@ fn numeric(number: f64, format: &Format) -> Result<String> {
 fn substitution(
     key: &str,
     spec: &str,
-    info: &VideoInfo,
+    info: Source<'_>,
     options: &super::TemplateOptions,
 ) -> Result<(String, usize)> {
     let (mut format, remaining) = format_spec(spec)?;
@@ -223,8 +282,18 @@ fn substitution(
     };
     if &spec[..consumed] == "s" {
         let size = match last_field {
-            "playlist_index" => Some(info.last_playlist_index.unwrap_or(0)),
-            "playlist_autonumber" => Some(info.n_entries.unwrap_or(0)),
+            "playlist_index" => Some(match info {
+                Source::Video(info) => info.last_playlist_index.unwrap_or(0),
+                Source::Playlist {
+                    last_playlist_index,
+                    ..
+                } => last_playlist_index,
+            }),
+            "playlist_autonumber" => match info {
+                Source::Video(info) => Some(info.n_entries.unwrap_or(0)),
+                // Unavailable for playlists, so the default path above applies.
+                Source::Playlist { .. } => None,
+            },
             _ => None,
         };
         if let Some(size) = size {
@@ -281,7 +350,7 @@ fn append(output: &mut String, value: &str) -> Result<()> {
 
 pub(super) fn render(
     template: &str,
-    info: &VideoInfo,
+    info: Source<'_>,
     options: &super::TemplateOptions,
 ) -> Result<PathBuf> {
     if template.len() > MAX_SPEC {
@@ -325,10 +394,14 @@ mod tests {
         serde_json::from_value(json!({"id":"42","title":"Épisode 影像","ext":"mp4","extractor":"native","extractor_key":"Native","url":"https://example.com/m.mp4","webpage_url":"https://example.com/watch","direct":true,"filesize":9007199254740993_u64,"width":1280,"height":720,"playlist_index":3,"playlist_autonumber":2,"n_entries":120,"__last_playlist_index":1000})).unwrap()
     }
     fn output(template: &str, info: &VideoInfo) -> String {
-        render(template, info, &super::super::TemplateOptions::default())
-            .unwrap()
-            .to_string_lossy()
-            .into_owned()
+        render(
+            template,
+            Source::Video(info),
+            &super::super::TemplateOptions::default(),
+        )
+        .unwrap()
+        .to_string_lossy()
+        .into_owned()
     }
 
     #[test]
@@ -368,7 +441,7 @@ mod tests {
         assert!(
             render(
                 "%(id,unsupported)s",
-                &info,
+                Source::Video(&info),
                 &super::super::TemplateOptions::default()
             )
             .is_err()
@@ -378,7 +451,7 @@ mod tests {
             na_placeholder: String::new(),
         };
         assert_eq!(
-            render("%(format_id)s-file", &info, &options).unwrap(),
+            render("%(format_id)s-file", Source::Video(&info), &options).unwrap(),
             PathBuf::from("-file")
         );
     }
@@ -405,7 +478,7 @@ mod tests {
         assert!(
             render(
                 "%(title)d",
-                &info,
+                Source::Video(&info),
                 &super::super::TemplateOptions::default()
             )
             .is_err()
@@ -431,7 +504,11 @@ mod tests {
             let options = super::super::TemplateOptions {
                 na_placeholder: case["na_placeholder"].as_str().unwrap().into(),
             };
-            match render(case["template"].as_str().unwrap(), &info, &options) {
+            match render(
+                case["template"].as_str().unwrap(),
+                Source::Video(&info),
+                &options,
+            ) {
                 Ok(actual) if actual.to_string_lossy() == case["expected"].as_str().unwrap() => {}
                 actual => failures.push(format!(
                     "{}: {actual:?}, expected {}",
@@ -463,14 +540,17 @@ mod tests {
             "%(id,missing)s",
             "%(id)lls",
         ] {
-            assert!(render(template, &info, &options).is_err(), "{template}");
+            assert!(
+                render(template, Source::Video(&info), &options).is_err(),
+                "{template}"
+            );
         }
         assert_eq!(output("%%-%(id)s", &info), "%-42");
-        assert!(render(&"x".repeat(MAX_SPEC + 1), &info, &options).is_err());
-        assert!(render(&"%%".repeat(257), &info, &options).is_err());
-        assert!(render(&"%(width)4096s".repeat(17), &info, &options).is_err());
+        assert!(render(&"x".repeat(MAX_SPEC + 1), Source::Video(&info), &options).is_err());
+        assert!(render(&"%%".repeat(257), Source::Video(&info), &options).is_err());
+        assert!(render(&"%(width)4096s".repeat(17), Source::Video(&info), &options).is_err());
         let mut huge = info.clone();
         huge.title = "x".repeat(MAX_OUTPUT + 1);
-        assert!(render("%(title).1s", &huge, &options).is_err());
+        assert!(render("%(title).1s", Source::Video(&huge), &options).is_err());
     }
 }

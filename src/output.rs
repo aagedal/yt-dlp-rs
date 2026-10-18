@@ -4,7 +4,7 @@ mod template;
 pub use formats::render_formats;
 pub use subtitles::{render_automatic_captions, render_subtitles};
 
-use crate::{Result, VideoInfo};
+use crate::{PlaylistCounts, PlaylistInfo, Result, VideoInfo};
 use std::path::PathBuf;
 
 pub const DEFAULT_TEMPLATE: &str = "%(title)s [%(id)s].%(ext)s";
@@ -55,7 +55,25 @@ pub fn render_template_with_options(
     info: &VideoInfo,
     options: &TemplateOptions,
 ) -> Result<PathBuf> {
-    template::render(template, info, options)
+    template::render(template, template::Source::Video(info), options)
+}
+
+/// Render a playlist-level file name, as upstream's playlist info JSON does.
+/// Playlist metadata supplies id/title/extractor/webpage URL plus
+/// `playlist_index` 0 and the counts; other represented fields are missing.
+pub fn render_playlist_template_with_options(
+    template: &str,
+    info: &PlaylistInfo,
+    counts: PlaylistCounts,
+    options: &TemplateOptions,
+) -> Result<PathBuf> {
+    let source = template::Source::Playlist {
+        info,
+        playlist_count: counts.playlist_count,
+        n_entries: counts.n_entries,
+        last_playlist_index: counts.last_playlist_index,
+    };
+    template::render(template, source, options)
 }
 
 #[cfg(test)]

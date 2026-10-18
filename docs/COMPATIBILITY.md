@@ -22,7 +22,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--embed-subs`, `--no-embed-subs` | Embed selected sidecars after media processing; implied acquisition and source retention rules below; last flag wins |
 | `--convert-subs`, `--convert-sub`, `--convert-subtitles` | Convert written sidecars to one of srt/vtt/ass/lrc; `none` disables; no implied subtitle writing |
 | `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
-| `--skip-download`, `--no-download` | Skip media while allowing selected sidecars; never record a completed media archive entry |
+| `--skip-download`, `--no-download` | Skip media while allowing selected subtitle and info JSON sidecars; never record a completed media archive entry |
+| `--write-info-json`, `--no-write-info-json` | Write cleaned video/playlist `.info.json` files before media/entries; keep existing files; never with JSON/simulation/listing; last flag wins; see [info JSON](../upstream/notes/info-json.md) |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--proxy URL` | Explicit HTTP/HTTPS/SOCKS route; empty string forces direct connections, last value wins |

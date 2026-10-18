@@ -49,6 +49,8 @@ pub enum Error {
     DownloadCancelled,
     #[error("postprocessing failed: {0}")]
     Postprocess(String),
+    #[error("info JSON failed: {0}")]
+    InfoJson(String),
     #[error("download archive failed: {0}")]
     Archive(String),
     #[error("filesystem error: {0}")]

@@ -3,6 +3,15 @@ use std::collections::HashSet;
 
 use crate::{ExtractResult, Result};
 
+/// Upstream playlist-file counts after item selection, before archive filtering:
+/// the full count, selected count and largest selected index.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PlaylistCounts {
+    pub playlist_count: usize,
+    pub n_entries: usize,
+    pub last_playlist_index: usize,
+}
+
 #[derive(Debug, Clone)]
 pub struct PlaylistSelection {
     segments: Vec<Segment>,
@@ -134,9 +143,10 @@ impl PlaylistSelection {
     }
 
     /// Reorder playlist entries and assign positions before any archive filtering.
-    pub fn apply(&self, result: &mut ExtractResult) {
+    /// Returns the playlist-level counts used for playlist file names.
+    pub fn apply(&self, result: &mut ExtractResult) -> Option<PlaylistCounts> {
         let ExtractResult::Playlist(playlist) = result else {
-            return;
+            return None;
         };
         let count = playlist.entries.len();
         let indices = self.indices(count);
@@ -161,6 +171,11 @@ impl PlaylistSelection {
                 entry
             })
             .collect();
+        Some(PlaylistCounts {
+            playlist_count: count,
+            n_entries: selected_count,
+            last_playlist_index: last_index,
+        })
     }
 }
 

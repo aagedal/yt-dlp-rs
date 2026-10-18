@@ -12,6 +12,7 @@ mod fragment;
 mod hls;
 mod http;
 mod info;
+mod info_json;
 mod merge;
 pub mod output;
 mod playlist;
@@ -33,8 +34,12 @@ pub use http::HttpOptions;
 pub use info::{
     ByteRange, ExtractResult, Fragment, HlsAes128, PlaylistInfo, StreamKind, VideoFormat, VideoInfo,
 };
+pub use info_json::{
+    InfoJsonWrite, info_json_path, playlist_info_json, to_python_json, video_info_json,
+    write_info_json,
+};
 pub use output::{render_automatic_captions, render_subtitles};
-pub use playlist::PlaylistSelection;
+pub use playlist::{PlaylistCounts, PlaylistSelection};
 pub use postprocess::{PostprocessOptions, ProcessedDownload};
 pub use subtitle_convert::{ConvertedSubtitle, SubtitleConversion};
 pub use subtitles::{
