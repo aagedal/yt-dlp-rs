@@ -291,6 +291,9 @@ struct Args {
     /// Abort after processing NUMBER videos (0 means no limit)
     #[arg(long, value_name = "NUMBER", allow_hyphen_values = true)]
     max_downloads: Option<i64>,
+    /// Maximum download rate in bytes per second, e.g. 50K or 4.2M
+    #[arg(short = 'r', long, aliases = ["rate-limit"], value_name = "RATE")]
+    limit_rate: Option<String>,
     /// Skip media downloads smaller than SIZE, e.g. 50k or 44.6M
     #[arg(long, value_name = "SIZE")]
     min_filesize: Option<String>,
@@ -661,6 +664,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let writes_info_json = args.write_info_json && !simulate;
     let min_filesize = size_option("min filesize", args.min_filesize.as_deref())?;
     let max_filesize = size_option("max filesize", args.max_filesize.as_deref())?;
+    // Upstream validates the rate limit as strictly positive.
+    let rate_limit = size_option("rate limit", args.limit_rate.as_deref())?;
+    if rate_limit == Some(0) {
+        return Err("rate limit \"0\" must be positive".into());
+    }
     // Upstream compares against `float(max_downloads or 'inf')`.
     let max_downloads = args.max_downloads.filter(|&limit| limit != 0);
     let mut processed: i64 = 0;
@@ -1079,6 +1087,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 retries: args.retries,
                                 min_filesize,
                                 max_filesize,
+                                rate_limit,
                             },
                             &processors,
                             progress,
@@ -1098,6 +1107,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 retries: args.retries,
                                 min_filesize,
                                 max_filesize,
+                                rate_limit,
                             },
                             progress,
                         )?;

@@ -47,10 +47,12 @@ impl Server {
                 }
                 let text = String::from_utf8_lossy(&request);
                 let path = text.split_whitespace().nth(1).unwrap_or("/").to_owned();
-                let (status, body) = if path.ends_with(".mp4") {
-                    (200, "media")
+                let (status, body) = if path == "/big.mp4" {
+                    (200, "x".repeat(96 * 1024))
+                } else if path.ends_with(".mp4") {
+                    (200, "media".to_owned())
                 } else {
-                    (404, "missing")
+                    (404, "missing".to_owned())
                 };
                 let _ = write!(
                     stream,
@@ -212,4 +214,29 @@ fn quiet_and_no_warnings_suppress_screen_and_warning_lines() {
         None,
     );
     assert!(stderr(&output).contains("WARNING: --remux-video is ignored"));
+}
+
+#[test]
+fn limit_rate_slows_media_transfers_and_rejects_zero() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("/big.mp4");
+    let start = std::time::Instant::now();
+    let output = cli(&["-r", "128K", &url], directory.path(), None);
+    assert!(output.status.success(), "{}", stderr(&output));
+    // 96 KiB at 128 KiB/s takes at least ~0.75 s.
+    assert!(
+        start.elapsed() >= Duration::from_millis(600),
+        "{:?}",
+        start.elapsed()
+    );
+    assert_eq!(
+        std::fs::metadata(directory.path().join("big [big].mp4"))
+            .unwrap()
+            .len(),
+        96 * 1024
+    );
+    let zero = cli(&["--limit-rate", "0", &url], directory.path(), None);
+    assert!(!zero.status.success());
+    assert!(stderr(&zero).contains("rate limit \"0\" must be positive"));
 }

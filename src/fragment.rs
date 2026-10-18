@@ -18,6 +18,8 @@ struct Reporter<'a> {
     attempt: u16,
     index: u32,
     count: u32,
+    /// `--limit-rate`, applied per fragment request like upstream.
+    rate_limit: Option<u64>,
 }
 impl Reporter<'_> {
     fn report(&mut self, phase: DownloadPhase, bytes: u64) -> Result<()> {
@@ -118,6 +120,7 @@ pub(crate) fn download(
         attempt: 1,
         index: 1,
         count: info.fragments.len() as u32,
+        rate_limit: options.rate_limit,
     };
     for (index, fragment) in info.fragments.iter().enumerate() {
         reporter.index = index as u32 + 1;
@@ -228,7 +231,9 @@ fn fetch(
         .read_to_end(&mut prefix)
         .map_err(|error| body_failure(Error::Io(error)))?;
     sniff(&prefix)?;
+    let mut limiter = crate::download::RateLimit::new(reporter.rate_limit);
     append(file, &prefix, stored, &mut received, expected, reporter)?;
+    limiter.consume(prefix.len());
     let mut buffer = [0; 64 * 1024];
     loop {
         let count = match response.read(&mut buffer) {
@@ -237,6 +242,7 @@ fn fetch(
             Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
             Err(error) => return Err(body_failure(Error::Io(error))),
         };
+        limiter.consume(count);
         append(
             file,
             &buffer[..count],
@@ -456,6 +462,7 @@ fn decrypt_response(
     let mut prefix = Vec::with_capacity(512);
     let mut sniffed = false;
     let mut buffer = [0; 32 * 1024];
+    let mut limiter = crate::download::RateLimit::new(reporter.rate_limit);
     loop {
         reporter.report(DownloadPhase::Downloading, *stored)?;
         let count = match response.read(&mut buffer) {
@@ -464,6 +471,7 @@ fn decrypt_response(
             Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
             Err(error) => return Err(body_failure(Error::Io(error))),
         };
+        limiter.consume(count);
         cipher_bytes = cipher_bytes
             .checked_add(count as u64)
             .ok_or(Error::InvalidRangeResponse)?;

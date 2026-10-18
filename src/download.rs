@@ -88,6 +88,39 @@ pub struct DownloadOptions {
     /// `--max-filesize`: abort a whole-file media transfer whose declared
     /// length is larger.
     pub max_filesize: Option<u64>,
+    /// `--limit-rate`: maximum bytes per second for each media transfer or
+    /// fragment request (upstream `slow_down`).
+    pub rate_limit: Option<u64>,
+}
+
+/// Upstream `FileDownloader.slow_down`: after each read, sleep until the
+/// average speed since the request started is at most the limit.
+pub(crate) struct RateLimit {
+    limit: Option<u64>,
+    start: Instant,
+    bytes: u64,
+}
+
+impl RateLimit {
+    pub(crate) fn new(limit: Option<u64>) -> Self {
+        Self {
+            limit,
+            start: Instant::now(),
+            bytes: 0,
+        }
+    }
+
+    pub(crate) fn consume(&mut self, count: usize) {
+        let Some(limit) = self.limit.filter(|&limit| limit > 0) else {
+            return;
+        };
+        self.bytes = self.bytes.saturating_add(count as u64);
+        let target = Duration::from_secs_f64(self.bytes as f64 / limit as f64);
+        let elapsed = self.start.elapsed();
+        if !elapsed.is_zero() && target > elapsed {
+            std::thread::sleep(target - elapsed);
+        }
+    }
 }
 
 impl Default for DownloadOptions {
@@ -96,6 +129,7 @@ impl Default for DownloadOptions {
             retries: 3,
             min_filesize: None,
             max_filesize: None,
+            rate_limit: None,
         }
     }
 }
@@ -231,6 +265,7 @@ pub fn download(
             validate_media: !info.direct,
             subtitle: false,
             limits: (options.min_filesize, options.max_filesize),
+            rate_limit: options.rate_limit,
         },
         destination,
         options,
@@ -257,6 +292,7 @@ pub(crate) fn download_subtitle(
             validate_media: false,
             subtitle: true,
             limits: (None, None),
+            rate_limit: None,
         },
         destination,
         options,
@@ -271,6 +307,7 @@ struct HttpResource<'a> {
     subtitle: bool,
     /// Minimum/maximum declared total length in bytes.
     limits: (Option<u64>, Option<u64>),
+    rate_limit: Option<u64>,
 }
 
 fn download_resource(
@@ -408,6 +445,7 @@ fn download_attempt(
     }
     reporter.total = expected;
     reporter.report(DownloadPhase::Downloading, *actual)?;
+    let mut limiter = RateLimit::new(resource.rate_limit);
     let mut buffer = [0; 64 * 1024];
     loop {
         // Separate network reads from filesystem writes: only the former retry.
@@ -426,6 +464,7 @@ fn download_attempt(
         temporary.write_all(&buffer[..count])?;
         *actual = next;
         reporter.report(DownloadPhase::Downloading, *actual)?;
+        limiter.consume(count);
     }
     if let Some(expected) = expected
         && *actual != expected
