@@ -44,7 +44,7 @@ headers. Extractor Referer/User-Agent/custom values override global values,
 including empty ones. These are request dictionary semantics only; native
 extractors and transport have separate local request/header tests.
 
-Cookie is excluded from the native feature until a scoped cookie jar exists.
+Cookie is excluded from the native feature because raw Cookie compatibility loading is not implemented.
 Upstream `YoutubeDL` compatibility-loads a user Cookie into its jar and removes
 it from generic headers; `_calc_headers` strips Cookie again to avoid leaking
 unscoped cookies. The reference's source-only request case uses an empty actual

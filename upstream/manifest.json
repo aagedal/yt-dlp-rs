@@ -371,7 +371,33 @@
         "tools/test_compare_headers.py",
         "upstream/notes/http-headers.md"
       ],
-      "scope": "Bounded global header defaults, repeated add-headers and explicit singular alias, convenience User-Agent/Referer normalization, extractor/transport request precedence across native clients/transfers, local retry/redirect propagation; explicit raw Cookie rejection; no scoped cookies, general authentication/proxy/impersonation/default browser headers or upstream redirect/legacy-byte parity"
+      "scope": "Bounded global header defaults, repeated add-headers and explicit singular alias, convenience User-Agent/Referer normalization, extractor/transport request precedence across native clients/transfers, local retry/redirect propagation; explicit raw Cookie rejection; scoped cookies tracked separately; no general authentication/proxy/impersonation/default browser headers or upstream redirect/legacy-byte parity"
+    },
+    {
+      "name": "http-cookies",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/cookies.py",
+        "yt_dlp/options.py",
+        "yt_dlp/YoutubeDL.py",
+        "test/test_cookies.py",
+        "yt_dlp/networking/"
+      ],
+      "rust": [
+        "src/cookies.rs",
+        "src/http.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "src/extractor/youtube.rs",
+        "src/extractor/youtube/challenge.rs",
+        "src/extractor/youtube/player.rs",
+        "tests/cookies.rs",
+        "tests/fixtures/cookies/",
+        "tools/compare_cookies.py",
+        "tools/test_compare_cookies.py",
+        "upstream/notes/http-cookies.md"
+      ],
+      "scope": "Shared bounded RFC6265-scoped in-memory response cookies across native clients and explicit Netscape import/atomic save, session/expiry/domain/path/Secure/HttpOnly and nameless values, last-wins cookies/no-cookies CLI persistence including metadata/failures; strict host-only and malformed-file native policies, no raw Cookie compatibility, browser-cookie extraction/decryption, PSL snapshot, SameSite/browser-context enforcement or account-specific YouTube authentication"
     }
   ]
 }

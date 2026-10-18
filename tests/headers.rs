@@ -190,6 +190,7 @@ fn configured() -> YoutubeDl {
     YoutubeDl::with_options(
         YoutubeOptions::default(),
         HttpOptions {
+            cookies: None,
             headers: vec![
                 ("X-Token".into(), "local-value".into()),
                 ("Accept-Encoding".into(), "gzip".into()),
@@ -275,6 +276,7 @@ fn library_defaults_support_http_token_names_and_tabs_for_direct_probe_and_downl
     let dl = YoutubeDl::with_options(
         YoutubeOptions::default(),
         HttpOptions {
+            cookies: None,
             headers: vec![("X!Token".into(), "one\ttwo".into())],
             user_agent: Some("library-fixture/1".into()),
             referer: Some("https://referrer.invalid/direct".into()),
@@ -465,6 +467,7 @@ fn library_header_controls_cookie_and_resource_limits_fail_during_construction()
             YoutubeDl::with_options(
                 YoutubeOptions::default(),
                 HttpOptions {
+                    cookies: None,
                     headers,
                     ..Default::default()
                 }

@@ -361,7 +361,7 @@
       "extractor": {
         "cookie": "site=value"
       },
-      "native_policy": "Source _calc_headers strips unscoped Cookie; native rejects user Cookie instead of supporting compatibility cookies",
+      "native_policy": "Source _calc_headers strips unscoped Cookie; native rejects raw user Cookie compatibility loading",
       "expected_headers": {
         "user-agent": "Fixture-Default-UA",
         "accept": "*/*"
@@ -426,7 +426,7 @@
         "--add-headers",
         "Cookie:fixture=value"
       ],
-      "native_policy": "Native rejects Cookie until a scoped cookie jar exists; source has cookie compatibility loading",
+      "native_policy": "Native rejects raw Cookie compatibility loading; scoped Netscape/response cookies are separate",
       "expected_headers": {
         "cookie": "fixture=value"
       }

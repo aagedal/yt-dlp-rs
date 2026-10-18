@@ -23,15 +23,28 @@ pub(super) struct PlayerSource {
 }
 
 impl PlayerSource {
-    pub(super) fn new(headers: reqwest::header::HeaderMap) -> Result<Self> {
-        Self::with_origin(Url::parse("https://www.youtube.com/")?, false, headers)
+    pub(super) fn new(
+        headers: reqwest::header::HeaderMap,
+        cookies: std::sync::Arc<crate::CookieJar>,
+    ) -> Result<Self> {
+        Self::with_origin(
+            Url::parse("https://www.youtube.com/")?,
+            false,
+            headers,
+            cookies,
+        )
     }
 
     #[cfg(test)]
     pub(super) fn local(origin: Url) -> Result<Self> {
         assert_eq!(origin.scheme(), "http");
         assert_eq!(origin.host_str(), Some("127.0.0.1"));
-        Self::with_origin(origin, true, reqwest::header::HeaderMap::new())
+        Self::with_origin(
+            origin,
+            true,
+            reqwest::header::HeaderMap::new(),
+            Default::default(),
+        )
     }
 
     // Origin substitution is private; only tests supply loopback HTTP origins.
@@ -39,10 +52,12 @@ impl PlayerSource {
         origin: Url,
         no_proxy: bool,
         headers: reqwest::header::HeaderMap,
+        cookies: std::sync::Arc<crate::CookieJar>,
     ) -> Result<Self> {
         let mut builder = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
             .default_headers(headers)
+            .cookie_provider(cookies)
             .connect_timeout(Duration::from_secs(15))
             .timeout(Duration::from_secs(300))
             .redirect(Policy::none())
@@ -274,7 +289,8 @@ mod tests {
 
     #[test]
     fn discovers_config_urls_with_precedence_and_literal_json_escapes() {
-        let source = PlayerSource::new(reqwest::header::HeaderMap::new()).unwrap();
+        let source =
+            PlayerSource::new(reqwest::header::HeaderMap::new(), Default::default()).unwrap();
         for value in [
             serde_json::json!({"PLAYER_JS_URL": PATH}),
             serde_json::json!({"PLAYER_JS_URL": format!("https://www.youtube.com{PATH}")}),
@@ -302,7 +318,8 @@ mod tests {
 
     #[test]
     fn never_evaluates_or_guesses_missing_or_ambiguous_configuration() {
-        let source = PlayerSource::new(reqwest::header::HeaderMap::new()).unwrap();
+        let source =
+            PlayerSource::new(reqwest::header::HeaderMap::new(), Default::default()).unwrap();
         for page in [
             "<p>ytcfg.set({\"PLAYER_JS_URL\":\"ignored\"})</p>".to_owned(),
             format!("<script src='{PATH}'></script>"),
@@ -326,7 +343,8 @@ mod tests {
 
     #[test]
     fn recognized_variants_and_strict_player_url_boundaries() {
-        let source = PlayerSource::new(reqwest::header::HeaderMap::new()).unwrap();
+        let source =
+            PlayerSource::new(reqwest::header::HeaderMap::new(), Default::default()).unwrap();
         for variant in [
             "player_ias.vflset/en_US/base.js",
             "player_ias_tcc.vflset/en_US/base.js",
@@ -424,7 +442,7 @@ mod tests {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         listener.set_nonblocking(true).unwrap();
         let origin = Url::parse(&format!("http://{}/", listener.local_addr().unwrap())).unwrap();
-        let source = PlayerSource::with_origin(origin, true, headers).unwrap();
+        let source = PlayerSource::with_origin(origin, true, headers, Default::default()).unwrap();
         let worker = thread::spawn(move || {
             for reply in replies {
                 let deadline = Instant::now() + Duration::from_secs(5);
@@ -502,8 +520,50 @@ mod tests {
     }
 
     #[test]
+    fn player_acquisition_uses_the_shared_scoped_cookie_jar() {
+        use reqwest::cookie::CookieStore;
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let origin = Url::parse(&format!("http://{}/", listener.local_addr().unwrap())).unwrap();
+        let cookies = std::sync::Arc::new(crate::CookieJar::default());
+        let source = PlayerSource::with_origin(
+            origin.clone(),
+            true,
+            reqwest::header::HeaderMap::new(),
+            cookies.clone(),
+        )
+        .unwrap();
+        let worker = thread::spawn(move || {
+            for expected_cookie in [false, true] {
+                let (mut stream, _) = listener.accept().unwrap();
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(5)))
+                    .unwrap();
+                let mut request = Vec::new();
+                while !request.ends_with(b"\r\n\r\n") {
+                    let mut byte = [0];
+                    assert_eq!(stream.read(&mut byte).unwrap(), 1);
+                    request.push(byte[0]);
+                }
+                let request = String::from_utf8(request).unwrap().to_ascii_lowercase();
+                assert_eq!(
+                    request.contains("cookie: player=session\r\n"),
+                    expected_cookie
+                );
+                write!(stream, "HTTP/1.1 200 OK\r\nContent-Type: text/javascript\r\nContent-Length: 17\r\nSet-Cookie: player=session; Path=/s/player; HttpOnly\r\nConnection: close\r\n\r\nconst player = 1;").unwrap();
+            }
+        });
+        for _ in 0..2 {
+            assert_eq!(source.fetch(&url(&source)).unwrap(), "const player = 1;");
+        }
+        worker.join().unwrap();
+        assert!(cookies.cookies(&origin).is_none());
+        assert_eq!(cookies.cookies(&url(&source)).unwrap(), "player=session");
+    }
+
+    #[test]
     fn explicit_http_defaults_apply_within_the_validated_player_origin() {
         let headers = crate::HttpOptions {
+            cookies: None,
             user_agent: Some("FixturePlayer/1".into()),
             referer: Some("https://example.test/explicit".into()),
             headers: vec![

@@ -1,11 +1,14 @@
 //! Validated global HTTP defaults, separate from extractor-owned request headers.
-use crate::{Error, Result};
+use crate::{CookieJar, Error, Result};
 use reqwest::header::{COOKIE, HeaderMap, HeaderName, HeaderValue, REFERER, USER_AGENT};
+use std::sync::Arc;
 
 /// Global request defaults. Extractor/transport headers take precedence.
-/// Cookie headers require a scoped cookie jar and are currently unsupported.
+/// Raw Cookie headers are unsupported; use the scoped cookie jar instead.
 #[derive(Clone, Default)]
 pub struct HttpOptions {
+    /// Shared cookie state; None creates a fresh in-memory jar.
+    pub cookies: Option<Arc<CookieJar>>,
     pub headers: Vec<(String, String)>,
     pub user_agent: Option<String>,
     pub referer: Option<String>,
@@ -28,6 +31,7 @@ impl HttpOptions {
             return Err(error("more than 256 custom headers"));
         }
         let mut options = Self {
+            cookies: None,
             headers: Vec::with_capacity(headers.len()),
             user_agent,
             referer,
@@ -69,7 +73,7 @@ impl HttpOptions {
             }
             if name == COOKIE {
                 return Err(error(
-                    "Cookie headers require scoped cookies, which are not implemented",
+                    "raw Cookie headers are unsupported; use a scoped cookie jar",
                 ));
             }
             let mut value = HeaderValue::from_str(raw.trim())

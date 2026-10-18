@@ -23,6 +23,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--skip-download`, `--no-download` | Skip media while allowing selected sidecars; never record a completed media archive entry |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
+| `--cookies FILE`, `--no-cookies` | Load/save a scoped Netscape jar, including metadata modes; last flag wins, response cookies remain in memory |
 | `--add-headers FIELD:VALUE`, `--add-header` | Repeated custom HTTP defaults; case-insensitive last custom value wins |
 | `--user-agent UA`, `--referer URL` | Convenience HTTP defaults override matching custom options; extractor/transport headers can override them |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
@@ -1385,8 +1386,8 @@ values. Names are bounded to 256 bytes; at most 256 custom entries, 16 KiB per
 value and 64 KiB total supplied names/values, including overwritten entries.
 CR/LF and other controls except horizontal tabs are rejected before trimming.
 Header values are UTF-8 bytes; arbitrary upstream legacy-byte encoding is not
-established by the fixtures. Raw Cookie headers are explicitly unsupported until
-scoped cookie storage is implemented; they are never silently forwarded.
+established by the fixtures. Raw Cookie headers remain explicitly unsupported; use the scoped jar described
+below. They are never silently forwarded.
 
 The actual pinned option/container/header-merge comparison covers 21 option
 configurations, seven merges and seven grammar rejections, with three source-only
@@ -1396,3 +1397,64 @@ request bytes, precedence, redirects, retries, protocol/sidecar propagation and
 preflight rejection independently of that pure source comparison.
 See [source applicability](../upstream/notes/http-headers.md) and
 [fixture provenance](../tests/fixtures/headers/README.md).
+
+
+## Scoped HTTP cookies
+
+Every downloader owns a fresh in-memory cookie jar by default. Response
+Set-Cookie values update it during pages, redirects, probes, media, fragments,
+keys and subtitle transfers. The explicit bounded player client shares the same
+jar without relaxing its canonical-origin/path/redirect validation. Domain,
+host-only, path, Secure and expiry rules are enforced by native cookie storage.
+Secure cookies are sent only over HTTPS, including for loopback requests.
+Cookie scope ignores ports, as cookies require; a change of port alone does not
+isolate cookies. A different host only receives matching domain cookies. Native
+host-only cookies require the exact host even where Python's legacy policy can
+send them to subdomains. Canonical domain/path/name identity replaces earlier
+host-only/domain variants for the same domain; Python can retain distinct
+leading-dot records and send both. No cookie values are added to metadata or diagnostics.
+
+`--cookies FILE` reads Netscape format before requests and saves the updated jar
+after all inputs, including metadata/list/simulation and failed requests.
+A missing input file starts empty. `--no-cookies` disables file loading/saving;
+the last cookies/no-cookies option wins. It does not disable in-memory response
+cookies. Cookie persistence is independent of media/archive publication; a save
+failure returns a failing exit status while preserving completed media. Raw
+Cookie custom headers are still unsupported: use a scoped jar or file instead.
+Browser cookie extraction, JSON cookie files and browser encryption stores are
+unsupported. Supplying cookies does not implement account-specific YouTube
+request contexts, clients, token acquisition or prove live-site reliability.
+
+Use `CookieJar::load`, `save` and `save_new` explicitly in the library. Set
+`HttpOptions.cookies` to `Some(Arc<CookieJar>)` to share state across clients, or
+use `YoutubeDl::cookie_jar()` to retrieve the client's jar. `save_new` refuses
+replacement; the CLI uses it when the file did not exist initially, preventing
+cookie persistence from overwriting a newly created media/output or another
+process's newly created file. Existing regular cookie files are replaced through
+a same-directory temporary file; symlinks and nonregular cookie paths are refused.
+Parent directories must exist. Existing-file saves do not merge concurrent
+process changes or acquire cross-process locks. Identical and existing canonical cookie/archive paths are rejected before requests. Library calls never save implicitly.
+
+Saved-fixture comparisons invoke actual pinned YoutubeDLCookieJar loading,
+request-header construction, response extraction and save/reload without network
+or downloads. Five file cases and six response cases compare logical records and
+sorted header pairs; duplicate-name path ordering is checked explicitly. Three
+source-only cases document legacy host-only leakage, skipped malformed lines and
+public-suffix acceptance. Python's standard-library policy is a reference-runtime
+dependency, not a separately pinned source tree. HttpOnly marker preservation and
+file bytes/order are explicit native policies rather than byte-level save parity.
+Files are bounded to 4 MiB, 10000 records and 16 KiB per line. Stored response
+cookies have the same count/aggregate bounds; outgoing Cookie headers are capped
+at 16 KiB. Invalid or oversized response cookies are ignored with a deduplicated,
+value-free warning, available through `CookieJar::take_warnings` for library users.
+Malformed existing files fail before requests rather than skipping source lines.
+Names use HTTP token syntax; controls, semicolon-bearing values, inconsistent
+Netscape domain flags and invalid expiry/path/domain fields are unsupported.
+Session expiry is saved as zero; expired records can persist but are never sent.
+Headers use longest path then original creation order, retained on replacement.
+HttpOnly file prefixes are preserved natively even where source saving loses them.
+New and replaced cookie files use private mode 0600 on Unix; Windows permissions
+follow platform temporary-file behavior. No public-suffix snapshot or browser
+SameSite/partitioned/prefix policy is supplied. The local pipeline tests establish
+request propagation and failure/persistence behavior separately. See [source applicability](../upstream/notes/http-cookies.md)
+and [fixture provenance](../tests/fixtures/cookies/README.md).

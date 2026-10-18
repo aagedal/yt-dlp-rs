@@ -26,6 +26,8 @@ pub enum Error {
     FormatSelection(String),
     #[error("HTML page exceeds the {0}-byte extraction limit")]
     HtmlTooLarge(u64),
+    #[error("cookie operation failed: {0}")]
+    Cookies(String),
     #[error("invalid HTTP configuration: {0}")]
     HttpConfiguration(String),
     #[error("HTTP request failed: {0}")]

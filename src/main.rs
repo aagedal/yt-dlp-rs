@@ -3,11 +3,12 @@ use std::io::{self, Write};
 use std::{
     ops::ControlFlow,
     path::PathBuf,
+    sync::Arc,
     time::{Duration, Instant},
 };
 use yt_dlp_rs::{
-    DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions, HttpOptions,
-    PlaylistSelection, SubtitleOptions, YoutubeDl, YoutubeOptions,
+    CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions,
+    HttpOptions, PlaylistSelection, SubtitleOptions, YoutubeDl, YoutubeOptions,
     output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
     render_automatic_captions, render_subtitles, subtitle_paths, validate_format_selector,
 };
@@ -75,6 +76,12 @@ struct Args {
     /// Retry the entire extraction after transient network failures (0 disables retries)
     #[arg(long, default_value_t = 0)]
     extractor_retries: u8,
+    /// Read and save scoped cookies in Netscape format (including metadata modes)
+    #[arg(long, value_name = "FILE", overrides_with_all = ["no_cookies", "cookies"])]
+    cookies: Option<PathBuf>,
+    /// Disable cookie-file loading and saving (in-memory response cookies remain enabled)
+    #[arg(long, overrides_with = "cookies")]
+    no_cookies: bool,
     /// Custom HTTP header FIELD:VALUE (repeatable; last name wins)
     #[arg(long, alias = "add-header", value_name = "FIELD:VALUE")]
     add_headers: Vec<String>,
@@ -138,7 +145,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let subtitle_languages = (!args.sub_langs.is_empty()).then(|| args.sub_langs.join(","));
     let subtitle_options = SubtitleOptions::new(subtitle_languages.as_deref(), &args.sub_format)?;
-    let http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
+    if let (Some(cookies), Some(archive)) = (&args.cookies, &args.download_archive) {
+        let identical = std::path::absolute(cookies)? == std::path::absolute(archive)?;
+        let canonical_alias = std::fs::canonicalize(cookies)
+            .ok()
+            .zip(std::fs::canonicalize(archive).ok())
+            .is_some_and(|(left, right)| left == right);
+        if identical || canonical_alias {
+            return Err(yt_dlp_rs::Error::Cookies(
+                "cookie file and download archive must have different paths".into(),
+            )
+            .into());
+        }
+    }
+    let cookie_file_was_missing = args.cookies.as_ref().is_some_and(|path| !path.exists());
+    let mut http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
+    if let Some(path) = &args.cookies {
+        http_options.cookies = Some(Arc::new(CookieJar::load(path)?));
+    }
     let mut downloader = YoutubeDl::with_options(
         YoutubeOptions {
             js_runtime: args.youtube_js_runtime,
@@ -327,6 +351,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 eprintln!("ERROR: {url}: {}: {error}", info.id);
                 failed = true;
             }
+        }
+    }
+    for warning in downloader.cookie_jar().take_warnings() {
+        eprintln!("WARNING: {warning}");
+    }
+    if let Some(path) = &args.cookies {
+        let cookies = downloader.cookie_jar();
+        let save = if cookie_file_was_missing {
+            cookies.save_new(path)
+        } else {
+            cookies.save(path)
+        };
+        if let Err(error) = save {
+            eprintln!("ERROR: {error}");
+            failed = true;
         }
     }
     Ok(!failed)

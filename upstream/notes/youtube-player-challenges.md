@@ -49,7 +49,9 @@ no whitespace, control characters, or backslashes. Unlike upstream's default
 main-variant override, this boundary retains the actual validated path.
 
 The player client has automatic redirects disabled, no implicit cookie/auth state,
-the existing user agent/timeouts, and `Accept-Encoding: identity`. Explicit global
+the existing user agent/timeouts, and `Accept-Encoding: identity`. Scoped cookies
+now share the explicit native jar within this boundary; see
+[cookie persistence](http-cookies.md). Explicit global
 HTTP defaults now apply within this validated boundary; see
 [request configuration](http-headers.md). It manually follows
 at most ten HTTP 301/302/303/307/308 redirects. Every target is validated before

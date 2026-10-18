@@ -36,6 +36,7 @@ tests separately exercise actual headers for extraction/downloads, fragments,
 keys, subtitles, retries and redirects. Player tests verify defaults on permitted
 redirects and reject a changed-origin target before issuing a request.
 
+Scoped Netscape/response cookies are now tracked in [the cookie slice](http-cookies.md).
 Raw Cookie options are explicit unsupported errors rather than a global Cookie
 header: source compatibility loading requires a scoped cookie jar, not unscoped
 forwarding. Native grammar, control/size bounds, UTF-8 header values and reqwest

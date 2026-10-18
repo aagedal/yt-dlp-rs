@@ -1,4 +1,5 @@
 mod archive;
+mod cookies;
 mod crypto;
 mod dash;
 mod download;
@@ -16,6 +17,7 @@ mod selector;
 mod subtitles;
 
 pub use archive::{DownloadArchive, archive_id};
+pub use cookies::CookieJar;
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
@@ -34,6 +36,7 @@ use extractor::{Extractor, GenericHttp, Youtube};
 use reqwest::blocking::Client;
 use std::{
     path::{Path, PathBuf},
+    sync::Arc,
     time::Duration,
 };
 use url::Url;
@@ -53,6 +56,7 @@ pub struct ExtractionOptions {
 
 pub struct YoutubeDl {
     client: Client,
+    cookies: Arc<CookieJar>,
     extractors: Vec<Box<dyn Extractor>>,
     ffmpeg: Option<PathBuf>,
 }
@@ -72,9 +76,11 @@ impl YoutubeDl {
     /// Per-request extractor and transport headers override these defaults.
     pub fn with_options(youtube: YoutubeOptions, http: HttpOptions) -> Result<Self> {
         let headers = http.header_map()?;
+        let cookies = http.cookies.unwrap_or_default();
         let client = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
             .default_headers(headers.clone())
+            .cookie_provider(cookies.clone())
             .connect_timeout(Duration::from_secs(15))
             .timeout(Duration::from_secs(300))
             .redirect(reqwest::redirect::Policy::limited(10))
@@ -84,11 +90,21 @@ impl YoutubeDl {
         Ok(Self {
             client,
             ffmpeg: None,
+            cookies: cookies.clone(),
             extractors: vec![
-                Box::new(Youtube::with_http_headers(youtube, headers)),
+                Box::new(Youtube::with_http_options(
+                    youtube,
+                    headers,
+                    cookies.clone(),
+                )),
                 Box::new(GenericHttp),
             ],
         })
+    }
+
+    /// Return shared scoped cookies for explicit library persistence or reuse.
+    pub fn cookie_jar(&self) -> Arc<CookieJar> {
+        self.cookies.clone()
     }
 
     /// Configure an explicit ffmpeg executable for two-stream copy merging.

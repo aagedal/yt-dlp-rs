@@ -23,6 +23,7 @@ cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/
 cargo run --locked -- -I '3,1:2' --playlist-reverse -o '%(playlist_index)03d-%(title)s.%(ext)s' 'https://example.com/multiple-videos.html'
 cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
+cargo run --locked -- --cookies cookies.txt 'https://example.com/video.mp4'
 cargo run --locked -- --user-agent 'My media client' --add-headers 'X-Media-Key:example' 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
 ```
@@ -116,7 +117,8 @@ Supported today:
 - Global `--add-headers FIELD:VALUE` (repeatable), `--user-agent` and `--referer`
   defaults across extraction, downloads, fragments, keys and subtitles. Explicit
   extractor/transport headers take precedence, including page referrers and identity
-  encoding. Cookie headers require scoped cookie support and remain unsupported.
+  encoding. A shared in-memory cookie jar learns scoped response cookies. `--cookies FILE` loads/saves Netscape cookies, including session cookies; `--no-cookies`
+  disables file persistence. Raw Cookie headers remain unsupported.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Typed output fields include IDs/titles, dimensions, filesize and playlist indices,
   with string `s`, integer `d/i/u` and fixed-point `f/F` width/precision formatting.
@@ -143,7 +145,7 @@ Supported today:
   using the same bounded `Retry-After` policy.
 
 Other HTML pages, general YouTube support, broader DASH/HLS delivery, site playlists, full upstream format ranking, general selector
-expressions, cookies/authentication, persistent resume, broader subtitle acquisition, and other
+expressions, browser-cookie extraction/broader authentication, persistent resume, broader subtitle acquisition, and other
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
@@ -170,6 +172,11 @@ user_agent: Some("My media client".into()), ..Default::default()
 })` configures HTTP defaults; `HttpOptions.headers` holds name/value pairs.
 `HttpOptions::from_cli(user_agent, referer, &headers)` parses repeated FIELD:VALUE
 strings with the same normalization and validation as the binary.
+`CookieJar::load(path)` and `save(path)` expose explicit Netscape persistence;
+`HttpOptions.cookies` accepts a shared `Arc<CookieJar>`, or the client creates a
+fresh in-memory jar. `YoutubeDl::cookie_jar()` returns it for reuse or saving.
+Cookie files are credential state: an explicit `--cookies` path is updated after
+requests even in JSON/listing/simulation modes and after extraction failures.
 `YoutubeDl::new()?.with_ffmpeg(path)` configures optional local merging.
 `extract_result_unselected` / `extract_result_unselected_with_options` expose all
 eligible alternatives without library selection; `select_result` applies configured
