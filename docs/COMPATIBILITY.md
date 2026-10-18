@@ -10,6 +10,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Positional URLs | One or more HTTP(S) URLs (stripped), processed sequentially; continue after errors, return failure if any URL fails; optional with a batch file |
 | `-a`, `--batch-file FILE`, `--no-batch-file` | URLs from FILE or `-` (stdin) precede positional URLs; upstream comment/BOM/newline/whitespace rules and `~`/`$VAR` path expansion; unreadable file fails before requests; last flag wins; see [batch files](../upstream/notes/batch-file.md) |
 | `-j`, `--dump-json` | One selected `VideoInfo` JSON object per video, including each HTML5 playlist entry; no downloads; with `-F`, a table precedes JSON |
+| `-J`, `--dump-single-json` | One JSON object per URL after selection: the `-j` object for videos; playlists add `_type`, `playlist_count`, `requested_entries` and selected `entries`; implies quiet simulation; native field shape like `-j`, not upstream `sanitize_info` output |
 | `-F`, `--list-formats` | List eligible alternatives without selection or downloads; combined `-j`/`-s` retain normal selection; native table styling |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
 | `-O`, `--print [video:]TEMPLATE` | Print a field list or unsanitized output template per selected video; implies quiet simulation; repeatable; see [print templates](#print-templates) |

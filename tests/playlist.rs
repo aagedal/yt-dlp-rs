@@ -352,3 +352,27 @@ fn later_urls_continue_after_playlist_format_failure_and_keep_their_own_selectio
     assert_eq!(items[0]["id"], "one");
     assert!(items[0].get("playlist_index").is_none());
 }
+
+#[test]
+fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
+    let server = Server::new();
+    let stdout = success(&server.cli("/playlist.html", &["-J", "-I", "3,2"]));
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(lines.len(), 1, "{stdout}");
+    let value: Value = serde_json::from_str(lines[0]).unwrap();
+    assert_eq!(value["_type"], "playlist");
+    assert_eq!(value["playlist_count"], 4);
+    assert_eq!(value["requested_entries"], serde_json::json!([3, 2]));
+    let entries = value["entries"].as_array().unwrap();
+    assert_eq!(entries.len(), 2);
+    assert_eq!(entries[0]["playlist_index"], 3);
+    assert!(entries[0]["format_id"].is_string(), "entries are selected");
+    // Only extraction probes; -J implies simulation.
+    assert_eq!(server.count("/three.mp4"), 1);
+    // A single video prints the same object as -j, and both flags print both.
+    let single = success(&server.cli("/one.mp4", &["-J"]));
+    let json = success(&server.cli("/one.mp4", &["-j"]));
+    assert_eq!(single, json);
+    let both = success(&server.cli("/one.mp4", &["-j", "-J"]));
+    assert_eq!(both, format!("{json}{json}"));
+}

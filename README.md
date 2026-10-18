@@ -146,6 +146,7 @@ Supported today:
   native HTTP clients. `--proxy ''` forces direct connections. Pinned SOCKS5
   compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.
   HTTPS proxy and CONNECT transfers retain certificate validation.
+- `-J/--dump-single-json` prints one object per URL (playlists with selected entries).
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - `-a/--batch-file FILE` reads URLs (`-` for stdin) before positional URLs, skipping
   blank and `#`/`;`/`]` comment lines and ` #` trailing comments; `--no-batch-file`

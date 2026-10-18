@@ -34,6 +34,9 @@ struct Args {
     /// Print one JSON info object per video (including playlist entries) without downloading
     #[arg(short = 'j', long)]
     dump_json: bool,
+    /// Print one JSON object per URL; playlists include their selected entries (implies simulation)
+    #[arg(short = 'J', long)]
+    dump_single_json: bool,
     /// Extract metadata without writing media
     #[arg(short = 's', long)]
     simulate: bool,
@@ -283,6 +286,36 @@ fn path_exists(path: &std::path::Path) -> yt_dlp_rs::Result<bool> {
     }
 }
 
+/// The `-J` object for one URL: the `-j` video object, or the playlist with
+/// `_type`, selected counts/indices and every selected entry.
+fn single_json(
+    result: &ExtractResult,
+    counts: Option<PlaylistCounts>,
+) -> serde_json::Result<serde_json::Value> {
+    match result {
+        ExtractResult::Video(info) => serde_json::to_value(info),
+        ExtractResult::Playlist(playlist) => {
+            let mut value = serde_json::to_value(playlist)?;
+            let object = value
+                .as_object_mut()
+                .expect("playlist serializes to an object");
+            let entries = object.remove("entries");
+            object.insert("_type".into(), "playlist".into());
+            if let Some(counts) = counts {
+                object.insert("playlist_count".into(), counts.playlist_count.into());
+            }
+            let indices: Vec<_> = playlist
+                .entries
+                .iter()
+                .map(|info| info.playlist_index)
+                .collect();
+            object.insert("requested_entries".into(), serde_json::to_value(indices)?);
+            object.insert("entries".into(), entries.unwrap_or_default());
+            Ok(value)
+        }
+    }
+}
+
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut args = Args::parse();
     // Like upstream get_urls: batch URLs precede positional URLs, all stripped.
@@ -325,7 +358,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
     // Like upstream, printing implies quiet simulation (no --no-simulate here).
     let printing = !print_templates.is_empty();
-    let simulate = args.simulate || printing;
+    // -J, like printing, is quiet and implies simulation.
+    let quiet = printing || args.dump_single_json;
+    let simulate = args.simulate || quiet;
     let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
     let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
     audio_options.keep_video = args.keep_video;
@@ -538,6 +573,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 continue;
             }
         }
+        let single_json = args
+            .dump_single_json
+            .then(|| single_json(&extracted, counts))
+            .transpose()?;
         for info in extracted.into_entries() {
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 if args.list_subs {
@@ -589,7 +628,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     serde_json::to_writer(&mut stdout, &info)?;
                     writeln!(stdout)?;
                 } else if simulate {
-                    if printing {
+                    if quiet {
                         return Ok(());
                     }
                     eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
@@ -887,6 +926,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 eprintln!("ERROR: {url}: {}: {error}", info.id);
                 failed = true;
             }
+        }
+        if let Some(value) = single_json {
+            serde_json::to_writer(&mut stdout, &value)?;
+            writeln!(stdout)?;
         }
     }
     for warning in downloader.cookie_jar().take_warnings() {
