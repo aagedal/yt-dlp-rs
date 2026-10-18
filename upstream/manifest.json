@@ -509,6 +509,34 @@
         "upstream/notes/subtitle-conversion.md"
       ],
       "scope": "Before-media selected sidecar conversion to SRT/VTT/ASS/LRC, aliases/none and same-extension/literal-JSON skips, native bounded pinned TTML/DFXP timing/style conversion and fixed local FFmpeg sidecar conversion; skip-download/lazy metadata modes, no-clobber original/intermediate retention and cancellation; no embedding, general TTML standards, DTD/custom entities, extra encodings, JSON3/server XML conversion or arbitrary postprocessor arguments"
+    },
+    {
+      "name": "subtitle-embedding",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/YoutubeDL.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/embed_subtitles.rs",
+        "src/embed_subtitles/ffmpeg.rs",
+        "src/embed_subtitles/languages.rs",
+        "src/postprocess.rs",
+        "src/lib.rs",
+        "src/main.rs",
+        "tests/subtitle_embedding.rs",
+        "tests/helpers/embed_runtime.rs",
+        "tests/helpers/embed_pipeline.rs",
+        "tests/fixtures/subtitle_embedding/",
+        "tools/compare_subtitle_embedding.py",
+        "tools/test_compare_subtitle_embedding.py",
+        "upstream/notes/subtitle-embedding.md"
+      ],
+      "scope": "Final private media-stage embedding for MP4/MOV/M4A/WebM/MKV/MKA; source eligibility/maps/timed-text and ISO639/name metadata, implied acquisition and explicit manual/global keep retention, skip/lazy paths, bounded local FFmpeg and postpublication sidecar cleanup; no network FFmpeg, arbitrary arguments, extra active subtitle formats or broad acquisition/container guarantees"
     }
   ]
 }

@@ -17,6 +17,7 @@ cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sou
 cargo run --locked -- --list-subs 'https://example.com/video-with-tracks.html'
 cargo run --locked -- --write-subs --sub-langs all --skip-download 'https://example.com/video-with-tracks.html'
 cargo run --locked -- --write-subs --convert-subs srt --ffmpeg-location /path/to/ffmpeg 'https://example.com/video-with-tracks.html'
+cargo run --locked -- --embed-subs --ffmpeg-location /path/to/ffmpeg 'https://example.com/video-with-tracks.html'
 cargo run --locked -- --write-auto-subs --sub-langs en --skip-download 'https://www.youtube.com/watch?v=VIDEO_ID'
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
@@ -119,7 +120,13 @@ Supported today:
   no FFmpeg; other supported conversions use the explicit local executable.
   `none` disables conversion; `-k` retains originals and intermediate SRT.
   [Conversion limits](docs/COMPATIBILITY.md#subtitle-conversion) are documented.
-  Regex languages, embedding and manifest/other-site subtitles remain unsupported.
+  `--embed-subs` embeds selected sidecars after media processing for
+  MP4/MOV/M4A/WebM/Matroska; WebM requires WebVTT. It implies manual subtitle
+  acquisition unless automatic writing is enabled. Explicit `--write-subs` keeps
+  embedded sidecars; embed-only removes eligible sidecars after successful final
+  publication. `-k` also keeps them. [Embedding policies](docs/COMPATIBILITY.md#subtitle-embedding)
+  cover automatic tracks, skipped formats and metadata. Regex languages and
+  manifest/other-site subtitles remain unsupported.
 - `--download-archive FILE` skips recorded extractor/video IDs before selection and
   records only successfully published downloads. Metadata/listing/simulation never
   write the archive. Extraction still makes normal requests for recorded inputs.

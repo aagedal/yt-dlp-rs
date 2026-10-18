@@ -19,6 +19,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--no-write-auto-subs`, `--no-write-automatic-subs` | Disable automatic writing; last automatic write/no-write flag wins |
 | `--no-write-subs`, `--no-write-srt` | Disable subtitle writing; last write/no-write flag wins |
 | `--sub-langs`, `--srt-langs` | Repeated comma-separated literal tags, `all` and `-` exclusions; trimmed tokens, case-insensitive matching; no regex |
+| `--embed-subs`, `--no-embed-subs` | Embed selected sidecars after media processing; implied acquisition and source retention rules below; last flag wins |
 | `--convert-subs`, `--convert-sub`, `--convert-subtitles` | Convert written sidecars to one of srt/vtt/ass/lrc; `none` disables; no implied subtitle writing |
 | `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
 | `--skip-download`, `--no-download` | Skip media while allowing selected sidecars; never record a completed media archive entry |
@@ -29,7 +30,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--add-headers FIELD:VALUE`, `--add-header` | Repeated custom HTTP defaults; case-insensitive last custom value wins |
 | `--user-agent UA`, `--referer URL` | Convenience HTTP defaults override matching custom options; extractor/transport headers can override them |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
-| `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging, audio extraction and video processing; no PATH discovery, directory lookup or installation |
+| `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging, audio/video and subtitle processing; no PATH discovery, directory lookup or installation |
 | `-x`, `--extract-audio`, `--audio-format`, `--audio-quality` | Ordered audio extraction mappings and bounded quality settings; see audio extraction below |
 | `--remux-video`, `--recode-video` | Ordered video target mappings; stream copying or container-default re-encoding; recode wins |
 | `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates; requires an audio/video/subtitle processing option; last flag wins |
@@ -1731,3 +1732,76 @@ source-only JSON3 plan and five invalid options. Native tests separately exercis
 local files/processes and CLI behavior; real FFmpeg tests verify cues/timing and
 representable styles across all four targets. See [source applicability](../upstream/notes/subtitle-conversion.md)
 and [fixture provenance](../tests/fixtures/subtitle_conversion/README.md).
+
+
+## Subtitle embedding
+
+`--embed-subs` enables the last media processor, after audio extraction and video
+remux/recode. `--no-embed-subs` disables it; the last flag wins. The supported
+containers are exactly lowercase `mp4`, `mov`, `m4a`, `webm`, `mkv` and `mka`.
+Other containers or no eligible captions produce a visible skip diagnostic and
+publish the downloaded/processed media without launching embedding tools.
+
+Embedding implies manual subtitle acquisition when automatic writing is disabled,
+even with an explicit `--no-write-subs`. With `--write-auto-subs`, it does not
+imply manual writing; explicit manual writing enables both with existing manual
+precedence. Existing language/format selection applies before fetching. Metadata,
+listing and simulation launch no tools or caption transfers. Skip-download fetches
+and optionally converts selected sidecars but never embeds or removes them.
+
+WebM accepts only VTT inputs and warns once when other caption formats are skipped.
+Literal JSON and missing files are skipped with source warnings. MP4 ASS inputs
+emit the pinned warning about imperfect embedding. Ordinary local SRT, VTT,
+ASS/SSA and LRC are supported; other active inputs (including JSON3 and TTML)
+require conversion first or fail explicitly. Converted sidecar paths/extensions
+feed embedding. Active conversion drops the original caption name, matching
+upstream metadata replacement; same-format/none/JSON skips retain that name.
+
+The plan maps known media streams, discards data, removes existing subtitle
+streams and maps each selected sidecar. MP4/MOV/M4A encode subtitles as
+`mov_text`; WebM and Matroska copy their supported subtitle codecs. Video/audio
+are copied. Language tags use the pinned 188-entry ISO639 first-two-character
+lookup, case-sensitive, then fall back to the original tag. For example, `en-US`
+becomes `eng`. Nonempty names become both `handler_name` and `title` where the
+container represents them. All inputs have fixed local demuxers and file-only
+protocols; output muxers and faststart are explicit. FFprobe is unnecessary.
+
+`--ffmpeg-location PATH` is inspected only for an eligible embedding. The version
+check and embedding share a ten-minute deadline, bounded process pipes and
+cooperative cancellation. Track count is capped at 1000, language at 128 bytes,
+name at 4096 bytes and extension at 1..32 ASCII alphanumerics; metadata controls
+are rejected. Active sidecars must be regular nonsymlink files, at most 16 MiB
+each and 256 MiB total. Private copies isolate FFmpeg from network acquisition.
+Repeated canonical paths can create separate tracks but are cleaned up once.
+
+Eligible embedded sidecars are removed only after successful final media
+publication, unless explicit `--write-subs` or `-k` keeps them. This includes
+preexisting selected sidecars. Upstream's automatic-only quirk is preserved:
+`--write-auto-subs --embed-subs` without manual writing still removes eligible
+automatic sidecars after success, unless `-k` is enabled. JSON, missing and
+WebM-ineligible sidecars are not scheduled for removal. No caption is removed
+on embedding failure, cancellation or failed final publication.
+
+Embedding replaces the current private media stage. It does not create an extra
+unembedded copy with `-k`; earlier audio/video processor inputs still follow
+existing retention rules. No-clobber final publication and archive-after-success
+remain in force. Cleanup checks original caption identity before removing it;
+a changed caption is retained and returns an error after media publication.
+A cleanup failure therefore can leave complete media and sidecars without an
+archive record. Publication and cleanup are not one transaction.
+
+Library callers put `SubtitleEmbedding` and local `SubtitleFile` entries in
+`PostprocessOptions.embed`. `keep_subtitles` preserves eligible sidecars, as do
+the global or contained audio keep flags. `ProcessedDownload.warnings` exposes
+source warnings and skip diagnostics; `kept_files` continues to list retained
+media, rather than sidecars supplied by the caller.
+
+57 actual source plans, six documented source-only cases, 200 language projections
+and a rejected alias are saved. The reference invokes actual option parsing,
+embedding and `run_pp` deletion/keep bookkeeping. Eight native model/runner tests
+and 16 local pipeline tests cover separate execution/publication behavior. Real
+tools verify MP4/MKV/WebM codecs, language/name tags, cue text, copied media and
+replacement of existing subtitle tracks. See [source applicability](../upstream/notes/subtitle-embedding.md)
+and [fixture provenance](../tests/fixtures/subtitle_embedding/README.md). This does
+not establish every FFmpeg codec/container combination, arbitrary postprocessor
+arguments or broader subtitle acquisition.

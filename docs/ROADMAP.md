@@ -36,6 +36,8 @@ tractable for future agents.
 - `src/subtitles.rs`: ordered subtitle metadata, language/format selection and sidecar name planning; `src/output/subtitles.rs` renders inventories.
 - `src/subtitle_convert.rs`: subtitle conversion publication/retention; nested
   `ttml.rs` ports bounded native text/timing/styles and `ffmpeg.rs` converts local sidecars.
+- `src/embed_subtitles.rs`: local subtitle eligibility and language/stream metadata;
+  its bounded FFmpeg runner feeds the final stage of `src/postprocess.rs`.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/audio.rs`, `src/audio/ffmpeg.rs`: pure audio plans and bounded local
@@ -169,7 +171,9 @@ remain outside the current result contract.
    Subtitle conversion to SRT/VTT/ASS/LRC, including native TTML/DFXP preprocessing,
    now follows sidecar acquisition before media downloads, with bounded local
    tools, no-clobber publication and original/intermediate retention.
-   Other-site/manifest subtitles, regex languages and embedding remain open.
+   Subtitle embedding now follows audio/video processing for MP4/MOV/M4A/WebM/
+   Matroska, preserving source container/language policies and sidecar retention.
+   Other-site/manifest subtitles and regex languages remain open.
    Basic download archives are implemented: cached extractor-key/ID membership,
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive

@@ -9,14 +9,15 @@ use std::{
 use yt_dlp_rs::{
     AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult,
     ExtractionOptions, HttpOptions, PlaylistSelection, PostprocessOptions, SubtitleConversion,
-    SubtitleOptions, VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
+    SubtitleEmbedding, SubtitleFile, SubtitleOptions, VideoMode, VideoOptions, YoutubeDl,
+    YoutubeOptions,
     output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
     render_automatic_captions, render_subtitles, subtitle_paths, validate_format_selector,
 };
 
 #[derive(Parser)]
 #[command(
-    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video", "convert_subs"]).multiple(true)),
+    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video", "convert_subs", "embed_subs"]).multiple(true)),
     version,
     about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
 )]
@@ -66,6 +67,12 @@ struct Args {
     /// Ordered subtitle extension preferences separated by / (default best)
     #[arg(long, default_value = "best", value_name = "FORMAT")]
     sub_format: String,
+    /// Embed selected subtitles after audio/video processing (implies manual writing unless auto writing is enabled)
+    #[arg(long, overrides_with = "no_embed_subs")]
+    embed_subs: bool,
+    /// Disable subtitle embedding
+    #[arg(long, overrides_with = "embed_subs")]
+    no_embed_subs: bool,
     /// Convert written subtitles to srt, vtt, ass or lrc; none disables conversion
     #[arg(long, aliases = ["convert-sub", "convert-subtitles"], value_name = "FORMAT", overrides_with = "convert_subs")]
     convert_subs: Option<String>,
@@ -169,6 +176,7 @@ struct Args {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
+    let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
     let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
     audio_options.keep_video = args.keep_video;
     // Source validation applies to both values even when recode takes precedence.
@@ -188,6 +196,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let processors = PostprocessOptions {
         audio: args.extract_audio.then_some(audio_options),
         video: recode.or(remux),
+        embed: None,
         keep_video: args.keep_video,
     };
     let mut subtitle_conversion = args
@@ -284,18 +293,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             } else {
                 result
             };
-            if args.write_subs || args.write_auto_subs {
+            if write_subs || args.write_auto_subs {
                 let select = |info: &mut yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<()> {
                     let selection = subtitle_options.select_sources(
                         &info.subtitles,
                         &info.automatic_captions,
-                        args.write_subs,
+                        write_subs,
                         args.write_auto_subs,
                     )?;
                     for warning in selection.warnings {
                         eprintln!("WARNING: {}: {warning}", info.id);
                     }
-                    info.requested_subtitles = ((args.write_subs && !info.subtitles.is_empty())
+                    info.requested_subtitles = ((write_subs && !info.subtitles.is_empty())
                         || (args.write_auto_subs && !info.automatic_captions.is_empty()))
                     .then_some(selection.requested);
                     Ok(())
@@ -402,6 +411,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                         }
                     }
+                    let mut embedding_files = Vec::new();
                     for (language, subtitle, subtitle_path) in sidecars {
                         match std::fs::symlink_metadata(&subtitle_path) {
                             Ok(_) if std::fs::metadata(&subtitle_path)?.is_file() => {
@@ -433,6 +443,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                             Err(error) => return Err(error.into()),
                         }
+                        let mut embedded_file = SubtitleFile {
+                            path: subtitle_path.clone(),
+                            ext: subtitle.ext.clone(),
+                            language,
+                            name: subtitle.name.clone(),
+                        };
                         if let Some(conversion) = &subtitle_conversion {
                             let converted = downloader.convert_subtitle_with_options(
                                 &subtitle_path,
@@ -443,12 +459,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 eprintln!("WARNING: {warning}");
                             }
                             if converted.converted {
+                                // The source converter replaces the subtitle's
+                                // metadata entry and drops its original name.
+                                embedded_file.name = None;
                                 eprintln!(
                                     "[SubtitlesConvertor] Destination: {}",
                                     converted.path.display()
                                 );
                             }
+                            embedded_file.path = converted.path;
+                            embedded_file.ext = converted.ext;
                         }
+                        embedding_files.push(embedded_file);
                     }
                     if args.skip_download {
                         return Ok(());
@@ -474,32 +496,44 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                         ControlFlow::Continue(())
                     };
-                    let (bytes, published_paths) =
-                        if processors.audio.is_some() || processors.video.is_some() {
-                            let result = downloader.download_processed_with_progress(
-                                &info,
-                                &path,
-                                DownloadOptions {
-                                    retries: args.retries,
-                                },
-                                &processors,
-                                progress,
-                            )?;
-                            eprintln!("[postprocess] Destination: {}", result.path.display());
-                            let mut paths = vec![result.path];
-                            paths.extend(result.kept_files);
-                            (result.bytes, paths)
-                        } else {
-                            let bytes = downloader.download_with_progress(
-                                &info,
-                                &path,
-                                DownloadOptions {
-                                    retries: args.retries,
-                                },
-                                progress,
-                            )?;
-                            (bytes, vec![path.clone()])
-                        };
+                    let mut processors = processors.clone();
+                    if args.embed_subs {
+                        processors.embed = Some(SubtitleEmbedding {
+                            subtitles: embedding_files,
+                            keep_subtitles: args.write_subs || args.keep_video,
+                        });
+                    }
+                    let (bytes, published_paths) = if processors.audio.is_some()
+                        || processors.video.is_some()
+                        || processors.embed.is_some()
+                    {
+                        let result = downloader.download_processed_with_progress(
+                            &info,
+                            &path,
+                            DownloadOptions {
+                                retries: args.retries,
+                            },
+                            &processors,
+                            progress,
+                        )?;
+                        for warning in result.warnings {
+                            eprintln!("WARNING: {warning}");
+                        }
+                        eprintln!("[postprocess] Destination: {}", result.path.display());
+                        let mut paths = vec![result.path];
+                        paths.extend(result.kept_files);
+                        (result.bytes, paths)
+                    } else {
+                        let bytes = downloader.download_with_progress(
+                            &info,
+                            &path,
+                            DownloadOptions {
+                                retries: args.retries,
+                            },
+                            progress,
+                        )?;
+                        (bytes, vec![path.clone()])
+                    };
                     let mut published_paths = published_paths;
                     for (_, subtitle, source) in subtitle_paths(&info, &path)? {
                         published_paths.push(source.clone());
@@ -612,6 +646,60 @@ fn main() -> std::process::ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn saved_embedding_flags_preserve_implied_writing_and_retention_precedence() {
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../tests/fixtures/subtitle_embedding/cases.json"
+        ))
+        .unwrap();
+        for case in fixture["cases"].as_array().unwrap() {
+            let flags = case["args"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|value| value.as_str().unwrap());
+            let args = Args::try_parse_from(
+                std::iter::once("yt-dlp-rs")
+                    .chain(flags)
+                    .chain(std::iter::once("https://example.test/video.mp4")),
+            )
+            .unwrap();
+            let expected = &case["expected"];
+            assert_eq!(
+                args.embed_subs,
+                expected["enabled"].as_bool().unwrap(),
+                "{}",
+                case["name"]
+            );
+            assert_eq!(
+                args.write_subs || (args.embed_subs && !args.write_auto_subs),
+                expected["write_subtitles"].as_bool().unwrap(),
+                "{}",
+                case["name"]
+            );
+            assert_eq!(
+                args.write_auto_subs,
+                expected["write_automatic"].as_bool().unwrap(),
+                "{}",
+                case["name"]
+            );
+            assert_eq!(
+                args.keep_video,
+                expected["keep_video"].as_bool().unwrap(),
+                "{}",
+                case["name"]
+            );
+            if args.embed_subs && case.get("already_have_subtitle").is_none() {
+                assert_eq!(
+                    args.write_subs,
+                    expected["already_have_subtitle"].as_bool().unwrap(),
+                    "{}",
+                    case["name"]
+                );
+            }
+        }
+    }
 
     #[test]
     fn saved_subtitle_conversion_options_match_pinned_targets_and_alias_precedence() {

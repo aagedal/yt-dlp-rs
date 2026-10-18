@@ -21,6 +21,7 @@ pub(crate) fn download(
         &PostprocessOptions {
             audio: Some(audio.clone()),
             video: None,
+            embed: None,
             keep_video: audio.keep_video,
         },
         callback,

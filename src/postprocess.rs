@@ -1,21 +1,23 @@
 //! Local postprocessing orchestration and no-clobber publication.
 use crate::{
-    AudioOptions, DownloadOptions, DownloadPhase, DownloadProgress, Error, Result, VideoInfo,
-    VideoOptions, YoutubeDl, audio_original_path, audio_output_path,
+    AudioOptions, DownloadOptions, DownloadPhase, DownloadProgress, Error, Result,
+    SubtitleEmbedding, VideoInfo, VideoOptions, YoutubeDl, audio_original_path, audio_output_path,
 };
 use std::{
     fs,
+    io::Read,
     ops::ControlFlow,
     path::{Path, PathBuf},
 };
 
-/// Local processors run in upstream order: extract audio, then remux/recode.
+/// Local processors run in upstream order: audio, remux/recode, then subtitles.
 /// Source and intermediate retention is enabled by either keep flag.
 #[derive(Debug, Clone, Default)]
 pub struct PostprocessOptions {
     pub audio: Option<AudioOptions>,
     pub video: Option<VideoOptions>,
     pub keep_video: bool,
+    pub embed: Option<SubtitleEmbedding>,
 }
 
 /// Published final media and any sources/intermediates retained by keep-video.
@@ -27,6 +29,7 @@ pub struct ProcessedDownload {
     pub kept_video: Option<PathBuf>,
     /// All retained files, including kept_video when present.
     pub kept_files: Vec<PathBuf>,
+    pub warnings: Vec<String>,
 }
 
 struct Stage {
@@ -131,13 +134,14 @@ pub(crate) fn download(
         .map(|video| video.plan(&info.ext))
         .transpose()?
         .is_some_and(|plan| !plan.skip);
-    if !needs_audio && !needs_video {
+    if !needs_audio && !needs_video && processors.embed.is_none() {
         let bytes = downloader.download_with_progress(info, destination, options, callback)?;
         return Ok(ProcessedDownload {
             path: destination.into(),
             bytes,
             kept_video: None,
             kept_files: Vec::new(),
+            warnings: Vec::new(),
         });
     }
     let keep = processors.keep_video
@@ -172,6 +176,8 @@ pub(crate) fn download(
         bytes,
     }];
     let mut publishing = false;
+    let mut delete_subtitles = Vec::new();
+    let mut warnings = Vec::new();
     let process = (|| -> Result<ProcessedDownload> {
         if needs_audio {
             let current = stages.last().unwrap();
@@ -261,6 +267,77 @@ pub(crate) fn download(
                 });
             }
         }
+        if let Some(embedding) = &processors.embed {
+            let current = stages.last_mut().unwrap();
+            let mut plan = crate::embed_subtitles::plan(&current.ext, &embedding.subtitles)?;
+            warnings.append(&mut plan.warnings);
+            warnings.append(&mut plan.messages);
+            if !plan.skip {
+                if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
+                    return Err(Error::DownloadCancelled);
+                }
+                let mut total = 0u64;
+                let mut seen = std::collections::HashSet::new();
+                for (index, file) in plan.files.iter_mut().enumerate() {
+                    if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break()
+                    {
+                        return Err(Error::DownloadCancelled);
+                    }
+                    let metadata = subtitle_metadata(&file.path)?;
+                    if metadata.len() > 16 * 1024 * 1024 {
+                        return Err(Error::Postprocess(
+                            "subtitle embedding input exceeds 16 MiB".into(),
+                        ));
+                    }
+                    let canonical = file.path.canonicalize()?;
+                    let mut bytes = Vec::new();
+                    fs::File::open(&file.path)?
+                        .take(16 * 1024 * 1024 + 1)
+                        .read_to_end(&mut bytes)?;
+                    total += bytes.len() as u64;
+                    if bytes.len() > 16 * 1024 * 1024 || total > 256 * 1024 * 1024 {
+                        return Err(Error::Postprocess(
+                            "subtitle embedding inputs exceed byte budget".into(),
+                        ));
+                    }
+                    if !same_subtitle(&metadata, &subtitle_metadata(&file.path)?) {
+                        return Err(Error::Postprocess(
+                            "subtitle changed during embedding".into(),
+                        ));
+                    }
+                    if !embedding.keep_subtitles && !keep && seen.insert(canonical) {
+                        delete_subtitles.push((file.path.clone(), metadata));
+                    }
+                    let private = workspace
+                        .path()
+                        .join(format!("subtitle-{index}.{}", file.ext));
+                    fs::write(&private, bytes)?;
+                    file.path = private;
+                }
+                let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
+                    Error::Postprocess(
+                        "subtitle embedding requires an explicit --ffmpeg-location PATH".into(),
+                    )
+                })?;
+                let output = workspace.path().join(format!("embedded.{}", current.ext));
+                let mut observe =
+                    || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
+                crate::embed_subtitles::ffmpeg::embed(
+                    executable,
+                    &current.disk,
+                    &current.container,
+                    &output,
+                    &plan,
+                    &mut observe,
+                )?;
+                // Upstream replaces the current media and returns no media deletion.
+                // Keep-video therefore retains earlier processors' inputs, not a
+                // new unembedded copy of this stage.
+                current.bytes = fs::metadata(&output)?.len();
+                current.disk = output;
+                current.container = current.ext.clone();
+            }
+        }
         publishing = true;
         let last = stages.last().unwrap();
         let retained = if keep {
@@ -284,6 +361,7 @@ pub(crate) fn download(
             bytes: last.bytes,
             kept_video: retained.first().cloned(),
             kept_files: retained,
+            warnings,
         })
     })();
     match process {
@@ -317,6 +395,51 @@ pub(crate) fn download(
             }
             Err(error)
         }
-        result => result,
+        Ok(result) => {
+            let mut failures = Vec::new();
+            for (path, metadata) in delete_subtitles {
+                let remove = (|| -> Result<()> {
+                    if !same_subtitle(&metadata, &subtitle_metadata(&path)?) {
+                        return Err(Error::Postprocess(
+                            "embedded subtitle changed; source retained".into(),
+                        ));
+                    }
+                    fs::remove_file(path)?;
+                    Ok(())
+                })();
+                if let Err(error) = remove {
+                    failures.push(error.to_string());
+                }
+            }
+            if !failures.is_empty() {
+                return Err(Error::Postprocess(format!(
+                    "media published, but embedded subtitle cleanup failed: {}",
+                    failures.join("; ")
+                )));
+            }
+            Ok(result)
+        }
+    }
+}
+
+fn subtitle_metadata(path: &Path) -> Result<fs::Metadata> {
+    let metadata = fs::symlink_metadata(path)?;
+    if !metadata.is_file() || metadata.file_type().is_symlink() {
+        return Err(Error::Postprocess(
+            "subtitle embedding requires regular local sidecars".into(),
+        ));
+    }
+    Ok(metadata)
+}
+fn same_subtitle(before: &fs::Metadata, after: &fs::Metadata) -> bool {
+    let same = before.len() == after.len() && before.modified().ok() == after.modified().ok();
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+        same && before.dev() == after.dev() && before.ino() == after.ino()
+    }
+    #[cfg(not(unix))]
+    {
+        same
     }
 }
