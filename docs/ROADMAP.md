@@ -46,7 +46,7 @@ tractable for future agents.
 - `src/video.rs`, `src/video/ffmpeg.rs`: video mappings and bounded local remux/recode;
   `src/postprocess.rs` shares ordered processing, retention and publication.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
-- `src/output.rs`: template rendering and filename-component sanitization; `src/output/formats.rs` renders format inventories and `src/output/template.rs` handles bounded typed filename templates.
+- `src/output.rs`: template rendering and filename-component sanitization; `src/output/formats.rs` renders format inventories, `src/output/template.rs` handles bounded typed filename/print templates and `src/output/print.rs` parses `--print` values.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
 - `upstream/manifest.json`: upstream revision and component coverage ledger.
 - `tools/upstream_report.py`: machine-readable input for an update agent.
@@ -85,7 +85,9 @@ remain outside the current result contract.
    extraction lazy. Typed filename templates support represented root fields,
    string/integer/fixed-point conversions, width/precision/flags, alternatives and
    missing-value defaults; full template expressions, conversions and platform
-   filename parity remain open.
+   filename parity remain open. `--print` video-stage field lists/templates and
+   the title/ID/URL/filename `--get-*` aliases print unsanitized values with
+   quiet simulation; other print stages and `--print-to-file` remain open.
    Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.

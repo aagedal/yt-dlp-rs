@@ -11,6 +11,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-j`, `--dump-json` | One selected `VideoInfo` JSON object per video, including each HTML5 playlist entry; no downloads; with `-F`, a table precedes JSON |
 | `-F`, `--list-formats` | List eligible alternatives without selection or downloads; combined `-j`/`-s` retain normal selection; native table styling |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
+| `-O`, `--print [video:]TEMPLATE` | Print a field list or unsanitized output template per selected video; implies quiet simulation; repeatable; see [print templates](#print-templates) |
+| `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-filename` | Hidden upstream aliases printing title, ID, selected URLs and prepared filename after `--print` lines; imply quiet simulation |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
 | `-o`, `--output` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; no overwrite |
 | `--list-subs` | Native language/format inventory; list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
@@ -42,7 +44,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection, record only after successful download/merge publication; no writes in metadata/listing/simulation |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
-| All other flags | Rejected; `--print` and general option parity are not implemented |
+| All other flags | Rejected; `--print-to-file`, `--no-simulate` and general option parity are not implemented |
 
 Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
@@ -1191,10 +1193,10 @@ limits can still reject a rendered path. Empty final paths and stdout `-` remain
 unsupported. Existing destination files remain untouched, failed renders never
 record archives, and later entries/inputs still continue.
 
-Rendering occurs only on actual download paths after extraction and selection.
-Metadata, simulation and listing leave output templates inert, including invalid
-ones; this existing native timing is not general upstream option-normalization
-parity. Library `output::render_template` uses default options;
+Rendering occurs only on actual download paths after extraction and selection,
+or for `--print` lines that refer to `filename`. Other metadata, simulation and
+listing paths leave output templates inert, including invalid ones; this
+existing native timing is not general upstream option-normalization parity. Library `output::render_template` uses default options;
 `render_template_with_options` accepts `TemplateOptions { na_placeholder }`.
 Object traversal, arithmetic/dates, replacements, arbitrary fields, scientific/
 general/hex/octal/repr/custom conversions, autonumber state, environment expansion
@@ -1206,6 +1208,48 @@ unsafe-character output is not normalized to hide policy differences. Six
 source-only cases record unsupported behavior. See
 [the source slice](../upstream/notes/typed-output-templates.md).
 
+
+## Print templates
+
+`-O`/`--print [WHEN:]TEMPLATE` follows upstream's `video` stage for each
+selected video, including every selected HTML5 playlist entry. A WHEN prefix is
+recognized case-insensitively only when it names an upstream stage before the
+first `:`; `video` is accepted and every other stage (`playlist`, `before_dl`,
+`after_move`, ...) is rejected before any request instead of printing at the
+wrong time. Without a recognized prefix the whole value is the template.
+
+A value fully matching upstream's shorthand pattern `([\w.:,]|-\d)+` is a
+field list: each comma-separated field prints `%(field)s` on its own line, and a
+trailing `=` prints `field = %(field)#j`. Dictionary shorthand (`{id,title}`) is
+rejected. Other values are output templates using the typed template engine
+above, with these print-mode differences from filenames: values and defaults
+are not sanitized, empty strings remain available (so they do not advance
+alternates), empty output and `-` are valid lines, and a `j` conversion prints
+Python `json.dumps` text (`ensure_ascii` unless the `+` flag is given; `#`
+indentation is inert for scalar fields) formatted with the remaining `%s` flags.
+`filename` (the rendered `-o` path) and `urls` (the selected URL, or each
+`requested_formats` URL on its own line) are added as upstream `_forceprint`
+does. Unknown fields, traversal (`id.0`), arithmetic, `q`/`l`/other conversions
+and `formats_table`-style fields are rejected before extraction, whereas
+upstream prints `NA` or evaluates them.
+
+Hidden `-e`/`--get-title`, `--get-id`, `-g`/`--get-url` and `--get-filename`
+print after all `--print` lines in upstream order (title, ID, URLs, filename),
+regardless of argument order. `--get-thumbnail`, `--get-description`,
+`--get-duration` and `--get-format` are rejected because those fields are not
+represented. With `-j`, printed lines precede each JSON object.
+
+Printing and `--get-*` imply quiet simulation: no media, subtitle, info JSON or
+archive writes, and no `[extractor] id: title` stderr line. `--no-simulate`
+is not implemented. Listing options still print their tables and then keep
+normal selection, as with `-j`/`-s`. All lines for a video are rendered before
+any is written, so a render failure prints nothing for that video, reports an
+error and continues with later inputs. A failed `-o` render fails only videos
+whose print lines use `filename`. `--print-to-file` is not implemented.
+
+A 19-case fixture compares exact printed lines with actual pinned upstream
+`parseOpts` and `__forced_printings`, plus five source-only rejection cases.
+See [the source slice](../upstream/notes/print-templates.md).
 
 ## HTML5 subtitles and sidecars
 
