@@ -13,6 +13,19 @@ pub(super) enum Source<'a> {
         n_entries: usize,
         last_playlist_index: usize,
     },
+    /// Unsanitized `--print` rendering of a processed video, with upstream's
+    /// prepared `filename` and newline-joined selected `urls`.
+    Print {
+        info: &'a VideoInfo,
+        filename: std::result::Result<&'a str, &'a Error>,
+        urls: &'a str,
+    },
+}
+
+impl Source<'_> {
+    fn print(self) -> bool {
+        matches!(self, Source::Print { .. })
+    }
 }
 
 const MAX_SPEC: usize = 16 * 1024;
@@ -65,6 +78,19 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
     use Value::*;
     let info = match source {
         Source::Video(info) => info,
+        Source::Print {
+            info,
+            filename,
+            urls,
+        } => match name {
+            "filename" => {
+                return filename
+                    .map(|filename| Some(Text(filename)))
+                    .map_err(|error| invalid(format!("output filename failed: {error}")));
+            }
+            "urls" => return Ok(Some(Text(urls))),
+            _ => info,
+        },
         Source::Playlist {
             info,
             playlist_count,
@@ -152,7 +178,7 @@ fn format_spec(mut input: &str) -> Result<(Format, &str)> {
     let Some(conversion) = input.chars().next() else {
         return Err(invalid("missing template conversion"));
     };
-    if !matches!(conversion, 's' | 'd' | 'i' | 'u' | 'f' | 'F') {
+    if !matches!(conversion, 's' | 'd' | 'i' | 'u' | 'f' | 'F' | 'j') {
         return Err(invalid(format!("unsupported conversion {conversion:?}")));
     }
     format.conversion = conversion;
@@ -256,6 +282,10 @@ fn substitution(
 ) -> Result<(String, usize)> {
     let (mut format, remaining) = format_spec(spec)?;
     let consumed = spec.len() - remaining.len();
+    let print = info.print();
+    if format.conversion == 'j' && !print {
+        return Err(invalid("JSON conversion is only supported for printing"));
+    }
     let (names, fallback) = key
         .split_once('|')
         .map_or((key, None), |(a, b)| (a, Some(b)));
@@ -266,31 +296,39 @@ fn substitution(
         let value = field(name, info)?;
         if chosen.is_none() {
             last_field = name;
-            chosen = value.filter(|value| !matches!(value, Value::Text("")));
+            // Filename sanitization turns empty strings into missing values;
+            // printing keeps them, so they do not select an alternate.
+            chosen = value.filter(|value| print || !matches!(value, Value::Text("")));
         }
     }
     let default = || -> Result<String> {
         let value = fallback.unwrap_or(&options.na_placeholder);
         if value.is_empty() {
             Ok(String::new())
+        } else if print {
+            bounded(value).map(str::to_owned)
         } else {
             sanitize(value)
         }
     };
     let Some(value) = chosen else {
-        return Ok((safe_substitution(default()?), consumed));
+        return Ok((safe_substitution(default()?, print), consumed));
     };
     if &spec[..consumed] == "s" {
         let size = match last_field {
             "playlist_index" => Some(match info {
-                Source::Video(info) => info.last_playlist_index.unwrap_or(0),
+                Source::Video(info) | Source::Print { info, .. } => {
+                    info.last_playlist_index.unwrap_or(0)
+                }
                 Source::Playlist {
                     last_playlist_index,
                     ..
                 } => last_playlist_index,
             }),
             "playlist_autonumber" => match info {
-                Source::Video(info) => Some(info.n_entries.unwrap_or(0)),
+                Source::Video(info) | Source::Print { info, .. } => {
+                    Some(info.n_entries.unwrap_or(0))
+                }
                 // Unavailable for playlists, so the default path above applies.
                 Source::Playlist { .. } => None,
             },
@@ -302,8 +340,17 @@ fn substitution(
             format.conversion = 'd';
         }
     }
-    let result = if format.conversion == 's' {
+    let result = if format.conversion == 'j' {
         let value = match value {
+            Value::Text(s) => python_json_string(bounded(s)?, !format.plus),
+            Value::Integer(n) => n.to_string(),
+            Value::Boolean(b) => b.to_string(),
+        };
+        // Upstream formats the JSON text with the remaining `%s` flags.
+        text(&value, &format)
+    } else if format.conversion == 's' {
+        let value = match value {
+            Value::Text(s) if print => bounded(s)?.to_owned(),
             Value::Text(s) => sanitize(s)?,
             Value::Integer(n) => n.to_string(),
             Value::Boolean(b) => if b { "True" } else { "False" }.into(),
@@ -320,24 +367,54 @@ fn substitution(
             None => default()?,
         }
     };
-    Ok((safe_substitution(result), consumed))
+    Ok((safe_substitution(result, print), consumed))
 }
 
-fn safe_substitution(value: String) -> String {
+fn safe_substitution(value: String, print: bool) -> String {
     // Precision can expose a dot/space-only component that the initial sanitizer
     // had removed. Preserve normal padding, but do not substitute path aliases.
-    if !value.is_empty() && value.trim_matches([' ', '.']).is_empty() {
+    if !print && !value.is_empty() && value.trim_matches([' ', '.']).is_empty() {
         "video".into()
     } else {
         value
     }
 }
 
-fn sanitize(value: &str) -> Result<String> {
+fn bounded(value: &str) -> Result<&str> {
     if value.len() > MAX_OUTPUT {
         return Err(invalid("template metadata/default exceeds 64 KiB"));
     }
-    Ok(super::safe_component(value))
+    Ok(value)
+}
+
+fn sanitize(value: &str) -> Result<String> {
+    Ok(super::safe_component(bounded(value)?))
+}
+
+/// Python `json.dumps` for a string, with or without `ensure_ascii`.
+fn python_json_string(value: &str, ensure_ascii: bool) -> String {
+    let mut output = String::with_capacity(value.len() + 2);
+    output.push('"');
+    for c in value.chars() {
+        match c {
+            '"' => output.push_str("\\\""),
+            '\\' => output.push_str("\\\\"),
+            '\n' => output.push_str("\\n"),
+            '\r' => output.push_str("\\r"),
+            '\t' => output.push_str("\\t"),
+            '\u{8}' => output.push_str("\\b"),
+            '\u{c}' => output.push_str("\\f"),
+            c if c < ' ' || (ensure_ascii && c > '~') => {
+                let mut units = [0; 2];
+                for unit in c.encode_utf16(&mut units) {
+                    output.push_str(&format!("\\u{unit:04x}"));
+                }
+            }
+            c => output.push(c),
+        }
+    }
+    output.push('"');
+    output
 }
 
 fn append(output: &mut String, value: &str) -> Result<()> {
@@ -353,6 +430,20 @@ pub(super) fn render(
     info: Source<'_>,
     options: &super::TemplateOptions,
 ) -> Result<PathBuf> {
+    let output = expand(template, info, options)?;
+    if output.is_empty() || output == "-" {
+        return Err(invalid("empty paths and stdout output are unsupported"));
+    }
+    Ok(output.into())
+}
+
+/// Expand a template to text: unsanitized for `Source::Print`, otherwise
+/// with filename-component sanitization.
+pub(super) fn expand(
+    template: &str,
+    info: Source<'_>,
+    options: &super::TemplateOptions,
+) -> Result<String> {
     if template.len() > MAX_SPEC {
         return Err(invalid("output template exceeds 16 KiB"));
     }
@@ -379,10 +470,7 @@ pub(super) fn render(
         rest = &spec[consumed..];
     }
     append(&mut output, rest)?;
-    if output.is_empty() || output == "-" {
-        return Err(invalid("empty paths and stdout output are unsupported"));
-    }
-    Ok(output.into())
+    Ok(output)
 }
 
 #[cfg(test)]

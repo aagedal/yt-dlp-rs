@@ -12,8 +12,8 @@ use yt_dlp_rs::{
     PostprocessOptions, SubtitleConversion, SubtitleEmbedding, SubtitleFile, SubtitleOptions,
     VideoMode, VideoOptions, YoutubeDl, YoutubeOptions, info_json_path,
     output::{
-        DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_playlist_template_with_options,
-        render_template_with_options,
+        DEFAULT_TEMPLATE, PrintTemplate, TemplateOptions, render_formats,
+        render_playlist_template_with_options, render_template_with_options,
     },
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
     validate_format_selector, video_info_json, write_info_json,
@@ -34,6 +34,22 @@ struct Args {
     /// Extract metadata without writing media
     #[arg(short = 's', long)]
     simulate: bool,
+    /// Print a video field list or output template per video, optionally prefixed with video: (implies simulation; repeatable)
+    #[arg(
+        short = 'O',
+        long = "print",
+        value_name = "[WHEN:]TEMPLATE",
+        allow_hyphen_values = true
+    )]
+    print: Vec<String>,
+    #[arg(short = 'g', long, hide = true)]
+    get_url: bool,
+    #[arg(short = 'e', long, hide = true)]
+    get_title: bool,
+    #[arg(long, hide = true)]
+    get_id: bool,
+    #[arg(long, hide = true)]
+    get_filename: bool,
     /// List available formats (selection still applies with -j or -s; no downloads)
     #[arg(short = 'F', long = "list-formats")]
     list_formats: bool,
@@ -186,6 +202,20 @@ struct Args {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
+    let mut print_templates = args
+        .print
+        .iter()
+        .map(|spec| PrintTemplate::parse(spec))
+        .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
+    print_templates.extend(PrintTemplate::forced_fields(
+        args.get_title,
+        args.get_id,
+        args.get_url,
+        args.get_filename,
+    ));
+    // Like upstream, printing implies quiet simulation (no --no-simulate here).
+    let printing = !print_templates.is_empty();
+    let simulate = args.simulate || printing;
     let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
     let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
     audio_options.keep_video = args.keep_video;
@@ -285,11 +315,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
     };
-    let list_only = (args.list_formats || args.list_subs) && !args.dump_json && !args.simulate;
+    let list_only = (args.list_formats || args.list_subs) && !args.dump_json && !simulate;
     // Like upstream, simulation, JSON printing and listing never write info JSON.
     let writes_info_json = args.write_info_json
         && !args.dump_json
-        && !args.simulate
+        && !simulate
         && !args.list_formats
         && !args.list_subs;
     let mut failed = false;
@@ -385,13 +415,31 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 if args.list_formats {
                     write!(stdout, "{}", render_formats(&info))?;
                 }
-                if (args.list_formats || args.list_subs) && !args.dump_json {
+                if (args.list_formats || args.list_subs) && !args.dump_json && !printing {
                     return Ok(());
+                }
+                if printing {
+                    let filename =
+                        render_template_with_options(&args.output, &info, &template_options)
+                            .map(|path| path.to_string_lossy().into_owned());
+                    // Render every line first so a failure prints nothing partial.
+                    let lines = print_templates
+                        .iter()
+                        .map(|template| {
+                            template.render(&info, filename.as_deref(), &template_options)
+                        })
+                        .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
+                    for line in lines {
+                        writeln!(stdout, "{line}")?;
+                    }
                 }
                 if args.dump_json {
                     serde_json::to_writer(&mut stdout, &info)?;
                     writeln!(stdout)?;
-                } else if args.simulate {
+                } else if simulate {
+                    if printing {
+                        return Ok(());
+                    }
                     eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
                 } else {
                     if args.skip_download
