@@ -2,6 +2,7 @@
 pub(crate) mod ffmpeg;
 mod languages;
 use crate::{Error, Result};
+pub(crate) use languages::short_to_long;
 use std::path::PathBuf;
 
 #[derive(Debug, Clone)]

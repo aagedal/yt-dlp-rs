@@ -40,7 +40,7 @@ macro_rules! warning {
 
 #[derive(Parser)]
 #[command(
-    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video", "convert_subs", "embed_subs"]).multiple(true)),
+    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video", "convert_subs", "embed_subs", "embed_metadata"]).multiple(true)),
     version,
     about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
 )]
@@ -147,6 +147,12 @@ struct Args {
     /// Ordered subtitle extension preferences separated by / (default best)
     #[arg(long, default_value = "best", value_name = "FORMAT")]
     sub_format: String,
+    /// Embed metadata (title, date, description, URL, artist, genre, languages) with ffmpeg
+    #[arg(long, alias = "add-metadata", overrides_with_all = ["embed_metadata", "no_embed_metadata"])]
+    embed_metadata: bool,
+    /// Do not embed metadata (default)
+    #[arg(long, alias = "no-add-metadata", overrides_with_all = ["embed_metadata", "no_embed_metadata"])]
+    no_embed_metadata: bool,
     /// Embed selected subtitles after audio/video processing (implies manual writing unless auto writing is enabled)
     #[arg(long, overrides_with = "no_embed_subs")]
     embed_subs: bool,
@@ -730,6 +736,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         warning!("WARNING: --remux-video is ignored since --recode-video was given");
     }
     let processors = PostprocessOptions {
+        metadata: args.embed_metadata,
         audio: args.extract_audio.then_some(audio_options),
         video: recode.or(remux),
         embed: None,
@@ -844,6 +851,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     };
     // Like upstream, simulation never writes info JSON.
     let writes_info_json = args.write_info_json && !simulate;
+    if args.embed_metadata && writes_info_json {
+        // Upstream also attaches written info JSON to mkv/mka files.
+        warning!("WARNING: info JSON is not attached to mkv/mka files when embedding metadata");
+    }
     let writes_description = args.write_description && !simulate;
     let writes_thumbnails = thumbnail_mode != 0 && !simulate;
     let playlist_files = !args.no_write_playlist_metafiles;
@@ -1098,8 +1109,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             "WARNING: --paths is ignored since an absolute path is given in output template"
                         );
                     }
-                    let processing =
-                        processors.audio.is_some() || processors.video.is_some() || args.embed_subs;
+                    let processing = processors.audio.is_some()
+                        || processors.video.is_some()
+                        || args.embed_subs
+                        || args.embed_metadata;
                     let existing_media = !args.skip_download && path_exists(&path)?;
                     if existing_media && overwrites != Some(true) && processing {
                         // Upstream would rerun postprocessors on the existing file.
@@ -1337,6 +1350,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     let (bytes, published_paths) = if processors.audio.is_some()
                         || processors.video.is_some()
                         || processors.embed.is_some()
+                        || processors.metadata
                     {
                         let result = downloader.download_processed_with_progress(
                             &info,

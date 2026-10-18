@@ -18,6 +18,8 @@ pub struct PostprocessOptions {
     pub video: Option<VideoOptions>,
     pub keep_video: bool,
     pub embed: Option<SubtitleEmbedding>,
+    /// `--embed-metadata`: upstream `FFmpegMetadataPP` after subtitle embedding.
+    pub metadata: bool,
 }
 
 /// Published final media and any sources/intermediates retained by keep-video.
@@ -134,7 +136,7 @@ pub(crate) fn download(
         .map(|video| video.plan(&info.ext))
         .transpose()?
         .is_some_and(|plan| !plan.skip);
-    if !needs_audio && !needs_video && processors.embed.is_none() {
+    if !needs_audio && !needs_video && processors.embed.is_none() && !processors.metadata {
         let bytes = downloader.download_with_progress(info, destination, options, callback)?;
         return Ok(ProcessedDownload {
             path: destination.into(),
@@ -337,6 +339,37 @@ pub(crate) fn download(
                 current.disk = output;
                 current.container = current.ext.clone();
             }
+        }
+        if processors.metadata {
+            let current = stages.last_mut().unwrap();
+            if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
+                return Err(Error::DownloadCancelled);
+            }
+            let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
+                Error::Postprocess(
+                    "metadata embedding requires an explicit --ffmpeg-location PATH".into(),
+                )
+            })?;
+            let plan = crate::video::VideoPlan {
+                extension: current.ext.clone(),
+                args: crate::embed_metadata::args(info, &current.ext),
+                muxer: crate::embed_metadata::muxer(&current.ext.to_lowercase()).into(),
+                skip: false,
+            };
+            let output = workspace.path().join(format!("metadata.{}", current.ext));
+            let mut observe = || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
+            crate::video::ffmpeg::convert(
+                executable,
+                &current.disk,
+                &current.container,
+                &output,
+                &plan,
+                &mut observe,
+            )?;
+            // Like upstream, metadata replaces the current file in place.
+            current.bytes = fs::metadata(&output)?.len();
+            current.disk = output;
+            current.container = current.ext.to_lowercase();
         }
         publishing = true;
         let last = stages.last().unwrap();

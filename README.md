@@ -140,6 +140,8 @@ Supported today:
   `--max-sleep-interval` and `--sleep-subtitles` pause before downloads.
 - `--max-downloads NUMBER` (exit 101) and `--min-filesize`/`--max-filesize SIZE`
   for whole-file HTTP media follow upstream.
+- `--embed-metadata` writes title/date/description/URL/artist/genre/language tags
+  with explicit FFmpeg (no chapters or info JSON attachment).
 - `--list-thumbnails`, `--write-thumbnail` and `--write-all-thumbnails` use YouTube
   thumbnails and HTML5 `poster` images (no conversion or embedding).
 - `--write-description` writes `.description` files; `--no-write-playlist-metafiles`

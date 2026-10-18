@@ -57,6 +57,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging, audio/video and subtitle processing; no PATH discovery, directory lookup or installation |
 | `-x`, `--extract-audio`, `--audio-format`, `--audio-quality` | Ordered audio extraction mappings and bounded quality settings; see audio extraction below |
 | `--remux-video`, `--recode-video` | Ordered video target mappings; stream copying or container-default re-encoding; recode wins |
+| `--embed-metadata`, `--add-metadata`, `--no-embed-metadata`, `--no-add-metadata` | Final FFmpeg stage after subtitle embedding: upstream `FFmpegMetadataPP` stream-copy options, `-write_id3v1 1`, common tags from represented fields with upstream key precedence (title, date, description/synopsis, purl/comment, artist, genre, …) and per-stream `language`; requires `--ffmpeg-location`; no chapters and no info JSON attachment (warned with `--write-info-json`) |
 | `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates; requires an audio/video/subtitle processing option; last flag wins |
 | `--ffprobe-location PATH` | Explicit audio probe executable; otherwise inferred beside explicit FFmpeg |
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |

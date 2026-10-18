@@ -1,5 +1,5 @@
 //! Pinned ISO639Utils.short2long table; first two characters, case sensitive.
-pub(super) fn short_to_long(code: &str) -> Option<&'static str> {
+pub(crate) fn short_to_long(code: &str) -> Option<&'static str> {
     let prefix: String = code.chars().take(2).collect();
     match prefix.as_str() {
         "aa" => Some("aar"),

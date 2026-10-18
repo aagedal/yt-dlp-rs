@@ -6,6 +6,7 @@ mod cookies;
 mod crypto;
 mod dash;
 mod download;
+mod embed_metadata;
 mod embed_subtitles;
 mod error;
 pub mod extractor;

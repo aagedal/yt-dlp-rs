@@ -188,6 +188,7 @@ fn clean(path: &Path) {
 
 fn options(format: &str, mode: VideoMode, keep: bool) -> PostprocessOptions {
     PostprocessOptions {
+        metadata: false,
         audio: None,
         video: Some(VideoOptions::new(format, mode).unwrap()),
         keep_video: keep,
@@ -779,4 +780,41 @@ fn failed_original_retention_still_preserves_completed_audio_after_later_stage_f
     assert!(!directory.path().join("movie.alac").exists());
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 2);
     clean(directory.path());
+}
+
+#[test]
+fn embed_metadata_rewrites_the_final_file_with_upstream_metadata_arguments() {
+    let server = Server::new();
+    let tools = Tools::new("aac", false);
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("source.mp4");
+    let output = tools.cli(
+        &["--embed-metadata", "-o", "out.mp4", &url],
+        directory.path(),
+    );
+    success(&output);
+    assert_eq!(
+        std::fs::read(directory.path().join("out.mp4")).unwrap(),
+        b"converted video"
+    );
+    let log = tools.log(&tools.ffmpeg);
+    assert!(
+        log.contains(&format!(
+            "-map\n0\n-dn\n-ignore_unknown\n-c\ncopy\n-write_id3v1\n1\n-metadata\ntitle=source\n-metadata\npurl={url}\n-metadata\ncomment={url}\n-movflags\n+faststart\n-f\nmp4"
+        )),
+        "{log}"
+    );
+    clean(directory.path());
+    // --no-add-metadata (last flag) skips the stage and needs no tools.
+    let plain = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .current_dir(plain.path())
+        .args(["--add-metadata", "--no-add-metadata", "-o", "out.mp4", &url])
+        .output()
+        .unwrap();
+    success(&output);
+    assert_eq!(
+        std::fs::read(plain.path().join("out.mp4")).unwrap(),
+        b"source video"
+    );
 }
