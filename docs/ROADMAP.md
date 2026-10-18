@@ -32,7 +32,7 @@ tractable for future agents.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
-- `src/output.rs`: template rendering and filename-component sanitization; `src/output/formats.rs` renders format inventories.
+- `src/output.rs`: template rendering and filename-component sanitization; `src/output/formats.rs` renders format inventories and `src/output/template.rs` handles bounded typed filename templates.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
 - `upstream/manifest.json`: upstream revision and component coverage ledger.
 - `tools/upstream_report.py`: machine-readable input for an update agent.
@@ -68,7 +68,10 @@ remain outside the current result contract.
    Playlist item/range selection, legacy start/end, reverse ordering and original
    index/selected-order metadata are implemented for fully extracted HTML5 lists.
    Selection precedes archive filtering and format selection but does not make
-   extraction lazy.
+   extraction lazy. Typed filename templates support represented root fields,
+   string/integer/fixed-point conversions, width/precision/flags, alternatives and
+   missing-value defaults; full template expressions, conversions and platform
+   filename parity remain open.
    Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.

@@ -17,7 +17,7 @@ cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sou
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
-cargo run --locked -- -I '3,1:2' --playlist-reverse 'https://example.com/multiple-videos.html'
+cargo run --locked -- -I '3,1:2' --playlist-reverse -o '%(playlist_index)03d-%(title)s.%(ext)s' 'https://example.com/multiple-videos.html'
 cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
@@ -100,7 +100,11 @@ Supported today:
   records only successfully published downloads. Metadata/listing/simulation never
   write the archive. Extraction still makes normal requests for recorded inputs.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
-- Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
+- Typed output fields include IDs/titles, dimensions, filesize and playlist indices,
+  with string `s`, integer `d/i/u` and fixed-point `f/F` width/precision formatting.
+  For example, `%(playlist_index)03d-%(title).80s.%(ext)s`. Known-field alternatives
+  and defaults such as `%(width,height|unknown)s` are supported;
+  `--output-na-placeholder TEXT` changes the default `NA`. Literal `%%` is supported.
   Metadata cannot introduce directories; literal template paths can.
 - Same-directory temporary files, cleanup on transfer failure, and no overwrite
   of existing destinations. A failed entry or URL sets a nonzero exit status while later
@@ -144,6 +148,8 @@ configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it dis
 `extract_result_unselected` / `extract_result_unselected_with_options` expose all
 eligible alternatives without library selection; `select_result` applies configured
 selection atomically before downloading.
+`output::render_template_with_options` accepts `TemplateOptions` for the missing-value
+placeholder; `render_template` keeps the default `NA`.
 `output::render_formats` renders their inventory, while `validate_format_selector`
 checks supported syntax without network or availability checks.
 Use `extract_result` or

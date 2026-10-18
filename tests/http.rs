@@ -567,7 +567,11 @@ fn templates_are_explicit_and_metadata_cannot_inject_paths_or_fields() {
             .unwrap(),
         "downloads/%-_folder_%(id)s.mp4"
     );
-    for invalid in ["%(unknown)s", "%(title)d", "%", "", "-"] {
+    assert_eq!(
+        render_template("%(title)03d", &info).unwrap(),
+        std::path::PathBuf::from("NA")
+    );
+    for invalid in ["%(unknown)s", "%(title)q", "%", "", "-"] {
         assert!(render_template(invalid, &info).is_err(), "{invalid}");
     }
 }

@@ -507,6 +507,7 @@ fn extract_watch_page_with_runtime(
     }
     let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
+        last_playlist_index: None,
         playlist_index: None,
         playlist_autonumber: None,
         playlist_count: None,

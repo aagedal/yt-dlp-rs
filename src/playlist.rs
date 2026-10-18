@@ -141,6 +141,7 @@ impl PlaylistSelection {
         let count = playlist.entries.len();
         let indices = self.indices(count);
         let selected_count = indices.len();
+        let last_index = indices.iter().max().map(|index| index + 1).unwrap_or(0);
         let mut entries: Vec<_> = std::mem::take(&mut playlist.entries)
             .into_iter()
             .map(Some)
@@ -152,6 +153,7 @@ impl PlaylistSelection {
                 let mut entry = entries[index]
                     .take()
                     .expect("selection positions are unique");
+                entry.last_playlist_index = Some(last_index);
                 entry.playlist_index = Some(index + 1);
                 entry.playlist_autonumber = Some(order + 1);
                 entry.playlist_count = Some(count);
@@ -435,7 +437,14 @@ mod tests {
             vec!["2", "4"]
         );
         for (i, entry) in playlist.entries.iter().enumerate() {
+            assert_eq!(entry.last_playlist_index, Some(4));
             assert_eq!(entry.playlist_index, Some([2, 4][i]));
+            assert!(
+                serde_json::to_value(entry)
+                    .unwrap()
+                    .get("__last_playlist_index")
+                    .is_none()
+            );
             assert_eq!(entry.playlist_autonumber, Some(i + 1));
             assert_eq!(entry.playlist_count, Some(4));
             assert_eq!(entry.n_entries, Some(2));

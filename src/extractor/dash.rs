@@ -105,6 +105,7 @@ pub(crate) fn from_response(
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem }.to_owned();
     Ok(Some(VideoInfo {
+        last_playlist_index: None,
         playlist_index: None,
         playlist_autonumber: None,
         playlist_count: None,

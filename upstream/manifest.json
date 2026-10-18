@@ -93,7 +93,7 @@
         "tools/test_compare_listing.py",
         "upstream/notes/list-formats.md"
       ],
-      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, basic output templates, literal HTML5 source-ID or bounded resolution-based default/best/worst selection applied independently to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds/preferred HTTP-date; throttled CLI download byte progress on stderr; no CLI cancellation/signal handling or general option parity; bounded audio/video selectors, two-stream + pairs and / fallbacks with explicit native ranking policy; chained typed numeric/text format predicates with unknown inclusion, quoted delimiters and upstream unit conventions before native ranking; parenthesized choices/merges, group input filters, best/worst aliases and bare-filter selectors through a bounded expression AST; positive one-based indexed best/worst aliases after native filtered ranking; no regexes, arbitrary metadata filters, starred/extension selectors or multiselection; -F eligible format inventories through unselected extraction, combined -j/-s normal selection, pure bounded native table renderer and selector syntax preflight; no upstream table/sorter parity or no-simulate listing downloads"
+      "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, bounded typed output templates with primitive metadata, alternatives/defaults and selected-context padding, literal HTML5 source-ID or bounded resolution-based default/best/worst selection applied independently to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds/preferred HTTP-date; throttled CLI download byte progress on stderr; no CLI cancellation/signal handling or general option parity; bounded audio/video selectors, two-stream + pairs and / fallbacks with explicit native ranking policy; chained typed numeric/text format predicates with unknown inclusion, quoted delimiters and upstream unit conventions before native ranking; parenthesized choices/merges, group input filters, best/worst aliases and bare-filter selectors through a bounded expression AST; positive one-based indexed best/worst aliases after native filtered ranking; no regexes, arbitrary metadata filters, starred/extension selectors or multiselection; -F eligible format inventories through unselected extraction, combined -j/-s normal selection, pure bounded native table renderer and selector syntax preflight; no upstream table/sorter parity or no-simulate listing downloads"
     },
     {
       "name": "youtube",
@@ -265,6 +265,30 @@
         "upstream/notes/playlist-items.md"
       ],
       "scope": "Fully extracted HTML5 playlist inclusive signed item/range/step selection, legacy start/end and reverse; ordered first-index deduplication, phase-preserving out-of-range clipping and original index/count versus selected order/count metadata before archive filtering and atomic format selection; explicit signed-64-bit/spec bounds; no lazy/paged/nested/site playlists, full metadata or general output-template parity"
+    },
+    {
+      "name": "typed-output-templates",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py",
+        "test/test_YoutubeDL.py"
+      ],
+      "rust": [
+        "src/output.rs",
+        "src/output/template.rs",
+        "src/main.rs",
+        "src/info.rs",
+        "src/playlist.rs",
+        "tests/templates.rs",
+        "tests/fixtures/templates/",
+        "tests/http.rs",
+        "tools/compare_templates.py",
+        "tools/test_compare_templates.py",
+        "upstream/notes/typed-output-templates.md"
+      ],
+      "scope": "Whitelist of represented root string/integer/boolean filename fields; s/d/i/u/f/F flags-width-precision and inert length modifiers, known-field alternatives/literal defaults/global NA option, upstream float numeric casting and exact bare-s playlist padding before archive filtering; bounded grammar/output, native component sanitizer and explicit unsupported errors; no arbitrary metadata/traversal/math/date/replacement/custom conversions or platform filename parity"
     }
   ]
 }

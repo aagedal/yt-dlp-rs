@@ -111,6 +111,7 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem };
     Some(VideoInfo {
+        last_playlist_index: None,
         playlist_index: None,
         playlist_autonumber: None,
         playlist_count: None,

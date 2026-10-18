@@ -12,7 +12,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-F`, `--list-formats` | List eligible alternatives without selection or downloads; combined `-j`/`-s` retain normal selection; native table styling |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
-| `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
+| `-o`, `--output` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; no overwrite |
+| `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
 | `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging; no PATH discovery, directory lookup, installation, transcoding or other postprocessors |
@@ -1095,7 +1096,8 @@ count). All are one-based/count integers where applicable and omitted on standal
 videos. IDs/titles keep original extractor numbering. Metadata is assigned before
 archive filtering, so archive skips leave gaps in selected autonumbers and do not
 change selected counts. This follows the materialized upstream ordering; no full
-playlist metadata, output-template fields or lazy evaluation parity is claimed.
+playlist metadata or lazy evaluation parity is claimed. Represented playlist fields
+can be used in the typed templates described below.
 
 Library callers explicitly use `PlaylistSelection::new(items, start, end, reverse)`
 then `apply(&mut ExtractResult)` before format selection/download. `indices(len)`
@@ -1104,3 +1106,83 @@ implicitly apply CLI options or annotate playlist indices. Reapplying selection
 treats the current entry vector as its input, so select once before archive filters.
 Source evidence and shared comparison fixtures are recorded in
 [the source slice](../upstream/notes/playlist-items.md).
+
+
+## Typed output templates
+
+`-o` accepts the represented root string fields `id`, `title`, `ext`, `extractor`,
+`extractor_key`, `format_id`, `url` and `webpage_url`; integer fields `width`,
+`height`, `filesize`, `playlist_index`, `playlist_autonumber`, `playlist_count` and
+`n_entries`; and boolean `direct`. Unknown fields and unsupported expressions are
+errors, retaining the native explicit unsupported boundary. The full upstream
+metadata dictionary is not inferred.
+
+Named substitutions use `%(field)FORMAT`, where conversions are `s`, `d`, `i`,
+`u`, `f` and `F`. Formats support Python-style `#`, `0`, `-`, `+` and space flags,
+ASCII minimum width, `.PRECISION` and one inert `h`/`l`/`L` length modifier. Width
+is a minimum, string precision counts Unicode characters, integer precision
+pads digits and floating precision defaults to six. Integer aliases truncate
+numeric values toward zero; `F` uppercases nonfinite output. Nonfinite integer
+conversion is an explicit error. Naked precision dots, unsupported conversions,
+raw percent escapes and malformed named tokens fail; only `%%` escapes a percent.
+These strict syntax limits differ from upstream's more permissive escaping.
+
+`%(width,height|unknown)s` picks the first available known field. Empty strings
+are unavailable. Only an unavailable value advances to the next alternative;
+a chosen string that fails numeric casting uses the default instead. Explicit
+`|TEXT` overrides `--output-na-placeholder` (default `NA`); either can be empty.
+Unavailable and failed numeric conversions discard *all* formatting flags,
+width and precision, so `%(width|0)04d` with missing width renders `0`, not `0000`.
+All alternate field names are validated even after an available first candidate.
+Default text is literal, sanitized and never recursively evaluated.
+
+For numeric conversions, pinned upstream first casts values through a float.
+The native renderer follows that behavior, including rounding integer metadata
+above 2^53 before `d/i/u`, numeric ASCII string casts, surrounding whitespace,
+valid between-digit underscores and fixed-point rounding. A plain `s` on integer
+metadata preserves its exact decimal value; booleans render `True`/`False` for
+`s` and 1/0 numerically. Unicode numeric strings and full Python conversion
+syntax are not claimed. No metadata values are invented for missing fields.
+
+An exact bare `%(playlist_index)s` automatically zero-pads to the digit count of
+the highest selected original index. Bare `%(playlist_autonumber)s` uses the
+selected entry count. This context is assigned before archive filtering, so
+archive skips do not shrink padding. Explicit formats (`03d`, `0s`, `hs`, `.0s`)
+do not use this compatibility rule. Original playlist count is not a substitute
+for selected maximum index. Library callers can apply `PlaylistSelection` before
+rendering; its internal maximum-index context is accepted as
+`__last_playlist_index` on input but omitted from JSON output. Explicit widths
+avoid depending on that context after a JSON round trip.
+
+String values/defaults use existing native component sanitation before width or
+precision: control and `/\<>:"|?*` characters become underscores, edge whitespace
+and dots are trimmed, and an empty sanitized component becomes `video`. A
+post-format dot/space-only component also becomes `video`; ordinary alignment
+padding is preserved. Precision cannot turn metadata into a parent-directory
+alias. Only literal template text can introduce directories. Neither metadata nor
+defaults trigger environment, home-directory or template expansion. URLs therefore
+render as sanitized components rather than paths. This remains a native policy,
+not upstream platform-specific filename sanitation parity.
+
+Specs are limited to 16 KiB and 256 percent tokens, widths/precisions to 4096,
+and selected text/default input and final expanded output to 64 KiB each. A
+selected oversized string fails even if precision could truncate it. Bounds are
+explicit errors before large formatting allocations; host filesystem filename
+limits can still reject a rendered path. Empty final paths and stdout `-` remain
+unsupported. Existing destination files remain untouched, failed renders never
+record archives, and later entries/inputs still continue.
+
+Rendering occurs only on actual download paths after extraction and selection.
+Metadata, simulation and listing leave output templates inert, including invalid
+ones; this existing native timing is not general upstream option-normalization
+parity. Library `output::render_template` uses default options;
+`render_template_with_options` accepts `TemplateOptions { na_placeholder }`.
+Object traversal, arithmetic/dates, replacements, arbitrary fields, scientific/
+general/hex/octal/repr/custom conversions, autonumber state, environment expansion
+and full filename/platform compatibility remain open.
+
+The shared 160-case comparison uses actual pinned `evaluate_outtmpl` in filename
+sanitization mode on portable fields. Native safety/resource cases are separate;
+unsafe-character output is not normalized to hide policy differences. Six
+source-only cases record unsupported behavior. See
+[the source slice](../upstream/notes/typed-output-templates.md).

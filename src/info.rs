@@ -141,6 +141,10 @@ pub struct VideoFormat {
 /// Small, explicitly supported subset of yt-dlp's info dictionary.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoInfo {
+    /// Selected maximum original index, used for legacy string-template padding.
+    /// Internal rendering context is accepted on input but omitted from JSON output.
+    #[serde(default, rename = "__last_playlist_index", skip_serializing)]
+    pub last_playlist_index: Option<usize>,
     /// Original one-based position, assigned when applying playlist selection.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub playlist_index: Option<usize>,
@@ -522,6 +526,7 @@ mod tests {
 
     fn info(formats: Vec<VideoFormat>) -> VideoInfo {
         VideoInfo {
+            last_playlist_index: None,
             playlist_index: None,
             playlist_autonumber: None,
             playlist_count: None,

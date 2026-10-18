@@ -8,7 +8,7 @@ use std::{
 use yt_dlp_rs::{
     DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions,
     PlaylistSelection, YoutubeDl, YoutubeOptions,
-    output::{DEFAULT_TEMPLATE, render_formats, render_template},
+    output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
     validate_format_selector,
 };
 
@@ -64,7 +64,10 @@ struct Args {
     /// Reverse the selected playlist item order
     #[arg(long)]
     playlist_reverse: bool,
-    /// Filename template: %(title)s, %(id)s, %(ext)s, %(extractor)s, and %%
+    /// Placeholder for unavailable output-template metadata
+    #[arg(long, default_value = "NA", value_name = "TEXT")]
+    output_na_placeholder: String,
+    /// Filename template: represented metadata with s/d/i/u/f/F conversions and %%
     #[arg(short, long, default_value = DEFAULT_TEMPLATE)]
     output: String,
 }
@@ -97,6 +100,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .download_archive
         .map(DownloadArchive::load)
         .transpose()?;
+    let template_options = TemplateOptions {
+        na_placeholder: args.output_na_placeholder,
+    };
     let list_only = args.list_formats && !args.dump_json && !args.simulate;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
@@ -143,7 +149,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 } else if args.simulate {
                     eprintln!("[{}] {}: {}", info.extractor, info.id, info.title);
                 } else {
-                    let path = render_template(&args.output, &info)?;
+                    let path =
+                        render_template_with_options(&args.output, &info, &template_options)?;
                     eprintln!("[download] Destination: {}", path.display());
                     let mut last_progress = Instant::now();
                     let bytes = downloader.download_with_progress(
