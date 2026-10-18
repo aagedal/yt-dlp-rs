@@ -28,6 +28,7 @@ tractable for future agents.
 - `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
 - `src/dash.rs` and `src/extractor/dash.rs`: bounded static single-period MPD parsing and generic/HTML5 acquisition.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
+- `src/playlist.rs`: playlist item/range parsing, ordered index deduplication and fully extracted entry selection.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
@@ -64,6 +65,10 @@ remain outside the current result contract.
    aliases, bare-filter selectors and positive indexed ranks are implemented.
    Format listing and unselected extraction expose eligible alternatives before
    selection, including separate-only presentations without a merger.
+   Playlist item/range selection, legacy start/end, reverse ordering and original
+   index/selected-order metadata are implemented for fully extracted HTML5 lists.
+   Selection precedes archive filtering and format selection but does not make
+   extraction lazy.
    Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.

@@ -507,6 +507,10 @@ fn extract_watch_page_with_runtime(
     }
     let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
+        playlist_index: None,
+        playlist_autonumber: None,
+        playlist_count: None,
+        n_entries: None,
         fragments: first.fragments.clone(),
         id: id.into(),
         title,

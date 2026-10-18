@@ -6,8 +6,8 @@ use std::{
     time::{Duration, Instant},
 };
 use yt_dlp_rs::{
-    DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions, YoutubeDl,
-    YoutubeOptions,
+    DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions,
+    PlaylistSelection, YoutubeDl, YoutubeOptions,
     output::{DEFAULT_TEMPLATE, render_formats, render_template},
     validate_format_selector,
 };
@@ -47,6 +47,23 @@ struct Args {
     /// Skip recorded extractor/video IDs and record only completed downloads
     #[arg(long, value_name = "FILE")]
     download_archive: Option<PathBuf>,
+    /// Comma-separated playlist indices or inclusive START:STOP:STEP ranges
+    #[arg(
+        short = 'I',
+        long,
+        value_name = "ITEM_SPEC",
+        allow_hyphen_values = true
+    )]
+    playlist_items: Option<String>,
+    /// First playlist item (one-based, default 1; overridden by --playlist-items)
+    #[arg(long, default_value_t = 1, allow_hyphen_values = true)]
+    playlist_start: i64,
+    /// Last playlist item, inclusive (-1 means through the end)
+    #[arg(long, allow_hyphen_values = true)]
+    playlist_end: Option<i64>,
+    /// Reverse the selected playlist item order
+    #[arg(long)]
+    playlist_reverse: bool,
     /// Filename template: %(title)s, %(id)s, %(ext)s, %(extractor)s, and %%
     #[arg(short, long, default_value = DEFAULT_TEMPLATE)]
     output: String,
@@ -54,10 +71,21 @@ struct Args {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
-    if (args.list_formats || args.download_archive.is_some())
-        && let Some(format) = &args.format
-    {
+    if let Some(format) = &args.format {
         validate_format_selector(format)?;
+    }
+    let playlist_selection = PlaylistSelection::new(
+        args.playlist_items.as_deref(),
+        args.playlist_start,
+        args.playlist_end,
+        args.playlist_reverse,
+    )?;
+    if args.playlist_items.is_some()
+        && (args.playlist_start != 1 || args.playlist_end.is_some_and(|end| end != -1 && end != 0))
+    {
+        eprintln!(
+            "WARNING: Ignoring --playlist-start and --playlist-end because --playlist-items was given"
+        );
     }
     let mut downloader = YoutubeDl::with_youtube_options(YoutubeOptions {
         js_runtime: args.youtube_js_runtime,
@@ -77,7 +105,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             retries: args.extractor_retries,
         };
         let extracted = (|| -> yt_dlp_rs::Result<Option<ExtractResult>> {
-            let result = downloader.extract_result_unselected_with_options(&url, options)?;
+            let mut result = downloader.extract_result_unselected_with_options(&url, options)?;
+            playlist_selection.apply(&mut result);
             let mut result = if let Some(archive) = &archive {
                 let Some(result) = filter_archived(result, archive)? else {
                     return Ok(None);

@@ -141,6 +141,18 @@ pub struct VideoFormat {
 /// Small, explicitly supported subset of yt-dlp's info dictionary.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoInfo {
+    /// Original one-based position, assigned when applying playlist selection.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub playlist_index: Option<usize>,
+    /// One-based selected order, before archive filtering.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub playlist_autonumber: Option<usize>,
+    /// Total number of fully extracted entries before item selection.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub playlist_count: Option<usize>,
+    /// Number of selected entries before archive filtering.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub n_entries: Option<usize>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub fragments: Vec<Fragment>,
     pub id: String,
@@ -510,6 +522,10 @@ mod tests {
 
     fn info(formats: Vec<VideoFormat>) -> VideoInfo {
         VideoInfo {
+            playlist_index: None,
+            playlist_autonumber: None,
+            playlist_count: None,
+            n_entries: None,
             fragments: Vec::new(),
             id: "test".into(),
             title: "Test".into(),

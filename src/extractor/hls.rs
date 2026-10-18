@@ -116,6 +116,10 @@ pub(crate) fn from_response(
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem }.to_owned();
     let mut info = VideoInfo {
+        playlist_index: None,
+        playlist_autonumber: None,
+        playlist_count: None,
+        n_entries: None,
         id: title.clone(),
         title,
         ext: String::new(),

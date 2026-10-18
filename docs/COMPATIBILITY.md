@@ -16,6 +16,9 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
 | `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging; no PATH discovery, directory lookup, installation, transcoding or other postprocessors |
+| `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
+| `--playlist-start NUMBER`, `--playlist-end NUMBER` | Inclusive one-based defaults 1 through end, end -1 unbounded; items option overrides after validation |
+| `--playlist-reverse` | Reverse selected request order after deduplication |
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection, record only after successful download/merge publication; no writes in metadata/listing/simulation |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
@@ -1017,7 +1020,9 @@ Extraction, selection, template, transport, merge, cancellation and existing-out
 errors do not record. Duplicate inputs in one invocation skip after the first
 successful record. If the media succeeds but recording fails, keep the completed
 media, report the archive error, continue later entries/inputs and return failure.
-Parent directories are never created; a missing archive parent fails on the first
+Parent directories are never created; existing regular-file ancestors are rejected
+consistently even when an OS reports the descendant as missing. A genuinely missing
+archive parent fails on the first
 record after media publication. Invalid UTF-8/nonregular existing paths fail before
 any input request. Archives have no artificial size cap and are trusted local input.
 
@@ -1045,3 +1050,57 @@ archive option parity remain unsupported. The shared fixture compares twelve
 identities/file-and-set membership checks, logical recording and four upstream
 control flows. Native tests separately cover failure timing, concurrency and
 append rollback. See [the source slice](../upstream/notes/download-archive.md).
+
+
+## Playlist item selection
+
+`-I` / `--playlist-items ITEM_SPEC` selects entries of fully extracted HTML5
+playlists. Comma-separated segments preserve requested order and discard repeated
+original indices after their first occurrence. `--playlist-reverse` reverses that
+final order. Single video results are unaffected by valid playlist options.
+
+Indices are one-based and ranges have inclusive endpoints. A negative index counts
+from the end (`-1` is last); zero refers to no entry. `START:STOP:STEP` accepts
+omitted bounds and signed nonzero steps: `::-1` reverses all entries, `1::2` takes
+every other entry and `-5::2` starts five from the end. The endpoint may be `inf`
+or `infinite`. Pinned upstream interprets `infinite` as an omitted endpoint,
+so `:infinite:-1` reverses the list while `:inf:-1` selects nothing. The legacy `START-STOP` delimiter also supports omitted/negative
+bounds and a colon step. Out-of-range positions are skipped while preserving the
+range's phase, rather than resetting its first position to an in-range boundary.
+Descending endpoints require a negative step; unavailable and empty selections
+succeed with no output or download.
+
+Without `-I`, `--playlist-start` (default 1) and `--playlist-end` select an inclusive
+range; omitted end or end -1 means through the end. Start must be positive;
+end must be at least start unless -1. These legacy bounds are validated even when
+`-I` overrides them, and an override warning is emitted for effective nondefaults.
+Empty item strings, empty comma segments, whitespace and zero steps are errors.
+Native specs are bounded to 16 KiB and 1024 segments, with signed 64-bit numbers;
+unsupported oversized syntax fails before HTTP instead of iterating huge ranges.
+Format selector syntax is also checked before requests, including when a playlist
+selection would be empty. Full Unicode numeric syntax is outside this contract.
+
+Selection runs after complete extraction/probes and before archive filtering and
+format selection. It cannot avoid requests, challenges, unsupported extraction
+errors or media probe failures in excluded entries. Excluded entries need not
+satisfy a requested format, while all retained entries must select successfully
+before any output or downloads. No lazy/paged/nested or site playlist result is
+introduced. Multiple inputs apply the same selection independently and retain
+normal failure continuation. Listing, JSON, simulation and downloads use the same
+selected order; empty selections do not create output or archive files.
+
+Entry JSON adds `playlist_index` (original position), `playlist_count` (original
+entry count), `playlist_autonumber` (selected order) and `n_entries` (selected
+count). All are one-based/count integers where applicable and omitted on standalone
+videos. IDs/titles keep original extractor numbering. Metadata is assigned before
+archive filtering, so archive skips leave gaps in selected autonumbers and do not
+change selected counts. This follows the materialized upstream ordering; no full
+playlist metadata, output-template fields or lazy evaluation parity is claimed.
+
+Library callers explicitly use `PlaylistSelection::new(items, start, end, reverse)`
+then `apply(&mut ExtractResult)` before format selection/download. `indices(len)`
+returns zero-based positions in selected order. Library extraction APIs do not
+implicitly apply CLI options or annotate playlist indices. Reapplying selection
+treats the current entry vector as its input, so select once before archive filters.
+Source evidence and shared comparison fixtures are recorded in
+[the source slice](../upstream/notes/playlist-items.md).

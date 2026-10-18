@@ -241,6 +241,30 @@
         "upstream/notes/download-archive.md"
       ],
       "scope": "Explicit UTF-8 regular-file archive with lowercase extractor_key and case-sensitive id; cached membership after full extraction and before atomic remaining-entry selection; no writes in metadata/listing/simulation; record only after successful final download/merge publication; bounded shared/exclusive file locks, locked reread/dedup, missing-newline repair and append/sync failure rollback; no early URL-ID skip, legacy IDs, ie_key/URL guessing, force-write options or full upstream archive parity"
+    },
+    {
+      "name": "playlist-item-selection",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "test/test_YoutubeDL.py"
+      ],
+      "rust": [
+        "src/playlist.rs",
+        "src/main.rs",
+        "src/info.rs",
+        "src/error.rs",
+        "src/lib.rs",
+        "tests/playlist.rs",
+        "tests/fixtures/playlist/",
+        "tools/compare_playlist.py",
+        "tools/test_compare_playlist.py",
+        "upstream/notes/playlist-items.md"
+      ],
+      "scope": "Fully extracted HTML5 playlist inclusive signed item/range/step selection, legacy start/end and reverse; ordered first-index deduplication, phase-preserving out-of-range clipping and original index/count versus selected order/count metadata before archive filtering and atomic format selection; explicit signed-64-bit/spec bounds; no lazy/paged/nested/site playlists, full metadata or general output-template parity"
     }
   ]
 }

@@ -18,6 +18,8 @@ pub enum Error {
     UnsupportedHtml5(String),
     #[error("playlist result requires extract_result or extract_result_with_format")]
     PlaylistRequiresResult,
+    #[error("playlist selection failed: {0}")]
+    PlaylistSelection(String),
     #[error("format selection failed: {0}")]
     FormatSelection(String),
     #[error("HTML page exceeds the {0}-byte extraction limit")]

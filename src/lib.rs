@@ -9,6 +9,7 @@ mod hls;
 mod info;
 mod merge;
 pub mod output;
+mod playlist;
 mod retry;
 mod selector;
 
@@ -19,6 +20,7 @@ pub use extractor::YoutubeOptions;
 pub use info::{
     ByteRange, ExtractResult, Fragment, HlsAes128, PlaylistInfo, StreamKind, VideoFormat, VideoInfo,
 };
+pub use playlist::PlaylistSelection;
 
 use extractor::{Extractor, GenericHttp, Youtube};
 use reqwest::blocking::Client;

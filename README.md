@@ -17,6 +17,7 @@ cargo run --locked -- --list-formats 'https://example.com/page-with-multiple-sou
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
+cargo run --locked -- -I '3,1:2' --playlist-reverse 'https://example.com/multiple-videos.html'
 cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
@@ -91,6 +92,10 @@ Supported today:
   Tables show IDs, containers, dimensions, stream kind, size, bitrate and language.
   With `-j` or `-s`, normal selection still applies; `-F -j` prints a table followed
   by selected JSON. Table styling is native, not byte-for-byte upstream output.
+- `-I/--playlist-items` selects inclusive ranges, signed indices and steps, preserving
+  requested order and deduplicating overlaps. `--playlist-start`, `--playlist-end`
+  and `--playlist-reverse` are supported for fully extracted HTML5 playlists.
+  Original indices and selected order are exposed in playlist entry JSON.
 - `--download-archive FILE` skips recorded extractor/video IDs before selection and
   records only successfully published downloads. Metadata/listing/simulation never
   write the archive. Extraction still makes normal requests for recorded inputs.
@@ -144,6 +149,10 @@ checks supported syntax without network or availability checks.
 Use `extract_result` or
 `extract_result_with_format(url, Some("1"))` for video/playlist results. A format
 ID applies to every playlist entry independently; each must offer that ID.
+`PlaylistSelection::new(items, start, end, reverse)` parses item selection;
+`apply` filters/reorders fully extracted playlist entries and annotates their
+original index/count and selected order/count. Single videos are unaffected.
+Library extraction methods do not implicitly apply CLI playlist options.
 `DownloadArchive::load`, `contains` and `record` expose persistence separately;
 library callers choose when to filter and record, after successful publication.
 `archive_id` returns the supported lowercase extractor-key plus case-sensitive ID.
