@@ -20,7 +20,8 @@ fn main() {
         println!("ffmpeg version test-fixture");
         return;
     }
-    let directory = std::env::current_dir().unwrap();
+    // Match the runner's canonical paths, including Windows verbatim prefixes.
+    let directory = std::env::current_dir().unwrap().canonicalize().unwrap();
     let expected: Vec<std::ffi::OsString> = [
         "-nostdin",
         "-hide_banner",
