@@ -33,10 +33,12 @@ Supported today:
   `-f/--format` accepts `best`, `worst`, or a source ID (`0`, `1`, … in declaration order per element). Relative
   sources, the first `<base href>`, HTML entities, page redirects, and page referrers are supported. The media
   response must pass the same MIME/extension checks as a direct URL.
-- Native unencrypted HLS VOD downloads from direct playlist URLs or HTML5 sources:
+- Native HLS VOD downloads from direct playlist URLs or HTML5 sources:
   master selection, MPEG-TS/AAC segments, one fMP4 initialization map, and exact
   byte ranges. JSON/simulation fetch manifests but never segment bodies.
-  Live, encrypted, discontinuous and external-rendition streams remain unsupported.
+  Native AES-128 CBC decryption supports identity keys, explicit/sequence IVs and
+  key rotation. Live, SAMPLE-AES/DRM, discontinuous and external-rendition
+  streams remain unsupported.
 - Multiple nonempty media elements form an HTML5 playlist, processed in document
   order. Empty elements are skipped. IDs and titles use upstream's numbered
   `-1` / ` (1)`, `-2` / ` (2)` suffixes. Titles prefer
@@ -99,7 +101,7 @@ and a five-minute total timeout per request. Simulation and JSON extraction stil
 network requests. MIME identification is not media-container verification.
 
 The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
-`VideoFormat`, `StreamKind`, `Fragment`, `ByteRange`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
+`VideoFormat`, `StreamKind`, `Fragment`, `ByteRange`, `HlsAes128`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
 `ExtractionOptions`, `YoutubeOptions`, and an `Extractor` interface.
 `YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path) })`
 configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it disabled.

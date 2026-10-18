@@ -7,11 +7,17 @@ hls_media_playlist_data; socket access and external downloader discovery are
 blocked. HlsFD.real_download constructs its actual fragments, intercepted before
 any fragment download or file preparation. Comparison preserves fragment order,
 URL query/fragment, and ranges. Upstream exclusive start/end ranges map exactly to
-native offset/length; only the exact ephemeral localhost origin is replaced.
+native offset/length. AES-128 key URLs and resolved 16-byte IVs are compared;
+upstream's explicit byte IV maps to a JSON byte list, and its implicit IV maps
+from media_sequence to a 128-bit big-endian integer. Only the exact ephemeral
+localhost origin is replaced (including key URLs). The fMP4/MAP case uses explicit
+IVs: pinned upstream counts MAP as a media sequence increment, whereas the native
+plan follows RFC 8216's media-segment counter for implicit IVs. This difference is
+not normalized away and implicit-IV-after-MAP parity is not claimed.
 No extension/container comparison is made: native TS concatenation emits .ts,
 while upstream may label TS HLS .mp4 and subsequently remux it. This check does not
-establish remuxing, encryption, live, master selection, or network acquisition
-parity. No segment or external site request is permitted.
+establish decryption, remuxing, live, master selection, or network acquisition
+parity. No segment, key, or external site request is permitted.
 """
 import argparse
 import contextlib
@@ -34,6 +40,39 @@ combined.mp4
 #EXTINF:1,
 #EXT-X-BYTERANGE:30
 combined.mp4
+#EXT-X-ENDLIST
+"""
+AES_TS_MANIFEST = """#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:1
+#EXT-X-MEDIA-SEQUENCE:7
+#EXT-X-KEY:METHOD=AES-128,URI="keys/first.key?fixture=1"
+#EXTINF:1,
+first.ts
+#EXTINF:1,
+second.ts
+#EXT-X-KEY:METHOD=AES-128,URI="keys/rotated.key",IV=0x000000000000000000000000000000ab
+#EXTINF:1,
+third.ts
+#EXT-X-KEY:METHOD=NONE
+#EXTINF:1,
+plain.ts
+#EXT-X-KEY:METHOD=AES-128,URI="keys/first.key?fixture=1"
+#EXTINF:1,
+fifth.ts
+#EXT-X-ENDLIST
+"""
+AES_MAP_MANIFEST = """#EXTM3U
+#EXT-X-VERSION:7
+#EXT-X-TARGETDURATION:1
+#EXT-X-MEDIA-SEQUENCE:21
+#EXT-X-KEY:METHOD=AES-128,URI="keys/map.key",IV=0x00000000000000000000000000000001
+#EXT-X-MAP:URI="init.mp4"
+#EXTINF:1,
+first.m4s
+#EXT-X-KEY:METHOD=AES-128,URI="keys/rotated.key",IV=0x00000000000000000000000000000002
+#EXTINF:1,
+second.m4s
 #EXT-X-ENDLIST
 """
 UPSTREAM_WORKER = r'''
@@ -60,22 +99,43 @@ with YoutubeDL({'quiet': True, 'no_warnings': True, 'cachedir': False}) as ydl:
     assert fd.real_download('forbidden-output', {
         'id': 'fixture', 'ext': 'mp4', 'url': sys.argv[2],
         'is_live': False, 'hls_media_playlist_data': sys.stdin.read()})
-    print(json.dumps(fd.captured))
+    print(json.dumps(fd.captured, default=lambda value: list(value) if isinstance(value, bytes) else forbidden()))
 '''
+
+
+def normalize_url(url, origin):
+    parsed = urlsplit(url)
+    if f"{parsed.scheme}://{parsed.netloc}" == origin:
+        return "{{ORIGIN}}" + url[len(origin):]
+    return url
 
 
 def normalize(fragments, origin, *, upstream=False):
     result = []
     for fragment in fragments:
-        url = fragment["url"]
-        parsed = urlsplit(url)
-        if f"{parsed.scheme}://{parsed.netloc}" == origin:
-            url = "{{ORIGIN}}" + url[len(origin):]
+        url = normalize_url(fragment["url"], origin)
         byte_range = fragment.get("byte_range")
         if upstream and byte_range:
             byte_range = {"offset": byte_range["start"],
                           "length": byte_range["end"] - byte_range["start"]}
-        result.append({"url": url, "byte_range": byte_range or None})
+        encryption = fragment.get("encryption")
+        if upstream:
+            decrypt_info = fragment.get("decrypt_info", {})
+            method = decrypt_info.get("METHOD", "NONE")
+            if method == "AES-128":
+                iv = decrypt_info.get("IV")
+                if iv is None:
+                    iv = list(fragment["media_sequence"].to_bytes(16, "big"))
+                encryption = {"key_url": decrypt_info["URI"], "iv": iv}
+            elif method != "NONE":
+                raise ValueError(f"unexpected upstream encryption method: {method}")
+        if encryption is not None:
+            iv = encryption["iv"]
+            if not isinstance(iv, list) or len(iv) != 16 or any(
+                    type(byte) is not int or not 0 <= byte <= 255 for byte in iv):
+                raise ValueError("invalid AES-128 IV byte list")
+            encryption = {"key_url": normalize_url(encryption["key_url"], origin), "iv": list(iv)}
+        result.append({"url": url, "byte_range": byte_range or None, "encryption": encryption})
     return result
 
 
@@ -138,6 +198,8 @@ def main():
             f"/{kind}/index.m3u8": (root / "tests/fixtures/hls" / kind / "index.m3u8").read_text(encoding="utf-8")
             for kind in ("ts", "fmp4")}
         manifests["/range.m3u8"] = RANGE_MANIFEST
+        manifests["/aes/sequence.m3u8"] = AES_TS_MANIFEST
+        manifests["/aes/map.m3u8"] = AES_MAP_MANIFEST
         with manifest_server(manifests) as (origin, requests):
             for path, manifest in manifests.items():
                 url = origin + path
@@ -150,14 +212,14 @@ def main():
                                            timeout=30, check=True)
                 compare(json.loads(native.stdout)["fragments"], json.loads(reference.stdout), origin)
             if requests != list(manifests):
-                raise ValueError(f"unexpected manifest/segment requests: {requests!r}")
+                raise ValueError(f"unexpected manifest/segment/key requests: {requests!r}")
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         print(f"comparison failed: {error}", file=sys.stderr)
         if isinstance(error, subprocess.CalledProcessError) and error.stderr:
             print(error.stderr, file=sys.stderr)
         return 1
-    print("TS, fMP4/init, and byte-range fragment plans match pinned upstream HlsFD "
-          "(ordered URLs and exact ranges only; no container/remux parity claim)")
+    print("TS, fMP4/init, byte-range, and AES-128 fragment plans match pinned upstream HlsFD "
+          "(ordered URLs, ranges, key URLs and IVs; no decryption/container/remux parity claim)")
     return 0
 
 

@@ -22,7 +22,7 @@
         "tools/test_compare_html5.py",
         "docs/COMPATIBILITY.md"
       ],
-      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; optional positive source width/height/res attributes and bounded resolution-based default/best/worst ranking; no embedded players, full upstream ranking, nested/site playlists or DASH; finite unencrypted HLS VOD sources supported through dedicated parser/transport"
+      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; optional positive source width/height/res attributes and bounded resolution-based default/best/worst ranking; no embedded players, full upstream ranking, nested/site playlists or DASH; finite clear/identity-AES-128 HLS VOD sources supported through dedicated parser/transport"
     },
     {
       "name": "extractor-contract",
@@ -144,7 +144,9 @@
         "yt_dlp/downloader/dash.py",
         "yt_dlp/downloader/fragment.py",
         "yt_dlp/extractor/common.py",
-        "test/test_InfoExtractor.py"
+        "test/test_InfoExtractor.py",
+        "yt_dlp/aes.py",
+        "test/test_aes.py"
       ],
       "rust": [
         "src/hls.rs",
@@ -157,9 +159,13 @@
         "tests/fixtures/hls/",
         "tools/compare_hls.py",
         "tools/test_compare_hls.py",
-        "upstream/notes/hls-vod.md"
+        "upstream/notes/hls-vod.md",
+        "src/crypto.rs",
+        "tests/hls_aes.rs",
+        "tools/generate_hls_aes_fixtures.py",
+        "upstream/notes/hls-aes128.md"
       ],
-      "scope": "Native finite unencrypted HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; no DASH, encryption, live, discontinuities, external renditions, nested masters or remux parity"
+      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; no DASH, SAMPLE-AES/DRM, live, discontinuities, external renditions, nested masters or remux parity"
     },
     {
       "name": "direct-stream-merging",

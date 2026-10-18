@@ -1,5 +1,5 @@
 //! Bounded, pure HLS VOD parsing. Transport and playlist traversal live elsewhere.
-use crate::{ByteRange, Error, Fragment, Result, StreamKind};
+use crate::{ByteRange, Error, Fragment, HlsAes128, Result, StreamKind};
 use std::collections::BTreeMap;
 use url::Url;
 
@@ -134,6 +134,85 @@ fn byte_range(
     Ok(ByteRange { offset, length })
 }
 
+struct AesKey {
+    url: Url,
+    iv: Option<[u8; 16]>,
+}
+
+impl AesKey {
+    fn snapshot(&self, sequence: u64, initialization: bool) -> Result<HlsAes128> {
+        let iv = match self.iv {
+            Some(iv) => iv,
+            None if initialization => {
+                return Err(invalid("encrypted HLS MAP requires an explicit IV"));
+            }
+            None => u128::from(sequence).to_be_bytes(),
+        };
+        Ok(HlsAes128 {
+            key_url: self.url.clone(),
+            iv,
+        })
+    }
+}
+
+fn aes_key(value: &str, base: &Url) -> Result<Option<AesKey>> {
+    let attrs = attributes(value)?;
+    if attrs.get("METHOD") == Some(&"NONE") {
+        return if attrs.len() == 1 {
+            Ok(None)
+        } else {
+            Err(invalid("HLS METHOD=NONE cannot have other attributes"))
+        };
+    }
+    if attrs.get("METHOD") != Some(&"AES-128") {
+        return Err(invalid("only HLS identity AES-128 encryption is supported"));
+    }
+    if attrs.keys().any(|key| {
+        !matches!(
+            *key,
+            "METHOD" | "URI" | "IV" | "KEYFORMAT" | "KEYFORMATVERSIONS"
+        )
+    }) {
+        return Err(invalid("unsupported HLS key attribute"));
+    }
+    if attrs
+        .get("KEYFORMAT")
+        .is_some_and(|format| *format != "identity")
+        || attrs
+            .get("KEYFORMATVERSIONS")
+            .is_some_and(|versions| *versions != "1")
+    {
+        return Err(invalid("unsupported HLS key format or version"));
+    }
+    let uri = attrs
+        .get("URI")
+        .ok_or_else(|| invalid("HLS AES-128 key has no URI"))?;
+    if uri.bytes().any(|byte| byte <= b' ' || byte == 0x7f) {
+        return Err(invalid("invalid HLS key URI"));
+    }
+    let url = absolute(base, uri)?;
+    let iv = attrs
+        .get("IV")
+        .map(|value| {
+            let digits = value
+                .strip_prefix("0x")
+                .or_else(|| value.strip_prefix("0X"))
+                .filter(|digits| {
+                    !digits.is_empty()
+                        && digits.len() <= 32
+                        && digits.bytes().all(|byte| byte.is_ascii_hexdigit())
+                })
+                .ok_or_else(|| {
+                    invalid("HLS IV must be a hexadecimal integer of at most 128 bits")
+                })?;
+            u128::from_str_radix(digits, 16)
+                .map(u128::to_be_bytes)
+                .map_err(|_| invalid("invalid HLS IV"))
+        })
+        .transpose()?;
+    Ok(Some(AesKey { url, iv }))
+}
+
 fn variant(
     values: &BTreeMap<&str, &str>,
     url: Url,
@@ -235,6 +314,9 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
     let mut media_seen = false;
     let mut has_map = false;
     let mut ext: Option<&str> = None;
+    let mut current_key: Option<AesKey> = None;
+    let mut sequence = Some(0u64);
+    let mut sequence_seen = false;
     for line in lines.into_iter().skip(1) {
         if endlist && (line.starts_with("#EXT") || !line.starts_with('#')) {
             return Err(invalid("HLS ENDLIST must terminate the media playlist"));
@@ -297,9 +379,14 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 .get("BYTERANGE")
                 .map(|value| byte_range(value, None, &url, true))
                 .transpose()?;
+            let encryption = current_key
+                .as_ref()
+                .map(|key| key.snapshot(0, true))
+                .transpose()?;
             fragments.push(Fragment {
                 url,
                 byte_range: range,
+                encryption,
             });
             has_map = true;
             media_seen = true;
@@ -309,17 +396,24 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 return Err(invalid("HLS media key appears in a master playlist"));
             }
             media_seen = true;
-            let attrs = attributes(value)?;
-            if attrs.get("METHOD") != Some(&"NONE") || attrs.len() != 1 {
-                return Err(invalid("encrypted HLS is unsupported"));
-            }
+            current_key = aes_key(value, base)?;
         } else if let Some(value) = line.strip_prefix("#EXT-X-VERSION:") {
             positive_integer(value)?;
         } else if let Some(value) = line.strip_prefix("#EXT-X-TARGETDURATION:") {
             positive_integer(value)?;
             media_seen = true;
         } else if let Some(value) = line.strip_prefix("#EXT-X-MEDIA-SEQUENCE:") {
-            unsigned(value)?;
+            if sequence_seen
+                || fragments.len() > usize::from(has_map)
+                || pending_duration
+                || pending_range.is_some()
+            {
+                return Err(invalid(
+                    "HLS media sequence must occur once before media segments",
+                ));
+            }
+            sequence = Some(unsigned(value)?);
+            sequence_seen = true;
             media_seen = true;
         } else if let Some(value) = line.strip_prefix("#EXT-X-PLAYLIST-TYPE:") {
             if !matches!(value, "VOD" | "EVENT") {
@@ -394,10 +488,17 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 .take()
                 .map(|value| byte_range(value, previous, &url, false))
                 .transpose()?;
+            let number = sequence.ok_or_else(|| invalid("HLS media sequence overflow"))?;
+            let encryption = current_key
+                .as_ref()
+                .map(|key| key.snapshot(number, false))
+                .transpose()?;
             fragments.push(Fragment {
                 url,
                 byte_range: range,
+                encryption,
             });
+            sequence = number.checked_add(1);
             pending_duration = false;
         }
     }
@@ -505,7 +606,6 @@ mod tests {
     fn rejects_unsafe_or_unsupported_state_and_incomplete_playlists() {
         let valid = "#EXTM3U\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST";
         for tag in [
-            "#EXT-X-KEY:METHOD=AES-128,URI=\"key\"",
             "#EXT-X-KEY:METHOD=SAMPLE-AES",
             "#EXT-X-KEY:METHOD=NONE,URI=\"key\"",
             "#EXT-X-DISCONTINUITY",
@@ -611,6 +711,126 @@ mod tests {
             );
         }
     }
+    #[test]
+    fn aes_implicit_iv_uses_media_sequence_and_rotation_snapshots() {
+        let (fragments, _) = media(
+            "#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:255\n#EXT-X-KEY:METHOD=AES-128,URI=\"../key-a\"\n#EXTINF:1,\na.ts\n#EXT-X-KEY:METHOD=AES-128,URI=\"key-b\",IV=0xabc,KEYFORMAT=\"identity\",KEYFORMATVERSIONS=\"1\"\n#EXTINF:1,\nb.ts\n#EXT-X-KEY:METHOD=NONE\n#EXTINF:1,\nc.ts\n#EXT-X-KEY:METHOD=AES-128,URI=\"key-a\"\n#EXTINF:1,\nd.ts\n#EXT-X-ENDLIST",
+        );
+        let first = fragments[0].encryption.as_ref().unwrap();
+        assert_eq!(first.key_url.as_str(), "https://example.com/key-a");
+        assert_eq!(first.iv, 255u128.to_be_bytes());
+        let second = fragments[1].encryption.as_ref().unwrap();
+        assert_eq!(second.key_url.as_str(), "https://example.com/path/key-b");
+        assert_eq!(second.iv, 0xabcu128.to_be_bytes());
+        assert!(fragments[2].encryption.is_none());
+        assert_eq!(
+            fragments[3].encryption.as_ref().unwrap().iv,
+            258u128.to_be_bytes()
+        );
+        let (fragments, _) = media(
+            "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"key\"\n#EXTINF:1,\na.ts\n#EXTINF:1,\nb.ts\n#EXT-X-ENDLIST",
+        );
+        assert_eq!(fragments[0].encryption.as_ref().unwrap().iv, [0; 16]);
+        assert_eq!(
+            fragments[1].encryption.as_ref().unwrap().iv,
+            1u128.to_be_bytes()
+        );
+    }
+
+    #[test]
+    fn encrypted_map_requires_explicit_iv_and_does_not_increment_media_sequence() {
+        let text = "#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:7\n#EXT-X-KEY:METHOD=AES-128,URI=\"key\",IV=0Xffffffffffffffffffffffffffffffff\n#EXT-X-MAP:URI=\"init.mp4\"\n#EXT-X-KEY:METHOD=AES-128,URI=\"key\"\n#EXTINF:1,\na.m4s\n#EXT-X-ENDLIST";
+        let (fragments, ext) = media(text);
+        assert_eq!(ext, "mp4");
+        assert_eq!(fragments[0].encryption.as_ref().unwrap().iv, [255; 16]);
+        assert_eq!(
+            fragments[1].encryption.as_ref().unwrap().iv,
+            7u128.to_be_bytes()
+        );
+        assert!(
+            parse(
+                &text.replace(",IV=0Xffffffffffffffffffffffffffffffff", ""),
+                &base()
+            )
+            .is_err()
+        );
+        assert!(
+            parse(
+                &text.replace("#EXT-X-MEDIA-SEQUENCE:7\n", "").replace(
+                    "#EXT-X-MAP:URI=\"init.mp4\"\n",
+                    "#EXT-X-MAP:URI=\"init.mp4\"\n#EXT-X-MEDIA-SEQUENCE:7\n"
+                ),
+                &base()
+            )
+            .is_ok()
+        );
+    }
+
+    #[test]
+    fn encrypted_byte_ranges_retain_their_own_iv_and_do_not_alter_offsets() {
+        let (fragments, _) = media(
+            "#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"key\"\n#EXTINF:1,\n#EXT-X-BYTERANGE:16@32\na.ts\n#EXTINF:1,\n#EXT-X-BYTERANGE:32\na.ts\n#EXT-X-ENDLIST",
+        );
+        assert_eq!(fragments[0].byte_range.as_ref().unwrap().offset, 32);
+        assert_eq!(fragments[1].byte_range.as_ref().unwrap().offset, 48);
+        assert_eq!(fragments[1].byte_range.as_ref().unwrap().length, 32);
+        assert_eq!(
+            fragments[0].encryption.as_ref().unwrap().iv,
+            0u128.to_be_bytes()
+        );
+        assert_eq!(
+            fragments[1].encryption.as_ref().unwrap().iv,
+            1u128.to_be_bytes()
+        );
+    }
+
+    #[test]
+    fn malformed_encryption_keys_and_iv_fail_closed() {
+        for attrs in [
+            "METHOD=AES-128",
+            "METHOD=AES-128,URI=\"\"",
+            "METHOD=AES-128,URI=\"file:///key\"",
+            "METHOD=AES-128,URI=\"data:key\"",
+            "METHOD=AES-128,URI=\"key#fragment\"",
+            "METHOD=AES-128,URI=\"key space\"",
+            "METHOD=AES-128,URI=\"key\",KEYFORMAT=\"com.apple.streamingkeydelivery\"",
+            "METHOD=AES-128,URI=\"key\",KEYFORMATVERSIONS=\"1/2\"",
+            "METHOD=AES-128,URI=\"key\",UNKNOWN=1",
+            "METHOD=SAMPLE-AES,URI=\"key\"",
+            "METHOD=NONE,IV=0x1",
+            "METHOD=AES-128,URI=\"key\",IV=0x",
+            "METHOD=AES-128,URI=\"key\",IV=abc",
+            "METHOD=AES-128,URI=\"key\",IV=0xgg",
+            "METHOD=AES-128,URI=\"key\",IV=0x100000000000000000000000000000000",
+        ] {
+            let text = format!("#EXTM3U\n#EXT-X-KEY:{attrs}\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST");
+            assert!(parse(&text, &base()).is_err(), "{attrs}");
+        }
+    }
+
+    #[test]
+    fn media_sequence_rejects_late_duplicate_and_overflow_without_wrapping() {
+        for body in [
+            "#EXT-X-MEDIA-SEQUENCE:1\n#EXT-X-MEDIA-SEQUENCE:1\n#EXTINF:1,\na.ts",
+            "#EXTINF:1,\na.ts\n#EXT-X-MEDIA-SEQUENCE:1",
+            "#EXTINF:1,\n#EXT-X-MEDIA-SEQUENCE:1\na.ts",
+            "#EXT-X-MEDIA-SEQUENCE:18446744073709551616\n#EXTINF:1,\na.ts",
+            "#EXT-X-MEDIA-SEQUENCE:18446744073709551615\n#EXTINF:1,\na.ts\n#EXTINF:1,\nb.ts",
+        ] {
+            assert!(
+                parse(&format!("#EXTM3U\n{body}\n#EXT-X-ENDLIST"), &base()).is_err(),
+                "{body}"
+            );
+        }
+        let (fragments, _) = media(
+            "#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:18446744073709551615\n#EXT-X-KEY:METHOD=AES-128,URI=\"key\"\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST",
+        );
+        assert_eq!(
+            fragments[0].encryption.as_ref().unwrap().iv,
+            u128::from(u64::MAX).to_be_bytes()
+        );
+    }
+
     #[test]
     fn enforces_fragment_and_variant_resource_limits() {
         let media = format!(

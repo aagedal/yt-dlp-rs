@@ -1,3 +1,4 @@
+mod crypto;
 mod download;
 mod error;
 pub mod extractor;
@@ -12,7 +13,7 @@ pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
 pub use info::{
-    ByteRange, ExtractResult, Fragment, PlaylistInfo, StreamKind, VideoFormat, VideoInfo,
+    ByteRange, ExtractResult, Fragment, HlsAes128, PlaylistInfo, StreamKind, VideoFormat, VideoInfo,
 };
 
 use extractor::{Extractor, GenericHttp, Youtube};

@@ -83,8 +83,13 @@ impl Server {
                         "application/x-mpegurl",
                         "",
                     ),
+                    "/aes.m3u8" => (
+                        "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXT-X-MEDIA-SEQUENCE:7\n#EXT-X-KEY:METHOD=AES-128,URI=\"key\"\n#EXTINF:4,\nsegment.ts\n#EXT-X-ENDLIST\n",
+                        "application/x-mpegurl",
+                        "",
+                    ),
                     "/encrypted.m3u8" => (
-                        "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXT-X-KEY:METHOD=AES-128,URI=\"key\"\n#EXTINF:4,\nsegment.ts\n#EXT-X-ENDLIST\n",
+                        "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXT-X-KEY:METHOD=SAMPLE-AES,URI=\"key\"\n#EXTINF:4,\nsegment.ts\n#EXT-X-ENDLIST\n",
                         "application/x-mpegurl",
                         "",
                     ),
@@ -379,4 +384,33 @@ fn master_retained_fragment_count_is_bounded_across_variants() {
         server.paths(),
         ["/many-master.m3u8", "/many-child.m3u8", "/many-child.m3u8"]
     );
+}
+
+#[test]
+fn encrypted_json_and_simulation_do_not_request_keys_or_segments() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    for flag in ["-j", "-s"] {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args([flag, &server.url("/aes.m3u8")])
+            .current_dir(directory.path())
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        if flag == "-j" {
+            let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+            assert_eq!(
+                info["fragments"][0]["encryption"]["key_url"],
+                server.url("/key")
+            );
+            assert_eq!(info["fragments"][0]["encryption"]["iv"][15], 7);
+            assert!(info["fragments"][0]["encryption"].get("key").is_none());
+        }
+    }
+    assert_eq!(server.paths(), ["/aes.m3u8", "/aes.m3u8"]);
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
 }

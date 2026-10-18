@@ -59,6 +59,8 @@ impl Server {
                 .unwrap();
                 let mime = if path.ends_with("m3u8") {
                     "application/vnd.apple.mpegurl"
+                } else if path.ends_with("key") {
+                    "application/octet-stream"
                 } else if path.ends_with("ts") {
                     "video/mp2t"
                 } else {
@@ -108,7 +110,14 @@ impl Drop for Server {
 fn saved_transport_stream_and_fragmented_mp4_assemble_exact_media() {
     let server = Server::new();
     let dl = YoutubeDl::new().unwrap();
-    for (kind, ext, count) in [("ts", "ts", 3), ("fmp4", "mp4", 4), ("range", "mp4", 4)] {
+    for (kind, ext, count) in [
+        ("ts", "ts", 3),
+        ("fmp4", "mp4", 4),
+        ("range", "mp4", 4),
+        ("aes-ts", "ts", 3),
+        ("aes-fmp4", "mp4", 4),
+        ("aes-range", "mp4", 4),
+    ] {
         let info = dl
             .extract_info(&format!("{}/{kind}/index.m3u8", server.origin))
             .unwrap();
@@ -119,18 +128,40 @@ fn saved_transport_stream_and_fragmented_mp4_assemble_exact_media() {
         let bytes = dl.download(&info, &output).unwrap();
         let actual = std::fs::read(&output).unwrap();
         let mut expected = Vec::new();
-        for fragment in &info.fragments {
-            let path = fragment.url.path();
-            let body = std::fs::read(
-                concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/hls").to_owned() + path,
-            )
-            .unwrap();
-            if let Some(range) = &fragment.byte_range {
-                expected.extend_from_slice(
-                    &body[range.offset as usize..(range.offset + range.length) as usize],
+        for (index, fragment) in info.fragments.iter().enumerate() {
+            if kind.starts_with("aes-") {
+                let plain_kind = if kind == "aes-ts" { "ts" } else { "fmp4" };
+                let name = if plain_kind == "fmp4" && index == 0 {
+                    "init.mp4".to_owned()
+                } else {
+                    let number = if plain_kind == "fmp4" {
+                        index - 1
+                    } else {
+                        index
+                    };
+                    let suffix = if plain_kind == "fmp4" { "m4s" } else { "ts" };
+                    format!("segment-{number}.{suffix}")
+                };
+                expected.extend(
+                    std::fs::read(format!(
+                        "{}/tests/fixtures/hls/{plain_kind}/{name}",
+                        env!("CARGO_MANIFEST_DIR")
+                    ))
+                    .unwrap(),
                 );
             } else {
-                expected.extend(body);
+                let path = fragment.url.path();
+                let body = std::fs::read(
+                    concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/hls").to_owned() + path,
+                )
+                .unwrap();
+                if let Some(range) = &fragment.byte_range {
+                    expected.extend_from_slice(
+                        &body[range.offset as usize..(range.offset + range.length) as usize],
+                    );
+                } else {
+                    expected.extend(body);
+                }
             }
         }
         assert_eq!(actual, expected);

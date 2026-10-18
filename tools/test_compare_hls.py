@@ -29,7 +29,7 @@ class HlsComparisonTests(unittest.TestCase):
         before = copy.deepcopy((self.native, self.upstream))
         normalized = compare(self.native, self.upstream, ORIGIN)
         self.assertEqual(normalized[0], {"url": "{{ORIGIN}}/init.mp4",
-                                         "byte_range": {"offset": 0, "length": 10}})
+                                         "byte_range": {"offset": 0, "length": 10}, "encryption": None})
         self.assertEqual(normalized[1]["url"], "{{ORIGIN}}/combined.mp4?x=1#part")
         self.assertIsNone(normalized[2]["byte_range"])
         self.assertEqual((self.native, self.upstream), before)
@@ -54,6 +54,53 @@ class HlsComparisonTests(unittest.TestCase):
     def test_missing_fragment_url_is_error(self):
         with self.assertRaises(KeyError):
             compare([{}], [], ORIGIN)
+
+    def test_aes_explicit_and_sequence_ivs_and_method_none(self):
+        explicit = [0] * 15 + [171]
+        implicit = list((258).to_bytes(16, "big"))
+        native = [
+            {"url": ORIGIN + "/first.ts", "encryption": {
+                "key_url": ORIGIN + "/keys/first.key?fixture=1", "iv": implicit}},
+            {"url": ORIGIN + "/second.ts", "encryption": {
+                "key_url": ORIGIN + "/keys/rotated.key", "iv": explicit}},
+            {"url": ORIGIN + "/plain.ts"},
+            {"url": ORIGIN + "/zero.ts", "encryption": {
+                "key_url": ORIGIN + "/keys/rotated.key", "iv": [0] * 16}},
+        ]
+        upstream = [
+            {"url": ORIGIN + "/first.ts", "media_sequence": 258,
+             "decrypt_info": {"METHOD": "AES-128", "URI": ORIGIN + "/keys/first.key?fixture=1"}},
+            {"url": ORIGIN + "/second.ts", "media_sequence": 259,
+             "decrypt_info": {"METHOD": "AES-128", "URI": ORIGIN + "/keys/rotated.key", "IV": explicit}},
+            {"url": ORIGIN + "/plain.ts", "decrypt_info": {"METHOD": "NONE"}},
+            {"url": ORIGIN + "/zero.ts", "media_sequence": 261,
+             "decrypt_info": {"METHOD": "AES-128", "URI": ORIGIN + "/keys/rotated.key", "IV": [0] * 16}},
+        ]
+        original = copy.deepcopy((native, upstream))
+        result = compare(native, upstream, ORIGIN)
+        self.assertEqual(result[0]["encryption"], {
+            "key_url": "{{ORIGIN}}/keys/first.key?fixture=1", "iv": implicit})
+        self.assertEqual(result[1]["encryption"]["iv"], explicit)
+        self.assertIsNone(result[2]["encryption"])
+        self.assertEqual(result[3]["encryption"]["iv"], [0] * 16)
+        self.assertEqual((native, upstream), original)
+        for field, value in (("key_url", ORIGIN + "/wrong.key"), ("iv", [0] * 16)):
+            changed = copy.deepcopy(native)
+            changed[0]["encryption"][field] = value
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, "fragment plan mismatch"):
+                compare(changed, upstream, ORIGIN)
+
+    def test_encryption_key_origin_is_exact_and_invalid_iv_is_rejected(self):
+        url = "https://127.0.0.1:43210/key"
+        encrypted = {"url": ORIGIN + "/first.ts", "encryption": {"key_url": url, "iv": [0] * 16}}
+        self.assertEqual(normalize([encrypted], ORIGIN)[0]["encryption"]["key_url"], url)
+        for iv in ([0] * 15, [256] * 16, [True] * 16, "00" * 16):
+            encrypted["encryption"]["iv"] = iv
+            with self.subTest(iv=iv), self.assertRaisesRegex(ValueError, "invalid AES-128 IV"):
+                normalize([encrypted], ORIGIN)
+        with self.assertRaisesRegex(ValueError, "unexpected upstream encryption"):
+            normalize([{"url": ORIGIN + "/first.ts", "decrypt_info": {"METHOD": "SAMPLE-AES"}}],
+                      ORIGIN, upstream=True)
 
     def test_requires_pinned_checkout(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -88,9 +88,18 @@ pub struct ByteRange {
     pub length: u64,
 }
 
+/// AES-128 HLS key location and resolved IV; key bytes are never metadata.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HlsAes128 {
+    pub key_url: Url,
+    pub iv: [u8; 16],
+}
+
 /// An ordered whole-resource or byte-range media fragment.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Fragment {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub encryption: Option<HlsAes128>,
     pub url: Url,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub byte_range: Option<ByteRange>,

@@ -76,9 +76,11 @@ remain outside the current result contract.
    Download byte-progress observers and cooperative cancellation are implemented,
    with polling during retry waits and cancellation before publication; the CLI
    emits throttled byte progress on stderr. Blocking requests/reads are not
-   interruptible. Native unencrypted HLS VOD master/media selection, MPEG-TS/AAC/fMP4
+   interruptible. Native HLS VOD master/media selection, MPEG-TS/AAC/fMP4
    assembly, explicit/implicit media ranges, fragment retries and cancellation are
-   implemented. DASH, encrypted/live HLS, external renditions, discontinuities,
+   implemented. Identity AES-128 CBC keys, sequence/explicit IVs, rotation and
+   streaming decryption are implemented with exact local media fixtures.
+   DASH, SAMPLE-AES/DRM and live HLS, external renditions, discontinuities,
    persistent resume across invocations, extraction cancellation, and CLI signal handling remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,
    progressive and adaptive formats, signature/JavaScript challenge strategy,

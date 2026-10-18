@@ -513,8 +513,8 @@ See [source and fixture provenance](../upstream/notes/youtube-adaptive-merge.md)
 
 ## Native HLS VOD and fragment transport
 
-Direct HLS playlist URLs and HTML5 HLS sources support a finite unencrypted VOD
-subset. Recognize MPEGURL MIME types, final `.m3u8` URL paths, and explicit HTML5
+Direct HLS playlist URLs and HTML5 HLS sources support a finite VOD
+subset, including identity AES-128 encryption. Recognize MPEGURL MIME types, final `.m3u8` URL paths, and explicit HTML5
 HLS type hints. A conflicting media MIME must not cause a manifest to be saved as
 one media file. Read at most 2 MiB of uncompressed UTF-8/ASCII manifest text;
 ambiguous encoding/content-type headers fail. URLs resolve against each final
@@ -540,8 +540,8 @@ remuxed. FFmpeg is unnecessary for this download path.
 `EXT-X-BYTERANGE` supports explicit offsets and implicit continuation only after
 an immediately preceding media range on the same URL. Map byte ranges require
 an explicit offset. All ranges are positive with checked arithmetic. Unsupported
-state is an error: live playlists without ENDLIST, encrypted keys (including
-AES-128), discontinuities, gaps, low-latency tags, variables, changing maps,
+state is an error: live playlists without ENDLIST, SAMPLE-AES/DRM or unsupported
+key formats, discontinuities, gaps, low-latency tags, variables, changing maps,
 external or unresolved rendition groups, nested masters and unknown EXT tags.
 In-band rendition references without external resources are supported. Plain
 comments and recognized informational metadata do not change assembly.
@@ -579,3 +579,44 @@ Only the exact ephemeral localhost origin and upstream exclusive range end are
 normalized. Container naming/remux behavior, live/encrypted delivery and general
 HLS parity are not inferred. YouTube HLS responses remain unsupported by its
 extractor. See [the source slice](../upstream/notes/hls-vod.md).
+
+
+### HLS AES-128
+
+`EXT-X-KEY:METHOD=AES-128` supports raw 16-byte identity keys from HTTP(S) URLs,
+optional `KEYFORMAT="identity"` / `KEYFORMATVERSIONS="1"`, and CBC with strict
+PKCS#7 padding. `METHOD=NONE` clears encryption. Explicit IVs are hexadecimal
+integers of up to 128 bits, left-padded to 16 bytes. Otherwise the IV is the
+media segment sequence number in a 16-byte big-endian buffer. Initialization
+maps require an explicit IV while encrypted, and do not consume media sequence
+numbers. These rules follow [RFC 8216 sections 4.3.2.4, 4.3.2.5 and 5.2](https://www.rfc-editor.org/rfc/rfc8216.html).
+
+Each fragment's optional `encryption` contains `HlsAes128 { key_url, iv }` only;
+key bytes never appear in metadata. JSON and simulation request neither keys
+nor segment bodies. Downloads retrieve keys lazily, preserving the page referrer
+and identity encoding, with exact 16-byte length and response validation. A URL's
+validated key is cached only for the current download; rotation to a different
+URI fetches a new key. Key and segment requests share that fragment's retry
+budget. Cancellation includes key request/read checkpoints.
+
+RustCrypto `aes`/`cbc` performs bounded streaming decryption without an external
+process. The last ciphertext block is held until EOF for padding validation.
+Ciphertext lengths/ranges are validated against network headers; stored byte
+counts, publication size and observer progress use plaintext bytes. Key bytes and
+padding do not contribute to progress. Invalid keys/ciphertext/padding and
+unsupported methods fail without publication. Earlier plaintext may exist only
+in the private temporary file until all fragments pass validation.
+
+Original OpenSSL-encrypted TS, fMP4/map and byte-range fixtures decrypt to the
+exact original bytes and pass optional FFprobe track checks. Fixed NIST/RustCrypto
+vectors cover CBC and padding independently of the fixture generator. Parser and
+local HTTP tests cover rotation, NONE, sequence bounds, key caching, retries,
+malformed responses and cancellation. The upstream plan comparison additionally
+checks key URLs and IVs. Pinned upstream increments its counter for MAP; native
+implicit-IV-after-MAP behavior follows RFC media sequence numbering, and that
+specific upstream equivalence is explicitly excluded. Explicit-IV MAP plans
+are compared without masking this difference.
+
+SAMPLE-AES, DRM key formats, session keys, custom key overrides and live/key
+refresh across playlist reloads remain unsupported. See the
+[AES source slice](../upstream/notes/hls-aes128.md).

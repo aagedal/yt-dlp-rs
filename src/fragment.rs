@@ -5,6 +5,7 @@ use reqwest::{
     header::{ACCEPT_ENCODING, CONTENT_ENCODING, CONTENT_RANGE, CONTENT_TYPE, RANGE, REFERER},
 };
 use std::{
+    collections::HashMap,
     fs,
     io::{Read, Seek, SeekFrom, Write},
     ops::ControlFlow,
@@ -90,6 +91,11 @@ pub(crate) fn download(
         if !matches!(fragment.url.scheme(), "http" | "https") {
             return Err(Error::UnsupportedScheme(fragment.url.scheme().into()));
         }
+        if let Some(encryption) = &fragment.encryption
+            && !matches!(encryption.key_url.scheme(), "http" | "https")
+        {
+            return Err(Error::UnsupportedScheme(encryption.key_url.scheme().into()));
+        }
         if let Some(range) = &fragment.byte_range
             && (range.length == 0 || range.offset.checked_add(range.length).is_none())
         {
@@ -106,6 +112,7 @@ pub(crate) fn download(
         .suffix(".part")
         .tempfile_in(parent)?;
     let mut stored = 0_u64;
+    let mut keys = HashMap::new();
     let mut reporter = Reporter {
         callback,
         attempt: 1,
@@ -125,6 +132,7 @@ pub(crate) fn download(
                 client,
                 info,
                 fragment,
+                &mut keys,
                 temporary.as_file_mut(),
                 &mut stored,
                 &mut reporter,
@@ -161,10 +169,25 @@ fn fetch(
     client: &Client,
     info: &VideoInfo,
     fragment: &Fragment,
+    keys: &mut HashMap<url::Url, [u8; 16]>,
     file: &mut fs::File,
     stored: &mut u64,
     reporter: &mut Reporter<'_>,
 ) -> std::result::Result<(), Failure> {
+    let decryption = if let Some(encryption) = &fragment.encryption {
+        let key = match keys.get(&encryption.key_url) {
+            Some(key) => *key,
+            None => {
+                let key = fetch_key(client, info, &encryption.key_url, *stored, reporter)?;
+                keys.insert(encryption.key_url.clone(), key);
+                key
+            }
+        };
+        reporter.report(DownloadPhase::Requesting, *stored)?;
+        Some(crate::crypto::Decryptor::new(&key, &encryption.iv))
+    } else {
+        None
+    };
     let mut request = client
         .get(fragment.url.clone())
         .header(ACCEPT_ENCODING, "identity");
@@ -185,8 +208,16 @@ fn fetch(
             retry: crate::retry::failure_delay(&error),
             error,
         })?;
-    let expected = validate(&response, fragment)?;
+    let expected = validate(&response, fragment, false)?;
     reporter.report(DownloadPhase::Downloading, *stored)?;
+    if let Some(decryptor) = decryption {
+        if expected.is_some_and(|length| length == 0 || length % 16 != 0) {
+            return Err(
+                unsupported("AES-128 ciphertext length must be a positive multiple of 16").into(),
+            );
+        }
+        return decrypt_response(response, expected, decryptor, file, stored, reporter);
+    }
     let mut received = 0_u64;
     // Buffer enough leading bytes to recognize split HTML/manifest responses
     // even when a server omits Content-Type or sends one byte per network read.
@@ -196,18 +227,7 @@ fn fetch(
         .take(512)
         .read_to_end(&mut prefix)
         .map_err(|error| body_failure(Error::Io(error)))?;
-    let text = String::from_utf8_lossy(&prefix)
-        .trim_start_matches('\u{feff}')
-        .trim_start()
-        .to_ascii_lowercase();
-    if text.starts_with("<!doctype html")
-        || text.starts_with("<html")
-        || text.starts_with("#extm3u")
-        || text.starts_with("<?xml")
-        || text.starts_with("<mpd")
-    {
-        return Err(unsupported("fragment returned HTML or another manifest").into());
-    }
+    sniff(&prefix)?;
     append(file, &prefix, stored, &mut received, expected, reporter)?;
     let mut buffer = [0; 64 * 1024];
     loop {
@@ -262,7 +282,7 @@ fn append(
     reporter.report(DownloadPhase::Downloading, *stored)?;
     Ok(())
 }
-fn validate(response: &Response, fragment: &Fragment) -> Result<Option<u64>> {
+fn validate(response: &Response, fragment: &Fragment, key: bool) -> Result<Option<u64>> {
     let encoding: Vec<_> = response
         .headers()
         .get_all(CONTENT_ENCODING)
@@ -293,12 +313,23 @@ fn validate(response: &Response, fragment: &Fragment) -> Result<Option<u64>> {
         if mime.contains("mpegurl") || mime == "application/dash+xml" {
             return Err(unsupported("fragment response is another manifest"));
         }
-        if !(mime.starts_with("video/")
-            || mime.starts_with("audio/")
-            || matches!(
+        if key
+            && matches!(
                 mime.as_str(),
-                "application/octet-stream" | "application/mp4" | "application/ogg"
-            ))
+                "text/html" | "application/xhtml+xml" | "application/xml" | "text/xml"
+            )
+        {
+            return Err(unsupported(
+                "HLS AES-128 key response is HTML or a manifest",
+            ));
+        }
+        if !key
+            && !(mime.starts_with("video/")
+                || mime.starts_with("audio/")
+                || matches!(
+                    mime.as_str(),
+                    "application/octet-stream" | "application/mp4" | "application/ogg"
+                ))
         {
             return Err(unsupported("fragment response is not media"));
         }
@@ -345,4 +376,159 @@ fn validate(response: &Response, fragment: &Fragment) -> Result<Option<u64>> {
         }
         Ok(response.content_length())
     }
+}
+
+fn sniff(prefix: &[u8]) -> Result<()> {
+    let text = String::from_utf8_lossy(prefix)
+        .trim_start_matches('\u{feff}')
+        .trim_start()
+        .to_ascii_lowercase();
+    if text.starts_with("<!doctype html")
+        || text.starts_with("<html")
+        || text.starts_with("#extm3u")
+        || text.starts_with("<?xml")
+        || text.starts_with("<mpd")
+    {
+        return Err(unsupported("fragment returned HTML or another manifest"));
+    }
+    Ok(())
+}
+
+fn fetch_key(
+    client: &Client,
+    info: &VideoInfo,
+    url: &url::Url,
+    stored: u64,
+    reporter: &mut Reporter<'_>,
+) -> std::result::Result<[u8; 16], Failure> {
+    reporter.report(DownloadPhase::Requesting, stored)?;
+    let mut request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
+    if !info.direct {
+        request = request.header(REFERER, info.webpage_url.as_str());
+    }
+    let mut response = request
+        .send()
+        .map_err(Error::Http)
+        .and_then(crate::retry::check_response)
+        .map_err(|error| Failure {
+            retry: crate::retry::failure_delay(&error),
+            error,
+        })?;
+    let key_fragment = Fragment {
+        url: url.clone(),
+        byte_range: None,
+        encryption: None,
+    };
+    let expected = validate(&response, &key_fragment, true)?;
+    if expected.is_some_and(|length| length != 16) {
+        return Err(unsupported("HLS AES-128 key must contain exactly 16 bytes").into());
+    }
+    let mut bytes = [0_u8; 17];
+    let mut received = 0;
+    while received < bytes.len() {
+        reporter.report(DownloadPhase::Downloading, stored)?;
+        let count = match response.read(&mut bytes[received..]) {
+            Ok(0) => break,
+            Ok(count) => count,
+            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+            Err(error) => return Err(body_failure(Error::Io(error))),
+        };
+        received += count;
+    }
+    if received != 16 {
+        return Err(unsupported("HLS AES-128 key must contain exactly 16 bytes").into());
+    }
+    let mut key = [0; 16];
+    key.copy_from_slice(&bytes[..16]);
+    Ok(key)
+}
+
+fn decrypt_response(
+    mut response: Response,
+    expected: Option<u64>,
+    mut decryptor: crate::crypto::Decryptor,
+    file: &mut fs::File,
+    stored: &mut u64,
+    reporter: &mut Reporter<'_>,
+) -> std::result::Result<(), Failure> {
+    let mut cipher_bytes = 0_u64;
+    let mut plain_bytes = 0_u64;
+    let mut prefix = Vec::with_capacity(512);
+    let mut sniffed = false;
+    let mut buffer = [0; 32 * 1024];
+    loop {
+        reporter.report(DownloadPhase::Downloading, *stored)?;
+        let count = match response.read(&mut buffer) {
+            Ok(0) => break,
+            Ok(count) => count,
+            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+            Err(error) => return Err(body_failure(Error::Io(error))),
+        };
+        cipher_bytes = cipher_bytes
+            .checked_add(count as u64)
+            .ok_or(Error::InvalidRangeResponse)?;
+        if expected.is_some_and(|expected| cipher_bytes > expected) {
+            return Err(Error::InvalidRangeResponse.into());
+        }
+        let plain = decryptor.update(&buffer[..count]);
+        write_plain(
+            &plain,
+            &mut prefix,
+            &mut sniffed,
+            file,
+            stored,
+            &mut plain_bytes,
+            reporter,
+        )?;
+    }
+    if let Some(expected) = expected
+        && cipher_bytes != expected
+    {
+        return Err(body_failure(Error::IncompleteDownload {
+            expected,
+            actual: cipher_bytes,
+        }));
+    }
+    let final_plain = decryptor.finish()?;
+    write_plain(
+        &final_plain,
+        &mut prefix,
+        &mut sniffed,
+        file,
+        stored,
+        &mut plain_bytes,
+        reporter,
+    )?;
+    if !sniffed {
+        sniff(&prefix)?;
+        append(file, &prefix, stored, &mut plain_bytes, None, reporter)?;
+    }
+    if plain_bytes == 0 {
+        return Err(unsupported("empty media fragment").into());
+    }
+    Ok(())
+}
+
+fn write_plain(
+    bytes: &[u8],
+    prefix: &mut Vec<u8>,
+    sniffed: &mut bool,
+    file: &mut fs::File,
+    stored: &mut u64,
+    plain_bytes: &mut u64,
+    reporter: &mut Reporter<'_>,
+) -> std::result::Result<(), Failure> {
+    if *sniffed {
+        return append(file, bytes, stored, plain_bytes, None, reporter);
+    }
+    let take = bytes.len().min(512 - prefix.len());
+    prefix.extend_from_slice(&bytes[..take]);
+    if prefix.len() == 512 {
+        sniff(prefix)?;
+        append(file, prefix, stored, plain_bytes, None, reporter)?;
+        prefix.clear();
+        *sniffed = true;
+        append(file, &bytes[take..], stored, plain_bytes, None, reporter)?;
+    }
+    Ok(())
 }
