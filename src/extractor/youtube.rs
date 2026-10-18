@@ -1,5 +1,8 @@
 //! Narrow watch-page slice of YoutubeIE at the pinned upstream revision.
 //! One bounded WEB API fallback; no JavaScript or manifest fallback.
+// The offline boundary is tested independently before extraction integration.
+#[allow(dead_code)]
+mod challenge;
 mod client;
 use super::{Extractor, direct};
 use crate::{Error, Result, VideoFormat, VideoInfo};

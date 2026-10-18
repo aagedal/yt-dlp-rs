@@ -90,9 +90,13 @@ remain outside the current result contract.
    fixtures cover it. The
    [JavaScript runtime decision](../upstream/notes/youtube-challenge-runtime.md)
    selects an opt-in external Deno process with pinned offline EJS assets;
-   challenge solving remains unimplemented. Next: import and verify the full
-   EJS assets and saved challenge vectors, then implement the bounded runner
-   before integrating one challenge kind at a time. Adaptive media requires
+   extraction challenge solving remains unimplemented. The full EJS 0.8.0
+   assets, saved player vectors, private typed protocol, bounded Deno 2.9.7 runner,
+   and a dedicated offline runtime CI matrix are now implemented; see the
+   [runner slice](../upstream/notes/youtube-challenge-runner.md). Local saved-player
+   `n`/signature comparisons pass. Next: confirm the cross-platform CI gates,
+   then add bounded player acquisition and integrate one challenge kind at a time.
+   Adaptive media requires
    explicit stream types and merging, while manifests remain milestone 3 work. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor

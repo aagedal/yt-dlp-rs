@@ -1,0 +1,3 @@
+# Hash-pinned solver/player artifacts must retain their original LF bytes.
+/vendor/ejs/* text eol=lf
+/tests/fixtures/youtube/challenges/* text eol=lf
