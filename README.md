@@ -145,11 +145,15 @@ Supported today:
   compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.
   HTTPS proxy and CONNECT transfers retain certificate validation.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
+- `-a/--batch-file FILE` reads URLs (`-` for stdin) before positional URLs, skipping
+  blank and `#`/`;`/`]` comment lines and ` #` trailing comments; `--no-batch-file`
+  disables it. See [batch files](upstream/notes/batch-file.md).
 - `-O/--print [video:]TEMPLATE` prints field lists (`-O id,title`, `-O title=`)
   or unsanitized output templates per selected video, including `j` JSON values,
   `filename` and selected `urls`; `-e`, `--get-id`, `-g` and `--get-filename` are
-  supported aliases. Printing implies quiet simulation. Other print stages,
-  `--print-to-file` and `--no-simulate` are not implemented; see
+  supported aliases. Printing implies quiet simulation. `--print-to-file` appends
+  video-stage lines without implying simulation. Other print stages and
+  `--no-simulate` are not implemented; see
   [print templates](docs/COMPATIBILITY.md#print-templates).
 - Typed output fields include IDs/titles, dimensions, filesize and playlist indices,
   with string `s`, integer `d/i/u` and fixed-point `f/F` width/precision formatting.

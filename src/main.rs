@@ -26,8 +26,14 @@ use yt_dlp_rs::{
     about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
 )]
 struct Args {
-    #[arg(required = true)]
+    #[arg(required_unless_present = "batch_file")]
     urls: Vec<String>,
+    /// Read URLs from FILE ("-" for stdin), one per line; "#", ";" and "]" lines are comments
+    #[arg(short = 'a', long, value_name = "FILE", overrides_with_all = ["batch_file", "no_batch_file"])]
+    batch_file: Option<String>,
+    /// Do not read URLs from a batch file (default)
+    #[arg(long, overrides_with = "batch_file")]
+    no_batch_file: bool,
     /// Print one JSON info object per video (including playlist entries) without downloading
     #[arg(short = 'j', long)]
     dump_json: bool,
@@ -221,7 +227,27 @@ fn append_line(path: &std::path::Path, line: &str) -> io::Result<()> {
 }
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
-    let args = Args::parse();
+    let mut args = Args::parse();
+    // Like upstream get_urls: batch URLs precede positional URLs, all stripped.
+    let mut urls = match args.batch_file.as_deref().filter(|_| !args.no_batch_file) {
+        Some(spec) => {
+            if spec == "-" {
+                // Upstream prints this unless -q, which is not implemented here.
+                eprintln!("Reading URLs from STDIN - EOF (Ctrl+D) to end:");
+            }
+            yt_dlp_rs::batch::load_batch_file(spec)
+                .map_err(|_| format!("batch file {spec} could not be read"))?
+        }
+        None => Vec::new(),
+    };
+    urls.extend(
+        std::mem::take(&mut args.urls)
+            .iter()
+            .map(|url| yt_dlp_rs::batch::py_strip(url).to_owned()),
+    );
+    if urls.is_empty() {
+        return Err("You must provide at least one URL.".into());
+    }
     let mut print_templates = args
         .print
         .iter()
@@ -351,7 +377,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         && !args.list_subs;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
-    for url in args.urls {
+    for url in urls {
         let options = ExtractionOptions {
             retries: args.extractor_retries,
         };

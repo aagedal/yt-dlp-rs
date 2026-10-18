@@ -1,6 +1,7 @@
 mod archive;
 mod audio;
 mod audio_download;
+pub mod batch;
 mod cookies;
 mod crypto;
 mod dash;

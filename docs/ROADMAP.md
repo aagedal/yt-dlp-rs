@@ -89,6 +89,7 @@ remain outside the current result contract.
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
    destinations without implying simulation. Other print stages remain open.
+   `-a/--batch-file` URL lists follow upstream `get_urls` parsing.
    Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.
