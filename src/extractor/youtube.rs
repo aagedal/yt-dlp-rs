@@ -1,5 +1,6 @@
 //! Narrow watch-page slice of YoutubeIE at the pinned upstream revision.
-//! No API client, JavaScript execution, signature solving, or manifest fallback.
+//! One bounded WEB API fallback; no JavaScript or manifest fallback.
+mod client;
 use super::{Extractor, direct};
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use reqwest::{
@@ -74,7 +75,7 @@ fn video_id(url: &Url) -> Result<Option<String>> {
         .ok_or_else(|| unsupported("expected a single video URL with an 11-character ID"))
 }
 
-fn player_response(html: &str) -> Result<Value> {
+fn initial_player_response(html: &str) -> Result<Option<Value>> {
     let document = Html::parse_document(html);
     let scripts = Selector::parse("script").expect("static selector");
     for script in document.select(&scripts) {
@@ -97,19 +98,23 @@ fn player_response(html: &str) -> Result<Value> {
                     continue;
                 };
                 if !json.starts_with('{') {
-                    continue;
+                    return Err(unsupported("initial player response is not a JSON object"));
                 }
                 let mut values = serde_json::Deserializer::from_str(json).into_iter::<Value>();
                 return values
                     .next()
                     .and_then(std::result::Result::ok)
+                    .map(Some)
                     .ok_or_else(|| unsupported("malformed initial player response"));
             }
         }
     }
-    Err(unsupported(
-        "watch page has no initial player response; API/client fallback is not implemented",
-    ))
+    Ok(None)
+}
+
+#[cfg(test)]
+fn player_response(html: &str) -> Result<Value> {
+    initial_player_response(html)?.ok_or_else(|| unsupported("no initial player response"))
 }
 
 fn parse_formats(player: &Value, id: &str) -> Result<(String, Vec<VideoFormat>)> {
@@ -291,7 +296,23 @@ fn extract_watch_page(client: &Client, page: &Url, id: &str) -> Result<VideoInfo
         return Err(Error::HtmlTooLarge(MAX_PAGE_BYTES));
     }
     let html = std::str::from_utf8(&bytes).map_err(|_| unsupported("watch page is not UTF-8"))?;
-    let (title, mut formats) = parse_formats(&player_response(html)?, id)?;
+    // Never use API fallback to bypass a malformed, gated, or unsupported
+    // initial response. The missing-response path gets exactly one WEB request.
+    let (player, api) = match initial_player_response(html)? {
+        Some(player) => (player, false),
+        None => (client::fetch_player(client, page, html, id)?, true),
+    };
+    let (title, mut formats) = parse_formats(&player, id)?;
+    if api {
+        // WEB HTTPS GVS requires a PO token except for itag 18 at the pinned
+        // source revision. No token acquisition or missing-token override.
+        formats.retain(|format| format.format_id == "18");
+        if formats.is_empty() {
+            return Err(unsupported(
+                "WEB API formats require an unsupported GVS PO token; no token-free itag 18",
+            ));
+        }
+    }
     for format in &mut formats {
         let response = direct::request(client, &format.url, Some(page))?;
         let media = direct::from_response(&response, &format.url)

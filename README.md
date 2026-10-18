@@ -44,8 +44,10 @@ Supported today:
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes
   canonicalized to a watch page (actual live content is rejected). Only direct
   combined audio/video MP4/WebM formats in `ytInitialPlayerResponse` are eligible;
-  format IDs are YouTube itags. This is fixture-tested groundwork, not general
-  live-site support. Signatures, `n` challenges, player API/client fallback, tokens,
+  when that response is absent, one anonymous WEB player API request can supply
+  token-exempt itag 18 using literal page client configuration.
+  Format IDs are YouTube itags. This is fixture-tested groundwork, not general
+  live-site support. Signatures, `n` challenges, additional clients, token acquisition,
   adaptive streams, and playlists are unsupported; many current videos will fail.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.

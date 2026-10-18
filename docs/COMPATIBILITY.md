@@ -26,7 +26,7 @@ The built-in `Youtube` extractor runs before the generic HTTP fallback. Exact
 `youtube.com`, `www.youtube.com`, `m.youtube.com`, `music.youtube.com`, `youtu.be`,
 `www.youtu.be`, `youtube-nocookie.com`, and `www.youtube-nocookie.com` hosts are
 claimed. Accept watch URLs with one `v` parameter, short links, `/shorts/`,
-`/embed/`, and `/live/` paths with exactly an 11-character video ID. All requests
+`/embed/`, and `/live/` paths with exactly an 11-character video ID. Watch-page requests
 use the canonical HTTPS watch URL. Reject channels, playlists, malformed IDs,
 and URLs containing `list=` before making a request. `/live/` is a URL shape;
 live, upcoming, and post-live player responses remain unsupported.
@@ -35,7 +35,29 @@ Watch pages must be uncompressed UTF-8/ASCII `text/html`, at most 2 MiB. Parse
 JSON assigned to `ytInitialPlayerResponse` in a script, including quoted window
 property assignments. Require `playabilityStatus.status=OK`, the requested video
 ID, and a nonempty title. No JavaScript runs. Authentication, age/consent gates,
-player API/client fallback, cookies, and token acquisition are unsupported.
+additional API clients, cookies, and token acquisition are unsupported.
+
+Only when the initial response is absent, make one WEB player API POST to the
+canonical page origin at `/youtubei/v1/player?prettyPrint=false`; the shared
+HTTP redirect policy still applies. Require literal
+`ytcfg.set({...})` script configuration with `INNERTUBE_CONTEXT.client` naming
+`WEB` and a nonempty digits/dots client version (at most 128 bytes). Multiple
+literal objects merge in declaration order. Construct a fresh context with that
+name/version, `hl=en`, `gl=US`, and optional visitor data (at most 4096 bytes, no
+control characters); send matching client/visitor headers and page Origin/Referer.
+Page host overrides, API keys, user/session context, and credentials are ignored.
+The body contains video ID, this client context, and HTML5 playback preference.
+No signature timestamp, content/racy check overrides, player token, or auth is
+sent. JSON responses must be uncompressed, at most 2 MiB, and pass the same
+identity/playability/format validation. Malformed or unsupported initial
+responses never invoke fallback. API errors fail explicitly; opt-in extraction
+retries restart the whole page/API sequence after transient status/read failures.
+
+WEB player requests need no PLAYER PO token at the pinned baseline. Its media
+URLs require a GVS PO token except itag 18. API-derived formats therefore retain
+only itag 18 before any media probe; no surviving format is an unsupported error.
+This policy does not acquire tokens or assert that exempt URLs always work.
+The original initial-response path retains its prior token/probe behavior.
 
 Expose only `streamingData.formats` entries with direct HTTP(S) URLs, MP4/WebM
 MIME types, and recognized audio **and** video codecs. Preserve numeric itags as
@@ -52,8 +74,9 @@ if another format might work. Metadata uses `youtube` / `Youtube`, `direct=false
 and the canonical watch page. The shared downloader sends that page as referrer.
 
 This is fixture-tested groundwork, not general live-site YouTube support. Modern
-YouTube may require API clients, PO tokens, signatures, `n` challenges, SABR,
-manifest protocols, or separate adaptive audio/video merging; none is implemented.
+YouTube may require other API clients, PO tokens, signatures, `n` challenges,
+SABR, manifest protocols, or separate adaptive audio/video merging; those remain
+unimplemented.
 An unsupported page cannot fall through to generic HTML5 and appear successful.
 The deterministic Rust tests cover URL dispatch, player response validation,
 format rejection, source probes, selection, and a local download. The optional
@@ -67,9 +90,14 @@ Only ID, title, extractor identity, canonical webpage URL, and ordered formats'
 itag, extension, dimensions, URL, and filesize are compared. Normalize only the
 exact fixture origin to `{{ORIGIN}}`; all other compared values remain exact.
 The harness bypasses upstream network/client acquisition and allows missing PO
-tokens for fixture parsing. It verifies response parsing, not request/client
-parity, token policy, full ranking, or live-site usability. See
-[the implementation brief](../upstream/notes/youtube-watch-page.md).
+tokens for the original watch-page fixture only. The additional saved API
+response uses ordinary upstream WEB token policy and compares the retained
+itag 18 metadata. These comparisons verify parsing and that token-policy subset,
+not API acquisition/request parity, full ranking, or live-site usability. Local
+Rust HTTP tests separately assert API requests, rejected responses, fallback
+boundaries, whole-extraction retries, and token filtering before probes. See
+[the watch-page brief](../upstream/notes/youtube-watch-page.md) and
+[the API brief](../upstream/notes/youtube-player-api.md).
 
 ## HTML5 extraction
 

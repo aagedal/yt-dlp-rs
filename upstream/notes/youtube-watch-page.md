@@ -1,5 +1,9 @@
 # YouTube watch-page implementation brief
 
+Historical initial-slice brief. The subsequent [WEB API slice](youtube-player-api.md)
+implements the missing-response fallback and API token policy described as next
+steps below; the original initial-response path retains this brief's scope.
+
 Source and target: official yt-dlp commit
 `897341241f2bfb2439fe0367f4c7c9ccd29a3828` (the existing pinned baseline).
 This introduces a scoped extractor at the baseline; it is not an upstream update.

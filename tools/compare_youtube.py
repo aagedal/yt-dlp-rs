@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """Compare saved YouTube player-response metadata with an upstream checkout.
 
-Development-only parser parity check: no requests, player API, JavaScript, token
-acquisition, or download occurs. Rust fixture tests independently consume the
-same expected.json. This does not establish live-site or client parity.
+Development-only parser parity check: no requests, player API acquisition,
+JavaScript, token acquisition, or download occurs. Rust fixture tests independently
+consume the same expected JSON files. This does not establish live-site or client
+request parity: the saved API response is injected after acquisition.
 Only FIELDS and FORMAT_FIELDS are compared, preserving ordered formats. The sole
 normalization replaces the exact fixed fixture origin with {{ORIGIN}} in URLs.
-Upstream's missing_pot option permits parsing fixture itag 22 without acquiring
-a token; this does not claim the resulting URL is usable without one.
+For the original watch-page fixture only, upstream's missing_pot option permits
+parsing itag 22 without acquiring a token; this does not claim URL usability.
+The API fixture uses ordinary anonymous WEB token policy, retaining exempt itag 18
+and rejecting itag 22 without a GVS token.
 """
 
 import argparse
@@ -21,6 +24,10 @@ from urllib.parse import urlsplit
 ORIGIN = "http://127.0.0.1:43210"
 FIELDS = ("id", "title", "extractor", "extractor_key", "webpage_url")
 FORMAT_FIELDS = ("format_id", "ext", "width", "height", "url", "filesize")
+FIXTURE_CASES = (
+    ("progressive.html", "expected.json", "watch-page"),
+    ("player-api.json", "player-api-expected.json", "player-api"),
+)
 UPSTREAM_WORKER = r'''
 import json, socket, sys
 from pathlib import Path
@@ -35,6 +42,7 @@ def forbidden(*args, **kwargs):
 socket.create_connection = forbidden
 socket.socket = forbidden
 page = Path(sys.argv[2]).read_text().replace('{{ORIGIN}}', sys.argv[3])
+is_api = sys.argv[4] == 'player-api'
 
 class FixtureYoutubeIE(YoutubeIE):
     _request_webpage = forbidden
@@ -44,7 +52,7 @@ class FixtureYoutubeIE(YoutubeIE):
         return YoutubeIE.ie_key()
 
     def _initial_extract(self, url, smuggled_data, webpage_url, webpage_client, video_id):
-        response = self._search_json(
+        response = json.loads(page) if is_api else self._search_json(
             self._YT_INITIAL_PLAYER_RESPONSE_RE, page, 'saved player response', video_id)
         response['streamingData'].update({
             _video.STREAMING_DATA_CLIENT_NAME: 'web',
@@ -53,11 +61,11 @@ class FixtureYoutubeIE(YoutubeIE):
             _video.STREAMING_DATA_IS_PREMIUM_SUBSCRIBER: False,
             _video.STREAMING_DATA_AVAILABLE_AT_TIMESTAMP: None,
         })
-        return page, {}, {}, False, [response], None
+        return '' if is_api else page, {}, {}, False, [response], None
 
 with YoutubeDL({'quiet': True, 'no_warnings': True, 'cachedir': False,
                 'skip_download': True, 'extractor_args': {'youtube': {
-                    'player_skip': ['js'], 'formats': ['missing_pot'],
+                    'player_skip': ['js'], 'formats': [] if is_api else ['missing_pot'],
                     'skip': ['hls', 'dash', 'translated_subs']}}}) as ydl:
     ie = FixtureYoutubeIE(ydl)
     info = ie._real_extract('https://www.youtube.com/watch?v=BaW_jenozKc')
@@ -101,17 +109,18 @@ def main():
         parser.error("--upstream must name an official yt-dlp source checkout")
     fixtures = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "youtube"
     try:
-        completed = subprocess.run(
-            [sys.executable, "-B", "-c", UPSTREAM_WORKER, str(upstream),
-             str(fixtures / "progressive.html"), ORIGIN],
-            capture_output=True, text=True, timeout=30, check=True)
-        compare(json.loads(completed.stdout), json.loads((fixtures / "expected.json").read_text()))
+        for response_file, expected_file, mode in FIXTURE_CASES:
+            completed = subprocess.run(
+                [sys.executable, "-B", "-c", UPSTREAM_WORKER, str(upstream),
+                 str(fixtures / response_file), ORIGIN, mode],
+                capture_output=True, text=True, timeout=30, check=True)
+            compare(json.loads(completed.stdout), json.loads((fixtures / expected_file).read_text()))
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         print(f"comparison failed: {error}", file=sys.stderr)
         if isinstance(error, subprocess.CalledProcessError) and error.stderr:
             print(error.stderr, file=sys.stderr)
         return 1
-    print("YouTube saved player-response metadata matches (parser parity only)")
+    print("YouTube saved watch-page and API metadata match (parser/token policy parity only)")
     return 0
 
 

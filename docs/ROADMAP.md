@@ -20,8 +20,10 @@ tractable for future agents.
 - `src/extractor/`: independent extractors, generic fallback last.
 - `src/extractor/html5.rs`: generic response dispatch and progressive HTML5 source parsing;
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
-- `src/extractor/youtube.rs`: narrow watch-page initial player response extraction,
+- `src/extractor/youtube.rs`: narrow watch-page/player response extraction,
   direct muxed formats only, with unsupported challenge/access handling errors.
+- `src/extractor/youtube/client.rs`: isolated anonymous WEB player API request
+  fallback and explicit token-exempt itag 18 policy.
 - `src/download.rs`: streaming HTTP transfer, byte-progress/cancellation checkpoints, and no-clobber publication.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
 - `src/output.rs`: template rendering and filename-component sanitization.
@@ -82,8 +84,9 @@ remain outside the current result contract.
    initial player response parsing, playable/identity checks, direct muxed
    MP4/WebM formats, itag selection, media probes, and local fixture downloads.
    A saved-response upstream comparison covers the parsed metadata subset.
-   This does not establish current live-site reliability. Next: add isolated
-   player API request/client fixtures and a token policy, then choose the
+   This does not establish current live-site reliability. An isolated anonymous
+   WEB API fallback is implemented for missing initial responses, with literal
+   page client configuration and token-exempt itag 18 only; local request/response fixtures cover it. Next: choose the
    JavaScript challenge boundary; adaptive media requires explicit stream types
    and merging, while manifests remain milestone 3 work. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
