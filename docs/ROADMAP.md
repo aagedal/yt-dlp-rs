@@ -88,7 +88,8 @@ remain outside the current result contract.
    filename parity remain open. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
-   destinations without implying simulation. Other print stages remain open.
+   destinations without implying simulation. `--no-simulate` downloads after printing, `-j` or listing.
+   Other print stages remain open.
    Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.

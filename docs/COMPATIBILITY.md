@@ -44,7 +44,8 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection, record only after successful download/merge publication; no writes in metadata/listing/simulation |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
-| All other flags | Rejected; `--no-simulate` and general option parity are not implemented |
+| `--no-simulate` | Download despite `-O`/`--get-*`/`-j`/`-F`/`--list-subs`; the last of `-s`/`--no-simulate` wins |
+| All other flags | Rejected; general option parity is not implemented |
 
 Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
@@ -980,8 +981,8 @@ As in pinned upstream control flow, adding `-j` or `-s` retains normal selection
 is human text plus JSON, rather than plain NDJSON. `-F -s` selects and prints the
 table without downloading. Existing native selection/default/group policies apply,
 so a separate-only combined mode may require an explicit pair selector or merger
-configuration. `--no-simulate` and upstream listing-style toggles remain unsupported;
-listing never downloads in this CLI subset.
+configuration. With `--no-simulate`, listing prints the table and then selects and
+downloads normally, as upstream does. Upstream listing-style toggles remain unsupported.
 
 Tables retain extractor declaration order and show ID, extension, resolution,
 stream kind, exact declared/probed filesize in bytes, declared kbps rates, language
@@ -1241,7 +1242,8 @@ represented. With `-j`, printed lines precede each JSON object.
 
 Printing and `--get-*` imply quiet simulation: no media, subtitle, info JSON or
 archive writes, and no `[extractor] id: title` stderr line. `--no-simulate`
-is not implemented. Listing options still print their tables and then keep
+(also with `-j`) keeps the printed lines and then downloads and writes sidecars;
+unlike upstream it does not silence the download diagnostics on stderr. Listing options still print their tables and then keep
 normal selection, as with `-j`/`-s`. All lines for a video are rendered before
 any is written, so a render failure prints nothing for that video, reports an
 error and continues with later inputs. A failed `-o` render fails only videos
@@ -1311,7 +1313,7 @@ controls and are bounded to 128/256 characters, with at most 1024 rows. List-onl
 mode bypasses media format availability; adding `-j` or `-s` retains selection.
 Tables/JSON wait for all retained entries to extract and select successfully.
 Listing, JSON and simulation never write sidecars or render output paths.
-`--no-simulate` and upstream table styling remain unsupported.
+`--no-simulate` downloads after listing; upstream table styling remains unsupported.
 
 Actual downloads plan sanitized sidecars before I/O, replacing a final matching
 media extension with `.LANG.EXT`, or appending that suffix otherwise. Language and

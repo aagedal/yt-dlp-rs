@@ -357,16 +357,11 @@ fn playlist_listing_is_ordered_and_failed_later_entries_produce_no_output() {
 }
 
 #[test]
-fn malformed_selector_and_unsupported_no_simulate_fail_before_any_network_or_listing() {
+fn malformed_selector_fails_before_any_network_or_listing() {
     let server = Server::new();
-    for args in [
-        vec!["-F", "-f", "best/best[unknown=1]"],
-        vec!["-F", "--no-simulate"],
-    ] {
-        let output = server.cli("/page.html", &args);
-        assert!(!output.status.success());
-        assert!(output.stdout.is_empty());
-    }
+    let output = server.cli("/page.html", &["-F", "-f", "best/best[unknown=1]"]);
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty());
     assert!(server.requests.lock().unwrap().is_empty());
 }
 

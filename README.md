@@ -148,8 +148,8 @@ Supported today:
 - `-O/--print [video:]TEMPLATE` prints field lists (`-O id,title`, `-O title=`)
   or unsanitized output templates per selected video, including `j` JSON values,
   `filename` and selected `urls`; `-e`, `--get-id`, `-g` and `--get-filename` are
-  supported aliases. Printing implies quiet simulation. Other print stages,
-  `--print-to-file` and `--no-simulate` are not implemented; see
+  supported aliases. Printing implies quiet simulation unless `--no-simulate`
+  is given; `--print-to-file` appends lines to files. Other print stages are not implemented; see
   [print templates](docs/COMPATIBILITY.md#print-templates).
 - Typed output fields include IDs/titles, dimensions, filesize and playlist indices,
   with string `s`, integer `d/i/u` and fixed-point `f/F` width/precision formatting.

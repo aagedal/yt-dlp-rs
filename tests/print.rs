@@ -320,3 +320,41 @@ fn print_to_file_runs_under_print_simulation_and_validates_at_startup() {
     }
     assert_eq!(server.count("/page.html"), 0);
 }
+
+#[test]
+fn no_simulate_downloads_while_printing_dumping_and_listing() {
+    let server = Server::new();
+    for (index, args) in [
+        vec!["-O", "id", "--no-simulate"],
+        vec!["-j", "--no-simulate", "--write-info-json"],
+        vec!["-F", "--no-simulate"],
+        vec!["--no-simulate", "-s", "-O", "id"],
+        vec!["-s", "--no-simulate", "--get-id"],
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let directory = tempfile::tempdir().unwrap();
+        let mut args = args;
+        args.extend(["-o", "%(id)s.%(ext)s"]);
+        let output = server.cli(&["/page.html"], &args, directory.path());
+        let stdout = success(&output);
+        let media = directory.path().join("page-1.mp4");
+        match index {
+            0 | 4 => assert_eq!(stdout, "page-1\n"),
+            1 => {
+                let json: Value = serde_json::from_str(stdout.trim_end()).unwrap();
+                assert_eq!(json["id"], "page-1");
+                assert!(directory.path().join("page-1.info.json").exists());
+            }
+            2 => assert!(stdout.contains("ID"), "{stdout}"),
+            _ => {
+                // The last of -s/--no-simulate wins.
+                assert_eq!(stdout, "page-1\n");
+                assert!(!media.exists());
+                continue;
+            }
+        }
+        assert_eq!(std::fs::read(&media).unwrap(), b"media", "{args:?}");
+    }
+}
