@@ -162,6 +162,21 @@ struct Args {
     /// Retry the entire extraction after transient network failures (0 disables retries)
     #[arg(long, default_value_t = 0)]
     extractor_retries: u8,
+    /// Seconds to wait for connections and each read/write before giving up
+    #[arg(long, value_name = "SECONDS", allow_hyphen_values = true)]
+    socket_timeout: Option<f64>,
+    /// Client-side IP address to bind to
+    #[arg(long, value_name = "IP", overrides_with_all = ["source_address", "force_ipv4", "force_ipv6"])]
+    source_address: Option<String>,
+    /// Make all connections via IPv4
+    #[arg(short = '4', long, overrides_with_all = ["source_address", "force_ipv4", "force_ipv6"])]
+    force_ipv4: bool,
+    /// Make all connections via IPv6
+    #[arg(short = '6', long, overrides_with_all = ["source_address", "force_ipv4", "force_ipv6"])]
+    force_ipv6: bool,
+    /// Suppress HTTPS certificate validation
+    #[arg(long)]
+    no_check_certificates: bool,
     /// HTTP/HTTPS/SOCKS proxy URL; an empty value forces direct connections
     #[arg(long, value_name = "URL", overrides_with = "proxy")]
     proxy: Option<String>,
@@ -586,6 +601,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let cookie_file_was_missing = args.cookies.as_ref().is_some_and(|path| !path.exists());
     let mut http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
     http_options.proxy = args.proxy;
+    http_options.socket_timeout = args.socket_timeout;
+    http_options.no_check_certificates = args.no_check_certificates;
+    // Upstream -4/-6 store 0.0.0.0/:: into the shared source_address option.
+    http_options.source_address = if args.force_ipv4 {
+        Some("0.0.0.0".into())
+    } else if args.force_ipv6 {
+        Some("::".into())
+    } else {
+        args.source_address
+    };
     http_options.validate()?;
     if let Some(path) = &args.cookies {
         http_options.cookies = Some(Arc::new(CookieJar::load(path)?));

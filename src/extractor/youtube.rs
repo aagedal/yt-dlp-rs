@@ -47,7 +47,7 @@ impl Youtube {
         options: YoutubeOptions,
         headers: reqwest::header::HeaderMap,
         cookies: std::sync::Arc<crate::CookieJar>,
-        proxy: crate::http::ProxyConfig,
+        proxy: crate::http::TransportConfig,
     ) -> impl Extractor {
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,

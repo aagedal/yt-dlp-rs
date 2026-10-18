@@ -2,8 +2,10 @@
 mod proxy;
 use crate::{CookieJar, Error, Result};
 pub(crate) use proxy::ProxyConfig;
+use reqwest::blocking::ClientBuilder;
 use reqwest::header::{COOKIE, HeaderMap, HeaderName, HeaderValue, REFERER, USER_AGENT};
 use std::sync::Arc;
+use std::{net::IpAddr, time::Duration};
 
 /// Global request defaults. Extractor/transport headers take precedence.
 /// Raw Cookie headers are unsupported; use the scoped cookie jar instead.
@@ -16,6 +18,52 @@ pub struct HttpOptions {
     pub headers: Vec<(String, String)>,
     pub user_agent: Option<String>,
     pub referer: Option<String>,
+    /// `--socket-timeout` seconds for connect and each read/write; None or 0
+    /// keeps the native defaults (15 s connect, 300 s operations).
+    pub socket_timeout: Option<f64>,
+    /// `--no-check-certificates`: accept invalid HTTPS certificates.
+    pub no_check_certificates: bool,
+    /// `--source-address`/`-4`/`-6`: client-side IP address to bind to.
+    pub source_address: Option<String>,
+}
+
+/// Connection policy shared by the normal and bounded player clients.
+#[derive(Clone, Default)]
+pub(crate) struct TransportConfig {
+    pub(crate) proxy: ProxyConfig,
+    timeout: Option<Duration>,
+    insecure: bool,
+    source_address: Option<IpAddr>,
+}
+
+impl From<ProxyConfig> for TransportConfig {
+    fn from(proxy: ProxyConfig) -> Self {
+        Self {
+            proxy,
+            ..Default::default()
+        }
+    }
+}
+
+impl TransportConfig {
+    pub(crate) fn apply(&self, builder: ClientBuilder) -> Result<ClientBuilder> {
+        let (connect, operation) = match self.timeout {
+            Some(timeout) => (timeout, timeout),
+            None => (Duration::from_secs(15), Duration::from_secs(300)),
+        };
+        let mut builder = self
+            .proxy
+            .apply(builder)?
+            .connect_timeout(connect)
+            .timeout(operation);
+        if self.insecure {
+            builder = builder.danger_accept_invalid_certs(true);
+        }
+        if let Some(address) = self.source_address {
+            builder = builder.local_address(address);
+        }
+        Ok(builder)
+    }
 }
 
 fn error(message: &str) -> Error {
@@ -35,11 +83,10 @@ impl HttpOptions {
             return Err(error("more than 256 custom headers"));
         }
         let mut options = Self {
-            cookies: None,
-            proxy: None,
             headers: Vec::with_capacity(headers.len()),
             user_agent,
             referer,
+            ..Default::default()
         };
         for raw in headers {
             let (name, value) = raw
@@ -62,12 +109,34 @@ impl HttpOptions {
     /// Validate request configuration without network requests or DNS resolution.
     pub fn validate(&self) -> Result<()> {
         self.header_map()?;
-        self.proxy_config()?;
+        self.transport_config()?;
         Ok(())
     }
 
-    pub(crate) fn proxy_config(&self) -> Result<ProxyConfig> {
-        ProxyConfig::parse(self.proxy.as_deref())
+    pub(crate) fn transport_config(&self) -> Result<TransportConfig> {
+        let timeout = match self.socket_timeout {
+            // Upstream treats 0 as unset (`socket_timeout or 20`).
+            None | Some(0.0) => None,
+            Some(seconds) if seconds.is_finite() && seconds > 0.0 && seconds <= 86_400.0 => {
+                Some(Duration::from_secs_f64(seconds))
+            }
+            Some(_) => return Err(error("socket timeout must be a positive number of seconds")),
+        };
+        let source_address = self
+            .source_address
+            .as_deref()
+            .map(|address| {
+                address
+                    .parse::<IpAddr>()
+                    .map_err(|_| error("source address must be an IP address"))
+            })
+            .transpose()?;
+        Ok(TransportConfig {
+            proxy: ProxyConfig::parse(self.proxy.as_deref())?,
+            timeout,
+            insecure: self.no_check_certificates,
+            source_address,
+        })
     }
 
     pub(crate) fn header_map(&self) -> Result<HeaderMap> {

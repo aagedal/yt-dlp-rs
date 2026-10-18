@@ -147,6 +147,8 @@ Supported today:
   extractor/transport headers take precedence, including page referrers and identity
   encoding. A shared in-memory cookie jar learns scoped response cookies. `--cookies FILE` loads/saves Netscape cookies, including session cookies; `--no-cookies`
   disables file persistence. Raw Cookie headers remain unsupported.
+- `--socket-timeout`, `--source-address`, `-4`/`-6` and `--no-check-certificates`
+  configure every native HTTP client.
 - Explicit `--proxy URL` for HTTP/HTTPS or SOCKS4/4a/5/5h routing across the
   native HTTP clients. `--proxy ''` forces direct connections. Pinned SOCKS5
   compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.

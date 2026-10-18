@@ -39,6 +39,9 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--min-filesize SIZE`, `--max-filesize SIZE` | Upstream `parse_bytes` sizes (`50k`, `44.6M`); whole-file HTTP media transfers with a declared length outside the limits are skipped with upstream's `[download]` message, no error and no archive record; fragment/HLS/DASH transfers are not checked |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
+| `--socket-timeout SECONDS` | Connect and per-operation timeout for every native client; 0 keeps native defaults (15 s connect, 300 s operations; upstream defaults to 20 s); negative/non-finite values fail before requests |
+| `--source-address IP`, `-4`/`--force-ipv4`, `-6`/`--force-ipv6` | Bind every native client to an IP address; `-4`/`-6` store `0.0.0.0`/`::` like upstream; last of the three wins |
+| `--no-check-certificates` | Accept invalid HTTPS certificates on every native client |
 | `--proxy URL` | Explicit HTTP/HTTPS/SOCKS route; empty string forces direct connections, last value wins |
 | `--cookies FILE`, `--no-cookies` | Load/save a scoped Netscape jar, including metadata modes; last flag wins, response cookies remain in memory |
 | `--add-headers FIELD:VALUE`, `--add-header` | Repeated custom HTTP defaults; case-insensitive last custom value wins |

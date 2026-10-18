@@ -308,7 +308,7 @@ pub(super) fn resolve_urls(
 pub(super) struct Runtime {
     headers: reqwest::header::HeaderMap,
     cookies: std::sync::Arc<crate::CookieJar>,
-    proxy: crate::http::ProxyConfig,
+    proxy: crate::http::TransportConfig,
     path: std::path::PathBuf,
     checked: std::sync::OnceLock<Result<runtime::DenoRuntime>>,
 }
@@ -328,7 +328,7 @@ impl Runtime {
         path: std::path::PathBuf,
         headers: reqwest::header::HeaderMap,
         cookies: std::sync::Arc<crate::CookieJar>,
-        proxy: crate::http::ProxyConfig,
+        proxy: crate::http::TransportConfig,
     ) -> Self {
         Self {
             headers,

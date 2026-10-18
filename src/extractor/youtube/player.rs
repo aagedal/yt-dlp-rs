@@ -8,7 +8,7 @@ use reqwest::{
     redirect::Policy,
 };
 use serde_json::Value;
-use std::{io::Read, time::Duration};
+use std::io::Read;
 use url::Url;
 
 const MAX_PLAYER_BYTES: u64 = 8 * 1024 * 1024;
@@ -26,7 +26,7 @@ impl PlayerSource {
     pub(super) fn new(
         headers: reqwest::header::HeaderMap,
         cookies: std::sync::Arc<crate::CookieJar>,
-        proxy: &crate::http::ProxyConfig,
+        proxy: &crate::http::TransportConfig,
     ) -> Result<Self> {
         Self::with_origin_and_proxy(
             Url::parse("https://www.youtube.com/")?,
@@ -65,14 +65,12 @@ impl PlayerSource {
         no_proxy: bool,
         headers: reqwest::header::HeaderMap,
         cookies: std::sync::Arc<crate::CookieJar>,
-        proxy: &crate::http::ProxyConfig,
+        proxy: &crate::http::TransportConfig,
     ) -> Result<Self> {
         let mut builder = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
             .default_headers(headers)
             .cookie_provider(cookies)
-            .connect_timeout(Duration::from_secs(15))
-            .timeout(Duration::from_secs(300))
             .redirect(Policy::none())
             .referer(false);
         builder = proxy.apply(builder)?;
@@ -291,7 +289,12 @@ impl PlayerSource {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::{io::Write, net::TcpListener, thread, time::Instant};
+    use std::{
+        io::Write,
+        net::TcpListener,
+        thread,
+        time::{Duration, Instant},
+    };
 
     const PATH: &str = "/s/player/74edf1a3/player_ias.vflset/en_US/base.js";
     const SAVED: &str =
@@ -549,11 +552,13 @@ mod tests {
     fn explicit_proxy_routes_player_requests_without_relaxing_redirect_validation() {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         listener.set_nonblocking(true).unwrap();
-        let proxy = crate::http::ProxyConfig::parse(Some(&format!(
-            "http://user:pass@{}",
-            listener.local_addr().unwrap()
-        )))
-        .unwrap();
+        let proxy = crate::http::TransportConfig::from(
+            crate::http::ProxyConfig::parse(Some(&format!(
+                "http://user:pass@{}",
+                listener.local_addr().unwrap()
+            )))
+            .unwrap(),
+        );
         let origin = Url::parse("http://127.0.0.1:9/").unwrap();
         let source = PlayerSource::with_origin_and_proxy(
             origin,
@@ -668,6 +673,7 @@ mod tests {
                 ("authorization".into(), "Bearer fixture".into()),
                 ("accept-encoding".into(), "gzip".into()),
             ],
+            ..Default::default()
         }
         .header_map()
         .unwrap();

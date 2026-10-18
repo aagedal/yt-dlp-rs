@@ -198,6 +198,7 @@ fn configured() -> YoutubeDl {
             ],
             user_agent: Some("header-fixture/1".into()),
             referer: Some("https://referrer.invalid/start".into()),
+            ..Default::default()
         },
     )
     .unwrap()
@@ -282,6 +283,7 @@ fn library_defaults_support_http_token_names_and_tabs_for_direct_probe_and_downl
             headers: vec![("X!Token".into(), "one\ttwo".into())],
             user_agent: Some("library-fixture/1".into()),
             referer: Some("https://referrer.invalid/direct".into()),
+            ..Default::default()
         },
     )
     .unwrap();
