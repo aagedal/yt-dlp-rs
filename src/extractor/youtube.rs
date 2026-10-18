@@ -4,7 +4,7 @@ mod challenge;
 mod client;
 mod player;
 use super::{Extractor, direct};
-use crate::{Error, Result, VideoFormat, VideoInfo};
+use crate::{Error, Result, StreamKind, VideoFormat, VideoInfo};
 use reqwest::{
     blocking::Client,
     header::{CONTENT_ENCODING, CONTENT_TYPE},
@@ -40,6 +40,9 @@ struct Candidate {
     format_id: String,
     source: Value,
     ext: String,
+    stream_kind: StreamKind,
+    abr: Option<f64>,
+    tbr: Option<f64>,
     width: Option<u32>,
     height: Option<u32>,
 }
@@ -50,6 +53,9 @@ impl Candidate {
             format_id: self.format_id,
             url,
             ext: self.ext,
+            stream_kind: self.stream_kind,
+            abr: self.abr,
+            tbr: self.tbr,
             filesize: None,
             width: self.width,
             height: self.height,
@@ -209,7 +215,10 @@ fn parse_candidates(
         return Err(unsupported("DRM-protected player response"));
     }
     let mut formats = Vec::new();
-    for source in streaming["formats"].as_array().into_iter().flatten() {
+    for source in ["formats", "adaptiveFormats"]
+        .into_iter()
+        .flat_map(|key| streaming[key].as_array().into_iter().flatten())
+    {
         if ["drmFamilies", "drmTrackType", "targetDurationSec"]
             .iter()
             .any(|key| source.get(*key).is_some_and(|v| !v.is_null()))
@@ -247,7 +256,8 @@ fn parse_candidates(
         let (kind, parameters) = mime.split_once(';').unwrap_or((mime, ""));
         let ext = match kind.trim() {
             "video/mp4" => "mp4",
-            "video/webm" => "webm",
+            "video/webm" | "audio/webm" => "webm",
+            "audio/mp4" => "m4a",
             _ => continue,
         };
         let codecs = parameters
@@ -256,21 +266,43 @@ fn parse_candidates(
             .unwrap_or("")
             .trim_matches('"');
         let codecs: Vec<_> = codecs.split(',').map(str::trim).collect();
-        let video = codecs.iter().any(|c| {
+        let video_codec = |codec: &str| {
             ["avc1", "av01", "vp8", "vp9", "vp09"].iter().any(|prefix| {
-                c.strip_prefix(prefix)
+                codec
+                    .strip_prefix(prefix)
                     .is_some_and(|suffix| suffix.is_empty() || suffix.starts_with('.'))
             })
-        });
-        let audio = codecs.iter().any(|c| {
+        };
+        let audio_codec = |codec: &str| {
             ["mp4a", "opus", "vorbis"].iter().any(|prefix| {
-                c.strip_prefix(prefix)
+                codec
+                    .strip_prefix(prefix)
                     .is_some_and(|suffix| suffix.is_empty() || suffix.starts_with('.'))
             })
-        });
-        if !video || !audio {
+        };
+        if codecs
+            .iter()
+            .any(|codec| !video_codec(codec) && !audio_codec(codec))
+        {
             continue;
         }
+        let video = codecs.iter().any(|codec| video_codec(codec));
+        let audio = codecs.iter().any(|codec| audio_codec(codec));
+        let stream_kind = match (kind.trim().starts_with("audio/"), video, audio) {
+            (false, true, true) => StreamKind::Standalone,
+            (false, true, false) => StreamKind::VideoOnly,
+            (true, false, true) => StreamKind::AudioOnly,
+            _ => continue,
+        };
+        let rate = |key: &str| {
+            source
+                .get(key)
+                .and_then(Value::as_f64)
+                .filter(|number| number.is_finite() && *number > 0.0)
+        };
+        let tbr = rate("averageBitrate")
+            .or_else(|| rate("bitrate"))
+            .map(|number| number / 1000.0);
         if formats
             .iter()
             .any(|f: &Candidate| f.format_id == itag.to_string())
@@ -287,13 +319,20 @@ fn parse_candidates(
             format_id: itag.to_string(),
             source: url_source,
             ext: ext.into(),
+            stream_kind,
+            tbr,
+            abr: if stream_kind == StreamKind::AudioOnly {
+                tbr
+            } else {
+                None
+            },
             width: dimension("width"),
             height: dimension("height"),
         });
     }
     if formats.is_empty() {
         return Err(unsupported(
-            "no eligible combined audio/video formats; signature/n URL challenges require an explicit runtime; adaptive streams, manifests, SABR, and DRM are unsupported",
+            "no eligible direct media formats; signature/n URL challenges require an explicit runtime; fragmented manifests, SABR, and DRM are unsupported",
         ));
     }
     Ok((title, formats))
@@ -378,7 +417,7 @@ fn extract_watch_page_with_runtime(
         None => (client::fetch_player(client, page, html, id)?, true),
     };
     // Eligibility and WEB API token policy precede challenge solving and every
-    // media probe. No token-protected/DRM/live/adaptive source reaches EJS.
+    // media probe. No token-protected/DRM/live/fragmented source reaches EJS.
     let (title, candidates) = parse_candidates(&player, id, runtime.is_some(), api)?;
     let sources: Vec<_> = candidates
         .iter()
@@ -417,6 +456,8 @@ fn extract_watch_page_with_runtime(
         extractor_key: "Youtube".into(),
         direct: false,
         format_id: None,
+        stream_kind: first.stream_kind,
+        requested_formats: Vec::new(),
         filesize: first.filesize,
         width: first.width,
         height: first.height,
@@ -590,7 +631,6 @@ mod tests {
             ("type", Value::from("FORMAT_STREAM_TYPE_OTF")),
             ("targetDurationSec", Value::from(5)),
             ("drmFamilies", serde_json::json!(["WIDEVINE"])),
-            ("mimeType", Value::from("video/mp4; codecs=\"avc1.42001E\"")),
             ("mimeType", Value::from("application/x-mpegURL")),
             (
                 "mimeType",
@@ -618,8 +658,95 @@ mod tests {
             .remove("formats")
             .unwrap();
         data["streamingData"]["adaptiveFormats"] = formats;
+        for source in data["streamingData"]["adaptiveFormats"]
+            .as_array_mut()
+            .unwrap()
+        {
+            source["type"] = "FORMAT_STREAM_TYPE_OTF".into();
+        }
         data["streamingData"]["hlsManifestUrl"] = "https://media.example/live.m3u8".into();
         assert!(parse_formats(&data, "BaW_jenozKc").is_err());
+    }
+
+    #[test]
+    fn adaptive_streams_preserve_declaration_order_kinds_and_kilobit_rates() {
+        let mut data = player();
+        data["streamingData"]["adaptiveFormats"] = serde_json::json!([
+            {"itag":137,"url":"https://media.example/video.mp4","mimeType":"video/mp4; codecs=\"avc1.640028\"","width":1920,"height":1080,"bitrate":2400000},
+            {"itag":140,"url":"https://media.example/audio.m4a","mimeType":"audio/mp4; codecs=\"mp4a.40.2\"","bitrate":128000,"averageBitrate":129500},
+            {"itag":248,"url":"https://media.example/video.webm","mimeType":"video/webm; codecs=\"vp09.00.40.08\"","width":1920,"height":1080},
+            {"itag":251,"url":"https://media.example/audio.webm","mimeType":"audio/webm; codecs=\"opus\"","bitrate":160000},
+            {"itag":18,"url":"https://media.example/duplicate.mp4","mimeType":"video/mp4; codecs=\"avc1.42001E\""}
+        ]);
+        let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
+        assert_eq!(
+            formats
+                .iter()
+                .map(|f| f.format_id.as_str())
+                .collect::<Vec<_>>(),
+            ["18", "22", "137", "140", "248", "251"]
+        );
+        assert_eq!(formats[0].stream_kind, StreamKind::Standalone);
+        assert_eq!(formats[2].stream_kind, StreamKind::VideoOnly);
+        assert_eq!(formats[2].tbr, Some(2400.0));
+        assert_eq!(formats[2].abr, None);
+        assert_eq!(formats[3].stream_kind, StreamKind::AudioOnly);
+        assert_eq!(formats[3].ext, "m4a");
+        assert_eq!(formats[3].abr, Some(129.5));
+        assert_eq!(formats[3].tbr, Some(129.5));
+        assert_eq!(formats[4].ext, "webm");
+        assert_eq!(formats[4].stream_kind, StreamKind::VideoOnly);
+        assert_eq!(formats[5].stream_kind, StreamKind::AudioOnly);
+        assert_eq!(formats[5].abr, Some(160.0));
+    }
+
+    #[test]
+    fn absent_or_invalid_average_bitrate_falls_back_to_valid_total_rate() {
+        for value in [
+            Value::Null,
+            serde_json::json!(0),
+            serde_json::json!(-1),
+            serde_json::json!("invalid"),
+        ] {
+            let mut data = player();
+            data["streamingData"]["formats"][0]["averageBitrate"] = value;
+            data["streamingData"]["formats"][0]["bitrate"] = 500000.into();
+            let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
+            assert_eq!(formats[0].tbr, Some(500.0));
+        }
+    }
+
+    #[test]
+    fn malformed_bitrates_are_unknown_and_unsupported_codec_sources_are_excluded() {
+        for value in [
+            Value::Null,
+            serde_json::json!("128000"),
+            serde_json::json!(-1),
+            serde_json::json!(0),
+            serde_json::json!(true),
+        ] {
+            let mut data = player();
+            let mut source = data["streamingData"]["formats"][0].clone();
+            source["mimeType"] = "audio/mp4; codecs=\"mp4a.40.2\"".into();
+            source["bitrate"] = value;
+            data["streamingData"]["formats"] = serde_json::json!([source]);
+            let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
+            assert_eq!((formats[0].abr, formats[0].tbr), (None, None));
+        }
+        for mime in [
+            "audio/mp4; codecs=\"ac-3\"",
+            "video/mp4; codecs=\"hvc1.1.6.L93\"",
+            "audio/webm; codecs=\"vp9, opus\"",
+            "video/mp4; codecs=\"avc1.640028, unknown\"",
+            "video/mp4",
+            "audio/mp4; codecs=\"mp4aunknown\"",
+        ] {
+            let mut data = player();
+            data["streamingData"]["formats"][0]["mimeType"] = mime.into();
+            let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
+            assert_eq!(formats.len(), 1, "{mime}");
+            assert_eq!(formats[0].format_id, "22");
+        }
     }
 
     #[test]

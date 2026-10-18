@@ -18,10 +18,12 @@ pub enum DownloadPhase {
     Downloading,
     WaitingToRetry,
     Publishing,
+    Merging,
 }
 
 /// Bytes stored for the current representation, rather than cumulative traffic.
-/// A full-response retry can reset the byte count and change the total.
+/// A full-response retry or the next selected stream can reset bytes and total.
+/// Merging reports summed input bytes; final publication reports output bytes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DownloadProgress {
     /// One-based attempt number, including the initial request (maximum 256).
@@ -30,6 +32,9 @@ pub struct DownloadProgress {
     /// Total from validated download response headers, absent when unknown.
     pub total_bytes: Option<u64>,
     pub phase: DownloadPhase,
+    /// One-based selected input stream, present only for merged downloads.
+    pub stream_index: Option<u8>,
+    pub stream_count: Option<u8>,
 }
 
 struct Reporter<'a> {
@@ -45,6 +50,8 @@ impl Reporter<'_> {
             downloaded_bytes,
             total_bytes: self.total,
             phase,
+            stream_index: None,
+            stream_count: None,
         }) {
             ControlFlow::Continue(()) => Ok(()),
             ControlFlow::Break(()) => Err(Error::DownloadCancelled),

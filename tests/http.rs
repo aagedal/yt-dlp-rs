@@ -742,7 +742,7 @@ fn format_ids_are_literal_and_src_precedes_child_sources() {
     let info = dl.extract_info_with_format(&page, Some("1")).unwrap();
     assert_eq!(info.ext, "mp3");
     assert_eq!(info.url.as_str(), server.url("/audio"));
-    for id in ["", "2", "01", "bestvideo", "0/1", "0+1", "[ext=mp4]"] {
+    for id in ["", "2", "01", "bestvideo", "0//1", "0+1", "[ext=mp4]"] {
         assert!(
             matches!(
                 dl.extract_info_with_format(&page, Some(id)),
@@ -1101,12 +1101,12 @@ fn cli_format_selection_json_download_and_failure() {
         b"webm"
     );
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-        .args(["-j", "-f", "best/worst", &page])
+        .args(["-j", "-f", "missing/best", &page])
         .output()
         .unwrap();
-    assert!(!output.status.success());
-    assert!(output.stdout.is_empty());
-    assert!(String::from_utf8_lossy(&output.stderr).contains("available IDs: 0, 1"));
+    assert!(output.status.success());
+    let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(info["format_id"], "1");
 }
 
 #[test]

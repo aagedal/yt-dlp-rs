@@ -359,7 +359,7 @@ fn protocol_failures_are_permanent_and_never_probe_unresolved_media() {
 }
 
 #[test]
-fn gated_live_drm_adaptive_and_otf_sources_never_reach_runtime() {
+fn gated_live_drm_fragmented_adaptive_and_otf_sources_never_reach_runtime() {
     let fake = Fake::new("solver");
     let runtime = challenge::Runtime::new(fake.path.clone());
     let mut cases = Vec::new();
@@ -375,6 +375,7 @@ fn gated_live_drm_adaptive_and_otf_sources_never_reach_runtime() {
     let mut adaptive = response(Vec::new());
     adaptive["streamingData"]["adaptiveFormats"] =
         json!([format(18, "{{ORIGIN}}/media.mp4?n=challenge")]);
+    adaptive["streamingData"]["adaptiveFormats"][0]["targetDurationSec"] = 5.into();
     cases.push(adaptive);
     let mut otf = response(vec![format(18, "{{ORIGIN}}/media.mp4?n=challenge")]);
     otf["streamingData"]["formats"][0]["type"] = "FORMAT_STREAM_TYPE_OTF".into();
@@ -715,4 +716,100 @@ fn real_saved_player_signature_and_n_extraction_match_upstream_metadata_and_down
         5
     );
     assert_eq!(std::fs::read(target).unwrap(), b"media");
+}
+
+#[test]
+fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
+    struct LocalYoutube;
+    impl Extractor for LocalYoutube {
+        fn key(&self) -> &'static str {
+            "LocalYoutube"
+        }
+        fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+            extract_watch_page(client, url, ID).map(Some)
+        }
+    }
+    for (enable_merge, selector, selected) in [
+        (false, None, "18"),
+        (true, None, "137+140"),
+        (false, Some("140+137"), "140+137"),
+    ] {
+        let saved: Value = serde_json::from_str(include_str!(
+            "../../../tests/fixtures/youtube/adaptive.json"
+        ))
+        .unwrap();
+        let server = Server::new(vec![
+            reply(WATCH, "text/html", page(Some(saved))),
+            reply("/media/muxed.mp4", "video/mp4", "muxed"),
+            reply("/media/video.mp4", "video/mp4", "picture"),
+            reply("/media/audio-low.m4a", "audio/mp4", "low"),
+            reply("/media/audio.m4a", "audio/mp4", "high"),
+            reply("/media/video.webm", "video/webm", "webpic"),
+            reply("/media/audio.webm", "audio/webm", "wb"),
+        ]);
+        let mut ydl = crate::YoutubeDl::with_youtube_options(YoutubeOptions {
+            js_runtime: Some(PathBuf::from("unused-adaptive-runtime")),
+        })
+        .unwrap();
+        ydl.register_extractor(Box::new(LocalYoutube));
+        if enable_merge {
+            // Configuration changes selection; simulation never inspects the executable.
+            ydl = ydl.with_ffmpeg("unused-adaptive-ffmpeg");
+        }
+        let info = ydl
+            .extract_info_with_format(server.watch().as_str(), selector)
+            .unwrap();
+        assert_eq!(info.format_id.as_deref(), Some(selected));
+        let expected: Value = serde_json::from_str(
+            &include_str!("../../../tests/fixtures/youtube/adaptive-expected.json")
+                .replace("{{ORIGIN}}", server.origin.as_str().trim_end_matches('/')),
+        )
+        .unwrap();
+        let expected_formats: Vec<VideoFormat> =
+            serde_json::from_value(expected["formats"].clone()).unwrap();
+        assert_eq!(
+            serde_json::to_value(&info.formats).unwrap(),
+            serde_json::to_value(expected_formats).unwrap()
+        );
+        assert_eq!(info.title, expected["title"]);
+        assert_eq!(info.webpage_url.as_str(), expected["webpage_url"]);
+        if selected == "18" {
+            assert!(info.requested_formats.is_empty());
+            assert_eq!(info.filesize, Some(5));
+            assert_eq!(info.height, Some(360));
+        } else {
+            assert_eq!(info.requested_formats.len(), 2);
+            assert_eq!(info.height, Some(1080));
+            assert_eq!(info.ext, "mp4");
+            assert_eq!(info.filesize, None);
+            assert_eq!(info.url, info.requested_formats[0].url);
+        }
+    }
+}
+
+#[test]
+fn adaptive_without_standalone_requires_explicit_stream_or_configured_merge() {
+    let mut saved: Value = serde_json::from_str(include_str!(
+        "../../../tests/fixtures/youtube/adaptive.json"
+    ))
+    .unwrap();
+    saved["streamingData"]["formats"] = json!([]);
+    let server = Server::new(vec![
+        reply(WATCH, "text/html", page(Some(saved))),
+        reply("/media/video.mp4", "video/mp4", "picture"),
+        reply("/media/audio-low.m4a", "audio/mp4", "low"),
+        reply("/media/audio.m4a", "audio/mp4", "high"),
+        reply("/media/video.webm", "video/webm", "webpic"),
+        reply("/media/audio.webm", "audio/webm", "wb"),
+    ]);
+    let mut info = extract(&server, None).unwrap();
+    assert!(matches!(
+        info.select_format(None),
+        Err(Error::FormatSelection(_))
+    ));
+    info.select_format(Some("bestaudio")).unwrap();
+    assert_eq!(info.format_id.as_deref(), Some("140"));
+    assert_eq!(info.stream_kind, StreamKind::AudioOnly);
+    info.select_format_with_merge(None, true).unwrap();
+    assert_eq!(info.format_id.as_deref(), Some("137+140"));
 }

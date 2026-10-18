@@ -14,6 +14,7 @@ cargo build --locked
 cargo run --locked -- 'https://example.com/video.mp4'
 cargo run --locked -- --dump-json 'https://example.com/video.mp4'
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
+cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
 ```
@@ -42,16 +43,22 @@ Supported today:
   dimension, or the only known one; unknown resolution sorts lowest. Ties select
   the last declaration for best/default and the first for worst.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes
-  canonicalized to a watch page (actual live content is rejected). Only progressive
-  combined audio/video MP4/WebM formats in `ytInitialPlayerResponse` are eligible;
+  canonicalized to a watch page (actual live content is rejected). Direct combined or separate audio/video MP4/M4A/WebM formats in
+  `ytInitialPlayerResponse` are eligible;
   when that response is absent, one anonymous WEB player API request can supply
   token-exempt itag 18 using literal page client configuration.
   Format IDs are YouTube itags. This is fixture-tested groundwork, not general
   live-site support. `--youtube-js-runtime PATH` opts into bounded offline solving
   of encrypted signatures and query `n` challenges using explicitly installed
   Deno 2.9.7 and pinned bundled EJS assets. Challenge-free extraction never inspects
-  or launches that runtime. Additional clients, token acquisition, adaptive streams,
+  or launches that runtime. Additional clients, token acquisition, fragmented adaptive streams,
   and playlists remain unsupported; many current videos will fail.
+- Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
+  `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.
+  `--ffmpeg-location PATH` configures an explicit FFmpeg executable for local
+  stream copying; default selection then prefers a video/audio pair. Without it,
+  default selection requires an independently playable source. `-f best` always
+  selects an independently playable source. This is a bounded selector subset.
 - `-j/--dump-json`, `-s/--simulate`, `-o/--output`, multiple URLs, help and version.
 - Output fields `%(title)s`, `%(id)s`, `%(ext)s`, `%(extractor)s`, and literal `%%`.
   Metadata cannot introduce directories; literal template paths can.
@@ -73,8 +80,8 @@ Supported today:
   and interrupted HTML reads restart extraction before any output is emitted,
   using the same bounded `Retry-After` policy.
 
-Other HTML pages, general YouTube support, HLS/DASH, site playlists, full upstream format ranking, selector
-expressions, cookies/authentication, persistent resume, subtitles, and ffmpeg
+Other HTML pages, general YouTube support, HLS/DASH, site playlists, full upstream format ranking, general selector
+expressions, cookies/authentication, persistent resume, subtitles, and other
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
@@ -88,10 +95,11 @@ and a five-minute total timeout per request. Simulation and JSON extraction stil
 network requests. MIME identification is not media-container verification.
 
 The library exposes `YoutubeDl`, `ExtractResult`, `PlaylistInfo`, `VideoInfo`,
-`VideoFormat`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
+`VideoFormat`, `StreamKind`, `DownloadOptions`, `DownloadProgress`, `DownloadPhase`,
 `ExtractionOptions`, `YoutubeOptions`, and an `Extractor` interface.
 `YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path) })`
 configures optional YouTube signature/n solving; `YoutubeDl::new()` keeps it disabled.
+`YoutubeDl::new()?.with_ffmpeg(path)` configures optional local merging.
 Use `extract_result` or
 `extract_result_with_format(url, Some("1"))` for video/playlist results. A format
 ID applies to every playlist entry independently; each must offer that ID.

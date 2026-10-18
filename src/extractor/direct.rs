@@ -120,6 +120,8 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
         extractor_key: "Generic".into(),
         direct: true,
         formats: Vec::new(),
+        stream_kind: crate::StreamKind::Standalone,
+        requested_formats: Vec::new(),
         format_id: None,
         filesize: response.content_length(),
         width: None,

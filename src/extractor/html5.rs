@@ -215,6 +215,9 @@ impl Extractor for GenericHttp {
                 })?;
                 formats.push(VideoFormat {
                     format_id: index.to_string(),
+                    stream_kind: crate::StreamKind::Standalone,
+                    abr: None,
+                    tbr: None,
                     url: info.url.clone(),
                     ext: info.ext.clone(),
                     filesize: info.filesize,

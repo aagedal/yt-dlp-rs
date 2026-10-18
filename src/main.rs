@@ -24,7 +24,7 @@ struct Args {
     /// Extract metadata without writing media
     #[arg(short = 's', long)]
     simulate: bool,
-    /// Select best (default), worst, or a literal HTML5 source ID
+    /// Format ID, best/worst, bestvideo+bestaudio, or a fallback expression
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
     /// Retry transient download failures this many times (0 disables retries)
@@ -36,6 +36,9 @@ struct Args {
     /// Explicit path to Deno 2.9.7 for YouTube player challenges (no runtime discovery or installation)
     #[arg(long, value_name = "PATH")]
     youtube_js_runtime: Option<PathBuf>,
+    /// Explicit ffmpeg executable for merging separate video/audio streams
+    #[arg(long, value_name = "PATH")]
+    ffmpeg_location: Option<PathBuf>,
     /// Filename template: %(title)s, %(id)s, %(ext)s, %(extractor)s, and %%
     #[arg(short, long, default_value = DEFAULT_TEMPLATE)]
     output: String,
@@ -43,9 +46,12 @@ struct Args {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
-    let downloader = YoutubeDl::with_youtube_options(YoutubeOptions {
+    let mut downloader = YoutubeDl::with_youtube_options(YoutubeOptions {
         js_runtime: args.youtube_js_runtime,
     })?;
+    if let Some(path) = args.ffmpeg_location {
+        downloader = downloader.with_ffmpeg(path);
+    }
     let mut failed = false;
     let mut stdout = io::stdout().lock();
     for url in args.urls {

@@ -40,3 +40,17 @@ jobs:
         shell: bash
         run: deno eval 'console.log("YT_DLP_RS_TEST_DENO=" + Deno.execPath())' >> "$GITHUB_ENV"
       - run: cargo test --locked --lib extractor::youtube
+
+  direct-adaptive-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install real local merge tools
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Verify copied audio and video tracks from local fixtures
+        env:
+          YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
+          YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
+        run: cargo test --locked --test merge

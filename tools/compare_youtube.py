@@ -10,10 +10,13 @@ this checks normalized metadata with that solved vector, not solver or player
 acquisition parity. Rust fixture tests independently
 consume the same expected JSON files. This does not establish live-site or client
 request parity: the saved API response is injected after acquisition.
-Only FIELDS and FORMAT_FIELDS are compared, preserving ordered formats. The sole
-normalization replaces the exact fixed fixture origin with {{ORIGIN}} in URLs.
-For the original watch-page fixture only, upstream's missing_pot option permits
-parsing itag 22 without acquiring a token; this does not claim URL usability.
+Only FIELDS and FORMAT_FIELDS are compared, preserving ordered formats. Adaptive
+metadata additionally compares stream_kind, tbr and abr: upstream acodec/vcodec
+flags map to stream kind, and audio-only total bitrate maps to audio bitrate
+(as upstream format processing does). The URL normalization replaces the exact
+fixed fixture origin with {{ORIGIN}} in URLs. For the original watch-page and
+saved adaptive fixtures only, upstream's missing_pot option permits parsing
+token-requiring itags without acquiring a token; this does not claim URL usability.
 The API fixture uses ordinary anonymous WEB token policy, retaining exempt itag 18
 and rejecting itag 22 without a GVS token.
 """
@@ -34,6 +37,7 @@ FIXTURE_CASES = (
     ("progressive.html", "expected.json", "watch-page"),
     ("player-api.json", "player-api-expected.json", "player-api"),
     ("n-extraction.json", "n-extraction-expected.json", "n-extraction"),
+    ("adaptive.json", "adaptive-expected.json", "adaptive"),
 )
 SIGNATURE_CASE = ("signature-extraction.json", "signature-extraction-expected.json",
                   "signature-extraction")
@@ -59,7 +63,8 @@ page = Path(sys.argv[2]).read_text(encoding='utf-8').replace('{{ORIGIN}}', sys.a
 is_api = sys.argv[4] == 'player-api'
 is_n = sys.argv[4] == 'n-extraction'
 is_signature = sys.argv[4] == 'signature-extraction'
-is_json = is_api or is_n or is_signature
+is_adaptive = sys.argv[4] == 'adaptive'
+is_json = is_api or is_n or is_signature or is_adaptive
 has_player = is_n or is_signature
 player_url = 'https://www.youtube.com/s/player/74edf1a3/player_ias.vflset/en_US/base.js'
 solves = []
@@ -131,7 +136,7 @@ class FixtureYoutubeIE(YoutubeIE):
 with YoutubeDL({'quiet': True, 'no_warnings': True, 'cachedir': False,
                 'skip_download': True, 'extractor_args': {'youtube': {
                     'player_skip': [] if has_player else ['js'],
-                    'formats': [] if is_json else ['missing_pot'],
+                    'formats': ['missing_pot'] if is_adaptive or not is_json else [],
                     'skip': ['hls', 'dash', 'translated_subs']}}}) as ydl:
     ie = FixtureYoutubeIE(ydl)
     ie.initialize()
@@ -143,13 +148,28 @@ with YoutubeDL({'quiet': True, 'no_warnings': True, 'cachedir': False,
 '''
 
 
-def normalize(info, origin=ORIGIN):
-    """Select exact comparison fields and normalize only the fixture origin."""
+def normalize(info, origin=ORIGIN, *, adaptive=False):
+    """Select explicit fields; map adaptive codec flags/rates and fixture origin."""
     result = {field: info[field] for field in FIELDS}
     result["formats"] = [
         {field: entry[field] for field in FORMAT_FIELDS}
         for entry in info["formats"]
     ]
+    if adaptive:
+        for entry, source in zip(result["formats"], info["formats"], strict=True):
+            kind = source.get("stream_kind")
+            if kind is None:
+                video, audio = source.get("vcodec"), source.get("acodec")
+                if video == "none" and audio and audio != "none":
+                    kind = "audio_only"
+                elif audio == "none" and video and video != "none":
+                    kind = "video_only"
+                elif video and audio and video != "none" and audio != "none":
+                    kind = "standalone"
+                else:
+                    raise ValueError("adaptive format lacks stream codec classification")
+            entry.update(stream_kind=kind, tbr=source.get("tbr"),
+                         abr=source.get("abr", source.get("tbr") if kind == "audio_only" else None))
     for entry in [result, *result["formats"]]:
         for field in ("url", "webpage_url"):
             if field not in entry:
@@ -161,8 +181,8 @@ def normalize(info, origin=ORIGIN):
     return result
 
 
-def compare(actual, expected):
-    normalized = normalize(actual)
+def compare(actual, expected, *, adaptive=False):
+    normalized = normalize(actual, adaptive=adaptive)
     if normalized != expected:
         raise ValueError("metadata mismatch: " + json.dumps(
             {"upstream": normalized, "expected": expected}, sort_keys=True))
@@ -195,13 +215,14 @@ def main():
                  str(fixtures / response_file), ORIGIN, mode, str(root), str(deno or '')],
                 capture_output=True, text=True, encoding="utf-8", timeout=60, check=True)
             compare(json.loads(completed.stdout),
-                    json.loads((fixtures / expected_file).read_text(encoding="utf-8")))
+                    json.loads((fixtures / expected_file).read_text(encoding="utf-8")),
+                    adaptive=mode == "adaptive")
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         print(f"comparison failed: {error}", file=sys.stderr)
         if isinstance(error, subprocess.CalledProcessError) and error.stderr:
             print(error.stderr, file=sys.stderr)
         return 1
-    print("YouTube saved watch-page, API, and fixed n-vector metadata match "
+    print("YouTube saved watch-page, API, adaptive, and fixed n-vector metadata match "
           "(parser/token policy and normalized solved metadata only)")
     if deno:
         print("Signature/n metadata match using upstream's actual offline EJS permutation path")

@@ -10,10 +10,11 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Positional URLs | One or more HTTP(S) URLs, processed sequentially; continue after errors, return failure if any URL fails |
 | `-j`, `--dump-json` | One supported `VideoInfo` JSON object per video, including each HTML5 playlist entry; extract without downloading |
 | `-s`, `--simulate` | Extract metadata, write diagnostics to stderr, create no media files |
-| `-f`, `--format` | Default/`best` selects highest declared resolution, `worst` lowest, or a literal zero-based HTML5 source ID per element / YouTube itag; applies independently to each playlist entry; no expressions, merging, or direct-URL format IDs |
+| `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs and `/` fallbacks; see selection policy below; no filters or direct-URL format IDs |
 | `-o`, `--output` | `title`, `id`, `ext`, `extractor` string fields and literal `%%`; no overwrite |
 | `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
+| `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging; no PATH discovery, directory lookup, installation, transcoding or other postprocessors |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | All other flags | Rejected; aliases such as `--skip-download` and `--print` are not implemented |
@@ -61,13 +62,14 @@ only itag 18 before any media probe; no surviving format is an unsupported error
 This policy does not acquire tokens or assert that exempt URLs always work.
 The original initial-response path retains its prior token/probe behavior.
 
-Expose only `streamingData.formats` entries resolving to direct HTTP(S) media,
-with MP4/WebM MIME types, and recognized audio **and** video codecs. Preserve numeric itags as
+Expose `streamingData.formats` followed by `adaptiveFormats` entries resolving
+to direct HTTP(S) media, with MP4/M4A/WebM MIME types and recognized audio
+and/or video codecs. Classify sources as standalone, video-only or audio-only. Preserve numeric itags as
 format IDs and positive declared dimensions. Skip DRM, OTF/fragments, unknown
 source types and live fragments. Encrypted `signatureCipher`/legacy `cipher` and
 query-n URLs require explicit `--youtube-js-runtime PATH` or library configuration;
-reject player responses with DRM license information. Adaptive formats and manifest URLs are ignored.
-If no supported progressive format remains, return an explicit unsupported error.
+reject player responses with DRM license information. Manifest URLs are ignored.
+If no supported direct format remains, return an explicit unsupported error.
 Supported alternatives retain declaration order and use the existing resolution
 ranking or literal itag selection, not upstream's full sorter. Every eligible
 URL must pass a direct media probe; a failing probe fails the entire extraction,
@@ -77,7 +79,7 @@ if another format might work. Metadata uses `youtube` / `Youtube`, `direct=false
 and the canonical watch page. The shared downloader sends that page as referrer.
 
 This is fixture-tested groundwork, not general live-site YouTube support. Modern
-YouTube may require other API clients, PO tokens, SABR, manifest protocols, or separate adaptive audio/video merging; those remain
+YouTube may require other API clients, PO tokens, SABR, manifest protocols, or fragmented adaptive delivery; those remain
 unimplemented.
 
 An optional offline EJS/Deno pipeline solves encrypted signatures and query-n challenges during public
@@ -145,7 +147,7 @@ literal zero-based strings assigned to nonempty declarations: the media element'
 `src` first, then direct child sources in document order. Duplicate URLs remain
 separate declarations. Source IDs restart at `0` for each element. These IDs are
 Rust-specific; upstream's label/title IDs,
-full format sorting, and fallback expressions are not implemented.
+and full upstream format sorting are not implemented.
 
 Default selection and `-f best` choose the highest resolution source; `-f worst`
 chooses the lowest. Child `<source>` attributes `width`, `height`, and fallback
@@ -163,7 +165,8 @@ rate, and audio/video distinctions do not break ties. This is an explicit native
 policy for the supported progressive subset, not full upstream best/worst parity
 or a guarantee of perceptual quality. Format lists and source IDs retain declaration
 order. Literal IDs override ranking; unavailable IDs return an error listing IDs.
-Filters, merge/fallback expressions, and selectors such as `bestvideo` remain errors.
+Filters, parentheses, comma selections, more than two merged streams, and
+upstream selector modifiers remain errors. See the bounded adaptive policy below.
 Direct HTTP results accept default/`best`/`worst` as their sole representation,
 without adding format IDs; explicit IDs fail.
 The library's `extract_info_with_format` performs the same selection; standalone
@@ -441,7 +444,8 @@ source width/height/res handling; its corresponding dimension examples in
 `yt_dlp/utils/_utils.py` supplies the shorter-known-dimension resolution concept,
 and `YoutubeDL.build_format_selector` in `yt_dlp/YoutubeDL.py` supplies best/worst
 selection direction. Other upstream ordering fields, stream eligibility, label
-parsing, and format expressions remain outside this slice. Declaration-order ties
+parsing remain outside this progressive ranking slice; bounded adaptive
+expressions are described below. Declaration-order ties
 are a native policy; upstream may choose differently for equal resolution.
 
 The saved `ranked.html` fixture compares default, `best`, `worst`, and literal-ID
@@ -450,3 +454,58 @@ All alternatives use the same progressive media type and distinct declared
 resolutions to isolate the supported ranking criterion. Dimension metadata,
 unknown/tie behavior, invalid attributes, explicit overrides, CLI transfers, and
 independent playlist selection are covered by deterministic Rust tests.
+
+
+## Direct adaptive selection and merging
+
+`StreamKind` adds `standalone` (the default, omitted from JSON), `video_only`,
+and `audio_only`. Generic sources retain standalone classification because their
+track composition is unknown. Optional `tbr`/`abr` are positive finite declared
+kilobits per second, not measured quality. YouTube uses averageBitrate then bitrate.
+The anonymous WEB API still accepts only itag 18; adaptive support does not bypass
+that token policy.
+
+`best`/`worst` choose standalone sources; an audio-only fallback is allowed only
+when neither standalone nor video-only sources exist. `bestvideo`/`worstvideo`
+choose video-only sources by resolution then total bitrate; `bestaudio`/`worstaudio`
+choose audio-only sources by audio then total bitrate. Unknown values rank lowest.
+Standalone ranking retains resolution-only policy. Best ties choose the last
+candidate, worst ties the first. Literal IDs also select isolated streams.
+
+A `+` expression requires exactly one video-only and one audio-only source.
+`/` tries alternatives in order, for example `bestvideo+bestaudio/best`.
+Every branch must have valid bounded syntax. Selection errors leave metadata
+unchanged, including across playlists. Without an explicit selector, configuring
+FFmpeg prefers that pair/fallback expression; otherwise default equals `best`.
+An explicit pair can be inspected with JSON/simulation without installing FFmpeg.
+
+A merge plan carries `requested_formats` in expression order and a joined
+`format_id`. Top-level `url` represents the first source, not a merged HTTP URL;
+callers must honor the plan. MP4 video + M4A audio yields MP4, WebM + WebM yields
+WebM, and mixed containers yield Matroska (`mkv`). The selected video's dimensions
+are retained; merged filesize is unknown until download. Added serde fields have
+defaults for older metadata, but Rust struct literals must supply the new fields.
+
+`YoutubeDl::with_ffmpeg(path)` or `--ffmpeg-location PATH` permits downloading
+both sources into a private destination-directory workspace, then stream copying
+with explicit video/audio maps. Inputs use fixed local demuxers and the file-only
+protocol whitelist. The executable is canonicalized; its version banner is checked.
+No shell is used, environment is cleared except Windows system directories, stdin
+is closed, and process output and elapsed time are bounded (64 KiB stdout,
+256 KiB stderr, ten minutes shared by version check and merge). A process error,
+nonempty error diagnostics, or empty output fails explicitly. No codec fallback
+or transcoding occurs. A bad tool may fail after source downloads.
+
+Each input receives the usual download retry budget. Progress includes one-based
+`stream_index` and `stream_count=2`; input byte counts reset for the next source.
+Input publication events are hidden. `Merging` reports the sum of stored input
+bytes, with cooperative process cancellation polling. Final `Publishing` reports
+the merged output size. Only that final file is published, using no-clobber
+semantics; cancellation/failure removes both inputs and staging output. Single
+stream downloads never inspect the configured FFmpeg path.
+
+Optional real-tool regression: set both `YT_DLP_RS_TEST_FFMPEG` and
+`YT_DLP_RS_TEST_FFPROBE` to executable paths and run `cargo test --locked --test merge`.
+The generated local media fixtures verify that copied output retains audio and
+video tracks; this is not a claim that every FFmpeg version or codec pair works.
+See [source and fixture provenance](../upstream/notes/youtube-adaptive-merge.md).

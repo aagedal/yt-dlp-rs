@@ -2,17 +2,21 @@ mod download;
 mod error;
 pub mod extractor;
 mod info;
+mod merge;
 pub mod output;
 mod retry;
 
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
-pub use info::{ExtractResult, PlaylistInfo, VideoFormat, VideoInfo};
+pub use info::{ExtractResult, PlaylistInfo, StreamKind, VideoFormat, VideoInfo};
 
 use extractor::{Extractor, GenericHttp, Youtube};
 use reqwest::blocking::Client;
-use std::{path::Path, time::Duration};
+use std::{
+    path::{Path, PathBuf},
+    time::Duration,
+};
 use url::Url;
 
 /// Whole-extraction retry policy, independent of download retries.
@@ -26,6 +30,7 @@ pub struct ExtractionOptions {
 pub struct YoutubeDl {
     client: Client,
     extractors: Vec<Box<dyn Extractor>>,
+    ffmpeg: Option<PathBuf>,
 }
 
 impl YoutubeDl {
@@ -46,11 +51,20 @@ impl YoutubeDl {
             .build()?;
         Ok(Self {
             client,
+            ffmpeg: None,
             extractors: vec![
                 Box::new(Youtube::with_options(options)),
                 Box::new(GenericHttp),
             ],
         })
+    }
+
+    /// Configure an explicit ffmpeg executable for two-stream copy merging.
+    /// The path is inspected only for a merged download, never a single stream.
+    /// Default selection prefers a video/audio pair when this option is present.
+    pub fn with_ffmpeg(mut self, executable: impl Into<PathBuf>) -> Self {
+        self.ffmpeg = Some(executable.into());
+        self
     }
 
     /// Insert a site extractor before the generic fallback.
@@ -62,8 +76,8 @@ impl YoutubeDl {
         self.extract_info_with_format(input, None)
     }
 
-    /// Extract and select default/best, worst, or a literal source ID.
-    /// General selector expressions and full upstream ranking are unsupported.
+    /// Extract and select a supported single source, two-stream pair, or fallback.
+    /// Full upstream selector grammar and ranking are unsupported.
     pub fn extract_info_with_format(&self, input: &str, format: Option<&str>) -> Result<VideoInfo> {
         self.extract_result_with_format(input, format)?.into_video()
     }
@@ -73,7 +87,7 @@ impl YoutubeDl {
         self.extract_result_with_format(input, None)
     }
 
-    /// Default/best, worst, or a literal source ID applies independently per entry.
+    /// The supported selector applies independently to each entry.
     /// Extraction or selection failure in any entry fails the whole result.
     pub fn extract_result_with_format(
         &self,
@@ -99,7 +113,7 @@ impl YoutubeDl {
         for attempt in 0..=options.retries {
             match self.extract_once(&url) {
                 Ok(mut info) => {
-                    info.select_format(format)?;
+                    info.select_format_with_merge(format, self.ffmpeg.is_some())?;
                     return Ok(info);
                 }
                 Err(error) => {
@@ -156,6 +170,9 @@ impl YoutubeDl {
         options: DownloadOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
+        if !info.requested_formats.is_empty() {
+            return self.download_merged(info, destination.as_ref(), options, &mut callback);
+        }
         download::download(
             &self.client,
             info,
@@ -163,5 +180,154 @@ impl YoutubeDl {
             options,
             &mut callback,
         )
+    }
+    fn download_merged(
+        &self,
+        info: &VideoInfo,
+        destination: &Path,
+        options: DownloadOptions,
+        callback: &mut dyn FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<u64> {
+        use std::{fs, ops::ControlFlow};
+        if destination.exists() {
+            return Err(Error::OutputExists(destination.into()));
+        }
+        let streams = &info.requested_formats;
+        if streams.len() != 2 {
+            return Err(Error::Postprocess(
+                "exactly two selected streams are required".into(),
+            ));
+        }
+        let video = streams
+            .iter()
+            .position(|stream| stream.stream_kind == StreamKind::VideoOnly);
+        let audio = streams
+            .iter()
+            .position(|stream| stream.stream_kind == StreamKind::AudioOnly);
+        let (Some(video), Some(audio)) = (video, audio) else {
+            return Err(Error::Postprocess(
+                "merging requires one video-only and one audio-only stream".into(),
+            ));
+        };
+        let video_ext = streams[video].ext.as_str();
+        let audio_ext = streams[audio].ext.as_str();
+        if !matches!(video_ext, "mp4" | "webm") || !matches!(audio_ext, "m4a" | "webm") {
+            return Err(Error::Postprocess("unsupported stream containers".into()));
+        }
+        let output_ext = match (video_ext, audio_ext) {
+            ("mp4", "m4a") => "mp4",
+            ("webm", "webm") => "webm",
+            _ => "mkv",
+        };
+        if info.ext != output_ext {
+            return Err(Error::Postprocess(
+                "merge output container disagrees with selected streams".into(),
+            ));
+        }
+        let executable = self.ffmpeg.as_ref().ok_or_else(|| {
+            Error::Postprocess(
+                "separate streams require --ffmpeg-location PATH or YoutubeDl::with_ffmpeg".into(),
+            )
+        })?;
+        let executable = executable.canonicalize().map_err(|error| {
+            Error::Postprocess(format!("invalid ffmpeg executable path: {error}"))
+        })?;
+        if !executable.is_file() {
+            return Err(Error::Postprocess(
+                "ffmpeg executable path is not a file".into(),
+            ));
+        }
+        for stream in streams {
+            if !matches!(stream.url.scheme(), "http" | "https") {
+                return Err(Error::UnsupportedScheme(stream.url.scheme().into()));
+            }
+        }
+        let parent = destination
+            .parent()
+            .filter(|path| !path.as_os_str().is_empty())
+            .unwrap_or(Path::new("."));
+        fs::create_dir_all(parent)?;
+        let workspace = tempfile::Builder::new()
+            .prefix(".yt-dlp-rs-merge-")
+            .tempdir_in(parent)?;
+        let mut paths = Vec::new();
+        let mut stored = 0u64;
+        for (index, stream) in streams.iter().enumerate() {
+            let path = workspace
+                .path()
+                .join(format!("input-{index}.{}", stream.ext));
+            let mut part = info.clone();
+            part.requested_formats.clear();
+            part.formats.clear();
+            part.url = stream.url.clone();
+            part.ext = stream.ext.clone();
+            part.stream_kind = stream.stream_kind;
+            part.format_id = Some(stream.format_id.clone());
+            part.filesize = stream.filesize;
+            part.width = stream.width;
+            part.height = stream.height;
+            let bytes =
+                download::download(&self.client, &part, &path, options, &mut |mut progress| {
+                    if progress.phase == DownloadPhase::Publishing {
+                        return ControlFlow::Continue(());
+                    }
+                    progress.stream_index = Some(index as u8 + 1);
+                    progress.stream_count = Some(2);
+                    callback(progress)
+                })?;
+            stored = stored
+                .checked_add(bytes)
+                .ok_or_else(|| Error::Postprocess("combined stream byte count overflow".into()))?;
+            paths.push(path);
+        }
+        let output = tempfile::Builder::new()
+            .prefix("merged-")
+            .suffix(".part")
+            .tempfile_in(workspace.path())?
+            .into_temp_path();
+        merge::merge(
+            &executable,
+            &paths[video],
+            video_ext,
+            &paths[audio],
+            audio_ext,
+            &output,
+            output_ext,
+            &mut || {
+                callback(DownloadProgress {
+                    attempt: 1,
+                    downloaded_bytes: stored,
+                    total_bytes: Some(stored),
+                    phase: DownloadPhase::Merging,
+                    stream_index: None,
+                    stream_count: Some(2),
+                })
+            },
+        )?;
+        let bytes = fs::metadata(&output)?.len();
+        fs::OpenOptions::new()
+            .write(true)
+            .open(&output)?
+            .sync_all()?;
+        if callback(DownloadProgress {
+            attempt: 1,
+            downloaded_bytes: bytes,
+            total_bytes: Some(bytes),
+            phase: DownloadPhase::Publishing,
+            stream_index: None,
+            stream_count: Some(2),
+        })
+        .is_break()
+        {
+            return Err(Error::DownloadCancelled);
+        }
+        output.persist_noclobber(destination).map_err(|error| {
+            if error.error.kind() == std::io::ErrorKind::AlreadyExists {
+                Error::OutputExists(destination.into())
+            } else {
+                Error::Io(error.error)
+            }
+        })?;
+        Ok(bytes)
     }
 }

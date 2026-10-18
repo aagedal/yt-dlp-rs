@@ -71,6 +71,43 @@ class YoutubeComparisonTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "metadata mismatch"):
             compare(info, expected)
 
+    def test_adaptive_fixture_preserves_stream_metadata_and_rates(self):
+        fixtures = Path(__file__).resolve().parents[1] / "tests/fixtures/youtube"
+        response = json.loads((fixtures / "adaptive.json").read_text(encoding="utf-8"))
+        expected = json.loads((fixtures / "adaptive-expected.json").read_text(encoding="utf-8"))
+        self.assertEqual([fmt["itag"] for fmt in response["streamingData"]["formats"]], [18])
+        self.assertEqual([fmt["itag"] for fmt in response["streamingData"]["adaptiveFormats"]],
+                         [137, 139, 140, 248, 251])
+        info = json.loads(json.dumps(expected).replace("{{ORIGIN}}", ORIGIN))
+        original = copy.deepcopy(info)
+        self.assertEqual(compare(info, expected, adaptive=True), expected)
+        self.assertEqual(info, original)
+        self.assertEqual([fmt["stream_kind"] for fmt in expected["formats"]],
+                         ["standalone", "video_only", "audio_only", "audio_only",
+                          "video_only", "audio_only"])
+        self.assertEqual(expected["formats"][1]["tbr"], 2000)
+        self.assertEqual([fmt["abr"] for fmt in expected["formats"]],
+                         [None, None, 48, 128, None, 96])
+        for field, value in (("stream_kind", "standalone"), ("tbr", 2200), ("abr", 1)):
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, "metadata mismatch"):
+                changed = copy.deepcopy(info)
+                changed["formats"][1][field] = value
+                compare(changed, expected, adaptive=True)
+
+    def test_adaptive_normalizes_upstream_codec_flags_and_audio_rate(self):
+        fixtures = Path(__file__).resolve().parents[1] / "tests/fixtures/youtube"
+        expected = json.loads((fixtures / "adaptive-expected.json").read_text(encoding="utf-8"))
+        info = json.loads(json.dumps(expected).replace("{{ORIGIN}}", ORIGIN))
+        for fmt in info["formats"]:
+            kind = fmt.pop("stream_kind")
+            fmt.pop("abr")
+            fmt.update(vcodec="none" if kind == "audio_only" else "avc1.640028",
+                       acodec="none" if kind == "video_only" else "mp4a.40.2")
+        self.assertEqual(compare(info, expected, adaptive=True), expected)
+        info["formats"][0].pop("acodec")
+        with self.assertRaisesRegex(ValueError, "lacks stream codec classification"):
+            normalize(info, adaptive=True)
+
     def test_command_compares_all_saved_cases(self):
         fixtures = Path(__file__).resolve().parents[1] / "tests/fixtures/youtube"
         results = [subprocess.CompletedProcess([], 0, PINNED_UPSTREAM + "\n", "")]
@@ -86,11 +123,11 @@ class YoutubeComparisonTest(unittest.TestCase):
                     contextlib.redirect_stdout(io.StringIO()) as stdout:
                 self.assertEqual(main(), 0)
             self.assertIn("Signature comparison skipped", stdout.getvalue())
-            self.assertEqual(run.call_count, 4)
+            self.assertEqual(run.call_count, 5)
             self.assertEqual(run.call_args_list[0].args[0],
                              ["git", "-C", str(upstream.resolve()), "rev-parse", "HEAD"])
             self.assertEqual([call.args[0][-3] for call in run.call_args_list[1:]],
-                             ["watch-page", "player-api", "n-extraction"])
+                             ["watch-page", "player-api", "n-extraction", "adaptive"])
 
     def test_signature_fixture_contains_real_cipher_and_exact_saved_solution(self):
         fixtures = Path(__file__).resolve().parents[1] / "tests/fixtures/youtube"
@@ -128,7 +165,7 @@ class YoutubeComparisonTest(unittest.TestCase):
                     mock.patch("compare_youtube.subprocess.run", side_effect=results) as run, \
                     contextlib.redirect_stdout(io.StringIO()) as stdout:
                 self.assertEqual(main(), 0)
-            self.assertEqual(run.call_count, 5)
+            self.assertEqual(run.call_count, 6)
             self.assertEqual(run.call_args.args[0][-3], "signature-extraction")
             self.assertEqual(run.call_args.args[0][-1], str(deno.resolve()))
             self.assertEqual(run.call_args.kwargs["encoding"], "utf-8")

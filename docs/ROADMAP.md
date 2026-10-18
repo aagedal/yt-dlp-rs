@@ -104,7 +104,10 @@ remain outside the current result contract.
    Encrypted signature/default/custom-sp and combined-n extraction/download
    fixtures now pass, including an actual offline upstream EJS permutation-path
    comparison; see the [signature slice](../upstream/notes/youtube-signature-extraction.md).
-   Next: adaptive media requires explicit stream types and merging, while manifests remain milestone 3 work. Upstream's challenge
+   Direct adaptive audio/video types, bounded pair/fallback selection and explicit
+   FFmpeg stream-copy merging are implemented with local fixtures; see the
+   [adaptive slice](../upstream/notes/youtube-adaptive-merge.md). Fragmented adaptive
+   delivery and manifests remain milestone 3 work. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
