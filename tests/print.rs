@@ -252,3 +252,71 @@ fn unsupported_print_stages_and_templates_fail_before_requests() {
     }
     assert_eq!(server.count("/page.html"), 0);
 }
+
+#[test]
+fn print_to_file_appends_before_downloading_without_implying_simulation() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let args = [
+        "--print-to-file",
+        "video:id,width",
+        "lists/%(extractor)s.txt",
+        "--print-to-file",
+        "%(filename)s",
+        "names.txt",
+        "-o",
+        "%(id)s.%(ext)s",
+    ];
+    let output = server.cli(&["/page.html"], &args, directory.path());
+    assert_eq!(success(&output), "");
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains("[info] Writing \"%(id)s\\n%(width)s\" to: lists/html5.txt"),
+        "{stderr}"
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("page-1.mp4")).unwrap(),
+        b"media"
+    );
+    // A second run appends; the existing media now fails after the write.
+    let output = server.cli(&["/page.html"], &args, directory.path());
+    assert!(!output.status.success());
+    let read = |name: &str| std::fs::read_to_string(directory.path().join(name)).unwrap();
+    assert_eq!(read("lists/html5.txt"), "page-1\n1280\npage-1\n1280\n");
+    assert_eq!(read("names.txt"), "page-1.mp4\npage-1.mp4\n");
+}
+
+#[test]
+fn print_to_file_runs_under_print_simulation_and_validates_at_startup() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = server.cli(
+        &["/playlist.html"],
+        &[
+            "-I",
+            "2:3",
+            "-O",
+            "id",
+            "--print-to-file",
+            "%(playlist_index)s",
+            "%(extractor)s.txt",
+        ],
+        directory.path(),
+    );
+    assert_eq!(success(&output), "playlist-2\nplaylist-3\n");
+    assert!(!String::from_utf8_lossy(&output.stderr).contains("[info] Writing"));
+    assert_eq!(entries(directory.path()), 1);
+    assert_eq!(
+        std::fs::read_to_string(directory.path().join("html5.txt")).unwrap(),
+        "2\n3\n"
+    );
+    for args in [
+        ["--print-to-file", "playlist:id", "x.txt"],
+        ["--print-to-file", "id", "%(missing)s.txt"],
+        ["--print-to-file", "{id}", "x.txt"],
+    ] {
+        let output = server.cli(&["/page.html"], &args, directory.path());
+        assert!(!output.status.success(), "{args:?}");
+    }
+    assert_eq!(server.count("/page.html"), 0);
+}

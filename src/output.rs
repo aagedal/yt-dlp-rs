@@ -3,7 +3,7 @@ mod print;
 mod subtitles;
 mod template;
 pub use formats::render_formats;
-pub use print::PrintTemplate;
+pub use print::{PrintTemplate, PrintToFile};
 pub use subtitles::{render_automatic_captions, render_subtitles};
 
 use crate::{PlaylistCounts, PlaylistInfo, Result, VideoInfo};

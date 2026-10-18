@@ -44,7 +44,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection, record only after successful download/merge publication; no writes in metadata/listing/simulation |
 | `--extractor-retries` | Additional whole-extraction attempts, integer 0–255, default 0; no `infinite` value |
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
-| All other flags | Rejected; `--print-to-file`, `--no-simulate` and general option parity are not implemented |
+| All other flags | Rejected; `--no-simulate` and general option parity are not implemented |
 
 Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
@@ -1245,7 +1245,14 @@ is not implemented. Listing options still print their tables and then keep
 normal selection, as with `-j`/`-s`. All lines for a video are rendered before
 any is written, so a render failure prints nothing for that video, reports an
 error and continues with later inputs. A failed `-o` render fails only videos
-whose print lines use `filename`. `--print-to-file` is not implemented.
+whose print lines use `filename`.
+
+`--print-to-file [WHEN:]TEMPLATE FILE` (repeatable) accepts the same video-stage
+templates; FILE is a sanitized output template. Both are validated at startup.
+For each processed video, every destination and line is rendered first, then
+lines are appended (UTF-8, parent directories created) before any download.
+Unlike `--print` it does not imply simulation; the `[info] Writing` notice goes
+to stderr and is suppressed while `--print` is active.
 
 A 19-case fixture compares exact printed lines with actual pinned upstream
 `parseOpts` and `__forced_printings`, plus five source-only rejection cases.

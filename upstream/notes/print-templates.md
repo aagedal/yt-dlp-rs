@@ -38,6 +38,13 @@ startup rejections without media writes. `tools/compare_print.py` runs actual
 pinned `parseOpts` and `__forced_printings` offline: 19 shared exact-line cases
 and 5 source-only cases.
 
+`--print-to-file` follow-up (same pinned source, `_forceprint` print_to_file
+loop and `__init__` validation of both templates): pairs share the video-stage
+parser; FILE is rendered by the filename template engine, parent directories are
+created and lines appended with `\n`. It is not part of `any_getting`, so it does
+not imply simulation. Native difference: all pairs render before any append.
+Covered by one unit test and two localhost CLI tests.
+
 ```sh
 python3 tools/compare_print.py --upstream /path/to/yt-dlp
 ```

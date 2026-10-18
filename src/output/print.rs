@@ -1,7 +1,8 @@
 //! `--print` templates: upstream `[WHEN:]` prefixes, field-name shorthand and
 //! unsanitized rendering of processed video metadata.
-use super::{TemplateOptions, template};
+use super::{TemplateOptions, render_template_with_options, template};
 use crate::{Error, Result, VideoInfo};
+use std::path::PathBuf;
 
 /// Upstream `POSTPROCESS_WHEN`; only `video` is supported here.
 const WHEN: &[&str] = &[
@@ -44,13 +45,11 @@ impl PrintTemplate {
         };
         // Validate syntax and field names before any extraction, with
         // placeholder metadata standing in for the processed video.
-        let info: VideoInfo = serde_json::from_value(serde_json::json!({
-            "id": "id", "title": "title", "ext": "mp4", "extractor": "generic",
-            "extractor_key": "Generic", "url": "https://example.invalid/media",
-            "webpage_url": "https://example.invalid/", "direct": true,
-        }))
-        .expect("static placeholder metadata is valid");
-        template.render(&info, Ok("filename"), &TemplateOptions::default())?;
+        template.render(
+            &placeholder_info(),
+            Ok("filename"),
+            &TemplateOptions::default(),
+        )?;
         Ok(template)
     }
 
@@ -90,6 +89,52 @@ impl PrintTemplate {
             options,
         )
     }
+}
+
+/// A validated `--print-to-file [WHEN:]TEMPLATE FILE` pair. Like upstream,
+/// FILE is an output (filename) template rendered per video, and each
+/// rendered line is appended to it with a trailing newline.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrintToFile {
+    template: PrintTemplate,
+    file: String,
+}
+
+impl PrintToFile {
+    /// Validate both templates before extraction, as upstream does.
+    pub fn parse(spec: &str, file: &str) -> Result<Self> {
+        let template = PrintTemplate::parse(spec)?;
+        render_template_with_options(file, &placeholder_info(), &TemplateOptions::default())?;
+        Ok(Self {
+            template,
+            file: file.into(),
+        })
+    }
+
+    /// The expanded line template, for diagnostics.
+    pub fn template(&self) -> &str {
+        &self.template.template
+    }
+
+    /// Render the line and its sanitized destination for one video.
+    pub fn render(
+        &self,
+        info: &VideoInfo,
+        filename: std::result::Result<&str, &Error>,
+        options: &TemplateOptions,
+    ) -> Result<(PathBuf, String)> {
+        let path = render_template_with_options(&self.file, info, options)?;
+        Ok((path, self.template.render(info, filename, options)?))
+    }
+}
+
+fn placeholder_info() -> VideoInfo {
+    serde_json::from_value(serde_json::json!({
+        "id": "id", "title": "title", "ext": "mp4", "extractor": "generic",
+        "extractor_key": "Generic", "url": "https://example.invalid/media",
+        "webpage_url": "https://example.invalid/", "direct": true,
+    }))
+    .expect("static placeholder metadata is valid")
 }
 
 /// Selected stream URLs, one per line for multi-stream selections.
@@ -319,6 +364,20 @@ mod tests {
                 case["name"]
             );
         }
+    }
+
+    #[test]
+    fn print_to_file_renders_sanitized_destinations() {
+        let pair = PrintToFile::parse("video:id,ext", "lists/%(title)s.txt").unwrap();
+        assert_eq!(pair.template(), "%(id)s\n%(ext)s");
+        let (path, line) = pair
+            .render(&info(), Ok("f.mp4"), &TemplateOptions::default())
+            .unwrap();
+        assert_eq!(path, PathBuf::from("lists/Épisode_ _1__.txt"));
+        assert_eq!(line, "a/b\nmp4");
+        assert!(PrintToFile::parse("playlist:id", "x.txt").is_err());
+        assert!(PrintToFile::parse("id", "%(missing)s.txt").is_err());
+        assert!(PrintToFile::parse("id", "").is_err());
     }
 
     #[test]

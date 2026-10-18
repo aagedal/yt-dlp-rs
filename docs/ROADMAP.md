@@ -87,7 +87,8 @@ remain outside the current result contract.
    missing-value defaults; full template expressions, conversions and platform
    filename parity remain open. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
-   quiet simulation; other print stages and `--print-to-file` remain open.
+   quiet simulation; `--print-to-file` appends video-stage lines to output-template
+   destinations without implying simulation. Other print stages remain open.
    Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.
