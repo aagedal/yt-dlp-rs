@@ -26,6 +26,7 @@ tractable for future agents.
   fallback and explicit token-exempt itag 18 policy.
 - `src/download.rs`: streaming HTTP transfer, byte-progress/cancellation checkpoints, and no-clobber publication.
 - `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
+- `src/dash.rs` and `src/extractor/dash.rs`: bounded static single-period MPD parsing and generic/HTML5 acquisition.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
@@ -82,7 +83,9 @@ remain outside the current result contract.
    streaming decryption are implemented with exact local media fixtures.
    External audio groups, metadata and compatible video/audio selection now
    feed native fragment downloads and explicit FFmpeg copy merging, including
-   MPEG-TS video and AAC/TS audio. DASH, SAMPLE-AES/DRM and live HLS,
+   MPEG-TS video and AAC/TS audio. Static single-period DASH templates/timelines/lists/ranges and native
+   representation downloads are implemented; explicit FFmpeg merges separate
+   tracks. Dynamic/multi-period/SIDX DASH, SAMPLE-AES/DRM and live HLS,
    external video/subtitle renditions, discontinuities,
    persistent resume across invocations, extraction cancellation, and CLI signal handling remain open.
 4. **YouTube vertical slice.** Player/API request fixtures, client selection,

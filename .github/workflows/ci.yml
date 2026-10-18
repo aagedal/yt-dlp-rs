@@ -53,4 +53,4 @@ jobs:
         env:
           YT_DLP_RS_TEST_FFMPEG: /usr/bin/ffmpeg
           YT_DLP_RS_TEST_FFPROBE: /usr/bin/ffprobe
-        run: cargo test --locked --test merge --test hls_media
+        run: cargo test --locked --test merge --test hls_media --test dash_media

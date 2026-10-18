@@ -122,8 +122,8 @@ boundaries, whole-extraction retries, and token filtering before probes. See
 
 ## HTML5 extraction
 
-The generic fallback dispatches a single response to HLS parsing, direct-media
-inspection or HTML5 parsing. Site extractors registered through `Extractor` run first. The
+The generic fallback dispatches a single response to DASH/HLS parsing,
+direct-media inspection or HTML5 parsing. Site extractors registered through `Extractor` run first. The
 standalone `DirectHttp` extractor remains available for direct-only callers.
 
 For `text/html`, accept `video`/`audio` elements with nonempty
@@ -671,3 +671,77 @@ It compares URL-keyed stream kind, language/name, dimensions and total bitrate.
 Format IDs/order, native group/flag fields, selection, ext/remuxing and download
 behavior are explicitly excluded from that comparison. Only the exact local
 origin is normalized. See [the source slice](../upstream/notes/hls-audio.md).
+
+
+## Static DASH MPDs
+
+Direct `.mpd` paths, `application/dash+xml`, and HTML5 DASH type hints support a
+bounded static, single-period MPD subset. Original/final MPD paths and explicit
+hints force parsing even with a conflicting media MIME, preventing MPD text from
+being published as media. Read at most 2 MiB of identity-encoded UTF-8 XML;
+ambiguous/invalid headers, DTDs, foreign element namespaces and external XML
+references fail. No schema, xlink, initialization or media URL is fetched during
+extraction or JSON/simulation. XML nodes/depth are bounded at 100000/64.
+
+`BaseURL` resolves through MPD, Period, AdaptationSet and Representation, with one
+base per level. SegmentTemplate attributes/timelines and SegmentList initialization
+and segment lists inherit within the same addressing scheme. Supported template
+tokens are RepresentationID, Bandwidth, Number and Time, dollar escaping and
+bounded zero-padded decimal numeric forms. Initialization permits only RepresentationID
+and Bandwidth; media cannot combine actual Number and Time tokens. Static duration
+templates require a
+finite Period or MPD duration. Exact day/hour/minute/second ISO durations use
+nanosecond precision (up to nine fractional second digits), checked integer
+arithmetic and ceiling division. Explicit Period and MPD duration bounds must agree.
+No floating-point segment count is used.
+
+SegmentTimeline supports explicit/implicit starts, positive durations, finite
+repeats and bounded `r=-1` expansion to an aligned next start or finite period
+end. Nonzero presentationTimeOffset is applied to period bounds and duration
+Time templates; timelines that start before the offset require clipping and are
+rejected, as are segment starts at or beyond a known period end. Namespaced
+addressing attributes fail rather than being interpreted as ordinary DASH fields.
+The simple-addressing offset policy follows the
+[DASH-IF restricted timing model](https://dashif.org/Guidelines-TimingModel/).
+Unknown eptDelta and advanced timing attributes remain unsupported. Final segment
+bytes are not cropped to presentation boundaries; no trimming/remux parity is
+claimed.
+
+SegmentList supports Initialization sourceURL/range and SegmentURL media/mediaRange.
+Inclusive XML byte endpoints become exact ByteRange offset/length values. Explicit
+resource BaseURLs may supply omitted range-resource URIs. Fragmented MP4/WebM
+plans require initialization; an explicit whole-resource non-directory BaseURL
+can instead form a single-fragment representation. Resolved URLs are limited to
+16 KiB, formats to 256 and aggregate fragments (including initialization) to 10000.
+
+Formats use native declaration-order `dash-N` IDs, declared stream kind, MP4/M4A
+or WebM extension, dimensions, bandwidth-derived kbps and inherited language.
+Video/audio representations share the native `dash-period-0` group; HTML source
+prefixes isolate independent masters. Their representative URL is the MPD URL;
+the ordered fragments describe actual resources. Existing selectors, per-fragment
+retries/cancellation, no-clobber publication and explicit FFmpeg merge policy apply.
+Without a merger, separate-only presentations need explicit single-track selection.
+
+Reject dynamic MPDs, multiple periods, ContentProtection/DRM, SegmentBase/SIDX and
+index attributes, dependent/scalable representations, SubRepresentation,
+EssentialProperty, remapping, multiple BaseURL alternatives, mixed inherited
+addressing schemes and unsupported state. YouTube MPD discovery remains outside
+its extractor. No live/site reliability or general DASH parity is implied.
+
+Original local fMP4 fixtures verify exact single-track bytes and optional FFprobe
+H.264/AAC tracks for timeline, duration-template, list and range forms. The real
+merge test downloads both representations and checks the combined tracks. The
+Linux real-tool job includes these checks. Pinned reference command:
+
+```sh
+python3 tools/compare_dash.py --upstream /path/to/yt-dlp --binary target/debug/yt-dlp-rs
+```
+
+The actual upstream parser receives saved XML with network access blocked; native
+JSON reads only localhost MPDs. A documented allowlist compares declaration-order
+metadata and fragment URLs, resolving upstream relative paths and normalizing
+only the exact local origin. Source ID and audio bitrate representations have
+explicit mappings. Pinned upstream ignores SegmentList ranges and does not expand
+negative repeats or apply presentationTimeOffset: native range expectations are
+checked independently, and those timing behaviors are excluded from upstream
+parity claims. See [the source slice](../upstream/notes/dash-static.md).

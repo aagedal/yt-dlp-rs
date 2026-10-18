@@ -1,3 +1,4 @@
+mod dash;
 mod direct;
 mod hls;
 mod html5;

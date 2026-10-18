@@ -41,6 +41,10 @@ Supported today:
   default/autoselect metadata; automatic merging stays within the declared audio
   group. Live, SAMPLE-AES/DRM, discontinuous and external video/subtitle
   renditions remain unsupported.
+- Static single-period DASH MPDs from direct URLs and HTML5 sources: inherited
+  BaseURLs, numbered/time templates, finite timelines, SegmentLists and exact byte
+  ranges. Native fragment downloads feed explicit audio/video merging. Dynamic,
+  DRM, multi-period and SegmentBase/SIDX presentations remain unsupported.
 - Multiple nonempty media elements form an HTML5 playlist, processed in document
   order. Empty elements are skipped. IDs and titles use upstream's numbered
   `-1` / ` (1)`, `-2` / ` (2)` suffixes. Titles prefer
@@ -88,7 +92,7 @@ Supported today:
   and interrupted HTML reads restart extraction before any output is emitted,
   using the same bounded `Retry-After` policy.
 
-Other HTML pages, general YouTube support, DASH, broader HLS delivery, site playlists, full upstream format ranking, general selector
+Other HTML pages, general YouTube support, broader DASH/HLS delivery, site playlists, full upstream format ranking, general selector
 expressions, cookies/authentication, persistent resume, subtitles, and other
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet

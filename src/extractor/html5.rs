@@ -1,6 +1,6 @@
 //! Deliberately narrow HTML5 subset of upstream GenericIE and
 //! HTML5MediaEmbedIE / InfoExtractor._parse_html5_media_entries at the pinned revision.
-use super::{Extractor, direct, hls};
+use super::{Extractor, dash, direct, hls};
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoFormat, VideoInfo};
 use percent_encoding::percent_decode_str;
 use reqwest::{
@@ -25,6 +25,7 @@ struct Html5Page {
 struct Html5Source {
     url: Url,
     hls_hint: bool,
+    dash_hint: bool,
     width: Option<u32>,
     height: Option<u32>,
 }
@@ -87,16 +88,13 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
             if !matches!(url.scheme(), "http" | "https") {
                 return Err(Error::UnsupportedScheme(url.scheme().into()));
             }
-            let path = url.path().to_ascii_lowercase();
             let hint = hint.unwrap_or("").to_ascii_lowercase();
-            if path.ends_with(".mpd") || hint.contains("dash+xml") {
-                return Err(unsupported("DASH sources require a manifest downloader"));
-            }
             urls.push(Html5Source {
                 url,
                 width,
                 height,
                 hls_hint: hint.contains("mpegurl"),
+                dash_hint: hint.contains("dash+xml"),
             });
         }
         entries.push(urls);
@@ -152,6 +150,10 @@ impl Extractor for GenericHttp {
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         // Dispatch a single response so direct media does not need two probes.
         let response = direct::request(client, url, None)?;
+        let dash_path = url.path().to_ascii_lowercase().ends_with(".mpd");
+        if dash_path || dash::recognized(&response) {
+            return Ok(dash::from_response(response, url, dash_path)?.map(ExtractResult::Video));
+        }
         let hls_path = url.path().to_ascii_lowercase().ends_with(".m3u8")
             || response
                 .url()
@@ -220,15 +222,22 @@ impl Extractor for GenericHttp {
                 let url = &source.url;
                 let response = direct::request(client, url, Some(&page_url))?;
                 let direct = direct::from_response(&response, url);
-                let info = hls::from_response(
-                    client,
-                    response,
-                    url,
-                    Some(&page_url),
-                    source.hls_hint || url.path().to_ascii_lowercase().ends_with(".m3u8"),
-                )?
-                .or(direct)
-                .ok_or_else(|| unsupported("source does not serve supported HTTP media"))?;
+                let dash_hint =
+                    source.dash_hint || url.path().to_ascii_lowercase().ends_with(".mpd");
+                let manifest = if dash_hint || dash::recognized(&response) {
+                    dash::from_response(response, url, dash_hint)?
+                } else {
+                    hls::from_response(
+                        client,
+                        response,
+                        url,
+                        Some(&page_url),
+                        source.hls_hint || url.path().to_ascii_lowercase().ends_with(".m3u8"),
+                    )?
+                };
+                let info = manifest
+                    .or(direct)
+                    .ok_or_else(|| unsupported("source does not serve supported HTTP media"))?;
                 if !info.formats.is_empty() {
                     formats.extend(info.formats.iter().cloned().map(|mut format| {
                         format.format_id = format!("{index}-{}", format.format_id);

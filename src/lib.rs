@@ -1,4 +1,5 @@
 mod crypto;
+mod dash;
 mod download;
 mod error;
 pub mod extractor;
