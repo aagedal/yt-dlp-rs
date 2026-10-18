@@ -155,7 +155,7 @@ fn read_pipe(mut pipe: impl Read, cap: usize) -> Result<Vec<u8>> {
     }
 }
 
-fn execute(
+pub(crate) fn execute(
     executable: &Path,
     args: &[OsString],
     directory: &Path,

@@ -1,4 +1,6 @@
 mod archive;
+mod audio;
+mod audio_download;
 mod cookies;
 mod crypto;
 mod dash;
@@ -17,6 +19,7 @@ mod selector;
 mod subtitles;
 
 pub use archive::{DownloadArchive, archive_id};
+pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
 pub use cookies::CookieJar;
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
 pub use error::{Error, Result};
@@ -59,6 +62,7 @@ pub struct YoutubeDl {
     cookies: Arc<CookieJar>,
     extractors: Vec<Box<dyn Extractor>>,
     ffmpeg: Option<PathBuf>,
+    ffprobe: Option<PathBuf>,
 }
 
 impl YoutubeDl {
@@ -91,6 +95,7 @@ impl YoutubeDl {
         Ok(Self {
             client,
             ffmpeg: None,
+            ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
                 Box::new(Youtube::with_http_options(
@@ -115,6 +120,46 @@ impl YoutubeDl {
     pub fn with_ffmpeg(mut self, executable: impl Into<PathBuf>) -> Self {
         self.ffmpeg = Some(executable.into());
         self
+    }
+
+    /// Configure an explicit ffprobe executable for audio codec inspection.
+    /// Without this override, audio processing uses ffprobe beside explicit ffmpeg.
+    pub fn with_ffprobe(mut self, executable: impl Into<PathBuf>) -> Self {
+        self.ffprobe = Some(executable.into());
+        self
+    }
+
+    /// Download and extract audio, publishing the result without overwriting.
+    pub fn download_audio_with_options(
+        &self,
+        info: &VideoInfo,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+        audio: &AudioOptions,
+    ) -> Result<AudioDownload> {
+        self.download_audio_with_progress(info, destination, options, audio, |_| {
+            std::ops::ControlFlow::Continue(())
+        })
+    }
+
+    /// Observe/cancel transfer and audio processing. Only final publication emits
+    /// Publishing; a processing failure can retain the completed source download.
+    pub fn download_audio_with_progress(
+        &self,
+        info: &VideoInfo,
+        destination: impl AsRef<Path>,
+        options: DownloadOptions,
+        audio: &AudioOptions,
+        mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<AudioDownload> {
+        audio_download::download(
+            self,
+            info,
+            destination.as_ref(),
+            options,
+            audio,
+            &mut callback,
+        )
     }
 
     /// Insert a site extractor before the generic fallback.

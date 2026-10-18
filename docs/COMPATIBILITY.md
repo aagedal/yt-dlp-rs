@@ -28,7 +28,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--add-headers FIELD:VALUE`, `--add-header` | Repeated custom HTTP defaults; case-insensitive last custom value wins |
 | `--user-agent UA`, `--referer URL` | Convenience HTTP defaults override matching custom options; extractor/transport headers can override them |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
-| `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging; no PATH discovery, directory lookup, installation, transcoding or other postprocessors |
+| `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging and extract-audio conversion; no PATH discovery, directory lookup or installation |
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
 | `--playlist-start NUMBER`, `--playlist-end NUMBER` | Inclusive one-based defaults 1 through end, end -1 unbounded; items option overrides after validation |
 | `--playlist-reverse` | Reverse selected request order after deduplication |
@@ -1524,3 +1524,64 @@ proxy test preserves redirect gates independently. See
 [source applicability](../upstream/notes/http-proxies.md),
 [configuration fixtures](../tests/fixtures/proxies/README.md) and
 [TLS provenance](../tests/fixtures/proxies/tls/README.md).
+
+## Audio extraction
+
+`-x` / `--extract-audio` enables audio inspection and copy/conversion after a
+successful native download or merge. Targets are `best` (default), `mp3`, `aac`,
+`m4a`, `opus`, `vorbis`, `flac`, `alac` and `wav`. Ordered slash-separated
+`SOURCE>TARGET/TARGET` rules match the source metadata extension; an unmatched
+rule skips processing. CLI target names are lowercase. Without `-f` or `-k`,
+`-x` selects `bestaudio/best` using existing native ranking. With `-k` it retains
+the normal default selection, potentially downloading/merging video first.
+
+`--audio-quality` defaults to 5. Finite 0..10 values use the source MP3, Vorbis
+and ordinary AAC encoder curves; values above 10 request kbit/s, e.g. `128K`.
+The native limit is 1000000 and the option is at most 128 bytes. Opus/FLAC/WAV
+have no invented VBR curve. Missing encoders fail. ALAC explicitly uses ALAC;
+the pinned source's ALAC option-loss behavior is not reproduced. Format mappings
+are bounded to 16 KiB/1024 branches and ASCII word source names.
+
+`--ffmpeg-location PATH` configures the local executable; `--ffprobe-location`
+may select a separate executable, otherwise FFprobe is inferred beside FFmpeg.
+There is no PATH lookup or installation. Common audio extensions with `best`
+(aiff, alac, flac, m4a, mka, mp3, ogg, opus, wav, wma) and unmatched rules skip
+tools. Other paths inspect the first audio stream, then copy a matching codec or
+encode the requested target. Unknown-codec `best` falls back to MP3. A same-path
+codec copy skips FFmpeg. JSON, simulation, format/subtitle listing and
+skip-download do not run audio tools.
+
+Local input demuxers cover MP4/M4A/MOV, WebM/Matroska, MP3, AAC, Ogg/Opus, WAV,
+FLAC, MPEG-TS, AVI, FLV and AIFF. Other containers fail explicitly. Tools receive
+local regular files and a file-only protocol whitelist; remote I/O stays native.
+Each probe has a 30-second budget and each conversion ten minutes including
+version checks. Output capture, JSON, stderr and process cleanup are bounded.
+Missing audio or tool diagnostics fail rather than guessing successful output.
+
+Output replaces only a suffix matching the source extension; otherwise it
+appends the target suffix. AAC target retains the pinned `.m4a` naming quirk:
+AAC codec copy uses ADTS while AAC encoding uses the M4A container. Vorbis uses
+`.ogg`, ALAC uses `.m4a`. Byte-identical FFmpeg output is not claimed.
+
+Final files are published without overwriting. `-k` / `--keep-video` currently
+requires `-x`; it retains the source, using `.orig` before the last suffix if the
+conversion keeps its filename. `--no-keep-video` reverses that option. A completed
+source is preserved after processing failure; cancellation cleans the private
+workspace. If publishing audio fails after the retained source was published,
+the source remains and the operation returns an error. Sidecars retain the
+original media stem. Archive recording follows successful final audio publication
+and rejects aliases of published media paths. There is no persistent processing
+resume or transaction across source, sidecars, final audio and archive files.
+
+Library callers use `AudioOptions`, `with_ffprobe` and
+`download_audio_with_options` / `download_audio_with_progress`. The returned
+`AudioDownload` reports the final path, byte count and optional retained path;
+progress includes cooperative `Postprocessing` checkpoints. Callers select
+formats before invoking this method, just as for normal downloads.
+
+73 saved source plans, bounded model tests, portable subprocess regressions and
+14 local integration tests cover this slice. Optional explicitly configured real
+FFmpeg/FFprobe verify all target encoders and actual MP3/WAV/ALAC downloads.
+See [source classification](../upstream/notes/audio-extraction.md) and
+[reference rules](../tests/fixtures/audio/README.md). General postprocessor
+chains, discovery, fixups, timestamp preservation and embedding remain open.

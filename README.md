@@ -24,6 +24,7 @@ cargo run --locked -- -I '3,1:2' --playlist-reverse -o '%(playlist_index)03d-%(t
 cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
 cargo run --locked -- --cookies cookies.txt 'https://example.com/video.mp4'
+cargo run --locked -- -x --audio-format mp3 --ffmpeg-location /path/to/ffmpeg 'https://example.com/video.mp4'
 cargo run --locked -- --proxy 'socks5://127.0.0.1:1080' 'https://example.com/video.mp4'
 cargo run --locked -- --user-agent 'My media client' --add-headers 'X-Media-Key:example' 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
@@ -131,6 +132,14 @@ Supported today:
   and defaults such as `%(width,height|unknown)s` are supported;
   `--output-na-placeholder TEXT` changes the default `NA`. Literal `%%` is supported.
   Metadata cannot introduce directories; literal template paths can.
+- `-x` / `--extract-audio` supports `best`, MP3, AAC, M4A, Opus, Vorbis,
+  FLAC, ALAC and WAV through explicitly configured local FFmpeg/FFprobe.
+  `--audio-format` accepts ordered `SOURCE>TARGET/TARGET` rules;
+  `--audio-quality` accepts VBR 0..10 or a bitrate such as `128K`.
+  FFprobe defaults to the sibling of `--ffmpeg-location`, or use
+  `--ffprobe-location PATH`. `-k` / `--keep-video` requires `-x` and retains the
+  source. [Audio limits and publication behavior](docs/COMPATIBILITY.md#audio-extraction)
+  are explicit; no tool discovery or installation is performed.
 - Same-directory temporary files, cleanup on transfer failure, and no overwrite
   of existing destinations. A failed entry or URL sets a nonzero exit status while later
   entries and URLs still run. JSON goes to stdout; diagnostics go to stderr.

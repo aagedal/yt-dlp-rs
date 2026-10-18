@@ -36,6 +36,8 @@ tractable for future agents.
 - `src/subtitles.rs`: ordered subtitle metadata, language/format selection and sidecar name planning; `src/output/subtitles.rs` renders inventories.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
+- `src/audio.rs`, `src/audio/ffmpeg.rs`, `src/audio_download.rs`: pure audio plans,
+  bounded local inspection/conversion and final publication.
 - `src/retry.rs`: shared transient HTTP classification, response checks, bounded backoff and Retry-After delay-seconds/preferred HTTP-date hints.
 - `src/output.rs`: template rendering and filename-component sanitization; `src/output/formats.rs` renders format inventories and `src/output/template.rs` handles bounded typed filename templates.
 - `tests/http.rs`: deterministic local HTTP and binary integration tests.
@@ -166,6 +168,10 @@ remain outside the current result contract.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive
    reference fixture are covered; early URL-ID skips, alternate legacy IDs,
    force-write options and broader archive option parity remain open.
+   Audio extraction now supports bounded format mappings, quality plans and local
+   FFprobe/FFmpeg copy/conversion for eight target formats, source retention,
+   cancellation and archive-after-final-publication. General postprocessor chains,
+   metadata/thumbnail embedding, fixups and video conversion remain open.
 6. **Agent-maintained updates.** Upstream delta reports, bounded implementation
    briefs, differential regression fixtures, reviewable PRs, and staged releases.
    Measure extraction coverage and compatibility before enabling unattended merges.

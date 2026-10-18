@@ -426,6 +426,32 @@
         "upstream/notes/http-proxies.md"
       ],
       "scope": "Explicit shared HTTP/HTTPS/SOCKS4/4a/5/5h routing, empty direct override, pinned aliases/default ports and SOCKS5 remote DNS/auth gating; HTTP proxy Basic credentials, verified CONNECT/HTTPS-proxy transport and bounded-player routing; reject unsupported SOCKS4 user IDs and legacy per-request headers; existing reqwest environment/system routing retained without full upstream discovery/bypass/PAC, geo-verification or per-extractor proxy parity"
+    },
+    {
+      "name": "audio-extraction",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/utils/_utils.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/audio.rs",
+        "src/audio/ffmpeg.rs",
+        "src/audio_download.rs",
+        "src/main.rs",
+        "src/lib.rs",
+        "tests/audio.rs",
+        "tests/helpers/audio_runtime.rs",
+        "tests/helpers/audio_pipeline.rs",
+        "tests/fixtures/audio/",
+        "tools/compare_audio.py",
+        "tools/test_compare_audio.py",
+        "upstream/notes/audio-extraction.md"
+      ],
+      "scope": "Explicit extract-audio mappings, codec inspection and copy/conversion to MP3/AAC/M4A/Opus/Vorbis/FLAC/ALAC/WAV; bounded native quality and process policies, lazy tools, source retention, cancellation and no-clobber final publication; no discovery, FDK selection, arbitrary postprocessors, embedding, video conversion or general format ranking parity"
     }
   ]
 }

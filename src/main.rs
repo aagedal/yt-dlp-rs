@@ -7,8 +7,8 @@ use std::{
     time::{Duration, Instant},
 };
 use yt_dlp_rs::{
-    CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult, ExtractionOptions,
-    HttpOptions, PlaylistSelection, SubtitleOptions, YoutubeDl, YoutubeOptions,
+    AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult,
+    ExtractionOptions, HttpOptions, PlaylistSelection, SubtitleOptions, YoutubeDl, YoutubeOptions,
     output::{DEFAULT_TEMPLATE, TemplateOptions, render_formats, render_template_with_options},
     render_automatic_captions, render_subtitles, subtitle_paths, validate_format_selector,
 };
@@ -97,7 +97,35 @@ struct Args {
     /// Explicit path to Deno 2.9.7 for YouTube player challenges (no runtime discovery or installation)
     #[arg(long, value_name = "PATH")]
     youtube_js_runtime: Option<PathBuf>,
-    /// Explicit ffmpeg executable for merging separate video/audio streams
+    /// Extract audio with local ffmpeg/ffprobe after downloading
+    #[arg(short = 'x', long)]
+    extract_audio: bool,
+    /// Audio target or ordered SOURCE>TARGET/TARGET rules
+    #[arg(long, default_value = "best", value_name = "FORMAT")]
+    audio_format: String,
+    /// VBR quality 0..10 or bitrate such as 128K
+    #[arg(
+        long,
+        default_value = "5",
+        value_name = "QUALITY",
+        allow_hyphen_values = true
+    )]
+    audio_quality: String,
+    /// Keep the downloaded source after audio extraction
+    #[arg(
+        short = 'k',
+        long,
+        requires = "extract_audio",
+        overrides_with = "no_keep_video"
+    )]
+    keep_video: bool,
+    /// Remove the source after successful audio extraction (default)
+    #[arg(long, overrides_with = "keep_video")]
+    no_keep_video: bool,
+    /// Explicit ffprobe executable for audio inspection (otherwise beside ffmpeg)
+    #[arg(long, value_name = "PATH")]
+    ffprobe_location: Option<PathBuf>,
+    /// Explicit ffmpeg executable for local stream merging and audio conversion
     #[arg(long, value_name = "PATH")]
     ffmpeg_location: Option<PathBuf>,
     /// Skip recorded extractor/video IDs and record only completed downloads
@@ -130,6 +158,16 @@ struct Args {
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args = Args::parse();
+    let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
+    audio_options.keep_video = args.keep_video;
+    let format = args
+        .format
+        .as_deref()
+        .or(if args.extract_audio && !args.keep_video {
+            Some("bestaudio/best")
+        } else {
+            None
+        });
     if let Some(format) = &args.format {
         validate_format_selector(format)?;
     }
@@ -178,6 +216,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if let Some(path) = args.ffmpeg_location {
         downloader = downloader.with_ffmpeg(path);
     }
+    if let Some(path) = args.ffprobe_location {
+        downloader = downloader.with_ffprobe(path);
+    }
+    let archive_path = args.download_archive.clone();
     let mut archive = args
         .download_archive
         .map(DownloadArchive::load)
@@ -229,7 +271,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
             }
             if !list_only {
-                downloader.select_result(&mut result, args.format.as_deref())?;
+                downloader.select_result(&mut result, format)?;
             }
             Ok(Some(result))
         })();
@@ -317,32 +359,66 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                     eprintln!("[download] Destination: {}", path.display());
                     let mut last_progress = Instant::now();
-                    let bytes = downloader.download_with_progress(
-                        &info,
-                        &path,
-                        DownloadOptions {
-                            retries: args.retries,
-                        },
-                        |progress| {
-                            if progress.phase == DownloadPhase::Downloading
-                                && last_progress.elapsed() >= Duration::from_secs(1)
-                            {
-                                if let Some(total) = progress.total_bytes {
-                                    eprintln!(
-                                        "[download] {} / {total} bytes (attempt {})",
-                                        progress.downloaded_bytes, progress.attempt
-                                    );
-                                } else {
-                                    eprintln!(
-                                        "[download] {} bytes (attempt {})",
-                                        progress.downloaded_bytes, progress.attempt
-                                    );
-                                }
-                                last_progress = Instant::now();
+                    let progress = |progress: yt_dlp_rs::DownloadProgress| {
+                        if progress.phase == DownloadPhase::Downloading
+                            && last_progress.elapsed() >= Duration::from_secs(1)
+                        {
+                            if let Some(total) = progress.total_bytes {
+                                eprintln!(
+                                    "[download] {} / {total} bytes (attempt {})",
+                                    progress.downloaded_bytes, progress.attempt
+                                );
+                            } else {
+                                eprintln!(
+                                    "[download] {} bytes (attempt {})",
+                                    progress.downloaded_bytes, progress.attempt
+                                );
                             }
-                            ControlFlow::Continue(())
-                        },
-                    )?;
+                            last_progress = Instant::now();
+                        }
+                        ControlFlow::Continue(())
+                    };
+                    let (bytes, published_paths) = if args.extract_audio {
+                        let result = downloader.download_audio_with_progress(
+                            &info,
+                            &path,
+                            DownloadOptions {
+                                retries: args.retries,
+                            },
+                            &audio_options,
+                            progress,
+                        )?;
+                        eprintln!("[ExtractAudio] Destination: {}", result.path.display());
+                        let mut paths = vec![result.path];
+                        paths.extend(result.kept_video);
+                        (result.bytes, paths)
+                    } else {
+                        let bytes = downloader.download_with_progress(
+                            &info,
+                            &path,
+                            DownloadOptions {
+                                retries: args.retries,
+                            },
+                            progress,
+                        )?;
+                        (bytes, vec![path.clone()])
+                    };
+                    if let Some(archive_path) = &archive_path {
+                        for output in &published_paths {
+                            let identical =
+                                std::path::absolute(output)? == std::path::absolute(archive_path)?;
+                            let canonical_alias = std::fs::canonicalize(output)
+                                .ok()
+                                .zip(std::fs::canonicalize(archive_path).ok())
+                                .is_some_and(|(left, right)| left == right);
+                            if identical || canonical_alias {
+                                return Err(yt_dlp_rs::Error::Archive(
+                                    "download output collides with archive path".into(),
+                                )
+                                .into());
+                            }
+                        }
+                    }
                     if let Some(archive) = &mut archive {
                         archive.record(&info).map_err(|error| {
                             format!("download completed, but archive update failed: {error}")

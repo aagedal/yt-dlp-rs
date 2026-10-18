@@ -19,6 +19,7 @@ pub enum DownloadPhase {
     WaitingToRetry,
     Publishing,
     Merging,
+    Postprocessing,
 }
 
 /// Bytes stored for the current representation, rather than cumulative traffic.
