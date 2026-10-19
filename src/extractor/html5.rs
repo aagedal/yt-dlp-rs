@@ -628,6 +628,7 @@ impl Extractor for GenericHttp {
                     format_note: None,
                     audio_default: false,
                     audio_autoselect: false,
+                    manifest_stream_number: None,
                     container: None,
                     abr: None,
                     tbr: source.tbr,

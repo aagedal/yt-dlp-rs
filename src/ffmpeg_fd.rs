@@ -114,23 +114,28 @@ fn arguments(
         .filter(|start| start.as_f64() != 0.0)
         .unwrap_or(PyNumber::Int(0));
     let end = info.section_end.filter(|end| end.as_f64() != 0.0);
-    let single = [info.clone()];
-    let formats: Vec<VideoInfo> = if info.requested_formats.is_empty() {
-        single.to_vec()
+    // Each input with its `manifest_stream_number`.
+    let formats: Vec<(VideoInfo, usize)> = if info.requested_formats.is_empty() {
+        let number = info
+            .formats
+            .iter()
+            .find(|format| info.format_id.as_deref() == Some(format.format_id.as_str()))
+            .and_then(|format| format.manifest_stream_number);
+        vec![(info.clone(), number.unwrap_or(0))]
     } else {
         info.requested_formats
             .iter()
-            .map(|format| info.with_selected_format(format))
+            .map(|format| {
+                (
+                    info.with_selected_format(format),
+                    format.manifest_stream_number.unwrap_or(0),
+                )
+            })
             .collect()
     };
     let mut protocol = String::new();
-    for format in &formats {
+    for (format, _) in &formats {
         protocol = format.protocol.clone().unwrap_or_default();
-        if protocol == "http_dash_segments" {
-            return Err(Error::UnsupportedManifest(
-                "partial DASH downloads are not supported natively".into(),
-            ));
-        }
         if matches!(format.url.scheme(), "http" | "https") {
             let headers = header_lines(network, format, &format.url);
             if !headers.is_empty() {
@@ -146,9 +151,9 @@ fn arguments(
         args.extend(["-i".into(), format.url.as_str().into()]);
     }
     args.extend(["-c".into(), "copy".into()]);
-    if !info.requested_formats.is_empty() {
-        for index in 0..formats.len() {
-            args.extend(["-map".into(), format!("{index}:0").into()]);
+    if !info.requested_formats.is_empty() || protocol == "http_dash_segments" {
+        for (index, (_, number)) in formats.iter().enumerate() {
+            args.extend(["-map".into(), format!("{index}:{number}").into()]);
         }
     }
     let format = if protocol.starts_with("m3u8") {
@@ -349,5 +354,48 @@ mod tests {
         assert!(args.windows(2).any(|pair| pair == ["-t", "4.5"]));
         assert!(!args.contains(&"-ss".to_owned()));
         assert!(args.windows(2).any(|pair| pair == ["-f", "ipod"]));
+    }
+
+    #[test]
+    fn dash_inputs_map_their_manifest_stream_numbers() {
+        let format = |id: &str, number: usize, kind: &str| {
+            json!({"format_id": id, "url": "https://example.test/manifest.mpd", "ext": "mp4",
+                "protocol": "http_dash_segments", "stream_kind": kind, "manifest_stream_number": number})
+        };
+        let mut info: VideoInfo = serde_json::from_value(json!({"id":"v","title":"V",
+            "url":"https://example.test/manifest.mpd","webpage_url":"https://example.test/manifest.mpd",
+            "ext":"mp4","extractor":"generic","extractor_key":"Generic","direct":true,
+            "protocol":"http_dash_segments","format_id":"a",
+            "formats":[format("v", 0, "video_only"), format("a", 1, "audio_only")]}))
+        .unwrap();
+        info.section_end = Some(PyNumber::Int(4));
+        let headers = HeaderMap::new();
+        let cookies = CookieJar::default();
+        let network = Network {
+            headers: &headers,
+            cookies: &cookies,
+            proxy: None,
+        };
+        let render = |info: &VideoInfo| -> Vec<String> {
+            arguments(&network, Settings::default(), info, Path::new("o"))
+                .unwrap()
+                .iter()
+                .map(|arg| arg.to_string_lossy().into_owned())
+                .collect()
+        };
+        // Upstream maps a single DASH format's stream too.
+        let single = render(&info);
+        assert!(
+            single.windows(2).any(|pair| pair == ["-map", "0:1"]),
+            "{single:?}"
+        );
+        info.requested_formats = info.formats.clone();
+        let pair = render(&info);
+        let maps: Vec<_> = pair
+            .windows(2)
+            .filter(|pair| pair[0] == "-map")
+            .map(|pair| pair[1].clone())
+            .collect();
+        assert_eq!(maps, ["0:0", "1:1"]);
     }
 }

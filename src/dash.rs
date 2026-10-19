@@ -714,6 +714,9 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
     let address = Address::default().inherit(root)?.inherit(period)?;
     let mut formats = Vec::new();
     let mut total_fragments = 0usize;
+    // Upstream `stream_numbers[mpd_url]`: video, audio and image
+    // representations count in manifest order.
+    let mut stream_number = 0usize;
     for adaptation in children(period, "AdaptationSet") {
         let (adaptation_base, adaptation_explicit) =
             base_url(adaptation, &period_base, period_explicit)?;
@@ -752,7 +755,10 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 "video" | "audio" => declared,
                 // Text tracks (subtitles) are not represented yet.
                 "text" => continue,
-                _ if matches!(mime, "image/avif" | "image/jpeg") => continue,
+                _ if matches!(mime, "image/avif" | "image/jpeg") => {
+                    stream_number += 1;
+                    continue;
+                }
                 _ => match &codecs {
                     Some(codecs) if codecs.vcodec != "none" => "video",
                     Some(codecs) if codecs.acodec != "none" => "audio",
@@ -852,6 +858,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 format_note: Some(format!("DASH {content_type}")),
                 audio_default: false,
                 audio_autoselect: false,
+                manifest_stream_number: Some(stream_number),
                 container: Some(format!("{ext}_dash")),
                 abr: if kind == StreamKind::AudioOnly {
                     tbr
@@ -864,6 +871,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 filesize: None,
                 fragments,
             });
+            stream_number += 1;
         }
     }
     if formats.is_empty() {

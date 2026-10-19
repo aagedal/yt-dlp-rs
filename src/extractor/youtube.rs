@@ -112,6 +112,7 @@ impl Candidate {
             format_note: None,
             audio_default: false,
             audio_autoselect: false,
+            manifest_stream_number: None,
             // Upstream: single streams (a `none` codec) name an `EXT_dash` container.
             container: codecs
                 .filter(|codecs| codecs.vcodec == "none" || codecs.acodec == "none")

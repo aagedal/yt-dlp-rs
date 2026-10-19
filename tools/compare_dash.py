@@ -111,7 +111,10 @@ def normalize(formats, origin, *, upstream=False):
                        "ext": source["ext"], "width": source.get("width"),
                        "height": source.get("height"), "tbr": source.get("tbr"),
                        "abr": source.get("tbr") if upstream and kind == "audio_only" else source.get("abr"),
-                       "language": source.get("language"), "fragments": fragments})
+                       "language": source.get("language"),
+                       "container": source.get("container"),
+                       "manifest_stream_number": source.get("manifest_stream_number"),
+                       "fragments": fragments})
     return result
 
 

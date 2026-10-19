@@ -138,6 +138,10 @@ pub struct VideoFormat {
     /// Upstream `container` (`EXT_dash` for DASH and YouTube single streams).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub container: Option<String>,
+    /// Upstream `manifest_stream_number`: the DASH representation's stream
+    /// index among those sharing its URL (FFmpeg `-map INPUT:N`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub manifest_stream_number: Option<usize>,
     /// Filled like `FormatSorter._fill_sorting_fields`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub video_ext: Option<String>,
@@ -1247,6 +1251,7 @@ mod tests {
             format_note: None,
             audio_default: false,
             audio_autoselect: false,
+            manifest_stream_number: None,
             container: None,
             fragments: Vec::new(),
             format_id: id.into(),

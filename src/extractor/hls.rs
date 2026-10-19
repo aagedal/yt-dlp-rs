@@ -243,6 +243,7 @@ pub(crate) fn from_response(
                 format_note: None,
                 audio_default: false,
                 audio_autoselect: false,
+                manifest_stream_number: None,
                 container: None,
                 abr: None,
                 tbr: None,
@@ -323,6 +324,7 @@ pub(crate) fn from_response(
                     format_note: None,
                     audio_default: false,
                     audio_autoselect: false,
+                    manifest_stream_number: None,
                     container: None,
                     abr: (variant.stream_kind == StreamKind::AudioOnly)
                         .then_some(variant.bandwidth)
@@ -375,6 +377,7 @@ pub(crate) fn from_response(
                     format_note: Some(rendition.name),
                     audio_default: rendition.default,
                     audio_autoselect: rendition.autoselect,
+                    manifest_stream_number: None,
                     container: None,
                     abr: None,
                     tbr: None,
