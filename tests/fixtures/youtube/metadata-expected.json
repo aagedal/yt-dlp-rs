@@ -274,7 +274,10 @@
       "vcodec": "avc1.42001E",
       "acodec": "mp4a.40.2",
       "quality": 2.0,
-      "source_preference": -1
+      "source_preference": -1,
+      "downloader_options": {
+        "http_chunk_size": 10485760
+      }
     }
   ]
 }

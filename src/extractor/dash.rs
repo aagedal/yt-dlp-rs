@@ -127,6 +127,7 @@ pub(crate) fn from_response(
         section_title: None,
         section_number: None,
         extra: Default::default(),
+        downloader_options: None,
         video_ext: None,
         audio_ext: None,
         metadata: Default::default(),

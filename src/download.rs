@@ -316,11 +316,12 @@ fn validate_range(response: &Response, state: &ResumeState, offset: u64) -> Resu
 /// Stream to a same-directory temporary file, then publish without overwriting.
 /// Interrupted bodies resume only with a strong ETag and known total length.
 /// Partial files are private to this invocation and removed on failure.
-pub fn download(
+pub(crate) fn download(
     client: &Client,
     info: &VideoInfo,
     destination: &Path,
     options: DownloadOptions,
+    chunk: Option<Chunking>,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
     download_resource(
@@ -334,6 +335,7 @@ pub fn download(
             rate_limit: options.rate_limit,
             update_time: options.update_time,
             part_files: options.part_files,
+            chunk,
         },
         destination,
         options,
@@ -363,6 +365,7 @@ pub(crate) fn download_subtitle(
             rate_limit: None,
             update_time: options.update_time,
             part_files: PartFiles::Private,
+            chunk: None,
         },
         destination,
         options,
@@ -393,6 +396,7 @@ pub(crate) fn download_thumbnail(
             // Upstream writes thumbnails without the downloader's utime.
             update_time: false,
             part_files: PartFiles::Private,
+            chunk: None,
         },
         destination,
         options,
@@ -410,6 +414,51 @@ struct HttpResource<'a> {
     rate_limit: Option<u64>,
     update_time: bool,
     part_files: PartFiles,
+    /// Upstream chunked HTTP downloading (`http_chunk_size` or `--test`).
+    chunk: Option<Chunking>,
+}
+
+/// Upstream `HttpFD` chunking: `size` bytes per request (randomized to
+/// 95-100% unless `test`); `test` keeps only the first `_TEST_FILE_SIZE`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct Chunking {
+    pub size: u64,
+    pub test: bool,
+}
+
+/// Upstream `FileDownloader._TEST_FILE_SIZE`.
+pub(crate) const TEST_FILE_SIZE: u64 = 10241;
+
+/// `random.randint(low, high)` from a clock-seeded xorshift64*.
+fn randint(low: u64, high: u64) -> u64 {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static STATE: AtomicU64 = AtomicU64::new(0);
+    let mut state = STATE.load(Ordering::Relaxed);
+    if state == 0 {
+        state = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0x9e37_79b9_7f4a_7c15, |time| time.as_nanos() as u64)
+            | 1;
+    }
+    state ^= state >> 12;
+    state ^= state << 25;
+    state ^= state >> 27;
+    STATE.store(state, Ordering::Relaxed);
+    let value = state.wrapping_mul(0x2545_f491_4f6c_dd1d);
+    low + value % (high - low + 1)
+}
+
+/// `parse_http_range(Content-Range)`: start, end and total.
+fn content_range_span(response: &Response) -> Option<(u64, u64, Option<u64>)> {
+    let range = response.headers().get(CONTENT_RANGE)?.to_str().ok()?;
+    let (span, total) = range.strip_prefix("bytes ")?.split_once('/')?;
+    let (start, end) = span.split_once('-')?;
+    let total = if total.trim() == "*" {
+        None
+    } else {
+        Some(total.trim().parse().ok()?)
+    };
+    Some((start.trim().parse().ok()?, end.trim().parse().ok()?, total))
 }
 
 /// The file a transfer is written to.
@@ -565,6 +614,151 @@ fn download_resource(
     unreachable!("the final attempt returns success or an error")
 }
 
+/// Upstream `HttpFD.real_download` with a chunk size: each connection asks
+/// for `bytes=START-END`; a matching `206` continues with the next chunk
+/// (`NextFragment`, not a retry), anything else restarts as a whole download.
+#[allow(clippy::too_many_arguments)]
+fn chunked_attempt(
+    client: &Client,
+    resource: &HttpResource<'_>,
+    temporary: &mut fs::File,
+    actual: &mut u64,
+    continued: &mut bool,
+    last_modified: &mut Option<String>,
+    reporter: &mut Reporter<'_>,
+    chunk: Chunking,
+) -> std::result::Result<(), AttemptFailure> {
+    let mut resuming = std::mem::take(continued) && *actual > 0;
+    // `ctx.content_len`: the whole resource length once known.
+    let mut content_len: Option<u64> = None;
+    loop {
+        let size = if chunk.test {
+            chunk.size
+        } else {
+            randint((chunk.size as f64 * 0.95) as u64, chunk.size)
+        }
+        .max(1);
+        let start = *actual;
+        let mut end = start + size - 1;
+        if let Some(length) = content_len
+            && end >= length
+        {
+            end = length.saturating_sub(1);
+        }
+        if resuming {
+            crate::screen::screen(&format!("[download] Resuming download at byte {start}"));
+            resuming = false;
+        }
+        let mut request = client
+            .get(resource.url.clone())
+            .header(ACCEPT_ENCODING, "identity")
+            .header(RANGE, format!("bytes={start}-{end}"));
+        if let Some(referrer) = resource.referrer {
+            request = request.header(REFERER, referrer.as_str());
+        }
+        let mut response = request
+            .send()
+            .map_err(Error::Http)
+            .and_then(crate::retry::check_response)
+            .map_err(AttemptFailure::request)?;
+        *last_modified = crate::filetime::header(&response);
+        let matched = (response.status() == reqwest::StatusCode::PARTIAL_CONTENT)
+            .then(|| content_range_span(&response))
+            .flatten()
+            .filter(|(range_start, range_end, total)| {
+                *range_start == start
+                    && (*range_end == end || total.is_some_and(|total| total < end))
+            });
+        // `ctx.data_len`: the whole length, reported as the total.
+        let whole = match matched {
+            Some((_, _, total)) => {
+                content_len = total;
+                total
+            }
+            None => {
+                if start > 0 {
+                    crate::screen::screen("[download] Unable to resume");
+                }
+                temporary.set_len(0)?;
+                temporary.seek(SeekFrom::Start(0))?;
+                *actual = 0;
+                content_len = response.content_length();
+                content_len
+            }
+        };
+        if *actual == 0
+            && resource.validate_media
+            && crate::extractor::direct_media_info(&response, resource.url).is_none()
+        {
+            return Err(Error::UnsupportedHtml5(
+                "source no longer serves supported direct HTTP media".into(),
+            )
+            .into());
+        }
+        // `download()`'s `data_len`: this response's end; upstream compares
+        // the size limits with it.
+        let mut data_len = response.content_length().map(|length| length + *actual);
+        if let Some(length) = data_len {
+            match resource.limits {
+                (Some(min), _) if length < min => {
+                    return Err(Error::FileSizeLimit(format!(
+                        "File is smaller than min-filesize ({length} bytes < {min} bytes). Aborting."
+                    ))
+                    .into());
+                }
+                (_, Some(max)) if length > max => {
+                    return Err(Error::FileSizeLimit(format!(
+                        "File is larger than max-filesize ({length} bytes > {max} bytes). Aborting."
+                    ))
+                    .into());
+                }
+                _ => {}
+            }
+        }
+        if chunk.test && data_len.is_none_or(|length| length > TEST_FILE_SIZE) {
+            data_len = Some(TEST_FILE_SIZE);
+        }
+        reporter.total = whole;
+        reporter.report(DownloadPhase::Downloading, *actual)?;
+        let mut limiter = RateLimit::new(resource.rate_limit);
+        let mut buffer = [0; 64 * 1024];
+        loop {
+            let want = data_len.map_or(buffer.len() as u64, |length| {
+                length.saturating_sub(*actual).min(buffer.len() as u64)
+            }) as usize;
+            if want == 0 {
+                break;
+            }
+            let count = match response.read(&mut buffer[..want]) {
+                Ok(0) => break,
+                Ok(count) => count,
+                Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+                Err(error) => return Err(AttemptFailure::retry(Error::Io(error))),
+            };
+            temporary.write_all(&buffer[..count])?;
+            *actual += count as u64;
+            reporter.report(DownloadPhase::Downloading, *actual)?;
+            limiter.consume(count);
+        }
+        if !chunk.test
+            && let Some(length) = content_len
+            && *actual < length
+            && data_len.is_none_or(|data_len| *actual == data_len)
+        {
+            continue;
+        }
+        if let Some(expected) = data_len
+            && *actual != expected
+        {
+            return Err(AttemptFailure::retry(Error::IncompleteDownload {
+                expected,
+                actual: *actual,
+            }));
+        }
+        return Ok(());
+    }
+}
+
 #[allow(clippy::too_many_arguments)]
 fn download_attempt(
     client: &Client,
@@ -576,6 +770,18 @@ fn download_attempt(
     last_modified: &mut Option<String>,
     reporter: &mut Reporter<'_>,
 ) -> std::result::Result<(), AttemptFailure> {
+    if let Some(chunk) = resource.chunk {
+        return chunked_attempt(
+            client,
+            resource,
+            temporary,
+            actual,
+            continued,
+            last_modified,
+            reporter,
+            chunk,
+        );
+    }
     let resume = state
         .as_ref()
         .filter(|state| *actual > 0 && *actual < state.total);

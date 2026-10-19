@@ -112,6 +112,10 @@ impl Candidate {
             format_note: None,
             audio_default: false,
             audio_autoselect: false,
+            // Upstream `process_https_formats`: `CHUNK_SIZE = 10 << 20`.
+            downloader_options: Some(crate::info::DownloaderOptions {
+                http_chunk_size: Some(10 << 20),
+            }),
             manifest_stream_number: None,
             // Upstream: single streams (a `none` codec) name an `EXT_dash` container.
             container: codecs
@@ -710,6 +714,7 @@ fn extract_watch_page_with_caption_options(
         section_title: None,
         section_number: None,
         extra: Default::default(),
+        downloader_options: None,
         video_ext: None,
         audio_ext: None,
         metadata: {

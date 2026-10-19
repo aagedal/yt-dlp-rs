@@ -266,7 +266,10 @@
       "vcodec": "avc1.42001E",
       "acodec": "mp4a.40.2",
       "quality": 2.0,
-      "source_preference": -1
+      "source_preference": -1,
+      "downloader_options": {
+        "http_chunk_size": 10485760
+      }
     },
     {
       "format_id": "137",
@@ -281,7 +284,10 @@
       "vcodec": "avc1.640028",
       "acodec": "none",
       "quality": -1.0,
-      "source_preference": -1
+      "source_preference": -1,
+      "downloader_options": {
+        "http_chunk_size": 10485760
+      }
     },
     {
       "format_id": "139",
@@ -296,7 +302,10 @@
       "vcodec": "none",
       "acodec": "mp4a.40.5",
       "quality": 2.0,
-      "source_preference": -1
+      "source_preference": -1,
+      "downloader_options": {
+        "http_chunk_size": 10485760
+      }
     },
     {
       "format_id": "140",
@@ -311,7 +320,10 @@
       "vcodec": "none",
       "acodec": "mp4a.40.2",
       "quality": 3.0,
-      "source_preference": -1
+      "source_preference": -1,
+      "downloader_options": {
+        "http_chunk_size": 10485760
+      }
     },
     {
       "format_id": "248",
@@ -326,7 +338,10 @@
       "vcodec": "vp9",
       "acodec": "none",
       "quality": -1.0,
-      "source_preference": -1
+      "source_preference": -1,
+      "downloader_options": {
+        "http_chunk_size": 10485760
+      }
     },
     {
       "format_id": "251",
@@ -341,7 +356,10 @@
       "vcodec": "none",
       "acodec": "opus",
       "quality": 3.0,
-      "source_preference": -1
+      "source_preference": -1,
+      "downloader_options": {
+        "http_chunk_size": 10485760
+      }
     }
   ]
 }

@@ -646,6 +646,12 @@ struct Args {
     /// Maximum download rate in bytes per second, e.g. 50K or 4.2M
     #[arg(short = 'r', long, aliases = ["rate-limit"], value_name = "RATE")]
     limit_rate: Option<String>,
+    /// Size of a chunk for chunk-based HTTP downloading, e.g. 10485760 or 10M
+    #[arg(long, value_name = "SIZE")]
+    http_chunk_size: Option<String>,
+    /// Download only the first 10241 bytes of HTTP media (upstream's test mode)
+    #[arg(long, hide = true)]
+    test: bool,
     /// Seconds to sleep before each download (the minimum with --max-sleep-interval)
     #[arg(
         long,
@@ -1628,6 +1634,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if rate_limit == Some(0) {
         return Err(usage("rate limit \"0\" must be positive").into());
     }
+    let http_chunk_size =
+        size_option("http chunk size", args.http_chunk_size.as_deref()).map_err(usage)?;
+    let downloader = downloader
+        .with_http_chunk_size(http_chunk_size)
+        .with_test(args.test);
     // Upstream reports a missing URL after validating the options.
     if urls.is_empty() && args.load_info_json.is_none() {
         return Err(UsageError(

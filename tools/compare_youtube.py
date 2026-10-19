@@ -55,7 +55,9 @@ FORMAT_FIELDS = ("format_id", "ext", "width", "height", "url", "filesize")
 # parse_codecs fields, compared when upstream sets a non-null value.
 CODEC_FIELDS = ("vcodec", "acodec", "dynamic_range",
                 # FormatSorter inputs set by the extractor.
-                "quality", "source_preference", "fps", "asr", "audio_channels")
+                "quality", "source_preference", "fps", "asr", "audio_channels",
+                # HttpFD chunking for HTTPS formats.
+                "downloader_options")
 FIXTURE_CASES = (
     ("progressive.html", "expected.json", "watch-page"),
     ("player-api.json", "player-api-expected.json", "player-api"),

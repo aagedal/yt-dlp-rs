@@ -49,8 +49,8 @@ pub use extractor::YoutubeOptions;
 pub use format_sort::FormatSorter;
 pub use http::HttpOptions;
 pub use info::{
-    ByteRange, Chapter, ExtractResult, Fragment, HlsAes128, Metadata, PlaylistInfo, PyNumber,
-    StreamKind, Thumbnail, VideoFormat, VideoInfo,
+    ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
+    PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
 pub use info_json::{
     InfoJsonWrite, info_json_path, load_info_json, playlist_info_json, to_python_json,
@@ -103,6 +103,9 @@ pub struct YoutubeDl {
     headers: reqwest::header::HeaderMap,
     proxy: Option<String>,
     ffmpeg_settings: ffmpeg_fd::Settings,
+    /// `--http-chunk-size` and `--test`.
+    http_chunk_size: Option<u64>,
+    test: bool,
 }
 
 /// Upstream `-S`/`--format-sort`, `--format-sort-force` and
@@ -149,6 +152,8 @@ impl YoutubeDl {
             headers: headers.clone(),
             proxy: proxy_url,
             ffmpeg_settings: ffmpeg_fd::Settings::default(),
+            http_chunk_size: None,
+            test: false,
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -292,6 +297,19 @@ impl YoutubeDl {
     /// Upstream `quiet` for FFmpeg downloads (`-loglevel quiet`).
     pub fn with_external_quiet(mut self, quiet: bool) -> Self {
         self.ffmpeg_settings.quiet = quiet;
+        self
+    }
+
+    /// `--http-chunk-size`: chunked HTTP downloads (overrides a format's
+    /// `downloader_options`).
+    pub fn with_http_chunk_size(mut self, size: Option<u64>) -> Self {
+        self.http_chunk_size = size;
+        self
+    }
+
+    /// `--test`: download only the first 10241 bytes of HTTP media.
+    pub fn with_test(mut self, test: bool) -> Self {
+        self.test = test;
         self
     }
 
@@ -626,11 +644,25 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
+        // Upstream `HttpFD`: `_TEST_FILE_SIZE` for `--test`, else the
+        // `http_chunk_size` parameter, else the format's downloader options.
+        let chunk = if self.test {
+            Some(download::Chunking {
+                size: download::TEST_FILE_SIZE,
+                test: true,
+            })
+        } else {
+            self.http_chunk_size
+                .or_else(|| info.downloader_options.as_ref()?.http_chunk_size)
+                .filter(|size| *size > 0)
+                .map(|size| download::Chunking { size, test: false })
+        };
         download::download(
             &self.client,
             info,
             destination.as_ref(),
             options,
+            chunk,
             &mut callback,
         )
     }

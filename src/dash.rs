@@ -858,6 +858,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 format_note: Some(format!("DASH {content_type}")),
                 audio_default: false,
                 audio_autoselect: false,
+                downloader_options: None,
                 manifest_stream_number: Some(stream_number),
                 container: Some(format!("{ext}_dash")),
                 abr: if kind == StreamKind::AudioOnly {

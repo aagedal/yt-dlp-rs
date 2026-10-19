@@ -138,6 +138,8 @@ pub struct VideoFormat {
     /// Upstream `container` (`EXT_dash` for DASH and YouTube single streams).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub container: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub downloader_options: Option<DownloaderOptions>,
     /// Upstream `manifest_stream_number`: the DASH representation's stream
     /// index among those sharing its URL (FFmpeg `-map INPUT:N`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -224,6 +226,14 @@ pub fn sanitize_url(url: &str) -> String {
         }
     }
     url.to_owned()
+}
+
+/// Upstream `downloader_options` of a format.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DownloaderOptions {
+    /// Chunked HTTP downloading (YouTube HTTPS formats use 10 MiB).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub http_chunk_size: Option<u64>,
 }
 
 /// One upstream chapter dictionary.
@@ -415,6 +425,9 @@ impl Metadata {
 pub struct VideoInfo {
     #[serde(flatten)]
     pub metadata: Metadata,
+    /// The selected format's `downloader_options`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub downloader_options: Option<DownloaderOptions>,
     /// Fields this port does not model, set by `--parse-metadata` or
     /// `--replace-in-metadata` (serialized with the info dict).
     #[serde(flatten, skip_deserializing)]
@@ -722,6 +735,7 @@ impl VideoInfo {
         self.acodec = selected.acodec.clone();
         self.dynamic_range = selected.dynamic_range.clone();
         self.container = selected.container.clone();
+        self.downloader_options = selected.downloader_options.clone();
         self.video_ext = selected.video_ext.clone();
         self.audio_ext = selected.audio_ext.clone();
         self.filesize = selected.filesize;
@@ -1255,6 +1269,7 @@ mod tests {
             format_note: None,
             audio_default: false,
             audio_autoselect: false,
+            downloader_options: None,
             manifest_stream_number: None,
             container: None,
             fragments: Vec::new(),
@@ -1292,6 +1307,7 @@ mod tests {
             section_title: None,
             section_number: None,
             extra: Default::default(),
+            downloader_options: None,
             video_ext: None,
             audio_ext: None,
             metadata: Default::default(),
