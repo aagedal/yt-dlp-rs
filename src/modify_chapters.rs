@@ -619,9 +619,16 @@ pub(crate) fn force_keyframes(
         times.remove(0);
     }
     let directory = output.parent().unwrap_or(Path::new("."));
-    let mut args: Vec<OsString> = ["-nostdin", "-hide_banner", "-loglevel", "error", "-y", "-f"]
-        .map(OsString::from)
-        .into();
+    let mut args: Vec<OsString> = [
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "repeat+info",
+        "-y",
+        "-f",
+    ]
+    .map(OsString::from)
+    .into();
     args.push(crate::video::ffmpeg::demuxer(container)?.into());
     args.extend(["-protocol_whitelist", "file"].map(OsString::from));
     args.extend(crate::pp_args::input(pp, 1));
@@ -665,7 +672,7 @@ pub(crate) fn concat(
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         "concat",
@@ -773,7 +780,7 @@ pub(crate) fn concat_files(
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         "concat",

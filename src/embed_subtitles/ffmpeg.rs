@@ -80,7 +80,7 @@ fn embed_with_deadline(
     {
         return Err(error("embedded output must be regular"));
     }
-    let mut args: Vec<OsString> = ["-nostdin", "-hide_banner", "-loglevel", "error", "-y"]
+    let mut args: Vec<OsString> = ["-nostdin", "-hide_banner", "-loglevel", "repeat+info", "-y"]
         .into_iter()
         .map(Into::into)
         .collect();
@@ -186,7 +186,7 @@ mod tests {
             "-nostdin",
             "-hide_banner",
             "-loglevel",
-            "error",
+            "repeat+info",
             "-y",
             "-f",
             if matches!(container, "mp4" | "mov" | "m4a") {
@@ -272,7 +272,7 @@ mod tests {
             ("bad-version", "banner"),
             ("stderr", "diagnostic"),
             ("stdout-flood", "budget"),
-            ("stderr-flood", "budget"),
+            ("stderr-flood", "fixture tail"),
             ("fail", "exited"),
             ("empty", "nonempty"),
             ("missing", "nonempty"),

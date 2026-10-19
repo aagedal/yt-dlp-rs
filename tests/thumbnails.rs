@@ -347,6 +347,10 @@ fn embed_thumbnail_writes_embeds_and_deletes_unless_written_explicitly() {
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
     assert!(text(&output.stdout).contains("[info] Writing video thumbnail 0 to: video.jpg"));
+    assert!(text(&output.stdout).ends_with(
+        "[EmbedThumbnail] Neither mutagen nor AtomicParsley was found. Falling back to ffmpeg\n\
+         [EmbedThumbnail] ffmpeg: Adding thumbnail to \"video.mp4\"\n"
+    ));
     // The fake ffmpeg writes "source video" for two inputs.
     assert_eq!(
         names(directory.path()),
@@ -393,7 +397,13 @@ fn embed_thumbnail_writes_embeds_and_deletes_unless_written_explicitly() {
         plain.path(),
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
-    assert!(text(&output.stdout).contains("[EmbedThumbnail] There aren't any thumbnails to embed"));
+    // Reported when the processor runs, after the download.
+    assert!(
+        text(&output.stdout)
+            .ends_with("s     \n[EmbedThumbnail] There aren't any thumbnails to embed\n"),
+        "{}",
+        text(&output.stdout)
+    );
     assert_eq!(
         std::fs::read(plain.path().join("video.mp4")).unwrap(),
         b"media"
@@ -437,6 +447,15 @@ fn embed_thumbnail_fixes_webp_extensions_and_converts_them_to_png() {
     // The kept original is renamed to its real WebP extension; the PNG
     // conversion used for embedding is temporary.
     assert_eq!(names(directory.path()), ["video.mp4", "video.webp"]);
+    let stdout = text(&output.stdout);
+    assert!(
+        stdout.contains(
+            "s     \n\
+             [ThumbnailsConvertor] Correcting thumbnail \"video.jpg\" extension to webp\n\
+             [ThumbnailsConvertor] Converting thumbnail \"video.webp\" to png\n"
+        ),
+        "{stdout}"
+    );
     let log = tools.log();
     assert!(log.contains("-update\n1\n-movflags\n+faststart\n"), "{log}");
     assert!(log.contains("thumbnail.png\n-map\n0\n"), "{log}");

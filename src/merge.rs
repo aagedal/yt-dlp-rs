@@ -114,7 +114,7 @@ fn merge_with_deadline(
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         video_demuxer,
@@ -149,6 +149,22 @@ fn merge_with_deadline(
 
 fn failure(message: impl Into<String>) -> Error {
     Error::Postprocess(message.into())
+}
+
+/// Read a pipe to its end, keeping only the last `cap` bytes.
+fn read_tail(mut pipe: impl Read, cap: usize) -> Result<Vec<u8>> {
+    let mut bytes = Vec::new();
+    let mut buffer = [0; 8192];
+    loop {
+        let count = pipe.read(&mut buffer)?;
+        if count == 0 {
+            return Ok(bytes);
+        }
+        bytes.extend_from_slice(&buffer[..count]);
+        if bytes.len() > 2 * cap {
+            bytes.drain(..bytes.len() - cap);
+        }
+    }
 }
 
 fn read_pipe(mut pipe: impl Read, cap: usize) -> Result<Vec<u8>> {
@@ -212,14 +228,14 @@ pub(crate) fn execute(
             return Err(error.into());
         }
         if let Err(error) = thread::Builder::new().spawn_scoped(scope, move || {
-            let _ = sender.send((true, read_pipe(stderr, MAX_STDERR)));
+            let _ = sender.send((true, read_tail(stderr, MAX_STDERR)));
         }) {
             let _ = child.kill();
             let _ = child.wait();
             return Err(error.into());
         }
         let mut output = None;
-        let mut errors_done = false;
+        let mut errors = None;
         let result = loop {
             if callback().is_break() {
                 break Err(Error::DownloadCancelled);
@@ -230,25 +246,25 @@ pub(crate) fn execute(
             match receiver.recv_timeout(Duration::from_millis(5)) {
                 Ok((_, Err(error))) => break Err(error),
                 Ok((false, Ok(bytes))) => output = Some(bytes),
-                Ok((true, Ok(bytes))) => {
-                    // Upstream raises `stderr.strip().splitlines()[-1]`.
-                    if !bytes.is_empty() {
-                        let text = String::from_utf8_lossy(&bytes);
-                        let last = text.trim().lines().last().unwrap_or("").to_owned();
-                        break Err(failure(last));
-                    }
-                    errors_done = true;
-                }
+                Ok((true, Ok(bytes))) => errors = Some(bytes),
                 Err(mpsc::RecvTimeoutError::Timeout) => {}
                 Err(mpsc::RecvTimeoutError::Disconnected) => {
                     thread::sleep(Duration::from_millis(5))
                 }
             }
             match child.try_wait() {
-                Ok(Some(status)) if !status.success() => {
-                    break Err(failure(format!("FFmpeg exited with {status}")));
+                // Upstream checks only the exit status and raises
+                // `stderr.strip().splitlines()[-1]`.
+                Ok(Some(status)) if !status.success() && errors.is_some() => {
+                    let text = String::from_utf8_lossy(errors.as_deref().unwrap_or_default());
+                    break Err(failure(match text.trim().lines().last() {
+                        Some(last) => last.to_owned(),
+                        None => format!("FFmpeg exited with {status}"),
+                    }));
                 }
-                Ok(Some(_)) if output.is_some() && errors_done => break Ok(output.take().unwrap()),
+                Ok(Some(_)) if output.is_some() && errors.is_some() => {
+                    break Ok(output.take().unwrap());
+                }
                 Ok(_) => {}
                 Err(error) => break Err(error.into()),
             }
@@ -332,6 +348,13 @@ mod tests {
             .unwrap(),
             b"merged"
         );
+        assert_eq!(
+            run("noisy-success", Duration::from_secs(5), &mut || {
+                ControlFlow::Continue(())
+            })
+            .unwrap(),
+            b"merged"
+        );
     }
     #[test]
     fn hls_containers_use_fixed_local_demuxers_and_explicit_muxers() {
@@ -359,12 +382,13 @@ mod tests {
     #[test]
     fn bounded_failures_join_pipes_and_reap_process() {
         for (mode, expected) in [
-            ("stderr", "diagnostic"),
+            ("stderr", "fixture diagnostic"),
             ("exit", "exited"),
             ("empty", "nonempty"),
             ("missing", "nonempty"),
             ("stdout-flood", "budget"),
-            ("stderr-flood", "budget"),
+            // A failure reports the last line of the retained stderr tail.
+            ("stderr-flood", "flood tail"),
             ("hang", "deadline"),
             ("version-hang", "deadline"),
             ("bad-version", "banner"),

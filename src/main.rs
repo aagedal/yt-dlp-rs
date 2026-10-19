@@ -3640,20 +3640,19 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                             // Upstream embeds the best thumbnail on disk.
                             let mut embedded_thumbnail = None;
+                            // Printed when the processor runs, after the download.
+                            let mut embed_note = None;
                             if args.embed_thumbnail {
                                 if info.metadata.thumbnails.is_empty() {
-                                    screen!(
-                                        "[EmbedThumbnail] There aren't any thumbnails to embed"
+                                    embed_note = Some(
+                                        "[EmbedThumbnail] There aren't any thumbnails to embed",
                                     );
                                 } else if let Some((_, written)) = thumbnail_files.last() {
-                                    let path = yt_dlp_rs::fixup_webp(written)?;
-                                    if path != *written {
-                                        move_files.derive(written, &path, true);
-                                    }
-                                    processors.thumbnail = Some(path.clone());
-                                    embedded_thumbnail = Some(path);
+                                    processors.thumbnail = Some(written.clone());
+                                    embedded_thumbnail = Some(written.clone());
                                 } else {
-                                    screen!("[EmbedThumbnail] There are no thumbnails on disk");
+                                    embed_note =
+                                        Some("[EmbedThumbnail] There are no thumbnails on disk");
                                 }
                             }
                             if let Some(modify) = &mut processors.modify_chapters {
@@ -3797,10 +3796,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 for warning in result.warnings {
                                     warning!("WARNING: {warning}");
                                 }
+                                if let Some(note) = embed_note {
+                                    screen!("{note}");
+                                }
                                 // Upstream `run_pp` under --ignore-errors.
                                 for error in result.errors {
                                     eprintln!("ERROR: {error}");
                                     postprocess_failed.set(true);
+                                }
+                                // The processor may have corrected a WebP extension.
+                                if let (Some(written), Some(fixed)) =
+                                    (&embedded_thumbnail, &result.thumbnail)
+                                    && written != fixed
+                                {
+                                    move_files.derive(written, fixed, true);
+                                    embedded_thumbnail = Some(fixed.clone());
                                 }
                                 if let Some(thumbnail) = &embedded_thumbnail
                                     && !keeps_thumbnails
@@ -3843,6 +3853,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 // Upstream `fixup()` for an unmerged, unprocessed download.
                                 if let Some(fixup) = &processors.fixup {
                                     downloader.fixup(info, &path, &path, fixup)?;
+                                }
+                                if let Some(note) = embed_note {
+                                    screen!("{note}");
                                 }
                                 (bytes, vec![path.clone()])
                             };

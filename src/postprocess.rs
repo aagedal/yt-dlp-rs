@@ -95,6 +95,8 @@ pub struct ProcessedDownload {
     pub errors: Vec<String>,
     /// Chapters and duration after `--remove-chapters` changed them.
     pub chapters: Option<(Vec<crate::info::Chapter>, Option<u64>)>,
+    /// The embedded thumbnail after its WebP extension fixup.
+    pub thumbnail: Option<PathBuf>,
 }
 
 struct Stage {
@@ -249,6 +251,7 @@ pub(crate) fn download(
             warnings: Vec::new(),
             errors: Vec::new(),
             chapters: None,
+            thumbnail: None,
         });
     }
     let keep = processors.keep_video
@@ -353,6 +356,7 @@ pub(crate) fn download(
     // Info dict changes made by processors (`ModifyChaptersPP`).
     let mut working = info.clone();
     let mut chapters_changed = false;
+    let mut embedded_thumbnail = None;
     // Files kept with -k beside the results (`NAME.uncut.EXT`).
     let mut uncut: Vec<(PathBuf, PathBuf)> = Vec::new();
     let mut delete_subtitles = Vec::new();
@@ -1021,12 +1025,23 @@ pub(crate) fn download(
                 let output = workspace
                     .path()
                     .join(format!("thumbnail-embedded.{}", current.ext));
+                // Upstream `EmbedThumbnailPP` first corrects a WebP extension.
+                let thumbnail = crate::fixup_webp(thumbnail)?;
+                if thumbnail != *processors.thumbnail.as_ref().unwrap() {
+                    crate::screen::screen(&format!(
+                        "[ThumbnailsConvertor] Correcting thumbnail \"{}\" extension to webp",
+                        processors.thumbnail.as_ref().unwrap().display()
+                    ));
+                }
+                embedded_thumbnail = Some(thumbnail.clone());
+                let thumbnail = &thumbnail;
                 let mut observe =
                     || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
                 crate::thumbnail_process::embed(
                     executable,
                     &probe_path(downloader)?,
                     &current.disk,
+                    &current.path,
                     &current.ext.to_lowercase(),
                     thumbnail,
                     workspace.path(),
@@ -1085,6 +1100,7 @@ pub(crate) fn download(
             errors,
             chapters: chapters_changed
                 .then(|| (working.metadata.chapters.clone(), working.metadata.duration)),
+            thumbnail: embedded_thumbnail,
         })
     })();
     match process {

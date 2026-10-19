@@ -203,7 +203,7 @@ fn convert_with_deadline(
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         demuxer,
@@ -342,7 +342,7 @@ mod tests {
             ("stderr", "diagnostic"),
             ("exit", "exited"),
             ("stdout-flood", "budget"),
-            ("stderr-flood", "budget"),
+            ("stderr-flood", "fixture tail"),
             ("hang", "deadline"),
             ("version-hang", "deadline"),
         ] {

@@ -124,7 +124,7 @@ fn main() {
     assert_eq!(maps,["0:v:0","1:a:0"]);
     let output = args.last().unwrap();
     std::fs::write(output,b"merged-video-audio").unwrap();
-    if std::env::current_exe().unwrap().file_stem().unwrap() == "failure" { eprintln!("fixture failed after writing output"); }
+    if std::env::current_exe().unwrap().file_stem().unwrap() == "failure" { eprintln!("fixture failed after writing output"); std::process::exit(1); }
 }
 "#).unwrap();
         let binary = directory.join(format!("fake-ffmpeg{}", std::env::consts::EXE_SUFFIX));

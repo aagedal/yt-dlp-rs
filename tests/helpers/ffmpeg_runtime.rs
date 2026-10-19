@@ -36,7 +36,7 @@ fn main() {
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         video_demuxer,
@@ -75,14 +75,29 @@ fn main() {
         0
     );
     match mode.as_str() {
-        "stderr" => eprintln!("fixture diagnostic"),
+        "stderr" => {
+            eprintln!("progress noise\nfixture diagnostic\n");
+            std::process::exit(1);
+        }
+        // Informational stderr does not fail a successful run.
+        "noisy-success" => {
+            eprintln!("Stream mapping: noise");
+            std::fs::write(&output, b"merged").unwrap();
+        }
         "exit" => std::process::exit(3),
         "empty" => {
             std::fs::write(&output, []).unwrap();
         }
         "missing" => {}
         "stdout-flood" => flood(std::io::stdout()),
-        "stderr-flood" => flood(std::io::stderr()),
+        "stderr-flood" => {
+            let mut stderr = std::io::stderr();
+            for _ in 0..512 {
+                stderr.write_all(&[b'x'; 8192]).unwrap();
+            }
+            eprintln!("\nflood tail");
+            std::process::exit(1);
+        }
         "hang" => hang(),
         "success" | "success-ts-aac" | "success-ts-m4a" | "success-ts-ts" | "success-mp4-aac"
         | "success-webm-ts" => std::fs::write(&output, b"merged").unwrap(),

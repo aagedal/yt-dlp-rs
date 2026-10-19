@@ -101,7 +101,7 @@ fn convert_with_deadline(
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         demuxer,
@@ -206,7 +206,7 @@ mod tests {
         for (mode, message) in [
             ("bad-version", "banner"),
             ("stderr", "diagnostic"),
-            ("large-stderr", "budget"),
+            ("large-stderr", "fixture tail"),
             ("large-stdout", "budget"),
             ("fail", "exited"),
             ("missing", "nonempty"),

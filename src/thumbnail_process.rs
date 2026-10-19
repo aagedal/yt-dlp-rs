@@ -149,7 +149,7 @@ pub fn convert(
 ) -> Result<()> {
     let started = Instant::now();
     let (executable, directory) = tool(ffmpeg, b"ffmpeg version ", started, callback)?;
-    let mut args: Vec<OsString> = ["-nostdin", "-hide_banner", "-loglevel", "error", "-y"]
+    let mut args: Vec<OsString> = ["-nostdin", "-hide_banner", "-loglevel", "repeat+info", "-y"]
         .map(OsString::from)
         .into();
     args.extend(image_input(input, "ThumbnailsConvertor", 1)?);
@@ -234,13 +234,15 @@ fn nested<'a>(stream: &'a Value, outer: &str, inner: &str) -> Option<&'a Value> 
     lookup(lookup(stream, outer)?, inner)
 }
 
-/// Embed `thumbnail` into `media` (container `ext`), writing `output`.
-/// Non-JPEG/PNG thumbnails are converted to PNG first except for Matroska.
+/// Embed `thumbnail` into `media` (container `ext`, shown as `display`),
+/// writing `output`. Non-JPEG/PNG thumbnails are converted to PNG first
+/// except for Matroska.
 #[allow(clippy::too_many_arguments)]
 pub fn embed(
     ffmpeg: &Path,
     ffprobe: &Path,
     media: &Path,
+    display: &Path,
     ext: &str,
     thumbnail: &Path,
     workspace: &Path,
@@ -251,6 +253,10 @@ pub fn embed(
     let mut thumbnail = thumbnail.to_owned();
     let mut thumbnail_ext = extension(&thumbnail).to_lowercase();
     if !matches!(ext, "mkv" | "mka") && !matches!(thumbnail_ext.as_str(), "jpg" | "jpeg" | "png") {
+        crate::screen::screen(&format!(
+            "[ThumbnailsConvertor] Converting thumbnail \"{}\" to png",
+            thumbnail.display()
+        ));
         let converted = workspace.join("thumbnail.png");
         convert(ffmpeg, &thumbnail, &converted, "png", callback)?;
         thumbnail = converted;
@@ -263,7 +269,7 @@ pub fn embed(
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         demuxer,
@@ -328,6 +334,9 @@ pub fn embed(
         }
         _ => {
             // Upstream's FFmpeg fallback (mutagen/AtomicParsley are not used).
+            crate::screen::screen(
+                "[EmbedThumbnail] Neither mutagen nor AtomicParsley was found. Falling back to ffmpeg",
+            );
             let (old, mut new) = stream_number(
                 ffprobe,
                 &media,
@@ -348,6 +357,10 @@ pub fn embed(
             args.extend([format!("-disposition:{new}").into(), "attached_pic".into()]);
         }
     }
+    crate::screen::screen(&format!(
+        "[EmbedThumbnail] ffmpeg: Adding thumbnail to \"{}\"",
+        display.display()
+    ));
     let muxer = match ext {
         "mkv" | "mka" => "matroska",
         "m4a" => "ipod",
