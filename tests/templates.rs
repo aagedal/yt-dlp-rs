@@ -124,7 +124,9 @@ fn typed_dimensions_sizes_booleans_and_format_ids_control_downloaded_filename() 
     );
     success(&output);
     assert_eq!(
-        std::fs::read(directory.path().join("1280-720.0-005-0-000.mp4")).unwrap(),
+        // Checked with pinned upstream: HTML5 results have neither filesize
+        // nor direct, so both render NA.
+        std::fs::read(directory.path().join("1280-720.0-NA-NA-000.mp4")).unwrap(),
         b"media"
     );
     assert_eq!(server.count("/media.mp4"), 2);

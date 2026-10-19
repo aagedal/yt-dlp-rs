@@ -172,7 +172,8 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
         "playlist_autonumber" => info.playlist_autonumber.map(|n| Integer(n as u64)),
         "playlist_count" => info.playlist_count.map(|n| Integer(n as u64)),
         "n_entries" => info.n_entries.map(|n| Integer(n as u64)),
-        "direct" => Some(Boolean(info.direct)),
+        // Only generic direct links have a `direct` field upstream.
+        "direct" => info.direct.map(Boolean),
         "description" => info.metadata.description.as_deref().map(Text),
         "duration" => info.metadata.duration.map(Integer),
         "channel_id" => info.metadata.channel_id.as_deref().map(Text),

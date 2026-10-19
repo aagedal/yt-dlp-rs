@@ -70,6 +70,8 @@ struct Candidate {
     /// and `audio_channels`.
     quality: f64,
     source_preference: i64,
+    /// `int_or_none(contentLength)`.
+    filesize: Option<u64>,
     fps: Option<f64>,
     asr: Option<u32>,
     audio_channels: Option<u32>,
@@ -109,7 +111,7 @@ impl Candidate {
             stream_kind: self.stream_kind,
             abr: self.abr,
             tbr: self.tbr,
-            filesize: None,
+            filesize: self.filesize,
             width: self.width,
             height: self.height,
         }
@@ -418,6 +420,10 @@ fn parse_candidates(
                 .and_then(|n| u32::try_from(n).ok())
         };
         formats.push(Candidate {
+            filesize: source["contentLength"]
+                .as_str()
+                .and_then(|text| text.trim().parse().ok())
+                .or_else(|| source["contentLength"].as_u64()),
             quality: rank - if drc { 0.5 } else { 0.0 },
             source_preference: if itag.to_string() == "22" { -5 } else { -1 }
                 + if name.contains("Premium") { 100 } else { 0 },
@@ -615,7 +621,6 @@ fn extract_watch_page_with_caption_options(
             ));
         }
         format.url = media.url;
-        format.filesize = media.filesize;
     }
     for manifest in manifests {
         formats.extend(manifest_formats(client, &manifest, page)?);
@@ -659,7 +664,7 @@ fn extract_watch_page_with_caption_options(
         webpage_url: Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?,
         extractor: "youtube".into(),
         extractor_key: "Youtube".into(),
-        direct: false,
+        direct: None,
         format_id: None,
         stream_kind: first.stream_kind,
         requested_formats: Vec::new(),

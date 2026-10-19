@@ -140,7 +140,7 @@ pub(crate) fn from_response(
         webpage_url: original.clone(),
         extractor: "generic".into(),
         extractor_key: "Generic".into(),
-        direct: false,
+        direct: None,
         formats: Vec::new(),
         fragments: Vec::new(),
         requested_formats: Vec::new(),

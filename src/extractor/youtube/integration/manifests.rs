@@ -57,6 +57,7 @@ fn mixed_direct_and_master_formats_probe_only_direct_sources_and_rank_dimensions
     let mut direct = format(18, "{{ORIGIN}}/direct.mp4");
     direct["width"] = 640.into();
     direct["height"] = 360.into();
+    direct["contentLength"] = "5".into();
     let server = Server::new(vec![
         reply(
             WATCH,
@@ -81,6 +82,7 @@ fn mixed_direct_and_master_formats_probe_only_direct_sources_and_rank_dimensions
     );
     assert!(info.formats[0].fragments.is_empty());
     assert!(info.fragments.is_empty());
+    // Upstream takes filesize from the stream's `contentLength`.
     assert_eq!(info.filesize, Some(5));
     info.select_format(None).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("hls-1"));

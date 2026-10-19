@@ -278,19 +278,30 @@ fn direct_result_filters_select_the_single_upstream_format() {
         .unwrap()
         .extract_info_with_format(
             &server.url("/medium.mp4"),
-            Some("best[filesize=6][ext=mp4]"),
+            Some("best[filesize=?6][ext=mp4]"),
         )
         .unwrap();
-    // Upstream names the direct format by its Content-Type subtype.
+    // Upstream names the direct format by its Content-Type subtype and, like
+    // upstream, leaves its filesize unknown at extraction time.
     assert_eq!(info.formats.len(), 1);
     assert_eq!(info.format_id.as_deref(), Some("mp4"));
-    assert_eq!(info.filesize, Some(6));
+    assert_eq!(info.filesize, None);
+    // Checked against pinned upstream: an unknown size fails a plain size
+    // comparison, and only the `?` suffix lets the fallback branch match.
     let fallback = server.json(
         "/medium.mp4",
-        "best[filesize<6]/worst[filesize>=6][ext=mp4]",
+        "best[filesize<6]/worst[filesize>=?6][ext=mp4]",
     );
     assert_eq!(fallback["format_id"], "mp4");
-    assert_eq!(fallback["filesize"], 6);
+    assert!(fallback["filesize"].is_null());
+    for selector in [
+        "best[filesize=6][ext=mp4]",
+        "best[filesize<6]/worst[filesize>=6][ext=mp4]",
+    ] {
+        let output = server.cli("/medium.mp4", &["-j", "-s", "-f", selector]);
+        assert!(!output.status.success(), "{selector}");
+        assert!(output.stdout.is_empty());
+    }
     let output = server.cli("/medium.mp4", &["-j", "-s", "-f", "best[ext=webm]"]);
     assert!(!output.status.success());
     assert!(output.stdout.is_empty());
@@ -459,14 +470,20 @@ fn grouped_playlist_selection_keeps_all_entries_atomic() {
 #[test]
 fn grouped_bare_filters_preserve_direct_metadata_and_format() {
     let server = Server::new();
-    let info = server.json("/medium.mp4", "(b[ext=webm]/[filesize>=6])[ext=mp4]");
+    // Checked against pinned upstream: the direct format's filesize is
+    // unknown, so size filters match it only with the `?` suffix.
+    let info = server.json("/medium.mp4", "(b[ext=webm]/[filesize>=?6])[ext=mp4]");
     assert_eq!(info["format_id"], "mp4");
-    assert_eq!(info["filesize"], 6);
+    assert!(info["filesize"].is_null());
     assert_eq!(info["ext"], "mp4");
     assert_eq!(info["formats"].as_array().map(Vec::len), Some(1));
-    let output = server.cli("/medium.mp4", &["-j", "-s", "-f", "(b/w)[filesize<6]"]);
-    assert!(!output.status.success());
-    assert!(output.stdout.is_empty());
+    let output = server.json("/medium.mp4", "(b/w)[filesize<?6]");
+    assert_eq!(output["format_id"], "mp4");
+    for selector in ["(b[ext=webm]/[filesize>=6])[ext=mp4]", "(b/w)[filesize<6]"] {
+        let output = server.cli("/medium.mp4", &["-j", "-s", "-f", selector]);
+        assert!(!output.status.success(), "{selector}");
+        assert!(output.stdout.is_empty());
+    }
 }
 
 #[test]
@@ -590,14 +607,17 @@ fn indexed_playlist_failure_is_atomic_before_json_and_downloads() {
 #[test]
 fn direct_metadata_exposes_only_the_first_index_of_its_single_format() {
     let server = Server::new();
-    for selector in ["b.1[ext=mp4]", "b.2/w.1", "(b.2/[filesize=6])"] {
+    // Checked against pinned upstream, including the unknown-size branch.
+    for selector in ["b.1[ext=mp4]", "b.2/w.1", "(b.2/[filesize=?6])"] {
         let info = server.json("/medium.mp4", selector);
-        assert_eq!(info["filesize"], 6);
+        assert!(info["filesize"].is_null());
         assert_eq!(info["format_id"], "mp4");
     }
-    let output = server.cli("/medium.mp4", &["-j", "-s", "-f", "b.2"]);
-    assert!(!output.status.success());
-    assert!(output.stdout.is_empty());
+    for selector in ["b.2", "(b.2/[filesize=6])"] {
+        let output = server.cli("/medium.mp4", &["-j", "-s", "-f", selector]);
+        assert!(!output.status.success(), "{selector}");
+        assert!(output.stdout.is_empty());
+    }
 }
 
 #[test]

@@ -274,7 +274,9 @@ fn extracts_redirected_media_and_downloads_exact_bytes() {
     assert_eq!(info.title, "hello world");
     assert_eq!(info.id, "hello world");
     assert_eq!(info.ext, "mp4");
-    assert_eq!(info.filesize, Some(11));
+    // Upstream's direct format carries no extraction-time filesize; the size
+    // is only checked through the downloaded byte count below.
+    assert_eq!(info.filesize, None);
     assert_eq!(info.webpage_url.as_str(), server.url("/redirect"));
     assert!(info.url.as_str().ends_with("?token=secret"));
     let directory = tempfile::tempdir().unwrap();
@@ -335,11 +337,12 @@ fn extracts_saved_html5_fixtures_and_downloads_media() {
         assert_eq!(info.ext, ext);
         assert_eq!(info.url.as_str(), server.url(source));
         assert_eq!(info.webpage_url.as_str(), page_url);
-        assert_eq!(info.filesize, Some(body.len() as u64));
-        assert!(!info.direct);
+        // Upstream HTML5 formats have no extraction-time filesize.
+        assert_eq!(info.filesize, None);
+        assert!(!info.is_direct());
         let directory = tempfile::tempdir().unwrap();
         let destination = directory.path().join(format!("media.{ext}"));
-        dl.download(&info, &destination).unwrap();
+        assert_eq!(dl.download(&info, &destination).unwrap(), body.len() as u64);
         assert_eq!(std::fs::read(destination).unwrap(), body);
     }
 }
@@ -494,7 +497,8 @@ fn cli_html5_json_and_simulation_do_not_download() {
         assert!(!target.exists());
         if flag == "--dump-json" {
             let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-            assert_eq!(info["direct"], false);
+            // Like upstream, only generic direct links have `direct`.
+            assert!(info.get("direct").is_none());
             assert_eq!(info["title"], "A & B (1)");
             assert_eq!(info["protocol"], "http");
             assert_eq!(info["formats"][0]["protocol"], "http");
@@ -597,7 +601,9 @@ fn cli_json_continues_after_errors_and_returns_failure() {
     assert_eq!(text.lines().count(), 1);
     let info: serde_json::Value = serde_json::from_str(text.trim()).unwrap();
     assert_eq!(info["extractor_key"], "Generic");
-    assert_eq!(info["filesize"], 11);
+    // Upstream's direct format has no extraction-time filesize.
+    assert!(info["filesize"].is_null());
+    assert_eq!(info["url"], server.url("/clip.mp4"));
     assert!(String::from_utf8(output.stderr).unwrap().contains("404"));
 }
 
@@ -670,7 +676,8 @@ fn youtube_runtime_configuration_is_lazy_for_generic_extraction() {
     .unwrap();
     for (path, extractor) in [("/clip.mp4", "generic"), ("/video.html", "html5")] {
         let info = dl.extract_info(&server.url(path)).unwrap();
-        assert_eq!(info.filesize, Some(11));
+        // Neither upstream direct nor HTML5 formats carry a filesize.
+        assert_eq!(info.filesize, None);
         assert_eq!(info.extractor, extractor);
     }
     assert!(!runtime.exists());
@@ -699,7 +706,9 @@ fn cli_explicit_youtube_runtime_preserves_generic_json_simulation_and_download()
             match mode {
                 Some("-j") => {
                     let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-                    assert_eq!(json["filesize"], 11);
+                    // Upstream direct and HTML5 formats carry no filesize.
+                    assert!(json["filesize"].is_null());
+                    assert!(json["url"].as_str().unwrap().contains("clip.mp4"));
                     assert!(!target.exists());
                 }
                 Some("-s") => {
@@ -738,15 +747,14 @@ fn html5_formats_select_automatically_and_download_explicit_sources() {
         dl.extract_info(&page).unwrap().format_id.as_deref(),
         Some("0")
     );
-    for (id, ext, size, path, bytes) in [
+    for (id, ext, path, bytes) in [
         (
             "0",
             "mp4",
-            11,
             "/media/clip.mp4?one=1&two=2",
             b"media bytes".as_slice(),
         ),
-        ("1", "webm", 4, "/media/clip.webm", b"webm".as_slice()),
+        ("1", "webm", "/media/clip.webm", b"webm".as_slice()),
     ] {
         let info = dl.extract_info_with_format(&page, Some(id)).unwrap();
         assert_eq!(info.formats.len(), 2);
@@ -754,7 +762,9 @@ fn html5_formats_select_automatically_and_download_explicit_sources() {
         assert_eq!(info.formats[1].format_id, "0");
         assert_eq!(info.format_id.as_deref(), Some(id));
         assert_eq!(info.ext, ext);
-        assert_eq!(info.filesize, Some(size));
+        // Upstream HTML5 formats have no extraction-time filesize; the
+        // downloaded byte count below checks the transfer size instead.
+        assert_eq!(info.filesize, None);
         assert_eq!(info.url.as_str(), server.url(path));
         assert_eq!(info.title, "Format fixture (1)");
         let directory = tempfile::tempdir().unwrap();
@@ -763,7 +773,10 @@ fn html5_formats_select_automatically_and_download_explicit_sources() {
             &info,
         )
         .unwrap();
-        dl.download(&info, &destination).unwrap();
+        assert_eq!(
+            dl.download(&info, &destination).unwrap(),
+            bytes.len() as u64
+        );
         assert_eq!(std::fs::read(destination).unwrap(), bytes);
     }
     // Every probe and transfer uses the page referrer, including the second source.
@@ -870,7 +883,7 @@ fn html5_playlist_metadata_order_and_legacy_boundary() {
         assert_eq!(entry.extractor, "html5");
         assert_eq!(entry.extractor_key, "HTML5MediaEmbed");
         assert_eq!(entry.format_id.as_deref(), Some("0"));
-        assert!(!entry.direct);
+        assert!(!entry.is_direct());
     }
     assert!(matches!(
         dl.extract_info(&page),
@@ -1233,7 +1246,8 @@ fn automatic_resolution_selection_reaches_cli_json_and_downloads() {
         assert_eq!(info.format_id.as_deref(), Some(id));
         assert_eq!((info.width, info.height), (width, height));
         assert_eq!(info.url.as_str(), server.url(path));
-        assert_eq!(info.filesize, Some(11));
+        // Upstream HTML5 formats have no extraction-time filesize.
+        assert_eq!(info.filesize, None);
         let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
         command.arg("-j");
         if let Some(selection) = selection {

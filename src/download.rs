@@ -324,8 +324,8 @@ pub fn download(
         client,
         &HttpResource {
             url: &info.url,
-            referrer: (!info.direct).then_some(&info.webpage_url),
-            validate_media: !info.direct,
+            referrer: (!info.is_direct()).then_some(&info.webpage_url),
+            validate_media: !info.is_direct(),
             subtitle: false,
             limits: (options.min_filesize, options.max_filesize),
             rate_limit: options.rate_limit,

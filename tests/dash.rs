@@ -155,7 +155,7 @@ fn direct_and_redirected_mpd_build_separate_stream_fragment_plans() {
     assert_eq!(server.requests.lock().unwrap().len(), 1);
     assert_eq!(info.id, "manifest");
     assert_eq!(info.title, "manifest");
-    assert!(!info.direct);
+    assert!(!info.is_direct());
     assert_eq!(info.formats.len(), 2);
     assert_eq!(info.requested_formats[0].stream_kind, StreamKind::VideoOnly);
     assert_eq!(info.requested_formats[1].stream_kind, StreamKind::AudioOnly);
@@ -243,7 +243,7 @@ fn mpd_paths_mime_and_html_hints_override_conflicting_media_headers() {
             .extract_info_with_format(&server.url(path), Some("bestvideo"))
             .unwrap();
         assert_eq!(info.fragments.len(), 3, "{path}");
-        assert!(!info.direct, "{path}");
+        assert!(!info.is_direct(), "{path}");
     }
     for path in ["/bad-hint.html", "/malformed.mpd"] {
         assert!(

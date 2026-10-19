@@ -633,7 +633,7 @@ impl Extractor for GenericHttp {
             info.id = format!("{}-{}", media.id, index + 1);
             info.title = format!("{} ({})", media.title, index + 1);
             info.webpage_url = page_url.clone();
-            info.direct = false;
+            info.direct = None;
             info.extractor = "html5".into();
             info.extractor_key = "HTML5MediaEmbed".into();
             entries.push(info);

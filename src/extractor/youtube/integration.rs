@@ -236,7 +236,11 @@ fn configured_n_formats_solve_once_before_probes_and_download() {
             WATCH,
             "text/html",
             page(Some(response(vec![
-                format(18, "{{ORIGIN}}/media-low.mp4?n=challenge&keep=%2f"),
+                {
+                    let mut low = format(18, "{{ORIGIN}}/media-low.mp4?n=challenge&keep=%2f");
+                    low["contentLength"] = "3".into();
+                    low
+                },
                 format(22, "{{ORIGIN}}/media-high.mp4?n=challenge"),
             ]))),
         ),
@@ -251,9 +255,11 @@ fn configured_n_formats_solve_once_before_probes_and_download() {
     ]);
     let mut info = extract(&server, Some(&runtime)).unwrap();
     info.select_format(Some("18")).unwrap();
+    // Upstream takes filesize from the stream's `contentLength`, not a probe.
     assert_eq!(info.filesize, Some(3));
     info.select_format(None).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("22"));
+    assert_eq!(info.filesize, None);
     assert!(info.url.as_str().ends_with("n=solved"));
     assert_eq!(
         info.webpage_url.as_str(),
@@ -566,7 +572,8 @@ fn signatures_and_combined_n_challenges_use_the_existing_complete_batch_boundary
         // Metadata records the final probe URL; HTTP transport drops fragments.
         let expected = format!("{}{target}", server.origin.as_str().trim_end_matches('/'));
         assert_eq!(info.url.as_str(), expected);
-        assert_eq!(info.filesize, Some(5));
+        // Without a `contentLength`, upstream leaves filesize unknown.
+        assert_eq!(info.filesize, None);
         assert_eq!(fake.log(), "version\nsolve\n");
         let directory = tempfile::tempdir().unwrap();
         let target = directory.path().join("signed.mp4");

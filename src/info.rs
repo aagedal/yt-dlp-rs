@@ -357,7 +357,10 @@ pub struct VideoInfo {
     pub webpage_url: Url,
     pub extractor: String,
     pub extractor_key: String,
-    pub direct: bool,
+    /// Upstream sets `direct` only for generic direct links; other results
+    /// have no such field (`None`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub direct: Option<bool>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub formats: Vec<VideoFormat>,
     /// Extractor sort order (`_format_sort_fields`), before the defaults.
@@ -405,6 +408,11 @@ enum Pick<'a> {
 }
 
 impl VideoInfo {
+    /// Whether this is a generic direct link (`direct` is true).
+    pub fn is_direct(&self) -> bool {
+        self.direct == Some(true)
+    }
+
     /// Select a supported source or explicit pair without implicit merger preference.
     pub fn select_format(&mut self, requested: Option<&str>) -> crate::Result<()> {
         self.select_format_with_merge(requested, false, None)
@@ -1003,7 +1011,7 @@ mod tests {
             webpage_url: Url::parse("https://example.com/watch").unwrap(),
             extractor: "test".into(),
             extractor_key: "Test".into(),
-            direct: false,
+            direct: None,
             stream_kind: StreamKind::Standalone,
             requested_formats: Vec::new(),
             formats,

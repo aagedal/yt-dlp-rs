@@ -354,8 +354,17 @@ fn match_filters_skip_or_break_like_upstream() {
     );
     assert_eq!(ids(&output), "a\nb\n");
     // Format fields pass before selection and are checked once complete.
+    // Checked against pinned upstream: the direct format has no filesize, so
+    // the complete check skips it unless the comparison allows unknown values.
     let output = cli(
         &["--match-filters", "filesize>4 & !height", "-O", "id", &a],
+        directory.path(),
+        None,
+    );
+    assert!(output.status.success(), "{}", stderr(&output));
+    assert_eq!(ids(&output), "", "{}", stderr(&output));
+    let output = cli(
+        &["--match-filters", "filesize>?4 & !height", "-O", "id", &a],
         directory.path(),
         None,
     );

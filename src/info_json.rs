@@ -370,11 +370,10 @@ fn sanitize_loaded(value: Value) -> Value {
 }
 
 /// Fill fields this port requires from an upstream-written dictionary:
-/// `direct` defaults to false, a format's stream kind follows `vcodec`/
+/// `direct` stays absent unless saved, a format's stream kind follows `vcodec`/
 /// `acodec` `"none"`, and a missing top-level `url`/`ext` (a merged
 /// selection) comes from the last format, to be replaced by format selection.
 fn normalize_loaded(map: &mut serde_json::Map<String, Value>) -> Result<()> {
-    map.entry("direct").or_insert(Value::Bool(false));
     if let Some(Value::Array(formats)) = map.get_mut("formats") {
         for format in formats.iter_mut().filter_map(Value::as_object_mut) {
             let protocol = format
@@ -487,7 +486,7 @@ mod load_tests {
         let crate::ExtractResult::Video(info) = &loaded[0] else {
             panic!("video expected");
         };
-        assert!(!info.direct);
+        assert!(!info.is_direct());
         assert_eq!(info.url.as_str(), "https://e.invalid/v");
         assert!(info.requested_formats.is_empty());
         assert_eq!(info.formats[0].stream_kind, crate::StreamKind::AudioOnly);

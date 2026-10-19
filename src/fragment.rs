@@ -238,7 +238,7 @@ fn fetch(
     let mut request = client
         .get(fragment.url.clone())
         .header(ACCEPT_ENCODING, "identity");
-    if !info.direct {
+    if !info.is_direct() {
         request = request.header(REFERER, info.webpage_url.as_str());
     }
     if let Some(range) = &fragment.byte_range {
@@ -455,7 +455,7 @@ fn fetch_key(
 ) -> std::result::Result<[u8; 16], Failure> {
     reporter.report(DownloadPhase::Requesting, stored)?;
     let mut request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
-    if !info.direct {
+    if !info.is_direct() {
         request = request.header(REFERER, info.webpage_url.as_str());
     }
     let mut response = request

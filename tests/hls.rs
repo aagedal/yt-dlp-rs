@@ -197,7 +197,7 @@ fn direct_media_and_master_extract_plans_without_fetching_segments() {
     let downloader = YoutubeDl::new().unwrap();
     for path in ["/media.m3u8", "/stream"] {
         let info = downloader.extract_info(&server.url(path)).unwrap();
-        assert!(!info.direct);
+        assert!(!info.is_direct());
         assert_eq!(info.ext, "ts");
         // Upstream returns a media playlist as one format, numbered `0`.
         assert_eq!(info.formats.len(), 1);
@@ -343,7 +343,7 @@ fn manifest_path_and_html_type_hints_override_misleading_media_mime() {
             .unwrap()
             .extract_info(&server.url(path))
             .unwrap();
-        assert!(!info.direct, "{path}");
+        assert!(!info.is_direct(), "{path}");
         assert_eq!(info.fragments.len(), 2, "{path}");
     }
     for path in ["/bad-mime.m3u8", "/hinted-bad.html"] {
