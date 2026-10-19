@@ -573,3 +573,45 @@ fn update_time_uses_the_latest_fragment_last_modified() {
         assert_eq!(modified == 1_445_412_480, update_time, "{name}");
     }
 }
+
+#[test]
+fn concurrent_fragments_assemble_in_order_with_per_fragment_retries() {
+    let failed_once = Arc::new(AtomicBool::new(false));
+    let failure = failed_once.clone();
+    let server = Server::new(move |request, _| {
+        let name = request
+            .split_whitespace()
+            .nth(1)
+            .unwrap()
+            .trim_start_matches('/')
+            .to_owned();
+        if name == "f3" && !failure.swap(true, Ordering::Relaxed) {
+            return Response {
+                status: 503,
+                headers: "Content-Length: 0\r\n".into(),
+                body: Vec::new(),
+            };
+        }
+        Response::media(format!("<{name}>").into_bytes())
+    });
+    let fragments: Vec<_> = (0..8)
+        .map(|index| serde_json::json!({"url": format!("{}/f{index}", server.url)}))
+        .collect();
+    let info = server.info(serde_json::Value::Array(fragments));
+    let directory = tempfile::tempdir().unwrap();
+    let output = directory.path().join("out.ts");
+    let bytes = YoutubeDl::new()
+        .unwrap()
+        .with_concurrent_fragments(3)
+        .download_with_progress(&info, &output, DownloadOptions::default(), |_| {
+            ControlFlow::Continue(())
+        })
+        .unwrap();
+    let expected: String = (0..8).map(|index| format!("<f{index}>")).collect();
+    assert_eq!(std::fs::read_to_string(&output).unwrap(), expected);
+    assert_eq!(bytes, expected.len() as u64);
+    assert!(failed_once.load(Ordering::Relaxed));
+    // Every fragment once, plus the retried one; worker files are removed.
+    assert_eq!(server.requests().len(), 9);
+    clean(directory.path(), &["out.ts"]);
+}

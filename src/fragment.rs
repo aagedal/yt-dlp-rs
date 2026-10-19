@@ -82,6 +82,7 @@ pub(crate) fn download(
     info: &VideoInfo,
     destination: &Path,
     options: DownloadOptions,
+    concurrency: usize,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
     if destination.exists() {
@@ -125,76 +126,36 @@ pub(crate) fn download(
         count: info.fragments.len() as u32,
         rate_limit: options.rate_limit,
     };
-    for (index, fragment) in info.fragments.iter().enumerate() {
-        reporter.index = index as u32 + 1;
-        let prefix = stored;
-        for attempt in 0..=options.fragment_retries {
-            temporary.as_file_mut().set_len(prefix)?;
-            temporary.as_file_mut().seek(SeekFrom::Start(prefix))?;
-            stored = prefix;
-            reporter.attempt = u16::try_from(attempt.saturating_add(1)).unwrap_or(u16::MAX);
-            reporter.report(DownloadPhase::Requesting, stored)?;
-            let outcome = fetch(
+    if concurrency > 1 && info.fragments.len() > 1 {
+        let (written, latest) = download_concurrent(
+            client,
+            info,
+            &options,
+            concurrency,
+            parent,
+            temporary.as_file_mut(),
+            &mut reporter,
+        )?;
+        stored = written;
+        filetime = latest;
+    } else {
+        for (index, fragment) in info.fragments.iter().enumerate() {
+            reporter.index = index as u32 + 1;
+            let prefix = stored;
+            if let Some(modified) = fetch_with_retries(
                 client,
                 info,
+                index,
                 fragment,
+                &options,
                 &mut keys,
                 temporary.as_file_mut(),
+                prefix,
                 &mut stored,
                 &mut reporter,
-            );
-            let failure = match outcome {
-                Ok(modified) => {
-                    filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
-                    break;
-                }
-                Err(failure) => failure,
-            };
-            // Discard every byte from the failed fragment, including bytes
-            // reported to observers, before waiting, retrying or skipping.
-            temporary.as_file_mut().set_len(prefix)?;
-            temporary.as_file_mut().seek(SeekFrom::Start(prefix))?;
-            stored = prefix;
-            // Upstream retries every HTTP status error for fragments when
-            // unavailable fragments may be skipped.
-            let retry = failure.retry.or_else(|| {
-                (options.skip_unavailable_fragments.is_some()
-                    && matches!(&failure.error, Error::Http(source) if source.status().is_some()))
-                .then_some(Duration::ZERO)
-            });
-            if let Some(retry_after) = retry
-                && attempt < options.fragment_retries
-            {
-                let delay = crate::retry::announce_retry(
-                    &failure.error,
-                    attempt,
-                    options.fragment_retries,
-                    Some(index as u32 + 1),
-                    options.retry_sleep.fragment,
-                )
-                .map_or_else(
-                    || crate::retry::delay(attempt, retry_after),
-                    |delay| delay.max(retry_after),
-                );
-                reporter.wait(delay, stored)?;
-                continue;
+            )? {
+                filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
             }
-            // Upstream `skip_unavailable_fragments`, never for the first one.
-            if options.skip_unavailable_fragments == Some(true)
-                && index > 0
-                && !matches!(failure.error, Error::DownloadCancelled | Error::Io(_))
-            {
-                crate::screen::screen(&format!(
-                    "[download] fragment not found; Skipping fragment {} ...",
-                    index + 1
-                ));
-                break;
-            }
-            return Err(if retry.is_some() {
-                crate::retry::exhausted(failure.error, options.fragment_retries)
-            } else {
-                failure.error
-            });
         }
     }
     temporary.flush()?;
@@ -212,6 +173,226 @@ pub(crate) fn download(
     })?;
     Ok(stored)
 }
+/// One fragment with `--fragment-retries` (`Ok(None)` when skipped as
+/// unavailable): written to `file` after `prefix`, which a failed attempt
+/// truncates back to.
+#[allow(clippy::too_many_arguments)]
+fn fetch_with_retries(
+    client: &Client,
+    info: &VideoInfo,
+    index: usize,
+    fragment: &Fragment,
+    options: &DownloadOptions,
+    keys: &mut HashMap<url::Url, [u8; 16]>,
+    file: &mut fs::File,
+    prefix: u64,
+    stored: &mut u64,
+    reporter: &mut Reporter<'_>,
+) -> Result<Option<Option<String>>> {
+    for attempt in 0..=options.fragment_retries {
+        file.set_len(prefix)?;
+        file.seek(SeekFrom::Start(prefix))?;
+        *stored = prefix;
+        reporter.attempt = u16::try_from(attempt.saturating_add(1)).unwrap_or(u16::MAX);
+        reporter.report(DownloadPhase::Requesting, *stored)?;
+        let failure = match fetch(client, info, fragment, keys, file, stored, reporter) {
+            Ok(modified) => return Ok(Some(modified)),
+            Err(failure) => failure,
+        };
+        // Discard every byte from the failed fragment, including bytes
+        // reported to observers, before waiting, retrying or skipping.
+        file.set_len(prefix)?;
+        file.seek(SeekFrom::Start(prefix))?;
+        *stored = prefix;
+        // Upstream retries every HTTP status error for fragments when
+        // unavailable fragments may be skipped.
+        let retry = failure.retry.or_else(|| {
+            (options.skip_unavailable_fragments.is_some()
+                && matches!(&failure.error, Error::Http(source) if source.status().is_some()))
+            .then_some(Duration::ZERO)
+        });
+        if let Some(retry_after) = retry
+            && attempt < options.fragment_retries
+        {
+            let delay = crate::retry::announce_retry(
+                &failure.error,
+                attempt,
+                options.fragment_retries,
+                Some(index as u32 + 1),
+                options.retry_sleep.fragment,
+            )
+            .map_or_else(
+                || crate::retry::delay(attempt, retry_after),
+                |delay| delay.max(retry_after),
+            );
+            reporter.wait(delay, *stored)?;
+            continue;
+        }
+        // Upstream `skip_unavailable_fragments`, never for the first one.
+        if options.skip_unavailable_fragments == Some(true)
+            && index > 0
+            && !matches!(failure.error, Error::DownloadCancelled | Error::Io(_))
+        {
+            crate::screen::screen(&format!(
+                "[download] fragment not found; Skipping fragment {} ...",
+                index + 1
+            ));
+            return Ok(None);
+        }
+        return Err(if retry.is_some() {
+            crate::retry::exhausted(failure.error, options.fragment_retries)
+        } else {
+            failure.error
+        });
+    }
+    unreachable!("the final attempt returns or errors")
+}
+
+/// A fragment worker's report to the assembling thread.
+enum Event {
+    Progress {
+        index: usize,
+        bytes: u64,
+    },
+    Done {
+        index: usize,
+        result: Result<Option<(tempfile::NamedTempFile, Option<String>)>>,
+    },
+}
+
+/// Upstream `--concurrent-fragments`: `concurrency` workers fetch fragments
+/// (each with its own retries) into private files, appended in order.
+/// Returns the stored length and the latest fragment filetime.
+fn download_concurrent(
+    client: &Client,
+    info: &VideoInfo,
+    options: &DownloadOptions,
+    concurrency: usize,
+    parent: &Path,
+    output: &mut fs::File,
+    reporter: &mut Reporter<'_>,
+) -> Result<(u64, Option<i64>)> {
+    use std::sync::{
+        Arc,
+        atomic::{AtomicBool, AtomicUsize, Ordering},
+        mpsc,
+    };
+    let next = Arc::new(AtomicUsize::new(0));
+    let cancelled = Arc::new(AtomicBool::new(false));
+    let (sender, receiver) = mpsc::channel::<Event>();
+    let count = info.fragments.len();
+    std::thread::scope(|scope| -> Result<(u64, Option<i64>)> {
+        for _ in 0..concurrency.min(count) {
+            let (next, cancelled, sender) = (next.clone(), cancelled.clone(), sender.clone());
+            scope.spawn(move || {
+                let mut keys = HashMap::new();
+                loop {
+                    let index = next.fetch_add(1, Ordering::Relaxed);
+                    if index >= count || cancelled.load(Ordering::Relaxed) {
+                        return;
+                    }
+                    let progress = sender.clone();
+                    let flag = cancelled.clone();
+                    let mut forward = move |event: DownloadProgress| {
+                        let _ = progress.send(Event::Progress {
+                            index,
+                            bytes: event.downloaded_bytes,
+                        });
+                        if flag.load(Ordering::Relaxed) {
+                            ControlFlow::Break(())
+                        } else {
+                            ControlFlow::Continue(())
+                        }
+                    };
+                    let mut worker = Reporter {
+                        callback: &mut forward,
+                        attempt: 1,
+                        index: index as u32 + 1,
+                        count: count as u32,
+                        rate_limit: options.rate_limit,
+                    };
+                    let result = (|| {
+                        let mut file = tempfile::Builder::new()
+                            .prefix(".yt-dlp-rs-fragment-")
+                            .tempfile_in(parent)?;
+                        let mut stored = 0;
+                        let outcome = fetch_with_retries(
+                            client,
+                            info,
+                            index,
+                            &info.fragments[index],
+                            options,
+                            &mut keys,
+                            file.as_file_mut(),
+                            0,
+                            &mut stored,
+                            &mut worker,
+                        )?;
+                        Ok(outcome.map(|modified| (file, modified)))
+                    })();
+                    let failed = result.is_err();
+                    let _ = sender.send(Event::Done { index, result });
+                    if failed {
+                        return;
+                    }
+                }
+            });
+        }
+        drop(sender);
+        // Assemble in order while reporting the in-flight total.
+        let mut finished: HashMap<usize, Option<(tempfile::NamedTempFile, Option<String>)>> =
+            HashMap::new();
+        let mut in_flight: HashMap<usize, u64> = HashMap::new();
+        let (mut written, mut done, mut cursor) = (0_u64, 0_usize, 0_usize);
+        let mut latest = None;
+        let mut outcome = Ok(());
+        for event in receiver {
+            match event {
+                Event::Progress { index, bytes } => {
+                    in_flight.insert(index, bytes);
+                }
+                Event::Done { index, result } => match result {
+                    Ok(file) => {
+                        in_flight.remove(&index);
+                        finished.insert(index, file);
+                        done += 1;
+                    }
+                    Err(error) => {
+                        cancelled.store(true, Ordering::Relaxed);
+                        if outcome.is_ok() {
+                            outcome = Err(error);
+                        }
+                    }
+                },
+            }
+            while let Some(file) = finished.remove(&cursor) {
+                if let Some((file, modified)) = file {
+                    let mut source = file.reopen()?;
+                    written += std::io::copy(&mut source, output)?;
+                    latest = crate::filetime::filetime(modified.as_deref()).or(latest);
+                }
+                cursor += 1;
+            }
+            if outcome.is_ok() {
+                let pending: u64 = finished
+                    .values()
+                    .flatten()
+                    .map(|(file, _)| file.as_file().metadata().map_or(0, |m| m.len()))
+                    .sum();
+                reporter.index = (done + 1).min(count) as u32;
+                reporter.attempt = 1;
+                let total = written + pending + in_flight.values().sum::<u64>();
+                if reporter.report(DownloadPhase::Downloading, total).is_err() {
+                    cancelled.store(true, Ordering::Relaxed);
+                    outcome = Err(Error::DownloadCancelled);
+                }
+            }
+        }
+        outcome?;
+        Ok((written, latest))
+    })
+}
+
 fn fetch(
     client: &Client,
     info: &VideoInfo,

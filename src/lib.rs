@@ -113,6 +113,8 @@ pub struct YoutubeDl {
     /// `--default-search`.
     default_search: Option<String>,
     check_formats: CheckFormats,
+    /// `-N`/`--concurrent-fragments`.
+    concurrent_fragments: usize,
 }
 
 /// Upstream `--fixup POLICY` and `--hls-use-mpegts`.
@@ -166,7 +168,7 @@ fn test_format(client: &Client, info: &VideoInfo, format: &VideoFormat) -> bool 
             &mut quiet,
         )
     } else {
-        fragment::download(client, &single, &target, options, &mut quiet)
+        fragment::download(client, &single, &target, options, 1, &mut quiet)
     };
     // Errors are still reported by the quiet test downloader.
     if let Err(error) = &result {
@@ -290,6 +292,7 @@ impl YoutubeDl {
             force_generic: false,
             default_search: None,
             check_formats: CheckFormats::Default,
+            concurrent_fragments: 1,
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -546,6 +549,12 @@ impl YoutubeDl {
     /// `--force-generic-extractor`: only the generic extractor is used.
     pub fn with_force_generic_extractor(mut self, force: bool) -> Self {
         self.force_generic = force;
+        self
+    }
+
+    /// `-N`/`--concurrent-fragments`: fragments downloaded in parallel.
+    pub fn with_concurrent_fragments(mut self, count: usize) -> Self {
+        self.concurrent_fragments = count.max(1);
         self
     }
 
@@ -1027,6 +1036,7 @@ impl YoutubeDl {
                 info,
                 destination.as_ref(),
                 options,
+                self.concurrent_fragments,
                 &mut callback,
             );
         }

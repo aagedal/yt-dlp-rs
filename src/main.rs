@@ -686,6 +686,15 @@ struct Args {
     /// Output descriptions of all supported extractors
     #[arg(long)]
     extractor_descriptions: bool,
+    /// Number of fragments of a dash/hlsnative video that should be downloaded concurrently
+    #[arg(
+        short = 'N',
+        long,
+        value_name = "N",
+        default_value_t = 1,
+        allow_hyphen_values = true
+    )]
+    concurrent_fragments: i64,
     /// Size of a chunk for chunk-based HTTP downloading, e.g. 10485760 or 10M
     #[arg(long, value_name = "SIZE")]
     http_chunk_size: Option<String>,
@@ -1490,6 +1499,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // Upstream `parse_chapters('--download-sections', ..., advanced=True)`.
     let download_sections =
         yt_dlp_rs::sections::DownloadSections::parse(&args.download_sections).map_err(usage)?;
+    if args.concurrent_fragments <= 0 {
+        return Err(usage(format!(
+            "concurrent fragments \"{}\" must be positive",
+            args.concurrent_fragments
+        ))
+        .into());
+    }
     // Upstream `validate_positive` for the autonumber options.
     if args.autonumber_start < 0 {
         return Err(usage(format!(
@@ -1691,6 +1707,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .with_http_chunk_size(http_chunk_size)
         .with_test(args.test)
         .with_force_generic_extractor(args.force_generic_extractor)
+        .with_concurrent_fragments(args.concurrent_fragments as usize)
         .with_check_formats(if args.check_formats {
             yt_dlp_rs::CheckFormats::Selected
         } else if args.check_all_formats {
