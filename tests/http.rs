@@ -732,9 +732,11 @@ fn html5_formats_select_automatically_and_download_explicit_sources() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     let page = server.url("/formats-progressive.html");
+    // Pinned upstream sorts the labeled sources as ["1", "0"] (webm below
+    // mp4) and selects "0" by default.
     assert_eq!(
         dl.extract_info(&page).unwrap().format_id.as_deref(),
-        Some("1")
+        Some("0")
     );
     for (id, ext, size, path, bytes) in [
         (
@@ -748,8 +750,8 @@ fn html5_formats_select_automatically_and_download_explicit_sources() {
     ] {
         let info = dl.extract_info_with_format(&page, Some(id)).unwrap();
         assert_eq!(info.formats.len(), 2);
-        assert_eq!(info.formats[0].format_id, "0");
-        assert_eq!(info.formats[1].format_id, "1");
+        assert_eq!(info.formats[0].format_id, "1");
+        assert_eq!(info.formats[1].format_id, "0");
         assert_eq!(info.format_id.as_deref(), Some(id));
         assert_eq!(info.ext, ext);
         assert_eq!(info.filesize, Some(size));
@@ -933,8 +935,9 @@ fn html5_playlist_selection_and_validation_are_atomic() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     let page = server.url("/playlist-formats.html");
+    // Pinned upstream selects the mp4 source ("0") for each entry by default.
     for entry in dl.extract_result(&page).unwrap().into_entries() {
-        assert_eq!(entry.format_id.as_deref(), Some("1"));
+        assert_eq!(entry.format_id.as_deref(), Some("0"));
     }
     for id in ["0", "1"] {
         let entries = dl
@@ -1167,7 +1170,8 @@ fn cli_format_selection_json_download_and_failure() {
         .unwrap();
     assert!(output.status.success());
     let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(info["format_id"], "1");
+    // Pinned upstream `-f missing/best` selects "0" (mp4) here.
+    assert_eq!(info["format_id"], "0");
 }
 
 #[test]
@@ -1288,31 +1292,42 @@ fn automatic_resolution_selection_reaches_cli_json_and_downloads() {
 }
 
 #[test]
-fn source_dimensions_ignore_invalid_values_and_player_size() {
+fn source_dimensions_follow_upstream_parsing_labels_and_player_size() {
     // Keep this parsing boundary covered through real extraction and JSON metadata.
+    // Compared with pinned upstream. Upstream keeps the widths -1 and
+    // 4294967296, which native u32 fields leave unknown; its `res` of -1 then
+    // sorts the 480 source first (ID 0) and the player source second, the
+    // reverse of the native order below. Known divergence for such values.
     let server = Server::start();
     let mut info = YoutubeDl::new()
         .unwrap()
         .extract_info(&server.url("/dimension-boundaries.html"))
         .unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("3"));
-    let dimensions: Vec<_> = info.formats.iter().map(|f| (f.width, f.height)).collect();
+    assert_eq!(info.format_id.as_deref(), Some("1080p"));
+    let dimensions: Vec<_> = info
+        .formats
+        .iter()
+        .map(|f| (f.format_id.as_str(), f.width, f.height))
+        .collect();
     assert_eq!(
         dimensions,
         vec![
-            (None, None),
-            (None, Some(480)),
-            (None, None),
-            (Some(1280), None)
+            // The media element's own player size is not a source dimension.
+            ("0", None, None),
+            // width='-1' height='0' res='480': zero height falls back to res.
+            ("1", None, Some(480)),
+            // ' 1280 ' and '+720' parse like Python int().
+            ("2", Some(1280), Some(720)),
+            // height='720p' is invalid; the label supplies 1080.
+            ("1080p", None, Some(1080)),
         ]
     );
     info.select_format(Some("worst")).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("0"));
-    assert_eq!((info.width, info.height), (None, None));
     info.select_format(Some("1")).unwrap();
     assert_eq!((info.width, info.height), (None, Some(480)));
     info.select_format(None).unwrap();
-    assert_eq!((info.width, info.height), (Some(1280), None));
+    assert_eq!((info.width, info.height), (None, Some(1080)));
 }
 
 #[test]
@@ -1345,12 +1360,13 @@ fn html5_formats_carry_upstream_content_type_codecs() {
     let text = |value: &str| Some(serde_json::json!(value));
     // The element's own src ignores type codecs; <source> codecs keep their
     // acodec, but vcodec is reset like upstream's `f.update(formats[0])`.
+    // Sorted like pinned upstream: the source with a known acodec ranks best.
     assert_eq!(
         codecs(0),
         [
             (None, None, serde_json::json!("SDR")),
-            (None, text("mp4a.40.2"), serde_json::json!("SDR")),
             (None, None, serde_json::json!("SDR")),
+            (None, text("mp4a.40.2"), serde_json::json!("SDR")),
         ]
     );
     // Inside <audio>, vcodec is `none` (no dynamic range), and the mp3

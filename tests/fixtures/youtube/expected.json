@@ -261,7 +261,9 @@
       "url": "{{ORIGIN}}/media/low.mp4",
       "filesize": 5,
       "vcodec": "avc1.42001E",
-      "acodec": "mp4a.40.2"
+      "acodec": "mp4a.40.2",
+      "quality": 2.0,
+      "source_preference": -1
     },
     {
       "format_id": "22",
@@ -271,7 +273,9 @@
       "url": "{{ORIGIN}}/media/high.mp4",
       "filesize": 5,
       "vcodec": "avc1.64001F",
-      "acodec": "mp4a.40.2"
+      "acodec": "mp4a.40.2",
+      "quality": 3.0,
+      "source_preference": -5
     }
   ]
 }

@@ -339,6 +339,33 @@ struct Args {
         allow_hyphen_values = true
     )]
     audio_quality: String,
+    /// Sort the formats by the fields given (comma-separated; later values take precedence)
+    #[arg(
+        short = 'S',
+        long,
+        value_name = "SORTORDER",
+        allow_hyphen_values = true
+    )]
+    format_sort: Vec<String>,
+    /// Disregard previous user specified sort order and reset to the default
+    #[arg(long)]
+    format_sort_reset: bool,
+    /// Force user specified sort order to have precedence over all fields (Alias: --S-force)
+    #[arg(
+        long,
+        visible_alias = "S-force",
+        overrides_with = "no_format_sort_force"
+    )]
+    format_sort_force: bool,
+    /// Some fields have precedence over the user specified sort order (default)
+    #[arg(long, overrides_with = "format_sort_force")]
+    no_format_sort_force: bool,
+    /// Prefer video formats with free containers over non-free ones of the same quality
+    #[arg(long, overrides_with = "no_prefer_free_formats")]
+    prefer_free_formats: bool,
+    /// Don't give any special preference to free containers (default)
+    #[arg(long, overrides_with = "prefer_free_formats")]
+    no_prefer_free_formats: bool,
     /// Containers that may be used when merging formats, separated by "/",
     /// e.g. "mp4/mkv"; ignored if no merge is required (currently supported:
     /// avi, flv, mkv, mov, mp4, webm)
@@ -999,6 +1026,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         ))
         .into());
     }
+    // Upstream `-S` (`_list_from_options_callback` with append=-1): each value
+    // is split on commas and prepended; `--format-sort-reset` clears earlier ones.
+    let mut format_sort: Vec<String> = Vec::new();
+    for value in after_reset("format_sort", "format_sort_reset") {
+        let mut fields: Vec<String> = value
+            .split(',')
+            .map(|field| field.trim().to_owned())
+            .filter(|field| !field.is_empty())
+            .collect();
+        fields.append(&mut format_sort);
+        format_sort = fields;
+    }
+    static SORT_FIELD: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"^ *(?:\+?[a-zA-Z0-9_]+(?:[~:].*?)?)? *$").unwrap()
+    });
+    if let Some(field) = format_sort.iter().find(|field| !SORT_FIELD.is_match(field)) {
+        return Err(usage(format!("invalid format sorting \"{field}\" given")).into());
+    }
     // Upstream `validate_regex` uses `re.match`: only a valid prefix is required.
     if let Some(format) = &args.merge_output_format {
         static PATTERN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
@@ -1144,6 +1189,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if let Some(path) = args.ffprobe_location.or(ffprobe) {
         downloader = downloader.with_ffprobe(path);
     }
+    downloader = downloader.with_format_sort(yt_dlp_rs::FormatSortOptions {
+        fields: format_sort,
+        force: args.format_sort_force,
+        prefer_free: args.prefer_free_formats,
+    });
     if let Some(formats) = &args.merge_output_format {
         downloader =
             downloader.with_merge_output_format(formats.split('/').map(str::to_owned).collect());
@@ -1354,7 +1404,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 warning!("WARNING: URLs are ignored due to --load-info-json");
             }
             let path = yt_dlp_rs::batch::expand_path_text(file);
-            yt_dlp_rs::load_info_json(std::path::Path::new(&path))?
+            let mut loaded = yt_dlp_rs::load_info_json(std::path::Path::new(&path))?;
+            // Upstream runs process_video_result (fills, sorting, IDs) again.
+            for result in &mut loaded {
+                downloader.process_result(result)?;
+            }
+            loaded
                 .into_iter()
                 .map(|result| (path.clone(), Some(result)))
                 .collect()

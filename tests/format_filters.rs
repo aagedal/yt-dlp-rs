@@ -153,8 +153,9 @@ fn only_screen_lines(output: &Output) {
 #[test]
 fn cli_numeric_and_extension_filters_select_without_downloading() {
     let server = Server::new();
+    // Upstream numbers HTML5 sources after FormatSorter order (worst first).
     let info = server.json("/formats.html", "best[height<=720][width>=1000][ext=mp4]");
-    assert_eq!(info["format_id"], "1");
+    assert_eq!(info["format_id"], "3");
     assert_eq!(info["height"], 720);
     assert_eq!(info["width"], 1280);
     assert!(info["url"].as_str().unwrap().ends_with("/medium.mp4"));
@@ -196,7 +197,7 @@ fn actual_download_uses_only_the_filtered_source_after_all_probes() {
 fn unknown_numeric_values_require_explicit_inclusion() {
     let server = Server::new();
     let info = server.json("/formats.html", "best[height<=?100][ext=mp4]");
-    assert_eq!(info["format_id"], "3");
+    assert_eq!(info["format_id"], "0");
     assert!(info.get("height").is_none());
     let output = server.cli(
         "/formats.html",
@@ -302,7 +303,7 @@ fn text_predicates_chain_and_literal_id_filters_can_fall_back() {
         "/formats.html",
         "2[height<720]/best[ext^=m][ext$=4][ext*=p][ext!=webm][height<1080]",
     );
-    assert_eq!(info["format_id"], "1");
+    assert_eq!(info["format_id"], "3");
     assert_eq!(info["ext"], "mp4");
     server.assert_one_probe_per_progressive_source();
 }
@@ -312,10 +313,10 @@ fn grouped_filters_narrow_candidates_before_nested_fallbacks_and_ranking() {
     let server = Server::new();
     for selector in [
         "(b/0)[height<=720][ext=mp4]",
-        "((2/(1/0)))[height<=720][ext=mp4]",
+        "((4/(3/0)))[height<=720][ext=mp4]",
     ] {
         let info = server.json("/formats.html", selector);
-        assert_eq!(info["format_id"], "1", "{selector}");
+        assert_eq!(info["format_id"], "3", "{selector}");
         assert_eq!(info["height"], 720);
     }
     for path in [
@@ -355,9 +356,9 @@ fn bare_filter_download_and_short_alias_json_use_existing_media_selection() {
     assert_eq!(std::fs::read(target).unwrap(), b"medium");
     assert_eq!(server.count("/medium.mp4"), 2);
     let best = server.json("/formats.html", "b[ext=mp4]");
-    assert_eq!(best["format_id"], "2");
+    assert_eq!(best["format_id"], "4");
     let worst = server.json("/formats.html", "w[height>=360][ext=mp4]");
-    assert_eq!(worst["format_id"], "0");
+    assert_eq!(worst["format_id"], "1");
     assert_eq!(server.count("/medium.mp4"), 4);
     assert_eq!(server.count("/high.mp4"), 3);
 }
@@ -472,10 +473,10 @@ fn grouped_bare_filters_preserve_direct_metadata_and_format() {
 fn indexed_best_and_worst_rank_after_filters_and_download_the_selected_bytes() {
     let server = Server::new();
     let second_best = server.json("/formats.html", "best.2[height>=360][ext=mp4]");
-    assert_eq!(second_best["format_id"], "1");
+    assert_eq!(second_best["format_id"], "3");
     assert_eq!(second_best["height"], 720);
     let second_worst = server.json("/formats.html", "worst.2[height>=360][ext=mp4]");
-    assert_eq!(second_worst["format_id"], "1");
+    assert_eq!(second_worst["format_id"], "3");
     let directory = tempfile::tempdir().unwrap();
     let target = directory.path().join("second.mp4");
     let output = server.cli(
@@ -499,10 +500,12 @@ fn indexed_best_and_worst_rank_after_filters_and_download_the_selected_bytes() {
 }
 
 #[test]
-fn indexed_hls_audio_follows_existing_default_first_ranking_without_merger_launch() {
+fn indexed_hls_audio_follows_upstream_sort_order_without_merger_launch() {
     let server = Server::new();
+    // Checked with pinned upstream: the renditions tie until the format ID,
+    // so `main-Norwegian` sorts last (best) despite DEFAULT=YES on English.
     for (index, expected_id, language) in
-        [(1, "main-English__Main", "en"), (2, "main-Norwegian", "nb")]
+        [(1, "main-Norwegian", "nb"), (2, "main-English__Main", "en")]
     {
         let selector = format!("bv.1+ba.{index}");
         let output = server.cli(
@@ -529,7 +532,7 @@ fn indexed_hls_audio_follows_existing_default_first_ranking_without_merger_launc
             info["requested_formats"][1]["audio_default"]
                 .as_bool()
                 .unwrap_or(false),
-            index == 1
+            index == 2
         );
     }
     assert_eq!(server.count("/init.mp4"), 0);
@@ -541,7 +544,7 @@ fn indexed_hls_audio_follows_existing_default_first_ranking_without_merger_launc
 fn indexed_out_of_range_can_fall_back_inside_filtered_groups() {
     let server = Server::new();
     let info = server.json("/formats.html", "(b.4/b.2)[height>=360][ext=mp4]");
-    assert_eq!(info["format_id"], "1");
+    assert_eq!(info["format_id"], "3");
     let unavailable = server.cli(
         "/formats.html",
         &["-j", "-s", "-f", "b.4[height>=360][ext=mp4]"],
@@ -549,7 +552,7 @@ fn indexed_out_of_range_can_fall_back_inside_filtered_groups() {
     assert!(!unavailable.status.success());
     assert!(unavailable.stdout.is_empty());
     let filtered = server.json("/formats.html", "(b.2/b.1)[height<=360][ext=mp4]");
-    assert_eq!(filtered["format_id"], "0");
+    assert_eq!(filtered["format_id"], "1");
 }
 
 #[test]
@@ -595,4 +598,90 @@ fn direct_metadata_exposes_only_the_first_index_of_its_single_format() {
     let output = server.cli("/medium.mp4", &["-j", "-s", "-f", "b.2"]);
     assert!(!output.status.success());
     assert!(output.stdout.is_empty());
+}
+
+#[test]
+fn format_sort_options_reorder_formats_like_upstream() {
+    let server = Server::new();
+    // Each expected order was checked with pinned upstream (FormatSorter).
+    let order = |args: &[&str]| -> Vec<String> {
+        let output = server.cli("/formats.html", &[&["-j"], args].concat());
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let info: Value = serde_json::from_slice(&output.stdout).unwrap();
+        info["formats"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|format| {
+                format["url"]
+                    .as_str()
+                    .unwrap()
+                    .rsplit('/')
+                    .next()
+                    .unwrap()
+                    .to_owned()
+            })
+            .collect()
+    };
+    assert_eq!(
+        order(&[]),
+        [
+            "unknown.mp4",
+            "low.mp4",
+            "clip.webm",
+            "medium.mp4",
+            "high.mp4"
+        ]
+    );
+    assert_eq!(
+        order(&["-S", "+res"]),
+        [
+            "high.mp4",
+            "clip.webm",
+            "medium.mp4",
+            "low.mp4",
+            "unknown.mp4"
+        ]
+    );
+    assert_eq!(
+        order(&["-S", "res~700"]),
+        [
+            "unknown.mp4",
+            "high.mp4",
+            "low.mp4",
+            "clip.webm",
+            "medium.mp4"
+        ]
+    );
+    // Later -S values are prepended: `ext` wins over `res,+size`.
+    assert_eq!(
+        order(&["-S", "res,+size", "-S", "ext"]),
+        [
+            "clip.webm",
+            "unknown.mp4",
+            "low.mp4",
+            "medium.mp4",
+            "high.mp4"
+        ]
+    );
+    assert_eq!(
+        order(&["-S", "ext", "--format-sort-reset", "-S", "+res"]),
+        [
+            "high.mp4",
+            "clip.webm",
+            "medium.mp4",
+            "low.mp4",
+            "unknown.mp4"
+        ]
+    );
+    let output = server.cli("/formats.html", &["-j", "-S", "res!"]);
+    assert_eq!(output.status.code(), Some(2));
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .ends_with("error: invalid format sorting \"res!\" given\n")
+    );
 }

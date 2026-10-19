@@ -66,6 +66,13 @@ struct Candidate {
     stream_kind: StreamKind,
     /// Upstream `parse_codecs` of the mimeType `codecs` parameter.
     codecs: Option<crate::codecs::Codecs>,
+    /// Upstream sort inputs: `quality`, `source_preference`, `fps`, `asr`
+    /// and `audio_channels`.
+    quality: f64,
+    source_preference: i64,
+    fps: Option<f64>,
+    asr: Option<u32>,
+    audio_channels: Option<u32>,
     abr: Option<f64>,
     tbr: Option<f64>,
     width: Option<u32>,
@@ -84,6 +91,12 @@ impl Candidate {
                 .map(str::to_owned),
             video_ext: None,
             audio_ext: None,
+            vbr: None,
+            source_preference: Some(self.source_preference),
+            quality: Some(self.quality),
+            fps: self.fps,
+            asr: self.asr,
+            audio_channels: self.audio_channels,
             audio_group: None,
             language: None,
             format_note: None,
@@ -361,7 +374,59 @@ fn parse_candidates(
                 .and_then(|n| u32::try_from(n).ok())
                 .filter(|n| *n > 0)
         };
+        // Upstream `process_format_stream` quality: `quality`, or
+        // `audioQuality` for tiny/missing values (itag 17 is tiny).
+        let mut quality = source["quality"].as_str().unwrap_or("").to_owned();
+        if quality == "tiny" || quality.is_empty() {
+            let audio = source["audioQuality"].as_str().unwrap_or("").to_lowercase();
+            if !audio.is_empty() {
+                quality = audio;
+            }
+        }
+        if itag.to_string() == "17" {
+            quality = "tiny".into();
+        }
+        const QUALITIES: &[&str] = &[
+            "tiny",
+            "audio_quality_ultralow",
+            "audio_quality_low",
+            "audio_quality_medium",
+            "audio_quality_high",
+            "small",
+            "medium",
+            "large",
+            "hd720",
+            "hd1080",
+            "hd1440",
+            "hd2160",
+            "hd2880",
+            "highres",
+        ];
+        let rank = QUALITIES
+            .iter()
+            .position(|candidate| *candidate == quality)
+            .map_or(-1.0, |index| index as f64);
+        let drc = source["isDrc"].as_bool().unwrap_or(false);
+        let name = source["qualityLabel"]
+            .as_str()
+            .map(str::to_owned)
+            .unwrap_or_else(|| quality.replace("audio_quality_", ""));
+        let small = |key: &str| {
+            source[key]
+                .as_u64()
+                .or_else(|| source[key].as_str().and_then(|text| text.parse().ok()))
+                .and_then(|n| u32::try_from(n).ok())
+        };
         formats.push(Candidate {
+            quality: rank - if drc { 0.5 } else { 0.0 },
+            source_preference: if itag.to_string() == "22" { -5 } else { -1 }
+                + if name.contains("Premium") { 100 } else { 0 },
+            // `fps if fps > 1 else None`.
+            fps: small("fps").filter(|fps| *fps > 1).map(f64::from),
+            asr: small("audioSampleRate"),
+            audio_channels: source["audioChannels"]
+                .as_u64()
+                .and_then(|n| u32::try_from(n).ok()),
             format_id: itag.to_string(),
             source: url_source,
             ext: ext.into(),
@@ -565,6 +630,13 @@ fn extract_watch_page_with_caption_options(
     let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
         protocol: None,
+        // Upstream YouTube `_format_sort_fields` (without `prefer-vp9-sort`).
+        format_sort_fields: [
+            "quality", "res", "fps", "hdr:12", "source", "vcodec", "channels", "acodec", "lang",
+            "proto",
+        ]
+        .map(str::to_owned)
+        .to_vec(),
         vcodec: None,
         acodec: None,
         dynamic_range: None,

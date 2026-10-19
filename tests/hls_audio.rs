@@ -128,7 +128,8 @@ fn external_audio_groups_build_typed_plans_and_choose_matching_default() {
     assert_eq!(info.requested_formats[1].language.as_deref(), Some("en"));
     assert_eq!(
         info.requested_formats[1].format_note.as_deref(),
-        Some("Main, English")
+        // Pinned upstream appends the group's quality rank among groups.
+        Some("Main, English, high")
     );
     assert!(info.requested_formats[1].audio_default);
     assert!(info.requested_formats[1].audio_autoselect);
@@ -160,20 +161,42 @@ fn html_groups_are_namespaced_and_manifest_requests_preserve_page_referer() {
         .unwrap();
     assert_eq!(info.title, "Audio groups (1)");
     assert_eq!(info.formats.len(), 10);
-    assert!(
-        info.formats[..5].iter().all(|format| format
-            .audio_group
-            .as_ref()
-            .unwrap()
-            .starts_with("0-"))
+    // Pinned upstream sorts the page's formats by quality, interleaving the
+    // two manifests; each keeps its source-index group namespace.
+    assert_eq!(
+        info.formats
+            .iter()
+            .map(|format| format.format_id.as_str())
+            .collect::<Vec<_>>(),
+        [
+            "hls-b-Other_default-0",
+            "hls-b-Other_default-1",
+            "hls-a-Alternative-0",
+            "hls-a-Alternative-1",
+            "hls-a-Main__English-0",
+            "hls-a-Main__English-1",
+            "hls-500-0",
+            "hls-500-1",
+            "hls-1000-0",
+            "hls-1000-1",
+        ]
     );
-    assert!(
-        info.formats[5..].iter().all(|format| format
-            .audio_group
-            .as_ref()
-            .unwrap()
-            .starts_with("1-"))
+    assert_eq!(
+        info.format_id.as_deref(),
+        Some("hls-1000-1+hls-a-Main__English-1")
     );
+    for format in &info.formats {
+        let source = &format.format_id[format.format_id.len() - 1..];
+        assert!(
+            format
+                .audio_group
+                .as_ref()
+                .unwrap()
+                .starts_with(&format!("{source}-")),
+            "{}",
+            format.format_id
+        );
+    }
     assert_eq!(
         info.requested_formats[0].audio_group,
         info.requested_formats[1].audio_group

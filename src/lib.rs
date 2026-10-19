@@ -13,6 +13,7 @@ mod embed_subtitles;
 mod error;
 pub mod extractor;
 mod filetime;
+pub mod format_sort;
 mod fragment;
 mod hls;
 mod html;
@@ -39,6 +40,7 @@ pub use download::{DownloadOptions, DownloadPhase, DownloadProgress, MergeFiles,
 pub use embed_subtitles::{SubtitleEmbedding, SubtitleFile};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
+pub use format_sort::FormatSorter;
 pub use http::HttpOptions;
 pub use info::{
     ByteRange, ExtractResult, Fragment, HlsAes128, Metadata, PlaylistInfo, StreamKind, Thumbnail,
@@ -89,6 +91,16 @@ pub struct YoutubeDl {
     ffmpeg: Option<PathBuf>,
     ffprobe: Option<PathBuf>,
     merge_output_format: Option<Vec<String>>,
+    format_sort: FormatSortOptions,
+}
+
+/// Upstream `-S`/`--format-sort`, `--format-sort-force` and
+/// `--prefer-free-formats`.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct FormatSortOptions {
+    pub fields: Vec<String>,
+    pub force: bool,
+    pub prefer_free: bool,
 }
 
 impl YoutubeDl {
@@ -120,6 +132,7 @@ impl YoutubeDl {
             client,
             ffmpeg: None,
             merge_output_format: None,
+            format_sort: FormatSortOptions::default(),
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -152,6 +165,47 @@ impl YoutubeDl {
     pub fn with_ffprobe(mut self, executable: impl Into<PathBuf>) -> Self {
         self.ffprobe = Some(executable.into());
         self
+    }
+
+    /// Sort formats like upstream with user fields and flags.
+    pub fn with_format_sort(mut self, options: FormatSortOptions) -> Self {
+        self.format_sort = options;
+        self
+    }
+
+    /// Upstream `process_video_result` format processing for every video of
+    /// an extracted or loaded result: common fields, thumbnails, per-format
+    /// fills, `FormatSorter` order (worst first) and format ID cleanup.
+    pub fn process_result(&self, result: &mut ExtractResult) -> Result<()> {
+        let entries = match result {
+            ExtractResult::Video(video) => std::slice::from_mut(video),
+            ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),
+        };
+        for entry in entries {
+            entry.metadata.fill_common_fields();
+            entry.metadata.sanitize_thumbnails();
+            info::fill_format_fields(&mut entry.formats);
+            let extractor: Vec<&str> = entry
+                .format_sort_fields
+                .iter()
+                .map(String::as_str)
+                .collect();
+            let sorter = format_sort::FormatSorter::new(
+                &self.format_sort.fields,
+                &extractor,
+                self.format_sort.force,
+                self.format_sort.prefer_free,
+            )
+            .map_err(|error| {
+                Error::FormatSelection(format!(
+                    "Invalid format sort string \"{}\" given by extractor",
+                    error.0
+                ))
+            })?;
+            info::sort_formats(&mut entry.formats, &sorter);
+            info::sanitize_format_ids(&mut entry.formats);
+        }
+        Ok(())
     }
 
     /// Upstream `--merge-output-format`: ordered containers that a merge may
@@ -342,18 +396,7 @@ impl YoutubeDl {
     fn extract_once(&self, url: &Url) -> Result<ExtractResult> {
         for extractor in &self.extractors {
             if let Some(mut info) = extractor.extract_result(&self.client, url)? {
-                // Upstream `process_video_result` fills common fields and
-                // sanitizes thumbnails per video.
-                let entries = match &mut info {
-                    ExtractResult::Video(video) => std::slice::from_mut(video),
-                    ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),
-                };
-                for entry in entries {
-                    entry.metadata.fill_common_fields();
-                    entry.metadata.sanitize_thumbnails();
-                    info::sanitize_format_ids(&mut entry.formats);
-                    info::fill_format_fields(&mut entry.formats);
-                }
+                self.process_result(&mut info)?;
                 return Ok(info);
             }
         }

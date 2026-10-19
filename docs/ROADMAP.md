@@ -75,7 +75,7 @@ remain outside the current result contract.
    elements, sequential entry downloads, and the option inventory are implemented.
    Bounded automatic resolution ranking and `best`/`worst` selection are implemented;
    Chained numeric/text format filters now constrain existing atoms, pairs and
-   fallbacks before native ranking. Parenthesized groups, best/worst shorthand
+   fallbacks before upstream FormatSorter ordering (`-S` supported). Parenthesized groups, best/worst shorthand
    aliases, bare-filter selectors and positive indexed ranks are implemented.
    Format listing and unselected extraction expose eligible alternatives before
    selection, including separate-only presentations without a merger.

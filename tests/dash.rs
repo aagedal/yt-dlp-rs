@@ -199,9 +199,20 @@ fn html_dash_formats_preserve_identity_group_namespace_and_referer() {
             .iter()
             .map(|format| format.format_id.as_str())
             .collect::<Vec<_>>(),
-        ["video-0", "audio-0", "video-1", "audio-1"]
+        // Pinned upstream sorts and selects these IDs for the same page.
+        ["audio-0", "audio-1", "video-0", "video-1"]
     );
-    assert_ne!(info.formats[0].audio_group, info.formats[2].audio_group);
+    assert_eq!(info.format_id.as_deref(), Some("video-1+audio-1"));
+    let group = |id: &str| {
+        info.formats
+            .iter()
+            .find(|format| format.format_id == id)
+            .unwrap()
+            .audio_group
+            .clone()
+    };
+    assert_ne!(group("video-0"), group("video-1"));
+    assert_eq!(group("video-0"), group("audio-0"));
     assert_eq!(
         info.requested_formats[0].audio_group,
         info.requested_formats[1].audio_group

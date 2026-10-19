@@ -122,6 +122,12 @@ pub(crate) fn with_format(mut info: VideoInfo, mime: &str) -> VideoInfo {
         dynamic_range: None,
         video_ext: None,
         audio_ext: None,
+        vbr: None,
+        source_preference: None,
+        quality: None,
+        fps: None,
+        asr: None,
+        audio_channels: None,
         format_id,
         stream_kind: info.stream_kind,
         audio_group: None,
@@ -175,6 +181,7 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
     let title = if stem.is_empty() { "video" } else { stem };
     Some(VideoInfo {
         protocol: None,
+        format_sort_fields: Vec::new(),
         vcodec: None,
         acodec: None,
         dynamic_range: None,

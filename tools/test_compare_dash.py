@@ -15,20 +15,20 @@ ORIGIN = "http://127.0.0.1:43210"
 
 class DashComparisonTests(unittest.TestCase):
     def setUp(self):
-        self.native = [{"format_id": "dash-0", "audio_group": "dash-period-0",
+        self.native = [{"format_id": "0", "audio_group": "dash-period-0",
                         "stream_kind": "video_only", "url": ORIGIN + "/manifest.mpd", "ext": "mp4", "tbr": 500.0,
                         "width": 640, "height": 360,
                         "fragments": [{"url": ORIGIN + "/base/init.mp4"},
                                       {"url": ORIGIN + "/base/segment.m4s?token=one"}]},
-                       {"format_id": "dash-1", "audio_group": "dash-period-0",
+                       {"format_id": "1", "audio_group": "dash-period-0",
                         "stream_kind": "audio_only", "url": ORIGIN + "/manifest.mpd", "ext": "m4a", "tbr": 128.0,
                         "abr": 128.0, "language": "en",
                         "fragments": [{"url": ORIGIN + "/base/audio.m4s"}]}]
-        self.upstream = [{"format_id": "video-representation", "vcodec": "avc1", "acodec": "none",
+        self.upstream = [{"format_id": "0", "vcodec": "avc1", "acodec": "none",
                           "ext": "mp4", "url": ORIGIN + "/manifest.mpd", "tbr": 500.0, "width": 640, "height": 360,
                           "fragment_base_url": ORIGIN + "/base/",
                           "fragments": [{"path": "init.mp4"}, {"path": "segment.m4s?token=one"}]},
-                         {"format_id": "audio-representation", "vcodec": "none", "acodec": "mp4a",
+                         {"format_id": "1", "vcodec": "none", "acodec": "mp4a",
                           "ext": "m4a", "url": ORIGIN + "/manifest.mpd", "tbr": 128.0, "language": "en",
                           "fragment_base_url": ORIGIN + "/base/",
                           "fragments": [{"url": ORIGIN + "/base/audio.m4s"}]}]
@@ -61,13 +61,13 @@ class DashComparisonTests(unittest.TestCase):
             with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, "DASH plan mismatch"):
                 compare(changed, self.upstream, ORIGIN)
 
-    def test_native_declaration_ids_order_and_period_groups_are_asserted(self):
+    def test_sorted_ids_order_and_period_groups_are_asserted(self):
         for field, value in (("format_id", "representation-0"), ("audio_group", "dash-period-1")):
             changed = copy.deepcopy(self.native)
             changed[0][field] = value
             with self.subTest(field=field), self.assertRaises(ValueError):
                 compare(changed, self.upstream, ORIGIN)
-        with self.assertRaisesRegex(ValueError, "declaration IDs/order"):
+        with self.assertRaisesRegex(ValueError, "DASH plan mismatch"):
             compare(self.native[::-1], self.upstream, ORIGIN)
         with self.assertRaisesRegex(ValueError, "DASH plan mismatch"):
             compare(self.native, self.upstream[::-1], ORIGIN)
@@ -84,7 +84,7 @@ class DashComparisonTests(unittest.TestCase):
             compare(native, self.upstream, ORIGIN, native_only_ranges=ranges)
         with self.assertRaisesRegex(ValueError, "format count"):
             compare(native, self.upstream, ORIGIN, native_only_ranges=[])
-        self.assertEqual(NATIVE_LIST_RANGES[1][-1], {"offset": 24, "length": 24})
+        self.assertEqual(NATIVE_LIST_RANGES[0][-1], {"offset": 24, "length": 24})
 
     def test_exact_origin_only_and_reference_kind_must_be_unambiguous(self):
         for url in ("http://127.0.0.1:432100/path", "https://127.0.0.1:43210/path", "https://example.invalid/path"):

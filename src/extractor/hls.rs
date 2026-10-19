@@ -118,6 +118,7 @@ pub(crate) fn from_response(
     let title = if stem.is_empty() { "video" } else { stem }.to_owned();
     let mut info = VideoInfo {
         protocol: None,
+        format_sort_fields: Vec::new(),
         vcodec: None,
         acodec: None,
         dynamic_range: None,
@@ -169,6 +170,12 @@ pub(crate) fn from_response(
                 dynamic_range: None,
                 video_ext: None,
                 audio_ext: None,
+                vbr: None,
+                source_preference: None,
+                quality: None,
+                fps: None,
+                asr: None,
+                audio_channels: None,
                 format_id: join(&[m3u8_id]),
                 stream_kind: StreamKind::Standalone,
                 audio_group: None,
@@ -195,6 +202,8 @@ pub(crate) fn from_response(
                 ));
             }
             let mut total_fragments = 0usize;
+            // Upstream `_audio_group_id` of video variants with CODECS.
+            let mut grouped_videos: Vec<(String, f64, u32)> = Vec::new();
             // Upstream lists renditions before variants (and counts them for
             // unnamed variants); playlists are still fetched variants first.
             let renditions = audio.len();
@@ -218,6 +227,15 @@ pub(crate) fn from_response(
                     None => (renditions + info.formats.len()).to_string(),
                 };
                 let name = variant.name.clone().unwrap_or(fallback);
+                if let (Some(codecs), Some(group)) = (&variant.codecs, &variant.audio_group)
+                    && codecs.vcodec != "none"
+                {
+                    grouped_videos.push((
+                        group.clone(),
+                        variant.bandwidth.unwrap_or(0.0),
+                        variant.width.unwrap_or(0),
+                    ));
+                }
                 let codecs = variant.codecs.unwrap_or_default();
                 let known = |codec: String| (!codec.is_empty()).then_some(codec);
                 info.formats.push(VideoFormat {
@@ -227,6 +245,12 @@ pub(crate) fn from_response(
                     dynamic_range: codecs.dynamic_range.map(str::to_owned),
                     video_ext: None,
                     audio_ext: None,
+                    vbr: None,
+                    source_preference: None,
+                    quality: None,
+                    fps: None,
+                    asr: None,
+                    audio_channels: None,
                     format_id: join(&[m3u8_id, Some(&name)]),
                     stream_kind: variant.stream_kind,
                     audio_group: variant.audio_group,
@@ -251,6 +275,7 @@ pub(crate) fn from_response(
                 });
             }
             let mut rendition_formats = Vec::new();
+            let alternates: Vec<bool> = audio.iter().map(|rendition| rendition.alternate).collect();
             for rendition in audio {
                 let response = direct::probe(client, &rendition.url, referer)?;
                 let (url, playlist) = read_playlist(response)?;
@@ -272,6 +297,12 @@ pub(crate) fn from_response(
                     dynamic_range: None,
                     video_ext: None,
                     audio_ext: None,
+                    vbr: None,
+                    source_preference: None,
+                    quality: None,
+                    fps: None,
+                    asr: None,
+                    audio_channels: None,
                     format_id: join(&[m3u8_id, Some(&rendition.group_id), Some(&rendition.name)]),
                     stream_kind: StreamKind::AudioOnly,
                     audio_group: Some(rendition.group_id),
@@ -288,6 +319,44 @@ pub(crate) fn from_response(
                     height: None,
                     fragments,
                 });
+            }
+            // Upstream: alternate renditions get source_preference -2; with
+            // several audio groups, the others are ranked by the quality of
+            // their videos and noted `low`/`high`.
+            grouped_videos.sort_by(|a, b| a.1.total_cmp(&b.1).then_with(|| a.2.cmp(&b.2)));
+            let mut groups: Vec<String> = Vec::new();
+            for (group, ..) in grouped_videos {
+                if !groups.contains(&group) {
+                    groups.push(group);
+                }
+            }
+            for (format, alternate) in rendition_formats.iter_mut().zip(&alternates) {
+                if *alternate {
+                    format.source_preference = Some(-2);
+                    continue;
+                }
+                let Some(group) = format.audio_group.as_deref().filter(|_| groups.len() > 1) else {
+                    continue;
+                };
+                format.source_preference = Some(
+                    groups
+                        .iter()
+                        .position(|candidate| candidate == group)
+                        .map_or(-1, |index| index as i64),
+                );
+                let note = if Some(group) == groups.first().map(String::as_str) {
+                    Some("low")
+                } else if Some(group) == groups.last().map(String::as_str) {
+                    Some("high")
+                } else {
+                    None
+                };
+                if let Some(note) = note {
+                    format.format_note = Some(match format.format_note.take() {
+                        Some(name) if !name.is_empty() => format!("{name}, {note}"),
+                        _ => note.to_owned(),
+                    });
+                }
             }
             info.formats.splice(0..0, rendition_formats);
             // Renditions precede variants; the top level mirrors a variant.

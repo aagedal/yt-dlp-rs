@@ -261,7 +261,9 @@
       "url": "{{ORIGIN}}/media.mp4?n=9nRTxrbM1f0yHg",
       "filesize": 5,
       "vcodec": "avc1.42001E",
-      "acodec": "mp4a.40.2"
+      "acodec": "mp4a.40.2",
+      "quality": 2.0,
+      "source_preference": -1
     }
   ]
 }

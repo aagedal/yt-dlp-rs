@@ -6,8 +6,10 @@ InfoExtractor._parse_mpd_formats_and_subtitles receives saved XML directly, with
 sockets and urlopen blocked. The native CLI may GET only the saved localhost MPD;
 segment, initialization, key and external requests fail the comparison.
 
-Normalization is an explicit allowlist: declaration-order index replaces native
-dash-N/upstream Representation@id (native raw IDs are independently checked);
+Normalization is an explicit allowlist: both sides are compared in upstream
+FormatSorter order (the reference is sorted by actual FormatSorter, as
+process_video_result does), and format IDs (Representation@id; generic passes
+no mpd_id for direct MPDs) must match at each position;
 fragment relative paths resolve against upstream fragment_base_url; only the exact
 ephemeral origin is replaced. Audio-only upstream tbr supplies normalized abr,
 since upstream does not expose a separate abr. Compared fields are stream kind,
@@ -35,9 +37,10 @@ import threading
 from urllib.parse import urljoin, urlsplit
 
 PINNED_UPSTREAM = "897341241f2bfb2439fe0367f4c7c9ccd29a3828"
+# plan-list.mpd in FormatSorter order: audio, then video.
 NATIVE_LIST_RANGES = [
-    [{"offset": 0, "length": 16}, {"offset": 16, "length": 16}, {"offset": 32, "length": 32}],
     [{"offset": 0, "length": 8}, {"offset": 8, "length": 16}, {"offset": 24, "length": 24}],
+    [{"offset": 0, "length": 16}, {"offset": 16, "length": 16}, {"offset": 32, "length": 32}],
 ]
 UPSTREAM_WORKER = r'''
 import json, socket, sys, xml.etree.ElementTree as ET
@@ -58,6 +61,8 @@ with YoutubeDL({'quiet': True, 'no_warnings': True, 'cachedir': False}) as ydl:
     formats, subtitles = ie._parse_mpd_formats_and_subtitles(
         ET.fromstring(sys.stdin.read()), mpd_base_url=url.rsplit('/', 1)[0] + '/', mpd_url=url)
     assert not subtitles, 'unexpected subtitle results'
+    from yt_dlp.utils import FormatSorter
+    formats.sort(key=FormatSorter(ydl, []).calculate_preference)
     print(json.dumps(formats))
 '''
 
@@ -81,15 +86,15 @@ def normalize_url(url, origin):
 
 def normalize(formats, origin, *, upstream=False):
     result = []
-    for index, source in enumerate(formats):
+    for source in formats:
         if upstream:
             video, audio = source.get("vcodec") != "none", source.get("acodec") != "none"
             if video == audio:
                 raise ValueError("reference must expose separate, codec-classified audio/video")
             kind = "video_only" if video else "audio_only"
+            format_id = source["format_id"]
         else:
-            if source["format_id"] != f"dash-{index}":
-                raise ValueError("native DASH declaration IDs/order changed")
+            format_id = source["format_id"]
             if source.get("audio_group") != "dash-period-0":
                 raise ValueError("native DASH period grouping changed")
             kind = source["stream_kind"]
@@ -101,7 +106,7 @@ def normalize(formats, origin, *, upstream=False):
                 location = urljoin(source["fragment_base_url"], location)
             fragments.append({"url": normalize_url(location, origin),
                               "byte_range": fragment.get("byte_range") or None})
-        result.append({"declaration_index": index, "stream_kind": kind,
+        result.append({"format_id": format_id, "stream_kind": kind,
                        "url": normalize_url(source["url"], origin),
                        "ext": source["ext"], "width": source.get("width"),
                        "height": source.get("height"), "tbr": source.get("tbr"),

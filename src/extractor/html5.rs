@@ -103,6 +103,11 @@ struct Html5Source {
     /// `parse_content_type` codecs of a `<source>` (the media element's own
     /// `src` keeps only its type's extension upstream).
     codecs: Option<crate::codecs::Codecs>,
+    /// A `<source>`'s `label` or `title`; otherwise the ID is the format's
+    /// index after sorting.
+    label: Option<String>,
+    /// `parse_bitrate` of the labels.
+    tbr: Option<f64>,
 }
 
 /// Upstream `parse_content_type`'s `codecs` group:
@@ -117,12 +122,87 @@ fn content_type_codecs(content_type: &str) -> Option<&str> {
         .map(|codecs| codecs.as_str())
 }
 
+/// Upstream `int_or_none` (Python `int()`: surrounding whitespace, a sign and
+/// single underscores between digits); values outside `u32` stay unknown.
 fn dimension(value: Option<&str>) -> Option<u32> {
     let value = value?.trim();
-    if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+    let digits = value.strip_prefix('+').unwrap_or(value);
+    if digits.starts_with('-') {
+        // Negative values are valid upstream but not representable here.
         return None;
     }
-    value.parse().ok().filter(|&value| value > 0)
+    let valid = !digits.is_empty()
+        && !digits.starts_with('_')
+        && !digits.ends_with('_')
+        && !digits.contains("__")
+        && digits
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || byte == b'_');
+    if !valid {
+        return None;
+    }
+    digits.replace('_', "").parse().ok()
+}
+
+/// Upstream `parse_resolution` (non-lenient): `W x H`, `NNNp`/`i`, or `4k`/`8k`.
+fn parse_resolution(text: &str) -> (Option<u32>, Option<u32>) {
+    static SIZE: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"(?:^|[^a-zA-Z0-9])(\d+)\s*[xX×,]\s*(\d+)(?:$|[^a-zA-Z0-9])").unwrap()
+    });
+    static HEIGHT: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"(?:^|[^a-zA-Z0-9])(\d+)[pPiI](?:\d{2,3})?(?:$|[^a-zA-Z0-9])").unwrap()
+    });
+    static K: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"\b([48])[kK](?:\d{2,3})?\b").unwrap());
+    if let Some(found) = SIZE.captures(text) {
+        return (found[1].parse().ok(), found[2].parse().ok());
+    }
+    if let Some(found) = HEIGHT.captures(text) {
+        return (None, found[1].parse().ok());
+    }
+    if let Some(found) = K.captures(text) {
+        return (None, found[1].parse::<u32>().ok().map(|k| k * 540));
+    }
+    (None, None)
+}
+
+/// Upstream `parse_bitrate`: `NNN kbps`.
+fn parse_bitrate(text: &str) -> Option<f64> {
+    static PATTERN: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"\b(\d+)\s*kbps").unwrap());
+    PATTERN.captures(text)?[1].parse().ok()
+}
+
+/// Upstream `<source>` width/height/res with `label`/`title` resolution and
+/// bitrate fallbacks.
+fn source_metadata(source: &scraper::node::Element) -> (Option<u32>, Option<u32>, Option<f64>) {
+    let labels: Vec<&str> = ["label", "title"]
+        .into_iter()
+        .filter_map(|name| source.attr(name))
+        .filter(|label| !label.is_empty())
+        .collect();
+    let mut width = dimension(source.attr("width"));
+    // `int_or_none(height) or int_or_none(res)`: zero counts as missing.
+    let mut height = dimension(source.attr("height"))
+        .filter(|height| *height != 0)
+        .or_else(|| dimension(source.attr("res")));
+    let missing = |value: Option<u32>| value.is_none_or(|value| value == 0);
+    if missing(width) || missing(height) {
+        for label in &labels {
+            let (label_width, label_height) = parse_resolution(label);
+            if label_width.is_none() && label_height.is_none() {
+                continue;
+            }
+            if missing(width) {
+                width = label_width.or(width);
+            }
+            if missing(height) {
+                height = label_height.or(height);
+            }
+        }
+    }
+    let tbr = labels.iter().find_map(|label| parse_bitrate(label));
+    (width, height, tbr)
 }
 
 fn unsupported(reason: &str) -> Error {
@@ -171,19 +251,35 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
         let vcodec = (element.value().name() == "audio").then(|| "none".to_owned());
         if let Some(src) = nonempty(element.value().attr("src")) {
             // Media element dimensions describe the player, not its source.
-            sources.push((src, element.value().attr("type"), None, None, false));
+            sources.push((
+                src,
+                element.value().attr("type"),
+                None,
+                None,
+                None,
+                false,
+                None,
+            ));
         }
         for child in element.children().filter_map(scraper::ElementRef::wrap) {
             if child.value().name() == "source"
                 && let Some(src) = nonempty(child.value().attr("src"))
             {
+                let (width, height, tbr) = source_metadata(child.value());
                 sources.push((
                     src,
                     child.value().attr("type"),
-                    dimension(child.value().attr("width")),
-                    dimension(child.value().attr("height"))
-                        .or_else(|| dimension(child.value().attr("res"))),
+                    width,
+                    height,
+                    tbr,
                     true,
+                    // `s_attr.get('label') or s_attr.get('title')`.
+                    child
+                        .value()
+                        .attr("label")
+                        .filter(|label| !label.is_empty())
+                        .or_else(|| child.value().attr("title").filter(|t| !t.is_empty()))
+                        .map(str::to_owned),
                 ));
             }
         }
@@ -191,7 +287,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
             continue;
         }
         let mut urls = Vec::new();
-        for (source, content_type, width, height, child) in sources {
+        for (source, content_type, width, height, tbr, child, label) in sources {
             let url = base.join(source)?;
             if !matches!(url.scheme(), "http" | "https") {
                 return Err(Error::UnsupportedScheme(url.scheme().into()));
@@ -207,6 +303,8 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                 height,
                 vcodec: vcodec.clone(),
                 codecs,
+                label,
+                tbr,
                 hls_hint: hint.contains("mpegurl"),
                 dash_hint: hint.contains("dash+xml"),
             });
@@ -504,7 +602,13 @@ impl Extractor for GenericHttp {
                         .map(str::to_owned),
                     video_ext: None,
                     audio_ext: None,
-                    format_id: index.to_string(),
+                    vbr: None,
+                    source_preference: None,
+                    quality: None,
+                    fps: None,
+                    asr: None,
+                    audio_channels: None,
+                    format_id: source.label.clone().unwrap_or_default(),
                     stream_kind: info.stream_kind,
                     audio_group: None,
                     language: None,
@@ -512,7 +616,7 @@ impl Extractor for GenericHttp {
                     audio_default: false,
                     audio_autoselect: false,
                     abr: None,
-                    tbr: None,
+                    tbr: source.tbr,
                     url: info.url.clone(),
                     ext: info.ext.clone(),
                     filesize: info.filesize,

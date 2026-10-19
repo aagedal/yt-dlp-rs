@@ -247,7 +247,8 @@ fn html_sources_flatten_master_formats_and_preserve_page_identity_and_referer() 
             .iter()
             .map(|format| format.format_id.as_str())
             .collect::<Vec<_>>(),
-        ["hls-400", "hls-1000", "1"]
+        // Pinned upstream: the unlabeled MP4 source sorts first, numbered `0`.
+        ["0", "hls-400", "hls-1000"]
     );
     assert_eq!(info.fragments.len(), 2);
     for request in server.requests.lock().unwrap().iter().skip(1) {

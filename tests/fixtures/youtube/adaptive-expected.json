@@ -264,7 +264,9 @@
       "tbr": 400.0,
       "abr": null,
       "vcodec": "avc1.42001E",
-      "acodec": "mp4a.40.2"
+      "acodec": "mp4a.40.2",
+      "quality": 2.0,
+      "source_preference": -1
     },
     {
       "format_id": "137",
@@ -277,7 +279,9 @@
       "tbr": 2000.0,
       "abr": null,
       "vcodec": "avc1.640028",
-      "acodec": "none"
+      "acodec": "none",
+      "quality": -1.0,
+      "source_preference": -1
     },
     {
       "format_id": "139",
@@ -290,7 +294,9 @@
       "tbr": 48.0,
       "abr": 48.0,
       "vcodec": "none",
-      "acodec": "mp4a.40.5"
+      "acodec": "mp4a.40.5",
+      "quality": 2.0,
+      "source_preference": -1
     },
     {
       "format_id": "140",
@@ -303,7 +309,9 @@
       "tbr": 128.0,
       "abr": 128.0,
       "vcodec": "none",
-      "acodec": "mp4a.40.2"
+      "acodec": "mp4a.40.2",
+      "quality": 3.0,
+      "source_preference": -1
     },
     {
       "format_id": "248",
@@ -316,7 +324,9 @@
       "tbr": 1000.0,
       "abr": null,
       "vcodec": "vp9",
-      "acodec": "none"
+      "acodec": "none",
+      "quality": -1.0,
+      "source_preference": -1
     },
     {
       "format_id": "251",
@@ -329,7 +339,9 @@
       "tbr": 96.0,
       "abr": 96.0,
       "vcodec": "none",
-      "acodec": "opus"
+      "acodec": "opus",
+      "quality": 3.0,
+      "source_preference": -1
     }
   ]
 }

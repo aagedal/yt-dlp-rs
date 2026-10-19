@@ -99,7 +99,9 @@ Supported today:
   as are bare filters such as `[height<=720]` (implicit `best`). For example,
   `(bv[height<=720]+ba)/b` preserves the fallback around the complete pair.
   Positive rank suffixes such as `bv.2`, `ba.2` and `worst.2` choose the Nth
-  candidate after filters and native ranking; out-of-range ranks allow fallback.
+  candidate after filters in upstream `FormatSorter` order; out-of-range ranks allow
+  fallback. `-S`/`--format-sort`, `--format-sort-force` and `--prefer-free-formats`
+  reorder formats like upstream.
 - `-F/--list-formats` lists all eligible formats without choosing a source or
   downloading media, including separate-only presentations without FFmpeg.
   Tables show IDs, containers, dimensions, stream kind, size, bitrate and language.

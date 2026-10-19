@@ -625,6 +625,38 @@ video's `vcodec`/`dynamic_range` and the audio's `acodec`. Upstream's explicit
 stricter HLS/DASH/YouTube codec allow-lists are unchanged by these fields;
 `tools/compare_youtube.py` now also compares non-null codec fields.
 
+## Format sorting
+
+Every extracted or loaded video's formats are sorted like upstream
+`process_video_result`: per-format fills (`protocol`, `video_ext`/`audio_ext`,
+`acodec` from audio extensions, `dynamic_range` `SDR`, and `_fill_sorting_fields`
+`vbr`/`abr`/`tbr`, with `0` for a missing stream), then a port of `FormatSorter`
+(`src/format_sort.rs`) orders them worst first, and only then do formats without
+an ID get their index (HTML5 `<source>` IDs come from `label`/`title`, otherwise
+the sorted index). The sorter implements the default field order, field settings
+(ordered regex lists, extractor/boolean/multiple/combined fields, aliases),
+`-S` limits/`~` closest/`+` reverse, `--format-sort-force` and
+`--prefer-free-formats` orders; 178 saved cases are checked against actual pinned
+upstream with `tools/compare_format_sort.py`. YouTube results carry upstream's
+`_format_sort_fields` and per-format `quality` (`qualities` over
+`quality`/`audioQuality`, DRC −0.5), `source_preference` (−5 for itag 22, +100 for
+Premium), `fps`, `asr` and `audio_channels` (included in `tools/compare_youtube.py`).
+HTML5 sources parse `width`/`height`/`res` like Python `int()`, fall back to
+`parse_resolution` of `label`/`title`, and take `tbr` from `parse_bitrate`.
+Remaining sort-input differences: unrepresentable negative or larger-than-`u32`
+dimensions are unknown natively (upstream keeps them); native probes add `filesize`
+from Content-Length to direct and HTML5 formats, which upstream does not know at
+extraction time and which can change `size`-based order; DASH `fps`/`asr`, HLS
+`FRAME-RATE` and upstream `filesize_approx`, `preference`, `language_preference`
+are not yet represented.
+
+| Option | Behavior |
+| --- | --- |
+| `-S`, `--format-sort SORTORDER` | Comma-separated fields; later values are prepended (upstream `append=-1`); validated with `FormatSorter.regex` (`invalid format sorting "X" given`) |
+| `--format-sort-reset` | Discards `-S` values given before it |
+| `--format-sort-force`, `--S-force`, `--no-format-sort-force` | User fields precede the priority fields (`hasvid`, `ie_pref`); last flag wins |
+| `--prefer-free-formats`, `--no-prefer-free-formats` | Free-container `vext`/`aext` orders; last flag wins |
+
 ## Direct adaptive selection and merging
 
 `StreamKind` adds `standalone` (the default, omitted from JSON), `video_only`,
@@ -636,12 +668,15 @@ that token policy.
 
 `best`/`worst` choose standalone sources; an audio-only fallback is allowed only
 when neither standalone nor video-only sources exist. `bestvideo`/`worstvideo`
-choose video-only sources by resolution then total bitrate; `bestaudio`/`worstaudio`
-choose audio-only sources by audio then total bitrate. Unknown values rank lowest.
-Standalone ranking retains resolution-only policy. Best ties choose the last
-candidate, worst ties the first. Literal IDs also select isolated streams.
+choose video-only and `bestaudio`/`worstaudio` audio-only sources. Every selector
+takes candidates in the sorted `formats` order described under
+[Format sorting](#format-sorting): `best` is the last match and `worst` the first.
+Literal IDs also select isolated streams.
 
-A `+` expression requires exactly one video-only and one audio-only source.
+A `+` expression combines the first result of each side like upstream `_merge`
+(a second stream repeating the first's video or audio is dropped), and so needs
+one video-only and one audio-only source; it does not match rendition groups or
+check container support, which is validated when the merge is downloaded.
 `/` tries alternatives in order, for example `bestvideo+bestaudio/best`.
 Every branch must have valid bounded syntax. Selection errors leave metadata
 unchanged, including across playlists. Without an explicit selector, configuring
@@ -847,15 +882,14 @@ read with the existing aggregate 10000-fragment cap. JSON/simulation fetch neith
 segments nor encryption keys. Audio-only fMP4 is labeled M4A; raw AAC and TS retain
 their containers.
 
-Automatic pair selectors choose a complete compatible pair in video rank order,
-then rank audio within that video's group. Both absent groups also match.
-Expression order is preserved in the plan even for `bestaudio+bestvideo`.
-One literal ID constrains the other generic selector to its group. Two literal
-IDs explicitly override group matching, for example `-f 1000+aud-English`.
-Best audio ranks DEFAULT, then AUTOSELECT, then declared audio/total bitrate;
-worst reverses that ordering. Declaration ties retain existing rules. There is
-no full upstream preference/sorting parity. Explicit language predicates are
-available through the shared format-filter grammar.
+Like upstream, rendition groups do not constrain pairs: `bestvideo+bestaudio`
+takes the best video and the best audio in sorted order. Renditions with
+`DEFAULT=NO` or `AUTOSELECT=NO` get `source_preference` -2; with several audio
+groups, the others get their group's index among the groups ordered by their
+videos' bandwidth and width, and the lowest/highest groups append `low`/`high`
+to `format_note`. Expression order is preserved in the plan even for
+`bestaudio+bestvideo`. Explicit language predicates are available through the
+shared format-filter grammar. `audio_group` remains a native informational field.
 
 HTML5 audio groups receive a source index prefix, so equal group names from
 independent source masters cannot pair automatically.
@@ -980,10 +1014,10 @@ IDs (upstream names YouTube HLS formats by itag; not yet ported) and
 `youtube-hls:` audio group namespaces. Direct numeric itags are unchanged.
 A media-only playlist forms `hls-0`; master formats retain dimensions, bandwidth,
 language and rendition metadata from the existing native HLS parser. Selection
-uses native ranking and pair rules, with explicit FFmpeg configuration for merging.
+uses the shared format sorting (with YouTube's `_format_sort_fields`) and pair rules.
 Representative fragments are retained even before library selection. Container
 extensions follow native TS/AAC/fMP4 assembly rather than upstream's default MP4
-remux label. No upstream format-ID or sorter parity is implied.
+remux label. No upstream format-ID parity is implied for YouTube HLS.
 
 Only eligible direct formats are probed as media. HLS acquisition reads the master
 and its media playlists; extraction/JSON/simulation never fetch initialization,
@@ -1113,8 +1147,8 @@ See [the source slice](../upstream/notes/selector-groups.md).
 
 Best/worst selectors and their aliases accept a positive one-based `.N` suffix:
 `best.2`, `worst.2`, `bv.2`, `ba.2` and their long forms. Apply atom and enclosing
-group predicates first, choose the represented stream kind, apply native ranking
-and then select Nth from that order. Existing declaration ties still apply.
+group predicates first, choose the represented stream kind, then select the Nth
+candidate in sorted order (from the end for `best`).
 
 ```sh
 -f 'bv.2[height<=1080]+ba.2/b'
@@ -1791,7 +1825,7 @@ successful native download or merge. Targets are `best` (default), `mp3`, `aac`,
 `m4a`, `opus`, `vorbis`, `flac`, `alac` and `wav`. Ordered slash-separated
 `SOURCE>TARGET/TARGET` rules match the source metadata extension; an unmatched
 rule skips processing. CLI target names are lowercase. Without `-f` or `-k`,
-`-x` selects `bestaudio/best` using existing native ranking. With `-k` it retains
+`-x` selects `bestaudio/best` in sorted format order. With `-k` it retains
 the normal default selection, potentially downloading/merging video first.
 
 `--audio-quality` defaults to 5. Finite 0..10 values use the source MP3, Vorbis

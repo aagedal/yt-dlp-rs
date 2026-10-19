@@ -53,7 +53,9 @@ def sorted_thumbnails(thumbnails):
     return [{field: t.get(field) for field in THUMBNAIL_FIELDS} for t in ordered]
 FORMAT_FIELDS = ("format_id", "ext", "width", "height", "url", "filesize")
 # parse_codecs fields, compared when upstream sets a non-null value.
-CODEC_FIELDS = ("vcodec", "acodec", "dynamic_range")
+CODEC_FIELDS = ("vcodec", "acodec", "dynamic_range",
+                # FormatSorter inputs set by the extractor.
+                "quality", "source_preference", "fps", "asr", "audio_channels")
 FIXTURE_CASES = (
     ("progressive.html", "expected.json", "watch-page"),
     ("player-api.json", "player-api-expected.json", "player-api"),

@@ -140,6 +140,22 @@ pub struct VideoFormat {
     pub video_ext: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub audio_ext: Option<String>,
+    /// Video bitrate, filled like `_fill_sorting_fields` (`0` without video).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vbr: Option<f64>,
+    /// Upstream `source_preference` (HLS audio renditions, YouTube).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_preference: Option<i64>,
+    /// Extractor `quality` rank (YouTube `qualities`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub quality: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fps: Option<f64>,
+    /// Audio sample rate.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub asr: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub audio_channels: Option<u32>,
     pub format_id: String,
     #[serde(default, skip_serializing_if = "StreamKind::is_standalone")]
     pub stream_kind: StreamKind,
@@ -344,6 +360,13 @@ pub struct VideoInfo {
     pub direct: bool,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub formats: Vec<VideoFormat>,
+    /// Extractor sort order (`_format_sort_fields`), before the defaults.
+    #[serde(
+        default,
+        rename = "_format_sort_fields",
+        skip_serializing_if = "Vec::is_empty"
+    )]
+    pub format_sort_fields: Vec<String>,
     #[serde(default, skip_serializing_if = "StreamKind::is_standalone")]
     pub stream_kind: StreamKind,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -597,35 +620,14 @@ impl VideoInfo {
         };
         let first_formats = separate(singles(first));
         let second_formats = separate(singles(second));
-        let reversed = match (
-            first_formats.first()?.0.stream_kind,
-            second_formats.first()?.0.stream_kind,
-        ) {
-            (StreamKind::VideoOnly, StreamKind::AudioOnly) => false,
-            (StreamKind::AudioOnly, StreamKind::VideoOnly) => true,
-            _ => return None,
-        };
-        let (videos, audios) = if reversed {
-            (&second_formats, &first_formats)
-        } else {
-            (&first_formats, &second_formats)
-        };
-        // A video's rendition group determines its compatible audio. Evaluate
-        // videos first even when the expression puts the audio atom first.
-        for &(video, video_literal) in videos {
-            for &(audio, audio_literal) in audios {
-                if (video_literal && audio_literal || video.audio_group == audio.audio_group)
-                    && mergeable(video, audio)
-                {
-                    return Some(if reversed {
-                        (audio, video)
-                    } else {
-                        (video, audio)
-                    });
-                }
-            }
+        // Upstream `_merge` combines the two selectors' first results; only
+        // a video-only and an audio-only stream remain after deduplication.
+        let (first, second) = (first_formats.first()?.0, second_formats.first()?.0);
+        match (first.stream_kind, second.stream_kind) {
+            (StreamKind::VideoOnly, StreamKind::AudioOnly)
+            | (StreamKind::AudioOnly, StreamKind::VideoOnly) => Some((first, second)),
+            _ => None,
         }
-        None
     }
 
     fn ranked_atom<'a>(&self, atom: &Atom, context: &[&'a VideoFormat]) -> Vec<&'a VideoFormat> {
@@ -703,34 +705,8 @@ impl VideoInfo {
             "audio*" => candidates.into_iter().filter(|f| has_audio(f)).collect(),
             _ => candidates,
         };
-        let kinds: std::collections::BTreeSet<_> =
-            selected.iter().map(|f| f.stream_kind as u8).collect();
-        let compare = |a: &&VideoFormat, b: &&VideoFormat| {
-            if kinds.len() > 1 {
-                // Mixed kinds: video before audio-only, then resolution,
-                // complete streams and bitrate (native ranking).
-                return has_video(a)
-                    .cmp(&has_video(b))
-                    .then_with(|| resolution(a).cmp(&resolution(b)))
-                    .then_with(|| has_audio(a).cmp(&has_audio(b)))
-                    .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr)))
-                    .then_with(|| bitrate(a.abr).total_cmp(&bitrate(b.abr)));
-            }
-            match a.stream_kind {
-                Standalone => resolution(a).cmp(&resolution(b)),
-                VideoOnly => resolution(a)
-                    .cmp(&resolution(b))
-                    .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr))),
-                AudioOnly => a
-                    .audio_default
-                    .cmp(&b.audio_default)
-                    .then_with(|| a.audio_autoselect.cmp(&b.audio_autoselect))
-                    .then_with(|| bitrate(a.abr).total_cmp(&bitrate(b.abr)))
-                    .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr))),
-            }
-        };
+        // Formats are in upstream `FormatSorter` order, worst first.
         let mut formats = selected;
-        formats.sort_by(compare);
         if !worst {
             formats.reverse();
         }
@@ -802,7 +778,88 @@ pub(crate) fn fill_format_fields(formats: &mut [VideoFormat]) {
         if format.dynamic_range.is_none() && format.vcodec.as_deref() != Some("none") {
             format.dynamic_range = Some("SDR".into());
         }
+        // `_fill_sorting_fields` missing bitrates (`0` marks a missing stream;
+        // differences need both operands and non-zero results).
+        let no_video = format.vcodec.as_deref() == Some("none");
+        let no_audio = format.acodec.as_deref() == Some("none");
+        if no_video {
+            format.vbr = Some(0.0);
+        }
+        if no_audio {
+            format.abr = Some(0.0);
+        }
+        let truthy = |value: Option<f64>| value.filter(|value| *value != 0.0);
+        if truthy(format.vbr).is_none() && !no_video {
+            format.vbr = format
+                .tbr
+                .zip(format.abr)
+                .map(|(t, a)| t - a)
+                .filter(|v| *v != 0.0);
+        }
+        if truthy(format.abr).is_none() && !no_audio {
+            format.abr = format
+                .tbr
+                .zip(format.vbr)
+                .map(|(t, v)| t - v)
+                .filter(|v| *v != 0.0);
+        }
+        if truthy(format.tbr).is_none() {
+            format.tbr = format
+                .vbr
+                .zip(format.abr)
+                .map(|(v, a)| v + a)
+                .filter(|v| *v != 0.0);
+        }
     }
+}
+
+/// The fields `FormatSorter` reads from a filled format.
+fn sort_fields(format: &VideoFormat) -> crate::format_sort::Fields {
+    use crate::format_sort::Value;
+    let mut fields = crate::format_sort::Fields::new();
+    let mut text = |key: &str, value: Option<&str>| {
+        if let Some(value) = value {
+            fields.insert(key.to_owned(), Value::Str(value.to_owned()));
+        }
+    };
+    text(
+        "format_id",
+        Some(&format.format_id)
+            .filter(|id| !id.is_empty())
+            .map(String::as_str),
+    );
+    text("ext", Some(&format.ext));
+    text("protocol", format.protocol.as_deref());
+    text("vcodec", format.vcodec.as_deref());
+    text("acodec", format.acodec.as_deref());
+    text("dynamic_range", format.dynamic_range.as_deref());
+    text("video_ext", format.video_ext.as_deref());
+    text("audio_ext", format.audio_ext.as_deref());
+    let mut number = |key: &str, value: Option<f64>| {
+        if let Some(value) = value {
+            fields.insert(key.to_owned(), Value::Num(value));
+        }
+    };
+    number("width", format.width.map(f64::from));
+    number("height", format.height.map(f64::from));
+    number("tbr", format.tbr);
+    number("vbr", format.vbr);
+    number("abr", format.abr);
+    number("filesize", format.filesize.map(|size| size as f64));
+    number(
+        "source_preference",
+        format.source_preference.map(|p| p as f64),
+    );
+    number("quality", format.quality);
+    number("fps", format.fps);
+    number("asr", format.asr.map(f64::from));
+    number("audio_channels", format.audio_channels.map(f64::from));
+    fields
+}
+
+/// Upstream `sort_formats`: ascending (worst first) `FormatSorter` order.
+pub(crate) fn sort_formats(formats: &mut [VideoFormat], sorter: &crate::format_sort::FormatSorter) {
+    sorter.clone().sort(formats, sort_fields);
 }
 
 pub(crate) fn sanitize_format_ids(formats: &mut [VideoFormat]) {
@@ -872,17 +929,6 @@ pub(crate) fn merge_container(
     )
 }
 
-fn resolution(format: &VideoFormat) -> Option<u32> {
-    match (format.width, format.height) {
-        (Some(width), Some(height)) => Some(width.min(height)),
-        (width, height) => width.or(height),
-    }
-}
-
-fn bitrate(value: Option<f64>) -> f64 {
-    value.filter(|v| v.is_finite() && *v >= 0.0).unwrap_or(-1.0)
-}
-
 fn selection_error(message: impl Into<String>) -> crate::Error {
     crate::Error::FormatSelection(message.into())
 }
@@ -907,6 +953,12 @@ mod tests {
             dynamic_range: None,
             video_ext: None,
             audio_ext: None,
+            vbr: None,
+            source_preference: None,
+            quality: None,
+            fps: None,
+            asr: None,
+            audio_channels: None,
             audio_group: None,
             language: None,
             format_note: None,
@@ -928,6 +980,7 @@ mod tests {
     fn info(formats: Vec<VideoFormat>) -> VideoInfo {
         VideoInfo {
             protocol: None,
+            format_sort_fields: Vec::new(),
             vcodec: None,
             acodec: None,
             dynamic_range: None,
@@ -1270,19 +1323,10 @@ mod tests {
         format
     }
 
+    /// Two HLS rendition groups, already in sorted (worst-first) order as
+    /// `process_result` leaves them.
     fn grouped_info() -> VideoInfo {
         info(vec![
-            grouped(
-                source(
-                    "v-a",
-                    StreamKind::VideoOnly,
-                    "ts",
-                    Some(1080),
-                    None,
-                    Some(2000.0),
-                ),
-                "a",
-            ),
             grouped(
                 source(
                     "v-b",
@@ -1293,6 +1337,17 @@ mod tests {
                     Some(1000.0),
                 ),
                 "b",
+            ),
+            grouped(
+                source(
+                    "v-a",
+                    StreamKind::VideoOnly,
+                    "ts",
+                    Some(1080),
+                    None,
+                    Some(2000.0),
+                ),
+                "a",
             ),
             grouped(
                 source("a-a", StreamKind::AudioOnly, "aac", None, Some(64.0), None),
@@ -1306,60 +1361,43 @@ mod tests {
     }
 
     #[test]
-    fn automatic_pairs_rank_video_before_audio_in_both_expression_orders() {
+    fn pairs_combine_first_results_in_expression_order_across_rendition_groups() {
+        // Upstream `_merge` pairs each side's first result; rendition groups
+        // do not constrain selection (checked with pinned upstream
+        // `build_format_selector` on the same worst-first list).
         let mut video = grouped_info();
         video.select_format(Some("bestvideo+bestaudio")).unwrap();
-        assert_eq!(video.format_id.as_deref(), Some("v-a+a-a"));
+        assert_eq!(video.format_id.as_deref(), Some("v-a+a-b"));
         // Upstream's compatible extension sets do not include `aac`.
         assert_eq!(video.ext, "mkv");
         video.select_format(Some("bestaudio+bestvideo")).unwrap();
-        assert_eq!(video.format_id.as_deref(), Some("a-a+v-a"));
+        assert_eq!(video.format_id.as_deref(), Some("a-b+v-a"));
         assert_eq!(video.url, video.requested_formats[0].url);
-        video.formats.retain(|format| format.format_id != "a-a");
+        video.formats.retain(|format| format.format_id != "a-b");
         video.select_format_with_merge(None, true, None).unwrap();
-        assert_eq!(video.format_id.as_deref(), Some("v-b+a-b"));
+        assert_eq!(video.format_id.as_deref(), Some("v-a+a-a"));
     }
 
     #[test]
-    fn one_literal_requires_compatible_group_two_literals_can_override() {
+    fn literal_ids_pair_with_selectors_and_failed_pairs_fall_back_atomically() {
         let mut video = grouped_info();
         for (expression, expected) in [
             ("v-b+bestaudio", "v-b+a-b"),
             ("bestaudio+v-b", "a-b+v-b"),
-            ("a-b+bestvideo", "a-b+v-b"),
-            ("bestvideo+a-b", "v-b+a-b"),
+            ("a-a+bestvideo", "a-a+v-a"),
+            ("bestvideo+a-a", "v-a+a-a"),
             ("v-a+a-b", "v-a+a-b"),
         ] {
             video.select_format(Some(expression)).unwrap();
-            assert_eq!(video.format_id.as_deref(), Some(expected));
+            assert_eq!(video.format_id.as_deref(), Some(expected), "{expression}");
         }
-        video.formats.retain(|format| format.format_id != "a-a");
         let before = snapshot(&video);
-        assert!(video.select_format(Some("v-a+bestaudio")).is_err());
+        assert!(video.select_format(Some("v-a+missing")).is_err());
         assert_eq!(snapshot(&video), before);
         video
-            .select_format(Some("v-a+bestaudio/v-b+bestaudio"))
+            .select_format(Some("v-a+missing/v-b+bestaudio"))
             .unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v-b+a-b"));
-    }
-
-    #[test]
-    fn missing_group_never_matches_a_named_group_automatically() {
-        let mut video = grouped_info();
-        video.formats.retain(|format| format.format_id != "a-a");
-        video.formats.push(source(
-            "ungrouped",
-            StreamKind::AudioOnly,
-            "aac",
-            None,
-            Some(256.0),
-            None,
-        ));
-        video.select_format(Some("bestvideo+bestaudio")).unwrap();
-        assert_eq!(video.format_id.as_deref(), Some("v-b+a-b"));
-        video.formats[0].audio_group = None;
-        video.select_format(Some("bestvideo+bestaudio")).unwrap();
-        assert_eq!(video.format_id.as_deref(), Some("v-a+ungrouped"));
     }
 
     #[test]
@@ -1550,24 +1588,20 @@ mod tests {
     }
 
     #[test]
-    fn grouped_fallbacks_keep_boundaries_and_literal_group_override() {
+    fn grouped_fallbacks_keep_boundaries_inside_pairs() {
         let mut video = adaptive();
-        for format in &mut video.formats {
-            format.audio_group = Some(
-                if format.stream_kind == StreamKind::VideoOnly {
-                    "video"
-                } else {
-                    "audio"
-                }
-                .into(),
-            );
-        }
         video.select_format(Some("(v1/bv)+a1")).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v1+a1"));
+        video.select_format(Some("(bv/v1)+a1")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v2+a1"));
+        video.select_format(Some("(missing/v1)+a1")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v1+a1"));
         let before = snapshot(&video);
-        assert!(video.select_format(Some("(bv/v1)+a1")).is_err());
+        assert!(video.select_format(Some("(bv/v1)+missing")).is_err());
         assert_eq!(snapshot(&video), before);
-        video.select_format(Some("((bv/v1)+a1)/(v1+a1)")).unwrap();
+        video
+            .select_format(Some("((bv/v1)+missing)/(v1+a1)"))
+            .unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v1+a1"));
     }
 
@@ -1682,18 +1716,16 @@ mod tests {
     }
 
     #[test]
-    fn explicit_index_pins_candidate_before_native_pair_compatibility() {
+    fn explicit_indexes_pin_pair_candidates_and_fall_back_atomically() {
         let mut video = adaptive();
-        video.formats[0].audio_group = Some("one".into());
-        video.formats[1].audio_group = Some("two".into());
-        video.formats[2].audio_group = Some("one".into());
-        video.formats[3].audio_group = Some("one".into());
-        video.select_format(Some("bv+ba")).unwrap();
+        video.select_format(Some("bv.1+ba")).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v2+a2"));
+        video.select_format(Some("bv.2+ba")).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v1+a2"));
         let before = snapshot(&video);
-        assert!(video.select_format(Some("bv.1+ba")).is_err());
+        assert!(video.select_format(Some("bv.3+ba")).is_err());
         assert_eq!(snapshot(&video), before);
-        video.select_format(Some("(bv.1+ba)/(bv.2+ba.2)")).unwrap();
+        video.select_format(Some("(bv.3+ba)/(bv.2+ba.2)")).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v1+a1"));
     }
 

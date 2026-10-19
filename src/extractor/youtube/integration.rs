@@ -729,9 +729,12 @@ fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
             extract_watch_page(client, url, ID).map(Some)
         }
     }
+    // Checked with pinned upstream (actual YoutubeIE on this fixture, then
+    // process_ie_result): itag 18 ranks highest by `quality`, so the merge
+    // default `bv*+ba` also resolves to 18.
     for (enable_merge, selector, selected) in [
         (false, None, "18"),
-        (true, None, "137+140"),
+        (true, None, "18"),
         (false, Some("140+137"), "140+137"),
     ] {
         let saved: Value = serde_json::from_str(include_str!(
@@ -770,8 +773,25 @@ fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
             serde_json::from_value(expected["formats"].clone()).unwrap();
         // The saved upstream comparison is raw extractor output, before
         // `process_video_result` fills protocols, extensions and SDR.
-        let mut formats = info.formats.clone();
+        let ids: Vec<_> = info.formats.iter().map(|f| f.format_id.as_str()).collect();
+        assert_eq!(ids, ["139", "140", "251", "248", "137", "18"]);
+        // Compare in declaration order; sort inputs are not in the comparison.
+        let mut formats: Vec<VideoFormat> = expected_formats
+            .iter()
+            .map(|expected| {
+                info.formats
+                    .iter()
+                    .find(|format| format.format_id == expected.format_id)
+                    .unwrap()
+                    .clone()
+            })
+            .collect();
         for format in &mut formats {
+            // `_fill_sorting_fields` bitrates (0 for a missing stream).
+            format.vbr = None;
+            if format.acodec.as_deref() == Some("none") && format.abr == Some(0.0) {
+                format.abr = None;
+            }
             assert_eq!(format.protocol.take().as_deref(), Some("http"));
             let audio_only = format.vcodec.as_deref() == Some("none");
             assert_eq!(
@@ -822,16 +842,27 @@ fn adaptive_without_standalone_requires_explicit_stream_or_configured_merge() {
         reply("/media/video.webm", "video/webm", "webpic"),
         reply("/media/audio.webm", "audio/webm", "wb"),
     ]);
-    let mut info = extract(&server, None).unwrap();
+    let mut result = crate::ExtractResult::Video(extract(&server, None).unwrap());
+    crate::YoutubeDl::new()
+        .unwrap()
+        .process_result(&mut result)
+        .unwrap();
+    let crate::ExtractResult::Video(mut info) = result else {
+        unreachable!()
+    };
+    // Pinned upstream extraction of this fixture plus `process_ie_result`
+    // sorts 139, 140, 251, 248, 137 and selects 251 / 137+251.
+    let ids: Vec<_> = info.formats.iter().map(|f| f.format_id.as_str()).collect();
+    assert_eq!(ids, ["139", "140", "251", "248", "137"]);
     assert!(matches!(
         info.select_format(None),
         Err(Error::FormatSelection(_))
     ));
     info.select_format(Some("bestaudio")).unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("140"));
+    assert_eq!(info.format_id.as_deref(), Some("251"));
     assert_eq!(info.stream_kind, StreamKind::AudioOnly);
     info.select_format_with_merge(None, true, None).unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("137+140"));
+    assert_eq!(info.format_id.as_deref(), Some("137+251"));
 }
 
 mod manifests;

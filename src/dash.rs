@@ -851,6 +851,12 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                     .map(str::to_owned),
                 video_ext: None,
                 audio_ext: None,
+                vbr: None,
+                source_preference: None,
+                quality: None,
+                fps: None,
+                asr: None,
+                audio_channels: None,
                 format_id,
                 url: manifest.clone(),
                 ext: if mime.ends_with("webm") {

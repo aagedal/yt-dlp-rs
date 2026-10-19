@@ -43,6 +43,8 @@ pub(crate) struct AudioRendition {
     pub language: Option<String>,
     pub default: bool,
     pub autoselect: bool,
+    /// Upstream `is_alternate`: `DEFAULT=NO` or `AUTOSELECT=NO`.
+    pub alternate: bool,
 }
 
 fn invalid(message: impl Into<String>) -> Error {
@@ -410,6 +412,8 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                         language,
                         default,
                         autoselect,
+                        alternate: attrs.get("DEFAULT") == Some(&"NO")
+                            || attrs.get("AUTOSELECT") == Some(&"NO"),
                     });
                 }
             }

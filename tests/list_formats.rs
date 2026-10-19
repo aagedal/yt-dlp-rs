@@ -467,24 +467,32 @@ fn shared_upstream_listing_fixture_runs_through_unselected_orchestration_and_nat
         .iter()
         .map(|format| format.format_id.as_str())
         .collect();
-    let expected_ids: Vec<_> = expected["declaration_ids"]
+    // Processing sorts the declaration-order fixture like pinned upstream
+    // `process_ie_result` does (a128 lacks a filesize, so it ranks below a64).
+    let sorted_ids = ["a128", "a64", "v360", "v720"];
+    assert_eq!(ids, sorted_ids);
+    let mut declaration_ids: Vec<_> = expected["declaration_ids"]
         .as_array()
         .unwrap()
         .iter()
         .map(|id| id.as_str().unwrap())
         .collect();
-    assert_eq!(ids, expected_ids);
+    declaration_ids.sort_unstable();
+    let mut sorted = sorted_ids.to_vec();
+    sorted.sort_unstable();
+    assert_eq!(sorted, declaration_ids);
     let actual = serde_json::to_value(&info).unwrap();
     assert_eq!(
         info.formats.len(),
         expected["formats"].as_array().unwrap().len()
     );
-    for (actual, expected) in actual["formats"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .zip(expected["formats"].as_array().unwrap())
-    {
+    for expected in expected["formats"].as_array().unwrap() {
+        let actual = actual["formats"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|format| format["format_id"] == expected["format_id"])
+            .unwrap();
         for (field, value) in expected.as_object().unwrap() {
             if value.is_number() {
                 assert_eq!(
@@ -505,7 +513,7 @@ fn shared_upstream_listing_fixture_runs_through_unselected_orchestration_and_nat
         .skip(2)
         .map(|line| line.split_whitespace().next().unwrap())
         .collect();
-    assert_eq!(rendered_ids, expected_ids);
+    assert_eq!(rendered_ids, sorted_ids);
     for format in expected["formats"].as_array().unwrap() {
         let cells = row(&table, format["format_id"].as_str().unwrap());
         let tokens: Vec<_> = cells.split_whitespace().collect();
