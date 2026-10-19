@@ -273,11 +273,9 @@ fn invalid_audio_declarations_fail_before_child_or_media_requests() {
     for master in [
         MASTER.replace("DEFAULT=YES", "DEFAULT=maybe"),
         MASTER.replace("AUTOSELECT=YES", "AUTOSELECT=maybe"),
-        MASTER.replace("AUDIO=\"a\"", "AUDIO=\"missing\""),
         MASTER.replace("NAME=\"Alternative\"", "NAME=\"Main, English\""),
         MASTER.replace("NAME=\"Alternative\"", "NAME=\"Alternative\",DEFAULT=YES"),
         MASTER.replace(",URI=\"alt.m3u8\"", ""),
-        MASTER.replace("CODECS=\"avc1.4,mp4a.40.2\",", ""),
         MASTER.replace("URI=\"alt.m3u8\"", "URI=\"file:///audio.m3u8\""),
     ] {
         let server = Server::new(BTreeMap::from([("/bad.m3u8".into(), master)]));

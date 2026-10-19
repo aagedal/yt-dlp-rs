@@ -311,52 +311,23 @@ fn parse_candidates(
         let Some(mime) = source["mimeType"].as_str() else {
             continue;
         };
-        let (kind, parameters) = mime.split_once(';').unwrap_or((mime, ""));
-        let ext = match kind.trim() {
-            "video/mp4" => "mp4",
-            "video/webm" | "audio/webm" => "webm",
-            "audio/mp4" => "m4a",
-            _ => continue,
-        };
-        let codecs = parameters
-            .split(';')
-            .find_map(|p| p.trim().strip_prefix("codecs="))
-            .unwrap_or("")
-            .trim_matches('"');
-        // Upstream `((?:[^/]+)/(?:[^;]+))(?:;\s*codecs="([^"]+)")?`.
+        // Upstream `((?:[^/]+)/(?:[^;]+))(?:;\s*codecs="([^"]+)")?`:
+        // `mimetype2ext` and `parse_codecs` (unknown codecs only warn).
+        let kind = mime.split_once(';').map_or(mime, |(kind, _)| kind).trim();
+        // Native: only progressive audio/video streams are probed as media.
+        if !(kind.starts_with("audio/") || kind.starts_with("video/")) {
+            continue;
+        }
+        let ext = crate::extractor::direct::mimetype2ext_or(kind, None);
         let parsed = mime
             .split_once(';')
             .and_then(|(_, rest)| rest.trim_start().strip_prefix("codecs=\""))
             .and_then(|rest| rest.split_once('"'))
             .and_then(|(codecs, _)| crate::codecs::parse(Some(codecs)));
-        let codecs: Vec<_> = codecs.split(',').map(str::trim).collect();
-        let video_codec = |codec: &str| {
-            ["avc1", "av01", "vp8", "vp9", "vp09"].iter().any(|prefix| {
-                codec
-                    .strip_prefix(prefix)
-                    .is_some_and(|suffix| suffix.is_empty() || suffix.starts_with('.'))
-            })
-        };
-        let audio_codec = |codec: &str| {
-            ["mp4a", "opus", "vorbis"].iter().any(|prefix| {
-                codec
-                    .strip_prefix(prefix)
-                    .is_some_and(|suffix| suffix.is_empty() || suffix.starts_with('.'))
-            })
-        };
-        if codecs
-            .iter()
-            .any(|codec| !video_codec(codec) && !audio_codec(codec))
-        {
-            continue;
-        }
-        let video = codecs.iter().any(|codec| video_codec(codec));
-        let audio = codecs.iter().any(|codec| audio_codec(codec));
-        let stream_kind = match (kind.trim().starts_with("audio/"), video, audio) {
-            (false, true, true) => StreamKind::Standalone,
-            (false, true, false) => StreamKind::VideoOnly,
-            (true, false, true) => StreamKind::AudioOnly,
-            _ => continue,
+        let stream_kind = match &parsed {
+            Some(codecs) if codecs.vcodec == "none" => StreamKind::AudioOnly,
+            Some(codecs) if codecs.acodec == "none" => StreamKind::VideoOnly,
+            _ => StreamKind::Standalone,
         };
         let rate = |key: &str| {
             source
@@ -440,7 +411,7 @@ fn parse_candidates(
                 .and_then(|n| u32::try_from(n).ok()),
             format_id: itag.to_string(),
             source: url_source,
-            ext: ext.into(),
+            ext,
             stream_kind,
             codecs: parsed,
             tbr,
@@ -887,10 +858,6 @@ mod tests {
             ("targetDurationSec", Value::from(5)),
             ("drmFamilies", serde_json::json!(["WIDEVINE"])),
             ("mimeType", Value::from("application/x-mpegURL")),
-            (
-                "mimeType",
-                Value::from("video/mp4; codecs=\"avc1unknown, mp4aunknown\""),
-            ),
         ] {
             let mut data = player();
             data["streamingData"]["formats"][0][key] = value;
@@ -972,7 +939,7 @@ mod tests {
     }
 
     #[test]
-    fn malformed_bitrates_are_unknown_and_unsupported_codec_sources_are_excluded() {
+    fn malformed_bitrates_are_unknown_and_uncommon_codecs_are_kept_like_upstream() {
         for value in [
             Value::Null,
             serde_json::json!("128000"),
@@ -988,19 +955,28 @@ mod tests {
             let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
             assert_eq!((formats[0].abr, formats[0].tbr), (None, None));
         }
-        for mime in [
-            "audio/mp4; codecs=\"ac-3\"",
-            "video/mp4; codecs=\"hvc1.1.6.L93\"",
-            "audio/webm; codecs=\"vp9, opus\"",
-            "video/mp4; codecs=\"avc1.640028, unknown\"",
-            "video/mp4",
-            "audio/mp4; codecs=\"mp4aunknown\"",
+        // Like upstream, unknown or uncommon codecs only warn: the formats
+        // stay, classified by parse_codecs.
+        for (mime, kind) in [
+            ("audio/mp4; codecs=\"ac-3\"", StreamKind::AudioOnly),
+            ("video/mp4; codecs=\"hvc1.1.6.L93\"", StreamKind::VideoOnly),
+            ("audio/webm; codecs=\"vp9, opus\"", StreamKind::Standalone),
+            (
+                "video/mp4; codecs=\"avc1.640028, unknown\"",
+                StreamKind::VideoOnly,
+            ),
+            ("video/mp4", StreamKind::Standalone),
+            ("audio/mp4; codecs=\"mp4aunknown\"", StreamKind::Standalone),
+            (
+                "video/mp4; codecs=\"avc1unknown, mp4aunknown\"",
+                StreamKind::Standalone,
+            ),
         ] {
             let mut data = player();
             data["streamingData"]["formats"][0]["mimeType"] = mime.into();
             let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
-            assert_eq!(formats.len(), 1, "{mime}");
-            assert_eq!(formats[0].format_id, "22");
+            assert_eq!(formats.len(), 2, "{mime}");
+            assert_eq!(formats[0].stream_kind, kind, "{mime}");
         }
     }
 

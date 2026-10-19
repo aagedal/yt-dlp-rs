@@ -622,9 +622,15 @@ fills `video_ext`/`audio_ext`, `acodec` from `aac`/`opus`/`mp3`/`flac`/`vorbis`
 extensions and `dynamic_range` `SDR` for formats with possible video, like
 `process_video_result`; the selected result copies them, and merges take the
 video's `vcodec`/`dynamic_range` and the audio's `acodec`. Upstream's explicit
-`null` values are omitted. Native stream classification (`stream_kind`) and the
-stricter HLS/DASH/YouTube codec allow-lists are unchanged by these fields;
-`tools/compare_youtube.py` now also compares non-null codec fields.
+`null` values are omitted. `stream_kind` follows the codec fields like upstream's
+`'none'` checks (audio-only when `vcodec` is `none`, video-only when `acodec` is
+`none`, otherwise complete, including formats without codecs); unknown codecs only
+warn, so HLS variants, DASH representations and YouTube streams with uncommon
+codecs are kept. DASH classifies non-video/audio content types by their codecs,
+skips text and image representations, warns `Unknown MIME type X in DASH
+manifest` for the rest, and labels formats with `mimetype2ext`; YouTube still
+probes only `audio/*`/`video/*` streams. `tools/compare_youtube.py` also compares
+non-null codec fields.
 
 ## Output to stdout (`-o -`)
 
@@ -951,10 +957,11 @@ contains `audio_group`, optional `language` and `format_note` (NAME), and true
 names in a group, multiple default renditions, invalid flag values, and explicit
 DEFAULT=YES with AUTOSELECT=NO fail. Audio-only rendition masters are supported.
 
-A variant that references an external audio group must declare recognized video
-CODECS. It becomes video-only even when CODECS describes both tracks. Missing or
-audio-only CODECS on such a variant fails instead of guessing a complete stream.
-Inband groups retain the existing standalone behavior. Both variant and rendition
+A variant that references an external audio group with URIs and declares video
+CODECS becomes video-only (`acodec` `none`) even when CODECS describes both tracks;
+like upstream, a variant without CODECS (or with audio-only CODECS) is kept as a
+complete (or audio-only) format, and an unknown AUDIO group is ignored. Inband
+groups retain the existing standalone behavior. Both variant and rendition
 declarations count toward the combined limit of 256; every child playlist is
 read with the existing aggregate 10000-fragment cap. JSON/simulation fetch neither
 segments nor encryption keys. Like upstream (`ext='mp4'`), every HLS format is

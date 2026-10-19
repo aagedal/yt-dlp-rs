@@ -256,13 +256,10 @@ fn variant(
         }
     }
     let audio_group = values.get("AUDIO").filter(|group| **group != "NONE");
-    let external_audio = if let Some(group) = audio_group {
-        *groups
-            .get(&("AUDIO", *group))
-            .ok_or_else(|| invalid("unresolved HLS audio rendition group"))?
-    } else {
-        false
-    };
+    // Upstream ignores an AUDIO reference to an unknown group.
+    let external_audio = audio_group
+        .and_then(|group| groups.get(&("AUDIO", *group)).copied())
+        .unwrap_or(false);
     let bandwidth = |name| {
         values
             .get(name)
@@ -281,34 +278,9 @@ fn variant(
     } else {
         (None, None)
     };
-    let mut stream_kind = if let Some(codecs) = values.get("CODECS") {
-        let mut video = false;
-        let mut audio = false;
-        for codec in codecs.split(',').map(str::trim) {
-            let family = codec.split('.').next().unwrap_or("");
-            match family {
-                "avc1" | "avc3" | "av01" | "hvc1" | "hev1" | "vp8" | "vp9" | "vp09" => video = true,
-                "mp4a" | "aac" | "ac-3" | "ec-3" | "opus" | "vorbis" => audio = true,
-                _ => return Err(invalid("unsupported HLS codec")),
-            }
-        }
-        match (video, audio) {
-            (true, false) => StreamKind::VideoOnly,
-            (false, true) => StreamKind::AudioOnly,
-            (true, true) => StreamKind::Standalone,
-            _ => return Err(invalid("empty HLS codecs")),
-        }
-    } else {
-        StreamKind::Standalone
-    };
-    if external_audio {
-        if !values.contains_key("CODECS") || stream_kind == StreamKind::AudioOnly {
-            return Err(invalid(
-                "external HLS audio requires known video CODECS on its variant",
-            ));
-        }
-        stream_kind = StreamKind::VideoOnly;
-    }
+    // Upstream `parse_codecs(CODECS)` (unknown codecs only warn). A variant
+    // referencing an audio group with URIs loses its audio when it declares
+    // video codecs; otherwise upstream treats it as a complete format.
     let mut codecs = crate::codecs::parse(values.get("CODECS").copied());
     if external_audio
         && let Some(codecs) = &mut codecs
@@ -316,6 +288,11 @@ fn variant(
     {
         codecs.acodec = "none".into();
     }
+    let stream_kind = match &codecs {
+        Some(codecs) if codecs.vcodec == "none" => StreamKind::AudioOnly,
+        Some(codecs) if codecs.acodec == "none" => StreamKind::VideoOnly,
+        _ => StreamKind::Standalone,
+    };
     Ok(Variant {
         codecs,
         fps: values
@@ -736,7 +713,7 @@ mod tests {
     }
 
     #[test]
-    fn audio_groups_reject_ambiguous_metadata_and_unclassifiable_video() {
+    fn audio_groups_reject_ambiguous_metadata_and_keep_unpaired_variants() {
         let rendition = "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Main\",URI=\"a.m3u8\"";
         for extra in [
             ",DEFAULT=maybe",
@@ -756,11 +733,19 @@ mod tests {
             let first = format!("{rendition},DEFAULT=YES");
             assert!(parse(&format!("#EXTM3U\n{first}\n{second}"), &base()).is_err());
         }
-        for codec in ["", ",CODECS=\"mp4a.40.2\""] {
+        // Upstream treats a variant without video CODECS as complete (or
+        // audio-only) instead of pairing it with the external group.
+        for (codec, kind) in [
+            ("", StreamKind::Standalone),
+            (",CODECS=\"mp4a.40.2\"", StreamKind::AudioOnly),
+        ] {
             let text = format!(
                 "#EXTM3U\n{rendition}\n#EXT-X-STREAM-INF:BANDWIDTH=1000,AUDIO=\"a\"{codec}\nv.m3u8"
             );
-            assert!(parse(&text, &base()).is_err());
+            let Playlist::Master { variants, .. } = parse(&text, &base()).unwrap() else {
+                panic!()
+            };
+            assert_eq!(variants[0].stream_kind, kind);
         }
         for uri in ["", "file:///audio.m3u8", "audio.m3u8#fragment"] {
             assert!(parse(&format!("#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Main\",URI=\"{uri}\""), &base()).is_err());
@@ -859,8 +844,8 @@ mod tests {
     }
 
     #[test]
-    fn rejects_external_and_unresolved_rendition_groups() {
-        for group in ["AUDIO", "SUBTITLES", "VIDEO", "CLOSED-CAPTIONS"] {
+    fn rejects_external_non_audio_rendition_groups() {
+        for group in ["SUBTITLES", "VIDEO", "CLOSED-CAPTIONS"] {
             let text = format!(
                 "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,{group}=\"a\"\na.m3u8\n#EXT-X-MEDIA:TYPE={group},GROUP-ID=\"a\",NAME=\"A\",URI=\"extra.m3u8\""
             );
@@ -869,6 +854,9 @@ mod tests {
                 format!("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,{group}=\"missing\"\na.m3u8");
             assert!(parse(&text, &base()).is_err());
         }
+        // Like upstream, an unknown AUDIO group is ignored.
+        let text = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,AUDIO=\"missing\"\na.m3u8";
+        assert!(parse(text, &base()).is_ok());
     }
     #[test]
     fn rejects_invalid_ranges_maps_and_container_changes() {
@@ -889,12 +877,11 @@ mod tests {
         }
     }
     #[test]
-    fn malformed_attributes_and_unsupported_codecs_fail_closed() {
+    fn malformed_attributes_fail_closed() {
         for attributes in [
             "CODECS=\"avc1,mp4a",
             "BANDWIDTH=1000,BANDWIDTH=2000",
             "BANDWIDTH=1000,",
-            "CODECS=\"unknown\"",
             "RESOLUTION=0x720",
             "RESOLUTION=1280",
             "BANDWIDTH=1000 junk",

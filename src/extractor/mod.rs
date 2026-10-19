@@ -1,5 +1,5 @@
 mod dash;
-mod direct;
+pub(crate) mod direct;
 mod hls;
 mod html5;
 mod youtube;

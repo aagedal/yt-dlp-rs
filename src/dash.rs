@@ -741,46 +741,43 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 .get("mimeType")
                 .copied()
                 .ok_or_else(|| bad("DASH representation has no MIME type"))?;
-            if !matches!(
-                mime,
-                "video/mp4" | "audio/mp4" | "application/mp4" | "video/webm" | "audio/webm"
-            ) {
-                return Err(bad("unsupported DASH MIME type"));
-            }
-            let content = attrs
+            // Upstream: `contentType`, else the MIME type's major type; other
+            // types are classified by their `parse_codecs` result.
+            let codecs = crate::codecs::parse(attrs.get("codecs").copied());
+            let declared = attrs
                 .get("contentType")
                 .copied()
-                .or_else(|| mime.split_once('/').map(|(kind, _)| kind));
-            let mut video = false;
-            let mut audio = false;
-            if let Some(codecs) = attrs.get("codecs") {
-                for codec in codecs.split(',').map(str::trim) {
-                    match codec.split('.').next().unwrap_or("") {
-                        "avc1" | "avc3" | "av01" | "hvc1" | "hev1" | "vp8" | "vp9" | "vp09" => {
-                            video = true
-                        }
-                        "mp4a" | "aac" | "ac-3" | "ec-3" | "opus" | "vorbis" => audio = true,
-                        _ => return Err(bad("unsupported DASH codec")),
+                .unwrap_or_else(|| mime.split_once('/').map_or(mime, |(kind, _)| kind));
+            let content_type = match declared {
+                "video" | "audio" => declared,
+                // Text tracks (subtitles) are not represented yet.
+                "text" => continue,
+                _ if matches!(mime, "image/avif" | "image/jpeg") => continue,
+                _ => match &codecs {
+                    Some(codecs) if codecs.vcodec != "none" => "video",
+                    Some(codecs) if codecs.acodec != "none" => "audio",
+                    Some(codecs) if codecs.scodec.is_some() => continue,
+                    _ if matches!(
+                        crate::extractor::direct::mimetype2ext_or(mime, None).as_str(),
+                        "tt" | "dfxp" | "ttml" | "xml" | "json"
+                    ) =>
+                    {
+                        continue;
                     }
-                }
-            } else {
-                match content {
-                    Some("video") => video = true,
-                    Some("audio") => audio = true,
-                    _ => return Err(bad("DASH application MP4 requires contentType or codecs")),
-                }
-            }
-            if content == Some("audio") && video
-                || content == Some("video") && !video
-                || !matches!(content, Some("audio" | "video" | "application"))
-            {
-                return Err(bad("conflicting DASH stream metadata"));
-            }
-            let kind = match (video, audio) {
-                (true, true) => StreamKind::Standalone,
-                (true, false) => StreamKind::VideoOnly,
-                (false, true) => StreamKind::AudioOnly,
-                _ => return Err(bad("DASH has no playable stream")),
+                    _ => {
+                        crate::screen::warning(&format!(
+                            "Unknown MIME type {mime} in DASH manifest"
+                        ));
+                        continue;
+                    }
+                },
+            };
+            // Selection kinds follow upstream's codec fields (`none` marks a
+            // missing stream); without codecs the stream counts as complete.
+            let kind = match &codecs {
+                Some(codecs) if codecs.vcodec == "none" => StreamKind::AudioOnly,
+                Some(codecs) if codecs.acodec == "none" => StreamKind::VideoOnly,
+                _ => StreamKind::Standalone,
             };
             let bandwidth = attrs
                 .get("bandwidth")
@@ -810,14 +807,9 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
             // Upstream: the representation ID, else the content type.
             let format_id = match representation.attribute("id") {
                 Some(id) => id.to_owned(),
-                None => match content {
-                    Some(kind @ ("video" | "audio")) => kind.to_owned(),
-                    _ if video => "video".to_owned(),
-                    _ => "audio".to_owned(),
-                },
+                None => content_type.to_owned(),
             };
             // Upstream `**parse_codecs(codecs)`: no codec keys without one.
-            let codecs = crate::codecs::parse(attrs.get("codecs").copied());
             formats.push(VideoFormat {
                 protocol: Some("http_dash_segments".into()),
                 vcodec: codecs.as_ref().map(|codecs| codecs.vcodec.clone()),
@@ -846,14 +838,8 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 aspect_ratio: None,
                 format_id,
                 url: manifest.clone(),
-                ext: if mime.ends_with("webm") {
-                    "webm"
-                } else if kind == StreamKind::AudioOnly {
-                    "m4a"
-                } else {
-                    "mp4"
-                }
-                .into(),
+                // Upstream `mimetype2ext(mime_type)`.
+                ext: crate::extractor::direct::mimetype2ext_or(mime, None),
                 stream_kind: kind,
                 audio_group: (kind != StreamKind::Standalone).then(|| "dash-period-0".into()),
                 // Upstream drops the `mul`/`und`/`zxx`/`mis` language codes.
@@ -861,14 +847,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                     .get("lang")
                     .filter(|lang| !matches!(**lang, "mul" | "und" | "zxx" | "mis"))
                     .map(|value| (*value).to_owned()),
-                format_note: Some(format!(
-                    "DASH {}",
-                    match content {
-                        Some(kind @ ("video" | "audio")) => kind,
-                        _ if video => "video",
-                        _ => "audio",
-                    }
-                )),
+                format_note: Some(format!("DASH {content_type}")),
                 audio_default: false,
                 audio_autoselect: false,
                 abr: if kind == StreamKind::AudioOnly {
@@ -960,13 +939,28 @@ mod tests {
         }
     }
     #[test]
+    fn unknown_codecs_and_types_follow_upstream_classification() {
+        let text = template("");
+        // Unknown codecs only warn; the representation stays a format.
+        let formats = parse(&text.replace("avc1.640028", "unknown"), &manifest()).unwrap();
+        assert_eq!(formats.len(), 1);
+        assert_eq!(formats[0].stream_kind, StreamKind::Standalone);
+        // application/mp4 is classified by its codecs; text tracks are skipped.
+        let application = text.replace("video/mp4", "application/mp4");
+        assert_eq!(parse(&application, &manifest()).unwrap()[0].format_id, "v");
+        assert!(parse(&text.replace("video/mp4", "text/vtt"), &manifest()).is_err());
+    }
+
+    #[test]
     fn base_and_template_inheritance_and_language_are_deterministic() {
         let text = "<MPD><BaseURL>https://cdn.example/root/</BaseURL><SegmentTemplate timescale=\"100\" initialization=\"init-$RepresentationID$.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S t=\"10\" d=\"20\" r=\"1\"/></SegmentTimeline></SegmentTemplate><Period><BaseURL>period/</BaseURL><AdaptationSet mimeType=\"audio/mp4\" lang=\"en\"><BaseURL>audio/</BaseURL><Representation id=\"a\" bandwidth=\"128000\"><BaseURL>variant/</BaseURL></Representation></AdaptationSet></Period></MPD>";
         let formats = parse(text, &manifest()).unwrap();
         let audio = &formats[0];
         assert_eq!(audio.ext, "m4a");
         assert_eq!(audio.language.as_deref(), Some("en"));
-        assert_eq!(audio.abr, Some(128.0));
+        // Without codecs upstream knows only the total bitrate.
+        assert_eq!(audio.tbr, Some(128.0));
+        assert_eq!(audio.abr, None);
         assert_eq!(
             urls(audio),
             [
@@ -1094,8 +1088,6 @@ mod tests {
                 "<BaseURL>a/</BaseURL><BaseURL>b/</BaseURL><Representation ",
             ),
             text.replace("<Representation ", "<SegmentList/><Representation "),
-            text.replace("avc1.640028", "unknown"),
-            text.replace("video/mp4", "application/dash+xml"),
             text.replace(
                 "<Period>",
                 "<Period xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"other.xml\">",
