@@ -427,10 +427,31 @@ impl VideoInfo {
         prefer_merge: bool,
         merge_formats: Option<&[String]>,
     ) -> crate::Result<()> {
+        // Upstream `_default_format_spec`: without a merger, prefer a single
+        // file and warn when that may not be the best available.
+        if requested.is_none() && !prefer_merge && !self.formats.is_empty() {
+            let context: Vec<_> = self.formats.iter().collect();
+            let pick = |spec: &str| {
+                let expression = selector::parse(spec).expect("static selector");
+                self.evaluate(&expression, &context)
+                    .into_iter()
+                    .next()
+                    .map(|pick| match pick {
+                        Pick::Single { format, .. } => format.format_id.clone(),
+                        Pick::Pair(a, b) => format!("{}+{}", a.format_id, b.format_id),
+                    })
+            };
+            if pick("b/bv+ba") != pick("bv*+ba/b") {
+                crate::screen::warning(
+                    "ffmpeg not found. The downloaded format may not be the best available. \
+                     Installing ffmpeg is strongly recommended: https://github.com/yt-dlp/yt-dlp#dependencies",
+                );
+            }
+        }
         let expression = requested.unwrap_or(if prefer_merge {
             "bestvideo*+bestaudio/best"
         } else {
-            "best"
+            "best/bestvideo+bestaudio"
         });
         let expression = selector::parse(expression)?;
         if self.formats.is_empty() {
@@ -1213,7 +1234,7 @@ mod tests {
     }
 
     #[test]
-    fn implicit_merge_requires_preference_and_complete_supported_pair() {
+    fn implicit_defaults_follow_upstream_with_and_without_merger() {
         let mut video = adaptive();
         video.select_format_with_merge(None, true, None).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v2+a2"));
@@ -1222,7 +1243,9 @@ mod tests {
                 .select_format_with_merge(Some("best"), true, None)
                 .is_err()
         );
-        assert!(video.select_format(None).is_err());
+        // Without a merger, `best/bestvideo+bestaudio` falls back to the pair.
+        video.select_format(None).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v2+a2"));
         video
             .formats
             .retain(|f| f.stream_kind == StreamKind::VideoOnly);

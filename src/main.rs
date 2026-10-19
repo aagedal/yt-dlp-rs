@@ -1979,6 +1979,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             return Ok(());
                         }
                     }
+                    if !info.requested_formats.is_empty() && !downloader.has_ffmpeg() {
+                        let message = "You have requested merging of multiple formats but ffmpeg is not installed";
+                        if error_mode == ErrorMode::Abort {
+                            return Err(
+                                format!("{message}. Aborting due to --abort-on-error").into()
+                            );
+                        }
+                        warning!("WARNING: {message}. The formats won't be merged");
+                    }
                     if info.requested_formats.is_empty() && !info.fragments.is_empty() {
                         // Upstream `_prepare_frag_download`; plans are snapshots, so
                         // HlsFD's manifest download line has no counterpart.

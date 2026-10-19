@@ -682,8 +682,14 @@ one video-only and one audio-only source; it does not match rendition groups or
 check container support, which is validated when the merge is downloaded.
 `/` tries alternatives in order, for example `bestvideo+bestaudio/best`.
 Every branch must have valid bounded syntax. Selection errors leave metadata
-unchanged, including across playlists. Without an explicit selector, configuring
-FFmpeg prefers that pair/fallback expression; otherwise default equals `best`.
+unchanged, including across playlists. Without an explicit selector the default
+is upstream's `_default_format_spec`: `bestvideo*+bestaudio/best` with FFmpeg,
+otherwise `best/bestvideo+bestaudio`, warning `ffmpeg not found. The downloaded
+format may not be the best available. ...` when that picks something other than
+`bv*+ba/b`. Without FFmpeg a selected pair is downloaded to its `NAME.fID.EXT`
+format files without merging after upstream's `You have requested merging of
+multiple formats but ffmpeg is not installed. The formats won't be merged`
+warning (an error under `--abort-on-error`, before downloading).
 An explicit pair can be inspected with JSON/simulation without installing FFmpeg.
 
 A merge plan carries `requested_formats` in expression order and a joined

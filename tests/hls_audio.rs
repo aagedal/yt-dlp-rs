@@ -136,12 +136,13 @@ fn external_audio_groups_build_typed_plans_and_choose_matching_default() {
     assert_eq!(info.requested_formats[1].ext, "m4a");
     assert_eq!(info.requested_formats[1].fragments.len(), 2);
     assert!(info.requested_formats[1].fragments[0].encryption.is_some());
-    assert!(matches!(
-        YoutubeDl::new()
-            .unwrap()
-            .extract_info(&server.url("/master.m3u8")),
-        Err(Error::FormatSelection(_))
-    ));
+    // Without a merger, upstream's `best/bestvideo+bestaudio` selects the
+    // same pair (there is no complete format).
+    let unmerged = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/master.m3u8"))
+        .unwrap();
+    assert_eq!(unmerged.format_id, info.format_id);
     let audio = dl
         .extract_info_with_format(&server.url("/master.m3u8"), Some("a-Alternative"))
         .unwrap();

@@ -835,7 +835,7 @@ fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
 }
 
 #[test]
-fn adaptive_without_standalone_requires_explicit_stream_or_configured_merge() {
+fn adaptive_without_standalone_defaults_to_the_best_pair_with_or_without_merger() {
     let mut saved: Value = serde_json::from_str(include_str!(
         "../../../tests/fixtures/youtube/adaptive.json"
     ))
@@ -858,13 +858,12 @@ fn adaptive_without_standalone_requires_explicit_stream_or_configured_merge() {
         unreachable!()
     };
     // Pinned upstream extraction of this fixture plus `process_ie_result`
-    // sorts 139, 140, 251, 248, 137 and selects 251 / 137+251.
+    // sorts 139, 140, 251, 248, 137 and selects 251 / 137+251; without a
+    // merger its `best/bestvideo+bestaudio` default also gives 137+251.
     let ids: Vec<_> = info.formats.iter().map(|f| f.format_id.as_str()).collect();
     assert_eq!(ids, ["139", "140", "251", "248", "137"]);
-    assert!(matches!(
-        info.select_format(None),
-        Err(Error::FormatSelection(_))
-    ));
+    info.select_format(None).unwrap();
+    assert_eq!(info.format_id.as_deref(), Some("137+251"));
     info.select_format(Some("bestaudio")).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("251"));
     assert_eq!(info.stream_kind, StreamKind::AudioOnly);

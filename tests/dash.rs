@@ -24,6 +24,24 @@ const MPD: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
 </SegmentList></Representation></AdaptationSet>
 </Period></MPD>"#;
 
+/// MPD with a low-resolution muxed fallback beside the separate streams.
+const MUXED_MPD: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT2S">
+<Period duration="PT2S">
+<AdaptationSet mimeType="video/mp4" codecs="avc1.42001e" width="640" height="360">
+<Representation id="video" bandwidth="400000"><SegmentList timescale="1" duration="1">
+<Initialization sourceURL="video/init.mp4"/><SegmentURL media="video/0.m4s"/><SegmentURL media="video/1.m4s"/>
+</SegmentList></Representation></AdaptationSet>
+<AdaptationSet mimeType="audio/mp4" codecs="mp4a.40.2">
+<Representation id="audio" bandwidth="128000"><SegmentList timescale="1" duration="1">
+<Initialization sourceURL="audio/init.mp4"/><SegmentURL media="audio/0.m4s"/><SegmentURL media="audio/1.m4s"/>
+</SegmentList></Representation></AdaptationSet>
+<AdaptationSet mimeType="video/mp4" codecs="avc1.42001e,mp4a.40.2" width="320" height="180">
+<Representation id="muxed" bandwidth="300000"><SegmentList timescale="1" duration="1">
+<Initialization sourceURL="muxed/init.mp4"/><SegmentURL media="muxed/0.m4s"/>
+</SegmentList></Representation></AdaptationSet>
+</Period></MPD>"#;
+
 struct Server {
     origin: String,
     requests: Arc<Mutex<Vec<String>>>,
@@ -65,6 +83,7 @@ impl Server {
                 let path = request.split_whitespace().nth(1).unwrap();
                 let (body, mime, extra) = match path {
                     "/manifest.mpd" | "/nested/manifest.mpd" | "/second.mpd" => (MPD.to_owned(), "application/dash+xml", ""),
+                    "/muxed.mpd" => (MUXED_MPD.to_owned(), "application/dash+xml", ""),
                     "/redirect" => (String::new(), "text/plain", "Location: /nested/manifest.mpd\r\n"),
                     "/renamed.mpd" => (String::new(), "text/plain", "Location: /hinted\r\n"),
                     "/hinted" => (MPD.into(), "video/mp4", ""),
@@ -161,12 +180,13 @@ fn direct_and_redirected_mpd_build_separate_stream_fragment_plans() {
     assert_eq!(info.requested_formats[1].stream_kind, StreamKind::AudioOnly);
     assert_eq!(info.requested_formats[1].ext, "m4a");
     assert_eq!(info.requested_formats[0].fragments.len(), 3);
-    assert!(matches!(
-        YoutubeDl::new()
-            .unwrap()
-            .extract_info(&server.url("/manifest.mpd")),
-        Err(Error::FormatSelection(_))
-    ));
+    // Without a merger, upstream's `best/bestvideo+bestaudio` still selects
+    // the pair (downloads then keep the format files unmerged).
+    let unmerged = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/manifest.mpd"))
+        .unwrap();
+    assert_eq!(unmerged.format_id, info.format_id);
     let video = dl
         .extract_info_with_format(&server.url("/redirect"), Some("bestvideo"))
         .unwrap();
@@ -361,7 +381,7 @@ fn cli_ffmpeg_location_follows_upstream_determine_executables() {
         let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
             .env("PATH", path)
             .args(args)
-            .args(["-j", &server.url("/manifest.mpd")])
+            .args(["-j", &server.url("/muxed.mpd")])
             .output()
             .unwrap();
         let info = serde_json::from_slice::<serde_json::Value>(&output.stdout)
@@ -369,6 +389,8 @@ fn cli_ffmpeg_location_follows_upstream_determine_executables() {
             .ok();
         (info, String::from_utf8_lossy(&output.stderr).into_owned())
     };
+    // Checked with pinned upstream: with ffmpeg the default merges the
+    // separate streams; without it `best/bestvideo+bestaudio` picks the muxed one.
     let merged = Some(serde_json::json!("video+audio"));
     // Without a location, ffmpeg comes from PATH; simulation never runs it.
     assert_eq!(run(tools.path(), &[]).0, merged);

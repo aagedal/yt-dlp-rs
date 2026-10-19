@@ -558,3 +558,59 @@ fn cli_merge_output_format_prefers_containers_and_validates_like_upstream() {
             .ends_with("yt-dlp-rs: error: invalid merge output format \"bogus\" given\n")
     );
 }
+
+#[test]
+fn cli_without_ffmpeg_keeps_format_files_unmerged_or_aborts_like_upstream() {
+    let server = Server::new();
+    let empty = tempfile::tempdir().unwrap();
+    for abort in [false, true] {
+        let directory = tempfile::tempdir().unwrap();
+        let info = serde_json::json!({
+            "id": "fixture", "title": "fixture", "ext": "mp4",
+            "url": format!("{}/video", server.url),
+            "webpage_url": server.url, "extractor": "fixture", "extractor_key": "Fixture",
+            "formats": [
+                {"format_id": "v", "url": format!("{}/video", server.url), "ext": "mp4", "vcodec": "avc1", "acodec": "none"},
+                {"format_id": "a", "url": format!("{}/audio", server.url), "ext": "m4a", "vcodec": "none", "acodec": "mp4a"},
+            ],
+        });
+        let path = directory.path().join("info.json");
+        std::fs::write(&path, info.to_string()).unwrap();
+        let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+        // No ffmpeg on PATH and no --ffmpeg-location.
+        command
+            .env("PATH", empty.path())
+            .args(["--no-progress", "-o", "out.%(ext)s", "--load-info-json"])
+            .arg(&path)
+            .current_dir(directory.path());
+        if abort {
+            command.arg("--abort-on-error");
+        }
+        let output = command.output().unwrap();
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        let message = "You have requested merging of multiple formats but ffmpeg is not installed";
+        if abort {
+            assert!(!output.status.success());
+            assert!(
+                stderr.contains(&format!("{message}. Aborting due to --abort-on-error")),
+                "{stderr}"
+            );
+            clean(directory.path(), &["info.json"]);
+        } else {
+            assert!(output.status.success(), "{stderr}");
+            assert!(
+                stderr.contains(&format!("WARNING: {message}. The formats won't be merged")),
+                "{stderr}"
+            );
+            assert_eq!(
+                std::fs::read(directory.path().join("out.fv.mp4")).unwrap(),
+                b"video-bytes"
+            );
+            assert_eq!(
+                std::fs::read(directory.path().join("out.fa.m4a")).unwrap(),
+                b"audio-bytes"
+            );
+            clean(directory.path(), &["info.json", "out.fa.m4a", "out.fv.mp4"]);
+        }
+    }
+}

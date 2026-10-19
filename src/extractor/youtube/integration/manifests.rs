@@ -118,7 +118,9 @@ fn external_hls_audio_groups_are_namespaced_and_pair_selections_preserve_plans()
     );
     assert_eq!(info.formats[0].audio_group, info.formats[1].audio_group);
     assert_eq!(info.formats[1].language.as_deref(), Some("en"));
-    assert!(info.select_format(None).is_err());
+    // Upstream's no-merger default `best/bestvideo+bestaudio` picks the pair.
+    info.select_format(None).unwrap();
+    assert_eq!(info.format_id.as_deref(), Some("hls-0+hls-audio-0"));
     info.select_format(Some("bestvideo+bestaudio")).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("hls-0+hls-audio-0"));
     // get_compatible_ext over the native TS/AAC extensions (upstream labels

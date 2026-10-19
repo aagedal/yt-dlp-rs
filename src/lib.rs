@@ -160,6 +160,11 @@ impl YoutubeDl {
         self
     }
 
+    /// Whether an ffmpeg executable is configured (upstream `merger.available`).
+    pub fn has_ffmpeg(&self) -> bool {
+        self.ffmpeg.is_some()
+    }
+
     /// Configure an explicit ffprobe executable for audio codec inspection.
     /// Without this override, audio processing uses ffprobe beside explicit ffmpeg.
     pub fn with_ffprobe(mut self, executable: impl Into<PathBuf>) -> Self {
@@ -551,15 +556,28 @@ impl YoutubeDl {
         }
         // The selected container (upstream `get_compatible_ext`).
         let output_ext = info.ext.as_str();
-        let executable = self.ffmpeg.as_ref().ok_or_else(|| {
-            Error::Postprocess(
-                "separate streams require --ffmpeg-location PATH or YoutubeDl::with_ffmpeg".into(),
-            )
-        })?;
-        let executable = executable.canonicalize().map_err(|error| {
-            Error::Postprocess(format!("invalid ffmpeg executable path: {error}"))
-        })?;
-        if !executable.is_file() {
+        let upstream_files = matches!(options.merge_files, download::MergeFiles::Upstream { .. });
+        let executable = match &self.ffmpeg {
+            Some(executable) => Some(executable),
+            // Upstream downloads the formats without merging (after warning).
+            None if upstream_files => None,
+            None => {
+                return Err(Error::Postprocess(
+                    "separate streams require --ffmpeg-location PATH or YoutubeDl::with_ffmpeg"
+                        .into(),
+                ));
+            }
+        };
+        let executable = executable
+            .map(|executable| executable.canonicalize())
+            .transpose()
+            .map_err(|error| {
+                Error::Postprocess(format!("invalid ffmpeg executable path: {error}"))
+            })?;
+        if executable
+            .as_ref()
+            .is_some_and(|executable| !executable.is_file())
+        {
             return Err(Error::Postprocess(
                 "ffmpeg executable path is not a file".into(),
             ));
@@ -666,6 +684,10 @@ impl YoutubeDl {
                 .ok_or_else(|| Error::Postprocess("combined stream byte count overflow".into()))?;
             paths.push(path);
         }
+        let Some(executable) = executable else {
+            // No merger: the format files are the result.
+            return Ok(stored);
+        };
         if upstream.is_some() {
             screen::screen(&format!(
                 "[Merger] Merging formats into \"{}\"",

@@ -324,7 +324,7 @@ fn separate_dash_listing_reads_only_the_saved_mpd_and_combined_json_keeps_fragme
 }
 
 #[test]
-fn library_unselected_extraction_retains_separate_streams_that_default_selection_rejects() {
+fn library_unselected_extraction_retains_separate_streams_before_default_selection() {
     let server = Server::new();
     let dl = YoutubeDl::new().unwrap();
     let info = dl
@@ -338,7 +338,9 @@ fn library_unselected_extraction_retains_separate_streams_that_default_selection
     assert_eq!(info.formats[1].stream_kind, StreamKind::VideoOnly);
     assert!(info.format_id.is_none());
     assert!(info.requested_formats.is_empty());
-    assert!(dl.extract_info(&server.url("/master.m3u8")).is_err());
+    // Upstream's no-merger default `best/bestvideo+bestaudio` selects the pair.
+    let selected = dl.extract_info(&server.url("/master.m3u8")).unwrap();
+    assert_eq!(selected.requested_formats.len(), 2);
     server.assert_no_resources();
 }
 
@@ -540,7 +542,15 @@ fn shared_upstream_listing_fixture_runs_through_unselected_orchestration_and_nat
             "{cells}"
         );
     }
-    assert!(dl.extract_info("https://listing.invalid/saved").is_err());
+    // Without a merger the default falls back to the best pair in sorted
+    // order (a64 is the last audio-only format).
+    assert_eq!(
+        dl.extract_info("https://listing.invalid/saved")
+            .unwrap()
+            .format_id
+            .as_deref(),
+        Some("v720+a64")
+    );
     let selected = dl
         .extract_info_with_format("https://listing.invalid/saved", Some("v720+a64"))
         .unwrap();
