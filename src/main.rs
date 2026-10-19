@@ -286,6 +286,25 @@ struct Args {
     /// Write metadata to the video file's xattrs (using Dublin Core and XDG standards)
     #[arg(long, alias = "xattr")]
     xattrs: bool,
+    /// SponsorBlock categories to create chapters for, separated by commas (all, default (=all), -CATEGORY to exclude)
+    #[arg(long, value_name = "CATS")]
+    sponsorblock_mark: Vec<String>,
+    /// SponsorBlock categories to remove from the video file (default = all,-filler; poi_highlight and chapter are not available)
+    #[arg(long, value_name = "CATS")]
+    sponsorblock_remove: Vec<String>,
+    /// An output template for the title of the SponsorBlock chapters created by --sponsorblock-mark
+    #[arg(
+        long,
+        value_name = "TEMPLATE",
+        default_value = "[SponsorBlock]: %(category_names)l"
+    )]
+    sponsorblock_chapter_title: String,
+    /// Disable both --sponsorblock-mark and --sponsorblock-remove
+    #[arg(long)]
+    no_sponsorblock: bool,
+    /// SponsorBlock API location
+    #[arg(long, value_name = "URL", default_value = "https://sponsor.ajay.app")]
+    sponsorblock_api: String,
     /// Remove chapters whose title matches REGEX ("*START-END" ranges are parsed like upstream, which ignores them); repeatable
     #[arg(long, value_name = "REGEX")]
     remove_chapters: Vec<String>,
@@ -1790,11 +1809,58 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 .into(),
         );
     }
-    let modify_chapters = (!remove_patterns.is_empty()).then(|| yt_dlp_rs::ModifyChapters {
-        patterns: remove_patterns,
-        force_keyframes: args.force_keyframes_at_cuts,
-        subtitles: Vec::new(),
-    });
+    // Upstream `--sponsorblock-mark`/`--sponsorblock-remove` sets.
+    let (mut sponsorblock_mark, mut sponsorblock_remove) = (Vec::new(), Vec::new());
+    for (values, current, option, remove) in [
+        (
+            &args.sponsorblock_mark,
+            &mut sponsorblock_mark,
+            "--sponsorblock-mark",
+            false,
+        ),
+        (
+            &args.sponsorblock_remove,
+            &mut sponsorblock_remove,
+            "--sponsorblock-remove",
+            true,
+        ),
+    ] {
+        for value in values {
+            yt_dlp_rs::sponsorblock::parse_categories(current, value, option, remove)
+                .map_err(usage)?;
+        }
+    }
+    if let Err(error) = yt_dlp_rs::output::evaluate_dict_template(
+        &args.sponsorblock_chapter_title,
+        &serde_json::json!({}),
+        &TemplateOptions::default(),
+    ) {
+        return Err(usage(format!(
+            "invalid SponsorBlock chapter title \"{}\": {error}",
+            args.sponsorblock_chapter_title
+        ))
+        .into());
+    }
+    if args.no_sponsorblock {
+        sponsorblock_mark.clear();
+        sponsorblock_remove.clear();
+    }
+    // `sponsorblock_query`, in upstream's category order.
+    let sponsorblock_query: Vec<String> = yt_dlp_rs::sponsorblock::CATEGORIES
+        .iter()
+        .map(|(name, _)| (*name).to_owned())
+        .filter(|name| sponsorblock_mark.contains(name) || sponsorblock_remove.contains(name))
+        .collect();
+    let modify_chapters =
+        (!remove_patterns.is_empty() || !sponsorblock_query.is_empty()).then(|| {
+            yt_dlp_rs::ModifyChapters {
+                patterns: remove_patterns,
+                remove_sponsor: sponsorblock_remove.clone(),
+                sponsor_title: args.sponsorblock_chapter_title.clone(),
+                force_keyframes: args.force_keyframes_at_cuts,
+                subtitles: Vec::new(),
+            }
+        });
     let processors = PostprocessOptions {
         existing: None,
         modify_chapters,
@@ -1804,7 +1870,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         metadata: args.embed_metadata,
         // Upstream: `--embed-metadata` implies `--embed-chapters` unless
         // `--no-embed-chapters` was given.
-        chapters: args.embed_chapters || (args.embed_metadata && !args.no_embed_chapters),
+        // `--sponsorblock-mark` implies it as well.
+        chapters: args.embed_chapters
+            || ((args.embed_metadata || !sponsorblock_mark.is_empty()) && !args.no_embed_chapters),
         // Filled per video; see `embed_info_json` below.
         infojson: None,
         fixup: Some(yt_dlp_rs::FixupOptions {
@@ -2802,6 +2870,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 // `after_filter` processors precede listing and selection.
                 for when in ["pre_process", "after_filter"] {
                     run_metadata_parser(&metadata_actions, when, &mut info, &template_options)?;
+                }
+                // Upstream `SponsorBlockPP`, the last `after_filter` processor.
+                // Its failure is a deferred preprocessing error, like upstream's
+                // `__pending_error`.
+                if !sponsorblock_query.is_empty()
+                    && let Err(error) = downloader.fetch_sponsorblock(
+                        &mut info,
+                        &sponsorblock_query,
+                        &args.sponsorblock_api,
+                        u32::from(args.extractor_retries),
+                    )
+                {
+                    let text = match error {
+                        yt_dlp_rs::Error::Postprocess(text) => text,
+                        other => other.to_string(),
+                    };
+                    defer(text);
                 }
                 // Upstream lists thumbnails, then subtitles, then formats.
                 if args.list_thumbnails {

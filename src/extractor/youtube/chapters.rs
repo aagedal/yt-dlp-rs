@@ -77,6 +77,7 @@ fn helper(
             start_time,
             title,
             end_time: None,
+            extra: Default::default(),
         })
         .collect()
 }

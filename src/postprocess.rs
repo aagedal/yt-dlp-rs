@@ -49,6 +49,10 @@ pub struct PostprocessOptions {
 #[derive(Debug, Clone)]
 pub struct ModifyChapters {
     pub patterns: Vec<regex::Regex>,
+    /// `--sponsorblock-remove` categories (non-skippable ones are ignored).
+    pub remove_sponsor: Vec<String>,
+    /// `--sponsorblock-chapter-title`, an output template.
+    pub sponsor_title: String,
     pub force_keyframes: bool,
     /// Subtitle files on disk (with their extensions), cut as well.
     pub subtitles: Vec<(PathBuf, String)>,
@@ -681,29 +685,99 @@ pub(crate) fn download(
                         )
                     })
                     .collect();
-                let mut nothing_matched = true;
-                if segments.is_empty() {
-                    say("Chapter information is unavailable");
-                    nothing_matched = false;
-                }
-                for segment in &mut segments {
-                    let title = segment.title.as_deref().unwrap_or("");
-                    if modify.patterns.iter().any(|regex| regex.is_match(title)) {
-                        segment.remove = true;
+                if !modify.patterns.is_empty() {
+                    let mut nothing_matched = true;
+                    if segments.is_empty() {
+                        say("Chapter information is unavailable");
                         nothing_matched = false;
                     }
+                    for segment in &mut segments {
+                        let title = segment.title.as_deref().unwrap_or("");
+                        if modify.patterns.iter().any(|regex| regex.is_match(title)) {
+                            segment.remove = true;
+                            nothing_matched = false;
+                        }
+                    }
+                    if nothing_matched {
+                        say("There are no chapters matching the regex");
+                    }
                 }
-                if nothing_matched {
-                    say("There are no chapters matching the regex");
+                let mut sponsors: Vec<Segment> = working
+                    .extra
+                    .get("sponsorblock_chapters")
+                    .and_then(serde_json::Value::as_array)
+                    .into_iter()
+                    .flatten()
+                    .filter_map(mc::Segment::from_sponsor_json)
+                    .collect();
+                let remove: Vec<&String> = modify
+                    .remove_sponsor
+                    .iter()
+                    .filter(|category| {
+                        !crate::sponsorblock::NON_SKIPPABLE.contains(&category.as_str())
+                    })
+                    .collect();
+                if !remove.is_empty() {
+                    let mut nothing_matched = true;
+                    if sponsors.is_empty() {
+                        say("SponsorBlock information is unavailable");
+                        nothing_matched = false;
+                    }
+                    for sponsor in &mut sponsors {
+                        if sponsor
+                            .category()
+                            .is_some_and(|category| remove.iter().any(|r| r.as_str() == category))
+                        {
+                            sponsor.remove = true;
+                            nothing_matched = false;
+                        }
+                    }
+                    if nothing_matched {
+                        say("There are no matching SponsorBlock chapters");
+                    }
                 }
-                if segments.is_empty() {
+                if segments.is_empty() && sponsors.is_empty() {
                     return Ok(());
                 }
                 let real = match real {
                     Some(real) => real,
                     None => probe()?,
                 };
-                let (arranged, cuts) = mc::arrange(segments, &mc::default_sponsor_title);
+                if segments.is_empty() {
+                    let end = working
+                        .metadata
+                        .duration
+                        .filter(|duration| *duration != 0)
+                        .map_or(PyNumber::Float(real), |duration| {
+                            PyNumber::Int(duration as i64)
+                        });
+                    segments.push(Segment::chapter(
+                        PyNumber::Int(0),
+                        end,
+                        Some(working.title.clone()),
+                    ));
+                }
+                segments.extend(sponsors);
+                // `evaluate_outtmpl(sponsorblock_chapter_title, chapter)`.
+                let title = |sponsor: &mc::Sponsor, chapter: &serde_json::Value| {
+                    let mut dict = chapter.clone();
+                    if let Some(object) = dict.as_object_mut() {
+                        object.insert("category".into(), sponsor.category.clone().into());
+                        object.insert("categories".into(), sponsor.categories.clone().into());
+                        object.insert("name".into(), sponsor.name.clone().into());
+                        object.insert(
+                            "category_names".into(),
+                            sponsor.category_names.clone().into(),
+                        );
+                    }
+                    crate::output::evaluate_dict_template(
+                        &modify.sponsor_title,
+                        &dict,
+                        &crate::output::TemplateOptions::default(),
+                    )
+                    .unwrap_or_else(|_| mc::default_sponsor_title(sponsor))
+                };
+                let (arranged, cuts) = mc::arrange_titled(segments, &title);
                 working.metadata.chapters = arranged.iter().map(mc::Arranged::chapter).collect();
                 chapters_changed = true;
                 if cuts.is_empty() {

@@ -257,6 +257,10 @@ pub struct Chapter {
     pub title: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub end_time: Option<PyNumber>,
+    /// Other keys, such as SponsorBlock chapters' `category`, `type`,
+    /// `categories`, `name` and `category_names`.
+    #[serde(flatten, default)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
 }
 
 /// Represented descriptive metadata; every field is optional and omitted when

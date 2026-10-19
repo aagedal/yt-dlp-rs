@@ -17,6 +17,8 @@ pub(crate) struct Segment {
     pub start: PyNumber,
     pub end: PyNumber,
     pub title: Option<String>,
+    /// A SponsorBlock chapter's `type` (action type).
+    pub action: Option<String>,
     pub remove: bool,
     /// `_categories`, present (possibly empty) for sponsor chapters.
     pub categories: Option<Vec<Category>>,
@@ -25,11 +27,48 @@ pub(crate) struct Segment {
 }
 
 impl Segment {
+    /// A `sponsorblock_chapters` entry (`SponsorBlockPP`'s `to_chapter`).
+    pub(crate) fn from_sponsor_json(value: &serde_json::Value) -> Option<Self> {
+        let number =
+            |value: &serde_json::Value| serde_json::from_value::<PyNumber>(value.clone()).ok();
+        let categories = value["_categories"]
+            .as_array()?
+            .iter()
+            .map(|category| {
+                Some((
+                    category[0].as_str()?.to_owned(),
+                    number(&category[1])?,
+                    number(&category[2])?,
+                    category[3].as_str()?.to_owned(),
+                ))
+            })
+            .collect::<Option<Vec<_>>>()?;
+        Some(Self {
+            start: number(&value["start_time"])?,
+            end: number(&value["end_time"])?,
+            title: value["title"].as_str().map(str::to_owned),
+            action: value["type"].as_str().map(str::to_owned),
+            remove: false,
+            categories: Some(categories),
+            was_cut: false,
+            cut_idx: None,
+        })
+    }
+
+    /// A sponsor chapter's category (`c['category']`).
+    pub(crate) fn category(&self) -> Option<&str> {
+        self.categories
+            .as_ref()?
+            .first()
+            .map(|category| category.0.as_str())
+    }
+
     pub(crate) fn chapter(start: PyNumber, end: PyNumber, title: Option<String>) -> Self {
         Self {
             start,
             end,
             title,
+            action: None,
             remove: false,
             categories: None,
             was_cut: false,
@@ -53,15 +92,30 @@ pub(crate) struct Arranged {
     pub start: PyNumber,
     pub end: PyNumber,
     pub title: Option<String>,
+    pub action: Option<String>,
     pub sponsor: Option<Sponsor>,
 }
 
 impl Arranged {
     pub(crate) fn chapter(&self) -> Chapter {
+        let mut extra = serde_json::Map::new();
+        if let Some(sponsor) = &self.sponsor {
+            extra.insert("category".into(), sponsor.category.clone().into());
+            if let Some(action) = &self.action {
+                extra.insert("type".into(), action.clone().into());
+            }
+            extra.insert("categories".into(), sponsor.categories.clone().into());
+            extra.insert("name".into(), sponsor.name.clone().into());
+            extra.insert(
+                "category_names".into(),
+                sponsor.category_names.clone().into(),
+            );
+        }
         Chapter {
             start_time: Some(self.start),
             end_time: Some(self.end),
             title: self.title.clone(),
+            extra,
         }
     }
 }
@@ -157,9 +211,19 @@ impl Queue {
 /// `_remove_marked_arrange_sponsors`: the re-timed chapters and the merged
 /// cuts. `title` renders a sponsor chapter's title from its category names
 /// (upstream `--sponsorblock-chapter-title`).
+#[cfg(test)]
 pub(crate) fn arrange(
     chapters: Vec<Segment>,
     title: &dyn Fn(&Sponsor) -> String,
+) -> (Vec<Arranged>, Vec<Segment>) {
+    arrange_titled(chapters, &|sponsor, _| title(sponsor))
+}
+
+/// [`arrange`] whose title callback also gets the chapter dict
+/// (`start_time`, `end_time`, `title`), as `evaluate_outtmpl` does.
+pub(crate) fn arrange_titled(
+    chapters: Vec<Segment>,
+    title: &dyn Fn(&Sponsor, &serde_json::Value) -> String,
 ) -> (Vec<Arranged>, Vec<Segment>) {
     let mut cuts: Vec<Segment> = Vec::new();
     let mut arranged: Vec<Segment> = Vec::new();
@@ -326,7 +390,7 @@ fn ordered(values: impl Iterator<Item = String>) -> Vec<String> {
 /// neighbour; sponsor chapters get their category fields and title.
 fn remove_tiny_rename_sponsors(
     mut chapters: Vec<Segment>,
-    title: &dyn Fn(&Sponsor) -> String,
+    title: &dyn Fn(&Sponsor, &serde_json::Value) -> String,
 ) -> Vec<Arranged> {
     let mut result: Vec<Arranged> = Vec::new();
     let count = chapters.len();
@@ -365,6 +429,7 @@ fn remove_tiny_rename_sponsors(
             start: chapter.start,
             end: chapter.end,
             title: chapter.title,
+            action: chapter.action,
             sponsor: None,
         };
         if let Some(categories) = chapter
@@ -388,7 +453,12 @@ fn remove_tiny_rename_sponsors(
                 name: shortest.3.clone(),
                 category_names: ordered(categories.iter().map(|c| c.3.clone())),
             };
-            arranged.title = Some(title(&sponsor));
+            let dict = serde_json::json!({
+                "start_time": arranged.start,
+                "end_time": arranged.end,
+                "title": arranged.title,
+            });
+            arranged.title = Some(title(&sponsor, &dict));
             // Merge identically named sponsors.
             if let Some(previous) = result.last_mut()
                 && previous.sponsor.is_some()
@@ -744,6 +814,7 @@ mod tests {
             start: number(&value["start_time"]),
             end: number(&value["end_time"]),
             title: value["title"].as_str().map(str::to_owned),
+            action: None,
             remove: value["remove"].as_bool().unwrap_or(false),
             categories: value["_categories"].as_array().map(|categories| {
                 categories

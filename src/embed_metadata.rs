@@ -267,11 +267,13 @@ mod tests {
                 start_time: Some(PyNumber::Float(0.0)),
                 title: Some("Intro; a=b #1\\x".into()),
                 end_time: Some(PyNumber::Float(45.5)),
+                extra: Default::default(),
             },
             Chapter {
                 start_time: Some(PyNumber::Float(45.5)),
                 title: Some("Line\nbreak".into()),
                 end_time: Some(PyNumber::Int(120)),
+                extra: Default::default(),
             },
         ];
         // Rendered by pinned upstream `_get_chapter_opts`.

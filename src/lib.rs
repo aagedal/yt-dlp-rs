@@ -36,6 +36,7 @@ mod retry;
 pub mod screen;
 pub mod sections;
 mod selector;
+pub mod sponsorblock;
 mod subtitle_convert;
 mod subtitles;
 mod thumbnail_process;
@@ -125,6 +126,24 @@ pub struct YoutubeDl {
     /// `--downloader [PROTO:]NAME` choices by simplified protocol (`default`
     /// for the rest): `true` selects FFmpegFD, `false` the native downloaders.
     downloaders: std::collections::HashMap<String, bool>,
+}
+
+/// A transport error as urllib words it: `[Errno N] TEXT` for an OS error.
+fn urllib_error(error: &reqwest::Error) -> String {
+    let mut source: Option<&(dyn std::error::Error + 'static)> = Some(error);
+    while let Some(current) = source {
+        if let Some(io) = current.downcast_ref::<std::io::Error>()
+            && let Some(code) = io.raw_os_error()
+        {
+            let text = io.to_string();
+            let text = text
+                .strip_suffix(&format!(" (os error {code})"))
+                .unwrap_or(&text);
+            return format!("[Errno {code}] {text}");
+        }
+        source = current.source();
+    }
+    error.to_string()
 }
 
 /// HlsFD's `Total fragments` for `info` after `refresh_hls`: the whole
@@ -632,6 +651,96 @@ impl YoutubeDl {
             )?;
         }
         drop(workspace);
+        Ok(())
+    }
+
+    /// Upstream `SponsorBlockPP.run` (an `after_filter` processor): fetch the
+    /// video's segments in `categories` from `api` and store them as
+    /// `sponsorblock_chapters`. `retries` follows `--extractor-retries`.
+    pub fn fetch_sponsorblock(
+        &self,
+        info: &mut VideoInfo,
+        categories: &[String],
+        api: &str,
+        retries: u32,
+    ) -> Result<()> {
+        let say = |text: &str| screen::screen(&format!("[SponsorBlock] {text}"));
+        if !sponsorblock::supported(info) {
+            say(&format!(
+                "SponsorBlock is not supported for {}",
+                info.extractor_key
+            ));
+            return Ok(());
+        }
+        say("Fetching SponsorBlock segments");
+        let url = sponsorblock::query_url(api, &info.id, categories);
+        screen::debug(&format!("SponsorBlock query: {url}"));
+        // `_download_json` with `RetryManager`: 404 means no segments.
+        let mut attempt = 0;
+        let body: Option<serde_json::Value> = loop {
+            attempt += 1;
+            let result = self
+                .client
+                .get(&url)
+                .send()
+                .map_err(|error| urllib_error(&error))
+                .and_then(|response| {
+                    let status = response.status();
+                    if status == reqwest::StatusCode::NOT_FOUND {
+                        return Ok(None);
+                    }
+                    if !status.is_success() {
+                        return Err(format!(
+                            "HTTP Error {}: {}",
+                            status.as_u16(),
+                            status.canonical_reason().unwrap_or("")
+                        ));
+                    }
+                    let bytes = response.bytes().map_err(|error| error.to_string())?;
+                    serde_json::from_slice::<serde_json::Value>(&bytes)
+                        .map(Some)
+                        .map_err(|error| error.to_string())
+                });
+            match result {
+                Ok(body) => break body,
+                Err(error) => {
+                    let error = format!("Unable to communicate with SponsorBlock API: {error}");
+                    if attempt > retries {
+                        return Err(Error::Postprocess(error));
+                    }
+                    screen::warning(&format!("{error}. Retrying ({attempt}/{retries})..."));
+                }
+            }
+        };
+        let segments: Vec<serde_json::Value> = body
+            .as_ref()
+            .and_then(serde_json::Value::as_array)
+            .into_iter()
+            .flatten()
+            .find(|entry| entry["videoID"].as_str() == Some(info.id.as_str()))
+            .and_then(|entry| entry["segments"].as_array().cloned())
+            .unwrap_or_default();
+        let (chapters, mismatched) = sponsorblock::chapters(&segments, info.metadata.duration)?;
+        if mismatched {
+            screen::warning(
+                "Some SponsorBlock segments are from a video of different duration, maybe from an old version of this video",
+            );
+        }
+        if chapters.is_empty() {
+            say("No matching segments were found in the SponsorBlock database");
+        } else {
+            say(&format!(
+                "Found {} segments in the SponsorBlock database",
+                chapters.len()
+            ));
+        }
+        info.extra.insert(
+            "sponsorblock_chapters".into(),
+            chapters
+                .iter()
+                .map(sponsorblock::SponsorChapter::to_json)
+                .collect(),
+        );
         Ok(())
     }
 
