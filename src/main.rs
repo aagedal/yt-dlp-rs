@@ -194,6 +194,9 @@ struct Args {
     /// Skip media downloads while allowing requested subtitle and info JSON sidecars
     #[arg(long, alias = "no-download")]
     skip_download: bool,
+    /// Process the video or playlist information in FILE (written with --write-info-json) instead of URLs
+    #[arg(long, alias = "load-info", value_name = "FILE")]
+    load_info_json: Option<String>,
     /// Write cleaned video and playlist metadata to .info.json files (existing files are kept)
     #[arg(long, overrides_with = "no_write_info_json")]
     write_info_json: bool,
@@ -1138,7 +1141,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         return Err(usage("rate limit \"0\" must be positive").into());
     }
     // Upstream reports a missing URL after validating the options.
-    if urls.is_empty() {
+    if urls.is_empty() && args.load_info_json.is_none() {
         return Err(UsageError(
             "You must provide at least one URL.\nType yt-dlp-rs --help to see a list of all options."
                 .into(),
@@ -1153,15 +1156,48 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut cancelled: Option<Cancel> = None;
     let mut failed = false;
     let mut stdout = io::stdout().lock();
-    for url in urls {
+    // Upstream `download_with_info_file` replaces the URLs.
+    let inputs: Vec<(String, Option<ExtractResult>)> = match &args.load_info_json {
+        Some(file) => {
+            if !urls.is_empty() {
+                warning!("WARNING: URLs are ignored due to --load-info-json");
+            }
+            let path = yt_dlp_rs::batch::expand_path_text(file);
+            yt_dlp_rs::load_info_json(std::path::Path::new(&path))?
+                .into_iter()
+                .map(|result| (path.clone(), Some(result)))
+                .collect()
+        }
+        None => urls.into_iter().map(|url| (url, None)).collect(),
+    };
+    for (url, loaded) in inputs {
         let options = ExtractionOptions {
             retries: args.extractor_retries,
         };
         let mut pending: Option<Cancel> = None;
         let extracted =
             (|| -> yt_dlp_rs::Result<Option<(ExtractResult, Option<PlaylistCounts>)>> {
-                let mut result =
-                    downloader.extract_result_unselected_with_options(&url, options)?;
+                let mut result = match loaded {
+                    // Loaded playlists have no entries (`sanitize_info`), so
+                    // upstream's `EntryNotInPlaylist` falls back to the URL.
+                    Some(ExtractResult::Playlist(playlist)) => {
+                        let title = [&playlist.title, &playlist.id]
+                            .into_iter()
+                            .find(|text| !text.is_empty())
+                            .map_or("<Untitled>", |text| text.as_str());
+                        screen!("[download] Downloading playlist: {title}");
+                        warning!(
+                            "WARNING: The info failed to download: There are no entries; trying with URL {}",
+                            playlist.webpage_url
+                        );
+                        downloader.extract_result_unselected_with_options(
+                            playlist.webpage_url.as_str(),
+                            options,
+                        )?
+                    }
+                    Some(result) => result,
+                    None => downloader.extract_result_unselected_with_options(&url, options)?,
+                };
                 let counts = playlist_selection.apply(&mut result);
                 let result = if let Some(archive) = &archive {
                     let (result, reached) =

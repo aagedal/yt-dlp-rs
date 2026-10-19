@@ -182,8 +182,8 @@ remain outside the current result contract.
    Matroska, preserving source container/language policies and sidecar retention.
    Other-site/manifest subtitles and regex languages remain open.
    Video/playlist `--write-info-json` sidecars follow upstream clean filtering,
-   naming and ordering for the represented metadata subset; loading info JSON,
-   overwrite options and info JSON embedding remain open.
+   naming and ordering for the represented metadata subset, and
+   `--load-info-json` reprocesses saved dictionaries; info JSON embedding remains open.
    Basic download archives are implemented: cached extractor-key/ID membership,
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive

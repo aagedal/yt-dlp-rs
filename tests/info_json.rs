@@ -355,3 +355,76 @@ fn reserved_and_colliding_paths_fail_before_writes_and_skip_the_playlist() {
     assert!(!cookies.contains("_type"), "{cookies}");
     assert_eq!(server.count("/two.mp4"), 1, "entries are not downloaded");
 }
+
+fn load(dir: &Path, file: &Path, args: &[&str]) -> Output {
+    Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .current_dir(dir)
+        .arg("--load-info-json")
+        .arg(file)
+        .args(args)
+        .output()
+        .unwrap()
+}
+
+#[test]
+fn load_info_json_reselects_and_downloads_without_extraction() {
+    let server = Server::new();
+    let source = tempfile::tempdir().unwrap();
+    run(&server.cli(
+        source.path(),
+        "/playlist.html",
+        &[
+            "--write-info-json",
+            "--skip-download",
+            "-o",
+            "%(id)s.%(ext)s",
+        ],
+    ));
+    let pages = server.count("/playlist.html");
+    // A video dictionary is processed directly: no page request, normal
+    // selection over its saved formats, and the media download.
+    let dir = tempfile::tempdir().unwrap();
+    let entry = source.path().join("playlist-1.info.json");
+    let stderr = run(&load(
+        dir.path(),
+        &entry,
+        &["-o", "out.%(ext)s", "extra-url"],
+    ));
+    assert!(stderr.contains("WARNING: URLs are ignored due to --load-info-json"));
+    assert!(stderr.contains("[info] playlist-1: Downloading 1 format(s): 0"));
+    assert_eq!(fs::read(dir.path().join("out.mp4")).unwrap(), b"one");
+    assert_eq!(server.count("/playlist.html"), pages);
+    // A list of dictionaries is processed in order, with -j output.
+    let list = dir.path().join("list.json");
+    let entries: Vec<Value> = ["playlist-1", "playlist-2"]
+        .iter()
+        .map(|id| read(&source.path().join(format!("{id}.info.json"))).1)
+        .collect();
+    fs::write(&list, serde_json::to_vec(&entries).unwrap()).unwrap();
+    let output = load(dir.path(), &list, &["-j"]);
+    let ids: Vec<String> = String::from_utf8(output.stdout)
+        .unwrap()
+        .lines()
+        .map(|line| {
+            serde_json::from_str::<Value>(line).unwrap()["id"]
+                .as_str()
+                .unwrap()
+                .to_owned()
+        })
+        .collect();
+    assert_eq!(ids, ["playlist-1", "playlist-2"]);
+    // Playlists lose their entries when loaded, so the URL is re-extracted.
+    let playlist = source.path().join("playlist.info.json");
+    let stderr = run(&load(dir.path(), &playlist, &["-s"]));
+    assert!(stderr.contains(&format!(
+        "WARNING: The info failed to download: There are no entries; trying with URL {}",
+        server.url("/playlist.html")
+    )));
+    assert_eq!(server.count("/playlist.html"), pages + 1);
+    // Invalid files fail without a URL error.
+    let invalid = dir.path().join("invalid.json");
+    fs::write(&invalid, "{").unwrap();
+    let output = load(dir.path(), &invalid, &[]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&output.stderr).starts_with("ERROR: info JSON failed: "));
+}

@@ -338,3 +338,166 @@ mod tests {
         );
     }
 }
+
+/// Upstream `sanitize_info(info, remove_private_keys=True)`: drop `None`
+/// values, `__` keys and the request/file bookkeeping keys, recursively.
+fn sanitize_loaded(value: Value) -> Value {
+    const PRIVATE: &[&str] = &[
+        "requested_downloads",
+        "requested_formats",
+        "requested_subtitles",
+        "requested_entries",
+        "entries",
+        "filepath",
+        "_filename",
+        "filename",
+        "infojson_filename",
+        "original_url",
+        "playlist_autonumber",
+    ];
+    match value {
+        Value::Object(map) => Value::Object(
+            map.into_iter()
+                .filter(|(key, value)| {
+                    !value.is_null() && !key.starts_with("__") && !PRIVATE.contains(&key.as_str())
+                })
+                .map(|(key, value)| (key, sanitize_loaded(value)))
+                .collect(),
+        ),
+        Value::Array(items) => Value::Array(items.into_iter().map(sanitize_loaded).collect()),
+        other => other,
+    }
+}
+
+/// Fill fields this port requires from an upstream-written dictionary:
+/// `direct` defaults to false, a format's stream kind follows `vcodec`/
+/// `acodec` `"none"`, and a missing top-level `url` (a merged selection)
+/// comes from the last format, to be replaced by format selection.
+fn normalize_loaded(map: &mut serde_json::Map<String, Value>) -> Result<()> {
+    map.entry("direct").or_insert(Value::Bool(false));
+    if let Some(Value::Array(formats)) = map.get_mut("formats") {
+        for format in formats.iter_mut().filter_map(Value::as_object_mut) {
+            let protocol = format
+                .get("protocol")
+                .and_then(Value::as_str)
+                .unwrap_or("https");
+            if !matches!(protocol, "http" | "https") && !format.contains_key("fragments") {
+                return Err(Error::InfoJson(format!(
+                    "loaded format protocol {protocol:?} is unsupported"
+                )));
+            }
+            if !format.contains_key("stream_kind") {
+                let none = |key: &str| format.get(key).and_then(Value::as_str) == Some("none");
+                let kind = match (none("vcodec"), none("acodec")) {
+                    (false, true) => Some("video_only"),
+                    (true, false) => Some("audio_only"),
+                    _ => None,
+                };
+                if let Some(kind) = kind {
+                    format.insert("stream_kind".into(), kind.into());
+                }
+            }
+        }
+    }
+    if !map.contains_key("url")
+        && let Some(url) = map
+            .get("formats")
+            .and_then(Value::as_array)
+            .and_then(|formats| formats.last())
+            .and_then(|format| format.get("url"))
+            .cloned()
+    {
+        map.insert("url".into(), url);
+    }
+    Ok(())
+}
+
+/// Upstream `download_with_info_file`: one dictionary or a list of them,
+/// sanitized like upstream's default `clean_infojson`. Videos keep their
+/// formats for reselection; playlists lose their entries.
+pub fn load_info_json(path: &std::path::Path) -> Result<Vec<crate::ExtractResult>> {
+    let bytes = std::fs::read(path).map_err(|error| Error::InfoJson(error.to_string()))?;
+    let text = String::from_utf8(bytes)
+        .map_err(|_| Error::InfoJson("info JSON is not valid UTF-8".into()))?;
+    let value: Value =
+        serde_json::from_str(&text).map_err(|error| Error::InfoJson(error.to_string()))?;
+    let items = match value {
+        Value::Array(items) => items,
+        other => vec![other],
+    };
+    items
+        .into_iter()
+        .map(|item| {
+            let Value::Object(mut map) = sanitize_loaded(item) else {
+                return Err(Error::InfoJson("info is not a JSON object".into()));
+            };
+            let kind = map
+                .get("_type")
+                .and_then(Value::as_str)
+                .unwrap_or("video")
+                .to_owned();
+            match kind.as_str() {
+                "video" => {
+                    normalize_loaded(&mut map)?;
+                    let mut info: crate::VideoInfo = serde_json::from_value(Value::Object(map))
+                        .map_err(|error| Error::InfoJson(error.to_string()))?;
+                    info.metadata.fill_common_fields();
+                    info.metadata.sanitize_thumbnails();
+                    Ok(crate::ExtractResult::Video(info))
+                }
+                "playlist" => {
+                    map.insert("entries".into(), Value::Array(Vec::new()));
+                    serde_json::from_value(Value::Object(map))
+                        .map(crate::ExtractResult::Playlist)
+                        .map_err(|error| Error::InfoJson(error.to_string()))
+                }
+                other => Err(Error::InfoJson(format!(
+                    "loading {other:?} info is unsupported"
+                ))),
+            }
+        })
+        .collect()
+}
+
+#[cfg(test)]
+mod load_tests {
+    use super::*;
+    use serde_json::json;
+
+    fn load(value: Value) -> Result<Vec<crate::ExtractResult>> {
+        let file = tempfile::NamedTempFile::new().unwrap();
+        std::fs::write(file.path(), serde_json::to_vec(&value).unwrap()).unwrap();
+        load_info_json(file.path())
+    }
+
+    #[test]
+    fn upstream_dictionaries_are_sanitized_and_normalized() {
+        let loaded = load(json!({
+            "id": "v", "title": "T", "ext": "mp4", "webpage_url": "https://e.invalid/w",
+            "extractor": "x", "extractor_key": "X", "__private": 1, "filename": "f.mp4",
+            "requested_formats": [{"format_id": "nope"}], "description": null,
+            "formats": [
+                {"format_id": "a", "url": "https://e.invalid/a", "ext": "m4a", "vcodec": "none", "acodec": "mp4a"},
+                {"format_id": "v", "url": "https://e.invalid/v", "ext": "mp4", "vcodec": "avc1", "acodec": "none", "protocol": "https"},
+            ],
+        }))
+        .unwrap();
+        let crate::ExtractResult::Video(info) = &loaded[0] else {
+            panic!("video expected");
+        };
+        assert!(!info.direct);
+        assert_eq!(info.url.as_str(), "https://e.invalid/v");
+        assert!(info.requested_formats.is_empty());
+        assert_eq!(info.formats[0].stream_kind, crate::StreamKind::AudioOnly);
+        assert_eq!(info.formats[1].stream_kind, crate::StreamKind::VideoOnly);
+        let error = load(json!({
+            "id": "v", "title": "T", "ext": "mp4", "webpage_url": "https://e.invalid/w",
+            "extractor": "x", "extractor_key": "X",
+            "formats": [{"format_id": "h", "url": "https://e.invalid/h.m3u8", "ext": "mp4", "protocol": "m3u8_native"}],
+        }))
+        .unwrap_err();
+        assert!(error.to_string().contains("\"m3u8_native\" is unsupported"));
+        assert!(load(json!({"_type": "url", "url": "https://e.invalid/"})).is_err());
+        assert!(load(json!([1])).is_err());
+    }
+}

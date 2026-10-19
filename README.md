@@ -143,6 +143,8 @@ Supported today:
   `--no-download-archive` follow upstream archive control.
 - `-r/--limit-rate RATE` throttles media transfers like upstream; `--sleep-interval`,
   `--max-sleep-interval` and `--sleep-subtitles` pause before downloads.
+- `--load-info-json FILE` processes saved `.info.json` dictionaries without
+  extraction (playlists fall back to their URL, as upstream).
 - `--exec [WHEN:]CMD` runs shell commands at upstream's stages (POSIX only).
 - `--mtime` sets downloaded file times from `Last-Modified`; FFmpeg outputs keep
   their inputs' modification time.
