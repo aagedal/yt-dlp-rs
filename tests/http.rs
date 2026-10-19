@@ -532,8 +532,13 @@ fn rejects_pages_manifests_errors_and_non_http_urls() {
         dl.extract_info(&server.url("/missing")),
         Err(Error::Http(_))
     ));
+    // Upstream refuses file URLs unless --enable-file-urls.
     assert!(matches!(
         dl.extract_info("file:///tmp/video.mp4"),
+        Err(Error::Reported(message)) if message.starts_with("file:// URLs are disabled by default")
+    ));
+    assert!(matches!(
+        dl.extract_info("ftp://example.invalid/video.mp4"),
         Err(Error::UnsupportedScheme(_))
     ));
     // Upstream GenericIE: an input without a scheme is not a valid URL.

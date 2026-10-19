@@ -343,6 +343,58 @@ pub(crate) fn download(
     )
 }
 
+/// A local `file:` media download (`--enable-file-urls`): copied with
+/// progress like upstream's urllib file handler, then published.
+pub(crate) fn download_file(
+    info: &VideoInfo,
+    destination: &Path,
+    options: DownloadOptions,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    if destination.exists() {
+        return Err(Error::OutputExists(destination.into()));
+    }
+    let source = info
+        .url
+        .to_file_path()
+        .map_err(|_| Error::UnsupportedScheme("file".into()))?;
+    let mut input = fs::File::open(&source)?;
+    let total = input.metadata()?.len();
+    let parent = destination
+        .parent()
+        .filter(|p| !p.as_os_str().is_empty())
+        .unwrap_or(Path::new("."));
+    fs::create_dir_all(parent)?;
+    let mut temporary = tempfile::Builder::new()
+        .prefix(".yt-dlp-rs-")
+        .suffix(".part")
+        .tempfile_in(parent)?;
+    let mut reporter = Reporter {
+        callback,
+        attempt: 1,
+        total: Some(total),
+    };
+    let mut copied = 0;
+    let mut buffer = [0; 64 * 1024];
+    reporter.report(DownloadPhase::Downloading, 0)?;
+    loop {
+        let count = input.read(&mut buffer)?;
+        if count == 0 {
+            break;
+        }
+        temporary.write_all(&buffer[..count])?;
+        copied += count as u64;
+        reporter.report(DownloadPhase::Downloading, copied)?;
+    }
+    temporary.flush()?;
+    if options.update_time {
+        crate::filetime::apply(temporary.as_file(), info.metadata.timestamp);
+    }
+    reporter.report(DownloadPhase::Publishing, copied)?;
+    Target::Private(temporary).publish(destination)?;
+    Ok(copied)
+}
+
 pub(crate) fn download_subtitle(
     client: &Client,
     info: &VideoInfo,

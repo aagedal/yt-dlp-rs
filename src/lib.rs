@@ -118,6 +118,8 @@ pub struct YoutubeDl {
     concurrent_fragments: usize,
     /// `--keep-fragments`.
     keep_fragments: bool,
+    /// `--enable-file-urls`.
+    enable_file_urls: bool,
     /// `--downloader [PROTO:]NAME` choices by simplified protocol (`default`
     /// for the rest): `true` selects FFmpegFD, `false` the native downloaders.
     downloaders: std::collections::HashMap<String, bool>,
@@ -317,6 +319,7 @@ impl YoutubeDl {
             check_formats: CheckFormats::Default,
             concurrent_fragments: 1,
             keep_fragments: false,
+            enable_file_urls: false,
             downloaders: Default::default(),
             ffprobe: None,
             cookies: cookies.clone(),
@@ -582,6 +585,12 @@ impl YoutubeDl {
     /// `-N`/`--concurrent-fragments`: fragments downloaded in parallel.
     pub fn with_concurrent_fragments(mut self, count: usize) -> Self {
         self.concurrent_fragments = count.max(1);
+        self
+    }
+
+    /// `--enable-file-urls`: extract and download local `file:` media.
+    pub fn with_file_urls(mut self, enable: bool) -> Self {
+        self.enable_file_urls = enable;
         self
     }
 
@@ -940,6 +949,9 @@ impl YoutubeDl {
             return self.extract_unqualified(input, options);
         }
         let url = Url::parse(input)?;
+        if url.scheme() == "file" {
+            return self.extract_file(&url);
+        }
         if !matches!(url.scheme(), "http" | "https") {
             return Err(Error::UnsupportedScheme(url.scheme().into()));
         }
@@ -976,6 +988,32 @@ impl YoutubeDl {
     fn no_suitable(&self, url: &str) -> Error {
         let key = if self.force_generic { " (Generic)" } else { "" };
         Error::Reported(format!("No suitable extractor{key} found for URL {url}"))
+    }
+
+    /// Upstream generic extraction of a `file:` URL, refused unless
+    /// `--enable-file-urls` (urllib's file handler then reads it).
+    fn extract_file(&self, url: &Url) -> Result<ExtractResult> {
+        if !self.generic_allowed() {
+            return Err(self.no_suitable(url.as_str()));
+        }
+        screen::set_extractor("generic");
+        screen::screen(&format!(
+            "[generic] Extracting URL: {}",
+            screen::truncate_string(url.as_str(), 100, 20)
+        ));
+        screen::screen(&format!(
+            "[generic] {}: Downloading webpage",
+            screen::generic_id(url.as_str())
+        ));
+        if !self.enable_file_urls {
+            return Err(Error::Reported(
+                "file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk."
+                    .into(),
+            ));
+        }
+        let mut result = ExtractResult::Video(extractor::direct::from_file(url)?);
+        self.process_result(&mut result)?;
+        Ok(result)
     }
 
     /// Upstream `GenericIE._real_extract` for an input without a scheme.
@@ -1134,6 +1172,9 @@ impl YoutubeDl {
                 .filter(|size| *size > 0)
                 .map(|size| download::Chunking { size, test: false })
         };
+        if info.url.scheme() == "file" {
+            return download::download_file(info, destination.as_ref(), options, &mut callback);
+        }
         download::download(
             &self.client,
             info,

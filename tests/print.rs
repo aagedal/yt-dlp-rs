@@ -635,3 +635,40 @@ fn parse_and_replace_metadata_follow_metadata_parser_pp() {
         String::from_utf8_lossy(&output.stderr).ends_with("ERROR: bad escape \\q at position 0\n")
     );
 }
+
+#[test]
+fn file_urls_are_refused_unless_enabled_and_then_copy_local_media() {
+    let directory = tempfile::tempdir().unwrap();
+    let media = directory.path().join("clip.mp4");
+    std::fs::write(&media, b"\0\0\0\x18ftypisom local media").unwrap();
+    let url = url::Url::from_file_path(&media).unwrap().to_string();
+    let run = |args: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "--no-progress", "-o", "out.%(ext)s"])
+            .args(args)
+            .arg(&url)
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    // Checked against pinned upstream.
+    let output = run(&[]);
+    assert_eq!(output.status.code(), Some(1));
+    assert_eq!(
+        String::from_utf8_lossy(&output.stderr),
+        "ERROR: file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk.\n"
+    );
+    let output = run(&["--enable-file-urls"]);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(String::from_utf8_lossy(&output.stdout).ends_with(
+        "[info] clip: Downloading 1 format(s): mp4\n[download] Destination: out.mp4\n[download] Download completed\n"
+    ));
+    assert_eq!(
+        std::fs::read(directory.path().join("out.mp4")).unwrap(),
+        std::fs::read(&media).unwrap()
+    );
+}

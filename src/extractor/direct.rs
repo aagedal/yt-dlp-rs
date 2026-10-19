@@ -354,7 +354,71 @@ pub(crate) fn generic_untyped(response: &Response, url: &Url) -> VideoInfo {
 }
 
 fn build(response: &Response, url: &Url, ext: String) -> VideoInfo {
-    let final_url = response.url().clone();
+    build_at(response.url().clone(), url, ext)
+}
+
+/// Python `mimetypes.guess_type` for the media extensions a `file:` URL
+/// can name.
+fn guess_file_type(path: &str) -> Option<&'static str> {
+    let ext = path.rsplit_once('.')?.1.to_ascii_lowercase();
+    Some(match ext.as_str() {
+        "mp4" => "video/mp4",
+        "m4v" => "video/mp4",
+        "webm" => "video/webm",
+        "mkv" => "video/x-matroska",
+        "mov" => "video/quicktime",
+        "avi" => "video/x-msvideo",
+        "flv" => "video/x-flv",
+        "ts" => "video/mp2t",
+        "mpg" | "mpeg" => "video/mpeg",
+        "3gp" => "video/3gpp",
+        "mp3" => "audio/mpeg",
+        "m4a" => "audio/mp4",
+        "aac" => "audio/aac",
+        "opus" => "audio/opus",
+        "ogg" | "oga" => "audio/ogg",
+        "wav" => "audio/x-wav",
+        "flac" => "audio/flac",
+        "weba" => "audio/webm",
+        _ => return None,
+    })
+}
+
+/// Upstream generic extraction of a `file:` URL (`--enable-file-urls`):
+/// urllib's file handler supplies the guessed Content-Type and the file's
+/// mtime as Last-Modified, so media files are direct links.
+pub(crate) fn from_file(url: &Url) -> crate::Result<VideoInfo> {
+    let path = url
+        .to_file_path()
+        .map_err(|_| crate::Error::Reported(format!("[generic] Unable to open {url}")))?;
+    let metadata = std::fs::metadata(&path).map_err(|error| {
+        crate::Error::Reported(format!(
+            "[generic] {}: Unable to download webpage: {error}",
+            crate::screen::generic_id(url.as_str())
+        ))
+    })?;
+    let mime = guess_file_type(url.path())
+        .filter(|_| metadata.is_file())
+        .ok_or_else(|| {
+            crate::Error::UnsupportedHtml5(
+                "file: URLs are only supported for direct media files natively".into(),
+            )
+        })?;
+    let ext = determine_ext(url.as_str()).unwrap_or_else(|| mimetype2ext_or(mime, None));
+    let mut info = with_format(build_at(url.clone(), url, ext), mime);
+    info.protocol = Some("file".into());
+    for format in &mut info.formats {
+        format.protocol = Some("file".into());
+    }
+    info.metadata.timestamp = metadata
+        .modified()
+        .ok()
+        .and_then(|time| time.duration_since(std::time::UNIX_EPOCH).ok())
+        .map(|age| age.as_secs() as i64);
+    Ok(info)
+}
+
+fn build_at(final_url: Url, url: &Url, ext: String) -> VideoInfo {
     let filename = final_url
         .path_segments()
         .and_then(|mut p| p.next_back())

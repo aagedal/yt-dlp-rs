@@ -865,6 +865,9 @@ struct Args {
     allow_dynamic_mpd: bool,
     #[arg(long, hide = true, overrides_with = "allow_dynamic_mpd")]
     ignore_dynamic_mpd: bool,
+    /// Allow file:// URLs (direct local media files)
+    #[arg(long)]
+    enable_file_urls: bool,
     /// Size of a chunk for chunk-based HTTP downloading, e.g. 10485760 or 10M
     #[arg(long, value_name = "SIZE")]
     http_chunk_size: Option<String>,
@@ -1990,6 +1993,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .with_force_generic_extractor(args.force_generic_extractor)
         .with_concurrent_fragments(args.concurrent_fragments as usize)
         .with_keep_fragments(args.keep_fragments)
+        .with_file_urls(args.enable_file_urls)
         .with_check_formats(if args.check_formats {
             yt_dlp_rs::CheckFormats::Selected
         } else if args.check_all_formats {
