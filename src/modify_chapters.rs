@@ -628,6 +628,108 @@ pub(crate) fn concat(
     Ok(())
 }
 
+/// `FFmpegConcatPP._get_codecs`: the streams' `codec_name`s.
+fn codecs(ffprobe: &Path, input: &Path) -> crate::Result<Vec<String>> {
+    let directory = input.parent().unwrap_or(Path::new("."));
+    let args: Vec<OsString> = [
+        "-hide_banner",
+        "-v",
+        "error",
+        "-show_streams",
+        "-print_format",
+        "json",
+        "-protocol_whitelist",
+        "file",
+        "-i",
+    ]
+    .into_iter()
+    .map(OsString::from)
+    .chain([input.canonicalize()?.into_os_string()])
+    .collect();
+    let output = run(ffprobe, &args, directory)?;
+    let probe: serde_json::Value =
+        serde_json::from_slice(&output).map_err(|_| ffmpeg_error("invalid ffprobe JSON"))?;
+    let names: Vec<String> = probe["streams"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|stream| stream["codec_name"].as_str().map(str::to_owned))
+        .collect();
+    crate::screen::debug(&format!("Codecs = {}", names.join(", ")));
+    Ok(names)
+}
+
+/// `FFmpegConcatPP.concat_files` for several files: identical streams are
+/// required, then the concat demuxer stream-copies them into `output`.
+pub(crate) fn concat_files(
+    ffmpeg: &Path,
+    ffprobe: &Path,
+    inputs: &[std::path::PathBuf],
+    output: &Path,
+) -> crate::Result<()> {
+    let mut seen: Vec<Vec<String>> = Vec::new();
+    for input in inputs {
+        let names = codecs(ffprobe, input)?;
+        if !seen.contains(&names) {
+            seen.push(names);
+        }
+    }
+    if seen.len() > 1 {
+        return Err(ffmpeg_error(
+            "The files have different streams/codecs and cannot be concatenated. Either select different formats or --recode-video them to a common format",
+        ));
+    }
+    let parent = output
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or(Path::new("."));
+    std::fs::create_dir_all(parent)?;
+    let workspace = tempfile::Builder::new()
+        .prefix(".yt-dlp-rs-concat-")
+        .tempdir_in(parent)?;
+    let ext = output
+        .extension()
+        .map(|ext| ext.to_string_lossy().to_lowercase())
+        .unwrap_or_default();
+    let spec = workspace.path().join("files.concat");
+    let mut text = String::from("ffconcat version 1.0\n");
+    for input in inputs {
+        let file = format!("file:{}", input.canonicalize()?.display());
+        text.push_str(&format!("file {}\n", quote_for_ffmpeg(&file)));
+    }
+    std::fs::write(&spec, text)?;
+    let temporary = workspace.path().join(format!("concat.{ext}"));
+    let mut args: Vec<OsString> = [
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-y",
+        "-f",
+        "concat",
+        "-safe",
+        "0",
+        "-protocol_whitelist",
+        "file",
+    ]
+    .map(OsString::from)
+    .into();
+    args.extend(crate::pp_args::input("Concat", 1));
+    args.push("-i".into());
+    args.push(spec.into_os_string());
+    args.extend(stream_copy(true, &ext));
+    args.extend(["-movflags", "+faststart", "-f"].map(OsString::from));
+    args.push(crate::embed_metadata::muxer(&ext).into());
+    args.extend(crate::pp_args::output("Concat"));
+    args.push(temporary.clone().into_os_string());
+    run(ffmpeg, &args, workspace.path())?;
+    if std::fs::metadata(&temporary).map_or(true, |metadata| metadata.len() == 0) {
+        return Err(ffmpeg_error("FFmpeg produced no concatenated output"));
+    }
+    std::fs::rename(&temporary, output)?;
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

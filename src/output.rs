@@ -122,6 +122,22 @@ pub fn render_template_with_options(
     template::render(template, template::Source::Video(info), options)
 }
 
+/// Upstream `prepare_filename(dict, kind)` over an arbitrary dict (the
+/// playlist `pl_video` file of `--concat-playlist`).
+pub fn render_dict_filename(
+    template: &str,
+    dict: &serde_json::Value,
+    options: &TemplateOptions,
+    kind: &str,
+) -> Result<PathBuf> {
+    template::render_kind(
+        template,
+        template::Source::JsonFile(dict),
+        options,
+        Some(kind),
+    )
+}
+
 /// Upstream `evaluate_outtmpl(template, dict)` over an arbitrary dict, as
 /// `--progress-template` renders `{'info': ..., 'progress': ...}`.
 pub fn evaluate_dict_template(

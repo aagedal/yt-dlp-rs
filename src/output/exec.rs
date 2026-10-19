@@ -36,6 +36,8 @@ pub enum Stage {
     AfterMove,
     /// After a video and its archive record are complete.
     AfterVideo,
+    /// After every playlist entry, with the playlist's info dict.
+    Playlist,
 }
 
 impl Stage {
@@ -57,6 +59,7 @@ impl Stage {
             "post_process" => Self::PostProcess,
             "after_move" => Self::AfterMove,
             "after_video" => Self::AfterVideo,
+            "playlist" => Self::Playlist,
             other => {
                 return Err(Error::Exec(format!("stage {other:?} is unsupported")));
             }
@@ -152,6 +155,18 @@ impl ExecCommand {
             command.push_str(" {}");
         }
         Ok(command.replace("{}", &shell_quote(path)))
+    }
+
+    /// `parse_cmd` over a playlist's info dict, which has no file path.
+    pub fn render_dict(
+        &self,
+        dict: &serde_json::Value,
+        options: &TemplateOptions,
+    ) -> Result<String> {
+        if template::exec_fields(&self.template).is_empty() {
+            return Ok(self.template.clone());
+        }
+        template::expand(&self.template, template::Source::JsonExec(dict), options)
     }
 
     /// Run through `/bin/sh -c` with inherited standard streams, returning

@@ -248,7 +248,6 @@ fn unsupported_print_stages_and_templates_fail_before_requests() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
     for spec in [
-        "playlist:title",
         "pre_process:id",
         "after_filter:id",
         "%(id.a-b)s",
@@ -326,7 +325,6 @@ fn print_to_file_runs_under_print_simulation_and_validates_at_startup() {
         "2\n3\n"
     );
     for args in [
-        ["--print-to-file", "playlist:id", "x.txt"],
         ["--print-to-file", "id", "%(id.a-b)s.txt"],
         ["--print-to-file", "%(id.{x)s", "x.txt"],
     ] {

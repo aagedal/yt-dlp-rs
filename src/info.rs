@@ -31,6 +31,14 @@ impl ExtractResult {
         }
     }
 
+    /// The number of videos (playlist entries, or 1).
+    pub fn entry_count(&self) -> usize {
+        match self {
+            Self::Video(_) => 1,
+            Self::Playlist(info) => info.entries.len(),
+        }
+    }
+
     pub fn into_entries(self) -> Vec<VideoInfo> {
         match self {
             Self::Video(info) => vec![info],

@@ -38,7 +38,7 @@ pub struct StagePaths<'a> {
 
 impl PrintTemplate {
     /// Parse `[WHEN:]TEMPLATE`. WHEN is case-insensitive and defaults to
-    /// `video`; `pre_process`, `after_filter` and `playlist` are rejected
+    /// `video`; `pre_process` and `after_filter` are rejected
     /// rather than printed at the wrong time.
     /// Bare field lists become one `%(field)s` line per field, and a trailing
     /// `=` prints `field = %(field)#j`, as upstream's `_forceprint` does.
@@ -131,6 +131,15 @@ impl PrintTemplate {
         )
     }
 
+    /// Render over a playlist's info dict (the `playlist` stage).
+    pub fn render_dict(
+        &self,
+        dict: &serde_json::Value,
+        options: &TemplateOptions,
+    ) -> Result<String> {
+        template::expand(&self.template, template::Source::Json(dict), options)
+    }
+
     /// The stage that prints this template.
     pub fn stage(&self) -> Stage {
         self.stage
@@ -189,6 +198,17 @@ impl PrintToFile {
             path,
             self.template.render_at(info, filename, paths, options)?,
         ))
+    }
+
+    /// Render the line and destination over a playlist's info dict.
+    pub fn render_dict(
+        &self,
+        dict: &serde_json::Value,
+        options: &TemplateOptions,
+    ) -> Result<(PathBuf, String)> {
+        let path =
+            template::render_kind(&self.file, template::Source::JsonFile(dict), options, None)?;
+        Ok((path, self.template.render_dict(dict, options)?))
     }
 
     /// The stage that prints this pair.
@@ -320,7 +340,6 @@ mod tests {
             "out/a.mp4\nhttps://example.com/m.mp4"
         );
         for spec in [
-            "playlist:id",
             "pre_process:%(id)s",
             "-1",
             "pre-1",
@@ -472,7 +491,7 @@ mod tests {
             .unwrap();
         assert_eq!(path, PathBuf::from("lists/Épisode： ＂1＂.txt"));
         assert_eq!(line, "a/b\nmp4");
-        assert!(PrintToFile::parse("playlist:id", "x.txt").is_err());
+        assert!(PrintToFile::parse("playlist:id", "x.txt").is_ok());
         assert!(PrintToFile::parse("id", "%(id.a-b)s.txt").is_err());
         assert!(PrintToFile::parse("id", "").is_err());
     }

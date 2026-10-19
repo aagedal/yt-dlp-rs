@@ -31,6 +31,10 @@ pub(super) enum Source<'a> {
     },
     /// Unsanitized rendering over an arbitrary dict (`--progress-template`).
     Json(&'a serde_json::Value),
+    /// Sanitized filename rendering over a dict (playlist `pl_video`).
+    JsonFile(&'a serde_json::Value),
+    /// `--exec` rendering over a dict (`playlist:` commands).
+    JsonExec(&'a serde_json::Value),
 }
 
 impl Source<'_> {
@@ -38,12 +42,12 @@ impl Source<'_> {
     fn print(self) -> bool {
         matches!(
             self,
-            Source::Print { .. } | Source::Exec { .. } | Source::Json(_)
+            Source::Print { .. } | Source::Exec { .. } | Source::Json(_) | Source::JsonExec(_)
         )
     }
 
     fn exec(self) -> bool {
-        matches!(self, Source::Exec { .. })
+        matches!(self, Source::Exec { .. } | Source::JsonExec(_))
     }
 }
 
@@ -127,7 +131,7 @@ fn traversal_root(source: Source<'_>) -> serde_json::Value {
     };
     let value = |info: &VideoInfo| serde_json::to_value(info).unwrap_or_default();
     match source {
-        Source::Json(value) => value.clone(),
+        Source::Json(value) | Source::JsonFile(value) | Source::JsonExec(value) => value.clone(),
         Source::Video(info) => value(info),
         Source::Print {
             info,
@@ -251,7 +255,7 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
     use Value::*;
     let info = match source {
         // Dict sources are only traversed.
-        Source::Json(_) => return Ok(None),
+        Source::Json(_) | Source::JsonFile(_) | Source::JsonExec(_) => return Ok(None),
         Source::Video(info) => info,
         Source::Print {
             info,
@@ -539,8 +543,10 @@ fn substitution(
         let value = match name {
             "autonumber" => Ok(options.autonumber.get().map(Value::Integer)),
             "video_autonumber" => Ok(options.video_autonumber.get().map(Value::Integer)),
-            _ if !matches!(info, Source::Json(_))
-                && super::traverse::is_plain(name)
+            _ if !matches!(
+                info,
+                Source::Json(_) | Source::JsonFile(_) | Source::JsonExec(_)
+            ) && super::traverse::is_plain(name)
                 && (FIELDS.contains(&name)
                     || matches!(name, "filename" | "_filename" | "filepath" | "urls")) =>
             {
@@ -584,14 +590,17 @@ fn substitution(
                     last_playlist_index,
                     ..
                 } => Some(last_playlist_index),
-                Source::Json(_) => None,
+                Source::Json(_) | Source::JsonFile(_) | Source::JsonExec(_) => None,
             },
             "playlist_autonumber" => match info {
                 Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
                     Some(info.n_entries.unwrap_or(0))
                 }
                 // Unavailable for playlists, so the default path above applies.
-                Source::Playlist { .. } | Source::Json(_) => None,
+                Source::Playlist { .. }
+                | Source::Json(_)
+                | Source::JsonFile(_)
+                | Source::JsonExec(_) => None,
             },
             _ => None,
         };
@@ -785,7 +794,10 @@ pub(super) fn render_kind(
             Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
                 Some(info.ext.as_str())
             }
-            Source::Playlist { .. } | Source::Json(_) => None,
+            Source::Playlist { .. }
+            | Source::Json(_)
+            | Source::JsonFile(_)
+            | Source::JsonExec(_) => None,
         };
         output = super::filename::replace_extension(&output, ext, real);
     }

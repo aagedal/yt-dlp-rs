@@ -635,6 +635,22 @@ impl YoutubeDl {
         Ok(())
     }
 
+    /// Upstream `FFmpegConcatPP.concat_files` for `--concat-playlist`:
+    /// several files with identical streams are concatenated into `output`.
+    pub fn concat_files(&self, inputs: &[PathBuf], output: &Path) -> Result<()> {
+        let ffmpeg = self.ffmpeg.as_ref().ok_or_else(|| {
+            Error::Postprocess(
+                "ffmpeg not found. Please install or provide the path using --ffmpeg-location"
+                    .into(),
+            )
+        })?;
+        let ffprobe = self
+            .ffprobe
+            .clone()
+            .unwrap_or_else(|| ffmpeg.with_file_name("ffprobe"));
+        modify_chapters::concat_files(ffmpeg, &ffprobe, inputs, output)
+    }
+
     /// Whether an ffmpeg executable is configured (upstream `merger.available`).
     /// Upstream `dl`'s `--verbose` line naming the downloader, for callers
     /// that announce a download before starting it; the next
