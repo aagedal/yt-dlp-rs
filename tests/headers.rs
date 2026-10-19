@@ -354,7 +354,7 @@ fn headers_reach_dash_manifest_and_selected_stream_init_and_fragments() {
     let directory = tempfile::tempdir().unwrap();
     let dl = configured();
     let url = server.url("/dash/media/manifest.mpd");
-    let info = dl.extract_info_with_format(&url, Some("dash-0")).unwrap();
+    let info = dl.extract_info_with_format(&url, Some("0")).unwrap();
     let target = directory.path().join("video.mp4");
     dl.download(&info, &target).unwrap();
     assert_eq!(

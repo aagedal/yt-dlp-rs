@@ -202,7 +202,7 @@ fn quoted_filter_delimiters_do_not_split_hls_pair_or_fallback_expression() {
         "/master.m3u8",
         "bestvideo[height<=720]+bestaudio[format_note='English/+Main'][language=en]/best",
     );
-    assert_eq!(info["format_id"], "hls-0+hls-audio-0");
+    assert_eq!(info["format_id"], "500+main-English__Main");
     assert_eq!(info["requested_formats"][1]["language"], "en");
     assert_eq!(info["requested_formats"][1]["format_note"], "English/+Main");
     assert_eq!(
@@ -366,7 +366,7 @@ fn nested_hls_pair_groups_filter_audio_before_fallback_without_launching_ffmpeg(
         String::from_utf8_lossy(&output.stderr)
     );
     let info: Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(info["format_id"], "hls-0+hls-audio-0");
+    assert_eq!(info["format_id"], "500+main-English__Main");
     assert_eq!(info["requested_formats"][1]["language"], "en");
     assert_eq!(info["requested_formats"][0]["height"], 720);
     assert_eq!(
@@ -480,7 +480,9 @@ fn indexed_best_and_worst_rank_after_filters_and_download_the_selected_bytes() {
 #[test]
 fn indexed_hls_audio_follows_existing_default_first_ranking_without_merger_launch() {
     let server = Server::new();
-    for (index, expected_id, language) in [(1, "hls-audio-0", "en"), (2, "hls-audio-1", "nb")] {
+    for (index, expected_id, language) in
+        [(1, "main-English__Main", "en"), (2, "main-Norwegian", "nb")]
+    {
         let selector = format!("bv.1+ba.{index}");
         let output = server.cli(
             "/master.m3u8",
@@ -499,7 +501,8 @@ fn indexed_hls_audio_follows_existing_default_first_ranking_without_merger_launc
             String::from_utf8_lossy(&output.stderr)
         );
         let info: Value = serde_json::from_slice(&output.stdout).unwrap();
-        assert_eq!(info["format_id"], format!("hls-0+{expected_id}"));
+        // Upstream sanitizes `/` and `+` in rendition names to `_`.
+        assert_eq!(info["format_id"], format!("500+{expected_id}"));
         assert_eq!(info["requested_formats"][1]["language"], language);
         assert_eq!(
             info["requested_formats"][1]["audio_default"]

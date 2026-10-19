@@ -101,6 +101,7 @@ pub(crate) fn from_response(
     original: &Url,
     referer: Option<&Url>,
     force_hls: bool,
+    m3u8_id: Option<&str>,
 ) -> Result<Option<VideoInfo>> {
     if !force_hls && !recognized(&response) {
         return Ok(None);
@@ -142,8 +143,36 @@ pub(crate) fn from_response(
         width: None,
         height: None,
     };
+    // Upstream `join_nonempty(...)` format IDs; empty IDs are numbered later.
+    let join = |parts: &[Option<&str>]| -> String {
+        parts
+            .iter()
+            .flatten()
+            .filter(|part| !part.is_empty())
+            .copied()
+            .collect::<Vec<_>>()
+            .join("-")
+    };
     match playlist {
         Playlist::Media { fragments, ext } => {
+            // A media playlist is returned as one format.
+            info.formats.push(VideoFormat {
+                format_id: join(&[m3u8_id]),
+                stream_kind: StreamKind::Standalone,
+                audio_group: None,
+                language: None,
+                format_note: None,
+                audio_default: false,
+                audio_autoselect: false,
+                abr: None,
+                tbr: None,
+                url: info.url.clone(),
+                ext: ext.clone(),
+                filesize: None,
+                width: None,
+                height: None,
+                fragments: fragments.clone(),
+            });
             info.ext = ext;
             info.fragments = fragments;
         }
@@ -154,7 +183,10 @@ pub(crate) fn from_response(
                 ));
             }
             let mut total_fragments = 0usize;
-            for (index, variant) in variants.into_iter().enumerate() {
+            // Upstream lists renditions before variants (and counts them for
+            // unnamed variants); playlists are still fetched variants first.
+            let renditions = audio.len();
+            for variant in variants {
                 let response = direct::request(client, &variant.url, referer)?;
                 let (url, playlist) = read_playlist(response)?;
                 let Playlist::Media { fragments, ext } = playlist else {
@@ -168,8 +200,14 @@ pub(crate) fn from_response(
                         "HLS master exceeds the 10000-fragment extraction limit",
                     ));
                 }
+                // Upstream `'%d' % (tbr or len(formats))` without a stream name.
+                let fallback = match variant.bandwidth.filter(|tbr| *tbr != 0.0) {
+                    Some(tbr) => format!("{}", tbr.trunc() as i64),
+                    None => (renditions + info.formats.len()).to_string(),
+                };
+                let name = variant.name.clone().unwrap_or(fallback);
                 info.formats.push(VideoFormat {
-                    format_id: format!("hls-{index}"),
+                    format_id: join(&[m3u8_id, Some(&name)]),
                     stream_kind: variant.stream_kind,
                     audio_group: variant.audio_group,
                     language: None,
@@ -192,7 +230,8 @@ pub(crate) fn from_response(
                     fragments,
                 });
             }
-            for (index, rendition) in audio.into_iter().enumerate() {
+            let mut rendition_formats = Vec::new();
+            for rendition in audio {
                 let response = direct::request(client, &rendition.url, referer)?;
                 let (url, playlist) = read_playlist(response)?;
                 let Playlist::Media { fragments, ext } = playlist else {
@@ -206,8 +245,8 @@ pub(crate) fn from_response(
                         "HLS master exceeds the 10000-fragment extraction limit",
                     ));
                 }
-                info.formats.push(VideoFormat {
-                    format_id: format!("hls-audio-{index}"),
+                rendition_formats.push(VideoFormat {
+                    format_id: join(&[m3u8_id, Some(&rendition.group_id), Some(&rendition.name)]),
                     stream_kind: StreamKind::AudioOnly,
                     audio_group: Some(rendition.group_id),
                     language: rendition.language,
@@ -224,9 +263,12 @@ pub(crate) fn from_response(
                     fragments,
                 });
             }
+            info.formats.splice(0..0, rendition_formats);
+            // Renditions precede variants; the top level mirrors a variant.
             let first = info
                 .formats
-                .first()
+                .get(renditions)
+                .or(info.formats.first())
                 .ok_or_else(|| unsupported("HLS master has no variants"))?;
             info.ext = first.ext.clone();
             info.url = first.url.clone();

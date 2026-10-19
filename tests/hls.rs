@@ -199,7 +199,9 @@ fn direct_media_and_master_extract_plans_without_fetching_segments() {
         let info = downloader.extract_info(&server.url(path)).unwrap();
         assert!(!info.direct);
         assert_eq!(info.ext, "ts");
-        assert!(info.formats.is_empty());
+        // Upstream returns a media playlist as one format, numbered `0`.
+        assert_eq!(info.formats.len(), 1);
+        assert_eq!(info.format_id.as_deref(), Some("0"));
         assert_eq!(info.fragments.len(), 2);
         assert_eq!(
             info.fragments[0].url.as_str(),
@@ -210,12 +212,13 @@ fn direct_media_and_master_extract_plans_without_fetching_segments() {
     let best = downloader
         .extract_info(&server.url("/master.m3u8"))
         .unwrap();
-    assert_eq!(best.format_id.as_deref(), Some("hls-1"));
+    // Upstream names unnamed variants by their bitrate in kbps.
+    assert_eq!(best.format_id.as_deref(), Some("1000"));
     assert_eq!((best.width, best.height), (Some(1280), Some(720)));
     assert_eq!(best.formats[1].tbr, Some(1000.0));
     assert_eq!(best.fragments.len(), 2);
     let low = downloader
-        .extract_info_with_format(&server.url("/master.m3u8"), Some("hls-0"))
+        .extract_info_with_format(&server.url("/master.m3u8"), Some("400"))
         .unwrap();
     assert_eq!(low.height, Some(360));
     assert_eq!(low.url.as_str(), server.url("/low.m3u8"));
@@ -233,7 +236,7 @@ fn html_sources_flatten_master_formats_and_preserve_page_identity_and_referer() 
     let server = Server::new();
     let info = YoutubeDl::new()
         .unwrap()
-        .extract_info_with_format(&server.url("/page.html"), Some("0-hls-1"))
+        .extract_info_with_format(&server.url("/page.html"), Some("hls-1000"))
         .unwrap();
     assert_eq!(info.id, "page-1");
     assert_eq!(info.title, "Page title (1)");
@@ -244,7 +247,7 @@ fn html_sources_flatten_master_formats_and_preserve_page_identity_and_referer() 
             .iter()
             .map(|format| format.format_id.as_str())
             .collect::<Vec<_>>(),
-        ["0-hls-0", "0-hls-1", "1"]
+        ["hls-400", "hls-1000", "1"]
     );
     assert_eq!(info.fragments.len(), 2);
     for request in server.requests.lock().unwrap().iter().skip(1) {
@@ -258,7 +261,7 @@ fn html_sources_flatten_master_formats_and_preserve_page_identity_and_referer() 
         .unwrap()
         .extract_info(&server.url("/single.html"))
         .unwrap();
-    assert_eq!(single.format_id.as_deref(), Some("0"));
+    assert_eq!(single.format_id.as_deref(), Some("hls"));
     assert_eq!(single.fragments.len(), 2);
 }
 
@@ -277,7 +280,7 @@ fn json_simulation_does_not_fetch_fragments_or_create_output() {
         String::from_utf8_lossy(&result.stderr)
     );
     let json: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
-    assert_eq!(json["format_id"], "hls-1");
+    assert_eq!(json["format_id"], "1000");
     assert_eq!(json["fragments"].as_array().unwrap().len(), 2);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     assert_eq!(server.paths(), ["/master.m3u8", "/low.m3u8", "/high.m3u8"]);

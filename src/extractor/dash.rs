@@ -91,6 +91,8 @@ pub(crate) fn from_response(
     if !force_dash && !recognized(&response) {
         return Ok(None);
     }
+    // Upstream's generic and HTML5 DASH extraction pass no `mpd_id`, so
+    // representation IDs are used as they are.
     let (manifest_url, formats) = read_manifest(response)?;
     let first = formats
         .first()

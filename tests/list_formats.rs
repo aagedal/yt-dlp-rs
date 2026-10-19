@@ -229,8 +229,8 @@ fn separate_hls_listing_never_inspects_ffmpeg_or_fetches_keys_initialization_or_
         ],
     ));
     assert_header(&stdout);
-    assert!(row(&stdout, "hls-0").contains("1920x1080"));
-    assert!(row(&stdout, "hls-audio-0").contains("en"));
+    assert!(row(&stdout, "1000").contains("1920x1080"));
+    assert!(row(&stdout, "audio-English").contains("en"));
     assert_eq!(server.requests.lock().unwrap().len(), 3);
     server.assert_no_resources();
     let combined = success(&server.cli(
@@ -246,7 +246,7 @@ fn separate_hls_listing_never_inspects_ffmpeg_or_fetches_keys_initialization_or_
     ));
     let info: Value =
         serde_json::from_str(combined.lines().find(|line| line.starts_with('{')).unwrap()).unwrap();
-    assert_eq!(info["format_id"], "hls-0+hls-audio-0");
+    assert_eq!(info["format_id"], "1000+audio-English");
     assert_eq!(info["requested_formats"].as_array().unwrap().len(), 2);
     assert_eq!(server.requests.lock().unwrap().len(), 6);
     server.assert_no_resources();
@@ -270,12 +270,12 @@ fn separate_dash_listing_reads_only_the_saved_mpd_and_combined_json_keeps_fragme
         .unwrap();
     let table = success(&output);
     assert_header(&table);
-    let video = row(&table, "dash-0");
+    let video = row(&table, "0");
     assert!(
         video.contains("mp4") && video.contains("32x32") && video.contains("video only"),
         "{video}"
     );
-    let audio = row(&table, "dash-1");
+    let audio = row(&table, "1");
     assert!(
         audio.contains("m4a") && audio.contains("audio only"),
         "{audio}"
@@ -289,14 +289,14 @@ fn separate_dash_listing_reads_only_the_saved_mpd_and_combined_json_keeps_fragme
             "-F",
             "-j",
             "-f",
-            "dash-0+dash-1",
+            "0+1",
             "--ffmpeg-location",
             "/nonexistent-dash-listing-ffmpeg",
         ],
     ));
     let info: Value =
         serde_json::from_str(combined.lines().find(|line| line.starts_with('{')).unwrap()).unwrap();
-    assert_eq!(info["format_id"], "dash-0+dash-1");
+    assert_eq!(info["format_id"], "0+1");
     assert_eq!(info["requested_formats"].as_array().unwrap().len(), 2);
     assert_eq!(
         info["requested_formats"][0]["fragments"]
@@ -327,9 +327,10 @@ fn library_unselected_extraction_retains_separate_streams_that_default_selection
         .unwrap()
         .into_video()
         .unwrap();
+    // Upstream lists audio renditions before variants.
     assert_eq!(info.formats.len(), 2);
-    assert_eq!(info.formats[0].stream_kind, StreamKind::VideoOnly);
-    assert_eq!(info.formats[1].stream_kind, StreamKind::AudioOnly);
+    assert_eq!(info.formats[0].stream_kind, StreamKind::AudioOnly);
+    assert_eq!(info.formats[1].stream_kind, StreamKind::VideoOnly);
     assert!(info.format_id.is_none());
     assert!(info.requested_formats.is_empty());
     assert!(dl.extract_info(&server.url("/master.m3u8")).is_err());

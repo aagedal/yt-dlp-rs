@@ -618,6 +618,49 @@ fn is_false(value: &bool) -> bool {
 
 /// Shared selection/download container policy. Group matching belongs to selection;
 /// two explicit format IDs may deliberately override rendition-group matching.
+/// Upstream `process_video_result` format ID cleanup: empty IDs become the
+/// format's index, selector characters become `_`, duplicates get `-N`
+/// suffixes, and IDs that are another common extension get an `f` prefix.
+pub(crate) fn sanitize_format_ids(formats: &mut [VideoFormat]) {
+    const COMMON_EXTS: &[&str] = &[
+        "avi", "flv", "mkv", "mov", "mp4", "webm", "3gp", "aiff", "alac", "flac", "m4a", "mka",
+        "mp3", "ogg", "opus", "wav", "mhtml",
+    ];
+    for (index, format) in formats.iter_mut().enumerate() {
+        format.format_id = if format.format_id.is_empty() {
+            index.to_string()
+        } else {
+            format
+                .format_id
+                .chars()
+                .map(|c| {
+                    if c.is_whitespace() || ",/+[]()".contains(c) {
+                        '_'
+                    } else {
+                        c
+                    }
+                })
+                .collect()
+        };
+    }
+    let mut counts = std::collections::HashMap::<String, usize>::new();
+    for format in formats.iter() {
+        *counts.entry(format.format_id.clone()).or_default() += 1;
+    }
+    let mut seen = std::collections::HashMap::<String, usize>::new();
+    for format in formats.iter_mut() {
+        let id = format.format_id.clone();
+        if counts[&id] > 1 {
+            let next = seen.entry(id.clone()).or_default();
+            format.format_id = format!("{id}-{next}");
+            *next += 1;
+        }
+        if format.format_id != format.ext && COMMON_EXTS.contains(&format.format_id.as_str()) {
+            format.format_id = format!("f{}", format.format_id);
+        }
+    }
+}
+
 pub(crate) fn merge_extension(video: &VideoFormat, audio: &VideoFormat) -> Option<&'static str> {
     if video.stream_kind != StreamKind::VideoOnly
         || audio.stream_kind != StreamKind::AudioOnly

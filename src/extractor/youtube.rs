@@ -381,29 +381,23 @@ fn hls_manifest(player: &Value, allow_challenges: bool) -> Option<String> {
 
 fn manifest_formats(client: &Client, url: &Url, page: &Url) -> Result<Vec<VideoFormat>> {
     let response = direct::request(client, url, Some(page))?;
-    let info = hls::from_response(client, response, url, Some(page), true)?
+    let info = hls::from_response(client, response, url, Some(page), true, None)?
         .ok_or_else(|| unsupported("HLS manifest could not be parsed"))?;
-    let mut formats = if info.formats.is_empty() {
-        vec![VideoFormat {
-            format_id: "hls-0".into(),
-            url: info.url,
-            ext: info.ext,
-            filesize: info.filesize,
-            width: info.width,
-            height: info.height,
-            stream_kind: info.stream_kind,
-            abr: None,
-            tbr: None,
-            audio_group: None,
-            language: None,
-            format_note: None,
-            audio_default: false,
-            audio_autoselect: false,
-            fragments: info.fragments,
-        }]
-    } else {
-        info.formats
-    };
+    // Upstream names YouTube HLS formats by itag; until that is ported this
+    // extractor keeps its native order (variants, then audio renditions) and
+    // `hls-N`/`hls-audio-N` IDs.
+    let (mut variants, mut audio): (Vec<_>, Vec<_>) =
+        info.formats.into_iter().partition(|format| {
+            !(format.stream_kind == crate::StreamKind::AudioOnly && format.format_note.is_some())
+        });
+    for (index, format) in variants.iter_mut().enumerate() {
+        format.format_id = format!("hls-{index}");
+    }
+    for (index, format) in audio.iter_mut().enumerate() {
+        format.format_id = format!("hls-audio-{index}");
+    }
+    let mut formats = variants;
+    formats.append(&mut audio);
     for format in &mut formats {
         if let Some(group) = &mut format.audio_group {
             *group = format!("youtube-hls:{group}");

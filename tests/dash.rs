@@ -150,7 +150,8 @@ fn direct_and_redirected_mpd_build_separate_stream_fragment_plans() {
         .unwrap()
         .with_ffmpeg("unused-explicit-ffmpeg");
     let info = dl.extract_info(&server.url("/manifest.mpd")).unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("dash-0+dash-1"));
+    // Upstream names DASH formats by representation ID.
+    assert_eq!(info.format_id.as_deref(), Some("video+audio"));
     assert_eq!(server.requests.lock().unwrap().len(), 1);
     assert_eq!(info.id, "manifest");
     assert_eq!(info.title, "manifest");
@@ -169,7 +170,7 @@ fn direct_and_redirected_mpd_build_separate_stream_fragment_plans() {
     let video = dl
         .extract_info_with_format(&server.url("/redirect"), Some("bestvideo"))
         .unwrap();
-    assert_eq!(video.format_id.as_deref(), Some("dash-0"));
+    assert_eq!(video.format_id.as_deref(), Some("video"));
     assert_eq!(video.webpage_url.as_str(), server.url("/redirect"));
     assert_eq!(
         video.fragments[0].url.as_str(),
@@ -198,7 +199,7 @@ fn html_dash_formats_preserve_identity_group_namespace_and_referer() {
             .iter()
             .map(|format| format.format_id.as_str())
             .collect::<Vec<_>>(),
-        ["0-dash-0", "0-dash-1", "1-dash-0", "1-dash-1"]
+        ["video-0", "audio-0", "video-1", "audio-1"]
     );
     assert_ne!(info.formats[0].audio_group, info.formats[2].audio_group);
     assert_eq!(

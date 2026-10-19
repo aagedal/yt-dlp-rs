@@ -351,7 +351,7 @@ impl Extractor for GenericHttp {
             if !media_type {
                 fallback();
             }
-            let hls = hls::from_response(client, response, url, None, hls_path)?;
+            let hls = hls::from_response(client, response, url, None, hls_path, None)?;
             if hls.is_some() {
                 m3u8();
             } else if direct.is_some() && !media_type {
@@ -432,6 +432,7 @@ impl Extractor for GenericHttp {
                         url,
                         Some(&page_url),
                         source.hls_hint || url.path().to_ascii_lowercase().ends_with(".m3u8"),
+                        Some("hls"),
                     )?;
                     if manifest.is_some() {
                         screen(&format!("[html5] {id}: Downloading m3u8 information"));
@@ -442,8 +443,9 @@ impl Extractor for GenericHttp {
                     .or(direct)
                     .ok_or_else(|| unsupported("source does not serve supported HTTP media"))?;
                 if !info.formats.is_empty() {
+                    // Manifest IDs stay as upstream names them (`hls-…`, bare DASH
+                    // representation IDs); duplicates are numbered after extraction.
                     formats.extend(info.formats.iter().cloned().map(|mut format| {
-                        format.format_id = format!("{index}-{}", format.format_id);
                         format.audio_group =
                             format.audio_group.map(|group| format!("{index}-{group}"));
                         format

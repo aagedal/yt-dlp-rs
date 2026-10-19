@@ -830,8 +830,17 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 .checked_add(fragments.len())
                 .filter(|count| *count <= LIMIT)
                 .ok_or_else(|| bad("DASH total fragment limit exceeded"))?;
+            // Upstream: the representation ID, else the content type.
+            let format_id = match representation.attribute("id") {
+                Some(id) => id.to_owned(),
+                None => match content {
+                    Some(kind @ ("video" | "audio")) => kind.to_owned(),
+                    _ if video => "video".to_owned(),
+                    _ => "audio".to_owned(),
+                },
+            };
             formats.push(VideoFormat {
-                format_id: format!("dash-{}", formats.len()),
+                format_id,
                 url: manifest.clone(),
                 ext: if mime.ends_with("webm") {
                     "webm"
@@ -893,7 +902,8 @@ mod tests {
         )
         .unwrap();
         let video = &formats[0];
-        assert_eq!(video.format_id, "dash-0");
+        // Upstream names DASH formats by representation ID.
+        assert_eq!(video.format_id, "v");
         assert_eq!(video.url, manifest());
         assert_eq!(video.stream_kind, StreamKind::VideoOnly);
         assert_eq!(video.audio_group.as_deref(), Some("dash-period-0"));
@@ -1052,8 +1062,8 @@ mod tests {
             assert_eq!(formats[0].stream_kind, StreamKind::VideoOnly);
             assert_eq!(formats[1].stream_kind, StreamKind::AudioOnly);
             assert!(formats.iter().all(|format| !format.fragments.is_empty()));
-            assert_eq!(formats[0].format_id, "dash-0");
-            assert_eq!(formats[1].format_id, "dash-1");
+            assert_eq!(formats[0].format_id, "0");
+            assert_eq!(formats[1].format_id, "1");
         }
     }
     #[test]

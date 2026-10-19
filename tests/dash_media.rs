@@ -139,8 +139,8 @@ fn saved_timeline_number_list_and_range_plans_download_exact_media() {
         let dl = YoutubeDl::new().unwrap();
         let url = format!("{}/media/{manifest}", server.origin);
         for (id, kind, ext) in [
-            ("dash-0", StreamKind::VideoOnly, "mp4"),
-            ("dash-1", StreamKind::AudioOnly, "m4a"),
+            ("0", StreamKind::VideoOnly, "mp4"),
+            ("1", StreamKind::AudioOnly, "m4a"),
         ] {
             let before = server.requests.lock().unwrap().len();
             let info = dl.extract_info_with_format(&url, Some(id)).unwrap();
@@ -189,7 +189,7 @@ fn real_static_dash_downloads_both_representations_and_merges_tracks() {
         let info = dl
             .extract_info(&format!("{}/media/{manifest}", server.origin))
             .unwrap();
-        assert_eq!(info.format_id.as_deref(), Some("dash-0+dash-1"));
+        assert_eq!(info.format_id.as_deref(), Some("0+1"));
         let directory = tempfile::tempdir().unwrap();
         let output = directory.path().join("merged.mp4");
         let bytes = dl.download(&info, &output).unwrap();

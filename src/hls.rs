@@ -27,6 +27,9 @@ pub(crate) struct Variant {
     pub height: Option<u32>,
     pub stream_kind: StreamKind,
     pub audio_group: Option<String>,
+    /// Upstream `build_stream_name`: the variant's NAME, else its VIDEO
+    /// group's first rendition NAME or the group ID.
+    pub name: Option<String>,
 }
 
 #[derive(Debug)]
@@ -231,6 +234,7 @@ fn variant(
     values: &BTreeMap<&str, &str>,
     url: Url,
     groups: &BTreeMap<(&str, &str), bool>,
+    group_names: &BTreeMap<&str, &str>,
 ) -> Result<Variant> {
     for group_type in ["SUBTITLES", "VIDEO", "CLOSED-CAPTIONS"] {
         if let Some(group) = values.get(group_type).filter(|group| **group != "NONE")
@@ -302,6 +306,16 @@ fn variant(
         height,
         stream_kind,
         audio_group: audio_group.map(|group| (*group).to_owned()),
+        name: values
+            .get("NAME")
+            .filter(|name| !name.is_empty())
+            .or_else(|| {
+                values
+                    .get("VIDEO")
+                    .filter(|group| !group.is_empty())
+                    .map(|group| group_names.get(group).unwrap_or(group))
+            })
+            .map(|name| (*name).to_owned()),
     })
 }
 
@@ -316,6 +330,8 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         return Err(invalid("missing HLS EXTM3U header"));
     }
     let mut groups = BTreeMap::new();
+    // Upstream `groups`: renditions with TYPE, GROUP-ID and NAME, by GROUP-ID.
+    let mut group_names: BTreeMap<&str, &str> = BTreeMap::new();
     let mut audio = Vec::new();
     let mut audio_names = BTreeSet::new();
     let mut default_groups = BTreeSet::new();
@@ -332,6 +348,9 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 .ok_or_else(|| invalid("HLS rendition has no GROUP-ID"))?;
             if !matches!(*kind, "AUDIO" | "VIDEO" | "SUBTITLES" | "CLOSED-CAPTIONS") {
                 return Err(invalid("unsupported HLS rendition type"));
+            }
+            if let Some(name) = attrs.get("NAME").filter(|name| !name.is_empty()) {
+                group_names.entry(*group).or_insert(*name);
             }
             let external = attrs.contains_key("URI");
             rendition_count += 1;
@@ -526,7 +545,7 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 if variants.len() + rendition_count == MAX_VARIANTS {
                     return Err(invalid("HLS variant limit exceeded"));
                 }
-                variants.push(variant(&attrs, url, &groups)?);
+                variants.push(variant(&attrs, url, &groups, &group_names)?);
                 continue;
             }
             if endlist || !pending_duration || !variants.is_empty() {

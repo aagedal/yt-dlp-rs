@@ -17,7 +17,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-s`, `--simulate`, `--no-simulate` | Extract metadata, write diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
 | `-O`, `--print [WHEN:]TEMPLATE` | Print a field list or unsanitized output template per selected video at the `video`, `before_dl`, `post_process`, `after_move` or `after_video` stage; implies quiet, and simulation unless a later stage prints; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-filename` | Hidden upstream aliases printing title, ID, selected URLs and prepared filename after `--print` lines; imply quiet simulation |
-| `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
+| `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; format IDs follow upstream for direct, HLS and DASH results (see below) |
 | `-o`, `--output [TYPES:]TEMPLATE` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; upstream metadata sanitization; typed `subtitle`/`infojson`/`pl_infojson` templates (empty skips that file), `~`/`$VAR` template expansion; no overwrite; see [output paths](../upstream/notes/output-paths.md) |
 | `-P`, `--paths [TYPES:]PATH` | `home` (default) and output-type directories joined like upstream `get_output_path`; absolute templates ignore them with a warning; `temp:` is rejected |
 | `--list-subs` | Native language/format inventory; list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
@@ -652,10 +652,15 @@ one media file. Read at most 2 MiB of uncompressed UTF-8/ASCII manifest text;
 ambiguous encoding/content-type headers fail. URLs resolve against each final
 redirected manifest URL. HTML5 page referrers propagate to manifests and segments.
 
-Master playlists expose declaration-ordered `hls-N` format IDs, positive declared
-bandwidth in kbps, optional resolution and codec-derived stream kinds. HTML5 master
-sources flatten to `sourceIndex-hls-N`; a media playlist retains its ordinary
-source index. Existing standalone selection retains resolution/declaration-order
+Format IDs follow upstream `_parse_m3u8_formats_and_subtitles`: a media
+playlist is one format (`hls` from HTML5 sources, otherwise numbered `0`); master
+variants are named by `NAME`, else their `VIDEO` group's rendition name or group
+ID, else the bitrate in kbps (`AVERAGE-BANDWIDTH` preferred) or the format count,
+prefixed `hls-` for HTML5 sources; audio renditions are `GROUP-NAME` and are
+listed before the variants. Like upstream `process_video_result`, characters
+used by format selectors become `_`, duplicate IDs get `-N` suffixes and IDs
+that name another common extension get an `f` prefix. Variants keep positive
+declared bandwidth in kbps, optional resolution and codec-derived stream kinds. Existing standalone selection retains resolution/declaration-order
 ranking, not upstream's full bandwidth/codec sorter. Every variant manifest is
 read before selection; segment bodies are not probed. One master level, at most
 256 variants and 10000 retained fragments across a master are supported.
@@ -757,8 +762,8 @@ refresh across playlist reloads remain unsupported. See the
 
 ### External HLS audio renditions
 
-`EXT-X-MEDIA:TYPE=AUDIO` declarations with HTTP(S) playlist URIs now expose
-`hls-audio-N` formats after the existing `hls-N` variants. Per-format metadata
+`EXT-X-MEDIA:TYPE=AUDIO` declarations with HTTP(S) playlist URIs expose
+upstream-named `GROUP-NAME` formats before the variants. Per-format metadata
 contains `audio_group`, optional `language` and `format_note` (NAME), and true
 `audio_default` / `audio_autoselect` flags. Missing flags are false. Empty/duplicate
 names in a group, multiple default renditions, invalid flag values, and explicit
@@ -777,14 +782,14 @@ Automatic pair selectors choose a complete compatible pair in video rank order,
 then rank audio within that video's group. Both absent groups also match.
 Expression order is preserved in the plan even for `bestaudio+bestvideo`.
 One literal ID constrains the other generic selector to its group. Two literal
-IDs explicitly override group matching, for example `-f hls-0+hls-audio-1`.
+IDs explicitly override group matching, for example `-f 1000+aud-English`.
 Best audio ranks DEFAULT, then AUTOSELECT, then declared audio/total bitrate;
 worst reverses that ordering. Declaration ties retain existing rules. There is
 no full upstream preference/sorting parity. Explicit language predicates are
 available through the shared format-filter grammar.
 
-HTML5 master format IDs and audio groups both receive the source index prefix,
-so equal group names from independent source masters cannot pair automatically.
+HTML5 audio groups receive a source index prefix, so equal group names from
+independent source masters cannot pair automatically.
 Without FFmpeg configuration, implicit default selection fails when only separate
 video/audio formats exist. An explicit pair may still be inspected with JSON.
 With FFmpeg, implicit default prefers a compatible pair and downloads both native
@@ -847,7 +852,8 @@ plans require initialization; an explicit whole-resource non-directory BaseURL
 can instead form a single-fragment representation. Resolved URLs are limited to
 16 KiB, formats to 256 and aggregate fragments (including initialization) to 10000.
 
-Formats use native declaration-order `dash-N` IDs, declared stream kind, MP4/M4A
+Formats use upstream IDs (the representation `id`, else the content type; HTML5
+sources add no prefix, as upstream passes no `mpd_id`), declared stream kind, MP4/M4A
 or WebM extension, dimensions, bandwidth-derived kbps and inherited language.
 Video/audio representations share the native `dash-period-0` group; HTML source
 prefixes isolate independent masters. Their representative URL is the MPD URL;
@@ -899,7 +905,8 @@ legacy encrypted `/s/` paths. The latter two are unsupported native cases; the
 pinned upstream manifest branch does not solve them.
 
 HLS formats follow eligible direct formats, with native `hls-N` / `hls-audio-N`
-IDs and `youtube-hls:` audio group namespaces. Direct numeric itags are unchanged.
+IDs (upstream names YouTube HLS formats by itag; not yet ported) and
+`youtube-hls:` audio group namespaces. Direct numeric itags are unchanged.
 A media-only playlist forms `hls-0`; master formats retain dimensions, bandwidth,
 language and rendition metadata from the existing native HLS parser. Selection
 uses native ranking and pair rules, with explicit FFmpeg configuration for merging.

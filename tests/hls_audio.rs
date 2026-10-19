@@ -120,7 +120,7 @@ fn external_audio_groups_build_typed_plans_and_choose_matching_default() {
         .unwrap()
         .with_ffmpeg("unused-explicit-ffmpeg");
     let info = dl.extract_info(&server.url("/master.m3u8")).unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("hls-1+hls-audio-1"));
+    assert_eq!(info.format_id.as_deref(), Some("1000+a-Main__English"));
     assert_eq!(info.requested_formats.len(), 2);
     assert_eq!(info.requested_formats[0].stream_kind, StreamKind::VideoOnly);
     assert_eq!(info.requested_formats[1].stream_kind, StreamKind::AudioOnly);
@@ -142,7 +142,7 @@ fn external_audio_groups_build_typed_plans_and_choose_matching_default() {
         Err(Error::FormatSelection(_))
     ));
     let audio = dl
-        .extract_info_with_format(&server.url("/master.m3u8"), Some("hls-audio-0"))
+        .extract_info_with_format(&server.url("/master.m3u8"), Some("a-Alternative"))
         .unwrap();
     assert_eq!(audio.stream_kind, StreamKind::AudioOnly);
     assert_eq!(audio.ext, "m4a");
@@ -199,7 +199,7 @@ fn audio_only_master_declarations_and_aac_are_selectable() {
         .unwrap()
         .extract_info(&server.url("/audio-only.m3u8"))
         .unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("hls-audio-0"));
+    assert_eq!(info.format_id.as_deref(), Some("a-Only_audio"));
     assert_eq!(info.stream_kind, StreamKind::AudioOnly);
     assert_eq!(info.ext, "aac");
     assert_eq!(info.fragments.len(), 1);
