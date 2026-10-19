@@ -832,6 +832,15 @@ struct Args {
     geo_bypass_country: Option<String>,
     #[arg(long, hide = true, value_name = "IP_BLOCK")]
     geo_bypass_ip_block: Option<String>,
+    /// Path to the client certificate file in PEM format (may include the private key)
+    #[arg(long, value_name = "CERTFILE")]
+    client_certificate: Option<PathBuf>,
+    /// Path to the private key file for the client certificate
+    #[arg(long, value_name = "KEYFILE")]
+    client_certificate_key: Option<PathBuf>,
+    /// Password for an encrypted client certificate key (not supported natively)
+    #[arg(long, value_name = "PASSWORD")]
+    client_certificate_password: Option<String>,
     /// Display progress in the console titlebar (not supported natively)
     #[arg(long)]
     console_title: bool,
@@ -1621,6 +1630,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     http_options.proxy = args.proxy;
     http_options.socket_timeout = args.socket_timeout;
     http_options.no_check_certificates = args.no_check_certificates;
+    http_options.client_certificate = args.client_certificate.clone();
+    http_options.client_certificate_key = args.client_certificate_key.clone();
+    http_options.client_certificate_password = args.client_certificate_password.clone();
     // Upstream -4/-6 store 0.0.0.0/:: into the shared source_address option.
     http_options.source_address = if args.force_ipv4 {
         Some("0.0.0.0".into())

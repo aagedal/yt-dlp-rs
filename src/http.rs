@@ -25,6 +25,11 @@ pub struct HttpOptions {
     pub no_check_certificates: bool,
     /// `--source-address`/`-4`/`-6`: client-side IP address to bind to.
     pub source_address: Option<String>,
+    /// `--client-certificate` (PEM, optionally including the key),
+    /// `--client-certificate-key` and `--client-certificate-password`.
+    pub client_certificate: Option<std::path::PathBuf>,
+    pub client_certificate_key: Option<std::path::PathBuf>,
+    pub client_certificate_password: Option<String>,
 }
 
 /// Connection policy shared by the normal and bounded player clients.
@@ -34,6 +39,7 @@ pub(crate) struct TransportConfig {
     timeout: Option<Duration>,
     insecure: bool,
     source_address: Option<IpAddr>,
+    identity: Option<reqwest::Identity>,
 }
 
 impl From<ProxyConfig> for TransportConfig {
@@ -61,6 +67,9 @@ impl TransportConfig {
         }
         if let Some(address) = self.source_address {
             builder = builder.local_address(address);
+        }
+        if let Some(identity) = &self.identity {
+            builder = builder.identity(identity.clone());
         }
         Ok(builder)
     }
@@ -113,6 +122,40 @@ impl HttpOptions {
         Ok(())
     }
 
+    /// Upstream `client_certificate*`: the certificate file (which may hold
+    /// the key) plus an optional separate key file, as a TLS client identity.
+    fn client_identity(&self) -> Result<Option<reqwest::Identity>> {
+        let Some(certificate) = &self.client_certificate else {
+            if self.client_certificate_key.is_some() || self.client_certificate_password.is_some() {
+                return Err(error(
+                    "--client-certificate-key and --client-certificate-password need --client-certificate",
+                ));
+            }
+            return Ok(None);
+        };
+        let read = |path: &std::path::Path| {
+            std::fs::read(path)
+                .map_err(|_| error("unable to read the client certificate or key file"))
+        };
+        let mut pem = read(certificate)?;
+        if let Some(key) = &self.client_certificate_key {
+            pem.push(b'\n');
+            pem.extend(read(key)?);
+        }
+        if pem
+            .windows(b"ENCRYPTED PRIVATE KEY".len())
+            .any(|window| window == b"ENCRYPTED PRIVATE KEY")
+            || self.client_certificate_password.is_some()
+        {
+            return Err(error(
+                "encrypted client certificate keys (--client-certificate-password) are not supported natively",
+            ));
+        }
+        reqwest::Identity::from_pem(&pem).map(Some).map_err(|_| {
+            error("the client certificate must be PEM with a certificate and its private key")
+        })
+    }
+
     pub(crate) fn transport_config(&self) -> Result<TransportConfig> {
         let timeout = match self.socket_timeout {
             // Upstream treats 0 as unset (`socket_timeout or 20`).
@@ -136,6 +179,7 @@ impl HttpOptions {
             timeout,
             insecure: self.no_check_certificates,
             source_address,
+            identity: self.client_identity()?,
         })
     }
 
