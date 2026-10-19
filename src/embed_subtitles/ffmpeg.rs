@@ -85,12 +85,14 @@ fn embed_with_deadline(
         .map(Into::into)
         .collect();
     args.extend(
-        ["-f", demuxer, "-protocol_whitelist", "file", "-i"]
+        ["-f", demuxer, "-protocol_whitelist", "file"]
             .into_iter()
             .map(OsString::from),
     );
+    args.extend(crate::pp_args::input("EmbedSubtitle", 1));
+    args.push("-i".into());
     args.push(input.into_os_string());
-    for file in &plan.files {
+    for (index, file) in plan.files.iter().enumerate() {
         let demuxer = subtitle_demuxer(&file.ext)?;
         let path = file.path.canonicalize()?;
         if !path.is_file() {
@@ -100,10 +102,12 @@ fn embed_with_deadline(
             return Err(error("embedded output must differ from subtitle inputs"));
         }
         args.extend(
-            ["-f", demuxer, "-protocol_whitelist", "file", "-i"]
+            ["-f", demuxer, "-protocol_whitelist", "file"]
                 .into_iter()
                 .map(OsString::from),
         );
+        args.extend(crate::pp_args::input("EmbedSubtitle", index + 2));
+        args.push("-i".into());
         args.push(path.into_os_string());
     }
     args.extend(plan.args.iter().map(OsString::from));
@@ -112,6 +116,7 @@ fn embed_with_deadline(
             .into_iter()
             .map(OsString::from),
     );
+    args.extend(crate::pp_args::output("EmbedSubtitle"));
     args.push(output.clone().into_os_string());
     let banner = crate::merge::execute(
         &executable,

@@ -107,20 +107,22 @@ fn convert_with_deadline(
         demuxer,
         "-protocol_whitelist",
         "file",
-        "-i",
     ]
     .into_iter()
     .map(Into::into)
-    .chain(std::iter::once(input.into_os_string()))
+    .chain(crate::pp_args::input(plan.pp, 1))
+    .chain(["-i".into(), input.into_os_string()])
     .chain(plan.metadata_input.iter().flat_map(|path| {
-        ["-f", "ffmetadata", "-protocol_whitelist", "file", "-i"]
+        ["-f", "ffmetadata", "-protocol_whitelist", "file"]
             .into_iter()
             .map(OsString::from)
-            .chain(std::iter::once(path.clone().into_os_string()))
+            .chain(crate::pp_args::input(plan.pp, 2))
+            .chain(["-i".into(), path.clone().into_os_string()])
     }))
     .chain(plan.args.iter().map(Into::into))
     .chain(["-movflags", "+faststart"].into_iter().map(Into::into))
     .chain(["-f", plan.muxer.as_str()].into_iter().map(Into::into))
+    .chain(crate::pp_args::output(plan.pp))
     .chain(std::iter::once(output.clone().into_os_string()))
     .collect();
     crate::merge::execute(&executable, &args, &directory, started, deadline, callback)?;

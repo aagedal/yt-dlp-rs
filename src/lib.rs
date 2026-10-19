@@ -30,6 +30,7 @@ pub mod metadata_parser;
 pub mod output;
 mod playlist;
 mod postprocess;
+pub mod pp_args;
 mod retry;
 pub mod screen;
 pub mod sections;
@@ -408,7 +409,7 @@ impl YoutubeDl {
             })
             .is_ok_and(|codec| codec == "aac")
         });
-        fixup::remux_to_mp4(ffmpeg, path, "ts", aac, &mut || {
+        fixup::remux_to_mp4("FixupM3u8", ffmpeg, path, "ts", aac, &mut || {
             std::ops::ControlFlow::Continue(())
         })?;
         Ok(true)
@@ -430,7 +431,7 @@ impl YoutubeDl {
             shown.display()
         ));
         let container = crate::container::sniff(path).unwrap_or("m4a");
-        fixup::remux_to_mp4(ffmpeg, path, container, false, &mut || {
+        fixup::remux_to_mp4("FixupM4a", ffmpeg, path, container, false, &mut || {
             std::ops::ControlFlow::Continue(())
         })
     }

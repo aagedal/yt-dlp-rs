@@ -742,6 +742,9 @@ struct Args {
     /// Arguments for the downloader (NAME:ARGS; ffmpeg, ffmpeg_i[N], ffmpeg_o[N])
     #[arg(long, alias = "external-downloader-args", value_name = "NAME:ARGS")]
     downloader_args: Vec<String>,
+    /// Give these arguments to the postprocessors (PP[+EXE][_i|_o[N]]:ARGS; Merger, ExtractAudio, VideoRemuxer, VideoConvertor, Metadata, EmbedSubtitle, EmbedThumbnail, SubtitlesConvertor, ThumbnailsConvertor, SplitChapters, FixupM4a, FixupM3u8) (Alias: --ppa)
+    #[arg(long, visible_alias = "ppa", value_name = "NAME:ARGS")]
+    postprocessor_args: Vec<String>,
     #[arg(long, hide = true, overrides_with = "hls_prefer_ffmpeg")]
     hls_prefer_native: bool,
     #[arg(long, hide = true, overrides_with = "hls_prefer_native")]
@@ -1356,7 +1359,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("--datebefore", &mut datebefore),
         ] {
             if value.take().is_some_and(|value| !value.is_empty()) {
-                let rank = if name == "--dateafter" { 5 } else { 6 };
+                let rank = if name == "--dateafter" { 7 } else { 8 };
                 validation_warning(rank, format!("{name} is ignored since --date was given"));
             }
         }
@@ -1561,7 +1564,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .transpose()?;
     if remux.is_some() && recode.is_some() {
         validation_warning(
-            9,
+            11,
             "--remux-video is ignored since --recode-video was given".into(),
         );
     }
@@ -1634,15 +1637,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut playlist_random = args.playlist_random;
     if playlist_random && playlist_reverse {
         validation_warning(
-            2,
+            4,
             "--playlist-reverse is ignored since --playlist-random was given".into(),
         );
         playlist_reverse = false;
     }
     if args.lazy_playlist {
         for (rank, enabled, name) in [
-            (3, &mut playlist_reverse, "--playlist-reverse"),
-            (4, &mut playlist_random, "--playlist-random"),
+            (5, &mut playlist_reverse, "--playlist-reverse"),
+            (6, &mut playlist_random, "--playlist-random"),
         ] {
             if *enabled {
                 validation_warning(
@@ -1823,7 +1826,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // `-o` sets one (`report_conflict`).
     if args.id {
         if OutputTemplates::sets_default(&args.output) {
-            validation_warning(8, "--id is ignored since --output was given".into());
+            validation_warning(10, "--id is ignored since --output was given".into());
         } else {
             warning!("WARNING: --id is deprecated. Use -o \"%(id)s.%(ext)s\" instead");
             args.output.push("%(id)s.%(ext)s".into());
@@ -1858,7 +1861,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if !before_download.is_empty() {
         if exec.has(Stage::BeforeDownload) {
             validation_warning(
-                7,
+                9,
                 "--exec-before-download is ignored since \"--exec before_dl:\" was given".into(),
             );
         } else {
@@ -1868,17 +1871,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     .map(|value| (Some("before_dl"), value.as_str())),
             );
             exec = ExecCommands::parse(&exec_specs, &template_options)?;
-        }
-    }
-    flush_validation_warnings();
-    if args.verbose {
-        // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 3 extractors");
-        if let Some(path) = &archive_path {
-            eprintln!(
-                "[debug] Loading archive file {}",
-                yt_dlp_rs::batch::py_repr(&path.to_string_lossy())
-            );
         }
     }
     // Like upstream, simulation never writes info JSON.
@@ -2019,6 +2011,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         size_option("http chunk size", args.http_chunk_size.as_deref()).map_err(usage)?;
     // Upstream `--downloader` (`_dict_from_options_callback`) validation.
     let mut downloader = downloader;
+    let mut default_downloader: Option<String> = None;
     for value in &args.downloader {
         static KEYS: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
             regex::Regex::new(r"(?is)^(?P<keys>(?:http|ftp|m3u8|dash|rtmp)(?:,(?:http|ftp|m3u8|dash|rtmp))*):(?P<val>.*)$")
@@ -2032,6 +2025,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             None => (vec!["default".into()], value.as_str()),
         };
         let name = name.trim();
+        if keys == ["default"] {
+            default_downloader = Some(name.to_owned());
+        }
         // `get_external_downloader`: a name or a path to one.
         let base = std::path::Path::new(name)
             .file_stem()
@@ -2064,6 +2060,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     // Upstream `--downloader-args` (shlex-split, by downloader key).
+    let mut downloader_args: Vec<(String, Vec<String>)> = Vec::new();
     for value in &args.downloader_args {
         static KEYS: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
             regex::Regex::new(r"(?is)^(?P<keys>(?:ffmpeg_[io]\d*|aria2c|avconv|axel|curl|ffmpeg|httpie|wget)(?:,(?:ffmpeg_[io]\d*|aria2c|avconv|axel|curl|ffmpeg|httpie|wget))*):(?P<val>.*)$")
@@ -2079,7 +2076,81 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         let parts = yt_dlp_rs::config::shlex_split(text)
             .map_err(|error| usage(format!("wrong --downloader-args formatting; {error}")))?;
         for key in keys {
-            downloader = downloader.with_downloader_args(&key, parts.clone());
+            downloader_args.retain(|(name, _)| *name != key);
+            downloader_args.push((key, parts.clone()));
+        }
+    }
+    // Upstream `report_args_compat`: unnamed arguments go to the default
+    // downloader (when one is given).
+    if let Some(index) = downloader_args.iter().position(|(key, _)| key == "default") {
+        validation_warning(
+            2,
+            format!(
+                "External Downloader arguments given without specifying name. The arguments will be given to {}",
+                default_downloader
+                    .as_deref()
+                    .unwrap_or("all external downloaders")
+            ),
+        );
+        if let Some(name) = &default_downloader {
+            let (_, parts) = downloader_args.remove(index);
+            if !downloader_args.iter().any(|(key, _)| key == name) {
+                downloader_args.push((name.clone(), parts));
+            }
+        }
+    }
+    for (key, parts) in downloader_args {
+        downloader = downloader.with_downloader_args(&key, parts);
+    }
+    // Upstream `--postprocessor-args` (shlex-split, by postprocessor key).
+    let mut postprocessor_args: std::collections::HashMap<String, Vec<String>> = Default::default();
+    // optparse names the option as given.
+    let postprocessor_args_flag =
+        if std::env::args().any(|arg| arg == "--ppa" || arg.starts_with("--ppa=")) {
+            "--ppa"
+        } else {
+            "--postprocessor-args"
+        };
+    for value in &args.postprocessor_args {
+        static KEYS: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            regex::Regex::new(r"(?is)^(?P<key>\w+(?:\+\w+)?):(?P<val>.*)$").unwrap()
+        });
+        let (key, text) = match KEYS.captures(value) {
+            Some(captures) => (
+                captures["key"].to_lowercase(),
+                captures.name("val").unwrap().as_str(),
+            ),
+            None => ("default-compat".to_owned(), value.as_str()),
+        };
+        let parts = yt_dlp_rs::config::shlex_split(text).map_err(|error| {
+            usage(format!(
+                "wrong {postprocessor_args_flag} formatting; {error}"
+            ))
+        })?;
+        postprocessor_args.insert(key, parts);
+    }
+    if postprocessor_args.contains_key("default-compat")
+        && !postprocessor_args.contains_key("default")
+    {
+        validation_warning(
+            3,
+            "Post-Processor arguments given without specifying name. The arguments will be given to all post-processors".into(),
+        );
+        let parts = postprocessor_args
+            .remove("default-compat")
+            .unwrap_or_default();
+        postprocessor_args.insert("default".into(), parts);
+    }
+    yt_dlp_rs::pp_args::set(postprocessor_args);
+    flush_validation_warnings();
+    if args.verbose {
+        // `html5`, `youtube` and `generic` (see `--list-extractors`).
+        eprintln!("[debug] Loaded 3 extractors");
+        if let Some(path) = &archive_path {
+            eprintln!(
+                "[debug] Loading archive file {}",
+                yt_dlp_rs::batch::py_repr(&path.to_string_lossy())
+            );
         }
     }
     let downloader = downloader

@@ -109,6 +109,7 @@ fn merge_with_deadline(
             "executable did not report an FFmpeg version banner",
         ));
     }
+    // `--postprocessor-args` go before each `-i` and the output file.
     let args: Vec<OsString> = [
         "-nostdin",
         "-hide_banner",
@@ -119,22 +120,24 @@ fn merge_with_deadline(
         video_demuxer,
         "-protocol_whitelist",
         "file",
-        "-i",
     ]
     .into_iter()
     .map(OsString::from)
-    .chain(std::iter::once(video.into_os_string()))
+    .chain(crate::pp_args::input("Merger", 1))
+    .chain(["-i".into(), video.into_os_string()])
     .chain(
-        ["-f", audio_demuxer, "-protocol_whitelist", "file", "-i"]
+        ["-f", audio_demuxer, "-protocol_whitelist", "file"]
             .into_iter()
             .map(OsString::from),
     )
-    .chain(std::iter::once(audio.into_os_string()))
+    .chain(crate::pp_args::input("Merger", 2))
+    .chain(["-i".into(), audio.into_os_string()])
     .chain(
         ["-map", "0:v:0", "-map", "1:a:0", "-c", "copy", "-f", muxer]
             .into_iter()
             .map(OsString::from),
     )
+    .chain(crate::pp_args::output("Merger"))
     .chain(std::iter::once(output.clone().into_os_string()))
     .collect();
     execute(&executable, &args, &directory, started, deadline, callback)?;

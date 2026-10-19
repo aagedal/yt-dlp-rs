@@ -40,8 +40,10 @@ fn demuxer(container: &str) -> Result<&'static str> {
 }
 
 /// Stream-copy `path` into an MP4 container in place (`_fixup`), with
-/// `-bsf:a aac_adtstoasc` when requested.
+/// `-bsf:a aac_adtstoasc` when requested; `pp` names the postprocessor for
+/// `--postprocessor-args` (`FixupM3u8`, `FixupM4a`).
 pub(crate) fn remux_to_mp4(
+    pp: &str,
     ffmpeg: &Path,
     path: &Path,
     container: &str,
@@ -83,11 +85,12 @@ pub(crate) fn remux_to_mp4(
         "file",
         "-f",
         demuxer,
-        "-i",
     ]
     .into_iter()
     .map(Into::into)
     .collect();
+    args.extend(crate::pp_args::input(pp, 1));
+    args.push("-i".into());
     args.push(input.clone().into_os_string());
     // `stream_copy_opts()` then `-f mp4` (and the AAC bitstream filter).
     args.extend(
@@ -107,6 +110,7 @@ pub(crate) fn remux_to_mp4(
     if aac_bsf {
         args.extend(["-bsf:a", "aac_adtstoasc"].into_iter().map(OsString::from));
     }
+    args.extend(crate::pp_args::output(pp));
     args.push(output.clone().into_os_string());
     let oldest = crate::filetime::oldest(std::iter::once(input.as_path()));
     let result = crate::merge::execute(&executable, &args, &directory, started, DEADLINE, callback);
@@ -170,11 +174,12 @@ pub(crate) fn cut(
         demuxer,
         "-protocol_whitelist",
         "file",
-        "-i",
     ]
     .into_iter()
     .map(Into::into)
     .collect();
+    args.extend(crate::pp_args::input("SplitChapters", 1));
+    args.push("-i".into());
     args.push(input.into_os_string());
     args.extend(
         [
@@ -190,6 +195,7 @@ pub(crate) fn cut(
         .into_iter()
         .map(OsString::from),
     );
+    args.extend(crate::pp_args::output("SplitChapters"));
     args.push(temporary.clone().into_os_string());
     let result = crate::merge::execute(&executable, &args, &directory, started, DEADLINE, callback);
     if let Err(error) = result {

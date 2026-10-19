@@ -605,6 +605,7 @@ pub(crate) fn download(
                     muxer: crate::embed_metadata::muxer(&current.ext.to_lowercase()).into(),
                     skip: false,
                     metadata_input,
+                    pp: "Metadata",
                 };
                 crate::screen::screen(&format!(
                     "[Metadata] Adding metadata to \"{}\"",

@@ -29,6 +29,8 @@ pub(crate) struct VideoPlan {
     pub skip: bool,
     /// A second, FFMETADATA input (upstream's chapter metadata file).
     pub metadata_input: Option<std::path::PathBuf>,
+    /// The postprocessor key for `--postprocessor-args`.
+    pub pp: &'static str,
 }
 fn error(message: &str) -> Error {
     Error::Postprocess(message.into())
@@ -117,6 +119,10 @@ impl VideoOptions {
                     .is_none_or(|condition| condition == source)
             })
             .map(|mapping| mapping.target.as_str());
+        let pp = match self.mode {
+            VideoMode::Remux => "VideoRemuxer",
+            VideoMode::Recode => "VideoConvertor",
+        };
         let Some(target) = target.filter(|target| *target != source) else {
             return Ok(VideoPlan {
                 extension: source_ext.into(),
@@ -124,6 +130,7 @@ impl VideoOptions {
                 muxer: String::new(),
                 skip: true,
                 metadata_input: None,
+                pp,
             });
         };
         let mut args = vec![
@@ -155,6 +162,7 @@ impl VideoOptions {
             muxer: muxer.into(),
             skip: false,
             metadata_input: None,
+            pp,
         })
     }
 }

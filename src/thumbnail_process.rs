@@ -121,7 +121,8 @@ fn tool(
     Ok((executable, directory))
 }
 
-fn image_input(path: &Path) -> Result<Vec<OsString>> {
+/// An image input, with `pp`'s `--postprocessor-args` for input `number`.
+fn image_input(path: &Path, pp: &str, number: usize) -> Result<Vec<OsString>> {
     let path = path.canonicalize()?;
     if !path.is_file() {
         return Err(failure("thumbnail input must be a regular file"));
@@ -131,7 +132,9 @@ fn image_input(path: &Path) -> Result<Vec<OsString>> {
     if !extension(&path).eq_ignore_ascii_case("gif") {
         args.extend(["-f", "image2", "-pattern_type", "none"].map(OsString::from));
     }
-    args.extend(["-protocol_whitelist", "file", "-i"].map(OsString::from));
+    args.extend(["-protocol_whitelist", "file"].map(OsString::from));
+    args.extend(crate::pp_args::input(pp, number));
+    args.push("-i".into());
     args.push(path.into_os_string());
     Ok(args)
 }
@@ -149,12 +152,13 @@ pub fn convert(
     let mut args: Vec<OsString> = ["-nostdin", "-hide_banner", "-loglevel", "error", "-y"]
         .map(OsString::from)
         .into();
-    args.extend(image_input(input)?);
+    args.extend(image_input(input, "ThumbnailsConvertor", 1)?);
     args.extend(["-update", "1"].map(OsString::from));
     if target == "jpg" {
         args.extend(["-bsf:v", "mjpeg2jpeg"].map(OsString::from));
     }
     args.extend(["-movflags", "+faststart"].map(OsString::from));
+    args.extend(crate::pp_args::output("ThumbnailsConvertor"));
     args.push(std::path::absolute(output)?.into_os_string());
     crate::merge::execute(&executable, &args, &directory, started, DEADLINE, callback)?;
     if !output.is_file() || output.metadata()?.len() == 0 {
@@ -265,15 +269,16 @@ pub fn embed(
         demuxer,
         "-protocol_whitelist",
         "file",
-        "-i",
     ]
     .map(OsString::from)
     .into();
+    args.extend(crate::pp_args::input("EmbedThumbnail", 1));
+    args.push("-i".into());
     args.push(media.clone().into_os_string());
     let copy = ["-map", "0", "-dn", "-ignore_unknown", "-c", "copy"].map(OsString::from);
     match ext {
         "mp3" => {
-            args.extend(image_input(&thumbnail)?);
+            args.extend(image_input(&thumbnail, "EmbedThumbnail", 2)?);
             args.extend(
                 [
                     "-c",
@@ -333,7 +338,7 @@ pub fn embed(
                 started,
                 callback,
             )?;
-            args.extend(image_input(&thumbnail)?);
+            args.extend(image_input(&thumbnail, "EmbedThumbnail", 2)?);
             args.extend(copy);
             args.extend(["-map", "1"].map(OsString::from));
             if let Some(old) = old {
@@ -350,6 +355,7 @@ pub fn embed(
         other => other,
     };
     args.extend(["-movflags", "+faststart", "-f", muxer].map(OsString::from));
+    args.extend(crate::pp_args::output("EmbedThumbnail"));
     args.push(std::path::absolute(output)?.into_os_string());
     crate::merge::execute(&executable, &args, &directory, started, DEADLINE, callback)?;
     if !output.is_file() || output.metadata()?.len() == 0 {
