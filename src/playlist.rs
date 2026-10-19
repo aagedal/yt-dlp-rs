@@ -40,13 +40,17 @@ impl PlaylistSelection {
     /// Parse ASCII item specifications. Bounds are validated even when items override them.
     pub fn new(items: Option<&str>, start: i64, end: Option<i64>, reverse: bool) -> Result<Self> {
         if start <= 0 {
-            return Err(error("playlist start must be positive"));
+            return Err(error(format!(
+                "playlist start \"{start}\" must be positive"
+            )));
         }
         if let Some(end) = end
             && end != -1
             && end < start
         {
-            return Err(error("playlist end must be at least playlist start"));
+            return Err(error(format!(
+                "playlist end \"{end}\" must be must be greater than or equal to playlist start \"{start}\""
+            )));
         }
         let segments = if let Some(items) = items {
             if items.len() > 16 * 1024 {
@@ -197,9 +201,17 @@ fn integer_prefix(input: &str) -> Result<(Option<i64>, &str)> {
     Ok((Some(number), &input[end..]))
 }
 
+/// Upstream `parse_playlist_items` message for a malformed segment.
+fn invalid_segment(input: &str) -> crate::Error {
+    error(format!(
+        "{} is not a valid specification",
+        crate::batch::py_repr(input)
+    ))
+}
+
 fn parse_segment(input: &str) -> Result<Segment> {
     if input.is_empty() {
-        return Err(error("playlist item segments must not be empty"));
+        return Err(error("There is two or more consecutive commas"));
     }
     let (start, remaining) = integer_prefix(input)?;
     if remaining.is_empty() {
@@ -209,12 +221,10 @@ fn parse_segment(input: &str) -> Result<Segment> {
                 end: Endpoint::Index(index),
                 step: 1,
             })
-            .ok_or_else(|| error("expected playlist index"));
+            .ok_or_else(|| invalid_segment(input));
     }
     let Some(remaining) = remaining.strip_prefix([':', '-']) else {
-        return Err(error(format!(
-            "invalid playlist item specification: {input:?}"
-        )));
+        return Err(invalid_segment(input));
     };
     let (end, remaining) = if let Some(rest) = remaining.strip_prefix("infinite") {
         // Pinned float_or_none('infinite') is None, unlike float_or_none('inf').
@@ -229,18 +239,19 @@ fn parse_segment(input: &str) -> Result<Segment> {
         1
     } else {
         let Some(rest) = remaining.strip_prefix(':') else {
-            return Err(error(format!(
-                "invalid playlist item specification: {input:?}"
-            )));
+            return Err(invalid_segment(input));
         };
         let (step, rest) = integer_prefix(rest)?;
         if !rest.is_empty() || step.is_none() {
-            return Err(error(format!("invalid playlist step: {input:?}")));
+            return Err(invalid_segment(input));
         }
         step.unwrap()
     };
     if step == 0 {
-        return Err(error("playlist step must not be zero"));
+        return Err(error(format!(
+            "Step in {} cannot be zero",
+            crate::batch::py_repr(input)
+        )));
     }
     Ok(Segment { start, end, step })
 }

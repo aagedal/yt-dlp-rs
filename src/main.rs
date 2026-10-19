@@ -47,7 +47,6 @@ macro_rules! warning {
     about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
 )]
 struct Args {
-    #[arg(required_unless_present = "batch_file")]
     urls: Vec<String>,
     /// Read URLs from FILE ("-" for stdin), one per line; "#", ";" and "]" lines are comments
     #[arg(short = 'a', long, value_name = "FILE", overrides_with_all = ["batch_file", "no_batch_file"])]
@@ -793,9 +792,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     let date_range = match date {
-        Some(date) => Some(DateRange::day(date, now)?),
+        Some(date) => Some(DateRange::day(date, now).map_err(usage)?),
         None if dateafter.is_some() || datebefore.is_some() => {
-            Some(DateRange::new(dateafter, datebefore, now)?)
+            Some(DateRange::new(dateafter, datebefore, now).map_err(usage)?)
         }
         None => None,
     };
@@ -839,9 +838,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .iter()
             .map(|url| yt_dlp_rs::batch::py_strip(url).to_owned()),
     );
-    if urls.is_empty() {
-        return Err("You must provide at least one URL.".into());
-    }
     let mut print_templates = args
         .print
         .iter()
@@ -870,18 +866,43 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     } = args.simulation();
     let listing = args.list_formats || args.list_subs || args.list_thumbnails;
     let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
+    // Upstream `validate_regex('audio format', ...)` and
+    // `validate_positive('audio quality', int_or_none(float_or_none(q), default=0))`.
+    AudioOptions::from_cli(&args.audio_format, "5").map_err(|_| {
+        usage(format!(
+            "invalid audio format \"{}\" given",
+            args.audio_format
+        ))
+    })?;
+    if let Some(quality) = yt_dlp_rs::batch::py_strip(&args.audio_quality)
+        .parse::<f64>()
+        .ok()
+        .filter(|quality| quality.is_finite() && quality.trunc() < 0.0)
+    {
+        return Err(usage(format!(
+            "audio quality \"{}\" must be positive or 0",
+            quality.trunc()
+        ))
+        .into());
+    }
     let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
     audio_options.keep_video = args.keep_video;
     // Source validation applies to both values even when recode takes precedence.
     let remux = args
         .remux_video
         .as_deref()
-        .map(|format| VideoOptions::from_cli(format, VideoMode::Remux))
+        .map(|format| {
+            VideoOptions::from_cli(format, VideoMode::Remux)
+                .map_err(|_| usage(format!("invalid remux video format \"{format}\" given")))
+        })
         .transpose()?;
     let recode = args
         .recode_video
         .as_deref()
-        .map(|format| VideoOptions::from_cli(format, VideoMode::Recode))
+        .map(|format| {
+            VideoOptions::from_cli(format, VideoMode::Recode)
+                .map_err(|_| usage(format!("invalid recode video format \"{format}\" given")))
+        })
         .transpose()?;
     if remux.is_some() && recode.is_some() {
         warning!("WARNING: --remux-video is ignored since --recode-video was given");
@@ -898,7 +919,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut subtitle_conversion = args
         .convert_subs
         .as_deref()
-        .map(SubtitleConversion::new)
+        .map(|format| {
+            SubtitleConversion::new(format)
+                .map_err(|_| usage(format!("invalid subtitle format \"{format}\" given")))
+        })
         .transpose()?
         .filter(SubtitleConversion::is_enabled);
     if let Some(conversion) = &mut subtitle_conversion {
@@ -920,7 +944,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.playlist_start,
         args.playlist_end,
         args.playlist_reverse,
-    )?;
+    )
+    .map_err(|error| -> Box<dyn std::error::Error> {
+        match (&error, &args.playlist_items) {
+            // Upstream validates start/end, then parses the item segments.
+            (yt_dlp_rs::Error::PlaylistSelection(message), _)
+                if message.starts_with("playlist ") =>
+            {
+                usage(message).into()
+            }
+            (yt_dlp_rs::Error::PlaylistSelection(message), Some(items))
+                if message.ends_with("is not a valid specification")
+                    || message.ends_with("cannot be zero")
+                    || message.ends_with("consecutive commas") =>
+            {
+                usage(format!(
+                    "Invalid playlist-items {}: {message}",
+                    yt_dlp_rs::batch::py_repr(items)
+                ))
+                .into()
+            }
+            _ => error.into(),
+        }
+    })?;
     if args.playlist_items.is_some()
         && (args.playlist_start != 1 || args.playlist_end.is_some_and(|end| end != -1 && end != 0))
     {
@@ -1021,7 +1067,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let thumbnail_conversion = args
         .convert_thumbnails
         .as_deref()
-        .map(ThumbnailConversion::from_cli)
+        .map(|format| {
+            ThumbnailConversion::from_cli(format)
+                .map_err(|_| usage(format!("invalid thumbnail format \"{format}\" given")))
+        })
         .transpose()?
         .flatten();
     let playlist_files = !args.no_write_playlist_metafiles;
@@ -1029,13 +1078,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.sleep_interval,
         args.max_sleep_interval,
         args.sleep_subtitles,
-    )?;
-    let min_filesize = size_option("min filesize", args.min_filesize.as_deref())?;
-    let max_filesize = size_option("max filesize", args.max_filesize.as_deref())?;
+    )
+    .map_err(usage)?;
+    let min_filesize = size_option("min filesize", args.min_filesize.as_deref()).map_err(usage)?;
+    let max_filesize = size_option("max filesize", args.max_filesize.as_deref()).map_err(usage)?;
     // Upstream validates the rate limit as strictly positive.
-    let rate_limit = size_option("rate limit", args.limit_rate.as_deref())?;
+    let rate_limit = size_option("rate limit", args.limit_rate.as_deref()).map_err(usage)?;
     if rate_limit == Some(0) {
-        return Err("rate limit \"0\" must be positive".into());
+        return Err(usage("rate limit \"0\" must be positive").into());
+    }
+    // Upstream reports a missing URL after validating the options.
+    if urls.is_empty() {
+        return Err(UsageError(
+            "You must provide at least one URL.\nType yt-dlp-rs --help to see a list of all options."
+                .into(),
+        )
+        .into());
     }
     // Upstream compares against `float(max_downloads or 'inf')`.
     let max_downloads = args.max_downloads.filter(|&limit| limit != 0);
@@ -1717,6 +1775,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     Ok(!failed)
 }
 
+/// An upstream `parser.error`: usage, `PROG: error: MESSAGE`, exit status 2.
+#[derive(Debug)]
+struct UsageError(String);
+
+impl std::fmt::Display for UsageError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+impl std::error::Error for UsageError {}
+
+fn usage(message: impl std::fmt::Display) -> UsageError {
+    UsageError(message.to_string())
+}
+
 /// Upstream `ignoreerrors` values.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum ErrorMode {
@@ -2104,6 +2178,14 @@ fn main() -> std::process::ExitCode {
         Ok(true) => std::process::ExitCode::SUCCESS,
         Ok(false) => std::process::ExitCode::FAILURE,
         Err(error) if error.is::<Cancel>() => std::process::ExitCode::from(101),
+        Err(error) if error.is::<UsageError>() => {
+            // Upstream `_generate_error_message`, written after a newline.
+            eprintln!(
+                "\nUsage: yt-dlp-rs [OPTIONS] URL [URL...]\n\nyt-dlp-rs: error: {}",
+                yt_dlp_rs::batch::py_strip(&error.to_string())
+            );
+            std::process::ExitCode::from(2)
+        }
         Err(error) => {
             eprintln!("ERROR: {error}");
             std::process::ExitCode::FAILURE

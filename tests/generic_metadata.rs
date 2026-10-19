@@ -207,8 +207,11 @@ fn date_age_view_and_title_selection_follow_upstream_match_entry() {
         ),
     ] {
         let (code, stderr) = simulate(&["--date", value, "http://127.0.0.1:9/never"]);
-        assert_eq!(code, Some(1));
-        assert!(stderr.contains(message), "{value}: {stderr}");
+        assert_eq!(code, Some(2));
+        assert!(
+            stderr.ends_with(&format!("yt-dlp-rs: error: {message}\n")),
+            "{value}: {stderr}"
+        );
     }
     let (_, stderr) = simulate(&[
         "--dateafter",

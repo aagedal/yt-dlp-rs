@@ -80,8 +80,14 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | All other flags | Rejected; general option parity is not implemented |
 
 Informational lines go to stderr natively (upstream writes them to stdout
-unless quiet). Option validation errors print `ERROR: MESSAGE` and exit 1, where
-upstream's optparse prints usage plus `yt-dlp: error: MESSAGE` and exits 2.
+unless quiet). Option validations that upstream reports through `parser.error`
+(audio/remux/recode/subtitle/thumbnail formats, audio quality, playlist
+start/end/items, sleep intervals, file sizes, rate limit, dates and a missing
+URL) print upstream's blank line, `Usage: yt-dlp-rs [OPTIONS] URL [URL...]`,
+`yt-dlp-rs: error: MESSAGE` with upstream's message, and exit 2. Malformed
+option values rejected by clap (for example non-numeric `--retries`) keep
+clap's error text, also with exit status 2; other startup failures print
+`ERROR: MESSAGE` and exit 1.
 Generic extraction does not print upstream's `Falling back on generic
 information extractor` warning. Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
