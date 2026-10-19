@@ -530,7 +530,7 @@ fn rejects_pages_manifests_errors_and_non_http_urls() {
     }
     assert!(matches!(
         dl.extract_info(&server.url("/missing")),
-        Err(Error::Http(_))
+        Err(error @ Error::Webpage { .. }) if error.to_string().contains("Unable to download webpage: HTTP Error 404")
     ));
     // Upstream refuses file URLs unless --enable-file-urls.
     assert!(matches!(

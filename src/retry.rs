@@ -54,6 +54,7 @@ pub(crate) fn check_response(response: Response) -> Result<Response> {
 
 pub(crate) fn failure_delay(error: &Error) -> Option<Duration> {
     match error {
+        Error::Webpage { source, .. } => failure_delay(source),
         Error::Http(error) if transient_request(error) => Some(Duration::ZERO),
         Error::HttpRetryAfter {
             source,
@@ -231,7 +232,10 @@ pub fn upstream_error_text(error: &Error) -> String {
 /// urllib's text for a transport error: `[Errno N] TEXT` from the OS error.
 pub(crate) fn urllib_error(error: &reqwest::Error) -> String {
     let mut source: Option<&(dyn std::error::Error + 'static)> = Some(error);
+    // Without an OS error, the innermost cause says the most (e.g. TLS).
+    let mut innermost = error.to_string();
     while let Some(current) = source {
+        innermost = current.to_string();
         if let Some(io) = current.downcast_ref::<std::io::Error>()
             && let Some(code) = io.raw_os_error()
         {
@@ -243,7 +247,7 @@ pub(crate) fn urllib_error(error: &reqwest::Error) -> String {
         }
         source = current.source();
     }
-    error.to_string()
+    innermost
 }
 
 /// The server's reason phrase (like urllib's `HTTPError.reason`), which

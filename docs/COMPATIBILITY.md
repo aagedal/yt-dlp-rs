@@ -484,6 +484,12 @@ existing baseline and does not advance it.
 Existing extraction methods retain zero retries. Call `into_video()` on the
 result when a single video is required; playlists still fail at that boundary.
 
+A failed generic page request reports upstream's `ERROR: [generic] ID: Unable to
+download webpage: ERR (caused by REPR)` (`HTTP Error CODE: Reason` with
+`<HTTPError CODE: Reason>`, or urllib's `[Errno N] TEXT` with
+`TransportError('…')`); library callers receive `Error::Webpage` wrapping the
+HTTP error. Upstream never retries this request, as with the default of zero.
+
 Retry HTTP 408, 429, 500, 502, 503, and 504, connection/timeouts, and HTML
 response body read failures. Use the same bounded backoff and delay-seconds/HTTP-date
 Retry-After policy as download retries. A new attempt runs the extractor registry from the start, re-fetching

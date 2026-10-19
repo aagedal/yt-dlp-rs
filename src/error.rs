@@ -16,6 +16,14 @@ pub enum Error {
     /// An `--exec` command rejected like upstream `UnsafeExecExpansionError`.
     #[error("{0}")]
     Exec(String),
+    /// Upstream `_request_webpage`'s `ExtractorError` for the generic page:
+    /// `[generic] ID: Unable to download webpage: ERR (caused by REPR)`.
+    #[error("{}", crate::extractor::html5::webpage_error_text(id, source))]
+    Webpage {
+        id: String,
+        #[source]
+        source: Box<Error>,
+    },
     /// Upstream raises `DownloadError(MESSAGE)` without reporting it first:
     /// `--load-info-json` then retries the webpage URL, otherwise it is
     /// reported as `ERROR: MESSAGE`.

@@ -428,7 +428,8 @@ impl Extractor for GenericHttp {
         crate::screen::before_extraction_request();
         screen(&format!("[generic] {id}: Downloading webpage"));
         // Dispatch a single response so direct media does not need two probes.
-        let response = direct::probe(client, url, None)?;
+        let response =
+            direct::probe(client, url, None).map_err(|error| webpage_error(&id, error))?;
         // Upstream's direct-link Content-Type pattern; anything else falls
         // back to sniffing the body.
         let content_type = response
@@ -692,6 +693,31 @@ impl Extractor for GenericHttp {
             entries,
         })))
     }
+}
+
+/// The generic page request's failure (see `Error::Webpage`).
+fn webpage_error(id: &str, error: Error) -> Error {
+    match error {
+        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Webpage {
+            id: id.into(),
+            source: Box::new(error),
+        },
+        error => error,
+    }
+}
+
+/// `Unable to download webpage: ERR (caused by REPR)` for `Error::Webpage`.
+pub(crate) fn webpage_error_text(id: &str, error: &Error) -> String {
+    let text = crate::upstream_error_text(error);
+    let status = match error {
+        Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
+        _ => None,
+    };
+    let cause = match status {
+        Some(_) => format!("<{}>", text.replacen("HTTP Error ", "HTTPError ", 1)),
+        None => format!("TransportError({})", crate::batch::py_repr(&text)),
+    };
+    format!("[generic] {id}: Unable to download webpage: {text} (caused by {cause})")
 }
 
 #[cfg(test)]

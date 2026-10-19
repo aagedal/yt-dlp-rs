@@ -1059,8 +1059,12 @@ fn extraction_budget_is_bounded_and_returns_final_error() {
                 ExtractionOptions { retries },
             )
             .unwrap_err();
-        let Error::Http(error) = error else {
+        // Reported as upstream's `Unable to download webpage`.
+        let Error::Webpage { source, .. } = error else {
             panic!("{error}")
+        };
+        let Error::Http(error) = *source else {
+            panic!("{source}")
         };
         assert_eq!(
             error.status().unwrap().as_u16(),
@@ -1467,9 +1471,10 @@ fn retry_after_respects_exhausted_budgets_and_permanent_statuses() {
                     )
                     .unwrap_err()
             };
-            // A retryable download failure reports through `RetryManager`.
+            // A retryable download failure reports through `RetryManager`,
+            // a page failure as `Unable to download webpage`.
             let error = match error {
-                Error::RetriesExhausted { source, .. } => *source,
+                Error::RetriesExhausted { source, .. } | Error::Webpage { source, .. } => *source,
                 error => error,
             };
             if status == 503 {

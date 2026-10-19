@@ -1,7 +1,7 @@
 mod dash;
 pub(crate) mod direct;
 pub(crate) mod hls;
-mod html5;
+pub(crate) mod html5;
 mod youtube;
 
 pub use direct::DirectHttp;

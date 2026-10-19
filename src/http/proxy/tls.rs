@@ -200,7 +200,8 @@ fn configured_proxy_does_not_trust_the_saved_private_origin_ca() {
             "untrusted TLS must not reach an inner HTTP request"
         );
         let error = result.unwrap_err();
-        assert!(matches!(error, crate::Error::Http(_)), "{error}");
+        // Reported like upstream's `Unable to download webpage`.
+        assert!(matches!(error, crate::Error::Webpage { .. }), "{error}");
         let mut chain = String::new();
         let mut source: Option<&dyn std::error::Error> = Some(&error);
         while let Some(error) = source {
