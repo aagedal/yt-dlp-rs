@@ -277,8 +277,10 @@ or a guarantee of perceptual quality. Format lists and source IDs retain declara
 order. Literal IDs override ranking; unavailable IDs return an error listing IDs.
 Comma selections, more than two merged streams, and
 upstream selector modifiers remain errors. See the bounded adaptive policy below.
-Direct HTTP results accept default/`best`/`worst` as their sole representation,
-without adding format IDs; explicit IDs fail.
+Direct HTTP results carry upstream's single generic format: its ID is the
+Content-Type subtype (`mp4`, `mpeg`, `webm`, …), or `0` when only the URL suffix
+identified the media, and `audio/*` media is audio-only (`vcodec: none`), so
+`bestaudio`, `ba/b` and the literal ID select it.
 The library's `extract_info_with_format` performs the same selection; standalone
 extractor callers must call `VideoInfo::select_format` to resolve candidates before
 download. Selection updates top-level `url`, `ext`, `filesize`, `width`, `height`,
@@ -946,8 +948,8 @@ versa. Unsupported fields fail explicitly rather than being treated as absent.
 All predicates are ANDed and applied before stream-kind fallback and native
 ranking. Literal IDs must also pass their predicates. Existing group matching
 still applies to automatic pairs; two literal IDs retain their explicit override.
-Direct results without format alternatives evaluate their available top-level
-metadata without inventing a format ID or bitrate/language fields. Failed
+Direct results evaluate predicates against their single format (with no
+bitrate/language fields). Failed
 selection preserves the result, including all playlist entries. Every branch is
 parsed before selection, so a malformed later fallback cannot be hidden by an
 earlier successful branch. Selection still follows extraction of all alternatives;

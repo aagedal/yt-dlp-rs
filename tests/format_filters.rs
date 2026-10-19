@@ -255,7 +255,7 @@ fn playlist_filter_failure_is_atomic_for_json_and_downloads() {
 }
 
 #[test]
-fn direct_result_filters_use_metadata_without_inventing_a_format_id() {
+fn direct_result_filters_select_the_single_upstream_format() {
     let server = Server::new();
     let info = YoutubeDl::new()
         .unwrap()
@@ -264,14 +264,15 @@ fn direct_result_filters_use_metadata_without_inventing_a_format_id() {
             Some("best[filesize=6][ext=mp4]"),
         )
         .unwrap();
-    assert!(info.formats.is_empty());
-    assert_eq!(info.format_id, None);
+    // Upstream names the direct format by its Content-Type subtype.
+    assert_eq!(info.formats.len(), 1);
+    assert_eq!(info.format_id.as_deref(), Some("mp4"));
     assert_eq!(info.filesize, Some(6));
     let fallback = server.json(
         "/medium.mp4",
         "best[filesize<6]/worst[filesize>=6][ext=mp4]",
     );
-    assert!(fallback.get("format_id").is_none_or(Value::is_null));
+    assert_eq!(fallback["format_id"], "mp4");
     assert_eq!(fallback["filesize"], 6);
     let output = server.cli("/medium.mp4", &["-j", "-s", "-f", "best[ext=webm]"]);
     assert!(!output.status.success());
@@ -434,13 +435,13 @@ fn grouped_playlist_selection_keeps_all_entries_atomic() {
 }
 
 #[test]
-fn grouped_bare_filters_preserve_direct_metadata_and_no_format_id() {
+fn grouped_bare_filters_preserve_direct_metadata_and_format() {
     let server = Server::new();
     let info = server.json("/medium.mp4", "(b[ext=webm]/[filesize>=6])[ext=mp4]");
-    assert!(info.get("format_id").is_none_or(Value::is_null));
+    assert_eq!(info["format_id"], "mp4");
     assert_eq!(info["filesize"], 6);
     assert_eq!(info["ext"], "mp4");
-    assert!(info["formats"].as_array().is_none_or(Vec::is_empty));
+    assert_eq!(info["formats"].as_array().map(Vec::len), Some(1));
     let output = server.cli("/medium.mp4", &["-j", "-s", "-f", "(b/w)[filesize<6]"]);
     assert!(!output.status.success());
     assert!(output.stdout.is_empty());
@@ -555,12 +556,12 @@ fn indexed_playlist_failure_is_atomic_before_json_and_downloads() {
 }
 
 #[test]
-fn implicit_direct_metadata_exposes_only_the_first_index_without_synthetic_id() {
+fn direct_metadata_exposes_only_the_first_index_of_its_single_format() {
     let server = Server::new();
     for selector in ["b.1[ext=mp4]", "b.2/w.1", "(b.2/[filesize=6])"] {
         let info = server.json("/medium.mp4", selector);
         assert_eq!(info["filesize"], 6);
-        assert!(info.get("format_id").is_none_or(Value::is_null));
+        assert_eq!(info["format_id"], "mp4");
     }
     let output = server.cli("/medium.mp4", &["-j", "-s", "-f", "b.2"]);
     assert!(!output.status.success());

@@ -1217,7 +1217,7 @@ fn automatic_resolution_selection_reaches_cli_json_and_downloads() {
         let direct = dl
             .extract_info_with_format(&server.url("/clip.mp4"), selector)
             .unwrap();
-        assert!(direct.format_id.is_none());
+        assert_eq!(direct.format_id.as_deref(), Some("mp4"));
         assert!(direct.width.is_none());
         let entries = dl
             .extract_result_with_format(&server.url("/playlist-mixed-formats.html"), selector)

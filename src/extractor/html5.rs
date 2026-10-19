@@ -312,7 +312,9 @@ impl Extractor for GenericHttp {
                 .to_ascii_lowercase()
                 .ends_with(".m3u8");
         if hls_path || direct::response_mime(&response) != "text/html" {
-            let direct = direct::from_response(&response, url);
+            let mime = direct::response_mime(&response);
+            let direct =
+                direct::from_response(&response, url).map(|info| direct::with_format(info, &mime));
             return Ok(hls::from_response(client, response, url, None, hls_path)?
                 .or(direct)
                 .map(stamp));

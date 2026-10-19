@@ -384,20 +384,16 @@ fn listing_continues_to_later_urls_after_an_extraction_failure() {
 }
 
 #[test]
-fn direct_results_list_an_unknown_id_row_without_inventing_format_zero() {
+fn direct_results_list_their_content_type_format_id() {
     let server = Server::new();
     let stdout = success(&server.cli("/low.mp4", &["-F", "-j"]));
     assert_header(&stdout);
-    assert!(row(&stdout, "-").contains("mp4"));
-    assert!(
-        !stdout
-            .lines()
-            .any(|line| line.split_whitespace().next() == Some("0"))
-    );
+    // Upstream names the single direct format by its Content-Type subtype.
+    assert!(row(&stdout, "mp4").contains("mp4"));
     let info: Value =
         serde_json::from_str(stdout.lines().find(|line| line.starts_with('{')).unwrap()).unwrap();
-    assert!(info.get("format_id").is_none_or(Value::is_null));
-    assert!(info["formats"].as_array().is_none_or(Vec::is_empty));
+    assert_eq!(info["format_id"], "mp4");
+    assert_eq!(info["formats"].as_array().map(Vec::len), Some(1));
     assert_eq!(server.count("/low.mp4"), 1);
 }
 

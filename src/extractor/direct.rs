@@ -83,11 +83,47 @@ impl Extractor for DirectHttp {
         // The body remains streamed and is dropped after inspecting the headers.
         let response = request(client, url, None)?;
         let timestamp = last_modified(&response);
+        let mime = response_mime(&response);
         Ok(from_response(&response, url).map(|mut info| {
             info.metadata.timestamp = timestamp;
-            info
+            with_format(info, &mime)
         }))
     }
+}
+
+/// Upstream generic direct results carry one format: a matching media
+/// Content-Type names it by its subtype (with `vcodec: none` for audio);
+/// otherwise `process_video_result` numbers the bare result `0`.
+pub(crate) fn with_format(mut info: VideoInfo, mime: &str) -> VideoInfo {
+    let (kind, subtype) = mime.split_once('/').unwrap_or((mime, ""));
+    let media = matches!(kind, "audio" | "video") || mime == "application/ogg";
+    let format_id = if media && !subtype.is_empty() {
+        subtype.to_owned()
+    } else {
+        "0".to_owned()
+    };
+    if kind == "audio" {
+        info.stream_kind = crate::StreamKind::AudioOnly;
+    }
+    info.format_id = Some(format_id.clone());
+    info.formats = vec![crate::VideoFormat {
+        format_id,
+        stream_kind: info.stream_kind,
+        audio_group: None,
+        language: None,
+        format_note: None,
+        audio_default: false,
+        audio_autoselect: false,
+        abr: None,
+        tbr: None,
+        url: info.url.clone(),
+        ext: info.ext.clone(),
+        filesize: info.filesize,
+        fragments: Vec::new(),
+        width: None,
+        height: None,
+    }];
+    info
 }
 
 /// Generic `unified_timestamp(response.headers.get('Last-Modified'))`.
