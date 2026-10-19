@@ -445,7 +445,7 @@ pub struct VideoInfo {
     pub downloader_options: Option<DownloaderOptions>,
     /// Fields this port does not model, set by `--parse-metadata` or
     /// `--replace-in-metadata` (serialized with the info dict).
-    #[serde(flatten, skip_deserializing)]
+    #[serde(flatten)]
     pub extra: serde_json::Map<String, serde_json::Value>,
     #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
     pub automatic_captions: crate::Subtitles,
@@ -722,6 +722,18 @@ impl VideoInfo {
             self.vcodec = text("vcodec");
             self.vbr = number("vbr");
             self.aspect_ratio = number("aspect_ratio");
+            // The only video's value (a format field), even when unset.
+            match merged
+                .get("stretched_ratio")
+                .filter(|value| !value.is_null())
+            {
+                Some(ratio) => {
+                    self.extra.insert("stretched_ratio".into(), ratio.clone());
+                }
+                None => {
+                    self.extra.remove("stretched_ratio");
+                }
+            }
         }
         if present("acodec") {
             self.acodec = text("acodec");

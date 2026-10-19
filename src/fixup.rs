@@ -74,6 +74,28 @@ pub(crate) fn copy_stream(
     )
 }
 
+/// `FFmpegFixupStretchedPP`: stream-copy `path` in place with `-aspect`.
+pub(crate) fn set_aspect(
+    pp: &str,
+    ffmpeg: &Path,
+    path: &Path,
+    container: &str,
+    ext: &str,
+    ratio: f64,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+) -> Result<()> {
+    stream_copy_with(
+        pp,
+        ffmpeg,
+        path,
+        container,
+        None,
+        &["-aspect".into(), format!("{ratio:.6}").into()],
+        Some(crate::embed_metadata::muxer(ext)),
+        callback,
+    )
+}
+
 fn stream_copy(
     pp: &str,
     ffmpeg: &Path,
@@ -81,6 +103,36 @@ fn stream_copy(
     container: &str,
     muxer: &str,
     aac_bsf: bool,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+) -> Result<()> {
+    let extra: Vec<OsString> = if aac_bsf {
+        vec!["-bsf:a".into(), "aac_adtstoasc".into()]
+    } else {
+        Vec::new()
+    };
+    stream_copy_with(
+        pp,
+        ffmpeg,
+        path,
+        container,
+        Some(muxer),
+        &extra,
+        None,
+        callback,
+    )
+}
+
+/// `stream_copy_opts()`, then `-f MUXER` and `extra` (or `extra` then the
+/// output's own muxer `late_muxer`, as `_fixup` options are ordered).
+#[allow(clippy::too_many_arguments)]
+fn stream_copy_with(
+    pp: &str,
+    ffmpeg: &Path,
+    path: &Path,
+    container: &str,
+    muxer: Option<&str>,
+    extra: &[OsString],
+    late_muxer: Option<&str>,
     callback: &mut dyn FnMut() -> ControlFlow<()>,
 ) -> Result<()> {
     let started = Instant::now();
@@ -127,21 +179,17 @@ fn stream_copy(
     args.push(input.clone().into_os_string());
     // `stream_copy_opts()` then `-f mp4` (and the AAC bitstream filter).
     args.extend(
-        [
-            "-map",
-            "0",
-            "-dn",
-            "-ignore_unknown",
-            "-c",
-            "copy",
-            "-f",
-            muxer,
-        ]
-        .into_iter()
-        .map(OsString::from),
+        ["-map", "0", "-dn", "-ignore_unknown", "-c", "copy"]
+            .into_iter()
+            .map(OsString::from),
     );
-    if aac_bsf {
-        args.extend(["-bsf:a", "aac_adtstoasc"].into_iter().map(OsString::from));
+    if let Some(muxer) = muxer {
+        args.extend(["-f".into(), muxer.into()]);
+    }
+    args.extend(extra.iter().cloned());
+    // The temporary name's extension does not name a muxer.
+    if let Some(muxer) = late_muxer {
+        args.extend(["-f".into(), muxer.into()]);
     }
     args.extend(crate::pp_args::output(pp));
     args.push(output.clone().into_os_string());

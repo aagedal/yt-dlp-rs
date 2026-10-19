@@ -454,6 +454,46 @@ impl YoutubeDl {
         })
     }
 
+    /// Upstream `FFmpegFixupStretchedPP` (`_restrict_to(images=False,
+    /// audio=False)`): `[FixupStretched] Fixing aspect ratio of "PATH"`, a
+    /// stream copy with `-aspect RATIO`.
+    fn fixup_stretched_as(
+        &self,
+        info: &VideoInfo,
+        ratio: f64,
+        path: &Path,
+        shown: &Path,
+    ) -> Result<()> {
+        let ffmpeg = self
+            .ffmpeg
+            .as_ref()
+            .ok_or_else(|| Error::Postprocess("fixup requires ffmpeg".into()))?;
+        let none = |codec: &Option<String>| codec.as_deref() == Some("none");
+        if none(&info.vcodec) {
+            let kind = if none(&info.acodec) {
+                "images"
+            } else {
+                "audio"
+            };
+            screen::screen(&format!("[FixupStretched] Skipping {kind}"));
+            return Ok(());
+        }
+        screen::screen(&format!(
+            "[FixupStretched] Fixing aspect ratio of \"{}\"",
+            shown.display()
+        ));
+        let container = crate::container::sniff(path).unwrap_or(info.ext.as_str());
+        fixup::set_aspect(
+            "FixupStretched",
+            ffmpeg,
+            path,
+            container,
+            &info.ext,
+            ratio,
+            &mut || std::ops::ControlFlow::Continue(()),
+        )
+    }
+
     /// Upstream `FFmpegFixupDuplicateMoovPP`: `[FixupDuplicateMoov] Fixing
     /// duplicate MOOV atoms of "PATH"`, a stream copy in place.
     fn fixup_duplicate_moov_as(&self, info: &VideoInfo, path: &Path, shown: &Path) -> Result<()> {
@@ -525,11 +565,30 @@ impl YoutubeDl {
         options: &FixupOptions,
     ) -> Result<()> {
         let policy = options.policy.as_deref().unwrap_or("detect_or_warn");
-        // FFmpegFD downloads and merges are never fixed up.
-        if !info.requested_formats.is_empty()
-            || self.uses_ffmpeg_fd(info)
-            || matches!(policy, "never" | "ignore")
-        {
+        if matches!(policy, "never" | "ignore") {
+            return Ok(());
+        }
+        // `FFmpegFixupStretchedPP` comes first and also follows merges and
+        // FFmpegFD downloads.
+        let stretched = info
+            .extra
+            .get("stretched_ratio")
+            .filter(|ratio| ratio.as_f64().is_some_and(|ratio| ratio != 1.0));
+        if let Some(ratio) = stretched {
+            let message = format!("Non-uniform pixel ratio {ratio}");
+            if policy == "warn" {
+                screen::warning(&format!("{}: {message}", info.id));
+            } else if self.ffmpeg.is_none() {
+                screen::warning(&format!(
+                    "{}: {message}. Install ffmpeg to fix this automatically",
+                    info.id
+                ));
+            } else {
+                self.fixup_stretched_as(info, ratio.as_f64().unwrap_or(1.0), path, shown)?;
+            }
+        }
+        // Other fixups skip FFmpegFD downloads and merges.
+        if !info.requested_formats.is_empty() || self.uses_ffmpeg_fd(info) {
             return Ok(());
         }
         let protocol = info.protocol.as_deref().unwrap_or("");

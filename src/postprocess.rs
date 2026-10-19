@@ -310,7 +310,6 @@ pub(crate) fn download(
     // before `post_process` and its prints.
     // Like upstream's default policy, existing files are not fixed again.
     if let Some(fixup) = &processors.fixup
-        && !upstream_merge
         && existing.is_none()
     {
         if checkpoint(callback, bytes, DownloadPhase::Completed).is_break() {
