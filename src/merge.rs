@@ -231,11 +231,11 @@ pub(crate) fn execute(
                 Ok((_, Err(error))) => break Err(error),
                 Ok((false, Ok(bytes))) => output = Some(bytes),
                 Ok((true, Ok(bytes))) => {
+                    // Upstream raises `stderr.strip().splitlines()[-1]`.
                     if !bytes.is_empty() {
-                        break Err(failure(format!(
-                            "FFmpeg diagnostic: {}",
-                            String::from_utf8_lossy(&bytes)
-                        )));
+                        let text = String::from_utf8_lossy(&bytes);
+                        let last = text.trim().lines().last().unwrap_or("").to_owned();
+                        break Err(failure(last));
                     }
                     errors_done = true;
                 }

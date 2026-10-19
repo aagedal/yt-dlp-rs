@@ -470,6 +470,28 @@ impl YoutubeDl {
         })
     }
 
+    /// Upstream `FFmpegFixupDuplicateMoovPP`: `[FixupDuplicateMoov] Fixing
+    /// duplicate MOOV atoms of "PATH"`, a stream copy in place.
+    fn fixup_duplicate_moov_as(&self, info: &VideoInfo, path: &Path, shown: &Path) -> Result<()> {
+        let ffmpeg = self
+            .ffmpeg
+            .as_ref()
+            .ok_or_else(|| Error::Postprocess("fixup requires ffmpeg".into()))?;
+        screen::screen(&format!(
+            "[FixupDuplicateMoov] Fixing duplicate MOOV atoms of \"{}\"",
+            shown.display()
+        ));
+        let container = crate::container::sniff(path).unwrap_or(info.ext.as_str());
+        fixup::copy_stream(
+            "FixupDuplicateMoov",
+            ffmpeg,
+            path,
+            container,
+            &info.ext.to_lowercase(),
+            &mut || std::ops::ControlFlow::Continue(()),
+        )
+    }
+
     /// Upstream `HlsFD.real_download`: `[hlsnative] Downloading m3u8
     /// manifest` refetches the media playlist, whose fragments are then
     /// downloaded. `None` for other downloads.
@@ -529,17 +551,20 @@ impl YoutubeDl {
         let protocol = info.protocol.as_deref().unwrap_or("");
         let m3u8 = protocol.starts_with("m3u8") && !options.hls_use_mpegts;
         let m4a = info.ext == "m4a" && info.container.as_deref() == Some("m4a_dash");
-        for (needed, message, m3u8_fixup) in [
+        // Every MPD format is `is_dash_periods` upstream.
+        let dash = protocol == "http_dash_segments" && !info.fragments.is_empty();
+        for (needed, message, fixup) in [
             (
                 m4a,
                 "writing DASH m4a. Only some players support this container",
-                false,
+                "m4a",
             ),
             (
                 m3u8,
                 "Possible MPEG-TS in MP4 container or malformed AAC timestamps",
-                true,
+                "m3u8",
             ),
+            (dash, "Possible duplicate MOOV atoms", "moov"),
         ] {
             if !needed {
                 continue;
@@ -551,10 +576,12 @@ impl YoutubeDl {
                     "{}: {message}. Install ffmpeg to fix this automatically",
                     info.id
                 ));
-            } else if m3u8_fixup {
+            } else if fixup == "m3u8" {
                 if matches!(info.ext.as_str(), "mp4" | "m4a") {
                     self.fixup_m3u8_as(path, shown)?;
                 }
+            } else if fixup == "moov" {
+                self.fixup_duplicate_moov_as(info, path, shown)?;
             } else {
                 self.fixup_m4a_as(path, shown)?;
             }

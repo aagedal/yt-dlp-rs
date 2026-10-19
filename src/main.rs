@@ -3928,6 +3928,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         failed = true;
                         false
                     }
+                    // `report_error(f'Postprocessing: {err}')`.
+                    Some(yt_dlp_rs::Error::Postprocess(message)) => {
+                        eprintln!("ERROR: Postprocessing: {message}");
+                        failed = true;
+                        false
+                    }
                     _ => {
                         eprintln!("ERROR: {url}: {}: {error}", info.id);
                         failed = true;

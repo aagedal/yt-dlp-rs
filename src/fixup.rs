@@ -50,6 +50,39 @@ pub(crate) fn remux_to_mp4(
     aac_bsf: bool,
     callback: &mut dyn FnMut() -> ControlFlow<()>,
 ) -> Result<()> {
+    stream_copy(pp, ffmpeg, path, container, "mp4", aac_bsf, callback)
+}
+
+/// `FFmpegCopyStreamPP` (`FixupDuplicateMoov`): stream-copy `path` in place
+/// into its own container.
+pub(crate) fn copy_stream(
+    pp: &str,
+    ffmpeg: &Path,
+    path: &Path,
+    container: &str,
+    ext: &str,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+) -> Result<()> {
+    stream_copy(
+        pp,
+        ffmpeg,
+        path,
+        container,
+        crate::embed_metadata::muxer(ext),
+        false,
+        callback,
+    )
+}
+
+fn stream_copy(
+    pp: &str,
+    ffmpeg: &Path,
+    path: &Path,
+    container: &str,
+    muxer: &str,
+    aac_bsf: bool,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+) -> Result<()> {
     let started = Instant::now();
     let demuxer = demuxer(container)?;
     let executable = ffmpeg.canonicalize()?;
@@ -102,7 +135,7 @@ pub(crate) fn remux_to_mp4(
             "-c",
             "copy",
             "-f",
-            "mp4",
+            muxer,
         ]
         .into_iter()
         .map(OsString::from),
