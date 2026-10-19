@@ -562,7 +562,8 @@ fn media_failure_keeps_subtitles_and_later_url_continues_without_archiving_failu
         std::fs::read_to_string(archive).unwrap(),
         "html5mediaembed ok-1\n"
     );
-    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 4);
+    // The failed media transfer keeps its upstream-style part file.
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 5);
 }
 
 #[test]

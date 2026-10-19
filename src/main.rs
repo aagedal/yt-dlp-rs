@@ -72,6 +72,18 @@ struct Args {
     /// Ignore warnings
     #[arg(long)]
     no_warnings: bool,
+    /// Resume partially downloaded files/fragments (default)
+    #[arg(short = 'c', long = "continue", overrides_with_all = ["continue_partial", "no_continue"])]
+    continue_partial: bool,
+    /// Do not resume partially downloaded files (restart from the beginning)
+    #[arg(long, overrides_with_all = ["continue_partial", "no_continue"])]
+    no_continue: bool,
+    /// Use .part files instead of writing directly into the output file (default)
+    #[arg(long, overrides_with_all = ["part", "no_part"])]
+    part: bool,
+    /// Do not use .part files - write directly into the output file
+    #[arg(long, overrides_with_all = ["part", "no_part"])]
+    no_part: bool,
     /// Output progress as new lines
     #[arg(long)]
     newline: bool,
@@ -1196,6 +1208,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if let Some(seconds) = args.sleep_requests {
         yt_dlp_rs::screen::set_sleep_requests(seconds);
     }
+    // Upstream `continuedl` and `nopart` for whole-file media downloads.
+    let part_files = if args.no_part {
+        yt_dlp_rs::PartFiles::NoPart
+    } else {
+        yt_dlp_rs::PartFiles::Part {
+            resume: !args.no_continue,
+        }
+    };
     let min_filesize = size_option("min filesize", args.min_filesize.as_deref()).map_err(usage)?;
     let max_filesize = size_option("max filesize", args.max_filesize.as_deref()).map_err(usage)?;
     // Upstream validates the rate limit as strictly positive.
@@ -1850,6 +1870,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 max_filesize,
                                 rate_limit,
                                 update_time: args.mtime,
+                                part_files,
                             },
                             &processors,
                             progress,
@@ -1882,6 +1903,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 max_filesize,
                                 rate_limit,
                                 update_time: args.mtime,
+                                part_files,
                             },
                             progress,
                         )?;

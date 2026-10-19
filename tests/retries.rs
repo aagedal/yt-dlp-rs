@@ -414,7 +414,11 @@ fn cli_zero_retries_fails_once_and_continues_to_the_next_url() {
         std::fs::read(directory.path().join("success.mp4")).unwrap(),
         b"complete media"
     );
-    assert_eq!(directory_names(directory.path()), ["success.mp4"]);
+    // Like upstream, the failed transfer keeps its part file for a later resume.
+    assert_eq!(
+        directory_names(directory.path()),
+        ["failed.mp4.part", "success.mp4"]
+    );
 }
 
 #[test]
@@ -1526,4 +1530,56 @@ fn expired_http_date_hints_allow_extraction_and_download_recovery() {
             if extraction { 2 } else { 3 }
         );
     }
+}
+
+#[test]
+fn cli_part_files_resume_across_runs_or_restart_with_no_continue() {
+    let server = Server::start(|request, _| {
+        if request.to_ascii_lowercase().contains("range: bytes=9-") {
+            Response {
+                status: 206,
+                body: "media",
+                length: 5,
+                headers: "Content-Range: bytes 9-13/14\r\n",
+                ..Response::media()
+            }
+        } else {
+            Response::media()
+        }
+    });
+    for (args, resumed) in [(vec![], true), (vec!["--no-continue"], false)] {
+        let directory = tempfile::tempdir().unwrap();
+        std::fs::write(directory.path().join("clip.mp4.part"), "complete ").unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(&args)
+            .args(["-o", "clip.%(ext)s", &server.url("/clip.mp4")])
+            .current_dir(directory.path())
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert_eq!(
+            stderr.contains("[download] Resuming download at byte 9"),
+            resumed,
+            "{stderr}"
+        );
+        assert_eq!(
+            std::fs::read(directory.path().join("clip.mp4")).unwrap(),
+            b"complete media"
+        );
+        assert_eq!(directory_names(directory.path()), ["clip.mp4"]);
+    }
+    // --no-part writes the destination directly.
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--no-part", "-o", "clip.%(ext)s", &server.url("/clip.mp4")])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    assert_eq!(directory_names(directory.path()), ["clip.mp4"]);
 }

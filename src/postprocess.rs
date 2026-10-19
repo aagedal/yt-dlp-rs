@@ -176,6 +176,11 @@ pub(crate) fn download(
         "source.{}",
         crate::output::safe_component(&info.ext)
     ));
+    // The workspace source is private; part files apply to final media only.
+    let options = DownloadOptions {
+        part_files: crate::PartFiles::Private,
+        ..options
+    };
     let bytes = downloader.download_with_progress(info, &input, options, |progress| {
         if progress.phase == DownloadPhase::Publishing {
             ControlFlow::Continue(())

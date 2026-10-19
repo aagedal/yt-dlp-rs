@@ -34,7 +34,7 @@ mod video;
 pub use archive::{DownloadArchive, archive_id};
 pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
 pub use cookies::CookieJar;
-pub use download::{DownloadOptions, DownloadPhase, DownloadProgress};
+pub use download::{DownloadOptions, DownloadPhase, DownloadProgress, PartFiles};
 pub use embed_subtitles::{SubtitleEmbedding, SubtitleFile};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
@@ -540,7 +540,10 @@ impl YoutubeDl {
             let bytes = self.download_with_progress(
                 &part,
                 &path,
-                options,
+                DownloadOptions {
+                    part_files: PartFiles::Private,
+                    ..options
+                },
                 |mut progress: DownloadProgress| {
                     if progress.phase == DownloadPhase::Publishing {
                         return ControlFlow::Continue(());

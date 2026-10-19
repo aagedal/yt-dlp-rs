@@ -7,7 +7,7 @@ use std::{
     fs,
     io::{Read, Seek, SeekFrom, Write},
     ops::ControlFlow,
-    path::Path,
+    path::{Path, PathBuf},
     time::{Duration, Instant},
 };
 
@@ -94,6 +94,22 @@ pub struct DownloadOptions {
     /// `--mtime`: set media and subtitle modification times from the
     /// response `Last-Modified` header.
     pub update_time: bool,
+    /// Where a whole-file media transfer is written before publication.
+    pub part_files: PartFiles,
+}
+
+/// Temporary-file policy for whole-file media downloads.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum PartFiles {
+    /// A private same-directory temporary file, removed on failure or
+    /// cancellation and published without overwriting (library default).
+    #[default]
+    Private,
+    /// Upstream `FILE.part`, kept on failure; with `resume`, an existing one
+    /// is continued with a `Range` request (`--continue`).
+    Part { resume: bool },
+    /// Upstream `--no-part`: write the destination directly.
+    NoPart,
 }
 
 /// Upstream `FileDownloader.slow_down`: after each read, sleep until the
@@ -134,6 +150,7 @@ impl Default for DownloadOptions {
             max_filesize: None,
             rate_limit: None,
             update_time: false,
+            part_files: PartFiles::Private,
         }
     }
 }
@@ -216,6 +233,20 @@ fn resume_state(response: &Response) -> Option<ResumeState> {
     })
 }
 
+/// `parse_http_range(Content-Range)`: the start and the total, if known.
+fn content_range(response: &Response) -> Option<(u64, Option<u64>)> {
+    let range = response.headers().get(CONTENT_RANGE)?.to_str().ok()?;
+    let (span, total) = range.strip_prefix("bytes ")?.split_once('/')?;
+    let (start, _) = span.split_once('-')?;
+    let start = start.trim().parse().ok()?;
+    let total = if total.trim() == "*" {
+        None
+    } else {
+        Some(total.trim().parse().ok()?)
+    };
+    Some((start, total))
+}
+
 fn validate_range(response: &Response, state: &ResumeState, offset: u64) -> Result<()> {
     let invalid = || Error::InvalidRangeResponse;
     let range = response
@@ -271,6 +302,7 @@ pub fn download(
             limits: (options.min_filesize, options.max_filesize),
             rate_limit: options.rate_limit,
             update_time: options.update_time,
+            part_files: options.part_files,
         },
         destination,
         options,
@@ -299,6 +331,7 @@ pub(crate) fn download_subtitle(
             limits: (None, None),
             rate_limit: None,
             update_time: options.update_time,
+            part_files: PartFiles::Private,
         },
         destination,
         options,
@@ -328,6 +361,7 @@ pub(crate) fn download_thumbnail(
             rate_limit: None,
             // Upstream writes thumbnails without the downloader's utime.
             update_time: false,
+            part_files: PartFiles::Private,
         },
         destination,
         options,
@@ -344,6 +378,44 @@ struct HttpResource<'a> {
     limits: (Option<u64>, Option<u64>),
     rate_limit: Option<u64>,
     update_time: bool,
+    part_files: PartFiles,
+}
+
+/// The file a transfer is written to.
+enum Target {
+    Private(tempfile::NamedTempFile),
+    Part { file: fs::File, path: PathBuf },
+}
+
+impl Target {
+    fn file(&mut self) -> &mut fs::File {
+        match self {
+            Target::Private(temporary) => temporary.as_file_mut(),
+            Target::Part { file, .. } => file,
+        }
+    }
+
+    fn publish(self, destination: &Path) -> Result<()> {
+        match self {
+            Target::Private(temporary) => {
+                temporary.persist_noclobber(destination).map_err(|e| {
+                    if e.error.kind() == std::io::ErrorKind::AlreadyExists {
+                        Error::OutputExists(destination.into())
+                    } else {
+                        Error::Io(e.error)
+                    }
+                })?;
+            }
+            Target::Part { path, .. } if path != destination => {
+                if fs::symlink_metadata(destination).is_ok() {
+                    return Err(Error::OutputExists(destination.into()));
+                }
+                fs::rename(&path, destination)?;
+            }
+            Target::Part { .. } => {}
+        }
+        Ok(())
+    }
 }
 
 fn download_resource(
@@ -361,12 +433,41 @@ fn download_resource(
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
     fs::create_dir_all(parent)?;
-    let mut temporary = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-")
-        .suffix(".part")
-        .tempfile_in(parent)?;
-    let mut state = None;
     let mut actual = 0;
+    let mut temporary = match resource.part_files {
+        PartFiles::Private => Target::Private(
+            tempfile::Builder::new()
+                .prefix(".yt-dlp-rs-")
+                .suffix(".part")
+                .tempfile_in(parent)?,
+        ),
+        mode => {
+            let path = if mode == PartFiles::NoPart {
+                destination.to_owned()
+            } else {
+                let mut name = destination.as_os_str().to_owned();
+                name.push(".part");
+                PathBuf::from(name)
+            };
+            // Upstream `continuedl`: continue an existing regular part file.
+            if mode == (PartFiles::Part { resume: true })
+                && let Ok(metadata) = fs::metadata(&path)
+                && metadata.is_file()
+            {
+                actual = metadata.len();
+            }
+            let mut file = fs::OpenOptions::new()
+                .create(true)
+                .write(true)
+                .truncate(actual == 0)
+                .open(&path)?;
+            file.seek(SeekFrom::End(0))?;
+            Target::Part { file, path }
+        }
+    };
+    // A continued part file is first requested with a plain upstream Range.
+    let mut continued = actual > 0;
+    let mut state = None;
     let mut last_modified = None;
     let mut reporter = Reporter {
         callback,
@@ -379,29 +480,24 @@ fn download_resource(
         match download_attempt(
             client,
             resource,
-            temporary.as_file_mut(),
+            temporary.file(),
             &mut state,
             &mut actual,
+            &mut continued,
             &mut last_modified,
             &mut reporter,
         ) {
             Ok(()) => {
-                temporary.flush()?;
-                temporary.as_file().sync_all()?;
+                temporary.file().flush()?;
+                temporary.file().sync_all()?;
                 if resource.update_time {
                     crate::filetime::apply(
-                        temporary.as_file(),
+                        temporary.file(),
                         crate::filetime::filetime(last_modified.as_deref()),
                     );
                 }
                 reporter.report(DownloadPhase::Publishing, actual)?;
-                temporary.persist_noclobber(destination).map_err(|e| {
-                    if e.error.kind() == std::io::ErrorKind::AlreadyExists {
-                        Error::OutputExists(destination.into())
-                    } else {
-                        Error::Io(e.error)
-                    }
-                })?;
+                temporary.publish(destination)?;
                 return Ok(actual);
             }
             Err(failure) if failure.retryable && attempt < options.retries => {
@@ -413,30 +509,43 @@ fn download_resource(
     unreachable!("the final attempt returns success or an error")
 }
 
+#[allow(clippy::too_many_arguments)]
 fn download_attempt(
     client: &Client,
     resource: &HttpResource<'_>,
     temporary: &mut fs::File,
     state: &mut Option<ResumeState>,
     actual: &mut u64,
+    continued: &mut bool,
     last_modified: &mut Option<String>,
     reporter: &mut Reporter<'_>,
 ) -> std::result::Result<(), AttemptFailure> {
     let resume = state
         .as_ref()
         .filter(|state| *actual > 0 && *actual < state.total);
-    let mut request = client
-        .get(resource.url.clone())
-        .header(ACCEPT_ENCODING, "identity");
-    if let Some(state) = resume {
-        request = request
-            .header(RANGE, format!("bytes={actual}-"))
-            .header(IF_RANGE, state.etag.clone());
+    let loose = std::mem::take(continued) && *actual > 0;
+    let build = |range: bool| {
+        let mut request = client
+            .get(resource.url.clone())
+            .header(ACCEPT_ENCODING, "identity");
+        if let Some(state) = resume {
+            request = request
+                .header(RANGE, format!("bytes={actual}-"))
+                .header(IF_RANGE, state.etag.clone());
+        } else if range {
+            request = request.header(RANGE, format!("bytes={actual}-"));
+        }
+        if let Some(referrer) = resource.referrer {
+            request = request.header(REFERER, referrer.as_str());
+        }
+        request
+    };
+    if loose {
+        crate::screen::screen(&format!("[download] Resuming download at byte {actual}"));
     }
-    if let Some(referrer) = resource.referrer {
-        request = request.header(REFERER, referrer.as_str());
-    }
-    let mut response = request
+    // Upstream's 416 branch re-sends the same Range, so a complete part
+    // file fails with that status; the part file is kept.
+    let mut response = build(loose)
         .send()
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)
@@ -451,11 +560,21 @@ fn download_attempt(
     {
         return Err(Error::Subtitle("compressed subtitle responses are unsupported".into()).into());
     }
-    let expected = if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
+    let expected = if response.status() == reqwest::StatusCode::PARTIAL_CONTENT && loose {
+        // Upstream accepts a Content-Range starting at the part file's end.
+        let (start, total) = content_range(&response).ok_or(Error::InvalidRangeResponse)?;
+        if start != *actual {
+            return Err(Error::InvalidRangeResponse.into());
+        }
+        total
+    } else if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
         let resume = resume.ok_or(Error::PartialResponse)?;
         validate_range(&response, resume, *actual)?;
         Some(resume.total)
     } else {
+        if loose {
+            crate::screen::screen("[download] Unable to resume");
+        }
         // A server ignoring Range (or returning a changed representation for
         // If-Range) sends a full response. Never append it to the old bytes.
         temporary.set_len(0)?;
