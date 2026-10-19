@@ -210,12 +210,16 @@ fn audio_only_master_declarations_and_aac_are_selectable() {
 fn json_simulation_retains_audio_metadata_and_does_not_fetch_keys_or_segments() {
     let server = Server::new(BTreeMap::new());
     let directory = tempfile::tempdir().unwrap();
+    // An existing placeholder enables merging; simulation never runs it.
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = tools.path().join("ffmpeg");
+    std::fs::write(&ffmpeg, "").unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .args([
             "--dump-json",
             "--simulate",
             "--ffmpeg-location",
-            "unused-explicit-ffmpeg",
+            ffmpeg.to_str().unwrap(),
             &server.url("/master.m3u8"),
         ])
         .current_dir(directory.path())

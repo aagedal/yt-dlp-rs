@@ -70,12 +70,12 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--add-headers FIELD:VALUE`, `--add-header` | Repeated custom HTTP defaults; case-insensitive last custom value wins |
 | `--user-agent UA`, `--referer URL` | Convenience HTTP defaults override matching custom options; extractor/transport headers can override them |
 | `--youtube-js-runtime PATH` | Opt into YouTube signature/query-n solving with an explicit Deno 2.9.7 executable; lazy validation, no discovery/installation; not general upstream runtime option parity |
-| `--ffmpeg-location PATH` | Explicit executable file for two-stream copy merging, audio/video and subtitle processing; no PATH discovery, directory lookup or installation |
+| `--ffmpeg-location PATH` | Upstream `_determine_executables` for the CLI: without it `ffmpeg`/`ffprobe` are the first executable `PATH` entries; a directory holds both programs; a file selects the program its name contains (default `ffmpeg`) and finds the other by substituting the name, else beside it; a missing location warns `ffmpeg-location PATH does not exist! Continuing without ffmpeg` (once at startup) and disables ffmpeg. Availability (merge preference) does not run the executable for a version check like upstream; it is validated when used. The library keeps explicit `with_ffmpeg`/`with_ffprobe` configuration |
 | `-x`, `--extract-audio`, `--audio-format`, `--audio-quality` | Ordered audio extraction mappings and bounded quality settings; see audio extraction below |
 | `--remux-video`, `--recode-video` | Ordered video target mappings; stream copying or container-default re-encoding; recode wins |
 | `--embed-metadata`, `--add-metadata`, `--no-embed-metadata`, `--no-add-metadata` | Final FFmpeg stage after subtitle embedding: upstream `FFmpegMetadataPP` stream-copy options, `-write_id3v1 1`, common tags from represented fields with upstream key precedence (title, date, description/synopsis, purl/comment, artist, genre, …) and per-stream `language`; requires `--ffmpeg-location`; no chapters and no info JSON attachment (warned with `--write-info-json`) |
 | `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates; requires an audio/video/subtitle processing option; last flag wins |
-| `--ffprobe-location PATH` | Explicit audio probe executable; otherwise inferred beside explicit FFmpeg |
+| `--ffprobe-location PATH` | Native option: explicit audio probe executable, overriding the ffprobe found from `--ffmpeg-location` or `PATH` |
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
 | `--playlist-start NUMBER`, `--playlist-end NUMBER` | Inclusive one-based defaults 1 through end, end -1 unbounded; items option overrides after validation |
 | `--playlist-reverse` | Reverse selected request order after deduplication |

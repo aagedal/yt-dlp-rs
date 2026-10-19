@@ -250,12 +250,16 @@ fn mpd_paths_mime_and_html_hints_override_conflicting_media_headers() {
 fn json_simulation_does_not_request_initialization_or_media_or_create_files() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
+    // An existing placeholder enables merging; simulation never runs it.
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = tools.path().join("ffmpeg");
+    std::fs::write(&ffmpeg, "").unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .args([
             "--dump-json",
             "--simulate",
             "--ffmpeg-location",
-            "unused-explicit-ffmpeg",
+            ffmpeg.to_str().unwrap(),
             &server.url("/manifest.mpd"),
         ])
         .current_dir(directory.path())
@@ -316,4 +320,53 @@ fn unsupported_dash_and_invalid_response_metadata_fail_before_publication() {
     assert!(!output.status.success());
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     server.assert_no_fragments();
+}
+
+#[cfg(unix)]
+#[test]
+fn cli_ffmpeg_location_follows_upstream_determine_executables() {
+    use std::os::unix::fs::PermissionsExt;
+    let server = Server::new();
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = tools.path().join("ffmpeg");
+    std::fs::write(&ffmpeg, "").unwrap();
+    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    let empty = tempfile::tempdir().unwrap();
+    let run = |path: &std::path::Path, args: &[&str]| {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .env("PATH", path)
+            .args(args)
+            .args(["-j", &server.url("/manifest.mpd")])
+            .output()
+            .unwrap();
+        let info = serde_json::from_slice::<serde_json::Value>(&output.stdout)
+            .map(|info| info["format_id"].clone())
+            .ok();
+        (info, String::from_utf8_lossy(&output.stderr).into_owned())
+    };
+    let merged = Some(serde_json::json!("video+audio"));
+    // Without a location, ffmpeg comes from PATH; simulation never runs it.
+    assert_eq!(run(tools.path(), &[]).0, merged);
+    let (selected, _) = run(empty.path(), &[]);
+    assert_ne!(selected, merged);
+    // A directory holds the programs.
+    let directory = tools.path().to_str().unwrap();
+    assert_eq!(
+        run(empty.path(), &["--ffmpeg-location", directory]).0,
+        merged
+    );
+    // A missing location warns and continues without ffmpeg.
+    let missing = tools.path().join("missing");
+    let (selected, stderr) = run(
+        tools.path(),
+        &["--ffmpeg-location", missing.to_str().unwrap()],
+    );
+    assert_ne!(selected, merged);
+    assert!(
+        stderr.contains(&format!(
+            "WARNING: ffmpeg-location {} does not exist! Continuing without ffmpeg",
+            missing.display()
+        )),
+        "{stderr}"
+    );
 }

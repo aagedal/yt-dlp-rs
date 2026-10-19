@@ -3,7 +3,7 @@ use std::io::{self, Write};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
     ops::ControlFlow,
-    path::PathBuf,
+    path::{Path, PathBuf},
     sync::Arc,
     time::{Duration, Instant},
 };
@@ -360,7 +360,8 @@ struct Args {
     /// Explicit ffprobe executable for audio inspection (otherwise beside ffmpeg)
     #[arg(long, value_name = "PATH")]
     ffprobe_location: Option<PathBuf>,
-    /// Explicit ffmpeg executable for local stream merging and audio conversion
+    /// Location of the ffmpeg binary; either the path to the binary or its
+    /// containing directory (default: ffmpeg/ffprobe from PATH)
     #[arg(long, value_name = "PATH")]
     ffmpeg_location: Option<PathBuf>,
     /// Skip recorded extractor/video IDs and record only completed downloads
@@ -1126,10 +1127,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         },
         http_options,
     )?;
-    if let Some(path) = args.ffmpeg_location {
+    let (ffmpeg, ffprobe) = ffmpeg_executables(args.ffmpeg_location.as_deref());
+    if let Some(path) = ffmpeg {
         downloader = downloader.with_ffmpeg(path);
     }
-    if let Some(path) = args.ffprobe_location {
+    if let Some(path) = args.ffprobe_location.or(ffprobe) {
         downloader = downloader.with_ffprobe(path);
     }
     let archive_path = args.download_archive.clone();
@@ -2596,6 +2598,78 @@ fn cancel(reason: Cancel, per_input: bool) -> Option<Cancel> {
     } else {
         screen!("Aborting remaining downloads");
         Some(reason)
+    }
+}
+
+/// Upstream `FFmpegPostProcessor._determine_executables`: without a location
+/// the programs come from `PATH`; a directory holds both, and a file's name
+/// selects its program, with the other found by substituting the name.
+fn ffmpeg_executables(location: Option<&Path>) -> (Option<PathBuf>, Option<PathBuf>) {
+    const PROGRAMS: [&str; 2] = ["ffmpeg", "ffprobe"];
+    let Some(location) = location else {
+        let [ffmpeg, ffprobe] = PROGRAMS.map(find_in_path);
+        return (ffmpeg, ffprobe);
+    };
+    if !location.exists() {
+        warning!(
+            "WARNING: ffmpeg-location {} does not exist! Continuing without ffmpeg",
+            location.display()
+        );
+        return (None, None);
+    }
+    let (directory, named) = if location.is_dir() {
+        (location.to_path_buf(), None)
+    } else {
+        let filename = location
+            .file_name()
+            .map(|name| name.to_string_lossy().into_owned())
+            .unwrap_or_default();
+        let basename = PROGRAMS
+            .into_iter()
+            .find(|program| filename.contains(program))
+            .unwrap_or("ffmpeg");
+        let absolute = std::path::absolute(location).unwrap_or_else(|_| location.into());
+        let directory = absolute.parent().map(Path::to_path_buf).unwrap_or_default();
+        (directory, Some((basename, filename)))
+    };
+    let [ffmpeg, ffprobe] = PROGRAMS.map(|program| {
+        let Some((basename, filename)) = &named else {
+            return directory.join(program);
+        };
+        if *basename == program {
+            return location.to_path_buf();
+        }
+        if filename.contains(basename) {
+            let sibling = directory.join(filename.replace(basename, program));
+            if sibling.exists() {
+                return sibling;
+            }
+        }
+        directory.join(program)
+    });
+    (Some(ffmpeg), Some(ffprobe))
+}
+
+/// The first executable `PATH` entry for `program` (with `.exe` on Windows).
+fn find_in_path(program: &str) -> Option<PathBuf> {
+    let name = format!("{program}{}", std::env::consts::EXE_SUFFIX);
+    std::env::split_paths(&std::env::var_os("PATH")?)
+        .map(|directory| directory.join(&name))
+        .find(|candidate| is_executable(candidate))
+}
+
+fn is_executable(path: &Path) -> bool {
+    let Ok(metadata) = path.metadata() else {
+        return false;
+    };
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        metadata.is_file() && metadata.permissions().mode() & 0o111 != 0
+    }
+    #[cfg(not(unix))]
+    {
+        metadata.is_file()
     }
 }
 

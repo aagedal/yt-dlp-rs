@@ -21,7 +21,7 @@ cargo run --locked -- --embed-subs --ffmpeg-location /path/to/ffmpeg 'https://ex
 cargo run --locked -- --write-auto-subs --sub-langs en --skip-download 'https://www.youtube.com/watch?v=VIDEO_ID'
 cargo run --locked -- -f 1 'https://example.com/page-with-multiple-sources.html'
 cargo run --locked -- -f 'best[height<=720][ext=mp4]/best' 'https://example.com/page-with-multiple-sources.html'
-cargo run --locked -- --ffmpeg-location /path/to/ffmpeg -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
+cargo run --locked -- -f 'bestvideo+bestaudio/best' 'https://www.youtube.com/watch?v=VIDEO_ID'
 cargo run --locked -- -I '3,1:2' --playlist-reverse -o '%(playlist_index)03d-%(title)s.%(ext)s' 'https://example.com/multiple-videos.html'
 cargo run --locked -- --download-archive downloaded.txt 'https://example.com/video.mp4'
 cargo run --locked -- --simulate 'https://example.com/video.mp4'
@@ -32,6 +32,9 @@ cargo run --locked -- --proxy 'socks5://127.0.0.1:1080' 'https://example.com/vid
 cargo run --locked -- --user-agent 'My media client' --add-headers 'X-Media-Key:example' 'https://example.com/video.mp4'
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
 ```
+
+ffmpeg and ffprobe are found on `PATH` like upstream; `--ffmpeg-location` accepts
+either binary or its containing directory.
 
 The example URLs illustrate syntax; replace them with actual media or supported HTML5 page URLs.
 Install locally with `cargo install --locked --path .` to use `yt-dlp-rs` directly.
