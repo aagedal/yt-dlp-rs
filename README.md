@@ -180,6 +180,9 @@ Supported today:
   extractor/transport headers take precedence, including page referrers and identity
   encoding. A shared in-memory cookie jar learns scoped response cookies. `--cookies FILE` loads/saves Netscape cookies, including session cookies; `--no-cookies`
   disables file persistence. Raw Cookie headers remain unsupported.
+  `--cookies-from-browser` reads Firefox, Chromium-based (macOS keychain, Linux
+  BASICTEXT/KWallet) and Safari cookie stores natively; Windows DPAPI and the GNOME
+  keyring are not implemented.
 - `--socket-timeout`, `--source-address`, `-4`/`-6` and `--no-check-certificates`
   configure every native HTTP client.
 - Explicit `--proxy URL` for HTTP/HTTPS or SOCKS4/4a/5/5h routing across the
@@ -247,7 +250,7 @@ Supported today:
   using the same bounded `Retry-After` policy.
 
 Other HTML pages, general YouTube support, broader DASH/HLS delivery, site playlists, full upstream format ranking, general selector
-expressions, browser-cookie extraction/broader authentication, persistent resume, broader subtitle acquisition, and other
+expressions, broader authentication, persistent resume, broader subtitle acquisition, and other
 postprocessing remain unimplemented.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
