@@ -3290,16 +3290,69 @@ fn expand_preset_aliases(arguments: Vec<String>) -> Result<Vec<String>, String> 
             .map_or(1, |range| range.min_values().max(1))
     };
     let mut output = Vec::with_capacity(arguments.len());
-    let mut iter = arguments.into_iter();
-    while let Some(token) = iter.next() {
+    let mut queue: std::collections::VecDeque<String> = arguments.into();
+    // Upstream `--alias ALIASES OPTIONS`: option strings with their argument
+    // count, template and trigger count.
+    let mut aliases: Vec<(String, usize, String, usize)> = Vec::new();
+    while let Some(token) = queue.pop_front() {
         if token == "--" {
             output.push(token);
-            output.extend(iter);
+            output.extend(queue);
             break;
+        }
+        if token == "--alias" {
+            let (Some(names), Some(options)) = (queue.pop_front(), queue.pop_front()) else {
+                return Err("--alias option requires 2 arguments".into());
+            };
+            let nargs = alias_arguments(&options)
+                .map_err(|error| format!("wrong --alias OPTIONS formatting; {error}"))?;
+            for name in names.split(',').map(str::trim) {
+                let name = if name.starts_with('-') {
+                    name.to_owned()
+                } else {
+                    format!("--{name}")
+                };
+                aliases.retain(|(existing, ..)| *existing != name);
+                aliases.push((name, nargs, options.clone(), 0));
+            }
+            continue;
+        }
+        if let Some((name, nargs, options, triggers)) =
+            aliases.iter_mut().find(|(name, ..)| *name == token)
+        {
+            *triggers += 1;
+            if *triggers > 100 {
+                return Err(format!("Alias {name} exceeded invocation limit"));
+            }
+            let mut values = Vec::new();
+            for _ in 0..*nargs {
+                values.push(queue.pop_front().ok_or_else(|| {
+                    format!(
+                        "{name} option requires {nargs} argument{}",
+                        if *nargs == 1 { "" } else { "s" }
+                    )
+                })?);
+            }
+            let quoted: Vec<String> = values
+                .iter()
+                .map(|value| yt_dlp_rs::output::shell_quote(value))
+                .collect();
+            // Upstream only formats templates that take arguments.
+            let text = if *nargs == 0 {
+                options.clone()
+            } else {
+                format_alias(options, &quoted)?
+            };
+            let expanded = yt_dlp_rs::config::shlex_split(&text)?;
+            for (index, value) in expanded.into_iter().enumerate() {
+                queue.insert(index, value);
+            }
+            continue;
         }
         let name = if token == "-t" || token == "--preset-alias" {
             Some(
-                iter.next()
+                queue
+                    .pop_front()
                     .ok_or_else(|| format!("{token} option requires 1 argument"))?,
             )
         } else {
@@ -3335,10 +3388,103 @@ fn expand_preset_aliases(arguments: Vec<String>) -> Result<Vec<String>, String> 
                 1
             };
             output.push(token);
-            output.extend(iter.by_ref().take(count));
+            for _ in 0..count {
+                output.extend(queue.pop_front());
+            }
             continue;
         }
         output.push(token);
+    }
+    Ok(output)
+}
+
+/// The number of distinct `str.format` fields in an alias template
+/// (`{}` fields count by position, like `Formatter.parse`).
+fn alias_arguments(template: &str) -> Result<usize, String> {
+    let mut fields = Vec::new();
+    let mut auto = 0;
+    for field in alias_fields(template)? {
+        let key = if field.is_empty() {
+            let key = auto.to_string();
+            auto += 1;
+            key
+        } else {
+            field
+        };
+        if !fields.contains(&key) {
+            fields.push(key);
+        }
+    }
+    // Validate like `opts.format(*range(nargs))`.
+    format_alias(
+        template,
+        &(0..fields.len()).map(|i| i.to_string()).collect::<Vec<_>>(),
+    )?;
+    Ok(fields.len())
+}
+
+/// `str.format` field names in order (`{{`/`}}` are literal braces).
+fn alias_fields(template: &str) -> Result<Vec<String>, String> {
+    let mut fields = Vec::new();
+    let mut chars = template.chars().peekable();
+    while let Some(c) = chars.next() {
+        match c {
+            '{' if chars.peek() == Some(&'{') => {
+                chars.next();
+            }
+            '{' => {
+                let mut field = String::new();
+                loop {
+                    match chars.next() {
+                        Some('}') => break,
+                        Some(c) => field.push(c),
+                        None => return Err("expected '}' before end of string".into()),
+                    }
+                }
+                fields.push(field);
+            }
+            '}' if chars.peek() == Some(&'}') => {
+                chars.next();
+            }
+            '}' => return Err("Single '}' encountered in format string".into()),
+            _ => {}
+        }
+    }
+    Ok(fields)
+}
+
+/// Python `template.format(*values)` for positional fields.
+fn format_alias(template: &str, values: &[String]) -> Result<String, String> {
+    let mut output = String::new();
+    let mut chars = template.chars().peekable();
+    let mut auto = 0;
+    while let Some(c) = chars.next() {
+        match c {
+            '{' if chars.peek() == Some(&'{') => {
+                chars.next();
+                output.push('{');
+            }
+            '{' => {
+                let field: String = chars.by_ref().take_while(|c| *c != '}').collect();
+                let index = if field.is_empty() {
+                    auto += 1;
+                    auto - 1
+                } else {
+                    field
+                        .parse::<usize>()
+                        .map_err(|_| format!("unsupported format field {{{field}}}"))?
+                };
+                output.push_str(values.get(index).ok_or_else(|| {
+                    format!("Replacement index {index} out of range for positional args tuple")
+                })?);
+            }
+            '}' if chars.peek() == Some(&'}') => {
+                chars.next();
+                output.push('}');
+            }
+            '}' => return Err("Single '}' encountered in format string".into()),
+            other => output.push(other),
+        }
     }
     Ok(output)
 }
@@ -4530,6 +4676,48 @@ fn main() -> std::process::ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn option_aliases_expand_with_formatted_quoted_arguments() {
+        let expand = |args: &[&str]| {
+            expand_preset_aliases(args.iter().map(|arg| (*arg).to_owned()).collect())
+        };
+        assert_eq!(
+            expand(&[
+                "--alias",
+                "get-audio,-X",
+                "-S aext:{0},abr -x --audio-format {0}",
+                "-X",
+                "m4a",
+                "URL"
+            ])
+            .unwrap(),
+            ["-S", "aext:m4a,abr", "-x", "--audio-format", "m4a", "URL"]
+        );
+        // Values are shell-quoted into the template, aliases can chain, and
+        // argument-less templates are not formatted.
+        assert_eq!(
+            expand(&[
+                "--alias",
+                "o",
+                "-o {}",
+                "--alias",
+                "both",
+                "--o 'a b' -O {{x}}",
+                "--both"
+            ])
+            .unwrap(),
+            ["-o", "a b", "-O", "{{x}}"]
+        );
+        assert_eq!(
+            expand(&["--alias", "loop", "--loop", "--loop"]).unwrap_err(),
+            "Alias --loop exceeded invocation limit"
+        );
+        assert_eq!(
+            expand(&["--alias", "bad", "-f {0"]).unwrap_err(),
+            "wrong --alias OPTIONS formatting; expected '}' before end of string"
+        );
+    }
 
     #[test]
     fn preset_aliases_expand_in_place_like_upstream() {
