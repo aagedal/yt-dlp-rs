@@ -26,9 +26,63 @@ type Sink = Box<dyn Fn(Message<'_>) + Send + Sync>;
 
 static SINK: OnceLock<Sink> = OnceLock::new();
 
+/// The thread that installed the sink, which may hold the output streams.
+static SINK_THREAD: OnceLock<std::thread::ThreadId> = OnceLock::new();
+
 /// Install the sink once; later calls are ignored.
 pub fn set_sink(sink: impl Fn(Message<'_>) + Send + Sync + 'static) {
-    let _ = SINK.set(Box::new(sink));
+    if SINK.set(Box::new(sink)).is_ok() {
+        let _ = SINK_THREAD.set(std::thread::current().id());
+    }
+}
+
+/// Messages upstream reports when it first loads its cookie jar (lazily,
+/// during the first request): `--cookies-from-browser` extraction.
+static AT_FIRST_REQUEST: std::sync::Mutex<Vec<crate::browser_cookies::Message>> =
+    std::sync::Mutex::new(Vec::new());
+
+static COOKIE_ERROR: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+
+pub(crate) fn defer_until_request(
+    messages: Vec<crate::browser_cookies::Message>,
+    error: Option<String>,
+) {
+    AT_FIRST_REQUEST.lock().unwrap().extend(messages);
+    *COOKIE_ERROR.lock().unwrap() = error;
+}
+
+/// Upstream's lazy cookie-jar load, before a request (`--verbose` loads it
+/// for the debug header, saving cookies at the end): the deferred messages,
+/// then a deferred load error. Other threads leave both for the sink's.
+pub fn load_cookies() -> crate::Result<()> {
+    if SINK_THREAD.get() != Some(&std::thread::current().id()) {
+        return Ok(());
+    }
+    // A failed load is retried (and fails again) at every later access.
+    let error = COOKIE_ERROR.lock().unwrap().clone();
+    let messages = if error.is_some() {
+        AT_FIRST_REQUEST.lock().unwrap().clone()
+    } else {
+        std::mem::take(&mut *AT_FIRST_REQUEST.lock().unwrap())
+    };
+    for message in messages {
+        match message {
+            crate::browser_cookies::Message::Info(text) => screen(&text),
+            crate::browser_cookies::Message::Debug(text) => debug(&text),
+            crate::browser_cookies::Message::Warning(text) => warning(&text),
+        }
+    }
+    match error {
+        Some(error) => Err(crate::Error::CookieLoad(error)),
+        None => Ok(()),
+    }
+}
+
+/// `load_cookies` where a failure cannot be returned (it stays pending).
+pub(crate) fn after_request() {
+    if COOKIE_ERROR.lock().unwrap().is_none() {
+        let _ = load_cookies();
+    }
 }
 
 pub(crate) fn screen(text: &str) {

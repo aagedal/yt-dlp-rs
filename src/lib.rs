@@ -2,6 +2,7 @@ mod archive;
 mod audio;
 mod audio_download;
 pub mod batch;
+pub mod browser_cookies;
 pub mod codecs;
 pub mod config;
 pub mod container;
@@ -38,6 +39,7 @@ mod retry;
 pub mod screen;
 pub mod sections;
 pub mod sponsorblock;
+mod sqlite;
 mod subtitle_convert;
 mod subtitles;
 mod thumbnail_process;
@@ -756,6 +758,7 @@ impl YoutubeDl {
                 .client
                 .get(&url)
                 .send()
+                .inspect(|_| crate::screen::after_request())
                 .map_err(|error| retry::urllib_error(&error))
                 .and_then(|response| {
                     let status = response.status();

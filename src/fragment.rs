@@ -455,6 +455,7 @@ fn fetch(
     }
     let mut response = request
         .send()
+        .inspect(|_| crate::screen::after_request())
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)
         .map_err(|error| Failure {
@@ -666,6 +667,7 @@ fn fetch_key(
     }
     let mut response = request
         .send()
+        .inspect(|_| crate::screen::after_request())
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)
         .map_err(|error| Failure {

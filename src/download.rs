@@ -753,6 +753,7 @@ fn chunked_attempt(
         if let Some(referrer) = resource.referrer {
             request = request.header(REFERER, referrer.as_str());
         }
+        crate::screen::load_cookies().map_err(AttemptFailure::from)?;
         let mut response = request
             .send()
             .map_err(Error::Http)
@@ -904,6 +905,7 @@ fn download_attempt(
     }
     // Upstream's 416 branch re-sends the same Range, so a complete part
     // file fails with that status; the part file is kept.
+    crate::screen::load_cookies().map_err(AttemptFailure::from)?;
     let mut response = build(loose)
         .send()
         .map_err(Error::Http)

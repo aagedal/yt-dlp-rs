@@ -17,6 +17,10 @@ pub enum Error {
     /// `fragment N not found, unable to continue`).
     #[error("{source}")]
     FragmentUnavailable { index: usize, source: Box<Error> },
+    /// Upstream `CookieLoadError`: loading the cookie jar failed; it ends the
+    /// run.
+    #[error("{0}")]
+    CookieLoad(String),
     /// An `--exec` command rejected like upstream `UnsafeExecExpansionError`.
     #[error("{0}")]
     Exec(String),

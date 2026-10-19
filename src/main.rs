@@ -461,6 +461,16 @@ struct Args {
     /// Disable cookie-file loading and saving (in-memory response cookies remain enabled)
     #[arg(long, overrides_with = "cookies")]
     no_cookies: bool,
+    /// The name of the browser to load cookies from (firefox natively), with an optional KEYRING, PROFILE name/path and Firefox CONTAINER ("none" for no container)
+    #[arg(
+        long,
+        value_name = "BROWSER[+KEYRING][:PROFILE][::CONTAINER]",
+        overrides_with_all = ["cookies_from_browser", "no_cookies_from_browser"]
+    )]
+    cookies_from_browser: Option<String>,
+    /// Do not load cookies from browser (default)
+    #[arg(long, overrides_with_all = ["cookies_from_browser", "no_cookies_from_browser"])]
+    no_cookies_from_browser: bool,
     /// Custom HTTP header FIELD:VALUE (repeatable; last name wins)
     #[arg(long, alias = "add-header", value_name = "FIELD:VALUE")]
     add_headers: Vec<String>,
@@ -2047,6 +2057,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     let cookie_file_was_missing = args.cookies.as_ref().is_some_and(|path| !path.exists());
+    let browser_cookies = args
+        .cookies_from_browser
+        .as_deref()
+        .filter(|_| !args.no_cookies_from_browser)
+        .map(yt_dlp_rs::browser_cookies::BrowserSpec::parse)
+        .transpose()
+        .map_err(usage)?;
     let mut http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
     // Upstream `std_headers` precede `--add-headers` (which override them).
     http_options.headers.splice(0..0, std_headers());
@@ -2066,7 +2083,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.source_address
     };
     http_options.validate()?;
-    if let Some(path) = &args.cookies {
+    if let Some(spec) = &browser_cookies {
+        // Upstream `load_cookies`: browser cookies, then the cookie file's.
+        let extracted = yt_dlp_rs::browser_cookies::extract(spec);
+        http_options.cookies = Some(Arc::new(CookieJar::from_browser(
+            extracted,
+            args.cookies.as_deref(),
+        )?));
+    } else if let Some(path) = &args.cookies {
         http_options.cookies = Some(Arc::new(CookieJar::load(path)?));
     }
     let mut downloader = YoutubeDl::with_options(
@@ -2109,6 +2133,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ffprobe.as_deref(),
             args_proxy.as_deref(),
         );
+        // Upstream's request director (`Request Handlers`) loads the jar.
+        if let Err(error) = yt_dlp_rs::screen::load_cookies() {
+            report_error!("ERROR: {error}");
+            return Ok(false);
+        }
     }
     if let Some(path) = ffprobe {
         downloader = downloader.with_ffprobe(path);
@@ -2767,6 +2796,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }
             Ok(None) => continue,
             Err(error) => {
+                // `CookieLoadError` is re-raised and ends the run.
+                if let yt_dlp_rs::Error::CookieLoad(message) = &error {
+                    report_error!("ERROR: {message}");
+                    failed = true;
+                    break;
+                }
                 match &error {
                     yt_dlp_rs::Error::Reported(message) => report_error!("ERROR: {message}"),
                     error @ yt_dlp_rs::Error::Webpage { .. } => report_error!("ERROR: {error}"),
@@ -4100,6 +4135,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     false
                 }
                 Err(error) => match error.downcast_ref::<yt_dlp_rs::Error>() {
+                    Some(yt_dlp_rs::Error::CookieLoad(message)) => {
+                        report_error!("ERROR: {message}");
+                        failed = true;
+                        aborted = true;
+                        false
+                    }
                     // Upstream skips the transfer without an error or archive record.
                     Some(yt_dlp_rs::Error::FileSizeLimit(message)) => {
                         screen!("[download] {message}");
@@ -4197,6 +4238,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             {
                 report_error!("ERROR: {error}");
                 failed = true;
+            }
+            if aborted {
+                break;
             }
             // Upstream `--abort-on-error`: the first reported error raises and
             // ends the queue (a loaded info retries its URL instead).

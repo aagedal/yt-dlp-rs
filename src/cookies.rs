@@ -102,6 +102,75 @@ fn valid_value(value: &str) -> bool {
 }
 
 impl CookieJar {
+    /// Upstream `_merge_cookie_jars`: extracted browser cookies, then the
+    /// cookie file's (which replace same-key browser cookies). Browser
+    /// cookies this jar cannot represent are skipped.
+    pub fn from_browser(
+        extracted: crate::browser_cookies::Extracted,
+        file: Option<&Path>,
+    ) -> Result<Self> {
+        let mut text = String::from("# Netscape HTTP Cookie File\n");
+        for cookie in &extracted.cookies {
+            if cookie.name.is_empty() {
+                continue;
+            }
+            let expires = cookie
+                .expires
+                .filter(|expires| expires.is_finite() && *expires > 0.0)
+                .map_or(String::new(), |expires| (expires as i64).to_string());
+            let flag = |value: bool| if value { "TRUE" } else { "FALSE" };
+            let line = format!(
+                "{}\t{}\t{}\t{}\t{expires}\t{}\t{}",
+                cookie.domain,
+                flag(cookie.domain.starts_with('.')),
+                cookie.path,
+                flag(cookie.secure),
+                cookie.name,
+                cookie.value
+            );
+            if line.len() <= MAX_LINE && parse_record(&line, false).is_ok() {
+                text.push_str(&line);
+                text.push('\n');
+            }
+        }
+        if let Some(path) = file
+            && let Some(file_text) = Self::read(path)?
+        {
+            // The header is validated, then its records follow the browser's.
+            Self::parse(&file_text)?;
+            text.extend(file_text.lines().skip(1).map(|line| format!("{line}\n")));
+        }
+        let jar = Self::parse(&text)?;
+        // Upstream loads its jar lazily: at the first request (or the save).
+        crate::screen::defer_until_request(extracted.messages, extracted.error);
+        Ok(jar)
+    }
+
+    /// The text of a bounded UTF-8 cookie file, or `None` when it is missing.
+    fn read(path: &Path) -> Result<Option<String>> {
+        if !target(path)? {
+            return Ok(None);
+        }
+        let file = File::open(path).map_err(|_| error("cannot open cookie file"))?;
+        if !file
+            .metadata()
+            .map_err(|_| error("cannot inspect opened cookie file"))?
+            .is_file()
+        {
+            return Err(error("cookie file is not regular"));
+        }
+        let mut bytes = Vec::new();
+        file.take(MAX_FILE as u64 + 1)
+            .read_to_end(&mut bytes)
+            .map_err(|_| error("cannot read cookie file"))?;
+        if bytes.len() > MAX_FILE {
+            return Err(error("cookie file exceeds 4 MiB"));
+        }
+        String::from_utf8(bytes)
+            .map(Some)
+            .map_err(|_| error("cookie file is not UTF-8"))
+    }
+
     /// Load a bounded UTF-8 Netscape file. A missing file yields an empty jar and
     /// is not created. Malformed records fail with line numbers, never values.
     pub fn load(path: impl AsRef<Path>) -> Result<Self> {
@@ -236,6 +305,7 @@ impl CookieJar {
         Ok(())
     }
     fn snapshot(&self) -> Result<String> {
+        crate::screen::load_cookies()?;
         let state = self
             .state
             .read()

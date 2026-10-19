@@ -23,6 +23,7 @@ pub(crate) fn probe(client: &Client, url: &Url, referer: Option<&Url>) -> Result
     if let Some(referer) = referer {
         request = request.header(REFERER, referer.as_str());
     }
+    crate::screen::load_cookies()?;
     let response = crate::retry::check_response(request.send()?)?;
     if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
         return Err(Error::PartialResponse);
