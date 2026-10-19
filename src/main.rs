@@ -339,6 +339,11 @@ struct Args {
         allow_hyphen_values = true
     )]
     audio_quality: String,
+    /// Containers that may be used when merging formats, separated by "/",
+    /// e.g. "mp4/mkv"; ignored if no merge is required (currently supported:
+    /// avi, flv, mkv, mov, mp4, webm)
+    #[arg(long, value_name = "FORMAT")]
+    merge_output_format: Option<String>,
     /// Remux media to FORMAT or ordered SOURCE>TARGET/TARGET rules (stream copy)
     #[arg(long, value_name = "FORMAT", overrides_with = "remux_video")]
     remux_video: Option<String>,
@@ -994,6 +999,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         ))
         .into());
     }
+    // Upstream `validate_regex` uses `re.match`: only a valid prefix is required.
+    if let Some(format) = &args.merge_output_format {
+        static PATTERN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            let ext = "(?:avi|flv|mkv|mov|mp4|webm)";
+            regex::Regex::new(&format!("^{ext}(?:/{ext})*")).unwrap()
+        });
+        if !PATTERN.is_match(format) {
+            return Err(usage(format!("invalid merge output format \"{format}\" given")).into());
+        }
+    }
     let mut audio_options = AudioOptions::from_cli(&args.audio_format, &args.audio_quality)?;
     audio_options.keep_video = args.keep_video;
     // Source validation applies to both values even when recode takes precedence.
@@ -1128,6 +1143,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     if let Some(path) = args.ffprobe_location.or(ffprobe) {
         downloader = downloader.with_ffprobe(path);
+    }
+    if let Some(formats) = &args.merge_output_format {
+        downloader =
+            downloader.with_merge_output_format(formats.split('/').map(str::to_owned).collect());
     }
     let archive_path = args.download_archive.clone();
     let mut archive = args

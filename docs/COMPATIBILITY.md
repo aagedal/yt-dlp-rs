@@ -74,6 +74,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-x`, `--extract-audio`, `--audio-format`, `--audio-quality` | Ordered audio extraction mappings and bounded quality settings; see audio extraction below |
 | `--remux-video`, `--recode-video` | Ordered video target mappings; stream copying or container-default re-encoding; recode wins |
 | `--embed-metadata`, `--add-metadata`, `--no-embed-metadata`, `--no-add-metadata` | Final FFmpeg stage after subtitle embedding: upstream `FFmpegMetadataPP` stream-copy options, `-write_id3v1 1`, common tags from represented fields with upstream key precedence (title, date, description/synopsis, purl/comment, artist, genre, …) and per-stream `language`; requires `--ffmpeg-location`; no chapters and no info JSON attachment (warned with `--write-info-json`) |
+| `--merge-output-format FORMAT` | Upstream `/`-separated container preferences passed to `get_compatible_ext` for merges (`mp4/mkv`); validated with upstream's prefix-matching `re.match` against `avi`/`flv`/`mkv`/`mov`/`mp4`/`webm` (`invalid merge output format "X" given` usage error); ignored without a merge |
 | `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates and, for unprocessed merges, upstream's `NAME.fID.EXT` format files; accepted without other options like upstream; last flag wins |
 | `--ffprobe-location PATH` | Native option: explicit audio probe executable, overriding the ffprobe found from `--ffmpeg-location` or `PATH` |
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
@@ -649,8 +650,13 @@ An explicit pair can be inspected with JSON/simulation without installing FFmpeg
 
 A merge plan carries `requested_formats` in expression order and a joined
 `format_id`. Top-level `url` represents the first source, not a merged HTTP URL;
-callers must honor the plan. MP4/TS video + M4A/AAC/TS audio yields MP4, WebM + WebM yields
-WebM, and mixed supported containers yield Matroska (`mkv`). The selected video's dimensions
+callers must honor the plan. Pairs need MP4/WebM/TS video and M4A/WebM/AAC/TS audio
+(fixed local demuxers); the output container is upstream's `get_compatible_ext`
+over the video's `vcodec`/`ext` and the audio's `acodec`/`ext` (for example
+avc1+mp4a gives `mp4`, VP9+Opus `webm`, unknown codecs in `mp4`+`aac` `mkv`; native
+HLS TS extensions therefore often give `mkv` where upstream's HLS `mp4` labels give
+`mp4`), with `--merge-output-format` / `YoutubeDl::with_merge_output_format`
+preferences. The selected video's dimensions
 are retained; merged filesize is unknown until download. Added serde fields have
 defaults for older metadata, but Rust struct literals must supply the new fields.
 

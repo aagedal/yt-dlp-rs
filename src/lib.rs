@@ -88,6 +88,7 @@ pub struct YoutubeDl {
     extractors: Vec<Box<dyn Extractor>>,
     ffmpeg: Option<PathBuf>,
     ffprobe: Option<PathBuf>,
+    merge_output_format: Option<Vec<String>>,
 }
 
 impl YoutubeDl {
@@ -118,6 +119,7 @@ impl YoutubeDl {
         Ok(Self {
             client,
             ffmpeg: None,
+            merge_output_format: None,
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -149,6 +151,13 @@ impl YoutubeDl {
     /// Without this override, audio processing uses ffprobe beside explicit ffmpeg.
     pub fn with_ffprobe(mut self, executable: impl Into<PathBuf>) -> Self {
         self.ffprobe = Some(executable.into());
+        self
+    }
+
+    /// Upstream `--merge-output-format`: ordered containers that a merge may
+    /// use, passed to `get_compatible_ext` as preferences.
+    pub fn with_merge_output_format(mut self, formats: Vec<String>) -> Self {
+        self.merge_output_format = Some(formats);
         self
     }
 
@@ -288,7 +297,11 @@ impl YoutubeDl {
 
     /// Apply a requested or configured default selector atomically to an extracted result.
     pub fn select_result(&self, result: &mut ExtractResult, format: Option<&str>) -> Result<()> {
-        result.select_format_with_merge(format, self.ffmpeg.is_some())
+        result.select_format_with_merge(
+            format,
+            self.ffmpeg.is_some(),
+            self.merge_output_format.as_deref(),
+        )
     }
 
     /// Extract all supported alternatives without applying library format selection.
@@ -490,13 +503,11 @@ impl YoutubeDl {
         };
         let video_ext = streams[video].ext.as_str();
         let audio_ext = streams[audio].ext.as_str();
-        let output_ext = info::merge_extension(&streams[video], &streams[audio])
-            .ok_or_else(|| Error::Postprocess("unsupported stream containers".into()))?;
-        if info.ext != output_ext {
-            return Err(Error::Postprocess(
-                "merge output container disagrees with selected streams".into(),
-            ));
+        if !info::mergeable(&streams[video], &streams[audio]) {
+            return Err(Error::Postprocess("unsupported stream containers".into()));
         }
+        // The selected container (upstream `get_compatible_ext`).
+        let output_ext = info.ext.as_str();
         let executable = self.ffmpeg.as_ref().ok_or_else(|| {
             Error::Postprocess(
                 "separate streams require --ffmpeg-location PATH or YoutubeDl::with_ffmpeg".into(),

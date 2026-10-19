@@ -119,7 +119,9 @@ fn external_hls_audio_groups_are_namespaced_and_pair_selections_preserve_plans()
     assert!(info.select_format(None).is_err());
     info.select_format(Some("bestvideo+bestaudio")).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("hls-0+hls-audio-0"));
-    assert_eq!(info.ext, "mp4");
+    // get_compatible_ext over the native TS/AAC extensions (upstream labels
+    // HLS `mp4`, which would give `mp4`).
+    assert_eq!(info.ext, "mkv");
     assert!(info.fragments.is_empty());
     assert_eq!(info.requested_formats[0].fragments.len(), 2);
     assert_eq!(info.requested_formats[1].fragments.len(), 1);

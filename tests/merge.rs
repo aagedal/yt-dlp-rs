@@ -507,3 +507,54 @@ fn cli_merge_prints_upstream_format_destinations_merger_and_deletions() {
     );
     clean(directory.path(), &["info.json", "out.mp4"]);
 }
+
+#[test]
+fn cli_merge_output_format_prefers_containers_and_validates_like_upstream() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let info = serde_json::json!({
+        "id": "fixture", "title": "fixture", "ext": "mp4",
+        "url": format!("{}/video", server.url),
+        "webpage_url": server.url, "extractor": "fixture", "extractor_key": "Fixture",
+        "formats": [
+            {"format_id": "v", "url": format!("{}/video", server.url), "ext": "mp4", "vcodec": "avc1", "acodec": "none"},
+            {"format_id": "a", "url": format!("{}/audio", server.url), "ext": "m4a", "vcodec": "none", "acodec": "mp4a"},
+        ],
+    });
+    let path = directory.path().join("info.json");
+    std::fs::write(&path, info.to_string()).unwrap();
+    let run = |format: &str| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--no-progress", "-f", "v+a", "-o", "out.%(ext)s"])
+            .args(["--merge-output-format", format])
+            .arg("--ffmpeg-location")
+            .arg(helper())
+            .arg("--load-info-json")
+            .arg(&path)
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    // avc1+mp4a would merge to mp4; the first preference wins via get_compatible_ext.
+    let output = run("mkv/mp4");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(
+        String::from_utf8_lossy(&output.stdout)
+            .contains("[Merger] Merging formats into \"out.mkv\"")
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("out.mkv")).unwrap(),
+        b"merged-video-audio"
+    );
+    // `re.match` accepts a valid prefix; other values are usage errors.
+    let output = run("bogus");
+    assert_eq!(output.status.code(), Some(2));
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .ends_with("yt-dlp-rs: error: invalid merge output format \"bogus\" given\n")
+    );
+}

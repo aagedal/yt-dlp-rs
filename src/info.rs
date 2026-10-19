@@ -42,15 +42,18 @@ impl ExtractResult {
         &mut self,
         requested: Option<&str>,
         prefer_merge: bool,
+        merge_formats: Option<&[String]>,
     ) -> crate::Result<()> {
         // Select every entry before publishing any change to a playlist.
         let mut selected = self.clone();
         match &mut selected {
-            Self::Video(info) => info.select_format_with_merge(requested, prefer_merge)?,
+            Self::Video(info) => {
+                info.select_format_with_merge(requested, prefer_merge, merge_formats)?
+            }
             Self::Playlist(info) => {
                 for entry in &mut info.entries {
                     entry
-                        .select_format_with_merge(requested, prefer_merge)
+                        .select_format_with_merge(requested, prefer_merge, merge_formats)
                         .map_err(|error| match error {
                             crate::Error::FormatSelection(message) => {
                                 crate::Error::FormatSelection(format!("{}: {message}", entry.id))
@@ -381,7 +384,7 @@ enum Pick<'a> {
 impl VideoInfo {
     /// Select a supported source or explicit pair without implicit merger preference.
     pub fn select_format(&mut self, requested: Option<&str>) -> crate::Result<()> {
-        self.select_format_with_merge(requested, false)
+        self.select_format_with_merge(requested, false, None)
     }
 
     /// Bounded native selector grammar: filtered groups/atoms, two-stream `+`, and `/` fallback.
@@ -391,6 +394,7 @@ impl VideoInfo {
         &mut self,
         requested: Option<&str>,
         prefer_merge: bool,
+        merge_formats: Option<&[String]>,
     ) -> crate::Result<()> {
         let expression = requested.unwrap_or(if prefer_merge {
             "bestvideo*+bestaudio/best"
@@ -421,7 +425,7 @@ impl VideoInfo {
                     } else {
                         (second, first)
                     };
-                    let ext = merge_extension(video, audio).expect("selected compatible pair");
+                    let ext = merge_container(video, audio, merge_formats);
                     let selected = vec![first.clone(), second.clone()];
                     let (width, height) = (video.width, video.height);
                     let (vcodec, acodec, dynamic_range) = (
@@ -434,7 +438,7 @@ impl VideoInfo {
                         "{}+{}",
                         selected[0].format_id, selected[1].format_id
                     ));
-                    self.ext = ext.into();
+                    self.ext = ext;
                     self.protocol = Some(
                         selected
                             .iter()
@@ -611,7 +615,7 @@ impl VideoInfo {
         for &(video, video_literal) in videos {
             for &(audio, audio_literal) in audios {
                 if (video_literal && audio_literal || video.audio_group == audio.audio_group)
-                    && merge_extension(video, audio).is_some()
+                    && mergeable(video, audio)
                 {
                     return Some(if reversed {
                         (audio, video)
@@ -841,19 +845,31 @@ pub(crate) fn sanitize_format_ids(formats: &mut [VideoFormat]) {
     }
 }
 
-pub(crate) fn merge_extension(video: &VideoFormat, audio: &VideoFormat) -> Option<&'static str> {
-    if video.stream_kind != StreamKind::VideoOnly
-        || audio.stream_kind != StreamKind::AudioOnly
-        || !matches!(video.ext.as_str(), "mp4" | "webm" | "ts")
-        || !matches!(audio.ext.as_str(), "m4a" | "webm" | "aac" | "ts")
-    {
-        return None;
-    }
-    Some(match (video.ext.as_str(), audio.ext.as_str()) {
-        ("mp4" | "ts", "m4a" | "aac" | "ts") => "mp4",
-        ("webm", "webm") => "webm",
-        _ => "mkv",
-    })
+/// Native merge inputs: one video-only and one audio-only stream in
+/// containers with a fixed local demuxer.
+pub(crate) fn mergeable(video: &VideoFormat, audio: &VideoFormat) -> bool {
+    video.stream_kind == StreamKind::VideoOnly
+        && audio.stream_kind == StreamKind::AudioOnly
+        && matches!(video.ext.as_str(), "mp4" | "webm" | "ts")
+        && matches!(audio.ext.as_str(), "m4a" | "webm" | "aac" | "ts")
+}
+
+/// Upstream's merged `ext`: `get_compatible_ext` over the pair's codecs and
+/// extensions, with `--merge-output-format` preferences.
+pub(crate) fn merge_container(
+    video: &VideoFormat,
+    audio: &VideoFormat,
+    merge_formats: Option<&[String]>,
+) -> String {
+    let preferences: Option<Vec<&str>> =
+        merge_formats.map(|formats| formats.iter().map(String::as_str).collect());
+    crate::codecs::compatible_ext(
+        &[video.vcodec.as_deref()],
+        &[audio.acodec.as_deref()],
+        &[video.ext.as_str()],
+        &[audio.ext.as_str()],
+        preferences.as_deref(),
+    )
 }
 
 fn resolution(format: &VideoFormat) -> Option<u32> {
@@ -1138,9 +1154,13 @@ mod tests {
     #[test]
     fn implicit_merge_requires_preference_and_complete_supported_pair() {
         let mut video = adaptive();
-        video.select_format_with_merge(None, true).unwrap();
+        video.select_format_with_merge(None, true, None).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v2+a2"));
-        assert!(video.select_format_with_merge(Some("best"), true).is_err());
+        assert!(
+            video
+                .select_format_with_merge(Some("best"), true, None)
+                .is_err()
+        );
         assert!(video.select_format(None).is_err());
         video
             .formats
@@ -1149,7 +1169,7 @@ mod tests {
         // best falls back to them with or without a merger.
         video.select_format(None).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v2"));
-        video.select_format_with_merge(None, true).unwrap();
+        video.select_format_with_merge(None, true, None).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v2"));
         video.formats.push(source(
             "complete",
@@ -1159,7 +1179,7 @@ mod tests {
             None,
             None,
         ));
-        video.select_format_with_merge(None, true).unwrap();
+        video.select_format_with_merge(None, true, None).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("complete"));
         video.formats.push(source(
             "audio",
@@ -1169,7 +1189,7 @@ mod tests {
             None,
             None,
         ));
-        video.select_format_with_merge(None, true).unwrap();
+        video.select_format_with_merge(None, true, None).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("complete"));
     }
 
@@ -1188,12 +1208,16 @@ mod tests {
         assert_eq!(video.format_id.as_deref(), Some("muxed"));
         // Upstream `bestvideo*+bestaudio/best`: the complete 2160p format
         // ranks above the separate video and its audio is not added again.
-        video.select_format_with_merge(None, true).unwrap();
+        video.select_format_with_merge(None, true, None).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("muxed"));
         assert!(video.requested_formats.is_empty());
-        video.select_format_with_merge(Some("bv+ba"), true).unwrap();
+        video
+            .select_format_with_merge(Some("bv+ba"), true, None)
+            .unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v2+a2"));
-        video.select_format_with_merge(Some("best"), true).unwrap();
+        video
+            .select_format_with_merge(Some("best"), true, None)
+            .unwrap();
         assert_eq!(video.format_id.as_deref(), Some("muxed"));
         for (expression, expected) in [("v1+v2", "v1"), ("a1+a2", "a1"), ("muxed+a1", "muxed")] {
             video.select_format(Some(expression)).unwrap();
@@ -1286,12 +1310,13 @@ mod tests {
         let mut video = grouped_info();
         video.select_format(Some("bestvideo+bestaudio")).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v-a+a-a"));
-        assert_eq!(video.ext, "mp4");
+        // Upstream's compatible extension sets do not include `aac`.
+        assert_eq!(video.ext, "mkv");
         video.select_format(Some("bestaudio+bestvideo")).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("a-a+v-a"));
         assert_eq!(video.url, video.requested_formats[0].url);
         video.formats.retain(|format| format.format_id != "a-a");
-        video.select_format_with_merge(None, true).unwrap();
+        video.select_format_with_merge(None, true, None).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v-b+a-b"));
     }
 
@@ -1386,26 +1411,36 @@ mod tests {
     }
 
     #[test]
-    fn shared_merge_policy_validates_kinds_and_all_container_combinations() {
+    fn shared_merge_policy_validates_kinds_and_uses_upstream_compatible_ext() {
         for video_ext in ["mp4", "ts", "webm"] {
             for audio_ext in ["m4a", "aac", "ts", "webm"] {
                 let video = source("v", StreamKind::VideoOnly, video_ext, None, None, None);
                 let audio = source("a", StreamKind::AudioOnly, audio_ext, None, None, None);
+                // Without codecs, upstream's extension sets decide.
                 let expected = match (video_ext, audio_ext) {
-                    ("mp4" | "ts", "m4a" | "aac" | "ts") => "mp4",
+                    ("mp4", "m4a") => "mp4",
+                    ("ts", "ts") => "ts",
                     ("webm", "webm") => "webm",
                     _ => "mkv",
                 };
-                assert_eq!(merge_extension(&video, &audio), Some(expected));
-                assert_eq!(merge_extension(&audio, &video), None);
+                assert!(mergeable(&video, &audio));
+                assert!(!mergeable(&audio, &video));
+                assert_eq!(merge_container(&video, &audio, None), expected);
             }
         }
+        let mut video = source("v", StreamKind::VideoOnly, "mp4", None, None, None);
+        let mut audio = source("a", StreamKind::AudioOnly, "webm", None, None, None);
+        video.vcodec = Some("vp09.00.10.08".into());
+        audio.acodec = Some("opus".into());
+        assert_eq!(merge_container(&video, &audio, None), "webm");
+        let preferences = ["mp4".to_owned()];
+        assert_eq!(merge_container(&video, &audio, Some(&preferences)), "mp4");
         let video = source("v", StreamKind::Standalone, "mp4", None, None, None);
         let audio = source("a", StreamKind::AudioOnly, "aac", None, None, None);
-        assert_eq!(merge_extension(&video, &audio), None);
+        assert!(!mergeable(&video, &audio));
         let video = source("v", StreamKind::VideoOnly, "ts", None, None, None);
         let audio = source("a", StreamKind::AudioOnly, "mp3", None, None, None);
-        assert_eq!(merge_extension(&video, &audio), None);
+        assert!(!mergeable(&video, &audio));
     }
 
     #[test]
@@ -1436,7 +1471,7 @@ mod tests {
         });
         let before = serde_json::to_value(&playlist).unwrap();
         let error = playlist
-            .select_format_with_merge(Some("v2+a2"), false)
+            .select_format_with_merge(Some("v2+a2"), false, None)
             .unwrap_err();
         assert!(error.to_string().contains("second"));
         assert_eq!(serde_json::to_value(&playlist).unwrap(), before);

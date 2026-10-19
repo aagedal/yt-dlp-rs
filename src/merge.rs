@@ -57,10 +57,15 @@ fn merge_with_deadline(
         "webm" => "matroska",
         _ => return Err(failure("unsupported audio container")),
     };
+    // FFmpegMergerPP.SUPPORTED_EXTS, plus `ts` that get_compatible_ext can pick.
     let muxer = match output_ext {
         "mp4" => "mp4",
         "webm" => "webm",
         "mkv" => "matroska",
+        "mov" => "mov",
+        "avi" => "avi",
+        "flv" => "flv",
+        "ts" => "mpegts",
         _ => return Err(failure("unsupported output container")),
     };
     let executable = executable.canonicalize()?;
