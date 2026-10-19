@@ -536,9 +536,10 @@ fn rejects_pages_manifests_errors_and_non_http_urls() {
         dl.extract_info("file:///tmp/video.mp4"),
         Err(Error::UnsupportedScheme(_))
     ));
+    // Upstream GenericIE: an input without a scheme is not a valid URL.
     assert!(matches!(
         dl.extract_info("not a url"),
-        Err(Error::InvalidUrl(_))
+        Err(Error::Reported(message)) if message == "[generic] 'not a url' is not a valid URL"
     ));
 }
 

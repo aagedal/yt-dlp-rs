@@ -140,3 +140,43 @@ fn extractor_listings_and_color_policies_follow_upstream() {
         );
     }
 }
+
+#[test]
+fn extractor_selection_and_unqualified_inputs_follow_upstream() {
+    let run = |args: &[&str]| {
+        let output = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .arg("--ignore-config")
+            .args(args)
+            .output()
+            .unwrap();
+        (
+            output.status.code(),
+            String::from_utf8_lossy(&output.stdout).into_owned(),
+            String::from_utf8_lossy(&output.stderr).into_owned(),
+        )
+    };
+    // Checked against pinned upstream; no request is made for these inputs.
+    let (code, stdout, stderr) = run(&["--ies", "youtube", "http://127.0.0.1:1/a.mp4"]);
+    assert_eq!(code, Some(1));
+    assert_eq!(stdout, "");
+    assert_eq!(
+        stderr,
+        "ERROR: No suitable extractor found for URL http://127.0.0.1:1/a.mp4\n"
+    );
+    let (_, stdout, stderr) = run(&["--ies", "default,-generic,end", "http://127.0.0.1:1/a.mp4"]);
+    assert_eq!(
+        stdout,
+        "[UnsupportedURL] Extracting URL: http://127.0.0.1:1/a.mp4\n"
+    );
+    assert_eq!(stderr, "ERROR: Unsupported URL: http://127.0.0.1:1/a.mp4\n");
+    let (code, stdout, stderr) = run(&["foo"]);
+    assert_eq!(code, Some(1));
+    assert_eq!(stdout, "[generic] Extracting URL: foo\n");
+    assert_eq!(stderr, "ERROR: [generic] 'foo' is not a valid URL\n");
+    let (code, _, stderr) = run(&["--ies", "(bad", "foo"]);
+    assert_eq!(code, Some(2));
+    assert!(
+        stderr.contains("error: Wrong regex for allowed_extractors: (bad"),
+        "{stderr}"
+    );
+}

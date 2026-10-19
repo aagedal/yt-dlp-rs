@@ -106,6 +106,77 @@ pub struct YoutubeDl {
     /// `--http-chunk-size` and `--test`.
     http_chunk_size: Option<u64>,
     test: bool,
+    /// `--use-extractors` (upstream extractor names in matching order) and
+    /// `--force-generic-extractor`.
+    allowed_extractors: Option<Vec<&'static str>>,
+    force_generic: bool,
+    /// `--default-search`.
+    default_search: Option<String>,
+}
+
+/// Upstream extractor names this port knows, in `gen_extractor_classes`
+/// order (`end` is the unsupported-URL fallback).
+const EXTRACTOR_NAMES: [&str; 4] = ["html5", "youtube", "generic", "end"];
+
+/// Upstream `orderedSet_from_options(names, {'all', 'default'}, use_regex=True)`.
+fn ordered_extractors(
+    options: &[String],
+    start: Vec<&'static str>,
+) -> std::result::Result<Vec<&'static str>, String> {
+    let mut requested = start;
+    for option in options {
+        let (discard, value) = match option.strip_prefix('-') {
+            Some(value) => (true, value),
+            None => (false, option.as_str()),
+        };
+        let alias: Option<&[&str]> = match value {
+            "all" => Some(&EXTRACTOR_NAMES),
+            "default" => Some(&EXTRACTOR_NAMES[..3]),
+            _ => None,
+        };
+        if let Some(names) = alias {
+            let flipped: Vec<String> = names
+                .iter()
+                .map(|name| {
+                    if discard {
+                        format!("-{name}")
+                    } else {
+                        (*name).to_owned()
+                    }
+                })
+                .collect();
+            requested = ordered_extractors(&flipped, requested)?;
+            continue;
+        }
+        let regex = regex::RegexBuilder::new(&format!("^(?:{value})$"))
+            .case_insensitive(true)
+            .build()
+            .map_err(|_| format!("Wrong regex for allowed_extractors: {value}"))?;
+        for name in EXTRACTOR_NAMES.iter().filter(|name| regex.is_match(name)) {
+            if discard {
+                requested.retain(|item| item != name);
+            } else {
+                requested.push(name);
+            }
+        }
+    }
+    let mut seen = Vec::new();
+    requested.retain(|name| {
+        let new = !seen.contains(name);
+        seen.push(*name);
+        new
+    });
+    Ok(requested)
+}
+
+/// Python `urlparse(url).scheme` is nonempty.
+fn has_scheme(input: &str) -> bool {
+    input.split_once(':').is_some_and(|(scheme, _)| {
+        scheme.starts_with(|c: char| c.is_ascii_alphabetic())
+            && scheme
+                .chars()
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.'))
+    })
 }
 
 /// Upstream `-S`/`--format-sort`, `--format-sort-force` and
@@ -154,6 +225,9 @@ impl YoutubeDl {
             ffmpeg_settings: ffmpeg_fd::Settings::default(),
             http_chunk_size: None,
             test: false,
+            allowed_extractors: None,
+            force_generic: false,
+            default_search: None,
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -304,6 +378,33 @@ impl YoutubeDl {
     /// `downloader_options`).
     pub fn with_http_chunk_size(mut self, size: Option<u64>) -> Self {
         self.http_chunk_size = size;
+        self
+    }
+
+    /// `--use-extractors NAMES`: upstream names (`html5`, `youtube`,
+    /// `generic`, `end`, regexes, `all`, `default`, `-` exclusions) select and
+    /// order the extractors.
+    pub fn with_allowed_extractors(
+        mut self,
+        names: &[String],
+    ) -> std::result::Result<Self, String> {
+        self.allowed_extractors = if names.is_empty() {
+            None
+        } else {
+            Some(ordered_extractors(names, Vec::new())?)
+        };
+        Ok(self)
+    }
+
+    /// `--force-generic-extractor`: only the generic extractor is used.
+    pub fn with_force_generic_extractor(mut self, force: bool) -> Self {
+        self.force_generic = force;
+        self
+    }
+
+    /// `--default-search PREFIX` for inputs without a URL scheme.
+    pub fn with_default_search(mut self, prefix: Option<String>) -> Self {
+        self.default_search = prefix;
         self
     }
 
@@ -545,6 +646,9 @@ impl YoutubeDl {
         input: &str,
         options: ExtractionOptions,
     ) -> Result<ExtractResult> {
+        if !has_scheme(input) {
+            return self.extract_unqualified(input, options);
+        }
         let url = Url::parse(input)?;
         if !matches!(url.scheme(), "http" | "https") {
             return Err(Error::UnsupportedScheme(url.scheme().into()));
@@ -566,14 +670,96 @@ impl YoutubeDl {
         unreachable!("the final attempt returns success or an error")
     }
 
+    /// The extractor names in matching order (`None`: the registry order).
+    fn extractor_order(&self) -> Option<Vec<&'static str>> {
+        if self.force_generic {
+            return Some(vec!["generic"]);
+        }
+        self.allowed_extractors.clone()
+    }
+
+    fn generic_allowed(&self) -> bool {
+        self.extractor_order()
+            .is_none_or(|order| order.contains(&"generic"))
+    }
+
+    fn no_suitable(&self, url: &str) -> Error {
+        let key = if self.force_generic { " (Generic)" } else { "" };
+        Error::Reported(format!("No suitable extractor{key} found for URL {url}"))
+    }
+
+    /// Upstream `GenericIE._real_extract` for an input without a scheme.
+    fn extract_unqualified(
+        &self,
+        input: &str,
+        options: ExtractionOptions,
+    ) -> Result<ExtractResult> {
+        if !self.generic_allowed() {
+            return Err(self.no_suitable(input));
+        }
+        screen::screen(&format!(
+            "[generic] Extracting URL: {}",
+            screen::truncate_string(input, 100, 20)
+        ));
+        let search = self.default_search.as_deref().unwrap_or("fixup_error");
+        static DOMAIN: std::sync::LazyLock<regex::Regex> =
+            std::sync::LazyLock::new(|| regex::Regex::new(r"^[^\s/]+\.[^\s/]+/").unwrap());
+        if matches!(search, "auto" | "auto_warning" | "fixup_error") && DOMAIN.is_match(input) {
+            screen::warning(
+                "WARNING: [generic] The url doesn't specify the protocol, trying with https",
+            );
+            return self
+                .extract_result_unselected_with_options(&format!("https://{input}"), options);
+        }
+        let quoted = output::traverse::py_repr_str(input);
+        if matches!(search, "error" | "fixup_error") {
+            return Err(Error::Reported(format!(
+                "[generic] {quoted} is not a valid URL"
+            )));
+        }
+        Err(Error::Reported(format!(
+            "[generic] {quoted}: search extractors ({search}) are not supported natively"
+        )))
+    }
+
     fn extract_once(&self, url: &Url) -> Result<ExtractResult> {
-        for extractor in &self.extractors {
+        let order = self.extractor_order();
+        let extractors: Vec<&Box<dyn Extractor>> = match &order {
+            None => self.extractors.iter().collect(),
+            Some(order) => {
+                let mut selected = Vec::new();
+                for name in order {
+                    if *name == "end" {
+                        break;
+                    }
+                    selected.extend(
+                        self.extractors
+                            .iter()
+                            .filter(|extractor| extractor.key().eq_ignore_ascii_case(name)),
+                    );
+                }
+                selected
+            }
+        };
+        for extractor in extractors {
             if let Some(mut info) = extractor.extract_result(&self.client, url)? {
                 self.process_result(&mut info)?;
                 return Ok(info);
             }
         }
-        Err(Error::UnsupportedUrl(url.to_string()))
+        // Upstream `UnsupportedURLIE` (`end`) or no matching extractor.
+        match &order {
+            None => return Err(Error::UnsupportedUrl(url.to_string())),
+            Some(order) if order.contains(&"end") => {
+                screen::screen(&format!(
+                    "[UnsupportedURL] Extracting URL: {}",
+                    screen::truncate_string(url.as_str(), 100, 20)
+                ));
+                return Err(Error::Reported(format!("Unsupported URL: {url}")));
+            }
+            Some(_) => {}
+        }
+        Err(self.no_suitable(url.as_str()))
     }
 
     pub fn download(&self, info: &VideoInfo, destination: impl AsRef<Path>) -> Result<u64> {

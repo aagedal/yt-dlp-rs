@@ -657,6 +657,14 @@ struct Args {
     /// Write all fields to the infojson
     #[arg(long, overrides_with = "clean_info_json")]
     no_clean_info_json: bool,
+    /// Extractor names to use separated by commas (regexes, "all", "default", "end", "-" to exclude)
+    #[arg(long, alias = "ies", value_name = "NAMES")]
+    use_extractors: Vec<String>,
+    #[arg(long, hide = true)]
+    force_generic_extractor: bool,
+    /// Prefix for unqualified URLs ("error", "fixup_error"; search prefixes are unsupported)
+    #[arg(long, value_name = "PREFIX")]
+    default_search: Option<String>,
     /// List all supported extractors and the URLs they would handle
     #[arg(long)]
     list_extractors: bool,
@@ -1656,7 +1664,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         size_option("http chunk size", args.http_chunk_size.as_deref()).map_err(usage)?;
     let downloader = downloader
         .with_http_chunk_size(http_chunk_size)
-        .with_test(args.test);
+        .with_test(args.test)
+        .with_force_generic_extractor(args.force_generic_extractor)
+        .with_default_search(args.default_search.clone())
+        // Upstream `_list_from_options_callback`: comma-separated, stripped.
+        .with_allowed_extractors(
+            &args
+                .use_extractors
+                .iter()
+                .flat_map(|value| value.split(','))
+                .map(str::trim)
+                .filter(|name| !name.is_empty())
+                .map(str::to_owned)
+                .collect::<Vec<_>>(),
+        )
+        .map_err(usage)?;
     // Upstream `--color` validation; output is always uncolored.
     for value in &args.color {
         let policy = match value.split_once(':') {
@@ -1828,7 +1850,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }
             Ok(None) => continue,
             Err(error) => {
-                eprintln!("ERROR: {url}: {error}");
+                match &error {
+                    yt_dlp_rs::Error::Reported(message) => eprintln!("ERROR: {message}"),
+                    _ => eprintln!("ERROR: {url}: {error}"),
+                }
                 failed = true;
                 if abort_on_error {
                     break;
