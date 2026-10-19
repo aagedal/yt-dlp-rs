@@ -256,7 +256,13 @@ fn fetch_with_retries(
             return Ok(None);
         }
         return Err(if retry.is_some() {
-            crate::retry::exhausted(failure.error, options.fragment_retries)
+            Error::FragmentUnavailable {
+                index: index + 1,
+                source: Box::new(crate::retry::exhausted(
+                    failure.error,
+                    options.fragment_retries,
+                )),
+            }
         } else {
             failure.error
         });

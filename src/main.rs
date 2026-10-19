@@ -4088,6 +4088,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         failed = true;
                         false
                     }
+                    // A fatal fragment: `report_retry`, then `append_fragment`.
+                    Some(yt_dlp_rs::Error::FragmentUnavailable { index, source }) => {
+                        report_error!("ERROR: \r{source}");
+                        report_error!("ERROR: fragment {index} not found, unable to continue");
+                        failed = true;
+                        false
+                    }
                     // `RetryManager` exhaustion through `report_retry`.
                     Some(error @ yt_dlp_rs::Error::RetriesExhausted { .. }) => {
                         report_error!("ERROR: \r{error}");

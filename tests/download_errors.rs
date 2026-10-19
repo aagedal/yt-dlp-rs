@@ -8,7 +8,10 @@ use std::{
     thread,
 };
 
-/// Serves `/v.mp4`; `/busy*` answers 503 and anything else 404 with a
+/// A media playlist whose second segment is missing.
+const GAP: &str = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXTINF:2.0,\ns0.ts\n#EXTINF:2.0,\ns1.ts\n#EXTINF:2.0,\ns2.ts\n#EXT-X-ENDLIST\n";
+
+/// Serves `/v.mp4` and the `/gap.m3u8` playlist; `/busy*` answers 503 and anything else 404 with a
 /// non-canonical reason phrase like Python's `http.server`.
 fn serve() -> String {
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
@@ -22,6 +25,8 @@ fn serve() -> String {
             let path = request.split_whitespace().nth(1).unwrap_or("/").to_owned();
             let (status, body): (&str, &[u8]) = match path.as_str() {
                 "/v.mp4" => ("200 OK", b"media"),
+                "/gap.m3u8" => ("200 OK", GAP.as_bytes()),
+                "/s0.ts" | "/s2.ts" => ("200 OK", b"segment"),
                 path if path.starts_with("/busy") => ("503 Service Unavailable", b"busy"),
                 _ => ("404 File not found", b"missing"),
             };
@@ -204,4 +209,39 @@ fn transport_errors_use_urllib_errno_text() {
         "{stdout}"
     );
     assert!(text(&output.stderr).ends_with("] Connection refused. Giving up after 1 retries\n"));
+}
+
+#[test]
+fn unavailable_fragments_are_skipped_or_end_the_download() {
+    let origin = serve();
+    for abort in [false, true] {
+        let directory = tempfile::tempdir().unwrap();
+        let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+        command
+            .args(["--ignore-config", "--no-progress", "-o", "o.%(ext)s"])
+            .args(["--fragment-retries", "1", "--retry-sleep", "fragment:0"])
+            .current_dir(directory.path());
+        if abort {
+            command.arg("--abort-on-unavailable-fragments");
+        }
+        let output = command.arg(format!("{origin}/gap.m3u8")).output().unwrap();
+        let stdout = text(&output.stdout);
+        assert!(stdout.contains(
+            "[download] Got error: HTTP Error 404: File not found. Retrying fragment 2 (1/1)...\n"
+        ));
+        if abort {
+            assert_eq!(output.status.code(), Some(1));
+            assert!(text(&output.stderr).ends_with(
+                "ERROR: \r[download] Got error: HTTP Error 404: File not found. Giving up after 1 retries\n\
+                 ERROR: fragment 2 not found, unable to continue\n"
+            ));
+        } else {
+            assert!(output.status.success(), "{}", text(&output.stderr));
+            assert!(stdout.contains("[download] fragment not found; Skipping fragment 2 ...\n"));
+            assert_eq!(
+                std::fs::read(directory.path().join("o.mp4")).unwrap(),
+                b"segmentsegment"
+            );
+        }
+    }
 }

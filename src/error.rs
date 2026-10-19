@@ -13,6 +13,10 @@ pub enum Error {
         retries: u32,
         source: Box<Error>,
     },
+    /// A fatal fragment gave up (upstream reports the retry failure, then
+    /// `fragment N not found, unable to continue`).
+    #[error("{source}")]
+    FragmentUnavailable { index: usize, source: Box<Error> },
     /// An `--exec` command rejected like upstream `UnsafeExecExpansionError`.
     #[error("{0}")]
     Exec(String),
