@@ -979,7 +979,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let program = argv.next().unwrap_or_else(|| "yt-dlp-rs".into());
     let arguments = config_arguments(argv.collect())?;
     let (arguments, deprecated) = strip_deprecated_options(arguments);
-    let matches = Args::command().get_matches_from(std::iter::once(program).chain(arguments));
+    let arguments = expand_preset_aliases(arguments).map_err(UsageError)?;
+    let matches = command().get_matches_from(std::iter::once(program).chain(arguments));
     if !deprecated.is_empty() {
         // Upstream `deprecated_feature`, written directly to stderr.
         eprintln!(
@@ -3017,6 +3018,154 @@ impl std::fmt::Display for UsageError {
 
 impl std::error::Error for UsageError {}
 
+/// The parser, with optparse's value handling: an option that takes a
+/// value consumes the next argument even when it starts with `-`.
+fn command() -> clap::Command {
+    Args::command().mut_args(|argument| {
+        let takes_value = argument.get_action().takes_values() && !argument.is_positional();
+        argument.allow_hyphen_values(takes_value)
+    })
+}
+
+/// Upstream `_PRESET_ALIASES`.
+const PRESET_ALIASES: [(&str, &[&str]); 5] = [
+    (
+        "mp3",
+        &["-f", "ba[acodec^=mp3]/ba/b", "-x", "--audio-format", "mp3"],
+    ),
+    (
+        "aac",
+        &[
+            "-f",
+            "ba[acodec^=aac]/ba[acodec^=mp4a.40.]/ba/b",
+            "-x",
+            "--audio-format",
+            "aac",
+        ],
+    ),
+    (
+        "mp4",
+        &[
+            "--merge-output-format",
+            "mp4",
+            "--remux-video",
+            "mp4",
+            "-S",
+            "vcodec:h264,lang,quality,res,fps,hdr:12,acodec:aac",
+        ],
+    ),
+    (
+        "mkv",
+        &["--merge-output-format", "mkv", "--remux-video", "mkv"],
+    ),
+    (
+        "sleep",
+        &[
+            "--sleep-subtitles",
+            "5",
+            "--sleep-requests",
+            "0.75",
+            "--sleep-interval",
+            "10",
+            "--max-sleep-interval",
+            "20",
+        ],
+    ),
+];
+
+/// Upstream `-t`/`--preset-alias NAME`: the preset's options replace the
+/// alias in place (`parser.rargs[:0] = ...`). Option values (including
+/// another option's `-t` value) and arguments after `--` are left alone.
+fn expand_preset_aliases(arguments: Vec<String>) -> Result<Vec<String>, String> {
+    // Value arities are only known once the command is built.
+    let mut command = Args::command();
+    command.build();
+    let takes_value = |token: &str| -> bool {
+        let found = if let Some(long) = token.strip_prefix("--") {
+            command.get_arguments().find(|argument| {
+                argument.get_long() == Some(long)
+                    || argument
+                        .get_all_aliases()
+                        .is_some_and(|aliases| aliases.contains(&long))
+            })
+        } else {
+            let short = token.chars().nth(1);
+            command
+                .get_arguments()
+                .find(|argument| argument.get_short() == short)
+        };
+        found.is_some_and(|argument| {
+            argument
+                .get_num_args()
+                .is_some_and(|range| range.takes_values())
+        })
+    };
+    let arity = |token: &str| -> usize {
+        let long = token.strip_prefix("--").unwrap_or(token);
+        let found = command.get_arguments().find(|argument| {
+            argument.get_long() == Some(long)
+                || argument
+                    .get_all_aliases()
+                    .is_some_and(|aliases| aliases.contains(&long))
+        });
+        found
+            .and_then(|argument| argument.get_num_args())
+            .map_or(1, |range| range.min_values().max(1))
+    };
+    let mut output = Vec::with_capacity(arguments.len());
+    let mut iter = arguments.into_iter();
+    while let Some(token) = iter.next() {
+        if token == "--" {
+            output.push(token);
+            output.extend(iter);
+            break;
+        }
+        let name = if token == "-t" || token == "--preset-alias" {
+            Some(
+                iter.next()
+                    .ok_or_else(|| format!("{token} option requires 1 argument"))?,
+            )
+        } else {
+            token
+                .strip_prefix("--preset-alias=")
+                .or_else(|| {
+                    token
+                        .strip_prefix("-t")
+                        .filter(|_| !token.starts_with("--"))
+                })
+                .map(str::to_owned)
+        };
+        if let Some(name) = name {
+            let preset = PRESET_ALIASES
+                .iter()
+                .find(|(preset, _)| *preset == name)
+                .ok_or_else(|| format!("Unknown preset alias: {name}"))?;
+            output.extend(preset.1.iter().map(|value| (*value).to_owned()));
+            continue;
+        }
+        // Keep option values with their option.
+        let inline = token.starts_with("--") && token.contains('=');
+        let short_inline = !token.starts_with("--") && token.starts_with('-') && token.len() > 2;
+        if token.starts_with('-')
+            && token.len() > 1
+            && !inline
+            && !short_inline
+            && takes_value(&token)
+        {
+            let count = if token.starts_with("--") {
+                arity(&token)
+            } else {
+                1
+            };
+            output.push(token);
+            output.extend(iter.by_ref().take(count));
+            continue;
+        }
+        output.push(token);
+    }
+    Ok(output)
+}
+
 /// Upstream `deprecated_switches`/`deprecated_arguments`: accepted no-ops.
 fn strip_deprecated_options(arguments: Vec<String>) -> (Vec<String>, Vec<String>) {
     const SWITCHES: &[&str] = &[
@@ -4159,6 +4308,34 @@ fn main() -> std::process::ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn preset_aliases_expand_in_place_like_upstream() {
+        let expand = |args: &[&str]| {
+            expand_preset_aliases(args.iter().map(|arg| (*arg).to_owned()).collect())
+        };
+        assert_eq!(
+            expand(&["-t", "mp3", "-o", "-t", "URL"]).unwrap(),
+            [
+                "-f",
+                "ba[acodec^=mp3]/ba/b",
+                "-x",
+                "--audio-format",
+                "mp3",
+                "-o",
+                "-t",
+                "URL"
+            ]
+        );
+        assert_eq!(
+            expand(&["-tmkv", "--preset-alias=sleep", "--", "-t"]).unwrap()[..4],
+            ["--merge-output-format", "mkv", "--remux-video", "mkv"]
+        );
+        assert_eq!(
+            expand(&["-t", "nope"]).unwrap_err(),
+            "Unknown preset alias: nope"
+        );
+    }
 
     #[test]
     fn descriptions_follow_upstream_overwrite_and_missing_rules() {

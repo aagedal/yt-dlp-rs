@@ -47,6 +47,19 @@ enum Field {
     Language,
     Note,
     Group,
+    Acodec,
+    Vcodec,
+    Container,
+    Protocol,
+    DynamicRange,
+    Resolution,
+    VideoExt,
+    AudioExt,
+    Format,
+    Fps,
+    Vbr,
+    Asr,
+    AudioChannels,
 }
 impl Field {
     fn parse(value: &str) -> Result<Self> {
@@ -61,13 +74,34 @@ impl Field {
             "language" => Self::Language,
             "format_note" => Self::Note,
             "audio_group" => Self::Group,
+            "acodec" => Self::Acodec,
+            "vcodec" => Self::Vcodec,
+            "container" => Self::Container,
+            "protocol" => Self::Protocol,
+            "dynamic_range" => Self::DynamicRange,
+            "resolution" => Self::Resolution,
+            "video_ext" => Self::VideoExt,
+            "audio_ext" => Self::AudioExt,
+            "format" => Self::Format,
+            "fps" => Self::Fps,
+            "vbr" => Self::Vbr,
+            "asr" => Self::Asr,
+            "audio_channels" => Self::AudioChannels,
             _ => return Err(invalid("unsupported format filter field")),
         })
     }
     fn numeric(self) -> bool {
         matches!(
             self,
-            Self::Width | Self::Height | Self::Filesize | Self::Tbr | Self::Abr
+            Self::Width
+                | Self::Height
+                | Self::Filesize
+                | Self::Tbr
+                | Self::Abr
+                | Self::Fps
+                | Self::Vbr
+                | Self::Asr
+                | Self::AudioChannels
         )
     }
 }
@@ -97,6 +131,20 @@ impl<'a> View<'a> {
             (Self::Info(f), Field::Filesize) => return f.filesize.map(Number::Integer),
             (Self::Format(f), Field::Abr) => f.abr,
             (Self::Format(f), Field::Tbr) => f.tbr,
+            (Self::Format(f), Field::Vbr) => f.vbr,
+            (Self::Format(f), Field::Fps) => f.fps.map(|fps| fps.as_f64()),
+            (Self::Format(f), Field::Asr) => return f.asr.map(|v| Number::Integer(v.into())),
+            (Self::Format(f), Field::AudioChannels) => {
+                return f.audio_channels.map(|v| Number::Integer(v.into()));
+            }
+            (Self::Info(f), Field::Abr) => f.abr,
+            (Self::Info(f), Field::Tbr) => f.tbr,
+            (Self::Info(f), Field::Vbr) => f.vbr,
+            (Self::Info(f), Field::Fps) => f.fps.map(|fps| fps.as_f64()),
+            (Self::Info(f), Field::Asr) => return f.asr.map(|v| Number::Integer(v.into())),
+            (Self::Info(f), Field::AudioChannels) => {
+                return f.audio_channels.map(|v| Number::Integer(v.into()));
+            }
             _ => None,
         };
         value
@@ -110,8 +158,26 @@ impl<'a> View<'a> {
             (Self::Format(f), Field::Language) => f.language.as_deref(),
             (Self::Format(f), Field::Note) => f.format_note.as_deref(),
             (Self::Format(f), Field::Group) => f.audio_group.as_deref(),
+            (Self::Format(f), Field::Acodec) => f.acodec.as_deref(),
+            (Self::Format(f), Field::Vcodec) => f.vcodec.as_deref(),
+            (Self::Format(f), Field::Container) => f.container.as_deref(),
+            (Self::Format(f), Field::Protocol) => f.protocol.as_deref(),
+            (Self::Format(f), Field::DynamicRange) => f.dynamic_range.as_deref(),
+            (Self::Format(f), Field::Resolution) => f.resolution.as_deref(),
+            (Self::Format(f), Field::VideoExt) => f.video_ext.as_deref(),
+            (Self::Format(f), Field::AudioExt) => f.audio_ext.as_deref(),
+            (Self::Format(f), Field::Format) => f.format.as_deref(),
             (Self::Info(f), Field::Ext) => Some(&f.ext),
             (Self::Info(f), Field::Id) => f.format_id.as_deref(),
+            (Self::Info(f), Field::Acodec) => f.acodec.as_deref(),
+            (Self::Info(f), Field::Vcodec) => f.vcodec.as_deref(),
+            (Self::Info(f), Field::Container) => f.container.as_deref(),
+            (Self::Info(f), Field::Protocol) => f.protocol.as_deref(),
+            (Self::Info(f), Field::DynamicRange) => f.dynamic_range.as_deref(),
+            (Self::Info(f), Field::Resolution) => f.resolution.as_deref(),
+            (Self::Info(f), Field::VideoExt) => f.video_ext.as_deref(),
+            (Self::Info(f), Field::AudioExt) => f.audio_ext.as_deref(),
+            (Self::Info(f), Field::Format) => f.format.as_deref(),
             _ => None,
         }
     }
@@ -679,6 +745,29 @@ mod tests {
         };
         atom
     }
+    #[test]
+    fn codec_protocol_and_rate_fields_filter_like_upstream() {
+        let format: VideoFormat = serde_json::from_value(json!({"format_id":"v", "url":"https://example.com/v.mp4",
+            "ext":"mp4", "vcodec":"avc1.4d401e", "acodec":"none", "protocol":"https", "container":"mp4_dash",
+            "fps":30, "vbr":1500.5, "asr":48000, "audio_channels":2, "dynamic_range":"SDR"}))
+        .unwrap();
+        for (predicate, expected) in [
+            ("vcodec^=avc1", true),
+            ("vcodec!^=avc1", false),
+            ("acodec=none", true),
+            ("protocol=https", true),
+            ("container$=_dash", true),
+            ("dynamic_range=HDR10", false),
+            ("fps>25", true),
+            ("vbr<1500", false),
+            ("asr>=48000", true),
+            ("audio_channels=2", true),
+            ("video_ext=?mp4", true),
+        ] {
+            assert_eq!(atom(predicate).matches(&format), expected, "{predicate}");
+        }
+    }
+
     #[test]
     fn quoted_delimiters_and_chained_filters_do_not_split_the_expression() {
         let ast = parse(r#"bestvideo[format_note*="/ [720p]+audio"][height>=720]+bestaudio[language='en-US']/18[ext=mp4]"#).unwrap();
