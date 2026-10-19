@@ -106,6 +106,9 @@ Supported today:
   requested order and deduplicating overlaps. `--playlist-start`, `--playlist-end`
   and `--playlist-reverse` are supported for fully extracted HTML5 playlists.
   Original indices and selected order are exposed in playlist entry JSON.
+- Generic results carry upstream `timestamp` from `Last-Modified` with derived
+  `upload_date`; single HTML5 pages add `og:description`, `og:image` and RTA
+  `age_limit`.
 - HTML5 direct-child subtitle/caption `<track>` metadata, `--list-subs`, and
   `--write-subs` sidecars selected with literal `--sub-langs` tags/all/exclusions
   and ordered `--sub-format` preferences. `--skip-download` writes requested
@@ -143,7 +146,7 @@ Supported today:
 - `--embed-metadata` writes title/date/description/URL/artist/genre/language tags
   with explicit FFmpeg (no chapters or info JSON attachment).
 - `--list-thumbnails`, `--write-thumbnail` and `--write-all-thumbnails` use YouTube
-  thumbnails and HTML5 `poster` images. `--convert-thumbnails FORMAT` converts
+  thumbnails, HTML5 `poster` images and page `og:image`. `--convert-thumbnails FORMAT` converts
   them and `--embed-thumbnail` embeds the best one into mp3, mkv/mka and
   mp4/m4a/m4v/mov with explicit FFmpeg (no ogg/opus/flac embedding).
 - `--write-description` writes `.description` files; `--no-write-playlist-metafiles`

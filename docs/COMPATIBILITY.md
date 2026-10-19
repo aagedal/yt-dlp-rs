@@ -100,6 +100,16 @@ chapters) and watch-page meta fallbacks are not extracted. Thumbnails follow
 upstream: saved `videoDetails`/microformat thumbnails, 38 generated `i.ytimg.com`
 candidates with name/WebP preferences, URL deduplication and the best saved
 thumbnail as `thumbnail`. HTML5 media `poster` attributes become thumbnails.
+Generic results follow upstream `GenericIE`: the first response's
+`Last-Modified` header becomes `timestamp` through a port of
+`unified_timestamp` (pinned `DATE_FORMATS`, `extract_timezone`,
+`email.utils.parsedate_tz`; checked against actual upstream for 115 inputs;
+non-ASCII digits are not interpreted and inputs where upstream raises yield no
+timestamp), and every video derives `upload_date` from `timestamp` like
+`_fill_common_fields`. A single-entry HTML5 page also takes
+`og:description` (unescaped) as `description`, `og:image` verbatim as the
+thumbnail when no poster exists, and `_rta_search` markers as `age_limit`
+(playlists do not represent these page-level fields).
 All videos then get upstream `_sanitize_thumbnails` ordering, IDs, resolutions
 and `thumbnail` finalization (no `--check-formats` URL testing). These
 fields appear in JSON, info JSON, match filters and (scalar ones) output
@@ -257,7 +267,7 @@ HTML bodies are limited to 2 MiB, including responses without Content-Length.
 Only uncompressed UTF-8/ASCII HTML is supported. Other encodings are rejected
 when declared in HTTP Content-Type; invalid UTF-8 is rejected. HTML meta charset
 sniffing, compressed responses, XHTML, JavaScript, nonstandard lazy-loading
-attributes, subtitles, posters, durations, codecs, inferred dimensions, authentication,
+attributes, durations, codecs, inferred dimensions, authentication,
 and general embedded-player extraction are not implemented. Unsupported HLS/DASH
 features and non-HTTP sources fail explicitly, even
 when another supported source was explicitly selected. Unselected source probe

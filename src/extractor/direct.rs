@@ -82,8 +82,20 @@ impl Extractor for DirectHttp {
         // GET rather than HEAD: some media servers reject HEAD or return different headers.
         // The body remains streamed and is dropped after inspecting the headers.
         let response = request(client, url, None)?;
-        Ok(from_response(&response, url))
+        let timestamp = last_modified(&response);
+        Ok(from_response(&response, url).map(|mut info| {
+            info.metadata.timestamp = timestamp;
+            info
+        }))
     }
+}
+
+/// Generic `unified_timestamp(response.headers.get('Last-Modified'))`.
+pub(crate) fn last_modified(response: &Response) -> Option<i64> {
+    let value = response.headers().get(reqwest::header::LAST_MODIFIED)?;
+    // Python decodes header bytes as Latin-1.
+    let text: String = value.as_bytes().iter().map(|&b| char::from(b)).collect();
+    crate::dates::unified_timestamp(&text, true)
 }
 
 pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo> {

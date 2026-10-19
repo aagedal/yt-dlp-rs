@@ -5,6 +5,7 @@ pub mod batch;
 mod cookies;
 mod crypto;
 mod dash;
+pub mod dates;
 mod download;
 mod embed_metadata;
 mod embed_subtitles;
@@ -12,6 +13,7 @@ mod error;
 pub mod extractor;
 mod fragment;
 mod hls;
+mod html;
 mod http;
 mod info;
 mod info_json;
@@ -323,14 +325,15 @@ impl YoutubeDl {
     fn extract_once(&self, url: &Url) -> Result<ExtractResult> {
         for extractor in &self.extractors {
             if let Some(mut info) = extractor.extract_result(&self.client, url)? {
-                // Upstream `process_video_result` sanitizes thumbnails per video.
-                match &mut info {
-                    ExtractResult::Video(video) => video.metadata.sanitize_thumbnails(),
-                    ExtractResult::Playlist(playlist) => {
-                        for entry in &mut playlist.entries {
-                            entry.metadata.sanitize_thumbnails();
-                        }
-                    }
+                // Upstream `process_video_result` fills common fields and
+                // sanitizes thumbnails per video.
+                let entries = match &mut info {
+                    ExtractResult::Video(video) => std::slice::from_mut(video),
+                    ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),
+                };
+                for entry in entries {
+                    entry.metadata.fill_common_fields();
+                    entry.metadata.sanitize_thumbnails();
                 }
                 return Ok(info);
             }

@@ -295,9 +295,15 @@ impl Extractor for GenericHttp {
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         // Dispatch a single response so direct media does not need two probes.
         let response = direct::request(client, url, None)?;
+        // Upstream sets the timestamp before inspecting the response.
+        let timestamp = direct::last_modified(&response);
+        let stamp = |mut info: VideoInfo| {
+            info.metadata.timestamp = timestamp;
+            ExtractResult::Video(info)
+        };
         let dash_path = url.path().to_ascii_lowercase().ends_with(".mpd");
         if dash_path || dash::recognized(&response) {
-            return Ok(dash::from_response(response, url, dash_path)?.map(ExtractResult::Video));
+            return Ok(dash::from_response(response, url, dash_path)?.map(stamp));
         }
         let hls_path = url.path().to_ascii_lowercase().ends_with(".m3u8")
             || response
@@ -309,7 +315,7 @@ impl Extractor for GenericHttp {
             let direct = direct::from_response(&response, url);
             return Ok(hls::from_response(client, response, url, None, hls_path)?
                 .or(direct)
-                .map(ExtractResult::Video));
+                .map(stamp));
         }
         if response
             .content_length()
@@ -425,7 +431,15 @@ impl Extractor for GenericHttp {
             entries.push(info);
         }
         if entries.len() == 1 {
-            return Ok(entries.pop().map(ExtractResult::Video));
+            // `merge_dicts(embed, info_dict)`: page fields fill missing values.
+            let mut info = entries.pop().expect("one entry");
+            info.metadata.timestamp = info.metadata.timestamp.or(timestamp);
+            info.metadata.description = crate::html::og_search_property(html, "description");
+            if info.metadata.thumbnail.is_none() {
+                info.metadata.thumbnail = crate::html::og_search_property(html, "image");
+            }
+            info.metadata.age_limit = crate::html::rta_search(html);
+            return Ok(Some(ExtractResult::Video(info)));
         }
         Ok(Some(ExtractResult::Playlist(PlaylistInfo {
             id: media.id,

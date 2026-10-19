@@ -196,7 +196,7 @@ pub struct Metadata {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub average_rating: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub age_limit: Option<u8>,
+    pub age_limit: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub categories: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -223,6 +223,13 @@ pub struct Metadata {
 }
 
 impl Metadata {
+    /// Upstream `_fill_common_fields`: derive `upload_date` from `timestamp`.
+    pub fn fill_common_fields(&mut self) {
+        if self.upload_date.is_none() {
+            self.upload_date = self.timestamp.and_then(crate::dates::strftime_date);
+        }
+    }
+
     /// Upstream `YoutubeDL._sanitize_thumbnails` (without `--check-formats`):
     /// fall back to `thumbnail`, sort ascending by preference/width/height/
     /// id/url, assign index IDs and resolutions and sanitize URLs.

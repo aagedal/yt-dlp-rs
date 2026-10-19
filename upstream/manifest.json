@@ -11,18 +11,31 @@
         "yt_dlp/extractor/generic.py",
         "yt_dlp/extractor/genericembeds.py",
         "yt_dlp/extractor/common.py",
-        "test/test_InfoExtractor.py"
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/YoutubeDL.py",
+        "test/test_InfoExtractor.py",
+        "test/test_utils.py"
       ],
       "rust": [
         "src/extractor/direct.rs",
         "src/extractor/html5.rs",
+        "src/dates.rs",
+        "src/html.rs",
+        "src/data/html_entities.txt",
+        "tests/generic_metadata.rs",
+        "tests/fixtures/dates/",
+        "tests/fixtures/html/",
+        "tools/compare_dates.py",
+        "tools/test_compare_dates.py",
+        "tools/compare_html_helpers.py",
+        "tools/test_compare_html_helpers.py",
         "tests/http.rs",
         "tests/fixtures/html5/",
         "tools/compare_html5.py",
         "tools/test_compare_html5.py",
         "docs/COMPATIBILITY.md"
       ],
-      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; optional positive source width/height/res attributes and bounded resolution-based default/best/worst ranking; no embedded players, full upstream ranking, nested/site playlists; bounded static single-period DASH and finite clear/identity-AES-128 HLS VOD sources supported through dedicated parser/transport"
+      "scope": "Direct HTTP media and uncompressed UTF-8/ASCII HTML5 pages with audio/video elements, typed progressive HTTP sources, explicit zero-based source-ID selection per entry, and fully extracted playlists for multiple elements; optional positive source width/height/res attributes and bounded resolution-based default/best/worst ranking; no embedded players, full upstream ranking, nested/site playlists; bounded static single-period DASH and finite clear/identity-AES-128 HLS VOD sources supported through dedicated parser/transport; first-response Last-Modified timestamp via actual-fixture unified_timestamp (pinned DATE_FORMATS, extract_timezone, parsedate_tz; ASCII digits only) and _fill_common_fields upload_date; single-entry page og:description, og:image fallback and _rta_search age_limit with unescapeHTML; no playlist-level page fields"
     },
     {
       "name": "extractor-contract",
