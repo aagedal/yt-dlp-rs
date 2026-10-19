@@ -106,6 +106,12 @@ struct Args {
     /// List available subtitle languages/formats without downloading
     #[arg(long)]
     list_subs: bool,
+    /// Use the Last-modified header to set the file modification time
+    #[arg(long, overrides_with_all = ["mtime", "no_mtime"])]
+    mtime: bool,
+    /// Do not use the Last-modified header to set the file modification time (default)
+    #[arg(long, overrides_with_all = ["mtime", "no_mtime"])]
+    no_mtime: bool,
     /// Write the best available thumbnail image
     #[arg(long, action = clap::ArgAction::Count)]
     write_thumbnail: u8,
@@ -1414,6 +1420,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     &subtitle_path,
                                     DownloadOptions {
                                         retries: args.retries,
+                                        update_time: args.mtime,
                                         ..Default::default()
                                     },
                                 )?;
@@ -1555,6 +1562,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 min_filesize,
                                 max_filesize,
                                 rate_limit,
+                                update_time: args.mtime,
                             },
                             &processors,
                             progress,
@@ -1586,6 +1594,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 min_filesize,
                                 max_filesize,
                                 rate_limit,
+                                update_time: args.mtime,
                             },
                             progress,
                         )?;

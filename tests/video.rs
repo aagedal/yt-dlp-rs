@@ -896,3 +896,29 @@ fn ignore_errors_skips_failed_processors_and_abort_on_error_stops_the_queue() {
         );
     }
 }
+
+#[test]
+fn ffmpeg_outputs_inherit_the_downloaded_modification_time() {
+    let server = Server::new();
+    let tools = Tools::new("aac", false);
+    let directory = tempfile::tempdir().unwrap();
+    let source = directory.path().join("source.mp4");
+    let info = tools
+        .client()
+        .extract_info(&server.url("source.mp4"))
+        .unwrap();
+    let result = tools
+        .client()
+        .download_processed_with_options(
+            &info,
+            &source,
+            DownloadOptions::default(),
+            &options("mkv", VideoMode::Remux, true),
+        )
+        .unwrap();
+    let kept = result.kept_video.unwrap();
+    let times = |path: &Path| std::fs::metadata(path).unwrap().modified().unwrap();
+    // Like upstream `run_ffmpeg_multiple_files`, the remuxed output takes
+    // the oldest input modification time rather than its creation time.
+    assert_eq!(times(&result.path), times(&kept));
+}

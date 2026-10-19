@@ -143,6 +143,8 @@ Supported today:
   `--no-download-archive` follow upstream archive control.
 - `-r/--limit-rate RATE` throttles media transfers like upstream; `--sleep-interval`,
   `--max-sleep-interval` and `--sleep-subtitles` pause before downloads.
+- `--mtime` sets downloaded file times from `Last-Modified`; FFmpeg outputs keep
+  their inputs' modification time.
 - `--abort-on-error` stops at the first error; `-i` also continues past failed
   postprocessors (the default continues past failed inputs).
 - `--max-downloads NUMBER` (exit 101) and `--min-filesize`/`--max-filesize SIZE`

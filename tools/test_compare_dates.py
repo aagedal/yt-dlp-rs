@@ -15,7 +15,7 @@ class DateComparisonTests(unittest.TestCase):
     def setUp(self):
         self.fixture = json.loads(FIXTURE.read_text(encoding='utf-8'))
         self.result = {key: copy.deepcopy(self.fixture[key])
-                       for key in ('unified_timestamp', 'strftime', 'ranges')}
+                       for key in ('unified_timestamp', 'strftime', 'timeconvert', 'ranges')}
 
     def test_results_and_order_are_compared(self):
         self.assertEqual(compare(self.result, self.fixture), self.result)
@@ -41,6 +41,7 @@ class DateComparisonTests(unittest.TestCase):
         self.assertIn('unified_timestamp(case', UPSTREAM_WORKER)
         self.assertIn('strftime_or_none(case', UPSTREAM_WORKER)
         self.assertIn('DateRange.day(case', UPSTREAM_WORKER)
+        self.assertIn('timeconvert(case', UPSTREAM_WORKER)
         self.assertIn('subprocess.Popen = forbidden', UPSTREAM_WORKER)
 
     def run_main(self, revision):

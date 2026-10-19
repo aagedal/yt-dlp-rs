@@ -532,3 +532,44 @@ fn excessive_fragment_counts_and_non_http_urls_fail_before_io() {
         clean(directory.path(), &[]);
     }
 }
+#[test]
+fn update_time_uses_the_latest_fragment_last_modified() {
+    let server = Server::new(|request, _| {
+        let mut response = Response::media(b"part".to_vec());
+        if request.starts_with("GET /first ") {
+            response
+                .headers
+                .push_str("Last-Modified: Wed, 21 Oct 2015 07:28:00 GMT\r\n");
+        } else {
+            // The epoch is ignored; the earlier fragment's time remains.
+            response
+                .headers
+                .push_str("Last-Modified: Thu, 01 Jan 1970 00:00:00 GMT\r\n");
+        }
+        response
+    });
+    let directory = tempfile::tempdir().unwrap();
+    for (update_time, name) in [(true, "out.ts"), (false, "plain.ts")] {
+        let output = directory.path().join(name);
+        YoutubeDl::new()
+            .unwrap()
+            .download_with_progress(
+                &server.whole(),
+                &output,
+                DownloadOptions {
+                    update_time,
+                    ..Default::default()
+                },
+                |_| ControlFlow::Continue(()),
+            )
+            .unwrap();
+        let modified = std::fs::metadata(&output)
+            .unwrap()
+            .modified()
+            .unwrap()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs();
+        assert_eq!(modified == 1_445_412_480, update_time, "{name}");
+    }
+}

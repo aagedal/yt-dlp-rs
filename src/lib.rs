@@ -11,6 +11,7 @@ mod embed_metadata;
 mod embed_subtitles;
 mod error;
 pub mod extractor;
+mod filetime;
 mod fragment;
 mod hls;
 mod html;
@@ -557,6 +558,7 @@ impl YoutubeDl {
             .suffix(".part")
             .tempfile_in(workspace.path())?
             .into_temp_path();
+        let oldest = filetime::oldest(paths.iter().map(PathBuf::as_path));
         merge::merge(
             &executable,
             &paths[video],
@@ -578,6 +580,7 @@ impl YoutubeDl {
                 })
             },
         )?;
+        filetime::inherit(&output, oldest);
         let bytes = fs::metadata(&output)?.len();
         fs::OpenOptions::new()
             .write(true)

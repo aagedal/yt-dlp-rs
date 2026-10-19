@@ -115,6 +115,8 @@ pub(crate) fn download(
         .tempfile_in(parent)?;
     let mut stored = 0_u64;
     let mut keys = HashMap::new();
+    // Upstream keeps the latest nonzero fragment filetime.
+    let mut filetime = None;
     let mut reporter = Reporter {
         callback,
         attempt: 1,
@@ -140,7 +142,10 @@ pub(crate) fn download(
                 &mut stored,
                 &mut reporter,
             ) {
-                Ok(()) => break,
+                Ok(modified) => {
+                    filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
+                    break;
+                }
                 Err(Failure {
                     error: _,
                     retry: Some(delay),
@@ -158,6 +163,9 @@ pub(crate) fn download(
     }
     temporary.flush()?;
     temporary.as_file().sync_all()?;
+    if options.update_time {
+        crate::filetime::apply(temporary.as_file(), filetime);
+    }
     reporter.report(DownloadPhase::Publishing, stored)?;
     temporary.persist_noclobber(destination).map_err(|error| {
         if error.error.kind() == std::io::ErrorKind::AlreadyExists {
@@ -176,7 +184,7 @@ fn fetch(
     file: &mut fs::File,
     stored: &mut u64,
     reporter: &mut Reporter<'_>,
-) -> std::result::Result<(), Failure> {
+) -> std::result::Result<Option<String>, Failure> {
     let decryption = if let Some(encryption) = &fragment.encryption {
         let key = match keys.get(&encryption.key_url) {
             Some(key) => *key,
@@ -212,6 +220,7 @@ fn fetch(
             error,
         })?;
     let expected = validate(&response, fragment, false)?;
+    let modified = crate::filetime::header(&response);
     reporter.report(DownloadPhase::Downloading, *stored)?;
     if let Some(decryptor) = decryption {
         if expected.is_some_and(|length| length == 0 || length % 16 != 0) {
@@ -219,7 +228,8 @@ fn fetch(
                 unsupported("AES-128 ciphertext length must be a positive multiple of 16").into(),
             );
         }
-        return decrypt_response(response, expected, decryptor, file, stored, reporter);
+        return decrypt_response(response, expected, decryptor, file, stored, reporter)
+            .map(|()| modified);
     }
     let mut received = 0_u64;
     // Buffer enough leading bytes to recognize split HTML/manifest responses
@@ -263,7 +273,7 @@ fn fetch(
     if received == 0 {
         return Err(unsupported("empty media fragment").into());
     }
-    Ok(())
+    Ok(modified)
 }
 fn append(
     file: &mut fs::File,

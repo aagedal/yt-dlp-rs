@@ -351,8 +351,9 @@ fn py_int(text: &str) -> Option<i64> {
     Some(if negative { -value } else { value })
 }
 
-/// `email.utils.parsedate_tz` without the (unused) timezone offset.
-fn parsedate(data: &str) -> Option<DateTime> {
+/// `email.utils.parsedate_tz`: the fields and the zone offset in seconds
+/// (zero when absent, as the public wrapper reports it).
+fn parsedate_tz(data: &str) -> Option<(DateTime, i64)> {
     const MONTH_NAMES: [&str; 24] = [
         "jan",
         "feb",
@@ -470,14 +471,49 @@ fn parsedate(data: &str) -> Option<DateTime> {
     if year < 100 {
         year += if year > 68 { 1900 } else { 2000 };
     }
-    Some(DateTime {
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-    })
+    const ZONES: &[(&str, i64)] = &[
+        ("UT", 0),
+        ("UTC", 0),
+        ("GMT", 0),
+        ("Z", 0),
+        ("AST", -400),
+        ("ADT", -300),
+        ("EST", -500),
+        ("EDT", -400),
+        ("CST", -600),
+        ("CDT", -500),
+        ("MST", -700),
+        ("MDT", -600),
+        ("PST", -800),
+        ("PDT", -700),
+    ];
+    let tz = tz.to_uppercase();
+    let offset = ZONES
+        .iter()
+        .find(|(name, _)| *name == tz)
+        .map(|(_, offset)| *offset)
+        .or_else(|| py_int(&tz))
+        .unwrap_or(0);
+    let sign = offset.signum();
+    let offset = offset.abs();
+    let offset = sign * ((offset / 100) * 3600 + (offset % 100) * 60);
+    Some((
+        DateTime {
+            year,
+            month,
+            day,
+            hour,
+            minute,
+            second,
+        },
+        offset,
+    ))
+}
+
+/// Upstream `timeconvert`: `mktime_tz(parsedate_tz(text))`.
+pub fn timeconvert(text: &str) -> Option<i64> {
+    let (parsed, offset) = parsedate_tz(text)?;
+    timegm(&parsed)?.checked_sub(offset)
 }
 
 fn is_word(c: char) -> bool {
@@ -628,7 +664,7 @@ pub fn unified_timestamp(date: &str, day_first: bool) -> Option<i64> {
             return timegm(&shifted);
         }
     }
-    let parsed = parsedate(&rest)?;
+    let (parsed, _) = parsedate_tz(&rest)?;
     timegm(&parsed)?
         .checked_add(pm_delta * 3600)?
         .checked_sub(timezone)
@@ -802,6 +838,10 @@ mod tests {
                     "{input:?} {key}"
                 );
             }
+        }
+        for case in fixture["timeconvert"].as_array().unwrap() {
+            let input = case["input"].as_str().unwrap();
+            assert_eq!(timeconvert(input), case["timestamp"].as_i64(), "{input:?}");
         }
         let ranges = &fixture["ranges"];
         let now = ranges["now"].as_i64().unwrap();

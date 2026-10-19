@@ -3,7 +3,7 @@
 
 Development only; no network/process access in the reference worker. Each
 input is parsed by actual `yt_dlp.utils.unified_timestamp` (day-first and
-month-first) and each timestamp formatted by `strftime_or_none`; results and
+month-first), `timeconvert` and each timestamp formatted by `strftime_or_none`; results and
 the classes of exceptions upstream raises are compared exactly. Date ranges use
 actual `DateRange`/`date_from_str` with `datetime.now` pinned to the saved
 instant; their exception messages are compared too.
@@ -19,7 +19,7 @@ FIXTURE = Path(__file__).resolve().parents[1] / 'tests/fixtures/dates/cases.json
 UPSTREAM_WORKER = r'''
 import datetime as real, json, socket, subprocess, sys, types
 sys.path.insert(0, sys.argv[1])
-from yt_dlp.utils import _utils, DateRange, strftime_or_none, unified_timestamp
+from yt_dlp.utils import _utils, DateRange, strftime_or_none, timeconvert, unified_timestamp
 
 def forbidden(*args, **kwargs):
     raise AssertionError('Network/process forbidden in date comparison')
@@ -35,7 +35,7 @@ class PinnedNow(real.datetime):
 
 _utils.dt = types.SimpleNamespace(datetime=PinnedNow, timedelta=real.timedelta,
                                   timezone=real.timezone, date=real.date)
-result = {'unified_timestamp': [], 'strftime': [],
+result = {'unified_timestamp': [], 'strftime': [], 'timeconvert': [],
           'ranges': {'now': ranges['now'], 'uploads': ranges['uploads'], 'cases': []}}
 for case in fixture['unified_timestamp']:
     entry = {'input': case['input']}
@@ -49,6 +49,14 @@ for case in fixture['unified_timestamp']:
 for case in fixture['strftime']:
     result['strftime'].append({'timestamp': case['timestamp'],
                                'date': strftime_or_none(case['timestamp'])})
+for case in fixture['timeconvert']:
+    entry = {'input': case['input']}
+    try:
+        entry['timestamp'] = timeconvert(case['input'])
+    except Exception as error:
+        entry['timestamp'] = None
+        entry['error'] = type(error).__name__
+    result['timeconvert'].append(entry)
 for case in ranges['cases']:
     entry = {key: case[key] for key in ('date', 'dateafter', 'datebefore')}
     try:
@@ -66,7 +74,7 @@ print(json.dumps(result, ensure_ascii=False))
 
 
 def compare(result, fixture):
-    target = {key: fixture[key] for key in ('unified_timestamp', 'strftime', 'ranges')}
+    target = {key: fixture[key] for key in ('unified_timestamp', 'strftime', 'timeconvert', 'ranges')}
     if result != target:
         raise ValueError('date mismatch: ' + json.dumps(
             {'upstream': result, 'expected': target}, ensure_ascii=False, sort_keys=True))

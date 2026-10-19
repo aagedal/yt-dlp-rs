@@ -221,3 +221,39 @@ fn date_age_view_and_title_selection_follow_upstream_match_entry() {
         "Date range: \"2020-01-02 to 2020-01-01\" , the start date must be before the end date"
     ));
 }
+
+fn modified(path: &std::path::Path) -> u64 {
+    std::fs::metadata(path)
+        .unwrap()
+        .modified()
+        .unwrap()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs()
+}
+
+#[test]
+fn mtime_sets_media_modification_times_from_last_modified() {
+    let server = Server::new();
+    let url = format!("{}/media/clip.mp4", server.origin);
+    for (args, expected) in [
+        (vec!["--mtime"], true),
+        (vec!["--mtime", "--no-mtime"], false),
+        (vec![], false),
+    ] {
+        let directory = tempfile::tempdir().unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .current_dir(directory.path())
+            .args(["--proxy", "", "-o", "clip.%(ext)s"])
+            .args(&args)
+            .arg(&url)
+            .output()
+            .unwrap();
+        assert!(output.status.success(), "{args:?}");
+        assert_eq!(
+            modified(&directory.path().join("clip.mp4")) == 784_111_777,
+            expected,
+            "{args:?}"
+        );
+    }
+}

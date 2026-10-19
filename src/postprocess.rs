@@ -254,6 +254,11 @@ pub(crate) fn download(
                         &plan,
                         &mut observe,
                     )?;
+                    // Upstream FFmpeg outputs take the oldest input mtime.
+                    crate::filetime::inherit(
+                        &output,
+                        crate::filetime::oldest([current.disk.as_path()]),
+                    );
                     let bytes = fs::metadata(&output)?.len();
                     // AAC copy deliberately keeps upstream's m4a name with ADTS bytes.
                     let container = if plan.muxer == "adts" {
@@ -302,6 +307,11 @@ pub(crate) fn download(
                         &plan,
                         &mut observe,
                     )?;
+                    // Upstream FFmpeg outputs take the oldest input mtime.
+                    crate::filetime::inherit(
+                        &output,
+                        crate::filetime::oldest([current.disk.as_path()]),
+                    );
                     let bytes = fs::metadata(&output)?.len();
                     stages.push(Stage {
                         disk: output,
@@ -326,6 +336,8 @@ pub(crate) fn download(
                     }
                     let mut total = 0u64;
                     let mut seen = std::collections::HashSet::new();
+                    // Upstream FFmpeg inputs are the original subtitle files.
+                    let mut oldest = crate::filetime::oldest([current.disk.as_path()]);
                     for (index, file) in plan.files.iter_mut().enumerate() {
                         if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing)
                             .is_break()
@@ -333,6 +345,7 @@ pub(crate) fn download(
                             return Err(Error::DownloadCancelled);
                         }
                         let metadata = subtitle_metadata(&file.path)?;
+                        oldest = oldest.into_iter().chain(metadata.modified().ok()).min();
                         if metadata.len() > 16 * 1024 * 1024 {
                             return Err(Error::Postprocess(
                                 "subtitle embedding input exceeds 16 MiB".into(),
@@ -379,6 +392,7 @@ pub(crate) fn download(
                         &plan,
                         &mut observe,
                     )?;
+                    crate::filetime::inherit(&output, oldest);
                     // Upstream replaces the current media and returns no media deletion.
                     // Keep-video therefore retains earlier processors' inputs, not a
                     // new unembedded copy of this stage.
@@ -416,6 +430,10 @@ pub(crate) fn download(
                     &plan,
                     &mut observe,
                 )?;
+                crate::filetime::inherit(
+                    &output,
+                    crate::filetime::oldest([current.disk.as_path()]),
+                );
                 // Like upstream, metadata replaces the current file in place.
                 current.bytes = fs::metadata(&output)?.len();
                 current.disk = output;
@@ -448,6 +466,11 @@ pub(crate) fn download(
                     &output,
                     &mut observe,
                 )?;
+                // Upstream restores the media's own modification time.
+                crate::filetime::inherit(
+                    &output,
+                    crate::filetime::oldest([current.disk.as_path()]),
+                );
                 current.bytes = fs::metadata(&output)?.len();
                 current.disk = output;
                 current.container = current.ext.to_lowercase();

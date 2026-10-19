@@ -91,6 +91,9 @@ pub struct DownloadOptions {
     /// `--limit-rate`: maximum bytes per second for each media transfer or
     /// fragment request (upstream `slow_down`).
     pub rate_limit: Option<u64>,
+    /// `--mtime`: set media and subtitle modification times from the
+    /// response `Last-Modified` header.
+    pub update_time: bool,
 }
 
 /// Upstream `FileDownloader.slow_down`: after each read, sleep until the
@@ -130,6 +133,7 @@ impl Default for DownloadOptions {
             min_filesize: None,
             max_filesize: None,
             rate_limit: None,
+            update_time: false,
         }
     }
 }
@@ -266,6 +270,7 @@ pub fn download(
             subtitle: false,
             limits: (options.min_filesize, options.max_filesize),
             rate_limit: options.rate_limit,
+            update_time: options.update_time,
         },
         destination,
         options,
@@ -293,6 +298,7 @@ pub(crate) fn download_subtitle(
             subtitle: true,
             limits: (None, None),
             rate_limit: None,
+            update_time: options.update_time,
         },
         destination,
         options,
@@ -320,6 +326,8 @@ pub(crate) fn download_thumbnail(
             subtitle: false,
             limits: (None, None),
             rate_limit: None,
+            // Upstream writes thumbnails without the downloader's utime.
+            update_time: false,
         },
         destination,
         options,
@@ -335,6 +343,7 @@ struct HttpResource<'a> {
     /// Minimum/maximum declared total length in bytes.
     limits: (Option<u64>, Option<u64>),
     rate_limit: Option<u64>,
+    update_time: bool,
 }
 
 fn download_resource(
@@ -358,6 +367,7 @@ fn download_resource(
         .tempfile_in(parent)?;
     let mut state = None;
     let mut actual = 0;
+    let mut last_modified = None;
     let mut reporter = Reporter {
         callback,
         attempt: 1,
@@ -372,11 +382,18 @@ fn download_resource(
             temporary.as_file_mut(),
             &mut state,
             &mut actual,
+            &mut last_modified,
             &mut reporter,
         ) {
             Ok(()) => {
                 temporary.flush()?;
                 temporary.as_file().sync_all()?;
+                if resource.update_time {
+                    crate::filetime::apply(
+                        temporary.as_file(),
+                        crate::filetime::filetime(last_modified.as_deref()),
+                    );
+                }
                 reporter.report(DownloadPhase::Publishing, actual)?;
                 temporary.persist_noclobber(destination).map_err(|e| {
                     if e.error.kind() == std::io::ErrorKind::AlreadyExists {
@@ -402,6 +419,7 @@ fn download_attempt(
     temporary: &mut fs::File,
     state: &mut Option<ResumeState>,
     actual: &mut u64,
+    last_modified: &mut Option<String>,
     reporter: &mut Reporter<'_>,
 ) -> std::result::Result<(), AttemptFailure> {
     let resume = state
@@ -423,6 +441,7 @@ fn download_attempt(
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)
         .map_err(AttemptFailure::request)?;
+    *last_modified = crate::filetime::header(&response);
     if resource.subtitle
         && !response
             .headers()
