@@ -26,6 +26,9 @@ pub(crate) struct Variant {
     pub width: Option<u32>,
     pub height: Option<u32>,
     pub stream_kind: StreamKind,
+    /// Upstream `parse_codecs(CODECS)`, with `acodec` `none` for a variant
+    /// whose audio comes from an external rendition group.
+    pub codecs: Option<crate::codecs::Codecs>,
     pub audio_group: Option<String>,
     /// Upstream `build_stream_name`: the variant's NAME, else its VIDEO
     /// group's first rendition NAME or the group ID.
@@ -299,7 +302,15 @@ fn variant(
         }
         stream_kind = StreamKind::VideoOnly;
     }
+    let mut codecs = crate::codecs::parse(values.get("CODECS").copied());
+    if external_audio
+        && let Some(codecs) = &mut codecs
+        && codecs.vcodec != "none"
+    {
+        codecs.acodec = "none".into();
+    }
     Ok(Variant {
+        codecs,
         url,
         bandwidth: bandwidth("AVERAGE-BANDWIDTH").or_else(|| bandwidth("BANDWIDTH")),
         width,

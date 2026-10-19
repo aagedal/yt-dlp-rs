@@ -233,6 +233,12 @@ fn json_simulation_retains_audio_metadata_and_does_not_fetch_keys_or_segments() 
     let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(info["requested_formats"][1]["audio_group"], "a");
     assert_eq!(info["requested_formats"][1]["language"], "en");
+    // Upstream: a variant with external audio gets acodec `none`, its
+    // renditions vcodec `none` without a known audio codec.
+    assert_eq!(info["requested_formats"][0]["vcodec"], "avc1.4");
+    assert_eq!(info["requested_formats"][0]["acodec"], "none");
+    assert_eq!(info["requested_formats"][1]["vcodec"], "none");
+    assert!(info["requested_formats"][1].get("acodec").is_none());
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     server.assert_no_media();
 }

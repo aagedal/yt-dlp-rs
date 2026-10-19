@@ -839,8 +839,18 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                     _ => "audio".to_owned(),
                 },
             };
+            // Upstream `**parse_codecs(codecs)`: no codec keys without one.
+            let codecs = crate::codecs::parse(attrs.get("codecs").copied());
             formats.push(VideoFormat {
                 protocol: Some("http_dash_segments".into()),
+                vcodec: codecs.as_ref().map(|codecs| codecs.vcodec.clone()),
+                acodec: codecs.as_ref().map(|codecs| codecs.acodec.clone()),
+                dynamic_range: codecs
+                    .as_ref()
+                    .and_then(|codecs| codecs.dynamic_range)
+                    .map(str::to_owned),
+                video_ext: None,
+                audio_ext: None,
                 format_id,
                 url: manifest.clone(),
                 ext: if mime.ends_with("webm") {

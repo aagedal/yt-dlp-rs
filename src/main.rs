@@ -902,6 +902,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     yt_dlp_rs::screen::set_sink(|message| match message {
         yt_dlp_rs::screen::Message::Screen(text) => screen!("{text}"),
         yt_dlp_rs::screen::Message::Warning(text) => warning!("WARNING: {text}"),
+        yt_dlp_rs::screen::Message::Stderr(text) => eprintln!("{text}"),
     });
     NO_WARNINGS.store(args.no_warnings, Ordering::Relaxed);
     if args.no_download_archive {

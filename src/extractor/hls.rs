@@ -118,6 +118,11 @@ pub(crate) fn from_response(
     let title = if stem.is_empty() { "video" } else { stem }.to_owned();
     let mut info = VideoInfo {
         protocol: None,
+        vcodec: None,
+        acodec: None,
+        dynamic_range: None,
+        video_ext: None,
+        audio_ext: None,
         metadata: Default::default(),
         automatic_captions: Default::default(),
         subtitles: Default::default(),
@@ -159,6 +164,11 @@ pub(crate) fn from_response(
             // A media playlist is returned as one format.
             info.formats.push(VideoFormat {
                 protocol: Some("m3u8_native".into()),
+                vcodec: None,
+                acodec: None,
+                dynamic_range: None,
+                video_ext: None,
+                audio_ext: None,
                 format_id: join(&[m3u8_id]),
                 stream_kind: StreamKind::Standalone,
                 audio_group: None,
@@ -208,8 +218,15 @@ pub(crate) fn from_response(
                     None => (renditions + info.formats.len()).to_string(),
                 };
                 let name = variant.name.clone().unwrap_or(fallback);
+                let codecs = variant.codecs.unwrap_or_default();
+                let known = |codec: String| (!codec.is_empty()).then_some(codec);
                 info.formats.push(VideoFormat {
                     protocol: Some("m3u8_native".into()),
+                    vcodec: known(codecs.vcodec),
+                    acodec: known(codecs.acodec),
+                    dynamic_range: codecs.dynamic_range.map(str::to_owned),
+                    video_ext: None,
+                    audio_ext: None,
                     format_id: join(&[m3u8_id, Some(&name)]),
                     stream_kind: variant.stream_kind,
                     audio_group: variant.audio_group,
@@ -250,6 +267,11 @@ pub(crate) fn from_response(
                 }
                 rendition_formats.push(VideoFormat {
                     protocol: Some("m3u8_native".into()),
+                    vcodec: Some("none".into()),
+                    acodec: None,
+                    dynamic_range: None,
+                    video_ext: None,
+                    audio_ext: None,
                     format_id: join(&[m3u8_id, Some(&rendition.group_id), Some(&rendition.name)]),
                     stream_kind: StreamKind::AudioOnly,
                     audio_group: Some(rendition.group_id),

@@ -259,7 +259,9 @@
       "width": 640,
       "height": 360,
       "url": "{{ORIGIN}}/media/low.mp4",
-      "filesize": 5
+      "filesize": 5,
+      "vcodec": "avc1.42001E",
+      "acodec": "mp4a.40.2"
     }
   ]
 }

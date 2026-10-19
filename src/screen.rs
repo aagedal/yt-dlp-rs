@@ -9,12 +9,14 @@ use std::{
     },
 };
 
-/// One message: a `[extractor] …` screen line or a warning text (without
-/// the `WARNING: ` prefix).
+/// One message: a `[extractor] …` screen line, a warning text (without
+/// the `WARNING: ` prefix), or a complete line upstream writes to stderr
+/// with `write_string`, independently of quiet/no-warnings options.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Message<'a> {
     Screen(&'a str),
     Warning(&'a str),
+    Stderr(&'a str),
 }
 
 type Sink = Box<dyn Fn(Message<'_>) + Send + Sync>;
@@ -35,6 +37,12 @@ pub(crate) fn screen(text: &str) {
 pub(crate) fn warning(text: &str) {
     if let Some(sink) = SINK.get() {
         sink(Message::Warning(text));
+    }
+}
+
+pub(crate) fn stderr(text: &str) {
+    if let Some(sink) = SINK.get() {
+        sink(Message::Stderr(text));
     }
 }
 

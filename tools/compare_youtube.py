@@ -52,6 +52,8 @@ def sorted_thumbnails(thumbnails):
         t.get("url")))
     return [{field: t.get(field) for field in THUMBNAIL_FIELDS} for t in ordered]
 FORMAT_FIELDS = ("format_id", "ext", "width", "height", "url", "filesize")
+# parse_codecs fields, compared when upstream sets a non-null value.
+CODEC_FIELDS = ("vcodec", "acodec", "dynamic_range")
 FIXTURE_CASES = (
     ("progressive.html", "expected.json", "watch-page"),
     ("player-api.json", "player-api-expected.json", "player-api"),
@@ -179,7 +181,8 @@ def normalize(info, origin=ORIGIN, *, adaptive=False):
     if not result["thumbnail"] and result["thumbnails"]:
         result["thumbnail"] = result["thumbnails"][-1]["url"]
     result["formats"] = [
-        {field: entry[field] for field in FORMAT_FIELDS}
+        {**{field: entry[field] for field in FORMAT_FIELDS},
+         **{field: entry[field] for field in CODEC_FIELDS if entry.get(field) is not None}}
         for entry in info["formats"]
     ]
     if adaptive:

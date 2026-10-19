@@ -59,6 +59,9 @@ fn html_fixture(path: &str) -> Option<&'static str> {
             "<video><source src='/clip.mp4'><source src='blob:https://example.invalid/id'></video>"
         }
         "/manifest.html" => "<video src='/playlist.m3u8'></video>",
+        "/codecs.html" => {
+            "<video src='/clip.mp4' type='video/mp4; codecs=\"avc1, mp4a\"'><source src='/clip.mp4' type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'><source src='/clip.mp4' type='video/mp4; codecs=\"newcodec\"'></video><audio><source src='/audio'></audio>"
+        }
         "/manifest-hint.html" => "<video src='/clip.mp4' type='application/dash+xml'></video>",
         "/blob.html" => "<video src='blob:https://example.invalid/id'></video>",
         "/source-is-html.html" => "<video src='/page.mp4'></video>",
@@ -1310,4 +1313,52 @@ fn source_dimensions_ignore_invalid_values_and_player_size() {
     assert_eq!((info.width, info.height), (None, Some(480)));
     info.select_format(None).unwrap();
     assert_eq!((info.width, info.height), (Some(1280), None));
+}
+
+#[test]
+fn html5_formats_carry_upstream_content_type_codecs() {
+    let server = Server::start();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-J", &server.url("/codecs.html")])
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    let codecs = |entry: usize| -> Vec<_> {
+        info["entries"][entry]["formats"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|format| {
+                (
+                    format.get("vcodec").cloned(),
+                    format.get("acodec").cloned(),
+                    format["dynamic_range"].clone(),
+                )
+            })
+            .collect()
+    };
+    let text = |value: &str| Some(serde_json::json!(value));
+    // The element's own src ignores type codecs; <source> codecs keep their
+    // acodec, but vcodec is reset like upstream's `f.update(formats[0])`.
+    assert_eq!(
+        codecs(0),
+        [
+            (None, None, serde_json::json!("SDR")),
+            (None, text("mp4a.40.2"), serde_json::json!("SDR")),
+            (None, None, serde_json::json!("SDR")),
+        ]
+    );
+    // Inside <audio>, vcodec is `none` (no dynamic range), and the mp3
+    // extension fills acodec like process_video_result.
+    assert_eq!(
+        codecs(1),
+        [(text("none"), text("mp3"), serde_json::Value::Null)]
+    );
+    // Unknown codecs are reported like upstream's write_string warning.
+    assert!(String::from_utf8_lossy(&output.stderr).contains("WARNING: Unknown codec newcodec\n"));
 }

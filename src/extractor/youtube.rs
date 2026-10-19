@@ -64,6 +64,8 @@ struct Candidate {
     source: Value,
     ext: String,
     stream_kind: StreamKind,
+    /// Upstream `parse_codecs` of the mimeType `codecs` parameter.
+    codecs: Option<crate::codecs::Codecs>,
     abr: Option<f64>,
     tbr: Option<f64>,
     width: Option<u32>,
@@ -72,8 +74,16 @@ struct Candidate {
 
 impl Candidate {
     fn into_format(self, url: Url) -> VideoFormat {
+        let codecs = self.codecs.as_ref();
         VideoFormat {
             protocol: None,
+            vcodec: codecs.map(|codecs| codecs.vcodec.clone()),
+            acodec: codecs.map(|codecs| codecs.acodec.clone()),
+            dynamic_range: codecs
+                .and_then(|codecs| codecs.dynamic_range)
+                .map(str::to_owned),
+            video_ext: None,
+            audio_ext: None,
             audio_group: None,
             language: None,
             format_note: None,
@@ -295,6 +305,12 @@ fn parse_candidates(
             .find_map(|p| p.trim().strip_prefix("codecs="))
             .unwrap_or("")
             .trim_matches('"');
+        // Upstream `((?:[^/]+)/(?:[^;]+))(?:;\s*codecs="([^"]+)")?`.
+        let parsed = mime
+            .split_once(';')
+            .and_then(|(_, rest)| rest.trim_start().strip_prefix("codecs=\""))
+            .and_then(|rest| rest.split_once('"'))
+            .and_then(|(codecs, _)| crate::codecs::parse(Some(codecs)));
         let codecs: Vec<_> = codecs.split(',').map(str::trim).collect();
         let video_codec = |codec: &str| {
             ["avc1", "av01", "vp8", "vp9", "vp09"].iter().any(|prefix| {
@@ -350,6 +366,7 @@ fn parse_candidates(
             source: url_source,
             ext: ext.into(),
             stream_kind,
+            codecs: parsed,
             tbr,
             abr: if stream_kind == StreamKind::AudioOnly {
                 tbr
@@ -548,6 +565,11 @@ fn extract_watch_page_with_caption_options(
     let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
         protocol: None,
+        vcodec: None,
+        acodec: None,
+        dynamic_range: None,
+        video_ext: None,
+        audio_ext: None,
         metadata: metadata::parse(&player),
         automatic_captions: captions.automatic,
         subtitles: captions.subtitles,

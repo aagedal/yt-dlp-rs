@@ -272,6 +272,20 @@ fn json_simulation_does_not_request_initialization_or_media_or_create_files() {
     );
     let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(info["protocol"], "http_dash_segments+http_dash_segments");
+    // Upstream parse_codecs fields; merges take video and audio codecs.
+    assert_eq!(
+        (&info["vcodec"], &info["acodec"], &info["dynamic_range"]),
+        (
+            &serde_json::json!("avc1.42001e"),
+            &serde_json::json!("mp4a.40.2"),
+            &serde_json::json!("SDR")
+        )
+    );
+    assert_eq!(info["requested_formats"][1]["vcodec"], "none");
+    assert_eq!(info["requested_formats"][1]["audio_ext"], "m4a");
+    assert_eq!(info["requested_formats"][1]["video_ext"], "none");
+    assert!(info["requested_formats"][1].get("dynamic_range").is_none());
+    assert_eq!(info["requested_formats"][0]["acodec"], "none");
     assert_eq!(
         info["requested_formats"][1]["protocol"],
         "http_dash_segments"

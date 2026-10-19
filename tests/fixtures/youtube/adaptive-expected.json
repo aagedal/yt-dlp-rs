@@ -262,7 +262,9 @@
       "filesize": 5,
       "stream_kind": "standalone",
       "tbr": 400.0,
-      "abr": null
+      "abr": null,
+      "vcodec": "avc1.42001E",
+      "acodec": "mp4a.40.2"
     },
     {
       "format_id": "137",
@@ -273,7 +275,9 @@
       "filesize": 7,
       "stream_kind": "video_only",
       "tbr": 2000.0,
-      "abr": null
+      "abr": null,
+      "vcodec": "avc1.640028",
+      "acodec": "none"
     },
     {
       "format_id": "139",
@@ -284,7 +288,9 @@
       "filesize": 3,
       "stream_kind": "audio_only",
       "tbr": 48.0,
-      "abr": 48.0
+      "abr": 48.0,
+      "vcodec": "none",
+      "acodec": "mp4a.40.5"
     },
     {
       "format_id": "140",
@@ -295,7 +301,9 @@
       "filesize": 4,
       "stream_kind": "audio_only",
       "tbr": 128.0,
-      "abr": 128.0
+      "abr": 128.0,
+      "vcodec": "none",
+      "acodec": "mp4a.40.2"
     },
     {
       "format_id": "248",
@@ -306,7 +314,9 @@
       "filesize": 6,
       "stream_kind": "video_only",
       "tbr": 1000.0,
-      "abr": null
+      "abr": null,
+      "vcodec": "vp9",
+      "acodec": "none"
     },
     {
       "format_id": "251",
@@ -317,7 +327,9 @@
       "filesize": 2,
       "stream_kind": "audio_only",
       "tbr": 96.0,
-      "abr": 96.0
+      "abr": 96.0,
+      "vcodec": "none",
+      "acodec": "opus"
     }
   ]
 }

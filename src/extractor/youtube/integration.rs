@@ -768,10 +768,24 @@ fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
         .unwrap();
         let expected_formats: Vec<VideoFormat> =
             serde_json::from_value(expected["formats"].clone()).unwrap();
-        // The saved upstream comparison omits `determine_protocol` output.
+        // The saved upstream comparison is raw extractor output, before
+        // `process_video_result` fills protocols, extensions and SDR.
         let mut formats = info.formats.clone();
         for format in &mut formats {
             assert_eq!(format.protocol.take().as_deref(), Some("http"));
+            let audio_only = format.vcodec.as_deref() == Some("none");
+            assert_eq!(
+                format.dynamic_range.take().as_deref(),
+                (!audio_only).then_some("SDR")
+            );
+            let (video_ext, audio_ext) = (format.video_ext.take(), format.audio_ext.take());
+            let ext = Some(format.ext.clone());
+            let none = Some("none".to_owned());
+            if audio_only {
+                assert_eq!((video_ext, audio_ext), (none, ext));
+            } else {
+                assert_eq!((video_ext, audio_ext), (ext, none));
+            }
         }
         assert_eq!(
             serde_json::to_value(&formats).unwrap(),

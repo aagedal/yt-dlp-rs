@@ -98,6 +98,23 @@ struct Html5Source {
     dash_hint: bool,
     width: Option<u32>,
     height: Option<u32>,
+    /// Upstream `vcodec`: `none` inside `<audio>`, otherwise unknown.
+    vcodec: Option<String>,
+    /// `parse_content_type` codecs of a `<source>` (the media element's own
+    /// `src` keeps only its type's extension upstream).
+    codecs: Option<crate::codecs::Codecs>,
+}
+
+/// Upstream `parse_content_type`'s `codecs` group:
+/// `[^/]+/[^;]+(?:;\s*codecs="?([^"]+))?`.
+fn content_type_codecs(content_type: &str) -> Option<&str> {
+    static PATTERN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r#"[^/]+/[^;]+(?:;\s*codecs="?([^"]+))?"#).unwrap()
+    });
+    PATTERN
+        .captures(content_type)?
+        .get(1)
+        .map(|codecs| codecs.as_str())
 }
 
 fn dimension(value: Option<&str>) -> Option<u32> {
@@ -151,9 +168,10 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
     for element in document.select(&selector("video, audio")) {
         // Validate every alternative, including unselected manifests.
         let mut sources = Vec::new();
+        let vcodec = (element.value().name() == "audio").then(|| "none".to_owned());
         if let Some(src) = nonempty(element.value().attr("src")) {
             // Media element dimensions describe the player, not its source.
-            sources.push((src, element.value().attr("type"), None, None));
+            sources.push((src, element.value().attr("type"), None, None, false));
         }
         for child in element.children().filter_map(scraper::ElementRef::wrap) {
             if child.value().name() == "source"
@@ -165,6 +183,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                     dimension(child.value().attr("width")),
                     dimension(child.value().attr("height"))
                         .or_else(|| dimension(child.value().attr("res"))),
+                    true,
                 ));
             }
         }
@@ -172,16 +191,22 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
             continue;
         }
         let mut urls = Vec::new();
-        for (source, hint, width, height) in sources {
+        for (source, content_type, width, height, child) in sources {
             let url = base.join(source)?;
             if !matches!(url.scheme(), "http" | "https") {
                 return Err(Error::UnsupportedScheme(url.scheme().into()));
             }
-            let hint = hint.unwrap_or("").to_ascii_lowercase();
+            let hint = content_type.unwrap_or("").to_ascii_lowercase();
+            let codecs = content_type
+                .filter(|_| child)
+                .and_then(content_type_codecs)
+                .and_then(|codecs| crate::codecs::parse(Some(codecs)));
             urls.push(Html5Source {
                 url,
                 width,
                 height,
+                vcodec: vcodec.clone(),
+                codecs,
                 hls_hint: hint.contains("mpegurl"),
                 dash_hint: hint.contains("dash+xml"),
             });
@@ -467,8 +492,18 @@ impl Extractor for GenericHttp {
                     first_info.get_or_insert(info);
                     continue;
                 }
+                // `f.update(formats[0])` keeps the source's acodec/dynamic_range
+                // but replaces vcodec.
+                let codecs = source.codecs.as_ref();
                 formats.push(VideoFormat {
                     protocol: None,
+                    vcodec: source.vcodec.clone(),
+                    acodec: codecs.map(|codecs| codecs.acodec.clone()),
+                    dynamic_range: codecs
+                        .and_then(|codecs| codecs.dynamic_range)
+                        .map(str::to_owned),
+                    video_ext: None,
+                    audio_ext: None,
                     format_id: index.to_string(),
                     stream_kind: info.stream_kind,
                     audio_group: None,

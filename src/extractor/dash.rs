@@ -108,6 +108,11 @@ pub(crate) fn from_response(
     let title = if stem.is_empty() { "video" } else { stem }.to_owned();
     Ok(Some(VideoInfo {
         protocol: None,
+        vcodec: None,
+        acodec: None,
+        dynamic_range: None,
+        video_ext: None,
+        audio_ext: None,
         metadata: Default::default(),
         automatic_captions: Default::default(),
         subtitles: Default::default(),

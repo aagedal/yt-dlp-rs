@@ -604,6 +604,26 @@ unknown/tie behavior, invalid attributes, explicit overrides, CLI transfers, and
 independent playlist selection are covered by deterministic Rust tests.
 
 
+## Codec fields
+
+Formats carry upstream's `vcodec`, `acodec` and `dynamic_range` from a port of
+`parse_codecs` (`src/codecs.rs`, checked against actual pinned upstream with
+`tools/compare_codecs.py` and `tests/fixtures/codecs/cases.json`): HLS variant
+`CODECS` (with `acodec` `none` when the variant's audio comes from an external
+rendition group, and `vcodec` `none` for audio renditions), DASH `codecs`, YouTube
+`mimeType` `codecs="..."`, and HTML5 `<source type>` codecs with upstream's quirk
+that `vcodec` is then reset to unknown (`none` inside `<audio>`); the media
+element's own `src` keeps no codecs. Direct `audio/*` responses get `vcodec`
+`none`. Unknown codecs print upstream's `WARNING: Unknown codec X` directly on
+stderr (not suppressed by `--no-warnings`/`-q`, like `write_string`). Processing
+fills `video_ext`/`audio_ext`, `acodec` from `aac`/`opus`/`mp3`/`flac`/`vorbis`
+extensions and `dynamic_range` `SDR` for formats with possible video, like
+`process_video_result`; the selected result copies them, and merges take the
+video's `vcodec`/`dynamic_range` and the audio's `acodec`. Upstream's explicit
+`null` values are omitted. Native stream classification (`stream_kind`) and the
+stricter HLS/DASH/YouTube codec allow-lists are unchanged by these fields;
+`tools/compare_youtube.py` now also compares non-null codec fields.
+
 ## Direct adaptive selection and merging
 
 `StreamKind` adds `standalone` (the default, omitted from JSON), `video_only`,

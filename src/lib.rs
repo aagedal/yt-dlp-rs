@@ -2,6 +2,7 @@ mod archive;
 mod audio;
 mod audio_download;
 pub mod batch;
+pub mod codecs;
 mod cookies;
 mod crypto;
 mod dash;
@@ -338,7 +339,7 @@ impl YoutubeDl {
                     entry.metadata.fill_common_fields();
                     entry.metadata.sanitize_thumbnails();
                     info::sanitize_format_ids(&mut entry.formats);
-                    info::fill_protocols(&mut entry.formats);
+                    info::fill_format_fields(&mut entry.formats);
                 }
                 return Ok(info);
             }

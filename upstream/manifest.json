@@ -42,7 +42,8 @@
       "name": "extractor-contract",
       "status": "partial",
       "upstream": [
-        "yt_dlp/extractor/common.py"
+        "yt_dlp/extractor/common.py",
+        "yt_dlp/utils/_utils.py"
       ],
       "rust": [
         "src/extractor/mod.rs",
@@ -50,9 +51,13 @@
         "src/lib.rs",
         "src/error.rs",
         "src/retry.rs",
-        "tests/retries.rs"
+        "tests/retries.rs",
+        "src/codecs.rs",
+        "tests/fixtures/codecs/",
+        "tools/compare_codecs.py",
+        "tools/test_compare_codecs.py"
       ],
-      "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, literal-ID and bounded resolution-based default/best/worst selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds/preferred HTTP-date; no nested playlists or unresolved URL results; bounded audio/video selectors, two-stream + pairs and / fallbacks with explicit native ranking policy; predicate filtering of represented metadata before kind fallback, ranking and atomic pair/playlist selection; unselected result API shares whole-extraction retries and leaves library selection to the caller"
+      "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, literal-ID and bounded resolution-based default/best/worst selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds/preferred HTTP-date; no nested playlists or unresolved URL results; bounded audio/video selectors, two-stream + pairs and / fallbacks with explicit native ranking policy; predicate filtering of represented metadata before kind fallback, ranking and atomic pair/playlist selection; unselected result API shares whole-extraction retries and leaves library selection to the caller; parse_codecs/get_compatible_ext port with actual-upstream fixture and vcodec/acodec/dynamic_range/video_ext/audio_ext format fields"
     },
     {
       "name": "http-downloader",
@@ -253,7 +258,7 @@
         "tools/test_compare_dash.py",
         "upstream/notes/dash-static.md"
       ],
-      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; external AUDIO rendition groups with language/name/default metadata, compatible automatic pair selection, audio-only masters and copy merging; upstream protocol fields (m3u8_native/http_dash_segments/determine_protocol, +-joined merges) and single-download [hlsnative]/[dashsegments] Total fragments lines (no HlsFD manifest refetch line); static single-period DASH BaseURL inheritance, templates/timelines, lists/ranges, explicit resources and native fragment representation downloads/merging; no dynamic/multi-period/SIDX/DRM DASH, SAMPLE-AES/DRM, live, discontinuities, external video/subtitle renditions, nested masters or remux parity"
+      "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; external AUDIO rendition groups with language/name/default metadata, compatible automatic pair selection, audio-only masters and copy merging; parse_codecs vcodec/acodec/dynamic_range for HLS/DASH formats; upstream protocol fields (m3u8_native/http_dash_segments/determine_protocol, +-joined merges) and single-download [hlsnative]/[dashsegments] Total fragments lines (no HlsFD manifest refetch line); static single-period DASH BaseURL inheritance, templates/timelines, lists/ranges, explicit resources and native fragment representation downloads/merging; no dynamic/multi-period/SIDX/DRM DASH, SAMPLE-AES/DRM, live, discontinuities, external video/subtitle renditions, nested masters or remux parity"
     },
     {
       "name": "direct-stream-merging",

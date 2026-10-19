@@ -99,10 +99,9 @@ class YoutubeComparisonTest(unittest.TestCase):
         expected = json.loads((fixtures / "adaptive-expected.json").read_text(encoding="utf-8"))
         info = json.loads(json.dumps(expected).replace("{{ORIGIN}}", ORIGIN))
         for fmt in info["formats"]:
-            kind = fmt.pop("stream_kind")
+            # Upstream has no stream_kind: it is derived from the saved codecs.
+            fmt.pop("stream_kind")
             fmt.pop("abr")
-            fmt.update(vcodec="none" if kind == "audio_only" else "avc1.640028",
-                       acodec="none" if kind == "video_only" else "mp4a.40.2")
         self.assertEqual(compare(info, expected, adaptive=True), expected)
         info["formats"][0].pop("acodec")
         with self.assertRaisesRegex(ValueError, "lacks stream codec classification"):

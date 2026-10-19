@@ -125,6 +125,18 @@ pub struct VideoFormat {
     /// scheme); missing values are filled like `determine_protocol`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
+    /// Upstream codec fields (`parse_codecs`; `none` marks a missing stream).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vcodec: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub acodec: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub dynamic_range: Option<String>,
+    /// Filled like `FormatSorter._fill_sorting_fields`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub video_ext: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub audio_ext: Option<String>,
     pub format_id: String,
     #[serde(default, skip_serializing_if = "StreamKind::is_standalone")]
     pub stream_kind: StreamKind,
@@ -338,6 +350,18 @@ pub struct VideoInfo {
     /// The selected format's protocol, `+`-joined for merges.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub protocol: Option<String>,
+    /// The selected format's codecs; merges take the video's `vcodec` and
+    /// `dynamic_range` and the audio's `acodec`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vcodec: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub acodec: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub dynamic_range: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub video_ext: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub audio_ext: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub filesize: Option<u64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -400,6 +424,11 @@ impl VideoInfo {
                     let ext = merge_extension(video, audio).expect("selected compatible pair");
                     let selected = vec![first.clone(), second.clone()];
                     let (width, height) = (video.width, video.height);
+                    let (vcodec, acodec, dynamic_range) = (
+                        video.vcodec.clone(),
+                        audio.acodec.clone(),
+                        video.dynamic_range.clone(),
+                    );
                     self.url = selected[0].url.clone();
                     self.format_id = Some(format!(
                         "{}+{}",
@@ -416,6 +445,11 @@ impl VideoInfo {
                     self.filesize = None;
                     self.width = width;
                     self.height = height;
+                    self.vcodec = vcodec;
+                    self.acodec = acodec;
+                    self.dynamic_range = dynamic_range;
+                    self.video_ext = None;
+                    self.audio_ext = None;
                     self.stream_kind = StreamKind::Standalone;
                     self.fragments.clear();
                     self.requested_formats = selected;
@@ -447,6 +481,11 @@ impl VideoInfo {
         self.url = selected.url.clone();
         self.ext = selected.ext.clone();
         self.protocol = Some(selected.determine_protocol());
+        self.vcodec = selected.vcodec.clone();
+        self.acodec = selected.acodec.clone();
+        self.dynamic_range = selected.dynamic_range.clone();
+        self.video_ext = selected.video_ext.clone();
+        self.audio_ext = selected.audio_ext.clone();
         self.filesize = selected.filesize;
         self.width = selected.width;
         self.height = selected.height;
@@ -733,10 +772,32 @@ impl VideoFormat {
     }
 }
 
-/// Upstream `FormatSorter._fill_sorting_fields`: fill missing protocols.
-pub(crate) fn fill_protocols(formats: &mut [VideoFormat]) {
+/// Upstream `process_video_result` per-format fills: missing protocols and
+/// `video_ext`/`audio_ext` (`FormatSorter._fill_sorting_fields`), `acodec`
+/// from audio extensions, and `dynamic_range` `SDR` for video.
+pub(crate) fn fill_format_fields(formats: &mut [VideoFormat]) {
     for format in formats {
         format.protocol = Some(format.determine_protocol());
+        let ext = format.ext.clone();
+        if format.vcodec.as_deref() == Some("none") {
+            format.audio_ext = Some(if format.acodec.as_deref() == Some("none") {
+                "none".into()
+            } else {
+                ext.clone()
+            });
+            format.video_ext = Some("none".into());
+        } else {
+            format.video_ext = Some(ext.clone());
+            format.audio_ext = Some("none".into());
+        }
+        if matches!(ext.as_str(), "aac" | "opus" | "mp3" | "flac" | "vorbis")
+            && format.acodec.is_none()
+        {
+            format.acodec = Some(ext);
+        }
+        if format.dynamic_range.is_none() && format.vcodec.as_deref() != Some("none") {
+            format.dynamic_range = Some("SDR".into());
+        }
     }
 }
 
@@ -825,6 +886,11 @@ mod tests {
     ) -> VideoFormat {
         VideoFormat {
             protocol: None,
+            vcodec: None,
+            acodec: None,
+            dynamic_range: None,
+            video_ext: None,
+            audio_ext: None,
             audio_group: None,
             language: None,
             format_note: None,
@@ -846,6 +912,11 @@ mod tests {
     fn info(formats: Vec<VideoFormat>) -> VideoInfo {
         VideoInfo {
             protocol: None,
+            vcodec: None,
+            acodec: None,
+            dynamic_range: None,
+            video_ext: None,
+            audio_ext: None,
             metadata: Default::default(),
             automatic_captions: Default::default(),
             subtitles: Default::default(),

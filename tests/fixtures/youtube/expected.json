@@ -259,7 +259,9 @@
       "width": 640,
       "height": 360,
       "url": "{{ORIGIN}}/media/low.mp4",
-      "filesize": 5
+      "filesize": 5,
+      "vcodec": "avc1.42001E",
+      "acodec": "mp4a.40.2"
     },
     {
       "format_id": "22",
@@ -267,7 +269,9 @@
       "width": 1280,
       "height": 720,
       "url": "{{ORIGIN}}/media/high.mp4",
-      "filesize": 5
+      "filesize": 5,
+      "vcodec": "avc1.64001F",
+      "acodec": "mp4a.40.2"
     }
   ]
 }
