@@ -32,7 +32,7 @@ fn recognized(response: &Response) -> bool {
         .ends_with(".m3u8")
 }
 
-fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
+pub(crate) fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
     if response
         .content_length()
         .is_some_and(|size| size > MAX_MANIFEST_BYTES)

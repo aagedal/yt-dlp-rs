@@ -1325,6 +1325,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         chapters: args.embed_chapters || (args.embed_metadata && !args.no_embed_chapters),
         // Filled per video; see `embed_info_json` below.
         infojson: None,
+        fixup: Some(yt_dlp_rs::FixupOptions {
+            policy: args.fixup.clone(),
+            hls_use_mpegts: args.hls_use_mpegts,
+        }),
         audio: args.extract_audio.then_some(audio_options),
         video: recode.or(remux),
         embed: None,
@@ -2524,12 +2528,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                                 warning!("WARNING: {message}. The formats won't be merged");
                             }
+                            // Upstream `HlsFD` refetches the media playlist first.
+                            let refreshed = if !partial && info.requested_formats.is_empty() {
+                                downloader.refresh_hls(&info)?
+                            } else {
+                                None
+                            };
+                            let info = refreshed.as_ref().unwrap_or(&info);
                             if !partial
                                 && info.requested_formats.is_empty()
                                 && !info.fragments.is_empty()
                             {
-                                // Upstream `_prepare_frag_download`; plans are snapshots, so
-                                // HlsFD's manifest download line has no counterpart.
+                                // Upstream `_prepare_frag_download`.
                                 let downloader = match info.protocol.as_deref() {
                                     Some("http_dash_segments") => "dashsegments",
                                     _ => "hlsnative",
@@ -2566,7 +2576,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     explicit,
                                     json: yt_dlp_rs::to_python_json(
                                         &yt_dlp_rs::video_info_json_with(
-                                            &info,
+                                            info,
                                             epoch(),
                                             !args.no_clean_info_json,
                                         )?,
@@ -2627,6 +2637,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         .collect()
                                 };
                                 for stream in &streams {
+                                    let refreshed = if info.requested_formats.is_empty() {
+                                        None
+                                    } else {
+                                        downloader.refresh_hls(stream)?
+                                    };
+                                    let stream = refreshed.as_ref().unwrap_or(stream);
                                     // A single result already announced itself above.
                                     if !info.requested_formats.is_empty() {
                                         if !stream.fragments.is_empty() {
@@ -2669,7 +2685,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                             let (bytes, published_paths) = if processing {
                                 let result = downloader.download_processed_with_progress(
-                                    &info,
+                                    info,
                                     &path,
                                     DownloadOptions {
                                         min_filesize,
@@ -2710,7 +2726,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 (result.bytes, paths)
                             } else {
                                 let bytes = downloader.download_with_progress(
-                                    &info,
+                                    info,
                                     &path,
                                     DownloadOptions {
                                         min_filesize,
@@ -2729,46 +2745,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     progress,
                                 )?;
                                 // Upstream `fixup()` for an unmerged, unprocessed download.
-                                let policy = args.fixup.as_deref().unwrap_or("detect_or_warn");
-                                // FFmpegFD downloads are never fixed up.
-                                if info.requested_formats.is_empty()
-                                    && !partial
-                                    && !matches!(policy, "never" | "ignore")
-                                {
-                                    let protocol = info.protocol.as_deref().unwrap_or("");
-                                    let m3u8 = protocol.starts_with("m3u8") && !args.hls_use_mpegts;
-                                    let m4a = info.ext == "m4a"
-                                        && info.container.as_deref() == Some("m4a_dash");
-                                    for (needed, message, m3u8_fixup) in [
-                                        (
-                                            m4a,
-                                            "writing DASH m4a. Only some players support this container",
-                                            false,
-                                        ),
-                                        (
-                                            m3u8,
-                                            "Possible MPEG-TS in MP4 container or malformed AAC timestamps",
-                                            true,
-                                        ),
-                                    ] {
-                                        if !needed {
-                                            continue;
-                                        }
-                                        if policy == "warn" {
-                                            warning!("WARNING: {}: {message}", info.id);
-                                        } else if !downloader.has_ffmpeg() {
-                                            warning!(
-                                                "WARNING: {}: {message}. Install ffmpeg to fix this automatically",
-                                                info.id
-                                            );
-                                        } else if m3u8_fixup {
-                                            if matches!(info.ext.as_str(), "mp4" | "m4a") {
-                                                downloader.fixup_m3u8(&path)?;
-                                            }
-                                        } else {
-                                            downloader.fixup_m4a(&path)?;
-                                        }
-                                    }
+                                if let Some(fixup) = &processors.fixup {
+                                    downloader.fixup(info, &path, &path, fixup)?;
                                 }
                                 (bytes, vec![path.clone()])
                             };
@@ -2844,7 +2822,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                             if !after_download(
                                 &exec,
-                                &info,
+                                info,
                                 &published_paths[0],
                                 &path,
                                 &template_options,
@@ -2856,7 +2834,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 return Ok(());
                             }
                             if let Some(archive) = &mut archive {
-                                archive.record(&info).map_err(|error| {
+                                archive.record(info).map_err(|error| {
                                     format!(
                                         "download completed, but archive update failed: {error}"
                                     )

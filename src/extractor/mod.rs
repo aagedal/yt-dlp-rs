@@ -1,6 +1,6 @@
 mod dash;
 pub(crate) mod direct;
-mod hls;
+pub(crate) mod hls;
 mod html5;
 mod youtube;
 

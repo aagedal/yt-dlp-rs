@@ -115,6 +115,14 @@ pub struct YoutubeDl {
     check_formats: CheckFormats,
 }
 
+/// Upstream `--fixup POLICY` and `--hls-use-mpegts`.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct FixupOptions {
+    /// `never`, `ignore`, `warn`, `detect_or_warn` (default) or `force`.
+    pub policy: Option<String>,
+    pub hls_use_mpegts: bool,
+}
+
 /// Upstream `check_formats`: `--check-formats` (`selected`),
 /// `--check-all-formats` (`True`) and `--no-check-formats` (`False`).
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -314,6 +322,11 @@ impl YoutubeDl {
     /// MP4 in place (`aac_adtstoasc` when ffprobe reports AAC audio).
     /// Returns whether a fixup ran; requires a configured ffmpeg.
     pub fn fixup_m3u8(&self, path: &Path) -> Result<bool> {
+        self.fixup_m3u8_as(path, path)
+    }
+
+    /// [`Self::fixup_m3u8`] naming `shown` (the destination) in its message.
+    fn fixup_m3u8_as(&self, path: &Path, shown: &Path) -> Result<bool> {
         if crate::container::sniff(path) != Some("ts") {
             return Ok(false);
         }
@@ -323,7 +336,7 @@ impl YoutubeDl {
             .ok_or_else(|| Error::Postprocess("fixup requires ffmpeg".into()))?;
         screen::screen(&format!(
             "[FixupM3u8] Fixing MPEG-TS in MP4 container of \"{}\"",
-            path.display()
+            shown.display()
         ));
         let probe = self.ffprobe.clone().or_else(|| {
             ffmpeg
@@ -345,18 +358,98 @@ impl YoutubeDl {
     /// Upstream `FFmpegFixupM4aPP`: print `[FixupM4a] Correcting container of
     /// "PATH"` and remux a DASH m4a download to a plain MP4 container.
     pub fn fixup_m4a(&self, path: &Path) -> Result<()> {
+        self.fixup_m4a_as(path, path)
+    }
+
+    fn fixup_m4a_as(&self, path: &Path, shown: &Path) -> Result<()> {
         let ffmpeg = self
             .ffmpeg
             .as_ref()
             .ok_or_else(|| Error::Postprocess("fixup requires ffmpeg".into()))?;
         screen::screen(&format!(
             "[FixupM4a] Correcting container of \"{}\"",
-            path.display()
+            shown.display()
         ));
         let container = crate::container::sniff(path).unwrap_or("m4a");
         fixup::remux_to_mp4(ffmpeg, path, container, false, &mut || {
             std::ops::ControlFlow::Continue(())
         })
+    }
+
+    /// Upstream `HlsFD.real_download`: `[hlsnative] Downloading m3u8
+    /// manifest` refetches the media playlist, whose fragments are then
+    /// downloaded. `None` for other downloads.
+    pub fn refresh_hls(&self, info: &VideoInfo) -> Result<Option<VideoInfo>> {
+        if info.fragments.is_empty() || !info.protocol.as_deref().unwrap_or("").starts_with("m3u8")
+        {
+            return Ok(None);
+        }
+        screen::screen("[hlsnative] Downloading m3u8 manifest");
+        let referer = (!info.is_direct()).then_some(&info.webpage_url);
+        let response = crate::extractor::direct::probe(&self.client, &info.url, referer)?;
+        let (_, playlist) = crate::extractor::hls::read_playlist(response)?;
+        let hls::Playlist::Media { fragments, .. } = playlist else {
+            return Err(Error::UnsupportedManifest(
+                "the refetched HLS manifest is not a media playlist".into(),
+            ));
+        };
+        let mut refreshed = info.clone();
+        refreshed.fragments = fragments;
+        Ok(Some(refreshed))
+    }
+
+    /// Upstream `YoutubeDL.fixup()` for an unmerged download at `path`
+    /// (shown as `shown`): `FixupM4a` for `m4a_dash` containers and
+    /// `FixupM3u8` for native HLS MP4 downloads, under `--fixup` policies.
+    pub fn fixup(
+        &self,
+        info: &VideoInfo,
+        path: &Path,
+        shown: &Path,
+        options: &FixupOptions,
+    ) -> Result<()> {
+        let policy = options.policy.as_deref().unwrap_or("detect_or_warn");
+        // FFmpegFD downloads and merges are never fixed up.
+        if !info.requested_formats.is_empty()
+            || sections::is_partial(info)
+            || matches!(policy, "never" | "ignore")
+        {
+            return Ok(());
+        }
+        let protocol = info.protocol.as_deref().unwrap_or("");
+        let m3u8 = protocol.starts_with("m3u8") && !options.hls_use_mpegts;
+        let m4a = info.ext == "m4a" && info.container.as_deref() == Some("m4a_dash");
+        for (needed, message, m3u8_fixup) in [
+            (
+                m4a,
+                "writing DASH m4a. Only some players support this container",
+                false,
+            ),
+            (
+                m3u8,
+                "Possible MPEG-TS in MP4 container or malformed AAC timestamps",
+                true,
+            ),
+        ] {
+            if !needed {
+                continue;
+            }
+            if policy == "warn" {
+                screen::warning(&format!("{}: {message}", info.id));
+            } else if self.ffmpeg.is_none() {
+                screen::warning(&format!(
+                    "{}: {message}. Install ffmpeg to fix this automatically",
+                    info.id
+                ));
+            } else if m3u8_fixup {
+                if matches!(info.ext.as_str(), "mp4" | "m4a") {
+                    self.fixup_m3u8_as(path, shown)?;
+                }
+            } else {
+                self.fixup_m4a_as(path, shown)?;
+            }
+        }
+        Ok(())
     }
 
     /// Upstream `FFmpegSplitChaptersPP`: cut `input` into one file per
@@ -1145,6 +1238,10 @@ impl YoutubeDl {
             part.width = stream.width;
             part.height = stream.height;
             if upstream.is_some() {
+                // Upstream `HlsFD` refetches each stream's media playlist.
+                if let Some(refreshed) = self.refresh_hls(&part)? {
+                    part = refreshed;
+                }
                 if !part.fragments.is_empty() {
                     let downloader = match part.protocol.as_deref() {
                         Some("http_dash_segments") => "dashsegments",

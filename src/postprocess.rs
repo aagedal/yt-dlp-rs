@@ -26,6 +26,8 @@ pub struct PostprocessOptions {
     /// `--embed-info-json` (`if_exists` with `--embed-metadata`): attach the
     /// info JSON to mkv/mka files.
     pub infojson: Option<InfoJsonEmbed>,
+    /// Upstream `fixup()` before the processors; `None` skips fixups.
+    pub fixup: Option<crate::FixupOptions>,
     /// `--embed-thumbnail`: a local thumbnail embedded after metadata.
     pub thumbnail: Option<PathBuf>,
     /// `--ignore-errors`: a failed processor is reported and skipped, and the
@@ -244,6 +246,16 @@ pub(crate) fn download(
             }
         })?
     };
+    // Upstream `process_info` fixes the download (after its progress ends)
+    // before `post_process` and its prints.
+    if let Some(fixup) = &processors.fixup
+        && !upstream_merge
+    {
+        if checkpoint(callback, bytes, DownloadPhase::Completed).is_break() {
+            return Err(Error::DownloadCancelled);
+        }
+        downloader.fixup(info, &input, destination, fixup)?;
+    }
     // End the transfer's progress before processors print (upstream reports
     // the download finished before running postprocessors).
     if checkpoint(callback, bytes, DownloadPhase::Postprocessing).is_break() {
