@@ -198,6 +198,7 @@ const SRT: &[u8] = b"1\n00:00:01,250 --> 00:00:03,500\nHello world\n";
 const TTML: &[u8] = b"<tt xmlns='http://www.w3.org/ns/ttml'><body><div><p begin='1.25s' end='3.5s'>Hello world</p></div></body></tt>";
 fn embedding(path: &Path, ext: &str, keep: bool) -> PostprocessOptions {
     PostprocessOptions {
+        thumbnail: None,
         metadata: false,
         embed: Some(SubtitleEmbedding {
             subtitles: vec![SubtitleFile {
@@ -464,6 +465,7 @@ fn empty_embedding_skips_tools_and_cli_last_disable_prevents_implicit_caption_do
         .with_ffmpeg(directory.path().join("missing"));
     let info = client.extract_info(&server.url("source.mp4")).unwrap();
     let plan = PostprocessOptions {
+        thumbnail: None,
         metadata: false,
         embed: Some(SubtitleEmbedding {
             subtitles: Vec::new(),

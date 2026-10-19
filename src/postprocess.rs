@@ -20,6 +20,8 @@ pub struct PostprocessOptions {
     pub embed: Option<SubtitleEmbedding>,
     /// `--embed-metadata`: upstream `FFmpegMetadataPP` after subtitle embedding.
     pub metadata: bool,
+    /// `--embed-thumbnail`: a local thumbnail embedded after metadata.
+    pub thumbnail: Option<PathBuf>,
 }
 
 /// Published final media and any sources/intermediates retained by keep-video.
@@ -136,7 +138,12 @@ pub(crate) fn download(
         .map(|video| video.plan(&info.ext))
         .transpose()?
         .is_some_and(|plan| !plan.skip);
-    if !needs_audio && !needs_video && processors.embed.is_none() && !processors.metadata {
+    if !needs_audio
+        && !needs_video
+        && processors.embed.is_none()
+        && !processors.metadata
+        && processors.thumbnail.is_none()
+    {
         let bytes = downloader.download_with_progress(info, destination, options, callback)?;
         return Ok(ProcessedDownload {
             path: destination.into(),
@@ -367,6 +374,34 @@ pub(crate) fn download(
                 &mut observe,
             )?;
             // Like upstream, metadata replaces the current file in place.
+            current.bytes = fs::metadata(&output)?.len();
+            current.disk = output;
+            current.container = current.ext.to_lowercase();
+        }
+        if let Some(thumbnail) = &processors.thumbnail {
+            let current = stages.last_mut().unwrap();
+            if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
+                return Err(Error::DownloadCancelled);
+            }
+            let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
+                Error::Postprocess(
+                    "thumbnail embedding requires an explicit --ffmpeg-location PATH".into(),
+                )
+            })?;
+            let output = workspace
+                .path()
+                .join(format!("thumbnail-embedded.{}", current.ext));
+            let mut observe = || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
+            crate::thumbnail_process::embed(
+                executable,
+                &probe_path(downloader)?,
+                &current.disk,
+                &current.ext.to_lowercase(),
+                thumbnail,
+                workspace.path(),
+                &output,
+                &mut observe,
+            )?;
             current.bytes = fs::metadata(&output)?.len();
             current.disk = output;
             current.container = current.ext.to_lowercase();

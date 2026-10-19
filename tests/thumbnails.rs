@@ -1,11 +1,12 @@
-//! HTML5 poster thumbnails: listing and `--write-(all-)thumbnail(s)` through the CLI.
+//! HTML5 poster thumbnails: listing, `--write-(all-)thumbnail(s)`,
+//! `--convert-thumbnails` and `--embed-thumbnail` through the CLI.
 use std::{
     io::{Read, Write},
     net::TcpListener,
-    path::Path,
+    path::{Path, PathBuf},
     process::{Command, Output},
     sync::{
-        Arc,
+        Arc, OnceLock,
         atomic::{AtomicBool, Ordering},
     },
     thread,
@@ -58,6 +59,16 @@ impl Server {
                         "text/html",
                         "<title>Gone</title><video poster='/nope.jpg' src='/media.mp4'></video>",
                     ),
+                    "/webp.html" => (
+                        200,
+                        "text/html",
+                        "<title>Webp</title><video poster='/cover.jpg' src='/media.mp4'></video>",
+                    ),
+                    "/real.html" => (
+                        200,
+                        "text/html",
+                        "<title>Real</title><video poster='/real.png' src='/real.mp4'></video>",
+                    ),
                     "/plain.html" => (
                         200,
                         "text/html",
@@ -65,13 +76,22 @@ impl Server {
                     ),
                     "/media.mp4" => (200, "video/mp4", "media"),
                     "/poster.jpg" => (200, "image/jpeg", "jpeg"),
+                    "/cover.jpg" => (200, "image/jpeg", "RIFF\0\0\0\0WEBPVP8 "),
+                    "/real.mp4" => (200, "video/mp4", ""),
+                    "/real.png" => (200, "image/png", ""),
                     _ => (404, "text/plain", "missing"),
+                };
+                let body: &[u8] = match path.as_str() {
+                    "/real.mp4" => include_bytes!("fixtures/merge/video.mp4"),
+                    "/real.png" => include_bytes!("fixtures/thumbnails/cover.png"),
+                    _ => body.as_bytes(),
                 };
                 let _ = write!(
                     stream,
-                    "HTTP/1.1 {status} Fixture\r\nContent-Type: {mime}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    "HTTP/1.1 {status} Fixture\r\nContent-Type: {mime}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
                     body.len()
                 );
+                let _ = stream.write_all(body);
             }
         });
         Self {
@@ -236,4 +256,286 @@ fn write_thumbnail_follows_upstream_messages_overwrites_and_flag_order() {
         all.path(),
     );
     assert!(text(&none.stderr).contains("[info] There are no video thumbnails to download"));
+}
+
+/// Fake ffmpeg/ffprobe pair built from the shared video pipeline helper.
+struct Tools {
+    _directory: tempfile::TempDir,
+    probe: PathBuf,
+    ffmpeg: PathBuf,
+}
+impl Tools {
+    fn new() -> Self {
+        static HELPER: OnceLock<PathBuf> = OnceLock::new();
+        let helper = HELPER.get_or_init(|| {
+            let directory = tempfile::tempdir().unwrap().keep();
+            let binary = directory.join(format!("video-pipeline{}", std::env::consts::EXE_SUFFIX));
+            assert!(
+                Command::new(std::env::var_os("RUSTC").unwrap_or_else(|| "rustc".into()))
+                    .arg(
+                        Path::new(env!("CARGO_MANIFEST_DIR"))
+                            .join("tests/helpers/video_pipeline.rs")
+                    )
+                    .args(["--edition=2024", "-Dwarnings", "-o"])
+                    .arg(&binary)
+                    .status()
+                    .unwrap()
+                    .success()
+            );
+            binary
+        });
+        let directory = tempfile::tempdir().unwrap();
+        let probe = directory
+            .path()
+            .join(format!("probe-aac{}", std::env::consts::EXE_SUFFIX));
+        let ffmpeg = directory
+            .path()
+            .join(format!("ffmpeg-ok{}", std::env::consts::EXE_SUFFIX));
+        std::fs::copy(helper, &probe).unwrap();
+        std::fs::copy(helper, &ffmpeg).unwrap();
+        Self {
+            _directory: directory,
+            probe,
+            ffmpeg,
+        }
+    }
+    fn cli(&self, args: &[&str], directory: &Path) -> Output {
+        let mut all: Vec<&std::ffi::OsStr> = vec![
+            "--ffmpeg-location".as_ref(),
+            self.ffmpeg.as_ref(),
+            "--ffprobe-location".as_ref(),
+            self.probe.as_ref(),
+        ];
+        all.extend(args.iter().map(std::ffi::OsStr::new));
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(all)
+            .current_dir(directory)
+            .output()
+            .unwrap()
+    }
+    fn log(&self) -> String {
+        std::fs::read_to_string(self.ffmpeg.with_extension("log")).unwrap_or_default()
+    }
+}
+
+fn names(directory: &Path) -> Vec<String> {
+    let mut names: Vec<_> = std::fs::read_dir(directory)
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
+        .collect();
+    names.sort();
+    names
+}
+
+#[test]
+fn embed_thumbnail_writes_embeds_and_deletes_unless_written_explicitly() {
+    let server = Server::new();
+    let tools = Tools::new();
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("/page.html");
+    let output = tools.cli(
+        &["--embed-thumbnail", "-o", "video.%(ext)s", &url],
+        directory.path(),
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert!(text(&output.stderr).contains("[info] Writing video thumbnail 0 to: video.jpg"));
+    // The fake ffmpeg writes "source video" for two inputs.
+    assert_eq!(names(directory.path()), ["video.mp4"]);
+    assert_eq!(
+        std::fs::read(directory.path().join("video.mp4")).unwrap(),
+        b"source video"
+    );
+    let log = tools.log();
+    assert!(
+        log.contains("\n-f\nimage2\n-pattern_type\nnone\n-protocol_whitelist\nfile\n-i\n"),
+        "{log}"
+    );
+    assert!(
+        log.contains("-map\n0\n-dn\n-ignore_unknown\n-c\ncopy\n-map\n1\n-disposition:1\nattached_pic\n-movflags\n+faststart\n-f\nmp4\n"),
+        "{log}"
+    );
+    // An explicit --write-thumbnail keeps the embedded thumbnail.
+    let kept = tempfile::tempdir().unwrap();
+    let output = tools.cli(
+        &[
+            "--write-thumbnail",
+            "--embed-thumbnail",
+            "-o",
+            "video.%(ext)s",
+            &url,
+        ],
+        kept.path(),
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert_eq!(names(kept.path()), ["video.jpg", "video.mp4"]);
+    // Without thumbnails nothing is embedded and no tool runs.
+    let plain = tempfile::tempdir().unwrap();
+    let output = cli(
+        &[
+            "--embed-thumbnail",
+            "-o",
+            "video.%(ext)s",
+            &server.url("/plain.html"),
+        ],
+        plain.path(),
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert!(text(&output.stderr).contains("[EmbedThumbnail] There aren't any thumbnails to embed"));
+    assert_eq!(
+        std::fs::read(plain.path().join("video.mp4")).unwrap(),
+        b"media"
+    );
+    // --no-embed-thumbnail (last) disables embedding and the implied write.
+    let disabled = tempfile::tempdir().unwrap();
+    let output = cli(
+        &[
+            "--embed-thumbnail",
+            "--no-embed-thumbnail",
+            "-o",
+            "video.%(ext)s",
+            &url,
+        ],
+        disabled.path(),
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert_eq!(names(disabled.path()), ["video.mp4"]);
+    assert_eq!(
+        std::fs::read(disabled.path().join("video.mp4")).unwrap(),
+        b"media"
+    );
+}
+
+#[test]
+fn embed_thumbnail_fixes_webp_extensions_and_converts_them_to_png() {
+    let server = Server::new();
+    let tools = Tools::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = tools.cli(
+        &[
+            "--write-thumbnail",
+            "--embed-thumbnail",
+            "-o",
+            "video.%(ext)s",
+            &server.url("/webp.html"),
+        ],
+        directory.path(),
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    // The kept original is renamed to its real WebP extension; the PNG
+    // conversion used for embedding is temporary.
+    assert_eq!(names(directory.path()), ["video.mp4", "video.webp"]);
+    let log = tools.log();
+    assert!(log.contains("-update\n1\n-movflags\n+faststart\n"), "{log}");
+    assert!(log.contains("thumbnail.png\n-map\n0\n"), "{log}");
+}
+
+#[test]
+fn convert_thumbnails_follows_mappings_and_keep_video() {
+    let server = Server::new();
+    let tools = Tools::new();
+    let url = server.url("/page.html");
+    let directory = tempfile::tempdir().unwrap();
+    let output = tools.cli(
+        &[
+            "--write-thumbnail",
+            "--convert-thumbnails",
+            "png",
+            "--skip-download",
+            "-o",
+            "video.%(ext)s",
+            &url,
+        ],
+        directory.path(),
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    let stderr = text(&output.stderr);
+    assert!(
+        stderr.contains("[ThumbnailsConvertor] Converting thumbnail \"video.jpg\" to png"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("Deleting original file video.jpg (pass -k to keep)"),
+        "{stderr}"
+    );
+    assert_eq!(names(directory.path()), ["video.png"]);
+    assert!(tools.log().contains("-update\n1\n-movflags\n+faststart\n"));
+    // -k keeps the original; a mapping without a match skips conversion.
+    let kept = tempfile::tempdir().unwrap();
+    let output = tools.cli(
+        &[
+            "--write-thumbnail",
+            "--convert-thumbnails",
+            "png",
+            "-k",
+            "--skip-download",
+            "-o",
+            "video.%(ext)s",
+            &url,
+        ],
+        kept.path(),
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert!(!text(&output.stderr).contains("Deleting original file"));
+    assert_eq!(names(kept.path()), ["video.jpg", "video.png"]);
+    let skipped = tempfile::tempdir().unwrap();
+    let output = tools.cli(
+        &[
+            "--write-thumbnail",
+            "--convert-thumbnails",
+            "webp>png",
+            "--skip-download",
+            "-o",
+            "video.%(ext)s",
+            &url,
+        ],
+        skipped.path(),
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert!(
+        text(&output.stderr).contains("[ThumbnailsConvertor] Not converting thumbnail \"video.jpg\"; could not find a mapping for jpg"),
+        "{}",
+        text(&output.stderr)
+    );
+    assert_eq!(names(skipped.path()), ["video.jpg"]);
+    // Invalid formats fail before any request.
+    let output = cli(&["--convert-thumbnails", "gif", &url], skipped.path());
+    assert!(!output.status.success());
+    assert!(text(&output.stderr).contains("invalid thumbnail format \"gif\" given"));
+}
+
+#[test]
+fn optional_real_tools_embed_a_png_cover_into_mp4() {
+    let Some(ffmpeg) = std::env::var_os("YT_DLP_RS_TEST_FFMPEG") else {
+        return;
+    };
+    let Some(ffprobe) = std::env::var_os("YT_DLP_RS_TEST_FFPROBE") else {
+        return;
+    };
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+    command
+        .arg("--ffmpeg-location")
+        .arg(&ffmpeg)
+        .arg("--ffprobe-location")
+        .arg(&ffprobe)
+        .args([
+            "--embed-thumbnail",
+            "-o",
+            "video.%(ext)s",
+            &server.url("/real.html"),
+        ])
+        .current_dir(directory.path());
+    let output = command.output().unwrap();
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert_eq!(names(directory.path()), ["video.mp4"]);
+    let probe = Command::new(&ffprobe)
+        .args(["-v", "error", "-show_streams", "-of", "json"])
+        .arg(directory.path().join("video.mp4"))
+        .output()
+        .unwrap();
+    let probe: serde_json::Value = serde_json::from_slice(&probe.stdout).unwrap();
+    assert!(probe["streams"].as_array().unwrap().iter().any(|stream| {
+        stream["codec_name"] == "png" && stream["disposition"]["attached_pic"] == 1
+    }));
 }

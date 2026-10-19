@@ -24,6 +24,7 @@ mod retry;
 mod selector;
 mod subtitle_convert;
 mod subtitles;
+mod thumbnail_process;
 mod video;
 
 pub use archive::{DownloadArchive, archive_id};
@@ -51,6 +52,7 @@ pub use subtitles::{
     RequestedSubtitles, SubtitleFormat, SubtitleMap, SubtitleOptions, SubtitleSelection, Subtitles,
     subtitle_paths,
 };
+pub use thumbnail_process::{ThumbnailConversion, fixup_webp};
 pub use video::{VideoMode, VideoOptions};
 
 use extractor::{Extractor, GenericHttp, Youtube};
@@ -419,6 +421,19 @@ impl YoutubeDl {
             options,
             &mut callback,
         )
+    }
+
+    /// Convert a local thumbnail image with the explicit FFmpeg (upstream
+    /// `FFmpegThumbnailsConvertorPP.convert_thumbnail`).
+    pub fn convert_thumbnail(&self, input: &Path, output: &Path, target: &str) -> Result<()> {
+        let ffmpeg = self.ffmpeg.as_ref().ok_or_else(|| {
+            Error::Postprocess(
+                "thumbnail conversion requires an explicit --ffmpeg-location PATH".into(),
+            )
+        })?;
+        thumbnail_process::convert(ffmpeg, input, output, target, &mut || {
+            std::ops::ControlFlow::Continue(())
+        })
     }
 
     /// Copy a thumbnail URL to `destination` without overwriting it.

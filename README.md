@@ -143,7 +143,9 @@ Supported today:
 - `--embed-metadata` writes title/date/description/URL/artist/genre/language tags
   with explicit FFmpeg (no chapters or info JSON attachment).
 - `--list-thumbnails`, `--write-thumbnail` and `--write-all-thumbnails` use YouTube
-  thumbnails and HTML5 `poster` images (no conversion or embedding).
+  thumbnails and HTML5 `poster` images. `--convert-thumbnails FORMAT` converts
+  them and `--embed-thumbnail` embeds the best one into mp3, mkv/mka and
+  mp4/m4a/m4v/mov with explicit FFmpeg (no ogg/opus/flac embedding).
 - `--write-description` writes `.description` files; `--no-write-playlist-metafiles`
   disables playlist metadata files.
 - `-w/--no-overwrites`, `--force-overwrites` and the default follow upstream:

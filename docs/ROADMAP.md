@@ -194,8 +194,9 @@ remain outside the current result contract.
    FFprobe/FFmpeg copy/conversion for eight target formats, source retention,
    cancellation and archive-after-final-publication. Video remux/recode now follows
    audio extraction in the shared pipeline, with source/intermediate retention and
-   latest-completed-stage preservation after failure. General postprocessor chains,
-   metadata/thumbnail embedding and fixups remain open.
+   latest-completed-stage preservation after failure. Metadata and thumbnail
+   embedding (FFmpeg paths only) and thumbnail conversion now follow upstream.
+   General postprocessor chains, mutagen-only embedding and fixups remain open.
 6. **Agent-maintained updates.** Upstream delta reports, bounded implementation
    briefs, differential regression fixtures, reviewable PRs, and staged releases.
    Measure extraction coverage and compatibility before enabling unattended merges.

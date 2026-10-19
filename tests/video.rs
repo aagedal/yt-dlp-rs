@@ -188,6 +188,7 @@ fn clean(path: &Path) {
 
 fn options(format: &str, mode: VideoMode, keep: bool) -> PostprocessOptions {
     PostprocessOptions {
+        thumbnail: None,
         metadata: false,
         audio: None,
         video: Some(VideoOptions::new(format, mode).unwrap()),

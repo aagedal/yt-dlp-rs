@@ -11,7 +11,7 @@ use yt_dlp_rs::{
     AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult,
     ExtractionOptions, HttpOptions, InfoJsonWrite, MatchFilters, MatchOutcome, PlaylistCounts,
     PlaylistSelection, PostprocessOptions, SubtitleConversion, SubtitleEmbedding, SubtitleFile,
-    SubtitleOptions, VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
+    SubtitleOptions, ThumbnailConversion, VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
     output::{OutputTemplates, PrintTemplate, PrintToFile, TemplateOptions, render_formats},
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
     validate_format_selector, video_info_json, write_info_json_with,
@@ -40,7 +40,7 @@ macro_rules! warning {
 
 #[derive(Parser)]
 #[command(
-    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video", "convert_subs", "embed_subs", "embed_metadata"]).multiple(true)),
+    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video", "convert_subs", "embed_subs", "embed_metadata", "embed_thumbnail", "convert_thumbnails"]).multiple(true)),
     version,
     about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
 )]
@@ -153,6 +153,15 @@ struct Args {
     /// Do not embed metadata (default)
     #[arg(long, alias = "no-add-metadata", overrides_with_all = ["embed_metadata", "no_embed_metadata"])]
     no_embed_metadata: bool,
+    /// Embed the best written thumbnail as cover art (mp3, mkv/mka, mp4/m4a/m4v/mov; implies writing it)
+    #[arg(long, overrides_with_all = ["embed_thumbnail", "no_embed_thumbnail"])]
+    embed_thumbnail: bool,
+    /// Do not embed thumbnails (default)
+    #[arg(long, overrides_with_all = ["embed_thumbnail", "no_embed_thumbnail"])]
+    no_embed_thumbnail: bool,
+    /// Convert written thumbnails to jpg, png or webp (rules like webp>jpg/png); none disables conversion
+    #[arg(long, value_name = "FORMAT", overrides_with = "convert_thumbnails")]
+    convert_thumbnails: Option<String>,
     /// Embed selected subtitles after audio/video processing (implies manual writing unless auto writing is enabled)
     #[arg(long, overrides_with = "no_embed_subs")]
     embed_subs: bool,
@@ -736,6 +745,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         warning!("WARNING: --remux-video is ignored since --recode-video was given");
     }
     let processors = PostprocessOptions {
+        thumbnail: None,
         metadata: args.embed_metadata,
         audio: args.extract_audio.then_some(audio_options),
         video: recode.or(remux),
@@ -856,7 +866,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         warning!("WARNING: info JSON is not attached to mkv/mka files when embedding metadata");
     }
     let writes_description = args.write_description && !simulate;
+    // Upstream --embed-thumbnail writes the thumbnail when not otherwise asked
+    // and then deletes it after embedding.
+    let keeps_thumbnails = thumbnail_mode != 0;
+    let thumbnail_mode = if args.embed_thumbnail {
+        thumbnail_mode.max(1)
+    } else {
+        thumbnail_mode
+    };
     let writes_thumbnails = thumbnail_mode != 0 && !simulate;
+    let thumbnail_conversion = args
+        .convert_thumbnails
+        .as_deref()
+        .map(ThumbnailConversion::from_cli)
+        .transpose()?
+        .flatten();
     let playlist_files = !args.no_write_playlist_metafiles;
     let sleep = SleepPolicy::from_cli(
         args.sleep_interval,
@@ -1112,7 +1136,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     let processing = processors.audio.is_some()
                         || processors.video.is_some()
                         || args.embed_subs
-                        || args.embed_metadata;
+                        || args.embed_metadata
+                        || args.embed_thumbnail;
                     let existing_media = !args.skip_download && path_exists(&path)?;
                     if existing_media && overwrites != Some(true) && processing {
                         // Upstream would rerun postprocessors on the existing file.
@@ -1278,14 +1303,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         embedding_files.push(embedded_file);
                     }
                     // Upstream writes thumbnails after subtitles and before info JSON.
+                    let mut thumbnail_files = Vec::new();
                     if writes_thumbnails {
-                        write_thumbnails(
+                        thumbnail_files = write_thumbnails(
                             &downloader,
                             &info,
                             templates.prepare(&info, Some("thumbnail"), &template_options)?,
                             thumbnail_mode == 2,
                             overwrites,
                             args.retries,
+                        )?;
+                    }
+                    if let Some(conversion) = &thumbnail_conversion {
+                        convert_thumbnails(
+                            &downloader,
+                            &mut thumbnail_files,
+                            conversion,
+                            args.keep_video,
                         )?;
                     }
                     // Upstream writes info JSON after subtitles and before media.
@@ -1341,6 +1375,19 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         ControlFlow::Continue(())
                     };
                     let mut processors = processors.clone();
+                    // Upstream embeds the best thumbnail on disk.
+                    let mut embedded_thumbnail = None;
+                    if args.embed_thumbnail {
+                        if info.metadata.thumbnails.is_empty() {
+                            screen!("[EmbedThumbnail] There aren't any thumbnails to embed");
+                        } else if let Some((_, path)) = thumbnail_files.last() {
+                            let path = yt_dlp_rs::fixup_webp(path)?;
+                            processors.thumbnail = Some(path.clone());
+                            embedded_thumbnail = Some(path);
+                        } else {
+                            screen!("[EmbedThumbnail] There are no thumbnails on disk");
+                        }
+                    }
                     if args.embed_subs {
                         processors.embed = Some(SubtitleEmbedding {
                             subtitles: embedding_files,
@@ -1351,6 +1398,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         || processors.video.is_some()
                         || processors.embed.is_some()
                         || processors.metadata
+                        || processors.thumbnail.is_some()
                     {
                         let result = downloader.download_processed_with_progress(
                             &info,
@@ -1368,6 +1416,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             warning!("WARNING: {warning}");
                         }
                         screen!("[postprocess] Destination: {}", result.path.display());
+                        if let Some(thumbnail) = &embedded_thumbnail
+                            && !keeps_thumbnails
+                            && std::fs::remove_file(thumbnail).is_err()
+                        {
+                            warning!("WARNING: Unable to delete file {}", thumbnail.display());
+                        }
                         let mut paths = vec![result.path];
                         paths.extend(result.kept_files);
                         (result.bytes, paths)
@@ -1570,19 +1624,20 @@ fn write_thumbnails(
     write_all: bool,
     overwrites: Option<bool>,
     retries: u8,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<Vec<(usize, PathBuf)>, Box<dyn std::error::Error>> {
     let thumbnails = &info.metadata.thumbnails;
+    let mut on_disk = Vec::new();
     if thumbnails.is_empty() {
         screen!("[info] There are no video thumbnails to download");
-        return Ok(());
+        return Ok(on_disk);
     }
     let Some(base) = base else {
-        return Ok(());
+        return Ok(on_disk);
     };
     let multiple = write_all && thumbnails.len() > 1;
     let base = base.to_string_lossy();
     let mut written = false;
-    for thumbnail in thumbnails.iter().rev() {
+    for (index, thumbnail) in thumbnails.iter().enumerate().rev() {
         let id = thumbnail.id.as_deref().unwrap_or("None");
         let mut ext = determine_ext(&thumbnail.url);
         if multiple {
@@ -1614,6 +1669,7 @@ fn write_thumbnails(
                     })
                     .unwrap_or_default();
                 screen!("[info] {capitalized} is already present");
+                on_disk.push((index, path));
                 written = true;
                 if !write_all {
                     break;
@@ -1631,6 +1687,7 @@ fn write_thumbnails(
         match downloader.download_thumbnail(&thumbnail.url, &path, options) {
             Ok(_) => {
                 screen!("[info] Writing {display} to: {}", path.display());
+                on_disk.push((index, path));
                 written = true;
             }
             Err(yt_dlp_rs::Error::Http(error))
@@ -1652,6 +1709,67 @@ fn write_thumbnails(
         }
         if written && !write_all {
             break;
+        }
+    }
+    on_disk.sort();
+    Ok(on_disk)
+}
+
+/// Upstream `FFmpegThumbnailsConvertorPP.run` over the written thumbnails.
+fn convert_thumbnails(
+    downloader: &YoutubeDl,
+    thumbnails: &mut [(usize, PathBuf)],
+    conversion: &ThumbnailConversion,
+    keep_original: bool,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if thumbnails.is_empty() {
+        screen!("[ThumbnailsConvertor] There aren't any thumbnails to convert");
+    }
+    for (_, path) in thumbnails.iter_mut() {
+        let original = yt_dlp_rs::fixup_webp(path)?;
+        if original != *path {
+            screen!(
+                "[ThumbnailsConvertor] Correcting thumbnail \"{}\" extension to webp",
+                path.display()
+            );
+        }
+        let mut ext = original
+            .extension()
+            .map(|ext| ext.to_string_lossy().to_lowercase())
+            .unwrap_or_default();
+        if ext == "jpeg" {
+            ext = "jpg".into();
+        }
+        match conversion.resolve(&ext) {
+            Err(reason) => {
+                screen!(
+                    "[ThumbnailsConvertor] Not converting thumbnail \"{}\"; {reason}",
+                    original.display()
+                );
+                *path = original;
+            }
+            Ok(target) => {
+                let converted = PathBuf::from(yt_dlp_rs::output::replace_extension(
+                    &original.to_string_lossy(),
+                    &target,
+                    None,
+                ));
+                screen!(
+                    "[ThumbnailsConvertor] Converting thumbnail \"{}\" to {target}",
+                    original.display()
+                );
+                downloader.convert_thumbnail(&original, &converted, &target)?;
+                if !keep_original {
+                    screen!(
+                        "Deleting original file {} (pass -k to keep)",
+                        original.display()
+                    );
+                    if std::fs::remove_file(&original).is_err() {
+                        warning!("WARNING: Unable to delete file {}", original.display());
+                    }
+                }
+                *path = converted;
+            }
         }
     }
     Ok(())

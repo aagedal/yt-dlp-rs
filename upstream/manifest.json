@@ -520,6 +520,25 @@
       "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio→video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
     },
     {
+      "name": "thumbnail-processing",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/embedthumbnail.py",
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/thumbnail_process.rs",
+        "src/postprocess.rs",
+        "src/main.rs",
+        "tests/thumbnails.rs",
+        "tests/fixtures/thumbnails/"
+      ],
+      "scope": "--convert-thumbnails jpg/png/webp mappings with upstream validation/resolution messages, WebP extension fixup, -k original retention; --embed-thumbnail as the final pipeline stage with implied write and post-embed deletion unless --write-thumbnail, PNG pre-conversion, mp3 ID3 cover, mkv/mka attachment with mimetype stream replacement and mp4/m4a/m4v/mov FFmpeg attached_pic fallback; no mutagen/AtomicParsley, ogg/opus/flac embedding (explicit error), playlist thumbnails or --check-formats"
+    },
+    {
       "name": "subtitle-conversion",
       "status": "partial",
       "upstream": [
