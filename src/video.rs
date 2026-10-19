@@ -79,6 +79,30 @@ impl VideoOptions {
         }
         Self::new(format, mode)
     }
+    /// Upstream `_ACTION` (`remuxing`/`converting`) and its PP name.
+    pub(crate) fn action(&self) -> (&'static str, &'static str) {
+        match self.mode {
+            VideoMode::Remux => ("remuxing", "VideoRemuxer"),
+            VideoMode::Recode => ("converting", "VideoConvertor"),
+        }
+    }
+
+    /// Upstream `resolve_mapping` skip reason for `source_ext`, if any.
+    pub(crate) fn skip_reason(&self, source_ext: &str) -> Option<String> {
+        let source = source_ext.to_lowercase();
+        match self
+            .mappings
+            .iter()
+            .find(|m| m.source.as_deref().is_none_or(|c| c == source))
+        {
+            None => Some(format!("could not find a mapping for {source}")),
+            Some(mapping) if mapping.target == source => {
+                Some(format!("already is in target format {source}"))
+            }
+            Some(_) => None,
+        }
+    }
+
     pub(crate) fn plan(&self, source_ext: &str) -> Result<VideoPlan> {
         let source = source_ext.to_lowercase();
         let target = self

@@ -150,6 +150,26 @@ pub(crate) fn download(
         && processors.thumbnail.is_none()
     {
         let bytes = downloader.download_with_progress(info, destination, options, callback)?;
+        // Upstream still runs the processors, which report why they skip.
+        if let Some(audio) = &processors.audio {
+            let reason = match audio.target(&info.ext) {
+                None => format!("could not find a mapping for {}", info.ext),
+                Some(_) => "the file is already in a common audio format".into(),
+            };
+            crate::screen::screen(&format!(
+                "[ExtractAudio] Not converting audio {}; {reason}",
+                destination.display()
+            ));
+        }
+        if let Some(video) = &processors.video
+            && let Some(reason) = video.skip_reason(&info.ext)
+        {
+            let (action, name) = video.action();
+            crate::screen::screen(&format!(
+                "[{name}] Not {action} media file \"{}\"; {reason}",
+                destination.display()
+            ));
+        }
         return Ok(ProcessedDownload {
             path: destination.into(),
             bytes,
@@ -190,6 +210,11 @@ pub(crate) fn download(
             callback(progress)
         }
     })?;
+    // End the transfer's progress before processors print (upstream reports
+    // the download finished before running postprocessors).
+    if checkpoint(callback, bytes, DownloadPhase::Postprocessing).is_break() {
+        return Err(Error::DownloadCancelled);
+    }
     // HLS media is labeled `mp4` like upstream; FFmpeg reads its real container.
     let container = crate::container::sniff(&input)
         .map(str::to_owned)
@@ -205,6 +230,15 @@ pub(crate) fn download(
     let mut delete_subtitles = Vec::new();
     let mut warnings = Vec::new();
     let mut errors = Vec::new();
+    // Upstream `run_pp` deletion notice for a processor's replaced input.
+    let deleted = |path: &Path| {
+        if !keep {
+            crate::screen::screen(&format!(
+                "Deleting original file {} (pass -k to keep)",
+                path.display()
+            ));
+        }
+    };
     let process = (|| -> Result<ProcessedDownload> {
         // Upstream `run_pp`: with --ignore-errors a failed processor is
         // reported and skipped without its file deletions.
@@ -246,8 +280,30 @@ pub(crate) fn download(
                     .unwrap()
                     .plan(&current.ext, Some(&codec))?;
                 let path = audio_output_path(&current.path, &current.ext, &plan.extension)?;
+                let options = processors.audio.as_ref().unwrap();
+                if plan.skip {
+                    // Upstream `Not converting audio PATH; REASON`.
+                    let reason = match options.target(&current.ext) {
+                        None => format!("could not find a mapping for {}", current.ext),
+                        Some(_) => "the file is already in a common audio format".into(),
+                    };
+                    crate::screen::screen(&format!(
+                        "[ExtractAudio] Not converting audio {}; {reason}",
+                        current.path.display()
+                    ));
+                } else if plan.encoder.as_deref() == Some("copy") && path == current.path {
+                    crate::screen::screen(&format!(
+                        "[ExtractAudio] Not converting audio {}; file is already in target format {}",
+                        current.path.display(),
+                        options.target(&current.ext).unwrap_or("best")
+                    ));
+                }
                 if !plan.skip && !(plan.encoder.as_deref() == Some("copy") && path == current.path)
                 {
+                    crate::screen::screen(&format!(
+                        "[ExtractAudio] Destination: {}",
+                        path.display()
+                    ));
                     absent(&path)?;
                     let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
                         Error::Postprocess(
@@ -277,6 +333,7 @@ pub(crate) fn download(
                     } else {
                         plan.extension.clone()
                     };
+                    let original = current.path.clone();
                     stages.push(Stage {
                         disk: output,
                         path,
@@ -284,6 +341,7 @@ pub(crate) fn download(
                         container,
                         bytes,
                     });
+                    deleted(&original);
                 }
             }
         });
@@ -291,12 +349,27 @@ pub(crate) fn download(
             if let Some(video) = &processors.video {
                 let current = stages.last().unwrap();
                 let plan = video.plan(&current.ext)?;
+                let (action, name) = video.action();
+                if let Some(reason) = video.skip_reason(&current.ext).filter(|_| plan.skip) {
+                    crate::screen::screen(&format!(
+                        "[{name}] Not {action} media file \"{}\"; {reason}",
+                        current.path.display()
+                    ));
+                }
                 if !plan.skip {
                     let path = audio_output_path(
                         &current.path,
                         &current.ext.to_lowercase(),
                         &plan.extension,
                     )?;
+                    let mut title = action.to_owned();
+                    title[..1].make_ascii_uppercase();
+                    crate::screen::screen(&format!(
+                        "[{name}] {title} video from {} to {}; Destination: {}",
+                        current.ext.to_lowercase(),
+                        plan.extension,
+                        path.display()
+                    ));
                     absent(&path)?;
                     if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break()
                     {
@@ -324,6 +397,7 @@ pub(crate) fn download(
                         crate::filetime::oldest([current.disk.as_path()]),
                     );
                     let bytes = fs::metadata(&output)?.len();
+                    let original = current.path.clone();
                     stages.push(Stage {
                         disk: output,
                         path,
@@ -331,11 +405,13 @@ pub(crate) fn download(
                         container: plan.extension,
                         bytes,
                     });
+                    deleted(&original);
                 }
             }
         });
         stage!({
             if let Some(embedding) = &processors.embed {
+                let subtitle_start = delete_subtitles.len();
                 let current = stages.last_mut().unwrap();
                 let mut plan = crate::embed_subtitles::plan(&current.ext, &embedding.subtitles)?;
                 warnings.append(&mut plan.warnings);
@@ -392,6 +468,10 @@ pub(crate) fn download(
                             "subtitle embedding requires an explicit --ffmpeg-location PATH".into(),
                         )
                     })?;
+                    crate::screen::screen(&format!(
+                        "[EmbedSubtitle] Embedding subtitles in \"{}\"",
+                        current.path.display()
+                    ));
                     let output = workspace.path().join(format!("embedded.{}", current.ext));
                     let mut observe =
                         || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
@@ -410,6 +490,13 @@ pub(crate) fn download(
                     current.bytes = fs::metadata(&output)?.len();
                     current.disk = output;
                     current.container = current.ext.clone();
+                    // Upstream returns the embedded subtitle files for deletion.
+                    for (path, _) in &delete_subtitles[subtitle_start..] {
+                        crate::screen::screen(&format!(
+                            "Deleting original file {} (pass -k to keep)",
+                            path.display()
+                        ));
+                    }
                 }
             }
         });
@@ -430,6 +517,10 @@ pub(crate) fn download(
                     muxer: crate::embed_metadata::muxer(&current.ext.to_lowercase()).into(),
                     skip: false,
                 };
+                crate::screen::screen(&format!(
+                    "[Metadata] Adding metadata to \"{}\"",
+                    current.path.display()
+                ));
                 let output = workspace.path().join(format!("metadata.{}", current.ext));
                 let mut observe =
                     || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);

@@ -626,6 +626,24 @@ video's `vcodec`/`dynamic_range` and the audio's `acodec`. Upstream's explicit
 stricter HLS/DASH/YouTube codec allow-lists are unchanged by these fields;
 `tools/compare_youtube.py` now also compares non-null codec fields.
 
+## Postprocessor messages
+
+Processed downloads print upstream's postprocessor lines in chain order after the
+transfer's progress ends: `[ExtractAudio] Destination: FILE` (or `Not converting
+audio FILE; could not find a mapping for EXT` / `the file is already in a common
+audio format` / `file is already in target format TARGET`),
+`[VideoRemuxer] Remuxing video from SRC to TGT; Destination: FILE` and
+`[VideoConvertor] Converting video ...` (or `Not remuxing/converting media file
+"FILE"; already is in target format EXT` / `could not find a mapping for EXT`),
+`[EmbedSubtitle] Embedding subtitles in "FILE"`, `[Metadata] Adding metadata to
+"FILE"`, and `run_pp`'s `Deleting original file FILE (pass -k to keep)` after
+each processor that replaces its input (not with `-k`; subtitles kept by
+`--write-subs` are not deleted). Subtitle sidecars print `[info] Writing video
+subtitles to: FILE` (or `[info] Video subtitle LANG.EXT is already present`) and
+their own `[download] Destination` and progress lines. Checked against pinned
+upstream with real media. Merges followed by processing still print no
+per-format lines, and processed HLS downloads print no `[FixupM3u8]` line.
+
 ## Format descriptions
 
 Like `process_video_result`, formats get `resolution` (`format_resolution`:

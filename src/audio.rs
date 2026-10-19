@@ -124,7 +124,7 @@ impl AudioOptions {
         }
         Self::new(format, quality)
     }
-    fn target<'a>(&'a self, source_ext: &str) -> Option<&'a str> {
+    pub(crate) fn target<'a>(&'a self, source_ext: &str) -> Option<&'a str> {
         self.mappings
             .iter()
             .find(|mapping| {

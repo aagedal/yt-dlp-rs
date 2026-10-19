@@ -1869,8 +1869,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         match std::fs::symlink_metadata(&subtitle_path) {
                             Ok(_) if std::fs::metadata(&subtitle_path)?.is_file() => {
                                 screen!(
-                                    "[info] Subtitle {} is already present",
-                                    subtitle_path.display()
+                                    "[info] Video subtitle {}.{} is already present",
+                                    language,
+                                    subtitle.ext
                                 );
                             }
                             Ok(_) => {
@@ -1882,11 +1883,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                             Err(error) if error.kind() == io::ErrorKind::NotFound => {
                                 screen!(
-                                    "[info] Writing {language:?} subtitles to: {}",
+                                    "[info] Writing video subtitles to: {}",
                                     subtitle_path.display()
                                 );
                                 sleep.subtitle();
-                                downloader.download_subtitle_with_options(
+                                // Upstream `dl(..., subtitle=True)`: the file
+                                // downloader announces and reports the sidecar.
+                                screen!("[download] Destination: {}", subtitle_path.display());
+                                let mut reporter = ProgressReporter::new(&progress_options);
+                                downloader.download_subtitle_with_progress(
                                     &info,
                                     &subtitle,
                                     &subtitle_path,
@@ -1895,7 +1900,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         update_time: args.mtime,
                                         ..Default::default()
                                     },
+                                    |progress| {
+                                        reporter.event(&progress);
+                                        ControlFlow::Continue(())
+                                    },
                                 )?;
+                                reporter.finish();
                             }
                             Err(error) => return Err(error.into()),
                         }
@@ -2116,7 +2126,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             eprintln!("ERROR: {error}");
                             postprocess_failed.set(true);
                         }
-                        screen!("[postprocess] Destination: {}", result.path.display());
                         if let Some(thumbnail) = &embedded_thumbnail
                             && !keeps_thumbnails
                             && std::fs::remove_file(thumbnail).is_err()

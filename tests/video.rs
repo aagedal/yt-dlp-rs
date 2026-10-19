@@ -218,6 +218,19 @@ fn remux_and_recode_cli_use_distinct_codecs_and_publish_selected_container() {
             b"converted video"
         );
         assert!(!directory.path().join("out.mp4").exists());
+        // Upstream FFmpegVideoRemuxerPP/ConvertorPP and run_pp messages.
+        let (name, action) = if flag == "--remux-video" {
+            ("VideoRemuxer", "Remuxing")
+        } else {
+            ("VideoConvertor", "Converting")
+        };
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        assert!(
+            stdout.contains(&format!(
+                "[{name}] {action} video from mp4 to {extension}; Destination: out.{extension}\nDeleting original file out.mp4 (pass -k to keep)\n"
+            )),
+            "{stdout}"
+        );
         let log = tools.log(&tools.ffmpeg);
         if flag == "--remux-video" {
             assert!(log.contains("copy"), "{log}");
@@ -255,6 +268,14 @@ fn mappings_and_same_extension_skip_without_any_tools() {
             std::fs::read(directory.path().join("out.mp4")).unwrap(),
             b"source video"
         );
+        let reason = if format == "mp4" {
+            "already is in target format mp4"
+        } else {
+            "could not find a mapping for mp4"
+        };
+        assert!(String::from_utf8_lossy(&output.stdout).contains(&format!(
+            "[VideoRemuxer] Not remuxing media file \"out.mp4\"; {reason}\n"
+        )));
         clean(directory.path());
     }
 }
