@@ -73,6 +73,7 @@ struct Candidate {
 impl Candidate {
     fn into_format(self, url: Url) -> VideoFormat {
         VideoFormat {
+            protocol: None,
             audio_group: None,
             language: None,
             format_note: None,
@@ -546,6 +547,7 @@ fn extract_watch_page_with_caption_options(
     }
     let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
+        protocol: None,
         metadata: metadata::parse(&player),
         automatic_captions: captions.automatic,
         subtitles: captions.subtitles,

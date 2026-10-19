@@ -267,6 +267,11 @@ fn json_simulation_does_not_request_initialization_or_media_or_create_files() {
         String::from_utf8_lossy(&output.stderr)
     );
     let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(info["protocol"], "http_dash_segments+http_dash_segments");
+    assert_eq!(
+        info["requested_formats"][1]["protocol"],
+        "http_dash_segments"
+    );
     assert_eq!(
         info["requested_formats"][0]["fragments"]
             .as_array()

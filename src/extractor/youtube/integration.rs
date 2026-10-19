@@ -768,8 +768,13 @@ fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
         .unwrap();
         let expected_formats: Vec<VideoFormat> =
             serde_json::from_value(expected["formats"].clone()).unwrap();
+        // The saved upstream comparison omits `determine_protocol` output.
+        let mut formats = info.formats.clone();
+        for format in &mut formats {
+            assert_eq!(format.protocol.take().as_deref(), Some("http"));
+        }
         assert_eq!(
-            serde_json::to_value(&info.formats).unwrap(),
+            serde_json::to_value(&formats).unwrap(),
             serde_json::to_value(expected_formats).unwrap()
         );
         assert_eq!(info.title, expected["title"]);

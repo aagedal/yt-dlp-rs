@@ -840,6 +840,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 },
             };
             formats.push(VideoFormat {
+                protocol: Some("http_dash_segments".into()),
                 format_id,
                 url: manifest.clone(),
                 ext: if mime.ends_with("webm") {

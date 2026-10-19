@@ -704,6 +704,16 @@ values, including initialization when needed. Each has a URL and optional
 Selection copies the chosen plan; a merge plan retains each child's fragments.
 Extraction snapshots these plans, and downloads do not refetch manifests.
 
+Formats carry upstream's `protocol`: `m3u8_native` for HLS, `http_dash_segments`
+for DASH, and otherwise `determine_protocol` (`rtmp`/`mms`/`rtsp` prefixes, `.m3u8`
+/`.f4m` URLs, else the URL scheme), filled for every extracted format like
+`FormatSorter._fill_sorting_fields`; the selected result copies it, and merges join
+both with `+`. A single fragmented CLI download prints upstream's
+`[hlsnative] Total fragments: N` or `[dashsegments] Total fragments: N` line before
+`Destination`. Because downloads use the extracted plan, HlsFD's
+`[hlsnative] Downloading m3u8 manifest` line (and its manifest request) has no
+counterpart, and merges do not yet print per-format downloader lines.
+
 The fragment downloader retries each whole failed fragment using
 `--fragment-retries`, retains earlier complete fragments, and truncates the
 failed fragment before retrying. The library default never skips a failed

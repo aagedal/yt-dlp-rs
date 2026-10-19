@@ -493,6 +493,8 @@ fn cli_html5_json_and_simulation_do_not_download() {
             let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
             assert_eq!(info["direct"], false);
             assert_eq!(info["title"], "A & B (1)");
+            assert_eq!(info["protocol"], "http");
+            assert_eq!(info["formats"][0]["protocol"], "http");
         }
     }
     assert_eq!(server.requests.lock().unwrap().len(), 4);

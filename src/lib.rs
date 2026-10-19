@@ -338,6 +338,7 @@ impl YoutubeDl {
                     entry.metadata.fill_common_fields();
                     entry.metadata.sanitize_thumbnails();
                     info::sanitize_format_ids(&mut entry.formats);
+                    info::fill_protocols(&mut entry.formats);
                 }
                 return Ok(info);
             }

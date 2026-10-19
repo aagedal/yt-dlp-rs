@@ -1900,6 +1900,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             return Ok(());
                         }
                     }
+                    if info.requested_formats.is_empty() && !info.fragments.is_empty() {
+                        // Upstream `_prepare_frag_download`; plans are snapshots, so
+                        // HlsFD's manifest download line has no counterpart.
+                        let downloader = match info.protocol.as_deref() {
+                            Some("http_dash_segments") => "dashsegments",
+                            _ => "hlsnative",
+                        };
+                        screen!("[{downloader}] Total fragments: {}", info.fragments.len());
+                    }
                     screen!("[download] Destination: {}", path.display());
                     // Upstream sleeps before each stream's FileDownloader.download.
                     for _ in 0..info.requested_formats.len().max(1) {

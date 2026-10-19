@@ -116,6 +116,7 @@ pub(crate) fn with_format(mut info: VideoInfo, mime: &str) -> VideoInfo {
     }
     info.format_id = Some(format_id.clone());
     info.formats = vec![crate::VideoFormat {
+        protocol: None,
         format_id,
         stream_kind: info.stream_kind,
         audio_group: None,
@@ -168,6 +169,7 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem };
     Some(VideoInfo {
+        protocol: None,
         metadata: Default::default(),
         automatic_captions: Default::default(),
         subtitles: Default::default(),

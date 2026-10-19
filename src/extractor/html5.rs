@@ -468,6 +468,7 @@ impl Extractor for GenericHttp {
                     continue;
                 }
                 formats.push(VideoFormat {
+                    protocol: None,
                     format_id: index.to_string(),
                     stream_kind: info.stream_kind,
                     audio_group: None,

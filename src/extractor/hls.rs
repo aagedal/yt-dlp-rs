@@ -117,6 +117,7 @@ pub(crate) fn from_response(
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem }.to_owned();
     let mut info = VideoInfo {
+        protocol: None,
         metadata: Default::default(),
         automatic_captions: Default::default(),
         subtitles: Default::default(),
@@ -157,6 +158,7 @@ pub(crate) fn from_response(
         Playlist::Media { fragments, ext } => {
             // A media playlist is returned as one format.
             info.formats.push(VideoFormat {
+                protocol: Some("m3u8_native".into()),
                 format_id: join(&[m3u8_id]),
                 stream_kind: StreamKind::Standalone,
                 audio_group: None,
@@ -207,6 +209,7 @@ pub(crate) fn from_response(
                 };
                 let name = variant.name.clone().unwrap_or(fallback);
                 info.formats.push(VideoFormat {
+                    protocol: Some("m3u8_native".into()),
                     format_id: join(&[m3u8_id, Some(&name)]),
                     stream_kind: variant.stream_kind,
                     audio_group: variant.audio_group,
@@ -246,6 +249,7 @@ pub(crate) fn from_response(
                     ));
                 }
                 rendition_formats.push(VideoFormat {
+                    protocol: Some("m3u8_native".into()),
                     format_id: join(&[m3u8_id, Some(&rendition.group_id), Some(&rendition.name)]),
                     stream_kind: StreamKind::AudioOnly,
                     audio_group: Some(rendition.group_id),

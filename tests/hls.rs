@@ -281,6 +281,14 @@ fn json_simulation_does_not_fetch_fragments_or_create_output() {
     );
     let json: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
     assert_eq!(json["format_id"], "1000");
+    assert_eq!(json["protocol"], "m3u8_native");
+    assert!(
+        json["formats"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|format| format["protocol"] == "m3u8_native")
+    );
     assert_eq!(json["fragments"].as_array().unwrap().len(), 2);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     assert_eq!(server.paths(), ["/master.m3u8", "/low.m3u8", "/high.m3u8"]);
@@ -416,4 +424,26 @@ fn encrypted_json_and_simulation_do_not_request_keys_or_segments() {
     }
     assert_eq!(server.paths(), ["/aes.m3u8", "/aes.m3u8"]);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+}
+
+#[test]
+fn cli_download_reports_upstream_fragment_count_before_destination() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--no-progress",
+            "-o",
+            "out.%(ext)s",
+            &server.url("/master.m3u8"),
+        ])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    // This server's segments are not media; the lines precede the transfer.
+    let stdout = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stdout.contains("[hlsnative] Total fragments: 2\n[download] Destination: out."),
+        "{stdout}"
+    );
 }

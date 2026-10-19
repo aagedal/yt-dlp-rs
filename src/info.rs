@@ -121,6 +121,10 @@ pub struct VideoFormat {
     pub audio_autoselect: bool,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub fragments: Vec<Fragment>,
+    /// Upstream protocol name (`m3u8_native`, `http_dash_segments`, or the URL
+    /// scheme); missing values are filled like `determine_protocol`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub protocol: Option<String>,
     pub format_id: String,
     #[serde(default, skip_serializing_if = "StreamKind::is_standalone")]
     pub stream_kind: StreamKind,
@@ -331,6 +335,9 @@ pub struct VideoInfo {
     pub requested_formats: Vec<VideoFormat>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub format_id: Option<String>,
+    /// The selected format's protocol, `+`-joined for merges.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub protocol: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub filesize: Option<u64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -399,6 +406,13 @@ impl VideoInfo {
                         selected[0].format_id, selected[1].format_id
                     ));
                     self.ext = ext.into();
+                    self.protocol = Some(
+                        selected
+                            .iter()
+                            .map(VideoFormat::determine_protocol)
+                            .collect::<Vec<_>>()
+                            .join("+"),
+                    );
                     self.filesize = None;
                     self.width = width;
                     self.height = height;
@@ -432,6 +446,7 @@ impl VideoInfo {
         self.fragments = selected.fragments.clone();
         self.url = selected.url.clone();
         self.ext = selected.ext.clone();
+        self.protocol = Some(selected.determine_protocol());
         self.filesize = selected.filesize;
         self.width = selected.width;
         self.height = selected.height;
@@ -697,6 +712,34 @@ fn is_false(value: &bool) -> bool {
 /// Upstream `process_video_result` format ID cleanup: empty IDs become the
 /// format's index, selector characters become `_`, duplicates get `-N`
 /// suffixes, and IDs that are another common extension get an `f` prefix.
+impl VideoFormat {
+    /// Upstream `determine_protocol` for the represented URL schemes.
+    pub fn determine_protocol(&self) -> String {
+        if let Some(protocol) = &self.protocol {
+            return protocol.clone();
+        }
+        let url = self.url.as_str();
+        for prefix in ["rtmp", "mms", "rtsp"] {
+            if url.starts_with(prefix) {
+                return prefix.into();
+            }
+        }
+        let path = url.split('?').next().unwrap_or("");
+        match path.rsplit_once('.').map(|(_, ext)| ext) {
+            Some("m3u8") => "m3u8_native".into(),
+            Some("f4m") => "f4m".into(),
+            _ => self.url.scheme().into(),
+        }
+    }
+}
+
+/// Upstream `FormatSorter._fill_sorting_fields`: fill missing protocols.
+pub(crate) fn fill_protocols(formats: &mut [VideoFormat]) {
+    for format in formats {
+        format.protocol = Some(format.determine_protocol());
+    }
+}
+
 pub(crate) fn sanitize_format_ids(formats: &mut [VideoFormat]) {
     const COMMON_EXTS: &[&str] = &[
         "avi", "flv", "mkv", "mov", "mp4", "webm", "3gp", "aiff", "alac", "flac", "m4a", "mka",
@@ -781,6 +824,7 @@ mod tests {
         tbr: Option<f64>,
     ) -> VideoFormat {
         VideoFormat {
+            protocol: None,
             audio_group: None,
             language: None,
             format_note: None,
@@ -801,6 +845,7 @@ mod tests {
 
     fn info(formats: Vec<VideoFormat>) -> VideoInfo {
         VideoInfo {
+            protocol: None,
             metadata: Default::default(),
             automatic_captions: Default::default(),
             subtitles: Default::default(),
