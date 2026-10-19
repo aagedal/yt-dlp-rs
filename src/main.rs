@@ -399,6 +399,12 @@ struct Args {
     /// Disable info JSON writing
     #[arg(long, overrides_with = "write_info_json")]
     no_write_info_json: bool,
+    /// Retrieve video comments to be placed in the infojson (implies --write-info-json unless JSON is printed)
+    #[arg(long, alias = "get-comments", overrides_with = "no_write_comments")]
+    write_comments: bool,
+    /// Do not retrieve video comments unless the extraction is known to be quick (default)
+    #[arg(long, alias = "no-get-comments", overrides_with = "write_comments")]
+    no_write_comments: bool,
     /// Format ID or indexed/grouped selector with filters, + pairs and / fallbacks
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
@@ -758,10 +764,10 @@ struct Args {
     #[arg(long, alias = "no-colours", hide = true)]
     no_colors: bool,
     /// Remove some internal metadata such as filenames from the infojson (default)
-    #[arg(long, overrides_with = "no_clean_info_json")]
+    #[arg(long, alias = "clean-infojson", overrides_with = "no_clean_info_json")]
     clean_info_json: bool,
     /// Write all fields to the infojson
-    #[arg(long, overrides_with = "clean_info_json")]
+    #[arg(long, alias = "no-clean-infojson", overrides_with = "clean_info_json")]
     no_clean_info_json: bool,
     /// Extractor names to use separated by commas (regexes, "all", "default", "end", "-" to exclude)
     #[arg(long, alias = "ies", value_name = "NAMES")]
@@ -953,7 +959,7 @@ struct Args {
     #[arg(long, hide = true)]
     legacy_server_connect: bool,
     /// Use an unencrypted connection to retrieve information where an extractor supports it
-    #[arg(long)]
+    #[arg(long, alias = "prefer-unsecure")]
     prefer_insecure: bool,
     #[arg(long, hide = true)]
     bidi_workaround: bool,
@@ -961,9 +967,19 @@ struct Args {
     ignore_no_formats_error: bool,
     #[arg(long, hide = true, overrides_with = "ignore_no_formats_error")]
     no_ignore_no_formats_error: bool,
-    #[arg(long, hide = true, overrides_with = "ignore_dynamic_mpd")]
+    #[arg(
+        long,
+        hide = true,
+        alias = "no-ignore-dynamic-mpd",
+        overrides_with = "ignore_dynamic_mpd"
+    )]
     allow_dynamic_mpd: bool,
-    #[arg(long, hide = true, overrides_with = "allow_dynamic_mpd")]
+    #[arg(
+        long,
+        hide = true,
+        alias = "no-allow-dynamic-mpd",
+        overrides_with = "allow_dynamic_mpd"
+    )]
     ignore_dynamic_mpd: bool,
     /// Allow file:// URLs (direct local media files)
     #[arg(long)]
@@ -2199,7 +2215,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     // Like upstream, simulation never writes info JSON.
-    let writes_info_json = args.write_info_json && !simulate;
+    // Upstream: comments without a JSON destination imply --write-info-json.
+    let comments_info_json = args.write_comments
+        && !args.write_info_json
+        && !args.no_write_info_json
+        && !args.embed_info_json
+        && (!args.dump_json || args.print_json || args.dump_single_json);
+    let writes_info_json = (args.write_info_json || comments_info_json) && !simulate;
     // Upstream `embed_infojson`: explicit, or `if_exists` with --embed-metadata.
     let embed_info_json = if args.embed_info_json {
         Some(true)
@@ -3013,6 +3035,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 for (selected, section) in runs {
                     let mut info = yt_dlp_rs::sections::apply(selected, section.as_ref());
                     (|| -> Result<(), Box<dyn std::error::Error>> {
+                        // Upstream's YouTube `_get_comments` uses its comment API.
+                        if args.write_comments && info.extractor_key == "Youtube" {
+                            return Err(yt_dlp_rs::Error::Reported(
+                                "YouTube comment extraction (--write-comments) is not supported natively"
+                                    .into(),
+                            )
+                            .into());
+                        }
                         // Upstream `process_info` rechecks complete metadata before counting.
                         if !match_filters.is_empty() {
                             match match_filters.check(&info, false)? {
