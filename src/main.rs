@@ -464,8 +464,19 @@ struct Args {
     #[arg(long, allow_hyphen_values = true)]
     playlist_end: Option<i64>,
     /// Reverse the selected playlist item order
-    #[arg(long)]
+    #[arg(long, overrides_with = "no_playlist_reverse")]
     playlist_reverse: bool,
+    #[arg(long, hide = true, overrides_with = "playlist_reverse")]
+    no_playlist_reverse: bool,
+    /// Download playlist videos in random order
+    #[arg(long)]
+    playlist_random: bool,
+    /// Process entries in the playlist as they are received. This disables n_entries, --playlist-random and --playlist-reverse
+    #[arg(long, overrides_with = "no_lazy_playlist")]
+    lazy_playlist: bool,
+    /// Process videos in the playlist only after the entire playlist is parsed (default)
+    #[arg(long, overrides_with = "lazy_playlist")]
+    no_lazy_playlist: bool,
     /// Placeholder for unavailable output-template metadata
     #[arg(long, default_value = "NA", value_name = "TEXT")]
     output_na_placeholder: String,
@@ -743,7 +754,10 @@ fn single_json(
                 .iter()
                 .map(|info| info.playlist_index)
                 .collect();
-            object.insert("requested_entries".into(), serde_json::to_value(indices)?);
+            // Lazy playlists have no `requested_entries` upstream.
+            if counts.is_none_or(|counts| counts.n_entries.is_some()) {
+                object.insert("requested_entries".into(), serde_json::to_value(indices)?);
+            }
             object.insert("entries".into(), entries.unwrap_or_default());
             Ok(value)
         }
@@ -1163,12 +1177,31 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if let Some(format) = &args.format {
         validate_format_selector(format)?;
     }
+    // Upstream `report_conflict` between the playlist ordering options.
+    let mut playlist_reverse = args.playlist_reverse;
+    let mut playlist_random = args.playlist_random;
+    if playlist_random && playlist_reverse {
+        warning!("WARNING: --playlist-reverse is ignored since --playlist-random was given");
+        playlist_reverse = false;
+    }
+    if args.lazy_playlist {
+        for (enabled, name) in [
+            (&mut playlist_reverse, "--playlist-reverse"),
+            (&mut playlist_random, "--playlist-random"),
+        ] {
+            if *enabled {
+                warning!("WARNING: {name} is ignored since --lazy-playlist was given");
+                *enabled = false;
+            }
+        }
+    }
     let playlist_selection = PlaylistSelection::new(
         args.playlist_items.as_deref(),
         args.playlist_start,
         args.playlist_end,
-        args.playlist_reverse,
+        playlist_reverse,
     )
+    .map(|selection| selection.random(playlist_random).lazy(args.lazy_playlist))
     .map_err(|error| -> Box<dyn std::error::Error> {
         match (&error, &args.playlist_items) {
             // Upstream validates start/end, then parses the item segments.
@@ -1640,7 +1673,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             screen!(
                 "[{}] Playlist {title}: Downloading {} items of {}",
                 playlist.extractor,
-                counts.n_entries,
+                counts
+                    .n_entries
+                    .map_or_else(|| "N/A".into(), |count| count.to_string()),
                 counts.playlist_count
             );
         }
@@ -1660,9 +1695,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 pending_error.set(earlier.or(Some(format!("Preprocessing: {error}"))));
             };
             let mut entry_cancel = None;
-            if let (Some(index), Some(count)) = (info.playlist_autonumber, info.n_entries)
+            if let Some(index) = info.playlist_autonumber
                 && playlist_title.is_some()
             {
+                let count = info
+                    .n_entries
+                    .map_or_else(|| "N/A".into(), |count| count.to_string());
                 screen!("[download] Downloading item {index} of {count}");
             }
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {

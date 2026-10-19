@@ -80,7 +80,9 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--ffprobe-location PATH` | Native option: explicit audio probe executable, overriding the ffprobe found from `--ffmpeg-location` or `PATH` |
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
 | `--playlist-start NUMBER`, `--playlist-end NUMBER` | Inclusive one-based defaults 1 through end, end -1 unbounded; items option overrides after validation |
-| `--playlist-reverse` | Reverse selected request order after deduplication |
+| `--playlist-reverse`, `--no-playlist-reverse` | Reverse selected request order after deduplication; last flag wins |
+| `--playlist-random` | Upstream `random.shuffle` of the selected entries (clock-seeded; `playlist_autonumber` follows the new order); `--playlist-reverse is ignored since --playlist-random was given` |
+| `--lazy-playlist`, `--no-lazy-playlist` | Upstream lazy semantics on the eagerly extracted playlist: entries keep their order, `n_entries` is unknown (`Downloading N/A items`, `item N of N/A`, `NA` in templates), `-J` has no `requested_entries`, and reverse/random are ignored with upstream's `is ignored since --lazy-playlist was given` warnings (printed after date conflicts, unlike upstream's order) |
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection (`[download] ID: TITLE has already been recorded in the archive`), record after successful download/merge publication or an already-downloaded file; no writes in metadata/listing/simulation unless `--force-write-archive` |
 | `--no-download-archive` | Disable the archive; last of it and `--download-archive` wins |
 | `--break-on-existing`, `--no-break-on-existing` | Stop at the first archived video (earlier playlist entries are still processed), print upstream's cancellation message and exit 101 |

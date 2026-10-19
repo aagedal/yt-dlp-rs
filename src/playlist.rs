@@ -8,7 +8,8 @@ use crate::{ExtractResult, Result};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PlaylistCounts {
     pub playlist_count: usize,
-    pub n_entries: usize,
+    /// The selected count; `None` with `--lazy-playlist` (upstream `N/A`).
+    pub n_entries: Option<usize>,
     pub last_playlist_index: usize,
 }
 
@@ -16,6 +17,8 @@ pub struct PlaylistCounts {
 pub struct PlaylistSelection {
     segments: Vec<Segment>,
     reverse: bool,
+    random: bool,
+    lazy: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -74,7 +77,25 @@ impl PlaylistSelection {
                 step: 1,
             }]
         };
-        Ok(Self { segments, reverse })
+        Ok(Self {
+            segments,
+            reverse,
+            random: false,
+            lazy: false,
+        })
+    }
+
+    /// Upstream `--playlist-random`: shuffle the selected entries.
+    pub fn random(mut self, random: bool) -> Self {
+        self.random = random;
+        self
+    }
+
+    /// Upstream `--lazy-playlist`: entries keep their order and the selected
+    /// count is unknown (`N/A`).
+    pub fn lazy(mut self, lazy: bool) -> Self {
+        self.lazy = lazy;
+        self
     }
 
     /// Return zero-based positions, removing duplicates before optional reversal.
@@ -140,8 +161,12 @@ impl PlaylistSelection {
                 break;
             }
         }
-        if self.reverse {
+        if self.lazy {
+            // Upstream ignores reverse/random for lazy playlists.
+        } else if self.reverse {
             indices.reverse();
+        } else if self.random {
+            shuffle(&mut indices);
         }
         indices
     }
@@ -171,15 +196,32 @@ impl PlaylistSelection {
                 entry.playlist_index = Some(index + 1);
                 entry.playlist_autonumber = Some(order + 1);
                 entry.playlist_count = Some(count);
-                entry.n_entries = Some(selected_count);
+                entry.n_entries = (!self.lazy).then_some(selected_count);
                 entry
             })
             .collect();
         Some(PlaylistCounts {
             playlist_count: count,
-            n_entries: selected_count,
+            n_entries: (!self.lazy).then_some(selected_count),
             last_playlist_index: last_index,
         })
+    }
+}
+
+/// `random.shuffle`: a Fisher-Yates shuffle seeded from the clock.
+fn shuffle(items: &mut [usize]) {
+    let mut state = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0x9e37_79b9_7f4a_7c15, |time| time.as_nanos() as u64)
+        ^ u64::from(std::process::id()).rotate_left(32)
+        | 1;
+    for index in (1..items.len()).rev() {
+        // xorshift64*
+        state ^= state >> 12;
+        state ^= state << 25;
+        state ^= state >> 27;
+        let value = state.wrapping_mul(0x2545_f491_4f6c_dd1d);
+        items.swap(index, (value % (index as u64 + 1)) as usize);
     }
 }
 

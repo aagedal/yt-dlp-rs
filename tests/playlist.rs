@@ -412,3 +412,52 @@ fn playlist_progress_lines_follow_upstream_process_playlist() {
         ]
     );
 }
+
+#[test]
+fn playlist_random_lazy_and_reverse_follow_upstream_conflicts() {
+    let server = Server::new();
+    // Checked with pinned upstream: --playlist-random wins over reverse, and
+    // --lazy-playlist disables both and reports N/A entries.
+    let output = server.cli(
+        "/playlist.html",
+        &["-s", "--playlist-random", "--playlist-reverse"],
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains("WARNING: --playlist-reverse is ignored since --playlist-random was given"),
+        "{stderr}"
+    );
+    let output = server.cli(
+        "/playlist.html",
+        &[
+            "--lazy-playlist",
+            "--playlist-reverse",
+            "-O",
+            "%(n_entries)s %(playlist_autonumber)s %(playlist_index)s",
+        ],
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains("WARNING: --playlist-reverse is ignored since --lazy-playlist was given"),
+        "{stderr}"
+    );
+    assert!(stdout.starts_with("NA 1 1\nNA 2 2\n"), "{stdout}");
+    let output = server.cli("/playlist.html", &["--lazy-playlist", "-J"]);
+    let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert!(json.get("requested_entries").is_none());
+    // Random order still covers every selected entry once.
+    let output = server.cli(
+        "/playlist.html",
+        &["--playlist-random", "-O", "%(playlist_index)s"],
+    );
+    let mut indices: Vec<_> = String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .map(str::to_owned)
+        .collect();
+    indices.sort();
+    assert!(
+        indices.len() >= 2 && indices.windows(2).all(|pair| pair[0] != pair[1]),
+        "{indices:?}"
+    );
+}

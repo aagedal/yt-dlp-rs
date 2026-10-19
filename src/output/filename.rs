@@ -207,7 +207,7 @@ mod tests {
         .unwrap();
         let counts = PlaylistCounts {
             playlist_count: 3,
-            n_entries: 3,
+            n_entries: Some(3),
             last_playlist_index: 3,
         };
         for case in fixture["cases"].as_array().unwrap() {

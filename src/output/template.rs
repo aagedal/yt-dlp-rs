@@ -10,7 +10,7 @@ pub(super) enum Source<'a> {
     Playlist {
         info: &'a PlaylistInfo,
         playlist_count: usize,
-        n_entries: usize,
+        n_entries: Option<usize>,
         last_playlist_index: usize,
     },
     /// Unsanitized `--print` rendering of a processed video, with upstream's
@@ -175,7 +175,7 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
                 "webpage_url" => Some(Text(info.webpage_url.as_str())),
                 "playlist_index" => Some(Integer(0)),
                 "playlist_count" => Some(Integer(playlist_count as u64)),
-                "n_entries" => Some(Integer(n_entries as u64)),
+                "n_entries" => n_entries.map(|n| Integer(n as u64)),
                 _ => None,
             });
         }
