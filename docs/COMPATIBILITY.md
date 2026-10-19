@@ -74,6 +74,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-x`, `--extract-audio`, `--audio-format`, `--audio-quality` | Ordered audio extraction mappings and bounded quality settings; see audio extraction below |
 | `--remux-video`, `--recode-video` | Ordered video target mappings; stream copying or container-default re-encoding; recode wins |
 | `--embed-metadata`, `--add-metadata`, `--no-embed-metadata`, `--no-add-metadata` | Final FFmpeg stage after subtitle embedding: upstream `FFmpegMetadataPP` stream-copy options, `-write_id3v1 1`, common tags from represented fields with upstream key precedence (title, date, description/synopsis, purl/comment, artist, genre, …) and per-stream `language`; requires `--ffmpeg-location`; no chapters and no info JSON attachment (warned with `--write-info-json`) |
+| `--fixup POLICY`, `--hls-use-mpegts`, `--no-hls-use-mpegts` | Upstream `fixup()` for unmerged, unprocessed downloads: HLS (`hlsnative`, unless `--hls-use-mpegts`) MP4-labeled files that are MPEG-TS get `FFmpegFixupM3u8PP` (`[FixupM3u8] Fixing MPEG-TS in MP4 container of "FILE"`, stream copy `-map 0 -dn -ignore_unknown -c copy -f mp4`, `-bsf:a aac_adtstoasc` when ffprobe reports AAC, via `NAME.temp.EXT`); DASH `m4a` downloads get `FFmpegFixupM4aPP` (`[FixupM4a] Correcting container of "FILE"`). Without ffmpeg upstream's `ID: MESSAGE. Install ffmpeg to fix this automatically` warning; `warn` only warns, `never`/`ignore` skip; `detect_or_warn` (default) and `force` fix new downloads (already-downloaded files are not re-fixed). MPEG-TS is detected from the file's bytes rather than ffprobe `format_name`. Merges and other FFmpeg inputs also choose demuxers from the bytes. Processed downloads (`-x`, embedding, recoding) produce correct containers through their FFmpeg stage but do not print the fixup line |
 | `--merge-output-format FORMAT` | Upstream `/`-separated container preferences passed to `get_compatible_ext` for merges (`mp4/mkv`); validated with upstream's prefix-matching `re.match` against `avi`/`flv`/`mkv`/`mov`/`mp4`/`webm` (`invalid merge output format "X" given` usage error); ignored without a merge |
 | `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates and, for unprocessed merges, upstream's `NAME.fID.EXT` format files; accepted without other options like upstream; last flag wins |
 | `--ffprobe-location PATH` | Native option: explicit audio probe executable, overriding the ffprobe found from `--ffmpeg-location` or `PATH` |
@@ -719,9 +720,7 @@ A merge plan carries `requested_formats` in expression order and a joined
 callers must honor the plan. Pairs need MP4/WebM/TS video and M4A/WebM/AAC/TS audio
 (fixed local demuxers); the output container is upstream's `get_compatible_ext`
 over the video's `vcodec`/`ext` and the audio's `acodec`/`ext` (for example
-avc1+mp4a gives `mp4`, VP9+Opus `webm`, unknown codecs in `mp4`+`aac` `mkv`; native
-HLS TS extensions therefore often give `mkv` where upstream's HLS `mp4` labels give
-`mp4`), with `--merge-output-format` / `YoutubeDl::with_merge_output_format`
+avc1+mp4a gives `mp4`, VP9+Opus `webm`, unknown codecs in `mp4`+`aac` `mkv`), with `--merge-output-format` / `YoutubeDl::with_merge_output_format`
 preferences. The selected video's dimensions
 are retained; merged filesize is unknown until download. Added serde fields have
 defaults for older metadata, but Rust struct literals must supply the new fields.
@@ -910,8 +909,8 @@ audio-only CODECS on such a variant fails instead of guessing a complete stream.
 Inband groups retain the existing standalone behavior. Both variant and rendition
 declarations count toward the combined limit of 256; every child playlist is
 read with the existing aggregate 10000-fragment cap. JSON/simulation fetch neither
-segments nor encryption keys. Audio-only fMP4 is labeled M4A; raw AAC and TS retain
-their containers.
+segments nor encryption keys. Like upstream (`ext='mp4'`), every HLS format is
+labeled `mp4`, including audio renditions and raw-AAC or TS segments.
 
 Like upstream, rendition groups do not constrain pairs: `bestvideo+bestaudio`
 takes the best video and the best audio in sorted order. Renditions with
@@ -1046,9 +1045,8 @@ IDs (upstream names YouTube HLS formats by itag; not yet ported) and
 A media-only playlist forms `hls-0`; master formats retain dimensions, bandwidth,
 language and rendition metadata from the existing native HLS parser. Selection
 uses the shared format sorting (with YouTube's `_format_sort_fields`) and pair rules.
-Representative fragments are retained even before library selection. Container
-extensions follow native TS/AAC/fMP4 assembly rather than upstream's default MP4
-remux label. No upstream format-ID parity is implied for YouTube HLS.
+Representative fragments are retained even before library selection. Formats are
+labeled `mp4` like upstream. No upstream format-ID parity is implied for YouTube HLS.
 
 Only eligible direct formats are probed as media. HLS acquisition reads the master
 and its media playlists; extraction/JSON/simulation never fetch initialization,

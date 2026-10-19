@@ -14,6 +14,9 @@ pub(crate) enum Playlist {
     },
     Media {
         fragments: Vec<Fragment>,
+        /// Segment container from the URLs; formats are labeled `mp4` like
+        /// upstream and FFmpeg inputs sniff their contents instead.
+        #[cfg_attr(not(test), allow(dead_code))]
         ext: String,
     },
 }

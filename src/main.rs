@@ -384,6 +384,17 @@ struct Args {
     /// Don't give any special preference to free containers (default)
     #[arg(long, overrides_with = "prefer_free_formats")]
     no_prefer_free_formats: bool,
+    /// Automatically correct known faults of the file: never (do nothing), warn
+    /// (only emit a warning), detect_or_warn (the default; fix the file if we can,
+    /// warn otherwise), force (try fixing even if the file already exists)
+    #[arg(long, value_name = "POLICY", value_parser = ["never", "ignore", "warn", "detect_or_warn", "force"])]
+    fixup: Option<String>,
+    /// Use the mpegts container for HLS videos (no MPEG-TS fixup)
+    #[arg(long, overrides_with = "no_hls_use_mpegts")]
+    hls_use_mpegts: bool,
+    /// Do not use the mpegts container for HLS videos (default)
+    #[arg(long, overrides_with = "hls_use_mpegts")]
+    no_hls_use_mpegts: bool,
     /// Containers that may be used when merging formats, separated by "/",
     /// e.g. "mp4/mkv"; ignored if no merge is required (currently supported:
     /// avi, flv, mkv, mov, mp4, webm)
@@ -2135,6 +2146,45 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             },
                             progress,
                         )?;
+                        // Upstream `fixup()` for an unmerged, unprocessed download.
+                        let policy = args.fixup.as_deref().unwrap_or("detect_or_warn");
+                        if info.requested_formats.is_empty()
+                            && !matches!(policy, "never" | "ignore")
+                        {
+                            let protocol = info.protocol.as_deref().unwrap_or("");
+                            let m3u8 = protocol.starts_with("m3u8") && !args.hls_use_mpegts;
+                            let m4a = info.ext == "m4a" && protocol == "http_dash_segments";
+                            for (needed, message, m3u8_fixup) in [
+                                (
+                                    m4a,
+                                    "writing DASH m4a. Only some players support this container",
+                                    false,
+                                ),
+                                (
+                                    m3u8,
+                                    "Possible MPEG-TS in MP4 container or malformed AAC timestamps",
+                                    true,
+                                ),
+                            ] {
+                                if !needed {
+                                    continue;
+                                }
+                                if policy == "warn" {
+                                    warning!("WARNING: {}: {message}", info.id);
+                                } else if !downloader.has_ffmpeg() {
+                                    warning!(
+                                        "WARNING: {}: {message}. Install ffmpeg to fix this automatically",
+                                        info.id
+                                    );
+                                } else if m3u8_fixup {
+                                    if matches!(info.ext.as_str(), "mp4" | "m4a") {
+                                        downloader.fixup_m3u8(&path)?;
+                                    }
+                                } else {
+                                    downloader.fixup_m4a(&path)?;
+                                }
+                            }
+                        }
                         (bytes, vec![path.clone()])
                     };
                     let mut published_paths = published_paths;

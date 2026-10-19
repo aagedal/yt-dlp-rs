@@ -198,7 +198,8 @@ fn direct_media_and_master_extract_plans_without_fetching_segments() {
     for path in ["/media.m3u8", "/stream"] {
         let info = downloader.extract_info(&server.url(path)).unwrap();
         assert!(!info.is_direct());
-        assert_eq!(info.ext, "ts");
+        // Upstream labels HLS formats `mp4` regardless of segment containers.
+        assert_eq!(info.ext, "mp4");
         // Upstream returns a media playlist as one format, numbered `0`.
         assert_eq!(info.formats.len(), 1);
         assert_eq!(info.format_id.as_deref(), Some("0"));

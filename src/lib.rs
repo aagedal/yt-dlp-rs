@@ -4,6 +4,7 @@ mod audio_download;
 pub mod batch;
 pub mod codecs;
 pub mod config;
+pub mod container;
 mod cookies;
 mod crypto;
 mod dash;
@@ -14,6 +15,7 @@ mod embed_subtitles;
 mod error;
 pub mod extractor;
 mod filetime;
+mod fixup;
 pub mod format_sort;
 mod fragment;
 mod hls;
@@ -159,6 +161,56 @@ impl YoutubeDl {
     pub fn with_ffmpeg(mut self, executable: impl Into<PathBuf>) -> Self {
         self.ffmpeg = Some(executable.into());
         self
+    }
+
+    /// Upstream `FFmpegFixupM3u8PP`: when `path` holds MPEG-TS, print
+    /// `[FixupM3u8] Fixing MPEG-TS in MP4 container of "PATH"` and remux it to
+    /// MP4 in place (`aac_adtstoasc` when ffprobe reports AAC audio).
+    /// Returns whether a fixup ran; requires a configured ffmpeg.
+    pub fn fixup_m3u8(&self, path: &Path) -> Result<bool> {
+        if crate::container::sniff(path) != Some("ts") {
+            return Ok(false);
+        }
+        let ffmpeg = self
+            .ffmpeg
+            .as_ref()
+            .ok_or_else(|| Error::Postprocess("fixup requires ffmpeg".into()))?;
+        screen::screen(&format!(
+            "[FixupM3u8] Fixing MPEG-TS in MP4 container of \"{}\"",
+            path.display()
+        ));
+        let probe = self.ffprobe.clone().or_else(|| {
+            ffmpeg
+                .parent()
+                .map(|dir| dir.join(format!("ffprobe{}", std::env::consts::EXE_SUFFIX)))
+        });
+        let aac = probe.is_some_and(|probe| {
+            audio::ffmpeg::probe(&probe, path, "ts", &mut || {
+                std::ops::ControlFlow::Continue(())
+            })
+            .is_ok_and(|codec| codec == "aac")
+        });
+        fixup::remux_to_mp4(ffmpeg, path, "ts", aac, &mut || {
+            std::ops::ControlFlow::Continue(())
+        })?;
+        Ok(true)
+    }
+
+    /// Upstream `FFmpegFixupM4aPP`: print `[FixupM4a] Correcting container of
+    /// "PATH"` and remux a DASH m4a download to a plain MP4 container.
+    pub fn fixup_m4a(&self, path: &Path) -> Result<()> {
+        let ffmpeg = self
+            .ffmpeg
+            .as_ref()
+            .ok_or_else(|| Error::Postprocess("fixup requires ffmpeg".into()))?;
+        screen::screen(&format!(
+            "[FixupM4a] Correcting container of \"{}\"",
+            path.display()
+        ));
+        let container = crate::container::sniff(path).unwrap_or("m4a");
+        fixup::remux_to_mp4(ffmpeg, path, container, false, &mut || {
+            std::ops::ControlFlow::Continue(())
+        })
     }
 
     /// Whether an ffmpeg executable is configured (upstream `merger.available`).

@@ -37,7 +37,8 @@ fn hls_only_watch_extraction_selects_and_downloads_ordered_fragments() {
     assert_eq!(info.formats[0].format_id, "hls-0");
     assert_eq!(info.fragments, info.formats[0].fragments);
     assert_eq!(info.fragments.len(), 2);
-    assert_eq!(info.ext, "ts");
+    // Upstream labels HLS `mp4` (the downloaded segments are MPEG-TS).
+    assert_eq!(info.ext, "mp4");
     info.select_format(None).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("hls-0"));
     let directory = tempfile::tempdir().unwrap();
@@ -123,9 +124,8 @@ fn external_hls_audio_groups_are_namespaced_and_pair_selections_preserve_plans()
     assert_eq!(info.format_id.as_deref(), Some("hls-0+hls-audio-0"));
     info.select_format(Some("bestvideo+bestaudio")).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("hls-0+hls-audio-0"));
-    // get_compatible_ext over the native TS/AAC extensions (upstream labels
-    // HLS `mp4`, which would give `mp4`).
-    assert_eq!(info.ext, "mkv");
+    // HLS formats are labeled `mp4` like upstream, so the merge is `mp4`.
+    assert_eq!(info.ext, "mp4");
     assert!(info.fragments.is_empty());
     assert_eq!(info.requested_formats[0].fragments.len(), 2);
     assert_eq!(info.requested_formats[1].fragments.len(), 1);

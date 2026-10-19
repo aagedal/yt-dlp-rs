@@ -133,7 +133,7 @@ fn external_audio_groups_build_typed_plans_and_choose_matching_default() {
     );
     assert!(info.requested_formats[1].audio_default);
     assert!(info.requested_formats[1].audio_autoselect);
-    assert_eq!(info.requested_formats[1].ext, "m4a");
+    assert_eq!(info.requested_formats[1].ext, "mp4");
     assert_eq!(info.requested_formats[1].fragments.len(), 2);
     assert!(info.requested_formats[1].fragments[0].encryption.is_some());
     // Without a merger, upstream's `best/bestvideo+bestaudio` selects the
@@ -147,7 +147,7 @@ fn external_audio_groups_build_typed_plans_and_choose_matching_default() {
         .extract_info_with_format(&server.url("/master.m3u8"), Some("a-Alternative"))
         .unwrap();
     assert_eq!(audio.stream_kind, StreamKind::AudioOnly);
-    assert_eq!(audio.ext, "m4a");
+    assert_eq!(audio.ext, "mp4");
     assert_eq!(audio.fragments.len(), 2);
     server.assert_no_media();
 }
@@ -225,7 +225,8 @@ fn audio_only_master_declarations_and_aac_are_selectable() {
         .unwrap();
     assert_eq!(info.format_id.as_deref(), Some("a-Only_audio"));
     assert_eq!(info.stream_kind, StreamKind::AudioOnly);
-    assert_eq!(info.ext, "aac");
+    // Upstream labels HLS `mp4`, even for packed AAC audio.
+    assert_eq!(info.ext, "mp4");
     assert_eq!(info.fragments.len(), 1);
     server.assert_no_media();
 }
@@ -291,7 +292,7 @@ fn invalid_audio_declarations_fail_before_child_or_media_requests() {
 }
 
 #[test]
-fn audio_only_variant_with_initialization_uses_m4a_container() {
+fn audio_only_variant_with_initialization_is_labeled_mp4_like_upstream() {
     let server = Server::new(BTreeMap::from([(
         "/audio-variant.m3u8".into(),
         "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=128000,CODECS=\"mp4a.40.2\"\nmain.m3u8\n".into(),
@@ -301,7 +302,7 @@ fn audio_only_variant_with_initialization_uses_m4a_container() {
         .extract_info(&server.url("/audio-variant.m3u8"))
         .unwrap();
     assert_eq!(info.stream_kind, StreamKind::AudioOnly);
-    assert_eq!(info.ext, "m4a");
+    assert_eq!(info.ext, "mp4");
     assert_eq!(info.fragments.len(), 2);
     server.assert_no_media();
 }

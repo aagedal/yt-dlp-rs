@@ -171,7 +171,7 @@ pub(crate) fn from_response(
             .join("-")
     };
     match playlist {
-        Playlist::Media { fragments, ext } => {
+        Playlist::Media { fragments, .. } => {
             // A media playlist is returned as one format.
             info.formats.push(VideoFormat {
                 protocol: Some("m3u8_native".into()),
@@ -199,13 +199,14 @@ pub(crate) fn from_response(
                 abr: None,
                 tbr: None,
                 url: info.url.clone(),
-                ext: ext.clone(),
+                // Upstream passes `ext='mp4'` for every HLS format.
+                ext: "mp4".into(),
                 filesize: None,
                 width: None,
                 height: None,
                 fragments: fragments.clone(),
             });
-            info.ext = ext;
+            info.ext = "mp4".into();
             info.fragments = fragments;
         }
         Playlist::Master { variants, audio } => {
@@ -223,7 +224,7 @@ pub(crate) fn from_response(
             for variant in variants {
                 let response = direct::probe(client, &variant.url, referer)?;
                 let (url, playlist) = read_playlist(response)?;
-                let Playlist::Media { fragments, ext } = playlist else {
+                let Playlist::Media { fragments, .. } = playlist else {
                     return Err(unsupported("nested HLS master playlists are not supported"));
                 };
                 total_fragments = total_fragments
@@ -279,11 +280,7 @@ pub(crate) fn from_response(
                         .flatten(),
                     tbr: variant.bandwidth,
                     url,
-                    ext: if variant.stream_kind == StreamKind::AudioOnly && ext == "mp4" {
-                        "m4a".into()
-                    } else {
-                        ext
-                    },
+                    ext: "mp4".into(),
                     filesize: None,
                     width: variant.width,
                     height: variant.height,
@@ -295,7 +292,7 @@ pub(crate) fn from_response(
             for rendition in audio {
                 let response = direct::probe(client, &rendition.url, referer)?;
                 let (url, playlist) = read_playlist(response)?;
-                let Playlist::Media { fragments, ext } = playlist else {
+                let Playlist::Media { fragments, .. } = playlist else {
                     return Err(unsupported("nested HLS master playlists are not supported"));
                 };
                 total_fragments = total_fragments
@@ -332,7 +329,7 @@ pub(crate) fn from_response(
                     abr: None,
                     tbr: None,
                     url,
-                    ext: if ext == "mp4" { "m4a".into() } else { ext },
+                    ext: "mp4".into(),
                     filesize: None,
                     width: None,
                     height: None,

@@ -1092,7 +1092,8 @@ pub(crate) fn mergeable(video: &VideoFormat, audio: &VideoFormat) -> bool {
     video.stream_kind == StreamKind::VideoOnly
         && audio.stream_kind == StreamKind::AudioOnly
         && matches!(video.ext.as_str(), "mp4" | "webm" | "ts")
-        && matches!(audio.ext.as_str(), "m4a" | "webm" | "aac" | "ts")
+        // HLS audio is labeled `mp4` like upstream; demuxers sniff contents.
+        && matches!(audio.ext.as_str(), "m4a" | "mp4" | "webm" | "aac" | "ts")
 }
 
 /// Upstream's merged `ext`: `get_compatible_ext` over the pair's codecs and

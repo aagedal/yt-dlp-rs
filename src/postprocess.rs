@@ -190,11 +190,15 @@ pub(crate) fn download(
             callback(progress)
         }
     })?;
+    // HLS media is labeled `mp4` like upstream; FFmpeg reads its real container.
+    let container = crate::container::sniff(&input)
+        .map(str::to_owned)
+        .unwrap_or_else(|| info.ext.to_lowercase());
     let mut stages = vec![Stage {
         disk: input,
         path: destination.into(),
         ext: info.ext.clone(),
-        container: info.ext.to_lowercase(),
+        container,
         bytes,
     }];
     let mut publishing = false;

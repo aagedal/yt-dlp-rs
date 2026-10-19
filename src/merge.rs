@@ -44,6 +44,9 @@ fn merge_with_deadline(
     deadline: Duration,
 ) -> Result<()> {
     let started = Instant::now();
+    // HLS inputs are labeled `mp4` but may hold MPEG-TS or raw AAC.
+    let video_ext = crate::container::sniff(video).unwrap_or(video_ext);
+    let audio_ext = crate::container::sniff(audio).unwrap_or(audio_ext);
     let video_demuxer = match video_ext {
         "mp4" => "mov",
         "ts" => "mpegts",
@@ -51,7 +54,7 @@ fn merge_with_deadline(
         _ => return Err(failure("unsupported video container")),
     };
     let audio_demuxer = match audio_ext {
-        "m4a" => "mov",
+        "m4a" | "mp4" => "mov",
         "aac" => "aac",
         "ts" => "mpegts",
         "webm" => "matroska",
