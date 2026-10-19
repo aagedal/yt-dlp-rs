@@ -14,7 +14,10 @@ use yt_dlp_rs::{
     SubtitleFile, SubtitleOptions, ThumbnailConversion, VideoMode, VideoOptions, YoutubeDl,
     YoutubeOptions,
     dates::DateRange,
-    output::{OutputTemplates, PrintTemplate, PrintToFile, TemplateOptions, render_formats},
+    output::{
+        ExecCommand, ExecCommands, ExecStage, OutputTemplates, PrintTemplate, PrintToFile,
+        TemplateOptions, render_formats,
+    },
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
     validate_format_selector, video_info_json, write_info_json_with,
 };
@@ -154,6 +157,16 @@ struct Args {
     /// Ordered subtitle extension preferences separated by / (default best)
     #[arg(long, default_value = "best", value_name = "FORMAT")]
     sub_format: String,
+    /// Execute a command, optionally prefixed with when (video, before_dl, post_process, after_move (default), after_video); fields allow d/i/f/q conversions
+    #[arg(long, value_name = "[WHEN:]CMD", allow_hyphen_values = true)]
+    exec: Vec<String>,
+    /// Remove any previously defined --exec
+    #[arg(long, action = clap::ArgAction::Count)]
+    no_exec: u8,
+    #[arg(long, hide = true, value_name = "CMD", allow_hyphen_values = true)]
+    exec_before_download: Vec<String>,
+    #[arg(long, hide = true, action = clap::ArgAction::Count)]
+    no_exec_before_download: u8,
     /// Embed metadata (title, date, description, URL, artist, genre, languages) with ffmpeg
     #[arg(long, alias = "add-metadata", overrides_with_all = ["embed_metadata", "no_embed_metadata"])]
     embed_metadata: bool,
@@ -1048,6 +1061,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         trim_file_name: args.trim_filenames,
         paths: output_paths,
     };
+    // Upstream `exec_cmd`: --no-exec clears earlier values; the hidden
+    // --exec-before-download is ignored when "--exec before_dl:" is given.
+    let exec_values = after_reset("exec", "no_exec");
+    let before_download = after_reset("exec_before_download", "no_exec_before_download");
+    let mut exec_specs: Vec<(Option<&str>, &str)> = exec_values
+        .iter()
+        .map(|value| (None, value.as_str()))
+        .collect();
+    let mut exec = ExecCommands::parse(&exec_specs, &template_options)?;
+    if !before_download.is_empty() {
+        if exec.has(ExecStage::BeforeDownload) {
+            warning!(
+                "WARNING: --exec-before-download is ignored since \"--exec before_dl:\" was given"
+            );
+        } else {
+            exec_specs.extend(
+                before_download
+                    .iter()
+                    .map(|value| (Some("before_dl"), value.as_str())),
+            );
+            exec = ExecCommands::parse(&exec_specs, &template_options)?;
+        }
+    }
     // Like upstream, simulation never writes info JSON.
     let writes_info_json = args.write_info_json && !simulate;
     if args.embed_metadata && writes_info_json {
@@ -1238,6 +1274,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         for info in extracted.into_entries() {
             let mut counted = false;
             let postprocess_failed = std::cell::Cell::new(false);
+            // Upstream `__pending_error` from a failed preprocessing command.
+            let pending_error = std::cell::Cell::new(None::<String>);
+            let defer = |error: String| {
+                eprintln!("ERROR: Preprocessing: {error}");
+                let earlier = pending_error.take();
+                pending_error.set(earlier.or(Some(format!("Preprocessing: {error}"))));
+            };
             let mut entry_cancel = None;
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 // Upstream lists thumbnails, then subtitles, then formats.
@@ -1273,6 +1316,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 // Upstream `process_info` counts every processed video.
                 counted = true;
+                if let Err(error) = run_exec(
+                    &exec,
+                    ExecStage::Video,
+                    &info,
+                    None,
+                    None,
+                    &template_options,
+                ) {
+                    defer(error);
+                }
                 if printing {
                     let filename = prepare_media(&templates, &info, &template_options)
                         .map(|path| path.to_string_lossy().into_owned());
@@ -1330,6 +1383,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         && !writes_info_json
                         && !writes_description
                         && !writes_thumbnails
+                        && !exec.has(ExecStage::BeforeDownload)
                         && info
                             .requested_subtitles
                             .as_ref()
@@ -1541,6 +1595,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             write_info_json_with(info_json, &value, overwrites != Some(false))?;
                         report_info_json("video", info_json, written);
                     }
+                    if let Err(error) = run_exec(
+                        &exec,
+                        ExecStage::BeforeDownload,
+                        &info,
+                        None,
+                        Some(&path),
+                        &template_options,
+                    ) {
+                        defer(error);
+                    }
                     if args.skip_download {
                         force_record(&info)?;
                         return Ok(());
@@ -1551,6 +1615,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             std::fs::remove_file(&path)?;
                         } else {
                             screen!("[download] {} has already been downloaded", path.display());
+                            if !after_download(
+                                &exec,
+                                &info,
+                                &path,
+                                &path,
+                                &template_options,
+                                error_mode,
+                                &pending_error,
+                                &postprocess_failed,
+                            ) {
+                                return Ok(());
+                            }
                             if let Some(archive) = &mut archive {
                                 archive
                                     .record(&info)
@@ -1683,6 +1759,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                         }
                     }
+                    if !after_download(
+                        &exec,
+                        &info,
+                        &published_paths[0],
+                        &path,
+                        &template_options,
+                        error_mode,
+                        &pending_error,
+                        &postprocess_failed,
+                    ) {
+                        return Ok(());
+                    }
                     if let Some(archive) = &mut archive {
                         archive.record(&info).map_err(|error| {
                             format!("download completed, but archive update failed: {error}")
@@ -1708,6 +1796,26 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 },
             };
             failed |= postprocess_failed.get();
+            // Upstream `_raise_pending_errors` after `process_info`, then the
+            // `after_video` commands (without file paths).
+            if let Some(error) = pending_error.take() {
+                eprintln!("ERROR: {error}");
+                failed = true;
+            }
+            if counted
+                && !(abort_on_error && failed)
+                && let Err(error) = run_exec(
+                    &exec,
+                    ExecStage::AfterVideo,
+                    &info,
+                    None,
+                    None,
+                    &template_options,
+                )
+            {
+                eprintln!("ERROR: {error}");
+                failed = true;
+            }
             // Upstream `--abort-on-error`: the first reported error ends the queue.
             if abort_on_error && failed {
                 aborted = true;
@@ -1789,6 +1897,92 @@ impl std::error::Error for UsageError {}
 
 fn usage(message: impl std::fmt::Display) -> UsageError {
     UsageError(message.to_string())
+}
+
+/// Python `os.path.abspath`: join with the working directory and normalize
+/// `.`/`..` components lexically.
+fn py_abspath(path: &std::path::Path) -> PathBuf {
+    use std::path::Component;
+    let joined = std::path::absolute(path).unwrap_or_else(|_| path.to_owned());
+    let mut normal = PathBuf::new();
+    for component in joined.components() {
+        match component {
+            Component::CurDir => {}
+            Component::ParentDir => {
+                if !matches!(
+                    normal.components().next_back(),
+                    Some(Component::RootDir) | None
+                ) {
+                    normal.pop();
+                }
+            }
+            other => normal.push(other),
+        }
+    }
+    normal
+}
+
+/// Upstream `ExecPP.run` for one stage: announce and run each command,
+/// stopping at the first failure.
+fn run_exec(
+    exec: &ExecCommands,
+    stage: ExecStage,
+    info: &yt_dlp_rs::VideoInfo,
+    filepath: Option<&std::path::Path>,
+    filename: Option<&std::path::Path>,
+    options: &TemplateOptions,
+) -> Result<(), String> {
+    let text =
+        |path: Option<&std::path::Path>| path.map(|path| path.to_string_lossy().into_owned());
+    let (filepath, filename) = (text(filepath), text(filename));
+    for command in exec.stage(stage) {
+        let command = command
+            .render(info, filepath.as_deref(), filename.as_deref(), options)
+            .map_err(|error| error.to_string())?;
+        screen!("[Exec] Executing command: {command}");
+        ExecCommand::run(&command)?;
+    }
+    Ok(())
+}
+
+/// After a download or an existing file: report a pending preprocessing
+/// error, then run `post_process` and `after_move` commands with `run_pp`
+/// error handling. Returns whether the video may be archived.
+#[allow(clippy::too_many_arguments)]
+fn after_download(
+    exec: &ExecCommands,
+    info: &yt_dlp_rs::VideoInfo,
+    filepath: &std::path::Path,
+    filename: &std::path::Path,
+    options: &TemplateOptions,
+    mode: ErrorMode,
+    pending: &std::cell::Cell<Option<String>>,
+    failed: &std::cell::Cell<bool>,
+) -> bool {
+    if let Some(error) = pending.take() {
+        eprintln!("ERROR: {error}");
+        failed.set(true);
+        if mode == ErrorMode::Abort {
+            return false;
+        }
+    }
+    // `MoveFilesAfterDownloadPP` leaves an absolute `filepath`.
+    let moved = py_abspath(filepath);
+    for (stage, filepath) in [
+        (ExecStage::PostProcess, filepath),
+        (ExecStage::AfterMove, moved.as_path()),
+    ] {
+        if let Err(error) = run_exec(exec, stage, info, Some(filepath), Some(filename), options) {
+            failed.set(true);
+            if mode == ErrorMode::Ignore {
+                eprintln!("ERROR: {error}");
+            } else {
+                eprintln!("ERROR: Postprocessing: {error}");
+                return false;
+            }
+        }
+    }
+    true
 }
 
 /// Upstream `ignoreerrors` values.

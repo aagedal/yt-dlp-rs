@@ -128,7 +128,7 @@ impl PrintToFile {
     }
 }
 
-fn placeholder_info() -> VideoInfo {
+pub(super) fn placeholder_info() -> VideoInfo {
     serde_json::from_value(serde_json::json!({
         "id": "id", "title": "title", "ext": "mp4", "extractor": "generic",
         "extractor_key": "Generic", "url": "https://example.invalid/media",

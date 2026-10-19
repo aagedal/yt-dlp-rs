@@ -1,3 +1,4 @@
+mod exec;
 mod filename;
 mod formats;
 mod print;
@@ -5,6 +6,7 @@ mod sanitize;
 mod subtitles;
 mod template;
 mod thumbnails;
+pub use exec::{ExecCommand, ExecCommands, ExecStage};
 pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths, replace_extension};
 pub use formats::render_formats;
 pub use print::{PrintTemplate, PrintToFile};

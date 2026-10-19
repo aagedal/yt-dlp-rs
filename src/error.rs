@@ -2,6 +2,9 @@ use std::path::PathBuf;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// An `--exec` command rejected like upstream `UnsafeExecExpansionError`.
+    #[error("{0}")]
+    Exec(String),
     #[error("invalid URL: {0}")]
     InvalidUrl(#[from] url::ParseError),
     #[error("unsupported URL scheme: {0}; expected http or https")]

@@ -20,11 +20,23 @@ pub(super) enum Source<'a> {
         filename: std::result::Result<&'a str, &'a Error>,
         urls: &'a str,
     },
+    /// Unsanitized `--exec` rendering with the stage's `filepath` and
+    /// `_filename` values (when set).
+    Exec {
+        info: &'a VideoInfo,
+        filepath: Option<&'a str>,
+        filename: Option<&'a str>,
+    },
 }
 
 impl Source<'_> {
+    /// Unsanitized rendering, as `prepare_outtmpl` without `sanitize`.
     fn print(self) -> bool {
-        matches!(self, Source::Print { .. })
+        matches!(self, Source::Print { .. } | Source::Exec { .. })
+    }
+
+    fn exec(self) -> bool {
+        matches!(self, Source::Exec { .. })
     }
 }
 
@@ -103,6 +115,15 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
                     .map_err(|error| invalid(format!("output filename failed: {error}")));
             }
             "urls" => return Ok(Some(Text(urls))),
+            _ => info,
+        },
+        Source::Exec {
+            info,
+            filepath,
+            filename,
+        } => match name {
+            "filepath" => return Ok(filepath.map(Text)),
+            "_filename" => return Ok(filename.map(Text)),
             _ => info,
         },
         Source::Playlist {
@@ -211,7 +232,7 @@ fn format_spec(mut input: &str) -> Result<(Format, &str)> {
     let Some(conversion) = input.chars().next() else {
         return Err(invalid("missing template conversion"));
     };
-    if !matches!(conversion, 's' | 'd' | 'i' | 'u' | 'f' | 'F' | 'j') {
+    if !matches!(conversion, 's' | 'd' | 'i' | 'u' | 'f' | 'F' | 'j' | 'q') {
         return Err(invalid(format!("unsupported conversion {conversion:?}")));
     }
     format.conversion = conversion;
@@ -319,6 +340,11 @@ fn substitution(
     if format.conversion == 'j' && !print {
         return Err(invalid("JSON conversion is only supported for printing"));
     }
+    if format.conversion == 'q' && !info.exec() {
+        return Err(invalid(
+            "shell-quoted conversion is only supported for --exec",
+        ));
+    }
     let (names, fallback) = key
         .split_once('|')
         .map_or((key, None), |(a, b)| (a, Some(b)));
@@ -350,7 +376,7 @@ fn substitution(
     if &spec[..consumed] == "s" {
         let size = match last_field {
             "playlist_index" => Some(match info {
-                Source::Video(info) | Source::Print { info, .. } => {
+                Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
                     info.last_playlist_index.unwrap_or(0)
                 }
                 Source::Playlist {
@@ -359,7 +385,7 @@ fn substitution(
                 } => last_playlist_index,
             }),
             "playlist_autonumber" => match info {
-                Source::Video(info) | Source::Print { info, .. } => {
+                Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
                     Some(info.n_entries.unwrap_or(0))
                 }
                 // Unavailable for playlists, so the default path above applies.
@@ -373,7 +399,15 @@ fn substitution(
             format.conversion = 'd';
         }
     }
-    let result = if format.conversion == 'j' {
+    let result = if format.conversion == 'q' {
+        // `shell_quote(map(str, variadic(value)))`; scalars ignore `#`.
+        let value = match value {
+            Value::Text(s) => bounded(s)?.to_owned(),
+            Value::Integer(n) => n.to_string(),
+            Value::Boolean(b) => if b { "True" } else { "False" }.into(),
+        };
+        text(&super::exec::shell_quote(&value), &format)
+    } else if format.conversion == 'j' {
         let value = match value {
             Value::Text(s) => python_json_string(bounded(s)?, !format.plus),
             Value::Integer(n) => n.to_string(),
@@ -520,7 +554,9 @@ pub(super) fn render_kind(
     }
     if let Some(ext) = kind.and_then(super::filename::forced_extension) {
         let real = match info {
-            Source::Video(info) | Source::Print { info, .. } => Some(info.ext.as_str()),
+            Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
+                Some(info.ext.as_str())
+            }
             Source::Playlist { .. } => None,
         };
         output = super::filename::replace_extension(&output, ext, real);
@@ -565,6 +601,11 @@ pub(super) fn expand(
             continue;
         }
         let Some((key, spec)) = rest.strip_prefix('(').and_then(|s| s.split_once(')')) else {
+            // `escape_outtmpl` keeps other `%` sequences literal in commands.
+            if info.exec() {
+                append(&mut output, "%")?;
+                continue;
+            }
             return Err(invalid("malformed output template token"));
         };
         let (value, consumed) = substitution(key, spec, info, options)?;
@@ -573,6 +614,30 @@ pub(super) fn expand(
     }
     append(&mut output, rest)?;
     Ok(output)
+}
+
+/// Each keyed substitution's conversion character and `|default`, in
+/// template order, for `--exec` safety validation. Other `%` sequences are
+/// literal, as in command rendering.
+pub(super) fn exec_fields(template: &str) -> Vec<(Option<char>, Option<&str>)> {
+    let mut fields = Vec::new();
+    let mut rest = template;
+    while let Some(index) = rest.find('%') {
+        rest = &rest[index + 1..];
+        if let Some(tail) = rest.strip_prefix('%') {
+            rest = tail;
+            continue;
+        }
+        let Some((key, spec)) = rest.strip_prefix('(').and_then(|s| s.split_once(')')) else {
+            continue;
+        };
+        let spec = spec.trim_start_matches(|c: char| "-0123456789.*# +".contains(c));
+        let spec = spec.strip_prefix(['h', 'l', 'L']).unwrap_or(spec);
+        let conversion = spec.chars().next();
+        fields.push((conversion, key.split_once('|').map(|(_, default)| default)));
+        rest = &spec[conversion.map_or(0, char::len_utf8)..];
+    }
+    fields
 }
 
 #[cfg(test)]
