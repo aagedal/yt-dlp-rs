@@ -714,6 +714,145 @@ struct Args {
     /// Template for progress outputs ([TYPES:]TEMPLATE; "download" (default), "postprocess", "-title" variants)
     #[arg(long, value_name = "[TYPES:]TEMPLATE")]
     progress_template: Vec<String>,
+    /// Size of the download buffer (accepted; reads use a fixed native buffer)
+    #[arg(long, value_name = "SIZE")]
+    buffer_size: Option<String>,
+    #[arg(long, hide = true, overrides_with = "no_resize_buffer")]
+    resize_buffer: bool,
+    #[arg(long, hide = true, overrides_with = "resize_buffer")]
+    no_resize_buffer: bool,
+    /// Number of times to retry on a file access error (accepted; not retried natively)
+    #[arg(long, value_name = "RETRIES", default_value = "3")]
+    file_access_retries: String,
+    /// Minimum download rate below which throttling is assumed (accepted; not acted on)
+    #[arg(long, value_name = "RATE")]
+    throttled_rate: Option<String>,
+    /// Wait for scheduled streams (accepted; live and upcoming streams are unsupported)
+    #[arg(long, value_name = "MIN[-MAX]")]
+    wait_for_video: Option<String>,
+    #[arg(long, hide = true)]
+    no_wait_for_video: bool,
+    #[arg(long, hide = true, overrides_with = "no_live_from_start")]
+    live_from_start: bool,
+    #[arg(long, hide = true, overrides_with = "live_from_start")]
+    no_live_from_start: bool,
+    #[arg(long, hide = true, overrides_with = "no_mark_watched")]
+    mark_watched: bool,
+    #[arg(long, hide = true, overrides_with = "mark_watched")]
+    no_mark_watched: bool,
+    /// Self-updating is not supported; reinstall yt-dlp-rs instead
+    #[arg(short = 'U', long)]
+    update: bool,
+    #[arg(long, hide = true)]
+    no_update: bool,
+    #[arg(long, hide = true, value_name = "[CHANNEL]@[TAG]")]
+    update_to: Option<String>,
+    /// Location in the filesystem where cached data is stored (this port caches nothing)
+    #[arg(long, value_name = "DIR")]
+    cache_dir: Option<String>,
+    #[arg(long, hide = true)]
+    no_cache_dir: bool,
+    /// Delete the cache directory
+    #[arg(long)]
+    rm_cache_dir: bool,
+    /// JavaScript runtimes (RUNTIME[:PATH]; deno is the supported runtime)
+    #[arg(long, value_name = "RUNTIME[:PATH]")]
+    js_runtimes: Vec<String>,
+    #[arg(long, hide = true)]
+    no_js_runtimes: bool,
+    #[arg(long, hide = true, value_name = "COMPONENT")]
+    remote_components: Vec<String>,
+    #[arg(long, hide = true)]
+    no_remote_components: bool,
+    #[arg(long, hide = true, value_name = "PATH")]
+    plugin_dirs: Vec<String>,
+    #[arg(long, hide = true)]
+    no_plugin_dirs: bool,
+    /// Compatibility options (validated; not supported natively)
+    #[arg(long, value_name = "OPTS")]
+    compat_options: Vec<String>,
+    /// Extractor arguments (not supported natively)
+    #[arg(long, value_name = "IE_KEY:ARGS")]
+    extractor_args: Vec<String>,
+    /// Client to impersonate (no impersonation targets are available)
+    #[arg(long, value_name = "CLIENT[:OS]")]
+    impersonate: Option<String>,
+    /// List available clients to impersonate
+    #[arg(long)]
+    list_impersonate_targets: bool,
+    #[arg(long, hide = true, overrides_with = "no_video_multistreams")]
+    video_multistreams: bool,
+    #[arg(long, hide = true, overrides_with = "video_multistreams")]
+    no_video_multistreams: bool,
+    #[arg(long, hide = true, overrides_with = "no_audio_multistreams")]
+    audio_multistreams: bool,
+    #[arg(long, hide = true, overrides_with = "audio_multistreams")]
+    no_audio_multistreams: bool,
+    #[arg(long, hide = true, overrides_with = "no_allow_unplayable_formats")]
+    allow_unplayable_formats: bool,
+    #[arg(long, hide = true, overrides_with = "allow_unplayable_formats")]
+    no_allow_unplayable_formats: bool,
+    /// Download all formats (unsupported: equivalent to -f all)
+    #[arg(long)]
+    all_formats: bool,
+    /// Account credentials (unused by the supported extractors)
+    #[arg(short = 'u', long, value_name = "USERNAME")]
+    username: Option<String>,
+    #[arg(short = 'p', long, value_name = "PASSWORD")]
+    password: Option<String>,
+    #[arg(short = '2', long, value_name = "TWOFACTOR")]
+    twofactor: Option<String>,
+    #[arg(short = 'n', long)]
+    netrc: bool,
+    #[arg(long, value_name = "PATH")]
+    netrc_location: Option<String>,
+    #[arg(long, value_name = "NETRC_CMD")]
+    netrc_cmd: Option<String>,
+    #[arg(long, value_name = "PASSWORD")]
+    video_password: Option<String>,
+    #[arg(long, hide = true, value_name = "MSO")]
+    ap_mso: Option<String>,
+    #[arg(long, hide = true, value_name = "USERNAME")]
+    ap_username: Option<String>,
+    #[arg(long, hide = true, value_name = "PASSWORD")]
+    ap_password: Option<String>,
+    /// List all supported multiple-system operators
+    #[arg(long)]
+    ap_list_mso: bool,
+    /// Geo-restriction options (unused by the supported extractors)
+    #[arg(long, value_name = "URL")]
+    geo_verification_proxy: Option<String>,
+    #[arg(long, value_name = "VALUE")]
+    xff: Option<String>,
+    #[arg(long, hide = true)]
+    geo_bypass: bool,
+    #[arg(long, hide = true)]
+    no_geo_bypass: bool,
+    #[arg(long, hide = true, value_name = "CODE")]
+    geo_bypass_country: Option<String>,
+    #[arg(long, hide = true, value_name = "IP_BLOCK")]
+    geo_bypass_ip_block: Option<String>,
+    /// Display progress in the console titlebar (not supported natively)
+    #[arg(long)]
+    console_title: bool,
+    /// Force the specified encoding (only UTF-8 is supported natively)
+    #[arg(long, value_name = "ENCODING")]
+    encoding: Option<String>,
+    #[arg(long, hide = true)]
+    legacy_server_connect: bool,
+    /// Use an unencrypted connection to retrieve information where an extractor supports it
+    #[arg(long)]
+    prefer_insecure: bool,
+    #[arg(long, hide = true)]
+    bidi_workaround: bool,
+    #[arg(long, hide = true, overrides_with = "no_ignore_no_formats_error")]
+    ignore_no_formats_error: bool,
+    #[arg(long, hide = true, overrides_with = "ignore_no_formats_error")]
+    no_ignore_no_formats_error: bool,
+    #[arg(long, hide = true, overrides_with = "ignore_dynamic_mpd")]
+    allow_dynamic_mpd: bool,
+    #[arg(long, hide = true, overrides_with = "allow_dynamic_mpd")]
+    ignore_dynamic_mpd: bool,
     /// Size of a chunk for chunk-based HTTP downloading, e.g. 10485760 or 10M
     #[arg(long, value_name = "SIZE")]
     http_chunk_size: Option<String>,
@@ -1087,6 +1226,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             args.write_subs = true;
         }
     }
+    validate_accepted_options(&args)?;
     // `--no-match-filters` resets values given before it (optparse store_const).
     let after_reset = |values: &str, reset: &str| -> Vec<String> {
         // Defaulted flags also report an index, so require a command-line source.
@@ -1495,7 +1635,27 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let mut downloader = YoutubeDl::with_options(
         YoutubeOptions {
-            js_runtime: args.youtube_js_runtime,
+            // `--js-runtimes deno[:PATH]` names the same Deno runtime; a bare
+            // `deno` is looked up on PATH because it was requested.
+            js_runtime: args.youtube_js_runtime.or_else(|| {
+                if args.no_js_runtimes {
+                    return None;
+                }
+                args.js_runtimes.iter().rev().find_map(|value| {
+                    let (name, path) = value.split_once(':').unwrap_or((value, ""));
+                    if !name.eq_ignore_ascii_case("deno") {
+                        return None;
+                    }
+                    if !path.is_empty() {
+                        return Some(PathBuf::from(path));
+                    }
+                    std::env::var_os("PATH").and_then(|paths| {
+                        std::env::split_paths(&paths)
+                            .map(|dir| dir.join(format!("deno{}", std::env::consts::EXE_SUFFIX)))
+                            .find(|candidate| candidate.is_file())
+                    })
+                })
+            }),
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
         },
@@ -1854,6 +2014,66 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         ) {
             return Err(usage(format!("\"{policy}\" is not a valid color policy")).into());
         }
+    }
+    if args.update || args.update_to.is_some() {
+        eprintln!("ERROR: yt-dlp-rs cannot update itself; install a newer release instead");
+        return Ok(false);
+    }
+    // Upstream `Cache.remove` (this port stores no cache).
+    if args.rm_cache_dir {
+        if args.no_cache_dir {
+            screen!("Cache is disabled (Did you combine --no-cache-dir and --rm-cache-dir?)");
+        } else {
+            let directory = args
+                .cache_dir
+                .clone()
+                .map(PathBuf::from)
+                .unwrap_or_else(|| {
+                    std::env::var_os("XDG_CACHE_HOME")
+                        .map(PathBuf::from)
+                        .or_else(|| {
+                            std::env::var_os("HOME").map(|home| PathBuf::from(home).join(".cache"))
+                        })
+                        .unwrap_or_default()
+                        .join("yt-dlp-rs")
+                });
+            let mut line = format!("Removing cache dir {} .", directory.display());
+            if directory.is_dir() {
+                std::fs::remove_dir_all(&directory)?;
+                line.push('.');
+            }
+            line.push('.');
+            screen!("{line}");
+        }
+        if urls.is_empty() && args.load_info_json.is_none() {
+            return Ok(true);
+        }
+    }
+    if args.list_impersonate_targets {
+        screen!("[info] Available impersonate targets");
+        writeln!(
+            io::stdout().lock(),
+            "Client    OS   Source\n--------------------------------------------\n\
+             Tor       -    curl_cffi>=0.11 (unavailable)\nEdge      -    curl_cffi (unavailable)\n\
+             Firefox   -    curl_cffi>=0.10 (unavailable)\nSafari    -    curl_cffi (unavailable)\n\
+             Chrome    -    curl_cffi (unavailable)"
+        )?;
+        return Ok(true);
+    }
+    if args.ap_list_mso {
+        // No supported extractor uses Adobe Pass.
+        writeln!(
+            io::stdout().lock(),
+            "Supported TV Providers:\nmso  mso name"
+        )?;
+        return Ok(true);
+    }
+    if let Some(target) = &args.impersonate {
+        eprintln!(
+            "ERROR: Impersonate target \"{}\" is not available. Use --list-impersonate-targets to see available targets. You may be missing dependencies required to support this target.",
+            target.split(':').next().unwrap_or(target).to_lowercase()
+        );
+        return Ok(false);
     }
     // Upstream `print_extractor_information`, for this port's extractors
     // (sorted, `generic` last); the generic extractor lists unmatched URLs.
@@ -3202,6 +3422,155 @@ fn command() -> clap::Command {
         let takes_value = argument.get_action().takes_values() && !argument.is_positional();
         argument.allow_hyphen_values(takes_value)
     })
+}
+
+/// Upstream validation for options this port accepts without acting on
+/// them, and warnings where upstream would behave differently.
+fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
+    for (name, value, strict) in [
+        ("buffer size", &args.buffer_size, true),
+        ("throttled rate limit", &args.throttled_rate, false),
+    ] {
+        if let Some(value) = value {
+            match parse_bytes(value) {
+                None => return Err(usage(format!("invalid {name} \"{value}\" given"))),
+                Some(0) if strict => {
+                    return Err(usage(format!("{name} \"{value}\" must be positive")));
+                }
+                _ => {}
+            }
+        }
+    }
+    let file_access = yt_dlp_rs::batch::py_strip(&args.file_access_retries);
+    if !matches!(file_access, "inf" | "infinite")
+        && file_access.trim_start_matches('+').parse::<u64>().is_err()
+    {
+        return Err(usage(format!(
+            "invalid file access retry count \"{}\" given",
+            args.file_access_retries
+        )));
+    }
+    if let Some(range) = &args.wait_for_video {
+        let parse = |text: &str| yt_dlp_rs::parse_duration(text);
+        let py_str = |value: yt_dlp_rs::PyNumber| match value {
+            yt_dlp_rs::PyNumber::Int(value) => value.to_string(),
+            yt_dlp_rs::PyNumber::Float(value) => py_float(value),
+        };
+        let (min, max) = match range.split_once('-') {
+            Some((min, max)) => (parse(min), Some(parse(max))),
+            None => (parse(range), None),
+        };
+        let invalid = || {
+            usage(format!(
+                "invalid time range to wait for video \"{range}\" given"
+            ))
+        };
+        let min = min.ok_or_else(invalid)?;
+        if let Some(max) = max {
+            let max = max.ok_or_else(invalid)?;
+            if max.as_f64() < min.as_f64() {
+                return Err(usage(format!(
+                    "max time range to wait for video \"{}\" must be must be greater than or equal to min time range to wait for video \"{}\"",
+                    py_str(max),
+                    py_str(min)
+                )));
+            }
+        }
+    }
+    // Upstream `_set_from_options_callback` for --compat-options.
+    const COMPAT: [&str; 29] = [
+        "abort-on-error",
+        "allow-unsafe-exec-expansion",
+        "allow-unsafe-ext",
+        "embed-metadata",
+        "embed-thumbnail-atomicparsley",
+        "filename",
+        "filename-sanitization",
+        "format-sort",
+        "format-spec",
+        "list-formats",
+        "manifest-filesize-approx",
+        "mtime-by-default",
+        "multistreams",
+        "no-attach-info-json",
+        "no-certifi",
+        "no-clean-infojson",
+        "no-direct-merge",
+        "no-external-downloader-progress",
+        "no-keep-subs",
+        "no-live-chat",
+        "no-playlist-metafiles",
+        "no-youtube-channel-redirect",
+        "no-youtube-prefer-utc-upload-date",
+        "no-youtube-unavailable-videos",
+        "playlist-index",
+        "playlist-match-filter",
+        "prefer-legacy-http-handler",
+        "prefer-vp9-sort",
+        "seperate-video-versions",
+    ];
+    for value in args
+        .compat_options
+        .iter()
+        .flat_map(|value| value.split(','))
+    {
+        let name = value.trim().to_lowercase();
+        let name = name.strip_prefix('-').unwrap_or(&name);
+        if !(COMPAT.contains(&name)
+            || matches!(
+                name,
+                "all" | "youtube-dl" | "youtube-dlc" | "2021" | "2022" | "2023" | "2024" | "2025"
+            ))
+        {
+            return Err(usage(format!(
+                "wrong OPTS for --compat-options: {}",
+                value.trim()
+            )));
+        }
+        warning!(
+            "WARNING: compatibility option {} is not supported natively and is ignored",
+            value.trim()
+        );
+    }
+    for value in &args.js_runtimes {
+        let name = value.split(':').next().unwrap_or(value).to_lowercase();
+        if !matches!(name.as_str(), "deno" | "node" | "bun" | "quickjs") {
+            warning!(
+                "WARNING: Ignoring unsupported JavaScript runtime(s): {name}. Supported runtimes: deno, node, bun, quickjs."
+            );
+        } else if name != "deno" {
+            warning!("WARNING: JavaScript runtime {name} is not supported natively; use deno");
+        }
+    }
+    if let Some(encoding) = &args.encoding
+        && !matches!(
+            encoding.to_lowercase().replace(['-', '_'], "").as_str(),
+            "utf8"
+        )
+    {
+        warning!("WARNING: --encoding {encoding} is not supported natively; output is UTF-8");
+    }
+    for (given, what) in [
+        (args.console_title, "--console-title"),
+        (args.legacy_server_connect, "--legacy-server-connect"),
+        (args.bidi_workaround, "--bidi-workaround"),
+        (!args.extractor_args.is_empty(), "--extractor-args"),
+        (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
+        (
+            args.video_multistreams || args.audio_multistreams,
+            "multiple video/audio streams",
+        ),
+    ] {
+        if given {
+            warning!("WARNING: {what} is not supported natively and is ignored");
+        }
+    }
+    if args.allow_unplayable_formats {
+        warning!(
+            "WARNING: You have asked for UNPLAYABLE formats to be listed/downloaded. This is a developer option intended for debugging. \n         If you experience any issues while using this option, DO NOT open a bug report"
+        );
+    }
+    Ok(())
 }
 
 /// Upstream `_PRESET_ALIASES`.
@@ -4653,7 +5022,20 @@ fn filter_archived(
     }
 }
 
+/// The parser and the long `run` need more stack than the 1 MiB some
+/// platforms give the main thread, so the CLI runs on its own thread.
+const STACK_SIZE: usize = 64 * 1024 * 1024;
+
 fn main() -> std::process::ExitCode {
+    std::thread::Builder::new()
+        .stack_size(STACK_SIZE)
+        .spawn(cli)
+        .expect("spawn the CLI thread")
+        .join()
+        .unwrap_or_else(|panic| std::panic::resume_unwind(panic))
+}
+
+fn cli() -> std::process::ExitCode {
     match run() {
         Ok(true) => std::process::ExitCode::SUCCESS,
         Ok(false) => std::process::ExitCode::FAILURE,
@@ -4677,10 +5059,21 @@ fn main() -> std::process::ExitCode {
 mod tests {
     use super::*;
 
+    /// Building the parser needs more stack than test threads have.
+    fn with_stack<T: Send + 'static>(f: impl FnOnce() -> T + Send + 'static) -> T {
+        std::thread::Builder::new()
+            .stack_size(STACK_SIZE)
+            .spawn(f)
+            .unwrap()
+            .join()
+            .unwrap()
+    }
+
     #[test]
     fn option_aliases_expand_with_formatted_quoted_arguments() {
         let expand = |args: &[&str]| {
-            expand_preset_aliases(args.iter().map(|arg| (*arg).to_owned()).collect())
+            let args: Vec<String> = args.iter().map(|arg| (*arg).to_owned()).collect();
+            with_stack(move || expand_preset_aliases(args))
         };
         assert_eq!(
             expand(&[
@@ -4722,7 +5115,8 @@ mod tests {
     #[test]
     fn preset_aliases_expand_in_place_like_upstream() {
         let expand = |args: &[&str]| {
-            expand_preset_aliases(args.iter().map(|arg| (*arg).to_owned()).collect())
+            let args: Vec<String> = args.iter().map(|arg| (*arg).to_owned()).collect();
+            with_stack(move || expand_preset_aliases(args))
         };
         assert_eq!(
             expand(&["-t", "mp3", "-o", "-t", "URL"]).unwrap(),

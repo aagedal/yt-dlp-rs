@@ -194,6 +194,11 @@ fn test_format(client: &Client, info: &VideoInfo, format: &VideoFormat) -> bool 
     result.is_ok()
 }
 
+/// Upstream `parse_duration`: whole durations are `int`, others `float`.
+pub fn parse_duration(text: &str) -> Option<PyNumber> {
+    match_filter::parse_duration_number(text)
+}
+
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
 const EXTRACTOR_NAMES: [&str; 4] = ["html5", "youtube", "generic", "end"];
