@@ -227,7 +227,8 @@ Supported today:
   attempts (default 3, 0 disables, maximum 255). Transient HTTP failures honor
   a single `Retry-After` delay-seconds or preferred HTTP-date value, capped at
   60 seconds.
-- Download byte progress on stderr, at most once per second during transfers.
+- Upstream-style download progress lines on stderr (`--newline`, `--no-progress`,
+  `--progress`, `--progress-delta`).
   Library observers can cancel at transfer checkpoints and during retry waits,
   cleaning up the private temporary file before publication.
 - Opt-in whole-extraction retries with `--extractor-retries N` (default 0, maximum

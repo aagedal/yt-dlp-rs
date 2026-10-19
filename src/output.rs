@@ -3,6 +3,7 @@ mod filename;
 mod formats;
 mod links;
 mod print;
+pub mod progress;
 mod sanitize;
 mod subtitles;
 mod template;

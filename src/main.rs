@@ -72,6 +72,18 @@ struct Args {
     /// Ignore warnings
     #[arg(long)]
     no_warnings: bool,
+    /// Output progress as new lines
+    #[arg(long)]
+    newline: bool,
+    /// Do not print progress
+    #[arg(long, overrides_with_all = ["no_progress", "progress"])]
+    no_progress: bool,
+    /// Show progress, even in quiet mode
+    #[arg(long, overrides_with_all = ["no_progress", "progress"])]
+    progress: bool,
+    /// Time between progress output (default: 0)
+    #[arg(long, value_name = "SECONDS", allow_hyphen_values = true)]
+    progress_delta: Option<f64>,
     /// Extract metadata without writing media
     #[arg(short = 's', long, overrides_with_all = ["simulate", "no_simulate"])]
     simulate: bool,
@@ -907,6 +919,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         ..
     } = args.simulation();
     let listing = args.list_formats || args.list_subs || args.list_thumbnails;
+    let quiet_screen = QUIET.load(Ordering::Relaxed);
+    let progress_options = ProgressOptions {
+        enabled: if args.no_progress {
+            false
+        } else if args.progress {
+            true
+        } else {
+            !quiet_screen
+        },
+        newline: args.newline,
+        quiet: quiet_screen,
+        delta: args
+            .progress_delta
+            .filter(|delta| *delta > 0.0 && delta.is_finite())
+            .map(Duration::from_secs_f64),
+    };
     let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
     // Upstream `validate_regex('audio format', ...)` and
     // `validate_positive('audio quality', int_or_none(float_or_none(q), default=0))`.
@@ -1772,9 +1800,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     for _ in 0..info.requested_formats.len().max(1) {
                         sleep.media();
                     }
-                    let mut last_progress = Instant::now();
                     let post_printed = std::cell::Cell::new(false);
+                    let mut reporter = ProgressReporter::new(&progress_options);
                     let progress = |progress: yt_dlp_rs::DownloadProgress| {
+                        reporter.event(&progress);
                         if matches!(
                             progress.phase,
                             DownloadPhase::Merging | DownloadPhase::Postprocessing
@@ -1782,24 +1811,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             && post_print.emit().is_err()
                         {
                             return ControlFlow::Break(());
-                        }
-                        if progress.phase == DownloadPhase::Downloading
-                            && last_progress.elapsed() >= Duration::from_secs(1)
-                        {
-                            if let Some(total) = progress.total_bytes {
-                                screen!(
-                                    "[download] {} / {total} bytes (attempt {})",
-                                    progress.downloaded_bytes,
-                                    progress.attempt
-                                );
-                            } else {
-                                screen!(
-                                    "[download] {} bytes (attempt {})",
-                                    progress.downloaded_bytes,
-                                    progress.attempt
-                                );
-                            }
-                            last_progress = Instant::now();
                         }
                         ControlFlow::Continue(())
                     };
@@ -1921,7 +1932,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             format!("download completed, but archive update failed: {error}")
                         })?;
                     }
-                    screen!("[download] Downloaded {bytes} bytes");
+                    let _ = bytes;
                 }
                 Ok(())
             })();
@@ -2257,6 +2268,151 @@ fn after_download(
         }
     }
     true
+}
+
+/// Upstream progress parameters: `noprogress` (quiet unless `--progress`),
+/// `progress_with_newline` and `progress_delta`.
+struct ProgressOptions {
+    enabled: bool,
+    newline: bool,
+    quiet: bool,
+    delta: Option<Duration>,
+}
+
+/// `FileDownloader.report_progress` through one status printer per
+/// downloaded stream, written to stderr like other informational output.
+struct ProgressReporter<'a> {
+    options: &'a ProgressOptions,
+    active: Option<ActiveDownload>,
+}
+
+struct ActiveDownload {
+    stream: Option<u8>,
+    start: Instant,
+    downloaded: u64,
+    printer: yt_dlp_rs::output::progress::StatusPrinter,
+    next: Instant,
+}
+
+impl<'a> ProgressReporter<'a> {
+    fn new(options: &'a ProgressOptions) -> Self {
+        Self {
+            options,
+            active: None,
+        }
+    }
+
+    fn write(text: &str) {
+        let mut stderr = io::stderr().lock();
+        let _ = stderr.write_all(text.as_bytes());
+        let _ = stderr.flush();
+    }
+
+    fn event(&mut self, progress: &yt_dlp_rs::DownloadProgress) {
+        use yt_dlp_rs::output::progress::{ProgressStatus, downloading_line};
+        match progress.phase {
+            DownloadPhase::Downloading => {}
+            DownloadPhase::Merging | DownloadPhase::Postprocessing | DownloadPhase::Publishing => {
+                return self.finish();
+            }
+            _ => return,
+        }
+        if self
+            .active
+            .as_ref()
+            .is_some_and(|active| active.stream != progress.stream_index)
+        {
+            self.finish();
+        }
+        let now = Instant::now();
+        let active = self.active.get_or_insert_with(|| ActiveDownload {
+            stream: progress.stream_index,
+            start: now,
+            downloaded: 0,
+            printer: yt_dlp_rs::output::progress::StatusPrinter::new(
+                self.options.newline,
+                !self.options.quiet,
+            ),
+            next: now,
+        });
+        active.downloaded = progress.downloaded_bytes;
+        // Upstream's HTTP downloader reports after each received block.
+        if !self.options.enabled
+            || (progress.downloaded_bytes == 0 && progress.fragment_index.is_none())
+        {
+            return;
+        }
+        if let Some(delta) = self.options.delta {
+            if now < active.next {
+                return;
+            }
+            active.next += delta;
+        }
+        let elapsed = now.duration_since(active.start).as_secs_f64();
+        let downloaded = progress.downloaded_bytes as f64;
+        let speed =
+            (progress.downloaded_bytes != 0 && elapsed >= 0.001).then(|| downloaded / elapsed);
+        // Fragments: completed count and a size estimate from the average
+        // fragment so far (upstream also counts the current one's length).
+        let (fragment_index, estimate) = match (progress.fragment_index, progress.fragment_count) {
+            (Some(index), Some(count)) if progress.total_bytes.is_none() => {
+                let estimate = (progress.downloaded_bytes > 0)
+                    .then(|| downloaded / f64::from(index) * f64::from(count));
+                (Some(index.saturating_sub(1)), estimate)
+            }
+            (Some(index), _) => (Some(index.saturating_sub(1)), None),
+            _ => (None, None),
+        };
+        let remaining = progress
+            .total_bytes
+            .map(|total| total as f64)
+            .or(estimate)
+            .map(|total| total - downloaded);
+        let eta = speed
+            .zip(remaining)
+            .map(|(speed, remaining)| (remaining / speed).trunc());
+        let status = ProgressStatus {
+            downloaded_bytes: progress.downloaded_bytes,
+            total_bytes: progress.total_bytes,
+            total_bytes_estimate: estimate,
+            elapsed: Some(elapsed),
+            speed,
+            eta,
+            fragment_index,
+            fragment_count: progress.fragment_count,
+        };
+        let line = format!("[download] {}", downloading_line(&status));
+        Self::write(&active.printer.print(&line));
+    }
+
+    /// The `finished` status of the current stream.
+    fn finish(&mut self) {
+        let Some(mut active) = self.active.take() else {
+            return;
+        };
+        if !self.options.enabled {
+            screen!("[download] Download completed");
+            return;
+        }
+        let elapsed = active.start.elapsed().as_secs_f64();
+        let line = format!(
+            "[download] {}",
+            yt_dlp_rs::output::progress::finished_line(active.downloaded, Some(elapsed))
+        );
+        Self::write(&active.printer.print(&line));
+        Self::write(&active.printer.end());
+    }
+}
+
+impl Drop for ProgressReporter<'_> {
+    /// End an interrupted status line before an error is reported.
+    fn drop(&mut self) {
+        if let Some(mut active) = self.active.take()
+            && self.options.enabled
+        {
+            Self::write(&active.printer.end());
+        }
+    }
 }
 
 /// Upstream `ignoreerrors` values.

@@ -42,6 +42,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--exec [WHEN:]CMD`, `--no-exec` | Upstream `ExecPP` on POSIX (`/bin/sh -c`; rejected on Windows): case-insensitive `WHEN:` prefixes `video`, `before_dl`, `post_process`, `after_move` (default) and `after_video` run at upstream's points (`video` and `after_video` also when simulating; `before_dl` also with `--skip-download`; `post_process`/`after_move` also for an already-downloaded file); `pre_process`, `after_filter` and `playlist` are rejected. Templates use output-template fields with only `d`/`i`/`f`/`q` (shell-quoted) conversions plus `filepath` and `_filename`, validated at startup with upstream's unsafe-conversion/default/placeholder errors (exit 1); without fields, `{}` (appended when absent) becomes the quoted path, absolute after the move. `[Exec] Executing command: CMD` precedes each run; a failing `post_process`/`after_move` command fails the video before archiving (`ERROR: Postprocessing: …`, or reported and skipped under `-i`), and a failing `video`/`before_dl` command is reported as `ERROR: Preprocessing: …` and again after the video. `--no-exec` clears earlier commands; hidden `--exec-before-download` maps to `before_dl` with upstream's conflict warning |
 | `--load-info-json FILE`, `--load-info` | Upstream `download_with_info_file`: FILE (with `~`/`$VAR` expansion) holds one dictionary or a list, each sanitized like the default `clean_infojson` (`None` values, `__` keys, `requested_*`, `entries`, `filepath`/`filename` and similar keys dropped) and processed without extraction: filters, archive checks and format selection run again over the saved `formats`. URLs are ignored with upstream's warning. Because sanitizing removes `entries`, a playlist prints its `Downloading playlist` line and falls back to re-extracting its `webpage_url` with upstream's `There are no entries` warning. Upstream-written dictionaries load when they fit the represented subset (`direct` defaults to false, stream kinds come from `vcodec`/`acodec` `none`, a missing top-level `url` comes from the last format); formats with other protocols and no saved fragments are rejected. The `--abort-on-error` retry with the URL after a failed download is not implemented |
 | `--write-link`, `--write-url-link`, `--write-webloc-link`, `--write-desktop-link` | Upstream `_write_link_file` after info JSON (also with `--skip-download`, never when simulating): `--write-link` picks `.webloc` on macOS, `.desktop` on Linux and `.url` elsewhere; the `link` output template with the shortcut extension; `webpage_url` through ported `iri_to_uri` (http/https only, no IPv6; otherwise upstream's warning); `.url` files with CRLF and `.desktop` names escaped; an existing shortcut is kept (`Internet shortcut (.EXT) is already present`) unless `-w` is given, as upstream's overwrite check does |
+| `--newline`, `--no-progress`, `--progress`, `--progress-delta SECONDS` | Upstream progress lines and printers; see [download progress](#download-progress-and-cooperative-cancellation) |
 | `--age-limit YEARS` | Upstream `age_restricted`: skip videos whose `age_limit` exceeds YEARS (`Skipping "TITLE" because it is age restricted`); unknown ratings pass |
 | `--min-views`, `--max-views`, `--match-title`, `--reject-title`, `--break-on-reject` (hidden upstream) | Upstream `_match_entry` order and messages: case-insensitive title regexes (Rust `regex` syntax, validated at startup), view counts when known, and `--break-on-reject` turning any rejection into the `RejectedVideoReached` cancellation (exit 101) |
 | `--max-downloads NUMBER` | Stop after NUMBER processed videos (simulated, already-downloaded and size-skipped ones count), print upstream's message and exit 101; 0 means unlimited |
@@ -485,14 +486,25 @@ method's `Ok(bytes)` return confirms successful publication. No callback runs
 after publication, and existing destinations remain protected even if created
 by a callback immediately before publication.
 
-The CLI reports stored bytes and the known total, when available, plus the
-attempt number on stderr at most once per second at downloading checkpoints.
-Fast downloads can emit only the existing destination/completion diagnostics.
-JSON and simulation do not download and emit no download progress. The CLI does
-not install signal handlers or expose cancellation flags.
+The CLI renders upstream `FileDownloader.report_progress` lines (ported
+`format_bytes`/`format_seconds`/`format_eta`/`format_speed`/`format_percent` and
+templates, checked against actual upstream output in
+`tests/fixtures/progress/cases.json`) on stderr through a port of
+`minicurses`' single-line printer: each status starts with `\r` and is padded
+over the previous one, the `100% of SIZE in TIME at SPEED` finished line ends
+with a newline, `--newline` prints one line per status, and quiet output with
+`--progress` erases the line instead. Whole-file downloads report after each
+received block; fragmented downloads show the completed fragment count and a
+size estimate from the average fragment so far (upstream also counts the current
+fragment's announced length). `--no-progress` (implied by quiet unless
+`--progress`) prints `[download] Download completed` instead; `--progress-delta
+SECONDS` limits updates. Colors, terminal control sequences, console titles and
+`--progress-template` are not implemented. JSON and simulation do not download
+and emit no download progress. The CLI does not install signal handlers or
+expose cancellation flags.
 
-This is a native extension of the transport milestone, not a port of upstream's
-progress-hook contract or CLI cancellation behavior. The pinned baseline remains
+The library observer is a native extension of the transport milestone, not a
+port of upstream's progress-hook contract or CLI cancellation behavior. The pinned baseline remains
 **897341241f2bfb2439fe0367f4c7c9ccd29a3828**. Deterministic local HTTP tests in
 `tests/progress.rs` cover observer events, response-derived/unknown totals,
 resumed and restarted counters, cancellation cleanup, and retry-wait polling.

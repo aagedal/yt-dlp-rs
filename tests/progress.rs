@@ -457,15 +457,32 @@ fn cli_progress_uses_stderr_and_preserves_download_bytes() {
     );
     assert!(output.stdout.is_empty());
     let stderr = String::from_utf8(output.stderr).unwrap();
+    // Upstream `report_progress` lines share one carriage-return status line,
+    // ending with the finished line and a newline.
     assert!(
-        stderr.contains("[download] 14 / 14 bytes (attempt 1)"),
+        stderr.contains("\r[download] 100.0% of     14.00B at "),
         "{stderr}"
     );
+    let finished = stderr
+        .split('\r')
+        .find(|line| line.starts_with("[download] 100% of     14.00B in 00:00:0"))
+        .unwrap_or_else(|| panic!("{stderr}"));
+    assert!(finished.trim_end().ends_with("B/s"), "{finished:?}");
+    assert!(stderr.ends_with('\n') && !stderr.contains("Downloaded 14 bytes"));
+    let quiet = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--no-progress", "-o", "other.mp4", &server.url])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let quiet = String::from_utf8(quiet.stderr).unwrap();
+    assert!(quiet.contains("[download] Download completed\n"), "{quiet}");
+    assert!(!quiet.contains('\r'));
+    std::fs::remove_file(directory.path().join("other.mp4")).unwrap();
     assert_eq!(
         std::fs::read(directory.path().join("clip.mp4")).unwrap(),
         b"complete media"
     );
-    assert_eq!(server.requests().len(), 2);
+    assert_eq!(server.requests().len(), 4);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
 }
 
