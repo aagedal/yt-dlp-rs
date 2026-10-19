@@ -251,6 +251,9 @@ struct Args {
     /// Do not embed the infojson as an attachment to the video file
     #[arg(long, overrides_with = "embed_info_json")]
     no_embed_info_json: bool,
+    /// Write metadata to the video file's xattrs (using Dublin Core and XDG standards)
+    #[arg(long, alias = "xattr")]
+    xattrs: bool,
     /// Split video into multiple files based on internal chapters (the "chapter" output template)
     #[arg(long, alias = "split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
     split_chapters: bool,
@@ -3176,6 +3179,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     } else {
                                         eprintln!("ERROR: Postprocessing: {error}");
                                         return Ok(());
+                                    }
+                                }
+                            }
+                            // Upstream `XAttrMetadataPP`, after SplitChapters.
+                            if args.xattrs {
+                                match yt_dlp_rs::xattr::write_metadata(&published_paths[0], info) {
+                                    Ok(warnings) => {
+                                        for warning in warnings {
+                                            warning!("WARNING: {warning}");
+                                        }
+                                    }
+                                    Err(error) => {
+                                        let error = match error {
+                                            yt_dlp_rs::Error::Postprocess(message) => message,
+                                            other => other.to_string(),
+                                        };
+                                        postprocess_failed.set(true);
+                                        if error_mode == ErrorMode::Ignore {
+                                            eprintln!("ERROR: {error}");
+                                        } else {
+                                            eprintln!("ERROR: Postprocessing: {error}");
+                                            return Ok(());
+                                        }
                                     }
                                 }
                             }

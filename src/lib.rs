@@ -38,6 +38,7 @@ mod subtitle_convert;
 mod subtitles;
 mod thumbnail_process;
 mod video;
+pub mod xattr;
 
 pub use archive::{DownloadArchive, archive_id};
 pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
