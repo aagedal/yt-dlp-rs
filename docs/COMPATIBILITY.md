@@ -81,6 +81,10 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
 | `--playlist-start NUMBER`, `--playlist-end NUMBER` | Inclusive one-based defaults 1 through end, end -1 unbounded; items option overrides after validation |
 | `--playlist-reverse`, `--no-playlist-reverse` | Reverse selected request order after deduplication; last flag wins |
+| `--autonumber-start NUMBER`, `--autonumber-size NUMBER` | Hidden upstream options: `%(autonumber)s` counts processed videos from the start (default 1), zero-padded to the size (default 5); `%(video_autonumber)s` counts every entry; upstream's validation messages |
+| `--id` | Hidden deprecated upstream option: `-o "%(id)s.%(ext)s"` with its deprecation warning, or `--id is ignored since --output was given` |
+| `--print-json`, `--all-subs` | Hidden deprecated upstream aliases: quiet JSON printing without simulation; `--sub-langs all --write-subs` |
+| Removed upstream switches | `--call-home`, `-C`, `--dump-user-agent`, `--sponskrub*`, `--prefer-ffmpeg`, `--write-annotations` and the other options in upstream's deprecated list are accepted and dropped (with their values) and reported once with upstream's `Deprecated Feature:` notice |
 | `--playlist-random` | Upstream `random.shuffle` of the selected entries (clock-seeded; `playlist_autonumber` follows the new order); `--playlist-reverse is ignored since --playlist-random was given` |
 | `--lazy-playlist`, `--no-lazy-playlist` | Upstream lazy semantics on the eagerly extracted playlist: entries keep their order, `n_entries` is unknown (`Downloading N/A items`, `item N of N/A`, `NA` in templates), `-J` has no `requested_entries`, and reverse/random are ignored with upstream's `is ignored since --lazy-playlist was given` warnings (printed after date conflicts, unlike upstream's order) |
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection (`[download] ID: TITLE has already been recorded in the archive`), record after successful download/merge publication or an already-downloaded file; no writes in metadata/listing/simulation unless `--force-write-archive` |
@@ -1512,7 +1516,7 @@ existing native timing is not general upstream option-normalization parity. Libr
 `render_template_with_options` accepts `TemplateOptions` with `na_placeholder`,
 `filename_mode`, `windows_filenames` and `trim_file_name`.
 Object traversal, arithmetic/dates, replacements, arbitrary fields, scientific/
-general/hex/octal/repr/custom conversions, autonumber state, environment expansion
+general/hex/octal/repr/custom conversions, environment expansion
 and full filename/platform compatibility remain open.
 
 The shared 160-case comparison uses actual pinned `evaluate_outtmpl` in filename

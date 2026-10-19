@@ -404,7 +404,12 @@ fn substitution(
     let mut last_field = "";
     // Validate every alternate, including fields after an available first value.
     for name in names.split(',') {
-        let value = field(name, info)?;
+        // Per-run counters come from the caller's options.
+        let value = match name {
+            "autonumber" => Ok(options.autonumber.get().map(Value::Integer)),
+            "video_autonumber" => Ok(options.video_autonumber.get().map(Value::Integer)),
+            _ => field(name, info),
+        }?;
         if chosen.is_none() {
             last_field = name;
             // Filename sanitization turns empty strings into missing values;
@@ -447,6 +452,11 @@ fn substitution(
         };
         if let Some(size) = size {
             format.width = size.to_string().len();
+            format.zero = true;
+            format.conversion = 'd';
+        }
+        if last_field == "autonumber" {
+            format.width = options.autonumber_size;
             format.zero = true;
             format.conversion = 'd';
         }

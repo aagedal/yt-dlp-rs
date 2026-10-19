@@ -68,6 +68,16 @@ impl OutputTemplates {
         Self { templates }
     }
 
+    /// Whether `values` set the default (untyped or `default:`) template.
+    pub fn sets_default(values: &[String]) -> bool {
+        values.iter().any(|value| {
+            parse_typed(value, is_output_type, "default")
+                .0
+                .iter()
+                .any(|key| key == "default")
+        })
+    }
+
     /// The template for `kind`, falling back to the default template.
     pub fn get(&self, kind: Option<&str>) -> &str {
         kind.and_then(|kind| self.templates.get(kind))

@@ -69,6 +69,13 @@ pub struct TemplateOptions {
     pub trim_file_name: i64,
     /// `--paths`: `home` and output-type directories joined before names.
     pub paths: std::collections::BTreeMap<String, String>,
+    /// Upstream `autonumber` (`autonumber_start - 1 + downloads`) for the
+    /// video being processed, set by the caller.
+    pub autonumber: std::cell::Cell<Option<u64>>,
+    /// `--autonumber-size`: `%(autonumber)s` zero padding (default 5).
+    pub autonumber_size: usize,
+    /// Upstream `video_autonumber` (videos processed so far).
+    pub video_autonumber: std::cell::Cell<Option<u64>>,
 }
 
 impl TemplateOptions {
@@ -92,6 +99,9 @@ impl Default for TemplateOptions {
             windows_filenames: false,
             trim_file_name: 0,
             paths: Default::default(),
+            autonumber: Default::default(),
+            autonumber_size: 5,
+            video_autonumber: Default::default(),
         }
     }
 }

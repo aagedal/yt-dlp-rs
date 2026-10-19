@@ -505,3 +505,71 @@ fn numeric_rate_fields_render_like_python() {
     assert_eq!(print("h"), "500.0|29.97|29.97|01.78|0.0|500|NA\n");
     assert_eq!(print("v+a"), "1096.0|30|30|01.78|96.0|1000|44100\n");
 }
+
+#[test]
+fn legacy_id_autonumber_and_deprecated_options_follow_upstream() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    std::fs::write(
+        &path,
+        serde_json::json!({
+            "id": "clip", "title": "Clip", "ext": "mp4", "url": "http://127.0.0.1:1/clip.mp4",
+            "webpage_url": "http://127.0.0.1:1/page", "extractor": "generic", "extractor_key": "Generic",
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let run = |args: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(args)
+            .arg("--get-filename")
+            .arg("--load-info-json")
+            .arg(&path)
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    // Checked with pinned upstream.
+    let output = run(&["--id"]);
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "clip.mp4\n");
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .contains("WARNING: --id is deprecated. Use -o \"%(id)s.%(ext)s\" instead")
+    );
+    let output = run(&["--id", "-o", "x.%(ext)s"]);
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "x.mp4\n");
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .contains("WARNING: --id is ignored since --output was given")
+    );
+    let output = run(&["-o", "%(autonumber)s-%(video_autonumber)s.%(ext)s"]);
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "00001-1.mp4\n");
+    let output = run(&[
+        "--autonumber-start",
+        "5",
+        "--autonumber-size",
+        "3",
+        "-o",
+        "%(autonumber)s %(autonumber)d.%(ext)s",
+    ]);
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "005 5.mp4\n");
+    for (args, message) in [
+        (
+            &["--autonumber-start", "-1"][..],
+            "autonumber start \"-1\" must be positive or 0",
+        ),
+        (
+            &["--autonumber-size", "0"][..],
+            "autonumber size \"0\" must be positive",
+        ),
+    ] {
+        let output = run(args);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(String::from_utf8_lossy(&output.stderr).contains(message));
+    }
+    let output = run(&["--call-home", "--sponskrub-args", "x", "-C"]);
+    assert!(output.status.success());
+    assert!(String::from_utf8_lossy(&output.stderr).starts_with(
+        "Deprecated Feature: The following options have been deprecated: --call-home, --sponskrub-args, -C\nPlease remove them from your command/configuration to avoid future errors.\n"
+    ));
+}

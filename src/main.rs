@@ -477,6 +477,16 @@ struct Args {
     /// Process videos in the playlist only after the entire playlist is parsed (default)
     #[arg(long, overrides_with = "lazy_playlist")]
     no_lazy_playlist: bool,
+    #[arg(long, hide = true)]
+    id: bool,
+    #[arg(long, hide = true)]
+    print_json: bool,
+    #[arg(long, hide = true)]
+    all_subs: bool,
+    #[arg(long, hide = true, default_value_t = 1, allow_hyphen_values = true)]
+    autonumber_start: i64,
+    #[arg(long, hide = true, allow_hyphen_values = true)]
+    autonumber_size: Option<i64>,
     /// Placeholder for unavailable output-template metadata
     #[arg(long, default_value = "NA", value_name = "TEXT")]
     output_na_placeholder: String,
@@ -683,7 +693,8 @@ impl Args {
         Simulation {
             simulate: explicit.unwrap_or(getting || listing),
             list_only: explicit.is_none() && !getting && listing,
-            quiet: quiet.unwrap_or(any_getting || !self.print.is_empty()),
+            // Hidden `--print-json` is quiet JSON without simulation.
+            quiet: quiet.unwrap_or(any_getting || self.print_json || !self.print.is_empty()),
         }
     }
 }
@@ -886,8 +897,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut argv = std::env::args();
     let program = argv.next().unwrap_or_else(|| "yt-dlp-rs".into());
     let arguments = config_arguments(argv.collect())?;
+    let (arguments, deprecated) = strip_deprecated_options(arguments);
     let matches = Args::command().get_matches_from(std::iter::once(program).chain(arguments));
+    if !deprecated.is_empty() {
+        // Upstream `deprecated_feature`, written directly to stderr.
+        eprintln!(
+            "Deprecated Feature: The following options have been deprecated: {}\nPlease remove them from your command/configuration to avoid future errors.\nSee  https://github.com/yt-dlp/yt-dlp/issues/14198  for more details",
+            deprecated.join(", ")
+        );
+    }
     let mut args = Args::from_arg_matches(&matches)?;
+    // Upstream `allsubtitles`: every language, implying --write-subs unless
+    // embedding or automatic captions are requested.
+    if args.all_subs {
+        args.sub_langs = vec!["all".into()];
+        if !(args.embed_subs || args.write_auto_subs) {
+            args.write_subs = true;
+        }
+    }
     // `--no-match-filters` resets values given before it (optparse store_const).
     let after_reset = |values: &str, reset: &str| -> Vec<String> {
         // Defaulted flags also report an index, so require a command-line source.
@@ -1306,6 +1333,27 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     } else {
         None
     };
+    // Upstream `validate_positive` for the autonumber options.
+    if args.autonumber_start < 0 {
+        return Err(usage(format!(
+            "autonumber start \"{}\" must be positive or 0",
+            args.autonumber_start
+        ))
+        .into());
+    }
+    if let Some(size) = args.autonumber_size.filter(|size| *size <= 0) {
+        return Err(usage(format!("autonumber size \"{size}\" must be positive")).into());
+    }
+    // Upstream `--id`: the default template becomes `%(id)s.%(ext)s` unless
+    // `-o` sets one (`report_conflict`).
+    if args.id {
+        if OutputTemplates::sets_default(&args.output) {
+            warning!("WARNING: --id is ignored since --output was given");
+        } else {
+            warning!("WARNING: --id is deprecated. Use -o \"%(id)s.%(ext)s\" instead");
+            args.output.push("%(id)s.%(ext)s".into());
+        }
+    }
     let templates = OutputTemplates::parse(&args.output, args.restrict_filenames);
     LOG_TO_STDERR.store(templates.get(None) == "-", Ordering::Relaxed);
     let downloader = downloader.with_prefer_best_format(templates.get(None) == "-");
@@ -1316,6 +1364,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         windows_filenames: windows_filenames == Some(true),
         trim_file_name: args.trim_filenames,
         paths: output_paths,
+        autonumber: Default::default(),
+        autonumber_size: args.autonumber_size.map_or(5, |size| size as usize),
+        video_autonumber: Default::default(),
     };
     // Upstream `exec_cmd`: --no-exec clears earlier values; the hidden
     // --exec-before-download is ignored when "--exec before_dl:" is given.
@@ -1483,6 +1534,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let abort_on_error = error_mode == ErrorMode::Abort;
     let mut aborted = false;
     let mut processed: i64 = 0;
+    let mut videos: u64 = 0;
     let mut cancelled: Option<Cancel> = None;
     let mut failed = false;
     // Upstream `_out_files.out`: JSON, listings and prints use stderr with
@@ -1695,6 +1747,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 pending_error.set(earlier.or(Some(format!("Preprocessing: {error}"))));
             };
             let mut entry_cancel = None;
+            // Upstream `_num_videos` (`process_video_result`).
+            videos += 1;
+            template_options.video_autonumber.set(Some(videos));
             if let Some(index) = info.playlist_autonumber
                 && playlist_title.is_some()
             {
@@ -1748,6 +1803,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 // Upstream `process_info` counts every processed video.
                 counted = true;
+                template_options.autonumber.set(Some(
+                    (args.autonumber_start - 1 + processed + 1).max(0) as u64,
+                ));
                 if let Err(error) =
                     run_exec(&exec, Stage::Video, &info, None, None, &template_options)
                 {
@@ -1775,7 +1833,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     },
                 )?
                 .emit()?;
-                if args.dump_json {
+                // Upstream `forcejson`: `--dump-json` or `--print-json`.
+                if args.dump_json || args.print_json {
                     serde_json::to_writer(&mut stdout, &info)?;
                     writeln!(stdout)?;
                 }
@@ -2510,6 +2569,69 @@ impl std::fmt::Display for UsageError {
 }
 
 impl std::error::Error for UsageError {}
+
+/// Upstream `deprecated_switches`/`deprecated_arguments`: accepted no-ops.
+fn strip_deprecated_options(arguments: Vec<String>) -> (Vec<String>, Vec<String>) {
+    const SWITCHES: &[&str] = &[
+        "--xattr-set-filesize",
+        "--dump-user-agent",
+        "--youtube-include-dash-manifest",
+        "--no-youtube-skip-dash-manifest",
+        "--youtube-skip-dash-manifest",
+        "--no-youtube-include-dash-manifest",
+        "--youtube-include-hls-manifest",
+        "--no-youtube-skip-hls-manifest",
+        "--youtube-skip-hls-manifest",
+        "--no-youtube-include-hls-manifest",
+        "--youtube-print-sig-code",
+        "--sponskrub",
+        "--no-sponskrub",
+        "--sponskrub-cut",
+        "--no-sponskrub-cut",
+        "--sponskrub-force",
+        "--no-sponskrub-force",
+        "--prefer-avconv",
+        "--no-prefer-ffmpeg",
+        "--prefer-ffmpeg",
+        "--no-prefer-avconv",
+        "-C",
+        "--call-home",
+        "--no-call-home",
+        "--include-ads",
+        "--no-include-ads",
+        "--write-annotations",
+        "--no-write-annotations",
+    ];
+    const ARGUMENTS: &[&str] = &[
+        "--sponskrub-location",
+        "--sponskrub-args",
+        "--cn-verification-proxy",
+    ];
+    let mut kept = Vec::with_capacity(arguments.len());
+    let mut deprecated = Vec::new();
+    let mut iter = arguments.into_iter();
+    while let Some(argument) = iter.next() {
+        if argument == "--" {
+            kept.push(argument);
+            kept.extend(iter);
+            break;
+        }
+        let name = argument
+            .split_once('=')
+            .map_or(argument.as_str(), |(name, _)| name);
+        if SWITCHES.contains(&argument.as_str()) {
+            deprecated.push(argument);
+        } else if ARGUMENTS.contains(&name) {
+            if !argument.contains('=') {
+                iter.next();
+            }
+            deprecated.push(name.to_owned());
+        } else {
+            kept.push(argument);
+        }
+    }
+    (kept, deprecated)
+}
 
 /// What one configuration's own arguments say about further configuration
 /// (upstream `parse_known_args` of those arguments).
