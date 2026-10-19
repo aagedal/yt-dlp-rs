@@ -121,6 +121,7 @@ pub(crate) fn from_response(
         vcodec: None,
         acodec: None,
         dynamic_range: None,
+        container: None,
         video_ext: None,
         audio_ext: None,
         metadata: Default::default(),

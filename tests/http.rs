@@ -682,6 +682,7 @@ fn youtube_runtime_configuration_is_lazy_for_generic_extraction() {
     let runtime = directory.path().join("nonexistent-deno");
     let dl = YoutubeDl::with_youtube_options(YoutubeOptions {
         include_translated_subtitles: false,
+        no_playlist: false,
         js_runtime: Some(runtime.clone()),
     })
     .unwrap();
@@ -955,7 +956,7 @@ fn html5_result_cardinality_and_title_fallback() {
 }
 
 #[test]
-fn html5_playlist_selection_and_validation_are_atomic() {
+fn html5_playlist_selection_is_atomic_in_the_library_and_per_entry_in_the_cli() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     let page = server.url("/playlist-formats.html");
@@ -988,14 +989,42 @@ fn html5_playlist_selection_and_validation_are_atomic() {
         dl.extract_result_with_format(&server.url("/playlist-manifest.html"), Some("0")),
         Err(Error::UnsupportedManifest(_))
     ));
+    // The library stays atomic, but the CLI selects per entry like upstream
+    // `process_video_result`: entry 1 downloads its audio source, entry 2
+    // (no format "1") fails on its own and the run exits 1.
     let directory = tempfile::tempdir().unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .current_dir(directory.path())
         .args(["-f", "1", &server.url("/playlist-mixed-formats.html")])
         .output()
         .unwrap();
-    assert!(!output.status.success());
-    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    assert_eq!(output.status.code(), Some(1));
+    only_screen_lines(&output.stdout);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(
+        stderr
+            .lines()
+            .filter(|line| line.starts_with("ERROR:"))
+            .collect::<Vec<_>>(),
+        [
+            "ERROR: [html5] playlist-mixed-formats-2: Requested format is not available. Use --list-formats for a list of available formats"
+        ],
+        "{stderr}"
+    );
+    assert!(!stderr.contains("format selection failed"), "{stderr}");
+    let item_two = stdout.find("[download] Downloading item 2 of 2").unwrap();
+    assert!(
+        stdout[..item_two].contains("[info] playlist-mixed-formats-1: Downloading 1 format(s): 1")
+    );
+    assert!(!stdout[item_two..].contains("[info]"), "{stdout}");
+    assert!(stdout.contains("[download] Finished downloading playlist: video"));
+    let downloaded = directory
+        .path()
+        .join("playlist-mixed-formats (1) [playlist-mixed-formats-1].mp3");
+    assert_eq!(std::fs::read(&downloaded).unwrap(), b"audio");
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+    std::fs::remove_file(downloaded).unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .current_dir(directory.path())
         .args(["-f", "1", "-o", "%(id)s.%(ext)s", &page])
@@ -1228,12 +1257,54 @@ fn cli_continues_after_a_format_selection_error() {
         ])
         .output()
         .unwrap();
-    assert!(!output.status.success());
+    assert_eq!(output.status.code(), Some(1));
     let text = String::from_utf8(output.stdout).unwrap();
     assert_eq!(text.lines().count(), 1);
     let info: serde_json::Value = serde_json::from_str(text.trim()).unwrap();
+    assert_eq!(info["id"], "formats-progressive-1");
     assert_eq!(info["format_id"], "1");
-    assert!(String::from_utf8_lossy(&output.stderr).contains("format selection failed"));
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(
+        stderr
+            .lines()
+            .filter(|line| line.starts_with("ERROR:"))
+            .collect::<Vec<_>>(),
+        [
+            "ERROR: [generic] clip: Requested format is not available. Use --list-formats for a list of available formats"
+        ],
+        "{stderr}"
+    );
+    assert!(!stderr.contains("format selection failed"), "{stderr}");
+    // With -J, a single video whose selection fails prints `null`.
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "-J",
+            "-f",
+            "1",
+            &server.url("/clip.mp4"),
+            &server.url("/formats-progressive.html"),
+        ])
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(1));
+    let text = String::from_utf8(output.stdout).unwrap();
+    let lines: Vec<serde_json::Value> = text
+        .lines()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
+    assert_eq!(lines.len(), 2, "{text}");
+    assert!(lines[0].is_null());
+    assert_eq!(lines[1]["id"], "formats-progressive-1");
+    assert_eq!(lines[1]["format_id"], "1");
+    assert_eq!(
+        String::from_utf8_lossy(&output.stderr)
+            .lines()
+            .filter(|line| line.starts_with("ERROR:"))
+            .collect::<Vec<_>>(),
+        [
+            "ERROR: [generic] clip: Requested format is not available. Use --list-formats for a list of available formats"
+        ]
+    );
 }
 
 #[test]

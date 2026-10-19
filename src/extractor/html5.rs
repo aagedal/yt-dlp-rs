@@ -486,9 +486,10 @@ impl Extractor for GenericHttp {
             if !media_type {
                 fallback();
             }
-            let hls = hls::from_response(client, response, url, None, hls_path, None)?;
-            if hls.is_some() {
+            let mut hls = hls::from_response(client, response, url, None, hls_path, None)?;
+            if let Some(info) = &mut hls {
                 m3u8();
+                hls::check_live_status(client, info);
             } else if direct.is_some() && !media_type {
                 warning("[generic] URL could be a direct video link, returning it as such.");
             }
@@ -627,6 +628,7 @@ impl Extractor for GenericHttp {
                     format_note: None,
                     audio_default: false,
                     audio_autoselect: false,
+                    container: None,
                     abr: None,
                     tbr: source.tbr,
                     url: info.url.clone(),

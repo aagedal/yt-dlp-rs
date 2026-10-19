@@ -783,6 +783,8 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 .get("bandwidth")
                 .map(|value| positive(value))
                 .transpose()?;
+            // Upstream `mimetype2ext(mime_type)`, also naming the `EXT_dash` container.
+            let ext = crate::extractor::direct::mimetype2ext_or(mime, None);
             let tbr = bandwidth.map(|value| value as f64 / 1000.0);
             let dimension = |name| {
                 attrs
@@ -839,7 +841,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 format_id,
                 url: manifest.clone(),
                 // Upstream `mimetype2ext(mime_type)`.
-                ext: crate::extractor::direct::mimetype2ext_or(mime, None),
+                ext: ext.clone(),
                 stream_kind: kind,
                 audio_group: (kind != StreamKind::Standalone).then(|| "dash-period-0".into()),
                 // Upstream drops the `mul`/`und`/`zxx`/`mis` language codes.
@@ -850,6 +852,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 format_note: Some(format!("DASH {content_type}")),
                 audio_default: false,
                 audio_autoselect: false,
+                container: Some(format!("{ext}_dash")),
                 abr: if kind == StreamKind::AudioOnly {
                     tbr
                 } else {

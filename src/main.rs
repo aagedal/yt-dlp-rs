@@ -16,7 +16,7 @@ use yt_dlp_rs::{
     dates::DateRange,
     output::{
         ExecCommand, ExecCommands, OutputTemplates, PrintTemplate, PrintToFile, Stage, StagePaths,
-        TemplateOptions, render_formats,
+        TemplateOptions,
     },
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
     validate_format_selector, video_info_json, write_info_json_with,
@@ -153,6 +153,16 @@ struct Args {
     /// List available formats (selection still applies with -j or -s; no downloads)
     #[arg(short = 'F', long = "list-formats")]
     list_formats: bool,
+    /// Present the list of formats in a more readable table (default)
+    #[arg(long, hide = true, overrides_with = "list_formats_old")]
+    list_formats_as_table: bool,
+    /// Present the list of formats in the older layout
+    #[arg(
+        long,
+        alias = "no-list-formats-as-table",
+        overrides_with = "list_formats_as_table"
+    )]
+    list_formats_old: bool,
     /// List available subtitle languages/formats without downloading
     #[arg(long)]
     list_subs: bool,
@@ -477,6 +487,22 @@ struct Args {
     /// Process videos in the playlist only after the entire playlist is parsed (default)
     #[arg(long, overrides_with = "lazy_playlist")]
     no_lazy_playlist: bool,
+    /// Download only the video, if the URL refers to a video and a playlist
+    #[arg(long, overrides_with = "yes_playlist")]
+    no_playlist: bool,
+    /// Download the playlist, if the URL refers to a video and a playlist
+    #[arg(long, overrides_with = "no_playlist")]
+    yes_playlist: bool,
+    /// Do not extract a playlist's URL result entries; supported playlists
+    /// carry fully extracted entries, which are processed either way
+    #[arg(long, overrides_with = "no_flat_playlist")]
+    flat_playlist: bool,
+    /// Fully extract the videos of a playlist (default)
+    #[arg(long, overrides_with = "flat_playlist")]
+    no_flat_playlist: bool,
+    /// Number of allowed failures until the rest of the playlist is skipped
+    #[arg(long, value_name = "N", allow_hyphen_values = true)]
+    skip_playlist_after_errors: Option<i64>,
     #[arg(long, hide = true)]
     id: bool,
     #[arg(long, hide = true)]
@@ -765,8 +791,15 @@ fn single_json(
                 .iter()
                 .map(|info| info.playlist_index)
                 .collect();
-            // Lazy playlists have no `requested_entries` upstream.
-            if counts.is_none_or(|counts| counts.n_entries.is_some()) {
+            // Lazy playlists have no `requested_entries` upstream, and full
+            // playlists drop it ("Do not set for full playlist").
+            let full = counts.is_some_and(|counts| {
+                indices
+                    .iter()
+                    .copied()
+                    .eq((1..=counts.playlist_count).map(Some))
+            });
+            if !full && counts.is_none_or(|counts| counts.n_entries.is_some()) {
                 object.insert("requested_entries".into(), serde_json::to_value(indices)?);
             }
             object.insert("entries".into(), entries.unwrap_or_default());
@@ -1294,6 +1327,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         YoutubeOptions {
             js_runtime: args.youtube_js_runtime,
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
+            no_playlist: args.no_playlist,
         },
         http_options,
     )?;
@@ -1630,9 +1664,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         }
                     }
                 }
-                if !list_only {
-                    downloader.select_result(&mut result, format)?;
-                }
                 Ok(Some((result, counts)))
             })();
         let (extracted, counts) = match extracted {
@@ -1717,7 +1748,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             (&extracted, args.list_thumbnails && playlist_files)
         {
             // Playlist results carry no represented thumbnails.
-            writeln!(stdout, "{} has no thumbnails", playlist.id)?;
+            screen!("{} has no thumbnails", playlist.id);
         }
         if let (ExtractResult::Playlist(playlist), Some(counts), Some(title)) =
             (&extracted, counts, &playlist_title)
@@ -1731,12 +1762,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 counts.playlist_count
             );
         }
-        let single_json = args
+        // Upstream `-J` prints the processed entries (`null` for entries whose
+        // processing failed) after the playlist.
+        let mut single_json = args
             .dump_single_json
             .then(|| single_json(&extracted, counts))
             .transpose()?;
+        let mut json_entries = single_json
+            .as_mut()
+            .and_then(|value| value.get_mut("entries"))
+            .map(serde_json::Value::take);
         let mut url_cancelled = false;
-        for info in extracted.into_entries() {
+        // Upstream `__process_playlist` `failures`.
+        let mut extraction_failures = 0;
+        for (entry_index, mut info) in extracted.into_entries().into_iter().enumerate() {
             let mut counted = false;
             let postprocess_failed = std::cell::Cell::new(false);
             // Upstream `__pending_error` from a failed preprocessing command.
@@ -1761,16 +1800,46 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 // Upstream lists thumbnails, then subtitles, then formats.
                 if args.list_thumbnails {
-                    write!(stdout, "{}", yt_dlp_rs::output::render_thumbnails(&info))?;
+                    emit_listing(&mut stdout, &yt_dlp_rs::output::render_thumbnails(&info))?;
                 }
                 if args.list_subs {
                     if !info.automatic_captions.is_empty() {
-                        write!(stdout, "{}", render_automatic_captions(&info))?;
+                        emit_listing(&mut stdout, &render_automatic_captions(&info))?;
                     }
-                    write!(stdout, "{}", render_subtitles(&info))?;
+                    emit_listing(&mut stdout, &render_subtitles(&info))?;
                 }
                 if args.list_formats {
-                    write!(stdout, "{}", render_formats(&info))?;
+                    emit_listing(
+                        &mut stdout,
+                        &yt_dlp_rs::output::render_formats_listing(&info, !args.list_formats_old),
+                    )?;
+                }
+                // Upstream `process_video_result` format selection.
+                if !list_only {
+                    downloader.select_video(&mut info, format).map_err(
+                        |error| -> Box<dyn std::error::Error> {
+                            match error {
+                                yt_dlp_rs::Error::FormatSelection(_) => {
+                                    Box::new(EntryExtractionError(format!(
+                                        "[{}] {}: Requested format is not available. \
+                                         Use --list-formats for a list of available formats",
+                                        info.extractor, info.id
+                                    )))
+                                }
+                                other => Box::new(other),
+                            }
+                        },
+                    )?;
+                }
+                if let Some(entry) = json_entries
+                    .as_mut()
+                    .and_then(|entries| entries.get_mut(entry_index))
+                {
+                    *entry = serde_json::to_value(&info)?;
+                } else if let Some(value @ Some(_)) =
+                    (playlist_title.is_none() && args.dump_single_json).then_some(&mut single_json)
+                {
+                    *value = Some(serde_json::to_value(&info)?);
                 }
                 if listing && !args.dump_json && !printing && simulate {
                     return Ok(());
@@ -2353,7 +2422,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         {
                             let protocol = info.protocol.as_deref().unwrap_or("");
                             let m3u8 = protocol.starts_with("m3u8") && !args.hls_use_mpegts;
-                            let m4a = info.ext == "m4a" && protocol == "http_dash_segments";
+                            let m4a =
+                                info.ext == "m4a" && info.container.as_deref() == Some("m4a_dash");
                             for (needed, message, m3u8_fixup) in [
                                 (
                                     m4a,
@@ -2437,8 +2507,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 Ok(())
             })();
+            let mut extraction_failed = false;
             let succeeded = match result {
                 Ok(()) => true,
+                Err(error) if error.is::<EntryExtractionError>() => {
+                    eprintln!("ERROR: {error}");
+                    failed = true;
+                    extraction_failed = true;
+                    if let Some(entry) = json_entries
+                        .as_mut()
+                        .and_then(|entries| entries.get_mut(entry_index))
+                    {
+                        *entry = serde_json::Value::Null;
+                    } else if playlist_title.is_none() && single_json.is_some() {
+                        single_json = Some(serde_json::Value::Null);
+                    }
+                    false
+                }
                 Err(error) => match error.downcast_ref::<yt_dlp_rs::Error>() {
                     // Upstream skips the transfer without an error or archive record.
                     Some(yt_dlp_rs::Error::FileSizeLimit(message)) => {
@@ -2493,6 +2578,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 aborted = true;
                 break;
             }
+            extraction_failures += usize::from(extraction_failed);
+            if let (Some(limit), Some(title)) = (
+                args.skip_playlist_after_errors.filter(|limit| *limit != 0),
+                &playlist_title,
+            ) && extraction_failures as i64 >= limit
+            {
+                eprintln!(
+                    "ERROR: Skipping the remaining entries in playlist \"{title}\" since {extraction_failures} items failed extraction"
+                );
+                failed = true;
+                break;
+            }
             if let Some(reason) = entry_cancel {
                 cancelled = cancel(reason, args.break_per_input);
                 if cancelled.is_none() {
@@ -2532,6 +2629,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         if let Some(title) = &playlist_title {
             screen!("[download] Finished downloading playlist: {title}");
         }
+        if let (Some(object), Some(entries)) = (
+            single_json.as_mut().and_then(|value| value.as_object_mut()),
+            json_entries,
+        ) {
+            object.insert("entries".into(), entries);
+        }
         if let Some(value) = single_json {
             serde_json::to_writer(&mut stdout, &value)?;
             writeln!(stdout)?;
@@ -2557,6 +2660,27 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     Ok(!failed)
 }
+
+/// Upstream `__list_table`: the caption (or `ID has no NAME`) is a screen
+/// message and only the table is written to stdout.
+fn emit_listing(stdout: &mut impl Write, text: &str) -> io::Result<()> {
+    let (caption, table) = text.split_once('\n').unwrap_or((text, ""));
+    screen!("{caption}");
+    stdout.write_all(table.as_bytes())
+}
+
+/// An entry `ExtractorError` from upstream `process_video_result`, reported
+/// as `ERROR: [EXTRACTOR] ID: MESSAGE`.
+#[derive(Debug)]
+struct EntryExtractionError(String);
+
+impl std::fmt::Display for EntryExtractionError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+impl std::error::Error for EntryExtractionError {}
 
 /// An upstream `parser.error`: usage, `PROG: error: MESSAGE`, exit status 2.
 #[derive(Debug)]

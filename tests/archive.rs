@@ -262,7 +262,12 @@ fn archived_separate_hls_is_skipped_before_selection_or_ffmpeg_validation() {
     );
     succeeds(&output);
     only_screen_lines(&output);
-    assert_eq!(server.requests.lock().unwrap().len(), 3);
+    // Extraction (including upstream generic's "Checking m3u8 live status"
+    // refetch of the first `m3u8_native` format) precedes the archive check.
+    assert_eq!(
+        *server.requests.lock().unwrap(),
+        ["/master.m3u8", "/video.m3u8", "/audio.m3u8", "/audio.m3u8"]
+    );
     assert_eq!(server.count("/init.mp4"), 0);
     assert_eq!(server.count("/segment.m4s"), 0);
 }
@@ -293,7 +298,10 @@ fn playlist_skip_precedes_selection_and_only_retained_successes_are_recorded() {
 }
 
 #[test]
-fn all_retained_playlist_entries_are_selected_before_any_download_or_json() {
+fn retained_playlist_entries_are_selected_per_entry_and_failures_continue() {
+    // Like upstream `process_video_result`, each retained entry is selected
+    // when it is processed: three-2 succeeds, three-3 fails on its own and
+    // the run exits 1 without undoing three-2.
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
     let archive = directory.path().join("archive.txt");
@@ -304,21 +312,56 @@ fn all_retained_playlist_entries_are_selected_before_any_download_or_json() {
         let mut args = mode;
         args.extend(["-f", "best[height<=720]", "-o", template.to_str().unwrap()]);
         let output = server.cli(&archive, &args, &["/three.html"]);
-        assert!(!output.status.success());
+        assert_eq!(output.status.code(), Some(1));
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert_eq!(
+            stderr
+                .lines()
+                .filter(|line| line.starts_with("ERROR:"))
+                .collect::<Vec<_>>(),
+            [
+                "ERROR: [html5] three-3: Requested format is not available. Use --list-formats for a list of available formats"
+            ],
+            "{stderr}"
+        );
+        assert!(!stderr.contains("format selection failed"), "{stderr}");
         if json {
-            assert!(output.stdout.is_empty());
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            let ids: Vec<_> = stdout
+                .lines()
+                .map(|line| {
+                    let value: serde_json::Value = serde_json::from_str(line).unwrap();
+                    (
+                        value["id"].as_str().unwrap().to_owned(),
+                        value["format_id"].clone(),
+                        value["height"].clone(),
+                    )
+                })
+                .collect();
+            assert_eq!(ids, [("three-2".to_owned(), "0".into(), 720.into())]);
+            assert_eq!(
+                std::fs::read_to_string(&archive).unwrap(),
+                "html5mediaembed three-1\n"
+            );
+            assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
         } else {
             only_screen_lines(&output);
+            assert_eq!(
+                std::fs::read(directory.path().join("three-2.mp4")).unwrap(),
+                b"medium"
+            );
+            assert!(!directory.path().join("three-3.mp4").exists());
+            assert_eq!(
+                std::fs::read_to_string(&archive).unwrap(),
+                "html5mediaembed three-1\nhtml5mediaembed three-2\n"
+            );
+            assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 2);
         }
-        assert_eq!(
-            std::fs::read_to_string(&archive).unwrap(),
-            "html5mediaembed three-1\n"
-        );
-        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
     }
-    for path in ["/low.mp4", "/medium.mp4", "/high.mp4"] {
-        assert_eq!(server.count(path), 2);
-    }
+    // Each run probes every source once; only three-2 is downloaded.
+    assert_eq!(server.count("/low.mp4"), 2);
+    assert_eq!(server.count("/medium.mp4"), 3);
+    assert_eq!(server.count("/high.mp4"), 2);
 }
 
 #[test]

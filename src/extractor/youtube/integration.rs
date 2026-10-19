@@ -759,6 +759,7 @@ fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
         ]);
         let mut ydl = crate::YoutubeDl::with_youtube_options(YoutubeOptions {
             include_translated_subtitles: false,
+            no_playlist: false,
             js_runtime: Some(PathBuf::from("unused-adaptive-runtime")),
         })
         .unwrap();
@@ -804,6 +805,12 @@ fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
                 format.abr = None;
             }
             assert_eq!(format.protocol.take().as_deref(), Some("http"));
+            // Upstream names single-stream containers `EXT_dash`.
+            assert_eq!(
+                format.container.take(),
+                (format.stream_kind != StreamKind::Standalone)
+                    .then(|| format!("{}_dash", format.ext))
+            );
             let audio_only = format.vcodec.as_deref() == Some("none");
             assert_eq!(
                 format.dynamic_range.take().as_deref(),

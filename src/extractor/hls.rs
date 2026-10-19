@@ -95,6 +95,48 @@ fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
     Ok((base.clone(), crate::hls::parse(text, &base)?))
 }
 
+/// Upstream generic `_extra_manifest_info` ("Checking m3u8 live status"):
+/// the first `m3u8_native` format's playlist, refetched without failing
+/// extraction, supplies a missing VOD duration.
+pub(crate) fn check_live_status(client: &Client, info: &mut VideoInfo) {
+    let Some(format) = info
+        .formats
+        .iter()
+        .find(|format| format.determine_protocol() == "m3u8_native")
+    else {
+        return;
+    };
+    let Ok(response) = direct::probe(client, &format.url, None) else {
+        return;
+    };
+    let mut bytes = Vec::new();
+    if response
+        .take(MAX_MANIFEST_BYTES)
+        .read_to_end(&mut bytes)
+        .is_err()
+        || !bytes.starts_with(b"#EXTM3U")
+    {
+        return;
+    }
+    let duration = vod_duration(&String::from_utf8_lossy(&bytes));
+    info.metadata.duration = info.metadata.duration.or(duration);
+}
+
+/// Upstream `_parse_m3u8_vod_duration`: `int(sum(EXTINF))`, `None` for zero
+/// or without `#EXT-X-ENDLIST`.
+fn vod_duration(playlist: &str) -> Option<u64> {
+    if !playlist.contains("#EXT-X-ENDLIST") {
+        return None;
+    }
+    let mut total = 0.0;
+    for line in playlist.lines() {
+        if let Some(value) = line.strip_prefix("#EXTINF:") {
+            total += value.split(',').next()?.trim().parse::<f64>().ok()?;
+        }
+    }
+    Some(total.trunc() as u64).filter(|duration| *duration > 0)
+}
+
 pub(crate) fn from_response(
     client: &Client,
     response: Response,
@@ -131,6 +173,7 @@ pub(crate) fn from_response(
         vcodec: None,
         acodec: None,
         dynamic_range: None,
+        container: None,
         video_ext: None,
         audio_ext: None,
         metadata: Default::default(),
@@ -196,6 +239,7 @@ pub(crate) fn from_response(
                 format_note: None,
                 audio_default: false,
                 audio_autoselect: false,
+                container: None,
                 abr: None,
                 tbr: None,
                 url: info.url.clone(),
@@ -275,6 +319,7 @@ pub(crate) fn from_response(
                     format_note: None,
                     audio_default: false,
                     audio_autoselect: false,
+                    container: None,
                     abr: (variant.stream_kind == StreamKind::AudioOnly)
                         .then_some(variant.bandwidth)
                         .flatten(),
@@ -326,6 +371,7 @@ pub(crate) fn from_response(
                     format_note: Some(rendition.name),
                     audio_default: rendition.default,
                     audio_autoselect: rendition.autoselect,
+                    container: None,
                     abr: None,
                     tbr: None,
                     url,
@@ -388,4 +434,20 @@ pub(crate) fn from_response(
         }
     }
     Ok(Some(info))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::vod_duration;
+
+    #[test]
+    fn vod_duration_sums_extinf_like_upstream() {
+        let vod = "#EXTM3U\n#EXTINF:2.5,\na.ts\n#EXTINF:1.75,x\nb.ts\n#EXT-X-ENDLIST\n";
+        assert_eq!(vod_duration(vod), Some(4));
+        assert_eq!(vod_duration("#EXTM3U\n#EXTINF:2.5,\na.ts\n"), None);
+        assert_eq!(
+            vod_duration("#EXTM3U\n#EXTINF:0.5,\na.ts\n#EXT-X-ENDLIST"),
+            None
+        );
+    }
 }

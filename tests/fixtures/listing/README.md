@@ -18,10 +18,9 @@ Reference: official yt-dlp commit
 - `yt_dlp/__init__.py:755` and `817`: JSON/getting options imply simulation.
 
 `tools/compare_listing.py` calls the actual pinned `list_formats` and table
-renderer directly, observing the declaration-order input and metadata. It does
-not compare exact rendered bytes, columns, whitespace, coloring, unit rounding,
-resolution spelling or abr/vbr inference. The native table layout remains its
-own documented presentation.
+renderer directly, observing the declaration-order input and metadata. The
+native renderer now follows upstream `render_formats_table`; exact rendered
+bytes are pinned separately by `table.txt` (below).
 
 The same tool separately runs actual `parse_options` and `process_video_result`
 with network, download and external processes forbidden. Its eight probes show:
@@ -40,3 +39,9 @@ Actual processing sorts formats, so control-flow probes compare listed ID sets,
 not native declaration order. Explicit pair IDs avoid claiming parity for the
 native default selection, ranking, group rules or FFmpeg discovery. All probes
 exercise synthetic inputs only; no acquisition or live-site behavior is claimed.
+
+`table.txt` is the exact stdout of the pinned upstream for `input.json` (with
+the native-only `stream_kind`/`direct` keys removed), produced by
+`YoutubeDL({'quiet': True, 'listformats': True}).process_ie_result(info, download=False)`.
+The native renderer must reproduce it byte for byte; the `[info] Available
+formats for ID:` caption is a screen message and is not part of it.

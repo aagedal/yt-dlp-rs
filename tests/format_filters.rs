@@ -15,6 +15,16 @@ use yt_dlp_rs::YoutubeDl;
 
 const FORMATS: &str = "<title>Filters</title><video><source src='/low.mp4' type='video/mp4' width='640' height='360'><source src='/medium.mp4' type='video/mp4' width='1280' height='720'><source src='/high.mp4' type='video/mp4' width='1920' height='1080'><source src='/unknown.mp4' type='video/mp4'><source src='/clip.webm' type='video/webm' width='1280' height='720'></video>";
 const MASTER: &str = "#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"main\",NAME=\"English/+Main\",LANGUAGE=\"en\",DEFAULT=YES,AUTOSELECT=YES,URI=\"english.m3u8\"\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"main\",NAME=\"Norwegian\",LANGUAGE=\"nb\",URI=\"norwegian.m3u8\"\n#EXT-X-STREAM-INF:BANDWIDTH=500000,RESOLUTION=1280x720,CODECS=\"avc1.4,mp4a.40.2\",AUDIO=\"main\"\nvideo.m3u8\n";
+/// Extracting `MASTER` reads every media playlist, then upstream generic's
+/// "Checking m3u8 live status" refetches the first `m3u8_native` format
+/// (audio renditions precede variants). Segments and keys are never fetched.
+const MASTER_EXTRACTION: [&str; 5] = [
+    "/master.m3u8",
+    "/video.m3u8",
+    "/english.m3u8",
+    "/norwegian.m3u8",
+    "/english.m3u8",
+];
 const MEDIA: &str =
     "#EXTM3U\n#EXT-X-MAP:URI=\"init.mp4\"\n#EXTINF:1,\nsegment.m4s\n#EXT-X-ENDLIST\n";
 
@@ -150,6 +160,68 @@ fn only_screen_lines(output: &Output) {
     );
 }
 
+/// Runs `selector` against the two-entry playlist with `-j -s` and as a
+/// download. Like upstream `process_video_result`, entries are selected one
+/// at a time: playlist-1 resolves to `format_id` (served from `path`) and is
+/// printed/downloaded, playlist-2 (only 1080p) fails with upstream's error,
+/// and the run exits 1.
+fn assert_second_playlist_entry_fails_alone(
+    server: &Server,
+    selector: &str,
+    format_id: &str,
+    height: u64,
+    path: &str,
+) {
+    let directory = tempfile::tempdir().unwrap();
+    let template = directory.path().join("%(id)s.%(ext)s");
+    for mode in [vec!["-j", "-s"], Vec::new()] {
+        let json = !mode.is_empty();
+        let mut args = mode;
+        args.extend(["-f", selector, "-o", template.to_str().unwrap()]);
+        let output = server.cli("/playlist.html", &args);
+        assert_eq!(output.status.code(), Some(1), "{selector}");
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert_eq!(
+            stderr
+                .lines()
+                .filter(|line| line.starts_with("ERROR:"))
+                .collect::<Vec<_>>(),
+            [
+                "ERROR: [html5] playlist-2: Requested format is not available. Use --list-formats for a list of available formats"
+            ],
+            "{selector}: {stderr}"
+        );
+        assert!(!stderr.contains("format selection failed"), "{stderr}");
+        if json {
+            let lines: Vec<Value> = String::from_utf8_lossy(&output.stdout)
+                .lines()
+                .map(|line| serde_json::from_str(line).unwrap())
+                .collect();
+            assert_eq!(lines.len(), 1, "{selector}");
+            assert_eq!(lines[0]["id"], "playlist-1");
+            assert_eq!(lines[0]["playlist_index"], 1);
+            assert_eq!(lines[0]["format_id"], format_id);
+            assert_eq!(lines[0]["height"], height);
+            assert_eq!(lines[0]["url"], server.url(path));
+            assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+        } else {
+            only_screen_lines(&output);
+            let body = path.trim_start_matches('/').trim_end_matches(".mp4");
+            assert_eq!(
+                std::fs::read(directory.path().join("playlist-1.mp4")).unwrap(),
+                body.as_bytes(),
+                "{selector}"
+            );
+            assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+        }
+    }
+    // Two probes per source (one per run) plus the single playlist-1 download.
+    for source in ["/low.mp4", "/medium.mp4", "/high.mp4"] {
+        let expected = 2 + usize::from(source == path);
+        assert_eq!(server.count(source), expected, "{selector}: {source}");
+    }
+}
+
 #[test]
 fn cli_numeric_and_extension_filters_select_without_downloading() {
     let server = Server::new();
@@ -225,7 +297,7 @@ fn quoted_filter_delimiters_do_not_split_hls_pair_or_fallback_expression() {
         2
     );
     assert_eq!(server.count("/segment.m4s"), 0);
-    assert_eq!(server.requests.lock().unwrap().len(), 4);
+    assert_eq!(*server.requests.lock().unwrap(), MASTER_EXTRACTION);
 }
 
 #[test]
@@ -249,26 +321,14 @@ fn invalid_predicates_fail_even_after_a_valid_fallback_branch() {
 }
 
 #[test]
-fn playlist_filter_failure_is_atomic_for_json_and_downloads() {
-    let server = Server::new();
-    let directory = tempfile::tempdir().unwrap();
-    let template = directory.path().join("%(id)s.%(ext)s");
-    for mode in [vec!["-j", "-s"], Vec::new()] {
-        let json = !mode.is_empty();
-        let mut args = mode;
-        args.extend(["-f", "best[height<=720]", "-o", template.to_str().unwrap()]);
-        let output = server.cli("/playlist.html", &args);
-        assert!(!output.status.success());
-        if json {
-            assert!(output.stdout.is_empty());
-        } else {
-            only_screen_lines(&output);
-        }
-        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
-    }
-    assert_eq!(server.count("/low.mp4"), 2);
-    assert_eq!(server.count("/medium.mp4"), 2);
-    assert_eq!(server.count("/high.mp4"), 2);
+fn playlist_filter_failure_is_per_entry_for_json_and_downloads() {
+    assert_second_playlist_entry_fails_alone(
+        &Server::new(),
+        "best[height<=720]",
+        "1",
+        720,
+        "/medium.mp4",
+    );
 }
 
 #[test]
@@ -404,7 +464,7 @@ fn nested_hls_pair_groups_filter_audio_before_fallback_without_launching_ffmpeg(
             .len(),
         2
     );
-    assert_eq!(server.requests.lock().unwrap().len(), 4);
+    assert_eq!(*server.requests.lock().unwrap(), MASTER_EXTRACTION);
     assert_eq!(server.count("/init.mp4"), 0);
     assert_eq!(server.count("/segment.m4s"), 0);
 }
@@ -436,35 +496,16 @@ fn malformed_grouped_later_branches_fail_before_json_or_downloads() {
 }
 
 #[test]
-fn grouped_playlist_selection_keeps_all_entries_atomic() {
-    let server = Server::new();
-    let directory = tempfile::tempdir().unwrap();
-    let template = directory.path().join("%(id)s.%(ext)s");
-    for mode in [vec!["-j", "-s"], Vec::new()] {
-        let json = !mode.is_empty();
-        let mut args = mode;
-        args.extend([
-            "-f",
-            "((b/0)[height<=720])",
-            "-o",
-            template.to_str().unwrap(),
-        ]);
-        let output = server.cli("/playlist.html", &args);
-        assert!(!output.status.success());
-        if json {
-            assert!(output.stdout.is_empty());
-        } else {
-            only_screen_lines(&output);
-        }
-        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
-    }
-    for path in ["/low.mp4", "/medium.mp4", "/high.mp4"] {
-        assert_eq!(
-            server.count(path),
-            2,
-            "no download after a later entry fails: {path}"
-        );
-    }
+fn grouped_playlist_selection_fails_per_entry() {
+    // `0` names the only (1080p) format of playlist-2, which the outer
+    // filter still rejects.
+    assert_second_playlist_entry_fails_alone(
+        &Server::new(),
+        "((b/0)[height<=720])",
+        "1",
+        720,
+        "/medium.mp4",
+    );
 }
 
 #[test]
@@ -554,7 +595,10 @@ fn indexed_hls_audio_follows_upstream_sort_order_without_merger_launch() {
     }
     assert_eq!(server.count("/init.mp4"), 0);
     assert_eq!(server.count("/segment.m4s"), 0);
-    assert_eq!(server.requests.lock().unwrap().len(), 8);
+    assert_eq!(
+        *server.requests.lock().unwrap(),
+        MASTER_EXTRACTION.repeat(2)
+    );
 }
 
 #[test]
@@ -573,35 +617,15 @@ fn indexed_out_of_range_can_fall_back_inside_filtered_groups() {
 }
 
 #[test]
-fn indexed_playlist_failure_is_atomic_before_json_and_downloads() {
-    let server = Server::new();
-    let directory = tempfile::tempdir().unwrap();
-    let template = directory.path().join("%(id)s.%(ext)s");
-    for mode in [vec!["-j", "-s"], Vec::new()] {
-        let json = !mode.is_empty();
-        let mut args = mode;
-        args.extend([
-            "-f",
-            "(b.2/w.2)[height>=360]",
-            "-o",
-            template.to_str().unwrap(),
-        ]);
-        let output = server.cli("/playlist.html", &args);
-        assert!(!output.status.success());
-        if json {
-            assert!(output.stdout.is_empty());
-        } else {
-            only_screen_lines(&output);
-        }
-        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
-    }
-    for path in ["/low.mp4", "/medium.mp4", "/high.mp4"] {
-        assert_eq!(
-            server.count(path),
-            2,
-            "unexpected download before playlist index failure: {path}"
-        );
-    }
+fn indexed_playlist_failure_is_per_entry_for_json_and_downloads() {
+    // playlist-1 has a second-best format; playlist-2 has neither `b.2` nor `w.2`.
+    assert_second_playlist_entry_fails_alone(
+        &Server::new(),
+        "(b.2/w.2)[height>=360]",
+        "0",
+        360,
+        "/low.mp4",
+    );
 }
 
 #[test]

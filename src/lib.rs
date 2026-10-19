@@ -429,6 +429,17 @@ impl YoutubeDl {
         )
     }
 
+    /// Select formats for one video or playlist entry (upstream
+    /// `process_video_result`), leaving it unchanged on failure.
+    pub fn select_video(&self, info: &mut VideoInfo, format: Option<&str>) -> Result<()> {
+        let format = format.or(self.prefer_best.then_some("best/bestvideo+bestaudio"));
+        info.select_format_with_merge(
+            format,
+            self.ffmpeg.is_some(),
+            self.merge_output_format.as_deref(),
+        )
+    }
+
     /// Extract all supported alternatives without applying library format selection.
     /// Useful for inspection, including separate-only presentations without a merger.
     /// Metadata retains the extractor's representative fields; select before downloading.

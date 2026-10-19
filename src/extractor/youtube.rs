@@ -27,10 +27,13 @@ pub struct YoutubeOptions {
     /// Include translated manual captions in automatic-caption metadata.
     /// Original ASR captions/translations are always discovered without fetching.
     pub include_translated_subtitles: bool,
+    /// Upstream `noplaylist`: a watch URL with `list=` downloads just its video.
+    pub no_playlist: bool,
 }
 
 struct ConfiguredYoutube {
     include_translated_subtitles: bool,
+    no_playlist: bool,
     runtime: Option<challenge::Runtime>,
 }
 
@@ -52,6 +55,7 @@ impl Youtube {
     ) -> impl Extractor {
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,
+            no_playlist: options.no_playlist,
             runtime: options
                 .js_runtime
                 .map(|path| challenge::Runtime::with_http_options(path, headers, cookies, proxy)),
@@ -107,6 +111,11 @@ impl Candidate {
             format_note: None,
             audio_default: false,
             audio_autoselect: false,
+            // Upstream: single streams (a `none` codec) name an `EXT_dash` container.
+            container: codecs
+                .filter(|codecs| codecs.vcodec == "none" || codecs.acodec == "none")
+                .filter(|_| !self.ext.is_empty())
+                .map(|_| format!("{}_dash", self.ext)),
             fragments: Vec::new(),
             format_id: self.format_id,
             url,
@@ -136,7 +145,7 @@ fn valid_id(id: &str) -> bool {
 
 // Claim all URLs on these exact hosts so unsupported site pages cannot fall
 // through to generic HTML5 extraction and appear to be supported YouTube videos.
-fn video_id(url: &Url) -> Result<Option<String>> {
+fn video_id(url: &Url, no_playlist: bool) -> Result<Option<String>> {
     let host = url.host_str().unwrap_or("");
     if !matches!(
         host,
@@ -152,9 +161,22 @@ fn video_id(url: &Url) -> Result<Option<String>> {
         return Ok(None);
     }
     if url.query_pairs().any(|(key, _)| key == "list") {
-        return Err(unsupported(
-            "playlists and video URLs with list= are not supported",
-        ));
+        // Upstream `YoutubeTabIE._yes_playlist`: only `--no-playlist` resolves
+        // a watch URL with both IDs to its single video.
+        let ids: Vec<_> = url.query_pairs().filter(|(key, _)| key == "v").collect();
+        match (no_playlist && url.path() == "/watch", ids.as_slice()) {
+            (true, [(_, id)]) if valid_id(id) => {
+                crate::screen::screen(&format!(
+                    "[youtube:tab] Downloading just the video {id} because of --no-playlist"
+                ));
+                return Ok(Some(id.clone().into_owned()));
+            }
+            _ => {
+                return Err(unsupported(
+                    "playlists and video URLs with list= are not supported",
+                ));
+            }
+        }
     }
     let id = if matches!(host, "youtu.be" | "www.youtu.be") {
         url.path()
@@ -630,6 +652,7 @@ fn extract_watch_page_with_caption_options(
         vcodec: None,
         acodec: None,
         dynamic_range: None,
+        container: None,
         video_ext: None,
         audio_ext: None,
         metadata: metadata::parse(&player),
@@ -666,7 +689,7 @@ impl Extractor for Youtube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
-        let Some(id) = video_id(url)? else {
+        let Some(id) = video_id(url, false)? else {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
@@ -680,7 +703,7 @@ impl Extractor for ConfiguredYoutube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
-        let Some(id) = video_id(url)? else {
+        let Some(id) = video_id(url, self.no_playlist)? else {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
@@ -741,7 +764,9 @@ mod tests {
             "https://youtube.com/live/BaW_jenozKc",
         ] {
             assert_eq!(
-                video_id(&Url::parse(input).unwrap()).unwrap().as_deref(),
+                video_id(&Url::parse(input).unwrap(), false)
+                    .unwrap()
+                    .as_deref(),
                 Some("BaW_jenozKc")
             );
         }
@@ -749,7 +774,11 @@ mod tests {
             "https://youtube.com.evil.invalid/watch?v=BaW_jenozKc",
             "https://example.com/watch?v=BaW_jenozKc",
         ] {
-            assert!(video_id(&Url::parse(input).unwrap()).unwrap().is_none());
+            assert!(
+                video_id(&Url::parse(input).unwrap(), false)
+                    .unwrap()
+                    .is_none()
+            );
         }
         for input in [
             "https://youtube.com/playlist?list=foo",
@@ -764,6 +793,26 @@ mod tests {
                     crate::YoutubeDl::new().unwrap().extract_info(input),
                     Err(Error::UnsupportedYoutube(_))
                 ),
+                "{input}"
+            );
+        }
+    }
+
+    #[test]
+    fn no_playlist_resolves_watch_urls_with_lists() {
+        let url = Url::parse("https://www.youtube.com/watch?v=BaW_jenozKc&list=PLfoo").unwrap();
+        assert_eq!(
+            video_id(&url, true).unwrap().as_deref(),
+            Some("BaW_jenozKc")
+        );
+        assert!(video_id(&url, false).is_err());
+        for input in [
+            "https://youtube.com/playlist?list=foo",
+            "https://youtube.com/watch?list=foo",
+            "https://youtube.com/watch?v=bad&list=foo",
+        ] {
+            assert!(
+                video_id(&Url::parse(input).unwrap(), true).is_err(),
                 "{input}"
             );
         }

@@ -293,7 +293,14 @@ fn json_simulation_does_not_fetch_fragments_or_create_output() {
     );
     assert_eq!(json["fragments"].as_array().unwrap().len(), 2);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
-    assert_eq!(server.paths(), ["/master.m3u8", "/low.m3u8", "/high.m3u8"]);
+    // Upstream generic's "Checking m3u8 live status" refetches the first
+    // `m3u8_native` format and sets duration = int(sum of EXTINF) = 4 + 2.
+    assert_eq!(json["duration"], 6);
+    assert_eq!(json["duration_string"], "6");
+    assert_eq!(
+        server.paths(),
+        ["/master.m3u8", "/low.m3u8", "/high.m3u8", "/low.m3u8"]
+    );
 }
 
 #[test]
@@ -424,7 +431,12 @@ fn encrypted_json_and_simulation_do_not_request_keys_or_segments() {
             assert!(info["fragments"][0]["encryption"].get("key").is_none());
         }
     }
-    assert_eq!(server.paths(), ["/aes.m3u8", "/aes.m3u8"]);
+    // Per run: extraction plus the generic live-status refetch of the media
+    // playlist itself. Keys and segments are never requested.
+    assert_eq!(
+        server.paths(),
+        ["/aes.m3u8", "/aes.m3u8", "/aes.m3u8", "/aes.m3u8"]
+    );
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
 }
 

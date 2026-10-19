@@ -135,6 +135,9 @@ pub struct VideoFormat {
     pub acodec: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub dynamic_range: Option<String>,
+    /// Upstream `container` (`EXT_dash` for DASH and YouTube single streams).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub container: Option<String>,
     /// Filled like `FormatSorter._fill_sorting_fields`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub video_ext: Option<String>,
@@ -426,6 +429,9 @@ pub struct VideoInfo {
     pub acodec: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub dynamic_range: Option<String>,
+    /// Upstream `container` (`EXT_dash` for DASH and YouTube single streams).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub container: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub video_ext: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -583,6 +589,7 @@ impl VideoInfo {
                     self.vcodec = vcodec;
                     self.acodec = acodec;
                     self.dynamic_range = dynamic_range;
+                    self.container = None;
                     self.video_ext = None;
                     self.audio_ext = None;
                     self.stream_kind = StreamKind::Standalone;
@@ -628,6 +635,7 @@ impl VideoInfo {
         self.vcodec = selected.vcodec.clone();
         self.acodec = selected.acodec.clone();
         self.dynamic_range = selected.dynamic_range.clone();
+        self.container = selected.container.clone();
         self.video_ext = selected.video_ext.clone();
         self.audio_ext = selected.audio_ext.clone();
         self.filesize = selected.filesize;
@@ -1161,6 +1169,7 @@ mod tests {
             format_note: None,
             audio_default: false,
             audio_autoselect: false,
+            container: None,
             fragments: Vec::new(),
             format_id: id.into(),
             stream_kind: kind,
@@ -1190,6 +1199,7 @@ mod tests {
             vcodec: None,
             acodec: None,
             dynamic_range: None,
+            container: None,
             video_ext: None,
             audio_ext: None,
             metadata: Default::default(),

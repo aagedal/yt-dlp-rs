@@ -10,8 +10,9 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Positional URLs | One or more HTTP(S) URLs (stripped), processed sequentially; continue after errors, return failure if any URL fails; optional with a batch file |
 | `-a`, `--batch-file FILE`, `--no-batch-file` | URLs from FILE or `-` (stdin) precede positional URLs; upstream comment/BOM/newline/whitespace rules and `~`/`$VAR` path expansion; unreadable file fails before requests; last flag wins; see [batch files](../upstream/notes/batch-file.md) |
 | `-j`, `--dump-json` | One selected `VideoInfo` JSON object per video, including each HTML5 playlist entry; no downloads; with `-F`, a table precedes JSON |
-| `-J`, `--dump-single-json` | One JSON object per URL after selection: the `-j` object for videos; playlists add `_type`, `playlist_count`, `requested_entries` and selected `entries`; implies quiet simulation; native field shape like `-j`, not upstream `sanitize_info` output |
-| `-F`, `--list-formats` | List eligible alternatives without selection or downloads; combined `-j`/`-s` retain normal selection; native table styling |
+| `-J`, `--dump-single-json` | One JSON object per URL after processing: the `-j` object for videos (`null` when selection fails); playlists add `_type`, `playlist_count`, `requested_entries` (omitted for the full playlist, like upstream) and the processed `entries` (`null` for failed entries); implies quiet simulation; native field shape like `-j`, not upstream `sanitize_info` output |
+| `-F`, `--list-formats` | List eligible alternatives without selection or downloads; combined `-j`/`-s` retain normal selection; upstream `render_formats_table` layout without colors (the `[info] Available formats for ID:` caption is a screen message, so quiet modes print only the table) |
+| `--list-formats-old`, `--no-list-formats-as-table`, `--list-formats-as-table` | Upstream `listformats_table`: the old `format code  extension  resolution  note` layout (`_format_note`) |
 | `-q`, `--quiet`, `--no-quiet` | Suppress informational `[...]` stdout lines (upstream `to_screen`); implied by printing/JSON unless `--no-quiet`; errors and warnings remain; last flag wins |
 | `--no-warnings` | Suppress `WARNING:` lines |
 | `-s`, `--simulate`, `--no-simulate` | Extract metadata, print screen lines to stdout and diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
@@ -20,7 +21,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; format IDs follow upstream for direct, HLS and DASH results (see below) |
 | `-o`, `--output [TYPES:]TEMPLATE` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; upstream metadata sanitization; typed `subtitle`/`infojson`/`pl_infojson` templates (empty skips that file), `~`/`$VAR` template expansion; no overwrite; see [output paths](../upstream/notes/output-paths.md) |
 | `-P`, `--paths [TYPES:]PATH` | `home` (default) and output-type directories joined like upstream `get_output_path`; absolute templates ignore them with a warning; `temp:` is rejected |
-| `--list-subs` | Native language/format inventory; list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
+| `--list-subs` | Upstream `render_subtitles_table` (`Language Name Formats`, formats in reverse order, `ID has no subtitles`); list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
 | `--write-subs`, `--write-srt` | Select normal subtitles and write sidecars before actual media downloads; JSON/simulation/listing only expose selection |
 | `--write-auto-subs`, `--write-automatic-subs` | Select automatic captions independently; manual tracks win shared languages when both writing flags are enabled |
 | `--no-write-auto-subs`, `--no-write-automatic-subs` | Disable automatic writing; last automatic write/no-write flag wins |
@@ -74,7 +75,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-x`, `--extract-audio`, `--audio-format`, `--audio-quality` | Ordered audio extraction mappings and bounded quality settings; see audio extraction below |
 | `--remux-video`, `--recode-video` | Ordered video target mappings; stream copying or container-default re-encoding; recode wins |
 | `--embed-metadata`, `--add-metadata`, `--no-embed-metadata`, `--no-add-metadata` | Final FFmpeg stage after subtitle embedding: upstream `FFmpegMetadataPP` stream-copy options, `-write_id3v1 1`, common tags from represented fields with upstream key precedence (title, date, description/synopsis, purl/comment, artist, genre, …) and per-stream `language`; requires `--ffmpeg-location`; no chapters and no info JSON attachment (warned with `--write-info-json`) |
-| `--fixup POLICY`, `--hls-use-mpegts`, `--no-hls-use-mpegts` | Upstream `fixup()` for unmerged, unprocessed downloads: HLS (`hlsnative`, unless `--hls-use-mpegts`) MP4-labeled files that are MPEG-TS get `FFmpegFixupM3u8PP` (`[FixupM3u8] Fixing MPEG-TS in MP4 container of "FILE"`, stream copy `-map 0 -dn -ignore_unknown -c copy -f mp4`, `-bsf:a aac_adtstoasc` when ffprobe reports AAC, via `NAME.temp.EXT`); DASH `m4a` downloads get `FFmpegFixupM4aPP` (`[FixupM4a] Correcting container of "FILE"`). Without ffmpeg upstream's `ID: MESSAGE. Install ffmpeg to fix this automatically` warning; `warn` only warns, `never`/`ignore` skip; `detect_or_warn` (default) and `force` fix new downloads (already-downloaded files are not re-fixed). MPEG-TS is detected from the file's bytes rather than ffprobe `format_name`. Merges and other FFmpeg inputs also choose demuxers from the bytes. Processed downloads (`-x`, embedding, recoding) produce correct containers through their FFmpeg stage but do not print the fixup line |
+| `--fixup POLICY`, `--hls-use-mpegts`, `--no-hls-use-mpegts` | Upstream `fixup()` for unmerged, unprocessed downloads: HLS (`hlsnative`, unless `--hls-use-mpegts`) MP4-labeled files that are MPEG-TS get `FFmpegFixupM3u8PP` (`[FixupM3u8] Fixing MPEG-TS in MP4 container of "FILE"`, stream copy `-map 0 -dn -ignore_unknown -c copy -f mp4`, `-bsf:a aac_adtstoasc` when ffprobe reports AAC, via `NAME.temp.EXT`); `m4a` downloads whose `container` is `m4a_dash` (DASH representations and YouTube audio-only formats, which carry upstream's `EXT_dash` containers) get `FFmpegFixupM4aPP` (`[FixupM4a] Correcting container of "FILE"`). Without ffmpeg upstream's `ID: MESSAGE. Install ffmpeg to fix this automatically` warning; `warn` only warns, `never`/`ignore` skip; `detect_or_warn` (default) and `force` fix new downloads (already-downloaded files are not re-fixed). MPEG-TS is detected from the file's bytes rather than ffprobe `format_name`. Merges and other FFmpeg inputs also choose demuxers from the bytes. Processed downloads (`-x`, embedding, recoding) produce correct containers through their FFmpeg stage but do not print the fixup line |
 | `--merge-output-format FORMAT` | Upstream `/`-separated container preferences passed to `get_compatible_ext` for merges (`mp4/mkv`); validated with upstream's prefix-matching `re.match` against `avi`/`flv`/`mkv`/`mov`/`mp4`/`webm` (`invalid merge output format "X" given` usage error); ignored without a merge |
 | `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates and, for unprocessed merges, upstream's `NAME.fID.EXT` format files; accepted without other options like upstream; last flag wins |
 | `--ffprobe-location PATH` | Native option: explicit audio probe executable, overriding the ffprobe found from `--ffmpeg-location` or `PATH` |
@@ -85,6 +86,9 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--id` | Hidden deprecated upstream option: `-o "%(id)s.%(ext)s"` with its deprecation warning, or `--id is ignored since --output was given` |
 | `--print-json`, `--all-subs` | Hidden deprecated upstream aliases: quiet JSON printing without simulation; `--sub-langs all --write-subs` |
 | Removed upstream switches | `--call-home`, `-C`, `--dump-user-agent`, `--sponskrub*`, `--prefer-ffmpeg`, `--write-annotations` and the other options in upstream's deprecated list are accepted and dropped (with their values) and reported once with upstream's `Deprecated Feature:` notice |
+| `--no-playlist`, `--yes-playlist` | Upstream `noplaylist`: a YouTube `watch?v=ID&list=...` URL downloads just the video (`[youtube:tab] Downloading just the video ID because of --no-playlist`); without it such URLs remain an explicit unsupported-playlist error. HTML5 playlists are unaffected, as upstream's generic extractor ignores the option |
+| `--flat-playlist`, `--no-flat-playlist` | Accepted; supported playlists contain fully extracted entries rather than URL results, which upstream processes either way |
+| `--skip-playlist-after-errors N` | Upstream `__process_playlist` `failures`: after N entries fail extraction/selection, `ERROR: Skipping the remaining entries in playlist "TITLE" since N items failed extraction`; 0 is unlimited |
 | `--playlist-random` | Upstream `random.shuffle` of the selected entries (clock-seeded; `playlist_autonumber` follows the new order); `--playlist-reverse is ignored since --playlist-random was given` |
 | `--lazy-playlist`, `--no-lazy-playlist` | Upstream lazy semantics on the eagerly extracted playlist: entries keep their order, `n_entries` is unknown (`Downloading N/A items`, `item N of N/A`, `NA` in templates), `-J` has no `requested_entries`, and reverse/random are ignored with upstream's `is ignored since --lazy-playlist was given` warnings (printed after date conflicts, unlike upstream's order) |
 | `--download-archive FILE` | Read recorded extractor/video IDs, skip before selection (`[download] ID: TITLE has already been recorded in the archive`), record after successful download/merge publication or an already-downloaded file; no writes in metadata/listing/simulation unless `--force-write-archive` |
@@ -120,7 +124,9 @@ like `truncate_string(url, 100, 20)`), `[generic] ID: Downloading webpage` with
 `_generic_id`, the `Falling back on generic information extractor` warning when
 the Content-Type is not a direct media type, then `Extracting information`
 (HTML and MPD), `Downloading m3u8 information`/`Checking m3u8 live status`
-(HLS) or the `URL could be a direct video link` warning (suffix-only media), and
+(HLS; like upstream `_extra_manifest_info`, the first `m3u8_native` format's
+playlist is fetched again and a missing `duration` becomes `int(sum(EXTINF))`;
+live playlists stay unsupported) or the `URL could be a direct video link` warning (suffix-only media), and
 `[html5] ID: Downloading m3u8 information`/`Downloading MPD manifest` for HTML5
 manifest sources. Simulation prints no native per-video summary line.
 Simulation and JSON still make network requests. This inventory does not claim
@@ -328,9 +334,14 @@ and general embedded-player extraction are not implemented. Unsupported HLS/DASH
 features and non-HTTP sources fail explicitly, even
 when another supported source was explicitly selected. Unselected source probe
 failures also fail extraction rather than hiding unsupported alternatives.
-Every entry and alternative is validated before a result is returned. A failed
-probe or format selection fails the whole input before downloads or JSON output;
-selection errors identify the entry. A failed transfer or output-path collision
+Every entry and alternative is validated before a result is returned, and a
+failed probe fails the whole input before downloads or JSON output. The CLI
+selects formats per entry like upstream `process_video_result`: a failed
+selection reports `ERROR: [EXTRACTOR] ID: Requested format is not available. Use
+--list-formats for a list of available formats` (after that entry's `-F` table)
+and later entries continue; `-J` shows the entry as `null` (a single video prints
+`null`). The library's `extract_result_with_format` still selects atomically and
+names the entry in its error. A failed transfer or output-path collision
 sets a nonzero CLI exit status while later entries and input URLs continue.
 Fixed output paths may therefore collide; the default template includes each
 entry's distinct ID. Existing files are never overwritten.
@@ -1289,23 +1300,18 @@ so a separate-only combined mode may require an explicit pair selector or merger
 configuration. With `--no-simulate`, listing keeps normal selection and then
 downloads; upstream listing-style toggles remain unsupported.
 
-Tables retain extractor declaration order and show ID, extension, resolution,
-stream kind, exact declared/probed filesize in bytes, declared kbps rates, language
-and rendition notes/default/autoselect flags. Missing fields display `-`; sizes
-and codecs are not inferred from fragments. Standalone means independently usable
-or unknown composition, not a claim that both audio and video exist. An implicit
-source without a formats array has one row with `-` as its non-selectable ID.
-Resource URL and encryption fields are not rendered. Table layout, number/size
-formatting and order follow native metadata policy, not upstream sorter or table
-byte parity. Unicode is preserved with character-count alignment; terminal-width
-alignment for all scripts is not claimed.
-
-Controls and line/bidirectional control characters are visibly escaped before
-alignment. Cells are limited to 128 characters and captions to 256, with an
-ellipsis for truncation. Full metadata remains available in JSON. Listing output
-is rendered only after every entry in the input extracts successfully (and, for
-combined modes, selects successfully). This preserves native playlist atomicity;
-upstream may print a table before a later selection failure.
+Tables port upstream `render_formats_table` over the serialized info dict, in
+sorted format order: `ID EXT RESOLUTION FPS HDR CH | FILESIZE TBR PROTO | VCODEC
+VBR ACODEC ABR ASR MORE INFO`, with `format_field`/`round` (ties to even)
+formatting, `format_bytes`/`format_decimal_suffix`, `≈`/`~` approximate sizes
+(including `filesize_from_tbr`), `shorten_protocol_name`, `simplified_codec`,
+`hide_empty` columns and the uncolored `|`/`-` delimiters (upstream uses them
+whenever colors are off). An info dict without formats renders itself as one row.
+Saved HLS, DASH and HTML5 fixtures render byte-identical tables and old-layout
+notes. Unicode alignment counts characters like upstream; terminal controls and
+line/bidirectional controls in text fields are visibly escaped (a native safety
+difference). Each entry's table is printed before its format selection, so a
+failed selection follows its table like upstream.
 
 Extraction uses normal probes, bounded manifest reads, eligibility and optional
 challenge solving. Listing does not fetch segment bodies, initialization resources
@@ -1630,14 +1636,11 @@ first available preference, or last available with a warning. Empty format queri
 are valid fallback requests. Requested metadata is exposed with `--write-subs`
 even in JSON/simulation, without caption downloads.
 
-`--list-subs` renders a native inventory of declared languages/extensions, with
-no URLs or resource inspection. Cells/captions escape controls, line/bidirectional
-controls and are bounded to 128/256 characters, with at most 1024 rows. List-only
-mode bypasses media format availability; adding `-j` or `-s` retains selection.
-Tables/JSON wait for all retained entries to extract and select successfully.
+`--list-subs` renders upstream's subtitle table of declared languages/extensions,
+with no URLs or resource inspection; text fields escape controls and
+line/bidirectional controls. List-only mode bypasses media format availability;
+adding `-j` or `-s` retains selection.
 Without `--no-simulate`, listing, JSON and simulation never write sidecars or render output paths.
-Upstream table styling remains unsupported.
-
 Actual downloads plan sanitized sidecars before I/O, replacing a final matching
 media extension with `.LANG.EXT`, or appending that suffix otherwise. Language and
 extension components use native filename sanitation. An ASCII case-insensitive
@@ -1703,7 +1706,8 @@ literal/all/exclusion and extension preference rules apply to the combined map.
 `SubtitleOptions::select_sources` exposes this explicitly to library callers.
 
 `--list-subs` prints automatic captions first when present, then normal subtitles;
-optional names use the same escaped/bounded cell policy. Pure
+a language shows one name when all its formats agree (none when all are unnamed),
+otherwise every name with `unknown` for missing ones. Pure
 `render_automatic_captions` is exported alongside `render_subtitles`. JSON retains
 both maps and optional selected metadata. Listing, JSON and simulation do not
 fetch caption bytes. The existing native subtitle transport and path planning
