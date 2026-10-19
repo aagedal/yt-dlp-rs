@@ -67,11 +67,18 @@ pub(crate) fn failure_delay(error: &Error) -> Option<Duration> {
 /// Upstream `HttpFD.establish_connection`: 5xx statuses and transport
 /// errors retry; other statuses fail at once.
 pub(crate) fn download_failure_delay(error: &Error) -> Option<Duration> {
-    let server_error =
-        |error: &reqwest::Error| error.status().is_some_and(|status| status.is_server_error());
+    let server_error = |error: &reqwest::Error| {
+        error
+            .status()
+            .is_some_and(|status| status.is_server_error())
+    };
     match error {
-        Error::Http(error) if error.status().is_some() => server_error(error).then_some(Duration::ZERO),
-        Error::Http(error) => (!error.is_builder() && !error.is_redirect()).then_some(Duration::ZERO),
+        Error::Http(error) if error.status().is_some() => {
+            server_error(error).then_some(Duration::ZERO)
+        }
+        Error::Http(error) => {
+            (!error.is_builder() && !error.is_redirect()).then_some(Duration::ZERO)
+        }
         Error::HttpRetryAfter {
             source,
             retry_after,
@@ -214,8 +221,29 @@ pub fn upstream_error_text(error: &Error) -> String {
                     .unwrap_or(status.canonical_reason().unwrap_or(""))
             )
         }
-        None => error.to_string(),
+        None => match error {
+            Error::Http(source) => urllib_error(source),
+            _ => error.to_string(),
+        },
     }
+}
+
+/// urllib's text for a transport error: `[Errno N] TEXT` from the OS error.
+pub(crate) fn urllib_error(error: &reqwest::Error) -> String {
+    let mut source: Option<&(dyn std::error::Error + 'static)> = Some(error);
+    while let Some(current) = source {
+        if let Some(io) = current.downcast_ref::<std::io::Error>()
+            && let Some(code) = io.raw_os_error()
+        {
+            let text = io.to_string();
+            let text = text
+                .strip_suffix(&format!(" (os error {code})"))
+                .unwrap_or(&text);
+            return format!("[Errno {code}] {text}");
+        }
+        source = current.source();
+    }
+    error.to_string()
 }
 
 /// The server's reason phrase (like urllib's `HTTPError.reason`), which

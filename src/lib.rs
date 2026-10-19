@@ -132,23 +132,6 @@ pub struct YoutubeDl {
 }
 
 /// A transport error as urllib words it: `[Errno N] TEXT` for an OS error.
-fn urllib_error(error: &reqwest::Error) -> String {
-    let mut source: Option<&(dyn std::error::Error + 'static)> = Some(error);
-    while let Some(current) = source {
-        if let Some(io) = current.downcast_ref::<std::io::Error>()
-            && let Some(code) = io.raw_os_error()
-        {
-            let text = io.to_string();
-            let text = text
-                .strip_suffix(&format!(" (os error {code})"))
-                .unwrap_or(&text);
-            return format!("[Errno {code}] {text}");
-        }
-        source = current.source();
-    }
-    error.to_string()
-}
-
 /// HlsFD's `Total fragments` for `info` after `refresh_hls`: the whole
 /// playlist's fragments even when only a discontinuity section downloads.
 pub fn total_fragments(info: &VideoInfo) -> usize {
@@ -713,7 +696,7 @@ impl YoutubeDl {
                 .client
                 .get(&url)
                 .send()
-                .map_err(|error| urllib_error(&error))
+                .map_err(|error| retry::urllib_error(&error))
                 .and_then(|response| {
                     let status = response.status();
                     if status == reqwest::StatusCode::NOT_FOUND {

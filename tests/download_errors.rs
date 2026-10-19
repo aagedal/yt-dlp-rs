@@ -164,3 +164,44 @@ fn a_raised_subtitle_failure_retries_the_loaded_info_with_its_url() {
     );
     assert!(directory.path().join("o.mp4").is_file());
 }
+
+#[test]
+fn transport_errors_use_urllib_errno_text() {
+    // A port that was just bound and released refuses connections.
+    let closed = TcpListener::bind("127.0.0.1:0").unwrap();
+    let address = closed.local_addr().unwrap();
+    drop(closed);
+    let directory = tempfile::tempdir().unwrap();
+    let info = serde_json::json!({
+        "id": "vid", "title": "Vid", "ext": "mp4",
+        "webpage_url": format!("http://{address}/v.mp4"),
+        "extractor": "generic", "extractor_key": "Generic",
+        "formats": [{"format_id": "0", "url": format!("http://{address}/v.mp4"), "ext": "mp4",
+            "protocol": "http", "vcodec": "avc1", "acodec": "mp4a.40.2"}],
+    });
+    let path = directory.path().join("info.json");
+    std::fs::write(&path, info.to_string()).unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "--no-progress",
+            "-R",
+            "1",
+            "--retry-sleep",
+            "0",
+        ])
+        .arg("--load-info-json")
+        .arg(&path)
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(1));
+    let stdout = text(&output.stdout);
+    let retry = stdout.lines().nth(1).unwrap();
+    assert!(
+        retry.starts_with("[download] Got error: [Errno ")
+            && retry.ends_with("] Connection refused. Retrying (1/1)..."),
+        "{stdout}"
+    );
+    assert!(text(&output.stderr).ends_with("] Connection refused. Giving up after 1 retries\n"));
+}
