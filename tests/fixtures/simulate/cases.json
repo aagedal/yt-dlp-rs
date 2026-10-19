@@ -233,6 +233,84 @@
    "simulate": true,
    "list_only": true,
    "quiet": true
+  },
+  {
+   "args": [
+    "-O",
+    "after_move:id"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-O",
+    "before_dl:id",
+    "-O",
+    "id"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-O",
+    "AFTER_VIDEO:id"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-O",
+    "video:id",
+    "-O",
+    "pre_process:id"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-O",
+    "after_filter:id"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
+  },
+  {
+   "args": [
+    "-F",
+    "-O",
+    "after_move:id"
+   ],
+   "simulate": true,
+   "list_only": true,
+   "quiet": true
+  },
+  {
+   "args": [
+    "--print-to-file",
+    "after_move:id",
+    "f.txt"
+   ],
+   "simulate": false,
+   "list_only": false,
+   "quiet": false
+  },
+  {
+   "args": [
+    "-O",
+    "bogus:id"
+   ],
+   "simulate": true,
+   "list_only": false,
+   "quiet": true
   }
  ]
 }

@@ -22,9 +22,10 @@ const ADVISORY: &str =
     "See  https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-69qj-pvh9-c5wg  for details";
 const UNSAFE_DEFAULT_CHARS: &str = "\"' \n\t;&|^$%*<>{}()[]`#\\";
 
-/// The implemented stages, in processing order.
+/// The implemented `POSTPROCESS_WHEN` stages for `--exec` and `--print`,
+/// in processing order.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum ExecStage {
+pub enum Stage {
     /// After format selection, before printing (also when simulating).
     Video,
     /// After sidecars and info JSON, before the media download.
@@ -37,8 +38,19 @@ pub enum ExecStage {
     AfterVideo,
 }
 
-impl ExecStage {
-    fn parse(when: &str) -> Result<Self> {
+impl Stage {
+    /// Split a case-insensitive `WHEN:` prefix from `value`, defaulting to
+    /// `default` when the prefix is absent or not a `POSTPROCESS_WHEN` name.
+    pub(super) fn split<'a>(value: &'a str, default: &str) -> (String, &'a str) {
+        match value.split_once(':') {
+            Some((when, rest)) if WHEN.iter().any(|w| w.eq_ignore_ascii_case(when)) => {
+                (when.to_ascii_lowercase(), rest)
+            }
+            _ => (default.into(), value),
+        }
+    }
+
+    pub(super) fn parse(when: &str) -> Result<Self> {
         Ok(match when {
             "video" => Self::Video,
             "before_dl" => Self::BeforeDownload,
@@ -46,9 +58,7 @@ impl ExecStage {
             "after_move" => Self::AfterMove,
             "after_video" => Self::AfterVideo,
             other => {
-                return Err(Error::Exec(format!(
-                    "--exec stage {other:?} is unsupported"
-                )));
+                return Err(Error::Exec(format!("stage {other:?} is unsupported")));
             }
         })
     }
@@ -177,7 +187,7 @@ fn signal(_: &std::process::ExitStatus) -> Option<i32> {
 /// Commands by stage, in the order given.
 #[derive(Debug, Clone, Default)]
 pub struct ExecCommands {
-    commands: Vec<(ExecStage, ExecCommand)>,
+    commands: Vec<(Stage, ExecCommand)>,
 }
 
 impl ExecCommands {
@@ -193,15 +203,11 @@ impl ExecCommands {
         for (forced, value) in values {
             let (when, template) = match forced {
                 Some(when) => (when.to_string(), *value),
-                None => match value.split_once(':') {
-                    Some((when, rest)) if WHEN.iter().any(|w| w.eq_ignore_ascii_case(when)) => {
-                        (when.to_ascii_lowercase(), rest)
-                    }
-                    _ => ("after_move".into(), *value),
-                },
+                None => Stage::split(value, "after_move"),
             };
             commands.push((
-                ExecStage::parse(&when)?,
+                Stage::parse(&when)
+                    .map_err(|_| Error::Exec(format!("--exec stage {when:?} is unsupported")))?,
                 ExecCommand::validate(template, options)?,
             ));
         }
@@ -212,11 +218,11 @@ impl ExecCommands {
         self.commands.is_empty()
     }
 
-    pub fn has(&self, stage: ExecStage) -> bool {
+    pub fn has(&self, stage: Stage) -> bool {
         self.commands.iter().any(|(s, _)| *s == stage)
     }
 
-    pub fn stage(&self, stage: ExecStage) -> impl Iterator<Item = &ExecCommand> {
+    pub fn stage(&self, stage: Stage) -> impl Iterator<Item = &ExecCommand> {
         self.commands
             .iter()
             .filter(move |(s, _)| *s == stage)

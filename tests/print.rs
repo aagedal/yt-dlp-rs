@@ -241,7 +241,8 @@ fn unsupported_print_stages_and_templates_fail_before_requests() {
     let directory = tempfile::tempdir().unwrap();
     for spec in [
         "playlist:title",
-        "after_move:filepath",
+        "pre_process:id",
+        "after_filter:id",
         "{id,title}",
         "missing_field",
         "%(id)q",
@@ -271,7 +272,7 @@ fn print_to_file_appends_before_downloading_without_implying_simulation() {
     assert_eq!(success(&output), "");
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert!(
-        stderr.contains("[info] Writing \"%(id)s\\n%(width)s\" to: lists/html5.txt"),
+        stderr.contains("[info] Writing '%(id)s\\n%(width)s' to: lists/html5.txt"),
         "{stderr}"
     );
     assert_eq!(
@@ -347,4 +348,50 @@ fn no_simulate_downloads_after_printing_json_and_listing() {
     let directory = tempfile::tempdir().unwrap();
     success(&server.cli(&["/page.html"], &["--no-simulate", "-s"], directory.path()));
     assert_eq!(entries(directory.path()), 0);
+}
+
+#[test]
+fn later_print_stages_follow_upstream_order_and_disable_implied_simulation() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let absolute = std::fs::canonicalize(directory.path())
+        .unwrap()
+        .join("page-1.mp4");
+    let output = server.cli(
+        &["/page.html"],
+        &[
+            "-O",
+            "after_video:%(id)s %(filepath)s",
+            "-O",
+            "after_move:filepath",
+            "-O",
+            "post_process:filepath,_filename",
+            "-O",
+            "Before_DL:_filename",
+            "-O",
+            "id",
+            "--print-to-file",
+            "after_move:filepath",
+            "moved.txt",
+            "-o",
+            "%(id)s.%(ext)s",
+        ],
+        directory.path(),
+    );
+    // A later stage means the media is downloaded; printing stays quiet.
+    assert_eq!(
+        success(&output),
+        format!(
+            "page-1\npage-1.mp4\npage-1.mp4\npage-1.mp4\n{}\npage-1 NA\n",
+            absolute.display()
+        )
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("page-1.mp4")).unwrap(),
+        b"media"
+    );
+    assert_eq!(
+        std::fs::read_to_string(directory.path().join("moved.txt")).unwrap(),
+        format!("{}\n", absolute.display())
+    );
 }

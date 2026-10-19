@@ -19,6 +19,8 @@ pub(super) enum Source<'a> {
         info: &'a VideoInfo,
         filename: std::result::Result<&'a str, &'a Error>,
         urls: &'a str,
+        filepath: Option<&'a str>,
+        prepared: Option<&'a str>,
     },
     /// Unsanitized `--exec` rendering with the stage's `filepath` and
     /// `_filename` values (when set).
@@ -108,7 +110,11 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
             info,
             filename,
             urls,
+            filepath,
+            prepared,
         } => match name {
+            "filepath" => return Ok(filepath.map(Text)),
+            "_filename" => return Ok(prepared.map(Text)),
             "filename" => {
                 return filename
                     .map(|filename| Some(Text(filename)))

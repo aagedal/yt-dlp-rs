@@ -4,44 +4,36 @@ use super::{TemplateOptions, render_template_with_options, template};
 use crate::{Error, Result, VideoInfo};
 use std::path::PathBuf;
 
-/// Upstream `POSTPROCESS_WHEN`; only `video` is supported here.
-const WHEN: &[&str] = &[
-    "pre_process",
-    "after_filter",
-    "video",
-    "before_dl",
-    "post_process",
-    "after_move",
-    "after_video",
-    "playlist",
-];
+use super::Stage;
 
-/// A validated `--print` template for the `video` stage.
+/// A validated `--print` template and the stage that prints it.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PrintTemplate {
     template: String,
+    stage: Stage,
+}
+
+/// The stage's file paths: `filepath` (set from `post_process` on) and the
+/// prepared `_filename`.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct StagePaths<'a> {
+    pub filepath: Option<&'a str>,
+    pub prepared: Option<&'a str>,
 }
 
 impl PrintTemplate {
     /// Parse `[WHEN:]TEMPLATE`. WHEN is case-insensitive and defaults to
-    /// `video`; other stages are rejected rather than printed at the wrong time.
+    /// `video`; `pre_process`, `after_filter` and `playlist` are rejected
+    /// rather than printed at the wrong time.
     /// Bare field lists become one `%(field)s` line per field, and a trailing
     /// `=` prints `field = %(field)#j`, as upstream's `_forceprint` does.
     pub fn parse(spec: &str) -> Result<Self> {
-        let template = match spec.split_once(':') {
-            Some((when, rest)) if WHEN.iter().any(|w| w.eq_ignore_ascii_case(when)) => {
-                if !when.eq_ignore_ascii_case("video") {
-                    return Err(Error::InvalidTemplate(format!(
-                        "print stage {:?} is unsupported; only \"video\" is implemented",
-                        when.to_ascii_lowercase()
-                    )));
-                }
-                rest
-            }
-            _ => spec,
-        };
+        let (when, template) = Stage::split(spec, "video");
+        let stage = Stage::parse(&when)
+            .map_err(|_| Error::InvalidTemplate(format!("print stage {when:?} is unsupported")))?;
         let template = Self {
             template: expand_shorthand(template)?,
+            stage,
         };
         // Validate syntax and field names before any extraction, with
         // placeholder metadata standing in for the processed video.
@@ -65,6 +57,7 @@ impl PrintTemplate {
         .filter(|(enabled, _)| *enabled)
         .map(|(_, field)| Self {
             template: format!("%({field})s"),
+            stage: Stage::Video,
         })
         .collect()
     }
@@ -78,6 +71,21 @@ impl PrintTemplate {
         filename: std::result::Result<&str, &Error>,
         options: &TemplateOptions,
     ) -> Result<String> {
+        let paths = StagePaths {
+            filepath: None,
+            prepared: filename.ok(),
+        };
+        self.render_at(info, filename, paths, options)
+    }
+
+    /// Render at a stage with its `filepath`/`_filename` values.
+    pub fn render_at(
+        &self,
+        info: &VideoInfo,
+        filename: std::result::Result<&str, &Error>,
+        paths: StagePaths<'_>,
+        options: &TemplateOptions,
+    ) -> Result<String> {
         let urls = print_urls(info);
         template::expand(
             &self.template,
@@ -85,9 +93,16 @@ impl PrintTemplate {
                 info,
                 filename,
                 urls: &urls,
+                filepath: paths.filepath,
+                prepared: paths.prepared,
             },
             options,
         )
+    }
+
+    /// The stage that prints this template.
+    pub fn stage(&self) -> Stage {
+        self.stage
     }
 }
 
@@ -123,8 +138,31 @@ impl PrintToFile {
         filename: std::result::Result<&str, &Error>,
         options: &TemplateOptions,
     ) -> Result<(PathBuf, String)> {
+        let paths = StagePaths {
+            filepath: None,
+            prepared: filename.ok(),
+        };
+        self.render_at(info, filename, paths, options)
+    }
+
+    /// Render at a stage with its `filepath`/`_filename` values.
+    pub fn render_at(
+        &self,
+        info: &VideoInfo,
+        filename: std::result::Result<&str, &Error>,
+        paths: StagePaths<'_>,
+        options: &TemplateOptions,
+    ) -> Result<(PathBuf, String)> {
         let path = render_template_with_options(&self.file, info, options)?;
-        Ok((path, self.template.render(info, filename, options)?))
+        Ok((
+            path,
+            self.template.render_at(info, filename, paths, options)?,
+        ))
+    }
+
+    /// The stage that prints this pair.
+    pub fn stage(&self) -> Stage {
+        self.template.stage
     }
 }
 
@@ -244,7 +282,7 @@ mod tests {
         );
         for spec in [
             "playlist:id",
-            "Before_DL:%(id)s",
+            "pre_process:%(id)s",
             "{id,title}",
             "id,missing",
             "id.0",
@@ -257,6 +295,18 @@ mod tests {
             assert!(PrintTemplate::parse(spec).is_err(), "{spec}");
         }
         assert!(PrintTemplate::parse("%(id)j").is_ok());
+        let staged = PrintTemplate::parse("Before_DL:%(id)s %(_filename)s %(filepath)s").unwrap();
+        assert_eq!(staged.stage(), Stage::BeforeDownload);
+        let paths = StagePaths {
+            filepath: Some("/abs/a.mp4"),
+            prepared: Some("a.mp4"),
+        };
+        assert_eq!(
+            staged
+                .render_at(&info(), Ok("a.mp4"), paths, &TemplateOptions::default())
+                .unwrap(),
+            "a/b a.mp4 /abs/a.mp4"
+        );
         assert!(super::super::render_template("%(id)j", &info()).is_err());
     }
 

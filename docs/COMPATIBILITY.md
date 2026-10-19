@@ -15,7 +15,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-q`, `--quiet`, `--no-quiet` | Suppress informational `[...]` stderr lines (upstream `to_screen`); implied by printing/JSON unless `--no-quiet`; errors and warnings remain; last flag wins |
 | `--no-warnings` | Suppress `WARNING:` lines |
 | `-s`, `--simulate`, `--no-simulate` | Extract metadata, write diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
-| `-O`, `--print [video:]TEMPLATE` | Print a field list or unsanitized output template per selected video; implies quiet simulation; repeatable; see [print templates](#print-templates) |
+| `-O`, `--print [WHEN:]TEMPLATE` | Print a field list or unsanitized output template per selected video at the `video`, `before_dl`, `post_process`, `after_move` or `after_video` stage; implies quiet, and simulation unless a later stage prints; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-filename` | Hidden upstream aliases printing title, ID, selected URLs and prepared filename after `--print` lines; imply quiet simulation |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; no direct-URL format IDs |
 | `-o`, `--output [TYPES:]TEMPLATE` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; upstream metadata sanitization; typed `subtitle`/`infojson`/`pl_infojson` templates (empty skips that file), `~`/`$VAR` template expansion; no overwrite; see [output paths](../upstream/notes/output-paths.md) |
@@ -1292,12 +1292,18 @@ source-only cases record unsupported behavior. See
 
 ## Print templates
 
-`-O`/`--print [WHEN:]TEMPLATE` follows upstream's `video` stage for each
-selected video, including every selected HTML5 playlist entry. A WHEN prefix is
+`-O`/`--print [WHEN:]TEMPLATE` prints at upstream's stages for each selected
+video, including every selected HTML5 playlist entry. A WHEN prefix is
 recognized case-insensitively only when it names an upstream stage before the
-first `:`; `video` is accepted and every other stage (`playlist`, `before_dl`,
-`after_move`, ...) is rejected before any request instead of printing at the
-wrong time. Without a recognized prefix the whole value is the template.
+first `:`. `video` (the default) prints after `video`-stage `--exec` commands;
+`before_dl` after sidecars and info JSON (also with `--skip-download`);
+`post_process` after the download but before merging or postprocessing;
+`after_move` with the absolute final path (also for an already-downloaded file);
+and `after_video` after the archive record. `filepath` (from `post_process` on)
+and `_filename` (the prepared media path, through `after_move`) are available
+fields. `pre_process`, `after_filter` and `playlist` are rejected before any
+request instead of printing at the wrong time. Without a recognized prefix the
+whole value is the template.
 
 A value fully matching upstream's shorthand pattern `([\w.:,]|-\d)+` is a
 field list: each comma-separated field prints `%(field)s` on its own line, and a
@@ -1322,7 +1328,9 @@ represented. With `-j`, printed lines precede each JSON object.
 
 Printing and `--get-*` imply quiet simulation: no media, subtitle, info JSON or
 archive writes, and no `[extractor] id: title` stderr line, unless
-`--no-simulate` is given, which prints and then downloads. Listing options still print their tables and then keep
+`--no-simulate` is given, which prints and then downloads. Like upstream's
+`print_only`, a `--print` at `before_dl` or a later stage does not imply
+simulation (it still implies quiet). Listing options still print their tables and then keep
 normal selection, as with `-j`/`-s`. All lines for a video are rendered before
 any is written, so a render failure prints nothing for that video, reports an
 error and continues with later inputs. A failed `-o` render fails only videos
@@ -1332,8 +1340,8 @@ whose print lines use `filename`.
 templates; FILE is a sanitized output template. Both are validated at startup.
 For each processed video, every destination and line is rendered first, then
 lines are appended (UTF-8, parent directories created) before any download.
-Unlike `--print` it does not imply simulation; the `[info] Writing` notice goes
-to stderr and is suppressed while `--print` is active.
+Unlike `--print` it does not imply simulation; the `[info] Writing 'TEMPLATE'
+to: FILE` notice (Python `repr`) goes to stderr and is suppressed while quiet.
 
 A 19-case fixture compares exact printed lines with actual pinned upstream
 `parseOpts` and `__forced_printings`, plus five source-only rejection cases.

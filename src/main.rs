@@ -15,7 +15,7 @@ use yt_dlp_rs::{
     YoutubeOptions,
     dates::DateRange,
     output::{
-        ExecCommand, ExecCommands, ExecStage, OutputTemplates, PrintTemplate, PrintToFile,
+        ExecCommand, ExecCommands, OutputTemplates, PrintTemplate, PrintToFile, Stage, StagePaths,
         TemplateOptions, render_formats,
     },
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
@@ -497,14 +497,22 @@ struct Simulation {
 
 impl Args {
     fn simulation(&self) -> Simulation {
-        // "any getting" and video-stage print templates imply quiet simulation.
-        let getting = self.dump_json
+        // Upstream `print_only`: print templates imply simulation unless a
+        // later stage (`before_dl` onwards) prints; any printing implies quiet.
+        let any_getting = self.dump_json
             || self.dump_single_json
-            || !self.print.is_empty()
             || self.get_title
             || self.get_id
             || self.get_url
             || self.get_filename;
+        let print_only = !self.print.is_empty()
+            && self.print.iter().all(|spec| {
+                !matches!(
+                    yt_dlp_rs::output::print_stage_name(spec).as_str(),
+                    "before_dl" | "post_process" | "after_move" | "after_video" | "playlist"
+                )
+            });
+        let getting = any_getting || print_only;
         let listing = self.list_formats || self.list_subs || self.list_thumbnails;
         let explicit = if self.simulate {
             Some(true)
@@ -523,7 +531,7 @@ impl Args {
         Simulation {
             simulate: explicit.unwrap_or(getting || listing),
             list_only: explicit.is_none() && !getting && listing,
-            quiet: quiet.unwrap_or(getting),
+            quiet: quiet.unwrap_or(any_getting || !self.print.is_empty()),
         }
     }
 }
@@ -869,6 +877,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .iter()
         .map(|[spec, file]| PrintToFile::parse(spec, file))
         .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
+    let prints_stage = |stage: Stage| {
+        print_templates
+            .iter()
+            .any(|template| template.stage() == stage)
+            || print_files.iter().any(|pair| pair.stage() == stage)
+    };
     // Like upstream, printing implies quiet simulation unless --no-simulate.
     let printing = !print_templates.is_empty();
     // `quiet` was applied to screen output at startup.
@@ -1071,7 +1085,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .collect();
     let mut exec = ExecCommands::parse(&exec_specs, &template_options)?;
     if !before_download.is_empty() {
-        if exec.has(ExecStage::BeforeDownload) {
+        if exec.has(Stage::BeforeDownload) {
             warning!(
                 "WARNING: --exec-before-download is ignored since \"--exec before_dl:\" was given"
             );
@@ -1316,49 +1330,33 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 // Upstream `process_info` counts every processed video.
                 counted = true;
-                if let Err(error) = run_exec(
-                    &exec,
-                    ExecStage::Video,
-                    &info,
-                    None,
-                    None,
-                    &template_options,
-                ) {
+                if let Err(error) =
+                    run_exec(&exec, Stage::Video, &info, None, None, &template_options)
+                {
                     defer(error);
                 }
-                if printing {
-                    let filename = prepare_media(&templates, &info, &template_options)
-                        .map(|path| path.to_string_lossy().into_owned());
-                    // Render every line first so a failure prints nothing partial.
-                    let lines = print_templates
-                        .iter()
-                        .map(|template| {
-                            template.render(&info, filename.as_deref(), &template_options)
-                        })
-                        .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
-                    for line in lines {
-                        writeln!(stdout, "{line}")?;
-                    }
-                }
-                if !print_files.is_empty() {
-                    let filename = prepare_media(&templates, &info, &template_options)
-                        .map(|path| path.to_string_lossy().into_owned());
-                    // Render every destination and line before appending any.
-                    let writes = print_files
-                        .iter()
-                        .map(|pair| pair.render(&info, filename.as_deref(), &template_options))
-                        .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
-                    for (pair, (path, line)) in print_files.iter().zip(writes) {
-                        if !printing {
-                            screen!(
-                                "[info] Writing {:?} to: {}",
-                                pair.template(),
-                                path.display()
-                            );
-                        }
-                        append_line(&path, &line)?;
-                    }
-                }
+                // `_forceprint`: `filename` is the prepared media filename.
+                let print_filename = prepare_media(&templates, &info, &template_options)
+                    .map(|path| path.to_string_lossy().into_owned());
+                let stage_print = |stage: Stage, paths: StagePaths<'_>| {
+                    render_stage(
+                        stage,
+                        &print_templates,
+                        &print_files,
+                        &info,
+                        print_filename.as_deref(),
+                        paths,
+                        &template_options,
+                    )
+                };
+                stage_print(
+                    Stage::Video,
+                    StagePaths {
+                        filepath: None,
+                        prepared: print_filename.as_deref().ok(),
+                    },
+                )?
+                .emit()?;
                 if args.dump_json {
                     serde_json::to_writer(&mut stdout, &info)?;
                     writeln!(stdout)?;
@@ -1383,7 +1381,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         && !writes_info_json
                         && !writes_description
                         && !writes_thumbnails
-                        && !exec.has(ExecStage::BeforeDownload)
+                        && !exec.has(Stage::BeforeDownload)
+                        && !prints_stage(Stage::BeforeDownload)
                         && info
                             .requested_subtitles
                             .as_ref()
@@ -1595,9 +1594,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             write_info_json_with(info_json, &value, overwrites != Some(false))?;
                         report_info_json("video", info_json, written);
                     }
+                    let prepared = path.to_string_lossy().into_owned();
+                    stage_print(Stage::BeforeDownload, stage_paths(None, &prepared))?.emit()?;
                     if let Err(error) = run_exec(
                         &exec,
-                        ExecStage::BeforeDownload,
+                        Stage::BeforeDownload,
                         &info,
                         None,
                         Some(&path),
@@ -1605,6 +1606,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     ) {
                         defer(error);
                     }
+                    // Upstream prints `post_process` before merging/processing
+                    // and `after_move` with the absolute moved path.
+                    let post_print =
+                        stage_print(Stage::PostProcess, stage_paths(Some(&prepared), &prepared))?;
+                    let move_print = |filepath: &std::path::Path| -> Result<(), String> {
+                        let filepath = py_abspath(filepath).to_string_lossy().into_owned();
+                        stage_print(Stage::AfterMove, stage_paths(Some(&filepath), &prepared))
+                            .map_err(|error| error.to_string())?
+                            .emit()
+                            .map_err(|error| error.to_string())
+                    };
+
                     if args.skip_download {
                         force_record(&info)?;
                         return Ok(());
@@ -1615,6 +1628,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             std::fs::remove_file(&path)?;
                         } else {
                             screen!("[download] {} has already been downloaded", path.display());
+                            post_print.emit()?;
                             if !after_download(
                                 &exec,
                                 &info,
@@ -1624,6 +1638,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 error_mode,
                                 &pending_error,
                                 &postprocess_failed,
+                                &move_print,
                             ) {
                                 return Ok(());
                             }
@@ -1641,7 +1656,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         sleep.media();
                     }
                     let mut last_progress = Instant::now();
+                    let post_printed = std::cell::Cell::new(false);
                     let progress = |progress: yt_dlp_rs::DownloadProgress| {
+                        if matches!(
+                            progress.phase,
+                            DownloadPhase::Merging | DownloadPhase::Postprocessing
+                        ) && !post_printed.replace(true)
+                            && post_print.emit().is_err()
+                        {
+                            return ControlFlow::Break(());
+                        }
                         if progress.phase == DownloadPhase::Downloading
                             && last_progress.elapsed() >= Duration::from_secs(1)
                         {
@@ -1759,6 +1783,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                         }
                     }
+                    if !post_printed.get() {
+                        post_print.emit()?;
+                    }
                     if !after_download(
                         &exec,
                         &info,
@@ -1768,6 +1795,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         error_mode,
                         &pending_error,
                         &postprocess_failed,
+                        &move_print,
                     ) {
                         return Ok(());
                     }
@@ -1804,14 +1832,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }
             if counted
                 && !(abort_on_error && failed)
-                && let Err(error) = run_exec(
-                    &exec,
-                    ExecStage::AfterVideo,
+                && let Err(error) = render_stage(
+                    Stage::AfterVideo,
+                    &print_templates,
+                    &print_files,
                     &info,
-                    None,
-                    None,
+                    prepare_media(&templates, &info, &template_options)
+                        .map(|path| path.to_string_lossy().into_owned())
+                        .as_deref(),
+                    StagePaths::default(),
                     &template_options,
                 )
+                .map_err(|error| error.to_string())
+                .and_then(|rendered| rendered.emit().map_err(|error| error.to_string()))
+                .and_then(|()| {
+                    run_exec(
+                        &exec,
+                        Stage::AfterVideo,
+                        &info,
+                        None,
+                        None,
+                        &template_options,
+                    )
+                })
             {
                 eprintln!("ERROR: {error}");
                 failed = true;
@@ -1899,6 +1942,66 @@ fn usage(message: impl std::fmt::Display) -> UsageError {
     UsageError(message.to_string())
 }
 
+fn stage_paths<'a>(filepath: Option<&'a str>, prepared: &'a str) -> StagePaths<'a> {
+    StagePaths {
+        filepath,
+        prepared: Some(prepared),
+    }
+}
+
+/// Rendered `--print`/`--print-to-file` output for one stage.
+struct StagePrint {
+    lines: Vec<String>,
+    files: Vec<(String, PathBuf, String)>,
+}
+
+impl StagePrint {
+    /// Print lines, then append file lines with upstream's `[info] Writing`.
+    fn emit(&self) -> io::Result<()> {
+        let mut stdout = io::stdout().lock();
+        for line in &self.lines {
+            writeln!(stdout, "{line}")?;
+        }
+        stdout.flush()?;
+        for (template, path, line) in &self.files {
+            screen!(
+                "[info] Writing {} to: {}",
+                yt_dlp_rs::batch::py_repr(template),
+                path.display()
+            );
+            append_line(path, line)?;
+        }
+        Ok(())
+    }
+}
+
+/// Render a stage's templates (all lines before any output, so a failure
+/// prints nothing partial).
+fn render_stage(
+    stage: Stage,
+    templates: &[PrintTemplate],
+    files: &[PrintToFile],
+    info: &yt_dlp_rs::VideoInfo,
+    filename: Result<&str, &yt_dlp_rs::Error>,
+    paths: StagePaths<'_>,
+    options: &TemplateOptions,
+) -> yt_dlp_rs::Result<StagePrint> {
+    let lines = templates
+        .iter()
+        .filter(|template| template.stage() == stage)
+        .map(|template| template.render_at(info, filename, paths, options))
+        .collect::<yt_dlp_rs::Result<_>>()?;
+    let files = files
+        .iter()
+        .filter(|pair| pair.stage() == stage)
+        .map(|pair| {
+            let (path, line) = pair.render_at(info, filename, paths, options)?;
+            Ok((pair.template().to_owned(), path, line))
+        })
+        .collect::<yt_dlp_rs::Result<_>>()?;
+    Ok(StagePrint { lines, files })
+}
+
 /// Python `os.path.abspath`: join with the working directory and normalize
 /// `.`/`..` components lexically.
 fn py_abspath(path: &std::path::Path) -> PathBuf {
@@ -1926,7 +2029,7 @@ fn py_abspath(path: &std::path::Path) -> PathBuf {
 /// stopping at the first failure.
 fn run_exec(
     exec: &ExecCommands,
-    stage: ExecStage,
+    stage: Stage,
     info: &yt_dlp_rs::VideoInfo,
     filepath: Option<&std::path::Path>,
     filename: Option<&std::path::Path>,
@@ -1958,6 +2061,7 @@ fn after_download(
     mode: ErrorMode,
     pending: &std::cell::Cell<Option<String>>,
     failed: &std::cell::Cell<bool>,
+    print_after_move: &dyn Fn(&std::path::Path) -> Result<(), String>,
 ) -> bool {
     if let Some(error) = pending.take() {
         eprintln!("ERROR: {error}");
@@ -1969,10 +2073,17 @@ fn after_download(
     // `MoveFilesAfterDownloadPP` leaves an absolute `filepath`.
     let moved = py_abspath(filepath);
     for (stage, filepath) in [
-        (ExecStage::PostProcess, filepath),
-        (ExecStage::AfterMove, moved.as_path()),
+        (Stage::PostProcess, filepath),
+        (Stage::AfterMove, moved.as_path()),
     ] {
-        if let Err(error) = run_exec(exec, stage, info, Some(filepath), Some(filename), options) {
+        let printed = if stage == Stage::AfterMove {
+            print_after_move(filepath)
+        } else {
+            Ok(())
+        };
+        if let Err(error) = printed
+            .and_then(|()| run_exec(exec, stage, info, Some(filepath), Some(filename), options))
+        {
             failed.set(true);
             if mode == ErrorMode::Ignore {
                 eprintln!("ERROR: {error}");

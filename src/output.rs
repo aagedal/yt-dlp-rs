@@ -6,10 +6,16 @@ mod sanitize;
 mod subtitles;
 mod template;
 mod thumbnails;
-pub use exec::{ExecCommand, ExecCommands, ExecStage};
+pub use exec::{ExecCommand, ExecCommands, Stage};
 pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths, replace_extension};
 pub use formats::render_formats;
-pub use print::{PrintTemplate, PrintToFile};
+pub use print::{PrintTemplate, PrintToFile, StagePaths};
+
+/// The case-insensitive `WHEN:` stage name of a `--print` value (`video`
+/// when absent), as upstream's `when_prefix` splits it.
+pub fn print_stage_name(spec: &str) -> String {
+    exec::Stage::split(spec, "video").0
+}
 pub use sanitize::{FilenameMode, force_sanitize_path, sanitize_filename};
 pub use subtitles::{render_automatic_captions, render_subtitles};
 pub use thumbnails::render_thumbnails;
