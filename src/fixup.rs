@@ -123,6 +123,88 @@ pub(crate) fn remux_to_mp4(
     Ok(())
 }
 
+/// Upstream `FFmpegSplitChaptersPP` for one chapter: input `-ss START -t
+/// DURATION`, `stream_copy_opts()` into `output` (via a temporary name).
+pub(crate) fn cut(
+    ffmpeg: &Path,
+    input: &Path,
+    output: &Path,
+    start: &str,
+    duration: &str,
+    muxer: &str,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+) -> Result<()> {
+    let started = Instant::now();
+    let container =
+        crate::container::sniff(input).ok_or_else(|| failure("unknown chapter input container"))?;
+    let demuxer = demuxer(container)?;
+    let executable = ffmpeg.canonicalize()?;
+    let input = input.canonicalize()?;
+    let directory = output
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or(Path::new("."));
+    // `_ensure_dir_exists`.
+    std::fs::create_dir_all(directory)?;
+    let directory = directory.canonicalize()?;
+    let output = directory.join(
+        output
+            .file_name()
+            .ok_or_else(|| failure("invalid chapter output path"))?,
+    );
+    if output == input {
+        return Err(failure("chapter output must differ from its input"));
+    }
+    let temporary = temp_path(&output);
+    let mut args: Vec<OsString> = [
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-y",
+        "-ss",
+        start,
+        "-t",
+        duration,
+        "-f",
+        demuxer,
+        "-protocol_whitelist",
+        "file",
+        "-i",
+    ]
+    .into_iter()
+    .map(Into::into)
+    .collect();
+    args.push(input.into_os_string());
+    args.extend(
+        [
+            "-map",
+            "0",
+            "-dn",
+            "-ignore_unknown",
+            "-c",
+            "copy",
+            "-f",
+            muxer,
+        ]
+        .into_iter()
+        .map(OsString::from),
+    );
+    args.push(temporary.clone().into_os_string());
+    let result = crate::merge::execute(&executable, &args, &directory, started, DEADLINE, callback);
+    if let Err(error) = result {
+        let _ = std::fs::remove_file(&temporary);
+        return Err(error);
+    }
+    if std::fs::metadata(&temporary).map_or(true, |metadata| metadata.len() == 0) {
+        let _ = std::fs::remove_file(&temporary);
+        return Err(failure("FFmpeg produced no chapter output"));
+    }
+    // Upstream's FFmpeg overwrites an existing chapter file (`-y`).
+    std::fs::rename(&temporary, &output)?;
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -228,3 +228,72 @@ fn ffmpeg_failures_are_reported_like_upstream() {
     assert!(text(&output.stderr).ends_with("\n\nERROR: ffmpeg exited with code 3\n"));
     assert!(!directory.path().join("o.mp4").exists());
 }
+
+#[cfg(unix)]
+#[test]
+fn split_chapters_cut_each_chapter_with_the_chapter_template() {
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(directory.path(), 0);
+    let info = directory.path().join("info.json");
+    std::fs::write(
+        &info,
+        serde_json::json!({"id": "chap", "title": "Chap", "ext": "mp4", "duration": 10,
+            "url": format!("{origin}/v.mp4"), "webpage_url": format!("{origin}/v.mp4"),
+            "extractor": "generic", "extractor_key": "Generic",
+            "formats": [{"format_id": "0", "url": format!("{origin}/v.mp4"), "ext": "mp4", "protocol": "http"}],
+            "chapters": [{"start_time": 2.0, "title": "Alpha"}, {"start_time": 4.5, "title": "Beta"}]})
+        .to_string(),
+    )
+    .unwrap();
+    let output = run(
+        directory.path(),
+        &[
+            "--ffmpeg-location",
+            ffmpeg.to_str().unwrap(),
+            "--load-info-json",
+            info.to_str().unwrap(),
+            "-o",
+            "o.%(ext)s",
+            "--split-chapters",
+        ],
+    );
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    // Checked against pinned upstream with real media.
+    assert!(text(&output.stdout).ends_with(
+        "[SplitChapters] Splitting video by chapters; 3 chapters found\n\
+         [SplitChapters] Chapter 001; Destination: Chap - 001 ＜Untitled Chapter 1＞ [chap].mp4\n\
+         [SplitChapters] Chapter 002; Destination: Chap - 002 Alpha [chap].mp4\n\
+         [SplitChapters] Chapter 003; Destination: Chap - 003 Beta [chap].mp4\n"
+    ));
+    for name in [
+        "Chap - 001 ＜Untitled Chapter 1＞ [chap].mp4",
+        "Chap - 002 Alpha [chap].mp4",
+        "Chap - 003 Beta [chap].mp4",
+        "o.mp4",
+    ] {
+        assert!(directory.path().join(name).is_file(), "{name}");
+    }
+    // The last chapter runs from 4.5 to the duration.
+    let args = std::fs::read_to_string(directory.path().join("args.txt")).unwrap();
+    assert!(args.contains("\n-ss\n4.5\n-t\n5.5\n"), "{args}");
+    assert!(
+        args.contains("\n-map\n0\n-dn\n-ignore_unknown\n-c\ncopy\n-f\nmp4\n"),
+        "{args}"
+    );
+    let output = run(
+        directory.path(),
+        &[
+            "--load-info-json",
+            info.to_str().unwrap(),
+            "-o",
+            "p.%(ext)s",
+            "--split-chapters",
+            "--ffmpeg-location",
+            ffmpeg.to_str().unwrap(),
+            "-O",
+            "%(chapters.:.title)l",
+        ],
+    );
+    assert_eq!(text(&output.stdout), "<Untitled Chapter 1>, Alpha, Beta\n");
+}

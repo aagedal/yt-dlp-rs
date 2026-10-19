@@ -237,6 +237,12 @@ struct Args {
     /// Do not add chapter markers
     #[arg(long, alias = "no-add-chapters", overrides_with_all = ["embed_chapters", "no_embed_chapters"])]
     no_embed_chapters: bool,
+    /// Split video into multiple files based on internal chapters (the "chapter" output template)
+    #[arg(long, alias = "split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
+    split_chapters: bool,
+    /// Do not split video based on chapters (default)
+    #[arg(long, alias = "no-split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
+    no_split_chapters: bool,
     /// Embed the best written thumbnail as cover art (mp3, mkv/mka, mp4/m4a/m4v/mov; implies writing it)
     #[arg(long, overrides_with_all = ["embed_thumbnail", "no_embed_thumbnail"])]
     embed_thumbnail: bool,
@@ -1985,6 +1991,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 || args.embed_subs
                                 || processors.metadata
                                 || processors.chapters
+                                || args.split_chapters
                                 || args.embed_thumbnail;
                             let existing_media = !args.skip_download && path_exists(&path)?;
                             if existing_media && overwrites != Some(true) && processing {
@@ -2580,6 +2587,47 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                             if !post_printed.get() {
                                 post_print.emit()?;
+                            }
+                            // Upstream `FFmpegSplitChaptersPP`, the last
+                            // `post_process` processor before `--exec`.
+                            if args.split_chapters {
+                                let split = (|| -> yt_dlp_rs::Result<()> {
+                                    if info.metadata.chapters.is_empty() {
+                                        screen!(
+                                            "[SplitChapters] Chapter information is unavailable"
+                                        );
+                                        return Ok(());
+                                    }
+                                    let mut chapters = Vec::new();
+                                    for (index, chapter) in
+                                        info.metadata.chapters.iter().enumerate()
+                                    {
+                                        let mut section = info.clone();
+                                        section.section_number = Some(index + 1);
+                                        section.section_title = chapter.title.clone();
+                                        section.section_start = chapter.start_time;
+                                        section.section_end = chapter.end_time;
+                                        let Some(destination) = templates.prepare(
+                                            &section,
+                                            Some("chapter"),
+                                            &template_options,
+                                        )?
+                                        else {
+                                            continue;
+                                        };
+                                        chapters.push((chapter.clone(), destination));
+                                    }
+                                    downloader.split_chapters(&published_paths[0], &chapters)
+                                })();
+                                if let Err(error) = split {
+                                    postprocess_failed.set(true);
+                                    if error_mode == ErrorMode::Ignore {
+                                        eprintln!("ERROR: {error}");
+                                    } else {
+                                        eprintln!("ERROR: Postprocessing: {error}");
+                                        return Ok(());
+                                    }
+                                }
                             }
                             if !after_download(
                                 &exec,

@@ -48,8 +48,8 @@ pub use extractor::YoutubeOptions;
 pub use format_sort::FormatSorter;
 pub use http::HttpOptions;
 pub use info::{
-    ByteRange, ExtractResult, Fragment, HlsAes128, Metadata, PlaylistInfo, PyNumber, StreamKind,
-    Thumbnail, VideoFormat, VideoInfo,
+    ByteRange, Chapter, ExtractResult, Fragment, HlsAes128, Metadata, PlaylistInfo, PyNumber,
+    StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
 pub use info_json::{
     InfoJsonWrite, info_json_path, load_info_json, playlist_info_json, to_python_json,
@@ -223,6 +223,55 @@ impl YoutubeDl {
         fixup::remux_to_mp4(ffmpeg, path, container, false, &mut || {
             std::ops::ControlFlow::Continue(())
         })
+    }
+
+    /// Upstream `FFmpegSplitChaptersPP`: cut `input` into one file per
+    /// chapter (`destinations` pairs each chapter with its prepared path).
+    pub fn split_chapters(&self, input: &Path, chapters: &[(Chapter, PathBuf)]) -> Result<()> {
+        let ffmpeg = self.ffmpeg.as_ref().ok_or_else(|| {
+            Error::Postprocess(
+                "ffmpeg not found. Please install or provide the path using --ffmpeg-location"
+                    .into(),
+            )
+        })?;
+        screen::screen(&format!(
+            "[SplitChapters] Splitting video by chapters; {} chapters found",
+            chapters.len()
+        ));
+        let py_str = |value: PyNumber| match value {
+            PyNumber::Int(value) => value.to_string(),
+            PyNumber::Float(value) => screen::py_float(value),
+        };
+        for (index, (chapter, destination)) in chapters.iter().enumerate() {
+            let (Some(start), Some(end)) = (chapter.start_time, chapter.end_time) else {
+                return Err(Error::Postprocess(
+                    "chapter end times need the video duration".into(),
+                ));
+            };
+            let duration = match (end, start) {
+                (PyNumber::Int(end), PyNumber::Int(start)) => PyNumber::Int(end - start),
+                (end, start) => PyNumber::Float(end.as_f64() - start.as_f64()),
+            };
+            screen::screen(&format!(
+                "[SplitChapters] Chapter {:03}; Destination: {}",
+                index + 1,
+                destination.display()
+            ));
+            let ext = destination
+                .extension()
+                .map(|ext| ext.to_string_lossy().to_lowercase())
+                .unwrap_or_default();
+            fixup::cut(
+                ffmpeg,
+                input,
+                destination,
+                &py_str(start),
+                &py_str(duration),
+                embed_metadata::muxer(&ext),
+                &mut || std::ops::ControlFlow::Continue(()),
+            )?;
+        }
+        Ok(())
     }
 
     /// Whether an ffmpeg executable is configured (upstream `merger.available`).

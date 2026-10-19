@@ -65,6 +65,10 @@ impl OutputTemplates {
         if templates.get("default").is_none_or(String::is_empty) {
             templates.insert("default".into(), super::default_template(restrict));
         }
+        // Upstream `DEFAULT_OUTTMPL['chapter']`.
+        templates.entry("chapter".into()).or_insert_with(|| {
+            "%(title)s - %(section_number)03d %(section_title)s [%(id)s].%(ext)s".into()
+        });
         Self { templates }
     }
 
