@@ -122,6 +122,16 @@ pub fn render_template_with_options(
     template::render(template, template::Source::Video(info), options)
 }
 
+/// Upstream `evaluate_outtmpl(template, dict)` over an arbitrary dict, as
+/// `--progress-template` renders `{'info': ..., 'progress': ...}`.
+pub fn evaluate_dict_template(
+    template: &str,
+    dict: &serde_json::Value,
+    options: &TemplateOptions,
+) -> Result<String> {
+    template::expand(template, template::Source::Json(dict), options)
+}
+
 /// Upstream `evaluate_outtmpl(template, info)`: unsanitized text, as
 /// printing renders it (without `filename`/`urls`).
 pub fn evaluate_template(

@@ -119,6 +119,90 @@ pub fn downloading_line(status: &ProgressStatus) -> String {
     line
 }
 
+/// Upstream `report_progress`'s `downloading` status dict (the
+/// `progress` of `--progress-template`), with `_default_template`.
+pub fn downloading_dict(status: &ProgressStatus, filename: Option<&str>) -> serde_json::Value {
+    let downloaded = status.downloaded_bytes as f64;
+    let percent = status
+        .total_bytes
+        .map(|total| 100.0 * downloaded / total as f64)
+        .or_else(|| {
+            status
+                .total_bytes_estimate
+                .map(|total| 100.0 * downloaded / total)
+        })
+        .or_else(|| (status.downloaded_bytes == 0).then_some(0.0));
+    let mut dict = serde_json::json!({
+        "status": "downloading",
+        "downloaded_bytes": status.downloaded_bytes,
+        "total_bytes": status.total_bytes,
+        "tmpfilename": filename,
+        "filename": filename,
+        "eta": status.eta.map(|eta| eta as i64),
+        "speed": status.speed,
+        "elapsed": status.elapsed,
+    });
+    let object = dict.as_object_mut().expect("static object");
+    if let Some(total) = status.total_bytes_estimate {
+        object.insert("total_bytes_estimate".into(), total.into());
+    }
+    if let Some(index) = status.fragment_index {
+        object.insert("fragment_index".into(), index.into());
+    }
+    if let Some(count) = status.fragment_count {
+        object.insert("fragment_count".into(), count.into());
+    }
+    for (key, value) in [
+        ("_eta_str", format_eta(status.eta).trim().to_owned()),
+        ("_speed_str", format_speed(status.speed)),
+    ] {
+        object.insert(key.into(), value.into());
+    }
+    object.insert("_percent".into(), percent.into());
+    for (key, value) in [
+        ("_percent_str", format_percent(percent)),
+        (
+            "_total_bytes_str",
+            bytes(status.total_bytes.map(|total| total as f64)),
+        ),
+        (
+            "_total_bytes_estimate_str",
+            bytes(status.total_bytes_estimate),
+        ),
+        ("_downloaded_bytes_str", bytes(Some(downloaded))),
+        ("_elapsed_str", format_seconds(status.elapsed)),
+        ("_default_template", downloading_line(status)),
+    ] {
+        object.insert(key.into(), value.into());
+    }
+    dict
+}
+
+/// Upstream `report_progress`'s `finished` status dict.
+pub fn finished_dict(
+    total_bytes: u64,
+    elapsed: Option<f64>,
+    filename: Option<&str>,
+) -> serde_json::Value {
+    let speed = elapsed
+        .filter(|elapsed| *elapsed > 0.0)
+        .map(|elapsed| total_bytes as f64 / elapsed);
+    serde_json::json!({
+        "downloaded_bytes": total_bytes,
+        "total_bytes": total_bytes,
+        "filename": filename,
+        "status": "finished",
+        "elapsed": elapsed,
+        "speed": speed,
+        "_speed_str": format_speed(speed).trim(),
+        "_total_bytes_str": bytes(Some(total_bytes as f64)),
+        "_elapsed_str": format_seconds(elapsed),
+        "_percent": 100.0,
+        "_percent_str": format_percent(Some(100.0)),
+        "_default_template": finished_line(total_bytes, elapsed),
+    })
+}
+
 /// The `finished` line: `100% of SIZE in TIME at SPEED`.
 pub fn finished_line(total_bytes: u64, elapsed: Option<f64>) -> String {
     let speed = elapsed

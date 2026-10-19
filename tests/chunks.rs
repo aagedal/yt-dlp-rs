@@ -140,3 +140,37 @@ fn test_mode_keeps_the_first_10241_bytes_even_without_range_support() {
             .contains("error: invalid http chunk size \"ten\" given")
     );
 }
+
+#[test]
+fn progress_templates_render_info_and_progress_fields() {
+    let (origin, _) = serve(true);
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "--newline",
+            "-o",
+            "o.%(ext)s",
+            "--progress-template",
+        ])
+        .arg("%(info.id)s|%(progress.status)s|%(progress._total_bytes_str)s|%(progress.filename)s")
+        .arg(format!("{origin}/v.mp4"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    // Upstream's `report_progress` dict: right-aligned byte strings.
+    assert!(
+        stdout.contains("\nv|downloading|  24.41KiB|o.mp4\n"),
+        "{stdout}"
+    );
+    assert!(
+        stdout.ends_with("\nv|finished|  24.41KiB|o.mp4\n"),
+        "{stdout}"
+    );
+}

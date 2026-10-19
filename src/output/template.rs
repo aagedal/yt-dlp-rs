@@ -29,12 +29,17 @@ pub(super) enum Source<'a> {
         filepath: Option<&'a str>,
         filename: Option<&'a str>,
     },
+    /// Unsanitized rendering over an arbitrary dict (`--progress-template`).
+    Json(&'a serde_json::Value),
 }
 
 impl Source<'_> {
     /// Unsanitized rendering, as `prepare_outtmpl` without `sanitize`.
     fn print(self) -> bool {
-        matches!(self, Source::Print { .. } | Source::Exec { .. })
+        matches!(
+            self,
+            Source::Print { .. } | Source::Exec { .. } | Source::Json(_)
+        )
     }
 
     fn exec(self) -> bool {
@@ -122,6 +127,7 @@ fn traversal_root(source: Source<'_>) -> serde_json::Value {
     };
     let value = |info: &VideoInfo| serde_json::to_value(info).unwrap_or_default();
     match source {
+        Source::Json(value) => value.clone(),
         Source::Video(info) => value(info),
         Source::Print {
             info,
@@ -244,6 +250,8 @@ pub(crate) fn has_value(info: &VideoInfo, name: &str) -> bool {
 fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
     use Value::*;
     let info = match source {
+        // Dict sources are only traversed.
+        Source::Json(_) => return Ok(None),
         Source::Video(info) => info,
         Source::Print {
             info,
@@ -531,7 +539,8 @@ fn substitution(
         let value = match name {
             "autonumber" => Ok(options.autonumber.get().map(Value::Integer)),
             "video_autonumber" => Ok(options.video_autonumber.get().map(Value::Integer)),
-            _ if super::traverse::is_plain(name)
+            _ if !matches!(info, Source::Json(_))
+                && super::traverse::is_plain(name)
                 && (FIELDS.contains(&name)
                     || matches!(name, "filename" | "_filename" | "filepath" | "urls")) =>
             {
@@ -539,7 +548,7 @@ fn substitution(
             }
             // Upstream object traversal over the whole info dict; unknown
             // fields are missing values.
-            _ if super::traverse::is_plain(name) && !word(name) => {
+            _ if super::traverse::is_plain(name) && !word(name) && !name.is_empty() => {
                 Err(invalid(format!("unknown or unsupported field {name:?}")))
             }
             _ => super::traverse::traverse(root.get_or_insert_with(|| traversal_root(info)), name)
@@ -567,21 +576,22 @@ fn substitution(
     };
     if &spec[..consumed] == "s" {
         let size = match last_field {
-            "playlist_index" => Some(match info {
+            "playlist_index" => match info {
                 Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
-                    info.last_playlist_index.unwrap_or(0)
+                    Some(info.last_playlist_index.unwrap_or(0))
                 }
                 Source::Playlist {
                     last_playlist_index,
                     ..
-                } => last_playlist_index,
-            }),
+                } => Some(last_playlist_index),
+                Source::Json(_) => None,
+            },
             "playlist_autonumber" => match info {
                 Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
                     Some(info.n_entries.unwrap_or(0))
                 }
                 // Unavailable for playlists, so the default path above applies.
-                Source::Playlist { .. } => None,
+                Source::Playlist { .. } | Source::Json(_) => None,
             },
             _ => None,
         };
@@ -775,7 +785,7 @@ pub(super) fn render_kind(
             Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
                 Some(info.ext.as_str())
             }
-            Source::Playlist { .. } => None,
+            Source::Playlist { .. } | Source::Json(_) => None,
         };
         output = super::filename::replace_extension(&output, ext, real);
     }

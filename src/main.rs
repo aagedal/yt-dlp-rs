@@ -711,6 +711,9 @@ struct Args {
     hls_prefer_native: bool,
     #[arg(long, hide = true, overrides_with = "hls_prefer_native")]
     hls_prefer_ffmpeg: bool,
+    /// Template for progress outputs ([TYPES:]TEMPLATE; "download" (default), "postprocess", "-title" variants)
+    #[arg(long, value_name = "[TYPES:]TEMPLATE")]
+    progress_template: Vec<String>,
     /// Size of a chunk for chunk-based HTTP downloading, e.g. 10485760 or 10M
     #[arg(long, value_name = "SIZE")]
     http_chunk_size: Option<String>,
@@ -1270,6 +1273,28 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .progress_delta
             .filter(|delta| *delta > 0.0 && delta.is_finite())
             .map(Duration::from_secs_f64),
+        // Upstream `progress_template` (`_dict_from_options_callback` keys);
+        // titles and postprocessor progress are not printed by this port.
+        template: {
+            let mut template = None;
+            for value in &args.progress_template {
+                static KEYS: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+                    regex::Regex::new(r"(?is)^(?P<keys>(?:download|postprocess)(?:-title)?(?:,(?:download|postprocess)(?:-title)?)*):(?P<val>.*)$")
+                        .unwrap()
+                });
+                let (keys, text) = match KEYS.captures(value) {
+                    Some(captures) => (
+                        captures["keys"].to_lowercase(),
+                        captures.name("val").unwrap().as_str().to_owned(),
+                    ),
+                    None => ("download".into(), value.clone()),
+                };
+                if keys.split(',').any(|key| key == "download") {
+                    template = Some(text);
+                }
+            }
+            template
+        },
     };
     let write_subs = args.write_subs || (args.embed_subs && !args.write_auto_subs);
     // Upstream `validate_regex('audio format', ...)` and
@@ -2657,7 +2682,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 sleep.media();
                             }
                             let post_printed = std::cell::Cell::new(false);
-                            let mut reporter = ProgressReporter::new(&progress_options);
+                            let mut reporter =
+                                ProgressReporter::new(&progress_options).for_download(info, &path);
                             let mut progress = |progress: yt_dlp_rs::DownloadProgress| {
                                 reporter.event(&progress);
                                 if matches!(
@@ -3812,6 +3838,8 @@ struct ProgressOptions {
     newline: bool,
     quiet: bool,
     delta: Option<Duration>,
+    /// `--progress-template download:TEMPLATE`.
+    template: Option<String>,
 }
 
 /// `FileDownloader.report_progress` through one status printer per
@@ -3820,6 +3848,9 @@ struct ProgressOptions {
 struct ProgressReporter<'a> {
     options: &'a ProgressOptions,
     active: Option<ActiveDownload>,
+    /// `info` and `progress.filename` for `--progress-template`.
+    info: serde_json::Value,
+    filename: Option<String>,
 }
 
 struct ActiveDownload {
@@ -3835,6 +3866,37 @@ impl<'a> ProgressReporter<'a> {
         Self {
             options,
             active: None,
+            info: serde_json::Value::Object(Default::default()),
+            filename: None,
+        }
+    }
+
+    /// The video and file a `--progress-template` describes.
+    fn for_download(mut self, info: &yt_dlp_rs::VideoInfo, filename: &std::path::Path) -> Self {
+        if self.options.template.is_some() {
+            self.info = serde_json::to_value(info).unwrap_or_default();
+            self.filename = Some(filename.to_string_lossy().into_owned());
+        }
+        self
+    }
+
+    /// Upstream `_report_progress_status`: the template over
+    /// `{'info': ..., 'progress': ...}`, else `[download] DEFAULT`.
+    fn render(&self, progress: serde_json::Value) -> String {
+        match &self.options.template {
+            Some(template) => {
+                let dict = serde_json::json!({"info": self.info, "progress": progress});
+                yt_dlp_rs::output::evaluate_dict_template(
+                    template,
+                    &dict,
+                    &TemplateOptions::default(),
+                )
+                .unwrap_or_default()
+            }
+            None => format!(
+                "[download] {}",
+                progress["_default_template"].as_str().unwrap_or_default()
+            ),
         }
     }
 
@@ -3948,7 +4010,15 @@ impl<'a> ProgressReporter<'a> {
             fragment_index,
             fragment_count: progress.fragment_count,
         };
-        let line = format!("[download] {}", downloading_line(&status));
+        let line = if self.options.template.is_some() {
+            self.render(yt_dlp_rs::output::progress::downloading_dict(
+                &status,
+                self.filename.as_deref(),
+            ))
+        } else {
+            format!("[download] {}", downloading_line(&status))
+        };
+        let active = self.active.as_mut().expect("active download");
         Self::write(&active.printer.print(&line));
     }
 
@@ -3962,10 +4032,11 @@ impl<'a> ProgressReporter<'a> {
             return;
         }
         let elapsed = active.start.elapsed().as_secs_f64();
-        let line = format!(
-            "[download] {}",
-            yt_dlp_rs::output::progress::finished_line(active.downloaded, Some(elapsed))
-        );
+        let line = self.render(yt_dlp_rs::output::progress::finished_dict(
+            active.downloaded,
+            Some(elapsed),
+            self.filename.as_deref(),
+        ));
         Self::write(&active.printer.print(&line));
         Self::write(&active.printer.end());
     }
