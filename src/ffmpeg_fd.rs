@@ -114,10 +114,15 @@ fn arguments(
     temporary: &Path,
 ) -> Result<Vec<OsString>> {
     let mut args: Vec<OsString> = vec!["-y".into()];
+    let verbose = crate::screen::verbose();
     if settings.quiet {
         args.extend(["-loglevel".into(), "quiet".into()]);
+    } else if verbose {
+        args.extend(["-loglevel".into(), "verbose".into()]);
     }
-    args.push("-hide_banner".into());
+    if !verbose {
+        args.push("-hide_banner".into());
+    }
     let start = info
         .section_start
         .filter(|start| start.as_f64() != 0.0)
@@ -239,6 +244,7 @@ pub(crate) fn download(
     if callback(progress(DownloadPhase::Downloading, 0)).is_break() {
         return Err(Error::DownloadCancelled);
     }
+    crate::screen::debug_command(ffmpeg, &args);
     let mut command = Command::new(ffmpeg);
     command.args(&args).stdin(Stdio::piped());
     if let Some(proxy) = network.proxy.filter(|proxy| !proxy.is_empty()) {

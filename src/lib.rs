@@ -125,6 +125,34 @@ pub struct YoutubeDl {
     downloaders: std::collections::HashMap<String, bool>,
 }
 
+thread_local! {
+    /// The URL whose download `announce_download` already reported.
+    static ANNOUNCED: std::cell::RefCell<Option<Url>> = const { std::cell::RefCell::new(None) };
+}
+
+/// Upstream `dl`'s `Invoking … downloader on "URL"[, "URL"]` debug line;
+/// `data:` URLs are abbreviated.
+fn report_invoking(name: &str, urls: &[&Url]) {
+    if !screen::verbose() {
+        return;
+    }
+    let urls: Vec<String> = urls
+        .iter()
+        .map(|url| {
+            let url = url.as_str();
+            if url.starts_with("data:") {
+                format!("{},<data>", url.split(',').next().unwrap_or(url))
+            } else {
+                url.to_owned()
+            }
+        })
+        .collect();
+    screen::debug(&format!(
+        "Invoking {name} downloader on \"{}\"",
+        urls.join("\", \"")
+    ));
+}
+
 /// Upstream `shorten_protocol_name(proto, simplify=True)`.
 fn simplify_protocol(protocol: &str) -> &str {
     match protocol {
@@ -535,6 +563,44 @@ impl YoutubeDl {
     }
 
     /// Whether an ffmpeg executable is configured (upstream `merger.available`).
+    /// Upstream `dl`'s `--verbose` line naming the downloader, for callers
+    /// that announce a download before starting it; the next
+    /// `download_with_progress` of the same info does not repeat it.
+    pub fn announce_download(&self, info: &VideoInfo) {
+        self.report_invoking(info);
+        ANNOUNCED.with(|announced| announced.replace(Some(info.url.clone())));
+    }
+
+    fn report_invoking(&self, info: &VideoInfo) {
+        let ffmpeg_fd = self.uses_ffmpeg_fd(info);
+        if !(ffmpeg_fd || info.requested_formats.is_empty()) {
+            return;
+        }
+        let name = if ffmpeg_fd {
+            "ffmpeg"
+        } else if info.fragments.is_empty() {
+            "http"
+        } else if info.protocol.as_deref() == Some("http_dash_segments") {
+            "dashsegments"
+        } else {
+            "hlsnative"
+        };
+        let urls: Vec<&Url> = if info.requested_formats.is_empty() {
+            vec![&info.url]
+        } else {
+            info.requested_formats
+                .iter()
+                .map(|format| &format.url)
+                .collect()
+        };
+        report_invoking(name, &urls);
+    }
+
+    /// The configured ffmpeg executable.
+    pub fn ffmpeg_path(&self) -> Option<&Path> {
+        self.ffmpeg.as_deref()
+    }
+
     pub fn has_ffmpeg(&self) -> bool {
         self.ffmpeg.is_some()
     }
@@ -734,6 +800,12 @@ impl YoutubeDl {
                     error.0
                 ))
             })?;
+            // Upstream sorts (and reports the order) only with formats.
+            if !entry.formats.is_empty() && screen::verbose() {
+                for line in sorter.verbose_info() {
+                    screen::debug(&line);
+                }
+            }
             info::sort_formats(&mut entry.formats, &sorter);
             info::sanitize_format_ids(&mut entry.formats);
             info::fill_format_descriptions(&mut entry.formats);
@@ -896,6 +968,9 @@ impl YoutubeDl {
     /// Select formats for one video or playlist entry (upstream
     /// `process_video_result`), leaving it unchanged on failure.
     pub fn select_video(&self, info: &mut VideoInfo, format: Option<&str>) -> Result<()> {
+        if format.is_none() && self.prefer_best {
+            screen::debug("Default format spec: best/bestvideo+bestaudio");
+        }
         let format = format.or(self.prefer_best.then_some("best/bestvideo+bestaudio"));
         if self.check_formats != CheckFormats::Selected {
             return info.select_format_with_merge(
@@ -999,7 +1074,7 @@ impl YoutubeDl {
         screen::set_extractor("generic");
         screen::screen(&format!(
             "[generic] Extracting URL: {}",
-            screen::truncate_string(url.as_str(), 100, 20)
+            screen::extracting_url(url.as_str())
         ));
         screen::screen(&format!(
             "[generic] {}: Downloading webpage",
@@ -1027,7 +1102,7 @@ impl YoutubeDl {
         }
         screen::screen(&format!(
             "[generic] Extracting URL: {}",
-            screen::truncate_string(input, 100, 20)
+            screen::extracting_url(input)
         ));
         let search = self.default_search.as_deref().unwrap_or("fixup_error");
         static DOMAIN: std::sync::LazyLock<regex::Regex> =
@@ -1079,7 +1154,7 @@ impl YoutubeDl {
             Some(order) if order.contains(&"end") => {
                 screen::screen(&format!(
                     "[UnsupportedURL] Extracting URL: {}",
-                    screen::truncate_string(url.as_str(), 100, 20)
+                    screen::extracting_url(url.as_str())
                 ));
                 return Err(Error::Reported(format!("Unsupported URL: {url}")));
             }
@@ -1123,7 +1198,12 @@ impl YoutubeDl {
         // Upstream `get_suitable_downloader`: partial downloads and
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
-        if self.uses_ffmpeg_fd(info) {
+        let ffmpeg_fd = self.uses_ffmpeg_fd(info);
+        let announced = ANNOUNCED.with(|announced| announced.take());
+        if announced.as_ref() != Some(&info.url) {
+            self.report_invoking(info);
+        }
+        if ffmpeg_fd {
             let ffmpeg = self.ffmpeg.as_deref().ok_or_else(|| {
                 Error::Reported(
                     "You have requested downloading the video partially, but ffmpeg is not installed. Aborting"
@@ -1207,6 +1287,7 @@ impl YoutubeDl {
         options: DownloadOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
+        report_invoking("http", &[&subtitle.url]);
         download::download_subtitle(
             &self.client,
             info,
@@ -1370,6 +1451,7 @@ impl YoutubeDl {
             part.width = stream.width;
             part.height = stream.height;
             if upstream.is_some() {
+                self.announce_download(&part);
                 // Upstream `HlsFD` refetches each stream's media playlist.
                 if let Some(refreshed) = self.refresh_hls(&part)? {
                     part = refreshed;

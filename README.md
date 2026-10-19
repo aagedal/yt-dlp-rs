@@ -142,7 +142,8 @@ Supported today:
   Names follow upstream extension replacement; existing files follow the
   overwrite options and `-j`/`-s`/listing never write. Content covers the
   represented metadata subset; `_version` and `--load-info-json` are not implemented.
-- `-q/--quiet`, `--no-quiet` and `--no-warnings` gate informational and warning lines.
+- `-q/--quiet`, `--no-quiet` and `--no-warnings` gate informational and warning lines;
+  `-v/--verbose` adds upstream's `[debug]` lines.
 - `--match-filters`/`--break-match-filters` filter videos with upstream syntax;
   `--date`/`--datebefore`/`--dateafter` and `--age-limit` select by upload date
   and age rating.

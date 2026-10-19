@@ -606,6 +606,9 @@ impl VideoInfo {
         } else {
             "best/bestvideo+bestaudio"
         });
+        if requested.is_none() {
+            crate::screen::debug(&format!("Default format spec: {expression}"));
+        }
         let expression = selector::parse(expression)?;
         if self.formats.is_empty() {
             return if self.matches_implicit(&expression) {

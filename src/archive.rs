@@ -75,6 +75,7 @@ impl DownloadArchive {
     /// Successful media publication is not rolled back.
     pub fn record(&mut self, info: &VideoInfo) -> Result<()> {
         let identity = archive_id(info)?;
+        crate::screen::debug(&format!("Adding to archive: {identity}"));
         regular_path(&self.path)?;
         let file = open_record(&self.path)
             .map_err(|error| io_error("open for append", &self.path, error))?;

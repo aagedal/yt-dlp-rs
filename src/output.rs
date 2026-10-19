@@ -1,4 +1,4 @@
-mod exec;
+pub(crate) mod exec;
 mod filename;
 mod formats;
 mod links;

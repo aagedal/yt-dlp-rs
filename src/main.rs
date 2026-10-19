@@ -26,6 +26,17 @@ use yt_dlp_rs::{
 static QUIET: AtomicBool = AtomicBool::new(false);
 /// `--no-warnings`: suppress `WARNING:` lines.
 static NO_WARNINGS: AtomicBool = AtomicBool::new(false);
+/// Upstream `validate_options` warnings, ranked in upstream's order and
+/// written together after the `--verbose` header (`YoutubeDL.__init__`).
+static VALIDATION_WARNINGS: std::sync::Mutex<Vec<(u8, String)>> = std::sync::Mutex::new(Vec::new());
+
+fn validation_warning(rank: u8, text: String) {
+    VALIDATION_WARNINGS
+        .lock()
+        .unwrap_or_else(|poison| poison.into_inner())
+        .push((rank, text));
+}
+
 /// Upstream `logtostderr` (`-o -`): screen and progress output use stderr.
 static LOG_TO_STDERR: AtomicBool = AtomicBool::new(false);
 
@@ -38,25 +49,43 @@ fn out_stream() -> Box<dyn Write> {
     }
 }
 
-/// Upstream `to_screen`: stdout, or stderr with `logtostderr`.
+/// Upstream `to_screen`: stdout, or stderr with `logtostderr`; quiet mode
+/// suppresses it unless `--verbose`, which writes it to stderr.
 macro_rules! screen {
-    ($($arg:tt)*) => {
-        if !QUIET.load(Ordering::Relaxed) {
-            if LOG_TO_STDERR.load(Ordering::Relaxed) {
+    ($($arg:tt)*) => {{
+        let quiet = QUIET.load(Ordering::Relaxed);
+        if !quiet || yt_dlp_rs::screen::verbose() {
+            if quiet || LOG_TO_STDERR.load(Ordering::Relaxed) {
                 eprintln!($($arg)*);
             } else {
                 println!($($arg)*);
             }
         }
-    };
+    }};
 }
 
+/// Upstream `report_warning`: `--no-warnings` hides warnings, except as
+/// `[debug] ` lines with `--verbose`.
 macro_rules! warning {
     ($($arg:tt)*) => {
         if !NO_WARNINGS.load(Ordering::Relaxed) {
             eprintln!($($arg)*);
+        } else if yt_dlp_rs::screen::verbose() {
+            eprintln!("[debug] {}", format!($($arg)*));
         }
     };
+}
+
+fn flush_validation_warnings() {
+    let mut warnings = std::mem::take(
+        &mut *VALIDATION_WARNINGS
+            .lock()
+            .unwrap_or_else(|poison| poison.into_inner()),
+    );
+    warnings.sort_by_key(|(rank, _)| *rank);
+    for (_, text) in warnings {
+        warning!("WARNING: {text}");
+    }
 }
 
 #[derive(Parser)]
@@ -88,6 +117,9 @@ struct Args {
     /// Ignore warnings
     #[arg(long)]
     no_warnings: bool,
+    /// Print various debugging information
+    #[arg(short = 'v', long)]
+    verbose: bool,
     /// Resume partially downloaded files/fragments (default)
     #[arg(short = 'c', long = "continue", overrides_with_all = ["continue_partial", "no_continue"])]
     continue_partial: bool,
@@ -1182,10 +1214,16 @@ fn size_option(name: &str, value: Option<&str>) -> Result<Option<u64>, String> {
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut argv = std::env::args();
     let program = argv.next().unwrap_or_else(|| "yt-dlp-rs".into());
-    let arguments = config_arguments(argv.collect())?;
+    let (arguments, config_debug) = config_arguments(argv.collect())?;
     let (arguments, deprecated) = strip_deprecated_options(arguments);
     let arguments = expand_preset_aliases(arguments).map_err(UsageError)?;
     let matches = command().get_matches_from(std::iter::once(program).chain(arguments));
+    // Upstream `parseOpts` prints the configuration tree with `--verbose`.
+    if matches.get_flag("verbose") {
+        for line in &config_debug {
+            eprintln!("[debug] {line}");
+        }
+    }
     if !deprecated.is_empty() {
         // Upstream `deprecated_feature`, written directly to stderr.
         eprintln!(
@@ -1194,6 +1232,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         );
     }
     let mut args = Args::from_arg_matches(&matches)?;
+    yt_dlp_rs::screen::set_verbose(args.verbose);
     // Upstream `parse_metadata` (shared by both options, in command-line
     // order per stage) plus the deprecated `--metadata-from-title`.
     let metadata_actions = {
@@ -1310,7 +1349,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // the warnings print only after validation succeeds.
     let now = epoch() as i64;
     let date = args.date.as_deref().filter(|date| !date.is_empty());
-    let mut date_warnings = Vec::new();
     let (mut dateafter, mut datebefore) = (args.dateafter.as_deref(), args.datebefore.as_deref());
     if date.is_some() {
         for (name, value) in [
@@ -1318,7 +1356,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("--datebefore", &mut datebefore),
         ] {
             if value.take().is_some_and(|value| !value.is_empty()) {
-                date_warnings.push(format!("WARNING: {name} is ignored since --date was given"));
+                let rank = if name == "--dateafter" { 5 } else { 6 };
+                validation_warning(rank, format!("{name} is ignored since --date was given"));
             }
         }
     }
@@ -1344,14 +1383,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         break_on_reject: args.break_on_reject,
         now,
     });
-    for warning in date_warnings {
-        warning!("{warning}");
-    }
     QUIET.store(args.simulation().quiet, Ordering::Relaxed);
     yt_dlp_rs::screen::set_sink(|message| match message {
         yt_dlp_rs::screen::Message::Screen(text) => screen!("{text}"),
         yt_dlp_rs::screen::Message::Warning(text) => warning!("WARNING: {text}"),
         yt_dlp_rs::screen::Message::Stderr(text) => eprintln!("{text}"),
+        yt_dlp_rs::screen::Message::Debug(text) => eprintln!("[debug] {text}"),
     });
     NO_WARNINGS.store(args.no_warnings, Ordering::Relaxed);
     if args.no_download_archive {
@@ -1364,8 +1401,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             if spec == "-" && !args.quiet {
                 eprintln!("Reading URLs from STDIN - EOF (Ctrl+D) to end:");
             }
-            yt_dlp_rs::batch::load_batch_file(spec)
-                .map_err(|_| format!("batch file {spec} could not be read"))?
+            let urls = yt_dlp_rs::batch::load_batch_file(spec)
+                .map_err(|_| format!("batch file {spec} could not be read"))?;
+            if args.verbose {
+                eprintln!("[debug] Batch file urls: {}", py_list(&urls));
+            }
+            urls
         }
         None => Vec::new(),
     };
@@ -1519,7 +1560,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         })
         .transpose()?;
     if remux.is_some() && recode.is_some() {
-        warning!("WARNING: --remux-video is ignored since --recode-video was given");
+        validation_warning(
+            9,
+            "--remux-video is ignored since --recode-video was given".into(),
+        );
     }
     let processors = PostprocessOptions {
         ignore_errors: error_mode == ErrorMode::Ignore,
@@ -1559,6 +1603,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         } else {
             None
         });
+    // Upstream `validate_options`: common `-f` mistakes.
+    match args.format.as_deref() {
+        Some("best") => validation_warning(
+            0,
+            [
+                "\"-f best\" selects the best pre-merged format which is often not the best option",
+                "To let yt-dlp download and merge the best available formats, simply do not pass any format selection",
+                "If you know what you are doing and want only the best pre-merged format, use \"-f b\" instead to suppress this warning",
+            ]
+            .join(".\n         "),
+        ),
+        Some("mp4") => validation_warning(
+            1,
+            [
+                "\"-f mp4\" selects the best pre-merged mp4 format which is often not what's intended",
+                "Pre-merged mp4 formats are not available from all sites, or may only be available in lower quality",
+                "To prioritize the best h264 video and aac audio in an mp4 container, use \"-t mp4\" instead",
+                "If you know what you are doing and want a pre-merged mp4 format, use \"-f b[ext=mp4]\" instead to suppress this warning",
+            ]
+            .join(".\n         "),
+        ),
+        _ => {}
+    }
     if let Some(format) = &args.format {
         validate_format_selector(format)?;
     }
@@ -1566,16 +1633,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut playlist_reverse = args.playlist_reverse;
     let mut playlist_random = args.playlist_random;
     if playlist_random && playlist_reverse {
-        warning!("WARNING: --playlist-reverse is ignored since --playlist-random was given");
+        validation_warning(
+            2,
+            "--playlist-reverse is ignored since --playlist-random was given".into(),
+        );
         playlist_reverse = false;
     }
     if args.lazy_playlist {
-        for (enabled, name) in [
-            (&mut playlist_reverse, "--playlist-reverse"),
-            (&mut playlist_random, "--playlist-random"),
+        for (rank, enabled, name) in [
+            (3, &mut playlist_reverse, "--playlist-reverse"),
+            (4, &mut playlist_random, "--playlist-random"),
         ] {
             if *enabled {
-                warning!("WARNING: {name} is ignored since --lazy-playlist was given");
+                validation_warning(
+                    rank,
+                    format!("{name} is ignored since --lazy-playlist was given"),
+                );
                 *enabled = false;
             }
         }
@@ -1633,6 +1706,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let cookie_file_was_missing = args.cookies.as_ref().is_some_and(|path| !path.exists());
     let mut http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
+    let args_proxy = args.proxy.clone();
     http_options.proxy = args.proxy;
     http_options.socket_timeout = args.socket_timeout;
     http_options.no_check_certificates = args.no_check_certificates;
@@ -1683,7 +1757,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if let Some(path) = ffmpeg {
         downloader = downloader.with_ffmpeg(path);
     }
-    if let Some(path) = args.ffprobe_location.or(ffprobe) {
+    let ffprobe = args.ffprobe_location.or(ffprobe);
+    if args.verbose {
+        print_debug_header(
+            QUIET.load(Ordering::Relaxed),
+            downloader.ffmpeg_path(),
+            ffprobe.as_deref(),
+            args_proxy.as_deref(),
+        );
+    }
+    if let Some(path) = ffprobe {
         downloader = downloader.with_ffprobe(path);
     }
     downloader = downloader.with_format_sort(yt_dlp_rs::FormatSortOptions {
@@ -1740,7 +1823,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // `-o` sets one (`report_conflict`).
     if args.id {
         if OutputTemplates::sets_default(&args.output) {
-            warning!("WARNING: --id is ignored since --output was given");
+            validation_warning(8, "--id is ignored since --output was given".into());
         } else {
             warning!("WARNING: --id is deprecated. Use -o \"%(id)s.%(ext)s\" instead");
             args.output.push("%(id)s.%(ext)s".into());
@@ -1774,8 +1857,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut exec = ExecCommands::parse(&exec_specs, &template_options)?;
     if !before_download.is_empty() {
         if exec.has(Stage::BeforeDownload) {
-            warning!(
-                "WARNING: --exec-before-download is ignored since \"--exec before_dl:\" was given"
+            validation_warning(
+                7,
+                "--exec-before-download is ignored since \"--exec before_dl:\" was given".into(),
             );
         } else {
             exec_specs.extend(
@@ -1784,6 +1868,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     .map(|value| (Some("before_dl"), value.as_str())),
             );
             exec = ExecCommands::parse(&exec_specs, &template_options)?;
+        }
+    }
+    flush_validation_warnings();
+    if args.verbose {
+        // `html5`, `youtube` and `generic` (see `--list-extractors`).
+        eprintln!("[debug] Loaded 3 extractors");
+        if let Some(path) = &archive_path {
+            eprintln!(
+                "[debug] Loading archive file {}",
+                yt_dlp_rs::batch::py_repr(&path.to_string_lossy())
+            );
         }
     }
     // Like upstream, simulation never writes info JSON.
@@ -2893,6 +2988,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                                 warning!("WARNING: {message}. The formats won't be merged");
                             }
+                            downloader.announce_download(&info);
                             // Upstream `HlsFD` refetches the media playlist first.
                             let refreshed = if !ffmpeg_fd && info.requested_formats.is_empty() {
                                 downloader.refresh_hls(&info)?
@@ -3006,6 +3102,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     let refreshed = if info.requested_formats.is_empty() {
                                         None
                                     } else {
+                                        downloader.announce_download(stream);
                                         downloader.refresh_hls(stream)?
                                     };
                                     let stream = refreshed.as_ref().unwrap_or(stream);
@@ -3415,6 +3512,11 @@ fn run_metadata_parser(
         match message {
             yt_dlp_rs::metadata_parser::Message::Screen(text) => screen!("{text}"),
             yt_dlp_rs::metadata_parser::Message::Warning(text) => warning!("{text}"),
+            yt_dlp_rs::metadata_parser::Message::Debug(text) => {
+                if yt_dlp_rs::screen::verbose() {
+                    eprintln!("[debug] {text}");
+                }
+            }
         }
     }
     match error {
@@ -4057,9 +4159,79 @@ fn scan_config_options(command: &clap::Command, args: &[String]) -> ConfigScan {
 struct ConfigNode {
     args: Vec<String>,
     children: Vec<ConfigNode>,
+    /// Upstream `Config.label` (`None` for `--config-locations` files).
+    label: Option<&'static str>,
+    filename: Option<PathBuf>,
+}
+
+/// Python `repr(list_of_str)`.
+fn py_list(items: &[String]) -> String {
+    let items: Vec<String> = items
+        .iter()
+        .map(|item| yt_dlp_rs::batch::py_repr(item))
+        .collect();
+    format!("[{}]", items.join(", "))
+}
+
+/// Upstream `Config.hide_login_info`.
+fn hide_login_info(args: &[String]) -> Vec<String> {
+    const PRIVATE: [&str; 7] = [
+        "-p",
+        "--password",
+        "-u",
+        "--username",
+        "--video-password",
+        "--ap-password",
+        "--ap-username",
+    ];
+    let mut args: Vec<String> = args
+        .iter()
+        .map(|arg| match arg.split_once('=') {
+            Some((key, value)) if PRIVATE.contains(&key) && !value.is_empty() => {
+                format!("{key}=PRIVATE")
+            }
+            _ => arg.clone(),
+        })
+        .collect();
+    for index in 0..args.len() {
+        if PRIVATE.contains(&args[index].as_str()) && index + 1 < args.len() {
+            args[index + 1] = "PRIVATE".into();
+        }
+    }
+    args
 }
 
 impl ConfigNode {
+    /// Upstream `Config.__str__`, as lines; nested configurations are
+    /// prefixed with `| `.
+    fn debug_lines(&self, out: &mut Vec<String>) {
+        let mut label = [
+            self.label.unwrap_or(""),
+            "config",
+            &self
+                .filename
+                .as_ref()
+                .map(|path| format!("\"{}\"", path.display()))
+                .unwrap_or_default(),
+        ]
+        .into_iter()
+        .filter(|part| !part.is_empty())
+        .collect::<Vec<_>>()
+        .join(" ");
+        if let Some(first) = label.get(..1) {
+            label = format!("{}{}", first.to_uppercase(), &label[1..]);
+        }
+        out.push(format!(
+            "{label}: {}",
+            py_list(&hide_login_info(&self.args))
+        ));
+        for child in &self.children {
+            let mut lines = Vec::new();
+            child.debug_lines(&mut lines);
+            out.extend(lines.into_iter().map(|line| format!("| {line}")));
+        }
+    }
+
     /// Upstream `Config.all_args`: later locations first, then own arguments.
     fn all_args(&self, out: &mut Vec<String>) {
         for child in self.children.iter().rev() {
@@ -4088,6 +4260,8 @@ fn load_config(
     let mut node = ConfigNode {
         args: Vec::new(),
         children: Vec::new(),
+        label: None,
+        filename: filename.map(Path::to_path_buf),
     };
     for location in scan_config_options(command, &args).locations {
         if location == "-" {
@@ -4099,7 +4273,8 @@ fn load_config(
             std::io::Read::read_to_string(&mut io::stdin(), &mut text)
                 .map_err(|error| usage(error.to_string()))?;
             let stdin_args = yt_dlp_rs::config::shlex_split(&text).map_err(usage)?;
-            if let Some(child) = load_config(command, stdin_args, None, loaded)? {
+            if let Some(mut child) = load_config(command, stdin_args, None, loaded)? {
+                child.label = Some("stdin");
                 node.children.push(child);
             }
             continue;
@@ -4127,15 +4302,16 @@ fn load_config(
 
 /// Upstream `parseOpts` configuration assembly: command line, then
 /// portable, home, user and system configurations until `--ignore-config`,
-/// flattened so the command line takes precedence.
-fn config_arguments(cli: Vec<String>) -> Result<Vec<String>, UsageError> {
+/// flattened so the command line takes precedence, with the `--verbose`
+/// configuration debug lines.
+fn config_arguments(cli: Vec<String>) -> Result<(Vec<String>, Vec<String>), UsageError> {
     use yt_dlp_rs::config::{
         PACKAGE_NAME, first_config, read_file, system_config_dirs, user_config_dirs,
     };
     let command = Args::command();
     let mut loaded = std::collections::HashSet::new();
     // (label, node) in append order; `all_args` reverses it.
-    let mut configs: Vec<(&str, ConfigNode)> = Vec::new();
+    let mut configs: Vec<(&'static str, ConfigNode)> = Vec::new();
     let flatten = |configs: &[(&str, ConfigNode)]| {
         let mut out = Vec::new();
         for (_, node) in configs.iter().rev() {
@@ -4143,7 +4319,8 @@ fn config_arguments(cli: Vec<String>) -> Result<Vec<String>, UsageError> {
         }
         out
     };
-    if let Some(node) = load_config(&command, cli, None, &mut loaded)? {
+    if let Some(mut node) = load_config(&command, cli, None, &mut loaded)? {
+        node.label = Some("Command-line");
         configs.push(("Command-line", node));
     }
     let mut loaded_all = true;
@@ -4175,8 +4352,9 @@ fn config_arguments(cli: Vec<String>) -> Result<Vec<String>, UsageError> {
             _ => first_config(&system_config_dirs()).map_err(usage)?,
         };
         if let Some((args, path)) = found
-            && let Some(node) = load_config(&command, args, Some(&path), &mut loaded)?
+            && let Some(mut node) = load_config(&command, args, Some(&path), &mut loaded)?
         {
+            node.label = Some(label);
             configs.push((label, node));
         }
     }
@@ -4184,7 +4362,11 @@ fn config_arguments(cli: Vec<String>) -> Result<Vec<String>, UsageError> {
     if loaded_all && scan_config_options(&command, &flatten(&configs)).ignore_config {
         configs.retain(|(label, _)| *label != "User");
     }
-    Ok(flatten(&configs))
+    let mut debug = Vec::new();
+    for (_, node) in &configs {
+        node.debug_lines(&mut debug);
+    }
+    Ok((flatten(&configs), debug))
 }
 
 fn usage(message: impl std::fmt::Display) -> UsageError {
@@ -4660,6 +4842,195 @@ fn cancel(reason: Cancel, per_input: bool) -> Option<Cancel> {
 /// Upstream `FFmpegPostProcessor._determine_executables`: without a location
 /// the programs come from `PATH`; a directory holds both, and a file's name
 /// selects its program, with the other found by substituting the name.
+/// Upstream `FFmpegPostProcessor._get_ffmpeg_version`: the version from
+/// `PROG -bsfs` and, for ffmpeg, the enabled features.
+fn ffmpeg_version(path: &Path, ffmpeg: bool) -> Option<String> {
+    let output = std::process::Command::new(path)
+        .arg("-bsfs")
+        .stdin(std::process::Stdio::null())
+        .output()
+        .ok()
+        .filter(|output| output.status.success())?;
+    let mut text = String::from_utf8_lossy(&output.stdout).into_owned();
+    text.push_str(&String::from_utf8_lossy(&output.stderr));
+    static VERSION: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"version\s+([-0-9._a-zA-Z]+)").unwrap());
+    static DISTRIBUTION: std::sync::LazyLock<[regex::Regex; 2]> = std::sync::LazyLock::new(|| {
+        [
+            regex::Regex::new(r"^(?:\d+:)?([0-9.]+)-[0-9]+ubuntu[0-9.]+$").unwrap(),
+            regex::Regex::new(r"^n([0-9.]+)$").unwrap(),
+        ]
+    });
+    let mut version = VERSION
+        .captures(&text)
+        .map_or("present".to_owned(), |found| found[1].to_owned());
+    for regex in DISTRIBUTION.iter() {
+        if let Some(found) = regex.captures(&version) {
+            version = found[1].to_owned();
+        }
+    }
+    if !ffmpeg {
+        return Some(version);
+    }
+    static LAVF: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"(?m)^\s+libavformat\s+(?:[0-9. ]+)\s+/\s+(?P<runtime>[0-9. ]+)")
+            .unwrap()
+    });
+    // `is_outdated_version(runtime, '57.56.100', assume_new=False)`.
+    let outdated = LAVF
+        .captures(&text)
+        .map(|found| found["runtime"].replace(' ', ""))
+        .and_then(|runtime| {
+            let parse = |text: &str| {
+                text.split(['-', '.'])
+                    .map(|part| part.parse::<u64>().ok())
+                    .collect::<Option<Vec<_>>>()
+            };
+            Some(parse(&runtime)? < parse("57.56.100")?)
+        })
+        .unwrap_or(true);
+    let mut features = Vec::new();
+    if text.contains("--enable-libfdk-aac") {
+        features.push("fdk");
+    }
+    if outdated {
+        features.push("needs_adtstoasc");
+    }
+    if text.lines().any(|line| line == "setts") {
+        features.push("setts");
+    }
+    if !features.is_empty() {
+        version = format!("{version} ({})", features.join(","));
+    }
+    Some(version)
+}
+
+/// Upstream `YoutubeDL.proxies` as a Python dict: `--proxy`, or the
+/// `*_proxy` environment variables (`urllib.request.getproxies`).
+fn proxy_map(proxy: Option<&str>) -> String {
+    let mut proxies: Vec<(String, String)> = Vec::new();
+    let set = |proxies: &mut Vec<(String, String)>, key: String, value: Option<String>| {
+        let position = proxies.iter().position(|(name, _)| *name == key);
+        match (position, value) {
+            (Some(index), Some(value)) => proxies[index].1 = value,
+            (None, Some(value)) => proxies.push((key, value)),
+            (Some(index), None) => {
+                proxies.remove(index);
+            }
+            (None, None) => {}
+        }
+    };
+    if let Some(proxy) = proxy {
+        let proxy = if proxy.is_empty() {
+            "__noproxy__"
+        } else {
+            proxy
+        };
+        set(&mut proxies, "all".into(), Some(proxy.into()));
+    } else {
+        let environment: Vec<(String, String)> = std::env::vars_os()
+            .filter_map(|(name, value)| Some((name.into_string().ok()?, value.into_string().ok()?)))
+            .collect();
+        for (name, value) in &environment {
+            let name = name.to_lowercase();
+            if !value.is_empty() && name.ends_with("_proxy") {
+                set(
+                    &mut proxies,
+                    name[..name.len() - 6].into(),
+                    Some(value.clone()),
+                );
+            }
+        }
+        if std::env::var_os("REQUEST_METHOD").is_some() {
+            set(&mut proxies, "http".into(), None);
+        }
+        for (name, value) in &environment {
+            if name.ends_with("_proxy") {
+                let name = name.to_lowercase();
+                let value = (!value.is_empty()).then(|| value.clone());
+                set(&mut proxies, name[..name.len() - 6].into(), value);
+            }
+        }
+        if let Some((_, http)) = proxies.iter().find(|(name, _)| name == "http").cloned()
+            && !proxies.iter().any(|(name, _)| name == "https")
+        {
+            proxies.push(("https".into(), http));
+        }
+    }
+    let items: Vec<String> = proxies
+        .iter()
+        .map(|(name, value)| {
+            format!(
+                "{}: {}",
+                yt_dlp_rs::batch::py_repr(name),
+                yt_dlp_rs::batch::py_repr(value)
+            )
+        })
+        .collect();
+    format!("{{{}}}", items.join(", "))
+}
+
+/// Upstream `print_debug_header`, for the parts that describe this port.
+fn print_debug_header(
+    quiet: bool,
+    ffmpeg: Option<&Path>,
+    ffprobe: Option<&Path>,
+    proxy: Option<&str>,
+) {
+    use std::io::IsTerminal;
+    let term = std::env::var("TERM").unwrap_or_default();
+    let encoding = |tty: bool| {
+        let mut info = Vec::new();
+        if term.eq_ignore_ascii_case("dumb") {
+            info.push("dumb");
+        }
+        if term.is_empty() || !tty {
+            info.push("No ANSI");
+        }
+        if info.is_empty() {
+            "utf-8".to_owned()
+        } else {
+            format!("utf-8 ({})", info.join(","))
+        }
+    };
+    let (stdout, stderr) = (io::stdout().is_terminal(), io::stderr().is_terminal());
+    let out = if LOG_TO_STDERR.load(Ordering::Relaxed) {
+        stderr
+    } else {
+        stdout
+    };
+    let screen = if quiet { stderr } else { out };
+    let debug = |text: &str| eprintln!("[debug] {text}");
+    debug(&format!(
+        "Encodings: locale utf-8, fs utf-8, pref utf-8, out {}, error {}, screen {}",
+        encoding(out),
+        encoding(stderr),
+        encoding(screen)
+    ));
+    debug(&format!("yt-dlp-rs version {}", env!("CARGO_PKG_VERSION")));
+    debug(&format!(
+        "Rust native build ({}) - {}",
+        std::env::consts::ARCH,
+        std::env::consts::OS
+    ));
+    let mut versions = Vec::new();
+    if let Some(version) = ffmpeg.and_then(|path| ffmpeg_version(path, true)) {
+        versions.push(format!("ffmpeg {version}"));
+    }
+    if let Some(version) = ffprobe.and_then(|path| ffmpeg_version(path, false)) {
+        versions.push(format!("ffprobe {version}"));
+    }
+    debug(&format!(
+        "exe versions: {}",
+        if versions.is_empty() {
+            "none".to_owned()
+        } else {
+            versions.join(", ")
+        }
+    ));
+    debug(&format!("Proxy map: {}", proxy_map(proxy)));
+}
+
 fn ffmpeg_executables(location: Option<&Path>) -> (Option<PathBuf>, Option<PathBuf>) {
     const PROGRAMS: [&str; 2] = ["ffmpeg", "ffprobe"];
     let Some(location) = location else {

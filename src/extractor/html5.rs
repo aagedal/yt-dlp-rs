@@ -416,12 +416,12 @@ impl Extractor for GenericHttp {
     }
 
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
-        use crate::screen::{generic_id, screen, truncate_string, warning};
+        use crate::screen::{generic_id, screen, warning};
         crate::screen::set_extractor("generic");
         // Upstream `InfoExtractor.extract` and `GenericIE._real_extract` lines.
         screen(&format!(
             "[generic] Extracting URL: {}",
-            truncate_string(url.as_str(), 100, 20)
+            crate::screen::extracting_url(url.as_str())
         ));
         let id = generic_id(url.as_str());
         // `_request_webpage` sleeps before announcing the download.
@@ -446,6 +446,11 @@ impl Extractor for GenericHttp {
             MEDIA.is_match(&content_type)
         };
         let fallback = || warning("[generic] Falling back on generic information extractor");
+        // Upstream `GenericIE.report_detected`.
+        let detected = |name: &str| crate::screen::debug(&format!("Identified a {name}"));
+        if media_type {
+            detected("direct video link");
+        }
         let m3u8 = || {
             screen(&format!("[generic] {id}: Downloading m3u8 information"));
             screen(&format!("[generic] {id}: Checking m3u8 live status"));
@@ -462,7 +467,11 @@ impl Extractor for GenericHttp {
                 fallback();
             }
             screen(&format!("[generic] {id}: Extracting information"));
-            return Ok(dash::from_response(response, url, dash_path)?.map(stamp));
+            let manifest = dash::from_response(response, url, dash_path)?;
+            if manifest.is_some() && !media_type {
+                detected("DASH manifest");
+            }
+            return Ok(manifest.map(stamp));
         }
         let hls_path = url.path().to_ascii_lowercase().ends_with(".m3u8")
             || response
@@ -488,6 +497,9 @@ impl Extractor for GenericHttp {
             }
             let mut hls = hls::from_response(client, response, url, None, hls_path, None)?;
             if let Some(info) = &mut hls {
+                if !media_type {
+                    detected("M3U playlist");
+                }
                 m3u8();
                 hls::check_live_status(client, info);
             } else if direct.is_some() && !media_type {
@@ -542,6 +554,7 @@ impl Extractor for GenericHttp {
         }
         let html = std::str::from_utf8(&bytes)
             .map_err(|_| unsupported("only UTF-8/ASCII HTML is supported"))?;
+        crate::screen::debug("Looking for embeds");
         let Some(media) = parse_page(&page_url, html)? else {
             return Ok(None);
         };
@@ -654,6 +667,10 @@ impl Extractor for GenericHttp {
             info.extractor_key = "HTML5MediaEmbed".into();
             entries.push(info);
         }
+        crate::screen::debug(&match entries.len() {
+            1 => "Identified a html5 embed".to_owned(),
+            count => format!("Identified {count} html5 embeds"),
+        });
         if entries.len() == 1 {
             // `merge_dicts(embed, info_dict)`: page fields fill missing values.
             let mut info = entries.pop().expect("one entry");

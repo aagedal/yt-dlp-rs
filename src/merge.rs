@@ -177,6 +177,10 @@ pub(crate) fn execute(
     if started.elapsed() >= deadline {
         return Err(failure("FFmpeg wall deadline exceeded"));
     }
+    // Version probes are not part of upstream's debug output.
+    if args != [OsString::from("-version")] {
+        crate::screen::debug_command(executable, args);
+    }
     let mut command = Command::new(executable);
     command
         .args(args)

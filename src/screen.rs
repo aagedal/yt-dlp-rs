@@ -17,6 +17,9 @@ pub enum Message<'a> {
     Screen(&'a str),
     Warning(&'a str),
     Stderr(&'a str),
+    /// A `write_debug` text (without the `[debug] ` prefix); only sent with
+    /// `--verbose`.
+    Debug(&'a str),
 }
 
 type Sink = Box<dyn Fn(Message<'_>) + Send + Sync>;
@@ -37,6 +40,26 @@ pub(crate) fn screen(text: &str) {
 pub(crate) fn warning(text: &str) {
     if let Some(sink) = SINK.get() {
         sink(Message::Warning(text));
+    }
+}
+
+static VERBOSE: AtomicBool = AtomicBool::new(false);
+
+/// `--verbose`: deliver `write_debug` messages.
+pub fn set_verbose(verbose: bool) {
+    VERBOSE.store(verbose, Ordering::Relaxed);
+}
+
+pub fn verbose() -> bool {
+    VERBOSE.load(Ordering::Relaxed)
+}
+
+/// Upstream `write_debug`.
+pub(crate) fn debug(text: &str) {
+    if verbose()
+        && let Some(sink) = SINK.get()
+    {
+        sink(Message::Debug(text));
     }
 }
 
@@ -108,6 +131,37 @@ pub(crate) fn truncate_string(text: &str, left: usize, right: usize) -> String {
         String::new()
     };
     format!("{head}...{tail}")
+}
+
+/// Upstream `_debug_cmd`/`real_run_ffmpeg`: `ffmpeg command line: …` with
+/// the shell-quoted executable and arguments.
+pub(crate) fn debug_command(executable: &std::path::Path, args: &[std::ffi::OsString]) {
+    if !verbose() {
+        return;
+    }
+    let stem = executable
+        .file_stem()
+        .map(|stem| stem.to_string_lossy().to_lowercase())
+        .unwrap_or_default();
+    let name = if stem.contains("ffprobe") {
+        "ffprobe"
+    } else {
+        "ffmpeg"
+    };
+    let quoted: Vec<String> = std::iter::once(executable.as_os_str())
+        .chain(args.iter().map(std::ffi::OsString::as_os_str))
+        .map(|arg| crate::output::exec::shell_quote(&arg.to_string_lossy()))
+        .collect();
+    debug(&format!("{name} command line: {}", quoted.join(" ")));
+}
+
+/// The URL in `Extracting URL:` lines: truncated unless `--verbose`.
+pub(crate) fn extracting_url(url: &str) -> String {
+    if verbose() {
+        url.to_owned()
+    } else {
+        truncate_string(url, 100, 20)
+    }
 }
 
 /// Upstream `InfoExtractor._generic_id`: the unquoted last path component

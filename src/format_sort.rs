@@ -94,6 +94,10 @@ struct Setting {
     reverse: bool,
     closest: bool,
     limit: Option<Value>,
+    /// The limit text and Python `str` of its resolved value, for
+    /// `print_verbose_info`.
+    limit_text: Option<(String, String)>,
+    visible: bool,
 }
 
 impl Setting {
@@ -121,6 +125,8 @@ impl Setting {
             reverse: false,
             closest: false,
             limit: None,
+            limit_text: None,
+            visible: true,
         }
     }
 }
@@ -265,9 +271,11 @@ fn settings() -> BTreeMap<&'static str, Setting> {
     let mut hidden = Setting::new(Extractor, "hidden");
     hidden.forced = true;
     hidden.max = Some(-1000.0);
+    hidden.visible = false;
     add("hidden", hidden);
     let mut aud_or_vid = Setting::new(Multiple, "aud_or_vid");
     aud_or_vid.forced = true;
+    aud_or_vid.visible = false;
     aud_or_vid.fields = vec!["vcodec", "acodec"];
     aud_or_vid.function = Some(Function::AnyNotNone);
     add("aud_or_vid", aud_or_vid);
@@ -451,6 +459,8 @@ pub struct FormatSorter {
     unknown: BTreeMap<String, Setting>,
     order: Vec<String>,
     free: bool,
+    user: Vec<String>,
+    extractor: Vec<String>,
 }
 
 /// An invalid sort string (upstream `ExtractorError`).
@@ -471,6 +481,8 @@ impl FormatSorter {
             unknown: BTreeMap::new(),
             order: Vec::new(),
             free,
+            user: user.to_vec(),
+            extractor: extractor.iter().map(|field| (*field).to_owned()).collect(),
         };
         let forced: Vec<String> = DEFAULT
             .iter()
@@ -541,6 +553,50 @@ impl FormatSorter {
         Ok(sorter)
     }
 
+    /// Upstream `print_verbose_info`.
+    pub fn verbose_info(&self) -> Vec<String> {
+        let mut lines = Vec::new();
+        if !self.user.is_empty() {
+            lines.push(format!(
+                "Sort order given by user: {}",
+                self.user.join(", ")
+            ));
+        }
+        if !self.extractor.is_empty() {
+            lines.push(format!(
+                "Sort order given by extractor: {}",
+                self.extractor.join(", ")
+            ));
+        }
+        let fields: Vec<String> = self
+            .order
+            .iter()
+            .filter_map(|field| {
+                let setting = self.setting(field);
+                if setting.is_some_and(|setting| !setting.visible) {
+                    return None;
+                }
+                let mut text = String::new();
+                if setting.is_some_and(|setting| setting.reverse) {
+                    text.push('+');
+                }
+                text.push_str(field);
+                if let Some((limit, shown)) =
+                    setting.and_then(|setting| setting.limit_text.as_ref())
+                {
+                    let closest = setting.is_some_and(|setting| setting.closest);
+                    text.push_str(&format!(
+                        "{}{limit}({shown})",
+                        if closest { '~' } else { ':' }
+                    ));
+                }
+                Some(text)
+            })
+            .collect();
+        lines.push(format!("Formats sorted by: {}", fields.join(", ")));
+        lines
+    }
+
     fn setting(&self, field: &str) -> Option<&Setting> {
         self.settings.get(field).or_else(|| self.unknown.get(field))
     }
@@ -563,10 +619,23 @@ impl FormatSorter {
             return;
         }
         self.order.push(field.clone());
+        let convert = self
+            .setting(&field)
+            .map_or(Convert::FloatString, |s| s.convert);
         let limit = limit_text
             .as_deref()
             .and_then(|text| self.resolve(&field, Some(text), false));
+        // Python `str` of the resolved limit: `order` and `bytes` give ints.
+        let shown = match &limit {
+            None => "None".to_owned(),
+            Some(Value::Str(text)) => text.clone(),
+            Some(Value::Num(number)) if matches!(convert, Convert::Order | Convert::Bytes) => {
+                format!("{number:.0}")
+            }
+            Some(Value::Num(number)) => crate::screen::py_float(*number),
+        };
         let setting = self.setting_mut(&field);
+        setting.limit_text = limit_text.map(|text| (text, shown));
         if setting.fields.is_empty() && setting.kind == Type::Field {
             // Arbitrary fields read the format key of the same name.
             setting.fields = Vec::new();

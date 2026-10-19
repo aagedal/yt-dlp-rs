@@ -24,6 +24,8 @@ enum Action {
         output: String,
         template: String,
         regex: Regex,
+        /// Upstream's `out_re.pattern` (Python `re.escape`), for `--verbose`.
+        pattern: String,
     },
     Replace {
         field: String,
@@ -74,8 +76,24 @@ fn word(text: &str) -> bool {
     !text.is_empty() && text.chars().all(|c| c.is_alphanumeric() || c == '_')
 }
 
+/// Python `re.escape`.
+fn py_re_escape(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    for c in text.chars() {
+        if "()[]{}?*+-|^$\\.&~# \t\n\r\x0b\x0c".contains(c) {
+            out.push('\\');
+        }
+        out.push(c);
+    }
+    out
+}
+
 /// `MetadataParserPP.format_to_regex`.
 fn format_to_regex(format: &str) -> String {
+    format_to_pattern(format, regex::escape)
+}
+
+fn format_to_pattern(format: &str, escape: fn(&str) -> String) -> String {
     if word(format) {
         return format!("(?s)(?P<{format}>.+)");
     }
@@ -88,11 +106,11 @@ fn format_to_regex(format: &str) -> String {
     let mut last = 0;
     for captures in FIELD.captures_iter(format) {
         let whole = captures.get(0).unwrap();
-        regex.push_str(&regex::escape(&format[last..whole.start()]));
+        regex.push_str(&escape(&format[last..whole.start()]));
         regex.push_str(&format!("(?P<{}>.+)", &captures[1]));
         last = whole.end();
     }
-    regex.push_str(&regex::escape(&format[last..]));
+    regex.push_str(&escape(&format[last..]));
     regex
 }
 
@@ -177,6 +195,7 @@ impl MetadataActions {
         self.push(
             when,
             Action::Interpret {
+                pattern: format_to_pattern(&output, py_re_escape),
                 input,
                 output,
                 template,
@@ -246,9 +265,15 @@ impl MetadataActions {
                     output,
                     template,
                     regex,
+                    pattern,
                 } => {
                     let data = crate::output::evaluate_template(template, info, options)
                         .unwrap_or_default();
+                    messages.push(Message::Debug(format!(
+                        "Searching for {} in {}",
+                        crate::output::traverse::py_repr_str(pattern),
+                        crate::output::traverse::py_repr_str(template)
+                    )));
                     let Some(captures) = regex.captures(&data) else {
                         screen(
                             &mut messages,
@@ -303,6 +328,11 @@ impl MetadataActions {
                         )));
                         continue;
                     };
+                    messages.push(Message::Debug(format!(
+                        "Replacing all {} in {field} with {}",
+                        crate::output::traverse::py_repr_str(search),
+                        crate::output::traverse::py_repr_str(replace)
+                    )));
                     let count = regex.find_iter(&text).count();
                     let replace = match replacement(replace) {
                         Ok(replace) => replace,
@@ -333,6 +363,8 @@ impl MetadataActions {
 pub enum Message {
     Screen(String),
     Warning(String),
+    /// A `write_debug` text, shown with `--verbose`.
+    Debug(String),
 }
 
 /// `info[key] = value` on the typed info dict: represented fields are
@@ -422,8 +454,9 @@ mod tests {
             .unwrap();
         let text: Vec<String> = messages
             .iter()
-            .map(|message| match message {
-                Message::Screen(text) | Message::Warning(text) => text.clone(),
+            .filter_map(|message| match message {
+                Message::Screen(text) | Message::Warning(text) => Some(text.clone()),
+                Message::Debug(_) => None,
             })
             .collect();
         assert_eq!(
