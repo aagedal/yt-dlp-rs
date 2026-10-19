@@ -590,12 +590,18 @@ fn cli_without_ffmpeg_keeps_format_files_unmerged_or_aborts_like_upstream() {
         let stderr = String::from_utf8_lossy(&output.stderr);
         let message = "You have requested merging of multiple formats but ffmpeg is not installed";
         if abort {
-            assert!(!output.status.success());
+            // The raised error makes `download_with_info_file` retry the
+            // webpage URL, whose single format needs no merge.
+            assert!(output.status.success(), "{stderr}");
             assert!(
-                stderr.contains(&format!("{message}. Aborting due to --abort-on-error")),
+                stderr.starts_with(&format!(
+                    "ERROR: {message}. Aborting due to --abort-on-error\n\r\n\
+                     WARNING: The info failed to download: ERROR: {message}. Aborting due to --abort-on-error; trying with URL {}/\n",
+                    server.url
+                )),
                 "{stderr}"
             );
-            clean(directory.path(), &["info.json"]);
+            assert!(!directory.path().join("out.fv.mp4").exists());
         } else {
             assert!(output.status.success(), "{stderr}");
             assert!(

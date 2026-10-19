@@ -64,6 +64,19 @@ macro_rules! screen {
     }};
 }
 
+/// The last `ERROR:` line: upstream's raised `DownloadError` carries it.
+static LAST_ERROR: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+
+/// Upstream `report_error`: an `ERROR:` line on stderr, remembered for the
+/// `--load-info-json` fallback.
+macro_rules! report_error {
+    ($($arg:tt)*) => {{
+        let line = format!($($arg)*);
+        eprintln!("{line}");
+        *LAST_ERROR.lock().unwrap() = Some(line);
+    }};
+}
+
 /// Upstream `report_warning`: `--no-warnings` hides warnings, except as
 /// `[debug] ` lines with `--verbose`.
 macro_rules! warning {
@@ -1285,7 +1298,7 @@ fn run_playlist_stage(
             Ok(())
         })();
         if let Err(error) = concat {
-            eprintln!("ERROR: Postprocessing: {error}");
+            report_error!("ERROR: Postprocessing: {error}");
             return Ok(false);
         }
     }
@@ -1293,7 +1306,7 @@ fn run_playlist_stage(
         let command = command.render_dict(dict, options)?;
         screen!("[Exec] Executing command: {command}");
         if let Err(error) = ExecCommand::run(&command) {
-            eprintln!("ERROR: Postprocessing: {error}");
+            report_error!("ERROR: Postprocessing: {error}");
             return Ok(false);
         }
     }
@@ -2504,7 +2517,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     if args.update || args.update_to.is_some() {
-        eprintln!("ERROR: yt-dlp-rs cannot update itself; install a newer release instead");
+        report_error!("ERROR: yt-dlp-rs cannot update itself; install a newer release instead");
         return Ok(false);
     }
     // Upstream `Cache.remove` (this port stores no cache).
@@ -2557,7 +2570,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         return Ok(true);
     }
     if let Some(target) = &args.impersonate {
-        eprintln!(
+        report_error!(
             "ERROR: Impersonate target \"{}\" is not available. Use --list-impersonate-targets to see available targets. You may be missing dependencies required to support this target.",
             target.split(':').next().unwrap_or(target).to_lowercase()
         );
@@ -2627,7 +2640,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
         None => urls.into_iter().map(|url| (url, None)).collect(),
     };
-    for (url, loaded) in inputs {
+    let mut inputs: std::collections::VecDeque<_> = inputs.into();
+    while let Some((url, loaded)) = inputs.pop_front() {
+        // Upstream `download_with_info_file` retries a raised DownloadError
+        // with the webpage URL.
+        let from_info_json = matches!(loaded, Some(ExtractResult::Video(_)));
+        let mut fallback: Option<(String, String)> = None;
         let options = ExtractionOptions {
             retries: args.extractor_retries,
         };
@@ -2717,8 +2735,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             Ok(None) => continue,
             Err(error) => {
                 match &error {
-                    yt_dlp_rs::Error::Reported(message) => eprintln!("ERROR: {message}"),
-                    _ => eprintln!("ERROR: {url}: {error}"),
+                    yt_dlp_rs::Error::Reported(message) => report_error!("ERROR: {message}"),
+                    _ => report_error!("ERROR: {url}: {error}"),
                 }
                 failed = true;
                 if abort_on_error {
@@ -2778,7 +2796,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 Ok(())
             })();
             if let Err(error) = written {
-                eprintln!("ERROR: {url}: {error}");
+                report_error!("ERROR: {url}: {error}");
                 failed = true;
                 if abort_on_error {
                     break;
@@ -2824,13 +2842,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         let mut url_cancelled = false;
         // Upstream `__process_playlist` `failures`.
         let mut extraction_failures = 0;
+        let failed_before = failed;
         for (entry_index, mut info) in extracted.into_entries().into_iter().enumerate() {
             let mut counted = false;
             let postprocess_failed = std::cell::Cell::new(false);
             // Upstream `__pending_error` from a failed preprocessing command.
             let pending_error = std::cell::Cell::new(None::<String>);
             let defer = |error: String| {
-                eprintln!("ERROR: Preprocessing: {error}");
+                report_error!("ERROR: Preprocessing: {error}");
                 let earlier = pending_error.take();
                 pending_error.set(earlier.or(Some(format!("Preprocessing: {error}"))));
             };
@@ -3062,10 +3081,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 && !exec.has(Stage::BeforeDownload)
                                 && !writes_links
                                 && !prints_stage(Stage::BeforeDownload)
-                                && info
-                                    .requested_subtitles
-                                    .as_ref()
-                                    .is_none_or(|subtitles| subtitles.is_empty())
+                                && !(write_subs || args.write_auto_subs)
                             {
                                 force_record(&info)?;
                                 return Ok(());
@@ -3151,6 +3167,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 .requested_subtitles
                                 .as_ref()
                                 .is_some_and(|subtitles| !subtitles.is_empty());
+                            if (write_subs || args.write_auto_subs) && !has_subtitles {
+                                screen!(
+                                    "[info] There are no subtitles for the requested languages"
+                                );
+                            }
                             // Upstream writes subtitles beside the (temporary) media
                             // name; `MoveFiles` gives them the subtitle template's.
                             let mut subtitle_finals = Vec::new();
@@ -3318,7 +3339,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                                 warning!("WARNING: {message}");
                                                 continue;
                                             }
-                                            return Err(yt_dlp_rs::Error::Reported(message).into());
+                                            // Reported first only with --abort-on-error.
+                                            return Err(yt_dlp_rs::Error::Raised(message).into());
                                         }
                                         destination();
                                         reporter.finish();
@@ -3444,7 +3466,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 // `MoveFilesAfterDownloadPP(downloaded=False)` publishes
                                 // the sidecars.
                                 if let Err(error) = move_files.run(&path, false) {
-                                    eprintln!("ERROR: Postprocessing: {error}");
+                                    report_error!("ERROR: Postprocessing: {error}");
                                     return Ok(());
                                 }
                                 force_record(&info)?;
@@ -3546,9 +3568,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 {
                                     let message = "You have requested merging of multiple formats but ffmpeg is not installed";
                                     if error_mode == ErrorMode::Abort {
-                                        return Err(format!(
+                                        return Err(yt_dlp_rs::Error::Reported(format!(
                                             "{message}. Aborting due to --abort-on-error"
-                                        )
+                                        ))
                                         .into());
                                     }
                                     warning!("WARNING: {message}. The formats won't be merged");
@@ -3817,7 +3839,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                                 // Upstream `run_pp` under --ignore-errors.
                                 for error in result.errors {
-                                    eprintln!("ERROR: {error}");
+                                    report_error!("ERROR: {error}");
                                     postprocess_failed.set(true);
                                 }
                                 // The processor may have corrected a WebP extension.
@@ -3954,9 +3976,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 if let Err(error) = split {
                                     postprocess_failed.set(true);
                                     if error_mode == ErrorMode::Ignore {
-                                        eprintln!("ERROR: {error}");
+                                        report_error!("ERROR: {error}");
                                     } else {
-                                        eprintln!("ERROR: Postprocessing: {error}");
+                                        report_error!("ERROR: Postprocessing: {error}");
                                         return Ok(());
                                     }
                                 }
@@ -3976,9 +3998,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         };
                                         postprocess_failed.set(true);
                                         if error_mode == ErrorMode::Ignore {
-                                            eprintln!("ERROR: {error}");
+                                            report_error!("ERROR: {error}");
                                         } else {
-                                            eprintln!("ERROR: Postprocessing: {error}");
+                                            report_error!("ERROR: Postprocessing: {error}");
                                             return Ok(());
                                         }
                                     }
@@ -4022,7 +4044,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             let succeeded = match result {
                 Ok(()) => true,
                 Err(error) if error.is::<EntryExtractionError>() => {
-                    eprintln!("ERROR: {error}");
+                    report_error!("ERROR: {error}");
                     failed = true;
                     extraction_failed = true;
                     if let Some(entry) = json_entries
@@ -4041,21 +4063,33 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         screen!("[download] {message}");
                         true
                     }
+                    // A raised DownloadError: reported here unless the loaded
+                    // info falls back to its URL (only --abort-on-error
+                    // reports it first).
+                    Some(yt_dlp_rs::Error::Raised(message)) => {
+                        if from_info_json && !abort_on_error {
+                            fallback = Some((message.clone(), info.webpage_url.to_string()));
+                        } else {
+                            report_error!("ERROR: {message}");
+                            failed = true;
+                        }
+                        false
+                    }
                     // Upstream `report_error` text without a URL/ID prefix.
                     Some(yt_dlp_rs::Error::Reported(message)) => {
-                        eprintln!("ERROR: {message}");
+                        report_error!("ERROR: {message}");
                         failed = true;
                         false
                     }
                     // `report_error(f'Postprocessing: {err}')`.
                     Some(yt_dlp_rs::Error::Postprocess(message)) => {
-                        eprintln!("ERROR: Postprocessing: {message}");
+                        report_error!("ERROR: Postprocessing: {message}");
                         failed = true;
                         false
                     }
                     // `RetryManager` exhaustion through `report_retry`.
                     Some(error @ yt_dlp_rs::Error::RetriesExhausted { .. }) => {
-                        eprintln!("ERROR: \r{error}");
+                        report_error!("ERROR: \r{error}");
                         failed = true;
                         false
                     }
@@ -4065,7 +4099,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         error @ (yt_dlp_rs::Error::Http(_)
                         | yt_dlp_rs::Error::HttpRetryAfter { .. }),
                     ) => {
-                        eprintln!(
+                        report_error!(
                             "ERROR: unable to download video data: {}",
                             yt_dlp_rs::upstream_error_text(error)
                         );
@@ -4073,7 +4107,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         false
                     }
                     _ => {
-                        eprintln!("ERROR: {url}: {}: {error}", info.id);
+                        report_error!("ERROR: {url}: {}: {error}", info.id);
                         failed = true;
                         false
                     }
@@ -4083,7 +4117,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             // Upstream `_raise_pending_errors` after `process_info`, then the
             // `after_video` commands (without file paths).
             if let Some(error) = pending_error.take() {
-                eprintln!("ERROR: {error}");
+                report_error!("ERROR: {error}");
                 failed = true;
             }
             if counted
@@ -4112,12 +4146,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     )
                 })
             {
-                eprintln!("ERROR: {error}");
+                report_error!("ERROR: {error}");
                 failed = true;
             }
-            // Upstream `--abort-on-error`: the first reported error ends the queue.
+            // Upstream `--abort-on-error`: the first reported error raises and
+            // ends the queue (a loaded info retries its URL instead).
             if abort_on_error && failed {
-                aborted = true;
+                if from_info_json && let Some(line) = LAST_ERROR.lock().unwrap().clone() {
+                    fallback = Some((line, info.webpage_url.to_string()));
+                    failed = failed_before;
+                } else {
+                    aborted = true;
+                }
+                break;
+            }
+            if fallback.is_some() {
                 break;
             }
             extraction_failures += usize::from(extraction_failed);
@@ -4126,7 +4169,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 &playlist_title,
             ) && extraction_failures as i64 >= limit
             {
-                eprintln!(
+                report_error!(
                     "ERROR: Skipping the remaining entries in playlist \"{title}\" since {extraction_failures} items failed extraction"
                 );
                 failed = true;
@@ -4152,6 +4195,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 url_cancelled = true;
                 break;
             }
+        }
+        if let Some((message, webpage_url)) = fallback {
+            eprintln!("\r");
+            warning!(
+                "WARNING: The info failed to download: {message}; trying with URL {webpage_url}"
+            );
+            inputs.push_front((webpage_url, None));
+            continue;
         }
         if cancelled.is_some() || aborted {
             break;
@@ -4212,7 +4263,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             cookies.save(path)
         };
         if let Err(error) = save {
-            eprintln!("ERROR: {error}");
+            report_error!("ERROR: {error}");
             failed = true;
         }
     }
@@ -5385,7 +5436,7 @@ fn after_download(
     print_after_move: &dyn Fn(&std::path::Path, &yt_dlp_rs::VideoInfo) -> Result<(), String>,
 ) -> bool {
     if let Some(error) = pending.take() {
-        eprintln!("ERROR: {error}");
+        report_error!("ERROR: {error}");
         failed.set(true);
         if mode == ErrorMode::Abort {
             return false;
@@ -5396,9 +5447,9 @@ fn after_download(
         if let Err(error) = result {
             failed.set(true);
             if mode == ErrorMode::Ignore {
-                eprintln!("ERROR: {error}");
+                report_error!("ERROR: {error}");
             } else {
-                eprintln!("ERROR: Postprocessing: {error}");
+                report_error!("ERROR: Postprocessing: {error}");
                 return false;
             }
         }
@@ -6432,7 +6483,7 @@ fn cli() -> std::process::ExitCode {
             std::process::ExitCode::from(2)
         }
         Err(error) => {
-            eprintln!("ERROR: {error}");
+            report_error!("ERROR: {error}");
             std::process::ExitCode::FAILURE
         }
     }

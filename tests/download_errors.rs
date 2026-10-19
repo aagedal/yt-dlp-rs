@@ -134,3 +134,33 @@ fn subtitle_failures_warn_under_ignore_errors() {
     );
     assert!(directory.path().join("o.mp4").is_file());
 }
+
+#[test]
+fn a_raised_subtitle_failure_retries_the_loaded_info_with_its_url() {
+    let directory = tempfile::tempdir().unwrap();
+    let output = run(
+        directory.path(),
+        "/v.mp4",
+        Some("/nosub.vtt"),
+        &["--write-subs"],
+    );
+    // The retry succeeds, so the run does too.
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    let stdout = text(&output.stdout);
+    assert!(
+        stdout.starts_with(
+            "[info] vid: Downloading subtitles: en\n[info] vid: Downloading 1 format(s): 0\n\
+             [info] Writing video subtitles to: o.en.vtt\n[generic] Extracting URL: http://"
+        ),
+        "{stdout}"
+    );
+    assert!(stdout.contains("[info] There are no subtitles for the requested languages\n"));
+    let stderr = text(&output.stderr);
+    assert!(
+        stderr.starts_with(
+            "\r\nWARNING: The info failed to download: Unable to download video subtitles for 'en': HTTP Error 404: File not found; trying with URL http://"
+        ),
+        "{stderr}"
+    );
+    assert!(directory.path().join("o.mp4").is_file());
+}

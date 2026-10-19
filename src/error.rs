@@ -16,6 +16,11 @@ pub enum Error {
     /// An `--exec` command rejected like upstream `UnsafeExecExpansionError`.
     #[error("{0}")]
     Exec(String),
+    /// Upstream raises `DownloadError(MESSAGE)` without reporting it first:
+    /// `--load-info-json` then retries the webpage URL, otherwise it is
+    /// reported as `ERROR: MESSAGE`.
+    #[error("{0}")]
+    Raised(String),
     /// An error upstream reports as plain `ERROR: MESSAGE` (`report_error`
     /// in a downloader), without the URL/ID prefix.
     #[error("{0}")]
