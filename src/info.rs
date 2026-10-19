@@ -1421,6 +1421,39 @@ mod tests {
     }
 
     #[test]
+    fn saved_selector_kinds_match_pinned_upstream_per_context() {
+        let fixture: Value =
+            serde_json::from_str(include_str!("../tests/fixtures/selectors/kinds.json")).unwrap();
+        for context in fixture["contexts"].as_array().unwrap() {
+            let original: VideoInfo = serde_json::from_value(context["info"].clone()).unwrap();
+            for (expression, expected) in context["expected"].as_object().unwrap() {
+                let mut info = original.clone();
+                let expected: Vec<_> = expected
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|id| id.as_str().unwrap())
+                    .collect();
+                let name = context["name"].as_str().unwrap();
+                match info.select_format(Some(expression)) {
+                    Ok(()) => {
+                        let actual: Vec<_> = if info.requested_formats.is_empty() {
+                            vec![info.format_id.as_deref().unwrap()]
+                        } else {
+                            info.requested_formats
+                                .iter()
+                                .map(|format| format.format_id.as_str())
+                                .collect()
+                        };
+                        assert_eq!(actual, expected, "{name}: {expression}");
+                    }
+                    Err(error) => assert!(expected.is_empty(), "{name}: {expression}: {error}"),
+                }
+            }
+        }
+    }
+
+    #[test]
     fn saved_grouped_selector_expressions_match_pinned_upstream_ids() {
         let fixture: Value =
             serde_json::from_str(include_str!("../tests/fixtures/selectors/expressions.json"))
