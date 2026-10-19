@@ -290,7 +290,7 @@ fn failed_ffmpeg_preserves_original_and_completed_native_intermediate() {
     }
 }
 #[test]
-fn occupied_destination_and_publication_race_preserve_existing_bytes_and_source() {
+fn occupied_destination_is_replaced_like_ffmpeg_y() {
     for race in [false, true] {
         let tools = Tools::new("aac", false);
         let client = tools.client();
@@ -301,19 +301,15 @@ fn occupied_destination_and_publication_race_preserve_existing_bytes_and_source(
         if !race {
             std::fs::write(&destination, b"competitor").unwrap();
         }
-        let result = client.convert_subtitle_with_progress(
-            &source,
-            "srt",
-            &conversion("vtt", false),
-            |progress| {
+        client
+            .convert_subtitle_with_progress(&source, "srt", &conversion("vtt", true), |progress| {
                 if race && progress.phase == DownloadPhase::Publishing {
                     std::fs::write(&destination, b"competitor").unwrap();
                 }
                 ControlFlow::Continue(())
-            },
-        );
-        assert!(result.is_err());
-        assert_eq!(std::fs::read(destination).unwrap(), b"competitor");
+            })
+            .unwrap();
+        assert_eq!(std::fs::read(destination).unwrap(), b"converted subtitle");
         assert_eq!(std::fs::read(source).unwrap(), SRT);
         clean(directory.path());
     }
@@ -360,17 +356,22 @@ fn symlink_input_and_output_are_refused_without_touching_files() {
     );
     std::fs::remove_file(&source).unwrap();
     std::fs::write(&source, SRT).unwrap();
+    assert!(tools.log(&tools.ffmpeg).is_empty());
+    // An output symlink is replaced, not followed.
     let output = directory.path().join("captions.vtt");
     let absent = directory.path().join("absent");
     std::os::unix::fs::symlink(&absent, &output).unwrap();
-    assert!(
-        client
-            .convert_subtitle_with_options(&source, "srt", &conversion("vtt", false))
-            .is_err()
-    );
+    client
+        .convert_subtitle_with_options(&source, "srt", &conversion("vtt", true))
+        .unwrap();
     assert!(!absent.exists());
+    assert!(
+        !std::fs::symlink_metadata(&output)
+            .unwrap()
+            .file_type()
+            .is_symlink()
+    );
     assert_eq!(std::fs::read(real).unwrap(), SRT);
-    assert!(tools.log(&tools.ffmpeg).is_empty());
 }
 
 #[test]
@@ -428,7 +429,16 @@ fn cli_skip_media_converts_sidecar_with_aliases_and_keep_original() {
             args.push("-k");
         }
         args.push(&url);
-        success(&tools.cli(&args, directory.path()));
+        let output = tools.cli(&args, directory.path());
+        success(&output);
+        // Upstream `FFmpegSubtitlesConvertorPP` with `run_pp` deletion.
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let expected = if keep {
+            "[SubtitlesConvertor] Converting subtitles\n"
+        } else {
+            "[SubtitlesConvertor] Converting subtitles\nDeleting original file out.en.srt (pass -k to keep)\n"
+        };
+        assert!(stdout.ends_with(expected), "{stdout}");
         assert_eq!(
             std::fs::read(directory.path().join("out.en.vtt")).unwrap(),
             b"converted subtitle"
@@ -441,7 +451,7 @@ fn cli_skip_media_converts_sidecar_with_aliases_and_keep_original() {
 }
 
 #[test]
-fn cli_failed_conversion_retains_downloaded_subtitle_and_stops_media_and_archive() {
+fn cli_failed_conversion_is_a_deferred_preprocessing_error() {
     let server = Server::new();
     let tools = Tools::new("aac", true);
     let directory = tempfile::tempdir().unwrap();
@@ -464,15 +474,24 @@ fn cli_failed_conversion_retains_downloaded_subtitle_and_stops_media_and_archive
         SRT
     );
     assert!(!directory.path().join("out.en.vtt").exists());
-    assert!(!directory.path().join("out.mp4").exists());
-    assert!(!directory.path().join("archive").exists());
+    // Upstream defers the error: the media downloads, then the video fails
+    // before postprocessing (outside --abort-on-error it is still archived).
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    let errors: Vec<_> = stderr
+        .lines()
+        .filter(|line| line.starts_with("ERROR: Preprocessing: "))
+        .collect();
+    assert_eq!(errors.len(), 2, "{stderr}");
+    assert!(directory.path().join("out.mp4").exists());
+    assert!(directory.path().join("archive").exists());
     let requests = server.requests.lock().unwrap();
+    // The extraction probe and the download.
     assert_eq!(
         requests
             .iter()
             .filter(|request| request.contains("/media.mp4 "))
             .count(),
-        1
+        2
     );
     assert_eq!(
         requests

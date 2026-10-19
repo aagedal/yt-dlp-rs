@@ -1893,8 +1893,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         })
         .transpose()?
         .filter(SubtitleConversion::is_enabled);
+    // `convert_subtitles` deletes the originals itself, like `run_pp`.
     if let Some(conversion) = &mut subtitle_conversion {
-        conversion.keep_original = args.keep_video;
+        conversion.keep_original = true;
     }
     let format = args
         .format
@@ -3201,7 +3202,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         paths.push(intermediate);
                                     }
                                 }
-                                for (index, sidecar) in paths.iter().enumerate() {
+                                for sidecar in &paths {
                                     if !seen.insert(sidecar.as_os_str().to_ascii_lowercase()) {
                                         return Err(yt_dlp_rs::Error::Subtitle(
                                             "subtitle conversion or info JSON filenames collide"
@@ -3214,19 +3215,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     {
                                         if paths_alias(sidecar, reserved)? {
                                             return Err(yt_dlp_rs::Error::Subtitle("subtitle path collides with cookie file or download archive".into()).into());
-                                        }
-                                    }
-                                    if index != 0 {
-                                        match std::fs::symlink_metadata(sidecar) {
-                                            Ok(_) => {
-                                                return Err(yt_dlp_rs::Error::OutputExists(
-                                                    sidecar.clone(),
-                                                )
-                                                .into());
-                                            }
-                                            Err(error)
-                                                if error.kind() == io::ErrorKind::NotFound => {}
-                                            Err(error) => return Err(error.into()),
                                         }
                                     }
                                 }
@@ -3308,36 +3296,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     }
                                     Err(error) => return Err(error.into()),
                                 }
-                                let mut embedded_file = SubtitleFile {
+                                let embedded_file = SubtitleFile {
                                     path: subtitle_path.clone(),
                                     ext: subtitle.ext.clone(),
                                     language,
                                     name: subtitle.name.clone(),
                                 };
-                                if let Some(conversion) = &subtitle_conversion {
-                                    let converted = downloader.convert_subtitle_with_options(
-                                        &subtitle_path,
-                                        &subtitle.ext,
-                                        conversion,
-                                    )?;
-                                    for warning in converted.warnings {
-                                        warning!("WARNING: {warning}");
-                                    }
-                                    if converted.converted {
-                                        // The source converter replaces the subtitle's
-                                        // metadata entry and drops its original name.
-                                        embedded_file.name = None;
-                                        screen!(
-                                            "[SubtitlesConvertor] Destination: {}",
-                                            converted.path.display()
-                                        );
-                                    }
-                                    if converted.path != subtitle_path {
-                                        move_files.derive(&subtitle_path, &converted.path, false);
-                                    }
-                                    embedded_file.path = converted.path;
-                                    embedded_file.ext = converted.ext;
-                                }
                                 embedding_files.push(embedded_file);
                             }
                             // Upstream writes thumbnails after subtitles and before info JSON.
@@ -3356,15 +3320,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     thumbnail_mode == 2,
                                     overwrites,
                                     retries,
-                                )?;
-                            }
-                            if let Some(conversion) = &thumbnail_conversion {
-                                convert_thumbnails(
-                                    &downloader,
-                                    &mut thumbnail_files,
-                                    &mut move_files,
-                                    conversion,
-                                    args.keep_video,
                                 )?;
                             }
                             // Upstream writes info JSON after subtitles and before media.
@@ -3399,14 +3354,40 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 stage_paths(None, &prepared),
                             )?
                             .emit()?;
-                            if let Err(error) = run_exec(
-                                &exec,
-                                Stage::BeforeDownload,
-                                &info,
-                                None,
-                                Some(&final_path),
-                                &template_options,
-                            ) {
+                            // Upstream's `before_dl` processors: SubtitlesConvertor,
+                            // ThumbnailsConvertor, then `--exec before_dl:`; a
+                            // failure skips the rest.
+                            let before_dl = (|| -> Result<(), String> {
+                                if let Some(conversion) = &subtitle_conversion {
+                                    convert_subtitles(
+                                        &downloader,
+                                        &info,
+                                        &mut embedding_files,
+                                        conversion,
+                                        args.keep_video,
+                                        &mut move_files,
+                                    )?;
+                                }
+                                if let Some(conversion) = &thumbnail_conversion {
+                                    convert_thumbnails(
+                                        &downloader,
+                                        &mut thumbnail_files,
+                                        &mut move_files,
+                                        conversion,
+                                        args.keep_video,
+                                    )
+                                    .map_err(|error| error.to_string())?;
+                                }
+                                run_exec(
+                                    &exec,
+                                    Stage::BeforeDownload,
+                                    &info,
+                                    None,
+                                    Some(&final_path),
+                                    &template_options,
+                                )
+                            })();
+                            if let Err(error) = before_dl {
                                 defer(error);
                             }
                             // Upstream prints `post_process` before merging/processing
@@ -6080,6 +6061,84 @@ fn write_thumbnails(
     }
     on_disk.sort();
     Ok(on_disk)
+}
+
+/// Upstream `FFmpegSubtitlesConvertorPP.run` over the written subtitles.
+/// Originals (and TTML's SRT intermediate) are deleted unless -k.
+fn convert_subtitles(
+    downloader: &YoutubeDl,
+    info: &yt_dlp_rs::VideoInfo,
+    files: &mut [SubtitleFile],
+    conversion: &SubtitleConversion,
+    keep: bool,
+    move_files: &mut MoveFiles,
+) -> Result<(), String> {
+    let Some(requested) = &info.requested_subtitles else {
+        screen!("[SubtitlesConvertor] There aren't any subtitles to convert");
+        return Ok(());
+    };
+    let target = conversion.target().unwrap_or_default();
+    screen!("[SubtitlesConvertor] Converting subtitles");
+    let mut originals = Vec::new();
+    for (language, _) in &requested.entries {
+        let language = language.as_deref().unwrap_or("None");
+        let Some(file) = files
+            .iter_mut()
+            .find(|file| file.language == language && file.path.exists())
+        else {
+            warning!("WARNING: Skipping embedding {language} subtitle because the file is missing");
+            continue;
+        };
+        if file.ext == target {
+            screen!(
+                "[SubtitlesConvertor] Subtitle file for {target} is already in the requested format"
+            );
+            continue;
+        } else if file.ext == "json" {
+            screen!(
+                "[SubtitlesConvertor] You have requested to convert json subtitles into another format, which is currently not possible"
+            );
+            continue;
+        }
+        let ttml = matches!(file.ext.as_str(), "dfxp" | "ttml" | "tt");
+        if ttml {
+            warning!(
+                "WARNING: You have requested to convert dfxp (TTML) subtitles into another format, which results in style information loss"
+            );
+        }
+        let converted = downloader
+            .convert_subtitle_with_options(&file.path, &file.ext, conversion)
+            .map_err(|error| match error {
+                yt_dlp_rs::Error::Postprocess(message) => message,
+                other => other.to_string(),
+            })?;
+        originals.push(file.path.clone());
+        originals.extend(converted.intermediates);
+        // Upstream maps the result to the original's final name, except a
+        // TTML source converted to SRT, which it leaves unmapped.
+        if !(ttml && target == "srt") {
+            move_files.derive(&file.path, &converted.path, false);
+        }
+        // The new entry drops the subtitle's original name.
+        file.path = converted.path;
+        file.ext = converted.ext;
+        file.name = None;
+    }
+    // `run_pp` deletes (or with -k keeps) the processor's originals.
+    for original in originals {
+        if keep {
+            move_files.keep(original);
+        } else {
+            screen!(
+                "Deleting original file {} (pass -k to keep)",
+                original.display()
+            );
+            if std::fs::remove_file(&original).is_err() {
+                warning!("WARNING: Unable to delete file {}", original.display());
+            }
+        }
+    }
+    Ok(())
 }
 
 /// Upstream `FFmpegThumbnailsConvertorPP.run` over the written thumbnails.

@@ -57,7 +57,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--write-description`, `--no-write-description` | Write the represented description to the `description` output type (`.description`) before subtitles; upstream messages for missing/present descriptions; follows overwrite options; playlists report no description |
 | `--list-thumbnails` | Upstream `[info] Available thumbnails for ID:` table (ID/Width/Height/URL) or `ID has no thumbnails`; implies list-only simulation like other listings |
 | `--write-thumbnail`, `--no-write-thumbnail`, `--write-all-thumbnails` | Upstream flag folding; try thumbnails best-first until one is written (all with `--write-all-thumbnails`, named `ID.EXT` when several), before info JSON; upstream messages, 404 skip, overwrite options; raw bytes unless converted |
-| `--convert-thumbnails FORMAT` | Upstream `FFmpegThumbnailsConvertorPP` before media: `jpg`/`png`/`webp` targets or `SRC>TGT/...` mappings (`none` disables) with upstream validation and "Not converting"/"could not find a mapping"/"already is in target format" messages, WebP extension fixup, `-f image2 -pattern_type none`, `-update 1`, `mjpeg2jpeg` for JPEG; originals deleted unless `-k`; requires `--ffmpeg-location` |
+| `--convert-thumbnails FORMAT` | Upstream `FFmpegThumbnailsConvertorPP` as a `before_dl` processor (after SubtitlesConvertor, before `--exec before_dl:`): `jpg`/`png`/`webp` targets or `SRC>TGT/...` mappings (`none` disables) with upstream validation and "Not converting"/"could not find a mapping"/"already is in target format" messages, WebP extension fixup, `-f image2 -pattern_type none`, `-update 1`, `mjpeg2jpeg` for JPEG; originals deleted unless `-k`; requires `--ffmpeg-location` |
 | `--embed-thumbnail`, `--no-embed-thumbnail` | Upstream `EmbedThumbnailPP` as the final stage after metadata: implies `--write-thumbnail` and deletes the written file after embedding unless it was requested explicitly; best on-disk thumbnail, WebP fixup, PNG conversion outside mkv/mka; mp3 ID3v2.3 cover, mkv/mka `-attach` with mimetype/filename (replacing an existing same-mimetype attachment), mp4/m4a/m4v/mov FFmpeg `attached_pic` fallback (mutagen/AtomicParsley are never used, so upstream's `Neither mutagen nor AtomicParsley was found. Falling back to ffmpeg` is always printed); upstream's `[ThumbnailsConvertor] Correcting thumbnail "FILE" extension to webp`/`Converting thumbnail "FILE" to png`, `[EmbedThumbnail] ffmpeg: Adding thumbnail to "FILE"`, and `There aren't any thumbnails to embed`/`There are no thumbnails on disk` when the processor runs; ogg/opus/flac and other containers are explicit errors; requires `--ffmpeg-location` and ffprobe |
 | `--write-playlist-metafiles`, `--no-write-playlist-metafiles` | Enable (default) or disable playlist info JSON/description files |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
@@ -2001,8 +2001,15 @@ scope](../upstream/notes/video-processing.md) and [fixture provenance](../tests/
 `--convert-subs FORMAT` accepts one lowercase target: `srt`, `vtt`, `ass`, `lrc`
 or `none` (disabled). `--convert-sub` and `--convert-subtitles` are aliases; the
 last value wins. The option does not imply `--write-subs` or `--write-auto-subs`.
-Conversion follows selected sidecar downloads before media downloads and therefore
-works with `--skip-download`. JSON, simulation and format/subtitle listing fetch
+Conversion runs as upstream's `before_dl` `FFmpegSubtitlesConvertorPP`: after
+subtitles, thumbnails, info JSON, links and `--print before_dl:`, before
+ThumbnailsConvertor and `--exec before_dl:`, and therefore also with
+`--skip-download`. It prints `[SubtitlesConvertor] Converting subtitles` (or
+`There aren't any subtitles to convert` without requested subtitles), upstream's
+already-in-format, JSON and TTML style-loss lines, then `Deleting original file
+FILE (pass -k to keep)` for each converted original (and TTML's SRT intermediate)
+unless `-k`. A failure is upstream's deferred `ERROR: Preprocessing: …`: the media
+still downloads and the video then fails before postprocessing. JSON, simulation and format/subtitle listing fetch
 no subtitle payloads and launch no conversion tools. Existing format/language
 selection determines the input; conversion does not request another server format.
 
@@ -2037,15 +2044,16 @@ cooperative cancellation. Inputs and produced UTF-8 files are capped at 16 MiB;
 output growth is monitored while the child runs. Missing tools, diagnostics,
 invalid UTF-8 and empty FFmpeg outputs fail.
 
-Active conversions reject symlink/nonregular sources and any existing converted
-or intermediate destination. Final names replace the last suffix, even when it
-differs from metadata. The CLI preflights all source/intermediate/converted paths,
-sanitation collisions and cookie/archive aliases before subtitle I/O. A fresh
-conversion never overwrites an already converted sidecar; reruns can leave a new
-source sidecar when a later failure occurs. Existing source-sidecar reuse remains
-available, subject to active conversion's regular-file requirement.
+Active conversions reject symlink/nonregular sources and an output equal to the
+input. An existing converted or intermediate destination is replaced, as FFmpeg's
+`-y` does upstream (a symlink there is replaced, not followed). Final names
+replace the last suffix, even when it differs from metadata. The CLI preflights
+all source/intermediate/converted paths, sanitation collisions and cookie/archive
+aliases before subtitle I/O. Existing source-sidecar reuse remains available,
+subject to active conversion's regular-file requirement.
 
-Successful conversion removes the source unless `-k` retains it. TTML to another
+Library conversion removes the source unless `keep_original` is set (the CLI
+always keeps it and deletes originals itself, like upstream's `run_pp`). TTML to another
 format can retain original TTML, intermediate SRT and the final file. Source files
 remain after failures; a completed native SRT is also preserved if a later FFmpeg
 step fails and its destination is available. Cancellation leaves public sources
