@@ -94,7 +94,8 @@ def main():
     sys.path.insert(0, checkout)
     from yt_dlp.cookies import extract_cookies_from_browser
 
-    shutil.rmtree(fixtures, ignore_errors=True)
+    for generated in ('firefox', 'chrome'):
+        shutil.rmtree(os.path.join(fixtures, generated), ignore_errors=True)
     many = [('', f'n{index:03d}', f'v{index}', 'example.test', '/', 4102444800000, 0)
             for index in range(120)]
     firefox_profile(
