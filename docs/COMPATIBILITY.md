@@ -1794,8 +1794,11 @@ values remain explicit. CLI field names accept ASCII letters/digits/underscore/
 hyphen; arbitrary option abbreviations and Unicode field names are unsupported.
 `--user-agent` and `--referer` use their last supplied values and override matching
 custom headers regardless of argument order, preserving pinned normalization.
-The native default User-Agent remains `yt-dlp-rs/VERSION`; upstream's randomized
-browser User-Agent is not reproduced.
+The CLI sends upstream's `std_headers` before custom headers (which override
+them): `random_user_agent()`'s Chrome User-Agent (major version 145–151, drawn per
+run), `Accept`, `Accept-Language: en-us,en;q=0.5` and `Sec-Fetch-Mode: navigate`.
+The library's default User-Agent remains `yt-dlp-rs/VERSION`. FFmpegFD's
+`-headers` lines use upstream's title-cased header names.
 
 Global headers are defaults for the shared HTTP client across direct/HTML5/
 YouTube pages, anonymous player API calls, media probes/downloads, HLS/DASH

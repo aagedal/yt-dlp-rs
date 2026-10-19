@@ -68,7 +68,7 @@ pub(crate) struct Settings {
     pub hls_use_mpegts: bool,
 }
 
-/// The `-headers` value for one input: the defaults, this port's User-Agent,
+/// The `-headers` value for one input (title-cased names): the defaults, a User-Agent,
 /// the page Referer of non-direct media and the jar's cookies.
 fn header_lines(network: &Network<'_>, info: &VideoInfo, url: &url::Url) -> String {
     let mut headers = network.headers.clone();
@@ -92,9 +92,25 @@ fn header_lines(network: &Network<'_>, info: &VideoInfo, url: &url::Url) -> Stri
         .map(|(name, value)| {
             format!(
                 "{}: {}\r\n",
-                name,
+                py_title(name.as_str()),
                 String::from_utf8_lossy(value.as_bytes())
             )
+        })
+        .collect()
+}
+
+/// Python `str.title()` for header names, as `HTTPHeaderDict` stores them.
+fn py_title(name: &str) -> String {
+    let mut previous_letter = false;
+    name.chars()
+        .map(|c| {
+            let mapped = if previous_letter {
+                c.to_ascii_lowercase()
+            } else {
+                c.to_ascii_uppercase()
+            };
+            previous_letter = c.is_ascii_alphabetic();
+            mapped
         })
         .collect()
 }
@@ -330,9 +346,9 @@ mod tests {
                 "-hide_banner",
                 "-headers",
                 concat!(
-                    "user-agent: yt-dlp-rs/",
+                    "User-Agent: yt-dlp-rs/",
                     env!("CARGO_PKG_VERSION"),
-                    "\r\nreferer: https://example.test/page\r\n"
+                    "\r\nReferer: https://example.test/page\r\n"
                 ),
                 "-ss",
                 "2",

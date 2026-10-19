@@ -1123,6 +1123,32 @@ fn single_json(
     }
 }
 
+/// Upstream `std_headers`, with `random_user_agent()`'s Chrome major
+/// version drawn from 145..=151.
+fn std_headers() -> Vec<(String, String)> {
+    use std::hash::{BuildHasher, Hasher};
+    let mut hasher = std::collections::hash_map::RandomState::new().build_hasher();
+    hasher.write_u64(epoch());
+    let version = 145 + hasher.finish() % 7;
+    [
+        (
+            "User-Agent",
+            format!(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{version}.0.0.0 Safari/537.36"
+            ),
+        ),
+        (
+            "Accept",
+            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8".into(),
+        ),
+        ("Accept-Language", "en-us,en;q=0.5".into()),
+        ("Sec-Fetch-Mode", "navigate".into()),
+    ]
+    .into_iter()
+    .map(|(name, value)| (name.to_owned(), value))
+    .collect()
+}
+
 /// Options for [`run_playlist_stage`].
 struct PlaylistStage {
     simulate: bool,
@@ -1913,6 +1939,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let cookie_file_was_missing = args.cookies.as_ref().is_some_and(|path| !path.exists());
     let mut http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
+    // Upstream `std_headers` precede `--add-headers` (which override them).
+    http_options.headers.splice(0..0, std_headers());
     let args_proxy = args.proxy.clone();
     http_options.proxy = args.proxy;
     http_options.socket_timeout = args.socket_timeout;

@@ -169,10 +169,19 @@ fn ffmpeg_downloads_each_section_with_upstream_arguments() {
         std::fs::read(directory.path().join("o-90.mp4")).unwrap(),
         b"section"
     );
+    // Upstream `std_headers` with a random Chrome major version.
     let args = std::fs::read_to_string(directory.path().join("args.txt")).unwrap();
+    let version = args
+        .split("Chrome/")
+        .nth(1)
+        .and_then(|rest| rest.split('.').next())
+        .and_then(|version| version.parse::<u32>().ok())
+        .unwrap();
+    assert!((145..=151).contains(&version));
     let expected_headers = format!(
-        "user-agent: yt-dlp-rs/{}\r\nreferer: {page}\r\n",
-        env!("CARGO_PKG_VERSION")
+        "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{version}.0.0.0 Safari/537.36\r\n\
+         Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n\
+         Accept-Language: en-us,en;q=0.5\r\nSec-Fetch-Mode: navigate\r\nReferer: {page}\r\n"
     );
     assert_eq!(
         args,
