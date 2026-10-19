@@ -16,7 +16,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--no-warnings` | Suppress `WARNING:` lines |
 | `-s`, `--simulate`, `--no-simulate` | Extract metadata, print screen lines to stdout and diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
 | `-O`, `--print [WHEN:]TEMPLATE` | Print a field list or unsanitized output template per selected video at the `video`, `before_dl`, `post_process`, `after_move` or `after_video` stage; implies quiet, and simulation unless a later stage prints; repeatable; see [print templates](#print-templates) |
-| `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-filename` | Hidden upstream aliases printing title, ID, selected URLs and prepared filename after `--print` lines; imply quiet simulation |
+| `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-thumbnail`, `--get-description`, `--get-filename`, `--get-duration`, `--get-format` | Hidden upstream aliases printing, after `--print` lines and in upstream `__forced_printings` order, title, ID, selected URLs, thumbnail, description, prepared filename, `formatSeconds` duration and `format`; thumbnail, description and duration print only when present; imply quiet simulation |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; format IDs follow upstream for direct, HLS and DASH results (see below) |
 | `-o`, `--output [TYPES:]TEMPLATE` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; upstream metadata sanitization; typed `subtitle`/`infojson`/`pl_infojson` templates (empty skips that file), `~`/`$VAR` template expansion; no overwrite; see [output paths](../upstream/notes/output-paths.md) |
 | `-P`, `--paths [TYPES:]PATH` | `home` (default) and output-type directories joined like upstream `get_output_path`; absolute templates ignore them with a warning; `temp:` is rejected |
@@ -624,6 +624,19 @@ video's `vcodec`/`dynamic_range` and the audio's `acodec`. Upstream's explicit
 `null` values are omitted. Native stream classification (`stream_kind`) and the
 stricter HLS/DASH/YouTube codec allow-lists are unchanged by these fields;
 `tools/compare_youtube.py` now also compares non-null codec fields.
+
+## Format descriptions
+
+Like `process_video_result`, formats get `resolution` (`format_resolution`:
+`audio only`, `WxH`, `Hp` or `Wx?`), `aspect_ratio` (`round(width / height, 2)`)
+and, after IDs are assigned, `format` (`'{id} - {resolution or unknown}'` plus
+` (format_note)`); results get `fulltitle` and `duration_string`
+(`formatSeconds`). The selection copies them; merges join `format` with `+` and
+take the video's resolution and aspect ratio. Templates can use `format`,
+`resolution`, `protocol`, `vcodec`, `acodec`, `dynamic_range`, `video_ext`,
+`audio_ext`, `duration_string`, `fulltitle` and `thumbnail` (floating-point
+fields such as `aspect_ratio` are not yet available to the typed template
+renderer). Checked against pinned upstream on local HLS, DASH and HTML5 pages.
 
 ## Format sorting
 

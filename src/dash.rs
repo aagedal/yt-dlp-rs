@@ -864,6 +864,9 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                     .get("audioSamplingRate")
                     .and_then(|value| value.trim().parse().ok()),
                 audio_channels: None,
+                resolution: None,
+                format: None,
+                aspect_ratio: None,
                 format_id,
                 url: manifest.clone(),
                 ext: if mime.ends_with("webm") {

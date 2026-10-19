@@ -156,6 +156,15 @@ pub struct VideoFormat {
     pub asr: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub audio_channels: Option<u32>,
+    /// Upstream `format_resolution` fill (`audio only`, `WxH`, `Hp`, `Wx?`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolution: Option<String>,
+    /// Upstream `'{id} - {res}{note}'` description.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub format: Option<String>,
+    /// `round(width / height, 2)`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub aspect_ratio: Option<f64>,
     pub format_id: String,
     #[serde(default, skip_serializing_if = "StreamKind::is_standalone")]
     pub stream_kind: StreamKind,
@@ -218,6 +227,9 @@ pub struct Metadata {
     pub description: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration: Option<u64>,
+    /// `formatSeconds(duration)`, filled by `_fill_common_fields`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_string: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub channel_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -260,6 +272,9 @@ pub struct Metadata {
 impl Metadata {
     /// Upstream `_fill_common_fields`: derive `upload_date` from `timestamp`.
     pub fn fill_common_fields(&mut self) {
+        if let Some(duration) = self.duration {
+            self.duration_string = Some(format_seconds(duration));
+        }
         if self.upload_date.is_none() {
             self.upload_date = self.timestamp.and_then(crate::dates::strftime_date);
         }
@@ -352,6 +367,9 @@ pub struct VideoInfo {
     pub fragments: Vec<Fragment>,
     pub id: String,
     pub title: String,
+    /// The extractor's title, filled by `_fill_common_fields`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fulltitle: Option<String>,
     pub ext: String,
     pub url: Url,
     pub webpage_url: Url,
@@ -363,6 +381,13 @@ pub struct VideoInfo {
     pub direct: Option<bool>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub formats: Vec<VideoFormat>,
+    /// The selected format's `resolution`, `format` and `aspect_ratio`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolution: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub format: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub aspect_ratio: Option<f64>,
     /// Extractor sort order (`_format_sort_fields`), before the defaults.
     #[serde(
         default,
@@ -480,6 +505,15 @@ impl VideoInfo {
                     let ext = merge_container(video, audio, merge_formats);
                     let selected = vec![first.clone(), second.clone()];
                     let (width, height) = (video.width, video.height);
+                    let description = (
+                        selected
+                            .iter()
+                            .filter_map(|format| format.format.clone())
+                            .collect::<Vec<_>>()
+                            .join("+"),
+                        format_resolution(video, Some("unknown")),
+                        video.aspect_ratio,
+                    );
                     let (vcodec, acodec, dynamic_range) = (
                         video.vcodec.clone(),
                         audio.acodec.clone(),
@@ -501,6 +535,9 @@ impl VideoInfo {
                     self.filesize = None;
                     self.width = width;
                     self.height = height;
+                    self.format = Some(description.0).filter(|format| !format.is_empty());
+                    self.resolution = description.1;
+                    self.aspect_ratio = description.2;
                     self.vcodec = vcodec;
                     self.acodec = acodec;
                     self.dynamic_range = dynamic_range;
@@ -537,6 +574,9 @@ impl VideoInfo {
         self.url = selected.url.clone();
         self.ext = selected.ext.clone();
         self.protocol = Some(selected.determine_protocol());
+        self.resolution = selected.resolution.clone();
+        self.format = selected.format.clone();
+        self.aspect_ratio = selected.aspect_ratio;
         self.vcodec = selected.vcodec.clone();
         self.acodec = selected.acodec.clone();
         self.dynamic_range = selected.dynamic_range.clone();
@@ -842,6 +882,64 @@ pub(crate) fn fill_format_fields(formats: &mut [VideoFormat]) {
     }
 }
 
+/// Upstream `formatSeconds` for whole seconds: `H:MM:SS`, `M:SS` or `S`.
+pub fn format_seconds(seconds: u64) -> String {
+    let (hours, minutes, seconds) = (seconds / 3600, seconds / 60 % 60, seconds % 60);
+    if hours > 0 {
+        format!("{hours}:{minutes:02}:{seconds:02}")
+    } else if minutes > 0 {
+        format!("{minutes}:{seconds:02}")
+    } else {
+        seconds.to_string()
+    }
+}
+
+/// Upstream `format_resolution` with a default.
+pub(crate) fn format_resolution(format: &VideoFormat, default: Option<&str>) -> Option<String> {
+    if format.vcodec.as_deref() == Some("none") && format.acodec.as_deref() != Some("none") {
+        return Some("audio only".into());
+    }
+    if let Some(resolution) = &format.resolution {
+        return Some(resolution.clone());
+    }
+    match (
+        format.width.filter(|w| *w != 0),
+        format.height.filter(|h| *h != 0),
+    ) {
+        (Some(width), Some(height)) => Some(format!("{width}x{height}")),
+        (None, Some(height)) => Some(format!("{height}p")),
+        (Some(width), None) => Some(format!("{width}x?")),
+        (None, None) => default.map(str::to_owned),
+    }
+}
+
+/// Upstream `process_video_result` description fields, after format IDs:
+/// `resolution`, `aspect_ratio` and `format` (`'{id} - {res}{note}'`).
+pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat]) {
+    for format in formats {
+        if format.resolution.is_none() {
+            format.resolution = format_resolution(format, None);
+        }
+        if format.aspect_ratio.is_none()
+            && let (Some(width), Some(height)) = (format.width, format.height.filter(|h| *h != 0))
+        {
+            let ratio = f64::from(width) / f64::from(height);
+            format.aspect_ratio = format!("{ratio:.2}").parse().ok();
+        }
+        if format.format.is_none() {
+            let note = format
+                .format_note
+                .as_deref()
+                .map_or_else(String::new, |note| format!(" ({note})"));
+            format.format = Some(format!(
+                "{} - {}{note}",
+                format.format_id,
+                format_resolution(format, Some("unknown")).unwrap_or_default()
+            ));
+        }
+    }
+}
+
 /// The fields `FormatSorter` reads from a filled format.
 fn sort_fields(format: &VideoFormat) -> crate::format_sort::Fields {
     use crate::format_sort::Value;
@@ -988,6 +1086,9 @@ mod tests {
             fps: None,
             asr: None,
             audio_channels: None,
+            resolution: None,
+            format: None,
+            aspect_ratio: None,
             audio_group: None,
             language: None,
             format_note: None,
@@ -1010,6 +1111,9 @@ mod tests {
         VideoInfo {
             protocol: None,
             format_sort_fields: Vec::new(),
+            resolution: None,
+            format: None,
+            aspect_ratio: None,
             vcodec: None,
             acodec: None,
             dynamic_range: None,
@@ -1027,6 +1131,7 @@ mod tests {
             fragments: Vec::new(),
             id: "test".into(),
             title: "Test".into(),
+            fulltitle: None,
             ext: "mp4".into(),
             url: Url::parse("https://example.com/original.mp4").unwrap(),
             webpage_url: Url::parse("https://example.com/watch").unwrap(),

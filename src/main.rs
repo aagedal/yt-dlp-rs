@@ -133,6 +133,14 @@ struct Args {
     get_id: bool,
     #[arg(long, hide = true)]
     get_filename: bool,
+    #[arg(long, hide = true)]
+    get_thumbnail: bool,
+    #[arg(long, hide = true)]
+    get_description: bool,
+    #[arg(long, hide = true)]
+    get_duration: bool,
+    #[arg(long, hide = true)]
+    get_format: bool,
     /// List available formats (selection still applies with -j or -s; no downloads)
     #[arg(short = 'F', long = "list-formats")]
     list_formats: bool,
@@ -613,7 +621,11 @@ impl Args {
             || self.get_title
             || self.get_id
             || self.get_url
-            || self.get_filename;
+            || self.get_filename
+            || self.get_thumbnail
+            || self.get_description
+            || self.get_duration
+            || self.get_format;
         let print_only = !self.print.is_empty()
             && self.print.iter().all(|spec| {
                 !matches!(
@@ -976,10 +988,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .map(|spec| PrintTemplate::parse(spec))
         .collect::<yt_dlp_rs::Result<Vec<_>>>()?;
     print_templates.extend(PrintTemplate::forced_fields(
-        args.get_title,
-        args.get_id,
-        args.get_url,
-        args.get_filename,
+        yt_dlp_rs::output::ForcedFields {
+            title: args.get_title,
+            id: args.get_id,
+            url: args.get_url,
+            thumbnail: args.get_thumbnail,
+            description: args.get_description,
+            filename: args.get_filename,
+            duration: args.get_duration,
+            format: args.get_format,
+        },
     ));
     let print_files = args
         .print_to_file
@@ -2619,7 +2637,7 @@ fn render_stage(
 ) -> yt_dlp_rs::Result<StagePrint> {
     let lines = templates
         .iter()
-        .filter(|template| template.stage() == stage)
+        .filter(|template| template.stage() == stage && template.applies(info))
         .map(|template| template.render_at(info, filename, paths, options))
         .collect::<yt_dlp_rs::Result<_>>()?;
     let files = files

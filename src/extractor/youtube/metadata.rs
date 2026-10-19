@@ -398,6 +398,7 @@ pub(super) fn parse(player: &Value) -> Metadata {
         availability: availability.map(str::to_owned),
         thumbnail,
         thumbnails,
+        ..Default::default()
     }
 }
 

@@ -109,6 +109,9 @@ pub(crate) fn from_response(
     Ok(Some(VideoInfo {
         protocol: None,
         format_sort_fields: Vec::new(),
+        resolution: None,
+        format: None,
+        aspect_ratio: None,
         vcodec: None,
         acodec: None,
         dynamic_range: None,
@@ -125,6 +128,7 @@ pub(crate) fn from_response(
         n_entries: None,
         id: title.clone(),
         title,
+        fulltitle: None,
         ext: first.ext.clone(),
         url: first.url.clone(),
         webpage_url: original.clone(),

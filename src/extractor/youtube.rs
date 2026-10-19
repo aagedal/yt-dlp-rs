@@ -99,6 +99,9 @@ impl Candidate {
             fps: self.fps,
             asr: self.asr,
             audio_channels: self.audio_channels,
+            resolution: None,
+            format: None,
+            aspect_ratio: None,
             audio_group: None,
             language: None,
             format_note: None,
@@ -642,6 +645,9 @@ fn extract_watch_page_with_caption_options(
         ]
         .map(str::to_owned)
         .to_vec(),
+        resolution: None,
+        format: None,
+        aspect_ratio: None,
         vcodec: None,
         acodec: None,
         dynamic_range: None,
@@ -659,6 +665,7 @@ fn extract_watch_page_with_caption_options(
         fragments: first.fragments.clone(),
         id: id.into(),
         title,
+        fulltitle: None,
         ext: first.ext.clone(),
         url: first.url.clone(),
         webpage_url: Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?,

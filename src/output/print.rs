@@ -6,11 +6,26 @@ use std::path::PathBuf;
 
 use super::Stage;
 
+/// Which `--get-*` fields to print.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct ForcedFields {
+    pub title: bool,
+    pub id: bool,
+    pub url: bool,
+    pub thumbnail: bool,
+    pub description: bool,
+    pub filename: bool,
+    pub duration: bool,
+    pub format: bool,
+}
+
 /// A validated `--print` template and the stage that prints it.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PrintTemplate {
     template: String,
     stage: Stage,
+    /// A `--get-*` field printed only when present (upstream `optional`).
+    optional: Option<&'static str>,
 }
 
 /// The stage's file paths: `filepath` (set from `post_process` on) and the
@@ -34,6 +49,7 @@ impl PrintTemplate {
         let template = Self {
             template: expand_shorthand(template)?,
             stage,
+            optional: None,
         };
         // Validate syntax and field names before any extraction, with
         // placeholder metadata standing in for the processed video.
@@ -45,21 +61,36 @@ impl PrintTemplate {
         Ok(template)
     }
 
-    /// The `-e`/`--get-id`/`-g`/`--get-filename` equivalents, in upstream order.
-    pub fn forced_fields(title: bool, id: bool, url: bool, filename: bool) -> Vec<Self> {
+    /// Upstream `__forced_printings` for `--get-title`, `--get-id`,
+    /// `--get-url`, `--get-thumbnail`, `--get-description`, `--get-filename`,
+    /// `--get-duration` (`formatSeconds`) and `--get-format`, in that order;
+    /// thumbnail, description and duration print only when present.
+    pub fn forced_fields(fields: ForcedFields) -> Vec<Self> {
         [
-            (title, "title"),
-            (id, "id"),
-            (url, "urls"),
-            (filename, "filename"),
+            (fields.title, "title", "title", false),
+            (fields.id, "id", "id", false),
+            (fields.url, "urls", "urls", false),
+            (fields.thumbnail, "thumbnail", "thumbnail", true),
+            (fields.description, "description", "description", true),
+            (fields.filename, "filename", "filename", false),
+            (fields.duration, "duration_string", "duration", true),
+            (fields.format, "format", "format", false),
         ]
         .into_iter()
-        .filter(|(enabled, _)| *enabled)
-        .map(|(_, field)| Self {
+        .filter(|(enabled, ..)| *enabled)
+        .map(|(_, field, source, optional)| Self {
             template: format!("%({field})s"),
             stage: Stage::Video,
+            optional: optional.then_some(source),
         })
         .collect()
+    }
+
+    /// Whether this template prints for `info` (optional forced fields need
+    /// a value).
+    pub fn applies(&self, info: &VideoInfo) -> bool {
+        self.optional
+            .is_none_or(|field| template::has_value(info, field))
     }
 
     /// Render one line (without its terminating newline). `filename` is the
@@ -378,7 +409,13 @@ mod tests {
                 other => panic!("unexpected fixture argument {other}"),
             }
         }
-        templates.extend(PrintTemplate::forced_fields(get[0], get[1], get[2], get[3]));
+        templates.extend(PrintTemplate::forced_fields(ForcedFields {
+            title: get[0],
+            id: get[1],
+            url: get[2],
+            filename: get[3],
+            ..Default::default()
+        }));
         Ok(templates)
     }
 
@@ -433,7 +470,13 @@ mod tests {
 
     #[test]
     fn forced_fields_use_upstream_order() {
-        let fields = PrintTemplate::forced_fields(true, true, true, true);
+        let fields = PrintTemplate::forced_fields(ForcedFields {
+            title: true,
+            id: true,
+            url: true,
+            filename: true,
+            ..Default::default()
+        });
         let lines: Vec<_> = fields
             .iter()
             .map(|t| {

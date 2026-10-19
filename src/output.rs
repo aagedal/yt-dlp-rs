@@ -12,7 +12,7 @@ pub use exec::{ExecCommand, ExecCommands, Stage};
 pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths, replace_extension};
 pub use formats::render_formats;
 pub use links::{iri_to_uri, link_file};
-pub use print::{PrintTemplate, PrintToFile, StagePaths};
+pub use print::{ForcedFields, PrintTemplate, PrintToFile, StagePaths};
 
 /// The case-insensitive `WHEN:` stage name of a `--print` value (`video`
 /// when absent), as upstream's `when_prefix` splits it.

@@ -794,8 +794,12 @@ fn saved_adaptive_formats_probe_and_select_through_public_orchestration() {
             })
             .collect();
         for format in &mut formats {
-            // `_fill_sorting_fields` bitrates (0 for a missing stream).
+            // `_fill_sorting_fields` bitrates (0 for a missing stream) and
+            // the description fills.
             format.vbr = None;
+            format.resolution = None;
+            format.format = None;
+            format.aspect_ratio = None;
             if format.acodec.as_deref() == Some("none") && format.abr == Some(0.0) {
                 format.abr = None;
             }

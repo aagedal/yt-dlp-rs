@@ -400,3 +400,57 @@ fn later_print_stages_follow_upstream_order_and_disable_implied_simulation() {
         format!("{}\n", absolute.display())
     );
 }
+
+#[test]
+fn get_aliases_print_upstream_forced_fields_in_order() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    let info = |extra: serde_json::Value| {
+        let mut base = serde_json::json!({
+            "id": "clip", "title": "Clip", "ext": "mp4", "url": "http://127.0.0.1:1/clip.mp4",
+            "webpage_url": "http://127.0.0.1:1/page", "extractor": "generic", "extractor_key": "Generic",
+            "formats": [{"format_id": "hd", "url": "http://127.0.0.1:1/clip.mp4", "ext": "mp4",
+                         "width": 1280, "height": 720, "format_note": "main"}],
+        });
+        base.as_object_mut()
+            .unwrap()
+            .extend(extra.as_object().unwrap().clone());
+        base
+    };
+    let run = |value: serde_json::Value| {
+        std::fs::write(&path, value.to_string()).unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args([
+                "--get-format",
+                "--get-duration",
+                "--get-thumbnail",
+                "--get-description",
+                "--get-title",
+                "--get-id",
+                "--load-info-json",
+            ])
+            .arg(&path)
+            .current_dir(directory.path())
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        String::from_utf8(output.stdout).unwrap()
+    };
+    // Upstream order: title, id, thumbnail, description, duration
+    // (formatSeconds), format ('{id} - {res} (note)').
+    assert_eq!(
+        run(info(serde_json::json!({
+            "duration": 3725, "thumbnail": "http://127.0.0.1:1/t.jpg", "description": "About"
+        }))),
+        "Clip\nclip\nhttp://127.0.0.1:1/t.jpg\nAbout\n1:02:05\nhd - 1280x720 (main)\n"
+    );
+    // Optional fields print nothing when missing.
+    assert_eq!(
+        run(info(serde_json::json!({}))),
+        "Clip\nclip\nhd - 1280x720 (main)\n"
+    );
+}

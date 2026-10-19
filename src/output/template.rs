@@ -100,7 +100,23 @@ const FIELDS: &[&str] = &[
     "upload_date",
     "timestamp",
     "availability",
+    "format",
+    "resolution",
+    "protocol",
+    "vcodec",
+    "acodec",
+    "dynamic_range",
+    "video_ext",
+    "audio_ext",
+    "duration_string",
+    "fulltitle",
+    "thumbnail",
 ];
+
+/// Whether a represented video field has a value.
+pub(crate) fn has_value(info: &VideoInfo, name: &str) -> bool {
+    matches!(field(name, Source::Video(info)), Ok(Some(_)))
+}
 
 fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
     use Value::*;
@@ -193,6 +209,17 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
             .and_then(|t| u64::try_from(t).ok())
             .map(Integer),
         "availability" => info.metadata.availability.as_deref().map(Text),
+        "format" => info.format.as_deref().map(Text),
+        "resolution" => info.resolution.as_deref().map(Text),
+        "protocol" => info.protocol.as_deref().map(Text),
+        "vcodec" => info.vcodec.as_deref().map(Text),
+        "acodec" => info.acodec.as_deref().map(Text),
+        "dynamic_range" => info.dynamic_range.as_deref().map(Text),
+        "video_ext" => info.video_ext.as_deref().map(Text),
+        "audio_ext" => info.audio_ext.as_deref().map(Text),
+        "duration_string" => info.metadata.duration_string.as_deref().map(Text),
+        "fulltitle" => info.fulltitle.as_deref().map(Text),
+        "thumbnail" => info.metadata.thumbnail.as_deref().map(Text),
         _ => return Err(invalid(format!("unknown or unsupported field {name:?}"))),
     })
 }

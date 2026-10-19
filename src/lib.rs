@@ -188,6 +188,7 @@ impl YoutubeDl {
             ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),
         };
         for entry in entries {
+            entry.fulltitle = Some(entry.title.clone());
             entry.metadata.fill_common_fields();
             entry.metadata.sanitize_thumbnails();
             info::fill_format_fields(&mut entry.formats);
@@ -210,6 +211,7 @@ impl YoutubeDl {
             })?;
             info::sort_formats(&mut entry.formats, &sorter);
             info::sanitize_format_ids(&mut entry.formats);
+            info::fill_format_descriptions(&mut entry.formats);
         }
         Ok(())
     }
