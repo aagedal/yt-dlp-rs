@@ -14,6 +14,12 @@ pub(crate) enum Playlist {
     },
     Media {
         fragments: Vec<Fragment>,
+        /// Each fragment's count of preceding `#EXT-X-DISCONTINUITY*` lines
+        /// (upstream HlsFD's `discontinuity_count`).
+        discontinuity: Vec<u32>,
+        /// All `#EXT-X-DISCONTINUITY*` lines (upstream counts the whole
+        /// document for `--hls-split-discontinuity`).
+        discontinuities: u32,
         /// Segment container from the URLs; formats are labeled `mp4` like
         /// upstream and FFmpeg inputs sniff their contents instead.
         #[cfg_attr(not(test), allow(dead_code))]
@@ -420,6 +426,8 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
     let mut current_key: Option<AesKey> = None;
     let mut sequence = Some(0u64);
     let mut sequence_seen = false;
+    let mut discontinuity = Vec::new();
+    let mut discontinuities = 0u32;
     for line in lines.into_iter().skip(1) {
         if endlist && (line.starts_with("#EXT") || !line.starts_with('#')) {
             return Err(invalid("HLS ENDLIST must terminate the media playlist"));
@@ -491,6 +499,7 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 byte_range: range,
                 encryption,
             });
+            discontinuity.push(discontinuities);
             has_map = true;
             media_seen = true;
             ext = Some("mp4");
@@ -527,6 +536,22 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
             if !matches!(value, "YES" | "NO") {
                 return Err(invalid("invalid HLS cache policy"));
             }
+        } else if line.starts_with("#EXT-X-DISCONTINUITY") {
+            // Upstream counts `#EXT-X-DISCONTINUITY-SEQUENCE` lines too.
+            if !variants.is_empty() || pending_variant.is_some() {
+                return Err(invalid("HLS discontinuity appears in a master playlist"));
+            }
+            if line != "#EXT-X-DISCONTINUITY"
+                && line
+                    .strip_prefix("#EXT-X-DISCONTINUITY-SEQUENCE:")
+                    .is_none_or(|value| unsigned(value).is_err())
+            {
+                return Err(invalid("invalid HLS discontinuity tag"));
+            }
+            discontinuities = discontinuities
+                .checked_add(1)
+                .ok_or_else(|| invalid("HLS discontinuity count overflow"))?;
+            media_seen = true;
         } else if line == "#EXT-X-INDEPENDENT-SEGMENTS"
             || line.starts_with("#EXT-X-PROGRAM-DATE-TIME:")
             || line.starts_with("#EXT-X-MEDIA:")
@@ -601,6 +626,7 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 byte_range: range,
                 encryption,
             });
+            discontinuity.push(discontinuities);
             sequence = number.checked_add(1);
             pending_duration = false;
         }
@@ -625,8 +651,28 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
     }
     Ok(Playlist::Media {
         fragments,
+        discontinuity,
+        discontinuities,
         ext: ext.unwrap_or("ts").into(),
     })
+}
+
+/// The fragments of discontinuity section `index` (upstream HlsFD with a
+/// `format_index`), or all of them.
+pub(crate) fn section(
+    fragments: Vec<Fragment>,
+    discontinuity: &[u32],
+    index: Option<u32>,
+) -> Vec<Fragment> {
+    match index {
+        None => fragments,
+        Some(index) => fragments
+            .into_iter()
+            .zip(discontinuity)
+            .filter(|(_, count)| **count == index)
+            .map(|(fragment, _)| fragment)
+            .collect(),
+    }
 }
 
 #[cfg(test)]
@@ -637,7 +683,7 @@ mod tests {
     }
     fn media(text: &str) -> (Vec<Fragment>, String) {
         match parse(text, &base()).unwrap() {
-            Playlist::Media { fragments, ext } => (fragments, ext),
+            Playlist::Media { fragments, ext, .. } => (fragments, ext),
             _ => panic!("expected media playlist"),
         }
     }
@@ -793,8 +839,7 @@ mod tests {
         for tag in [
             "#EXT-X-KEY:METHOD=SAMPLE-AES",
             "#EXT-X-KEY:METHOD=NONE,URI=\"key\"",
-            "#EXT-X-DISCONTINUITY",
-            "#EXT-X-DISCONTINUITY-SEQUENCE:0",
+            "#EXT-X-DISCONTINUITY-SEQUENCE:x",
             "#EXT-X-GAP",
             "#EXT-X-PART:DURATION=1,URI=\"a.ts\"",
             "#EXT-X-PRELOAD-HINT:TYPE=PART,URI=\"a\"",
@@ -821,6 +866,31 @@ mod tests {
         ] {
             assert!(parse(text, &base()).is_err(), "{text}");
         }
+    }
+    #[test]
+    fn discontinuities_are_counted_per_fragment_and_select_sections() {
+        let text = "#EXTM3U\n#EXT-X-TARGETDURATION:1\n#EXTINF:1,\na.ts\n#EXT-X-DISCONTINUITY\n#EXTINF:1,\nb.ts\n#EXTINF:1,\nc.ts\n#EXT-X-DISCONTINUITY-SEQUENCE:4\n#EXTINF:1,\nd.ts\n#EXT-X-ENDLIST";
+        let Playlist::Media {
+            fragments,
+            discontinuity,
+            discontinuities,
+            ..
+        } = parse(text, &base()).unwrap()
+        else {
+            panic!("media playlist");
+        };
+        // Like upstream, DISCONTINUITY-SEQUENCE lines count too.
+        assert_eq!(discontinuity, [0, 1, 1, 2]);
+        assert_eq!(discontinuities, 2);
+        let names = |index| {
+            section(fragments.clone(), &discontinuity, index)
+                .iter()
+                .map(|fragment| fragment.url.path().to_owned())
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(names(Some(1)), ["/path/b.ts", "/path/c.ts"]);
+        assert_eq!(names(Some(3)), Vec::<String>::new());
+        assert_eq!(names(None).len(), 4);
     }
     #[test]
     fn endlist_is_terminal_and_media_keys_cannot_appear_in_master() {

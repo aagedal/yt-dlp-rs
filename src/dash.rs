@@ -860,6 +860,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 audio_autoselect: false,
                 downloader_options: None,
                 manifest_stream_number: Some(stream_number),
+                format_index: None,
                 container: Some(format!("{ext}_dash")),
                 abr: if kind == StreamKind::AudioOnly {
                     tbr

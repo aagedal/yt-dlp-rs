@@ -6,6 +6,7 @@ mod youtube;
 
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
+pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
 

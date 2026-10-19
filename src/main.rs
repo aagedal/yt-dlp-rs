@@ -487,6 +487,12 @@ struct Args {
     /// Do not use the mpegts container for HLS videos (default)
     #[arg(long, overrides_with = "hls_use_mpegts")]
     no_hls_use_mpegts: bool,
+    /// Split HLS playlists into different formats at discontinuities such as ad breaks
+    #[arg(long, overrides_with_all = ["hls_split_discontinuity", "no_hls_split_discontinuity"])]
+    hls_split_discontinuity: bool,
+    /// Do not split HLS playlists into different formats at discontinuities (default)
+    #[arg(long, overrides_with_all = ["hls_split_discontinuity", "no_hls_split_discontinuity"])]
+    no_hls_split_discontinuity: bool,
     /// Download only chapters matching the regex, or "*START-END" time
     /// ranges (negative values count from the end), through ffmpeg; may be
     /// repeated
@@ -1254,6 +1260,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let mut args = Args::from_arg_matches(&matches)?;
     yt_dlp_rs::screen::set_verbose(args.verbose);
+    yt_dlp_rs::extractor::hls_split_discontinuity(args.hls_split_discontinuity);
     // Upstream `parse_metadata` (shared by both options, in command-line
     // order per stage) plus the deprecated `--metadata-from-title`.
     let metadata_actions = {
@@ -3204,7 +3211,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     };
                                     screen!(
                                         "[{downloader}] Total fragments: {}",
-                                        info.fragments.len()
+                                        yt_dlp_rs::total_fragments(info)
                                     );
                                 }
                                 // Merges announce each format's file instead, except
@@ -3357,7 +3364,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             };
                                             screen!(
                                                 "[{downloader}] Total fragments: {}",
-                                                stream.fragments.len()
+                                                yt_dlp_rs::total_fragments(stream)
                                             );
                                         }
                                         screen!("[download] Destination: -");

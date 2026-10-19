@@ -137,6 +137,39 @@ fn vod_duration(playlist: &str) -> Option<u64> {
     Some(total.trunc() as u64).filter(|duration| *duration > 0)
 }
 
+static SPLIT_DISCONTINUITY: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// `--hls-split-discontinuity`: one format per discontinuity section.
+pub fn set_split_discontinuity(split: bool) {
+    SPLIT_DISCONTINUITY.store(split, std::sync::atomic::Ordering::Relaxed);
+}
+
+/// Upstream `_extract_m3u8_playlist_indices`: with
+/// `--hls-split-discontinuity`, `format` becomes one format per section
+/// (`idx` joins the format ID unless it is 0); otherwise it is unchanged.
+fn split_sections(format: VideoFormat, discontinuity: &[u32], count: u32) -> Vec<VideoFormat> {
+    if !SPLIT_DISCONTINUITY.load(std::sync::atomic::Ordering::Relaxed) {
+        return vec![format];
+    }
+    (0..=count)
+        .map(|index| {
+            let mut section = format.clone();
+            if index > 0 {
+                section.format_id = if format.format_id.is_empty() {
+                    index.to_string()
+                } else {
+                    format!("{}-{index}", format.format_id)
+                };
+            }
+            section.format_index = Some(index);
+            section.fragments =
+                crate::hls::section(format.fragments.clone(), discontinuity, Some(index));
+            section
+        })
+        .collect()
+}
+
 pub(crate) fn from_response(
     client: &Client,
     response: Response,
@@ -220,9 +253,14 @@ pub(crate) fn from_response(
             .join("-")
     };
     match playlist {
-        Playlist::Media { fragments, .. } => {
-            // A media playlist is returned as one format.
-            info.formats.push(VideoFormat {
+        Playlist::Media {
+            fragments,
+            discontinuity,
+            discontinuities,
+            ..
+        } => {
+            // A media playlist is returned as one format (per section).
+            let format = VideoFormat {
                 protocol: Some("m3u8_native".into()),
                 vcodec: None,
                 acodec: None,
@@ -247,6 +285,7 @@ pub(crate) fn from_response(
                 audio_autoselect: false,
                 downloader_options: None,
                 manifest_stream_number: None,
+                format_index: None,
                 container: None,
                 abr: None,
                 tbr: None,
@@ -256,10 +295,11 @@ pub(crate) fn from_response(
                 filesize: None,
                 width: None,
                 height: None,
-                fragments: fragments.clone(),
-            });
+                fragments,
+            };
+            info.formats = split_sections(format, &discontinuity, discontinuities);
             info.ext = "mp4".into();
-            info.fragments = fragments;
+            info.fragments = info.formats[0].fragments.clone();
         }
         Playlist::Master { variants, audio } => {
             if variants.len() + audio.len() > MAX_VARIANTS {
@@ -276,7 +316,13 @@ pub(crate) fn from_response(
             for variant in variants {
                 let response = direct::probe(client, &variant.url, referer)?;
                 let (url, playlist) = read_playlist(response)?;
-                let Playlist::Media { fragments, .. } = playlist else {
+                let Playlist::Media {
+                    fragments,
+                    discontinuity,
+                    discontinuities,
+                    ..
+                } = playlist
+                else {
                     return Err(unsupported("nested HLS master playlists are not supported"));
                 };
                 total_fragments = total_fragments
@@ -304,7 +350,7 @@ pub(crate) fn from_response(
                 }
                 let codecs = variant.codecs.unwrap_or_default();
                 let known = |codec: String| (!codec.is_empty()).then_some(codec);
-                info.formats.push(VideoFormat {
+                let format = VideoFormat {
                     protocol: Some("m3u8_native".into()),
                     vcodec: known(codecs.vcodec),
                     acodec: known(codecs.acodec),
@@ -329,6 +375,7 @@ pub(crate) fn from_response(
                     audio_autoselect: false,
                     downloader_options: None,
                     manifest_stream_number: None,
+                    format_index: None,
                     container: None,
                     abr: (variant.stream_kind == StreamKind::AudioOnly)
                         .then_some(variant.bandwidth)
@@ -340,14 +387,23 @@ pub(crate) fn from_response(
                     width: variant.width,
                     height: variant.height,
                     fragments,
-                });
+                };
+                info.formats
+                    .extend(split_sections(format, &discontinuity, discontinuities));
             }
             let mut rendition_formats = Vec::new();
-            let alternates: Vec<bool> = audio.iter().map(|rendition| rendition.alternate).collect();
+            let mut alternates: Vec<bool> = Vec::new();
             for rendition in audio {
+                let alternate = rendition.alternate;
                 let response = direct::probe(client, &rendition.url, referer)?;
                 let (url, playlist) = read_playlist(response)?;
-                let Playlist::Media { fragments, .. } = playlist else {
+                let Playlist::Media {
+                    fragments,
+                    discontinuity,
+                    discontinuities,
+                    ..
+                } = playlist
+                else {
                     return Err(unsupported("nested HLS master playlists are not supported"));
                 };
                 total_fragments = total_fragments
@@ -358,7 +414,7 @@ pub(crate) fn from_response(
                         "HLS master exceeds the 10000-fragment extraction limit",
                     ));
                 }
-                rendition_formats.push(VideoFormat {
+                let format = VideoFormat {
                     protocol: Some("m3u8_native".into()),
                     vcodec: Some("none".into()),
                     acodec: None,
@@ -383,6 +439,7 @@ pub(crate) fn from_response(
                     audio_autoselect: rendition.autoselect,
                     downloader_options: None,
                     manifest_stream_number: None,
+                    format_index: None,
                     container: None,
                     abr: None,
                     tbr: None,
@@ -392,7 +449,11 @@ pub(crate) fn from_response(
                     width: None,
                     height: None,
                     fragments,
-                });
+                };
+                for section in split_sections(format, &discontinuity, discontinuities) {
+                    alternates.push(alternate);
+                    rendition_formats.push(section);
+                }
             }
             // Upstream: alternate renditions get source_preference -2; with
             // several audio groups, the others are ranked by the quality of

@@ -643,6 +643,7 @@ impl Extractor for GenericHttp {
                     audio_autoselect: false,
                     downloader_options: None,
                     manifest_stream_number: None,
+                    format_index: None,
                     container: None,
                     abr: None,
                     tbr: source.tbr,

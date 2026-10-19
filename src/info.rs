@@ -144,6 +144,10 @@ pub struct VideoFormat {
     /// index among those sharing its URL (FFmpeg `-map INPUT:N`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub manifest_stream_number: Option<usize>,
+    /// Upstream `format_index` with `--hls-split-discontinuity`: the HLS
+    /// discontinuity section this format downloads.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub format_index: Option<u32>,
     /// Filled like `FormatSorter._fill_sorting_fields`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub video_ext: Option<String>,
@@ -746,6 +750,15 @@ impl VideoInfo {
         self.height = selected.height;
         self.stream_kind = selected.stream_kind;
         self.format_id = Some(selected.format_id.clone());
+        // `info_dict.update(best_format)` carries `format_index`.
+        match selected.format_index {
+            Some(index) => {
+                self.extra.insert("format_index".into(), index.into());
+            }
+            None => {
+                self.extra.remove("format_index");
+            }
+        }
         self.requested_formats.clear();
     }
 
@@ -1327,6 +1340,7 @@ mod tests {
             audio_autoselect: false,
             downloader_options: None,
             manifest_stream_number: None,
+            format_index: None,
             container: None,
             fragments: Vec::new(),
             format_id: id.into(),

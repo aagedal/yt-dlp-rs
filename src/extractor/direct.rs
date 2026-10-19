@@ -140,6 +140,7 @@ pub(crate) fn with_format(mut info: VideoInfo, mime: &str) -> VideoInfo {
         audio_autoselect: false,
         downloader_options: None,
         manifest_stream_number: None,
+        format_index: None,
         container: None,
         abr: None,
         tbr: None,

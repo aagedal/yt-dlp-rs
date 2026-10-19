@@ -900,9 +900,17 @@ remuxed. FFmpeg is unnecessary for this download path.
 an immediately preceding media range on the same URL. Map byte ranges require
 an explicit offset. All ranges are positive with checked arithmetic. Unsupported
 state is an error: live playlists without ENDLIST, SAMPLE-AES/DRM or unsupported
-key formats, discontinuities, gaps, low-latency tags, variables, changing maps,
+key formats, gaps, low-latency tags, variables, changing maps (also a map
+after a discontinuity),
 external video/subtitle or unresolved rendition groups, mixed inband/external
 audio groups, nested masters and unknown EXT tags.
+`EXT-X-DISCONTINUITY` (and, like upstream's prefix match,
+`EXT-X-DISCONTINUITY-SEQUENCE`) lines are counted per fragment: downloads span
+every section as HlsFD does, and `--hls-split-discontinuity` lists one format
+per section (`format_index` 0..N, the index joined to the format ID unless 0,
+for media playlists, variants and audio renditions), downloads only that
+section after the manifest refetch, and still reports the playlist's total
+`Total fragments`. `--no-hls-split-discontinuity` restores the default.
 In-band rendition references without external resources are supported. Plain
 comments and recognized informational metadata do not change assembly.
 

@@ -127,7 +127,18 @@ pub struct YoutubeDl {
     downloaders: std::collections::HashMap<String, bool>,
 }
 
+/// HlsFD's `Total fragments` for `info` after `refresh_hls`: the whole
+/// playlist's fragments even when only a discontinuity section downloads.
+pub fn total_fragments(info: &VideoInfo) -> usize {
+    FRAGMENT_TOTAL.with(|total| match &*total.borrow() {
+        Some((url, count)) if *url == info.url => *count,
+        _ => info.fragments.len(),
+    })
+}
+
 thread_local! {
+    /// The refetched playlist URL and its fragment count (section formats).
+    static FRAGMENT_TOTAL: std::cell::RefCell<Option<(Url, usize)>> = const { std::cell::RefCell::new(None) };
     /// The URL whose download `announce_download` already reported.
     static ANNOUNCED: std::cell::RefCell<Option<Url>> = const { std::cell::RefCell::new(None) };
 }
@@ -451,13 +462,27 @@ impl YoutubeDl {
         let referer = (!info.is_direct()).then_some(&info.webpage_url);
         let response = crate::extractor::direct::probe(&self.client, &info.url, referer)?;
         let (_, playlist) = crate::extractor::hls::read_playlist(response)?;
-        let hls::Playlist::Media { fragments, .. } = playlist else {
+        let hls::Playlist::Media {
+            fragments,
+            discontinuity,
+            ..
+        } = playlist
+        else {
             return Err(Error::UnsupportedManifest(
                 "the refetched HLS manifest is not a media playlist".into(),
             ));
         };
+        // HlsFD keeps only the format's discontinuity section.
+        let index = info
+            .extra
+            .get("format_index")
+            .and_then(serde_json::Value::as_u64)
+            .and_then(|index| u32::try_from(index).ok());
         let mut refreshed = info.clone();
-        refreshed.fragments = fragments;
+        // HlsFD's `Total fragments` counts every media URI of the playlist.
+        FRAGMENT_TOTAL
+            .with(|total| total.replace(index.map(|_| (info.url.clone(), fragments.len()))));
+        refreshed.fragments = hls::section(fragments, &discontinuity, index);
         Ok(Some(refreshed))
     }
 
@@ -1493,6 +1518,14 @@ impl YoutubeDl {
             part.protocol = Some(stream.determine_protocol());
             part.stream_kind = stream.stream_kind;
             part.format_id = Some(stream.format_id.clone());
+            match stream.format_index {
+                Some(index) => {
+                    part.extra.insert("format_index".into(), index.into());
+                }
+                None => {
+                    part.extra.remove("format_index");
+                }
+            }
             part.filesize = stream.filesize;
             part.width = stream.width;
             part.height = stream.height;
@@ -1509,7 +1542,7 @@ impl YoutubeDl {
                     };
                     screen::screen(&format!(
                         "[{downloader}] Total fragments: {}",
-                        part.fragments.len()
+                        total_fragments(&part)
                     ));
                 }
                 screen::screen(&format!("[download] Destination: {}", path.display()));

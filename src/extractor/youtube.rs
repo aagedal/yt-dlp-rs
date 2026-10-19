@@ -117,6 +117,7 @@ impl Candidate {
                 http_chunk_size: Some(10 << 20),
             }),
             manifest_stream_number: None,
+            format_index: None,
             // Upstream: single streams (a `none` codec) name an `EXT_dash` container.
             container: codecs
                 .filter(|codecs| codecs.vcodec == "none" || codecs.acodec == "none")
