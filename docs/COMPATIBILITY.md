@@ -100,8 +100,15 @@ URL) print upstream's blank line, `Usage: yt-dlp-rs [OPTIONS] URL [URL...]`,
 option values rejected by clap (for example non-numeric `--retries`) keep
 clap's error text, also with exit status 2; other startup failures print
 `ERROR: MESSAGE` and exit 1.
-Generic extraction does not print upstream's `Falling back on generic
-information extractor` warning. Simulation and JSON still make network requests. This inventory does not claim
+Generic extraction prints upstream's `[generic] Extracting URL: URL` (truncated
+like `truncate_string(url, 100, 20)`), `[generic] ID: Downloading webpage` with
+`_generic_id`, the `Falling back on generic information extractor` warning when
+the Content-Type is not a direct media type, then `Extracting information`
+(HTML and MPD), `Downloading m3u8 information`/`Checking m3u8 live status`
+(HLS) or the `URL could be a direct video link` warning (suffix-only media), and
+`[html5] ID: Downloading m3u8 information`/`Downloading MPD manifest` for HTML5
+manifest sources. Simulation prints no native per-video summary line.
+Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
 
 ## YouTube watch-page subset
@@ -1351,7 +1358,7 @@ regardless of argument order. `--get-thumbnail`, `--get-description`,
 represented. With `-j`, printed lines precede each JSON object.
 
 Printing and `--get-*` imply quiet simulation: no media, subtitle, info JSON or
-archive writes, and no `[extractor] id: title` stderr line, unless
+archive writes, unless
 `--no-simulate` is given, which prints and then downloads. Like upstream's
 `print_only`, a `--print` at `before_dl` or a later stage does not imply
 simulation (it still implies quiet). Listing options still print their tables and then keep

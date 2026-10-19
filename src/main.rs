@@ -865,6 +865,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         warning!("{warning}");
     }
     QUIET.store(args.simulation().quiet, Ordering::Relaxed);
+    yt_dlp_rs::screen::set_sink(|message| match message {
+        yt_dlp_rs::screen::Message::Screen(text) => screen!("{text}"),
+        yt_dlp_rs::screen::Message::Warning(text) => warning!("WARNING: {text}"),
+    });
     NO_WARNINGS.store(args.no_warnings, Ordering::Relaxed);
     if args.no_download_archive {
         args.download_archive = None;
@@ -1505,10 +1509,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                 };
                 if simulate {
-                    // Native simulation summary; never alongside printed/JSON output.
-                    if !printing && !args.dump_json && !args.dump_single_json {
-                        screen!("[{}] {}: {}", info.extractor, info.id, info.title);
-                    }
                     force_record(&info)?;
                 } else {
                     if args.skip_download

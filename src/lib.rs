@@ -24,6 +24,7 @@ pub mod output;
 mod playlist;
 mod postprocess;
 mod retry;
+pub mod screen;
 mod selector;
 mod subtitle_convert;
 mod subtitles;

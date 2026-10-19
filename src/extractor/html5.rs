@@ -293,8 +293,37 @@ impl Extractor for GenericHttp {
     }
 
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        use crate::screen::{generic_id, screen, truncate_string, warning};
+        // Upstream `InfoExtractor.extract` and `GenericIE._real_extract` lines.
+        screen(&format!(
+            "[generic] Extracting URL: {}",
+            truncate_string(url.as_str(), 100, 20)
+        ));
+        let id = generic_id(url.as_str());
+        screen(&format!("[generic] {id}: Downloading webpage"));
         // Dispatch a single response so direct media does not need two probes.
         let response = direct::request(client, url, None)?;
+        // Upstream's direct-link Content-Type pattern; anything else falls
+        // back to sniffing the body.
+        let content_type = response
+            .headers()
+            .get(CONTENT_TYPE)
+            .map(|value| String::from_utf8_lossy(value.as_bytes()).to_lowercase())
+            .unwrap_or_default();
+        let media_type = {
+            static MEDIA: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+                regex::Regex::new(
+                    r"^(?:audio|video|application/(?:ogg$|(?:vnd\.apple\.|x-)?mpegurl))",
+                )
+                .unwrap()
+            });
+            MEDIA.is_match(&content_type)
+        };
+        let fallback = || warning("[generic] Falling back on generic information extractor");
+        let m3u8 = || {
+            screen(&format!("[generic] {id}: Downloading m3u8 information"));
+            screen(&format!("[generic] {id}: Checking m3u8 live status"));
+        };
         // Upstream sets the timestamp before inspecting the response.
         let timestamp = direct::last_modified(&response);
         let stamp = |mut info: VideoInfo| {
@@ -303,6 +332,10 @@ impl Extractor for GenericHttp {
         };
         let dash_path = url.path().to_ascii_lowercase().ends_with(".mpd");
         if dash_path || dash::recognized(&response) {
+            if !media_type {
+                fallback();
+            }
+            screen(&format!("[generic] {id}: Extracting information"));
             return Ok(dash::from_response(response, url, dash_path)?.map(stamp));
         }
         let hls_path = url.path().to_ascii_lowercase().ends_with(".m3u8")
@@ -315,10 +348,19 @@ impl Extractor for GenericHttp {
             let mime = direct::response_mime(&response);
             let direct =
                 direct::from_response(&response, url).map(|info| direct::with_format(info, &mime));
-            return Ok(hls::from_response(client, response, url, None, hls_path)?
-                .or(direct)
-                .map(stamp));
+            if !media_type {
+                fallback();
+            }
+            let hls = hls::from_response(client, response, url, None, hls_path)?;
+            if hls.is_some() {
+                m3u8();
+            } else if direct.is_some() && !media_type {
+                warning("[generic] URL could be a direct video link, returning it as such.");
+            }
+            return Ok(hls.or(direct).map(stamp));
         }
+        fallback();
+        screen(&format!("[generic] {id}: Extracting information"));
         if response
             .content_length()
             .is_some_and(|size| size > MAX_HTML_BYTES)
@@ -378,15 +420,23 @@ impl Extractor for GenericHttp {
                 let dash_hint =
                     source.dash_hint || url.path().to_ascii_lowercase().ends_with(".mpd");
                 let manifest = if dash_hint || dash::recognized(&response) {
-                    dash::from_response(response, url, dash_hint)?
+                    let manifest = dash::from_response(response, url, dash_hint)?;
+                    if manifest.is_some() {
+                        screen(&format!("[html5] {id}: Downloading MPD manifest"));
+                    }
+                    manifest
                 } else {
-                    hls::from_response(
+                    let manifest = hls::from_response(
                         client,
                         response,
                         url,
                         Some(&page_url),
                         source.hls_hint || url.path().to_ascii_lowercase().ends_with(".m3u8"),
-                    )?
+                    )?;
+                    if manifest.is_some() {
+                        screen(&format!("[html5] {id}: Downloading m3u8 information"));
+                    }
+                    manifest
                 };
                 let info = manifest
                     .or(direct)

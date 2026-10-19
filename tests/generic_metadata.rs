@@ -260,3 +260,46 @@ fn mtime_sets_media_modification_times_from_last_modified() {
         );
     }
 }
+
+#[test]
+fn generic_extraction_reports_upstream_screen_lines() {
+    let server = Server::new();
+    let lines = |args: &[&str], path: &str| -> Vec<String> {
+        let (code, stderr) =
+            simulate(&[args, &[format!("{}{path}", server.origin).as_str()]].concat());
+        assert_eq!(code, Some(0), "{stderr}");
+        stderr
+            .lines()
+            .filter(|line| line.starts_with("[generic]") || line.starts_with("WARNING"))
+            .map(|line| line.replace(&server.origin, "<O>"))
+            .collect()
+    };
+    assert_eq!(
+        lines(&[], "/media/clip.mp4"),
+        [
+            "[generic] Extracting URL: <O>/media/clip.mp4",
+            "[generic] clip: Downloading webpage",
+        ]
+    );
+    assert_eq!(
+        lines(&[], "/meta.html"),
+        [
+            "[generic] Extracting URL: <O>/meta.html",
+            "[generic] meta: Downloading webpage",
+            "WARNING: [generic] Falling back on generic information extractor",
+            "[generic] meta: Extracting information",
+        ]
+    );
+    assert_eq!(
+        lines(&["--no-warnings"], "/meta.html"),
+        [
+            "[generic] Extracting URL: <O>/meta.html",
+            "[generic] meta: Downloading webpage",
+            "[generic] meta: Extracting information",
+        ]
+    );
+    assert_eq!(
+        lines(&["-q"], "/meta.html"),
+        ["WARNING: [generic] Falling back on generic information extractor"]
+    );
+}
