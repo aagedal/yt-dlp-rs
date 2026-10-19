@@ -434,12 +434,8 @@ fn times(address: &Address, duration_ns: Option<u128>) -> Result<Vec<(u64, u64)>
                 return Err(bad("DASH fragment limit exceeded"));
             }
             current = start;
+            // Upstream lists every S entry, even past a finite Period end.
             for _ in 0..count {
-                if period_end.is_some_and(|end| u128::from(current) * NS >= end) {
-                    return Err(bad(
-                        "DASH segment starts at or beyond the finite Period end",
-                    ));
-                }
                 let number = first_number
                     .checked_add(times.len() as u64)
                     .ok_or_else(|| bad("DASH segment number overflow"))?;
@@ -531,9 +527,8 @@ fn plans(
             fragments.push(fragment(base, Some(&init), None)?);
         } else if let Some((source, range)) = &address.initialization {
             fragments.push(fragment(base, source.as_deref(), range.as_deref())?);
-        } else {
-            return Err(bad("fragmented DASH requires initialization"));
         }
+        // Like upstream, initialization is optional.
         for (number, time) in schedule {
             let media = expand(media, id, bandwidth, number, time)?;
             fragments.push(fragment(base, Some(&media), None)?);
@@ -545,11 +540,10 @@ fn plans(
         if let Some(value) = address.attrs.get("duration") {
             positive(value)?;
         }
-        let (source, bytes) = address
-            .initialization
-            .as_ref()
-            .ok_or_else(|| bad("fragmented DASH requires initialization"))?;
-        fragments.push(fragment(base, source.as_deref(), bytes.as_deref())?);
+        // Like upstream, initialization is optional.
+        if let Some((source, bytes)) = &address.initialization {
+            fragments.push(fragment(base, source.as_deref(), bytes.as_deref())?);
+        }
         let segments = address
             .segments
             .as_ref()
@@ -558,30 +552,13 @@ fn plans(
         if address.timeline.is_some() && times(address, duration_ns)?.len() != segments.len() {
             return Err(bad("DASH timeline and SegmentList counts disagree"));
         }
-        if address.timeline.is_none()
-            && let Some(duration) = address.attrs.get("duration")
+        // Upstream includes every SegmentURL regardless of the Period end.
+        if let Some(duration) = address
+            .attrs
+            .get("duration")
+            .filter(|_| address.timeline.is_none())
         {
-            let duration = positive(duration)?;
-            let scale = address.integer("timescale", 1, true)?;
-            let pto = address.integer("presentationTimeOffset", 0, false)?;
-            let last_start = pto
-                .checked_add(
-                    (segments.len() as u64 - 1)
-                        .checked_mul(duration)
-                        .ok_or_else(|| bad("DASH SegmentList timing overflow"))?,
-                )
-                .ok_or_else(|| bad("DASH SegmentList timing overflow"))?;
-            if let Some(period_duration) = duration_ns {
-                let period_end = add(
-                    mul(u128::from(pto), NS)?,
-                    mul(period_duration, u128::from(scale))?,
-                )?;
-                if mul(u128::from(last_start), NS)? >= period_end {
-                    return Err(bad(
-                        "DASH SegmentList segment starts at or beyond the finite Period end",
-                    ));
-                }
-            }
+            positive(duration)?;
         }
         for (source, bytes) in segments {
             fragments.push(fragment(base, source.as_deref(), bytes.as_deref())?);
@@ -1116,7 +1093,6 @@ mod tests {
                 "<Representation ",
                 "<BaseURL>a/</BaseURL><BaseURL>b/</BaseURL><Representation ",
             ),
-            text.replace("initialization=\"init-$RepresentationID$.mp4\"", ""),
             text.replace("<Representation ", "<SegmentList/><Representation "),
             text.replace("avc1.640028", "unknown"),
             text.replace("video/mp4", "application/dash+xml"),
@@ -1250,27 +1226,19 @@ mod tests {
     }
 
     #[test]
-    fn finite_period_end_rejects_wholly_outside_timeline_and_segment_list_entries() {
+    fn entries_past_a_finite_period_end_and_missing_initialization_are_kept_like_upstream() {
+        // Upstream lists every S entry and SegmentURL without Period checks.
         let text = wrap("<AdaptationSet mimeType=\"video/mp4\"><SegmentTemplate initialization=\"init.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S t=\"0\" d=\"1\" r=\"5\"/></SegmentTimeline></SegmentTemplate><Representation/></AdaptationSet>").replace("PT2.5S", "PT2S");
-        assert!(parse(&text, &manifest()).is_err());
-        let valid = text.replace("r=\"5\"", "r=\"1\"");
-        assert_eq!(parse(&valid, &manifest()).unwrap()[0].fragments.len(), 3);
-        // A final segment may straddle the end; this planner never claims cropping.
-        assert!(parse(&valid.replace("PT2S", "PT1.5S"), &manifest()).is_ok());
+        assert_eq!(parse(&text, &manifest()).unwrap()[0].fragments.len(), 7);
         let list = wrap("<AdaptationSet mimeType=\"video/mp4\"><SegmentList timescale=\"10\" duration=\"10\" presentationTimeOffset=\"100\"><Initialization sourceURL=\"init.mp4\"/><SegmentURL media=\"one.m4s\"/><SegmentURL media=\"two.m4s\"/><SegmentURL media=\"three.m4s\"/></SegmentList><Representation/></AdaptationSet>").replace("PT2.5S", "PT2S");
-        assert!(parse(&list, &manifest()).is_err());
-        assert!(
-            parse(
-                &list.replace("<SegmentURL media=\"three.m4s\"/>", ""),
-                &manifest()
-            )
-            .is_ok()
-        );
-        let timeline_list = list.replace("duration=\"10\"", "").replace(
-            "<Initialization",
-            "<SegmentTimeline><S t=\"100\" d=\"10\" r=\"2\"/></SegmentTimeline><Initialization",
-        );
-        assert!(parse(&timeline_list, &manifest()).is_err());
+        assert_eq!(parse(&list, &manifest()).unwrap()[0].fragments.len(), 4);
+        // Initialization is optional for lists and templates.
+        let bare = list.replace("<Initialization sourceURL=\"init.mp4\"/>", "");
+        let fragments = &parse(&bare, &manifest()).unwrap()[0].fragments;
+        assert_eq!(fragments.len(), 3);
+        assert!(fragments[0].url.as_str().ends_with("one.m4s"));
+        let template = text.replace(" initialization=\"init.mp4\"", "");
+        assert_eq!(parse(&template, &manifest()).unwrap()[0].fragments.len(), 6);
     }
 
     #[test]

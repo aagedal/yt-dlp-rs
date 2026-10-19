@@ -1020,7 +1020,9 @@ SegmentTimeline supports explicit/implicit starts, positive durations, finite
 repeats and bounded `r=-1` expansion to an aligned next start or finite period
 end. Nonzero presentationTimeOffset is applied to period bounds and duration
 Time templates; timelines that start before the offset require clipping and are
-rejected, as are segment starts at or beyond a known period end. Namespaced
+rejected. Like upstream, every listed S entry and SegmentURL is kept even past a
+finite period end, and SegmentTemplate/SegmentList initialization is optional
+(the plan then starts with the first media segment). Namespaced
 addressing attributes fail rather than being interpreted as ordinary DASH fields.
 The simple-addressing offset policy follows the
 [DASH-IF restricted timing model](https://dashif.org/Guidelines-TimingModel/).
