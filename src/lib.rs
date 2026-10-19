@@ -1807,7 +1807,7 @@ impl YoutubeDl {
 
 /// Upstream's per-format merge input name: `correct_ext` of the destination
 /// for the stream's extension, then `prepend_extension` with `fFORMAT_ID`.
-fn stream_path(destination: &Path, merged_ext: &str, stream: &VideoFormat) -> PathBuf {
+pub fn stream_path(destination: &Path, merged_ext: &str, stream: &VideoFormat) -> PathBuf {
     let name = destination
         .file_name()
         .map(|name| name.to_string_lossy().into_owned())

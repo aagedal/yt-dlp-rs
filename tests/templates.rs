@@ -469,13 +469,6 @@ fn paths_and_typed_templates_place_media_and_info_json() {
         skipped.path(),
     ));
     assert_eq!(std::fs::read_dir(skipped.path()).unwrap().count(), 1);
-    assert!(
-        server
-            .cli(&["/typed.html"], &["-P", "temp:t"], skipped.path())
-            .stderr
-            .windows(11)
-            .any(|window| window == b"unsupported")
-    );
 }
 
 #[test]

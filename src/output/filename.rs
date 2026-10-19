@@ -1,6 +1,6 @@
 //! Typed output templates (`-o TYPE:TEMPLATE`) and output paths (`-P TYPE:PATH`).
 
-use crate::{Error, PlaylistCounts, PlaylistInfo, Result, VideoInfo};
+use crate::{PlaylistCounts, PlaylistInfo, Result, VideoInfo};
 use std::{collections::BTreeMap, path::PathBuf};
 
 /// Upstream `OUTTMPL_TYPES` with their forced extensions.
@@ -138,19 +138,13 @@ impl OutputTemplates {
     }
 }
 
-/// Parse repeated `-P [TYPES:]PATH` values (`home` by default). `temp` is
-/// rejected because intermediate-file relocation is not implemented.
+/// Parse repeated `-P [TYPES:]PATH` values (`home` by default).
 pub fn parse_paths(values: &[String]) -> Result<BTreeMap<String, String>> {
     let mut paths = BTreeMap::new();
     for value in values {
         let allowed = |key: &str| key == "home" || key == "temp" || is_output_type(key);
         let (keys, path) = parse_typed(value, allowed, "home");
         for key in keys {
-            if key == "temp" {
-                return Err(Error::InvalidTemplate(
-                    "--paths temp: is unsupported; intermediate files are not relocated".into(),
-                ));
-            }
             paths.insert(key, path.to_owned());
         }
     }
@@ -308,7 +302,7 @@ mod tests {
         assert_eq!(paths["home"], "b");
         assert_eq!(paths["subtitle"], "s");
         assert_eq!(paths["infojson"], "s");
-        assert!(parse_paths(&["temp:t".into()]).is_err());
+        assert_eq!(parse_paths(&["temp:t".into()]).unwrap()["temp"], "t");
         assert_eq!(parse_paths(&["bogus:x".into()]).unwrap()["home"], "bogus:x");
     }
 

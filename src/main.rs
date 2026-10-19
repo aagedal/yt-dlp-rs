@@ -3077,6 +3077,30 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     "WARNING: --paths is ignored since an absolute path is given in output template"
                                 );
                             }
+                            // Upstream `prepare_filename(info, 'temp')`: downloads and
+                            // processors work on the temporary name, then
+                            // `MoveFiles` publishes beside `final_path`.
+                            let final_path = path;
+                            let path = if final_path.as_os_str() != "-"
+                                && template_options.paths.contains_key("temp")
+                            {
+                                templates
+                                    .prepare(&info, Some("temp"), &template_options)?
+                                    .expect("default output template is non-empty")
+                            } else {
+                                final_path.clone()
+                            };
+                            // `_ensure_dir_exists` for both names.
+                            if final_path.as_os_str() != "-" {
+                                for name in [&final_path, &path] {
+                                    if let Some(parent) =
+                                        name.parent().filter(|p| !p.as_os_str().is_empty())
+                                    {
+                                        std::fs::create_dir_all(parent)?;
+                                    }
+                                }
+                            }
+                            let mut move_files = MoveFiles::new(&final_path, overwrites);
                             let processing = processors.audio.is_some()
                                 || processors.video.is_some()
                                 || args.embed_subs
@@ -3090,11 +3114,19 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             // first, then the prepared one.
                             let mut existing_files = Vec::new();
                             if !args.skip_download {
-                                let converted = final_ext
-                                    .as_deref()
-                                    .map(|ext| yt_dlp_rs::audio_output_path(&path, &info.ext, ext))
-                                    .transpose()?;
-                                for candidate in converted.into_iter().chain([path.clone()]) {
+                                let mut candidates = Vec::new();
+                                for name in [&final_path, &path] {
+                                    candidates.extend(
+                                        final_ext
+                                            .as_deref()
+                                            .map(|ext| {
+                                                yt_dlp_rs::audio_output_path(name, &info.ext, ext)
+                                            })
+                                            .transpose()?,
+                                    );
+                                    candidates.push(name.clone());
+                                }
+                                for candidate in candidates {
                                     if !existing_files.contains(&candidate)
                                         && path_exists(&candidate)?
                                     {
@@ -3118,12 +3150,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 .requested_subtitles
                                 .as_ref()
                                 .is_some_and(|subtitles| !subtitles.is_empty());
+                            // Upstream writes subtitles beside the (temporary) media
+                            // name; `MoveFiles` gives them the subtitle template's.
+                            let mut subtitle_finals = Vec::new();
                             let sidecars = match templates.prepare(
                                 &info,
                                 Some("subtitle"),
                                 &template_options,
                             )? {
-                                Some(base) => subtitle_paths(&info, &base)?,
+                                Some(base) => {
+                                    subtitle_finals = subtitle_paths(&info, &base)?
+                                        .into_iter()
+                                        .map(|(_, _, path)| path)
+                                        .collect();
+                                    subtitle_paths(&info, &path)?
+                                }
                                 None => {
                                     if has_subtitles {
                                         screen!("[info] Skipping writing video subtitles");
@@ -3195,15 +3236,32 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 .iter()
                                 .map(|(_, subtitle, source)| (subtitle.ext.clone(), source.clone()))
                                 .collect();
-                            for (language, subtitle, subtitle_path) in sidecars {
-                                // Related files are overwritten unless --no-overwrites.
-                                if overwrites != Some(false)
-                                    && std::fs::symlink_metadata(&subtitle_path).is_ok()
-                                    && std::fs::metadata(&subtitle_path)?.is_file()
-                                {
-                                    screen!("Deleting existing file {}", subtitle_path.display());
-                                    std::fs::remove_file(&subtitle_path)?;
+                            for ((language, subtitle, written_path), final_subtitle) in
+                                sidecars.into_iter().zip(subtitle_finals)
+                            {
+                                // Upstream `existing_file((final, written))`: related
+                                // files are overwritten unless --no-overwrites.
+                                let mut subtitle_path = written_path.clone();
+                                for candidate in [&final_subtitle, &written_path] {
+                                    if std::fs::symlink_metadata(candidate).is_ok()
+                                        && std::fs::metadata(candidate)?.is_file()
+                                    {
+                                        if overwrites != Some(false) {
+                                            screen!(
+                                                "Deleting existing file {}",
+                                                candidate.display()
+                                            );
+                                            std::fs::remove_file(candidate)?;
+                                        } else if subtitle_path == written_path {
+                                            subtitle_path = candidate.clone();
+                                        }
+                                    }
+                                    if final_subtitle == written_path {
+                                        break;
+                                    }
                                 }
+                                move_files
+                                    .insert(subtitle_path.clone(), Some(final_subtitle.clone()));
                                 match std::fs::symlink_metadata(&subtitle_path) {
                                     Ok(_) if std::fs::metadata(&subtitle_path)?.is_file() => {
                                         screen!(
@@ -3274,6 +3332,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             converted.path.display()
                                         );
                                     }
+                                    if converted.path != subtitle_path {
+                                        move_files.derive(&subtitle_path, &converted.path, false);
+                                    }
                                     embedded_file.path = converted.path;
                                     embedded_file.ext = converted.ext;
                                 }
@@ -3285,6 +3346,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 thumbnail_files = write_thumbnails(
                                     &downloader,
                                     &info,
+                                    &path,
+                                    &mut move_files,
                                     templates.prepare(
                                         &info,
                                         Some("thumbnail"),
@@ -3299,6 +3362,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 convert_thumbnails(
                                     &downloader,
                                     &mut thumbnail_files,
+                                    &mut move_files,
                                     conversion,
                                     args.keep_video,
                                 )?;
@@ -3327,7 +3391,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     overwrites,
                                 )?;
                             }
-                            let prepared = path.to_string_lossy().into_owned();
+                            let prepared = final_path.to_string_lossy().into_owned();
+                            let downloaded = path.to_string_lossy().into_owned();
                             stage_print(
                                 Stage::BeforeDownload,
                                 &info,
@@ -3339,7 +3404,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 Stage::BeforeDownload,
                                 &info,
                                 None,
-                                Some(&path),
+                                Some(&final_path),
                                 &template_options,
                             ) {
                                 defer(error);
@@ -3349,7 +3414,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             let post_print = stage_print(
                                 Stage::PostProcess,
                                 &info,
-                                stage_paths(Some(&prepared), &prepared),
+                                stage_paths(Some(&downloaded), &prepared),
                             )?;
                             let move_print = |filepath: &std::path::Path,
                                               info: &yt_dlp_rs::VideoInfo|
@@ -3366,6 +3431,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             };
 
                             if args.skip_download {
+                                // `MoveFilesAfterDownloadPP(downloaded=False)` publishes
+                                // the sidecars.
+                                if let Err(error) = move_files.run(&path, false) {
+                                    eprintln!("ERROR: Postprocessing: {error}");
+                                    return Ok(());
+                                }
                                 force_record(&info)?;
                                 return Ok(());
                             }
@@ -3380,6 +3451,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 && (args.no_continue || args.no_part);
                             let existing_media = existing_media && !redownload;
                             let mut process_existing = None;
+                            let found = existing_files.first().cloned();
                             if existing_media && overwrites == Some(true) {
                                 for existing in &existing_files {
                                     screen!("Deleting existing file {}", existing.display());
@@ -3407,12 +3479,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             if existing_media && overwrites != Some(true) && !processing {
                                 {
                                     post_print.emit()?;
-                                    entry_files.borrow_mut()[entry_index] = Some(py_abspath(&path));
+                                    let found = found.as_ref().unwrap_or(&path);
+                                    entry_files.borrow_mut()[entry_index] =
+                                        Some(move_files.final_path(found));
                                     if !after_download(
                                         &exec,
                                         &info,
-                                        &path,
-                                        &path,
+                                        found,
+                                        &final_path,
+                                        &move_files,
                                         &template_options,
                                         error_mode,
                                         &pending_error,
@@ -3570,8 +3645,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     screen!(
                                         "[EmbedThumbnail] There aren't any thumbnails to embed"
                                     );
-                                } else if let Some((_, path)) = thumbnail_files.last() {
-                                    let path = yt_dlp_rs::fixup_webp(path)?;
+                                } else if let Some((_, written)) = thumbnail_files.last() {
+                                    let path = yt_dlp_rs::fixup_webp(written)?;
+                                    if path != *written {
+                                        move_files.derive(written, &path, true);
+                                    }
                                     processors.thumbnail = Some(path.clone());
                                     embedded_thumbnail = Some(path);
                                 } else {
@@ -3672,6 +3750,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                                 return Ok(());
                             }
+                            // `run_pp` with -k keeps the merged formats for `MoveFiles`.
+                            if args.keep_video {
+                                for format in &info.requested_formats {
+                                    move_files
+                                        .keep(yt_dlp_rs::stream_path(&path, &info.ext, format));
+                                }
+                            }
                             let mut changed_chapters = None;
                             let (bytes, published_paths) = if processing {
                                 // `existing_video_file` sets `ext` from the found file.
@@ -3725,6 +3810,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         "WARNING: Unable to delete file {}",
                                         thumbnail.display()
                                     );
+                                }
+                                // Kept sources move to the final directory.
+                                for kept in &result.kept_files {
+                                    move_files.keep(kept.clone());
                                 }
                                 let mut paths = vec![result.path];
                                 paths.extend(result.kept_files);
@@ -3867,12 +3956,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                             }
                             entry_files.borrow_mut()[entry_index] =
-                                Some(py_abspath(&published_paths[0]));
+                                Some(move_files.final_path(&published_paths[0]));
                             if !after_download(
                                 &exec,
                                 info,
                                 &published_paths[0],
-                                &path,
+                                &final_path,
+                                &move_files,
                                 &template_options,
                                 error_mode,
                                 &pending_error,
@@ -5109,15 +5199,137 @@ fn run_exec(
     Ok(())
 }
 
+/// Upstream `__files_to_move` with `MoveFilesAfterDownloadPP`: sidecars
+/// written beside the (temporary) media move to their final names, other
+/// retained files and the media to the final directory.
+struct MoveFiles {
+    /// `__finaldir`: the directory of the absolute final media filename.
+    finaldir: PathBuf,
+    /// Source and final name (`None`: the final directory), in insertion order.
+    files: Vec<(PathBuf, Option<PathBuf>)>,
+    overwrites: bool,
+}
+
+impl MoveFiles {
+    fn new(final_media: &std::path::Path, overwrites: Option<bool>) -> Self {
+        let finaldir = py_abspath(final_media)
+            .parent()
+            .map(std::path::Path::to_path_buf)
+            .unwrap_or_default();
+        Self {
+            finaldir,
+            files: Vec::new(),
+            overwrites: overwrites != Some(false),
+        }
+    }
+
+    /// Python `dict.__setitem__`: an existing key keeps its position.
+    fn insert(&mut self, source: PathBuf, target: Option<PathBuf>) {
+        match self.files.iter_mut().find(|(old, _)| *old == source) {
+            Some(entry) => entry.1 = target,
+            None => self.files.push((source, target)),
+        }
+    }
+
+    /// Python `dict.setdefault(source, '')`.
+    fn keep(&mut self, source: PathBuf) {
+        if !self.files.iter().any(|(old, _)| *old == source) {
+            self.files.push((source, None));
+        }
+    }
+
+    /// A processor derived `to` from `from` (upstream maps it to `from`'s
+    /// final name with `to`'s extension); `rename` drops `from`'s entry.
+    fn derive(&mut self, from: &std::path::Path, to: &std::path::Path, rename: bool) {
+        let Some(index) = self.files.iter().position(|(old, _)| old == from) else {
+            return;
+        };
+        let target = self.files[index].1.as_ref().map(|target| {
+            let ext = to
+                .extension()
+                .map(|ext| ext.to_string_lossy().into_owned())
+                .unwrap_or_default();
+            PathBuf::from(yt_dlp_rs::output::replace_extension(
+                &target.to_string_lossy(),
+                &ext,
+                None,
+            ))
+        });
+        if rename {
+            self.files.remove(index);
+        }
+        self.insert(to.to_owned(), target);
+    }
+
+    fn final_path(&self, filepath: &std::path::Path) -> PathBuf {
+        self.finaldir
+            .join(filepath.file_name().unwrap_or(filepath.as_os_str()))
+    }
+
+    /// Run the processor; `filepath` is moved when `downloaded`. Returns the
+    /// final media path. Files deleted by earlier processors (which upstream
+    /// removes from the map) are skipped.
+    fn run(&self, filepath: &std::path::Path, downloaded: bool) -> Result<PathBuf, String> {
+        let final_path = self.final_path(filepath);
+        let mut files = self.files.clone();
+        if downloaded {
+            match files.iter_mut().find(|(old, _)| old == filepath) {
+                Some(entry) => entry.1 = Some(final_path.clone()),
+                None => files.push((filepath.to_owned(), Some(final_path.clone()))),
+            }
+        }
+        for (old, new) in files {
+            if std::fs::symlink_metadata(&old).is_err() {
+                continue;
+            }
+            let new = new.unwrap_or_else(|| self.final_path(&old));
+            if py_abspath(&old) == py_abspath(&new) {
+                continue;
+            }
+            if std::fs::metadata(&new).is_ok() {
+                if self.overwrites {
+                    warning!("WARNING: Replacing existing file \"{}\"", new.display());
+                    std::fs::remove_file(&new).map_err(|error| error.to_string())?;
+                } else {
+                    warning!(
+                        "WARNING: Cannot move file \"{}\" out of temporary directory since \"{}\" already exists. ",
+                        old.display(),
+                        new.display()
+                    );
+                    continue;
+                }
+            }
+            if let Some(parent) = new.parent().filter(|p| !p.as_os_str().is_empty()) {
+                std::fs::create_dir_all(parent)
+                    .map_err(|error| format!("Unable to create directory: {error}"))?;
+            }
+            screen!(
+                "[MoveFiles] Moving file \"{}\" to \"{}\"",
+                old.display(),
+                new.display()
+            );
+            // `shutil.move`: rename, or copy and delete across filesystems.
+            if std::fs::rename(&old, &new).is_err() {
+                std::fs::copy(&old, &new)
+                    .and_then(|_| std::fs::remove_file(&old))
+                    .map_err(|error| error.to_string())?;
+            }
+        }
+        Ok(final_path)
+    }
+}
+
 /// After a download or an existing file: report a pending preprocessing
-/// error, then run `post_process` and `after_move` commands with `run_pp`
-/// error handling. Returns whether the video may be archived.
+/// error, then run `post_process` commands, `MoveFiles` and `after_move`
+/// commands with `run_pp` error handling. Returns whether the video may be
+/// archived.
 #[allow(clippy::too_many_arguments)]
 fn after_download(
     exec: &ExecCommands,
     info: &yt_dlp_rs::VideoInfo,
     filepath: &std::path::Path,
     filename: &std::path::Path,
+    move_files: &MoveFiles,
     options: &TemplateOptions,
     mode: ErrorMode,
     pending: &std::cell::Cell<Option<String>>,
@@ -5131,20 +5343,9 @@ fn after_download(
             return false;
         }
     }
-    // `MoveFilesAfterDownloadPP` leaves an absolute `filepath`.
-    let moved = py_abspath(filepath);
-    for (stage, filepath) in [
-        (Stage::PostProcess, filepath),
-        (Stage::AfterMove, moved.as_path()),
-    ] {
-        let printed = if stage == Stage::AfterMove {
-            print_after_move(filepath, info)
-        } else {
-            Ok(())
-        };
-        if let Err(error) = printed
-            .and_then(|()| run_exec(exec, stage, info, Some(filepath), Some(filename), options))
-        {
+    // Upstream `run_pp` error handling.
+    let handle = |result: Result<(), String>| {
+        if let Err(error) = result {
             failed.set(true);
             if mode == ErrorMode::Ignore {
                 eprintln!("ERROR: {error}");
@@ -5153,6 +5354,34 @@ fn after_download(
                 return false;
             }
         }
+        true
+    };
+    if !handle(run_exec(
+        exec,
+        Stage::PostProcess,
+        info,
+        Some(filepath),
+        Some(filename),
+        options,
+    )) {
+        return false;
+    }
+    let mut moved = move_files.final_path(filepath);
+    if !handle(move_files.run(filepath, true).map(|path| moved = path)) {
+        return false;
+    }
+    let after_move = print_after_move(&moved, info).and_then(|()| {
+        run_exec(
+            exec,
+            Stage::AfterMove,
+            info,
+            Some(&moved),
+            Some(filename),
+            options,
+        )
+    });
+    if !handle(after_move) {
+        return false;
     }
     true
 }
@@ -5721,9 +5950,12 @@ fn determine_ext(url: &str) -> String {
 
 /// Upstream `_write_thumbnails` for a video: try thumbnails from best to worst
 /// until one is written (or all of them with `write_all`).
+#[allow(clippy::too_many_arguments)]
 fn write_thumbnails(
     downloader: &YoutubeDl,
     info: &yt_dlp_rs::VideoInfo,
+    filename: &std::path::Path,
+    move_files: &mut MoveFiles,
     base: Option<PathBuf>,
     write_all: bool,
     overwrites: Option<bool>,
@@ -5740,6 +5972,7 @@ fn write_thumbnails(
     };
     let multiple = write_all && thumbnails.len() > 1;
     let base = base.to_string_lossy();
+    let filename = filename.to_string_lossy();
     let mut written = false;
     for (index, thumbnail) in thumbnails.iter().enumerate().rev() {
         let id = thumbnail.id.as_deref().unwrap_or("None");
@@ -5748,7 +5981,13 @@ fn write_thumbnails(
             ext = format!("{id}.{ext}");
         }
         let display = format!("video thumbnail {id}");
+        // Written beside the (temporary) media name, moved to the template's.
         let path = PathBuf::from(yt_dlp_rs::output::replace_extension(
+            &filename,
+            &ext,
+            Some(&info.ext),
+        ));
+        let final_path = PathBuf::from(yt_dlp_rs::output::replace_extension(
             &base,
             &ext,
             Some(&info.ext),
@@ -5756,7 +5995,14 @@ fn write_thumbnails(
         if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
             std::fs::create_dir_all(parent)?;
         }
-        if path_exists(&path)? {
+        // Upstream `existing_file((final, written))`.
+        let mut existing = Vec::new();
+        for candidate in [&final_path, &path] {
+            if !existing.contains(candidate) && path_exists(candidate)? {
+                existing.push(candidate.clone());
+            }
+        }
+        if !existing.is_empty() {
             if overwrites == Some(false) {
                 let label = if multiple {
                     display.clone()
@@ -5773,15 +6019,18 @@ fn write_thumbnails(
                     })
                     .unwrap_or_default();
                 screen!("[info] {capitalized} is already present");
-                on_disk.push((index, path));
+                move_files.insert(existing[0].clone(), Some(final_path));
+                on_disk.push((index, existing.swap_remove(0)));
                 written = true;
                 if !write_all {
                     break;
                 }
                 continue;
             }
-            screen!("Deleting existing file {}", path.display());
-            std::fs::remove_file(&path)?;
+            for existing in existing {
+                screen!("Deleting existing file {}", existing.display());
+                std::fs::remove_file(&existing)?;
+            }
         }
         screen!("[info] Downloading {display} ...");
         let options = DownloadOptions {
@@ -5791,6 +6040,7 @@ fn write_thumbnails(
         match downloader.download_thumbnail(&thumbnail.url, &path, options) {
             Ok(_) => {
                 screen!("[info] Writing {display} to: {}", path.display());
+                move_files.insert(path.clone(), Some(final_path));
                 on_disk.push((index, path));
                 written = true;
             }
@@ -5823,6 +6073,7 @@ fn write_thumbnails(
 fn convert_thumbnails(
     downloader: &YoutubeDl,
     thumbnails: &mut [(usize, PathBuf)],
+    move_files: &mut MoveFiles,
     conversion: &ThumbnailConversion,
     keep_original: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5836,6 +6087,7 @@ fn convert_thumbnails(
                 "[ThumbnailsConvertor] Correcting thumbnail \"{}\" extension to webp",
                 path.display()
             );
+            move_files.derive(path, &original, true);
         }
         let mut ext = original
             .extension()
@@ -5863,6 +6115,7 @@ fn convert_thumbnails(
                     original.display()
                 );
                 downloader.convert_thumbnail(&original, &converted, &target)?;
+                move_files.derive(&original, &converted, false);
                 if !keep_original {
                     screen!(
                         "Deleting original file {} (pass -k to keep)",

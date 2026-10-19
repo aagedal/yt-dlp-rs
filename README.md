@@ -210,7 +210,7 @@ Supported today:
   and `--trim-filenames LENGTH` follow upstream. Metadata cannot introduce
   directories or `..` components; literal template paths can.
 - `-o TYPE:TEMPLATE` for `subtitle`, `infojson` and `pl_infojson` files and
-  `-P [TYPE:]PATH` output directories follow upstream; `-P temp:` is not supported.
+  `-P [TYPE:]PATH` output directories, including `temp:` with `[MoveFiles]`, follow upstream.
 - `-x` / `--extract-audio` supports `best`, MP3, AAC, M4A, Opus, Vorbis,
   FLAC, ALAC and WAV through explicitly configured local FFmpeg/FFprobe.
   `--audio-format` accepts ordered `SOURCE>TARGET/TARGET` rules;
