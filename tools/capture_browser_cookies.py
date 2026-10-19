@@ -8,6 +8,10 @@ pinned upstream checkout's `extract_cookies_from_browser` reads it. The
 cookies and logger messages it produced are saved as the native expectation.
 No network access is involved.
 
+Chromium profiles hold macOS-keychain (`v10`, 1003 PBKDF2 iterations) values
+for the password in `chrome/password.txt`; upstream reads it through a fake
+`security` command, as the native tests do.
+
 usage: capture_browser_cookies.py UPSTREAM_CHECKOUT FIXTURE_DIR
 """
 import json
@@ -47,6 +51,44 @@ def firefox_profile(directory, version, rows, legacy_rows=()):
         ]}, containers)
 
 
+CHROME_PASSWORD = b'fixture keychain password'
+
+
+def chrome_profile(directory, meta_version, rows, secure_column='is_secure'):
+    from yt_dlp.aes import aes_cbc_encrypt_bytes
+    import hashlib
+    os.makedirs(directory, exist_ok=True)
+    path = os.path.join(directory, 'Cookies')
+    if os.path.exists(path):
+        os.remove(path)
+    key = hashlib.pbkdf2_hmac('sha1', CHROME_PASSWORD, b'saltysalt', 1003, 16)
+    connection = sqlite3.connect(path)
+    connection.execute('CREATE TABLE meta(key LONGVARCHAR NOT NULL UNIQUE PRIMARY KEY, value LONGVARCHAR)')
+    connection.execute("INSERT INTO meta VALUES ('version', ?)", (str(meta_version),))
+    connection.execute(
+        'CREATE TABLE cookies(creation_utc INTEGER NOT NULL, host_key TEXT NOT NULL, name TEXT NOT NULL, '
+        'value TEXT NOT NULL, path TEXT NOT NULL, expires_utc INTEGER NOT NULL, '
+        f'{secure_column} INTEGER NOT NULL, is_httponly INTEGER NOT NULL, encrypted_value BLOB DEFAULT \'\')')
+    for host, name, value, kind, path_, expires, secure in rows:
+        plain, encrypted = '', b''
+        if kind == 'plain':
+            plain = value
+        elif kind == 'v10':
+            data = value.encode()
+            if meta_version >= 24:
+                data = hashlib.sha256(host.encode()).digest() + data
+            encrypted = b'v10' + aes_cbc_encrypt_bytes(data, key, b' ' * 16)
+        elif kind == 'v10-bad':
+            encrypted = b'v10' + aes_cbc_encrypt_bytes(b'\xff\xfe' * 8, key, b' ' * 16)
+        else:
+            encrypted = value.encode()
+        connection.execute(
+            'INSERT INTO cookies VALUES (0, ?, ?, ?, ?, ?, ?, 0, ?)',
+            (host, name, plain, path_, expires, secure, encrypted))
+    connection.commit()
+    connection.close()
+
+
 def main():
     checkout, fixtures = sys.argv[1:]
     sys.path.insert(0, checkout)
@@ -66,6 +108,18 @@ def main():
     firefox_profile(
         os.path.join(fixtures, 'firefox', 'v12'), 12,
         [('', 'seconds', 'yes', 'example.test', '/', 4102444800, 0)])
+
+    chrome_profile(
+        os.path.join(fixtures, 'chrome', 'Default'), 24,
+        [('.example.test', 'sid', 'secret value', 'v10', '/', 13400000000000000, 1),
+         ('example.test', 'plain', 'visible', 'plain', '/', 0, 0),
+         ('old.test', 'legacy', 'stored', 'old', '/', 13400000000000000, 0),
+         ('bad.test', 'garbled', '', 'v10-bad', '/', 0, 0)])
+    chrome_profile(
+        os.path.join(fixtures, 'chrome', 'Old'), 20,
+        [('example.test', 'sid', 'pre-24', 'v10', '/', 0, 1)], secure_column='secure')
+    with open(os.path.join(fixtures, 'chrome', 'password.txt'), 'wb') as password:
+        password.write(CHROME_PASSWORD)
 
     class Logger:
         def __init__(self):
@@ -95,6 +149,23 @@ def main():
                     for kind, text in logger.messages]
         cases.append({'profile': profile, 'container': container,
                       'cookies': cookies, 'messages': messages})
+    if sys.platform == 'darwin':
+        from yt_dlp import cookies as module
+        module._get_mac_keyring_password = lambda name, logger: CHROME_PASSWORD
+        for profile in ('Default', 'Old'):
+            logger = Logger()
+            root = os.path.join(fixtures, 'chrome', profile)
+            jar = extract_cookies_from_browser('chrome', root, logger)
+            # macOS 'old data' stays bytes upstream; str() gives its repr.
+            cookies = sorted(
+                [c.domain, c.path, c.name, c.value if isinstance(c.value, str) else repr(c.value),
+                 c.expires, bool(c.secure)] for c in jar)
+            messages = [[kind, text.replace(os.path.abspath(fixtures), 'FIXTURES')]
+                        for kind, text in logger.messages]
+            # The patched keychain lookup logs nothing.
+            messages.insert(2, ['debug', 'using find-generic-password to obtain password from OSX keychain'])
+            cases.append({'browser': 'chrome', 'profile': profile, 'cookies': cookies,
+                          'messages': messages})
     with open(os.path.join(fixtures, 'expected.json'), 'w') as output:
         json.dump(cases, output, indent=1)
         output.write('\n')

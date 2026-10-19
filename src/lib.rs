@@ -38,6 +38,7 @@ pub mod pp_args;
 mod retry;
 pub mod screen;
 pub mod sections;
+mod sha1;
 pub mod sponsorblock;
 mod sqlite;
 mod subtitle_convert;

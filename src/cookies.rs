@@ -114,10 +114,14 @@ impl CookieJar {
             if cookie.name.is_empty() {
                 continue;
             }
+            // Chromium's raw timestamps (microseconds since 1601), which
+            // upstream keeps, are capped at the jar's last representable time.
             let expires = cookie
                 .expires
                 .filter(|expires| expires.is_finite() && *expires > 0.0)
-                .map_or(String::new(), |expires| (expires as i64).to_string());
+                .map_or(String::new(), |expires| {
+                    (expires.min(253_402_300_799.0) as i64).to_string()
+                });
             let flag = |value: bool| if value { "TRUE" } else { "FALSE" };
             let line = format!(
                 "{}\t{}\t{}\t{}\t{expires}\t{}\t{}",

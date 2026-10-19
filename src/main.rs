@@ -4360,6 +4360,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             failed = true;
         }
     }
+    // Cookie loading's `report_error` lines count like other errors.
+    failed |= yt_dlp_rs::screen::cookies_reported_error();
     if let Some(cancel) = cancelled {
         return Err(Box::new(cancel));
     }

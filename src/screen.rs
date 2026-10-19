@@ -42,6 +42,13 @@ static AT_FIRST_REQUEST: std::sync::Mutex<Vec<crate::browser_cookies::Message>> 
     std::sync::Mutex::new(Vec::new());
 
 static COOKIE_ERROR: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
+static COOKIE_REPORTED_ERROR: AtomicBool = AtomicBool::new(false);
+
+/// Whether loading cookies reported a (non-fatal) error, which upstream's
+/// `report_error` counts toward the exit status.
+pub fn cookies_reported_error() -> bool {
+    COOKIE_REPORTED_ERROR.load(Ordering::Relaxed)
+}
 
 pub(crate) fn defer_until_request(
     messages: Vec<crate::browser_cookies::Message>,
@@ -70,6 +77,10 @@ pub fn load_cookies() -> crate::Result<()> {
             crate::browser_cookies::Message::Info(text) => screen(&text),
             crate::browser_cookies::Message::Debug(text) => debug(&text),
             crate::browser_cookies::Message::Warning(text) => warning(&text),
+            crate::browser_cookies::Message::Error(text) => {
+                COOKIE_REPORTED_ERROR.store(true, Ordering::Relaxed);
+                stderr(&format!("ERROR: {text}"));
+            }
         }
     }
     match error {

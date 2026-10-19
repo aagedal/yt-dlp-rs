@@ -2138,5 +2138,101 @@
     "Extracted 1 cookies from firefox"
    ]
   ]
+ },
+ {
+  "browser": "chrome",
+  "profile": "Default",
+  "cookies": [
+   [
+    ".example.test",
+    "/",
+    "sid",
+    "secret value",
+    13400000000000000,
+    true
+   ],
+   [
+    "bad.test",
+    "/",
+    "garbled",
+    "",
+    null,
+    false
+   ],
+   [
+    "example.test",
+    "/",
+    "plain",
+    "visible",
+    null,
+    false
+   ],
+   [
+    "old.test",
+    "/",
+    "legacy",
+    "b'stored'",
+    13400000000000000,
+    false
+   ]
+  ],
+  "messages": [
+   [
+    "info",
+    "Extracting cookies from chrome"
+   ],
+   [
+    "debug",
+    "Extracting cookies from: \"FIXTURES/chrome/Default/Cookies\""
+   ],
+   [
+    "debug",
+    "using find-generic-password to obtain password from OSX keychain"
+   ],
+   [
+    "info",
+    "Extracted 4 cookies from chrome"
+   ],
+   [
+    "debug",
+    "cookie version breakdown: {'v10': 2, 'other': 1, 'unencrypted': 1}"
+   ]
+  ]
+ },
+ {
+  "browser": "chrome",
+  "profile": "Old",
+  "cookies": [
+   [
+    "example.test",
+    "/",
+    "sid",
+    "pre-24",
+    null,
+    true
+   ]
+  ],
+  "messages": [
+   [
+    "info",
+    "Extracting cookies from chrome"
+   ],
+   [
+    "debug",
+    "Extracting cookies from: \"FIXTURES/chrome/Old/Cookies\""
+   ],
+   [
+    "debug",
+    "using find-generic-password to obtain password from OSX keychain"
+   ],
+   [
+    "info",
+    "Extracted 1 cookies from chrome"
+   ],
+   [
+    "debug",
+    "cookie version breakdown: {'v10': 1, 'other': 0, 'unencrypted': 0}"
+   ]
+  ]
  }
 ]

@@ -102,3 +102,54 @@ fn a_missing_database_fails_the_run_at_the_first_request() {
     );
     assert_eq!(output.status.code(), Some(2));
 }
+
+/// Chromium on macOS: the keychain password comes from `security`.
+#[cfg(target_os = "macos")]
+#[test]
+fn chrome_cookies_decrypt_with_the_keychain_password() {
+    use std::os::unix::fs::PermissionsExt;
+    let origin = serve();
+    let tools = tempfile::tempdir().unwrap();
+    let security = tools.path().join("security");
+    std::fs::write(
+        &security,
+        "#!/bin/sh\nprintf '%s\\n' \"$@\" > \"${0%/security}/args.txt\"\nprintf 'fixture keychain password\\n'\n",
+    )
+    .unwrap();
+    std::fs::set_permissions(&security, std::fs::Permissions::from_mode(0o755)).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let profile =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/browser_cookies/chrome/Default");
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ignore-config", "-s", "--cookies", "jar.txt"])
+        .arg("--cookies-from-browser")
+        .arg(format!("chrome:{}", profile.display()))
+        .arg(format!("{origin}/v.mp4"))
+        .current_dir(directory.path())
+        .env("PATH", format!("{}:/usr/bin:/bin", tools.path().display()))
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(
+        String::from_utf8_lossy(&output.stdout)
+            .contains("Extracting cookies from chrome\nExtracted 4 cookies from chrome\n")
+    );
+    assert_eq!(
+        std::fs::read_to_string(tools.path().join("args.txt")).unwrap(),
+        "find-generic-password\n-w\n-a\nChrome\n-s\nChrome Safe Storage\n"
+    );
+    let saved = std::fs::read_to_string(directory.path().join("jar.txt")).unwrap();
+    // Raw Chromium timestamps are capped at the jar's last representable time.
+    assert!(
+        saved.contains(".example.test\tTRUE\t/\tTRUE\t253402300799\tsid\tsecret value\n"),
+        "{saved}"
+    );
+    assert!(
+        saved.contains("old.test\tFALSE\t/\tFALSE\t253402300799\tlegacy\tb'stored'\n"),
+        "{saved}"
+    );
+}
