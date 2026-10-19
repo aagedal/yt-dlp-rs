@@ -1234,6 +1234,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 continue;
             }
         };
+        // Upstream `__process_playlist` progress lines use the playlist
+        // title (or ID).
+        let playlist_title = match &extracted {
+            ExtractResult::Playlist(playlist) => Some(
+                [&playlist.title, &playlist.id]
+                    .into_iter()
+                    .find(|text| !text.is_empty())
+                    .map_or("<Untitled>".to_owned(), |text| text.to_string()),
+            ),
+            ExtractResult::Video(_) => None,
+        };
+        if let Some(title) = &playlist_title {
+            screen!("[download] Downloading playlist: {title}");
+        }
         if let (ExtractResult::Playlist(playlist), Some(counts), true) = (
             &extracted,
             counts,
@@ -1280,6 +1294,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             // Playlist results carry no represented thumbnails.
             writeln!(stdout, "{} has no thumbnails", playlist.id)?;
         }
+        if let (ExtractResult::Playlist(playlist), Some(counts), Some(title)) =
+            (&extracted, counts, &playlist_title)
+        {
+            screen!(
+                "[{}] Playlist {title}: Downloading {} items of {}",
+                playlist.extractor,
+                counts.n_entries,
+                counts.playlist_count
+            );
+        }
         let single_json = args
             .dump_single_json
             .then(|| single_json(&extracted, counts))
@@ -1296,6 +1320,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 pending_error.set(earlier.or(Some(format!("Preprocessing: {error}"))));
             };
             let mut entry_cancel = None;
+            if let (Some(index), Some(count)) = (info.playlist_autonumber, info.n_entries)
+                && playlist_title.is_some()
+            {
+                screen!("[download] Downloading item {index} of {count}");
+            }
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 // Upstream lists thumbnails, then subtitles, then formats.
                 if args.list_thumbnails {
@@ -1313,6 +1342,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 if listing && !args.dump_json && !printing && simulate {
                     return Ok(());
                 }
+                // Upstream `process_video_result` after format selection.
+                let format_ids = if info.requested_formats.is_empty() {
+                    info.format_id.clone().unwrap_or_else(|| info.ext.clone())
+                } else {
+                    info.requested_formats
+                        .iter()
+                        .map(|format| format.format_id.as_str())
+                        .collect::<Vec<_>>()
+                        .join("+")
+                };
+                screen!("[info] {}: Downloading 1 format(s): {format_ids}", info.id);
                 // Upstream `process_info` rechecks complete metadata before counting.
                 if !match_filters.is_empty() {
                     match match_filters.check(&info, false)? {
@@ -1899,6 +1939,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
         if url_cancelled {
             continue;
+        }
+        if let Some(title) = &playlist_title {
+            screen!("[download] Finished downloading playlist: {title}");
         }
         if let Some(value) = single_json {
             serde_json::to_writer(&mut stdout, &value)?;

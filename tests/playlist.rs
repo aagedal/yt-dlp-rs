@@ -376,3 +376,33 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
     let both = success(&server.cli("/one.mp4", &["-j", "-J"]));
     assert_eq!(both, format!("{json}{json}"));
 }
+
+#[test]
+fn playlist_progress_lines_follow_upstream_process_playlist() {
+    let server = Server::new();
+    let output = server.cli("/playlist.html", &["-s", "-I", "3,1"]);
+    success(&output);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    let lines: Vec<_> = stderr
+        .lines()
+        .filter(|line| {
+            line.starts_with("[download] ")
+                || line.starts_with("[generic] Playlist ")
+                || line.contains("format(s)")
+        })
+        .collect();
+    let title = lines[0]
+        .strip_prefix("[download] Downloading playlist: ")
+        .expect("playlist header");
+    assert_eq!(
+        lines[1..],
+        [
+            format!("[generic] Playlist {title}: Downloading 2 items of 4"),
+            "[download] Downloading item 1 of 2".into(),
+            "[info] playlist-3: Downloading 1 format(s): 0".into(),
+            "[download] Downloading item 2 of 2".into(),
+            "[info] playlist-1: Downloading 1 format(s): 0".into(),
+            format!("[download] Finished downloading playlist: {title}"),
+        ]
+    );
+}

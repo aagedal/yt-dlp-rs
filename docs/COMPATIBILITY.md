@@ -80,6 +80,14 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-h`, `--help`, `-V`, `--version` | Clap help and crate version |
 | All other flags | Rejected; general option parity is not implemented |
 
+Upstream `__process_playlist` progress lines are printed for playlists
+(`[download] Downloading playlist: TITLE`, `[EXTRACTOR] Playlist TITLE:
+Downloading N items of COUNT`, `[download] Downloading item I of N` and
+`[download] Finished downloading playlist: TITLE`), as is `[info] ID:
+Downloading 1 format(s): FORMAT` after selection. Archived or filtered entries
+are reported before the first item rather than interleaved, and the updated
+playlist info JSON is not rewritten after the entries are processed.
+
 Informational lines go to stderr natively (upstream writes them to stdout
 unless quiet). Option validations that upstream reports through `parser.error`
 (audio/remux/recode/subtitle/thumbnail formats, audio quality, playlist
