@@ -19,6 +19,7 @@ pub(crate) fn download(
         destination,
         options,
         &PostprocessOptions {
+            ignore_errors: false,
             thumbnail: None,
             metadata: false,
             audio: Some(audio.clone()),

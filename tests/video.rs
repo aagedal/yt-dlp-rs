@@ -188,6 +188,7 @@ fn clean(path: &Path) {
 
 fn options(format: &str, mode: VideoMode, keep: bool) -> PostprocessOptions {
     PostprocessOptions {
+        ignore_errors: false,
         thumbnail: None,
         metadata: false,
         audio: None,
@@ -818,4 +819,80 @@ fn embed_metadata_rewrites_the_final_file_with_upstream_metadata_arguments() {
         std::fs::read(plain.path().join("out.mp4")).unwrap(),
         b"source video"
     );
+}
+
+#[test]
+fn ignore_errors_skips_failed_processors_and_abort_on_error_stops_the_queue() {
+    let server = Server::new();
+    let tools = Tools::new("aac", true);
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("source.mp4");
+    // -i: the failed remux is reported, the download still counts.
+    let output = tools.cli(
+        &[
+            "-i",
+            "--remux-video",
+            "mkv",
+            "--download-archive",
+            "archive.txt",
+            "-o",
+            "out.%(ext)s",
+            &url,
+        ],
+        directory.path(),
+    );
+    assert_eq!(output.status.code(), Some(1));
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(stderr.contains("ERROR: "), "{stderr}");
+    assert_eq!(
+        std::fs::read(directory.path().join("out.mp4")).unwrap(),
+        b"source video"
+    );
+    assert!(!directory.path().join("out.mkv").exists());
+    assert_eq!(
+        std::fs::read_to_string(directory.path().join("archive.txt")).unwrap(),
+        "generic source\n"
+    );
+    clean(directory.path());
+    // Without -i (or after a later --abort-on-error) nothing is archived.
+    let strict = tempfile::tempdir().unwrap();
+    let output = tools.cli(
+        &[
+            "-i",
+            "--abort-on-error",
+            "--remux-video",
+            "mkv",
+            "--download-archive",
+            "archive.txt",
+            "-o",
+            "out.%(ext)s",
+            &url,
+        ],
+        strict.path(),
+    );
+    assert_eq!(output.status.code(), Some(1));
+    assert!(!strict.path().join("archive.txt").exists());
+    // --abort-on-error stops at the first failing input; the default continues.
+    let unreachable = "http://127.0.0.1:9/missing.mp4";
+    for (args, downloads) in [
+        (vec!["--abort-on-error"], false),
+        (vec!["--no-ignore-errors", "--no-abort-on-error"], true),
+        (vec![], true),
+    ] {
+        let queue = tempfile::tempdir().unwrap();
+        let mut all = args.clone();
+        all.extend(["--proxy", "", "-o", "next.%(ext)s", unreachable, &url]);
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .current_dir(queue.path())
+            .args(&all)
+            .output()
+            .unwrap();
+        assert_eq!(output.status.code(), Some(1), "{args:?}");
+        assert_eq!(
+            queue.path().join("next.mp4").exists(),
+            downloads,
+            "{args:?}: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
 }

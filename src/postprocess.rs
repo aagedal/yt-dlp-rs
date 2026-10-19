@@ -22,6 +22,9 @@ pub struct PostprocessOptions {
     pub metadata: bool,
     /// `--embed-thumbnail`: a local thumbnail embedded after metadata.
     pub thumbnail: Option<PathBuf>,
+    /// `--ignore-errors`: a failed processor is reported and skipped, and the
+    /// remaining processors continue with the latest completed file.
+    pub ignore_errors: bool,
 }
 
 /// Published final media and any sources/intermediates retained by keep-video.
@@ -34,6 +37,8 @@ pub struct ProcessedDownload {
     /// All retained files, including kept_video when present.
     pub kept_files: Vec<PathBuf>,
     pub warnings: Vec<String>,
+    /// Processor failures skipped under `ignore_errors`.
+    pub errors: Vec<String>,
 }
 
 struct Stage {
@@ -151,6 +156,7 @@ pub(crate) fn download(
             kept_video: None,
             kept_files: Vec::new(),
             warnings: Vec::new(),
+            errors: Vec::new(),
         });
     }
     let keep = processors.keep_video
@@ -187,75 +193,219 @@ pub(crate) fn download(
     let mut publishing = false;
     let mut delete_subtitles = Vec::new();
     let mut warnings = Vec::new();
+    let mut errors = Vec::new();
     let process = (|| -> Result<ProcessedDownload> {
-        if needs_audio {
-            let current = stages.last().unwrap();
-            if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
-                return Err(Error::DownloadCancelled);
-            }
-            let mut observe = || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
-            let codec = crate::audio::ffmpeg::probe(
-                &probe_path(downloader)?,
-                &current.disk,
-                &current.container,
-                &mut observe,
-            )?;
-            let plan = processors
-                .audio
-                .as_ref()
-                .unwrap()
-                .plan(&current.ext, Some(&codec))?;
-            let path = audio_output_path(&current.path, &current.ext, &plan.extension)?;
-            if !plan.skip && !(plan.encoder.as_deref() == Some("copy") && path == current.path) {
-                absent(&path)?;
-                let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                    Error::Postprocess(
-                        "audio conversion requires an explicit --ffmpeg-location PATH".into(),
-                    )
-                })?;
-                let output = workspace.path().join(format!("audio.{}", plan.extension));
+        // Upstream `run_pp`: with --ignore-errors a failed processor is
+        // reported and skipped without its file deletions.
+        macro_rules! stage {
+            ($body:block) => {{
+                let subtitle_count = delete_subtitles.len();
+                let outcome = (|| -> Result<()> {
+                    $body
+                    Ok(())
+                })();
+                match outcome {
+                    Ok(()) => {}
+                    Err(Error::DownloadCancelled) => return Err(Error::DownloadCancelled),
+                    Err(error) if processors.ignore_errors => {
+                        delete_subtitles.truncate(subtitle_count);
+                        errors.push(error.to_string());
+                    }
+                    Err(error) => return Err(error),
+                }
+            }};
+        }
+        stage!({
+            if needs_audio {
+                let current = stages.last().unwrap();
+                if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
+                    return Err(Error::DownloadCancelled);
+                }
                 let mut observe =
                     || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
-                crate::audio::ffmpeg::convert(
-                    executable,
+                let codec = crate::audio::ffmpeg::probe(
+                    &probe_path(downloader)?,
                     &current.disk,
                     &current.container,
-                    &output,
-                    &plan,
                     &mut observe,
                 )?;
-                let bytes = fs::metadata(&output)?.len();
-                // AAC copy deliberately keeps upstream's m4a name with ADTS bytes.
-                let container = if plan.muxer == "adts" {
-                    "aac".into()
-                } else {
-                    plan.extension.clone()
-                };
-                stages.push(Stage {
-                    disk: output,
-                    path,
-                    ext: plan.extension,
-                    container,
-                    bytes,
-                });
+                let plan = processors
+                    .audio
+                    .as_ref()
+                    .unwrap()
+                    .plan(&current.ext, Some(&codec))?;
+                let path = audio_output_path(&current.path, &current.ext, &plan.extension)?;
+                if !plan.skip && !(plan.encoder.as_deref() == Some("copy") && path == current.path)
+                {
+                    absent(&path)?;
+                    let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
+                        Error::Postprocess(
+                            "audio conversion requires an explicit --ffmpeg-location PATH".into(),
+                        )
+                    })?;
+                    let output = workspace.path().join(format!("audio.{}", plan.extension));
+                    let mut observe =
+                        || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
+                    crate::audio::ffmpeg::convert(
+                        executable,
+                        &current.disk,
+                        &current.container,
+                        &output,
+                        &plan,
+                        &mut observe,
+                    )?;
+                    let bytes = fs::metadata(&output)?.len();
+                    // AAC copy deliberately keeps upstream's m4a name with ADTS bytes.
+                    let container = if plan.muxer == "adts" {
+                        "aac".into()
+                    } else {
+                        plan.extension.clone()
+                    };
+                    stages.push(Stage {
+                        disk: output,
+                        path,
+                        ext: plan.extension,
+                        container,
+                        bytes,
+                    });
+                }
             }
-        }
-        if let Some(video) = &processors.video {
-            let current = stages.last().unwrap();
-            let plan = video.plan(&current.ext)?;
-            if !plan.skip {
-                let path =
-                    audio_output_path(&current.path, &current.ext.to_lowercase(), &plan.extension)?;
-                absent(&path)?;
+        });
+        stage!({
+            if let Some(video) = &processors.video {
+                let current = stages.last().unwrap();
+                let plan = video.plan(&current.ext)?;
+                if !plan.skip {
+                    let path = audio_output_path(
+                        &current.path,
+                        &current.ext.to_lowercase(),
+                        &plan.extension,
+                    )?;
+                    absent(&path)?;
+                    if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break()
+                    {
+                        return Err(Error::DownloadCancelled);
+                    }
+                    let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
+                        Error::Postprocess(
+                            "video processing requires an explicit --ffmpeg-location PATH".into(),
+                        )
+                    })?;
+                    let output = workspace.path().join(format!("video.{}", plan.extension));
+                    let mut observe =
+                        || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
+                    crate::video::ffmpeg::convert(
+                        executable,
+                        &current.disk,
+                        &current.container,
+                        &output,
+                        &plan,
+                        &mut observe,
+                    )?;
+                    let bytes = fs::metadata(&output)?.len();
+                    stages.push(Stage {
+                        disk: output,
+                        path,
+                        ext: plan.extension.clone(),
+                        container: plan.extension,
+                        bytes,
+                    });
+                }
+            }
+        });
+        stage!({
+            if let Some(embedding) = &processors.embed {
+                let current = stages.last_mut().unwrap();
+                let mut plan = crate::embed_subtitles::plan(&current.ext, &embedding.subtitles)?;
+                warnings.append(&mut plan.warnings);
+                warnings.append(&mut plan.messages);
+                if !plan.skip {
+                    if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break()
+                    {
+                        return Err(Error::DownloadCancelled);
+                    }
+                    let mut total = 0u64;
+                    let mut seen = std::collections::HashSet::new();
+                    for (index, file) in plan.files.iter_mut().enumerate() {
+                        if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing)
+                            .is_break()
+                        {
+                            return Err(Error::DownloadCancelled);
+                        }
+                        let metadata = subtitle_metadata(&file.path)?;
+                        if metadata.len() > 16 * 1024 * 1024 {
+                            return Err(Error::Postprocess(
+                                "subtitle embedding input exceeds 16 MiB".into(),
+                            ));
+                        }
+                        let canonical = file.path.canonicalize()?;
+                        let mut bytes = Vec::new();
+                        fs::File::open(&file.path)?
+                            .take(16 * 1024 * 1024 + 1)
+                            .read_to_end(&mut bytes)?;
+                        total += bytes.len() as u64;
+                        if bytes.len() > 16 * 1024 * 1024 || total > 256 * 1024 * 1024 {
+                            return Err(Error::Postprocess(
+                                "subtitle embedding inputs exceed byte budget".into(),
+                            ));
+                        }
+                        if !same_subtitle(&metadata, &subtitle_metadata(&file.path)?) {
+                            return Err(Error::Postprocess(
+                                "subtitle changed during embedding".into(),
+                            ));
+                        }
+                        if !embedding.keep_subtitles && !keep && seen.insert(canonical) {
+                            delete_subtitles.push((file.path.clone(), metadata));
+                        }
+                        let private = workspace
+                            .path()
+                            .join(format!("subtitle-{index}.{}", file.ext));
+                        fs::write(&private, bytes)?;
+                        file.path = private;
+                    }
+                    let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
+                        Error::Postprocess(
+                            "subtitle embedding requires an explicit --ffmpeg-location PATH".into(),
+                        )
+                    })?;
+                    let output = workspace.path().join(format!("embedded.{}", current.ext));
+                    let mut observe =
+                        || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
+                    crate::embed_subtitles::ffmpeg::embed(
+                        executable,
+                        &current.disk,
+                        &current.container,
+                        &output,
+                        &plan,
+                        &mut observe,
+                    )?;
+                    // Upstream replaces the current media and returns no media deletion.
+                    // Keep-video therefore retains earlier processors' inputs, not a
+                    // new unembedded copy of this stage.
+                    current.bytes = fs::metadata(&output)?.len();
+                    current.disk = output;
+                    current.container = current.ext.clone();
+                }
+            }
+        });
+        stage!({
+            if processors.metadata {
+                let current = stages.last_mut().unwrap();
                 if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
                     return Err(Error::DownloadCancelled);
                 }
                 let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
                     Error::Postprocess(
-                        "video processing requires an explicit --ffmpeg-location PATH".into(),
+                        "metadata embedding requires an explicit --ffmpeg-location PATH".into(),
                     )
                 })?;
-                let output = workspace.path().join(format!("video.{}", plan.extension));
+                let plan = crate::video::VideoPlan {
+                    extension: current.ext.clone(),
+                    args: crate::embed_metadata::args(info, &current.ext),
+                    muxer: crate::embed_metadata::muxer(&current.ext.to_lowercase()).into(),
+                    skip: false,
+                };
+                let output = workspace.path().join(format!("metadata.{}", current.ext));
                 let mut observe =
                     || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
                 crate::video::ffmpeg::convert(
@@ -266,146 +416,43 @@ pub(crate) fn download(
                     &plan,
                     &mut observe,
                 )?;
-                let bytes = fs::metadata(&output)?.len();
-                stages.push(Stage {
-                    disk: output,
-                    path,
-                    ext: plan.extension.clone(),
-                    container: plan.extension,
-                    bytes,
-                });
+                // Like upstream, metadata replaces the current file in place.
+                current.bytes = fs::metadata(&output)?.len();
+                current.disk = output;
+                current.container = current.ext.to_lowercase();
             }
-        }
-        if let Some(embedding) = &processors.embed {
-            let current = stages.last_mut().unwrap();
-            let mut plan = crate::embed_subtitles::plan(&current.ext, &embedding.subtitles)?;
-            warnings.append(&mut plan.warnings);
-            warnings.append(&mut plan.messages);
-            if !plan.skip {
+        });
+        stage!({
+            if let Some(thumbnail) = &processors.thumbnail {
+                let current = stages.last_mut().unwrap();
                 if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
                     return Err(Error::DownloadCancelled);
                 }
-                let mut total = 0u64;
-                let mut seen = std::collections::HashSet::new();
-                for (index, file) in plan.files.iter_mut().enumerate() {
-                    if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break()
-                    {
-                        return Err(Error::DownloadCancelled);
-                    }
-                    let metadata = subtitle_metadata(&file.path)?;
-                    if metadata.len() > 16 * 1024 * 1024 {
-                        return Err(Error::Postprocess(
-                            "subtitle embedding input exceeds 16 MiB".into(),
-                        ));
-                    }
-                    let canonical = file.path.canonicalize()?;
-                    let mut bytes = Vec::new();
-                    fs::File::open(&file.path)?
-                        .take(16 * 1024 * 1024 + 1)
-                        .read_to_end(&mut bytes)?;
-                    total += bytes.len() as u64;
-                    if bytes.len() > 16 * 1024 * 1024 || total > 256 * 1024 * 1024 {
-                        return Err(Error::Postprocess(
-                            "subtitle embedding inputs exceed byte budget".into(),
-                        ));
-                    }
-                    if !same_subtitle(&metadata, &subtitle_metadata(&file.path)?) {
-                        return Err(Error::Postprocess(
-                            "subtitle changed during embedding".into(),
-                        ));
-                    }
-                    if !embedding.keep_subtitles && !keep && seen.insert(canonical) {
-                        delete_subtitles.push((file.path.clone(), metadata));
-                    }
-                    let private = workspace
-                        .path()
-                        .join(format!("subtitle-{index}.{}", file.ext));
-                    fs::write(&private, bytes)?;
-                    file.path = private;
-                }
                 let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
                     Error::Postprocess(
-                        "subtitle embedding requires an explicit --ffmpeg-location PATH".into(),
+                        "thumbnail embedding requires an explicit --ffmpeg-location PATH".into(),
                     )
                 })?;
-                let output = workspace.path().join(format!("embedded.{}", current.ext));
+                let output = workspace
+                    .path()
+                    .join(format!("thumbnail-embedded.{}", current.ext));
                 let mut observe =
                     || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
-                crate::embed_subtitles::ffmpeg::embed(
+                crate::thumbnail_process::embed(
                     executable,
+                    &probe_path(downloader)?,
                     &current.disk,
-                    &current.container,
+                    &current.ext.to_lowercase(),
+                    thumbnail,
+                    workspace.path(),
                     &output,
-                    &plan,
                     &mut observe,
                 )?;
-                // Upstream replaces the current media and returns no media deletion.
-                // Keep-video therefore retains earlier processors' inputs, not a
-                // new unembedded copy of this stage.
                 current.bytes = fs::metadata(&output)?.len();
                 current.disk = output;
-                current.container = current.ext.clone();
+                current.container = current.ext.to_lowercase();
             }
-        }
-        if processors.metadata {
-            let current = stages.last_mut().unwrap();
-            if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
-                return Err(Error::DownloadCancelled);
-            }
-            let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                Error::Postprocess(
-                    "metadata embedding requires an explicit --ffmpeg-location PATH".into(),
-                )
-            })?;
-            let plan = crate::video::VideoPlan {
-                extension: current.ext.clone(),
-                args: crate::embed_metadata::args(info, &current.ext),
-                muxer: crate::embed_metadata::muxer(&current.ext.to_lowercase()).into(),
-                skip: false,
-            };
-            let output = workspace.path().join(format!("metadata.{}", current.ext));
-            let mut observe = || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
-            crate::video::ffmpeg::convert(
-                executable,
-                &current.disk,
-                &current.container,
-                &output,
-                &plan,
-                &mut observe,
-            )?;
-            // Like upstream, metadata replaces the current file in place.
-            current.bytes = fs::metadata(&output)?.len();
-            current.disk = output;
-            current.container = current.ext.to_lowercase();
-        }
-        if let Some(thumbnail) = &processors.thumbnail {
-            let current = stages.last_mut().unwrap();
-            if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
-                return Err(Error::DownloadCancelled);
-            }
-            let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                Error::Postprocess(
-                    "thumbnail embedding requires an explicit --ffmpeg-location PATH".into(),
-                )
-            })?;
-            let output = workspace
-                .path()
-                .join(format!("thumbnail-embedded.{}", current.ext));
-            let mut observe = || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
-            crate::thumbnail_process::embed(
-                executable,
-                &probe_path(downloader)?,
-                &current.disk,
-                &current.ext.to_lowercase(),
-                thumbnail,
-                workspace.path(),
-                &output,
-                &mut observe,
-            )?;
-            current.bytes = fs::metadata(&output)?.len();
-            current.disk = output;
-            current.container = current.ext.to_lowercase();
-        }
+        });
         publishing = true;
         let last = stages.last().unwrap();
         let retained = if keep {
@@ -430,6 +477,7 @@ pub(crate) fn download(
             kept_video: retained.first().cloned(),
             kept_files: retained,
             warnings,
+            errors,
         })
     })();
     match process {

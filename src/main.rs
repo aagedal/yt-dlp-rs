@@ -410,6 +410,15 @@ struct Args {
     /// Abort after processing NUMBER videos (0 means no limit)
     #[arg(long, value_name = "NUMBER", allow_hyphen_values = true)]
     max_downloads: Option<i64>,
+    /// Ignore download and postprocessing errors; a video whose postprocessing fails still counts as downloaded
+    #[arg(short = 'i', long, action = clap::ArgAction::Count)]
+    ignore_errors: u8,
+    /// Continue with the next video on download errors (default)
+    #[arg(long, action = clap::ArgAction::Count)]
+    no_abort_on_error: u8,
+    /// Abort downloading of further videos if an error occurs
+    #[arg(long, alias = "no-ignore-errors", action = clap::ArgAction::Count)]
+    abort_on_error: u8,
     /// Maximum download rate in bytes per second, e.g. 50K or 4.2M
     #[arg(short = 'r', long, aliases = ["rate-limit"], value_name = "RATE")]
     limit_rate: Option<String>,
@@ -714,6 +723,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .map(|(_, value)| value.clone())
             .collect()
     };
+    // Upstream `ignoreerrors`: -i (True), --no-abort-on-error ("only_download",
+    // the default) and --abort-on-error (False); the last flag wins.
+    let error_mode = [
+        ("ignore_errors", ErrorMode::Ignore),
+        ("no_abort_on_error", ErrorMode::OnlyDownload),
+        ("abort_on_error", ErrorMode::Abort),
+    ]
+    .into_iter()
+    .filter(|(id, _)| matches.value_source(id) == Some(clap::parser::ValueSource::CommandLine))
+    .flat_map(|(id, mode)| {
+        matches
+            .indices_of(id)
+            .into_iter()
+            .flatten()
+            .map(move |i| (i, mode))
+    })
+    .max_by_key(|(index, _)| *index)
+    .map_or(ErrorMode::OnlyDownload, |(_, mode)| mode);
     // Upstream `writethumbnail`: --write-thumbnail keeps an earlier "all",
     // --no-write-thumbnail clears it, --write-all-thumbnails sets "all".
     let thumbnail_mode = {
@@ -854,6 +881,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         warning!("WARNING: --remux-video is ignored since --recode-video was given");
     }
     let processors = PostprocessOptions {
+        ignore_errors: error_mode == ErrorMode::Ignore,
         thumbnail: None,
         metadata: args.embed_metadata,
         audio: args.extract_audio.then_some(audio_options),
@@ -1005,6 +1033,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     // Upstream compares against `float(max_downloads or 'inf')`.
     let max_downloads = args.max_downloads.filter(|&limit| limit != 0);
+    let abort_on_error = error_mode == ErrorMode::Abort;
+    let mut aborted = false;
     let mut processed: i64 = 0;
     let mut cancelled: Option<Cancel> = None;
     let mut failed = false;
@@ -1084,6 +1114,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             Err(error) => {
                 eprintln!("ERROR: {url}: {error}");
                 failed = true;
+                if abort_on_error {
+                    break;
+                }
                 continue;
             }
         };
@@ -1121,6 +1154,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             if let Err(error) = written {
                 eprintln!("ERROR: {url}: {error}");
                 failed = true;
+                if abort_on_error {
+                    break;
+                }
                 continue;
             }
         }
@@ -1137,6 +1173,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         let mut url_cancelled = false;
         for info in extracted.into_entries() {
             let mut counted = false;
+            let postprocess_failed = std::cell::Cell::new(false);
             let mut entry_cancel = None;
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 // Upstream lists thumbnails, then subtitles, then formats.
@@ -1525,6 +1562,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         for warning in result.warnings {
                             warning!("WARNING: {warning}");
                         }
+                        // Upstream `run_pp` under --ignore-errors.
+                        for error in result.errors {
+                            eprintln!("ERROR: {error}");
+                            postprocess_failed.set(true);
+                        }
                         screen!("[postprocess] Destination: {}", result.path.display());
                         if let Some(thumbnail) = &embedded_thumbnail
                             && !keeps_thumbnails
@@ -1598,6 +1640,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                 },
             };
+            failed |= postprocess_failed.get();
+            // Upstream `--abort-on-error`: the first reported error ends the queue.
+            if abort_on_error && failed {
+                aborted = true;
+                break;
+            }
             if let Some(reason) = entry_cancel {
                 cancelled = cancel(reason, args.break_per_input);
                 if cancelled.is_none() {
@@ -1619,7 +1667,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 break;
             }
         }
-        if cancelled.is_some() {
+        if cancelled.is_some() || aborted {
             break;
         }
         if let Some(reason) = pending.take().filter(|_| !url_cancelled) {
@@ -1658,6 +1706,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         return Err(Box::new(cancel));
     }
     Ok(!failed)
+}
+
+/// Upstream `ignoreerrors` values.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ErrorMode {
+    Ignore,
+    OnlyDownload,
+    Abort,
 }
 
 /// Upstream `DownloadCancelled` reasons; uncaught ones exit with 101.
