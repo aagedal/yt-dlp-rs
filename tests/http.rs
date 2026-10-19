@@ -214,6 +214,17 @@ impl Server {
                     }
                     "/audio" => ("200 OK", "audio/mpeg; charset=binary", "audio", "", 5),
                     "/opaque.webm" => ("200 OK", "application/octet-stream", "webm", "", 4),
+                    "/latm.m4a" => ("200 OK", "audio/mp4a-latm", "audio", "", 5),
+                    "/clip.weird" => ("200 OK", "video/x-weird", "media", "", 5),
+                    "/unnamed" => ("200 OK", "video/mp2t", "media", "", 5),
+                    "/blob" => ("200 OK", "application/octet-stream", "media", "", 5),
+                    "/named" => (
+                        "200 OK",
+                        "audio/mpeg",
+                        "media",
+                        "Content-Disposition: attachment; filename=\"song.ogg\"\r\n",
+                        5,
+                    ),
                     "/truncated.mp4" => ("200 OK", "video/mp4", "short", "", 100),
                     "/partial.mp4" => (
                         "206 Partial Content",
@@ -1391,4 +1402,55 @@ fn html5_formats_carry_upstream_content_type_codecs() {
     );
     // Unknown codecs are reported like upstream's write_string warning.
     assert!(String::from_utf8_lossy(&output.stderr).contains("WARNING: Unknown codec newcodec\n"));
+}
+
+#[test]
+fn generic_direct_links_follow_upstream_content_type_and_extension_rules() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    // Checked with pinned upstream: any audio/video type is a direct link,
+    // `ext` comes from the URL, then Content-Disposition or mimetype2ext.
+    for (path, ext, format_id) in [
+        ("/latm.m4a", "m4a", "mp4a-latm"),
+        ("/clip.weird", "weird", "x-weird"),
+        ("/unnamed", "ts", "mp2t"),
+        ("/named", "ogg", "mpeg"),
+        // Untyped binary responses: an allowed URL extension or unknown_video.
+        ("/opaque.webm", "webm", "0"),
+        ("/blob", "unknown_video", "0"),
+    ] {
+        let info = dl.extract_info(&server.url(path)).unwrap();
+        assert_eq!(
+            (info.ext.as_str(), info.format_id.as_deref()),
+            (ext, Some(format_id)),
+            "{path}"
+        );
+        assert!(info.is_direct());
+    }
+    // Downloads refuse unusual extensions like upstream's _UnsafeExtensionError.
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-o", "o.%(ext)s", &server.url("/clip.weird")])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    assert!(String::from_utf8_lossy(&output.stderr).contains(
+        "The extracted extension ('weird') is unusual and will be skipped for safety reasons"
+    ));
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-o", "o.%(ext)s", &server.url("/blob")])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("o.unknown_video")).unwrap(),
+        b"media"
+    );
 }

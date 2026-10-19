@@ -177,12 +177,191 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
             None
         }
     });
-    let ext = ext?;
+    Some(build(response, url, ext?.to_owned()))
+}
+
+/// Upstream `determine_ext(url, default_ext=None)`.
+pub(crate) fn determine_ext(url: &str) -> Option<String> {
+    const KNOWN: &[&str] = &[
+        "avi", "flv", "mkv", "mov", "mp4", "webm", "3g2", "3gp", "f4v", "mk3d", "divx", "mpg",
+        "ogv", "m4v", "wmv", "aiff", "alac", "flac", "m4a", "mka", "mp3", "ogg", "opus", "wav",
+        "aac", "ape", "asf", "f4a", "f4b", "m4b", "m4r", "oga", "ogx", "spx", "vorbis", "wma",
+        "weba", "f4f", "f4m", "m3u8", "smil", "mpd",
+    ];
+    if !url.contains('.') {
+        return None;
+    }
+    let path = url.split('?').next().unwrap_or("");
+    let guess = path.rsplit_once('.').map_or(path, |(_, guess)| guess);
+    if !guess.is_empty() && guess.bytes().all(|b| b.is_ascii_alphanumeric()) {
+        Some(guess.to_owned())
+    } else if KNOWN.contains(&guess.trim_end_matches('/')) {
+        Some(guess.trim_end_matches('/').to_owned())
+    } else {
+        None
+    }
+}
+
+/// Upstream `mimetype2ext(mime, default)`.
+pub(crate) fn mimetype2ext_or(mime: &str, default: Option<&str>) -> String {
+    const MAP: &[(&str, &str)] = &[
+        ("3gpp", "3gp"),
+        ("mp2t", "ts"),
+        ("mp4", "mp4"),
+        ("mpeg", "mpeg"),
+        ("mpegurl", "m3u8"),
+        ("quicktime", "mov"),
+        ("webm", "webm"),
+        ("vp9", "vp9"),
+        ("video/ogg", "ogv"),
+        ("x-flv", "flv"),
+        ("x-m4v", "m4v"),
+        ("x-matroska", "mkv"),
+        ("x-mng", "mng"),
+        ("x-mp4-fragmented", "mp4"),
+        ("x-ms-asf", "asf"),
+        ("x-ms-wmv", "wmv"),
+        ("x-msvideo", "avi"),
+        ("vnd.dlna.mpeg-tts", "mpeg"),
+        ("dash+xml", "mpd"),
+        ("f4m+xml", "f4m"),
+        ("hds+xml", "f4m"),
+        ("vnd.apple.mpegurl", "m3u8"),
+        ("vnd.ms-sstr+xml", "ism"),
+        ("x-mpegurl", "m3u8"),
+        ("audio/mp4", "m4a"),
+        ("audio/mpeg", "mp3"),
+        ("audio/webm", "webm"),
+        ("audio/x-matroska", "mka"),
+        ("audio/x-mpegurl", "m3u"),
+        ("aacp", "aac"),
+        ("flac", "flac"),
+        ("midi", "mid"),
+        ("ogg", "ogg"),
+        ("wav", "wav"),
+        ("wave", "wav"),
+        ("x-aac", "aac"),
+        ("x-flac", "flac"),
+        ("x-m4a", "m4a"),
+        ("x-realaudio", "ra"),
+        ("x-wav", "wav"),
+        ("avif", "avif"),
+        ("bmp", "bmp"),
+        ("gif", "gif"),
+        ("jpeg", "jpg"),
+        ("png", "png"),
+        ("svg+xml", "svg"),
+        ("tiff", "tif"),
+        ("vnd.wap.wbmp", "wbmp"),
+        ("webp", "webp"),
+        ("x-icon", "ico"),
+        ("x-jng", "jng"),
+        ("x-ms-bmp", "bmp"),
+        ("filmstrip+json", "fs"),
+        ("smptett+xml", "tt"),
+        ("ttaf+xml", "dfxp"),
+        ("ttml+xml", "ttml"),
+        ("x-ms-sami", "sami"),
+        ("x-subrip", "srt"),
+        ("x-srt", "srt"),
+        ("gzip", "gz"),
+        ("json", "json"),
+        ("xml", "xml"),
+        ("zip", "zip"),
+    ];
+    let mimetype = mime.split(';').next().unwrap_or("").trim().to_lowercase();
+    let subtype = mimetype
+        .rsplit_once('/')
+        .map_or(mimetype.as_str(), |(_, s)| s);
+    let lookup = |key: &str| MAP.iter().find(|(k, _)| *k == key).map(|(_, v)| *v);
+    let last = subtype.rsplit('+').next().unwrap_or(subtype);
+    lookup(&mimetype)
+        .or_else(|| lookup(subtype))
+        .or_else(|| lookup(last))
+        .map(str::to_owned)
+        .or_else(|| default.map(str::to_owned))
+        .unwrap_or_else(|| subtype.replace('+', "."))
+}
+
+/// Upstream `disposition_filename`: the Content-Disposition `filename*`
+/// (RFC 2231/5987) or `filename` parameter.
+fn disposition_filename(response: &Response) -> Option<String> {
+    let header = response
+        .headers()
+        .get(reqwest::header::CONTENT_DISPOSITION)?;
+    let text: String = header.as_bytes().iter().map(|&b| char::from(b)).collect();
+    let mut plain = None;
+    for parameter in text.split(';').skip(1) {
+        let Some((name, value)) = parameter.split_once('=') else {
+            continue;
+        };
+        let name = name.trim().to_lowercase();
+        let value = value.trim();
+        if name == "filename*" {
+            // charset'language'percent-encoded
+            let encoded = value.splitn(3, '\'').nth(2).unwrap_or(value);
+            return Some(
+                percent_decode_str(encoded.trim_matches('"'))
+                    .decode_utf8_lossy()
+                    .trim()
+                    .to_owned(),
+            );
+        }
+        if name == "filename" && plain.is_none() {
+            plain = Some(value.trim_matches('"').trim().to_owned());
+        }
+    }
+    plain
+}
+
+/// Upstream `urlhandle_detect_ext`.
+pub(crate) fn urlhandle_detect_ext(response: &Response, default: Option<&str>) -> String {
+    let header = |name: &str| {
+        response
+            .headers()
+            .get(name)
+            .and_then(|value| value.to_str().ok())
+            .map(str::to_owned)
+    };
+    disposition_filename(response)
+        .and_then(|name| determine_ext(&name))
+        .or_else(|| header("x-amz-meta-name").and_then(|name| determine_ext(&name)))
+        .or_else(|| header("x-amz-meta-file-type"))
+        .unwrap_or_else(|| match header("content-type") {
+            Some(mime) => mimetype2ext_or(&mime, default),
+            None => default.unwrap_or_default().to_owned(),
+        })
+}
+
+/// Generic's direct-link result: `ext` is `determine_ext(url)` of the
+/// requested URL, else `urlhandle_detect_ext`.
+pub(crate) fn generic_direct(response: &Response, url: &Url, default: Option<&str>) -> VideoInfo {
+    let ext =
+        determine_ext(url.as_str()).unwrap_or_else(|| urlhandle_detect_ext(response, default));
+    build(response, url, ext)
+}
+
+/// Generic's untyped non-HTML response ("URL could be a direct video
+/// link"): `determine_ext(url)` if allowed, else `unknown_video`.
+pub(crate) fn generic_untyped(response: &Response, url: &Url) -> VideoInfo {
+    let ext = determine_ext(url.as_str())
+        .filter(|ext| crate::output::allowed_extension(ext))
+        .unwrap_or_else(|| "unknown_video".into());
+    build(response, url, ext)
+}
+
+fn build(response: &Response, url: &Url, ext: String) -> VideoInfo {
+    let final_url = response.url().clone();
+    let filename = final_url
+        .path_segments()
+        .and_then(|mut p| p.next_back())
+        .unwrap_or("");
+    let filename = percent_decode_str(filename).decode_utf8_lossy();
     let stem = filename
         .rsplit_once('.')
         .map_or(filename.as_ref(), |(stem, _)| stem);
     let title = if stem.is_empty() { "video" } else { stem };
-    Some(VideoInfo {
+    VideoInfo {
         protocol: None,
         format_sort_fields: Vec::new(),
         resolution: None,
@@ -227,5 +406,5 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
         filesize: None,
         width: None,
         height: None,
-    })
+    }
 }

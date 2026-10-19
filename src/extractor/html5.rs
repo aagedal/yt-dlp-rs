@@ -472,8 +472,17 @@ impl Extractor for GenericHttp {
                 .ends_with(".m3u8");
         if hls_path || direct::response_mime(&response) != "text/html" {
             let mime = direct::response_mime(&response);
-            let direct =
-                direct::from_response(&response, url).map(|info| direct::with_format(info, &mime));
+            // Upstream: a direct-link Content-Type takes `ext` from the URL,
+            // then the response headers; an untyped binary response defaults
+            // to `unknown_video`. Other types keep native recognition.
+            let direct = if media_type {
+                Some(direct::generic_direct(&response, url, None))
+            } else if mime.is_empty() || mime == "application/octet-stream" {
+                Some(direct::generic_untyped(&response, url))
+            } else {
+                direct::from_response(&response, url)
+            }
+            .map(|info| direct::with_format(info, &mime));
             if !media_type {
                 fallback();
             }

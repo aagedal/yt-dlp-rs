@@ -626,6 +626,22 @@ video's `vcodec`/`dynamic_range` and the audio's `acodec`. Upstream's explicit
 stricter HLS/DASH/YouTube codec allow-lists are unchanged by these fields;
 `tools/compare_youtube.py` now also compares non-null codec fields.
 
+## Generic direct links
+
+Like `GenericIE`, a Content-Type matching `audio/*`, `video/*`, `application/ogg`
+or an m3u8 type is a direct link: `ext` is `determine_ext` of the requested URL,
+else `urlhandle_detect_ext` (Content-Disposition `filename*`/`filename`,
+`x-amz-meta-name`, `x-amz-meta-file-type`, then the full `mimetype2ext` table with
+its subtype fallback), and the format ID is the MIME subtype. An untyped or
+`application/octet-stream` response is returned with upstream's "URL could be a
+direct video link" warning and `ext` from the URL when it is in
+`_UnsafeExtensionError.ALLOWED_EXTENSIONS`, else `unknown_video`. Downloads (not
+`-j`/`-s`/`--get-filename`) refuse media or format extensions outside that list
+with `The extracted extension ('EXT') is unusual and will be skipped for safety
+reasons` (without upstream's bug-report link). Responses with other non-HTML
+types keep the native MIME recognition, and upstream's HTML sniffing of the first
+bytes and redirect re-extraction are not ported.
+
 ## Postprocessor messages
 
 Processed downloads print upstream's postprocessor lines in chain order after the

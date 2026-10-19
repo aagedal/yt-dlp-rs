@@ -2031,6 +2031,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             return Ok(());
                         }
                     }
+                    // Upstream `_catch_unsafe_extension_error` around the
+                    // download's `replace_extension` calls.
+                    if let Some(ext) = std::iter::once(&info.ext)
+                        .chain(info.requested_formats.iter().map(|format| &format.ext))
+                        .find(|ext| !yt_dlp_rs::output::allowed_extension(ext))
+                    {
+                        return Err(format!(
+                            "The extracted extension ({}) is unusual and will be skipped for safety reasons. If you believe this is an error, please report it",
+                            yt_dlp_rs::batch::py_repr(ext)
+                        )
+                        .into());
+                    }
                     if !info.requested_formats.is_empty() && !downloader.has_ffmpeg() {
                         let message = "You have requested merging of multiple formats but ffmpeg is not installed";
                         if error_mode == ErrorMode::Abort {
