@@ -1,4 +1,5 @@
-//! Sequential, all-or-error assembly of saved, finite fragment plans.
+//! Sequential assembly of saved, finite fragment plans: all-or-error by
+//! default, or skipping unavailable fragments like upstream when enabled.
 use crate::{DownloadOptions, DownloadPhase, DownloadProgress, Error, Fragment, Result, VideoInfo};
 use reqwest::{
     blocking::{Client, Response},
@@ -127,13 +128,13 @@ pub(crate) fn download(
     for (index, fragment) in info.fragments.iter().enumerate() {
         reporter.index = index as u32 + 1;
         let prefix = stored;
-        for attempt in 0..=options.retries {
+        for attempt in 0..=options.fragment_retries {
             temporary.as_file_mut().set_len(prefix)?;
             temporary.as_file_mut().seek(SeekFrom::Start(prefix))?;
             stored = prefix;
-            reporter.attempt = u16::from(attempt) + 1;
+            reporter.attempt = u16::try_from(attempt.saturating_add(1)).unwrap_or(u16::MAX);
             reporter.report(DownloadPhase::Requesting, stored)?;
-            match fetch(
+            let outcome = fetch(
                 client,
                 info,
                 fragment,
@@ -141,24 +142,59 @@ pub(crate) fn download(
                 temporary.as_file_mut(),
                 &mut stored,
                 &mut reporter,
-            ) {
+            );
+            let failure = match outcome {
                 Ok(modified) => {
                     filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
                     break;
                 }
-                Err(Failure {
-                    error: _,
-                    retry: Some(delay),
-                }) if attempt < options.retries => {
-                    // Discard every byte from the failed fragment, including bytes
-                    // reported to observers, before waiting or starting another GET.
-                    temporary.as_file_mut().set_len(prefix)?;
-                    temporary.as_file_mut().seek(SeekFrom::Start(prefix))?;
-                    stored = prefix;
-                    reporter.wait(crate::retry::delay(attempt, delay), stored)?;
-                }
-                Err(failure) => return Err(failure.error),
+                Err(failure) => failure,
+            };
+            // Discard every byte from the failed fragment, including bytes
+            // reported to observers, before waiting, retrying or skipping.
+            temporary.as_file_mut().set_len(prefix)?;
+            temporary.as_file_mut().seek(SeekFrom::Start(prefix))?;
+            stored = prefix;
+            // Upstream retries every HTTP status error for fragments when
+            // unavailable fragments may be skipped.
+            let retry = failure.retry.or_else(|| {
+                (options.skip_unavailable_fragments.is_some()
+                    && matches!(&failure.error, Error::Http(source) if source.status().is_some()))
+                .then_some(Duration::ZERO)
+            });
+            if let Some(retry_after) = retry
+                && attempt < options.fragment_retries
+            {
+                let delay = crate::retry::announce_retry(
+                    &failure.error,
+                    attempt,
+                    options.fragment_retries,
+                    Some(index as u32 + 1),
+                    options.retry_sleep.fragment,
+                )
+                .map_or_else(
+                    || crate::retry::delay(attempt, retry_after),
+                    |delay| delay.max(retry_after),
+                );
+                reporter.wait(delay, stored)?;
+                continue;
             }
+            // Upstream `skip_unavailable_fragments`, never for the first one.
+            if options.skip_unavailable_fragments == Some(true)
+                && index > 0
+                && !matches!(failure.error, Error::DownloadCancelled | Error::Io(_))
+            {
+                crate::screen::screen(&format!(
+                    "[download] fragment not found; Skipping fragment {} ...",
+                    index + 1
+                ));
+                break;
+            }
+            return Err(if retry.is_some() {
+                crate::retry::exhausted(failure.error, options.fragment_retries)
+            } else {
+                failure.error
+            });
         }
     }
     temporary.flush()?;

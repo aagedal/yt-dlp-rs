@@ -254,9 +254,32 @@ struct Args {
     /// Format ID or indexed/grouped selector with filters, + pairs and / fallbacks
     #[arg(short = 'f', long = "format")]
     format: Option<String>,
-    /// Retry transient download failures this many times (0 disables retries)
-    #[arg(long, default_value_t = 3)]
-    retries: u8,
+    /// Number of retries (default is 10), or "infinite"
+    #[arg(
+        short = 'R',
+        long,
+        default_value = "10",
+        value_name = "RETRIES",
+        allow_hyphen_values = true
+    )]
+    retries: String,
+    /// Number of retries for a fragment (default is 10), or "infinite" (DASH and hlsnative)
+    #[arg(
+        long,
+        default_value = "10",
+        value_name = "RETRIES",
+        allow_hyphen_values = true
+    )]
+    fragment_retries: String,
+    /// Time to sleep between retries, optionally prefixed by http (default) or fragment: a number, linear=START[:END[:STEP=1]] or exp=START[:END[:BASE=2]]
+    #[arg(long, value_name = "[TYPE:]EXPR", allow_hyphen_values = true)]
+    retry_sleep: Vec<String>,
+    /// Skip unavailable fragments for DASH and hlsnative downloads (default)
+    #[arg(long, alias = "no-abort-on-unavailable-fragments", overrides_with_all = ["skip_unavailable_fragments", "abort_on_unavailable_fragments"])]
+    skip_unavailable_fragments: bool,
+    /// Abort download if a fragment is unavailable
+    #[arg(long, alias = "no-skip-unavailable-fragments", overrides_with_all = ["skip_unavailable_fragments", "abort_on_unavailable_fragments"])]
+    abort_on_unavailable_fragments: bool,
     /// Retry the entire extraction after transient network failures (0 disables retries)
     #[arg(long, default_value_t = 0)]
     extractor_retries: u8,
@@ -1208,6 +1231,67 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     if let Some(seconds) = args.sleep_requests {
         yt_dlp_rs::screen::set_sleep_requests(seconds);
     }
+    // Upstream `parse_retries` and `parse_sleep_func`.
+    let parse_retries = |name: &str, value: &str| -> Result<u32, UsageError> {
+        let text = yt_dlp_rs::batch::py_strip(value);
+        if matches!(text, "inf" | "infinite") {
+            return Ok(u32::MAX);
+        }
+        let digits = text.strip_prefix('+').unwrap_or(text);
+        let negative = digits.starts_with('-');
+        let magnitude = digits.trim_start_matches('-');
+        if magnitude.is_empty()
+            || digits.matches('-').count() > 1
+            || !magnitude.bytes().all(|b| b.is_ascii_digit())
+        {
+            return Err(usage(format!(
+                "invalid {name} retry count \"{value}\" given"
+            )));
+        }
+        if negative && magnitude.bytes().any(|b| b != b'0') {
+            return Err(usage(format!(
+                "{name} retry count \"{}\" must be positive or 0",
+                text.trim_start_matches('+')
+            )));
+        }
+        Ok(magnitude
+            .parse::<u64>()
+            .map_or(u32::MAX - 1, |n| n.min(u64::from(u32::MAX - 1)) as u32))
+    };
+    let retries = parse_retries("download", &args.retries)?;
+    let fragment_retries = parse_retries("fragment", &args.fragment_retries)?;
+    let mut retry_sleep = yt_dlp_rs::RetrySleep::default();
+    for spec in &args.retry_sleep {
+        let (key, expression) = match spec.split_once(':') {
+            Some((key, rest))
+                if ["http", "fragment", "file_access", "extractor"]
+                    .iter()
+                    .any(|name| name.eq_ignore_ascii_case(key)) =>
+            {
+                (key.to_ascii_lowercase(), rest)
+            }
+            _ => ("http".to_owned(), spec.as_str()),
+        };
+        let parsed = if expression.is_empty() {
+            None
+        } else {
+            Some(
+                yt_dlp_rs::SleepExpression::parse(expression).ok_or_else(|| {
+                    usage(format!(
+                        "invalid {key} retry sleep expression {}",
+                        yt_dlp_rs::batch::py_repr(expression)
+                    ))
+                })?,
+            )
+        };
+        match key.as_str() {
+            "http" => retry_sleep.http = parsed,
+            "fragment" => retry_sleep.fragment = parsed,
+            // File access and extractor retries are not represented.
+            _ => {}
+        }
+    }
+    let skip_unavailable_fragments = Some(!args.abort_on_unavailable_fragments);
     // Upstream `continuedl` and `nopart` for whole-file media downloads.
     let part_files = if args.no_part {
         yt_dlp_rs::PartFiles::NoPart
@@ -1686,7 +1770,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     &subtitle,
                                     &subtitle_path,
                                     DownloadOptions {
-                                        retries: args.retries,
+                                        retries,
                                         update_time: args.mtime,
                                         ..Default::default()
                                     },
@@ -1732,7 +1816,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             templates.prepare(&info, Some("thumbnail"), &template_options)?,
                             thumbnail_mode == 2,
                             overwrites,
-                            args.retries,
+                            retries,
                         )?;
                     }
                     if let Some(conversion) = &thumbnail_conversion {
@@ -1865,12 +1949,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             &info,
                             &path,
                             DownloadOptions {
-                                retries: args.retries,
                                 min_filesize,
                                 max_filesize,
                                 rate_limit,
                                 update_time: args.mtime,
                                 part_files,
+                                retries,
+                                fragment_retries,
+                                retry_sleep,
+                                skip_unavailable_fragments,
                             },
                             &processors,
                             progress,
@@ -1898,12 +1985,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             &info,
                             &path,
                             DownloadOptions {
-                                retries: args.retries,
                                 min_filesize,
                                 max_filesize,
                                 rate_limit,
                                 update_time: args.mtime,
                                 part_files,
+                                retries,
+                                fragment_retries,
+                                retry_sleep,
+                                skip_unavailable_fragments,
                             },
                             progress,
                         )?;
@@ -2521,7 +2611,7 @@ fn write_thumbnails(
     base: Option<PathBuf>,
     write_all: bool,
     overwrites: Option<bool>,
-    retries: u8,
+    retries: u32,
 ) -> Result<Vec<(usize, PathBuf)>, Box<dyn std::error::Error>> {
     let thumbnails = &info.metadata.thumbnails;
     let mut on_disk = Vec::new();

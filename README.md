@@ -223,8 +223,10 @@ Supported today:
 - Bounded download retries for selected transient HTTP statuses,
   connection/timeouts, and interrupted bodies. Interrupted transfers can resume
   within the same invocation with a strong ETag, known length, and validated range.
-  `--retries N` sets additional
-  attempts (default 3, 0 disables, maximum 255). Transient HTTP failures honor
+  `-R/--retries` and `--fragment-retries` set additional attempts (default 10,
+  `infinite` allowed) with upstream's `Got error ... Retrying` messages,
+  `--retry-sleep` delays and `--skip-unavailable-fragments`/
+  `--abort-on-unavailable-fragments`. Transient HTTP failures honor
   a single `Retry-After` delay-seconds or preferred HTTP-date value, capped at
   60 seconds.
 - Upstream-style download progress lines on stderr (`--newline`, `--no-progress`,

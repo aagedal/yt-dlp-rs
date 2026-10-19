@@ -501,7 +501,7 @@ fn exhausted_partial_fragment_retries_remove_the_assembled_prefix() {
                 &server.whole(),
                 &output,
                 DownloadOptions {
-                    retries: 1,
+                    fragment_retries: 1,
                     ..Default::default()
                 }
             )

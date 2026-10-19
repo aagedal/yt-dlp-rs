@@ -414,17 +414,45 @@ fn cli_zero_retries_fails_once_and_continues_to_the_next_url() {
         std::fs::read(directory.path().join("success.mp4")).unwrap(),
         b"complete media"
     );
-    // Like upstream, the failed transfer keeps its part file for a later resume.
-    assert_eq!(
-        directory_names(directory.path()),
-        ["failed.mp4.part", "success.mp4"]
-    );
+    // Like upstream, a transfer that fails before receiving data leaves no part file.
+    assert_eq!(directory_names(directory.path()), ["success.mp4"]);
+}
+
+#[test]
+fn cli_retry_count_errors_match_upstream() {
+    for (args, message) in [
+        (
+            &["--retries", "x"][..],
+            "yt-dlp-rs: error: invalid download retry count \"x\" given",
+        ),
+        (
+            &["--fragment-retries", "-1"][..],
+            "yt-dlp-rs: error: fragment retry count \"-1\" must be positive or 0",
+        ),
+        (
+            &["--retry-sleep", "http:bogus"][..],
+            "yt-dlp-rs: error: invalid http retry sleep expression 'bogus'",
+        ),
+    ] {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(args)
+            .arg("http://127.0.0.1:1/unused.mp4")
+            .output()
+            .unwrap();
+        assert_eq!(output.status.code(), Some(2));
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert!(stderr.trim_end().ends_with(message), "{stderr}");
+    }
 }
 
 #[test]
 fn cli_rejects_retry_values_outside_bounded_integer_range() {
-    for option in ["--retries", "--extractor-retries"] {
-        for value in ["-1", "256", "infinity", "1.5"] {
+    for (option, values) in [
+        ("--retries", &["-1", "infinity", "1.5", "x"][..]),
+        ("--fragment-retries", &["-1", "infinity", "1.5"][..]),
+        ("--extractor-retries", &["-1", "256", "infinity", "1.5"][..]),
+    ] {
+        for value in values {
             let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
                 .args([
                     &format!("{option}={value}"),
@@ -1429,7 +1457,7 @@ fn retry_after_respects_exhausted_budgets_and_permanent_statuses() {
                         &info,
                         directory.path().join("clip.mp4"),
                         DownloadOptions {
-                            retries,
+                            retries: retries.into(),
                             ..Default::default()
                         },
                     )

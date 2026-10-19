@@ -80,8 +80,18 @@ impl Reporter<'_> {
 /// Download retry policy, independent of `ExtractionOptions`.
 #[derive(Debug, Clone, Copy)]
 pub struct DownloadOptions {
-    /// Additional attempts after a transient failure, from zero to 255.
-    pub retries: u8,
+    /// Additional attempts after a transient failure (`u32::MAX` retries
+    /// indefinitely, like upstream `infinite`).
+    pub retries: u32,
+    /// Additional attempts for each fragment (`--fragment-retries`).
+    pub fragment_retries: u32,
+    /// `--retry-sleep` delays; without one, a short native backoff applies.
+    pub retry_sleep: crate::retry::RetrySleep,
+    /// Upstream fragment semantics: every HTTP status error is retried, and
+    /// with `Some(true)` (`--skip-unavailable-fragments`) a media fragment
+    /// whose retries are exhausted is skipped (the first never is). `None`
+    /// keeps all-or-error assembly retrying transient failures only.
+    pub skip_unavailable_fragments: Option<bool>,
     /// `--min-filesize`: abort a whole-file media transfer whose declared
     /// length is smaller (upstream HTTP downloader check).
     pub min_filesize: Option<u64>,
@@ -146,6 +156,9 @@ impl Default for DownloadOptions {
     fn default() -> Self {
         Self {
             retries: 3,
+            fragment_retries: 3,
+            retry_sleep: crate::retry::RetrySleep::default(),
+            skip_unavailable_fragments: None,
             min_filesize: None,
             max_filesize: None,
             rate_limit: None,
@@ -467,6 +480,7 @@ fn download_resource(
     };
     // A continued part file is first requested with a plain upstream Range.
     let mut continued = actual > 0;
+    let resumed = continued;
     let mut state = None;
     let mut last_modified = None;
     let mut reporter = Reporter {
@@ -475,7 +489,7 @@ fn download_resource(
         total: None,
     };
     for attempt in 0..=options.retries {
-        reporter.attempt = u16::from(attempt) + 1;
+        reporter.attempt = u16::try_from(attempt.saturating_add(1)).unwrap_or(u16::MAX);
         reporter.report(DownloadPhase::Requesting, actual)?;
         match download_attempt(
             client,
@@ -501,9 +515,33 @@ fn download_resource(
                 return Ok(actual);
             }
             Err(failure) if failure.retryable && attempt < options.retries => {
-                reporter.wait(crate::retry::delay(attempt, failure.retry_after), actual)?;
+                let delay = crate::retry::announce_retry(
+                    &failure.error,
+                    attempt,
+                    options.retries,
+                    None,
+                    options.retry_sleep.http,
+                )
+                .map_or_else(
+                    || crate::retry::delay(attempt, failure.retry_after),
+                    |delay| delay.max(failure.retry_after),
+                );
+                reporter.wait(delay, actual)?;
             }
-            Err(failure) => return Err(failure.error),
+            Err(failure) => {
+                // Upstream opens the part file only once data arrives.
+                if let Target::Part { path, .. } = &temporary
+                    && !resumed
+                    && fs::metadata(path).is_ok_and(|metadata| metadata.len() == 0)
+                {
+                    let _ = fs::remove_file(path);
+                }
+                return Err(if failure.retryable {
+                    crate::retry::exhausted(failure.error, options.retries)
+                } else {
+                    failure.error
+                });
+            }
         }
     }
     unreachable!("the final attempt returns success or an error")

@@ -101,7 +101,8 @@ remain outside the current result contract.
    as a successfully downloaded video.
    Bounded download retries are implemented for selected transient
    statuses, connection/timeouts, and body read/truncation failures, with CLI and
-   library configuration. Interrupted transfers resume within a download call using
+   library configuration (upstream `--retries`/`--fragment-retries` defaults,
+   messages, `--retry-sleep` and unavailable-fragment skipping). Interrupted transfers resume within a download call using
    strong ETags, known lengths, and strictly validated ranges, with whole-file
    fallback when validators are unavailable or the server returns a full response.
    Opt-in whole-extraction retries cover transient page/source HTTP failures and

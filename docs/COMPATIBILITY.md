@@ -58,7 +58,10 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--embed-thumbnail`, `--no-embed-thumbnail` | Upstream `EmbedThumbnailPP` as the final stage after metadata: implies `--write-thumbnail` and deletes the written file after embedding unless it was requested explicitly; best on-disk thumbnail, WebP fixup, PNG conversion outside mkv/mka; mp3 ID3v2.3 cover, mkv/mka `-attach` with mimetype/filename (replacing an existing same-mimetype attachment), mp4/m4a/m4v/mov FFmpeg `attached_pic` fallback (mutagen/AtomicParsley are not used); ogg/opus/flac and other containers are explicit errors; requires `--ffmpeg-location` and ffprobe |
 | `--write-playlist-metafiles`, `--no-write-playlist-metafiles` | Enable (default) or disable playlist info JSON/description files |
 | `--output-na-placeholder TEXT` | Missing/failed numeric conversion placeholder, default `NA`; per-field defaults override it |
-| `--retries` | Additional download attempts, integer 0–255, default 3; independent of extraction retries; no `infinite` value |
+| `-R`, `--retries RETRIES` | Additional whole-file download attempts, default 10 like upstream; a non-negative integer or `inf`/`infinite`, with upstream's `parse_retries` usage errors; independent of extraction retries. Each retry prints upstream's `[download] Got error: TEXT. Retrying (N/M)...` line (HTTP statuses as `HTTP Error CODE: Reason`), and the final error reads `[download] Got error: TEXT. Giving up after M retries`. Only the native transient failures listed under [Download retries](#download-retries) are retried |
+| `--fragment-retries RETRIES` | Additional attempts per HLS/DASH fragment, default 10, same values and messages with `Retrying fragment N` |
+| `--retry-sleep [TYPE:]EXPR` | Upstream `parse_sleep_func` delays for `http` (default type) and `fragment` retries: a number, `linear=START[:END[:STEP]]` or `exp=START[:END[:BASE]]`, announced with `Sleeping S.SS seconds ...`; invalid expressions fail with upstream's usage error. A `Retry-After` hint is still honored as a minimum. Without an expression the short native backoff is used instead of upstream's immediate retry. `extractor` and `file_access` types are accepted but unused |
+| `--skip-unavailable-fragments`, `--no-abort-on-unavailable-fragments`, `--abort-on-unavailable-fragments`, `--no-skip-unavailable-fragments` | Upstream fragment semantics from the CLI: every HTTP status error is retried for fragments, and with skipping (the default) a media fragment whose retries are exhausted is left out with `[download] fragment not found; Skipping fragment N ...` (never the first fragment). Aborting fails the download with the Giving-up error. The library default (`skip_unavailable_fragments: None`) keeps all-or-error assembly with transient-only retries |
 | `--socket-timeout SECONDS` | Connect and per-operation timeout for every native client; 0 keeps native defaults (15 s connect, 300 s operations; upstream defaults to 20 s); negative/non-finite values fail before requests |
 | `--source-address IP`, `-4`/`--force-ipv4`, `-6`/`--force-ipv6` | Bind every native client to an IP address; `-4`/`-6` store `0.0.0.0`/`::` like upstream; last of the three wins |
 | `--no-check-certificates` | Accept invalid HTTPS certificates on every native client |
@@ -339,12 +342,15 @@ MIME checks identify supported responses; they do not verify media containers.
 
 ## Download retries
 
-The default download policy permits three additional attempts after HTTP 408,
+The library default download policy permits three additional attempts after HTTP 408,
 429, 500, 502, 503, or 504, connection/timeouts, response body read errors, or
 Content-Length mismatches. `--retries 0` disables retries; values through 255
-are accepted. The library exposes `DownloadOptions { retries }` through
+are accepted (the CLI default is 10, see `--retries`; `u32::MAX` retries
+indefinitely). The library exposes `DownloadOptions { retries, fragment_retries,
+retry_sleep, skip_unavailable_fragments }` through
 `YoutubeDl::download_with_options`; `download` uses the default policy.
-After the retry budget is exhausted, return the final attempt's error.
+After the retry budget is exhausted, return `Error::RetriesExhausted`, which
+wraps the final attempt's error with upstream's Giving-up text.
 
 After a body interruption, a retry can reuse bytes already written in the same
 private temporary file. This requires a known Content-Length and a valid strong
@@ -698,9 +704,10 @@ values, including initialization when needed. Each has a URL and optional
 Selection copies the chosen plan; a merge plan retains each child's fragments.
 Extraction snapshots these plans, and downloads do not refetch manifests.
 
-The fragment downloader retries each whole failed fragment using `--retries`,
-retains earlier complete fragments, and truncates the failed fragment before
-retrying. It never skips a failed segment. Exact ranges require matching 206,
+The fragment downloader retries each whole failed fragment using
+`--fragment-retries`, retains earlier complete fragments, and truncates the
+failed fragment before retrying. The library default never skips a failed
+segment; the CLI follows upstream's `--skip-unavailable-fragments` default. Exact ranges require matching 206,
 Content-Range, known resource bounds, validated length and identity encoding;
 ignored ranges, unsolicited partials, HTML/manifests and empty fragments fail.
 Private temporary output is removed on errors/cancellation; final publication

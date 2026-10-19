@@ -51,6 +51,7 @@ pub use match_filter::{EntrySelection, MatchFilters, MatchOutcome};
 pub use output::{render_automatic_captions, render_subtitles};
 pub use playlist::{PlaylistCounts, PlaylistSelection};
 pub use postprocess::{PostprocessOptions, ProcessedDownload};
+pub use retry::{RetrySleep, SleepExpression};
 pub use subtitle_convert::{ConvertedSubtitle, SubtitleConversion};
 pub use subtitles::{
     RequestedSubtitles, SubtitleFormat, SubtitleMap, SubtitleOptions, SubtitleSelection, Subtitles,
@@ -317,7 +318,7 @@ impl YoutubeDl {
                     if attempt == options.retries {
                         return Err(error);
                     }
-                    retry::backoff(attempt, delay);
+                    retry::backoff(u32::from(attempt), delay);
                 }
             }
         }

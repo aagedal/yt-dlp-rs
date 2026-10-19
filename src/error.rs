@@ -2,6 +2,13 @@ use std::path::PathBuf;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// Retries were exhausted (upstream `RetryManager.report_retry` text).
+    #[error("[download] Got error: {text}. Giving up after {retries} retries")]
+    RetriesExhausted {
+        text: String,
+        retries: u32,
+        source: Box<Error>,
+    },
     /// An `--exec` command rejected like upstream `UnsafeExecExpansionError`.
     #[error("{0}")]
     Exec(String),

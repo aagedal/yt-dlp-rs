@@ -1042,14 +1042,14 @@ fn cli_playlist_download_failures_continue_to_later_entries_and_urls() {
         std::fs::read(directory.path().join("clip.mp4")).unwrap(),
         b"media bytes"
     );
-    // Like upstream, the failed transfer keeps its part file for a later resume.
+    // Like upstream, a transfer that fails before receiving data leaves no part file.
     assert!(
-        directory
+        !directory
             .path()
             .join("playlist-changing-1.mp4.part")
             .exists()
     );
-    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 3);
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 2);
 }
 
 #[test]

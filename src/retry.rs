@@ -64,7 +64,7 @@ pub(crate) fn failure_delay(error: &Error) -> Option<Duration> {
     }
 }
 
-pub(crate) fn delay(attempt: u8, retry_after: Duration) -> Duration {
+pub(crate) fn delay(attempt: u32, retry_after: Duration) -> Duration {
     let delay_ms = (100_u64 << attempt.min(4)).min(1000);
     Duration::from_millis(delay_ms).max(retry_after.min(MAX_RETRY_AFTER))
 }
@@ -77,7 +77,126 @@ pub(crate) fn transient_request(error: &reqwest::Error) -> bool {
             .is_some_and(|status| matches!(status.as_u16(), 408 | 429 | 500 | 502 | 503 | 504))
 }
 
-pub(crate) fn backoff(attempt: u8, retry_after: Duration) {
+/// Upstream `--retry-sleep` expression (`parse_sleep_func`): a number,
+/// `linear=START[:END[:STEP]]` or `exp=START[:END[:BASE]]`.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct SleepExpression {
+    exponential: bool,
+    start: f64,
+    limit: f64,
+    step: f64,
+}
+
+impl SleepExpression {
+    /// Parse a stripped expression; `None` when it does not match upstream's
+    /// pattern.
+    pub fn parse(text: &str) -> Option<Self> {
+        static PATTERN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            let number = r"([0-9]+(?:\.[0-9]+)?)";
+            regex::Regex::new(&format!(
+                r"^(?:(linear|exp)=)?{number}(?::{number}?)?(?::{number})?$"
+            ))
+            .unwrap()
+        });
+        let found = PATTERN.captures(crate::batch::py_strip(text))?;
+        let number = |index| {
+            found
+                .get(index)
+                .and_then(|m| m.as_str().parse::<f64>().ok())
+        };
+        let op = found.get(1).map(|m| m.as_str());
+        let start = number(2)?;
+        let limit = number(3);
+        let step = number(4);
+        let exponential = op == Some("exp");
+        let step = match (exponential, step) {
+            (_, Some(step)) => step,
+            (true, None) => 2.0,
+            (false, None) if op.is_some() || limit.is_some() => start,
+            (false, None) => 0.0,
+        };
+        Some(Self {
+            exponential,
+            start,
+            limit: limit.unwrap_or(f64::INFINITY),
+            step,
+        })
+    }
+
+    /// The delay before retry `n` (zero-based).
+    pub fn delay(&self, n: u32) -> f64 {
+        let value = if self.exponential {
+            self.start * self.step.powf(f64::from(n))
+        } else {
+            self.start + self.step * f64::from(n)
+        };
+        value.min(self.limit)
+    }
+}
+
+/// Upstream `--retry-sleep` functions for download retries.
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub struct RetrySleep {
+    pub http: Option<SleepExpression>,
+    pub fragment: Option<SleepExpression>,
+}
+
+/// `RetryManager.report_retry` for a retry: the `Got error` line, then the
+/// configured sleep (announced like upstream) or the native backoff.
+pub(crate) fn announce_retry(
+    error: &Error,
+    attempt: u32,
+    retries: u32,
+    fragment: Option<u32>,
+    sleep: Option<SleepExpression>,
+) -> Option<Duration> {
+    let retries_text = if retries == u32::MAX {
+        "inf".to_owned()
+    } else {
+        retries.to_string()
+    };
+    let suffix = fragment.map_or_else(String::new, |index| format!(" fragment {index}"));
+    crate::screen::screen(&format!(
+        "[download] Got error: {}. Retrying{suffix} ({}/{retries_text})...",
+        upstream_error_text(error),
+        attempt + 1
+    ));
+    let delay = sleep?.delay(attempt);
+    if delay > 0.0 {
+        crate::screen::screen(&format!("Sleeping {delay:.2} seconds ..."));
+    }
+    Some(Duration::from_secs_f64(delay.clamp(0.0, 86_400.0)))
+}
+
+/// The final error after `retries` retries (unchanged without retries).
+pub(crate) fn exhausted(error: Error, retries: u32) -> Error {
+    if retries == 0 {
+        return error;
+    }
+    Error::RetriesExhausted {
+        text: upstream_error_text(&error),
+        retries,
+        source: Box::new(error),
+    }
+}
+
+/// Upstream-style error text: `HTTP Error CODE: Reason` for HTTP statuses.
+pub(crate) fn upstream_error_text(error: &Error) -> String {
+    let status = match error {
+        Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
+        _ => None,
+    };
+    match status {
+        Some(status) => format!(
+            "HTTP Error {}: {}",
+            status.as_u16(),
+            status.canonical_reason().unwrap_or("")
+        ),
+        None => error.to_string(),
+    }
+}
+
+pub(crate) fn backoff(attempt: u32, retry_after: Duration) {
     // Bounded exponential backoff: 100, 200, 400, 800, then 1000 ms.
     std::thread::sleep(delay(attempt, retry_after));
 }
