@@ -17,6 +17,7 @@ pub mod extractor;
 mod ffmpeg_fd;
 mod filetime;
 mod fixup;
+pub mod format_select;
 pub mod format_sort;
 mod fragment;
 mod hls;
@@ -35,7 +36,6 @@ pub mod pp_args;
 mod retry;
 pub mod screen;
 pub mod sections;
-mod selector;
 pub mod sponsorblock;
 mod subtitle_convert;
 mod subtitles;
@@ -81,9 +81,12 @@ use std::{
 };
 use url::Url;
 
-/// Validate the supported selector grammar without extraction or availability checks.
+/// Upstream `build_format_selector` at startup: syntax and filter errors
+/// (as `Error::Reported` with upstream's text) before any extraction.
 pub fn validate_format_selector(expression: &str) -> Result<()> {
-    selector::parse(expression).map(|_| ())
+    format_select::parse(expression)
+        .map(|_| ())
+        .map_err(|error| Error::Reported(error.0))
 }
 
 /// Whole-extraction retry policy, independent of download retries.
@@ -1164,18 +1167,28 @@ impl YoutubeDl {
     }
 
     /// Select formats for one video or playlist entry (upstream
-    /// `process_video_result`), leaving it unchanged on failure.
+    /// `process_video_result`), leaving it unchanged on failure; with
+    /// several selected formats (`,`, `all`), the first is applied.
     pub fn select_video(&self, info: &mut VideoInfo, format: Option<&str>) -> Result<()> {
+        let mut selected = self.select_videos(info, format)?;
+        *info = selected.remove(0);
+        Ok(())
+    }
+
+    /// Upstream `formats_to_download`: one result per selected format, each
+    /// downloaded on its own by `process_info`.
+    pub fn select_videos(&self, info: &VideoInfo, format: Option<&str>) -> Result<Vec<VideoInfo>> {
         if format.is_none() && self.prefer_best {
             screen::debug("Default format spec: best/bestvideo+bestaudio");
         }
         let format = format.or(self.prefer_best.then_some("best/bestvideo+bestaudio"));
+        let options = format_select::Options {
+            merge_output_format: self.merge_output_format.clone(),
+            prefer_free: self.format_sort.prefer_free,
+            ..Default::default()
+        };
         if self.check_formats != CheckFormats::Selected {
-            return info.select_format_with_merge(
-                format,
-                self.ffmpeg.is_some(),
-                self.merge_output_format.as_deref(),
-            );
+            return info.select_formats(format, self.ffmpeg.is_some(), &options);
         }
         // Upstream `_check_formats` for `selected`: each candidate is tested
         // once, in preference order, as selection reaches it.
@@ -1196,11 +1209,7 @@ impl YoutubeDl {
             })
         });
         info::with_format_check(check, || {
-            info.select_format_with_merge(
-                format,
-                self.ffmpeg.is_some(),
-                self.merge_output_format.as_deref(),
-            )
+            info.select_formats(format, self.ffmpeg.is_some(), &options)
         })
     }
 

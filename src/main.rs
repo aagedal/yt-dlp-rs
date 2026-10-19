@@ -2818,9 +2818,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .as_mut()
             .and_then(|value| value.get_mut("entries"))
             .map(serde_json::Value::take);
-        // Upstream's playlist dict for the `playlist` stage, and each entry's
-        // downloaded file (`requested_downloads[0].filepath`).
-
+        // Each entry's downloaded file (`requested_downloads[0].filepath`).
         let entry_files = std::cell::RefCell::new(vec![None::<PathBuf>; extracted.entry_count()]);
         let mut url_cancelled = false;
         // Upstream `__process_playlist` `failures`.
@@ -2904,9 +2902,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         &yt_dlp_rs::output::render_formats_listing(&info, !args.list_formats_old),
                     )?;
                 }
-                // Upstream `process_video_result` format selection.
+                // Upstream `process_video_result` format selection; the info
+                // dict is updated with the last selected format.
+                let mut selections = Vec::new();
                 if !list_only {
-                    downloader.select_video(&mut info, format).map_err(
+                    selections = downloader.select_videos(&info, format).map_err(
                         |error| -> Box<dyn std::error::Error> {
                             match error {
                                 yt_dlp_rs::Error::FormatSelection(_) => {
@@ -2920,6 +2920,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                         },
                     )?;
+                    info = selections.last().cloned().expect("a nonempty selection");
+                }
+                if selections.is_empty() {
+                    selections.push(info.clone());
                 }
                 if let Some(entry) = json_entries
                     .as_mut()
@@ -2935,22 +2939,32 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     return Ok(());
                 }
                 // Upstream `process_video_result` after format selection.
-                let format_ids = if info.requested_formats.is_empty() {
-                    info.format_id.clone().unwrap_or_else(|| info.ext.clone())
-                } else {
-                    info.requested_formats
-                        .iter()
-                        .map(|format| format.format_id.as_str())
-                        .collect::<Vec<_>>()
-                        .join("+")
-                };
+                let format_ids: Vec<String> = selections
+                    .iter()
+                    .map(|info| {
+                        if info.requested_formats.is_empty() {
+                            info.format_id.clone().unwrap_or_else(|| info.ext.clone())
+                        } else {
+                            info.requested_formats
+                                .iter()
+                                .map(|format| format.format_id.as_str())
+                                .collect::<Vec<_>>()
+                                .join("+")
+                        }
+                    })
+                    .collect();
                 // Upstream `download_ranges`: every requested section is
                 // processed as its own info dict (none when no chapter matches).
                 let requested = download_sections.requested(&info);
                 if requested.is_empty() {
                     return Ok(());
                 }
-                screen!("[info] {}: Downloading 1 format(s): {format_ids}", info.id);
+                screen!(
+                    "[info] {}: Downloading {} format(s): {}",
+                    info.id,
+                    format_ids.len(),
+                    format_ids.join(", ")
+                );
                 if requested != [None] {
                     screen!(
                         "[info] {}: Downloading {} time ranges: {}",
@@ -2959,9 +2973,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         yt_dlp_rs::sections::describe(&requested)
                     );
                 }
-                let base = info.clone();
-                for section in &requested {
-                    let mut info = yt_dlp_rs::sections::apply(&base, section.as_ref());
+                // `itertools.product(formats_to_download, requested_ranges)`.
+                let runs: Vec<_> = selections
+                    .iter()
+                    .flat_map(|selected| requested.iter().map(move |section| (selected, section)))
+                    .collect();
+                for (selected, section) in runs {
+                    let mut info = yt_dlp_rs::sections::apply(selected, section.as_ref());
                     (|| -> Result<(), Box<dyn std::error::Error>> {
                         // Upstream `process_info` rechecks complete metadata before counting.
                         if !match_filters.is_empty() {

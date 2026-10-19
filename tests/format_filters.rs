@@ -303,17 +303,18 @@ fn quoted_filter_delimiters_do_not_split_hls_pair_or_fallback_expression() {
 #[test]
 fn invalid_predicates_fail_even_after_a_valid_fallback_branch() {
     let server = Server::new();
+    // Upstream builds every filter at startup; unknown fields only match
+    // nothing, and evaluation errors need a reached, mistyped value.
     for selector in [
-        "best/best[unknown=1]",
         "best/best[height<=]",
-        "best/best[height~=720]",
+        "best/best[height>abc]",
         "best/best[ext='mp4]",
     ] {
         let output = server.cli("/formats.html", &["-j", "-s", "-f", selector]);
         assert!(!output.status.success(), "{selector}");
         assert!(output.stdout.is_empty(), "{selector}");
         assert!(
-            String::from_utf8_lossy(&output.stderr).contains("format selection"),
+            String::from_utf8_lossy(&output.stderr).contains("Invalid "),
             "{}",
             String::from_utf8_lossy(&output.stderr)
         );
@@ -474,22 +475,16 @@ fn malformed_grouped_later_branches_fail_before_json_or_downloads() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
     let target = directory.path().join("never.mp4");
-    for selector in [
-        "b/(w[ext=mp4]",
-        "b/()",
-        "b/(w/)",
-        "b/(w)[unknown=1]",
-        "b/(b+b+b)",
-        "b/(b+(b+b))",
-        "b/(b,w)",
-    ] {
+    // Unbalanced groups fail tokenization; upstream accepts `()`, `(w/)`,
+    // multi-stream merges and `,` inside groups.
+    for selector in ["b/(w[ext=mp4]", "b/(w", "b/)(", "b/w["] {
         let output = server.cli("/formats.html", &["-j", "-s", "-f", selector]);
         assert!(!output.status.success(), "{selector}");
         assert!(output.stdout.is_empty(), "{selector}");
     }
     let output = server.cli(
         "/formats.html",
-        &["-f", "b/(w)[unknown=1]", "-o", target.to_str().unwrap()],
+        &["-f", "b/(w[ext=mp4]", "-o", target.to_str().unwrap()],
     );
     assert!(!output.status.success());
     assert!(!target.exists());

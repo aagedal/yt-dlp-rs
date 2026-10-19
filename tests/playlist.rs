@@ -210,7 +210,7 @@ fn invalid_playlist_options_fail_preflight_even_when_items_override_the_range() 
         vec!["-j", "-I", "x"],
         vec!["-j", "--playlist-start=-1"],
         vec!["-j", "--playlist-start", "0"],
-        vec!["-j", "-I", "99", "-f", "best[unknown=1]"],
+        vec!["-j", "-I", "99", "-f", "best[height>abc]"],
         vec![
             "-j",
             "-I",

@@ -117,3 +117,39 @@ fn discontinuities_download_across_or_split_into_sections() {
         section
     );
 }
+
+#[test]
+fn several_selected_formats_download_one_after_another() {
+    let url = format!("{}/m.m3u8", serve());
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ignore-config", "--no-progress", "--hls-use-mpegts"])
+        .args([
+            "--hls-split-discontinuity",
+            "-f",
+            "2,0",
+            "-o",
+            "s%(format_index)s.%(ext)s",
+        ])
+        .arg(&url)
+        .current_dir(directory.path())
+        .env("PATH", "")
+        .output()
+        .unwrap();
+    let stdout = stdout(&output);
+    assert!(
+        stdout.contains("[info] m: Downloading 2 format(s): 2, 0\n"),
+        "{stdout}"
+    );
+    assert!(
+        stdout.find("Destination: s2.mp4").unwrap() < stdout.find("Destination: s0.mp4").unwrap()
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("s2.mp4")).unwrap(),
+        segment("d.ts")
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("s0.mp4")).unwrap(),
+        segment("a.ts")
+    );
+}

@@ -19,7 +19,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-s`, `--simulate`, `--no-simulate` | Extract metadata, print screen lines to stdout and diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
 | `-O`, `--print [WHEN:]TEMPLATE` | Print a field list or unsanitized output template per selected video at the `video`, `before_dl`, `post_process`, `after_move` or `after_video` stage, or once per playlist at `playlist` (after its entries, over the playlist dict: `id`, `title`, `playlist_count`, `requested_entries` and the extracted entries); implies quiet, and simulation unless a later stage prints; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-thumbnail`, `--get-description`, `--get-filename`, `--get-duration`, `--get-format` | Hidden upstream aliases printing, after `--print` lines and in upstream `__forced_printings` order, title, ID, selected URLs, thumbnail, description, prepared filename, `formatSeconds` duration and `format`; thumbnail, description and duration print only when present; imply quiet simulation |
-| `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; format IDs follow upstream for direct, HLS and DASH results (see below); exactly `-f best` or `-f mp4` prints upstream's common-mistake warning, ordered with the other `validate_options` conflict warnings |
+| `-f`, `--format` | A port of upstream `build_format_selector`: atoms, ranks, extensions, IDs, `all`/`mergeall`, filters, groups, `/`, `+` and `,`; see [Format selection](#format-selection); format IDs follow upstream for direct, HLS and DASH results (see below); exactly `-f best` or `-f mp4` prints upstream's common-mistake warning, ordered with the other `validate_options` conflict warnings |
 | `-o`, `--output [TYPES:]TEMPLATE` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; upstream metadata sanitization; typed `subtitle`/`infojson`/`pl_infojson` templates (empty skips that file), `~`/`$VAR` template expansion; no overwrite; see [output paths](../upstream/notes/output-paths.md) |
 | `-P`, `--paths [TYPES:]PATH` | `home` (default) and output-type directories joined like upstream `get_output_path`; absolute templates ignore them with a warning; `temp:` is rejected |
 | `--list-subs` | Upstream `render_subtitles_table` (`Language Name Formats`, formats in reverse order, `ID has no subtitles`); list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
@@ -800,13 +800,10 @@ takes candidates in the sorted `formats` order described under
 [Format sorting](#format-sorting): `best` is the last match and `worst` the first.
 Literal IDs also select isolated streams.
 
-A `+` expression combines the first result of each side like upstream `_merge`
-(a second stream repeating the first's video or audio is dropped), and so needs
-one video-only and one audio-only source; it does not match rendition groups or
-check container support, which is validated when the merge is downloaded.
-`/` tries alternatives in order, for example `bestvideo+bestaudio/best`.
-Every branch must have valid bounded syntax. Selection errors leave metadata
-unchanged, including across playlists. Without an explicit selector the default
+See [Format selection](#format-selection) for the selector itself. Downloads
+of a merge need one video-only and one audio-only stream; other merges (two
+videos after `_merge`'s deduplication, for example) are explicit download
+errors. Selection errors leave metadata unchanged, including across playlists. Without an explicit selector the default
 is upstream's `_default_format_spec`: `bestvideo*+bestaudio/best` with FFmpeg,
 otherwise `best/bestvideo+bestaudio`, warning `ffmpeg not found. The downloaded
 format may not be the best available. ...` when that picks something other than
@@ -1186,142 +1183,41 @@ fixture provenance and offline comparison exclusions. Saved fixtures establish
 this bounded extraction behavior, not current live-site availability.
 
 
-## Format predicates
+## Format selection
 
-Selector atoms and literal format IDs accept chained `[field operator value]`
-predicates before `+` pairing and `/` fallback. For example:
+`-f` is a port of upstream `build_format_selector` (`src/format_select.rs`):
+the spec is tokenized like Python's `tokenize` with upstream's digit-prefix
+workaround (whitespace between operands vanishes, `#` starts a comment,
+operators other than `/ + , ( ) [` join the surrounding names, unbalanced
+brackets or quotes give `Missing closing/opening brackets or parenthesis`),
+then parsed by `_parse_format_selection` with upstream's `Invalid format
+specification: NOTE` messages and caret (whose column, like upstream's,
+counts the 32-letter prefix before each digit run). Filters are compiled at
+startup by `_build_format_filter`: numeric `< <= > >= = !=` comparisons with
+`?`, `parse_filesize` units (`[abr>100k]` is upstream's 102400) and
+`Invalid value`/`Invalid filter specification` errors, and string `= ^= $= *=
+~=` operators with `!` negation and quoting; any field name is accepted and
+fields a format lacks match only with `?`. Evaluation follows
+`_build_selector_function`: `best`/`worst`/`b`/`w` with `video`/`audio`/`v`/`a`,
+`*` and `.N`, the audio/video/storyboard extension atoms (with the
+`incomplete_formats` and no-merged-format fallbacks), literal IDs, `all`,
+`mergeall`, `/` fallbacks, `+` merges over every pair of results, `( )` groups
+whose filters narrow their context, and `,` lists. Streams are classified by
+`vcodec`/`acodec` (`none`, or unknown counting as present) like upstream.
+`_merge` keeps the first video and the first audio stream (including
+upstream's skip after a dropped stream), builds `format_id`, `format`,
+`protocol`, `tbr` and the single video's/audio's fields, and picks the
+container with `get_compatible_ext` (`--merge-output-format`, or `webm`/`mkv`
+with `--prefer-free-formats`). Python type errors from mistyped comparisons
+(`'int' object has no attribute 'startswith'`, ...) are reported as errors.
+`--check-formats` tests candidates lazily in selection order. A result without
+formats is selected over itself, like `_get_formats`. Startup errors print
+`ERROR: MESSAGE` where upstream raises (a traceback), and `~=` uses the Rust
+regex dialect. Every saved spec of `tools/capture_format_selection.py` (1284
+spec/format-list cases including errors) matches pinned upstream.
 
-```sh
--f 'best[height<=720][ext=mp4]/best'
--f 'bestvideo[height<=1080]+bestaudio[abr>=128]/best'
--f 'best[filesize<10MiB]'
--f 'bestaudio[language^=en][format_note*="English / main"]'
-```
-
-Numeric fields are `width`, `height`, `filesize`, `tbr` and `abr`; bitrate values
-are kbps. Operators are `<`, `<=`, `>`, `>=`, `=`, `!=`. Nonnegative decimals and
-pinned upstream filesize-style decimal/binary unit suffixes are supported.
-Unit suffixes preserve upstream case-dependent multipliers and rounding; bare
-filesize comparisons retain exact integer/rational precision rather than casting
-large byte counts to floating point. Native large-integer guarantees are tested
-separately from upstream's floating-point thresholds.
-
-Text fields are `ext`, `format_id`, `language`, `format_note` and `audio_group`.
-Support equality `=`, prefix `^=`, suffix `$=`, substring `*=` and their negations
-`!=`, `!^=`, `!$=`, `!*=`. Quoted strings can contain spaces, brackets and selector
-delimiters; quote/backslash escapes follow the supported upstream string syntax.
-Comparisons are case-sensitive. Preserve upstream numeric-first equality parsing:
-unquoted numeric-looking text values compare as numbers against strings, so
-`[format_id=18]` does not match the string ID `18`; use `[format_id="18"]` for
-text equality. Quoted numeric values on numeric fields remain unsupported.
-Numeric and text operators may append `?` to
-include unknown values, such as `[height<=?720]`; unknown values otherwise fail,
-including negated predicates. Numeric fields cannot use text operators or vice
-versa. Unsupported fields fail explicitly rather than being treated as absent.
-
-All predicates are ANDed and applied before stream-kind fallback and native
-ranking. Literal IDs must also pass their predicates. Existing group matching
-still applies to automatic pairs; two literal IDs retain their explicit override.
-Direct results evaluate predicates against their single format (with no
-bitrate/language fields). Failed
-selection preserves the result, including all playlist entries. Every branch is
-parsed before selection, so a malformed later fallback cannot be hidden by an
-earlier successful branch. Selection still follows extraction of all alternatives;
-filters do not reduce extraction probes or manifest acquisition.
-
-The grammar is bounded to 8 KiB, 16 global fallback choices, 16 group levels,
-128 syntax nodes, two streams on any possible branch and 16 predicates per atom
-or group. Regex predicates, comma/all selections and other unsupported upstream
-modifiers remain errors. Predicate
-support does not imply full upstream selection/sorting parity. See
-[the source slice](../upstream/notes/format-filters.md) and the shared saved cases.
-
-
-## Grouped selector expressions
-
-Parentheses scope fallback and merge expressions, with `+` binding more tightly
-than `/`. Supported aliases combine `best`, `worst`, `b` or `w` with an optional
-`video`/`v` or `audio`/`a`: `b`, `bv`, `ba`, `w`, `wv`, `wa`, `bestv`, `worsta`
-and their long equivalents use the same native selectors. Bare filters imply
-`best`, so `[height<=720]` equals `best[height<=720]`.
-
-```sh
--f '(bv[height<=720]+ba)/b'
--f '(b/w)[ext=mp4]'
--f 'bv+(ba[language=en]/ba)'
-```
-
-A filter after a group narrows its input formats before evaluating the group's
-children. For example, `(bv+ba/b)[height<=720]` removes unknown-height audio before
-trying the pair, while `bv[height<=720]+ba` filters only video. Use `<=?` to retain
-unknown heights where intended. A group does not filter the combined output.
-
-Fallbacks retain their scope. If an inner fallback selects an available branch,
-a surrounding merge does not revisit later inner branches when the chosen source
-cannot form a supported pair. Put the fallback outside the full merge when that
-behavior is desired. Existing native compatible-group pair search still applies;
-literal ID provenance survives groups, preserving the deliberate override for
-two explicit IDs. Direct results evaluate grouped filters on known metadata and
-retain their absent format ID. Selection failures remain atomic.
-
-The entire expression is parsed before selection. Empty/unbalanced/adjacent
-groups, malformed later branches and any possible branch with more than two
-streams fail, even when an earlier branch is available. Comma/all selections
-and multistream merging remain outside the supported grammar. Extension names
-are selectors, not literal IDs (format IDs equal to another extension receive
-upstream's `f` prefix).
-
-The shared expression fixtures compare selected IDs against actual pinned
-`YoutubeDL.build_format_selector` with an explicitly ordered format list and
-context flags. No upstream sorter runs. They cover groups, precedence, aliases,
-bare/group filters and unavailable branches; they do not establish full ranking,
-codec/modifier, incomplete-format fallback, stream deduplication or container parity.
-Native pair/group policy remains documented separately. Source and command:
-
-```sh
-python3 tools/compare_selectors.py --upstream /path/to/yt-dlp
-```
-
-See [the source slice](../upstream/notes/selector-groups.md).
-
-
-## Indexed selector ranks
-
-Best/worst selectors and their aliases accept a positive one-based `.N` suffix:
-`best.2`, `worst.2`, `bv.2`, `ba.2` and their long forms. Apply atom and enclosing
-group predicates first, choose the represented stream kind, then select the Nth
-candidate in sorted order (from the end for `best`).
-
-```sh
--f 'bv.2[height<=1080]+ba.2/b'
--f '(b.3/b.2/b)[ext=mp4]'
-```
-
-A rank beyond the available matching formats is unavailable, so the enclosing
-fallback can try its next branch. Explicit indexing pins an atom to one candidate
-before native rendition-group/container validation. It does not silently move to
-a different ranked format to form a pair. Unindexed atoms retain the existing
-compatible-pair search policy; this is a native group-policy distinction outside
-the upstream comparison. An indexed selector remains a selector and cannot use
-the two-literal-ID group override.
-
-An implicit direct result has one represented source: `b.1` and `w.1` can match
-known metadata, while `.2` is unavailable and no format ID is invented. Rank
-syntax starts with ASCII 1–9 and continues with digits. Names such as `bv.0`,
-`bv.01`, `bv.x` and non-selector dotted IDs retain literal-ID meaning, matching
-the pinned alias regex rather than being reinterpreted as a rank.
-
-Indexes above the platform signed index maximum fail explicitly during complete
-expression parsing, including later branches; no integer wrapping, huge allocation
-or implicit best fallback occurs. Pinned upstream's oversized iterator errors and
-very-long-integer conversion fallback are not emulated. Group suffix ranks such
-as `(bv/ba).2`, stars, multiselection and full sorting remain unsupported.
-
-The saved expression comparison includes indexed aliases, filtered/grouped ranks,
-ordered pairs and unavailable ranks within the supported range. Native tests
-separately verify ties, direct metadata, dotted literal IDs, compatibility failure
-and oversized-index errors. See [the source slice](../upstream/notes/selector-index.md).
-
+Several selected formats (`,`, `all`) are downloaded one after another, each
+as its own video like upstream's `process_info` per format.
 
 ## Available format inventory
 
