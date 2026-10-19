@@ -245,3 +245,84 @@ fn unavailable_fragments_are_skipped_or_end_the_download() {
         }
     }
 }
+
+/// Upstream `FragmentFD` resume: an aborted download keeps `FILE.part` and
+/// `FILE.ytdl`, and `--continue` skips the fragments already written.
+#[test]
+fn interrupted_fragment_downloads_resume_from_the_ytdl_state() {
+    use std::sync::{
+        Arc,
+        atomic::{AtomicBool, AtomicUsize, Ordering},
+    };
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    let origin = format!("http://{}", listener.local_addr().unwrap());
+    let available = Arc::new(AtomicBool::new(false));
+    let first_requests = Arc::new(AtomicUsize::new(0));
+    let (serve_available, serve_first) = (available.clone(), first_requests.clone());
+    thread::spawn(move || {
+        for stream in listener.incoming() {
+            let Ok(mut stream) = stream else { continue };
+            let mut request = [0; 4096];
+            let read = stream.read(&mut request).unwrap_or(0);
+            let request = String::from_utf8_lossy(&request[..read]);
+            let path = request.split_whitespace().nth(1).unwrap_or("/").to_owned();
+            let (status, body): (&str, &[u8]) = match path.as_str() {
+                "/gap.m3u8" => ("200 OK", GAP.as_bytes()),
+                "/s0.ts" => {
+                    serve_first.fetch_add(1, Ordering::Relaxed);
+                    ("200 OK", b"first-")
+                }
+                "/s1.ts" if serve_available.load(Ordering::Relaxed) => ("200 OK", b"second-"),
+                "/s2.ts" => ("200 OK", b"third"),
+                _ => ("404 Not Found", b"missing"),
+            };
+            let mime = if path.ends_with(".m3u8") {
+                "application/vnd.apple.mpegurl"
+            } else {
+                "video/mp2t"
+            };
+            let _ = write!(
+                stream,
+                "HTTP/1.1 {status}\r\nContent-Type: {mime}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            );
+            let _ = stream.write_all(body);
+        }
+    });
+    let directory = tempfile::tempdir().unwrap();
+    let run = || {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "--no-progress", "-o", "o.%(ext)s"])
+            .args([
+                "--fragment-retries",
+                "0",
+                "--abort-on-unavailable-fragments",
+            ])
+            .arg(format!("{origin}/gap.m3u8"))
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    let output = run();
+    assert_eq!(output.status.code(), Some(1));
+    assert_eq!(
+        std::fs::read(directory.path().join("o.mp4.part")).unwrap(),
+        b"first-"
+    );
+    assert_eq!(
+        std::fs::read_to_string(directory.path().join("o.mp4.ytdl")).unwrap(),
+        r#"{"downloader": {"current_fragment": {"index": 1}, "extra_state": {}}}"#
+    );
+    let fetched = first_requests.load(Ordering::Relaxed);
+    available.store(true, Ordering::Relaxed);
+    let output = run();
+    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert_eq!(
+        std::fs::read(directory.path().join("o.mp4")).unwrap(),
+        b"first-second-third"
+    );
+    // The first fragment was not fetched again; the state is removed.
+    assert_eq!(first_requests.load(Ordering::Relaxed), fetched);
+    assert!(!directory.path().join("o.mp4.ytdl").exists());
+    assert!(!directory.path().join("o.mp4.part").exists());
+}

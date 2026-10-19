@@ -110,29 +110,100 @@ pub(crate) fn download(
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
     fs::create_dir_all(parent)?;
-    let mut temporary = tempfile::Builder::new()
-        .prefix(".yt-dlp-rs-fragments-")
-        .suffix(".part")
-        .tempfile_in(parent)?;
-    let mut stored = 0_u64;
+    // Upstream `_prepare_frag_download`: `FILE.part` (or the destination
+    // with --no-part) and `FILE.ytdl` resume state; the library default
+    // assembles a private temporary file instead.
+    let (upstream, resume) = match options.part_files {
+        crate::PartFiles::Private => (false, false),
+        crate::PartFiles::Part { resume } | crate::PartFiles::NoPart { resume } => (true, resume),
+    };
+    let part_path = {
+        let mut name = destination.as_os_str().to_owned();
+        if matches!(options.part_files, crate::PartFiles::Part { .. }) {
+            name.push(".part");
+        }
+        std::path::PathBuf::from(name)
+    };
+    let ytdl_path = {
+        let mut name = destination.as_os_str().to_owned();
+        name.push(".ytdl");
+        std::path::PathBuf::from(name)
+    };
+    // HlsFD keeps an (empty) `extra_state`; DashSegmentsFD has none.
+    let hls = info
+        .protocol
+        .as_deref()
+        .is_some_and(|protocol| protocol.starts_with("m3u8"));
+    let write_state = |index: usize| -> Result<()> {
+        let extra = if hls { ", \"extra_state\": {}" } else { "" };
+        fs::write(
+            &ytdl_path,
+            format!("{{\"downloader\": {{\"current_fragment\": {{\"index\": {index}}}{extra}}}}}"),
+        )?;
+        Ok(())
+    };
+    let mut start = 0_usize;
+    let mut private = None;
+    let mut named = None;
+    if upstream {
+        let mut resume_len = fs::metadata(&part_path).map_or(0, |metadata| metadata.len());
+        if resume && ytdl_path.is_file() {
+            let state: Option<usize> = fs::read_to_string(&ytdl_path)
+                .ok()
+                .and_then(|text| serde_json::from_str::<serde_json::Value>(&text).ok())
+                .and_then(|value| value["downloader"]["current_fragment"]["index"].as_u64())
+                .map(|index| index as usize);
+            let message = match state {
+                None => Some(".ytdl file is corrupt"),
+                Some(index) if index > 0 && resume_len == 0 => {
+                    Some("Inconsistent state of incomplete fragment download")
+                }
+                Some(index) => {
+                    start = index.min(info.fragments.len());
+                    None
+                }
+            };
+            if let Some(message) = message {
+                crate::screen::warning(&format!("{message}. Restarting from the beginning ..."));
+                start = 0;
+                resume_len = 0;
+                write_state(0)?;
+            }
+        } else {
+            if !resume {
+                resume_len = 0;
+            }
+            write_state(0)?;
+        }
+        let file = fs::OpenOptions::new()
+            .create(true)
+            .write(true)
+            .append(resume_len > 0)
+            .truncate(resume_len == 0)
+            .open(&part_path)?;
+        named = Some((file, resume_len));
+    } else {
+        private = Some(
+            tempfile::Builder::new()
+                .prefix(".yt-dlp-rs-fragments-")
+                .suffix(".part")
+                .tempfile_in(parent)?,
+        );
+    }
+    let resumed_bytes = named.as_ref().map_or(0, |(_, length)| *length);
+    let mut stored = resumed_bytes;
     let mut keys = HashMap::new();
     // Upstream keeps the latest nonzero fragment filetime.
     let mut filetime = None;
     let mut reporter = Reporter {
         callback,
         attempt: 1,
-        index: 1,
+        index: start as u32 + 1,
         count: info.fragments.len() as u32,
         rate_limit: options.rate_limit,
     };
     // Upstream `--keep-fragments`: `TMPFILENAME-FragN` beside the output.
-    let keep = keep_fragments.then(|| {
-        let mut name = destination.as_os_str().to_owned();
-        if !matches!(options.part_files, crate::PartFiles::NoPart { .. }) {
-            name.push(".part");
-        }
-        name
-    });
+    let keep = keep_fragments.then(|| part_path.as_os_str().to_owned());
     let keep_fragment = |index: usize, bytes: &mut dyn Read| -> Result<()> {
         if let Some(base) = &keep {
             let mut name = base.clone();
@@ -142,51 +213,85 @@ pub(crate) fn download(
         }
         Ok(())
     };
-    if concurrency > 1 && info.fragments.len() > 1 {
-        let (written, latest) = download_concurrent(
-            client,
-            info,
-            &options,
-            concurrency,
-            parent,
-            temporary.as_file_mut(),
-            &mut reporter,
-            &keep_fragment,
-        )?;
-        stored = written;
-        filetime = latest;
-    } else {
-        for (index, fragment) in info.fragments.iter().enumerate() {
-            reporter.index = index as u32 + 1;
-            let prefix = stored;
-            if let Some(modified) = fetch_with_retries(
+    // Completed fragments for `FILE.ytdl` (upstream counts downloads, not
+    // positions).
+    let mut completed = start;
+    let mut appended = |_: usize| -> Result<()> {
+        completed += 1;
+        if upstream {
+            write_state(completed)
+        } else {
+            Ok(())
+        }
+    };
+    let output_path = private.as_ref().map_or_else(
+        || part_path.clone(),
+        |temporary| temporary.path().to_path_buf(),
+    );
+    {
+        let output: &mut fs::File = match (&mut private, &mut named) {
+            (Some(temporary), _) => temporary.as_file_mut(),
+            (_, Some((file, _))) => file,
+            _ => unreachable!("one output file is open"),
+        };
+        if concurrency > 1 && info.fragments.len() - start > 1 {
+            let (written, latest) = download_concurrent(
                 client,
                 info,
-                index,
-                fragment,
                 &options,
-                &mut keys,
-                temporary.as_file_mut(),
-                prefix,
-                &mut stored,
+                concurrency,
+                start,
+                parent,
+                output,
                 &mut reporter,
-            )? {
-                filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
-                if keep.is_some() {
-                    let mut file = temporary.reopen()?;
-                    file.seek(SeekFrom::Start(prefix))?;
-                    keep_fragment(index, &mut file.take(stored - prefix))?;
+                &keep_fragment,
+                &mut appended,
+            )?;
+            stored += written;
+            filetime = latest;
+        } else {
+            for (index, fragment) in info.fragments.iter().enumerate().skip(start) {
+                reporter.index = index as u32 + 1;
+                let prefix = stored;
+                if let Some(modified) = fetch_with_retries(
+                    client,
+                    info,
+                    index,
+                    fragment,
+                    &options,
+                    &mut keys,
+                    output,
+                    prefix,
+                    &mut stored,
+                    &mut reporter,
+                )? {
+                    filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
+                    if keep.is_some() {
+                        let mut file = fs::File::open(&output_path)?;
+                        file.seek(SeekFrom::Start(prefix))?;
+                        keep_fragment(index, &mut file.take(stored - prefix))?;
+                    }
+                    appended(index)?;
                 }
             }
         }
-    }
-    temporary.flush()?;
-    temporary.as_file().sync_all()?;
-    if options.update_time {
-        crate::filetime::apply(temporary.as_file(), filetime);
+        output.flush()?;
+        output.sync_all()?;
+        if options.update_time {
+            crate::filetime::apply(output, filetime);
+        }
     }
     reporter.report(DownloadPhase::Publishing, stored)?;
-    crate::download::persist(temporary, destination, options.overwrite)?;
+    match private {
+        Some(temporary) => crate::download::persist(temporary, destination, options.overwrite)?,
+        None => {
+            // `_finish_frag_download`: drop the state, then rename the part file.
+            let _ = fs::remove_file(&ytdl_path);
+            if part_path != destination {
+                fs::rename(&part_path, destination)?;
+            }
+        }
+    }
     Ok(stored)
 }
 /// One fragment with `--fragment-retries` (`Ok(None)` when skipped as
@@ -291,22 +396,24 @@ fn download_concurrent(
     info: &VideoInfo,
     options: &DownloadOptions,
     concurrency: usize,
+    start: usize,
     parent: &Path,
     output: &mut fs::File,
     reporter: &mut Reporter<'_>,
     keep_fragment: &dyn Fn(usize, &mut dyn Read) -> Result<()>,
+    appended: &mut dyn FnMut(usize) -> Result<()>,
 ) -> Result<(u64, Option<i64>)> {
     use std::sync::{
         Arc,
         atomic::{AtomicBool, AtomicUsize, Ordering},
         mpsc,
     };
-    let next = Arc::new(AtomicUsize::new(0));
+    let next = Arc::new(AtomicUsize::new(start));
     let cancelled = Arc::new(AtomicBool::new(false));
     let (sender, receiver) = mpsc::channel::<Event>();
     let count = info.fragments.len();
     std::thread::scope(|scope| -> Result<(u64, Option<i64>)> {
-        for _ in 0..concurrency.min(count) {
+        for _ in 0..concurrency.min(count - start) {
             let (next, cancelled, sender) = (next.clone(), cancelled.clone(), sender.clone());
             scope.spawn(move || {
                 let mut keys = HashMap::new();
@@ -367,7 +474,7 @@ fn download_concurrent(
         let mut finished: HashMap<usize, Option<(tempfile::NamedTempFile, Option<String>)>> =
             HashMap::new();
         let mut in_flight: HashMap<usize, u64> = HashMap::new();
-        let (mut written, mut done, mut cursor) = (0_u64, 0_usize, 0_usize);
+        let (mut written, mut done, mut cursor) = (0_u64, start, start);
         let mut latest = None;
         let mut outcome = Ok(());
         for event in receiver {
@@ -394,6 +501,7 @@ fn download_concurrent(
                     let mut source = file.reopen()?;
                     written += std::io::copy(&mut source, output)?;
                     keep_fragment(cursor, &mut file.reopen()?)?;
+                    appended(cursor)?;
                     latest = crate::filetime::filetime(modified.as_deref()).or(latest);
                 }
                 cursor += 1;
