@@ -64,6 +64,23 @@ pub(crate) fn failure_delay(error: &Error) -> Option<Duration> {
     }
 }
 
+/// Upstream `HttpFD.establish_connection`: 5xx statuses and transport
+/// errors retry; other statuses fail at once.
+pub(crate) fn download_failure_delay(error: &Error) -> Option<Duration> {
+    let server_error =
+        |error: &reqwest::Error| error.status().is_some_and(|status| status.is_server_error());
+    match error {
+        Error::Http(error) if error.status().is_some() => server_error(error).then_some(Duration::ZERO),
+        Error::Http(error) => (!error.is_builder() && !error.is_redirect()).then_some(Duration::ZERO),
+        Error::HttpRetryAfter {
+            source,
+            retry_after,
+        } => server_error(source).then_some(*retry_after),
+        Error::ExtractionRead(_) => Some(Duration::ZERO),
+        _ => None,
+    }
+}
+
 pub(crate) fn delay(attempt: u32, retry_after: Duration) -> Duration {
     let delay_ms = (100_u64 << attempt.min(4)).min(1000);
     Duration::from_millis(delay_ms).max(retry_after.min(MAX_RETRY_AFTER))

@@ -145,7 +145,8 @@ fn directory_names(directory: &std::path::Path) -> Vec<String> {
 
 #[test]
 fn transient_statuses_retry_and_preserve_complete_output() {
-    for status in [408, 429, 500, 502, 503, 504] {
+    // Upstream HttpFD retries every 5xx status.
+    for status in [500, 501, 502, 503, 504, 599] {
         let server = Server::start(move |_, count| {
             if count == 2 {
                 Response::status(status)
@@ -257,7 +258,7 @@ fn exhausted_retries_count_additional_attempts_and_clean_temporary_files() {
 
 #[test]
 fn permanent_download_failures_are_not_retried() {
-    for status in [401, 404, 501, 206] {
+    for status in [401, 404, 408, 429, 206] {
         let server = Server::start(move |_, count| {
             if count == 1 {
                 Response::media()
@@ -1382,7 +1383,8 @@ fn retry_after_delays_extraction_and_download_recovery() {
             if count == if extraction { 1 } else { 2 } {
                 Response {
                     headers: "Retry-After: 1\r\n",
-                    ..Response::status(429)
+                    // Downloads retry 5xx statuses only.
+                    ..Response::status(if extraction { 429 } else { 503 })
                 }
             } else {
                 Response::media()

@@ -394,9 +394,10 @@ MIME checks identify supported responses; they do not verify media containers.
 
 ## Download retries
 
-The library default download policy permits three additional attempts after HTTP 408,
-429, 500, 502, 503, or 504, connection/timeouts, response body read errors, or
-Content-Length mismatches. `--retries 0` disables retries; values through 255
+The library default download policy permits three additional attempts after any
+HTTP 5xx status (upstream HttpFD; other statuses fail at once), connection/timeouts
+and other transport errors, response body read errors, or Content-Length
+mismatches. Extraction requests keep retrying HTTP 408, 429, 500, 502, 503 and 504. `--retries 0` disables retries; values through 255
 are accepted (the CLI default is 10, see `--retries`; `u32::MAX` retries
 indefinitely). The library exposes `DownloadOptions { retries, fragment_retries,
 retry_sleep, skip_unavailable_fragments }` through

@@ -272,7 +272,7 @@ impl AttemptFailure {
     }
 
     fn request(error: Error) -> Self {
-        let delay = crate::retry::failure_delay(&error);
+        let delay = crate::retry::download_failure_delay(&error);
         Self {
             error,
             retryable: delay.is_some(),
