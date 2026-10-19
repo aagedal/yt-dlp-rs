@@ -8,6 +8,7 @@ mod sanitize;
 mod subtitles;
 mod template;
 mod thumbnails;
+mod traverse;
 pub use exec::{ExecCommand, ExecCommands, Stage};
 pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths, replace_extension};
 pub use formats::{render_formats, render_formats_listing, render_formats_table};

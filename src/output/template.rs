@@ -67,6 +67,121 @@ enum Value<'a> {
     Integer(u64),
     Float(f64),
     Boolean(bool),
+    /// A traversed value: owned strings and Python objects (lists, dicts,
+    /// negative integers).
+    Owned(String),
+    Json(serde_json::Value),
+}
+
+impl Value<'_> {
+    fn from_json(value: serde_json::Value) -> Self {
+        match value {
+            serde_json::Value::String(text) => Value::Owned(text),
+            serde_json::Value::Bool(value) => Value::Boolean(value),
+            serde_json::Value::Number(number) if number.is_u64() => {
+                Value::Integer(number.as_u64().unwrap_or_default())
+            }
+            serde_json::Value::Number(number) if number.is_f64() => {
+                Value::Float(number.as_f64().unwrap_or_default())
+            }
+            other => Value::Json(other),
+        }
+    }
+
+    fn text(&self) -> Option<&str> {
+        match self {
+            Value::Text(text) => Some(text),
+            Value::Owned(text) => Some(text),
+            _ => None,
+        }
+    }
+
+    /// Python `str(value)`.
+    fn py_str(&self) -> String {
+        match self {
+            Value::Text(text) => (*text).to_owned(),
+            Value::Owned(text) => text.clone(),
+            Value::Integer(n) => n.to_string(),
+            Value::Float(n) => crate::screen::py_float(*n),
+            Value::Boolean(b) => if *b { "True" } else { "False" }.into(),
+            Value::Json(value) => super::traverse::py_str(value),
+        }
+    }
+}
+
+/// Upstream's info dict for traversal: the serialized metadata plus the
+/// source's prepared extras.
+fn traversal_root(source: Source<'_>) -> serde_json::Value {
+    let insert = |mut value: serde_json::Value, extras: Vec<(&str, serde_json::Value)>| {
+        if let Some(object) = value.as_object_mut() {
+            for (key, extra) in extras {
+                object.insert(key.into(), extra);
+            }
+        }
+        value
+    };
+    let value = |info: &VideoInfo| serde_json::to_value(info).unwrap_or_default();
+    match source {
+        Source::Video(info) => value(info),
+        Source::Print {
+            info,
+            filename,
+            urls,
+            filepath,
+            prepared,
+        } => insert(
+            value(info),
+            vec![
+                ("filepath", filepath.into()),
+                ("_filename", prepared.into()),
+                ("filename", filename.ok().into()),
+                ("urls", urls.into()),
+            ],
+        ),
+        Source::Exec {
+            info,
+            filepath,
+            filename,
+        } => insert(
+            value(info),
+            vec![
+                ("filepath", filepath.into()),
+                ("_filename", filename.into()),
+            ],
+        ),
+        Source::Playlist {
+            info,
+            playlist_count,
+            n_entries,
+            ..
+        } => insert(
+            serde_json::to_value(info).unwrap_or_default(),
+            vec![
+                ("playlist_index", 0.into()),
+                ("playlist_count", playlist_count.into()),
+                ("n_entries", n_entries.into()),
+            ],
+        ),
+    }
+}
+
+/// Split alternates at commas outside `{...}` traversal groups.
+fn alternates(names: &str) -> Vec<&str> {
+    let mut parts = Vec::new();
+    let (mut depth, mut start) = (0usize, 0);
+    for (index, c) in names.char_indices() {
+        match c {
+            '{' => depth += 1,
+            '}' => depth = depth.saturating_sub(1),
+            ',' if depth == 0 => {
+                parts.push(&names[start..index]);
+                start = index + 1;
+            }
+            _ => {}
+        }
+    }
+    parts.push(&names[start..]);
+    parts
 }
 
 /// Every represented root field; playlists expose a subset.
@@ -242,6 +357,10 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
     })
 }
 
+fn word(text: &str) -> bool {
+    !text.is_empty() && text.chars().all(|c| c.is_alphanumeric() || c == '_')
+}
+
 fn digits(input: &str) -> Result<(Option<usize>, &str)> {
     let count = input.bytes().take_while(u8::is_ascii_digit).count();
     if count == 0 {
@@ -278,13 +397,19 @@ fn format_spec(mut input: &str) -> Result<(Format, &str)> {
             Some(precision.ok_or_else(|| invalid("precision requires ASCII digits"))?);
         input = rest;
     }
-    if input.starts_with(['h', 'l', 'L']) {
+    // A length modifier precedes a conversion; a bare `l` is the list one.
+    if input.starts_with(['h', 'l', 'L'])
+        && input[1..].starts_with(['s', 'd', 'i', 'u', 'f', 'F', 'j', 'q', 'l'])
+    {
         input = &input[1..];
     }
     let Some(conversion) = input.chars().next() else {
         return Err(invalid("missing template conversion"));
     };
-    if !matches!(conversion, 's' | 'd' | 'i' | 'u' | 'f' | 'F' | 'j' | 'q') {
+    if !matches!(
+        conversion,
+        's' | 'd' | 'i' | 'u' | 'f' | 'F' | 'j' | 'q' | 'l'
+    ) {
         return Err(invalid(format!("unsupported conversion {conversion:?}")));
     }
     format.conversion = conversion;
@@ -389,9 +514,6 @@ fn substitution(
     let (mut format, remaining) = format_spec(spec)?;
     let consumed = spec.len() - remaining.len();
     let print = info.print();
-    if format.conversion == 'j' && !print {
-        return Err(invalid("JSON conversion is only supported for printing"));
-    }
     if format.conversion == 'q' && !info.exec() {
         return Err(invalid(
             "shell-quoted conversion is only supported for --exec",
@@ -402,19 +524,32 @@ fn substitution(
         .map_or((key, None), |(a, b)| (a, Some(b)));
     let mut chosen = None;
     let mut last_field = "";
+    let mut root = None;
     // Validate every alternate, including fields after an available first value.
-    for name in names.split(',') {
+    for name in alternates(names) {
         // Per-run counters come from the caller's options.
         let value = match name {
             "autonumber" => Ok(options.autonumber.get().map(Value::Integer)),
             "video_autonumber" => Ok(options.video_autonumber.get().map(Value::Integer)),
-            _ => field(name, info),
+            _ if super::traverse::is_plain(name)
+                && (FIELDS.contains(&name)
+                    || matches!(name, "filename" | "_filename" | "filepath" | "urls")) =>
+            {
+                field(name, info)
+            }
+            // Upstream object traversal over the whole info dict; unknown
+            // fields are missing values.
+            _ if super::traverse::is_plain(name) && !word(name) => {
+                Err(invalid(format!("unknown or unsupported field {name:?}")))
+            }
+            _ => super::traverse::traverse(root.get_or_insert_with(|| traversal_root(info)), name)
+                .map(|value| value.map(Value::from_json)),
         }?;
         if chosen.is_none() {
             last_field = name;
             // Filename sanitization turns empty strings into missing values;
             // printing keeps them, so they do not select an alternate.
-            chosen = value.filter(|value| print || !matches!(value, Value::Text("")));
+            chosen = value.filter(|value| print || value.text() != Some(""));
         }
     }
     let default = || -> Result<String> {
@@ -463,29 +598,42 @@ fn substitution(
     }
     let result = if format.conversion == 'q' {
         // `shell_quote(map(str, variadic(value)))`; scalars ignore `#`.
-        let value = match value {
-            Value::Text(s) => bounded(s)?.to_owned(),
-            Value::Integer(n) => n.to_string(),
-            Value::Float(n) => crate::screen::py_float(n),
-            Value::Boolean(b) => if b { "True" } else { "False" }.into(),
-        };
-        text(&super::exec::shell_quote(&value), &format)
+        let value = value.py_str();
+        text(&super::exec::shell_quote(bounded(&value)?), &format)
     } else if format.conversion == 'j' {
         let value = match value {
             Value::Text(s) => python_json_string(bounded(s)?, !format.plus),
+            Value::Owned(s) => python_json_string(bounded(&s)?, !format.plus),
             Value::Integer(n) => n.to_string(),
             Value::Float(n) => crate::screen::py_float(n),
             Value::Boolean(b) => b.to_string(),
+            Value::Json(value) if format.alternate => {
+                super::traverse::py_json_indented(&value, !format.plus)
+            }
+            Value::Json(value) => super::traverse::py_json(&value, !format.plus),
         };
-        // Upstream formats the JSON text with the remaining `%s` flags.
+        // Upstream formats the JSON text with the remaining `%s` flags and
+        // sanitizes it in filenames.
+        let value = if print {
+            bounded(&value)?.to_owned()
+        } else {
+            sanitize(&value, options)?
+        };
         text(&value, &format)
-    } else if format.conversion == 's' {
+    } else if matches!(format.conversion, 's' | 'l') {
+        // `l`: `', '.join(map(str, variadic(value)))` (newlines with `#`).
         let value = match value {
-            Value::Text(s) if print => bounded(s)?.to_owned(),
-            Value::Text(s) => sanitize(s, options)?,
-            Value::Integer(n) => n.to_string(),
-            Value::Float(n) => crate::screen::py_float(n),
-            Value::Boolean(b) => if b { "True" } else { "False" }.into(),
+            Value::Json(serde_json::Value::Array(items)) if format.conversion == 'l' => items
+                .iter()
+                .map(super::traverse::py_str)
+                .collect::<Vec<_>>()
+                .join(if format.alternate { "\n" } else { ", " }),
+            other => other.py_str(),
+        };
+        let value = if print {
+            bounded(&value)?.to_owned()
+        } else {
+            sanitize(&value, options)?
         };
         text(&value, &format)
     } else {
@@ -494,6 +642,9 @@ fn substitution(
             Value::Float(n) => Some(n),
             Value::Boolean(b) => Some(u8::from(b) as f64),
             Value::Text(s) => number(s)?,
+            Value::Owned(s) => number(&s)?,
+            Value::Json(serde_json::Value::Number(n)) => n.as_f64(),
+            Value::Json(_) => None,
         };
         match number {
             Some(n) => numeric(n, &format)?,
@@ -561,7 +712,7 @@ fn trim_file_name(filename: &str, length: i64) -> String {
 }
 
 /// Python `json.dumps` for a string, with or without `ensure_ascii`.
-fn python_json_string(value: &str, ensure_ascii: bool) -> String {
+pub(super) fn python_json_string(value: &str, ensure_ascii: bool) -> String {
     let mut output = String::with_capacity(value.len() + 2);
     output.push('"');
     for c in value.chars() {
@@ -760,14 +911,8 @@ mod tests {
         assert_eq!(output("%(format_id)020.9d", &info), "NA");
         assert_eq!(output("%(extractor|fallback)020d", &info), "fallback");
         assert_eq!(output("%(format_id|)04s-suffix", &info), "-suffix");
-        assert!(
-            render(
-                "%(id,unsupported)s",
-                Source::Video(&info),
-                &super::super::TemplateOptions::default()
-            )
-            .is_err()
-        );
+        // Unknown fields are missing values, like upstream.
+        assert_eq!(output("%(unsupported,id)s", &info), "42");
         assert_eq!(output("%(format_id,playlist_index)s", &info), "0003");
         let options = super::super::TemplateOptions {
             na_placeholder: String::new(),
@@ -909,8 +1054,8 @@ mod tests {
             "%(id)999999999999999999999999999999d",
             "%(id+1)s",
             "%(id,)s",
-            "%(id,missing)s",
-            "%(id)lls",
+            "%(id.a-b)s",
+            "%(id.{x)s",
         ] {
             assert!(
                 render(template, Source::Video(&info), &options).is_err(),
@@ -918,6 +1063,8 @@ mod tests {
             );
         }
         assert_eq!(output("%%-%(id)s", &info), "%-42");
+        // `l` is a length modifier before a conversion, else the list one.
+        assert_eq!(output("%(id)lls-%(id)ls-%(id)l", &info), "42s-42-42");
         assert!(render(&"x".repeat(MAX_SPEC + 1), Source::Video(&info), &options).is_err());
         assert!(render(&"%%".repeat(257), Source::Video(&info), &options).is_err());
         assert!(render(&"%(width)4096s".repeat(17), Source::Video(&info), &options).is_err());

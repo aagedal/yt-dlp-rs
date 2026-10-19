@@ -251,8 +251,8 @@ fn unsupported_print_stages_and_templates_fail_before_requests() {
         "playlist:title",
         "pre_process:id",
         "after_filter:id",
-        "{id,title}",
-        "missing_field",
+        "%(id.a-b)s",
+        "%(id.{x)s",
         "%(id)q",
     ] {
         let output = server.cli(&["/page.html"], &["-O", spec], directory.path());
@@ -327,8 +327,8 @@ fn print_to_file_runs_under_print_simulation_and_validates_at_startup() {
     );
     for args in [
         ["--print-to-file", "playlist:id", "x.txt"],
-        ["--print-to-file", "id", "%(missing)s.txt"],
-        ["--print-to-file", "{id}", "x.txt"],
+        ["--print-to-file", "id", "%(id.a-b)s.txt"],
+        ["--print-to-file", "%(id.{x)s", "x.txt"],
     ] {
         let output = server.cli(&["/page.html"], &args, directory.path());
         assert!(!output.status.success(), "{args:?}");

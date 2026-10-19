@@ -4160,9 +4160,799 @@
       },
       "na_placeholder": "NA",
       "expected": "value--000000.20"
-    }
-  ],
-  "source_only_cases": [
+    },
+    {
+      "name": "slice-title-prefix",
+      "template": "%(title.0:4)s.%(ext)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "Café.mp4"
+    },
+    {
+      "name": "slice-title-negative",
+      "template": "%(title.-4:)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "demo"
+    },
+    {
+      "name": "slice-title-step",
+      "template": "%(title.::2)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "Cf  eo"
+    },
+    {
+      "name": "slice-title-reverse",
+      "template": "%(id.::-1)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "4321"
+    },
+    {
+      "name": "index-title",
+      "template": "%(title.0)s%(id.-1)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "C4"
+    },
+    {
+      "name": "slice-title-out-of-range",
+      "template": "%(title.40:)s|%(title.40)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "NA|NA"
+    },
+    {
+      "name": "traverse-all-format-ids",
+      "template": "%(formats.:.format_id)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "['hls-1', 'dash-a', '22']"
+    },
+    {
+      "name": "traverse-range-list",
+      "template": "%(formats.1:.format_id)l",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "dash-a, 22"
+    },
+    {
+      "name": "traverse-range-list-newlines",
+      "template": "%(formats.:2.format_id)#l",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "hls-1 dash-a"
+    },
+    {
+      "name": "traverse-last-format",
+      "template": "%(formats.-1.ext)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "mp4"
+    },
+    {
+      "name": "traverse-heights-filtered",
+      "template": "%(formats.:.height)j",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "[360, 720]"
+    },
+    {
+      "name": "traverse-dict-subset",
+      "template": "%(formats.0.{format_id,ext})j",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "{＂format_id＂： ＂hls-1＂, ＂ext＂： ＂mp4＂}"
+    },
+    {
+      "name": "traverse-dict-subset-str",
+      "template": "%(formats.-1.{format_id,height,missing})s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "{'format_id'： '22', 'height'： 720}"
+    },
+    {
+      "name": "traverse-missing-index-default",
+      "template": "%(formats.5.format_id|none)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "none"
+    },
+    {
+      "name": "traverse-range-empty",
+      "template": "%(formats.9:.format_id)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "[]"
+    },
+    {
+      "name": "traverse-alternate-after-range",
+      "template": "%(formats.9.ext,title.0:3)s",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "Caf"
+    },
+    {
+      "name": "traverse-numeric-padding",
+      "template": "%(formats.0.height)05d",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "00360"
+    },
+    {
+      "name": "traverse-range-step",
+      "template": "%(formats.::2.format_id)l",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "hls-1, 22"
+    },
     {
       "name": "unknown-field",
       "template": "%(unknown)s",
@@ -4175,7 +4965,25 @@
         "extractor": "generic",
         "extractor_key": "Generic",
         "direct": true,
-        "formats": [],
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
         "format_id": "18",
         "filesize": 1024,
         "width": null,
@@ -4187,7 +4995,6 @@
         "__last_playlist_index": 100
       },
       "na_placeholder": "NA",
-      "native_policy": "Unknown fields are native errors",
       "expected": "NA"
     },
     {
@@ -4202,7 +5009,25 @@
         "extractor": "generic",
         "extractor_key": "Generic",
         "direct": true,
-        "formats": [],
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
         "format_id": "18",
         "filesize": 1024,
         "width": null,
@@ -4214,9 +5039,98 @@
         "__last_playlist_index": 100
       },
       "na_placeholder": "NA",
-      "native_policy": "Traversal unsupported natively",
       "expected": "NA"
     },
+    {
+      "name": "json-conversion",
+      "template": "%(id)j",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "＂1234＂"
+    },
+    {
+      "name": "json-conversion-list",
+      "template": "%(formats.:.ext)+j",
+      "info": {
+        "id": "1234",
+        "title": "Café 𝐀 demo",
+        "ext": "mp4",
+        "url": "https://example.test/media.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "generic",
+        "extractor_key": "Generic",
+        "direct": true,
+        "formats": [
+          {
+            "format_id": "hls-1",
+            "url": "https://example.test/1.m3u8",
+            "ext": "mp4",
+            "height": 360
+          },
+          {
+            "format_id": "dash-a",
+            "url": "https://example.test/a.mp4",
+            "ext": "m4a"
+          },
+          {
+            "format_id": "22",
+            "url": "https://example.test/22.mp4",
+            "ext": "mp4",
+            "height": 720
+          }
+        ],
+        "format_id": "18",
+        "filesize": 1024,
+        "width": null,
+        "height": 1080,
+        "playlist_index": 1,
+        "playlist_autonumber": 2,
+        "playlist_count": 100,
+        "n_entries": 10,
+        "__last_playlist_index": 100
+      },
+      "na_placeholder": "NA",
+      "expected": "[＂mp4＂, ＂m4a＂, ＂mp4＂]"
+    }
+  ],
+  "source_only_cases": [
     {
       "name": "raw-percent",
       "template": "raw-%s-%",
@@ -4243,33 +5157,6 @@
       "na_placeholder": "NA",
       "native_policy": "Raw percent forms are native errors",
       "expected": "raw-%s-%"
-    },
-    {
-      "name": "json-conversion",
-      "template": "%(id)j",
-      "info": {
-        "id": "1234",
-        "title": "Café 𝐀 demo",
-        "ext": "mp4",
-        "url": "https://example.test/media.mp4",
-        "webpage_url": "https://example.test/watch",
-        "extractor": "generic",
-        "extractor_key": "Generic",
-        "direct": true,
-        "formats": [],
-        "format_id": "18",
-        "filesize": 1024,
-        "width": null,
-        "height": 1080,
-        "playlist_index": 1,
-        "playlist_autonumber": 2,
-        "playlist_count": 100,
-        "n_entries": 10,
-        "__last_playlist_index": 100
-      },
-      "na_placeholder": "NA",
-      "native_policy": "Custom conversions unsupported natively",
-      "expected": "＂1234＂"
     },
     {
       "name": "raw-url",

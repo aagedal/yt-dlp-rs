@@ -1446,9 +1446,18 @@ Source evidence and shared comparison fixtures are recorded in
 `-o` accepts the represented root string fields `id`, `title`, `ext`, `extractor`,
 `extractor_key`, `format_id`, `url` and `webpage_url`; integer fields `width`,
 `height`, `filesize`, `playlist_index`, `playlist_autonumber`, `playlist_count` and
-`n_entries`; and boolean `direct`. Unknown fields and unsupported expressions are
-errors, retaining the native explicit unsupported boundary. The full upstream
-metadata dictionary is not inferred.
+`n_entries`; and boolean `direct` (plus the other typed root fields listed in
+`FIELDS`). Every other field and any traversal use upstream `_traverse_infodict`
+over the serialized info dict (`traverse_obj(..., traverse_string=True)`): dotted
+keys, integer indices (negative from the end), Python slices such as
+`%(title.0:20)s`, `%(formats.1:3.format_id)s` or `%(id.::-1)s`, `:` for every
+item, and `{a,b.c}` dict subsets; branching results are lists with missing values
+dropped. Unknown fields are missing values (`NA` or the `|default`), like
+upstream. Lists and dicts render as Python `str()`/`repr()` text, `l` joins list
+items with `, ` (newlines with `#`) and `j` emits Python `json.dumps` (indented
+with `#`), sanitized in filenames. The serialized dict holds the represented
+fields only (with this port's key order inside formats), so fields upstream
+extractors would add are missing. Malformed traversal syntax remains an error.
 
 Named substitutions use `%(field)FORMAT`, where conversions are `s`, `d`, `i`,
 `u`, `f` and `F`. Formats support Python-style `#`, `0`, `-`, `+` and space flags,
@@ -1521,11 +1530,11 @@ listing paths leave output templates inert, including invalid ones; this
 existing native timing is not general upstream option-normalization parity. Library `output::render_template` uses default options;
 `render_template_with_options` accepts `TemplateOptions` with `na_placeholder`,
 `filename_mode`, `windows_filenames` and `trim_file_name`.
-Object traversal, arithmetic/dates, replacements, arbitrary fields, scientific/
-general/hex/octal/repr/custom conversions, environment expansion
+Arithmetic/dates, replacements, scientific/general/hex/octal/repr and other custom
+conversions (`h`, `B`, `U`, `D`, `S`, `c`), environment expansion
 and full filename/platform compatibility remain open.
 
-The shared 160-case comparison uses actual pinned `evaluate_outtmpl` in filename
+The shared 182-case comparison (including traversal and slice ranges) uses actual pinned `evaluate_outtmpl` in filename
 sanitization mode on portable fields. Native safety/resource cases are separate;
 unsafe-character output is not normalized to hide policy differences. Six
 source-only cases record unsupported behavior. See
@@ -1558,9 +1567,11 @@ Python `json.dumps` text (`ensure_ascii` unless the `+` flag is given; `#`
 indentation is inert for scalar fields) formatted with the remaining `%s` flags.
 `filename` (the rendered `-o` path) and `urls` (the selected URL, or each
 `requested_formats` URL on its own line) are added as upstream `_forceprint`
-does. Unknown fields, traversal (`id.0`), arithmetic, `q`/`l`/other conversions
+does. Unknown fields print `NA` and traversal works as in filenames; shorthand
+follows upstream `format_tmpl` (`-O id.0`, `-O "{id,title}"` as `%(.{id,title})j`,
+`-O field=` as `field = %(field)#j`). Arithmetic, `q`/other custom conversions
 and `formats_table`-style fields are rejected before extraction, whereas
-upstream prints `NA` or evaluates them.
+upstream evaluates them.
 
 Hidden `-e`/`--get-title`, `--get-id`, `-g`/`--get-url` and `--get-filename`
 print after all `--print` lines in upstream order (title, ID, URLs, filename),

@@ -591,7 +591,12 @@ fn templates_are_explicit_and_metadata_cannot_inject_paths_or_fields() {
         render_template("%(title)03d", &info).unwrap(),
         std::path::PathBuf::from("NA")
     );
-    for invalid in ["%(unknown)s", "%(title)q", "%", "", "-"] {
+    // Unknown fields are missing values, like upstream.
+    assert_eq!(
+        render_template("%(unknown)s", &info).unwrap(),
+        std::path::PathBuf::from("NA")
+    );
+    for invalid in ["%(id.a-b)s", "%(title)q", "%", "", "-"] {
         assert!(render_template(invalid, &info).is_err(), "{invalid}");
     }
 }

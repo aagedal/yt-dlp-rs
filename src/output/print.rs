@@ -258,26 +258,34 @@ fn shorthand_kind(body: &str) -> Option<bool> {
 }
 
 fn expand_shorthand(template: &str) -> Result<String> {
-    let (body, debug) = template
-        .strip_suffix('=')
-        .map_or((template, false), |body| (body, true));
-    match shorthand_kind(body) {
-        None => Ok(template.into()),
-        Some(true) => Err(Error::InvalidTemplate(
-            "dictionary print shorthand is unsupported".into(),
-        )),
-        Some(false) => Ok(body
-            .split(',')
-            .map(|field| {
-                if debug {
-                    format!("{field} = %({field})#j")
-                } else {
-                    format!("%({field})s")
-                }
-            })
-            .collect::<Vec<_>>()
-            .join("\n")),
+    // Upstream `format_tmpl`.
+    let Some(dict) = shorthand_kind(template.strip_suffix('=').unwrap_or(template)) else {
+        return Ok(template.into());
+    };
+    let mut body = template.to_owned();
+    let mut json = false;
+    if body.starts_with('{') {
+        body.insert(0, '.');
+        json = true;
     }
+    let debug = body.ends_with('=');
+    if debug {
+        body.pop();
+    }
+    let format = |field: &str| {
+        if debug {
+            format!("{field} = %({field})#j")
+        } else if json {
+            format!("%({field})j")
+        } else {
+            format!("%({field})s")
+        }
+    };
+    Ok(if dict {
+        format(&body)
+    } else {
+        body.split(',').map(format).collect::<Vec<_>>().join("\n")
+    })
 }
 
 #[cfg(test)]
@@ -314,9 +322,6 @@ mod tests {
         for spec in [
             "playlist:id",
             "pre_process:%(id)s",
-            "{id,title}",
-            "id,missing",
-            "id.0",
             "-1",
             "pre-1",
             "unknown:id",
@@ -338,7 +343,11 @@ mod tests {
                 .unwrap(),
             "a/b a.mp4 /abs/a.mp4"
         );
-        assert!(super::super::render_template("%(id)j", &info()).is_err());
+        // Filenames sanitize the JSON text like upstream.
+        assert_eq!(
+            super::super::render_template("%(id)j", &info()).unwrap(),
+            std::path::PathBuf::from("＂a⧸b＂")
+        );
     }
 
     #[test]
@@ -464,7 +473,7 @@ mod tests {
         assert_eq!(path, PathBuf::from("lists/Épisode： ＂1＂.txt"));
         assert_eq!(line, "a/b\nmp4");
         assert!(PrintToFile::parse("playlist:id", "x.txt").is_err());
-        assert!(PrintToFile::parse("id", "%(missing)s.txt").is_err());
+        assert!(PrintToFile::parse("id", "%(id.a-b)s.txt").is_err());
         assert!(PrintToFile::parse("id", "").is_err());
     }
 
