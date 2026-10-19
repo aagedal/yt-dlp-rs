@@ -19,6 +19,7 @@ pub(crate) fn download(
         destination,
         options,
         &PostprocessOptions {
+            existing: None,
             ignore_errors: false,
             thumbnail: None,
             metadata: false,

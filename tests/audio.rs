@@ -403,7 +403,7 @@ fn process_failure_preserves_sources_continues_urls_and_does_not_record_archive(
 }
 
 #[test]
-fn existing_final_is_preserved_and_completed_source_is_retained() {
+fn existing_final_extension_is_processed_again_without_downloading() {
     let server = Server::new();
     let tools = Tools::new("aac", false);
     let directory = tempfile::tempdir().unwrap();
@@ -421,17 +421,25 @@ fn existing_final_is_preserved_and_completed_source_is_retained() {
         ],
         directory.path(),
     );
-    assert!(!output.status.success());
+    // Upstream `existing_video_file` finds the `final_ext` file and runs
+    // the processors on it instead of downloading.
+    success(&output);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(stdout.ends_with(
+        "[download] out.mp3 has already been downloaded\n[ExtractAudio] Destination: out.mp3\nDeleting original file out.orig.mp3 (pass -k to keep)\n"
+    ));
+    // The (AAC-probed) existing file is converted in place.
     assert_eq!(
         std::fs::read(directory.path().join("out.mp3")).unwrap(),
-        b"existing"
+        b"converted audio"
     );
-    assert_eq!(
-        std::fs::read(directory.path().join("out.mp4")).unwrap(),
-        b"source audio"
+    assert!(!directory.path().join("out.mp4").exists());
+    assert!(!directory.path().join("out.orig.mp3").exists());
+    assert!(
+        std::fs::read_to_string(directory.path().join("archive"))
+            .unwrap()
+            .contains("source")
     );
-    assert!(tools.log(&tools.ffmpeg).is_empty());
-    assert!(!directory.path().join("archive").exists());
     clean(directory.path());
 }
 

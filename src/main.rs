@@ -1568,7 +1568,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             "--remux-video is ignored since --recode-video was given".into(),
         );
     }
+    // Upstream `final_ext`: the expected extension after processing, used to
+    // find an earlier run's processed file.
+    let final_ext = {
+        const VIDEO: [&str; 18] = [
+            "avi", "flv", "gif", "mkv", "mov", "mp4", "webm", "aac", "aiff", "alac", "flac", "m4a",
+            "mka", "mp3", "ogg", "opus", "vorbis", "wav",
+        ];
+        const AUDIO: [&str; 8] = ["mp3", "aac", "m4a", "opus", "vorbis", "flac", "alac", "wav"];
+        let video = |value: &Option<String>| {
+            value
+                .as_deref()
+                .filter(|value| VIDEO.contains(value))
+                .map(str::to_owned)
+        };
+        video(&args.recode_video)
+            .or_else(|| video(&args.remux_video))
+            .or_else(|| {
+                (args.extract_audio && AUDIO.contains(&args.audio_format.as_str()))
+                    .then(|| args.audio_format.clone())
+            })
+    };
     let processors = PostprocessOptions {
+        existing: None,
         ignore_errors: error_mode == ErrorMode::Ignore,
         thumbnail: None,
         metadata: args.embed_metadata,
@@ -2722,15 +2744,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 || embed_info_json.is_some()
                                 || args.split_chapters
                                 || args.embed_thumbnail;
-                            let existing_media = !args.skip_download && path_exists(&path)?;
-                            if existing_media && overwrites != Some(true) && processing {
-                                // Upstream would rerun postprocessors on the existing file.
-                                return Err(yt_dlp_rs::Error::Postprocess(format!(
-                            "{} already exists; postprocessing an existing download is unsupported (use --force-overwrites)",
-                            path.display()
-                        ))
-                        .into());
+                            // Upstream `existing_video_file`: the `final_ext` name
+                            // first, then the prepared one.
+                            let mut existing_files = Vec::new();
+                            if !args.skip_download {
+                                let converted = final_ext
+                                    .as_deref()
+                                    .map(|ext| yt_dlp_rs::audio_output_path(&path, &info.ext, ext))
+                                    .transpose()?;
+                                for candidate in converted.into_iter().chain([path.clone()]) {
+                                    if !existing_files.contains(&candidate)
+                                        && path_exists(&candidate)?
+                                    {
+                                        existing_files.push(candidate);
+                                    }
+                                }
                             }
+                            let existing_media = !existing_files.is_empty();
                             // Upstream writes the description before subtitles and info JSON.
                             if writes_description
                                 && let Some(path) = templates.prepare(
@@ -2829,10 +2859,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     && std::fs::symlink_metadata(&subtitle_path).is_ok()
                                     && std::fs::metadata(&subtitle_path)?.is_file()
                                 {
-                                    screen!(
-                                        "[download] Deleting existing file {}",
-                                        subtitle_path.display()
-                                    );
+                                    screen!("Deleting existing file {}", subtitle_path.display());
                                     std::fs::remove_file(&subtitle_path)?;
                                 }
                                 match std::fs::symlink_metadata(&subtitle_path) {
@@ -2992,15 +3019,33 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 force_record(&info)?;
                                 return Ok(());
                             }
-                            if existing_media {
-                                if overwrites == Some(true) {
-                                    screen!("[download] Deleting existing file {}", path.display());
-                                    std::fs::remove_file(&path)?;
-                                } else {
-                                    screen!(
-                                        "[download] {} has already been downloaded",
-                                        path.display()
-                                    );
+                            let mut process_existing = None;
+                            if existing_media && overwrites == Some(true) {
+                                for existing in &existing_files {
+                                    screen!("Deleting existing file {}", existing.display());
+                                    std::fs::remove_file(existing)?;
+                                }
+                            } else if existing_media {
+                                let existing = existing_files.swap_remove(0);
+                                screen!(
+                                    "[download] {} has already been downloaded",
+                                    existing.display()
+                                );
+                                // A single file found under its own name goes
+                                // through `FileDownloader.download`, which also
+                                // reports it finished.
+                                if existing == path && info.requested_formats.is_empty() {
+                                    ProgressReporter::new(&progress_options)
+                                        .for_download(&info, &path)
+                                        .already_downloaded(std::fs::metadata(&path)?.len());
+                                }
+                                if processing {
+                                    // The processors run again on the existing file.
+                                    process_existing = Some(existing);
+                                }
+                            }
+                            if existing_media && overwrites != Some(true) && !processing {
+                                {
                                     post_print.emit()?;
                                     if !after_download(
                                         &exec,
@@ -3035,58 +3080,68 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         )
                         .into());
                             }
-                            let partial = yt_dlp_rs::sections::is_partial(&info);
-                            // `get_suitable_downloader(...) == FFmpegFD`.
-                            let ffmpeg_fd = downloader.uses_ffmpeg_fd(&info);
-                            // Upstream `process_info`: a partial download needs FFmpegFD.
-                            if partial && !downloader.has_ffmpeg() {
-                                return Err(yt_dlp_rs::Error::Reported(
-                            "You have requested downloading the video partially, but ffmpeg is not installed. Aborting"
-                                .into(),
-                        )
-                        .into());
-                            }
-                            if !partial
-                                && !info.requested_formats.is_empty()
-                                && !downloader.has_ffmpeg()
-                            {
-                                let message = "You have requested merging of multiple formats but ffmpeg is not installed";
-                                if error_mode == ErrorMode::Abort {
-                                    return Err(format!(
-                                        "{message}. Aborting due to --abort-on-error"
-                                    )
-                                    .into());
+                            // An existing file is processed without downloading.
+                            let refreshed = if process_existing.is_none() {
+                                let partial = yt_dlp_rs::sections::is_partial(&info);
+                                // `get_suitable_downloader(...) == FFmpegFD`.
+                                let ffmpeg_fd = downloader.uses_ffmpeg_fd(&info);
+                                // Upstream `process_info`: a partial download needs FFmpegFD.
+                                if partial && !downloader.has_ffmpeg() {
+                                    return Err(yt_dlp_rs::Error::Reported(
+                                "You have requested downloading the video partially, but ffmpeg is not installed. Aborting"
+                                    .into(),
+                            )
+                            .into());
                                 }
-                                warning!("WARNING: {message}. The formats won't be merged");
-                            }
-                            downloader.announce_download(&info);
-                            // Upstream `HlsFD` refetches the media playlist first.
-                            let refreshed = if !ffmpeg_fd && info.requested_formats.is_empty() {
-                                downloader.refresh_hls(&info)?
+                                if !partial
+                                    && !info.requested_formats.is_empty()
+                                    && !downloader.has_ffmpeg()
+                                {
+                                    let message = "You have requested merging of multiple formats but ffmpeg is not installed";
+                                    if error_mode == ErrorMode::Abort {
+                                        return Err(format!(
+                                            "{message}. Aborting due to --abort-on-error"
+                                        )
+                                        .into());
+                                    }
+                                    warning!("WARNING: {message}. The formats won't be merged");
+                                }
+                                downloader.announce_download(&info);
+                                // Upstream `HlsFD` refetches the media playlist first.
+                                let refreshed = if !ffmpeg_fd && info.requested_formats.is_empty() {
+                                    downloader.refresh_hls(&info)?
+                                } else {
+                                    None
+                                };
+                                let info = refreshed.as_ref().unwrap_or(&info);
+                                if !ffmpeg_fd
+                                    && info.requested_formats.is_empty()
+                                    && !info.fragments.is_empty()
+                                {
+                                    // Upstream `_prepare_frag_download`.
+                                    let downloader = match info.protocol.as_deref() {
+                                        Some("http_dash_segments") => "dashsegments",
+                                        _ => "hlsnative",
+                                    };
+                                    screen!(
+                                        "[{downloader}] Total fragments: {}",
+                                        info.fragments.len()
+                                    );
+                                }
+                                // Merges announce each format's file instead, except
+                                // FFmpegFD merging the formats into one file.
+                                if info.requested_formats.is_empty() || ffmpeg_fd {
+                                    screen!("[download] Destination: {}", path.display());
+                                }
+                                // Upstream sleeps before each stream's FileDownloader.download.
+                                for _ in 0..info.requested_formats.len().max(1) {
+                                    sleep.media();
+                                }
+                                refreshed
                             } else {
                                 None
                             };
                             let info = refreshed.as_ref().unwrap_or(&info);
-                            if !ffmpeg_fd
-                                && info.requested_formats.is_empty()
-                                && !info.fragments.is_empty()
-                            {
-                                // Upstream `_prepare_frag_download`.
-                                let downloader = match info.protocol.as_deref() {
-                                    Some("http_dash_segments") => "dashsegments",
-                                    _ => "hlsnative",
-                                };
-                                screen!("[{downloader}] Total fragments: {}", info.fragments.len());
-                            }
-                            // Merges announce each format's file instead, except
-                            // FFmpegFD merging the formats into one file.
-                            if info.requested_formats.is_empty() || ffmpeg_fd {
-                                screen!("[download] Destination: {}", path.display());
-                            }
-                            // Upstream sleeps before each stream's FileDownloader.download.
-                            for _ in 0..info.requested_formats.len().max(1) {
-                                sleep.media();
-                            }
                             let post_printed = std::cell::Cell::new(false);
                             let mut reporter =
                                 ProgressReporter::new(&progress_options).for_download(info, &path);
@@ -3218,9 +3273,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 return Ok(());
                             }
                             let (bytes, published_paths) = if processing {
+                                // `existing_video_file` sets `ext` from the found file.
+                                let existing_info;
+                                let (info, path) = match &process_existing {
+                                    Some(existing) => {
+                                        let mut found = info.clone();
+                                        if let Some(ext) = existing.extension() {
+                                            found.ext = ext.to_string_lossy().into_owned();
+                                        }
+                                        processors.existing = Some(existing.clone());
+                                        existing_info = found;
+                                        (&existing_info, existing)
+                                    }
+                                    None => (info, &path),
+                                };
                                 let result = downloader.download_processed_with_progress(
                                     info,
-                                    &path,
+                                    path,
                                     DownloadOptions {
                                         min_filesize,
                                         max_filesize,
@@ -4730,19 +4799,7 @@ impl<'a> ProgressReporter<'a> {
             DownloadPhase::Publishing
                 if self.active.is_none() && progress.stream_index.is_some() =>
             {
-                if !self.options.enabled {
-                    screen!("[download] Download completed");
-                } else {
-                    let line =
-                        yt_dlp_rs::output::progress::finished_line(progress.downloaded_bytes, None);
-                    let mut printer = yt_dlp_rs::output::progress::StatusPrinter::new(
-                        self.options.newline,
-                        !self.options.quiet,
-                    );
-                    Self::write(&printer.print(&format!("[download] {line}")));
-                    Self::write(&printer.end());
-                }
-                return;
+                return self.already_downloaded(progress.downloaded_bytes);
             }
             DownloadPhase::Merging | DownloadPhase::Postprocessing | DownloadPhase::Publishing => {
                 return self.finish();
@@ -4830,6 +4887,22 @@ impl<'a> ProgressReporter<'a> {
         };
         let active = self.active.as_mut().expect("active download");
         Self::write(&active.printer.print(&line));
+    }
+
+    /// `FileDownloader.download`'s `finished` status for an existing file
+    /// (no timing).
+    fn already_downloaded(&self, bytes: u64) {
+        if !self.options.enabled {
+            screen!("[download] Download completed");
+        } else {
+            let line = yt_dlp_rs::output::progress::finished_line(bytes, None);
+            let mut printer = yt_dlp_rs::output::progress::StatusPrinter::new(
+                self.options.newline,
+                !self.options.quiet,
+            );
+            Self::write(&printer.print(&format!("[download] {line}")));
+            Self::write(&printer.end());
+        }
     }
 
     /// The `finished` status of the current stream.
@@ -5260,7 +5333,7 @@ fn write_thumbnails(
                 }
                 continue;
             }
-            screen!("[download] Deleting existing file {}", path.display());
+            screen!("Deleting existing file {}", path.display());
             std::fs::remove_file(&path)?;
         }
         screen!("[info] Downloading {display} ...");

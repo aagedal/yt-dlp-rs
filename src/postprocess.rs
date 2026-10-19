@@ -33,6 +33,11 @@ pub struct PostprocessOptions {
     /// `--ignore-errors`: a failed processor is reported and skipped, and the
     /// remaining processors continue with the latest completed file.
     pub ignore_errors: bool,
+    /// An already-downloaded file (the destination) to process instead of
+    /// downloading, like upstream's `post_process` after `has already been
+    /// downloaded`. It is replaced in place by same-named results and
+    /// removed after a successful conversion unless kept.
+    pub existing: Option<PathBuf>,
 }
 
 /// Upstream `FFmpegMetadataPP` `add_infojson`.
@@ -152,7 +157,10 @@ pub(crate) fn download(
     processors: &PostprocessOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<ProcessedDownload> {
-    absent(destination)?;
+    let existing = processors.existing.as_deref();
+    if existing.is_none() {
+        absent(destination)?;
+    }
     let needs_audio = processors
         .audio
         .as_ref()
@@ -171,7 +179,10 @@ pub(crate) fn download(
         && processors.infojson.is_none()
         && processors.thumbnail.is_none()
     {
-        let bytes = downloader.download_with_progress(info, destination, options, callback)?;
+        let bytes = match existing {
+            Some(existing) => fs::metadata(existing)?.len(),
+            None => downloader.download_with_progress(info, destination, options, callback)?,
+        };
         // Upstream still runs the processors, which report why they skip.
         if let Some(audio) = &processors.audio {
             let reason = match audio.target(&info.ext) {
@@ -221,10 +232,17 @@ pub(crate) fn download(
     // Upstream merges selected formats from `NAME.fID.EXT` files beside the
     // destination (printing their downloads and the merge) before the
     // processors run; the merged file then becomes the private source.
-    let upstream_merge = !info.requested_formats.is_empty()
+    let upstream_merge = existing.is_none()
+        && !info.requested_formats.is_empty()
         && matches!(options.merge_files, crate::MergeFiles::Upstream { .. })
         && !downloader.uses_ffmpeg_fd(info);
-    let bytes = if upstream_merge {
+    let bytes = if let Some(existing) = existing {
+        // A private link (or copy) of the existing file is the source.
+        if fs::hard_link(existing, &input).is_err() {
+            fs::copy(existing, &input)?;
+        }
+        fs::metadata(&input)?.len()
+    } else if upstream_merge {
         // Each stream's download reports its own completion.
         let bytes =
             downloader.download_with_progress(info, destination, options, &mut *callback)?;
@@ -248,8 +266,10 @@ pub(crate) fn download(
     };
     // Upstream `process_info` fixes the download (after its progress ends)
     // before `post_process` and its prints.
+    // Like upstream's default policy, existing files are not fixed again.
     if let Some(fixup) = &processors.fixup
         && !upstream_merge
+        && existing.is_none()
     {
         if checkpoint(callback, bytes, DownloadPhase::Completed).is_break() {
             return Err(Error::DownloadCancelled);
@@ -265,6 +285,24 @@ pub(crate) fn download(
     let container = crate::container::sniff(&input)
         .map(str::to_owned)
         .unwrap_or_else(|| info.ext.to_lowercase());
+    let source = input.clone();
+    // Publish a stage's file to `path`: an unchanged existing source stays in
+    // place, and results named like the existing file replace it.
+    let place = |disk: &Path, path: &Path| -> Result<()> {
+        if existing == Some(path) {
+            if disk != source {
+                fs::rename(disk, path)?;
+            }
+            return Ok(());
+        }
+        if disk == source
+            && let Some(existing) = existing
+        {
+            absent(path)?;
+            return Ok(fs::rename(existing, path)?);
+        }
+        publish(disk, path)
+    };
     let mut stages = vec![Stage {
         disk: input,
         path: destination.into(),
@@ -350,7 +388,9 @@ pub(crate) fn download(
                         "[ExtractAudio] Destination: {}",
                         path.display()
                     ));
-                    absent(&path)?;
+                    if existing != Some(path.as_path()) {
+                        absent(&path)?;
+                    }
                     let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
                         Error::Postprocess(
                             "audio conversion requires an explicit --ffmpeg-location PATH".into(),
@@ -379,7 +419,12 @@ pub(crate) fn download(
                     } else {
                         plan.extension.clone()
                     };
-                    let original = current.path.clone();
+                    // A same-named output moves the input to `NAME.orig.EXT`.
+                    let original = if path == current.path {
+                        audio_original_path(&current.path)?
+                    } else {
+                        current.path.clone()
+                    };
                     stages.push(Stage {
                         disk: output,
                         path,
@@ -675,17 +720,30 @@ pub(crate) fn download(
         } else {
             Vec::new()
         };
-        absent(&last.path)?;
+        if existing != Some(last.path.as_path()) {
+            absent(&last.path)?;
+        }
         for path in &retained {
-            absent(path)?;
+            if existing != Some(path.as_path()) {
+                absent(path)?;
+            }
         }
         if checkpoint(callback, last.bytes, DownloadPhase::Publishing).is_break() {
             return Err(Error::DownloadCancelled);
         }
         for (stage, path) in stages.iter().zip(&retained) {
-            publish(&stage.disk, path)?;
+            place(&stage.disk, path)?;
         }
-        publish(&last.disk, &last.path)?;
+        place(&last.disk, &last.path)?;
+        // Upstream deletes the processed original unless it is kept.
+        if let Some(existing) = existing
+            && existing != last.path
+            && !retained.iter().any(|path| path == existing)
+            && fs::symlink_metadata(existing).is_ok()
+            && !keep
+        {
+            fs::remove_file(existing)?;
+        }
         Ok(ProcessedDownload {
             path: last.path.clone(),
             bytes: last.bytes,
@@ -711,7 +769,7 @@ pub(crate) fn download(
             let mut failures = Vec::new();
             for (stage, path) in completed.iter().zip(paths).skip(first) {
                 if stage.disk.exists()
-                    && let Err(preserve) = publish(&stage.disk, &path)
+                    && let Err(preserve) = place(&stage.disk, &path)
                 {
                     // One retained-path collision must not discard another
                     // completed stage whose destination is still available.

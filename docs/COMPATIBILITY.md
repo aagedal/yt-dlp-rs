@@ -2237,12 +2237,25 @@ Ported from upstream `existing_file`, `FileDownloader.download`,
 recorded in the archive, while info JSON and subtitle sidecars are rewritten.
 `-w/--no-overwrites` also keeps existing info JSON and subtitles.
 `--force-overwrites`/`--yes-overwrites` deletes and replaces every existing
-output (`[download] Deleting existing file FILE`). Sidecars are still written
+output (`Deleting existing file FILE`, upstream `report_file_delete`). Sidecars are still written
 before the media check, as upstream does.
 
-Native boundaries: when audio/video conversion or subtitle embedding is
-requested, an existing media file without `--force-overwrites` is an explicit
-error, because upstream would rerun postprocessors on it. Converted-extension
-candidates (`final_ext`), `--no-continue`/`--no-part` resume semantics and
-`--no-post-overwrites` are not implemented; nonregular and dangling-symlink
-destinations are refused instead of written through.
+Like upstream's `existing_video_file`, the processed name (`final_ext`: a
+plain `--recode-video`/`--remux-video` extension, or the `--audio-format` of
+`-x`) is checked before the prepared name; `--force-overwrites` deletes each
+existing candidate. A single file found under its prepared name is also
+reported finished (`[download] Download completed`, or the untimed `100% of
+SIZE` line), as `FileDownloader.download` does. When processing is requested,
+the processors run again on the existing file, with its extension: same-named
+results replace it in place (a same-named audio conversion reports
+`Deleting original file NAME.orig.EXT`), other results are written beside it
+and the original is deleted unless kept. Fixups are not repeated, like
+upstream's default policy. Verified against pinned upstream for audio
+extraction, remuxing, recoding and metadata embedding with and without `-k`.
+
+Native boundaries: `--no-continue`/`--no-part` resume semantics (upstream
+downloads again over an existing file) and `--no-post-overwrites` are not
+implemented; processor outputs other than the existing file are not
+overwritten (an existing one is an `output already exists` error);
+nonregular and dangling-symlink destinations are refused instead of written
+through.
