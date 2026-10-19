@@ -3272,26 +3272,55 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         );
                                         sleep.subtitle();
                                         // Upstream `dl(..., subtitle=True)`: the file
-                                        // downloader announces and reports the sidecar.
-                                        screen!(
-                                            "[download] Destination: {}",
-                                            subtitle_path.display()
-                                        );
+                                        // downloader announces the sidecar once
+                                        // connected and reports it.
+                                        let announce = std::cell::Cell::new(true);
+                                        let destination = || {
+                                            if announce.replace(false) {
+                                                screen!(
+                                                    "[download] Destination: {}",
+                                                    subtitle_path.display()
+                                                );
+                                            }
+                                        };
                                         let mut reporter = ProgressReporter::new(&progress_options);
-                                        downloader.download_subtitle_with_progress(
-                                            &info,
-                                            &subtitle,
-                                            &subtitle_path,
-                                            DownloadOptions {
-                                                retries,
-                                                update_time: args.mtime,
-                                                ..Default::default()
-                                            },
-                                            |progress| {
-                                                reporter.event(&progress);
-                                                ControlFlow::Continue(())
-                                            },
-                                        )?;
+                                        let downloaded = downloader
+                                            .download_subtitle_with_progress(
+                                                &info,
+                                                &subtitle,
+                                                &subtitle_path,
+                                                DownloadOptions {
+                                                    retries,
+                                                    update_time: args.mtime,
+                                                    ..Default::default()
+                                                },
+                                                |progress| {
+                                                    if !matches!(
+                                                        progress.phase,
+                                                        DownloadPhase::Requesting
+                                                            | DownloadPhase::WaitingToRetry
+                                                    ) {
+                                                        destination();
+                                                    }
+                                                    reporter.event(&progress);
+                                                    ControlFlow::Continue(())
+                                                },
+                                            );
+                                        if let Err(error) = downloaded {
+                                            // Upstream `_write_subtitles`: a warning
+                                            // with --ignore-errors, else the video fails.
+                                            let message = format!(
+                                                "Unable to download video subtitles for {}: {}",
+                                                yt_dlp_rs::batch::py_repr(&language),
+                                                yt_dlp_rs::upstream_error_text(&error)
+                                            );
+                                            if error_mode == ErrorMode::Ignore {
+                                                warning!("WARNING: {message}");
+                                                continue;
+                                            }
+                                            return Err(yt_dlp_rs::Error::Reported(message).into());
+                                        }
+                                        destination();
                                         reporter.finish();
                                     }
                                     Err(error) => return Err(error.into()),
@@ -3570,7 +3599,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                                 metadata.is_file() && metadata.len() > 0
                                             })
                                         });
-                                    if resumes {
+                                    // HttpFD also waits for the connection.
+                                    let http_fd = !ffmpeg_fd
+                                        && info.fragments.is_empty()
+                                        && info.requested_formats.is_empty();
+                                    if resumes || http_fd {
                                         deferred_destination.set(true);
                                     } else {
                                         screen!("[download] Destination: {}", path.display());
@@ -3589,8 +3622,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             let mut reporter =
                                 ProgressReporter::new(&progress_options).for_download(info, &path);
                             let mut progress = |progress: yt_dlp_rs::DownloadProgress| {
-                                if progress.phase != DownloadPhase::Requesting
-                                    && deferred_destination.replace(false)
+                                if !matches!(
+                                    progress.phase,
+                                    DownloadPhase::Requesting | DownloadPhase::WaitingToRetry
+                                ) && deferred_destination.replace(false)
                                 {
                                     screen!("[download] Destination: {}", path.display());
                                 }
@@ -4015,6 +4050,25 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     // `report_error(f'Postprocessing: {err}')`.
                     Some(yt_dlp_rs::Error::Postprocess(message)) => {
                         eprintln!("ERROR: Postprocessing: {message}");
+                        failed = true;
+                        false
+                    }
+                    // `RetryManager` exhaustion through `report_retry`.
+                    Some(error @ yt_dlp_rs::Error::RetriesExhausted { .. }) => {
+                        eprintln!("ERROR: \r{error}");
+                        failed = true;
+                        false
+                    }
+                    // `process_info`: `unable to download video data: ERR` for
+                    // network errors of the media download.
+                    Some(
+                        error @ (yt_dlp_rs::Error::Http(_)
+                        | yt_dlp_rs::Error::HttpRetryAfter { .. }),
+                    ) => {
+                        eprintln!(
+                            "ERROR: unable to download video data: {}",
+                            yt_dlp_rs::upstream_error_text(error)
+                        );
                         failed = true;
                         false
                     }

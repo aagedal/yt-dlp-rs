@@ -64,7 +64,7 @@ pub use match_filter::{EntrySelection, MatchFilters, MatchOutcome};
 pub use output::{render_automatic_captions, render_subtitles};
 pub use playlist::{PlaylistCounts, PlaylistSelection};
 pub use postprocess::{InfoJsonEmbed, ModifyChapters, PostprocessOptions, ProcessedDownload};
-pub use retry::{RetrySleep, SleepExpression};
+pub use retry::{RetrySleep, SleepExpression, upstream_error_text};
 pub use subtitle_convert::{ConvertedSubtitle, SubtitleConversion};
 pub use subtitles::{
     RequestedSubtitles, SubtitleFormat, SubtitleMap, SubtitleOptions, SubtitleSelection, Subtitles,
@@ -1706,6 +1706,11 @@ impl YoutubeDl {
                         total_fragments(&part)
                     ));
                 }
+            }
+            // `HttpFD` names the destination once the connection is
+            // established; fragment downloaders before their first fragment.
+            let announce = std::cell::Cell::new(upstream.is_some());
+            if !part.fragments.is_empty() && announce.replace(false) {
                 screen::screen(&format!("[download] Destination: {}", path.display()));
             }
             let bytes = self.download_with_progress(
@@ -1720,6 +1725,13 @@ impl YoutubeDl {
                     ..options
                 },
                 |mut progress: DownloadProgress| {
+                    if !matches!(
+                        progress.phase,
+                        DownloadPhase::Requesting | DownloadPhase::WaitingToRetry
+                    ) && announce.replace(false)
+                    {
+                        screen::screen(&format!("[download] Destination: {}", path.display()));
+                    }
                     // Private inputs are not published; upstream-style ones are.
                     if progress.phase == DownloadPhase::Publishing && upstream.is_none() {
                         return ControlFlow::Continue(());
@@ -1729,6 +1741,9 @@ impl YoutubeDl {
                     callback(progress)
                 },
             )?;
+            if announce.replace(false) {
+                screen::screen(&format!("[download] Destination: {}", path.display()));
+            }
             stored = stored
                 .checked_add(bytes)
                 .ok_or_else(|| Error::Postprocess("combined stream byte count overflow".into()))?;

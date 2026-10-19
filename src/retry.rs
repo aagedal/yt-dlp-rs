@@ -168,11 +168,8 @@ pub(crate) fn announce_retry(
     Some(Duration::from_secs_f64(delay.clamp(0.0, 86_400.0)))
 }
 
-/// The final error after `retries` retries (unchanged without retries).
+/// The final error of a retryable failure after `retries` retries.
 pub(crate) fn exhausted(error: Error, retries: u32) -> Error {
-    if retries == 0 {
-        return error;
-    }
     Error::RetriesExhausted {
         text: upstream_error_text(&error),
         retries,
@@ -181,19 +178,42 @@ pub(crate) fn exhausted(error: Error, retries: u32) -> Error {
 }
 
 /// Upstream-style error text: `HTTP Error CODE: Reason` for HTTP statuses.
-pub(crate) fn upstream_error_text(error: &Error) -> String {
+pub fn upstream_error_text(error: &Error) -> String {
     let status = match error {
         Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
         _ => None,
     };
     match status {
-        Some(status) => format!(
-            "HTTP Error {}: {}",
-            status.as_u16(),
-            status.canonical_reason().unwrap_or("")
-        ),
+        Some(status) => {
+            let reason = match error {
+                Error::Http(source) | Error::HttpRetryAfter { source, .. } => reason_phrase(source),
+                _ => None,
+            };
+            format!(
+                "HTTP Error {}: {}",
+                status.as_u16(),
+                reason
+                    .as_deref()
+                    .unwrap_or(status.canonical_reason().unwrap_or(""))
+            )
+        }
         None => error.to_string(),
     }
+}
+
+/// The server's reason phrase (like urllib's `HTTPError.reason`), which
+/// reqwest keeps only in its status error text: `... (CODE REASON) for url (...)`.
+fn reason_phrase(error: &reqwest::Error) -> Option<String> {
+    let text = error.to_string();
+    let rest = text
+        .strip_prefix("HTTP status client error (")
+        .or_else(|| text.strip_prefix("HTTP status server error ("))?;
+    let inner = match rest.rfind(") for url (") {
+        Some(end) => &rest[..end],
+        None => rest.strip_suffix(')')?,
+    };
+    let (_, reason) = inner.split_once(' ')?;
+    Some(reason.to_owned())
 }
 
 pub(crate) fn backoff(attempt: u32, retry_after: Duration) {

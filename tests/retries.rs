@@ -1465,6 +1465,11 @@ fn retry_after_respects_exhausted_budgets_and_permanent_statuses() {
                     )
                     .unwrap_err()
             };
+            // A retryable download failure reports through `RetryManager`.
+            let error = match error {
+                Error::RetriesExhausted { source, .. } => *source,
+                error => error,
+            };
             if status == 503 {
                 match error {
                     Error::HttpRetryAfter {

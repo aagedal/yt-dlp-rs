@@ -2,8 +2,12 @@ use std::path::PathBuf;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    /// Retries were exhausted (upstream `RetryManager.report_retry` text).
-    #[error("[download] Got error: {text}. Giving up after {retries} retries")]
+    /// Retries were exhausted (upstream `RetryManager.report_retry` text,
+    /// without the suffix when no retries were allowed).
+    #[error(
+        "[download] Got error: {text}{}",
+        if *retries == 0 { String::new() } else { format!(". Giving up after {retries} retries") }
+    )]
     RetriesExhausted {
         text: String,
         retries: u32,
