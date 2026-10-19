@@ -33,6 +33,8 @@ pub struct PostprocessOptions {
     /// `--ignore-errors`: a failed processor is reported and skipped, and the
     /// remaining processors continue with the latest completed file.
     pub ignore_errors: bool,
+    /// `--no-post-overwrites`: audio extraction keeps an existing output.
+    pub no_post_overwrites: bool,
     /// An already-downloaded file (the destination) to process instead of
     /// downloading, like upstream's `post_process` after `has already been
     /// downloaded`. It is replaced in place by same-named results and
@@ -101,20 +103,26 @@ fn absent(path: &Path) -> Result<()> {
         Err(error) => Err(error.into()),
     }
 }
+/// Upstream processors overwrite their outputs (`os.replace`, `ffmpeg -y`);
+/// only existing directories, symlinks and other nonregular files are
+/// refused.
+fn writable(path: &Path) -> Result<()> {
+    match fs::symlink_metadata(path) {
+        Ok(metadata) if metadata.is_file() => Ok(()),
+        Ok(_) => Err(Error::OutputExists(path.into())),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(error) => Err(error.into()),
+    }
+}
 fn publish(source: &Path, destination: &Path) -> Result<()> {
     fs::OpenOptions::new()
         .write(true)
         .open(source)?
         .sync_all()?;
+    writable(destination)?;
     tempfile::TempPath::try_from_path(source)?
-        .persist_noclobber(destination)
-        .map_err(|error| {
-            if error.error.kind() == std::io::ErrorKind::AlreadyExists {
-                Error::OutputExists(destination.into())
-            } else {
-                Error::Io(error.error)
-            }
-        })?;
+        .persist(destination)
+        .map_err(|error| Error::Io(error.error))?;
     Ok(())
 }
 fn checkpoint(
@@ -298,7 +306,7 @@ pub(crate) fn download(
         if disk == source
             && let Some(existing) = existing
         {
-            absent(path)?;
+            writable(path)?;
             return Ok(fs::rename(existing, path)?);
         }
         publish(disk, path)
@@ -382,15 +390,28 @@ pub(crate) fn download(
                         options.target(&current.ext).unwrap_or("best")
                     ));
                 }
-                if !plan.skip && !(plan.encoder.as_deref() == Some("copy") && path == current.path)
-                {
+                let converts = !plan.skip
+                    && !(plan.encoder.as_deref() == Some("copy") && path == current.path);
+                // `--no-post-overwrites`: an existing output (with its
+                // original on disk) is kept.
+                let original_exists = path != current.path
+                    || fs::symlink_metadata(audio_original_path(&current.path)?).is_ok();
+                let kept = converts
+                    && processors.no_post_overwrites
+                    && fs::symlink_metadata(&path).is_ok()
+                    && original_exists;
+                if kept {
+                    crate::screen::screen(&format!(
+                        "[ExtractAudio] Post-process file {} exists, skipping",
+                        path.display()
+                    ));
+                }
+                if converts && !kept {
                     crate::screen::screen(&format!(
                         "[ExtractAudio] Destination: {}",
                         path.display()
                     ));
-                    if existing != Some(path.as_path()) {
-                        absent(&path)?;
-                    }
+                    writable(&path)?;
                     let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
                         Error::Postprocess(
                             "audio conversion requires an explicit --ffmpeg-location PATH".into(),
@@ -461,7 +482,7 @@ pub(crate) fn download(
                         plan.extension,
                         path.display()
                     ));
-                    absent(&path)?;
+                    writable(&path)?;
                     if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break()
                     {
                         return Err(Error::DownloadCancelled);
@@ -720,13 +741,9 @@ pub(crate) fn download(
         } else {
             Vec::new()
         };
-        if existing != Some(last.path.as_path()) {
-            absent(&last.path)?;
-        }
+        writable(&last.path)?;
         for path in &retained {
-            if existing != Some(path.as_path()) {
-                absent(path)?;
-            }
+            writable(path)?;
         }
         if checkpoint(callback, last.bytes, DownloadPhase::Publishing).is_break() {
             return Err(Error::DownloadCancelled);

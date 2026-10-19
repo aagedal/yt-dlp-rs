@@ -189,6 +189,7 @@ fn clean(path: &Path) {
 fn options(format: &str, mode: VideoMode, keep: bool) -> PostprocessOptions {
     PostprocessOptions {
         existing: None,
+        no_post_overwrites: false,
         ignore_errors: false,
         thumbnail: None,
         metadata: false,
@@ -386,7 +387,7 @@ fn failed_conversion_preserves_sources_continues_and_never_records() {
 }
 
 #[test]
-fn existing_final_and_publication_race_never_overwrite() {
+fn existing_and_racing_outputs_are_replaced_like_upstream() {
     let server = Server::new();
     let tools = Tools::new("aac", false);
     let client = tools.client();
@@ -409,12 +410,11 @@ fn existing_final_and_publication_race_never_overwrite() {
                 ControlFlow::Continue(())
             },
         );
-        assert!(result.is_err());
-        assert_eq!(std::fs::read(final_path).unwrap(), b"competitor");
-        assert_eq!(
-            std::fs::read(directory.path().join("out.mp4")).unwrap(),
-            b"source video"
-        );
+        // Upstream processors overwrite their outputs (`ffmpeg -y`).
+        let result = result.unwrap();
+        assert_eq!(result.path, final_path);
+        assert_ne!(std::fs::read(&final_path).unwrap(), b"competitor");
+        assert!(!directory.path().join("out.mp4").exists());
         clean(directory.path());
     }
 }
@@ -781,7 +781,7 @@ fn chain_returning_to_original_filename_keeps_source_under_orig_name() {
 }
 
 #[test]
-fn failed_original_retention_still_preserves_completed_audio_after_later_stage_failure() {
+fn kept_original_replaces_a_stale_orig_and_completed_audio_survives_later_failure() {
     let server = Server::new();
     let tools = Tools::new("aac", false);
     let client = tools.client();
@@ -799,7 +799,8 @@ fn failed_original_retention_still_preserves_completed_audio_after_later_stage_f
         &plan,
     );
     assert!(result.is_err());
-    assert_eq!(std::fs::read(competitor).unwrap(), b"competitor");
+    // The kept original replaces the stale `.orig` file (`os.replace`).
+    assert_eq!(std::fs::read(competitor).unwrap(), b"source video");
     assert_eq!(
         std::fs::read(directory.path().join("movie.mp3")).unwrap(),
         b"converted audio"

@@ -491,6 +491,12 @@ struct Args {
     /// Re-encode media to FORMAT or ordered SOURCE>TARGET/TARGET rules
     #[arg(long, value_name = "FORMAT", overrides_with = "recode_video")]
     recode_video: Option<String>,
+    /// Overwrite post-processed files (default)
+    #[arg(long, overrides_with_all = ["post_overwrites", "no_post_overwrites"])]
+    post_overwrites: bool,
+    /// Do not overwrite post-processed files
+    #[arg(long, overrides_with_all = ["post_overwrites", "no_post_overwrites"])]
+    no_post_overwrites: bool,
     /// Keep the intermediate video file on disk after post-processing
     #[arg(short = 'k', long, overrides_with = "no_keep_video")]
     keep_video: bool,
@@ -1592,6 +1598,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let processors = PostprocessOptions {
         existing: None,
         ignore_errors: error_mode == ErrorMode::Ignore,
+        no_post_overwrites: args.no_post_overwrites,
         thumbnail: None,
         metadata: args.embed_metadata,
         // Upstream: `--embed-metadata` implies `--embed-chapters` unless

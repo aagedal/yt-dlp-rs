@@ -545,7 +545,7 @@ fn archive_cannot_append_to_published_audio_or_kept_source() {
 }
 
 #[test]
-fn missing_probe_preserves_source_and_publication_race_preserves_competitor() {
+fn missing_probe_preserves_source_and_publication_replaces_outputs_like_upstream() {
     let server = Server::new();
     let tools = Tools::new("aac", false);
     let directory = tempfile::tempdir().unwrap();
@@ -579,12 +579,10 @@ fn missing_probe_preserves_source_and_publication_race_preserves_competitor() {
             ControlFlow::Continue(())
         },
     );
-    assert!(result.is_err());
-    assert_eq!(std::fs::read(final_path).unwrap(), b"competitor");
-    assert_eq!(
-        std::fs::read(directory.path().join("race.mp4")).unwrap(),
-        b"source audio"
-    );
+    // Upstream processors overwrite their outputs (`os.replace`).
+    assert!(result.is_ok());
+    assert_eq!(std::fs::read(final_path).unwrap(), b"converted audio");
+    assert!(!directory.path().join("race.mp4").exists());
     clean(directory.path());
 }
 
@@ -739,4 +737,41 @@ fn cli_audio_default_prefers_audio_but_keep_and_explicit_selector_preserve_selec
             .iter()
             .any(|line| line.contains("segment.ts"))
     );
+}
+
+#[test]
+fn post_overwrites_replace_existing_audio_unless_disabled() {
+    let server = Server::new();
+    let tools = Tools::new("aac", false);
+    for (flag, kept) in [
+        (None, false),
+        (Some("--no-post-overwrites"), true),
+        (Some("--post-overwrites"), false),
+    ] {
+        let directory = tempfile::tempdir().unwrap();
+        std::fs::write(directory.path().join("out.m4a"), b"existing").unwrap();
+        let mut args = vec!["-x", "--no-progress", "-o", "out.mp4"];
+        args.extend(flag);
+        let url = server.url("source.mp4");
+        args.push(&url);
+        let output = tools.cli(&args, directory.path());
+        success(&output);
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let audio = std::fs::read(directory.path().join("out.m4a")).unwrap();
+        if kept {
+            // Upstream keeps both files when the output exists.
+            assert!(
+                stdout.ends_with("[ExtractAudio] Post-process file out.m4a exists, skipping\n")
+            );
+            assert_eq!(audio, b"existing");
+            assert!(directory.path().join("out.mp4").exists());
+        } else {
+            assert!(stdout.ends_with(
+                "[ExtractAudio] Destination: out.m4a\nDeleting original file out.mp4 (pass -k to keep)\n"
+            ));
+            assert_ne!(audio, b"existing");
+            assert!(!directory.path().join("out.mp4").exists());
+        }
+        clean(directory.path());
+    }
 }
