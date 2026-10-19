@@ -166,7 +166,7 @@ pub(crate) fn download(
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<ProcessedDownload> {
     let existing = processors.existing.as_deref();
-    if existing.is_none() {
+    if existing.is_none() && !options.overwrite {
         absent(destination)?;
     }
     let needs_audio = processors
@@ -752,8 +752,10 @@ pub(crate) fn download(
             place(&stage.disk, path)?;
         }
         place(&last.disk, &last.path)?;
-        // Upstream deletes the processed original unless it is kept.
-        if let Some(existing) = existing
+        // Upstream deletes the processed original unless it is kept (also
+        // the file a repeated download replaced).
+        let replaced = existing.or(options.overwrite.then_some(destination));
+        if let Some(existing) = replaced
             && existing != last.path
             && !retained.iter().any(|path| path == existing)
             && fs::symlink_metadata(existing).is_ok()

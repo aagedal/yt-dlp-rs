@@ -111,6 +111,58 @@ pub struct DownloadOptions {
     pub part_files: PartFiles,
     /// Where the streams of a merged download are stored.
     pub merge_files: MergeFiles,
+    /// Replace an existing destination, like upstream downloading again over
+    /// an existing file without `--continue` or with `--no-part`.
+    pub overwrite: bool,
+}
+
+/// Refuse an existing destination unless `options.overwrite`.
+pub(crate) fn check_destination(destination: &Path, options: &DownloadOptions) -> Result<()> {
+    if destination.exists() && !options.overwrite {
+        return Err(Error::OutputExists(destination.into()));
+    }
+    Ok(())
+}
+
+/// [`persist`] for a temporary path.
+pub(crate) fn persist_path(
+    path: tempfile::TempPath,
+    destination: &Path,
+    overwrite: bool,
+) -> Result<()> {
+    let result = if overwrite {
+        path.persist(destination)
+    } else {
+        path.persist_noclobber(destination)
+    };
+    result.map_err(|error| {
+        if error.error.kind() == std::io::ErrorKind::AlreadyExists {
+            Error::OutputExists(destination.into())
+        } else {
+            Error::Io(error.error)
+        }
+    })
+}
+
+/// Publish a finished temporary file, replacing an existing destination
+/// only with `overwrite`.
+pub(crate) fn persist(
+    file: tempfile::NamedTempFile,
+    destination: &Path,
+    overwrite: bool,
+) -> Result<()> {
+    let result = if overwrite {
+        file.persist(destination).map(drop)
+    } else {
+        file.persist_noclobber(destination).map(drop)
+    };
+    result.map_err(|error| {
+        if error.error.kind() == std::io::ErrorKind::AlreadyExists {
+            Error::OutputExists(destination.into())
+        } else {
+            Error::Io(error.error)
+        }
+    })
 }
 
 /// Intermediate-file policy for merged (two-stream) downloads.
@@ -135,8 +187,9 @@ pub enum PartFiles {
     /// Upstream `FILE.part`, kept on failure; with `resume`, an existing one
     /// is continued with a `Range` request (`--continue`).
     Part { resume: bool },
-    /// Upstream `--no-part`: write the destination directly.
-    NoPart,
+    /// Upstream `--no-part`: write the destination directly; with `resume`
+    /// (`--continue`), an existing destination is continued.
+    NoPart { resume: bool },
 }
 
 /// Upstream `FileDownloader.slow_down`: after each read, sleep until the
@@ -182,6 +235,7 @@ impl Default for DownloadOptions {
             update_time: false,
             part_files: PartFiles::Private,
             merge_files: MergeFiles::Private,
+            overwrite: false,
         }
     }
 }
@@ -351,9 +405,7 @@ pub(crate) fn download_file(
     options: DownloadOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
-    if destination.exists() {
-        return Err(Error::OutputExists(destination.into()));
-    }
+    check_destination(destination, &options)?;
     let source = info
         .url
         .to_file_path()
@@ -391,7 +443,7 @@ pub(crate) fn download_file(
         crate::filetime::apply(temporary.as_file(), info.metadata.timestamp);
     }
     reporter.report(DownloadPhase::Publishing, copied)?;
-    Target::Private(temporary).publish(destination)?;
+    Target::Private(temporary).publish(destination, options.overwrite)?;
     Ok(copied)
 }
 
@@ -527,19 +579,11 @@ impl Target {
         }
     }
 
-    fn publish(self, destination: &Path) -> Result<()> {
+    fn publish(self, destination: &Path, overwrite: bool) -> Result<()> {
         match self {
-            Target::Private(temporary) => {
-                temporary.persist_noclobber(destination).map_err(|e| {
-                    if e.error.kind() == std::io::ErrorKind::AlreadyExists {
-                        Error::OutputExists(destination.into())
-                    } else {
-                        Error::Io(e.error)
-                    }
-                })?;
-            }
+            Target::Private(temporary) => persist(temporary, destination, overwrite)?,
             Target::Part { path, .. } if path != destination => {
-                if fs::symlink_metadata(destination).is_ok() {
+                if !overwrite && fs::symlink_metadata(destination).is_ok() {
                     return Err(Error::OutputExists(destination.into()));
                 }
                 fs::rename(&path, destination)?;
@@ -557,9 +601,7 @@ fn download_resource(
     options: DownloadOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
-    if destination.exists() {
-        return Err(Error::OutputExists(destination.into()));
-    }
+    check_destination(destination, &options)?;
     let parent = destination
         .parent()
         .filter(|p| !p.as_os_str().is_empty())
@@ -574,15 +616,18 @@ fn download_resource(
                 .tempfile_in(parent)?,
         ),
         mode => {
-            let path = if mode == PartFiles::NoPart {
-                destination.to_owned()
-            } else {
-                let mut name = destination.as_os_str().to_owned();
-                name.push(".part");
-                PathBuf::from(name)
+            let (path, resume) = match mode {
+                PartFiles::NoPart { resume } => (destination.to_owned(), resume),
+                PartFiles::Part { resume } => {
+                    let mut name = destination.as_os_str().to_owned();
+                    name.push(".part");
+                    (PathBuf::from(name), resume)
+                }
+                PartFiles::Private => unreachable!("handled above"),
             };
-            // Upstream `continuedl`: continue an existing regular part file.
-            if mode == (PartFiles::Part { resume: true })
+            // Upstream `continuedl`: continue an existing regular part file
+            // (with `--no-part`, the destination itself).
+            if resume
                 && let Ok(metadata) = fs::metadata(&path)
                 && metadata.is_file()
             {
@@ -630,7 +675,7 @@ fn download_resource(
                     );
                 }
                 reporter.report(DownloadPhase::Publishing, actual)?;
-                temporary.publish(destination)?;
+                temporary.publish(destination, options.overwrite)?;
                 return Ok(actual);
             }
             Err(failure) if failure.retryable && attempt < options.retries => {

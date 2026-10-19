@@ -204,9 +204,7 @@ pub(crate) fn download(
     options: &DownloadOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
-    if destination.exists() {
-        return Err(Error::OutputExists(destination.into()));
-    }
+    crate::download::check_destination(destination, options)?;
     let parent = destination
         .parent()
         .filter(|parent| !parent.as_os_str().is_empty())
@@ -214,7 +212,7 @@ pub(crate) fn download(
     std::fs::create_dir_all(parent)?;
     let mut private = None;
     let temporary: PathBuf = match options.part_files {
-        PartFiles::NoPart => destination.to_owned(),
+        PartFiles::NoPart { .. } => destination.to_owned(),
         PartFiles::Part { .. } => {
             let mut name = destination.as_os_str().to_owned();
             name.push(".part");
@@ -283,13 +281,7 @@ pub(crate) fn download(
     let size = std::fs::metadata(&temporary)?.len();
     match private {
         Some(file) => {
-            file.persist_noclobber(destination).map_err(|error| {
-                if error.error.kind() == std::io::ErrorKind::AlreadyExists {
-                    Error::OutputExists(destination.into())
-                } else {
-                    Error::Io(error.error)
-                }
-            })?;
+            crate::download::persist(file, destination, options.overwrite)?;
         }
         None if temporary != destination => std::fs::rename(&temporary, destination)?,
         None => {}

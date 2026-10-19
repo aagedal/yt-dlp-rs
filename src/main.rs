@@ -2023,7 +2023,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let skip_unavailable_fragments = Some(!args.abort_on_unavailable_fragments);
     // Upstream `continuedl` and `nopart` for whole-file media downloads.
     let part_files = if args.no_part {
-        yt_dlp_rs::PartFiles::NoPart
+        yt_dlp_rs::PartFiles::NoPart {
+            resume: !args.no_continue,
+        }
     } else {
         yt_dlp_rs::PartFiles::Part {
             resume: !args.no_continue,
@@ -3026,6 +3028,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 force_record(&info)?;
                                 return Ok(());
                             }
+                            // Upstream `FileDownloader.download` reuses a single file
+                            // found under its own name only with --no-overwrites
+                            // or when continuing with part files; otherwise it
+                            // downloads again over it.
+                            let redownload = existing_media
+                                && overwrites.is_none()
+                                && existing_files[0] == path
+                                && info.requested_formats.is_empty()
+                                && (args.no_continue || args.no_part);
+                            let existing_media = existing_media && !redownload;
                             let mut process_existing = None;
                             if existing_media && overwrites == Some(true) {
                                 for existing in &existing_files {
@@ -3087,6 +3099,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         )
                         .into());
                             }
+                            let deferred_destination = std::cell::Cell::new(false);
                             // An existing file is processed without downloading.
                             let refreshed = if process_existing.is_none() {
                                 let partial = yt_dlp_rs::sections::is_partial(&info);
@@ -3138,7 +3151,32 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 // Merges announce each format's file instead, except
                                 // FFmpegFD merging the formats into one file.
                                 if info.requested_formats.is_empty() || ffmpeg_fd {
-                                    screen!("[download] Destination: {}", path.display());
+                                    // `HttpFD` names the destination once data
+                                    // arrives, after any resume messages.
+                                    let resumed = match part_files {
+                                        yt_dlp_rs::PartFiles::Part { resume: true } => {
+                                            let mut name = path.as_os_str().to_owned();
+                                            name.push(".part");
+                                            Some(PathBuf::from(name))
+                                        }
+                                        yt_dlp_rs::PartFiles::NoPart { resume: true } => {
+                                            Some(path.clone())
+                                        }
+                                        _ => None,
+                                    };
+                                    let resumes = !processing
+                                        && !ffmpeg_fd
+                                        && info.fragments.is_empty()
+                                        && resumed.is_some_and(|file| {
+                                            std::fs::metadata(file).is_ok_and(|metadata| {
+                                                metadata.is_file() && metadata.len() > 0
+                                            })
+                                        });
+                                    if resumes {
+                                        deferred_destination.set(true);
+                                    } else {
+                                        screen!("[download] Destination: {}", path.display());
+                                    }
                                 }
                                 // Upstream sleeps before each stream's FileDownloader.download.
                                 for _ in 0..info.requested_formats.len().max(1) {
@@ -3153,6 +3191,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             let mut reporter =
                                 ProgressReporter::new(&progress_options).for_download(info, &path);
                             let mut progress = |progress: yt_dlp_rs::DownloadProgress| {
+                                if progress.phase != DownloadPhase::Requesting
+                                    && deferred_destination.replace(false)
+                                {
+                                    screen!("[download] Destination: {}", path.display());
+                                }
                                 reporter.event(&progress);
                                 if matches!(
                                     progress.phase,
@@ -3269,6 +3312,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             retry_sleep,
                                             skip_unavailable_fragments,
                                             merge_files: yt_dlp_rs::MergeFiles::Private,
+                                            overwrite: false,
                                         },
                                         &mut progress,
                                     )?;
@@ -3310,6 +3354,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         merge_files: yt_dlp_rs::MergeFiles::Upstream {
                                             keep: args.keep_video,
                                         },
+                                        overwrite: redownload,
                                     },
                                     &processors,
                                     progress,
@@ -3351,6 +3396,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         merge_files: yt_dlp_rs::MergeFiles::Upstream {
                                             keep: args.keep_video,
                                         },
+                                        overwrite: redownload,
                                     },
                                     progress,
                                 )?;

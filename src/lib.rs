@@ -197,7 +197,7 @@ fn test_format(client: &Client, info: &VideoInfo, format: &VideoFormat) -> bool 
     let target = directory.path().join("format.tmp");
     // The test parameters carry no retry counts, so nothing is retried.
     let options = DownloadOptions {
-        part_files: PartFiles::NoPart,
+        part_files: PartFiles::NoPart { resume: false },
         skip_unavailable_fragments: Some(false),
         retries: 0,
         fragment_retries: 0,
@@ -1335,9 +1335,7 @@ impl YoutubeDl {
         callback: &mut dyn FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
         use std::{fs, ops::ControlFlow};
-        if destination.exists() {
-            return Err(Error::OutputExists(destination.into()));
-        }
+        download::check_destination(destination, &options)?;
         let streams = &info.requested_formats;
         if streams.len() != 2 {
             return Err(Error::Postprocess(
@@ -1552,13 +1550,7 @@ impl YoutubeDl {
         {
             return Err(Error::DownloadCancelled);
         }
-        output.persist_noclobber(destination).map_err(|error| {
-            if error.error.kind() == std::io::ErrorKind::AlreadyExists {
-                Error::OutputExists(destination.into())
-            } else {
-                Error::Io(error.error)
-            }
-        })?;
+        download::persist_path(output, destination, options.overwrite)?;
         if upstream == Some(false) {
             for path in &paths {
                 screen::screen(&format!(

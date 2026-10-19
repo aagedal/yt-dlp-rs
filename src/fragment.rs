@@ -86,9 +86,7 @@ pub(crate) fn download(
     keep_fragments: bool,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
-    if destination.exists() {
-        return Err(Error::OutputExists(destination.into()));
-    }
+    crate::download::check_destination(destination, &options)?;
     if info.fragments.is_empty() || info.fragments.len() > 10_000 {
         return Err(unsupported("fragment count must be between 1 and 10000"));
     }
@@ -130,7 +128,7 @@ pub(crate) fn download(
     // Upstream `--keep-fragments`: `TMPFILENAME-FragN` beside the output.
     let keep = keep_fragments.then(|| {
         let mut name = destination.as_os_str().to_owned();
-        if options.part_files != crate::PartFiles::NoPart {
+        if !matches!(options.part_files, crate::PartFiles::NoPart { .. }) {
             name.push(".part");
         }
         name
@@ -188,13 +186,7 @@ pub(crate) fn download(
         crate::filetime::apply(temporary.as_file(), filetime);
     }
     reporter.report(DownloadPhase::Publishing, stored)?;
-    temporary.persist_noclobber(destination).map_err(|error| {
-        if error.error.kind() == std::io::ErrorKind::AlreadyExists {
-            Error::OutputExists(destination.into())
-        } else {
-            Error::Io(error.error)
-        }
-    })?;
+    crate::download::persist(temporary, destination, options.overwrite)?;
     Ok(stored)
 }
 /// One fragment with `--fragment-retries` (`Ok(None)` when skipped as

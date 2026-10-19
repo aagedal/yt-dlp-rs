@@ -140,3 +140,36 @@ fn existing_files_are_processed_again() {
             .starts_with(".yt-dlp-rs-")
     }));
 }
+
+#[test]
+fn without_continuing_or_part_files_an_existing_file_is_downloaded_again() {
+    let url = format!("{}/v.mp4", serve());
+    let directory = tempfile::tempdir().unwrap();
+    let media = directory.path().join("o.mp4");
+    let fresh = b"\0\0\0\x18ftypisom media bytes";
+    std::fs::write(&media, b"old").unwrap();
+    let output = run(directory.path(), &["--no-progress", "--no-continue"], &url);
+    assert!(
+        stdout(&output).ends_with("[download] Destination: o.mp4\n[download] Download completed\n")
+    );
+    assert_eq!(std::fs::read(&media).unwrap(), fresh);
+    // --no-part continues the existing file itself; this server ignores
+    // ranges, so the resume fails before the destination is named.
+    std::fs::write(&media, b"old").unwrap();
+    let output = run(directory.path(), &["--no-progress", "--no-part"], &url);
+    assert!(stdout(&output).ends_with(
+        "[download] Resuming download at byte 3\n[download] Unable to resume\n[download] Destination: o.mp4\n[download] Download completed\n"
+    ));
+    assert_eq!(std::fs::read(&media).unwrap(), fresh);
+    // --no-overwrites still reuses it.
+    std::fs::write(&media, b"old").unwrap();
+    let output = run(
+        directory.path(),
+        &["--no-progress", "--no-continue", "-w"],
+        &url,
+    );
+    assert!(stdout(&output).ends_with(
+        "[download] o.mp4 has already been downloaded\n[download] Download completed\n"
+    ));
+    assert_eq!(std::fs::read(&media).unwrap(), b"old");
+}

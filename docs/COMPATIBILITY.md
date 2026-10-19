@@ -2254,6 +2254,16 @@ and the original is deleted unless kept. Fixups are not repeated, like
 upstream's default policy. Verified against pinned upstream for audio
 extraction, remuxing, recoding and metadata embedding with and without `-k`.
 
-Native boundaries: `--no-continue`/`--no-part` resume semantics (upstream
-downloads again over an existing file) are not implemented; nonregular and
-dangling-symlink destinations are refused instead of written through.
+A single file found under its prepared name is reused only with
+`-w`/`--no-overwrites` or when continuing with part files (upstream
+`FileDownloader.download`); with `--no-continue` or `--no-part` it is
+downloaded again over the existing file (`--no-part` with `--continue` first
+tries to resume the existing file itself), and processing then deletes it
+unless kept. When a part file (or, with `--no-part`, the destination) is
+resumed, `[download] Destination` follows the resume messages, as upstream
+names it once data arrives.
+
+Native boundaries: processed downloads use a private workspace, so they never
+resume an existing part file or destination (upstream resumes them before
+processing); nonregular and dangling-symlink destinations are refused instead
+of written through.
