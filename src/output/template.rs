@@ -65,6 +65,7 @@ struct Format {
 enum Value<'a> {
     Text(&'a str),
     Integer(u64),
+    Float(f64),
     Boolean(bool),
 }
 
@@ -109,8 +110,15 @@ const FIELDS: &[&str] = &[
     "video_ext",
     "audio_ext",
     "duration_string",
-    "fulltitle",
     "thumbnail",
+    "aspect_ratio",
+    "fps",
+    "tbr",
+    "abr",
+    "vbr",
+    "asr",
+    "audio_channels",
+    "fulltitle",
 ];
 
 /// Whether a represented video field has a value.
@@ -220,6 +228,16 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
         "duration_string" => info.metadata.duration_string.as_deref().map(Text),
         "fulltitle" => info.fulltitle.as_deref().map(Text),
         "thumbnail" => info.metadata.thumbnail.as_deref().map(Text),
+        "aspect_ratio" => info.aspect_ratio.map(Float),
+        "fps" => info.fps.map(|fps| match fps {
+            crate::info::PyNumber::Int(n) if n >= 0 => Integer(n as u64),
+            other => Float(other.as_f64()),
+        }),
+        "tbr" => info.tbr.map(Float),
+        "abr" => info.abr.map(Float),
+        "vbr" => info.vbr.map(Float),
+        "asr" => info.asr.map(|n| Integer(n.into())),
+        "audio_channels" => info.audio_channels.map(|n| Integer(n.into())),
         _ => return Err(invalid(format!("unknown or unsupported field {name:?}"))),
     })
 }
@@ -438,6 +456,7 @@ fn substitution(
         let value = match value {
             Value::Text(s) => bounded(s)?.to_owned(),
             Value::Integer(n) => n.to_string(),
+            Value::Float(n) => crate::screen::py_float(n),
             Value::Boolean(b) => if b { "True" } else { "False" }.into(),
         };
         text(&super::exec::shell_quote(&value), &format)
@@ -445,6 +464,7 @@ fn substitution(
         let value = match value {
             Value::Text(s) => python_json_string(bounded(s)?, !format.plus),
             Value::Integer(n) => n.to_string(),
+            Value::Float(n) => crate::screen::py_float(n),
             Value::Boolean(b) => b.to_string(),
         };
         // Upstream formats the JSON text with the remaining `%s` flags.
@@ -454,12 +474,14 @@ fn substitution(
             Value::Text(s) if print => bounded(s)?.to_owned(),
             Value::Text(s) => sanitize(s, options)?,
             Value::Integer(n) => n.to_string(),
+            Value::Float(n) => crate::screen::py_float(n),
             Value::Boolean(b) => if b { "True" } else { "False" }.into(),
         };
         text(&value, &format)
     } else {
         let number = match value {
             Value::Integer(n) => Some(n as f64),
+            Value::Float(n) => Some(n),
             Value::Boolean(b) => Some(u8::from(b) as f64),
             Value::Text(s) => number(s)?,
         };

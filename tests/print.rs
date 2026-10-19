@@ -454,3 +454,46 @@ fn get_aliases_print_upstream_forced_fields_in_order() {
         "Clip\nclip\nhd - 1280x720 (main)\n"
     );
 }
+
+#[test]
+fn numeric_rate_fields_render_like_python() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    std::fs::write(
+        &path,
+        serde_json::json!({
+            "id": "clip", "title": "Clip", "ext": "mp4", "url": "http://127.0.0.1:1/v.mp4",
+            "webpage_url": "http://127.0.0.1:1/page", "extractor": "generic", "extractor_key": "Generic",
+            "formats": [
+                {"format_id": "v", "url": "http://127.0.0.1:1/v.mp4", "ext": "mp4", "vcodec": "avc1", "acodec": "none",
+                 "width": 1280, "height": 720, "tbr": 1000.0, "fps": 30},
+                {"format_id": "h", "url": "http://127.0.0.1:1/h.mp4", "ext": "mp4", "vcodec": "avc1", "acodec": "none",
+                 "width": 640, "height": 360, "tbr": 500.0, "fps": 29.97},
+                {"format_id": "a", "url": "http://127.0.0.1:1/a.m4a", "ext": "m4a", "vcodec": "none", "acodec": "mp4a",
+                 "tbr": 96.0, "asr": 44100},
+            ],
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let print = |format: &str| {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["-f", format, "-O"])
+            .arg("%(tbr)s|%(fps)s|%(fps)j|%(aspect_ratio)05.2f|%(abr).1f|%(vbr)d|%(asr)s")
+            .arg("--load-info-json")
+            .arg(&path)
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        String::from_utf8(output.stdout).unwrap()
+    };
+    // Checked with pinned upstream: ints stay ints (30), floats use repr, and
+    // a merge sums the rates and takes video fps/vbr and audio abr/asr.
+    assert_eq!(print("v"), "1000.0|30|30|01.78|0.0|1000|NA\n");
+    assert_eq!(print("h"), "500.0|29.97|29.97|01.78|0.0|500|NA\n");
+    assert_eq!(print("v+a"), "1096.0|30|30|01.78|96.0|1000|44100\n");
+}

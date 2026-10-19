@@ -858,8 +858,8 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 // and `int_or_none(audioSamplingRate)`.
                 fps: attrs
                     .get("frameRate")
-                    .and_then(|value| value.trim().parse::<u32>().ok())
-                    .map(f64::from),
+                    .and_then(|value| value.trim().parse::<i64>().ok())
+                    .map(crate::info::PyNumber::Int),
                 asr: attrs
                     .get("audioSamplingRate")
                     .and_then(|value| value.trim().parse().ok()),

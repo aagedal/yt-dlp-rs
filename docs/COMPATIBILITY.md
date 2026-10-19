@@ -634,9 +634,13 @@ and, after IDs are assigned, `format` (`'{id} - {resolution or unknown}'` plus
 (`formatSeconds`). The selection copies them; merges join `format` with `+` and
 take the video's resolution and aspect ratio. Templates can use `format`,
 `resolution`, `protocol`, `vcodec`, `acodec`, `dynamic_range`, `video_ext`,
-`audio_ext`, `duration_string`, `fulltitle` and `thumbnail` (floating-point
-fields such as `aspect_ratio` are not yet available to the typed template
-renderer). Checked against pinned upstream on local HLS, DASH and HTML5 pages.
+`audio_ext`, `duration_string`, `fulltitle`, `thumbnail` and the numbers
+`aspect_ratio`, `fps`, `tbr`, `vbr`, `abr`, `asr` and `audio_channels`, rendered
+like Python (`%s`/`%j` use `repr`, ints stay ints, so DASH/YouTube `fps` is `30`
+and HLS `29.97`). Results copy the selected format's rates; merges sum `tbr`
+(each format's first of tbr/vbr/abr) and take the video's `fps`/`vbr` and the
+audio's `abr`/`asr`/`audio_channels`. Checked against pinned upstream on local
+HLS, DASH and HTML5 pages and a saved info JSON.
 
 ## Format sorting
 
@@ -666,7 +670,7 @@ dimensions are unknown natively (upstream keeps them); upstream
 `filesize_approx`, `preference` and `language_preference` are not yet represented.
 HLS `FRAME-RATE` gives `fps` (`float_or_none`); DASH `frameRate` and
 `audioSamplingRate` give `fps`/`asr` (`int_or_none`, so fractional rates stay
-unknown; integral `fps` serializes as a float), DASH formats get upstream's
+unknown), DASH formats get upstream's
 `DASH video`/`DASH audio` `format_note`, and the `mul`/`und`/`zxx`/`mis` languages
 are dropped.
 

@@ -150,7 +150,7 @@ pub struct VideoFormat {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub quality: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub fps: Option<f64>,
+    pub fps: Option<PyNumber>,
     /// Audio sample rate.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub asr: Option<u32>,
@@ -388,6 +388,20 @@ pub struct VideoInfo {
     pub format: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub aspect_ratio: Option<f64>,
+    /// The selected format's rates and audio properties (merges: video
+    /// `fps`/`vbr`, audio `abr`/`asr`/`audio_channels`, summed `tbr`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fps: Option<PyNumber>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tbr: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vbr: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub abr: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub asr: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub audio_channels: Option<u32>,
     /// Extractor sort order (`_format_sort_fields`), before the defaults.
     #[serde(
         default,
@@ -514,6 +528,19 @@ impl VideoInfo {
                         format_resolution(video, Some("unknown")),
                         video.aspect_ratio,
                     );
+                    // `sum(filtered('tbr', 'vbr', 'abr'))`: each format's first
+                    // non-null rate.
+                    let rates = (
+                        video.fps,
+                        selected
+                            .iter()
+                            .filter_map(|f| f.tbr.or(f.vbr).or(f.abr))
+                            .sum::<f64>(),
+                        video.vbr,
+                        audio.abr,
+                        audio.asr,
+                        audio.audio_channels,
+                    );
                     let (vcodec, acodec, dynamic_range) = (
                         video.vcodec.clone(),
                         audio.acodec.clone(),
@@ -538,6 +565,12 @@ impl VideoInfo {
                     self.format = Some(description.0).filter(|format| !format.is_empty());
                     self.resolution = description.1;
                     self.aspect_ratio = description.2;
+                    self.fps = rates.0;
+                    self.tbr = Some(rates.1);
+                    self.vbr = rates.2;
+                    self.abr = rates.3;
+                    self.asr = rates.4;
+                    self.audio_channels = rates.5;
                     self.vcodec = vcodec;
                     self.acodec = acodec;
                     self.dynamic_range = dynamic_range;
@@ -577,6 +610,12 @@ impl VideoInfo {
         self.resolution = selected.resolution.clone();
         self.format = selected.format.clone();
         self.aspect_ratio = selected.aspect_ratio;
+        self.fps = selected.fps;
+        self.tbr = selected.tbr;
+        self.vbr = selected.vbr;
+        self.abr = selected.abr;
+        self.asr = selected.asr;
+        self.audio_channels = selected.audio_channels;
         self.vcodec = selected.vcodec.clone();
         self.acodec = selected.acodec.clone();
         self.dynamic_range = selected.dynamic_range.clone();
@@ -882,6 +921,24 @@ pub(crate) fn fill_format_fields(formats: &mut [VideoFormat]) {
     }
 }
 
+/// A Python `int` or `float` metadata value, serialized as upstream does
+/// (`30` versus `30.0`).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum PyNumber {
+    Int(i64),
+    Float(f64),
+}
+
+impl PyNumber {
+    pub fn as_f64(self) -> f64 {
+        match self {
+            Self::Int(value) => value as f64,
+            Self::Float(value) => value,
+        }
+    }
+}
+
 /// Upstream `formatSeconds` for whole seconds: `H:MM:SS`, `M:SS` or `S`.
 pub fn format_seconds(seconds: u64) -> String {
     let (hours, minutes, seconds) = (seconds / 3600, seconds / 60 % 60, seconds % 60);
@@ -978,7 +1035,7 @@ fn sort_fields(format: &VideoFormat) -> crate::format_sort::Fields {
         format.source_preference.map(|p| p as f64),
     );
     number("quality", format.quality);
-    number("fps", format.fps);
+    number("fps", format.fps.map(PyNumber::as_f64));
     number("asr", format.asr.map(f64::from));
     number("audio_channels", format.audio_channels.map(f64::from));
     fields
@@ -1114,6 +1171,12 @@ mod tests {
             resolution: None,
             format: None,
             aspect_ratio: None,
+            fps: None,
+            tbr: None,
+            vbr: None,
+            abr: None,
+            asr: None,
+            audio_channels: None,
             vcodec: None,
             acodec: None,
             dynamic_range: None,

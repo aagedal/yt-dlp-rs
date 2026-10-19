@@ -44,8 +44,8 @@ pub use extractor::YoutubeOptions;
 pub use format_sort::FormatSorter;
 pub use http::HttpOptions;
 pub use info::{
-    ByteRange, ExtractResult, Fragment, HlsAes128, Metadata, PlaylistInfo, StreamKind, Thumbnail,
-    VideoFormat, VideoInfo,
+    ByteRange, ExtractResult, Fragment, HlsAes128, Metadata, PlaylistInfo, PyNumber, StreamKind,
+    Thumbnail, VideoFormat, VideoInfo,
 };
 pub use info_json::{
     InfoJsonWrite, info_json_path, load_info_json, playlist_info_json, to_python_json,

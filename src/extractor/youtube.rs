@@ -72,7 +72,7 @@ struct Candidate {
     source_preference: i64,
     /// `int_or_none(contentLength)`.
     filesize: Option<u64>,
-    fps: Option<f64>,
+    fps: Option<crate::info::PyNumber>,
     asr: Option<u32>,
     audio_channels: Option<u32>,
     abr: Option<f64>,
@@ -431,7 +431,9 @@ fn parse_candidates(
             source_preference: if itag.to_string() == "22" { -5 } else { -1 }
                 + if name.contains("Premium") { 100 } else { 0 },
             // `fps if fps > 1 else None`.
-            fps: small("fps").filter(|fps| *fps > 1).map(f64::from),
+            fps: small("fps")
+                .filter(|fps| *fps > 1)
+                .map(|fps| crate::info::PyNumber::Int(fps.into())),
             asr: small("audioSampleRate"),
             audio_channels: source["audioChannels"]
                 .as_u64()
@@ -648,6 +650,12 @@ fn extract_watch_page_with_caption_options(
         resolution: None,
         format: None,
         aspect_ratio: None,
+        fps: None,
+        tbr: None,
+        vbr: None,
+        abr: None,
+        asr: None,
+        audio_channels: None,
         vcodec: None,
         acodec: None,
         dynamic_range: None,
