@@ -1,6 +1,7 @@
 mod exec;
 mod filename;
 mod formats;
+mod links;
 mod print;
 mod sanitize;
 mod subtitles;
@@ -9,6 +10,7 @@ mod thumbnails;
 pub use exec::{ExecCommand, ExecCommands, Stage};
 pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths, replace_extension};
 pub use formats::render_formats;
+pub use links::{iri_to_uri, link_file};
 pub use print::{PrintTemplate, PrintToFile, StagePaths};
 
 /// The case-insensitive `WHEN:` stage name of a `--print` value (`video`

@@ -428,3 +428,74 @@ fn load_info_json_reselects_and_downloads_without_extraction() {
     assert_eq!(output.status.code(), Some(1));
     assert!(String::from_utf8_lossy(&output.stderr).starts_with("ERROR: info JSON failed: "));
 }
+
+#[test]
+fn internet_shortcuts_follow_upstream_write_link_file() {
+    let server = Server::new();
+    let dir = tempfile::tempdir().unwrap();
+    let url = server.url("/one.mp4");
+    let stderr = run(&server.cli(
+        dir.path(),
+        "/one.mp4",
+        &[
+            "--write-url-link",
+            "--write-webloc-link",
+            "--write-desktop-link",
+            "--skip-download",
+            "-o",
+            "%(title)s x.%(ext)s",
+        ],
+    ));
+    assert!(stderr.contains("[info] Writing internet shortcut (.url) to: one x.url"));
+    assert_eq!(
+        fs::read_to_string(dir.path().join("one x.url")).unwrap(),
+        format!("[InternetShortcut]\r\nURL={url}\r\n")
+    );
+    assert!(
+        fs::read_to_string(dir.path().join("one x.webloc"))
+            .unwrap()
+            .contains(&format!("\t<string>{url}</string>\n"))
+    );
+    assert_eq!(
+        fs::read_to_string(dir.path().join("one x.desktop")).unwrap(),
+        format!(
+            "[Desktop Entry]\nEncoding=UTF-8\nName=one\\sx\nType=Link\nURL={url}\nIcon=text-html\n"
+        )
+    );
+    // Existing shortcuts are kept unless -w; simulation writes none.
+    fs::write(dir.path().join("one x.url"), "old").unwrap();
+    let stderr = run(&server.cli(
+        dir.path(),
+        "/one.mp4",
+        &[
+            "--write-url-link",
+            "--skip-download",
+            "-o",
+            "%(title)s x.%(ext)s",
+        ],
+    ));
+    assert!(stderr.contains("[info] Internet shortcut (.url) is already present"));
+    assert_eq!(
+        fs::read_to_string(dir.path().join("one x.url")).unwrap(),
+        "old"
+    );
+    run(&server.cli(
+        dir.path(),
+        "/one.mp4",
+        &[
+            "--write-url-link",
+            "-w",
+            "--skip-download",
+            "-o",
+            "%(title)s x.%(ext)s",
+        ],
+    ));
+    assert!(
+        fs::read_to_string(dir.path().join("one x.url"))
+            .unwrap()
+            .starts_with("[InternetShortcut]")
+    );
+    let simulated = tempfile::tempdir().unwrap();
+    run(&server.cli(simulated.path(), "/one.mp4", &["--write-link", "-s"]));
+    assert!(names(simulated.path()).is_empty());
+}

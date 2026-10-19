@@ -143,6 +143,8 @@ Supported today:
   `--no-download-archive` follow upstream archive control.
 - `-r/--limit-rate RATE` throttles media transfers like upstream; `--sleep-interval`,
   `--max-sleep-interval` and `--sleep-subtitles` pause before downloads.
+- `--write-link`/`--write-url-link`/`--write-webloc-link`/`--write-desktop-link`
+  write internet shortcuts.
 - `--load-info-json FILE` processes saved `.info.json` dictionaries without
   extraction (playlists fall back to their URL, as upstream).
 - `--exec [WHEN:]CMD` runs shell commands at upstream's stages (POSIX only).

@@ -197,6 +197,18 @@ struct Args {
     /// Process the video or playlist information in FILE (written with --write-info-json) instead of URLs
     #[arg(long, alias = "load-info", value_name = "FILE")]
     load_info_json: Option<String>,
+    /// Write an internet shortcut file for the platform (.webloc on macOS, .desktop on Linux, .url otherwise)
+    #[arg(long)]
+    write_link: bool,
+    /// Write a .url Windows internet shortcut
+    #[arg(long)]
+    write_url_link: bool,
+    /// Write a .webloc macOS internet shortcut
+    #[arg(long)]
+    write_webloc_link: bool,
+    /// Write a .desktop Linux internet shortcut
+    #[arg(long)]
+    write_desktop_link: bool,
     /// Write cleaned video and playlist metadata to .info.json files (existing files are kept)
     #[arg(long, overrides_with = "no_write_info_json")]
     write_info_json: bool,
@@ -1108,6 +1120,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         warning!("WARNING: info JSON is not attached to mkv/mka files when embedding metadata");
     }
     let writes_description = args.write_description && !simulate;
+    // Upstream `write_links`: --write-link picks the platform's type.
+    let platform_link = if cfg!(target_os = "macos") {
+        "webloc"
+    } else if cfg!(target_os = "linux") {
+        "desktop"
+    } else {
+        "url"
+    };
+    let link_kinds: Vec<&str> = [
+        ("url", args.write_url_link),
+        ("webloc", args.write_webloc_link),
+        ("desktop", args.write_desktop_link),
+    ]
+    .into_iter()
+    .filter(|(kind, enabled)| *enabled || (args.write_link && *kind == platform_link))
+    .map(|(kind, _)| kind)
+    .collect();
+    let writes_links = !link_kinds.is_empty() && !simulate;
     // Upstream --embed-thumbnail writes the thumbnail when not otherwise asked
     // and then deletes it after embedding.
     let keeps_thumbnails = thumbnail_mode != 0;
@@ -1458,6 +1488,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         && !writes_description
                         && !writes_thumbnails
                         && !exec.has(Stage::BeforeDownload)
+                        && !writes_links
                         && !prints_stage(Stage::BeforeDownload)
                         && info
                             .requested_subtitles
@@ -1669,6 +1700,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         let written =
                             write_info_json_with(info_json, &value, overwrites != Some(false))?;
                         report_info_json("video", info_json, written);
+                    }
+                    // Upstream writes internet shortcuts after info JSON.
+                    if writes_links {
+                        write_links(
+                            &link_kinds,
+                            &info,
+                            &templates,
+                            &template_options,
+                            overwrites,
+                        )?;
                     }
                     let prepared = path.to_string_lossy().into_owned();
                     stage_print(Stage::BeforeDownload, stage_paths(None, &prepared))?.emit()?;
@@ -2019,6 +2060,49 @@ impl std::error::Error for UsageError {}
 
 fn usage(message: impl std::fmt::Display) -> UsageError {
     UsageError(message.to_string())
+}
+
+/// Upstream `_write_link_file` for each requested type. Like upstream, an
+/// existing shortcut is kept unless `-w`/`--no-overwrites` is given.
+fn write_links(
+    kinds: &[&str],
+    info: &yt_dlp_rs::VideoInfo,
+    templates: &OutputTemplates,
+    options: &TemplateOptions,
+    overwrites: Option<bool>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let Some(uri) = yt_dlp_rs::output::iri_to_uri(&info.webpage_url) else {
+        warning!(
+            "WARNING: Cannot write internet shortcut file because the actual URL of \"{}\" is unknown or disallowed",
+            info.webpage_url
+        );
+        return Ok(());
+    };
+    let Some(base) = templates.prepare(info, Some("link"), options)? else {
+        return Ok(());
+    };
+    for kind in kinds {
+        let path = PathBuf::from(yt_dlp_rs::output::replace_extension(
+            &base.to_string_lossy(),
+            kind,
+            Some(&info.ext),
+        ));
+        if let Some(parent) = path.parent().filter(|p| !p.as_os_str().is_empty()) {
+            std::fs::create_dir_all(parent)?;
+        }
+        if overwrites != Some(false) && path.exists() {
+            screen!("[info] Internet shortcut (.{kind}) is already present");
+            continue;
+        }
+        screen!(
+            "[info] Writing internet shortcut (.{kind}) to: {}",
+            path.display()
+        );
+        let text = yt_dlp_rs::output::link_file(kind, &uri, &path.to_string_lossy());
+        std::fs::write(&path, text)
+            .map_err(|_| format!("Cannot write internet shortcut {}", path.display()))?;
+    }
+    Ok(())
 }
 
 fn stage_paths<'a>(filepath: Option<&'a str>, prepared: &'a str) -> StagePaths<'a> {
