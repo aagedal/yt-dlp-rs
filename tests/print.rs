@@ -204,12 +204,20 @@ fn listing_with_print_keeps_selection_and_prints_after_the_table() {
 fn filename_errors_only_fail_templates_that_use_filename() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
-    let stdout = success(&server.cli(
+    // Checked with pinned upstream: `-o -` sends prints to stderr
+    // (`logtostderr`), and the media filename is `-`.
+    let output = server.cli(
         &["/page.html"],
-        &["-O", "%(id)s", "-o", "-"],
+        &["-O", "%(id)s %(filename)s", "-o", "-"],
         directory.path(),
-    ));
-    assert_eq!(stdout, "page-1\n");
+    );
+    assert!(output.status.success());
+    assert!(output.stdout.is_empty());
+    assert!(
+        String::from_utf8_lossy(&output.stderr).contains("\npage-1 -\n"),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     let output = server.cli(
         &["/page.html", "/media.mp4"],
         &["-e", "--get-filename", "-o", "%(width|)s"],
@@ -226,10 +234,10 @@ fn filename_errors_only_fail_templates_that_use_filename() {
         &["-e", "--get-filename", "-o", "-"],
         directory.path(),
     );
-    assert!(!output.status.success());
+    assert!(output.status.success());
     assert!(output.stdout.is_empty());
     assert!(
-        String::from_utf8_lossy(&output.stderr).contains("output filename failed"),
+        String::from_utf8_lossy(&output.stderr).ends_with("Fixture: \"A/B\" Épisode (1)\n-\n"),
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );

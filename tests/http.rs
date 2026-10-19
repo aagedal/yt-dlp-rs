@@ -1454,3 +1454,37 @@ fn generic_direct_links_follow_upstream_content_type_and_extension_rules() {
         b"media"
     );
 }
+
+#[test]
+fn output_template_dash_streams_media_to_stdout_like_upstream() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    // Checked with pinned upstream: media goes to stdout, screen lines to
+    // stderr, postprocessors are skipped and sidecars derive from `-`.
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--no-progress", "-o", "-", "--write-info-json", "-x"])
+        .arg(server.url("/clip.mp4"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    assert_eq!(output.stdout, b"media bytes");
+    assert!(stderr.contains("[info] Writing video metadata as JSON to: -.info.json\n[download] Destination: -\n[download] Download completed\n"), "{stderr}");
+    assert!(!stderr.contains("ExtractAudio"));
+    let mut names: Vec<_> = std::fs::read_dir(directory.path())
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name().into_string().unwrap())
+        .collect();
+    names.sort();
+    assert_eq!(names, ["-.info.json"]);
+    // JSON output follows the screen to stderr.
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-o", "-", "-j"])
+        .arg(server.url("/clip.mp4"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(output.stdout.is_empty());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("\"id\":\"clip\""));
+}

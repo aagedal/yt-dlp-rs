@@ -605,7 +605,8 @@ pub(super) fn render_kind(
 ) -> Result<PathBuf> {
     let template = crate::batch::expand_path_text(template);
     let mut output = expand(&template, info, options)?;
-    if output.is_empty() || output == "-" {
+    // Media `-` is stdout (the caller handles it); typed files derive from it.
+    if output.is_empty() || (output == "-" && kind.is_none()) {
         return Err(invalid("empty paths and stdout output are unsupported"));
     }
     if let Some(ext) = kind.and_then(super::filename::forced_extension) {

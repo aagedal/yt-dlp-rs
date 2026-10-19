@@ -447,6 +447,15 @@ enum Pick<'a> {
 }
 
 impl VideoInfo {
+    /// This result narrowed to one of its formats (upstream
+    /// `new_info.update(fmt)` for a requested format's download).
+    pub fn with_selected_format(&self, format: &VideoFormat) -> VideoInfo {
+        let mut info = self.clone();
+        info.requested_formats.clear();
+        info.apply_single(format);
+        info
+    }
+
     /// Whether this is a generic direct link (`direct` is true).
     pub fn is_direct(&self) -> bool {
         self.direct == Some(true)

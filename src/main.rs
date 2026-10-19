@@ -29,6 +29,15 @@ static NO_WARNINGS: AtomicBool = AtomicBool::new(false);
 /// Upstream `logtostderr` (`-o -`): screen and progress output use stderr.
 static LOG_TO_STDERR: AtomicBool = AtomicBool::new(false);
 
+/// Upstream `_out_files.out`: stdout, or stderr with `logtostderr`.
+fn out_stream() -> Box<dyn Write> {
+    if LOG_TO_STDERR.load(Ordering::Relaxed) {
+        Box::new(io::stderr().lock())
+    } else {
+        Box::new(io::stdout().lock())
+    }
+}
+
 /// Upstream `to_screen`: stdout, or stderr with `logtostderr`.
 macro_rules! screen {
     ($($arg:tt)*) => {
@@ -686,6 +695,10 @@ fn prepare_media(
     info: &yt_dlp_rs::VideoInfo,
     options: &TemplateOptions,
 ) -> yt_dlp_rs::Result<PathBuf> {
+    // `-o -`: the media goes to stdout.
+    if templates.get(None) == "-" {
+        return Ok(PathBuf::from("-"));
+    }
     Ok(templates
         .prepare(info, None, options)?
         .expect("default output template is non-empty"))
@@ -1262,6 +1275,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     };
     let templates = OutputTemplates::parse(&args.output, args.restrict_filenames);
     LOG_TO_STDERR.store(templates.get(None) == "-", Ordering::Relaxed);
+    let downloader = downloader.with_prefer_best_format(templates.get(None) == "-");
     let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
@@ -1438,7 +1452,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut processed: i64 = 0;
     let mut cancelled: Option<Cancel> = None;
     let mut failed = false;
-    let mut stdout = io::stdout().lock();
+    // Upstream `_out_files.out`: JSON, listings and prints use stderr with
+    // `logtostderr` (`-o -`), whose stdout carries the media.
+    let mut stdout = out_stream();
     // Upstream `download_with_info_file` replaces the URLs.
     let inputs: Vec<(String, Option<ExtractResult>)> = match &args.load_info_json {
         Some(file) => {
@@ -2072,7 +2088,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                     let post_printed = std::cell::Cell::new(false);
                     let mut reporter = ProgressReporter::new(&progress_options);
-                    let progress = |progress: yt_dlp_rs::DownloadProgress| {
+                    let mut progress = |progress: yt_dlp_rs::DownloadProgress| {
                         reporter.event(&progress);
                         if matches!(
                             progress.phase,
@@ -2109,6 +2125,72 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         || processors.embed.is_some()
                         || processors.metadata
                         || processors.thumbnail.is_some();
+                    if path.as_os_str() == "-" {
+                        // Upstream streams to stdout and skips postprocessing,
+                        // fixups, the archive record and after-move hooks.
+                        let streams: Vec<yt_dlp_rs::VideoInfo> = if info
+                            .requested_formats
+                            .is_empty()
+                        {
+                            vec![info.clone()]
+                        } else {
+                            let reason = if downloader.has_ffmpeg() {
+                                return Err(
+                                    "merging multiple formats to stdout through ffmpeg is unsupported"
+                                        .into(),
+                                );
+                            } else {
+                                "but ffmpeg is not installed"
+                            };
+                            warning!(
+                                "WARNING: You have requested downloading multiple formats to stdout {reason}. The formats will be streamed one after the other"
+                            );
+                            info.requested_formats
+                                .iter()
+                                .map(|format| info.with_selected_format(format))
+                                .collect()
+                        };
+                        for stream in &streams {
+                            // A single result already announced itself above.
+                            if !info.requested_formats.is_empty() {
+                                if !stream.fragments.is_empty() {
+                                    let downloader = match stream.protocol.as_deref() {
+                                        Some("http_dash_segments") => "dashsegments",
+                                        _ => "hlsnative",
+                                    };
+                                    screen!(
+                                        "[{downloader}] Total fragments: {}",
+                                        stream.fragments.len()
+                                    );
+                                }
+                                screen!("[download] Destination: -");
+                            }
+                            let temporary = tempfile::tempdir()?;
+                            let target = temporary.path().join("media");
+                            downloader.download_with_progress(
+                                stream,
+                                &target,
+                                DownloadOptions {
+                                    min_filesize,
+                                    max_filesize,
+                                    rate_limit,
+                                    update_time: false,
+                                    part_files: yt_dlp_rs::PartFiles::Private,
+                                    retries,
+                                    fragment_retries,
+                                    retry_sleep,
+                                    skip_unavailable_fragments,
+                                    merge_files: yt_dlp_rs::MergeFiles::Private,
+                                },
+                                &mut progress,
+                            )?;
+                            let mut media = std::fs::File::open(&target)?;
+                            let mut out = io::stdout().lock();
+                            io::copy(&mut media, &mut out)?;
+                            out.flush()?;
+                        }
+                        return Ok(());
+                    }
                     let (bytes, published_paths) = if processing {
                         let result = downloader.download_processed_with_progress(
                             &info,
@@ -2678,7 +2760,7 @@ struct StagePrint {
 impl StagePrint {
     /// Print lines, then append file lines with upstream's `[info] Writing`.
     fn emit(&self) -> io::Result<()> {
-        let mut stdout = io::stdout().lock();
+        let mut stdout = out_stream();
         for line in &self.lines {
             writeln!(stdout, "{line}")?;
         }

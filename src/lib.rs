@@ -95,6 +95,7 @@ pub struct YoutubeDl {
     ffprobe: Option<PathBuf>,
     merge_output_format: Option<Vec<String>>,
     format_sort: FormatSortOptions,
+    prefer_best: bool,
 }
 
 /// Upstream `-S`/`--format-sort`, `--format-sort-force` and
@@ -136,6 +137,7 @@ impl YoutubeDl {
             ffmpeg: None,
             merge_output_format: None,
             format_sort: FormatSortOptions::default(),
+            prefer_best: false,
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -222,6 +224,13 @@ impl YoutubeDl {
     /// Without this override, audio processing uses ffprobe beside explicit ffmpeg.
     pub fn with_ffprobe(mut self, executable: impl Into<PathBuf>) -> Self {
         self.ffprobe = Some(executable.into());
+        self
+    }
+
+    /// Upstream's `prefer_best` default (`best/bestvideo+bestaudio`, no
+    /// ffmpeg warning), used for `-o -` output.
+    pub fn with_prefer_best_format(mut self, prefer_best: bool) -> Self {
+        self.prefer_best = prefer_best;
         self
     }
 
@@ -411,6 +420,8 @@ impl YoutubeDl {
 
     /// Apply a requested or configured default selector atomically to an extracted result.
     pub fn select_result(&self, result: &mut ExtractResult, format: Option<&str>) -> Result<()> {
+        // Upstream `_default_format_spec` `prefer_best` (stdout output).
+        let format = format.or(self.prefer_best.then_some("best/bestvideo+bestaudio"));
         result.select_format_with_merge(
             format,
             self.ffmpeg.is_some(),

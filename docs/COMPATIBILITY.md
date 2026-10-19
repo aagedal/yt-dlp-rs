@@ -100,7 +100,7 @@ playlist info JSON is not rewritten after the entries are processed.
 
 Informational `to_screen` lines and progress go to stdout like upstream's
 `_out_files`, or to stderr when the default output template is `-`
-(`logtostderr`; `-o -` itself is not supported yet); `WARNING:`/`ERROR:` lines
+(`logtostderr`); `WARNING:`/`ERROR:` lines
 and the STDIN batch prompt use stderr. Option validations that upstream reports through `parser.error`
 (audio/remux/recode/subtitle/thumbnail formats, audio quality, playlist
 start/end/items, sleep intervals, file sizes, rate limit, dates and a missing
@@ -625,6 +625,20 @@ video's `vcodec`/`dynamic_range` and the audio's `acodec`. Upstream's explicit
 `null` values are omitted. Native stream classification (`stream_kind`) and the
 stricter HLS/DASH/YouTube codec allow-lists are unchanged by these fields;
 `tools/compare_youtube.py` now also compares non-null codec fields.
+
+## Output to stdout (`-o -`)
+
+Like upstream, a default output template of `-` writes the media to stdout:
+screen, progress, JSON and `--print` output move to stderr (`logtostderr`), the
+default format is `best/bestvideo+bestaudio` without the ffmpeg warning, the media
+filename is `-` (sidecars derive from it, e.g. `-.info.json`), `[download]
+Destination: -` is printed, and postprocessors, fixups, the archive record and
+after-move hooks are skipped. A pair without ffmpeg prints upstream's two
+warnings and streams the formats one after the other (upstream fails on the
+second stream with `write to closed file`); a pair with ffmpeg is an explicit
+error because upstream's FFmpegFD stdout merging is not ported. Each stream is
+received into a private temporary file and then copied to stdout, so output
+starts only after the transfer completes (upstream writes progressively).
 
 ## Generic direct links
 
