@@ -144,6 +144,33 @@ fn valid_id(id: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
 }
 
+/// Upstream `_real_extract`: `start_time` from a `start`/`t` and `end_time`
+/// from an `end` parameter of the URL fragment, then its query (the first
+/// occurrence wins, even when it does not parse).
+fn url_times(url: &Url, metadata: &mut crate::Metadata) {
+    let (mut start, mut end) = (None, None);
+    for component in [url.fragment().unwrap_or(""), url.query().unwrap_or("")] {
+        // `parse_qs` keeps the first value of each non-blank key.
+        let mut seen = Vec::new();
+        for (key, value) in url::form_urlencoded::parse(component.as_bytes()) {
+            if value.is_empty() || seen.contains(&key) {
+                continue;
+            }
+            seen.push(key.clone());
+            let slot = match key.as_ref() {
+                "start" | "t" => &mut start,
+                "end" => &mut end,
+                _ => continue,
+            };
+            if slot.is_none() {
+                *slot = Some(crate::match_filter::parse_duration_number(&value));
+            }
+        }
+    }
+    metadata.start_time = start.flatten();
+    metadata.end_time = end.flatten();
+}
+
 // Claim all URLs on these exact hosts so unsupported site pages cannot fall
 // through to generic HTML5 extraction and appear to be supported YouTube videos.
 fn video_id(url: &Url, no_playlist: bool) -> Result<Option<String>> {
@@ -730,7 +757,9 @@ impl Extractor for Youtube {
         };
         crate::screen::set_extractor("youtube");
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        extract_watch_page_with_runtime(client, &page, &id, None, None).map(Some)
+        let mut info = extract_watch_page_with_runtime(client, &page, &id, None, None)?;
+        url_times(url, &mut info.metadata);
+        Ok(Some(info))
     }
 }
 
@@ -744,15 +773,16 @@ impl Extractor for ConfiguredYoutube {
         };
         crate::screen::set_extractor("youtube");
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        extract_watch_page_with_caption_options(
+        let mut info = extract_watch_page_with_caption_options(
             client,
             &page,
             &id,
             self.runtime.as_ref(),
             None,
             self.include_translated_subtitles,
-        )
-        .map(Some)
+        )?;
+        url_times(url, &mut info.metadata);
+        Ok(Some(info))
     }
 }
 
@@ -832,6 +862,32 @@ mod tests {
                 "{input}"
             );
         }
+    }
+
+    #[test]
+    fn url_start_and_end_times_follow_upstream() {
+        let times = |input: &str| {
+            let mut metadata = crate::Metadata::default();
+            url_times(&Url::parse(input).unwrap(), &mut metadata);
+            serde_json::to_value((metadata.start_time, metadata.end_time)).unwrap()
+        };
+        let base = "https://www.youtube.com/watch?v=BaW_jenozKc";
+        assert_eq!(
+            times(&format!("{base}&t=1m30s&end=120.5")),
+            serde_json::json!([90, 120.5])
+        );
+        assert_eq!(
+            times(&format!("{base}&start=5#t=7")),
+            serde_json::json!([7, null])
+        );
+        assert_eq!(
+            times(&format!("{base}&t=bad&start=5")),
+            serde_json::json!([null, null])
+        );
+        assert_eq!(
+            times(&format!("{base}&t=&end=3")),
+            serde_json::json!([null, 3])
+        );
     }
 
     #[test]

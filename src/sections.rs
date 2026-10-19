@@ -164,9 +164,19 @@ impl DownloadSections {
                 index: None,
             })
         }));
-        // `*from-url` needs extracted `start_time`/`end_time`, which no
-        // supported extractor provides.
-        if !self.from_url && self.ranges.is_empty() && self.chapters.is_empty() {
+        let (start, end) = (info.metadata.start_time, info.metadata.end_time);
+        if self.from_url && (truthy(start) || truthy(end)) {
+            requested.push(Some(Section {
+                start_time: start
+                    .filter(|start| start.as_f64() != 0.0)
+                    .unwrap_or(PyNumber::Int(0)),
+                end_time: end
+                    .filter(|end| end.as_f64() != 0.0)
+                    .unwrap_or(PyNumber::Float(f64::INFINITY)),
+                title: None,
+                index: None,
+            }));
+        } else if self.ranges.is_empty() && self.chapters.is_empty() {
             requested.push(None);
         }
         requested
@@ -293,6 +303,23 @@ mod tests {
         );
         assert!(parse(&["intro"]).unwrap().requested(&info(None)).is_empty());
         assert_eq!(parse(&[]).unwrap().requested(&info(None)), vec![None]);
+    }
+
+    #[test]
+    fn from_url_uses_extracted_start_and_end_times() {
+        let sections = parse(&["*from-url"]).unwrap();
+        let mut video = info(Some(10));
+        assert_eq!(sections.requested(&video), vec![None]);
+        video.metadata.start_time = Some(PyNumber::Int(3));
+        assert_eq!(describe(&sections.requested(&video)), "3.0-inf");
+        let applied = apply(&video, sections.requested(&video)[0].as_ref());
+        assert_eq!(
+            serde_json::to_value((applied.section_start, applied.section_end)).unwrap(),
+            json!([3, 10])
+        );
+        video.metadata.end_time = Some(PyNumber::Float(4.5));
+        let with_range = parse(&["*from-url", "*1-2"]).unwrap();
+        assert_eq!(describe(&with_range.requested(&video)), "1.0-2.0, 3.0-4.5");
     }
 
     #[test]

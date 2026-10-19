@@ -243,6 +243,12 @@ pub struct Metadata {
     /// titles are filled by `process_video_result`).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub chapters: Vec<Chapter>,
+    /// Upstream `start_time`/`end_time` (YouTube `t`/`start`/`end` URL
+    /// parameters), used by `--download-sections "*from-url"`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub start_time: Option<PyNumber>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub end_time: Option<PyNumber>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration: Option<u64>,
     /// `formatSeconds(duration)`, filled by `_fill_common_fields`.
