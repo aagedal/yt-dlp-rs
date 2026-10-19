@@ -114,54 +114,161 @@ fn format_to_pattern(format: &str, escape: fn(&str) -> String) -> String {
     regex
 }
 
-/// A Python `re.sub` replacement string in `regex` crate syntax; errors use
-/// `re.error` text with the escape's position.
-fn replacement(text: &str) -> Result<String, String> {
+/// A Python `re.sub` replacement string (`re._parser.parse_template`) in
+/// `regex` crate syntax for `regex`; errors use the `re.error` text with
+/// its position, or the `IndexError` text for unknown group names.
+fn replacement(text: &str, regex: &Regex) -> Result<String, String> {
+    let chars: Vec<char> = text.chars().collect();
+    let groups = regex.captures_len() - 1;
     let mut output = String::new();
-    let mut chars = text.chars().enumerate().peekable();
-    while let Some((position, c)) = chars.next() {
-        match c {
-            '$' => output.push_str("$$"),
-            '\\' => match chars.next().map(|(_, c)| c) {
-                Some(d @ '0'..='9') => {
-                    let mut group = d.to_string();
-                    if let Some((_, next)) =
-                        chars.peek().copied().filter(|(_, c)| c.is_ascii_digit())
-                    {
-                        group.push(next);
-                        chars.next();
+    let literal = |output: &mut String, c: char| match c {
+        '$' => output.push_str("$$"),
+        c => output.push(c),
+    };
+    let octal = |c: Option<&char>| c.is_some_and(|c| ('0'..='7').contains(c));
+    let mut index = 0;
+    while index < chars.len() {
+        let c = chars[index];
+        index += 1;
+        if c != '\\' {
+            literal(&mut output, c);
+            continue;
+        }
+        let Some(&escape) = chars.get(index) else {
+            return Err(format!(
+                "bad escape (end of pattern) at position {}",
+                chars.len() - 1
+            ));
+        };
+        index += 1;
+        // `s.error(message, offset)`: the position is `tell() - offset`.
+        let error = |message: String, end: usize, offset: usize| {
+            format!("{message} at position {}", end - offset)
+        };
+        match escape {
+            'g' => {
+                if chars.get(index) != Some(&'<') {
+                    return Err(error("missing <".into(), index, 0));
+                }
+                index += 1;
+                let mut name = String::new();
+                loop {
+                    let Some(&c) = chars.get(index) else {
+                        return Err(if name.is_empty() {
+                            error("missing group name".into(), index, 0)
+                        } else {
+                            error(
+                                "missing >, unterminated name".into(),
+                                index,
+                                name.chars().count(),
+                            )
+                        });
+                    };
+                    index += 1;
+                    if c == '>' {
+                        if name.is_empty() {
+                            return Err(error("missing group name".into(), index, 1));
+                        }
+                        break;
+                    }
+                    name.push(c);
+                }
+                let length = name.chars().count() + 1;
+                if name.chars().all(|c| c.is_ascii_digit()) {
+                    let group: usize = name.parse().unwrap_or(usize::MAX);
+                    if group > groups {
+                        return Err(error(
+                            format!("invalid group reference {name}"),
+                            index,
+                            length,
+                        ));
                     }
                     output.push_str(&format!("${{{group}}}"));
-                }
-                Some('g') => {
-                    if chars.next().map(|(_, c)| c) != Some('<') {
-                        return Err(format!("missing < at position {}", position + 2));
+                } else {
+                    let identifier = name
+                        .chars()
+                        .next()
+                        .is_some_and(|c| c == '_' || c.is_alphabetic())
+                        && name.chars().all(|c| c == '_' || c.is_alphanumeric());
+                    if !identifier {
+                        return Err(error(
+                            format!(
+                                "bad character in group name {}",
+                                crate::output::traverse::py_repr_str(&name)
+                            ),
+                            index,
+                            length,
+                        ));
                     }
-                    let name: String = chars
-                        .by_ref()
-                        .map(|(_, c)| c)
-                        .take_while(|c| *c != '>')
-                        .collect();
+                    if !regex.capture_names().flatten().any(|group| group == name) {
+                        return Err(format!(
+                            "unknown group name {}",
+                            crate::output::traverse::py_repr_str(&name)
+                        ));
+                    }
                     output.push_str(&format!("${{{name}}}"));
                 }
-                Some('n') => output.push('\n'),
-                Some('t') => output.push('\t'),
-                Some('r') => output.push('\r'),
-                Some('\\') => output.push('\\'),
-                Some(other) if other.is_ascii_alphabetic() => {
-                    return Err(format!("bad escape \\{other} at position {position}"));
+            }
+            '0' => {
+                let mut digits = String::from("0");
+                for _ in 0..2 {
+                    if octal(chars.get(index)) {
+                        digits.push(chars[index]);
+                        index += 1;
+                    }
                 }
-                Some(other) => {
-                    output.push('\\');
-                    output.push(other);
+                let value = u32::from_str_radix(&digits, 8).unwrap_or(0) & 0xff;
+                literal(&mut output, char::from_u32(value).unwrap_or('\0'));
+            }
+            '1'..='9' => {
+                let mut digits = escape.to_string();
+                if chars.get(index).is_some_and(char::is_ascii_digit) {
+                    digits.push(chars[index]);
+                    index += 1;
+                    if octal(Some(&escape))
+                        && octal(digits.chars().nth(1).as_ref())
+                        && octal(chars.get(index))
+                    {
+                        digits.push(chars[index]);
+                        index += 1;
+                        let value = u32::from_str_radix(&digits, 8).unwrap_or(0);
+                        if value > 0o377 {
+                            return Err(error(
+                                format!("octal escape value \\{digits} outside of range 0-0o377"),
+                                index,
+                                digits.len() + 1,
+                            ));
+                        }
+                        literal(&mut output, char::from_u32(value).unwrap_or('\0'));
+                        continue;
+                    }
                 }
-                None => {
-                    return Err(format!(
-                        "bad escape (end of pattern) at position {position}"
+                let group: usize = digits.parse().unwrap_or(usize::MAX);
+                if group > groups {
+                    return Err(error(
+                        format!("invalid group reference {group}"),
+                        index,
+                        digits.len(),
                     ));
                 }
-            },
-            other => output.push(other),
+                output.push_str(&format!("${{{group}}}"));
+            }
+            // `sre_parse.ESCAPES`.
+            'a' => output.push('\u{7}'),
+            'b' => output.push('\u{8}'),
+            'f' => output.push('\u{c}'),
+            'n' => output.push('\n'),
+            'r' => output.push('\r'),
+            't' => output.push('\t'),
+            'v' => output.push('\u{b}'),
+            '\\' => output.push('\\'),
+            other if other.is_ascii_alphabetic() => {
+                return Err(error(format!("bad escape \\{other}"), index, 2));
+            }
+            other => {
+                output.push('\\');
+                literal(&mut output, other);
+            }
         }
     }
     Ok(output)
@@ -334,7 +441,7 @@ impl MetadataActions {
                         crate::output::traverse::py_repr_str(replace)
                     )));
                     let count = regex.find_iter(&text).count();
-                    let replace = match replacement(replace) {
+                    let replace = match replacement(replace, regex) {
                         Ok(replace) => replace,
                         Err(error) => return Err((messages, error)),
                     };
@@ -422,6 +529,91 @@ mod fancy_free {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// `re.sub(pattern, replacement, subject)` results and errors from
+    /// CPython 3.15's `parse_template`.
+    #[test]
+    fn replacements_follow_python_parse_template() {
+        let cases: [(&str, &str, &str, Result<&str, &str>); 22] = [
+            ("(a)(b)?", "ab", r"x\1", Ok("xa")),
+            (
+                "(a)",
+                "a",
+                r"x\2",
+                Err("invalid group reference 2 at position 2"),
+            ),
+            ("(a)", "a", r"\0", Ok("\0")),
+            ("(a)", "a", r"\012z", Ok("\nz")),
+            (
+                "(a)",
+                "a",
+                r"\18",
+                Err("invalid group reference 18 at position 1"),
+            ),
+            (
+                "(a)",
+                "a",
+                r"\1\2",
+                Err("invalid group reference 2 at position 3"),
+            ),
+            (
+                "(a)",
+                "a",
+                r"\400",
+                Err(r"octal escape value \400 outside of range 0-0o377 at position 0"),
+            ),
+            ("(a)", "a", r"\g<0>", Ok("a")),
+            ("(?P<n>a)", "a", r"\g<n>\g<1>", Ok("aa")),
+            ("(a)", "a", r"\g<x>", Err("unknown group name 'x'")),
+            (
+                "(a)",
+                "a",
+                r"\g<1x>",
+                Err("bad character in group name '1x' at position 3"),
+            ),
+            ("(a)", "a", r"\g<>", Err("missing group name at position 3")),
+            (
+                "(a)",
+                "a",
+                r"\g<1",
+                Err("missing >, unterminated name at position 3"),
+            ),
+            ("(a)", "a", r"\a\b\f\v", Ok("\x07\x08\x0c\x0b")),
+            ("(a)", "a", r"\.\$", Ok(r"\.\$")),
+            ("(a)", "a", "$1", Ok("$1")),
+            ("(a)(b)?", "a", r"[\2]", Ok("[]")),
+            (
+                "(a)",
+                "a",
+                r"\g<2>",
+                Err("invalid group reference 2 at position 3"),
+            ),
+            ("(a)", "a", r"\q", Err(r"bad escape \q at position 0")),
+            (
+                "(a)",
+                "a",
+                "x\\",
+                Err("bad escape (end of pattern) at position 1"),
+            ),
+            ("(a)", "a", r"\g", Err("missing < at position 2")),
+            (
+                "(a)",
+                "a",
+                r"\11",
+                Err("invalid group reference 11 at position 1"),
+            ),
+        ];
+        for (pattern, subject, template, expected) in cases {
+            let regex = Regex::new(pattern).unwrap();
+            let actual = replacement(template, &regex)
+                .map(|replace| regex.replace_all(subject, replace.as_str()).into_owned());
+            assert_eq!(
+                actual.as_deref().map_err(String::as_str),
+                expected,
+                "{template}"
+            );
+        }
+    }
 
     fn info() -> VideoInfo {
         serde_json::from_value(serde_json::json!({"id": "x1", "title": "Artist - Song (Live)",
