@@ -350,17 +350,19 @@ fn invalid_audio_options_fail_before_http_or_files() {
         assert!(output.stdout.is_empty());
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     }
-    let directory = tempfile::tempdir().unwrap();
-    let output = tools.cli(&["-k", &server.url("source.mp4")], directory.path());
-    assert!(!output.status.success());
-    assert!(
-        output
-            .stderr
-            .windows(b"--extract-audio".len())
-            .any(|part| part == b"--extract-audio")
-    );
-    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     assert!(server.requests.lock().unwrap().is_empty());
+    // Like upstream, -k alone is accepted and changes nothing for one stream.
+    let directory = tempfile::tempdir().unwrap();
+    let output = tools.cli(
+        &["-k", "-o", "out.%(ext)s", &server.url("source.mp4")],
+        directory.path(),
+    );
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
 }
 
 #[test]

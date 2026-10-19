@@ -348,7 +348,12 @@ fn embed_thumbnail_writes_embeds_and_deletes_unless_written_explicitly() {
     assert!(output.status.success(), "{}", text(&output.stderr));
     assert!(text(&output.stdout).contains("[info] Writing video thumbnail 0 to: video.jpg"));
     // The fake ffmpeg writes "source video" for two inputs.
-    assert_eq!(names(directory.path()), ["video.mp4"]);
+    assert_eq!(
+        names(directory.path()),
+        ["video.mp4"],
+        "{}",
+        text(&output.stdout)
+    );
     assert_eq!(
         std::fs::read(directory.path().join("video.mp4")).unwrap(),
         b"source video"

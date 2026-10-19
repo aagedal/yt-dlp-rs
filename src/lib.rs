@@ -34,7 +34,7 @@ mod video;
 pub use archive::{DownloadArchive, archive_id};
 pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
 pub use cookies::CookieJar;
-pub use download::{DownloadOptions, DownloadPhase, DownloadProgress, PartFiles};
+pub use download::{DownloadOptions, DownloadPhase, DownloadProgress, MergeFiles, PartFiles};
 pub use embed_subtitles::{SubtitleEmbedding, SubtitleFile};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
@@ -522,32 +522,83 @@ impl YoutubeDl {
         let workspace = tempfile::Builder::new()
             .prefix(".yt-dlp-rs-merge-")
             .tempdir_in(parent)?;
+        let upstream = match options.merge_files {
+            download::MergeFiles::Private => None,
+            download::MergeFiles::Upstream { keep } => Some(keep),
+        };
         let mut paths = Vec::new();
         let mut stored = 0u64;
         for (index, stream) in streams.iter().enumerate() {
-            let path = workspace
-                .path()
-                .join(format!("input-{index}.{}", stream.ext));
+            let path = match upstream {
+                None => workspace
+                    .path()
+                    .join(format!("input-{index}.{}", stream.ext)),
+                Some(_) => stream_path(destination, &info.ext, stream),
+            };
+            if upstream.is_some() && path.exists() {
+                // Upstream FileDownloader.download reuses a complete file.
+                screen::screen(&format!(
+                    "[download] {} has already been downloaded",
+                    path.display()
+                ));
+                let bytes = fs::metadata(&path)?.len();
+                stored = stored.saturating_add(bytes);
+                paths.push(path);
+                if callback(DownloadProgress {
+                    attempt: 1,
+                    downloaded_bytes: bytes,
+                    total_bytes: Some(bytes),
+                    phase: DownloadPhase::Publishing,
+                    stream_index: Some(index as u8 + 1),
+                    stream_count: Some(2),
+                    fragment_index: None,
+                    fragment_count: None,
+                })
+                .is_break()
+                {
+                    return Err(Error::DownloadCancelled);
+                }
+                continue;
+            }
             let mut part = info.clone();
             part.fragments = stream.fragments.clone();
             part.requested_formats.clear();
             part.formats.clear();
             part.url = stream.url.clone();
             part.ext = stream.ext.clone();
+            part.protocol = Some(stream.determine_protocol());
             part.stream_kind = stream.stream_kind;
             part.format_id = Some(stream.format_id.clone());
             part.filesize = stream.filesize;
             part.width = stream.width;
             part.height = stream.height;
+            if upstream.is_some() {
+                if !part.fragments.is_empty() {
+                    let downloader = match part.protocol.as_deref() {
+                        Some("http_dash_segments") => "dashsegments",
+                        _ => "hlsnative",
+                    };
+                    screen::screen(&format!(
+                        "[{downloader}] Total fragments: {}",
+                        part.fragments.len()
+                    ));
+                }
+                screen::screen(&format!("[download] Destination: {}", path.display()));
+            }
             let bytes = self.download_with_progress(
                 &part,
                 &path,
                 DownloadOptions {
-                    part_files: PartFiles::Private,
+                    part_files: if upstream.is_some() {
+                        options.part_files
+                    } else {
+                        PartFiles::Private
+                    },
                     ..options
                 },
                 |mut progress: DownloadProgress| {
-                    if progress.phase == DownloadPhase::Publishing {
+                    // Private inputs are not published; upstream-style ones are.
+                    if progress.phase == DownloadPhase::Publishing && upstream.is_none() {
                         return ControlFlow::Continue(());
                     }
                     progress.stream_index = Some(index as u8 + 1);
@@ -559,6 +610,12 @@ impl YoutubeDl {
                 .checked_add(bytes)
                 .ok_or_else(|| Error::Postprocess("combined stream byte count overflow".into()))?;
             paths.push(path);
+        }
+        if upstream.is_some() {
+            screen::screen(&format!(
+                "[Merger] Merging formats into \"{}\"",
+                destination.display()
+            ));
         }
         let output = tempfile::Builder::new()
             .prefix("merged-")
@@ -614,6 +671,31 @@ impl YoutubeDl {
                 Error::Io(error.error)
             }
         })?;
+        if upstream == Some(false) {
+            for path in &paths {
+                screen::screen(&format!(
+                    "Deleting original file {} (pass -k to keep)",
+                    path.display()
+                ));
+                fs::remove_file(path)?;
+            }
+        }
         Ok(bytes)
     }
+}
+
+/// Upstream's per-format merge input name: `correct_ext` of the destination
+/// for the stream's extension, then `prepend_extension` with `fFORMAT_ID`.
+fn stream_path(destination: &Path, merged_ext: &str, stream: &VideoFormat) -> PathBuf {
+    let name = destination
+        .file_name()
+        .map(|name| name.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let stem = match name.rsplit_once('.') {
+        Some((stem, ext)) if !stem.is_empty() && (ext == merged_ext || ext == stream.ext) => {
+            stem.to_owned()
+        }
+        _ => name,
+    };
+    destination.with_file_name(format!("{stem}.f{}.{}", stream.format_id, stream.ext))
 }

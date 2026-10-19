@@ -74,7 +74,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-x`, `--extract-audio`, `--audio-format`, `--audio-quality` | Ordered audio extraction mappings and bounded quality settings; see audio extraction below |
 | `--remux-video`, `--recode-video` | Ordered video target mappings; stream copying or container-default re-encoding; recode wins |
 | `--embed-metadata`, `--add-metadata`, `--no-embed-metadata`, `--no-add-metadata` | Final FFmpeg stage after subtitle embedding: upstream `FFmpegMetadataPP` stream-copy options, `-write_id3v1 1`, common tags from represented fields with upstream key precedence (title, date, description/synopsis, purl/comment, artist, genre, …) and per-stream `language`; requires `--ffmpeg-location`; no chapters and no info JSON attachment (warned with `--write-info-json`) |
-| `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates; requires an audio/video/subtitle processing option; last flag wins |
+| `-k`, `--keep-video`, `--no-keep-video` | Retain completed processing sources/intermediates and, for unprocessed merges, upstream's `NAME.fID.EXT` format files; accepted without other options like upstream; last flag wins |
 | `--ffprobe-location PATH` | Native option: explicit audio probe executable, overriding the ffprobe found from `--ffmpeg-location` or `PATH` |
 | `-I`, `--playlist-items ITEM_SPEC` | Ordered, deduplicated inclusive playlist indices/ranges, signed indices and steps; fully extracted HTML5 playlists only |
 | `--playlist-start NUMBER`, `--playlist-end NUMBER` | Inclusive one-based defaults 1 through end, end -1 unbounded; items option overrides after validation |
@@ -651,6 +651,22 @@ bytes, with cooperative process cancellation polling. Final `Publishing` reports
 the merged output size. Only that final file is published, using no-clobber
 semantics; cancellation/failure removes both inputs and staging output. Single
 stream downloads never inspect the configured FFmpeg path.
+
+The CLI uses upstream's merge files (`MergeFiles::Upstream` in
+`DownloadOptions`; the library default stays private) for merges without
+postprocessing: each format goes to `correct_ext`/`prepend_extension`'s
+`NAME.fFORMAT_ID.EXT` beside the destination (derived from the rendered
+destination, so templates whose other fields depend on the format are not
+re-rendered per format) with `.part` files as configured, announced with its
+`[hlsnative]`/`[dashsegments] Total fragments` and `[download] Destination` lines
+and finished status; an existing format file is reused with `[download] FILE has
+already been downloaded`. Then `[Merger] Merging formats into "FILE"` and, unless
+`-k`, `Deleting original file FILE (pass -k to keep)` for each format in selection
+order (upstream's order comes from a set). Format files are kept after a failure.
+Input publication events are reported with their `stream_index` in this mode.
+Merges followed by postprocessing still use the private workspace and print the
+final `Destination` line (`tools`-free comparison against actual upstream output
+in `tests/merge.rs`'s CLI case).
 
 Optional real-tool regression: set both `YT_DLP_RS_TEST_FFMPEG` and
 `YT_DLP_RS_TEST_FFPROBE` to executable paths and run `cargo test --locked --test merge`.
@@ -1780,7 +1796,7 @@ appends the target suffix. AAC target retains the pinned `.m4a` naming quirk:
 AAC codec copy uses ADTS while AAC encoding uses the M4A container. Vorbis uses
 `.ogg`, ALAC uses `.m4a`. Byte-identical FFmpeg output is not claimed.
 
-Final files are published without overwriting. `-k` / `--keep-video` requires a processing option; it retains the source,
+Final files are published without overwriting. With a processing option, `-k` / `--keep-video` retains the source,
 using `.orig` before the last suffix if the
 conversion keeps its filename. `--no-keep-video` reverses that option. A completed
 source is preserved after processing failure; cancellation cleans the private

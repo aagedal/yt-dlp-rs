@@ -52,7 +52,6 @@ macro_rules! warning {
 
 #[derive(Parser)]
 #[command(
-    group(clap::ArgGroup::new("processing").args(["extract_audio", "remux_video", "recode_video", "convert_subs", "embed_subs", "embed_metadata", "embed_thumbnail", "convert_thumbnails"]).multiple(true)),
     version,
     about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
 )]
@@ -346,13 +345,8 @@ struct Args {
     /// Re-encode media to FORMAT or ordered SOURCE>TARGET/TARGET rules
     #[arg(long, value_name = "FORMAT", overrides_with = "recode_video")]
     recode_video: Option<String>,
-    /// Keep downloaded source and completed processing intermediates
-    #[arg(
-        short = 'k',
-        long,
-        requires = "processing",
-        overrides_with = "no_keep_video"
-    )]
+    /// Keep the intermediate video file on disk after post-processing
+    #[arg(short = 'k', long, overrides_with = "no_keep_video")]
     keep_video: bool,
     /// Remove processing sources after success (default)
     #[arg(long, overrides_with = "keep_video")]
@@ -1919,7 +1913,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         };
                         screen!("[{downloader}] Total fragments: {}", info.fragments.len());
                     }
-                    screen!("[download] Destination: {}", path.display());
+                    // Unprocessed merges announce each format's file instead
+                    // (`processing` mirrors the per-video processors below).
+                    if info.requested_formats.is_empty() || processing {
+                        screen!("[download] Destination: {}", path.display());
+                    }
                     // Upstream sleeps before each stream's FileDownloader.download.
                     for _ in 0..info.requested_formats.len().max(1) {
                         sleep.media();
@@ -1958,12 +1956,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             keep_subtitles: args.write_subs || args.keep_video,
                         });
                     }
-                    let (bytes, published_paths) = if processors.audio.is_some()
+                    let processing = processors.audio.is_some()
                         || processors.video.is_some()
                         || processors.embed.is_some()
                         || processors.metadata
-                        || processors.thumbnail.is_some()
-                    {
+                        || processors.thumbnail.is_some();
+                    let (bytes, published_paths) = if processing {
                         let result = downloader.download_processed_with_progress(
                             &info,
                             &path,
@@ -1977,6 +1975,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 fragment_retries,
                                 retry_sleep,
                                 skip_unavailable_fragments,
+                                merge_files: yt_dlp_rs::MergeFiles::Upstream {
+                                    keep: args.keep_video,
+                                },
                             },
                             &processors,
                             progress,
@@ -2013,6 +2014,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 fragment_retries,
                                 retry_sleep,
                                 skip_unavailable_fragments,
+                                merge_files: yt_dlp_rs::MergeFiles::Upstream {
+                                    keep: args.keep_video,
+                                },
                             },
                             progress,
                         )?;
@@ -2451,6 +2455,24 @@ impl<'a> ProgressReporter<'a> {
         use yt_dlp_rs::output::progress::{ProgressStatus, downloading_line};
         match progress.phase {
             DownloadPhase::Downloading => {}
+            // A reused merge input: upstream reports it finished without timing.
+            DownloadPhase::Publishing
+                if self.active.is_none() && progress.stream_index.is_some() =>
+            {
+                if !self.options.enabled {
+                    screen!("[download] Download completed");
+                } else {
+                    let line =
+                        yt_dlp_rs::output::progress::finished_line(progress.downloaded_bytes, None);
+                    let mut printer = yt_dlp_rs::output::progress::StatusPrinter::new(
+                        self.options.newline,
+                        !self.options.quiet,
+                    );
+                    Self::write(&printer.print(&format!("[download] {line}")));
+                    Self::write(&printer.end());
+                }
+                return;
+            }
             DownloadPhase::Merging | DownloadPhase::Postprocessing | DownloadPhase::Publishing => {
                 return self.finish();
             }

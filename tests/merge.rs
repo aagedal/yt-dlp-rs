@@ -423,3 +423,87 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
         clean(directory.path(), &[&name]);
     }
 }
+
+#[test]
+fn upstream_merge_files_are_named_reused_and_deleted_unless_kept() {
+    use yt_dlp_rs::MergeFiles;
+    for keep in [false, true] {
+        let server = Server::new();
+        let directory = tempfile::tempdir().unwrap();
+        let output = directory.path().join("out.mp4");
+        // An existing complete input is reused, like upstream FileDownloader.
+        std::fs::write(directory.path().join("out.fv.mp4"), b"video-bytes").unwrap();
+        YoutubeDl::new()
+            .unwrap()
+            .with_ffmpeg(helper())
+            .download_with_options(
+                &server.info(false),
+                &output,
+                DownloadOptions {
+                    merge_files: MergeFiles::Upstream { keep },
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+        assert_eq!(server.requests(), ["GET /audio HTTP/1.1"]);
+        assert_eq!(std::fs::read(&output).unwrap(), b"merged-video-audio");
+        if keep {
+            assert_eq!(
+                std::fs::read(directory.path().join("out.fa.m4a")).unwrap(),
+                b"audio-bytes"
+            );
+            clean(directory.path(), &["out.fa.m4a", "out.fv.mp4", "out.mp4"]);
+        } else {
+            clean(directory.path(), &["out.mp4"]);
+        }
+    }
+}
+
+#[test]
+fn cli_merge_prints_upstream_format_destinations_merger_and_deletions() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let info = serde_json::json!({
+        "id": "fixture", "title": "fixture", "ext": "mp4",
+        "url": format!("{}/video", server.url),
+        "webpage_url": server.url, "extractor": "fixture", "extractor_key": "Fixture",
+        "formats": [
+            {"format_id": "v", "url": format!("{}/video", server.url), "ext": "mp4", "vcodec": "avc1", "acodec": "none", "protocol": "http"},
+            {"format_id": "a", "url": format!("{}/audio", server.url), "ext": "m4a", "vcodec": "none", "acodec": "mp4a", "protocol": "http"},
+        ],
+    });
+    let path = directory.path().join("info.json");
+    std::fs::write(&path, info.to_string()).unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--no-progress", "-f", "v+a", "-o", "out.%(ext)s"])
+        .arg("--ffmpeg-location")
+        .arg(helper())
+        .arg("--load-info-json")
+        .arg(&path)
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let lines: Vec<_> = stdout
+        .lines()
+        .filter(|line| !line.starts_with("[info]"))
+        .collect();
+    assert_eq!(
+        lines,
+        [
+            "[download] Destination: out.fv.mp4",
+            "[download] Download completed",
+            "[download] Destination: out.fa.m4a",
+            "[download] Download completed",
+            "[Merger] Merging formats into \"out.mp4\"",
+            "Deleting original file out.fv.mp4 (pass -k to keep)",
+            "Deleting original file out.fa.m4a (pass -k to keep)",
+        ]
+    );
+    clean(directory.path(), &["info.json", "out.mp4"]);
+}

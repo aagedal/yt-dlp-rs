@@ -106,6 +106,20 @@ pub struct DownloadOptions {
     pub update_time: bool,
     /// Where a whole-file media transfer is written before publication.
     pub part_files: PartFiles,
+    /// Where the streams of a merged download are stored.
+    pub merge_files: MergeFiles,
+}
+
+/// Intermediate-file policy for merged (two-stream) downloads.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum MergeFiles {
+    /// A private same-directory workspace, removed afterwards (library default).
+    #[default]
+    Private,
+    /// Upstream `NAME.fFORMAT_ID.EXT` files beside the destination: existing
+    /// ones are reused, each download prints its downloader lines, and the
+    /// files are deleted after merging unless `keep` (`-k`).
+    Upstream { keep: bool },
 }
 
 /// Temporary-file policy for whole-file media downloads.
@@ -164,6 +178,7 @@ impl Default for DownloadOptions {
             rate_limit: None,
             update_time: false,
             part_files: PartFiles::Private,
+            merge_files: MergeFiles::Private,
         }
     }
 }
