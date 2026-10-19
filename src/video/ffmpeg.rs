@@ -11,7 +11,7 @@ const DEADLINE: Duration = Duration::from_secs(600);
 fn error(message: &str) -> Error {
     Error::Postprocess(message.into())
 }
-fn demuxer(extension: &str) -> Result<&'static str> {
+pub(crate) fn demuxer(extension: &str) -> Result<&'static str> {
     Ok(match extension.to_lowercase().as_str() {
         "mp4" | "m4a" | "mov" => "mov",
         "webm" | "mkv" | "mka" => "matroska",

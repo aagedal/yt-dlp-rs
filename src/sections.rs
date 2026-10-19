@@ -60,58 +60,76 @@ fn truthy(value: Option<PyNumber>) -> bool {
     value.is_some_and(|value| float(value) != 0.0)
 }
 
+/// Chapter regexes, `(start, end)` ranges and whether `*from-url` was given.
+pub type ParsedChapters = (Vec<Regex>, Vec<(PyNumber, PyNumber)>, bool);
+
+/// Upstream `parse_chapters(name, value, advanced)`: chapter regexes, time
+/// ranges and (`advanced` only) `*from-url`.
+pub fn parse_chapters(
+    name: &str,
+    values: &[String],
+    advanced: bool,
+) -> Result<ParsedChapters, String> {
+    let (mut chapters, mut ranges, mut from_url) = (Vec::new(), Vec::new(), false);
+    for value in values {
+        if advanced && value == "*from-url" {
+            from_url = true;
+            continue;
+        }
+        let Some(spec) = value.strip_prefix('*') else {
+            let regex = Regex::new(value)
+                .map_err(|error| format!("invalid {name} regex \"{value}\" - {error}"))?;
+            chapters.push(regex);
+            continue;
+        };
+        for range in spec.split(',').map(|range| range.trim()) {
+            let invalid = |reason: &str| format!("invalid {name} time range \"{value}\". {reason}");
+            let timestamp = |text: &str| {
+                if matches!(text, "inf" | "infinite") {
+                    Some(PyNumber::Float(f64::INFINITY))
+                } else {
+                    crate::match_filter::parse_duration_number(text)
+                }
+            };
+            let captures = (range != "-").then(|| TIMESTAMP.captures(range)).flatten();
+            let parsed = captures.as_ref().and_then(|captures| {
+                let part = |name: &str, default: &str| {
+                    timestamp(captures.name(name).map_or(default, |m| m.as_str()))
+                };
+                Some((part("start", "0")?, part("end", "inf")?))
+            });
+            let (Some(captures), Some((mut start, mut end))) = (captures, parsed) else {
+                return Err(invalid("Must be of the form \"*start-end\""));
+            };
+            let sign = |group: &str| captures.name(group).is_some_and(|m| m.as_str() == "-");
+            if !advanced && (sign("start_sign") || sign("end_sign")) {
+                return Err(invalid("Negative timestamps are not allowed"));
+            }
+            if sign("start_sign") {
+                start = negate(start);
+            }
+            if sign("end_sign") {
+                end = negate(end);
+            }
+            if float(end) == f64::NEG_INFINITY {
+                return Err(invalid("\"-inf\" is not a valid end"));
+            }
+            ranges.push((start, end));
+        }
+    }
+    Ok((chapters, ranges, from_url))
+}
+
 impl DownloadSections {
     /// `parse_chapters('--download-sections', values, advanced=True)`; the
     /// error text follows upstream (regex messages are this port's).
     pub fn parse(values: &[String]) -> Result<Self, String> {
-        let mut sections = Self::default();
-        for value in values {
-            if value == "*from-url" {
-                sections.from_url = true;
-                continue;
-            }
-            let Some(spec) = value.strip_prefix('*') else {
-                let regex = Regex::new(value).map_err(|error| {
-                    format!("invalid --download-sections regex \"{value}\" - {error}")
-                })?;
-                sections.chapters.push(regex);
-                continue;
-            };
-            for range in spec.split(',').map(|range| range.trim()) {
-                let invalid = |reason: &str| {
-                    format!("invalid --download-sections time range \"{value}\". {reason}")
-                };
-                let timestamp = |text: &str| {
-                    if matches!(text, "inf" | "infinite") {
-                        Some(PyNumber::Float(f64::INFINITY))
-                    } else {
-                        crate::match_filter::parse_duration_number(text)
-                    }
-                };
-                let captures = (range != "-").then(|| TIMESTAMP.captures(range)).flatten();
-                let parsed = captures.as_ref().and_then(|captures| {
-                    let part = |name: &str, default: &str| {
-                        timestamp(captures.name(name).map_or(default, |m| m.as_str()))
-                    };
-                    Some((part("start", "0")?, part("end", "inf")?))
-                });
-                let (Some(captures), Some((mut start, mut end))) = (captures, parsed) else {
-                    return Err(invalid("Must be of the form \"*start-end\""));
-                };
-                let sign = |name: &str| captures.name(name).is_some_and(|m| m.as_str() == "-");
-                if sign("start_sign") {
-                    start = negate(start);
-                }
-                if sign("end_sign") {
-                    end = negate(end);
-                }
-                if float(end) == f64::NEG_INFINITY {
-                    return Err(invalid("\"-inf\" is not a valid end"));
-                }
-                sections.ranges.push((start, end));
-            }
-        }
-        Ok(sections)
+        let (chapters, ranges, from_url) = parse_chapters("--download-sections", values, true)?;
+        Ok(Self {
+            chapters,
+            ranges,
+            from_url,
+        })
     }
 
     /// `download_range_func(info_dict, ydl)`: `None` stands for `{}` (the

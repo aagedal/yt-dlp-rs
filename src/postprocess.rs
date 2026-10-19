@@ -35,11 +35,34 @@ pub struct PostprocessOptions {
     pub ignore_errors: bool,
     /// `--no-post-overwrites`: audio extraction keeps an existing output.
     pub no_post_overwrites: bool,
+    /// `--remove-chapters`: upstream `ModifyChaptersPP` after subtitle
+    /// embedding.
+    pub modify_chapters: Option<ModifyChapters>,
     /// An already-downloaded file (the destination) to process instead of
     /// downloading, like upstream's `post_process` after `has already been
     /// downloaded`. It is replaced in place by same-named results and
     /// removed after a successful conversion unless kept.
     pub existing: Option<PathBuf>,
+}
+
+/// `--remove-chapters REGEX` (with `--force-keyframes-at-cuts`).
+#[derive(Debug, Clone)]
+pub struct ModifyChapters {
+    pub patterns: Vec<regex::Regex>,
+    pub force_keyframes: bool,
+    /// Subtitle files on disk (with their extensions), cut as well.
+    pub subtitles: Vec<(PathBuf, String)>,
+}
+
+/// Upstream `prepend_extension(path, infix)`: `NAME.INFIX.EXT`.
+fn prepend_extension(path: &Path, infix: &str) -> PathBuf {
+    let mut name = path.file_stem().unwrap_or_default().to_os_string();
+    name.push(format!(".{infix}"));
+    if let Some(ext) = path.extension() {
+        name.push(".");
+        name.push(ext);
+    }
+    path.with_file_name(name)
 }
 
 /// Upstream `FFmpegMetadataPP` `add_infojson`.
@@ -66,6 +89,8 @@ pub struct ProcessedDownload {
     pub warnings: Vec<String>,
     /// Processor failures skipped under `ignore_errors`.
     pub errors: Vec<String>,
+    /// Chapters and duration after `--remove-chapters` changed them.
+    pub chapters: Option<(Vec<crate::info::Chapter>, Option<u64>)>,
 }
 
 struct Stage {
@@ -186,6 +211,7 @@ pub(crate) fn download(
         && !processors.chapters
         && processors.infojson.is_none()
         && processors.thumbnail.is_none()
+        && processors.modify_chapters.is_none()
     {
         let bytes = match existing {
             Some(existing) => fs::metadata(existing)?.len(),
@@ -218,6 +244,7 @@ pub(crate) fn download(
             kept_files: Vec::new(),
             warnings: Vec::new(),
             errors: Vec::new(),
+            chapters: None,
         });
     }
     let keep = processors.keep_video
@@ -319,6 +346,11 @@ pub(crate) fn download(
         bytes,
     }];
     let mut publishing = false;
+    // Info dict changes made by processors (`ModifyChaptersPP`).
+    let mut working = info.clone();
+    let mut chapters_changed = false;
+    // Files kept with -k beside the results (`NAME.uncut.EXT`).
+    let mut uncut: Vec<(PathBuf, PathBuf)> = Vec::new();
     let mut delete_subtitles = Vec::new();
     let mut warnings = Vec::new();
     let mut errors = Vec::new();
@@ -613,9 +645,212 @@ pub(crate) fn download(
             }
         });
         stage!({
+            if let Some(modify) = &processors.modify_chapters {
+                use crate::{
+                    info::PyNumber,
+                    modify_chapters::{self as mc, Segment},
+                };
+                let current = stages.last_mut().unwrap();
+                let say = |text: &str| crate::screen::screen(&format!("[ModifyChapters] {text}"));
+                let ffprobe = probe_path(downloader)?;
+                let probe = || mc::probe_duration(&ffprobe, &current.disk, &current.container);
+                // `_fixup_chapters`: an open last chapter ends with the media.
+                let mut real = None;
+                if working
+                    .metadata
+                    .chapters
+                    .last()
+                    .is_some_and(|chapter| chapter.end_time.is_none())
+                {
+                    let duration = probe()?;
+                    real = Some(duration);
+                    if let Some(last) = working.metadata.chapters.last_mut() {
+                        last.end_time = Some(PyNumber::Float(duration));
+                    }
+                }
+                // `_mark_chapters_to_remove`.
+                let mut segments: Vec<Segment> = working
+                    .metadata
+                    .chapters
+                    .iter()
+                    .map(|chapter| {
+                        Segment::chapter(
+                            chapter.start_time.unwrap_or(PyNumber::Int(0)),
+                            chapter.end_time.unwrap_or(PyNumber::Int(0)),
+                            chapter.title.clone(),
+                        )
+                    })
+                    .collect();
+                let mut nothing_matched = true;
+                if segments.is_empty() {
+                    say("Chapter information is unavailable");
+                    nothing_matched = false;
+                }
+                for segment in &mut segments {
+                    let title = segment.title.as_deref().unwrap_or("");
+                    if modify.patterns.iter().any(|regex| regex.is_match(title)) {
+                        segment.remove = true;
+                        nothing_matched = false;
+                    }
+                }
+                if nothing_matched {
+                    say("There are no chapters matching the regex");
+                }
+                if segments.is_empty() {
+                    return Ok(());
+                }
+                let real = match real {
+                    Some(real) => real,
+                    None => probe()?,
+                };
+                let (arranged, cuts) = mc::arrange(segments, &mc::default_sponsor_title);
+                working.metadata.chapters = arranged.iter().map(mc::Arranged::chapter).collect();
+                chapters_changed = true;
+                if cuts.is_empty() {
+                    return Ok(());
+                }
+                let Some(last) = arranged.last() else {
+                    crate::screen::warning(
+                        "You have requested to remove the entire video, which is not possible",
+                    );
+                    return Ok(());
+                };
+                let original = working.metadata.duration.map(|duration| duration as f64);
+                let duration = last.end.as_f64();
+                working.metadata.duration = Some(duration.max(0.0) as u64);
+                // `_duration_mismatch`.
+                let mismatch = |a: Option<f64>, b: f64, tolerance: f64| {
+                    a.is_some_and(|a| a != 0.0 && b != 0.0 && (a - b).abs() > tolerance)
+                };
+                if mismatch(original, real, 1.0) {
+                    if !mismatch(Some(real), duration, 2.0) {
+                        say("Skipping ModifyChapters since the video appears to be already cut");
+                        return Ok(());
+                    }
+                    if existing.is_some() {
+                        return Err(Error::Postprocess(
+                            "Cannot cut video since the real and expected durations mismatch. Different chapters may have already been removed".into(),
+                        ));
+                    }
+                    crate::screen::debug("Expected and actual durations mismatch");
+                }
+                let options = mc::concat_options(&cuts, real);
+                crate::screen::debug(&format!(
+                    "Concat spec = {}",
+                    options
+                        .iter()
+                        .map(|entry| format!(
+                            "{}-{}",
+                            entry.inpoint.as_deref().unwrap_or("0.0"),
+                            entry.outpoint.as_deref().unwrap_or("inf")
+                        ))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ));
+                if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
+                    return Err(Error::DownloadCancelled);
+                }
+                let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
+                    Error::Postprocess(
+                        "chapter removal requires an explicit --ffmpeg-location PATH".into(),
+                    )
+                })?;
+                let ext = current.ext.to_lowercase();
+                let mut input = current.disk.clone();
+                if modify.force_keyframes {
+                    say(&format!(
+                        "Re-encoding \"{}\" with appropriate keyframes",
+                        current.path.display()
+                    ));
+                    let keyframes = workspace.path().join(format!("keyframes.{ext}"));
+                    let times: Vec<PyNumber> =
+                        cuts.iter().flat_map(|cut| [cut.start, cut.end]).collect();
+                    mc::force_keyframes(
+                        executable,
+                        "ModifyChapters",
+                        &input,
+                        &current.container,
+                        &ext,
+                        &keyframes,
+                        &times,
+                    )?;
+                    input = keyframes;
+                }
+                say(&format!(
+                    "Removing chapters from {}",
+                    current.path.display()
+                ));
+                let output = workspace.path().join(format!("cut.{ext}"));
+                mc::concat(
+                    executable,
+                    "ModifyChapters",
+                    &input,
+                    &ext,
+                    Some(crate::embed_metadata::muxer(&ext)),
+                    &output,
+                    &options,
+                )?;
+                // Subtitles on disk are cut too (embedded ones are gone).
+                let mut subtitles = Vec::new();
+                for (index, (path, sub_ext)) in modify.subtitles.iter().enumerate() {
+                    if !path.is_file() || delete_subtitles.iter().any(|(gone, _)| gone == path) {
+                        continue;
+                    }
+                    if !matches!(sub_ext.as_str(), "srt" | "vtt" | "ass" | "lrc") {
+                        crate::screen::warning(&format!(
+                            "Cannot remove chapters from external {sub_ext} subtitles; \"{}\" is now out of sync",
+                            path.display()
+                        ));
+                        continue;
+                    }
+                    say(&format!("Removing chapters from {}", path.display()));
+                    let cut = workspace.path().join(format!("subtitle-{index}.{sub_ext}"));
+                    mc::concat(
+                        executable,
+                        "ModifyChapters",
+                        path,
+                        sub_ext,
+                        None,
+                        &cut,
+                        &options,
+                    )?;
+                    subtitles.push((path.clone(), cut));
+                }
+                // Renaming happens after every file is cut; outputs keep the
+                // inputs' modification times.
+                crate::filetime::inherit(
+                    &output,
+                    crate::filetime::oldest([current.disk.as_path()]),
+                );
+                let previous = std::mem::replace(&mut current.disk, output);
+                current.bytes = fs::metadata(&current.disk)?.len();
+                let mut removed = vec![prepend_extension(&current.path, "uncut")];
+                if keep {
+                    uncut.push((previous, removed[0].clone()));
+                }
+                for (path, cut) in subtitles {
+                    crate::filetime::inherit(&cut, crate::filetime::oldest([path.as_path()]));
+                    let original = prepend_extension(&path, "uncut");
+                    if keep {
+                        writable(&original)?;
+                        fs::rename(&path, &original)?;
+                    } else {
+                        fs::remove_file(&path)?;
+                    }
+                    if fs::rename(&cut, &path).is_err() {
+                        fs::copy(&cut, &path)?;
+                    }
+                    removed.push(original);
+                }
+                for path in &removed {
+                    deleted(path);
+                }
+            }
+        });
+        stage!({
             if processors.metadata || processors.chapters || processors.infojson.is_some() {
                 let current = stages.last_mut().unwrap();
-                let chapters = processors.chapters && !info.metadata.chapters.is_empty();
+                let chapters = processors.chapters && !working.metadata.chapters.is_empty();
                 // `_get_infojson_opts`: only mkv/mka files take the attachment.
                 let mut attachment = None;
                 if let Some(embed) = &processors.infojson {
@@ -637,7 +872,7 @@ pub(crate) fn download(
                     }
                 }
                 let Some(args) = crate::embed_metadata::plan_args(
-                    info,
+                    &working,
                     &current.ext,
                     processors.metadata,
                     chapters,
@@ -659,7 +894,7 @@ pub(crate) fn download(
                     let path = workspace.path().join("chapters.meta");
                     fs::write(
                         &path,
-                        crate::embed_metadata::ffmetadata(&info.metadata.chapters),
+                        crate::embed_metadata::ffmetadata(&working.metadata.chapters),
                     )?;
                     Some(path)
                 } else {
@@ -751,6 +986,10 @@ pub(crate) fn download(
         for (stage, path) in stages.iter().zip(&retained) {
             place(&stage.disk, path)?;
         }
+        for (disk, path) in &uncut {
+            writable(path)?;
+            place(disk, path)?;
+        }
         place(&last.disk, &last.path)?;
         // Upstream deletes the processed original unless it is kept (also
         // the file a repeated download replaced).
@@ -770,6 +1009,8 @@ pub(crate) fn download(
             kept_files: retained,
             warnings,
             errors,
+            chapters: chapters_changed
+                .then(|| (working.metadata.chapters.clone(), working.metadata.duration)),
         })
     })();
     match process {

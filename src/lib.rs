@@ -27,6 +27,7 @@ mod info_json;
 mod match_filter;
 mod merge;
 pub mod metadata_parser;
+mod modify_chapters;
 pub mod output;
 mod playlist;
 mod postprocess;
@@ -61,7 +62,7 @@ pub use info_json::{
 pub use match_filter::{EntrySelection, MatchFilters, MatchOutcome};
 pub use output::{render_automatic_captions, render_subtitles};
 pub use playlist::{PlaylistCounts, PlaylistSelection};
-pub use postprocess::{InfoJsonEmbed, PostprocessOptions, ProcessedDownload};
+pub use postprocess::{InfoJsonEmbed, ModifyChapters, PostprocessOptions, ProcessedDownload};
 pub use retry::{RetrySleep, SleepExpression};
 pub use subtitle_convert::{ConvertedSubtitle, SubtitleConversion};
 pub use subtitles::{
@@ -516,13 +517,58 @@ impl YoutubeDl {
 
     /// Upstream `FFmpegSplitChaptersPP`: cut `input` into one file per
     /// chapter (`destinations` pairs each chapter with its prepared path).
-    pub fn split_chapters(&self, input: &Path, chapters: &[(Chapter, PathBuf)]) -> Result<()> {
+    /// With `force_keyframes` (`--force-keyframes-at-cuts`), a re-encoded copy
+    /// with keyframes at the chapter starts is split instead.
+    pub fn split_chapters(
+        &self,
+        input: &Path,
+        chapters: &[(Chapter, PathBuf)],
+        force_keyframes: bool,
+    ) -> Result<()> {
         let ffmpeg = self.ffmpeg.as_ref().ok_or_else(|| {
             Error::Postprocess(
                 "ffmpeg not found. Please install or provide the path using --ffmpeg-location"
                     .into(),
             )
         })?;
+        // Upstream deletes the keyframes copy afterwards, without a message.
+        let mut workspace = None;
+        let mut input = input.to_path_buf();
+        if force_keyframes && chapters.len() > 1 {
+            screen::screen(&format!(
+                "[SplitChapters] Re-encoding \"{}\" with appropriate keyframes",
+                input.display()
+            ));
+            let parent = input
+                .parent()
+                .filter(|parent| !parent.as_os_str().is_empty())
+                .unwrap_or(Path::new("."));
+            let directory = tempfile::Builder::new()
+                .prefix(".yt-dlp-rs-keyframes-")
+                .tempdir_in(parent)?;
+            let ext = input
+                .extension()
+                .map(|ext| ext.to_string_lossy().to_lowercase())
+                .unwrap_or_default();
+            let container = crate::container::sniff(&input).unwrap_or(&ext).to_owned();
+            let keyframes = directory.path().join(format!("keyframes.{ext}"));
+            let starts: Vec<PyNumber> = chapters
+                .iter()
+                .map(|(chapter, _)| chapter.start_time.unwrap_or(PyNumber::Int(0)))
+                .collect();
+            modify_chapters::force_keyframes(
+                ffmpeg,
+                "SplitChapters",
+                &input,
+                &container,
+                &ext,
+                &keyframes,
+                &starts,
+            )?;
+            input = keyframes;
+            workspace = Some(directory);
+        }
+        let input = input.as_path();
         screen::screen(&format!(
             "[SplitChapters] Splitting video by chapters; {} chapters found",
             chapters.len()
@@ -560,6 +606,7 @@ impl YoutubeDl {
                 &mut || std::ops::ControlFlow::Continue(()),
             )?;
         }
+        drop(workspace);
         Ok(())
     }
 

@@ -286,6 +286,18 @@ struct Args {
     /// Write metadata to the video file's xattrs (using Dublin Core and XDG standards)
     #[arg(long, alias = "xattr")]
     xattrs: bool,
+    /// Remove chapters whose title matches REGEX ("*START-END" ranges are parsed like upstream, which ignores them); repeatable
+    #[arg(long, value_name = "REGEX")]
+    remove_chapters: Vec<String>,
+    /// Do not remove any chapters (default); clears earlier --remove-chapters
+    #[arg(long)]
+    no_remove_chapters: bool,
+    /// Force keyframes at cuts when removing or splitting chapters (re-encodes)
+    #[arg(long, overrides_with_all = ["force_keyframes_at_cuts", "no_force_keyframes_at_cuts"])]
+    force_keyframes_at_cuts: bool,
+    /// Do not force keyframes around the chapters before cutting (default)
+    #[arg(long, overrides_with_all = ["force_keyframes_at_cuts", "no_force_keyframes_at_cuts"])]
+    no_force_keyframes_at_cuts: bool,
     /// Split video into multiple files based on internal chapters (the "chapter" output template)
     #[arg(long, alias = "split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
     split_chapters: bool,
@@ -1595,8 +1607,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     .then(|| args.audio_format.clone())
             })
     };
+    // Upstream `parse_chapters('--remove-chapters', ...)`. Pinned upstream
+    // only adds `ModifyChaptersPP` for chapter regexes, and fails building it
+    // when time ranges are also given.
+    let (remove_patterns, remove_ranges, _) = yt_dlp_rs::sections::parse_chapters(
+        "--remove-chapters",
+        &after_reset("remove_chapters", "no_remove_chapters"),
+        false,
+    )
+    .map_err(usage)?;
+    if !remove_patterns.is_empty() && !remove_ranges.is_empty() {
+        return Err(
+            "--remove-chapters time ranges together with chapter regexes are unsupported (pinned upstream fails with a TypeError)"
+                .into(),
+        );
+    }
+    let modify_chapters = (!remove_patterns.is_empty()).then(|| yt_dlp_rs::ModifyChapters {
+        patterns: remove_patterns,
+        force_keyframes: args.force_keyframes_at_cuts,
+        subtitles: Vec::new(),
+    });
     let processors = PostprocessOptions {
         existing: None,
+        modify_chapters,
         ignore_errors: error_mode == ErrorMode::Ignore,
         no_post_overwrites: args.no_post_overwrites,
         thumbnail: None,
@@ -2686,19 +2719,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         // `_forceprint`: `filename` is the prepared media filename.
                         let print_filename = prepare_media(&templates, &info, &template_options)
                             .map(|path| path.to_string_lossy().into_owned());
-                        let stage_print = |stage: Stage, paths: StagePaths<'_>| {
-                            render_stage(
-                                stage,
-                                &print_templates,
-                                &print_files,
-                                &info,
-                                print_filename.as_deref(),
-                                paths,
-                                &template_options,
-                            )
-                        };
+                        let stage_print =
+                            |stage: Stage, info: &yt_dlp_rs::VideoInfo, paths: StagePaths<'_>| {
+                                render_stage(
+                                    stage,
+                                    &print_templates,
+                                    &print_files,
+                                    info,
+                                    print_filename.as_deref(),
+                                    paths,
+                                    &template_options,
+                                )
+                            };
                         stage_print(
                             Stage::Video,
+                            &info,
                             StagePaths {
                                 filepath: None,
                                 prepared: print_filename.as_deref().ok(),
@@ -2752,6 +2787,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 || processors.chapters
                                 || embed_info_json.is_some()
                                 || args.split_chapters
+                                || processors.modify_chapters.is_some()
                                 || args.embed_thumbnail;
                             // Upstream `existing_video_file`: the `final_ext` name
                             // first, then the prepared one.
@@ -2995,8 +3031,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 )?;
                             }
                             let prepared = path.to_string_lossy().into_owned();
-                            stage_print(Stage::BeforeDownload, stage_paths(None, &prepared))?
-                                .emit()?;
+                            stage_print(
+                                Stage::BeforeDownload,
+                                &info,
+                                stage_paths(None, &prepared),
+                            )?
+                            .emit()?;
                             if let Err(error) = run_exec(
                                 &exec,
                                 Stage::BeforeDownload,
@@ -3011,12 +3051,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             // and `after_move` with the absolute moved path.
                             let post_print = stage_print(
                                 Stage::PostProcess,
+                                &info,
                                 stage_paths(Some(&prepared), &prepared),
                             )?;
-                            let move_print = |filepath: &std::path::Path| -> Result<(), String> {
+                            let move_print = |filepath: &std::path::Path,
+                                              info: &yt_dlp_rs::VideoInfo|
+                             -> Result<(), String> {
                                 let filepath = py_abspath(filepath).to_string_lossy().into_owned();
                                 stage_print(
                                     Stage::AfterMove,
+                                    info,
                                     stage_paths(Some(&filepath), &prepared),
                                 )
                                 .map_err(|error| error.to_string())?
@@ -3236,6 +3280,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     screen!("[EmbedThumbnail] There are no thumbnails on disk");
                                 }
                             }
+                            if let Some(modify) = &mut processors.modify_chapters {
+                                modify.subtitles = embedding_files
+                                    .iter()
+                                    .map(|file| (file.path.clone(), file.ext.clone()))
+                                    .collect();
+                            }
                             if args.embed_subs {
                                 processors.embed = Some(SubtitleEmbedding {
                                     subtitles: embedding_files,
@@ -3248,6 +3298,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 || processors.metadata
                                 || processors.chapters
                                 || processors.infojson.is_some()
+                                || processors.modify_chapters.is_some()
                                 || processors.thumbnail.is_some();
                             if path.as_os_str() == "-" {
                                 // Upstream streams to stdout and skips postprocessing,
@@ -3323,6 +3374,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                                 return Ok(());
                             }
+                            let mut changed_chapters = None;
                             let (bytes, published_paths) = if processing {
                                 // `existing_video_file` sets `ext` from the found file.
                                 let existing_info;
@@ -3378,6 +3430,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                                 let mut paths = vec![result.path];
                                 paths.extend(result.kept_files);
+                                changed_chapters = result.chapters;
                                 (result.bytes, paths)
                             } else {
                                 let bytes = downloader.download_with_progress(
@@ -3405,6 +3458,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     downloader.fixup(info, &path, &path, fixup)?;
                                 }
                                 (bytes, vec![path.clone()])
+                            };
+                            // `ModifyChaptersPP` changes the info dict for later stages.
+                            let modified_info;
+                            let info = match changed_chapters {
+                                Some((chapters, duration)) => {
+                                    let mut modified = info.clone();
+                                    modified.metadata.chapters = chapters;
+                                    modified.metadata.duration = duration;
+                                    modified_info = modified;
+                                    &modified_info
+                                }
+                                None => info,
                             };
                             let mut published_paths = published_paths;
                             published_paths.extend(info_json);
@@ -3464,7 +3529,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         };
                                         chapters.push((chapter.clone(), destination));
                                     }
-                                    downloader.split_chapters(&published_paths[0], &chapters)
+                                    downloader.split_chapters(
+                                        &published_paths[0],
+                                        &chapters,
+                                        args.force_keyframes_at_cuts,
+                                    )
                                 })();
                                 if let Err(error) = split {
                                     postprocess_failed.set(true);
@@ -4728,7 +4797,7 @@ fn after_download(
     mode: ErrorMode,
     pending: &std::cell::Cell<Option<String>>,
     failed: &std::cell::Cell<bool>,
-    print_after_move: &dyn Fn(&std::path::Path) -> Result<(), String>,
+    print_after_move: &dyn Fn(&std::path::Path, &yt_dlp_rs::VideoInfo) -> Result<(), String>,
 ) -> bool {
     if let Some(error) = pending.take() {
         eprintln!("ERROR: {error}");
@@ -4744,7 +4813,7 @@ fn after_download(
         (Stage::AfterMove, moved.as_path()),
     ] {
         let printed = if stage == Stage::AfterMove {
-            print_after_move(filepath)
+            print_after_move(filepath, info)
         } else {
             Ok(())
         };

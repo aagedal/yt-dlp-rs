@@ -200,6 +200,7 @@ fn embedding(path: &Path, ext: &str, keep: bool) -> PostprocessOptions {
     PostprocessOptions {
         existing: None,
         no_post_overwrites: false,
+        modify_chapters: None,
         ignore_errors: false,
         thumbnail: None,
         metadata: false,
@@ -475,6 +476,7 @@ fn empty_embedding_skips_tools_and_cli_last_disable_prevents_implicit_caption_do
     let plan = PostprocessOptions {
         existing: None,
         no_post_overwrites: false,
+        modify_chapters: None,
         ignore_errors: false,
         thumbnail: None,
         metadata: false,

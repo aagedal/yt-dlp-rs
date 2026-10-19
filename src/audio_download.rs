@@ -21,6 +21,7 @@ pub(crate) fn download(
         &PostprocessOptions {
             existing: None,
             no_post_overwrites: false,
+            modify_chapters: None,
             ignore_errors: false,
             thumbnail: None,
             metadata: false,

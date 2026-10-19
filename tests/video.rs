@@ -190,6 +190,7 @@ fn options(format: &str, mode: VideoMode, keep: bool) -> PostprocessOptions {
     PostprocessOptions {
         existing: None,
         no_post_overwrites: false,
+        modify_chapters: None,
         ignore_errors: false,
         thumbnail: None,
         metadata: false,
