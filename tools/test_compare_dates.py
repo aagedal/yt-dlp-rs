@@ -15,7 +15,7 @@ class DateComparisonTests(unittest.TestCase):
     def setUp(self):
         self.fixture = json.loads(FIXTURE.read_text(encoding='utf-8'))
         self.result = {key: copy.deepcopy(self.fixture[key])
-                       for key in ('unified_timestamp', 'strftime')}
+                       for key in ('unified_timestamp', 'strftime', 'ranges')}
 
     def test_results_and_order_are_compared(self):
         self.assertEqual(compare(self.result, self.fixture), self.result)
@@ -33,11 +33,14 @@ class DateComparisonTests(unittest.TestCase):
         self.assertEqual(cases['Wed, 21 Oct 2015 07:28:00 GMT']['day_first'], 1445412480)
         self.assertNotEqual(cases['8/7/2009']['day_first'], cases['8/7/2009']['month_first'])
         self.assertEqual(cases['0001-01-01T00:30:00+01:00']['day_first_error'], 'OverflowError')
+        ranges = {(c['date'], c['dateafter'], c['datebefore']): c for c in self.fixture['ranges']['cases']}
+        self.assertEqual(ranges[('today-1year', None, None)]['range'], '2023-02-28 to 2023-02-28')
         self.assertEqual(self.fixture['upstream_commit'], PINNED_UPSTREAM)
 
     def test_worker_uses_actual_helpers_without_network(self):
         self.assertIn('unified_timestamp(case', UPSTREAM_WORKER)
         self.assertIn('strftime_or_none(case', UPSTREAM_WORKER)
+        self.assertIn('DateRange.day(case', UPSTREAM_WORKER)
         self.assertIn('subprocess.Popen = forbidden', UPSTREAM_WORKER)
 
     def run_main(self, revision):

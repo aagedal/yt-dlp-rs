@@ -247,10 +247,22 @@ static MONTH_FIRST_REGEXES: LazyLock<Vec<Regex>> = LazyLock::new(|| {
 
 /// `datetime.strptime(data, format)` for a compiled pinned format.
 fn strptime(regex: &Regex, data: &str) -> Option<DateTime> {
-    let found = regex.captures(data)?;
-    if found.get(0)?.end() != data.len() {
-        return None;
+    strptime_checked(regex, data, "").ok()
+}
+
+/// `strptime` with Python's `ValueError` messages (datetime range errors use
+/// the Python 3.13 wording; later versions word them differently).
+fn strptime_checked(regex: &Regex, data: &str, format: &str) -> Result<DateTime, String> {
+    let Some(found) = regex.captures(data) else {
+        return Err(format!(
+            "time data '{data}' does not match format '{format}'"
+        ));
+    };
+    let end = found.get(0).map_or(0, |m| m.end());
+    if end != data.len() {
+        return Err(format!("unconverted data remains: {}", &data[end..]));
     }
+    let invalid = || "invalid date".to_owned();
     let number = |name: &str| {
         found
             .name(name)
@@ -274,43 +286,49 @@ fn strptime(regex: &Regex, data: &str) -> Option<DateTime> {
         second: 0,
     };
     if let Some(year) = number("y") {
-        let year = year.ok()?;
+        let year = year.map_err(|_| invalid())?;
         value.year = if year <= 68 { year + 2000 } else { year + 1900 };
     }
     if let Some(year) = number("Y") {
-        value.year = year.ok()?;
+        value.year = year.map_err(|_| invalid())?;
     }
     if let Some(month) = number("m") {
-        value.month = month.ok()?;
+        value.month = month.map_err(|_| invalid())?;
     }
     if let Some(month) = month_name("B", usize::MAX) {
-        value.month = month?;
+        value.month = month.ok_or_else(invalid)?;
     }
     if let Some(month) = month_name("b", 3) {
-        value.month = month?;
+        value.month = month.ok_or_else(invalid)?;
     }
     if let Some(day) = number("d") {
-        value.day = day.ok()?;
+        value.day = day.map_err(|_| invalid())?;
     }
     if let Some(hour) = number("H") {
-        value.hour = hour.ok()?;
+        value.hour = hour.map_err(|_| invalid())?;
     }
     // Without %p, 12 o'clock is midnight.
     if let Some(hour) = number("I") {
-        let hour = hour.ok()?;
+        let hour = hour.map_err(|_| invalid())?;
         value.hour = if hour == 12 { 0 } else { hour };
     }
     if let Some(minute) = number("M") {
-        value.minute = minute.ok()?;
+        value.minute = minute.map_err(|_| invalid())?;
     }
     if let Some(second) = number("S") {
-        value.second = second.ok()?;
+        value.second = second.map_err(|_| invalid())?;
     }
     // `datetime(...)` validation.
-    let valid = (1..=9999).contains(&value.year)
-        && (1..=days_in_month(value.year, value.month)).contains(&value.day)
-        && (0..60).contains(&value.second);
-    valid.then_some(value)
+    if !(1..=9999).contains(&value.year) {
+        return Err(format!("year {} is out of range", value.year));
+    }
+    if !(1..=days_in_month(value.year, value.month)).contains(&value.day) {
+        return Err("day is out of range for month".into());
+    }
+    if !(0..60).contains(&value.second) {
+        return Err("second must be in 0..59".into());
+    }
+    Ok(value)
 }
 
 /// Python `int(text)` for ASCII digits with an optional sign and underscores.
@@ -616,6 +634,149 @@ pub fn unified_timestamp(date: &str, day_first: bool) -> Option<i64> {
         .checked_sub(timezone)
 }
 
+const MIN_DAY: i64 = -719_162; // 0001-01-01
+const MAX_DAY: i64 = 2_932_896; // 9999-12-31
+
+fn iso_date(days: i64) -> String {
+    let (year, month, day) = civil_from_days(days);
+    format!("{year:04}-{month:02}-{day:02}")
+}
+
+/// `datetime_from_str(text, precision='microsecond', format='%Y%m%d')` in
+/// UNIX seconds (sub-second precision is not represented), with `now` in
+/// UNIX seconds.
+fn datetime_from_str(text: &str, now: i64) -> Result<i64, String> {
+    static RELATIVE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r"^(?P<start>.+)(?P<sign>[+-])(?P<time>[0-9]+)(?P<unit>microsecond|second|minute|hour|day|week|month|year)s?")
+            .unwrap()
+    });
+    static YMD: LazyLock<Regex> = LazyLock::new(|| strptime_regex("%Y%m%d"));
+    let overflow = || "date value out of range".to_owned();
+    match text {
+        "now" | "today" => return Ok(now),
+        "yesterday" => return Ok(now - 86_400),
+        _ => {}
+    }
+    if let Some(found) = RELATIVE.captures(text) {
+        let start = datetime_from_str(&found["start"], now)?;
+        let time: i64 = found["time"].parse().map_err(|_| overflow())?;
+        let time = if &found["sign"] == "-" { -time } else { time };
+        let unit_seconds = match &found["unit"] {
+            "month" | "year" => None,
+            "week" => Some(7 * 86_400),
+            "day" => Some(86_400),
+            "hour" => Some(3600),
+            "minute" => Some(60),
+            "second" => Some(1),
+            _ => Some(0),
+        };
+        let shifted = match unit_seconds {
+            Some(0) => start.checked_add(time.div_euclid(1_000_000)),
+            Some(unit) => time
+                .checked_mul(unit)
+                .and_then(|delta| start.checked_add(delta)),
+            None => {
+                let months = if &found["unit"] == "year" {
+                    time.checked_mul(12).ok_or_else(overflow)?
+                } else {
+                    time
+                };
+                // `datetime_add_months`: clamp the day to the target month.
+                let (year, month, day) = civil_from_days(start.div_euclid(86_400));
+                let month = (month - 1).checked_add(months).ok_or_else(overflow)?;
+                let year = year + month.div_euclid(12);
+                let month = month.rem_euclid(12) + 1;
+                if !(1..=9999).contains(&year) {
+                    return Err(format!("year {year} is out of range"));
+                }
+                let days = days_from_civil(year, month, day.min(days_in_month(year, month)));
+                Some(days * 86_400 + start.rem_euclid(86_400))
+            }
+        }
+        .ok_or_else(overflow)?;
+        return if (MIN_DAY * 86_400..(MAX_DAY + 1) * 86_400).contains(&shifted) {
+            Ok(shifted)
+        } else {
+            Err(overflow())
+        };
+    }
+    let parsed = strptime_checked(&YMD, text, "%Y%m%d")?;
+    Ok(days_from_civil(parsed.year, parsed.month, parsed.day) * 86_400)
+}
+
+/// `date_from_str(text)` as days since the epoch.
+fn date_from_str(text: &str, now: i64) -> Result<i64, String> {
+    Ok(datetime_from_str(text, now)?.div_euclid(86_400))
+}
+
+/// Upstream `DateRange` over UTC dates.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DateRange {
+    start: i64,
+    end: i64,
+}
+
+impl Default for DateRange {
+    fn default() -> Self {
+        Self {
+            start: MIN_DAY,
+            end: MAX_DAY,
+        }
+    }
+}
+
+impl std::fmt::Display for DateRange {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} to {}", iso_date(self.start), iso_date(self.end))
+    }
+}
+
+impl DateRange {
+    /// `date_from_str(value, strict=True)`.
+    fn strict(value: &str, now: i64) -> Result<i64, String> {
+        static STRICT: LazyLock<Regex> = LazyLock::new(|| {
+            Regex::new(r"^(?:[0-9]{8}|(now|today|yesterday)(-[0-9]+(day|week|month|year)s?)?)$")
+                .unwrap()
+        });
+        if !STRICT.is_match(value) {
+            return Err(format!("Invalid date format \"{value}\""));
+        }
+        date_from_str(value, now)
+    }
+
+    /// `DateRange(start, end)`.
+    pub fn new(start: Option<&str>, end: Option<&str>, now: i64) -> Result<Self, String> {
+        let range = Self {
+            start: start
+                .map(|v| Self::strict(v, now))
+                .transpose()?
+                .unwrap_or(MIN_DAY),
+            end: end
+                .map(|v| Self::strict(v, now))
+                .transpose()?
+                .unwrap_or(MAX_DAY),
+        };
+        if range.start > range.end {
+            return Err(format!(
+                "Date range: \"{range}\" , the start date must be before the end date"
+            ));
+        }
+        Ok(range)
+    }
+
+    /// `DateRange.day(day)`.
+    pub fn day(day: &str, now: i64) -> Result<Self, String> {
+        Self::new(Some(day), Some(day), now)
+    }
+
+    /// `date in range` for an `upload_date`, returning its ISO date when
+    /// outside the range.
+    pub fn reject(&self, upload_date: &str, now: i64) -> Result<Option<String>, String> {
+        let day = date_from_str(upload_date, now)?;
+        Ok((!(self.start..=self.end).contains(&day)).then(|| iso_date(day)))
+    }
+}
+
 /// Upstream `strftime_or_none(timestamp)` with the default `%Y%m%d`.
 pub fn strftime_date(timestamp: i64) -> Option<String> {
     let (year, month, day) = civil_from_days(timestamp.div_euclid(86_400));
@@ -642,6 +803,37 @@ mod tests {
                 );
             }
         }
+        let ranges = &fixture["ranges"];
+        let now = ranges["now"].as_i64().unwrap();
+        for case in ranges["cases"].as_array().unwrap() {
+            let text = |key: &str| case[key].as_str();
+            let result = match text("date").filter(|date| !date.is_empty()) {
+                Some(date) => DateRange::day(date, now),
+                None => DateRange::new(text("dateafter"), text("datebefore"), now),
+            };
+            match (result, case.get("error")) {
+                (Ok(range), None) => {
+                    assert_eq!(range.to_string(), case["range"].as_str().unwrap(), "{case}");
+                    for upload in ranges["uploads"].as_array().unwrap() {
+                        let upload = upload.as_str().unwrap();
+                        assert_eq!(
+                            range.reject(upload, now).unwrap().as_deref(),
+                            case["rejected"][upload].as_str(),
+                            "{case} {upload}"
+                        );
+                    }
+                }
+                (Err(error), Some(expected)) => {
+                    let expected = expected.as_str().unwrap();
+                    assert_eq!(
+                        Some(error.as_str()),
+                        expected.strip_prefix("ValueError: "),
+                        "{case}"
+                    );
+                }
+                (result, _) => panic!("{case}: {result:?}"),
+            }
+        }
         for case in fixture["strftime"].as_array().unwrap() {
             let timestamp = case["timestamp"].as_i64().unwrap();
             assert_eq!(
@@ -650,5 +842,31 @@ mod tests {
                 "{timestamp}"
             );
         }
+    }
+}
+
+#[cfg(test)]
+mod range_tests {
+    use super::*;
+
+    #[test]
+    fn out_of_range_dates_use_python_3_13_wording() {
+        let now = 1_709_164_800;
+        assert_eq!(
+            DateRange::day("00000101", now).unwrap_err(),
+            "year 0 is out of range"
+        );
+        assert_eq!(
+            DateRange::day("20230229", now).unwrap_err(),
+            "day is out of range for month"
+        );
+        assert_eq!(
+            DateRange::day("today-9999years", now).unwrap_err(),
+            "year -7975 is out of range"
+        );
+        assert_eq!(
+            DateRange::day("today-99999999999999days", now).unwrap_err(),
+            "date value out of range"
+        );
     }
 }

@@ -8,10 +8,12 @@ use std::{
     time::{Duration, Instant},
 };
 use yt_dlp_rs::{
-    AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, ExtractResult,
-    ExtractionOptions, HttpOptions, InfoJsonWrite, MatchFilters, MatchOutcome, PlaylistCounts,
-    PlaylistSelection, PostprocessOptions, SubtitleConversion, SubtitleEmbedding, SubtitleFile,
-    SubtitleOptions, ThumbnailConversion, VideoMode, VideoOptions, YoutubeDl, YoutubeOptions,
+    AudioOptions, CookieJar, DownloadArchive, DownloadOptions, DownloadPhase, EntrySelection,
+    ExtractResult, ExtractionOptions, HttpOptions, InfoJsonWrite, MatchFilters, MatchOutcome,
+    PlaylistCounts, PlaylistSelection, PostprocessOptions, SubtitleConversion, SubtitleEmbedding,
+    SubtitleFile, SubtitleOptions, ThumbnailConversion, VideoMode, VideoOptions, YoutubeDl,
+    YoutubeOptions,
+    dates::DateRange,
     output::{OutputTemplates, PrintTemplate, PrintToFile, TemplateOptions, render_formats},
     playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
     validate_format_selector, video_info_json, write_info_json_with,
@@ -339,6 +341,72 @@ struct Args {
     /// Discard earlier --break-match-filters
     #[arg(long, action = clap::ArgAction::Count)]
     no_break_match_filters: u8,
+    /// Download only videos uploaded on this date: YYYYMMDD or (now|today|yesterday)[-N(day|week|month|year)[s]]
+    #[arg(
+        long,
+        value_name = "DATE",
+        allow_hyphen_values = true,
+        overrides_with = "date"
+    )]
+    date: Option<String>,
+    /// Download only videos uploaded on or before this date
+    #[arg(
+        long,
+        value_name = "DATE",
+        allow_hyphen_values = true,
+        overrides_with = "datebefore"
+    )]
+    datebefore: Option<String>,
+    /// Download only videos uploaded on or after this date
+    #[arg(
+        long,
+        value_name = "DATE",
+        allow_hyphen_values = true,
+        overrides_with = "dateafter"
+    )]
+    dateafter: Option<String>,
+    /// Download only videos suitable for the given age
+    #[arg(
+        long,
+        value_name = "YEARS",
+        allow_hyphen_values = true,
+        overrides_with = "age_limit"
+    )]
+    age_limit: Option<i64>,
+    #[arg(
+        long,
+        hide = true,
+        value_name = "COUNT",
+        allow_hyphen_values = true,
+        overrides_with = "min_views"
+    )]
+    min_views: Option<i64>,
+    #[arg(
+        long,
+        hide = true,
+        value_name = "COUNT",
+        allow_hyphen_values = true,
+        overrides_with = "max_views"
+    )]
+    max_views: Option<i64>,
+    #[arg(
+        long,
+        hide = true,
+        value_name = "REGEX",
+        allow_hyphen_values = true,
+        overrides_with = "match_title"
+    )]
+    match_title: Option<String>,
+    #[arg(
+        long,
+        hide = true,
+        value_name = "REGEX",
+        allow_hyphen_values = true,
+        overrides_with = "reject_title"
+    )]
+    reject_title: Option<String>,
+    #[arg(long, hide = true)]
+    break_on_reject: bool,
     /// Abort after processing NUMBER videos (0 means no limit)
     #[arg(long, value_name = "NUMBER", allow_hyphen_values = true)]
     max_downloads: Option<i64>,
@@ -675,6 +743,47 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         &after_reset("match_filters", "no_match_filters"),
         &after_reset("break_match_filters", "no_break_match_filters"),
     )?;
+    // Upstream `report_conflict` for --date, then `opts.date` resolution;
+    // the warnings print only after validation succeeds.
+    let now = epoch() as i64;
+    let date = args.date.as_deref().filter(|date| !date.is_empty());
+    let mut date_warnings = Vec::new();
+    let (mut dateafter, mut datebefore) = (args.dateafter.as_deref(), args.datebefore.as_deref());
+    if date.is_some() {
+        for (name, value) in [
+            ("--dateafter", &mut dateafter),
+            ("--datebefore", &mut datebefore),
+        ] {
+            if value.take().is_some_and(|value| !value.is_empty()) {
+                date_warnings.push(format!("WARNING: {name} is ignored since --date was given"));
+            }
+        }
+    }
+    let date_range = match date {
+        Some(date) => Some(DateRange::day(date, now)?),
+        None if dateafter.is_some() || datebefore.is_some() => {
+            Some(DateRange::new(dateafter, datebefore, now)?)
+        }
+        None => None,
+    };
+    let title_pattern = |pattern: Option<&String>| {
+        pattern
+            .map(|pattern| EntrySelection::title_pattern(pattern))
+            .transpose()
+    };
+    let match_filters = match_filters.with_selection(EntrySelection {
+        match_title: title_pattern(args.match_title.as_ref())?,
+        reject_title: title_pattern(args.reject_title.as_ref())?,
+        date_range,
+        min_views: args.min_views,
+        max_views: args.max_views,
+        age_limit: args.age_limit,
+        break_on_reject: args.break_on_reject,
+        now,
+    });
+    for warning in date_warnings {
+        warning!("{warning}");
+    }
     QUIET.store(args.simulation().quiet, Ordering::Relaxed);
     NO_WARNINGS.store(args.no_warnings, Ordering::Relaxed);
     if args.no_download_archive {
@@ -1055,7 +1164,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             return Ok(());
                         }
                         MatchOutcome::Break(reason) => {
-                            entry_cancel = Some(Cancel::Rejected(reason));
+                            screen!("[download] {reason}");
+                            entry_cancel = Some(Cancel::Rejected);
                             return Ok(());
                         }
                     }
@@ -1555,8 +1665,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
 enum Cancel {
     MaxDownloads,
     Existing,
-    /// A `--break-match-filters` rejection reason.
-    Rejected(String),
+    /// A `--break-match-filters` (or `--break-on-reject`) rejection.
+    Rejected,
 }
 
 impl std::fmt::Display for Cancel {
@@ -1568,7 +1678,9 @@ impl std::fmt::Display for Cancel {
             Cancel::Existing => {
                 "Encountered a video that is already in the archive, stopping due to --break-on-existing"
             }
-            Cancel::Rejected(reason) => reason,
+            Cancel::Rejected => {
+                "Encountered a video that did not match filter, stopping due to --break-match-filter"
+            }
         })
     }
 }
@@ -1852,7 +1964,8 @@ fn prefilter(
                 Some(false)
             }
             MatchOutcome::Break(reason) => {
-                *pending = Some(Cancel::Rejected(reason));
+                screen!("[download] {reason}");
+                *pending = Some(Cancel::Rejected);
                 None
             }
         })

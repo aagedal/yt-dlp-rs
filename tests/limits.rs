@@ -361,7 +361,9 @@ fn match_filters_skip_or_break_like_upstream() {
         None,
     );
     assert_eq!(output.status.code(), Some(101), "{}", stderr(&output));
-    assert!(stderr(&output).contains("[info] b does not pass filter (id!=b), skipping .."));
+    assert!(stderr(&output).contains(
+        "[download] b does not pass filter (id!=b), skipping ..\n[info] Encountered a video that did not match filter, stopping due to --break-match-filter\nAborting remaining downloads"
+    ));
     assert!(directory.path().join("a [a].mp4").exists());
     assert!(!directory.path().join("c [c].mp4").exists());
     let invalid = cli(&["--match-filters", "x ?? 5", &a], directory.path(), None);

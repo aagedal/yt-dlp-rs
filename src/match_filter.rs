@@ -583,12 +583,102 @@ impl Conjunction {
     }
 }
 
+/// The `_match_entry` checks preceding the match filters: title patterns,
+/// upload date range, view counts and age limit.
+#[derive(Debug, Clone, Default)]
+pub struct EntrySelection {
+    /// `--match-title`: the pattern text and its case-insensitive regex.
+    pub match_title: Option<(String, Regex)>,
+    /// `--reject-title`.
+    pub reject_title: Option<(String, Regex)>,
+    pub date_range: Option<crate::dates::DateRange>,
+    pub min_views: Option<i64>,
+    pub max_views: Option<i64>,
+    pub age_limit: Option<i64>,
+    /// `--break-on-reject`: any rejection cancels the queue.
+    pub break_on_reject: bool,
+    /// UNIX seconds for relative dates in `upload_date` values.
+    pub now: i64,
+}
+
+impl EntrySelection {
+    /// A case-insensitive title pattern (Rust regex syntax).
+    pub fn title_pattern(pattern: &str) -> Result<(String, Regex)> {
+        regex::RegexBuilder::new(pattern)
+            .case_insensitive(true)
+            .build()
+            .map(|regex| (pattern.to_owned(), regex))
+            .map_err(|error| invalid(format!("invalid title regex \"{pattern}\": {error}")))
+    }
+
+    fn is_empty(&self) -> bool {
+        self.match_title.is_none()
+            && self.reject_title.is_none()
+            && self.date_range.is_none()
+            && self.min_views.is_none()
+            && self.max_views.is_none()
+            && self.age_limit.is_none()
+    }
+
+    /// `check_filter` up to the match filter: the rejection reason, if any.
+    fn rejection(&self, info: &VideoInfo) -> Result<Option<String>> {
+        let title = &info.title;
+        if let Some((pattern, regex)) = &self.match_title
+            && !regex.is_match(title)
+        {
+            return Ok(Some(format!(
+                "\"{title}\" title did not match pattern \"{pattern}\""
+            )));
+        }
+        if let Some((pattern, regex)) = &self.reject_title
+            && regex.is_match(title)
+        {
+            return Ok(Some(format!(
+                "\"{title}\" title matched reject pattern \"{pattern}\""
+            )));
+        }
+        if let (Some(range), Some(date)) = (&self.date_range, &info.metadata.upload_date)
+            && let Some(iso) = range
+                .reject(date, self.now)
+                .map_err(|error| invalid(format!("invalid upload_date \"{date}\": {error}")))?
+        {
+            return Ok(Some(format!("{iso} upload date is not in range {range}")));
+        }
+        if let Some(views) = info.metadata.view_count.map(i128::from) {
+            if let Some(min) = self.min_views
+                && views < i128::from(min)
+            {
+                return Ok(Some(format!(
+                    "Skipping {title}, because it has not reached minimum view count ({views}/{min})"
+                )));
+            }
+            if let Some(max) = self.max_views
+                && views > i128::from(max)
+            {
+                return Ok(Some(format!(
+                    "Skipping {title}, because it has exceeded the maximum view count ({views}/{max})"
+                )));
+            }
+        }
+        // `age_restricted(content_limit, age_limit)`.
+        if let (Some(limit), Some(content)) = (self.age_limit, info.metadata.age_limit)
+            && limit < i64::from(content)
+        {
+            return Ok(Some(format!(
+                "Skipping \"{title}\" because it is age restricted"
+            )));
+        }
+        Ok(None)
+    }
+}
+
 /// Upstream `match_filter_func`: any matching filter passes; breaking filters
 /// cancel the queue when they reject.
 #[derive(Debug, Clone, Default)]
 pub struct MatchFilters {
     filters: Vec<Conjunction>,
     breaking: Vec<Conjunction>,
+    selection: EntrySelection,
 }
 
 /// The outcome for one video.
@@ -622,11 +712,18 @@ impl MatchFilters {
         Ok(Self {
             filters: parse(filters)?,
             breaking: parse(breaking)?,
+            selection: EntrySelection::default(),
         })
     }
 
+    /// Apply the `_match_entry` checks that precede the filters.
+    pub fn with_selection(mut self, selection: EntrySelection) -> Self {
+        self.selection = selection;
+        self
+    }
+
     pub fn is_empty(&self) -> bool {
-        self.filters.is_empty() && self.breaking.is_empty()
+        self.filters.is_empty() && self.breaking.is_empty() && self.selection.is_empty()
     }
 
     fn rejection(
@@ -668,11 +765,21 @@ impl MatchFilters {
             .as_object()
             .expect("video info serializes to an object");
         let incomplete = |key: &str| before_selection && FORMAT_FIELDS.contains(&key);
+        let reject = |reason| {
+            if self.selection.break_on_reject {
+                MatchOutcome::Break(reason)
+            } else {
+                MatchOutcome::Reject(reason)
+            }
+        };
+        if let Some(reason) = self.selection.rejection(info)? {
+            return Ok(reject(reason));
+        }
         if let Some(reason) = Self::rejection(&self.breaking, dict, &incomplete)? {
             return Ok(MatchOutcome::Break(reason));
         }
         Ok(match Self::rejection(&self.filters, dict, &incomplete)? {
-            Some(reason) => MatchOutcome::Reject(reason),
+            Some(reason) => reject(reason),
             None => MatchOutcome::Pass,
         })
     }

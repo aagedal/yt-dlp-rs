@@ -118,3 +118,106 @@ fn page_and_direct_metadata_follow_upstream_generic_fields() {
     assert!(plain.get("timestamp").is_none() && plain.get("upload_date").is_none());
     assert_eq!(plain["thumbnail"], format!("{}/p.jpg", server.origin));
 }
+
+fn simulate(args: &[&str]) -> (Option<i32>, String) {
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--proxy", "", "-s"])
+        .args(args)
+        .output()
+        .unwrap();
+    (
+        output.status.code(),
+        String::from_utf8_lossy(&output.stderr).into_owned(),
+    )
+}
+
+#[test]
+fn date_age_view_and_title_selection_follow_upstream_match_entry() {
+    let server = Server::new();
+    let page = format!("{}/meta.html", server.origin);
+    let direct = format!("{}/media/clip.mp4", server.origin);
+    for (args, url, reason) in [
+        (
+            vec!["--date", "20151022"],
+            &page,
+            Some("[download] 2015-10-21 upload date is not in range 2015-10-22 to 2015-10-22"),
+        ),
+        (
+            vec!["--datebefore", "19941105"],
+            &direct,
+            Some("[download] 1994-11-06 upload date is not in range 0001-01-01 to 1994-11-05"),
+        ),
+        (
+            vec!["--dateafter", "19941106", "--datebefore", "19941106"],
+            &direct,
+            None,
+        ),
+        (
+            vec!["--age-limit", "17"],
+            &page,
+            Some("[download] Skipping \"Meta page (1)\" because it is age restricted"),
+        ),
+        (vec!["--age-limit", "18"], &page, None),
+        // Unknown content ratings and view counts never reject.
+        (vec!["--age-limit", "0", "--min-views", "5"], &direct, None),
+        (vec!["--match-title", "META"], &page, None),
+        (
+            vec!["--match-title", "zzz"],
+            &page,
+            Some("[download] \"Meta page (1)\" title did not match pattern \"zzz\""),
+        ),
+        (
+            vec!["--reject-title", "p.ge"],
+            &page,
+            Some("[download] \"Meta page (1)\" title matched reject pattern \"p.ge\""),
+        ),
+    ] {
+        let (code, stderr) = simulate(&[args.as_slice(), &[url.as_str()]].concat());
+        assert_eq!(code, Some(0), "{args:?}: {stderr}");
+        match reason {
+            Some(reason) => assert!(stderr.contains(reason), "{args:?}: {stderr}"),
+            None => assert!(!stderr.contains("[download] "), "{args:?}: {stderr}"),
+        }
+    }
+    // --break-on-reject turns any rejection into upstream's cancellation.
+    let (code, stderr) = simulate(&["--break-on-reject", "--age-limit", "1", &page]);
+    assert_eq!(code, Some(101));
+    assert!(stderr.contains(
+        "[download] Skipping \"Meta page (1)\" because it is age restricted\n[info] Encountered a video that did not match filter, stopping due to --break-match-filter\nAborting remaining downloads"
+    ), "{stderr}");
+    // --date wins over --dateafter/--datebefore with upstream warnings.
+    let (code, stderr) = simulate(&[
+        "--dateafter",
+        "20990101",
+        "--datebefore",
+        "20000101",
+        "--date",
+        "19941106",
+        &direct,
+    ]);
+    assert_eq!(code, Some(0), "{stderr}");
+    assert!(stderr.contains("WARNING: --dateafter is ignored since --date was given\nWARNING: --datebefore is ignored since --date was given"), "{stderr}");
+    // Invalid dates fail before any request with upstream messages.
+    for (value, message) in [
+        ("bogus", "Invalid date format \"bogus\""),
+        ("20201301", "unconverted data remains: 1"),
+        (
+            "20200001",
+            "time data '20200001' does not match format '%Y%m%d'",
+        ),
+    ] {
+        let (code, stderr) = simulate(&["--date", value, "http://127.0.0.1:9/never"]);
+        assert_eq!(code, Some(1));
+        assert!(stderr.contains(message), "{value}: {stderr}");
+    }
+    let (_, stderr) = simulate(&[
+        "--dateafter",
+        "20200102",
+        "--datebefore",
+        "20200101",
+        &direct,
+    ]);
+    assert!(stderr.contains(
+        "Date range: \"2020-01-02 to 2020-01-01\" , the start date must be before the end date"
+    ));
+}

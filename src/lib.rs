@@ -45,7 +45,7 @@ pub use info_json::{
     InfoJsonWrite, info_json_path, playlist_info_json, to_python_json, video_info_json,
     write_info_json, write_info_json_with,
 };
-pub use match_filter::{MatchFilters, MatchOutcome};
+pub use match_filter::{EntrySelection, MatchFilters, MatchOutcome};
 pub use output::{render_automatic_captions, render_subtitles};
 pub use playlist::{PlaylistCounts, PlaylistSelection};
 pub use postprocess::{PostprocessOptions, ProcessedDownload};

@@ -35,7 +35,10 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--windows-filenames`, `--no-windows-filenames` | Force upstream path sanitization, or minimal `/`-only sanitization outside Windows; last flag wins |
 | `--trim-filenames`, `--trim-file-names LENGTH` | Trim rendered names excluding the last two dot-separated parts; 0 disables |
 | `-w`, `--no-overwrites`, `--force-overwrites`, `--yes-overwrites`, `--no-force-overwrites` | Upstream overwrite modes for media, info JSON and subtitles; last flag wins; see [overwrite options](#overwrite-options) |
-| `--match-filters FILTER`, `--no-match-filters`, `--break-match-filters FILTER`, `--no-break-match-filters` | Upstream `match_str` over the JSON form of represented metadata: `&` conditions, repeated filters as OR, comparisons with `?`/`!`, string operators, regexes (Rust `regex`; no lookaround/backreferences), `parse_filesize`/`parse_duration` numbers; checked before selection (format fields incomplete) and again before processing; rejected videos are skipped with upstream's message, breaking rejections cancel with exit 101; filters are validated at startup; interactive `-` is unsupported |
+| `--match-filters FILTER`, `--no-match-filters`, `--break-match-filters FILTER`, `--no-break-match-filters` | Upstream `match_str` over the JSON form of represented metadata: `&` conditions, repeated filters as OR, comparisons with `?`/`!`, string operators, regexes (Rust `regex`; no lookaround/backreferences), `parse_filesize`/`parse_duration` numbers; checked before selection (format fields incomplete) and again before processing; rejected videos are skipped with upstream's message, breaking rejections cancel with exit 101; filters are validated at startup; interactive `-` is unsupported. A breaking rejection prints `[download] REASON`, then upstream's fixed `RejectedVideoReached` message |
+| `--date`, `--datebefore`, `--dateafter DATE` | Upstream `DateRange` from strict `date_from_str` (`YYYYMMDD` or `now`/`today`/`yesterday` with `-N(day\|week\|month\|year)[s]`, UTC), `--date` overriding the others with upstream warnings, and upstream validation messages (out-of-range dates use the Python 3.13 wording); videos with an `upload_date` outside the range are skipped with `[download] YYYY-MM-DD upload date is not in range START to END` before the match filters; ASCII digits only |
+| `--age-limit YEARS` | Upstream `age_restricted`: skip videos whose `age_limit` exceeds YEARS (`Skipping "TITLE" because it is age restricted`); unknown ratings pass |
+| `--min-views`, `--max-views`, `--match-title`, `--reject-title`, `--break-on-reject` (hidden upstream) | Upstream `_match_entry` order and messages: case-insensitive title regexes (Rust `regex` syntax, validated at startup), view counts when known, and `--break-on-reject` turning any rejection into the `RejectedVideoReached` cancellation (exit 101) |
 | `--max-downloads NUMBER` | Stop after NUMBER processed videos (simulated, already-downloaded and size-skipped ones count), print upstream's message and exit 101; 0 means unlimited |
 | `-r`, `--limit-rate`, `--rate-limit RATE` | Upstream `slow_down` per whole-file media transfer or fragment request: sleep after each read until the average rate is at most RATE (`parse_bytes`, strictly positive); subtitles are not limited |
 | `--sleep-interval`/`--min-sleep-interval`, `--max-sleep-interval`, `--sleep-subtitles SECONDS` | Upstream validation messages; sleep a uniform random interval (time-seeded, not Python's RNG) before each media stream download after existing-file checks, and before each subtitle download; `--sleep-requests` is not implemented |
@@ -75,7 +78,10 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | All other flags | Rejected; general option parity is not implemented |
 
 Informational lines go to stderr natively (upstream writes them to stdout
-unless quiet). Simulation and JSON still make network requests. This inventory does not claim
+unless quiet). Option validation errors print `ERROR: MESSAGE` and exit 1, where
+upstream's optparse prints usage plus `yt-dlp: error: MESSAGE` and exits 2.
+Generic extraction does not print upstream's `Falling back on generic
+information extractor` warning. Simulation and JSON still make network requests. This inventory does not claim
 upstream equivalence for every option interaction or filename rule.
 
 ## YouTube watch-page subset

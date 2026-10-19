@@ -136,7 +136,9 @@ Supported today:
   overwrite options and `-j`/`-s`/listing never write. Content covers the
   represented metadata subset; `_version` and `--load-info-json` are not implemented.
 - `-q/--quiet`, `--no-quiet` and `--no-warnings` gate informational and warning lines.
-- `--match-filters`/`--break-match-filters` filter videos with upstream syntax.
+- `--match-filters`/`--break-match-filters` filter videos with upstream syntax;
+  `--date`/`--datebefore`/`--dateafter` and `--age-limit` select by upload date
+  and age rating.
 - `--break-on-existing`, `--break-per-input`, `--force-write-archive` and
   `--no-download-archive` follow upstream archive control.
 - `-r/--limit-rate RATE` throttles media transfers like upstream; `--sleep-interval`,
