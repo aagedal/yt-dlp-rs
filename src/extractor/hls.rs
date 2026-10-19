@@ -248,7 +248,7 @@ pub(crate) fn from_response(
                     vbr: None,
                     source_preference: None,
                     quality: None,
-                    fps: None,
+                    fps: variant.fps,
                     asr: None,
                     audio_channels: None,
                     format_id: join(&[m3u8_id, Some(&name)]),

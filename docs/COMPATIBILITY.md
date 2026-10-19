@@ -649,9 +649,13 @@ so `--min/max-filesize` act during download), YouTube takes it from
 `contentLength`, and `direct` is present only (as true) for generic direct links,
 so templates render `NA` and `[filesize...]` filters need `?` for such results.
 Remaining sort-input differences: unrepresentable negative or larger-than-`u32`
-dimensions are unknown natively (upstream keeps them); DASH `fps`/`asr`, HLS
-`FRAME-RATE` and upstream `filesize_approx`, `preference`, `language_preference`
-are not yet represented.
+dimensions are unknown natively (upstream keeps them); upstream
+`filesize_approx`, `preference` and `language_preference` are not yet represented.
+HLS `FRAME-RATE` gives `fps` (`float_or_none`); DASH `frameRate` and
+`audioSamplingRate` give `fps`/`asr` (`int_or_none`, so fractional rates stay
+unknown; integral `fps` serializes as a float), DASH formats get upstream's
+`DASH video`/`DASH audio` `format_note`, and the `mul`/`und`/`zxx`/`mis` languages
+are dropped.
 
 | Option | Behavior |
 | --- | --- |

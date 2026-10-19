@@ -23,6 +23,8 @@ pub(crate) struct Variant {
     pub url: Url,
     /// Kilobits per second, with valid average bandwidth preferred.
     pub bandwidth: Option<f64>,
+    /// `float_or_none(FRAME-RATE)`.
+    pub fps: Option<f64>,
     pub width: Option<u32>,
     pub height: Option<u32>,
     pub stream_kind: StreamKind,
@@ -313,6 +315,9 @@ fn variant(
     }
     Ok(Variant {
         codecs,
+        fps: values
+            .get("FRAME-RATE")
+            .and_then(|value| value.trim().parse::<f64>().ok()),
         url,
         bandwidth: bandwidth("AVERAGE-BANDWIDTH").or_else(|| bandwidth("BANDWIDTH")),
         width,
@@ -678,6 +683,13 @@ mod tests {
             "aac"
         );
     }
+    #[test]
+    fn variant_frame_rate_is_upstream_float_or_none() {
+        let Playlist::Master { variants, .. } = parse("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1,FRAME-RATE=29.970\na.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=1,FRAME-RATE=fast\nb.m3u8", &base()).unwrap() else { panic!() };
+        assert_eq!(variants[0].fps, Some(29.97));
+        assert_eq!(variants[1].fps, None);
+    }
+
     #[test]
     fn master_quoted_codecs_dimensions_bandwidth_and_audio_kind() {
         let Playlist::Master { variants, .. } = parse("#EXTM3U\n#EXT-X-INDEPENDENT-SEGMENTS\n#EXT-X-STREAM-INF:BANDWIDTH=900000,AVERAGE-BANDWIDTH=800000,RESOLUTION=1280x720,CODECS=\"avc1.64001F,mp4a.40.2\"\nvideo/playlist.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=128000,CODECS=\"mp4a.40.2\"\naudio.m3u8", &base()).unwrap() else { panic!() };

@@ -854,8 +854,15 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 vbr: None,
                 source_preference: None,
                 quality: None,
-                fps: None,
-                asr: None,
+                // Upstream `int_or_none(frameRate)` (fractions stay unknown)
+                // and `int_or_none(audioSamplingRate)`.
+                fps: attrs
+                    .get("frameRate")
+                    .and_then(|value| value.trim().parse::<u32>().ok())
+                    .map(f64::from),
+                asr: attrs
+                    .get("audioSamplingRate")
+                    .and_then(|value| value.trim().parse().ok()),
                 audio_channels: None,
                 format_id,
                 url: manifest.clone(),
@@ -869,8 +876,19 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 .into(),
                 stream_kind: kind,
                 audio_group: (kind != StreamKind::Standalone).then(|| "dash-period-0".into()),
-                language: attrs.get("lang").map(|value| (*value).to_owned()),
-                format_note: None,
+                // Upstream drops the `mul`/`und`/`zxx`/`mis` language codes.
+                language: attrs
+                    .get("lang")
+                    .filter(|lang| !matches!(**lang, "mul" | "und" | "zxx" | "mis"))
+                    .map(|value| (*value).to_owned()),
+                format_note: Some(format!(
+                    "DASH {}",
+                    match content {
+                        Some(kind @ ("video" | "audio")) => kind,
+                        _ if video => "video",
+                        _ => "audio",
+                    }
+                )),
                 audio_default: false,
                 audio_autoselect: false,
                 abr: if kind == StreamKind::AudioOnly {
