@@ -362,7 +362,7 @@ impl VideoInfo {
         prefer_merge: bool,
     ) -> crate::Result<()> {
         let expression = requested.unwrap_or(if prefer_merge {
-            "bestvideo+bestaudio/best"
+            "bestvideo*+bestaudio/best"
         } else {
             "best"
         });
@@ -464,7 +464,8 @@ impl VideoInfo {
         context: &[&'a VideoFormat],
     ) -> Vec<Pick<'a>> {
         match expression {
-            Expression::Atom(atom) => Self::ranked_atom(atom, context)
+            Expression::Atom(atom) => self
+                .ranked_atom(atom, context)
                 .into_iter()
                 .map(|format| Pick::Single {
                     format,
@@ -483,6 +484,22 @@ impl VideoInfo {
             Expression::Merge(first, second) => {
                 let first = self.evaluate(first, context);
                 let second = self.evaluate(second, context);
+                // Upstream `_merge` without multiple streams: a second format
+                // repeating the first's video or audio is dropped.
+                if let (
+                    Some(Pick::Single { format: a, literal }),
+                    Some(Pick::Single { format: b, .. }),
+                ) = (first.first(), second.first())
+                {
+                    let video = |f: &VideoFormat| f.stream_kind != StreamKind::AudioOnly;
+                    let audio = |f: &VideoFormat| f.stream_kind != StreamKind::VideoOnly;
+                    if video(a) && video(b) || audio(a) && audio(b) {
+                        return vec![Pick::Single {
+                            format: a,
+                            literal: *literal,
+                        }];
+                    }
+                }
                 self.select_pair_candidates(&first, &second)
                     .into_iter()
                     .map(|(first, second)| Pick::Pair(first, second))
@@ -513,8 +530,15 @@ impl VideoInfo {
                 })
                 .collect::<Vec<_>>()
         };
-        let first_formats = singles(first);
-        let second_formats = singles(second);
+        // Pairs combine one video-only and one audio-only stream.
+        let separate = |formats: Vec<(&'a VideoFormat, bool)>| {
+            formats
+                .into_iter()
+                .filter(|(format, _)| format.stream_kind != StreamKind::Standalone)
+                .collect::<Vec<_>>()
+        };
+        let first_formats = separate(singles(first));
+        let second_formats = separate(singles(second));
         let reversed = match (
             first_formats.first()?.0.stream_kind,
             second_formats.first()?.0.stream_kind,
@@ -546,56 +570,108 @@ impl VideoInfo {
         None
     }
 
-    fn ranked_atom<'a>(atom: &Atom, context: &[&'a VideoFormat]) -> Vec<&'a VideoFormat> {
+    fn ranked_atom<'a>(&self, atom: &Atom, context: &[&'a VideoFormat]) -> Vec<&'a VideoFormat> {
+        use StreamKind::{AudioOnly, Standalone, VideoOnly};
+        let has_video = |f: &VideoFormat| f.stream_kind != AudioOnly;
+        let has_audio = |f: &VideoFormat| f.stream_kind != VideoOnly;
         // Predicates narrow the candidate set before kind fallback and ranking.
         let candidates: Vec<_> = context
             .iter()
             .copied()
             .filter(|f| atom.matches(f))
             .collect();
-        let (kind, worst) = match atom.name.as_str() {
-            "best" | "worst" => {
-                let kind = if candidates
-                    .iter()
-                    .any(|f| f.stream_kind == StreamKind::Standalone)
-                {
-                    StreamKind::Standalone
-                } else if candidates
-                    .iter()
-                    .any(|f| f.stream_kind == StreamKind::VideoOnly)
-                {
-                    return Vec::new();
-                } else {
-                    StreamKind::AudioOnly
-                };
-                (kind, atom.name == "worst")
-            }
-            "bestaudio" | "worstaudio" => (StreamKind::AudioOnly, atom.name == "worstaudio"),
-            "bestvideo" | "worstvideo" => (StreamKind::VideoOnly, atom.name == "worstvideo"),
-            id => {
+        let name = atom.name.as_str();
+        let worst = name.starts_with("worst");
+        let selected: Vec<_> = match name.trim_start_matches("best").trim_start_matches("worst") {
+            _ if !atom.is_selector() => {
                 return candidates
                     .into_iter()
-                    .find(|f| f.format_id == id)
+                    .find(|f| f.format_id == name)
                     .into_iter()
                     .collect();
             }
+            // Upstream extension selectors: audio extensions need audio, video
+            // ones a complete stream, falling back to video when nothing in
+            // the result is complete.
+            _ if selector::AUDIO_EXTS.contains(&name) => candidates
+                .into_iter()
+                .filter(|f| f.ext == name && has_audio(f))
+                .collect(),
+            _ if selector::VIDEO_EXTS.contains(&name) => {
+                let complete: Vec<_> = candidates
+                    .iter()
+                    .copied()
+                    .filter(|f| f.ext == name && f.stream_kind == Standalone)
+                    .collect();
+                if complete.is_empty() && !self.formats.iter().any(|f| f.stream_kind == Standalone)
+                {
+                    candidates
+                        .into_iter()
+                        .filter(|f| f.ext == name && has_video(f))
+                        .collect()
+                } else {
+                    complete
+                }
+            }
+            "" => {
+                let complete: Vec<_> = candidates
+                    .iter()
+                    .copied()
+                    .filter(|f| f.stream_kind == Standalone)
+                    .collect();
+                // Upstream `incomplete_formats`: only when every format of
+                // the video is video-only, or every one audio-only, do
+                // best/worst fall back to the (filtered) single-kind formats.
+                let uniform = |kind| {
+                    !self.formats.is_empty() && self.formats.iter().all(|f| f.stream_kind == kind)
+                };
+                if !complete.is_empty() {
+                    complete
+                } else if uniform(VideoOnly) || uniform(AudioOnly) {
+                    candidates
+                } else {
+                    return Vec::new();
+                }
+            }
+            "video" => candidates
+                .into_iter()
+                .filter(|f| f.stream_kind == VideoOnly)
+                .collect(),
+            "audio" => candidates
+                .into_iter()
+                .filter(|f| f.stream_kind == AudioOnly)
+                .collect(),
+            "video*" => candidates.into_iter().filter(|f| has_video(f)).collect(),
+            "audio*" => candidates.into_iter().filter(|f| has_audio(f)).collect(),
+            _ => candidates,
         };
-        let compare = |a: &&VideoFormat, b: &&VideoFormat| match kind {
-            StreamKind::Standalone => resolution(a).cmp(&resolution(b)),
-            StreamKind::VideoOnly => resolution(a)
-                .cmp(&resolution(b))
-                .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr))),
-            StreamKind::AudioOnly => a
-                .audio_default
-                .cmp(&b.audio_default)
-                .then_with(|| a.audio_autoselect.cmp(&b.audio_autoselect))
-                .then_with(|| bitrate(a.abr).total_cmp(&bitrate(b.abr)))
-                .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr))),
+        let kinds: std::collections::BTreeSet<_> =
+            selected.iter().map(|f| f.stream_kind as u8).collect();
+        let compare = |a: &&VideoFormat, b: &&VideoFormat| {
+            if kinds.len() > 1 {
+                // Mixed kinds: video before audio-only, then resolution,
+                // complete streams and bitrate (native ranking).
+                return has_video(a)
+                    .cmp(&has_video(b))
+                    .then_with(|| resolution(a).cmp(&resolution(b)))
+                    .then_with(|| has_audio(a).cmp(&has_audio(b)))
+                    .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr)))
+                    .then_with(|| bitrate(a.abr).total_cmp(&bitrate(b.abr)));
+            }
+            match a.stream_kind {
+                Standalone => resolution(a).cmp(&resolution(b)),
+                VideoOnly => resolution(a)
+                    .cmp(&resolution(b))
+                    .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr))),
+                AudioOnly => a
+                    .audio_default
+                    .cmp(&b.audio_default)
+                    .then_with(|| a.audio_autoselect.cmp(&b.audio_autoselect))
+                    .then_with(|| bitrate(a.abr).total_cmp(&bitrate(b.abr)))
+                    .then_with(|| bitrate(a.tbr).total_cmp(&bitrate(b.tbr))),
+            }
         };
-        let mut formats: Vec<_> = candidates
-            .into_iter()
-            .filter(|f| f.stream_kind == kind)
-            .collect();
+        let mut formats = selected;
         formats.sort_by(compare);
         if !worst {
             formats.reverse();
@@ -953,10 +1029,12 @@ mod tests {
         video
             .formats
             .retain(|f| f.stream_kind == StreamKind::VideoOnly);
-        let before = snapshot(&video);
-        assert!(video.select_format(None).is_err());
-        assert!(video.select_format_with_merge(None, true).is_err());
-        assert_eq!(snapshot(&video), before);
+        // Upstream `incomplete_formats`: with only video-only formats,
+        // best falls back to them with or without a merger.
+        video.select_format(None).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v2"));
+        video.select_format_with_merge(None, true).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("v2"));
         video.formats.push(source(
             "complete",
             StreamKind::Standalone,
@@ -992,11 +1070,19 @@ mod tests {
         ));
         video.select_format(None).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("muxed"));
+        // Upstream `bestvideo*+bestaudio/best`: the complete 2160p format
+        // ranks above the separate video and its audio is not added again.
         video.select_format_with_merge(None, true).unwrap();
+        assert_eq!(video.format_id.as_deref(), Some("muxed"));
+        assert!(video.requested_formats.is_empty());
+        video.select_format_with_merge(Some("bv+ba"), true).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("v2+a2"));
         video.select_format_with_merge(Some("best"), true).unwrap();
         assert_eq!(video.format_id.as_deref(), Some("muxed"));
-        assert!(video.requested_formats.is_empty());
+        for (expression, expected) in [("v1+v2", "v1"), ("a1+a2", "a1"), ("muxed+a1", "muxed")] {
+            video.select_format(Some(expression)).unwrap();
+            assert_eq!(video.format_id.as_deref(), Some(expected), "{expression}");
+        }
     }
 
     #[test]
@@ -1021,8 +1107,6 @@ mod tests {
         let before = snapshot(&video);
         for expression in [
             "v1+missing",
-            "v1+v2",
-            "a1+a2",
             "v1+",
             "v1+a1+a2",
             "v1/",
@@ -1261,8 +1345,9 @@ mod tests {
             None,
             None,
         ));
-        video.select_format(Some("best[ext=m4a]")).unwrap();
-        assert_eq!(video.format_id.as_deref(), Some("a2"));
+        // Upstream `best` needs a complete stream, so an audio-only match
+        // fails while complete and separate formats coexist.
+        video.select_format(Some("best[ext=m4a]")).unwrap_err();
         video.select_format(Some("best[height<=?720]")).unwrap_err();
     }
 

@@ -747,7 +747,15 @@ fn format_ids_are_literal_and_src_precedes_child_sources() {
     let info = dl.extract_info_with_format(&page, Some("1")).unwrap();
     assert_eq!(info.ext, "mp3");
     assert_eq!(info.url.as_str(), server.url("/audio"));
-    for id in ["", "2", "01", "bestvideo", "0//1", "0+1"] {
+    // Like upstream `_merge`, a second complete source is dropped.
+    assert_eq!(
+        dl.extract_info_with_format(&page, Some("0+1"))
+            .unwrap()
+            .format_id
+            .as_deref(),
+        Some("0")
+    );
+    for id in ["", "2", "01", "bestvideo", "0//1"] {
         assert!(
             matches!(
                 dl.extract_info_with_format(&page, Some(id)),

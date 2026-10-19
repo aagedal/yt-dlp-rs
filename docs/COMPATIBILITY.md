@@ -284,8 +284,14 @@ rate, and audio/video distinctions do not break ties. This is an explicit native
 policy for the supported progressive subset, not full upstream best/worst parity
 or a guarantee of perceptual quality. Format lists and source IDs retain declaration
 order. Literal IDs override ranking; unavailable IDs return an error listing IDs.
-Comma selections, more than two merged streams, and
-upstream selector modifiers remain errors. See the bounded adaptive policy below.
+Like upstream, `best`/`worst` need a complete (muxed or unknown-codec) format
+unless every format is video-only or every one audio-only; `bv`/`ba` take
+separate streams, `bv*`/`ba*` any format with video/audio and `b*`/`w*` any
+format; extension selectors (`mp4`, `webm`, `m4a`, `mp3`, …) pick that
+extension (video ones need a complete stream, falling back to video streams
+when the result has no complete format); and a `+` merge drops a second format
+that repeats the first's video or audio, leaving a single format. Comma
+selections and more than two merged streams remain errors. See the bounded adaptive policy below.
 Direct HTTP results carry upstream's single generic format: its ID is the
 Content-Type subtype (`mp4`, `mpeg`, `webm`, …), or `0` when only the URL suffix
 identified the media, and `audio/*` media is audio-only (`vcodec: none`), so
@@ -790,9 +796,11 @@ available through the shared format-filter grammar.
 
 HTML5 audio groups receive a source index prefix, so equal group names from
 independent source masters cannot pair automatically.
-Without FFmpeg configuration, implicit default selection fails when only separate
-video/audio formats exist. An explicit pair may still be inspected with JSON.
-With FFmpeg, implicit default prefers a compatible pair and downloads both native
+Without FFmpeg configuration, implicit default selection (`best`) fails when
+separate video and audio formats exist without a complete one (upstream would
+select `bestvideo+bestaudio` and download the streams unmerged). An explicit
+pair may still be inspected with JSON. With FFmpeg, implicit default is
+upstream's `bestvideo*+bestaudio/best` and downloads both native
 fragment plans before merging. TS video and AAC/TS audio use fixed local demuxers;
 MP4 muxing relies on FFmpeg's AAC ADTS-to-ASC handling. No transcoding is introduced.
 
@@ -1019,9 +1027,10 @@ retain their absent format ID. Selection failures remain atomic.
 
 The entire expression is parsed before selection. Empty/unbalanced/adjacent
 groups, malformed later branches and any possible branch with more than two
-streams fail, even when an earlier branch is available. Stars, extension selectors, comma/all selections and multistream merging
-remain outside the supported grammar. Literal extension-shaped IDs retain their
-existing ID meaning; they do not request an extension automatically.
+streams fail, even when an earlier branch is available. Comma/all selections
+and multistream merging remain outside the supported grammar. Extension names
+are selectors, not literal IDs (format IDs equal to another extension receive
+upstream's `f` prefix).
 
 The shared expression fixtures compare selected IDs against actual pinned
 `YoutubeDL.build_format_selector` with an explicitly ordered format list and

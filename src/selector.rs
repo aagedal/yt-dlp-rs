@@ -9,11 +9,16 @@ pub(crate) struct Atom {
     filters: Vec<Filter>,
 }
 impl Atom {
+    /// A ranked selector (`best`/`worst` with an optional type and `*`) or an
+    /// upstream extension selector, as opposed to a literal format ID.
     pub(crate) fn is_selector(&self) -> bool {
-        matches!(
-            self.name.as_str(),
-            "best" | "worst" | "bestvideo" | "worstvideo" | "bestaudio" | "worstaudio"
-        )
+        let name = self.name.as_str();
+        let ranked = ["best", "worst"].iter().any(|prefix| {
+            name.strip_prefix(prefix).is_some_and(|kind| {
+                matches!(kind, "" | "video" | "audio" | "*" | "video*" | "audio*")
+            })
+        });
+        ranked || AUDIO_EXTS.contains(&name) || VIDEO_EXTS.contains(&name)
     }
     pub(crate) fn matches(&self, format: &VideoFormat) -> bool {
         self.filters
@@ -444,8 +449,18 @@ impl Expression {
     }
 }
 
+/// Upstream `_format_selection_exts`: extension selectors.
+pub(crate) const AUDIO_EXTS: &[&str] = &[
+    "aiff", "alac", "flac", "m4a", "mka", "mp3", "ogg", "opus", "wav",
+];
+pub(crate) const VIDEO_EXTS: &[&str] = &["avi", "flv", "mkv", "mov", "mp4", "webm", "3gp"];
+
 fn canonical_name(name: &str) -> Result<(String, Option<u64>)> {
+    // Upstream `(best|worst|b|w)(video|audio|v|a)?(\*)?(\.N)?`.
     fn alias(name: &str) -> Option<String> {
+        let (name, starred) = name
+            .strip_suffix('*')
+            .map_or((name, ""), |name| (name, "*"));
         for prefix in ["best", "worst", "b", "w"] {
             if let Some(tail) = name.strip_prefix(prefix) {
                 let kind = match tail {
@@ -455,7 +470,7 @@ fn canonical_name(name: &str) -> Result<(String, Option<u64>)> {
                     _ => continue,
                 };
                 return Some(format!(
-                    "{}{kind}",
+                    "{}{kind}{starred}",
                     if prefix.starts_with('b') {
                         "best"
                     } else {
@@ -850,7 +865,6 @@ mod tests {
             "best+best+best",
             "best,(worst)",
             "best/all",
-            "best*/worst",
             "best[height>1",
             "best[height>1]]",
             "best[width~=1]",
@@ -997,7 +1011,17 @@ mod tests {
             assert_eq!(atom.name, expected);
             assert!(atom.is_selector());
         }
-        for expression in ["bv*", "bestvideo*/worst", "a,b", "all", "mergeall"] {
+        for (alias, expected) in [
+            ("bv*", "bestvideo*"),
+            ("wa*.2", "worstaudio*"),
+            ("b*", "best*"),
+        ] {
+            let Expression::Atom(atom) = parse(alias).unwrap() else {
+                panic!("expected starred atom")
+            };
+            assert_eq!(atom.name, expected);
+        }
+        for expression in ["bv**", "a,b", "all", "mergeall"] {
             assert!(parse(expression).is_err(), "{expression}");
         }
         let Expression::Atom(atom) = parse("file.1").unwrap() else {
