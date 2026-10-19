@@ -118,6 +118,95 @@ pub(crate) fn before_extraction_request() {
     }
 }
 
+/// `--dump-pages`/`--write-pages` (`dump_intermediate_pages`/`write_pages`)
+/// and `--trim-filenames` for the dump names.
+static DUMP_PAGES: AtomicBool = AtomicBool::new(false);
+static WRITE_PAGES: AtomicBool = AtomicBool::new(false);
+static TRIM_FILE_NAME: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+pub fn set_page_dumps(dump: bool, write: bool, trim_file_name: Option<usize>) {
+    DUMP_PAGES.store(dump, Ordering::Relaxed);
+    WRITE_PAGES.store(write, Ordering::Relaxed);
+    TRIM_FILE_NAME.store(trim_file_name.unwrap_or(0), Ordering::Relaxed);
+}
+
+/// The next extraction body read through `_webpage_read_content`: the video
+/// ID for its dump name and the lines around the read.
+struct ExpectedPage {
+    id: String,
+    before: Option<String>,
+    after: Option<String>,
+}
+
+thread_local! {
+    static PAGE: std::cell::RefCell<Option<ExpectedPage>> = const { std::cell::RefCell::new(None) };
+}
+
+/// Expect a page read for `id`, printing `before` just before it (the
+/// request's note) and `after` once it has been read.
+pub(crate) fn expect_page(id: &str, before: Option<String>, after: Option<String>) {
+    PAGE.with(|page| {
+        *page.borrow_mut() = Some(ExpectedPage {
+            id: id.into(),
+            before,
+            after,
+        });
+    });
+}
+
+/// Drop an expectation whose request was not made.
+pub(crate) fn clear_page() {
+    PAGE.with(|page| page.borrow_mut().take());
+}
+
+/// Upstream `_webpage_read_content` for an expected page: the note, then
+/// `Dumping request to URL` with the base64 body and `Saving request to
+/// FILE` (`_request_dump_filename`), then the follow-up line.
+pub(crate) fn page_read(url: &url::Url, bytes: &[u8]) -> std::io::Result<()> {
+    let Some(page) = PAGE.with(|page| page.borrow_mut().take()) else {
+        return Ok(());
+    };
+    if let Some(before) = &page.before {
+        screen(before);
+    }
+    let extractor = EXTRACTOR.with(Cell::get);
+    if DUMP_PAGES.load(Ordering::Relaxed) {
+        use base64::Engine;
+        screen(&format!("[{extractor}] Dumping request to {url}"));
+        screen(&base64::engine::general_purpose::STANDARD.encode(bytes));
+    }
+    if WRITE_PAGES.load(Ordering::Relaxed) {
+        let filename = request_dump_filename(
+            url.as_str(),
+            &page.id,
+            TRIM_FILE_NAME.load(Ordering::Relaxed),
+        );
+        screen(&format!("[{extractor}] Saving request to {filename}"));
+        std::fs::write(&filename, bytes)?;
+    }
+    if let Some(after) = &page.after {
+        screen(after);
+    }
+    Ok(())
+}
+
+/// Upstream `_request_dump_filename` without request data.
+fn request_dump_filename(url: &str, id: &str, trim_length: usize) -> String {
+    let mut basen = [id, url]
+        .into_iter()
+        .filter(|part| !part.is_empty())
+        .collect::<Vec<_>>()
+        .join("_");
+    let trim_length = if trim_length == 0 { 240 } else { trim_length };
+    let length = basen.chars().count();
+    if length > trim_length {
+        let hash = format!("___{}", crate::md5::hex(basen.as_bytes()));
+        let keep = trim_length.saturating_sub(hash.chars().count());
+        basen = basen.chars().take(keep).collect::<String>() + &hash;
+    }
+    crate::output::sanitize_filename(&format!("{basen}.dump"), true)
+}
+
 /// Upstream `truncate_string(s, left, right)`.
 pub(crate) fn truncate_string(text: &str, left: usize, right: usize) -> String {
     let chars: Vec<char> = text.chars().collect();

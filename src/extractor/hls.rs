@@ -90,6 +90,7 @@ pub(crate) fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
             "HLS playlist exceeds the 2097152-byte extraction limit",
         ));
     }
+    crate::screen::page_read(&base, &bytes)?;
     let text = std::str::from_utf8(&bytes)
         .map_err(|_| unsupported("only UTF-8/ASCII HLS playlists are supported"))?;
     Ok((base.clone(), crate::hls::parse(text, &base)?))
@@ -109,11 +110,13 @@ pub(crate) fn check_live_status(client: &Client, info: &mut VideoInfo) {
     let Ok(response) = direct::probe(client, &format.url, None) else {
         return;
     };
+    let url = response.url().clone();
     let mut bytes = Vec::new();
     if response
         .take(MAX_MANIFEST_BYTES)
         .read_to_end(&mut bytes)
         .is_err()
+        || crate::screen::page_read(&url, &bytes).is_err()
         || !bytes.starts_with(b"#EXTM3U")
     {
         return;

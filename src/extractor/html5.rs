@@ -452,10 +452,7 @@ impl Extractor for GenericHttp {
         if media_type {
             detected("direct video link");
         }
-        let m3u8 = || {
-            screen(&format!("[generic] {id}: Downloading m3u8 information"));
-            screen(&format!("[generic] {id}: Checking m3u8 live status"));
-        };
+
         // Upstream sets the timestamp before inspecting the response.
         let timestamp = direct::last_modified(&response);
         let stamp = |mut info: VideoInfo| {
@@ -467,8 +464,15 @@ impl Extractor for GenericHttp {
             if !media_type {
                 fallback();
             }
-            screen(&format!("[generic] {id}: Extracting information"));
-            let manifest = dash::from_response(response, url, dash_path)?;
+            // Read (and dumped) before `Extracting information`.
+            crate::screen::expect_page(
+                &id,
+                None,
+                Some(format!("[generic] {id}: Extracting information")),
+            );
+            let manifest = dash::from_response(response, url, dash_path);
+            crate::screen::clear_page();
+            let manifest = manifest?;
             if manifest.is_some() && !media_type {
                 detected("DASH manifest");
             }
@@ -496,20 +500,28 @@ impl Extractor for GenericHttp {
             if !media_type {
                 fallback();
             }
-            let mut hls = hls::from_response(client, response, url, None, hls_path, None)?;
+            crate::screen::expect_page(
+                &id,
+                Some(format!("[generic] {id}: Downloading m3u8 information")),
+                None,
+            );
+            let hls = hls::from_response(client, response, url, None, hls_path, None);
+            crate::screen::clear_page();
+            let mut hls = hls?;
             if let Some(info) = &mut hls {
                 if !media_type {
                     detected("M3U playlist");
                 }
-                m3u8();
+                screen(&format!("[generic] {id}: Checking m3u8 live status"));
+                crate::screen::expect_page(&id, None, None);
                 hls::check_live_status(client, info);
+                crate::screen::clear_page();
             } else if direct.is_some() && !media_type {
                 warning("[generic] URL could be a direct video link, returning it as such.");
             }
             return Ok(hls.or(direct).map(stamp));
         }
         fallback();
-        screen(&format!("[generic] {id}: Extracting information"));
         if response
             .content_length()
             .is_some_and(|size| size > MAX_HTML_BYTES)
@@ -553,6 +565,12 @@ impl Extractor for GenericHttp {
         if bytes.len() as u64 > MAX_HTML_BYTES {
             return Err(Error::HtmlTooLarge(MAX_HTML_BYTES));
         }
+        crate::screen::expect_page(
+            &id,
+            None,
+            Some(format!("[generic] {id}: Extracting information")),
+        );
+        crate::screen::page_read(&page_url, &bytes)?;
         let html = std::str::from_utf8(&bytes)
             .map_err(|_| unsupported("only UTF-8/ASCII HTML is supported"))?;
         crate::screen::debug("Looking for embeds");
@@ -580,13 +598,22 @@ impl Extractor for GenericHttp {
                 let direct = direct::from_response(&response, url);
                 let dash_hint =
                     source.dash_hint || url.path().to_ascii_lowercase().ends_with(".mpd");
+                // The request note precedes the manifest's page dump.
                 let manifest = if dash_hint || dash::recognized(&response) {
-                    let manifest = dash::from_response(response, url, dash_hint)?;
-                    if manifest.is_some() {
-                        screen(&format!("[html5] {id}: Downloading MPD manifest"));
-                    }
-                    manifest
+                    crate::screen::expect_page(
+                        &id,
+                        Some(format!("[html5] {id}: Downloading MPD manifest")),
+                        None,
+                    );
+                    let manifest = dash::from_response(response, url, dash_hint);
+                    crate::screen::clear_page();
+                    manifest?
                 } else {
+                    crate::screen::expect_page(
+                        &id,
+                        Some(format!("[html5] {id}: Downloading m3u8 information")),
+                        None,
+                    );
                     let manifest = hls::from_response(
                         client,
                         response,
@@ -594,11 +621,9 @@ impl Extractor for GenericHttp {
                         Some(&page_url),
                         source.hls_hint || url.path().to_ascii_lowercase().ends_with(".m3u8"),
                         Some("hls"),
-                    )?;
-                    if manifest.is_some() {
-                        screen(&format!("[html5] {id}: Downloading m3u8 information"));
-                    }
-                    manifest
+                    );
+                    crate::screen::clear_page();
+                    manifest?
                 };
                 let info = manifest
                     .or(direct)

@@ -78,6 +78,7 @@ fn read_manifest(response: Response) -> Result<(Url, Vec<VideoFormat>)> {
             "DASH playlist exceeds the 2097152-byte extraction limit",
         ));
     }
+    crate::screen::page_read(&base, &bytes)?;
     let text = std::str::from_utf8(&bytes)
         .map_err(|_| unsupported("only UTF-8/ASCII DASH playlists are supported"))?;
     Ok((base.clone(), crate::dash::parse(text, &base)?))

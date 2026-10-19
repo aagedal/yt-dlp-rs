@@ -26,6 +26,7 @@ mod http;
 mod info;
 mod info_json;
 mod match_filter;
+mod md5;
 mod merge;
 pub mod metadata_parser;
 mod modify_chapters;

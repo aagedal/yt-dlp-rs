@@ -133,6 +133,12 @@ struct Args {
     /// Print various debugging information
     #[arg(short = 'v', long)]
     verbose: bool,
+    /// Print downloaded pages encoded using base64 to debug problems (very verbose)
+    #[arg(long)]
+    dump_pages: bool,
+    /// Write downloaded intermediary pages to files in the current directory to debug problems
+    #[arg(long)]
+    write_pages: bool,
     /// Resume partially downloaded files/fragments (default)
     #[arg(short = 'c', long = "continue", overrides_with_all = ["continue_partial", "no_continue"])]
     continue_partial: bool,
@@ -1453,6 +1459,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let mut args = Args::from_arg_matches(&matches)?;
     yt_dlp_rs::screen::set_verbose(args.verbose);
+    yt_dlp_rs::screen::set_page_dumps(
+        args.dump_pages,
+        args.write_pages,
+        usize::try_from(args.trim_filenames).ok().filter(|&n| n > 0),
+    );
     yt_dlp_rs::extractor::hls_split_discontinuity(args.hls_split_discontinuity);
     // Upstream `parse_metadata` (shared by both options, in command-line
     // order per stage) plus the deprecated `--metadata-from-title`.
