@@ -223,7 +223,7 @@ pub(crate) fn download(
     // processors run; the merged file then becomes the private source.
     let upstream_merge = !info.requested_formats.is_empty()
         && matches!(options.merge_files, crate::MergeFiles::Upstream { .. })
-        && !crate::sections::is_partial(info);
+        && !downloader.uses_ffmpeg_fd(info);
     let bytes = if upstream_merge {
         // Each stream's download reports its own completion.
         let bytes =

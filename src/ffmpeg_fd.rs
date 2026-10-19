@@ -58,8 +58,10 @@ pub(crate) struct Network<'a> {
 }
 
 /// FFmpeg settings from the downloader parameters.
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Default)]
 pub(crate) struct Settings {
+    /// `--downloader-args` by key (`ffmpeg`, `ffmpeg_i1`, `ffmpeg_o`, ...).
+    pub args: std::collections::HashMap<String, Vec<String>>,
     /// `-loglevel quiet` (upstream `quiet`).
     pub quiet: bool,
     /// `--hls-use-mpegts`: MPEG-TS instead of MP4 for HLS inputs.
@@ -98,9 +100,16 @@ fn header_lines(network: &Network<'_>, info: &VideoInfo, url: &url::Url) -> Stri
 }
 
 /// `FFmpegFD._call_downloader` arguments, without the executable.
+/// Upstream `cli_configuration_args`: the first key with arguments.
+fn configured<'a>(settings: &'a Settings, keys: &[String]) -> &'a [String] {
+    keys.iter()
+        .find_map(|key| settings.args.get(key))
+        .map_or(&[], Vec::as_slice)
+}
+
 fn arguments(
     network: &Network<'_>,
-    settings: Settings,
+    settings: &Settings,
     info: &VideoInfo,
     temporary: &Path,
 ) -> Result<Vec<OsString>> {
@@ -134,7 +143,7 @@ fn arguments(
             .collect()
     };
     let mut protocol = String::new();
-    for (format, _) in &formats {
+    for (input, (format, _)) in formats.iter().enumerate() {
         protocol = format.protocol.clone().unwrap_or_default();
         if matches!(format.url.scheme(), "http" | "https") {
             let headers = header_lines(network, format, &format.url);
@@ -148,6 +157,9 @@ fn arguments(
         if let Some(end) = end {
             args.extend(["-t".into(), py_str(difference(end, start)).into()]);
         }
+        // `_configuration_args(('_i1', '_i'))` before each input.
+        let keys = [format!("ffmpeg_i{}", input + 1), "ffmpeg_i".into()];
+        args.extend(configured(settings, &keys).iter().map(OsString::from));
         args.extend(["-i".into(), format.url.as_str().into()]);
     }
     args.extend(["-c".into(), "copy".into()]);
@@ -166,6 +178,9 @@ fn arguments(
         out_format(&info.ext)
     };
     args.extend(["-f".into(), format.into()]);
+    // `_configuration_args(('_o1', '_o', ''))` (with `default`).
+    let keys = ["ffmpeg_o1", "ffmpeg_o", "ffmpeg", "default"].map(String::from);
+    args.extend(configured(settings, &keys).iter().map(OsString::from));
     // `_ffmpeg_filename_argument`.
     let mut output = OsString::from("file:");
     output.push(temporary);
@@ -178,7 +193,7 @@ fn arguments(
 pub(crate) fn download(
     ffmpeg: &Path,
     network: &Network<'_>,
-    settings: Settings,
+    settings: &Settings,
     info: &VideoInfo,
     destination: &Path,
     options: &DownloadOptions,
@@ -301,7 +316,7 @@ mod tests {
         };
         let args = arguments(
             &network,
-            Settings::default(),
+            &Settings::default(),
             &info,
             Path::new("o.mp4.part"),
         )
@@ -338,7 +353,7 @@ mod tests {
         info.section_start = None;
         let args = arguments(
             &network,
-            Settings {
+            &Settings {
                 quiet: true,
                 ..Default::default()
             },
@@ -354,6 +369,38 @@ mod tests {
         assert!(args.windows(2).any(|pair| pair == ["-t", "4.5"]));
         assert!(!args.contains(&"-ss".to_owned()));
         assert!(args.windows(2).any(|pair| pair == ["-f", "ipod"]));
+    }
+
+    #[test]
+    fn downloader_args_follow_configuration_args_keys() {
+        let info: VideoInfo = serde_json::from_value(json!({"id":"v","title":"V",
+            "url":"https://example.test/v.mp4","webpage_url":"https://example.test/v.mp4",
+            "ext":"mp4","extractor":"generic","extractor_key":"Generic","direct":true,"protocol":"https"}))
+        .unwrap();
+        let headers = HeaderMap::new();
+        let cookies = CookieJar::default();
+        let network = Network {
+            headers: &headers,
+            cookies: &cookies,
+            proxy: None,
+        };
+        let mut settings = Settings::default();
+        settings.args.insert("ffmpeg_i".into(), vec!["-re".into()]);
+        settings
+            .args
+            .insert("ffmpeg_i1".into(), vec!["-ss".into(), "1".into()]);
+        settings.args.insert("default".into(), vec!["-x".into()]);
+        settings.args.insert("ffmpeg".into(), vec!["-y2".into()]);
+        let args: Vec<_> = arguments(&network, &settings, &info, Path::new("o"))
+            .unwrap()
+            .iter()
+            .map(|arg| arg.to_string_lossy().into_owned())
+            .collect();
+        // `_i1` wins over `_i` before the input; `ffmpeg` over `default` before the output.
+        let input = args.iter().position(|arg| arg == "-i").unwrap();
+        assert_eq!(&args[input - 2..input], ["-ss", "1"]);
+        assert!(!args.contains(&"-re".to_owned()) && !args.contains(&"-x".to_owned()));
+        assert_eq!(&args[args.len() - 2..], ["-y2", "file:o"]);
     }
 
     #[test]
@@ -377,7 +424,7 @@ mod tests {
             proxy: None,
         };
         let render = |info: &VideoInfo| -> Vec<String> {
-            arguments(&network, Settings::default(), info, Path::new("o"))
+            arguments(&network, &Settings::default(), info, Path::new("o"))
                 .unwrap()
                 .iter()
                 .map(|arg| arg.to_string_lossy().into_owned())

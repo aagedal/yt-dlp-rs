@@ -117,6 +117,21 @@ pub struct YoutubeDl {
     concurrent_fragments: usize,
     /// `--keep-fragments`.
     keep_fragments: bool,
+    /// `--downloader [PROTO:]NAME` choices by simplified protocol (`default`
+    /// for the rest): `true` selects FFmpegFD, `false` the native downloaders.
+    downloaders: std::collections::HashMap<String, bool>,
+}
+
+/// Upstream `shorten_protocol_name(proto, simplify=True)`.
+fn simplify_protocol(protocol: &str) -> &str {
+    match protocol {
+        "https" => "http",
+        "ftps" => "ftp",
+        "m3u8" | "m3u8_native" => "m3u8",
+        "http_dash_segments" | "http_dash_segments_generator" => "dash",
+        "rtmp_ffmpeg" => "rtmp",
+        other => other,
+    }
 }
 
 /// Upstream `--fixup POLICY` and `--hls-use-mpegts`.
@@ -296,6 +311,7 @@ impl YoutubeDl {
             check_formats: CheckFormats::Default,
             concurrent_fragments: 1,
             keep_fragments: false,
+            downloaders: Default::default(),
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -386,7 +402,9 @@ impl YoutubeDl {
     /// manifest` refetches the media playlist, whose fragments are then
     /// downloaded. `None` for other downloads.
     pub fn refresh_hls(&self, info: &VideoInfo) -> Result<Option<VideoInfo>> {
-        if info.fragments.is_empty() || !info.protocol.as_deref().unwrap_or("").starts_with("m3u8")
+        if info.fragments.is_empty()
+            || !info.protocol.as_deref().unwrap_or("").starts_with("m3u8")
+            || self.uses_ffmpeg_fd(info)
         {
             return Ok(None);
         }
@@ -417,7 +435,7 @@ impl YoutubeDl {
         let policy = options.policy.as_deref().unwrap_or("detect_or_warn");
         // FFmpegFD downloads and merges are never fixed up.
         if !info.requested_formats.is_empty()
-            || sections::is_partial(info)
+            || self.uses_ffmpeg_fd(info)
             || matches!(policy, "never" | "ignore")
         {
             return Ok(());
@@ -565,6 +583,52 @@ impl YoutubeDl {
     pub fn with_keep_fragments(mut self, keep: bool) -> Self {
         self.keep_fragments = keep;
         self
+    }
+
+    /// `--downloader`: `ffmpeg` (FFmpegFD) or `native` per simplified
+    /// protocol key (`http`, `ftp`, `m3u8`, `dash`, `rtmp`, `default`).
+    pub fn with_downloader(mut self, protocol: &str, ffmpeg: bool) -> Self {
+        self.downloaders.insert(protocol.to_owned(), ffmpeg);
+        self
+    }
+
+    /// `--downloader-args NAME:ARGS` for FFmpegFD (`ffmpeg`, `ffmpeg_o`,
+    /// `ffmpeg_oN`, `ffmpeg_i`, `ffmpeg_iN`, `default`).
+    pub fn with_downloader_args(mut self, key: &str, args: Vec<String>) -> Self {
+        self.ffmpeg_settings.args.insert(key.to_lowercase(), args);
+        self
+    }
+
+    /// Upstream `get_suitable_downloader(...) == FFmpegFD`: partial downloads,
+    /// or every selected protocol assigned to `ffmpeg` by `--downloader`.
+    pub fn uses_ffmpeg_fd(&self, info: &VideoInfo) -> bool {
+        if sections::is_partial(info) {
+            return true;
+        }
+        // `FFmpegFD.can_download` needs ffmpeg; otherwise the native
+        // downloaders are used.
+        if self.ffmpeg.is_none() {
+            return false;
+        }
+        let protocols: Vec<String> = if info.requested_formats.is_empty() {
+            vec![
+                info.protocol
+                    .clone()
+                    .unwrap_or_else(|| info.url.scheme().to_owned()),
+            ]
+        } else {
+            info.requested_formats
+                .iter()
+                .map(VideoFormat::determine_protocol)
+                .collect()
+        };
+        protocols.iter().all(|protocol| {
+            self.downloaders
+                .get(simplify_protocol(protocol))
+                .or_else(|| self.downloaders.get("default"))
+                .copied()
+                .unwrap_or(false)
+        })
     }
 
     /// Upstream `check_formats`.
@@ -1012,9 +1076,10 @@ impl YoutubeDl {
         options: DownloadOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
-        // Upstream `get_suitable_downloader`: partial downloads use FFmpegFD,
-        // which also merges selected formats directly.
-        if sections::is_partial(info) {
+        // Upstream `get_suitable_downloader`: partial downloads and
+        // `--downloader ffmpeg` use FFmpegFD, which also merges selected
+        // formats directly.
+        if self.uses_ffmpeg_fd(info) {
             let ffmpeg = self.ffmpeg.as_deref().ok_or_else(|| {
                 Error::Reported(
                     "You have requested downloading the video partially, but ffmpeg is not installed. Aborting"
@@ -1029,7 +1094,7 @@ impl YoutubeDl {
             return ffmpeg_fd::download(
                 ffmpeg,
                 &network,
-                self.ffmpeg_settings,
+                &self.ffmpeg_settings,
                 info,
                 destination.as_ref(),
                 &options,

@@ -701,6 +701,16 @@ struct Args {
     /// Delete downloaded fragments after downloading is finished (default)
     #[arg(long, overrides_with = "keep_fragments")]
     no_keep_fragments: bool,
+    /// Downloader to use, optionally prefixed by protocols (http, ftp, m3u8, dash, rtmp): native or ffmpeg
+    #[arg(long, alias = "external-downloader", value_name = "[PROTO:]NAME")]
+    downloader: Vec<String>,
+    /// Arguments for the downloader (NAME:ARGS; ffmpeg, ffmpeg_i[N], ffmpeg_o[N])
+    #[arg(long, alias = "external-downloader-args", value_name = "NAME:ARGS")]
+    downloader_args: Vec<String>,
+    #[arg(long, hide = true, overrides_with = "hls_prefer_ffmpeg")]
+    hls_prefer_native: bool,
+    #[arg(long, hide = true, overrides_with = "hls_prefer_native")]
+    hls_prefer_ffmpeg: bool,
     /// Size of a chunk for chunk-based HTTP downloading, e.g. 10485760 or 10M
     #[arg(long, value_name = "SIZE")]
     http_chunk_size: Option<String>,
@@ -1709,6 +1719,71 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let http_chunk_size =
         size_option("http chunk size", args.http_chunk_size.as_deref()).map_err(usage)?;
+    // Upstream `--downloader` (`_dict_from_options_callback`) validation.
+    let mut downloader = downloader;
+    for value in &args.downloader {
+        static KEYS: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            regex::Regex::new(r"(?is)^(?P<keys>(?:http|ftp|m3u8|dash|rtmp)(?:,(?:http|ftp|m3u8|dash|rtmp))*):(?P<val>.*)$")
+                .unwrap()
+        });
+        let (keys, name): (Vec<String>, &str) = match KEYS.captures(value) {
+            Some(captures) => (
+                captures["keys"].split(',').map(str::to_lowercase).collect(),
+                captures.name("val").unwrap().as_str(),
+            ),
+            None => (vec!["default".into()], value.as_str()),
+        };
+        let name = name.trim();
+        // `get_external_downloader`: a name or a path to one.
+        let base = std::path::Path::new(name)
+            .file_stem()
+            .map(|stem| stem.to_string_lossy().to_lowercase())
+            .unwrap_or_default();
+        let ffmpeg = if name == "native" {
+            false
+        } else if base.contains("ffmpeg") || base.contains("avconv") {
+            true
+        } else {
+            let known = ["aria2c", "axel", "curl", "httpie", "http", "wget"]
+                .iter()
+                .any(|exe| base.contains(exe));
+            let proto = keys
+                .first()
+                .filter(|key| *key != "default")
+                .map_or_else(String::new, |key| format!("{key} "));
+            if !known {
+                return Err(usage(format!("No such {proto}external downloader \"{name}\"")).into());
+            }
+            // Upstream falls back to its native downloaders when the tool
+            // cannot download; this port has no other external downloaders.
+            warning!(
+                "WARNING: {proto}external downloader \"{name}\" is not supported natively; using the native downloader"
+            );
+            false
+        };
+        for key in keys {
+            downloader = downloader.with_downloader(&key, ffmpeg);
+        }
+    }
+    // Upstream `--downloader-args` (shlex-split, by downloader key).
+    for value in &args.downloader_args {
+        static KEYS: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            regex::Regex::new(r"(?is)^(?P<keys>(?:ffmpeg_[io]\d*|aria2c|avconv|axel|curl|ffmpeg|httpie|wget)(?:,(?:ffmpeg_[io]\d*|aria2c|avconv|axel|curl|ffmpeg|httpie|wget))*):(?P<val>.*)$")
+                .unwrap()
+        });
+        let (keys, text): (Vec<String>, &str) = match KEYS.captures(value) {
+            Some(captures) => (
+                captures["keys"].split(',').map(str::to_lowercase).collect(),
+                captures.name("val").unwrap().as_str(),
+            ),
+            None => (vec!["default".into()], value.as_str()),
+        };
+        let parts = yt_dlp_rs::config::shlex_split(text)
+            .map_err(|error| usage(format!("wrong --downloader-args formatting; {error}")))?;
+        for key in keys {
+            downloader = downloader.with_downloader_args(&key, parts.clone());
+        }
+    }
     let downloader = downloader
         .with_http_chunk_size(http_chunk_size)
         .with_test(args.test)
@@ -2531,6 +2606,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         .into());
                             }
                             let partial = yt_dlp_rs::sections::is_partial(&info);
+                            // `get_suitable_downloader(...) == FFmpegFD`.
+                            let ffmpeg_fd = downloader.uses_ffmpeg_fd(&info);
                             // Upstream `process_info`: a partial download needs FFmpegFD.
                             if partial && !downloader.has_ffmpeg() {
                                 return Err(yt_dlp_rs::Error::Reported(
@@ -2553,13 +2630,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 warning!("WARNING: {message}. The formats won't be merged");
                             }
                             // Upstream `HlsFD` refetches the media playlist first.
-                            let refreshed = if !partial && info.requested_formats.is_empty() {
+                            let refreshed = if !ffmpeg_fd && info.requested_formats.is_empty() {
                                 downloader.refresh_hls(&info)?
                             } else {
                                 None
                             };
                             let info = refreshed.as_ref().unwrap_or(&info);
-                            if !partial
+                            if !ffmpeg_fd
                                 && info.requested_formats.is_empty()
                                 && !info.fragments.is_empty()
                             {
@@ -2571,8 +2648,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 screen!("[{downloader}] Total fragments: {}", info.fragments.len());
                             }
                             // Merges announce each format's file instead, except
-                            // FFmpegFD merging a partial download into one file.
-                            if info.requested_formats.is_empty() || partial {
+                            // FFmpegFD merging the formats into one file.
+                            if info.requested_formats.is_empty() || ffmpeg_fd {
                                 screen!("[download] Destination: {}", path.display());
                             }
                             // Upstream sleeps before each stream's FileDownloader.download.
