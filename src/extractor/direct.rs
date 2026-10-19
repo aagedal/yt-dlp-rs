@@ -383,6 +383,7 @@ fn build(response: &Response, url: &Url, ext: String) -> VideoInfo {
         section_end: None,
         section_title: None,
         section_number: None,
+        extra: Default::default(),
         video_ext: None,
         audio_ext: None,
         metadata: Default::default(),

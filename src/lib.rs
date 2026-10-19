@@ -26,6 +26,7 @@ mod info;
 mod info_json;
 mod match_filter;
 mod merge;
+pub mod metadata_parser;
 pub mod output;
 mod playlist;
 mod postprocess;

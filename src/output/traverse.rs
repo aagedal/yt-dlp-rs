@@ -225,7 +225,7 @@ pub(super) fn traverse(root: &Value, fields: &str) -> Result<Option<Value>> {
 }
 
 /// Python `repr` of a string.
-fn py_repr_str(text: &str) -> String {
+pub(crate) fn py_repr_str(text: &str) -> String {
     let quote = if text.contains('\'') && !text.contains('"') {
         '"'
     } else {

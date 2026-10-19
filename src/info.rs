@@ -415,6 +415,10 @@ impl Metadata {
 pub struct VideoInfo {
     #[serde(flatten)]
     pub metadata: Metadata,
+    /// Fields this port does not model, set by `--parse-metadata` or
+    /// `--replace-in-metadata` (serialized with the info dict).
+    #[serde(flatten, skip_deserializing)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
     #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
     pub automatic_captions: crate::Subtitles,
     #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
@@ -1287,6 +1291,7 @@ mod tests {
             section_end: None,
             section_title: None,
             section_number: None,
+            extra: Default::default(),
             video_ext: None,
             audio_ext: None,
             metadata: Default::default(),

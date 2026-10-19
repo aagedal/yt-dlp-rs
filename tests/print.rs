@@ -573,3 +573,65 @@ fn legacy_id_autonumber_and_deprecated_options_follow_upstream() {
         "Deprecated Feature: The following options have been deprecated: --call-home, --sponskrub-args, -C\nPlease remove them from your command/configuration to avoid future errors.\n"
     ));
 }
+
+#[test]
+fn parse_and_replace_metadata_follow_metadata_parser_pp() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    std::fs::write(
+        &path,
+        serde_json::json!({
+            "id": "clip1", "title": "Artist - Song (Live)", "ext": "mp4", "url": "http://127.0.0.1:1/clip.mp4",
+            "webpage_url": "http://127.0.0.1:1/page", "extractor": "generic", "extractor_key": "Generic",
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let run = |args: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(args)
+            .arg("--load-info-json")
+            .arg(&path)
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    // Checked with pinned upstream.
+    let output = run(&[
+        "--parse-metadata",
+        "title:%(artist)s - %(track)s",
+        "--replace-in-metadata",
+        "track,id",
+        r"\s*\((\w+)\)|(\d)",
+        r"[\1\2]",
+        "--parse-metadata",
+        "video:id:(?P<initial>.)",
+        "-O",
+        "%(artist)s|%(track)s|%(id)s|%(initial)s",
+    ]);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout),
+        "Artist|Song[Live]|clip[1]|c\n"
+    );
+    let output = run(&["--parse-metadata", "title:%(artist)s - %(track)s", "-s"]);
+    assert!(String::from_utf8_lossy(&output.stdout).contains(
+        "[MetadataParser] Parsed artist from '%(title)s': 'Artist'\n[MetadataParser] Parsed track from '%(title)s': 'Song (Live)'\n"
+    ));
+    let output = run(&["--parse-metadata", "title", "-s"]);
+    assert_eq!(output.status.code(), Some(2));
+    assert!(
+        String::from_utf8_lossy(&output.stderr).contains(
+            "error: --parse-metadata title is invalid; it should be FROM:TO, not 'title'"
+        )
+    );
+    let output = run(&["--replace-in-metadata", "title", "a", r"\q", "-s"]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(
+        String::from_utf8_lossy(&output.stderr).ends_with("ERROR: bad escape \\q at position 0\n")
+    );
+}

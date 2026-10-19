@@ -8,8 +8,8 @@ mod sanitize;
 mod subtitles;
 mod template;
 mod thumbnails;
-mod traverse;
-pub use exec::{ExecCommand, ExecCommands, Stage};
+pub(crate) mod traverse;
+pub use exec::{ExecCommand, ExecCommands, Stage, shell_quote};
 pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths, replace_extension};
 pub use formats::{render_formats, render_formats_listing, render_formats_table};
 pub use links::{iri_to_uri, link_file};
@@ -120,6 +120,27 @@ pub fn render_template_with_options(
     options: &TemplateOptions,
 ) -> Result<PathBuf> {
     template::render(template, template::Source::Video(info), options)
+}
+
+/// Upstream `evaluate_outtmpl(template, info)`: unsanitized text, as
+/// printing renders it (without `filename`/`urls`).
+pub fn evaluate_template(
+    template: &str,
+    info: &VideoInfo,
+    options: &TemplateOptions,
+) -> Result<String> {
+    let unavailable = crate::Error::InvalidTemplate("filename is not available here".into());
+    template::expand(
+        template,
+        template::Source::Print {
+            info,
+            filename: Err(&unavailable),
+            urls: info.url.as_str(),
+            filepath: None,
+            prepared: None,
+        },
+        options,
+    )
 }
 
 /// Render a playlist-level file name, as upstream's playlist info JSON does.

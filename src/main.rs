@@ -237,6 +237,14 @@ struct Args {
     /// Do not add chapter markers
     #[arg(long, alias = "no-add-chapters", overrides_with_all = ["embed_chapters", "no_embed_chapters"])]
     no_embed_chapters: bool,
+    /// Parse additional metadata like title/artist from other fields (default WHEN: pre_process)
+    #[arg(long, value_name = "[WHEN:]FROM:TO", allow_hyphen_values = true)]
+    parse_metadata: Vec<String>,
+    /// Replace text in metadata fields using a regex (default WHEN: pre_process)
+    #[arg(long, value_names = ["[WHEN:]FIELDS", "REGEX", "REPLACE"], num_args = 3, allow_hyphen_values = true)]
+    replace_in_metadata: Vec<String>,
+    #[arg(long, hide = true, value_name = "FORMAT")]
+    metadata_from_title: Option<String>,
     /// Split video into multiple files based on internal chapters (the "chapter" output template)
     #[arg(long, alias = "split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
     split_chapters: bool,
@@ -957,6 +965,45 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         );
     }
     let mut args = Args::from_arg_matches(&matches)?;
+    // Upstream `parse_metadata` (shared by both options, in command-line
+    // order per stage) plus the deprecated `--metadata-from-title`.
+    let metadata_actions = {
+        let mut ordered: Vec<(usize, Vec<String>)> = Vec::new();
+        for (id, arity) in [("parse_metadata", 1), ("replace_in_metadata", 3)] {
+            let indices: Vec<usize> = matches.indices_of(id).into_iter().flatten().collect();
+            let values: Vec<String> = matches
+                .get_many::<String>(id)
+                .into_iter()
+                .flatten()
+                .cloned()
+                .collect();
+            for (chunk, index) in values.chunks(arity).zip(indices.chunks(arity)) {
+                ordered.push((index[0], chunk.to_vec()));
+            }
+        }
+        ordered.sort_by_key(|(index, _)| *index);
+        if let Some(format) = &args.metadata_from_title {
+            ordered.push((usize::MAX, vec![format!("pre_process:title:{format}")]));
+        }
+        let mut actions = yt_dlp_rs::metadata_parser::MetadataActions::default();
+        for (_, values) in ordered {
+            match values.as_slice() {
+                [value] => actions.add_interpret(value),
+                [fields, search, replace] => actions.add_replace(fields, search, replace),
+                _ => unreachable!("clap arity"),
+            }
+            .map_err(usage)?;
+        }
+        for when in yt_dlp_rs::metadata_parser::WHEN {
+            if actions.has(when) && !matches!(when, "pre_process" | "after_filter" | "video") {
+                return Err(usage(format!(
+                    "metadata parsing at {when} is not supported natively; use pre_process, after_filter or video"
+                ))
+                .into());
+            }
+        }
+        actions
+    };
     // Upstream `allsubtitles`: every language, implying --write-subs unless
     // embedding or automatic captions are requested.
     if args.all_subs {
@@ -1824,6 +1871,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 screen!("[download] Downloading item {index} of {count}");
             }
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+                // Upstream `process_video_result`: `pre_process` and
+                // `after_filter` processors precede listing and selection.
+                for when in ["pre_process", "after_filter"] {
+                    run_metadata_parser(&metadata_actions, when, &mut info, &template_options)?;
+                }
                 // Upstream lists thumbnails, then subtitles, then formats.
                 if args.list_thumbnails {
                     emit_listing(&mut stdout, &yt_dlp_rs::output::render_thumbnails(&info))?;
@@ -1897,7 +1949,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 let base = info.clone();
                 for section in &requested {
-                    let info = yt_dlp_rs::sections::apply(&base, section.as_ref());
+                    let mut info = yt_dlp_rs::sections::apply(&base, section.as_ref());
                     (|| -> Result<(), Box<dyn std::error::Error>> {
                         // Upstream `process_info` rechecks complete metadata before counting.
                         if !match_filters.is_empty() {
@@ -1914,6 +1966,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                             }
                         }
+                        // Upstream `pre_process(info, 'video')` before counting.
+                        run_metadata_parser(
+                            &metadata_actions,
+                            "video",
+                            &mut info,
+                            &template_options,
+                        )?;
                         // Upstream `process_info` counts every processed video.
                         counted = true;
                         template_options.autonumber.set(Some(
@@ -2818,6 +2877,30 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         return Err(Box::new(cancel));
     }
     Ok(!failed)
+}
+
+/// Run `--parse-metadata`/`--replace-in-metadata` actions for `when`.
+fn run_metadata_parser(
+    actions: &yt_dlp_rs::metadata_parser::MetadataActions,
+    when: &str,
+    info: &mut yt_dlp_rs::VideoInfo,
+    options: &TemplateOptions,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let (messages, error) = match actions.run(when, info, options) {
+        Ok(messages) => (messages, None),
+        Err((messages, error)) => (messages, Some(error)),
+    };
+    for message in messages {
+        match message {
+            yt_dlp_rs::metadata_parser::Message::Screen(text) => screen!("{text}"),
+            yt_dlp_rs::metadata_parser::Message::Warning(text) => warning!("{text}"),
+        }
+    }
+    match error {
+        // Raised from the processor and reported as `ERROR: MESSAGE`.
+        Some(error) => Err(Box::new(yt_dlp_rs::Error::Reported(error))),
+        None => Ok(()),
+    }
 }
 
 /// Upstream `__list_table`: the caption (or `ID has no NAME`) is a screen
