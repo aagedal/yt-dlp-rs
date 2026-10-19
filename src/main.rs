@@ -2601,6 +2601,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 screen!("[download] Downloading item {index} of {count}");
             }
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+                // Upstream `process_subtitles` names the selected languages.
+                if let Some(requested) = &info.requested_subtitles
+                    && !requested.entries.is_empty()
+                {
+                    let languages: Vec<&str> = requested
+                        .entries
+                        .iter()
+                        .map(|(language, _)| language.as_deref().unwrap_or("None"))
+                        .collect();
+                    screen!(
+                        "[info] {}: Downloading subtitles: {}",
+                        info.id,
+                        languages.join(", ")
+                    );
+                }
                 // Upstream `process_video_result`: `--check-all-formats` tests
                 // every format first.
                 downloader.check_all_formats(&mut info);

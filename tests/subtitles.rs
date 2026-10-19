@@ -318,7 +318,9 @@ fn language_and_extension_selection_is_visible_in_json_but_never_fetches_in_read
             .get("requested_subtitles")
             .is_none_or(Value::is_null)
     );
-    success(&server.cli(&["/select.html"], &["-s", "--write-subs"], directory.path()));
+    let stdout = success(&server.cli(&["/select.html"], &["-s", "--write-subs"], directory.path()));
+    // Upstream `process_subtitles` names the selected languages.
+    assert!(stdout.contains(": Downloading subtitles: "), "{stdout}");
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     server.assert_no_subtitle_requests();
 }
