@@ -20,6 +20,9 @@ pub struct PostprocessOptions {
     pub embed: Option<SubtitleEmbedding>,
     /// `--embed-metadata`: upstream `FFmpegMetadataPP` after subtitle embedding.
     pub metadata: bool,
+    /// `--embed-chapters` (implied by `--embed-metadata`): the same processor
+    /// adds the info dict's chapters.
+    pub chapters: bool,
     /// `--embed-thumbnail`: a local thumbnail embedded after metadata.
     pub thumbnail: Option<PathBuf>,
     /// `--ignore-errors`: a failed processor is reported and skipped, and the
@@ -147,6 +150,7 @@ pub(crate) fn download(
         && !needs_video
         && processors.embed.is_none()
         && !processors.metadata
+        && !processors.chapters
         && processors.thumbnail.is_none()
     {
         let bytes = downloader.download_with_progress(info, destination, options, callback)?;
@@ -501,8 +505,18 @@ pub(crate) fn download(
             }
         });
         stage!({
-            if processors.metadata {
+            if processors.metadata || processors.chapters {
                 let current = stages.last_mut().unwrap();
+                let chapters = processors.chapters && !info.metadata.chapters.is_empty();
+                let Some(args) = crate::embed_metadata::plan_args(
+                    info,
+                    &current.ext,
+                    processors.metadata,
+                    chapters,
+                ) else {
+                    crate::screen::screen("[Metadata] There isn't any metadata to add");
+                    return Ok(());
+                };
                 if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
                     return Err(Error::DownloadCancelled);
                 }
@@ -511,11 +525,23 @@ pub(crate) fn download(
                         "metadata embedding requires an explicit --ffmpeg-location PATH".into(),
                     )
                 })?;
+                // Upstream writes `NAME.meta` beside the media and deletes it.
+                let metadata_input = if chapters {
+                    let path = workspace.path().join("chapters.meta");
+                    fs::write(
+                        &path,
+                        crate::embed_metadata::ffmetadata(&info.metadata.chapters),
+                    )?;
+                    Some(path)
+                } else {
+                    None
+                };
                 let plan = crate::video::VideoPlan {
                     extension: current.ext.clone(),
-                    args: crate::embed_metadata::args(info, &current.ext),
+                    args,
                     muxer: crate::embed_metadata::muxer(&current.ext.to_lowercase()).into(),
                     skip: false,
+                    metadata_input,
                 };
                 crate::screen::screen(&format!(
                     "[Metadata] Adding metadata to \"{}\"",

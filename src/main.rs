@@ -231,6 +231,12 @@ struct Args {
     /// Do not embed metadata (default)
     #[arg(long, alias = "no-add-metadata", overrides_with_all = ["embed_metadata", "no_embed_metadata"])]
     no_embed_metadata: bool,
+    /// Add chapter markers to the video file (implied by --embed-metadata)
+    #[arg(long, alias = "add-chapters", overrides_with_all = ["embed_chapters", "no_embed_chapters"])]
+    embed_chapters: bool,
+    /// Do not add chapter markers
+    #[arg(long, alias = "no-add-chapters", overrides_with_all = ["embed_chapters", "no_embed_chapters"])]
+    no_embed_chapters: bool,
     /// Embed the best written thumbnail as cover art (mp3, mkv/mka, mp4/m4a/m4v/mov; implies writing it)
     #[arg(long, overrides_with_all = ["embed_thumbnail", "no_embed_thumbnail"])]
     embed_thumbnail: bool,
@@ -1214,6 +1220,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         ignore_errors: error_mode == ErrorMode::Ignore,
         thumbnail: None,
         metadata: args.embed_metadata,
+        // Upstream: `--embed-metadata` implies `--embed-chapters` unless
+        // `--no-embed-chapters` was given.
+        chapters: args.embed_chapters || (args.embed_metadata && !args.no_embed_chapters),
         audio: args.extract_audio.then_some(audio_options),
         video: recode.or(remux),
         embed: None,
@@ -1974,7 +1983,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             let processing = processors.audio.is_some()
                                 || processors.video.is_some()
                                 || args.embed_subs
-                                || args.embed_metadata
+                                || processors.metadata
+                                || processors.chapters
                                 || args.embed_thumbnail;
                             let existing_media = !args.skip_download && path_exists(&path)?;
                             if existing_media && overwrites != Some(true) && processing {
@@ -2369,6 +2379,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 || processors.video.is_some()
                                 || processors.embed.is_some()
                                 || processors.metadata
+                                || processors.chapters
                                 || processors.thumbnail.is_some();
                             if path.as_os_str() == "-" {
                                 // Upstream streams to stdout and skips postprocessing,

@@ -1,6 +1,5 @@
-//! Upstream `FFmpegMetadataPP` metadata options for represented fields.
-//! Chapters do not exist in the represented subset; info JSON attachment is
-//! not implemented.
+//! Upstream `FFmpegMetadataPP` metadata and chapter options for represented
+//! fields; info JSON attachment is not implemented.
 
 use crate::{StreamKind, VideoInfo};
 use serde_json::Value;
@@ -21,6 +20,50 @@ fn py_str(value: &Value) -> String {
         },
         other => other.to_string(),
     }
+}
+
+/// `FFmpegMetadataPP.run` options: `_options(ext)`, then the chapter
+/// options (`-map_metadata 1` for the FFMETADATA second input), then
+/// `_get_metadata_opts(info)` when `add_metadata`. `None` when there is
+/// nothing to add (upstream's `There isn't any metadata to add`).
+pub(crate) fn plan_args(
+    info: &VideoInfo,
+    ext: &str,
+    add_metadata: bool,
+    chapters: bool,
+) -> Option<Vec<String>> {
+    if !add_metadata && !chapters {
+        return None;
+    }
+    let all = args(info, ext);
+    let copy = if ext == "m4a" { 7 } else { 6 };
+    let mut output = all[..copy].to_vec();
+    if chapters {
+        output.extend(["-map_metadata", "1"].map(String::from));
+    }
+    if add_metadata {
+        output.extend_from_slice(&all[copy..]);
+    }
+    Some(output)
+}
+
+/// `_get_chapter_opts`: the FFMETADATA file with millisecond chapters.
+pub(crate) fn ffmetadata(chapters: &[crate::info::Chapter]) -> String {
+    static ESCAPE: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"([\\=;#\n])").unwrap());
+    let millis = |value: Option<crate::PyNumber>| {
+        (value.map_or(0.0, |v| v.as_f64()) * 1000.0).trunc() as i64
+    };
+    let mut content = String::from(";FFMETADATA1\n");
+    for chapter in chapters {
+        content.push_str("[CHAPTER]\nTIMEBASE=1/1000\n");
+        content.push_str(&format!("START={}\n", millis(chapter.start_time)));
+        content.push_str(&format!("END={}\n", millis(chapter.end_time)));
+        if let Some(title) = chapter.title.as_deref().filter(|title| !title.is_empty()) {
+            content.push_str(&format!("title={}\n", ESCAPE.replace_all(title, "\\$1")));
+        }
+    }
+    content
 }
 
 /// `FFmpegMetadataPP._options(ext)` followed by `_get_metadata_opts(info)`.
@@ -137,6 +180,67 @@ pub(crate) fn muxer(ext: &str) -> &str {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn chapter_options_precede_metadata_options() {
+        let info: VideoInfo = serde_json::from_value(serde_json::json!({"id":"a","title":"T",
+            "url":"https://example.test/a.mp4","webpage_url":"https://example.test/a",
+            "ext":"mp4","extractor":"generic","extractor_key":"Generic"}))
+        .unwrap();
+        assert_eq!(plan_args(&info, "mp4", false, false), None);
+        assert_eq!(
+            plan_args(&info, "mp4", false, true).unwrap(),
+            [
+                "-map",
+                "0",
+                "-dn",
+                "-ignore_unknown",
+                "-c",
+                "copy",
+                "-map_metadata",
+                "1"
+            ]
+        );
+        let both = plan_args(&info, "m4a", true, true).unwrap();
+        assert_eq!(
+            &both[..9],
+            [
+                "-map",
+                "0",
+                "-dn",
+                "-ignore_unknown",
+                "-vn",
+                "-acodec",
+                "copy",
+                "-map_metadata",
+                "1"
+            ]
+        );
+        assert_eq!(&both[9..11], ["-write_id3v1", "1"]);
+    }
+
+    #[test]
+    fn chapter_file_follows_get_chapter_opts() {
+        use crate::{PyNumber, info::Chapter};
+        let chapters = [
+            Chapter {
+                start_time: Some(PyNumber::Float(0.0)),
+                title: Some("Intro; a=b #1\\x".into()),
+                end_time: Some(PyNumber::Float(45.5)),
+            },
+            Chapter {
+                start_time: Some(PyNumber::Float(45.5)),
+                title: Some("Line\nbreak".into()),
+                end_time: Some(PyNumber::Int(120)),
+            },
+        ];
+        // Rendered by pinned upstream `_get_chapter_opts`.
+        assert_eq!(
+            ffmetadata(&chapters),
+            ";FFMETADATA1\n[CHAPTER]\nTIMEBASE=1/1000\nSTART=0\nEND=45500\ntitle=Intro\\; a\\=b \\#1\\\\x\n\
+             [CHAPTER]\nTIMEBASE=1/1000\nSTART=45500\nEND=120000\ntitle=Line\\\nbreak\n"
+        );
+    }
 
     #[test]
     fn metadata_options_follow_upstream_key_precedence() {

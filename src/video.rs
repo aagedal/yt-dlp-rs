@@ -27,6 +27,8 @@ pub(crate) struct VideoPlan {
     pub args: Vec<String>,
     pub muxer: String,
     pub skip: bool,
+    /// A second, FFMETADATA input (upstream's chapter metadata file).
+    pub metadata_input: Option<std::path::PathBuf>,
 }
 fn error(message: &str) -> Error {
     Error::Postprocess(message.into())
@@ -121,6 +123,7 @@ impl VideoOptions {
                 args: Vec::new(),
                 muxer: String::new(),
                 skip: true,
+                metadata_input: None,
             });
         };
         let mut args = vec![
@@ -151,6 +154,7 @@ impl VideoOptions {
             args,
             muxer: muxer.into(),
             skip: false,
+            metadata_input: None,
         })
     }
 }

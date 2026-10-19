@@ -22,6 +22,7 @@ pub(crate) fn download(
             ignore_errors: false,
             thumbnail: None,
             metadata: false,
+            chapters: false,
             audio: Some(audio.clone()),
             video: None,
             embed: None,

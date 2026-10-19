@@ -112,6 +112,12 @@ fn convert_with_deadline(
     .into_iter()
     .map(Into::into)
     .chain(std::iter::once(input.into_os_string()))
+    .chain(plan.metadata_input.iter().flat_map(|path| {
+        ["-f", "ffmetadata", "-protocol_whitelist", "file", "-i"]
+            .into_iter()
+            .map(OsString::from)
+            .chain(std::iter::once(path.clone().into_os_string()))
+    }))
     .chain(plan.args.iter().map(Into::into))
     .chain(["-movflags", "+faststart"].into_iter().map(Into::into))
     .chain(["-f", plan.muxer.as_str()].into_iter().map(Into::into))

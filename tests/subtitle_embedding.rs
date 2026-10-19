@@ -201,6 +201,7 @@ fn embedding(path: &Path, ext: &str, keep: bool) -> PostprocessOptions {
         ignore_errors: false,
         thumbnail: None,
         metadata: false,
+        chapters: false,
         embed: Some(SubtitleEmbedding {
             subtitles: vec![SubtitleFile {
                 path: path.into(),
@@ -469,6 +470,7 @@ fn empty_embedding_skips_tools_and_cli_last_disable_prevents_implicit_caption_do
         ignore_errors: false,
         thumbnail: None,
         metadata: false,
+        chapters: false,
         embed: Some(SubtitleEmbedding {
             subtitles: Vec::new(),
             keep_subtitles: false,
