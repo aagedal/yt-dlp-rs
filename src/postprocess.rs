@@ -23,11 +23,26 @@ pub struct PostprocessOptions {
     /// `--embed-chapters` (implied by `--embed-metadata`): the same processor
     /// adds the info dict's chapters.
     pub chapters: bool,
+    /// `--embed-info-json` (`if_exists` with `--embed-metadata`): attach the
+    /// info JSON to mkv/mka files.
+    pub infojson: Option<InfoJsonEmbed>,
     /// `--embed-thumbnail`: a local thumbnail embedded after metadata.
     pub thumbnail: Option<PathBuf>,
     /// `--ignore-errors`: a failed processor is reported and skipped, and the
     /// remaining processors continue with the latest completed file.
     pub ignore_errors: bool,
+}
+
+/// Upstream `FFmpegMetadataPP` `add_infojson`.
+#[derive(Debug, Clone, Default)]
+pub struct InfoJsonEmbed {
+    /// The info JSON written for this video, if any.
+    pub written: Option<PathBuf>,
+    /// `True` (`--embed-info-json`) rather than `if_exists`: a missing info
+    /// JSON is written from `json`, and other containers report that it
+    /// can only be attached to mkv/mka files.
+    pub explicit: bool,
+    pub json: Vec<u8>,
 }
 
 /// Published final media and any sources/intermediates retained by keep-video.
@@ -151,6 +166,7 @@ pub(crate) fn download(
         && processors.embed.is_none()
         && !processors.metadata
         && !processors.chapters
+        && processors.infojson.is_none()
         && processors.thumbnail.is_none()
     {
         let bytes = downloader.download_with_progress(info, destination, options, callback)?;
@@ -200,20 +216,34 @@ pub(crate) fn download(
         "source.{}",
         crate::output::safe_component(&info.ext)
     ));
-    // The workspace source is private; part files and upstream merge inputs
-    // apply to unprocessed media only.
-    let options = DownloadOptions {
-        part_files: crate::PartFiles::Private,
-        merge_files: crate::MergeFiles::Private,
-        ..options
+    // Upstream merges selected formats from `NAME.fID.EXT` files beside the
+    // destination (printing their downloads and the merge) before the
+    // processors run; the merged file then becomes the private source.
+    let upstream_merge = !info.requested_formats.is_empty()
+        && matches!(options.merge_files, crate::MergeFiles::Upstream { .. })
+        && !crate::sections::is_partial(info);
+    let bytes = if upstream_merge {
+        // Each stream's download reports its own completion.
+        let bytes =
+            downloader.download_with_progress(info, destination, options, &mut *callback)?;
+        fs::rename(destination, &input)?;
+        bytes
+    } else {
+        // The workspace source is private; part files apply to unprocessed
+        // media only.
+        let options = DownloadOptions {
+            part_files: crate::PartFiles::Private,
+            merge_files: crate::MergeFiles::Private,
+            ..options
+        };
+        downloader.download_with_progress(info, &input, options, |progress| {
+            if progress.phase == DownloadPhase::Publishing {
+                ControlFlow::Continue(())
+            } else {
+                callback(progress)
+            }
+        })?
     };
-    let bytes = downloader.download_with_progress(info, &input, options, |progress| {
-        if progress.phase == DownloadPhase::Publishing {
-            ControlFlow::Continue(())
-        } else {
-            callback(progress)
-        }
-    })?;
     // End the transfer's progress before processors print (upstream reports
     // the download finished before running postprocessors).
     if checkpoint(callback, bytes, DownloadPhase::Postprocessing).is_break() {
@@ -505,14 +535,35 @@ pub(crate) fn download(
             }
         });
         stage!({
-            if processors.metadata || processors.chapters {
+            if processors.metadata || processors.chapters || processors.infojson.is_some() {
                 let current = stages.last_mut().unwrap();
                 let chapters = processors.chapters && !info.metadata.chapters.is_empty();
+                // `_get_infojson_opts`: only mkv/mka files take the attachment.
+                let mut attachment = None;
+                if let Some(embed) = &processors.infojson {
+                    if matches!(current.ext.to_lowercase().as_str(), "mkv" | "mka") {
+                        attachment = match embed.written.as_ref().filter(|path| path.is_file()) {
+                            // FFmpeg runs in the workspace, so name it absolutely.
+                            Some(path) => Some(path.canonicalize()?),
+                            None if embed.explicit => {
+                                let path = workspace.path().join("info.json.temp");
+                                fs::write(&path, &embed.json)?;
+                                Some(path)
+                            }
+                            None => None,
+                        };
+                    } else if embed.explicit {
+                        crate::screen::screen(
+                            "[Metadata] The info-json can only be attached to mkv/mka files",
+                        );
+                    }
+                }
                 let Some(args) = crate::embed_metadata::plan_args(
                     info,
                     &current.ext,
                     processors.metadata,
                     chapters,
+                    attachment.as_deref(),
                 ) else {
                     crate::screen::screen("[Metadata] There isn't any metadata to add");
                     return Ok(());

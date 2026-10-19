@@ -192,6 +192,7 @@ fn options(format: &str, mode: VideoMode, keep: bool) -> PostprocessOptions {
         thumbnail: None,
         metadata: false,
         chapters: false,
+        infojson: None,
         audio: None,
         video: Some(VideoOptions::new(format, mode).unwrap()),
         keep_video: keep,

@@ -31,8 +31,9 @@ pub(crate) fn plan_args(
     ext: &str,
     add_metadata: bool,
     chapters: bool,
+    infojson: Option<&std::path::Path>,
 ) -> Option<Vec<String>> {
-    if !add_metadata && !chapters {
+    if !add_metadata && !chapters && infojson.is_none() {
         return None;
     }
     let all = args(info, ext);
@@ -43,6 +44,21 @@ pub(crate) fn plan_args(
     }
     if add_metadata {
         output.extend_from_slice(&all[copy..]);
+    }
+    // `_get_infojson_opts` for a file without attachments: the new
+    // attachment is the only `t` stream.
+    if let Some(path) = infojson {
+        output.push("-attach".into());
+        output.push(path.to_string_lossy().into_owned());
+        output.extend(
+            [
+                "-metadata:s:t",
+                "mimetype=application/json",
+                "-metadata:s:t",
+                "filename=info.json",
+            ]
+            .map(String::from),
+        );
     }
     Some(output)
 }
@@ -187,9 +203,33 @@ mod tests {
             "url":"https://example.test/a.mp4","webpage_url":"https://example.test/a",
             "ext":"mp4","extractor":"generic","extractor_key":"Generic"}))
         .unwrap();
-        assert_eq!(plan_args(&info, "mp4", false, false), None);
+        assert_eq!(plan_args(&info, "mp4", false, false, None), None);
         assert_eq!(
-            plan_args(&info, "mp4", false, true).unwrap(),
+            plan_args(
+                &info,
+                "mkv",
+                false,
+                false,
+                Some(std::path::Path::new("a.info.json"))
+            )
+            .unwrap(),
+            [
+                "-map",
+                "0",
+                "-dn",
+                "-ignore_unknown",
+                "-c",
+                "copy",
+                "-attach",
+                "a.info.json",
+                "-metadata:s:t",
+                "mimetype=application/json",
+                "-metadata:s:t",
+                "filename=info.json"
+            ]
+        );
+        assert_eq!(
+            plan_args(&info, "mp4", false, true, None).unwrap(),
             [
                 "-map",
                 "0",
@@ -201,7 +241,7 @@ mod tests {
                 "1"
             ]
         );
-        let both = plan_args(&info, "m4a", true, true).unwrap();
+        let both = plan_args(&info, "m4a", true, true, None).unwrap();
         assert_eq!(
             &both[..9],
             [

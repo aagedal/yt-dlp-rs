@@ -245,6 +245,12 @@ struct Args {
     replace_in_metadata: Vec<String>,
     #[arg(long, hide = true, value_name = "FORMAT")]
     metadata_from_title: Option<String>,
+    /// Embed the infojson as an attachment to mkv/mka video files
+    #[arg(long, overrides_with = "no_embed_info_json")]
+    embed_info_json: bool,
+    /// Do not embed the infojson as an attachment to the video file
+    #[arg(long, overrides_with = "embed_info_json")]
+    no_embed_info_json: bool,
     /// Split video into multiple files based on internal chapters (the "chapter" output template)
     #[arg(long, alias = "split-tracks", overrides_with_all = ["split_chapters", "no_split_chapters"])]
     split_chapters: bool,
@@ -1317,6 +1323,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream: `--embed-metadata` implies `--embed-chapters` unless
         // `--no-embed-chapters` was given.
         chapters: args.embed_chapters || (args.embed_metadata && !args.no_embed_chapters),
+        // Filled per video; see `embed_info_json` below.
+        infojson: None,
         audio: args.extract_audio.then_some(audio_options),
         video: recode.or(remux),
         embed: None,
@@ -1541,10 +1549,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     // Like upstream, simulation never writes info JSON.
     let writes_info_json = args.write_info_json && !simulate;
-    if args.embed_metadata && writes_info_json {
-        // Upstream also attaches written info JSON to mkv/mka files.
-        warning!("WARNING: info JSON is not attached to mkv/mka files when embedding metadata");
-    }
+    // Upstream `embed_infojson`: explicit, or `if_exists` with --embed-metadata.
+    let embed_info_json = if args.embed_info_json {
+        Some(true)
+    } else if args.no_embed_info_json || !args.embed_metadata {
+        None
+    } else {
+        Some(false)
+    };
     let writes_description = args.write_description && !simulate;
     // Upstream `write_links`: --write-link picks the platform's type.
     let platform_link = if cfg!(target_os = "macos") {
@@ -2174,6 +2186,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 || args.embed_subs
                                 || processors.metadata
                                 || processors.chapters
+                                || embed_info_json.is_some()
                                 || args.split_chapters
                                 || args.embed_thumbnail;
                             let existing_media = !args.skip_download && path_exists(&path)?;
@@ -2523,10 +2536,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 };
                                 screen!("[{downloader}] Total fragments: {}", info.fragments.len());
                             }
-                            // Unprocessed merges announce each format's file instead
-                            // (`processing` mirrors the per-video processors below).
-                            // FFmpegFD merges a partial download's formats into one file.
-                            if info.requested_formats.is_empty() || processing || partial {
+                            // Merges announce each format's file instead, except
+                            // FFmpegFD merging a partial download into one file.
+                            if info.requested_formats.is_empty() || partial {
                                 screen!("[download] Destination: {}", path.display());
                             }
                             // Upstream sleeps before each stream's FileDownloader.download.
@@ -2548,6 +2560,19 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 ControlFlow::Continue(())
                             };
                             let mut processors = processors.clone();
+                            if let Some(explicit) = embed_info_json {
+                                processors.infojson = Some(yt_dlp_rs::InfoJsonEmbed {
+                                    written: info_json.clone(),
+                                    explicit,
+                                    json: yt_dlp_rs::to_python_json(
+                                        &yt_dlp_rs::video_info_json_with(
+                                            &info,
+                                            epoch(),
+                                            !args.no_clean_info_json,
+                                        )?,
+                                    )?,
+                                });
+                            }
                             // Upstream embeds the best thumbnail on disk.
                             let mut embedded_thumbnail = None;
                             if args.embed_thumbnail {
@@ -2574,6 +2599,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 || processors.embed.is_some()
                                 || processors.metadata
                                 || processors.chapters
+                                || processors.infojson.is_some()
                                 || processors.thumbnail.is_some();
                             if path.as_os_str() == "-" {
                                 // Upstream streams to stdout and skips postprocessing,

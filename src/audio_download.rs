@@ -23,6 +23,7 @@ pub(crate) fn download(
             thumbnail: None,
             metadata: false,
             chapters: false,
+            infojson: None,
             audio: Some(audio.clone()),
             video: None,
             embed: None,

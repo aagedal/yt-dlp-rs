@@ -59,7 +59,7 @@ pub use info_json::{
 pub use match_filter::{EntrySelection, MatchFilters, MatchOutcome};
 pub use output::{render_automatic_captions, render_subtitles};
 pub use playlist::{PlaylistCounts, PlaylistSelection};
-pub use postprocess::{PostprocessOptions, ProcessedDownload};
+pub use postprocess::{InfoJsonEmbed, PostprocessOptions, ProcessedDownload};
 pub use retry::{RetrySleep, SleepExpression};
 pub use subtitle_convert::{ConvertedSubtitle, SubtitleConversion};
 pub use subtitles::{
