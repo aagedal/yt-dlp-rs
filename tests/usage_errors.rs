@@ -99,3 +99,44 @@ fn a_missing_url_is_reported_after_option_validation() {
     assert_eq!(code, Some(2));
     assert!(stderr.ends_with("yt-dlp-rs: error: Invalid date format \"bogus\"\n"));
 }
+
+#[test]
+fn extractor_listings_and_color_policies_follow_upstream() {
+    let run = |args: &[&str]| {
+        std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .arg("--ignore-config")
+            .args(args)
+            .output()
+            .unwrap()
+    };
+    // Lines checked against pinned upstream for these extractors.
+    let output = run(&[
+        "--list-extractors",
+        "https://www.youtube.com/watch?v=BaW_jenozKc",
+        "https://example.com/v.mp4",
+    ]);
+    assert!(output.status.success());
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout),
+        "html5\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\ngeneric\n  https://example.com/v.mp4\n"
+    );
+    let output = run(&["--extractor-descriptions"]);
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout),
+        "html5\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
+    );
+    let output = run(&["--color", "x", "https://example.com/"]);
+    assert_eq!(output.status.code(), Some(2));
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .contains("error: \"x\" is not a valid color policy")
+    );
+    for args in [&["--color", "stderr:never"][..], &["--no-colors"]] {
+        let output = run(args);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(
+            String::from_utf8_lossy(&output.stderr).contains("You must provide at least one URL."),
+            "{args:?}"
+        );
+    }
+}

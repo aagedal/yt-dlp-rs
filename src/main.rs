@@ -18,8 +18,8 @@ use yt_dlp_rs::{
         ExecCommand, ExecCommands, OutputTemplates, PrintTemplate, PrintToFile, Stage, StagePaths,
         TemplateOptions,
     },
-    playlist_info_json, render_automatic_captions, render_subtitles, subtitle_paths,
-    validate_format_selector, video_info_json, write_info_json_with,
+    render_automatic_captions, render_subtitles, subtitle_paths, validate_format_selector,
+    write_info_json_with,
 };
 
 /// `-q`: suppress informational `[...]` screen lines (upstream `to_screen`).
@@ -646,6 +646,23 @@ struct Args {
     /// Maximum download rate in bytes per second, e.g. 50K or 4.2M
     #[arg(short = 'r', long, aliases = ["rate-limit"], value_name = "RATE")]
     limit_rate: Option<String>,
+    /// Whether to emit color codes ([STREAM:]POLICY); this port never emits them
+    #[arg(long, value_name = "[STREAM:]POLICY")]
+    color: Vec<String>,
+    #[arg(long, alias = "no-colours", hide = true)]
+    no_colors: bool,
+    /// Remove some internal metadata such as filenames from the infojson (default)
+    #[arg(long, overrides_with = "no_clean_info_json")]
+    clean_info_json: bool,
+    /// Write all fields to the infojson
+    #[arg(long, overrides_with = "clean_info_json")]
+    no_clean_info_json: bool,
+    /// List all supported extractors and the URLs they would handle
+    #[arg(long)]
+    list_extractors: bool,
+    /// Output descriptions of all supported extractors
+    #[arg(long)]
+    extractor_descriptions: bool,
     /// Size of a chunk for chunk-based HTTP downloading, e.g. 10485760 or 10M
     #[arg(long, value_name = "SIZE")]
     http_chunk_size: Option<String>,
@@ -1639,6 +1656,50 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let downloader = downloader
         .with_http_chunk_size(http_chunk_size)
         .with_test(args.test);
+    // Upstream `--color` validation; output is always uncolored.
+    for value in &args.color {
+        let policy = match value.split_once(':') {
+            Some((stream, policy))
+                if matches!(stream.to_lowercase().as_str(), "stdout" | "stderr") =>
+            {
+                policy
+            }
+            _ => value.as_str(),
+        }
+        .trim();
+        if !matches!(
+            policy,
+            "always" | "auto" | "auto-tty" | "no_color" | "no_color-tty" | "never"
+        ) {
+            return Err(usage(format!("\"{policy}\" is not a valid color policy")).into());
+        }
+    }
+    // Upstream `print_extractor_information`, for this port's extractors
+    // (sorted, `generic` last); the generic extractor lists unmatched URLs.
+    if args.list_extractors {
+        let mut out = io::stdout().lock();
+        let (youtube, generic): (Vec<&String>, Vec<&String>) = urls
+            .iter()
+            .partition(|url| yt_dlp_rs::extractor::youtube_suitable(url));
+        writeln!(out, "html5")?;
+        writeln!(out, "youtube")?;
+        for url in youtube {
+            writeln!(out, "  {url}")?;
+        }
+        writeln!(out, "generic")?;
+        for url in generic {
+            writeln!(out, "  {url}")?;
+        }
+        return Ok(true);
+    }
+    if args.extractor_descriptions {
+        // Upstream writes the joined descriptions without a final newline.
+        write!(
+            io::stdout().lock(),
+            "html5\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
+        )?;
+        return Ok(true);
+    }
     // Upstream reports a missing URL after validating the options.
     if urls.is_empty() && args.load_info_json.is_none() {
         return Err(UsageError(
@@ -1805,7 +1866,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     )?
                 {
                     reject_reserved(&path, [&archive_path, &args.cookies])?;
-                    let value = playlist_info_json(playlist, counts, epoch())?;
+                    let value = yt_dlp_rs::playlist_info_json_with(
+                        playlist,
+                        counts,
+                        epoch(),
+                        !args.no_clean_info_json,
+                    )?;
                     let written = write_info_json_with(&path, &value, overwrites != Some(false))?;
                     report_info_json("playlist", &path, written);
                 }
@@ -2277,7 +2343,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                             // Upstream writes info JSON after subtitles and before media.
                             if let Some(info_json) = &info_json {
-                                let value = video_info_json(&info, epoch())?;
+                                let value = yt_dlp_rs::video_info_json_with(
+                                    &info,
+                                    epoch(),
+                                    !args.no_clean_info_json,
+                                )?;
                                 let written = write_info_json_with(
                                     info_json,
                                     &value,

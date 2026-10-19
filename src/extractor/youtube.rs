@@ -149,6 +149,11 @@ fn valid_id(id: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
 }
 
+/// Upstream `YoutubeIE.suitable`: a supported single-video URL.
+pub fn suitable(url: &str) -> bool {
+    Url::parse(url).is_ok_and(|url| matches!(video_id(&url, false), Ok(Some(_))))
+}
+
 /// Upstream `_real_extract`: `start_time` from a `start`/`t` and `end_time`
 /// from an `end` parameter of the URL fragment, then its query (the first
 /// occurrence wins, even when it does not parse).

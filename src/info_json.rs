@@ -62,7 +62,13 @@ fn splitext(name: &str) -> Option<(&str, &str)> {
 /// The cleaned video info dictionary, with upstream's `_type` and `epoch` defaults.
 /// `_version` is omitted because this is not an upstream release.
 pub fn video_info_json(info: &VideoInfo, epoch: u64) -> Result<Value> {
-    finish(to_value(info)?, "video", epoch)
+    video_info_json_with(info, epoch, true)
+}
+
+/// [`video_info_json`] with upstream `clean_infojson` (`--no-clean-info-json`
+/// keeps `None` values and private keys).
+pub fn video_info_json_with(info: &VideoInfo, epoch: u64, clean: bool) -> Result<Value> {
+    finish(to_value(info)?, "video", epoch, clean)
 }
 
 /// The cleaned playlist dictionary written before its entries are processed.
@@ -71,19 +77,30 @@ pub fn playlist_info_json(
     counts: PlaylistCounts,
     epoch: u64,
 ) -> Result<Value> {
+    playlist_info_json_with(info, counts, epoch, true)
+}
+
+/// [`playlist_info_json`] with upstream `clean_infojson`.
+pub fn playlist_info_json_with(
+    info: &PlaylistInfo,
+    counts: PlaylistCounts,
+    epoch: u64,
+    clean: bool,
+) -> Result<Value> {
     let mut value = to_value(info)?;
     if let Value::Object(map) = &mut value {
         map.insert("playlist_count".into(), counts.playlist_count.into());
     }
-    finish(value, "playlist", epoch)
+    finish(value, "playlist", epoch, clean)
 }
 
 fn to_value(value: impl serde::Serialize) -> Result<Value> {
     serde_json::to_value(value).map_err(|error| Error::InfoJson(error.to_string()))
 }
 
-fn finish(value: Value, kind: &str, epoch: u64) -> Result<Value> {
-    let Value::Object(mut map) = clean(value) else {
+fn finish(value: Value, kind: &str, epoch: u64, cleaned: bool) -> Result<Value> {
+    let value = if cleaned { clean(value) } else { value };
+    let Value::Object(mut map) = value else {
         return Err(Error::InfoJson("info is not a JSON object".into()));
     };
     map.entry("epoch").or_insert(epoch.into());
@@ -234,7 +251,7 @@ mod tests {
             "playlist_autonumber": 2, "nested": [{"filepath": "p", "keep": null, "ok": 1}],
             "playlist_index": 3,
         });
-        let value = finish(value, "video", 7).unwrap();
+        let value = finish(value, "video", 7, true).unwrap();
         assert_eq!(
             value,
             json!({"id": "x", "nested": [{"ok": 1}], "playlist_index": 3, "epoch": 7, "_type": "video"})
@@ -312,7 +329,7 @@ mod tests {
             assert_eq!(path.to_str().unwrap(), case["expected"], "{}", case["name"]);
         }
         for case in fixture["sanitize"].as_array().unwrap() {
-            let value = finish(case["info"].clone(), "video", 0).unwrap();
+            let value = finish(case["info"].clone(), "video", 0, true).unwrap();
             assert_eq!(value, case["expected"], "{}", case["name"]);
             let keys = |value: &Value| {
                 value
@@ -330,7 +347,7 @@ mod tests {
         }
         // Source-only: upstream's _version describes its own release.
         let version = &fixture["source_only"][0];
-        let value = finish(version["info"].clone(), "video", 0).unwrap();
+        let value = finish(version["info"].clone(), "video", 0, true).unwrap();
         assert!(
             value
                 .get(version["upstream_extra_key"].as_str().unwrap())
