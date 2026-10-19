@@ -523,7 +523,7 @@ fn extract_watch_page_with_caption_options(
         .map(|(candidate, url)| candidate.into_format(url))
         .collect();
     for format in &mut formats {
-        let response = direct::request(client, &format.url, Some(page))?;
+        let response = direct::probe(client, &format.url, Some(page))?;
         let media = direct::from_response(&response, &format.url)
             .ok_or_else(|| unsupported("format URL does not serve direct HTTP media"))?;
         if media.ext != format.ext {
@@ -582,6 +582,7 @@ impl Extractor for Youtube {
         let Some(id) = video_id(url)? else {
             return Ok(None);
         };
+        crate::screen::set_extractor("youtube");
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
         extract_watch_page_with_runtime(client, &page, &id, None, None).map(Some)
     }
@@ -595,6 +596,7 @@ impl Extractor for ConfiguredYoutube {
         let Some(id) = video_id(url)? else {
             return Ok(None);
         };
+        crate::screen::set_extractor("youtube");
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
         extract_watch_page_with_caption_options(
             client,

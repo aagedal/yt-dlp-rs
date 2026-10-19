@@ -187,7 +187,7 @@ pub(crate) fn from_response(
             // unnamed variants); playlists are still fetched variants first.
             let renditions = audio.len();
             for variant in variants {
-                let response = direct::request(client, &variant.url, referer)?;
+                let response = direct::probe(client, &variant.url, referer)?;
                 let (url, playlist) = read_playlist(response)?;
                 let Playlist::Media { fragments, ext } = playlist else {
                     return Err(unsupported("nested HLS master playlists are not supported"));
@@ -232,7 +232,7 @@ pub(crate) fn from_response(
             }
             let mut rendition_formats = Vec::new();
             for rendition in audio {
-                let response = direct::request(client, &rendition.url, referer)?;
+                let response = direct::probe(client, &rendition.url, referer)?;
                 let (url, playlist) = read_playlist(response)?;
                 let Playlist::Media { fragments, ext } = playlist else {
                     return Err(unsupported("nested HLS master playlists are not supported"));

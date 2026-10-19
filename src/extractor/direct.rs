@@ -9,7 +9,16 @@ use url::Url;
 
 pub struct DirectHttp;
 
+/// An extraction request upstream also makes (`_request_webpage`), subject
+/// to `--sleep-requests`.
 pub(crate) fn request(client: &Client, url: &Url, referer: Option<&Url>) -> Result<Response> {
+    crate::screen::before_extraction_request();
+    probe(client, url, referer)
+}
+
+/// A request this port adds to inspect media or child playlists that
+/// upstream does not fetch during extraction; never delayed.
+pub(crate) fn probe(client: &Client, url: &Url, referer: Option<&Url>) -> Result<Response> {
     let mut request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
     if let Some(referer) = referer {
         request = request.header(REFERER, referer.as_str());

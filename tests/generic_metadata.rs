@@ -303,3 +303,33 @@ fn generic_extraction_reports_upstream_screen_lines() {
         ["WARNING: [generic] Falling back on generic information extractor"]
     );
 }
+
+#[test]
+fn sleep_requests_waits_before_later_extraction_requests() {
+    let server = Server::new();
+    let page = format!("{}/meta.html", server.origin);
+    let direct = format!("{}/media/clip.mp4", server.origin);
+    let (code, stderr) = simulate(&["--sleep-requests", "0.2", &direct, &page]);
+    assert_eq!(code, Some(0), "{stderr}");
+    let lines: Vec<_> = stderr
+        .lines()
+        .filter(|line| line.starts_with("[generic]"))
+        .map(|line| line.replace(&server.origin, "<O>"))
+        .collect();
+    // The first request of the run is not delayed; HTML5 media sources are
+    // probed without a delay, as upstream does not request them.
+    assert_eq!(
+        lines,
+        [
+            "[generic] Extracting URL: <O>/media/clip.mp4",
+            "[generic] clip: Downloading webpage",
+            "[generic] Extracting URL: <O>/meta.html",
+            "[generic] Sleeping 0.2 seconds ...",
+            "[generic] meta: Downloading webpage",
+            "[generic] meta: Extracting information",
+        ]
+    );
+    let (code, stderr) = simulate(&["--sleep-requests", "-1", &direct]);
+    assert_eq!(code, Some(2));
+    assert!(stderr.contains("requests sleep interval \"-1.0\" must be positive or 0"));
+}

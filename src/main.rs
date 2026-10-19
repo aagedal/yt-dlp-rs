@@ -481,6 +481,9 @@ struct Args {
     /// Seconds to sleep before each subtitle download
     #[arg(long, value_name = "SECONDS", allow_hyphen_values = true)]
     sleep_subtitles: Option<f64>,
+    /// Seconds to sleep between requests during data extraction
+    #[arg(long, value_name = "SECONDS", allow_hyphen_values = true)]
+    sleep_requests: Option<f64>,
     /// Skip media downloads smaller than SIZE, e.g. 50k or 44.6M
     #[arg(long, value_name = "SIZE")]
     min_filesize: Option<String>,
@@ -634,15 +637,7 @@ fn single_json(
 
 /// Python `str(float)` for ordinary values (`1.0`, `0.5`, `nan`, `inf`).
 fn py_float(value: f64) -> String {
-    if value.is_nan() {
-        "nan".into()
-    } else if value.is_infinite() {
-        if value > 0.0 { "inf" } else { "-inf" }.into()
-    } else if value.fract() == 0.0 && value.abs() < 1e16 {
-        format!("{value:.1}")
-    } else {
-        format!("{value}")
-    }
+    yt_dlp_rs::screen::py_float(value)
 }
 
 /// Upstream download/subtitle sleep intervals (`__init__` validation and
@@ -658,9 +653,11 @@ impl SleepPolicy {
         min: Option<f64>,
         max: Option<f64>,
         subtitles: Option<f64>,
+        requests: Option<f64>,
     ) -> Result<Self, String> {
         for (name, value) in [
             ("subtitles sleep interval", subtitles),
+            ("requests sleep interval", requests),
             ("sleep interval", min),
             ("max sleep interval", max),
         ] {
@@ -1193,8 +1190,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.sleep_interval,
         args.max_sleep_interval,
         args.sleep_subtitles,
+        args.sleep_requests,
     )
     .map_err(usage)?;
+    if let Some(seconds) = args.sleep_requests {
+        yt_dlp_rs::screen::set_sleep_requests(seconds);
+    }
     let min_filesize = size_option("min filesize", args.min_filesize.as_deref()).map_err(usage)?;
     let max_filesize = size_option("max filesize", args.max_filesize.as_deref()).map_err(usage)?;
     // Upstream validates the rate limit as strictly positive.

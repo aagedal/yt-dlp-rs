@@ -1,7 +1,13 @@
 //! Upstream-style informational messages (`to_screen`) and warnings from
 //! library code, delivered to a process-wide sink installed by the CLI.
 //! Without a sink, messages are discarded.
-use std::sync::OnceLock;
+use std::{
+    cell::Cell,
+    sync::{
+        OnceLock,
+        atomic::{AtomicBool, Ordering},
+    },
+};
 
 /// One message: a `[extractor] …` screen line or a warning text (without
 /// the `WARNING: ` prefix).
@@ -29,6 +35,55 @@ pub(crate) fn screen(text: &str) {
 pub(crate) fn warning(text: &str) {
     if let Some(sink) = SINK.get() {
         sink(Message::Warning(text));
+    }
+}
+
+/// Python `str(float)` for finite values in the ranges used by options.
+pub fn py_float(value: f64) -> String {
+    if value.is_nan() {
+        "nan".into()
+    } else if value.is_infinite() {
+        if value > 0.0 { "inf" } else { "-inf" }.into()
+    } else if value.fract() == 0.0 && value.abs() < 1e16 {
+        format!("{value:.1}")
+    } else {
+        format!("{value}")
+    }
+}
+
+static SLEEP_REQUESTS: OnceLock<f64> = OnceLock::new();
+static FIRST_REQUEST_DONE: AtomicBool = AtomicBool::new(false);
+
+thread_local! {
+    static EXTRACTOR: Cell<&'static str> = const { Cell::new("generic") };
+}
+
+/// `--sleep-requests`: seconds to wait before each extraction request after
+/// the first of the run. Set once; later calls are ignored.
+pub fn set_sleep_requests(seconds: f64) {
+    let _ = SLEEP_REQUESTS.set(seconds);
+}
+
+/// The extractor name used to prefix request-sleep messages.
+pub(crate) fn set_extractor(name: &'static str) {
+    EXTRACTOR.with(|extractor| extractor.set(name));
+}
+
+/// Upstream `_request_webpage`: sleep before every extraction request but the
+/// first, announcing it like `[EXTRACTOR] Sleeping SECONDS seconds ...`.
+pub(crate) fn before_extraction_request() {
+    if !FIRST_REQUEST_DONE.swap(true, Ordering::Relaxed) {
+        return;
+    }
+    if let Some(&seconds) = SLEEP_REQUESTS.get().filter(|seconds| **seconds > 0.0) {
+        let extractor = EXTRACTOR.with(Cell::get);
+        screen(&format!(
+            "[{extractor}] Sleeping {} seconds ...",
+            py_float(seconds)
+        ));
+        if seconds.is_finite() {
+            std::thread::sleep(std::time::Duration::from_secs_f64(seconds));
+        }
     }
 }
 

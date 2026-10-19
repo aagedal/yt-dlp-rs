@@ -294,15 +294,18 @@ impl Extractor for GenericHttp {
 
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         use crate::screen::{generic_id, screen, truncate_string, warning};
+        crate::screen::set_extractor("generic");
         // Upstream `InfoExtractor.extract` and `GenericIE._real_extract` lines.
         screen(&format!(
             "[generic] Extracting URL: {}",
             truncate_string(url.as_str(), 100, 20)
         ));
         let id = generic_id(url.as_str());
+        // `_request_webpage` sleeps before announcing the download.
+        crate::screen::before_extraction_request();
         screen(&format!("[generic] {id}: Downloading webpage"));
         // Dispatch a single response so direct media does not need two probes.
-        let response = direct::request(client, url, None)?;
+        let response = direct::probe(client, url, None)?;
         // Upstream's direct-link Content-Type pattern; anything else falls
         // back to sniffing the body.
         let content_type = response
@@ -415,7 +418,18 @@ impl Extractor for GenericHttp {
             let mut first_info = None;
             for (index, source) in entry.sources.iter().enumerate() {
                 let url = &source.url;
-                let response = direct::request(client, url, Some(&page_url))?;
+                // Upstream requests only manifest sources it recognizes by
+                // type or extension; other sources are probed natively.
+                let manifest_hint = source.hls_hint
+                    || source.dash_hint
+                    || [".m3u8", ".mpd"]
+                        .iter()
+                        .any(|suffix| url.path().to_ascii_lowercase().ends_with(suffix));
+                let response = if manifest_hint {
+                    direct::request(client, url, Some(&page_url))?
+                } else {
+                    direct::probe(client, url, Some(&page_url))?
+                };
                 let direct = direct::from_response(&response, url);
                 let dash_hint =
                     source.dash_hint || url.path().to_ascii_lowercase().ends_with(".mpd");

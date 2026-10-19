@@ -81,6 +81,7 @@ pub(super) fn fetch_player(client: &Client, page: &Url, html: &str, id: &str) ->
     if let Some(visitor) = context["client"]["visitorData"].as_str() {
         request = request.header("X-Goog-Visitor-Id", visitor);
     }
+    crate::screen::before_extraction_request();
     let response = crate::retry::check_response(request.body(body.to_string()).send()?)?;
     if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
         return Err(Error::PartialResponse);
