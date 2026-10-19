@@ -38,7 +38,7 @@ fn helper(
     // Strict lists warn; description lists only write debug output.
     let warn = |message: String| {
         if strict {
-            crate::screen::warning(&format!("WARNING: [youtube] {message}"));
+            crate::screen::warning(&format!("[youtube] {message}"));
         }
     };
     let mut chapters: Vec<(Option<PyNumber>, Option<String>)> =

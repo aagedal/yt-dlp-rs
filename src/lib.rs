@@ -112,6 +112,59 @@ pub struct YoutubeDl {
     force_generic: bool,
     /// `--default-search`.
     default_search: Option<String>,
+    check_formats: CheckFormats,
+}
+
+/// Upstream `check_formats`: `--check-formats` (`selected`),
+/// `--check-all-formats` (`True`) and `--no-check-formats` (`False`).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum CheckFormats {
+    /// Only formats that need testing (none in the represented extractors).
+    #[default]
+    Default,
+    Selected,
+    All,
+    Never,
+}
+
+/// Upstream `dl(temp, format, test=True)`: a quiet `_TEST_FILE_SIZE` HTTP
+/// download, or the first fragment of a fragmented format.
+fn test_format(client: &Client, info: &VideoInfo, format: &VideoFormat) -> bool {
+    let mut single = info.with_selected_format(format);
+    single.fragments.truncate(1);
+    let Ok(directory) = tempfile::tempdir() else {
+        return false;
+    };
+    let target = directory.path().join("format.tmp");
+    // The test parameters carry no retry counts, so nothing is retried.
+    let options = DownloadOptions {
+        part_files: PartFiles::NoPart,
+        skip_unavailable_fragments: Some(false),
+        retries: 0,
+        fragment_retries: 0,
+        ..Default::default()
+    };
+    let mut quiet = |_| std::ops::ControlFlow::Continue(());
+    let result = if single.fragments.is_empty() {
+        download::download(
+            client,
+            &single,
+            &target,
+            options,
+            Some(download::Chunking {
+                size: download::TEST_FILE_SIZE,
+                test: true,
+            }),
+            &mut quiet,
+        )
+    } else {
+        fragment::download(client, &single, &target, options, &mut quiet)
+    };
+    // Errors are still reported by the quiet test downloader.
+    if let Err(error) = &result {
+        screen::stderr(&format!("ERROR: {error}"));
+    }
+    result.is_ok()
 }
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
@@ -228,6 +281,7 @@ impl YoutubeDl {
             allowed_extractors: None,
             force_generic: false,
             default_search: None,
+            check_formats: CheckFormats::Default,
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -400,6 +454,34 @@ impl YoutubeDl {
     pub fn with_force_generic_extractor(mut self, force: bool) -> Self {
         self.force_generic = force;
         self
+    }
+
+    /// Upstream `check_formats`.
+    pub fn with_check_formats(mut self, check: CheckFormats) -> Self {
+        self.check_formats = check;
+        self
+    }
+
+    /// `--check-all-formats`: test every format, best first, before listing
+    /// and selection, dropping those that fail (`process_video_result`).
+    pub fn check_all_formats(&self, info: &mut VideoInfo) {
+        if self.check_formats != CheckFormats::All {
+            return;
+        }
+        let mut working = Vec::new();
+        for format in info.formats.iter().rev() {
+            screen::screen(&format!("[info] Testing format {}", format.format_id));
+            if test_format(&self.client, info, format) {
+                working.push(format.clone());
+            } else {
+                screen::screen(&format!(
+                    "[info] Unable to download format {}. Skipping...",
+                    format.format_id
+                ));
+            }
+        }
+        working.reverse();
+        info.formats = working;
     }
 
     /// `--default-search PREFIX` for inputs without a URL scheme.
@@ -625,11 +707,38 @@ impl YoutubeDl {
     /// `process_video_result`), leaving it unchanged on failure.
     pub fn select_video(&self, info: &mut VideoInfo, format: Option<&str>) -> Result<()> {
         let format = format.or(self.prefer_best.then_some("best/bestvideo+bestaudio"));
-        info.select_format_with_merge(
-            format,
-            self.ffmpeg.is_some(),
-            self.merge_output_format.as_deref(),
-        )
+        if self.check_formats != CheckFormats::Selected {
+            return info.select_format_with_merge(
+                format,
+                self.ffmpeg.is_some(),
+                self.merge_output_format.as_deref(),
+            );
+        }
+        // Upstream `_check_formats` for `selected`: each candidate is tested
+        // once, in preference order, as selection reaches it.
+        let client = self.client.clone();
+        let snapshot = info.clone();
+        let mut tested: std::collections::HashMap<String, bool> = Default::default();
+        let check = Box::new(move |format: &VideoFormat| {
+            *tested.entry(format.format_id.clone()).or_insert_with(|| {
+                screen::screen(&format!("[info] Testing format {}", format.format_id));
+                let works = test_format(&client, &snapshot, format);
+                if !works {
+                    screen::warning(&format!(
+                        "Unable to download format {}. Skipping...",
+                        format.format_id
+                    ));
+                }
+                works
+            })
+        });
+        info::with_format_check(check, || {
+            info.select_format_with_merge(
+                format,
+                self.ffmpeg.is_some(),
+                self.merge_output_format.as_deref(),
+            )
+        })
     }
 
     /// Extract all supported alternatives without applying library format selection.
@@ -705,9 +814,7 @@ impl YoutubeDl {
         static DOMAIN: std::sync::LazyLock<regex::Regex> =
             std::sync::LazyLock::new(|| regex::Regex::new(r"^[^\s/]+\.[^\s/]+/").unwrap());
         if matches!(search, "auto" | "auto_warning" | "fixup_error") && DOMAIN.is_match(input) {
-            screen::warning(
-                "WARNING: [generic] The url doesn't specify the protocol, trying with https",
-            );
+            screen::warning("[generic] The url doesn't specify the protocol, trying with https");
             return self
                 .extract_result_unselected_with_options(&format!("https://{input}"), options);
         }

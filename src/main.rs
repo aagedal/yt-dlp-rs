@@ -665,6 +665,15 @@ struct Args {
     /// Prefix for unqualified URLs ("error", "fixup_error"; search prefixes are unsupported)
     #[arg(long, value_name = "PREFIX")]
     default_search: Option<String>,
+    /// Make sure formats are selected only from those that are actually downloadable
+    #[arg(long, overrides_with_all = ["check_formats", "check_all_formats", "no_check_formats"])]
+    check_formats: bool,
+    /// Check all formats for whether they are actually downloadable
+    #[arg(long, overrides_with_all = ["check_formats", "check_all_formats", "no_check_formats"])]
+    check_all_formats: bool,
+    /// Do not check that the formats are actually downloadable
+    #[arg(long, overrides_with_all = ["check_formats", "check_all_formats", "no_check_formats"])]
+    no_check_formats: bool,
     /// List all supported extractors and the URLs they would handle
     #[arg(long)]
     list_extractors: bool,
@@ -1666,6 +1675,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .with_http_chunk_size(http_chunk_size)
         .with_test(args.test)
         .with_force_generic_extractor(args.force_generic_extractor)
+        .with_check_formats(if args.check_formats {
+            yt_dlp_rs::CheckFormats::Selected
+        } else if args.check_all_formats {
+            yt_dlp_rs::CheckFormats::All
+        } else if args.no_check_formats {
+            yt_dlp_rs::CheckFormats::Never
+        } else {
+            yt_dlp_rs::CheckFormats::Default
+        })
         .with_default_search(args.default_search.clone())
         // Upstream `_list_from_options_callback`: comma-separated, stripped.
         .with_allowed_extractors(
@@ -1974,6 +1992,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 screen!("[download] Downloading item {index} of {count}");
             }
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+                // Upstream `process_video_result`: `--check-all-formats` tests
+                // every format first.
+                downloader.check_all_formats(&mut info);
                 // Upstream `process_video_result`: `pre_process` and
                 // `after_filter` processors precede listing and selection.
                 for when in ["pre_process", "after_filter"] {

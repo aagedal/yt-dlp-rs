@@ -594,7 +594,7 @@ impl VideoInfo {
                         Pick::Pair(a, b) => format!("{}+{}", a.format_id, b.format_id),
                     })
             };
-            if pick("b/bv+ba") != pick("bv*+ba/b") {
+            if without_format_check(|| pick("b/bv+ba") != pick("bv*+ba/b")) {
                 crate::screen::warning(
                     "ffmpeg not found. The downloaded format may not be the best available. \
                      Installing ffmpeg is strongly recommended: https://github.com/yt-dlp/yt-dlp#dependencies",
@@ -872,6 +872,7 @@ impl VideoInfo {
                 return candidates
                     .into_iter()
                     .find(|f| f.format_id == name)
+                    .filter(|f| format_works(f))
                     .into_iter()
                     .collect();
             }
@@ -935,6 +936,24 @@ impl VideoInfo {
         if !worst {
             formats.reverse();
         }
+        // Upstream `LazyList(_check_formats(matches))[format_idx - 1]`: test
+        // candidates in preference order until the requested one works.
+        if FORMAT_CHECK.with(|slot| slot.borrow().is_some()) {
+            let wanted = atom
+                .index
+                .and_then(|index| usize::try_from(index).ok())
+                .unwrap_or(1);
+            let mut working = 0;
+            for format in formats {
+                if format_works(format) {
+                    working += 1;
+                    if working == wanted {
+                        return vec![format];
+                    }
+                }
+            }
+            return Vec::new();
+        }
         if let Some(index) = atom.index {
             return index
                 .checked_sub(1)
@@ -945,6 +964,40 @@ impl VideoInfo {
         }
         formats
     }
+}
+
+/// A format tester (upstream `_check_formats`) for the current selection.
+type FormatCheck = Box<dyn FnMut(&VideoFormat) -> bool>;
+
+thread_local! {
+    static FORMAT_CHECK: std::cell::RefCell<Option<FormatCheck>> = const { std::cell::RefCell::new(None) };
+}
+
+/// Run `f` with `check` testing the candidates of each selector atom.
+pub(crate) fn with_format_check<T>(check: FormatCheck, f: impl FnOnce() -> T) -> T {
+    let previous = FORMAT_CHECK.with(|slot| slot.borrow_mut().replace(check));
+    let result = f();
+    FORMAT_CHECK.with(|slot| *slot.borrow_mut() = previous);
+    result
+}
+
+/// Run `f` without format testing (the default-format warning probe).
+fn without_format_check<T>(f: impl FnOnce() -> T) -> T {
+    let previous = FORMAT_CHECK.with(|slot| slot.borrow_mut().take());
+    let result = f();
+    FORMAT_CHECK.with(|slot| *slot.borrow_mut() = previous);
+    result
+}
+
+/// Whether `format` passes the installed check (always, without one).
+fn format_works(format: &VideoFormat) -> bool {
+    FORMAT_CHECK.with(|slot| {
+        let mut slot = slot.borrow_mut();
+        match slot.as_mut() {
+            Some(check) => check(format),
+            None => true,
+        }
+    })
 }
 
 fn is_false(value: &bool) -> bool {
