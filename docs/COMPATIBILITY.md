@@ -665,8 +665,8 @@ already been downloaded`. Then `[Merger] Merging formats into "FILE"` and, unles
 order (upstream's order comes from a set). Format files are kept after a failure.
 Input publication events are reported with their `stream_index` in this mode.
 Merges followed by postprocessing still use the private workspace and print the
-final `Destination` line (`tools`-free comparison against actual upstream output
-in `tests/merge.rs`'s CLI case).
+final `Destination` line. The messages were compared by hand with pinned upstream
+on a local DASH page; `tests/merge.rs` holds the regression cases.
 
 Optional real-tool regression: set both `YT_DLP_RS_TEST_FFMPEG` and
 `YT_DLP_RS_TEST_FFPROBE` to executable paths and run `cargo test --locked --test merge`.
