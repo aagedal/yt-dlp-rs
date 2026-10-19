@@ -1,0 +1,353 @@
+//! Upstream `FFmpegFD` for partial (`--download-sections`) downloads: FFmpeg
+//! reads the selected format URLs itself (`-ss`/`-t` input options, stream
+//! copy) and writes the destination's temporary file. FFmpeg's own output is
+//! inherited like upstream's `Popen`.
+use crate::{
+    CookieJar, DownloadOptions, DownloadPhase, DownloadProgress, Error, PartFiles, Result,
+    VideoInfo, info::PyNumber,
+};
+use reqwest::{
+    cookie::CookieStore,
+    header::{COOKIE, HeaderMap, HeaderValue, REFERER, USER_AGENT},
+};
+use std::{
+    ffi::OsString,
+    ops::ControlFlow,
+    path::{Path, PathBuf},
+    process::{Command, Stdio},
+    time::Duration,
+};
+
+/// Upstream `EXT_TO_OUT_FORMATS`.
+fn out_format(ext: &str) -> &str {
+    match ext {
+        "aac" => "adts",
+        "flac" => "flac",
+        "m4a" => "ipod",
+        "mka" | "mkv" => "matroska",
+        "mpg" => "mpeg",
+        "ogv" => "ogg",
+        "ts" => "mpegts",
+        "wma" | "wmv" => "asf",
+        "weba" => "webm",
+        "vtt" => "webvtt",
+        other => other,
+    }
+}
+
+/// Python `str()` of a number.
+fn py_str(value: PyNumber) -> String {
+    match value {
+        PyNumber::Int(value) => value.to_string(),
+        PyNumber::Float(value) => crate::screen::py_float(value),
+    }
+}
+
+fn difference(end: PyNumber, start: PyNumber) -> PyNumber {
+    match (end, start) {
+        (PyNumber::Int(end), PyNumber::Int(start)) => PyNumber::Int(end - start),
+        (end, start) => PyNumber::Float(end.as_f64() - start.as_f64()),
+    }
+}
+
+/// Request settings FFmpeg needs for network inputs.
+pub(crate) struct Network<'a> {
+    pub headers: &'a HeaderMap,
+    pub cookies: &'a CookieJar,
+    pub proxy: Option<&'a str>,
+}
+
+/// FFmpeg settings from the downloader parameters.
+#[derive(Debug, Clone, Copy, Default)]
+pub(crate) struct Settings {
+    /// `-loglevel quiet` (upstream `quiet`).
+    pub quiet: bool,
+    /// `--hls-use-mpegts`: MPEG-TS instead of MP4 for HLS inputs.
+    pub hls_use_mpegts: bool,
+}
+
+/// The `-headers` value for one input: the defaults, this port's User-Agent,
+/// the page Referer of non-direct media and the jar's cookies.
+fn header_lines(network: &Network<'_>, info: &VideoInfo, url: &url::Url) -> String {
+    let mut headers = network.headers.clone();
+    if !headers.contains_key(USER_AGENT) {
+        headers.insert(
+            USER_AGENT,
+            HeaderValue::from_static(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION"))),
+        );
+    }
+    if !info.is_direct()
+        && !headers.contains_key(REFERER)
+        && let Ok(value) = HeaderValue::from_str(info.webpage_url.as_str())
+    {
+        headers.insert(REFERER, value);
+    }
+    if let Some(cookie) = network.cookies.cookies(url) {
+        headers.insert(COOKIE, cookie);
+    }
+    headers
+        .iter()
+        .map(|(name, value)| {
+            format!(
+                "{}: {}\r\n",
+                name,
+                String::from_utf8_lossy(value.as_bytes())
+            )
+        })
+        .collect()
+}
+
+/// `FFmpegFD._call_downloader` arguments, without the executable.
+fn arguments(
+    network: &Network<'_>,
+    settings: Settings,
+    info: &VideoInfo,
+    temporary: &Path,
+) -> Result<Vec<OsString>> {
+    let mut args: Vec<OsString> = vec!["-y".into()];
+    if settings.quiet {
+        args.extend(["-loglevel".into(), "quiet".into()]);
+    }
+    args.push("-hide_banner".into());
+    let start = info
+        .section_start
+        .filter(|start| start.as_f64() != 0.0)
+        .unwrap_or(PyNumber::Int(0));
+    let end = info.section_end.filter(|end| end.as_f64() != 0.0);
+    let single = [info.clone()];
+    let formats: Vec<VideoInfo> = if info.requested_formats.is_empty() {
+        single.to_vec()
+    } else {
+        info.requested_formats
+            .iter()
+            .map(|format| info.with_selected_format(format))
+            .collect()
+    };
+    let mut protocol = String::new();
+    for format in &formats {
+        protocol = format.protocol.clone().unwrap_or_default();
+        if protocol == "http_dash_segments" {
+            return Err(Error::UnsupportedManifest(
+                "partial DASH downloads are not supported natively".into(),
+            ));
+        }
+        if matches!(format.url.scheme(), "http" | "https") {
+            let headers = header_lines(network, format, &format.url);
+            if !headers.is_empty() {
+                args.extend(["-headers".into(), headers.into()]);
+            }
+        }
+        if start.as_f64() != 0.0 {
+            args.extend(["-ss".into(), py_str(start).into()]);
+        }
+        if let Some(end) = end {
+            args.extend(["-t".into(), py_str(difference(end, start)).into()]);
+        }
+        args.extend(["-i".into(), format.url.as_str().into()]);
+    }
+    args.extend(["-c".into(), "copy".into()]);
+    if !info.requested_formats.is_empty() {
+        for index in 0..formats.len() {
+            args.extend(["-map".into(), format!("{index}:0").into()]);
+        }
+    }
+    let format = if protocol.starts_with("m3u8") {
+        if settings.hls_use_mpegts {
+            "mpegts"
+        } else {
+            "mp4"
+        }
+    } else {
+        out_format(&info.ext)
+    };
+    args.extend(["-f".into(), format.into()]);
+    // `_ffmpeg_filename_argument`.
+    let mut output = OsString::from("file:");
+    output.push(temporary);
+    args.push(output);
+    Ok(args)
+}
+
+/// `ExternalFD.real_download` with `FFmpegFD`: run FFmpeg into the
+/// temporary name, then publish it and report one finished status.
+pub(crate) fn download(
+    ffmpeg: &Path,
+    network: &Network<'_>,
+    settings: Settings,
+    info: &VideoInfo,
+    destination: &Path,
+    options: &DownloadOptions,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    if destination.exists() {
+        return Err(Error::OutputExists(destination.into()));
+    }
+    let parent = destination
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or(Path::new("."));
+    std::fs::create_dir_all(parent)?;
+    let mut private = None;
+    let temporary: PathBuf = match options.part_files {
+        PartFiles::NoPart => destination.to_owned(),
+        PartFiles::Part { .. } => {
+            let mut name = destination.as_os_str().to_owned();
+            name.push(".part");
+            name.into()
+        }
+        PartFiles::Private => {
+            let file = tempfile::Builder::new()
+                .prefix(".yt-dlp-rs-")
+                .suffix(".part")
+                .tempfile_in(parent)?;
+            let path = file.path().to_owned();
+            private = Some(file);
+            path
+        }
+    };
+    let args = arguments(network, settings, info, &temporary)?;
+    let progress = |phase, downloaded_bytes| DownloadProgress {
+        attempt: 1,
+        phase,
+        downloaded_bytes,
+        total_bytes: None,
+        stream_index: None,
+        stream_count: None,
+        fragment_index: None,
+        fragment_count: None,
+    };
+    if callback(progress(DownloadPhase::Downloading, 0)).is_break() {
+        return Err(Error::DownloadCancelled);
+    }
+    let mut command = Command::new(ffmpeg);
+    command.args(&args).stdin(Stdio::piped());
+    if let Some(proxy) = network.proxy.filter(|proxy| !proxy.is_empty()) {
+        let proxy = if proxy.contains("://") {
+            proxy.to_owned()
+        } else {
+            format!("http://{proxy}")
+        };
+        command.env("HTTP_PROXY", &proxy).env("http_proxy", &proxy);
+    }
+    let mut child = command.spawn()?;
+    // Upstream keeps FFmpeg's stdin open (a pipe) so it never reads the terminal.
+    let _stdin = child.stdin.take();
+    let status = loop {
+        if let Some(status) = child.try_wait()? {
+            break status;
+        }
+        if callback(progress(DownloadPhase::Downloading, 0)).is_break() {
+            let _ = child.kill();
+            let _ = child.wait();
+            let _ = std::fs::remove_file(&temporary);
+            return Err(Error::DownloadCancelled);
+        }
+        std::thread::sleep(Duration::from_millis(50));
+    };
+    if !status.success() {
+        if private.is_some() {
+            let _ = std::fs::remove_file(&temporary);
+        }
+        eprintln!("\n");
+        return Err(Error::Reported(format!(
+            "ffmpeg exited with code {}",
+            status.code().unwrap_or(-1)
+        )));
+    }
+    let size = std::fs::metadata(&temporary)?.len();
+    match private {
+        Some(file) => {
+            file.persist_noclobber(destination).map_err(|error| {
+                if error.error.kind() == std::io::ErrorKind::AlreadyExists {
+                    Error::OutputExists(destination.into())
+                } else {
+                    Error::Io(error.error)
+                }
+            })?;
+        }
+        None if temporary != destination => std::fs::rename(&temporary, destination)?,
+        None => {}
+    }
+    if callback(progress(DownloadPhase::Completed, size)).is_break() {
+        return Err(Error::DownloadCancelled);
+    }
+    Ok(size)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn arguments_follow_ffmpeg_fd() {
+        let mut info: VideoInfo = serde_json::from_value(json!({"id":"v","title":"V",
+            "url":"https://example.test/v.mp4","webpage_url":"https://example.test/page",
+            "ext":"mp4","extractor":"html5","extractor_key":"HTML5MediaEmbed","protocol":"https"}))
+        .unwrap();
+        info.section_start = Some(PyNumber::Int(2));
+        info.section_end = Some(PyNumber::Float(4.5));
+        let headers = HeaderMap::new();
+        let cookies = CookieJar::default();
+        let network = Network {
+            headers: &headers,
+            cookies: &cookies,
+            proxy: None,
+        };
+        let args = arguments(
+            &network,
+            Settings::default(),
+            &info,
+            Path::new("o.mp4.part"),
+        )
+        .unwrap();
+        let args: Vec<_> = args
+            .iter()
+            .map(|arg| arg.to_string_lossy().into_owned())
+            .collect();
+        assert_eq!(
+            args,
+            [
+                "-y",
+                "-hide_banner",
+                "-headers",
+                concat!(
+                    "user-agent: yt-dlp-rs/",
+                    env!("CARGO_PKG_VERSION"),
+                    "\r\nreferer: https://example.test/page\r\n"
+                ),
+                "-ss",
+                "2",
+                "-t",
+                "2.5",
+                "-i",
+                "https://example.test/v.mp4",
+                "-c",
+                "copy",
+                "-f",
+                "mp4",
+                "file:o.mp4.part"
+            ]
+        );
+        info.ext = "m4a".into();
+        info.section_start = None;
+        let args = arguments(
+            &network,
+            Settings {
+                quiet: true,
+                ..Default::default()
+            },
+            &info,
+            Path::new("o"),
+        )
+        .unwrap();
+        let args: Vec<_> = args
+            .iter()
+            .map(|arg| arg.to_string_lossy().into_owned())
+            .collect();
+        assert_eq!(&args[..4], ["-y", "-loglevel", "quiet", "-hide_banner"]);
+        assert!(args.windows(2).any(|pair| pair == ["-t", "4.5"]));
+        assert!(!args.contains(&"-ss".to_owned()));
+        assert!(args.windows(2).any(|pair| pair == ["-f", "ipod"]));
+    }
+}

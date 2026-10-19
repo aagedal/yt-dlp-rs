@@ -16,6 +16,9 @@ use std::{
 pub enum DownloadPhase {
     Requesting,
     Downloading,
+    /// An external downloader finished with `downloaded_bytes` on disk
+    /// (upstream's single `finished` progress hook).
+    Completed,
     WaitingToRetry,
     Publishing,
     Merging,

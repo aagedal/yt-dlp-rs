@@ -14,6 +14,7 @@ mod embed_metadata;
 mod embed_subtitles;
 mod error;
 pub mod extractor;
+mod ffmpeg_fd;
 mod filetime;
 mod fixup;
 pub mod format_sort;
@@ -30,6 +31,7 @@ mod playlist;
 mod postprocess;
 mod retry;
 pub mod screen;
+pub mod sections;
 mod selector;
 mod subtitle_convert;
 mod subtitles;
@@ -96,6 +98,10 @@ pub struct YoutubeDl {
     merge_output_format: Option<Vec<String>>,
     format_sort: FormatSortOptions,
     prefer_best: bool,
+    /// Global request headers and proxy for FFmpeg network inputs.
+    headers: reqwest::header::HeaderMap,
+    proxy: Option<String>,
+    ffmpeg_settings: ffmpeg_fd::Settings,
 }
 
 /// Upstream `-S`/`--format-sort`, `--format-sort-force` and
@@ -122,6 +128,7 @@ impl YoutubeDl {
     /// Per-request extractor and transport headers override these defaults.
     pub fn with_options(youtube: YoutubeOptions, http: HttpOptions) -> Result<Self> {
         let headers = http.header_map()?;
+        let proxy_url = http.proxy.clone();
         let proxy = http.transport_config()?;
         let cookies = http.cookies.unwrap_or_default();
         let builder = Client::builder()
@@ -138,6 +145,9 @@ impl YoutubeDl {
             merge_output_format: None,
             format_sort: FormatSortOptions::default(),
             prefer_best: false,
+            headers: headers.clone(),
+            proxy: proxy_url,
+            ffmpeg_settings: ffmpeg_fd::Settings::default(),
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -229,6 +239,18 @@ impl YoutubeDl {
 
     /// Upstream's `prefer_best` default (`best/bestvideo+bestaudio`, no
     /// ffmpeg warning), used for `-o -` output.
+    /// Upstream `quiet` for FFmpeg downloads (`-loglevel quiet`).
+    pub fn with_external_quiet(mut self, quiet: bool) -> Self {
+        self.ffmpeg_settings.quiet = quiet;
+        self
+    }
+
+    /// `--hls-use-mpegts` for FFmpeg HLS downloads.
+    pub fn with_hls_use_mpegts(mut self, mpegts: bool) -> Self {
+        self.ffmpeg_settings.hls_use_mpegts = mpegts;
+        self
+    }
+
     pub fn with_prefer_best_format(mut self, prefer_best: bool) -> Self {
         self.prefer_best = prefer_best;
         self
@@ -517,6 +539,30 @@ impl YoutubeDl {
         options: DownloadOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
+        // Upstream `get_suitable_downloader`: partial downloads use FFmpegFD,
+        // which also merges selected formats directly.
+        if sections::is_partial(info) {
+            let ffmpeg = self.ffmpeg.as_deref().ok_or_else(|| {
+                Error::Reported(
+                    "You have requested downloading the video partially, but ffmpeg is not installed. Aborting"
+                        .into(),
+                )
+            })?;
+            let network = ffmpeg_fd::Network {
+                headers: &self.headers,
+                cookies: &self.cookies,
+                proxy: self.proxy.as_deref(),
+            };
+            return ffmpeg_fd::download(
+                ffmpeg,
+                &network,
+                self.ffmpeg_settings,
+                info,
+                destination.as_ref(),
+                &options,
+                &mut callback,
+            );
+        }
         if !info.requested_formats.is_empty() {
             return self.download_merged(info, destination.as_ref(), options, &mut callback);
         }

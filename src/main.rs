@@ -414,6 +414,11 @@ struct Args {
     /// Do not use the mpegts container for HLS videos (default)
     #[arg(long, overrides_with = "hls_use_mpegts")]
     no_hls_use_mpegts: bool,
+    /// Download only the given time ranges ("*START-END", negative values
+    /// count from the end) through ffmpeg; may be repeated. Chapter regexes
+    /// are accepted but never match (chapters are not extracted)
+    #[arg(long, value_name = "REGEX", allow_hyphen_values = true)]
+    download_sections: Vec<String>,
     /// Containers that may be used when merging formats, separated by "/",
     /// e.g. "mp4/mkv"; ignored if no merge is required (currently supported:
     /// avi, flv, mkv, mov, mp4, webm)
@@ -1367,6 +1372,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     } else {
         None
     };
+    // Upstream `parse_chapters('--download-sections', ..., advanced=True)`.
+    let download_sections =
+        yt_dlp_rs::sections::DownloadSections::parse(&args.download_sections).map_err(usage)?;
     // Upstream `validate_positive` for the autonumber options.
     if args.autonumber_start < 0 {
         return Err(usage(format!(
@@ -1390,7 +1398,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let templates = OutputTemplates::parse(&args.output, args.restrict_filenames);
     LOG_TO_STDERR.store(templates.get(None) == "-", Ordering::Relaxed);
-    let downloader = downloader.with_prefer_best_format(templates.get(None) == "-");
+    let downloader = downloader
+        .with_prefer_best_format(templates.get(None) == "-")
+        .with_external_quiet(QUIET.load(Ordering::Relaxed))
+        .with_hls_use_mpegts(args.hls_use_mpegts);
     let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
@@ -1854,348 +1865,715 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         .collect::<Vec<_>>()
                         .join("+")
                 };
+                // Upstream `download_ranges`: every requested section is
+                // processed as its own info dict (none when no chapter matches).
+                let requested = download_sections.requested(&info);
+                if requested.is_empty() {
+                    return Ok(());
+                }
                 screen!("[info] {}: Downloading 1 format(s): {format_ids}", info.id);
-                // Upstream `process_info` rechecks complete metadata before counting.
-                if !match_filters.is_empty() {
-                    match match_filters.check(&info, false)? {
-                        MatchOutcome::Pass => {}
-                        MatchOutcome::Reject(reason) => {
-                            screen!("[download] {reason}");
-                            return Ok(());
+                if requested != [None] {
+                    screen!(
+                        "[info] {}: Downloading {} time ranges: {}",
+                        info.id,
+                        requested.len(),
+                        yt_dlp_rs::sections::describe(&requested)
+                    );
+                }
+                let base = info.clone();
+                for section in &requested {
+                    let info = yt_dlp_rs::sections::apply(&base, section.as_ref());
+                    (|| -> Result<(), Box<dyn std::error::Error>> {
+                        // Upstream `process_info` rechecks complete metadata before counting.
+                        if !match_filters.is_empty() {
+                            match match_filters.check(&info, false)? {
+                                MatchOutcome::Pass => {}
+                                MatchOutcome::Reject(reason) => {
+                                    screen!("[download] {reason}");
+                                    return Ok(());
+                                }
+                                MatchOutcome::Break(reason) => {
+                                    screen!("[download] {reason}");
+                                    entry_cancel = Some(Cancel::Rejected);
+                                    return Ok(());
+                                }
+                            }
                         }
-                        MatchOutcome::Break(reason) => {
-                            screen!("[download] {reason}");
-                            entry_cancel = Some(Cancel::Rejected);
-                            return Ok(());
+                        // Upstream `process_info` counts every processed video.
+                        counted = true;
+                        template_options.autonumber.set(Some(
+                            (args.autonumber_start - 1 + processed + 1).max(0) as u64,
+                        ));
+                        if let Err(error) =
+                            run_exec(&exec, Stage::Video, &info, None, None, &template_options)
+                        {
+                            defer(error);
                         }
-                    }
-                }
-                // Upstream `process_info` counts every processed video.
-                counted = true;
-                template_options.autonumber.set(Some(
-                    (args.autonumber_start - 1 + processed + 1).max(0) as u64,
-                ));
-                if let Err(error) =
-                    run_exec(&exec, Stage::Video, &info, None, None, &template_options)
-                {
-                    defer(error);
-                }
-                // `_forceprint`: `filename` is the prepared media filename.
-                let print_filename = prepare_media(&templates, &info, &template_options)
-                    .map(|path| path.to_string_lossy().into_owned());
-                let stage_print = |stage: Stage, paths: StagePaths<'_>| {
-                    render_stage(
-                        stage,
-                        &print_templates,
-                        &print_files,
-                        &info,
-                        print_filename.as_deref(),
-                        paths,
-                        &template_options,
-                    )
-                };
-                stage_print(
-                    Stage::Video,
-                    StagePaths {
-                        filepath: None,
-                        prepared: print_filename.as_deref().ok(),
-                    },
-                )?
-                .emit()?;
-                // Upstream `forcejson`: `--dump-json` or `--print-json`.
-                if args.dump_json || args.print_json {
-                    serde_json::to_writer(&mut stdout, &info)?;
-                    writeln!(stdout)?;
-                }
-                // --force-write-archive records simulated or skipped videos.
-                let mut force_record = |info: &yt_dlp_rs::VideoInfo| -> Result<(), String> {
-                    match &mut archive {
-                        Some(archive) if args.force_write_archive => archive
-                            .record(info)
-                            .map_err(|error| format!("archive update failed: {error}")),
-                        _ => Ok(()),
-                    }
-                };
-                if simulate {
-                    force_record(&info)?;
-                } else {
-                    if args.skip_download
-                        && !writes_info_json
-                        && !writes_description
-                        && !writes_thumbnails
-                        && !exec.has(Stage::BeforeDownload)
-                        && !writes_links
-                        && !prints_stage(Stage::BeforeDownload)
-                        && info
-                            .requested_subtitles
-                            .as_ref()
-                            .is_none_or(|subtitles| subtitles.is_empty())
-                    {
-                        force_record(&info)?;
-                        return Ok(());
-                    }
-                    let path = prepare_media(&templates, &info, &template_options)?;
-                    if !template_options.paths.is_empty() && path_is_absolute_template(&templates) {
-                        warning!(
-                            "WARNING: --paths is ignored since an absolute path is given in output template"
-                        );
-                    }
-                    let processing = processors.audio.is_some()
-                        || processors.video.is_some()
-                        || args.embed_subs
-                        || args.embed_metadata
-                        || args.embed_thumbnail;
-                    let existing_media = !args.skip_download && path_exists(&path)?;
-                    if existing_media && overwrites != Some(true) && processing {
-                        // Upstream would rerun postprocessors on the existing file.
-                        return Err(yt_dlp_rs::Error::Postprocess(format!(
+                        // `_forceprint`: `filename` is the prepared media filename.
+                        let print_filename = prepare_media(&templates, &info, &template_options)
+                            .map(|path| path.to_string_lossy().into_owned());
+                        let stage_print = |stage: Stage, paths: StagePaths<'_>| {
+                            render_stage(
+                                stage,
+                                &print_templates,
+                                &print_files,
+                                &info,
+                                print_filename.as_deref(),
+                                paths,
+                                &template_options,
+                            )
+                        };
+                        stage_print(
+                            Stage::Video,
+                            StagePaths {
+                                filepath: None,
+                                prepared: print_filename.as_deref().ok(),
+                            },
+                        )?
+                        .emit()?;
+                        // Upstream `forcejson`: `--dump-json` or `--print-json`.
+                        if args.dump_json || args.print_json {
+                            serde_json::to_writer(&mut stdout, &info)?;
+                            writeln!(stdout)?;
+                        }
+                        // --force-write-archive records simulated or skipped videos.
+                        let mut force_record = |info: &yt_dlp_rs::VideoInfo| -> Result<(), String> {
+                            match &mut archive {
+                                Some(archive) if args.force_write_archive => archive
+                                    .record(info)
+                                    .map_err(|error| format!("archive update failed: {error}")),
+                                _ => Ok(()),
+                            }
+                        };
+                        if simulate {
+                            force_record(&info)?;
+                        } else {
+                            if args.skip_download
+                                && !writes_info_json
+                                && !writes_description
+                                && !writes_thumbnails
+                                && !exec.has(Stage::BeforeDownload)
+                                && !writes_links
+                                && !prints_stage(Stage::BeforeDownload)
+                                && info
+                                    .requested_subtitles
+                                    .as_ref()
+                                    .is_none_or(|subtitles| subtitles.is_empty())
+                            {
+                                force_record(&info)?;
+                                return Ok(());
+                            }
+                            let path = prepare_media(&templates, &info, &template_options)?;
+                            if !template_options.paths.is_empty()
+                                && path_is_absolute_template(&templates)
+                            {
+                                warning!(
+                                    "WARNING: --paths is ignored since an absolute path is given in output template"
+                                );
+                            }
+                            let processing = processors.audio.is_some()
+                                || processors.video.is_some()
+                                || args.embed_subs
+                                || args.embed_metadata
+                                || args.embed_thumbnail;
+                            let existing_media = !args.skip_download && path_exists(&path)?;
+                            if existing_media && overwrites != Some(true) && processing {
+                                // Upstream would rerun postprocessors on the existing file.
+                                return Err(yt_dlp_rs::Error::Postprocess(format!(
                             "{} already exists; postprocessing an existing download is unsupported (use --force-overwrites)",
                             path.display()
                         ))
                         .into());
-                    }
-                    // Upstream writes the description before subtitles and info JSON.
-                    if writes_description
-                        && let Some(path) =
-                            templates.prepare(&info, Some("description"), &template_options)?
-                    {
-                        write_description(&path, &info, overwrites)?;
-                    }
-                    // Plan source, intermediate and final names before subtitle I/O.
-                    let has_subtitles = info
-                        .requested_subtitles
-                        .as_ref()
-                        .is_some_and(|subtitles| !subtitles.is_empty());
-                    let sidecars =
-                        match templates.prepare(&info, Some("subtitle"), &template_options)? {
-                            Some(base) => subtitle_paths(&info, &base)?,
-                            None => {
-                                if has_subtitles {
-                                    screen!("[info] Skipping writing video subtitles");
-                                }
-                                Vec::new()
                             }
-                        };
-                    let mut seen = std::collections::HashSet::new();
-                    let info_json = if writes_info_json {
-                        templates.prepare(&info, Some("infojson"), &template_options)?
-                    } else {
-                        None
-                    };
-                    if let Some(info_json) = &info_json {
-                        seen.insert(info_json.as_os_str().to_ascii_lowercase());
-                        if paths_alias(info_json, &path)? {
-                            return Err(yt_dlp_rs::Error::InfoJson(
-                                "info JSON path collides with media output".into(),
-                            )
-                            .into());
-                        }
-                        reject_reserved(info_json, [&archive_path, &args.cookies])?;
-                    }
-                    for (_, subtitle, source) in &sidecars {
-                        let mut paths = vec![source.clone()];
-                        if let Some(conversion) = &subtitle_conversion {
-                            let target = conversion.output_path(source, &subtitle.ext)?;
-                            if target != *source {
-                                paths.push(target);
-                            }
-                            if let Some(intermediate) =
-                                conversion.intermediate_path(source, &subtitle.ext)
+                            // Upstream writes the description before subtitles and info JSON.
+                            if writes_description
+                                && let Some(path) = templates.prepare(
+                                    &info,
+                                    Some("description"),
+                                    &template_options,
+                                )?
                             {
-                                paths.push(intermediate);
+                                write_description(&path, &info, overwrites)?;
                             }
-                        }
-                        for (index, sidecar) in paths.iter().enumerate() {
-                            if !seen.insert(sidecar.as_os_str().to_ascii_lowercase()) {
-                                return Err(yt_dlp_rs::Error::Subtitle(
-                                    "subtitle conversion or info JSON filenames collide".into(),
-                                )
-                                .into());
-                            }
-                            for reserved in [&archive_path, &args.cookies].into_iter().flatten() {
-                                if paths_alias(sidecar, reserved)? {
-                                    return Err(yt_dlp_rs::Error::Subtitle("subtitle path collides with cookie file or download archive".into()).into());
+                            // Plan source, intermediate and final names before subtitle I/O.
+                            let has_subtitles = info
+                                .requested_subtitles
+                                .as_ref()
+                                .is_some_and(|subtitles| !subtitles.is_empty());
+                            let sidecars = match templates.prepare(
+                                &info,
+                                Some("subtitle"),
+                                &template_options,
+                            )? {
+                                Some(base) => subtitle_paths(&info, &base)?,
+                                None => {
+                                    if has_subtitles {
+                                        screen!("[info] Skipping writing video subtitles");
+                                    }
+                                    Vec::new()
                                 }
+                            };
+                            let mut seen = std::collections::HashSet::new();
+                            let info_json = if writes_info_json {
+                                templates.prepare(&info, Some("infojson"), &template_options)?
+                            } else {
+                                None
+                            };
+                            if let Some(info_json) = &info_json {
+                                seen.insert(info_json.as_os_str().to_ascii_lowercase());
+                                if paths_alias(info_json, &path)? {
+                                    return Err(yt_dlp_rs::Error::InfoJson(
+                                        "info JSON path collides with media output".into(),
+                                    )
+                                    .into());
+                                }
+                                reject_reserved(info_json, [&archive_path, &args.cookies])?;
                             }
-                            if index != 0 {
-                                match std::fs::symlink_metadata(sidecar) {
-                                    Ok(_) => {
-                                        return Err(yt_dlp_rs::Error::OutputExists(
-                                            sidecar.clone(),
+                            for (_, subtitle, source) in &sidecars {
+                                let mut paths = vec![source.clone()];
+                                if let Some(conversion) = &subtitle_conversion {
+                                    let target = conversion.output_path(source, &subtitle.ext)?;
+                                    if target != *source {
+                                        paths.push(target);
+                                    }
+                                    if let Some(intermediate) =
+                                        conversion.intermediate_path(source, &subtitle.ext)
+                                    {
+                                        paths.push(intermediate);
+                                    }
+                                }
+                                for (index, sidecar) in paths.iter().enumerate() {
+                                    if !seen.insert(sidecar.as_os_str().to_ascii_lowercase()) {
+                                        return Err(yt_dlp_rs::Error::Subtitle(
+                                            "subtitle conversion or info JSON filenames collide"
+                                                .into(),
                                         )
                                         .into());
                                     }
-                                    Err(error) if error.kind() == io::ErrorKind::NotFound => {}
-                                    Err(error) => return Err(error.into()),
+                                    for reserved in
+                                        [&archive_path, &args.cookies].into_iter().flatten()
+                                    {
+                                        if paths_alias(sidecar, reserved)? {
+                                            return Err(yt_dlp_rs::Error::Subtitle("subtitle path collides with cookie file or download archive".into()).into());
+                                        }
+                                    }
+                                    if index != 0 {
+                                        match std::fs::symlink_metadata(sidecar) {
+                                            Ok(_) => {
+                                                return Err(yt_dlp_rs::Error::OutputExists(
+                                                    sidecar.clone(),
+                                                )
+                                                .into());
+                                            }
+                                            Err(error)
+                                                if error.kind() == io::ErrorKind::NotFound => {}
+                                            Err(error) => return Err(error.into()),
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
-                    let mut embedding_files = Vec::new();
-                    let planned_sidecars: Vec<_> = sidecars
-                        .iter()
-                        .map(|(_, subtitle, source)| (subtitle.ext.clone(), source.clone()))
-                        .collect();
-                    for (language, subtitle, subtitle_path) in sidecars {
-                        // Related files are overwritten unless --no-overwrites.
-                        if overwrites != Some(false)
-                            && std::fs::symlink_metadata(&subtitle_path).is_ok()
-                            && std::fs::metadata(&subtitle_path)?.is_file()
-                        {
-                            screen!(
-                                "[download] Deleting existing file {}",
-                                subtitle_path.display()
-                            );
-                            std::fs::remove_file(&subtitle_path)?;
-                        }
-                        match std::fs::symlink_metadata(&subtitle_path) {
-                            Ok(_) if std::fs::metadata(&subtitle_path)?.is_file() => {
-                                screen!(
-                                    "[info] Video subtitle {}.{} is already present",
+                            let mut embedding_files = Vec::new();
+                            let planned_sidecars: Vec<_> = sidecars
+                                .iter()
+                                .map(|(_, subtitle, source)| (subtitle.ext.clone(), source.clone()))
+                                .collect();
+                            for (language, subtitle, subtitle_path) in sidecars {
+                                // Related files are overwritten unless --no-overwrites.
+                                if overwrites != Some(false)
+                                    && std::fs::symlink_metadata(&subtitle_path).is_ok()
+                                    && std::fs::metadata(&subtitle_path)?.is_file()
+                                {
+                                    screen!(
+                                        "[download] Deleting existing file {}",
+                                        subtitle_path.display()
+                                    );
+                                    std::fs::remove_file(&subtitle_path)?;
+                                }
+                                match std::fs::symlink_metadata(&subtitle_path) {
+                                    Ok(_) if std::fs::metadata(&subtitle_path)?.is_file() => {
+                                        screen!(
+                                            "[info] Video subtitle {}.{} is already present",
+                                            language,
+                                            subtitle.ext
+                                        );
+                                    }
+                                    Ok(_) => {
+                                        return Err(yt_dlp_rs::Error::Subtitle(format!(
+                                            "subtitle destination is not a regular file: {}",
+                                            subtitle_path.display()
+                                        ))
+                                        .into());
+                                    }
+                                    Err(error) if error.kind() == io::ErrorKind::NotFound => {
+                                        screen!(
+                                            "[info] Writing video subtitles to: {}",
+                                            subtitle_path.display()
+                                        );
+                                        sleep.subtitle();
+                                        // Upstream `dl(..., subtitle=True)`: the file
+                                        // downloader announces and reports the sidecar.
+                                        screen!(
+                                            "[download] Destination: {}",
+                                            subtitle_path.display()
+                                        );
+                                        let mut reporter = ProgressReporter::new(&progress_options);
+                                        downloader.download_subtitle_with_progress(
+                                            &info,
+                                            &subtitle,
+                                            &subtitle_path,
+                                            DownloadOptions {
+                                                retries,
+                                                update_time: args.mtime,
+                                                ..Default::default()
+                                            },
+                                            |progress| {
+                                                reporter.event(&progress);
+                                                ControlFlow::Continue(())
+                                            },
+                                        )?;
+                                        reporter.finish();
+                                    }
+                                    Err(error) => return Err(error.into()),
+                                }
+                                let mut embedded_file = SubtitleFile {
+                                    path: subtitle_path.clone(),
+                                    ext: subtitle.ext.clone(),
                                     language,
-                                    subtitle.ext
-                                );
+                                    name: subtitle.name.clone(),
+                                };
+                                if let Some(conversion) = &subtitle_conversion {
+                                    let converted = downloader.convert_subtitle_with_options(
+                                        &subtitle_path,
+                                        &subtitle.ext,
+                                        conversion,
+                                    )?;
+                                    for warning in converted.warnings {
+                                        warning!("WARNING: {warning}");
+                                    }
+                                    if converted.converted {
+                                        // The source converter replaces the subtitle's
+                                        // metadata entry and drops its original name.
+                                        embedded_file.name = None;
+                                        screen!(
+                                            "[SubtitlesConvertor] Destination: {}",
+                                            converted.path.display()
+                                        );
+                                    }
+                                    embedded_file.path = converted.path;
+                                    embedded_file.ext = converted.ext;
+                                }
+                                embedding_files.push(embedded_file);
                             }
-                            Ok(_) => {
-                                return Err(yt_dlp_rs::Error::Subtitle(format!(
-                                    "subtitle destination is not a regular file: {}",
-                                    subtitle_path.display()
-                                ))
-                                .into());
-                            }
-                            Err(error) if error.kind() == io::ErrorKind::NotFound => {
-                                screen!(
-                                    "[info] Writing video subtitles to: {}",
-                                    subtitle_path.display()
-                                );
-                                sleep.subtitle();
-                                // Upstream `dl(..., subtitle=True)`: the file
-                                // downloader announces and reports the sidecar.
-                                screen!("[download] Destination: {}", subtitle_path.display());
-                                let mut reporter = ProgressReporter::new(&progress_options);
-                                downloader.download_subtitle_with_progress(
+                            // Upstream writes thumbnails after subtitles and before info JSON.
+                            let mut thumbnail_files = Vec::new();
+                            if writes_thumbnails {
+                                thumbnail_files = write_thumbnails(
+                                    &downloader,
                                     &info,
-                                    &subtitle,
-                                    &subtitle_path,
-                                    DownloadOptions {
-                                        retries,
-                                        update_time: args.mtime,
-                                        ..Default::default()
-                                    },
-                                    |progress| {
-                                        reporter.event(&progress);
-                                        ControlFlow::Continue(())
-                                    },
+                                    templates.prepare(
+                                        &info,
+                                        Some("thumbnail"),
+                                        &template_options,
+                                    )?,
+                                    thumbnail_mode == 2,
+                                    overwrites,
+                                    retries,
                                 )?;
-                                reporter.finish();
                             }
-                            Err(error) => return Err(error.into()),
-                        }
-                        let mut embedded_file = SubtitleFile {
-                            path: subtitle_path.clone(),
-                            ext: subtitle.ext.clone(),
-                            language,
-                            name: subtitle.name.clone(),
-                        };
-                        if let Some(conversion) = &subtitle_conversion {
-                            let converted = downloader.convert_subtitle_with_options(
-                                &subtitle_path,
-                                &subtitle.ext,
-                                conversion,
+                            if let Some(conversion) = &thumbnail_conversion {
+                                convert_thumbnails(
+                                    &downloader,
+                                    &mut thumbnail_files,
+                                    conversion,
+                                    args.keep_video,
+                                )?;
+                            }
+                            // Upstream writes info JSON after subtitles and before media.
+                            if let Some(info_json) = &info_json {
+                                let value = video_info_json(&info, epoch())?;
+                                let written = write_info_json_with(
+                                    info_json,
+                                    &value,
+                                    overwrites != Some(false),
+                                )?;
+                                report_info_json("video", info_json, written);
+                            }
+                            // Upstream writes internet shortcuts after info JSON.
+                            if writes_links {
+                                write_links(
+                                    &link_kinds,
+                                    &info,
+                                    &templates,
+                                    &template_options,
+                                    overwrites,
+                                )?;
+                            }
+                            let prepared = path.to_string_lossy().into_owned();
+                            stage_print(Stage::BeforeDownload, stage_paths(None, &prepared))?
+                                .emit()?;
+                            if let Err(error) = run_exec(
+                                &exec,
+                                Stage::BeforeDownload,
+                                &info,
+                                None,
+                                Some(&path),
+                                &template_options,
+                            ) {
+                                defer(error);
+                            }
+                            // Upstream prints `post_process` before merging/processing
+                            // and `after_move` with the absolute moved path.
+                            let post_print = stage_print(
+                                Stage::PostProcess,
+                                stage_paths(Some(&prepared), &prepared),
                             )?;
-                            for warning in converted.warnings {
-                                warning!("WARNING: {warning}");
-                            }
-                            if converted.converted {
-                                // The source converter replaces the subtitle's
-                                // metadata entry and drops its original name.
-                                embedded_file.name = None;
-                                screen!(
-                                    "[SubtitlesConvertor] Destination: {}",
-                                    converted.path.display()
-                                );
-                            }
-                            embedded_file.path = converted.path;
-                            embedded_file.ext = converted.ext;
-                        }
-                        embedding_files.push(embedded_file);
-                    }
-                    // Upstream writes thumbnails after subtitles and before info JSON.
-                    let mut thumbnail_files = Vec::new();
-                    if writes_thumbnails {
-                        thumbnail_files = write_thumbnails(
-                            &downloader,
-                            &info,
-                            templates.prepare(&info, Some("thumbnail"), &template_options)?,
-                            thumbnail_mode == 2,
-                            overwrites,
-                            retries,
-                        )?;
-                    }
-                    if let Some(conversion) = &thumbnail_conversion {
-                        convert_thumbnails(
-                            &downloader,
-                            &mut thumbnail_files,
-                            conversion,
-                            args.keep_video,
-                        )?;
-                    }
-                    // Upstream writes info JSON after subtitles and before media.
-                    if let Some(info_json) = &info_json {
-                        let value = video_info_json(&info, epoch())?;
-                        let written =
-                            write_info_json_with(info_json, &value, overwrites != Some(false))?;
-                        report_info_json("video", info_json, written);
-                    }
-                    // Upstream writes internet shortcuts after info JSON.
-                    if writes_links {
-                        write_links(
-                            &link_kinds,
-                            &info,
-                            &templates,
-                            &template_options,
-                            overwrites,
-                        )?;
-                    }
-                    let prepared = path.to_string_lossy().into_owned();
-                    stage_print(Stage::BeforeDownload, stage_paths(None, &prepared))?.emit()?;
-                    if let Err(error) = run_exec(
-                        &exec,
-                        Stage::BeforeDownload,
-                        &info,
-                        None,
-                        Some(&path),
-                        &template_options,
-                    ) {
-                        defer(error);
-                    }
-                    // Upstream prints `post_process` before merging/processing
-                    // and `after_move` with the absolute moved path.
-                    let post_print =
-                        stage_print(Stage::PostProcess, stage_paths(Some(&prepared), &prepared))?;
-                    let move_print = |filepath: &std::path::Path| -> Result<(), String> {
-                        let filepath = py_abspath(filepath).to_string_lossy().into_owned();
-                        stage_print(Stage::AfterMove, stage_paths(Some(&filepath), &prepared))
-                            .map_err(|error| error.to_string())?
-                            .emit()
-                            .map_err(|error| error.to_string())
-                    };
+                            let move_print = |filepath: &std::path::Path| -> Result<(), String> {
+                                let filepath = py_abspath(filepath).to_string_lossy().into_owned();
+                                stage_print(
+                                    Stage::AfterMove,
+                                    stage_paths(Some(&filepath), &prepared),
+                                )
+                                .map_err(|error| error.to_string())?
+                                .emit()
+                                .map_err(|error| error.to_string())
+                            };
 
-                    if args.skip_download {
-                        force_record(&info)?;
-                        return Ok(());
-                    }
-                    if existing_media {
-                        if overwrites == Some(true) {
-                            screen!("[download] Deleting existing file {}", path.display());
-                            std::fs::remove_file(&path)?;
-                        } else {
-                            screen!("[download] {} has already been downloaded", path.display());
-                            post_print.emit()?;
+                            if args.skip_download {
+                                force_record(&info)?;
+                                return Ok(());
+                            }
+                            if existing_media {
+                                if overwrites == Some(true) {
+                                    screen!("[download] Deleting existing file {}", path.display());
+                                    std::fs::remove_file(&path)?;
+                                } else {
+                                    screen!(
+                                        "[download] {} has already been downloaded",
+                                        path.display()
+                                    );
+                                    post_print.emit()?;
+                                    if !after_download(
+                                        &exec,
+                                        &info,
+                                        &path,
+                                        &path,
+                                        &template_options,
+                                        error_mode,
+                                        &pending_error,
+                                        &postprocess_failed,
+                                        &move_print,
+                                    ) {
+                                        return Ok(());
+                                    }
+                                    if let Some(archive) = &mut archive {
+                                        archive.record(&info).map_err(|error| {
+                                            format!("archive update failed: {error}")
+                                        })?;
+                                    }
+                                    return Ok(());
+                                }
+                            }
+                            // Upstream `_catch_unsafe_extension_error` around the
+                            // download's `replace_extension` calls.
+                            if let Some(ext) = std::iter::once(&info.ext)
+                                .chain(info.requested_formats.iter().map(|format| &format.ext))
+                                .find(|ext| !yt_dlp_rs::output::allowed_extension(ext))
+                            {
+                                return Err(format!(
+                            "The extracted extension ({}) is unusual and will be skipped for safety reasons. If you believe this is an error, please report it",
+                            yt_dlp_rs::batch::py_repr(ext)
+                        )
+                        .into());
+                            }
+                            let partial = yt_dlp_rs::sections::is_partial(&info);
+                            // Upstream `process_info`: a partial download needs FFmpegFD.
+                            if partial && !downloader.has_ffmpeg() {
+                                return Err(yt_dlp_rs::Error::Reported(
+                            "You have requested downloading the video partially, but ffmpeg is not installed. Aborting"
+                                .into(),
+                        )
+                        .into());
+                            }
+                            if !partial
+                                && !info.requested_formats.is_empty()
+                                && !downloader.has_ffmpeg()
+                            {
+                                let message = "You have requested merging of multiple formats but ffmpeg is not installed";
+                                if error_mode == ErrorMode::Abort {
+                                    return Err(format!(
+                                        "{message}. Aborting due to --abort-on-error"
+                                    )
+                                    .into());
+                                }
+                                warning!("WARNING: {message}. The formats won't be merged");
+                            }
+                            if !partial
+                                && info.requested_formats.is_empty()
+                                && !info.fragments.is_empty()
+                            {
+                                // Upstream `_prepare_frag_download`; plans are snapshots, so
+                                // HlsFD's manifest download line has no counterpart.
+                                let downloader = match info.protocol.as_deref() {
+                                    Some("http_dash_segments") => "dashsegments",
+                                    _ => "hlsnative",
+                                };
+                                screen!("[{downloader}] Total fragments: {}", info.fragments.len());
+                            }
+                            // Unprocessed merges announce each format's file instead
+                            // (`processing` mirrors the per-video processors below).
+                            // FFmpegFD merges a partial download's formats into one file.
+                            if info.requested_formats.is_empty() || processing || partial {
+                                screen!("[download] Destination: {}", path.display());
+                            }
+                            // Upstream sleeps before each stream's FileDownloader.download.
+                            for _ in 0..info.requested_formats.len().max(1) {
+                                sleep.media();
+                            }
+                            let post_printed = std::cell::Cell::new(false);
+                            let mut reporter = ProgressReporter::new(&progress_options);
+                            let mut progress = |progress: yt_dlp_rs::DownloadProgress| {
+                                reporter.event(&progress);
+                                if matches!(
+                                    progress.phase,
+                                    DownloadPhase::Merging | DownloadPhase::Postprocessing
+                                ) && !post_printed.replace(true)
+                                    && post_print.emit().is_err()
+                                {
+                                    return ControlFlow::Break(());
+                                }
+                                ControlFlow::Continue(())
+                            };
+                            let mut processors = processors.clone();
+                            // Upstream embeds the best thumbnail on disk.
+                            let mut embedded_thumbnail = None;
+                            if args.embed_thumbnail {
+                                if info.metadata.thumbnails.is_empty() {
+                                    screen!(
+                                        "[EmbedThumbnail] There aren't any thumbnails to embed"
+                                    );
+                                } else if let Some((_, path)) = thumbnail_files.last() {
+                                    let path = yt_dlp_rs::fixup_webp(path)?;
+                                    processors.thumbnail = Some(path.clone());
+                                    embedded_thumbnail = Some(path);
+                                } else {
+                                    screen!("[EmbedThumbnail] There are no thumbnails on disk");
+                                }
+                            }
+                            if args.embed_subs {
+                                processors.embed = Some(SubtitleEmbedding {
+                                    subtitles: embedding_files,
+                                    keep_subtitles: args.write_subs || args.keep_video,
+                                });
+                            }
+                            let processing = processors.audio.is_some()
+                                || processors.video.is_some()
+                                || processors.embed.is_some()
+                                || processors.metadata
+                                || processors.thumbnail.is_some();
+                            if path.as_os_str() == "-" {
+                                // Upstream streams to stdout and skips postprocessing,
+                                // fixups, the archive record and after-move hooks.
+                                let streams: Vec<yt_dlp_rs::VideoInfo> = if info
+                                    .requested_formats
+                                    .is_empty()
+                                {
+                                    vec![info.clone()]
+                                } else {
+                                    let reason = if downloader.has_ffmpeg() {
+                                        return Err(
+                                    "merging multiple formats to stdout through ffmpeg is unsupported"
+                                        .into(),
+                                );
+                                    } else {
+                                        "but ffmpeg is not installed"
+                                    };
+                                    warning!(
+                                        "WARNING: You have requested downloading multiple formats to stdout {reason}. The formats will be streamed one after the other"
+                                    );
+                                    info.requested_formats
+                                        .iter()
+                                        .map(|format| info.with_selected_format(format))
+                                        .collect()
+                                };
+                                for stream in &streams {
+                                    // A single result already announced itself above.
+                                    if !info.requested_formats.is_empty() {
+                                        if !stream.fragments.is_empty() {
+                                            let downloader = match stream.protocol.as_deref() {
+                                                Some("http_dash_segments") => "dashsegments",
+                                                _ => "hlsnative",
+                                            };
+                                            screen!(
+                                                "[{downloader}] Total fragments: {}",
+                                                stream.fragments.len()
+                                            );
+                                        }
+                                        screen!("[download] Destination: -");
+                                    }
+                                    let temporary = tempfile::tempdir()?;
+                                    let target = temporary.path().join("media");
+                                    downloader.download_with_progress(
+                                        stream,
+                                        &target,
+                                        DownloadOptions {
+                                            min_filesize,
+                                            max_filesize,
+                                            rate_limit,
+                                            update_time: false,
+                                            part_files: yt_dlp_rs::PartFiles::Private,
+                                            retries,
+                                            fragment_retries,
+                                            retry_sleep,
+                                            skip_unavailable_fragments,
+                                            merge_files: yt_dlp_rs::MergeFiles::Private,
+                                        },
+                                        &mut progress,
+                                    )?;
+                                    let mut media = std::fs::File::open(&target)?;
+                                    let mut out = io::stdout().lock();
+                                    io::copy(&mut media, &mut out)?;
+                                    out.flush()?;
+                                }
+                                return Ok(());
+                            }
+                            let (bytes, published_paths) = if processing {
+                                let result = downloader.download_processed_with_progress(
+                                    &info,
+                                    &path,
+                                    DownloadOptions {
+                                        min_filesize,
+                                        max_filesize,
+                                        rate_limit,
+                                        update_time: args.mtime,
+                                        part_files,
+                                        retries,
+                                        fragment_retries,
+                                        retry_sleep,
+                                        skip_unavailable_fragments,
+                                        merge_files: yt_dlp_rs::MergeFiles::Upstream {
+                                            keep: args.keep_video,
+                                        },
+                                    },
+                                    &processors,
+                                    progress,
+                                )?;
+                                for warning in result.warnings {
+                                    warning!("WARNING: {warning}");
+                                }
+                                // Upstream `run_pp` under --ignore-errors.
+                                for error in result.errors {
+                                    eprintln!("ERROR: {error}");
+                                    postprocess_failed.set(true);
+                                }
+                                if let Some(thumbnail) = &embedded_thumbnail
+                                    && !keeps_thumbnails
+                                    && std::fs::remove_file(thumbnail).is_err()
+                                {
+                                    warning!(
+                                        "WARNING: Unable to delete file {}",
+                                        thumbnail.display()
+                                    );
+                                }
+                                let mut paths = vec![result.path];
+                                paths.extend(result.kept_files);
+                                (result.bytes, paths)
+                            } else {
+                                let bytes = downloader.download_with_progress(
+                                    &info,
+                                    &path,
+                                    DownloadOptions {
+                                        min_filesize,
+                                        max_filesize,
+                                        rate_limit,
+                                        update_time: args.mtime,
+                                        part_files,
+                                        retries,
+                                        fragment_retries,
+                                        retry_sleep,
+                                        skip_unavailable_fragments,
+                                        merge_files: yt_dlp_rs::MergeFiles::Upstream {
+                                            keep: args.keep_video,
+                                        },
+                                    },
+                                    progress,
+                                )?;
+                                // Upstream `fixup()` for an unmerged, unprocessed download.
+                                let policy = args.fixup.as_deref().unwrap_or("detect_or_warn");
+                                // FFmpegFD downloads are never fixed up.
+                                if info.requested_formats.is_empty()
+                                    && !partial
+                                    && !matches!(policy, "never" | "ignore")
+                                {
+                                    let protocol = info.protocol.as_deref().unwrap_or("");
+                                    let m3u8 = protocol.starts_with("m3u8") && !args.hls_use_mpegts;
+                                    let m4a = info.ext == "m4a"
+                                        && info.container.as_deref() == Some("m4a_dash");
+                                    for (needed, message, m3u8_fixup) in [
+                                        (
+                                            m4a,
+                                            "writing DASH m4a. Only some players support this container",
+                                            false,
+                                        ),
+                                        (
+                                            m3u8,
+                                            "Possible MPEG-TS in MP4 container or malformed AAC timestamps",
+                                            true,
+                                        ),
+                                    ] {
+                                        if !needed {
+                                            continue;
+                                        }
+                                        if policy == "warn" {
+                                            warning!("WARNING: {}: {message}", info.id);
+                                        } else if !downloader.has_ffmpeg() {
+                                            warning!(
+                                                "WARNING: {}: {message}. Install ffmpeg to fix this automatically",
+                                                info.id
+                                            );
+                                        } else if m3u8_fixup {
+                                            if matches!(info.ext.as_str(), "mp4" | "m4a") {
+                                                downloader.fixup_m3u8(&path)?;
+                                            }
+                                        } else {
+                                            downloader.fixup_m4a(&path)?;
+                                        }
+                                    }
+                                }
+                                (bytes, vec![path.clone()])
+                            };
+                            let mut published_paths = published_paths;
+                            published_paths.extend(info_json);
+                            for (ext, source) in planned_sidecars {
+                                if let Some(conversion) = &subtitle_conversion {
+                                    published_paths.push(conversion.output_path(&source, &ext)?);
+                                    published_paths
+                                        .extend(conversion.intermediate_path(&source, &ext));
+                                }
+                                published_paths.push(source);
+                            }
+                            if let Some(archive_path) = &archive_path {
+                                for output in &published_paths {
+                                    let identical = std::path::absolute(output)?
+                                        == std::path::absolute(archive_path)?;
+                                    let canonical_alias = std::fs::canonicalize(output)
+                                        .ok()
+                                        .zip(std::fs::canonicalize(archive_path).ok())
+                                        .is_some_and(|(left, right)| left == right);
+                                    if identical || canonical_alias {
+                                        return Err(yt_dlp_rs::Error::Archive(
+                                            "download output collides with archive path".into(),
+                                        )
+                                        .into());
+                                    }
+                                }
+                            }
+                            if !post_printed.get() {
+                                post_print.emit()?;
+                            }
                             if !after_download(
                                 &exec,
                                 &info,
-                                &path,
+                                &published_paths[0],
                                 &path,
                                 &template_options,
                                 error_mode,
@@ -2206,304 +2584,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 return Ok(());
                             }
                             if let Some(archive) = &mut archive {
-                                archive
-                                    .record(&info)
-                                    .map_err(|error| format!("archive update failed: {error}"))?;
+                                archive.record(&info).map_err(|error| {
+                                    format!(
+                                        "download completed, but archive update failed: {error}"
+                                    )
+                                })?;
                             }
-                            return Ok(());
+                            let _ = bytes;
                         }
+                        Ok(())
+                    })()?;
+                    // A break filter or download limit ends the remaining sections.
+                    if entry_cancel.is_some() {
+                        break;
                     }
-                    // Upstream `_catch_unsafe_extension_error` around the
-                    // download's `replace_extension` calls.
-                    if let Some(ext) = std::iter::once(&info.ext)
-                        .chain(info.requested_formats.iter().map(|format| &format.ext))
-                        .find(|ext| !yt_dlp_rs::output::allowed_extension(ext))
-                    {
-                        return Err(format!(
-                            "The extracted extension ({}) is unusual and will be skipped for safety reasons. If you believe this is an error, please report it",
-                            yt_dlp_rs::batch::py_repr(ext)
-                        )
-                        .into());
-                    }
-                    if !info.requested_formats.is_empty() && !downloader.has_ffmpeg() {
-                        let message = "You have requested merging of multiple formats but ffmpeg is not installed";
-                        if error_mode == ErrorMode::Abort {
-                            return Err(
-                                format!("{message}. Aborting due to --abort-on-error").into()
-                            );
-                        }
-                        warning!("WARNING: {message}. The formats won't be merged");
-                    }
-                    if info.requested_formats.is_empty() && !info.fragments.is_empty() {
-                        // Upstream `_prepare_frag_download`; plans are snapshots, so
-                        // HlsFD's manifest download line has no counterpart.
-                        let downloader = match info.protocol.as_deref() {
-                            Some("http_dash_segments") => "dashsegments",
-                            _ => "hlsnative",
-                        };
-                        screen!("[{downloader}] Total fragments: {}", info.fragments.len());
-                    }
-                    // Unprocessed merges announce each format's file instead
-                    // (`processing` mirrors the per-video processors below).
-                    if info.requested_formats.is_empty() || processing {
-                        screen!("[download] Destination: {}", path.display());
-                    }
-                    // Upstream sleeps before each stream's FileDownloader.download.
-                    for _ in 0..info.requested_formats.len().max(1) {
-                        sleep.media();
-                    }
-                    let post_printed = std::cell::Cell::new(false);
-                    let mut reporter = ProgressReporter::new(&progress_options);
-                    let mut progress = |progress: yt_dlp_rs::DownloadProgress| {
-                        reporter.event(&progress);
-                        if matches!(
-                            progress.phase,
-                            DownloadPhase::Merging | DownloadPhase::Postprocessing
-                        ) && !post_printed.replace(true)
-                            && post_print.emit().is_err()
-                        {
-                            return ControlFlow::Break(());
-                        }
-                        ControlFlow::Continue(())
-                    };
-                    let mut processors = processors.clone();
-                    // Upstream embeds the best thumbnail on disk.
-                    let mut embedded_thumbnail = None;
-                    if args.embed_thumbnail {
-                        if info.metadata.thumbnails.is_empty() {
-                            screen!("[EmbedThumbnail] There aren't any thumbnails to embed");
-                        } else if let Some((_, path)) = thumbnail_files.last() {
-                            let path = yt_dlp_rs::fixup_webp(path)?;
-                            processors.thumbnail = Some(path.clone());
-                            embedded_thumbnail = Some(path);
-                        } else {
-                            screen!("[EmbedThumbnail] There are no thumbnails on disk");
-                        }
-                    }
-                    if args.embed_subs {
-                        processors.embed = Some(SubtitleEmbedding {
-                            subtitles: embedding_files,
-                            keep_subtitles: args.write_subs || args.keep_video,
-                        });
-                    }
-                    let processing = processors.audio.is_some()
-                        || processors.video.is_some()
-                        || processors.embed.is_some()
-                        || processors.metadata
-                        || processors.thumbnail.is_some();
-                    if path.as_os_str() == "-" {
-                        // Upstream streams to stdout and skips postprocessing,
-                        // fixups, the archive record and after-move hooks.
-                        let streams: Vec<yt_dlp_rs::VideoInfo> = if info
-                            .requested_formats
-                            .is_empty()
-                        {
-                            vec![info.clone()]
-                        } else {
-                            let reason = if downloader.has_ffmpeg() {
-                                return Err(
-                                    "merging multiple formats to stdout through ffmpeg is unsupported"
-                                        .into(),
-                                );
-                            } else {
-                                "but ffmpeg is not installed"
-                            };
-                            warning!(
-                                "WARNING: You have requested downloading multiple formats to stdout {reason}. The formats will be streamed one after the other"
-                            );
-                            info.requested_formats
-                                .iter()
-                                .map(|format| info.with_selected_format(format))
-                                .collect()
-                        };
-                        for stream in &streams {
-                            // A single result already announced itself above.
-                            if !info.requested_formats.is_empty() {
-                                if !stream.fragments.is_empty() {
-                                    let downloader = match stream.protocol.as_deref() {
-                                        Some("http_dash_segments") => "dashsegments",
-                                        _ => "hlsnative",
-                                    };
-                                    screen!(
-                                        "[{downloader}] Total fragments: {}",
-                                        stream.fragments.len()
-                                    );
-                                }
-                                screen!("[download] Destination: -");
-                            }
-                            let temporary = tempfile::tempdir()?;
-                            let target = temporary.path().join("media");
-                            downloader.download_with_progress(
-                                stream,
-                                &target,
-                                DownloadOptions {
-                                    min_filesize,
-                                    max_filesize,
-                                    rate_limit,
-                                    update_time: false,
-                                    part_files: yt_dlp_rs::PartFiles::Private,
-                                    retries,
-                                    fragment_retries,
-                                    retry_sleep,
-                                    skip_unavailable_fragments,
-                                    merge_files: yt_dlp_rs::MergeFiles::Private,
-                                },
-                                &mut progress,
-                            )?;
-                            let mut media = std::fs::File::open(&target)?;
-                            let mut out = io::stdout().lock();
-                            io::copy(&mut media, &mut out)?;
-                            out.flush()?;
-                        }
-                        return Ok(());
-                    }
-                    let (bytes, published_paths) = if processing {
-                        let result = downloader.download_processed_with_progress(
-                            &info,
-                            &path,
-                            DownloadOptions {
-                                min_filesize,
-                                max_filesize,
-                                rate_limit,
-                                update_time: args.mtime,
-                                part_files,
-                                retries,
-                                fragment_retries,
-                                retry_sleep,
-                                skip_unavailable_fragments,
-                                merge_files: yt_dlp_rs::MergeFiles::Upstream {
-                                    keep: args.keep_video,
-                                },
-                            },
-                            &processors,
-                            progress,
-                        )?;
-                        for warning in result.warnings {
-                            warning!("WARNING: {warning}");
-                        }
-                        // Upstream `run_pp` under --ignore-errors.
-                        for error in result.errors {
-                            eprintln!("ERROR: {error}");
-                            postprocess_failed.set(true);
-                        }
-                        if let Some(thumbnail) = &embedded_thumbnail
-                            && !keeps_thumbnails
-                            && std::fs::remove_file(thumbnail).is_err()
-                        {
-                            warning!("WARNING: Unable to delete file {}", thumbnail.display());
-                        }
-                        let mut paths = vec![result.path];
-                        paths.extend(result.kept_files);
-                        (result.bytes, paths)
-                    } else {
-                        let bytes = downloader.download_with_progress(
-                            &info,
-                            &path,
-                            DownloadOptions {
-                                min_filesize,
-                                max_filesize,
-                                rate_limit,
-                                update_time: args.mtime,
-                                part_files,
-                                retries,
-                                fragment_retries,
-                                retry_sleep,
-                                skip_unavailable_fragments,
-                                merge_files: yt_dlp_rs::MergeFiles::Upstream {
-                                    keep: args.keep_video,
-                                },
-                            },
-                            progress,
-                        )?;
-                        // Upstream `fixup()` for an unmerged, unprocessed download.
-                        let policy = args.fixup.as_deref().unwrap_or("detect_or_warn");
-                        if info.requested_formats.is_empty()
-                            && !matches!(policy, "never" | "ignore")
-                        {
-                            let protocol = info.protocol.as_deref().unwrap_or("");
-                            let m3u8 = protocol.starts_with("m3u8") && !args.hls_use_mpegts;
-                            let m4a =
-                                info.ext == "m4a" && info.container.as_deref() == Some("m4a_dash");
-                            for (needed, message, m3u8_fixup) in [
-                                (
-                                    m4a,
-                                    "writing DASH m4a. Only some players support this container",
-                                    false,
-                                ),
-                                (
-                                    m3u8,
-                                    "Possible MPEG-TS in MP4 container or malformed AAC timestamps",
-                                    true,
-                                ),
-                            ] {
-                                if !needed {
-                                    continue;
-                                }
-                                if policy == "warn" {
-                                    warning!("WARNING: {}: {message}", info.id);
-                                } else if !downloader.has_ffmpeg() {
-                                    warning!(
-                                        "WARNING: {}: {message}. Install ffmpeg to fix this automatically",
-                                        info.id
-                                    );
-                                } else if m3u8_fixup {
-                                    if matches!(info.ext.as_str(), "mp4" | "m4a") {
-                                        downloader.fixup_m3u8(&path)?;
-                                    }
-                                } else {
-                                    downloader.fixup_m4a(&path)?;
-                                }
-                            }
-                        }
-                        (bytes, vec![path.clone()])
-                    };
-                    let mut published_paths = published_paths;
-                    published_paths.extend(info_json);
-                    for (ext, source) in planned_sidecars {
-                        if let Some(conversion) = &subtitle_conversion {
-                            published_paths.push(conversion.output_path(&source, &ext)?);
-                            published_paths.extend(conversion.intermediate_path(&source, &ext));
-                        }
-                        published_paths.push(source);
-                    }
-                    if let Some(archive_path) = &archive_path {
-                        for output in &published_paths {
-                            let identical =
-                                std::path::absolute(output)? == std::path::absolute(archive_path)?;
-                            let canonical_alias = std::fs::canonicalize(output)
-                                .ok()
-                                .zip(std::fs::canonicalize(archive_path).ok())
-                                .is_some_and(|(left, right)| left == right);
-                            if identical || canonical_alias {
-                                return Err(yt_dlp_rs::Error::Archive(
-                                    "download output collides with archive path".into(),
-                                )
-                                .into());
-                            }
-                        }
-                    }
-                    if !post_printed.get() {
-                        post_print.emit()?;
-                    }
-                    if !after_download(
-                        &exec,
-                        &info,
-                        &published_paths[0],
-                        &path,
-                        &template_options,
-                        error_mode,
-                        &pending_error,
-                        &postprocess_failed,
-                        &move_print,
-                    ) {
-                        return Ok(());
-                    }
-                    if let Some(archive) = &mut archive {
-                        archive.record(&info).map_err(|error| {
-                            format!("download completed, but archive update failed: {error}")
-                        })?;
-                    }
-                    let _ = bytes;
                 }
                 Ok(())
             })();
@@ -2529,6 +2623,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     Some(yt_dlp_rs::Error::FileSizeLimit(message)) => {
                         screen!("[download] {message}");
                         true
+                    }
+                    // Upstream `report_error` text without a URL/ID prefix.
+                    Some(yt_dlp_rs::Error::Reported(message)) => {
+                        eprintln!("ERROR: {message}");
+                        failed = true;
+                        false
                     }
                     _ => {
                         eprintln!("ERROR: {url}: {}: {error}", info.id);
@@ -3250,6 +3350,13 @@ impl<'a> ProgressReporter<'a> {
                 return;
             }
             DownloadPhase::Merging | DownloadPhase::Postprocessing | DownloadPhase::Publishing => {
+                return self.finish();
+            }
+            // An external downloader's single `finished` status.
+            DownloadPhase::Completed => {
+                if let Some(active) = self.active.as_mut() {
+                    active.downloaded = progress.downloaded_bytes;
+                }
                 return self.finish();
             }
             _ => return,

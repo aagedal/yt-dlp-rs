@@ -12,6 +12,10 @@ pub enum Error {
     /// An `--exec` command rejected like upstream `UnsafeExecExpansionError`.
     #[error("{0}")]
     Exec(String),
+    /// An error upstream reports as plain `ERROR: MESSAGE` (`report_error`
+    /// in a downloader), without the URL/ID prefix.
+    #[error("{0}")]
+    Reported(String),
     #[error("invalid URL: {0}")]
     InvalidUrl(#[from] url::ParseError),
     #[error("unsupported URL scheme: {0}; expected http or https")]

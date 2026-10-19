@@ -432,6 +432,17 @@ pub struct VideoInfo {
     /// Upstream `container` (`EXT_dash` for DASH and YouTube single streams).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub container: Option<String>,
+    /// Upstream `--download-sections` fields: the section's start and end
+    /// seconds (`section_end` is missing for the media's end), chapter title
+    /// and chapter index.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub section_start: Option<PyNumber>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub section_end: Option<PyNumber>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub section_title: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub section_number: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub video_ext: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1200,6 +1211,10 @@ mod tests {
             acodec: None,
             dynamic_range: None,
             container: None,
+            section_start: None,
+            section_end: None,
+            section_title: None,
+            section_number: None,
             video_ext: None,
             audio_ext: None,
             metadata: Default::default(),

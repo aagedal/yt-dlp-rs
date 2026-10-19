@@ -368,6 +368,17 @@ static DECIMAL: LazyLock<Regex> = LazyLock::new(|| {
     .unwrap()
 });
 
+/// Upstream `parse_duration` as a Python `int` or `float`.
+pub(crate) fn parse_duration_number(text: &str) -> Option<crate::info::PyNumber> {
+    parse_duration(text).map(|number| match number {
+        Number::Int(value) => i64::try_from(value).map_or(
+            crate::info::PyNumber::Float(value as f64),
+            crate::info::PyNumber::Int,
+        ),
+        Number::Float(value) => crate::info::PyNumber::Float(value),
+    })
+}
+
 /// Upstream `parse_duration`.
 fn parse_duration(text: &str) -> Option<Number> {
     let text = py_strip(text);
