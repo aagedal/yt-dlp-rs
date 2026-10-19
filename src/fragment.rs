@@ -83,6 +83,7 @@ pub(crate) fn download(
     destination: &Path,
     options: DownloadOptions,
     concurrency: usize,
+    keep_fragments: bool,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
     if destination.exists() {
@@ -126,6 +127,23 @@ pub(crate) fn download(
         count: info.fragments.len() as u32,
         rate_limit: options.rate_limit,
     };
+    // Upstream `--keep-fragments`: `TMPFILENAME-FragN` beside the output.
+    let keep = keep_fragments.then(|| {
+        let mut name = destination.as_os_str().to_owned();
+        if options.part_files != crate::PartFiles::NoPart {
+            name.push(".part");
+        }
+        name
+    });
+    let keep_fragment = |index: usize, bytes: &mut dyn Read| -> Result<()> {
+        if let Some(base) = &keep {
+            let mut name = base.clone();
+            name.push(format!("-Frag{}", index + 1));
+            let mut file = fs::File::create(std::path::PathBuf::from(name))?;
+            std::io::copy(bytes, &mut file)?;
+        }
+        Ok(())
+    };
     if concurrency > 1 && info.fragments.len() > 1 {
         let (written, latest) = download_concurrent(
             client,
@@ -135,6 +153,7 @@ pub(crate) fn download(
             parent,
             temporary.as_file_mut(),
             &mut reporter,
+            &keep_fragment,
         )?;
         stored = written;
         filetime = latest;
@@ -155,6 +174,11 @@ pub(crate) fn download(
                 &mut reporter,
             )? {
                 filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
+                if keep.is_some() {
+                    let mut file = temporary.reopen()?;
+                    file.seek(SeekFrom::Start(prefix))?;
+                    keep_fragment(index, &mut file.take(stored - prefix))?;
+                }
             }
         }
     }
@@ -263,6 +287,7 @@ enum Event {
 /// Upstream `--concurrent-fragments`: `concurrency` workers fetch fragments
 /// (each with its own retries) into private files, appended in order.
 /// Returns the stored length and the latest fragment filetime.
+#[allow(clippy::too_many_arguments)]
 fn download_concurrent(
     client: &Client,
     info: &VideoInfo,
@@ -271,6 +296,7 @@ fn download_concurrent(
     parent: &Path,
     output: &mut fs::File,
     reporter: &mut Reporter<'_>,
+    keep_fragment: &dyn Fn(usize, &mut dyn Read) -> Result<()>,
 ) -> Result<(u64, Option<i64>)> {
     use std::sync::{
         Arc,
@@ -369,6 +395,7 @@ fn download_concurrent(
                 if let Some((file, modified)) = file {
                     let mut source = file.reopen()?;
                     written += std::io::copy(&mut source, output)?;
+                    keep_fragment(cursor, &mut file.reopen()?)?;
                     latest = crate::filetime::filetime(modified.as_deref()).or(latest);
                 }
                 cursor += 1;

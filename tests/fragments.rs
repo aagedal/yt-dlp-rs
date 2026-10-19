@@ -615,3 +615,60 @@ fn concurrent_fragments_assemble_in_order_with_per_fragment_retries() {
     assert_eq!(server.requests().len(), 9);
     clean(directory.path(), &["out.ts"]);
 }
+
+#[test]
+fn keep_fragments_writes_upstream_frag_files_sequentially_and_concurrently() {
+    for concurrency in [1, 3] {
+        let server = Server::new(|request, _| {
+            let name = request
+                .split_whitespace()
+                .nth(1)
+                .unwrap()
+                .trim_start_matches('/')
+                .to_owned();
+            Response::media(format!("<{name}>").into_bytes())
+        });
+        let fragments: Vec<_> = (0..4)
+            .map(|index| serde_json::json!({"url": format!("{}/f{index}", server.url)}))
+            .collect();
+        let info = server.info(serde_json::Value::Array(fragments));
+        let directory = tempfile::tempdir().unwrap();
+        let output = directory.path().join("o.ts");
+        YoutubeDl::new()
+            .unwrap()
+            .with_concurrent_fragments(concurrency)
+            .with_keep_fragments(true)
+            .download_with_progress(
+                &info,
+                &output,
+                DownloadOptions {
+                    part_files: yt_dlp_rs::PartFiles::Part { resume: false },
+                    ..Default::default()
+                },
+                |_| ControlFlow::Continue(()),
+            )
+            .unwrap();
+        // Upstream names them `TMPFILENAME-FragN`.
+        for index in 0..4 {
+            assert_eq!(
+                std::fs::read_to_string(
+                    directory
+                        .path()
+                        .join(format!("o.ts.part-Frag{}", index + 1))
+                )
+                .unwrap(),
+                format!("<f{index}>")
+            );
+        }
+        clean(
+            directory.path(),
+            &[
+                "o.ts",
+                "o.ts.part-Frag1",
+                "o.ts.part-Frag2",
+                "o.ts.part-Frag3",
+                "o.ts.part-Frag4",
+            ],
+        );
+    }
+}

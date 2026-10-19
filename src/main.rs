@@ -695,6 +695,12 @@ struct Args {
         allow_hyphen_values = true
     )]
     concurrent_fragments: i64,
+    /// Keep downloaded fragments on disk after downloading is finished
+    #[arg(long, overrides_with = "no_keep_fragments")]
+    keep_fragments: bool,
+    /// Delete downloaded fragments after downloading is finished (default)
+    #[arg(long, overrides_with = "keep_fragments")]
+    no_keep_fragments: bool,
     /// Size of a chunk for chunk-based HTTP downloading, e.g. 10485760 or 10M
     #[arg(long, value_name = "SIZE")]
     http_chunk_size: Option<String>,
@@ -1708,6 +1714,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .with_test(args.test)
         .with_force_generic_extractor(args.force_generic_extractor)
         .with_concurrent_fragments(args.concurrent_fragments as usize)
+        .with_keep_fragments(args.keep_fragments)
         .with_check_formats(if args.check_formats {
             yt_dlp_rs::CheckFormats::Selected
         } else if args.check_all_formats {

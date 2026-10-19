@@ -115,6 +115,8 @@ pub struct YoutubeDl {
     check_formats: CheckFormats,
     /// `-N`/`--concurrent-fragments`.
     concurrent_fragments: usize,
+    /// `--keep-fragments`.
+    keep_fragments: bool,
 }
 
 /// Upstream `--fixup POLICY` and `--hls-use-mpegts`.
@@ -168,7 +170,7 @@ fn test_format(client: &Client, info: &VideoInfo, format: &VideoFormat) -> bool 
             &mut quiet,
         )
     } else {
-        fragment::download(client, &single, &target, options, 1, &mut quiet)
+        fragment::download(client, &single, &target, options, 1, false, &mut quiet)
     };
     // Errors are still reported by the quiet test downloader.
     if let Err(error) = &result {
@@ -293,6 +295,7 @@ impl YoutubeDl {
             default_search: None,
             check_formats: CheckFormats::Default,
             concurrent_fragments: 1,
+            keep_fragments: false,
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -555,6 +558,12 @@ impl YoutubeDl {
     /// `-N`/`--concurrent-fragments`: fragments downloaded in parallel.
     pub fn with_concurrent_fragments(mut self, count: usize) -> Self {
         self.concurrent_fragments = count.max(1);
+        self
+    }
+
+    /// `--keep-fragments`: keep `TMPFILENAME-FragN` fragment files.
+    pub fn with_keep_fragments(mut self, keep: bool) -> Self {
+        self.keep_fragments = keep;
         self
     }
 
@@ -1037,6 +1046,7 @@ impl YoutubeDl {
                 destination.as_ref(),
                 options,
                 self.concurrent_fragments,
+                self.keep_fragments,
                 &mut callback,
             );
         }
