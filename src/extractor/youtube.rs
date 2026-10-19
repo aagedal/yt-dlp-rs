@@ -2,6 +2,7 @@
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
 mod captions;
 mod challenge;
+mod chapters;
 mod client;
 mod metadata;
 mod player;
@@ -206,15 +207,38 @@ fn video_id(url: &Url, no_playlist: bool) -> Result<Option<String>> {
 }
 
 fn initial_player_response(html: &str) -> Result<Option<Value>> {
+    initial_json(html, "ytInitialPlayerResponse", "initial player response")
+}
+
+/// Upstream `extract_yt_initial_data(..., fatal=False)`, discarded without
+/// `contents` (upstream then refetches it from the `next` API, which this
+/// port does not use).
+fn initial_data(html: &str) -> Option<Value> {
+    initial_json(html, "ytInitialData", "initial data")
+        .ok()
+        .flatten()
+        .filter(|data| {
+            data.get("contents").is_some_and(|contents| match contents {
+                Value::Null => false,
+                Value::Object(map) => !map.is_empty(),
+                Value::Array(items) => !items.is_empty(),
+                Value::String(text) => !text.is_empty(),
+                _ => true,
+            })
+        })
+}
+
+fn initial_json(html: &str, name: &str, label: &str) -> Result<Option<Value>> {
     let document = Html::parse_document(html);
     let scripts = Selector::parse("script").expect("static selector");
     for script in document.select(&scripts) {
         let text = script.text().collect::<String>();
         for marker in [
-            "ytInitialPlayerResponse",
-            "window[\"ytInitialPlayerResponse\"]",
-            "window['ytInitialPlayerResponse']",
+            name.to_owned(),
+            format!("window[\"{name}\"]"),
+            format!("window['{name}']"),
         ] {
+            let marker = marker.as_str();
             for (offset, _) in text.match_indices(marker) {
                 // Avoid matching a longer identifier or a quoted property name.
                 if offset > 0
@@ -228,14 +252,14 @@ fn initial_player_response(html: &str) -> Result<Option<Value>> {
                     continue;
                 };
                 if !json.starts_with('{') {
-                    return Err(unsupported("initial player response is not a JSON object"));
+                    return Err(unsupported(&format!("{label} is not a JSON object")));
                 }
                 let mut values = serde_json::Deserializer::from_str(json).into_iter::<Value>();
                 return values
                     .next()
                     .and_then(std::result::Result::ok)
                     .map(Some)
-                    .ok_or_else(|| unsupported("malformed initial player response"));
+                    .ok_or_else(|| unsupported(&format!("malformed {label}")));
             }
         }
     }
@@ -659,7 +683,15 @@ fn extract_watch_page_with_caption_options(
         section_number: None,
         video_ext: None,
         audio_ext: None,
-        metadata: metadata::parse(&player),
+        metadata: {
+            let mut metadata = metadata::parse(&player);
+            metadata.chapters = chapters::extract(
+                initial_data(html).as_ref(),
+                metadata.description.as_deref(),
+                metadata.duration,
+            );
+            metadata
+        },
         automatic_captions: captions.automatic,
         subtitles: captions.subtitles,
         requested_subtitles: None,

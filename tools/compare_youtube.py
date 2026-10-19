@@ -62,6 +62,9 @@ FIXTURE_CASES = (
     ("n-extraction.json", "n-extraction-expected.json", "n-extraction"),
     ("adaptive.json", "adaptive-expected.json", "adaptive"),
     ("metadata.json", "metadata-expected.json", "metadata"),
+    ("chapters-player-bar.html", "chapters-player-bar-expected.json", "watch-page"),
+    ("chapters-panel.html", "chapters-panel-expected.json", "watch-page"),
+    ("chapters-description.html", "chapters-description-expected.json", "watch-page"),
 )
 SIGNATURE_CASE = ("signature-extraction.json", "signature-extraction-expected.json",
                   "signature-extraction")
@@ -156,7 +159,9 @@ class FixtureYoutubeIE(YoutubeIE):
             _video.STREAMING_DATA_IS_PREMIUM_SUBSCRIBER: False,
             _video.STREAMING_DATA_AVAILABLE_AT_TIMESTAMP: None,
         })
-        return '' if is_json else page, {}, {}, False, [response], player_url if has_player else None
+        # Saved watch pages may embed ytInitialData (chapters).
+        initial_data = {} if is_json else (self.extract_yt_initial_data(video_id, page, fatal=False) or {})
+        return '' if is_json else page, {}, initial_data, False, [response], player_url if has_player else None
 
 with YoutubeDL({'quiet': True, 'no_warnings': True, 'cachedir': False,
                 'skip_download': True, 'extractor_args': {'youtube': {
@@ -177,6 +182,8 @@ def normalize(info, origin=ORIGIN, *, adaptive=False):
     """Select explicit fields; map adaptive codec flags/rates and fixture origin."""
     result = {field: info[field] for field in FIELDS}
     result.update({field: info.get(field) for field in METADATA_FIELDS})
+    if info.get("chapters"):
+        result["chapters"] = info["chapters"]
     result["thumbnails"] = sorted_thumbnails(info.get("thumbnails"))
     # `process_video_result` finalization: keep the extractor's best thumbnail,
     # otherwise use the best sorted candidate (sanitize_url is a no-op here).

@@ -910,3 +910,76 @@ fn saved_player_metadata_matches_the_upstream_normalized_fields() {
     }
     assert_eq!(info.formats.len(), 1);
 }
+
+#[test]
+fn saved_initial_data_chapters_match_upstream_and_drive_sections() {
+    let cases = [
+        (
+            include_str!("../../../tests/fixtures/youtube/chapters-player-bar.html"),
+            include_str!("../../../tests/fixtures/youtube/chapters-player-bar-expected.json"),
+        ),
+        (
+            include_str!("../../../tests/fixtures/youtube/chapters-panel.html"),
+            include_str!("../../../tests/fixtures/youtube/chapters-panel-expected.json"),
+        ),
+        (
+            include_str!("../../../tests/fixtures/youtube/chapters-description.html"),
+            include_str!("../../../tests/fixtures/youtube/chapters-description-expected.json"),
+        ),
+    ];
+    let mut processed = Vec::new();
+    for (source, expected) in cases {
+        let server = Server::new(vec![
+            reply(WATCH, "text/html", source),
+            reply("/media/low.mp4", "video/mp4", "media"),
+        ]);
+        let info = extract_watch_page(&Client::new(), &server.watch(), ID).unwrap();
+        let expected: Value = serde_json::from_str(expected).unwrap();
+        // Pinned upstream `_real_extract` chapters, before processing.
+        assert_eq!(
+            super::comparable_info(&info)["chapters"],
+            expected["chapters"]
+        );
+        let mut result = crate::ExtractResult::Video(info);
+        crate::YoutubeDl::new()
+            .unwrap()
+            .process_result(&mut result)
+            .unwrap();
+        let crate::ExtractResult::Video(info) = result else {
+            unreachable!()
+        };
+        processed.push(info);
+    }
+    // `process_video_result` fills end times from the next start and the
+    // duration (120), with a leading chapter for a late first start.
+    assert_eq!(
+        serde_json::to_value(&processed[0].metadata.chapters).unwrap(),
+        serde_json::json!([
+            {"start_time": 0.0, "title": "Opening", "end_time": 45.5},
+            {"start_time": 45.5, "title": "Second } part", "end_time": 90.0},
+            {"start_time": 90.0, "title": "Third", "end_time": 120}
+        ])
+    );
+    assert_eq!(
+        serde_json::to_value(&processed[1].metadata.chapters).unwrap(),
+        serde_json::json!([
+            {"start_time": 0, "title": "<Untitled Chapter 1>", "end_time": 10},
+            {"start_time": 10, "title": "Part A", "end_time": 65},
+            {"start_time": 65, "title": "Part B", "end_time": 120}
+        ])
+    );
+    // Chapter regexes select sections with their titles and indices.
+    let sections = crate::sections::DownloadSections::parse(&["part".into()]).unwrap();
+    let requested = sections.requested(&processed[2]);
+    assert_eq!(
+        crate::sections::describe(&requested),
+        "45.0-90.0, 90.0-120.0"
+    );
+    let section = crate::sections::apply(&processed[2], requested[1].as_ref());
+    assert_eq!(section.section_title.as_deref(), Some("Ending part"));
+    assert_eq!(section.section_number, Some(2));
+    assert_eq!(
+        serde_json::to_value((section.section_start, section.section_end)).unwrap(),
+        serde_json::json!([90, 120])
+    );
+}

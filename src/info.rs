@@ -222,12 +222,27 @@ pub fn sanitize_url(url: &str) -> String {
     url.to_owned()
 }
 
+/// One upstream chapter dictionary.
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct Chapter {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub start_time: Option<PyNumber>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub end_time: Option<PyNumber>,
+}
+
 /// Represented descriptive metadata; every field is optional and omitted when
 /// unknown. Field names and types follow the upstream info dictionary.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct Metadata {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    /// Upstream `chapters` (`start_time`, `title`; `end_time` and missing
+    /// titles are filled by `process_video_result`).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub chapters: Vec<Chapter>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration: Option<u64>,
     /// `formatSeconds(duration)`, filled by `_fill_common_fields`.
@@ -280,6 +295,52 @@ impl Metadata {
         }
         if self.upload_date.is_none() {
             self.upload_date = self.timestamp.and_then(crate::dates::strftime_date);
+        }
+    }
+
+    /// Upstream `process_video_result` chapter filling: a leading chapter
+    /// from 0, start/end times from the neighbours (the duration ends the
+    /// last one) and `<Untitled Chapter N>` titles.
+    pub fn fill_chapters(&mut self) {
+        let chapters = &mut self.chapters;
+        if chapters
+            .first()
+            .and_then(|chapter| chapter.start_time)
+            .is_some_and(|start| start.as_f64() != 0.0)
+        {
+            chapters.insert(
+                0,
+                Chapter {
+                    start_time: Some(PyNumber::Int(0)),
+                    ..Default::default()
+                },
+            );
+        }
+        let duration = self
+            .duration
+            .and_then(|duration| i64::try_from(duration).ok())
+            .map(PyNumber::Int);
+        let truthy = |value: Option<PyNumber>| value.filter(|value| value.as_f64() != 0.0);
+        for index in 0..chapters.len() {
+            // The dummy neighbours: `end_time` 0 before, the duration after.
+            let previous_end = if index == 0 {
+                Some(PyNumber::Int(0))
+            } else {
+                chapters[index - 1].end_time
+            };
+            let next_start = chapters
+                .get(index + 1)
+                .map_or(duration, |chapter| chapter.start_time);
+            let current = &mut chapters[index];
+            if current.start_time.is_none() {
+                current.start_time = previous_end;
+            }
+            if truthy(current.end_time).is_none() {
+                current.end_time = next_start;
+            }
+            if current.title.as_deref().is_none_or(str::is_empty) {
+                current.title = Some(format!("<Untitled Chapter {}>", index + 1));
+            }
         }
     }
 

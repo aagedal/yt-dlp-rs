@@ -273,6 +273,7 @@ impl YoutubeDl {
         for entry in entries {
             entry.fulltitle = Some(entry.title.clone());
             entry.metadata.fill_common_fields();
+            entry.metadata.fill_chapters();
             entry.metadata.sanitize_thumbnails();
             info::fill_format_fields(&mut entry.formats);
             let extractor: Vec<&str> = entry

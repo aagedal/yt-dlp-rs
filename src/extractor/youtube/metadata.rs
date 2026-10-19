@@ -6,7 +6,7 @@ use crate::Metadata;
 use serde_json::Value;
 
 /// Upstream `_get_text`: `simpleText`, else the joined `runs[].text`.
-fn text(value: &Value) -> Option<String> {
+pub(super) fn text(value: &Value) -> Option<String> {
     if let Some(text) = value.get("simpleText").and_then(Value::as_str)
         && !text.is_empty()
     {

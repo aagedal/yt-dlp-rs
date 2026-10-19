@@ -115,14 +115,29 @@ impl DownloadSections {
     }
 
     /// `download_range_func(info_dict, ydl)`: `None` stands for `{}` (the
-    /// whole video). Chapter regexes never match, because chapters are not
-    /// represented; upstream's notice is printed instead.
+    /// whole video). Chapter regexes search the chapter titles.
     pub fn requested(&self, info: &VideoInfo) -> Vec<Option<Section>> {
-        if !self.chapters.is_empty() {
-            crate::screen::screen(&format!(
-                "[info] {}: Cannot match chapters since chapter information is unavailable",
-                info.id
-            ));
+        let chapters = &info.metadata.chapters;
+        let mut requested: Vec<Option<Section>> = Vec::new();
+        for regex in &self.chapters {
+            for (index, chapter) in chapters.iter().enumerate() {
+                if regex.is_match(chapter.title.as_deref().unwrap_or("")) {
+                    requested.push(Some(Section {
+                        start_time: chapter.start_time.unwrap_or(PyNumber::Int(0)),
+                        end_time: chapter.end_time.unwrap_or(PyNumber::Float(f64::INFINITY)),
+                        title: chapter.title.clone(),
+                        index: Some(index),
+                    }));
+                }
+            }
+        }
+        if !self.chapters.is_empty() && requested.is_empty() {
+            let warning = if chapters.is_empty() {
+                "Cannot match chapters since chapter information is unavailable"
+            } else {
+                "There are no chapters matching the regex"
+            };
+            crate::screen::screen(&format!("[info] {}: {warning}", info.id));
         }
         let duration = info
             .metadata
@@ -141,18 +156,14 @@ impl DownloadSections {
             }
             _ => time,
         };
-        let mut requested: Vec<Option<Section>> = self
-            .ranges
-            .iter()
-            .map(|(start, end)| {
-                Some(Section {
-                    start_time: resolve(*start),
-                    end_time: resolve(*end),
-                    title: None,
-                    index: None,
-                })
+        requested.extend(self.ranges.iter().map(|(start, end)| {
+            Some(Section {
+                start_time: resolve(*start),
+                end_time: resolve(*end),
+                title: None,
+                index: None,
             })
-            .collect();
+        }));
         // `*from-url` needs extracted `start_time`/`end_time`, which no
         // supported extractor provides.
         if !self.from_url && self.ranges.is_empty() && self.chapters.is_empty() {

@@ -414,9 +414,9 @@ struct Args {
     /// Do not use the mpegts container for HLS videos (default)
     #[arg(long, overrides_with = "hls_use_mpegts")]
     no_hls_use_mpegts: bool,
-    /// Download only the given time ranges ("*START-END", negative values
-    /// count from the end) through ffmpeg; may be repeated. Chapter regexes
-    /// are accepted but never match (chapters are not extracted)
+    /// Download only chapters matching the regex, or "*START-END" time
+    /// ranges (negative values count from the end), through ffmpeg; may be
+    /// repeated
     #[arg(long, value_name = "REGEX", allow_hyphen_values = true)]
     download_sections: Vec<String>,
     /// Containers that may be used when merging formats, separated by "/",
