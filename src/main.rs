@@ -53,6 +53,7 @@ macro_rules! warning {
 #[derive(Parser)]
 #[command(
     version,
+    args_override_self = true,
     about = "Native Rust yt-dlp adaptation (direct HTTP, HTML5 and HLS/DASH VOD)"
 )]
 struct Args {
@@ -339,6 +340,15 @@ struct Args {
         allow_hyphen_values = true
     )]
     audio_quality: String,
+    /// Don't load any more configuration files except those given to --config-locations (Alias: --no-config)
+    #[arg(long, visible_alias = "no-config")]
+    ignore_config: bool,
+    /// Do not load any custom configuration files (default); inside a configuration file, ignore its previous --config-locations
+    #[arg(long)]
+    no_config_locations: bool,
+    /// Location of the main configuration file; either the path to the config or its containing directory ("-" for stdin)
+    #[arg(long, value_name = "PATH")]
+    config_locations: Vec<String>,
     /// Sort the formats by the fields given (comma-separated; later values take precedence)
     #[arg(
         short = 'S',
@@ -823,7 +833,10 @@ fn size_option(name: &str, value: Option<&str>) -> Result<Option<u64>, String> {
 }
 
 fn run() -> Result<bool, Box<dyn std::error::Error>> {
-    let matches = Args::command().get_matches();
+    let mut argv = std::env::args();
+    let program = argv.next().unwrap_or_else(|| "yt-dlp-rs".into());
+    let arguments = config_arguments(argv.collect())?;
+    let matches = Args::command().get_matches_from(std::iter::once(program).chain(arguments));
     let mut args = Args::from_arg_matches(&matches)?;
     // `--no-match-filters` resets values given before it (optparse store_const).
     let after_reset = |values: &str, reset: &str| -> Vec<String> {
@@ -2288,6 +2301,230 @@ impl std::fmt::Display for UsageError {
 }
 
 impl std::error::Error for UsageError {}
+
+/// What one configuration's own arguments say about further configuration
+/// (upstream `parse_known_args` of those arguments).
+#[derive(Default)]
+struct ConfigScan {
+    ignore_config: bool,
+    locations: Vec<String>,
+    home: Option<String>,
+}
+
+/// Find `--ignore-config`, `--config-locations` and `-P` home values in an
+/// argument list, using clap's option table to skip option values.
+fn scan_config_options(command: &clap::Command, args: &[String]) -> ConfigScan {
+    let mut scan = ConfigScan::default();
+    let find_long = |name: &str| {
+        command.get_arguments().find(|arg| {
+            arg.get_long() == Some(name)
+                || arg
+                    .get_all_aliases()
+                    .is_some_and(|aliases| aliases.contains(&name))
+        })
+    };
+    let takes_value = |arg: &clap::Arg| arg.get_action().takes_values();
+    let mut record = |id: &str, value: Option<&str>| match (id, value) {
+        ("ignore_config", _) => scan.ignore_config = true,
+        ("no_config_locations", _) => scan.locations.clear(),
+        ("config_locations", Some(value)) => scan.locations.push(value.to_owned()),
+        ("paths", Some(value)) => {
+            // `-P [TYPES:]PATH` with the shared typed-key rule.
+            if let Ok(paths) = yt_dlp_rs::output::parse_paths(&[value.to_owned()])
+                && let Some(home) = paths.get("home")
+            {
+                scan.home = Some(home.clone());
+            }
+        }
+        _ => {}
+    };
+    let mut index = 0;
+    while index < args.len() {
+        let token = &args[index];
+        index += 1;
+        if token == "--" {
+            break;
+        }
+        if let Some(long) = token.strip_prefix("--") {
+            let (name, inline) = match long.split_once('=') {
+                Some((name, value)) => (name, Some(value)),
+                None => (long, None),
+            };
+            let Some(arg) = find_long(name) else {
+                continue;
+            };
+            let value = if takes_value(arg) {
+                inline.or_else(|| {
+                    let value = args.get(index).map(String::as_str);
+                    index += 1;
+                    value
+                })
+            } else {
+                None
+            };
+            record(arg.get_id().as_str(), value);
+        } else if let Some(cluster) = token.strip_prefix('-').filter(|rest| !rest.is_empty()) {
+            for (offset, short) in cluster.char_indices() {
+                let Some(arg) = command.get_arguments().find(|arg| {
+                    arg.get_short() == Some(short)
+                        || arg
+                            .get_short_and_visible_aliases()
+                            .is_some_and(|aliases| aliases.contains(&short))
+                }) else {
+                    break;
+                };
+                if takes_value(arg) {
+                    let rest = &cluster[offset + short.len_utf8()..];
+                    let value = if rest.is_empty() {
+                        let value = args.get(index).cloned();
+                        index += 1;
+                        value
+                    } else {
+                        Some(rest.to_owned())
+                    };
+                    record(arg.get_id().as_str(), value.as_deref());
+                    break;
+                }
+                record(arg.get_id().as_str(), None);
+            }
+        }
+    }
+    scan
+}
+
+/// One loaded configuration and the configurations its locations name.
+struct ConfigNode {
+    args: Vec<String>,
+    children: Vec<ConfigNode>,
+}
+
+impl ConfigNode {
+    /// Upstream `Config.all_args`: later locations first, then own arguments.
+    fn all_args(&self, out: &mut Vec<String>) {
+        for child in self.children.iter().rev() {
+            child.all_args(out);
+        }
+        out.extend(self.args.iter().cloned());
+    }
+}
+
+/// Upstream `Config.init`/`load_configs` for one configuration; `None` when
+/// the file was already loaded.
+fn load_config(
+    command: &clap::Command,
+    args: Vec<String>,
+    filename: Option<&Path>,
+    loaded: &mut std::collections::HashSet<PathBuf>,
+) -> Result<Option<ConfigNode>, UsageError> {
+    let mut directory = PathBuf::new();
+    if let Some(filename) = filename {
+        let location = std::fs::canonicalize(filename).unwrap_or_else(|_| filename.into());
+        directory = location.parent().map(Path::to_path_buf).unwrap_or_default();
+        if !loaded.insert(location) {
+            return Ok(None);
+        }
+    }
+    let mut node = ConfigNode {
+        args: Vec::new(),
+        children: Vec::new(),
+    };
+    for location in scan_config_options(command, &args).locations {
+        if location == "-" {
+            if !loaded.insert(PathBuf::from("-")) {
+                continue;
+            }
+            eprintln!("Reading options from STDIN - EOF (Ctrl+D) to end:");
+            let mut text = String::new();
+            std::io::Read::read_to_string(&mut io::stdin(), &mut text)
+                .map_err(|error| usage(error.to_string()))?;
+            let stdin_args = yt_dlp_rs::config::shlex_split(&text).map_err(usage)?;
+            if let Some(child) = load_config(command, stdin_args, None, loaded)? {
+                node.children.push(child);
+            }
+            continue;
+        }
+        let mut path = directory.join(yt_dlp_rs::batch::expand_path_text(&location));
+        if path.is_dir() {
+            path = path.join(format!("{}.conf", yt_dlp_rs::config::PACKAGE_NAME));
+        }
+        if !path.exists() {
+            return Err(usage(format!(
+                "config location {} does not exist",
+                path.display()
+            )));
+        }
+        let file_args = yt_dlp_rs::config::read_file(&path)
+            .map_err(usage)?
+            .unwrap_or_default();
+        if let Some(child) = load_config(command, file_args, Some(&path), loaded)? {
+            node.children.push(child);
+        }
+    }
+    node.args = args;
+    Ok(Some(node))
+}
+
+/// Upstream `parseOpts` configuration assembly: command line, then
+/// portable, home, user and system configurations until `--ignore-config`,
+/// flattened so the command line takes precedence.
+fn config_arguments(cli: Vec<String>) -> Result<Vec<String>, UsageError> {
+    use yt_dlp_rs::config::{
+        PACKAGE_NAME, first_config, read_file, system_config_dirs, user_config_dirs,
+    };
+    let command = Args::command();
+    let mut loaded = std::collections::HashSet::new();
+    // (label, node) in append order; `all_args` reverses it.
+    let mut configs: Vec<(&str, ConfigNode)> = Vec::new();
+    let flatten = |configs: &[(&str, ConfigNode)]| {
+        let mut out = Vec::new();
+        for (_, node) in configs.iter().rev() {
+            node.all_args(&mut out);
+        }
+        out
+    };
+    if let Some(node) = load_config(&command, cli, None, &mut loaded)? {
+        configs.push(("Command-line", node));
+    }
+    let mut loaded_all = true;
+    for label in ["Portable", "Home", "User", "System"] {
+        let current = scan_config_options(&command, &flatten(&configs));
+        if current.ignore_config {
+            loaded_all = false;
+            break;
+        }
+        let found = match label {
+            "Portable" => std::env::current_exe()
+                .ok()
+                .and_then(|exe| exe.parent().map(Path::to_path_buf))
+                .map(|dir| dir.join(format!("{PACKAGE_NAME}.conf")))
+                .map(|path| read_file(&path).map(|args| args.map(|args| (args, path))))
+                .transpose()
+                .map_err(usage)?
+                .flatten(),
+            "Home" => {
+                let home = current.home.as_deref().unwrap_or("");
+                let home = yt_dlp_rs::batch::expand_path_text(home);
+                let path = Path::new(home.trim()).join(format!("{PACKAGE_NAME}.conf"));
+                read_file(&path).map_err(usage)?.map(|args| (args, path))
+            }
+            "User" => {
+                let home = std::env::var_os("HOME").map(PathBuf::from);
+                first_config(&user_config_dirs(home.as_deref())).map_err(usage)?
+            }
+            _ => first_config(&system_config_dirs()).map_err(usage)?,
+        };
+        if let Some((args, path)) = found
+            && let Some(node) = load_config(&command, args, Some(&path), &mut loaded)?
+        {
+            configs.push((label, node));
+        }
+    }
+    // `--ignore-config` inside the system configuration drops the user one.
+    if loaded_all && scan_config_options(&command, &flatten(&configs)).ignore_config {
+        configs.retain(|(label, _)| *label != "User");
+    }
+    Ok(flatten(&configs))
+}
 
 fn usage(message: impl std::fmt::Display) -> UsageError {
     UsageError(message.to_string())

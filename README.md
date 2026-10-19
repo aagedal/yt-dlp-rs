@@ -33,6 +33,8 @@ cargo run --locked -- --user-agent 'My media client' --add-headers 'X-Media-Key:
 cargo run --locked -- -o 'downloads/%(title)s.%(ext)s' 'https://example.com/audio.mp3'
 ```
 
+Options can also come from configuration files like upstream's (named `yt-dlp-rs`, e.g.
+`~/.config/yt-dlp-rs/config`; see `--ignore-config` and `--config-locations`).
 ffmpeg and ffprobe are found on `PATH` like upstream; `--ffmpeg-location` accepts
 either binary or its containing directory.
 

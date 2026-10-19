@@ -3,6 +3,7 @@ mod audio;
 mod audio_download;
 pub mod batch;
 pub mod codecs;
+pub mod config;
 mod cookies;
 mod crypto;
 mod dash;
