@@ -133,6 +133,16 @@ fn succeeds(output: &Output) {
         String::from_utf8_lossy(&output.stderr)
     );
 }
+/// Without `-j`/`-J`, stdout holds only bracketed screen lines: no JSON or tables.
+fn only_screen_lines(output: &Output) {
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout
+            .lines()
+            .all(|line| line.trim_start_matches('\r').starts_with('[')),
+        "{stdout}"
+    );
+}
 
 #[test]
 fn successful_download_records_exact_key_and_duplicate_urls_skip_downloads_in_this_and_later_runs()
@@ -175,7 +185,11 @@ fn simulation_json_and_listing_never_create_or_append_archives() {
         std::fs::write(&archive, "generic low\n").unwrap();
         let skipped = server.cli(&archive, &mode, &["/low.mp4"]);
         succeeds(&skipped);
-        assert!(skipped.stdout.is_empty());
+        if mode.contains(&"-j") {
+            assert!(skipped.stdout.is_empty());
+        } else {
+            only_screen_lines(&skipped);
+        }
         assert_eq!(server.count("/low.mp4"), 3);
     }
 }
@@ -222,7 +236,7 @@ fn failed_download_existing_destination_and_invalid_template_are_not_recorded() 
     std::fs::write(&target, b"keep").unwrap();
     let output = server.cli(&archive, &["-o", target.to_str().unwrap()], &["/low.mp4"]);
     assert!(output.status.success());
-    assert!(String::from_utf8_lossy(&output.stderr).contains("has already been downloaded"));
+    assert!(String::from_utf8_lossy(&output.stdout).contains("has already been downloaded"));
     assert_eq!(std::fs::read(&target).unwrap(), b"keep");
     assert_eq!(
         std::fs::read_to_string(&archive).unwrap().lines().count(),
@@ -247,7 +261,7 @@ fn archived_separate_hls_is_skipped_before_selection_or_ffmpeg_validation() {
         &["/master.m3u8"],
     );
     succeeds(&output);
-    assert!(output.stdout.is_empty());
+    only_screen_lines(&output);
     assert_eq!(server.requests.lock().unwrap().len(), 3);
     assert_eq!(server.count("/init.mp4"), 0);
     assert_eq!(server.count("/segment.m4s"), 0);
@@ -286,11 +300,16 @@ fn all_retained_playlist_entries_are_selected_before_any_download_or_json() {
     std::fs::write(&archive, "html5mediaembed three-1\n").unwrap();
     let template = directory.path().join("%(id)s.%(ext)s");
     for mode in [vec!["-j"], Vec::new()] {
+        let json = !mode.is_empty();
         let mut args = mode;
         args.extend(["-f", "best[height<=720]", "-o", template.to_str().unwrap()]);
         let output = server.cli(&archive, &args, &["/three.html"]);
         assert!(!output.status.success());
-        assert!(output.stdout.is_empty());
+        if json {
+            assert!(output.stdout.is_empty());
+        } else {
+            only_screen_lines(&output);
+        }
         assert_eq!(
             std::fs::read_to_string(&archive).unwrap(),
             "html5mediaembed three-1\n"
@@ -447,12 +466,17 @@ fn break_on_existing_processes_earlier_entries_then_cancels() {
         &["--break-on-existing", "-o", template],
         &["/three.html", "/high.mp4"],
     );
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    assert_eq!(output.status.code(), Some(101), "{stderr}");
-    assert!(
-        stderr.contains("three-2: ") && stderr.contains("has already been recorded in the archive")
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert_eq!(
+        output.status.code(),
+        Some(101),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
     );
-    assert!(stderr.contains(
+    assert!(
+        stdout.contains("three-2: ") && stdout.contains("has already been recorded in the archive")
+    );
+    assert!(stdout.contains(
         "[info] Encountered a video that is already in the archive, stopping due to --break-on-existing"
     ));
     assert!(directory.path().join("three-1.mp4").exists());

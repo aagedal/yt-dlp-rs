@@ -269,11 +269,17 @@ fn print_to_file_appends_before_downloading_without_implying_simulation() {
         "%(id)s.%(ext)s",
     ];
     let output = server.cli(&["/page.html"], &args, directory.path());
-    assert_eq!(success(&output), "");
-    let stderr = String::from_utf8_lossy(&output.stderr);
+    // Nothing is printed to stdout besides the (non-quiet) screen lines.
+    let stdout = success(&output);
     assert!(
-        stderr.contains("[info] Writing '%(id)s\\n%(width)s' to: lists/html5.txt"),
-        "{stderr}"
+        stdout
+            .lines()
+            .all(|line| line.trim_start_matches('\r').starts_with('[')),
+        "{stdout}"
+    );
+    assert!(
+        stdout.contains("[info] Writing '%(id)s\\n%(width)s' to: lists/html5.txt"),
+        "{stdout}"
     );
     assert_eq!(
         std::fs::read(directory.path().join("page-1.mp4")).unwrap(),
@@ -281,8 +287,7 @@ fn print_to_file_appends_before_downloading_without_implying_simulation() {
     );
     // A second run appends; the existing media is then already downloaded.
     let output = server.cli(&["/page.html"], &args, directory.path());
-    success(&output);
-    assert!(String::from_utf8_lossy(&output.stderr).contains("has already been downloaded"));
+    assert!(success(&output).contains("has already been downloaded"));
     let read = |name: &str| std::fs::read_to_string(directory.path().join(name)).unwrap();
     assert_eq!(read("lists/html5.txt"), "page-1\n1280\npage-1\n1280\n");
     assert_eq!(read("names.txt"), "page-1.mp4\npage-1.mp4\n");

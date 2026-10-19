@@ -219,7 +219,7 @@ Supported today:
   remains an error. See [video processing limits](docs/COMPATIBILITY.md#video-remuxing-and-conversion).
 - Same-directory temporary files, cleanup on transfer failure, and no overwrite
   of existing destinations. A failed entry or URL sets a nonzero exit status while later
-  entries and URLs still run. JSON goes to stdout; diagnostics go to stderr.
+  entries and URLs still run. JSON, screen and progress lines go to stdout; warnings and errors go to stderr.
 - Bounded download retries for selected transient HTTP statuses,
   connection/timeouts, and interrupted bodies. Interrupted transfers can resume
   within the same invocation with a strong ETag, known length, and validated range.
@@ -229,7 +229,7 @@ Supported today:
   `--abort-on-unavailable-fragments`. Transient HTTP failures honor
   a single `Retry-After` delay-seconds or preferred HTTP-date value, capped at
   60 seconds.
-- Upstream-style download progress lines on stderr (`--newline`, `--no-progress`,
+- Upstream-style download progress lines on stdout (`--newline`, `--no-progress`,
   `--progress`, `--progress-delta`).
   Library observers can cancel at transfer checkpoints and during retry waits,
   cleaning up the private temporary file before publication.

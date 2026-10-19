@@ -442,7 +442,7 @@ fn full_response_to_range_retry_resets_bytes_and_total() {
 }
 
 #[test]
-fn cli_progress_uses_stderr_and_preserves_download_bytes() {
+fn cli_progress_uses_stdout_and_preserves_download_bytes() {
     let server = Server::start_with_delay(|_| Response::media(), Duration::from_millis(1100));
     let directory = tempfile::tempdir().unwrap();
     let output = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
@@ -455,26 +455,31 @@ fn cli_progress_uses_stderr_and_preserves_download_bytes() {
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
-    assert!(output.stdout.is_empty());
-    let stderr = String::from_utf8(output.stderr).unwrap();
+    // Like upstream, progress goes to stdout; this direct download warns nothing.
+    assert!(
+        output.stderr.is_empty(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8(output.stdout).unwrap();
     // Upstream `report_progress` lines share one carriage-return status line,
     // ending with the finished line and a newline.
     assert!(
-        stderr.contains("\r[download] 100.0% of     14.00B at "),
-        "{stderr}"
+        stdout.contains("\r[download] 100.0% of     14.00B at "),
+        "{stdout}"
     );
-    let finished = stderr
+    let finished = stdout
         .split('\r')
         .find(|line| line.starts_with("[download] 100% of     14.00B in 00:00:0"))
-        .unwrap_or_else(|| panic!("{stderr}"));
+        .unwrap_or_else(|| panic!("{stdout}"));
     assert!(finished.trim_end().ends_with("B/s"), "{finished:?}");
-    assert!(stderr.ends_with('\n') && !stderr.contains("Downloaded 14 bytes"));
+    assert!(stdout.ends_with('\n') && !stdout.contains("Downloaded 14 bytes"));
     let quiet = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .args(["--no-progress", "-o", "other.mp4", &server.url])
         .current_dir(directory.path())
         .output()
         .unwrap();
-    let quiet = String::from_utf8(quiet.stderr).unwrap();
+    let quiet = String::from_utf8(quiet.stdout).unwrap();
     assert!(quiet.contains("[download] Download completed\n"), "{quiet}");
     assert!(!quiet.contains('\r'));
     std::fs::remove_file(directory.path().join("other.mp4")).unwrap();

@@ -619,6 +619,42 @@ fn cli_simulate_and_download() {
     assert_eq!(std::fs::read(target).unwrap(), b"media bytes");
 }
 
+/// Without `-j`/`-J`/`--print`, stdout holds only bracketed screen lines.
+fn only_screen_lines(stdout: &[u8]) {
+    let stdout = String::from_utf8_lossy(stdout);
+    assert!(
+        stdout
+            .lines()
+            .all(|line| line.trim_start_matches('\r').starts_with('[')),
+        "{stdout}"
+    );
+}
+
+#[test]
+fn cli_screen_lines_use_stdout_and_warnings_use_stderr() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    let target = directory.path().join("video.mp4");
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-o", target.to_str().unwrap(), &server.url("/video.html")])
+        .output()
+        .unwrap();
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    assert!(target.exists());
+    // Upstream `to_screen` writes to stdout unless the output template is `-`.
+    let destination = format!("[download] Destination: {}", target.display());
+    assert!(stdout.contains(&destination), "{stdout}");
+    assert!(stdout.contains("[generic] Extracting URL: "), "{stdout}");
+    assert!(!stderr.contains("[download]"), "{stderr}");
+    assert!(!stderr.contains("[generic] Extracting URL: "), "{stderr}");
+    // `report_warning` always writes to stderr.
+    let warning = "WARNING: [generic] Falling back on generic information extractor";
+    assert!(stderr.contains(warning), "{stderr}");
+    assert!(!stdout.contains("WARNING:"), "{stdout}");
+}
+
 #[test]
 fn youtube_runtime_configuration_is_lazy_for_generic_extraction() {
     let server = Server::start();
@@ -664,7 +700,7 @@ fn cli_explicit_youtube_runtime_preserves_generic_json_simulation_and_download()
                     assert!(!target.exists());
                 }
                 Some("-s") => {
-                    assert!(output.stdout.is_empty());
+                    only_screen_lines(&output.stdout);
                     assert!(!target.exists());
                 }
                 None => assert_eq!(std::fs::read(&target).unwrap(), b"media bytes"),
@@ -975,7 +1011,7 @@ fn cli_playlist_json_simulation_and_downloads() {
             assert_eq!(entries[0]["id"], "playlist-1");
             assert_eq!(entries[1]["id"], "playlist-2");
         } else {
-            assert!(output.stdout.is_empty());
+            only_screen_lines(&output.stdout);
         }
     }
     // Only page requests and header probes, no transfer requests.

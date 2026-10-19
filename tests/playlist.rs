@@ -277,7 +277,14 @@ fn excluded_format_failures_are_ignored_but_retained_failures_are_atomic() {
         ],
     );
     assert!(!failed.status.success());
-    assert!(failed.stdout.is_empty());
+    // No JSON is requested: stdout holds only bracketed screen lines.
+    let stdout = String::from_utf8_lossy(&failed.stdout);
+    assert!(
+        stdout
+            .lines()
+            .all(|line| line.trim_start_matches('\r').starts_with('[')),
+        "{stdout}"
+    );
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     failure_server.assert_probed_once();
     let extraction_server = Server::new();
@@ -381,9 +388,8 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
 fn playlist_progress_lines_follow_upstream_process_playlist() {
     let server = Server::new();
     let output = server.cli("/playlist.html", &["-s", "-I", "3,1"]);
-    success(&output);
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    let lines: Vec<_> = stderr
+    let stdout = success(&output);
+    let lines: Vec<_> = stdout
         .lines()
         .filter(|line| {
             line.starts_with("[download] ")

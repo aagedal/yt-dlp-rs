@@ -86,6 +86,10 @@ fn stderr(output: &Output) -> String {
     String::from_utf8_lossy(&output.stderr).into_owned()
 }
 
+fn stdout(output: &Output) -> String {
+    String::from_utf8_lossy(&output.stdout).into_owned()
+}
+
 #[test]
 fn stages_run_in_upstream_order_with_quoted_paths_and_fields() {
     let server = Server::new();
@@ -117,7 +121,7 @@ fn stages_run_in_upstream_order_with_quoted_paths_and_fields() {
             absolute.display()
         )
     );
-    assert!(stderr(&output).contains("[Exec] Executing command: echo before_dl v.mp4 >> log"));
+    assert!(stdout(&output).contains("[Exec] Executing command: echo before_dl v.mp4 >> log"));
 }
 
 #[test]

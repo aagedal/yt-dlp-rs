@@ -441,7 +441,7 @@ fn cli_download_reports_upstream_fragment_count_before_destination() {
         .output()
         .unwrap();
     // This server's segments are not media; the lines precede the transfer.
-    let stdout = String::from_utf8_lossy(&output.stderr);
+    let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(
         stdout.contains("[hlsnative] Total fragments: 2\n[download] Destination: out."),
         "{stdout}"

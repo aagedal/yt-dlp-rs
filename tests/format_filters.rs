@@ -139,6 +139,17 @@ impl Drop for Server {
     }
 }
 
+/// Without `-j`, stdout holds only bracketed screen lines: no JSON was printed.
+fn only_screen_lines(output: &Output) {
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout
+            .lines()
+            .all(|line| line.trim_start_matches('\r').starts_with('[')),
+        "{stdout}"
+    );
+}
+
 #[test]
 fn cli_numeric_and_extension_filters_select_without_downloading() {
     let server = Server::new();
@@ -242,11 +253,16 @@ fn playlist_filter_failure_is_atomic_for_json_and_downloads() {
     let directory = tempfile::tempdir().unwrap();
     let template = directory.path().join("%(id)s.%(ext)s");
     for mode in [vec!["-j", "-s"], Vec::new()] {
+        let json = !mode.is_empty();
         let mut args = mode;
         args.extend(["-f", "best[height<=720]", "-o", template.to_str().unwrap()]);
         let output = server.cli("/playlist.html", &args);
         assert!(!output.status.success());
-        assert!(output.stdout.is_empty());
+        if json {
+            assert!(output.stdout.is_empty());
+        } else {
+            only_screen_lines(&output);
+        }
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     }
     assert_eq!(server.count("/low.mp4"), 2);
@@ -413,6 +429,7 @@ fn grouped_playlist_selection_keeps_all_entries_atomic() {
     let directory = tempfile::tempdir().unwrap();
     let template = directory.path().join("%(id)s.%(ext)s");
     for mode in [vec!["-j", "-s"], Vec::new()] {
+        let json = !mode.is_empty();
         let mut args = mode;
         args.extend([
             "-f",
@@ -422,7 +439,11 @@ fn grouped_playlist_selection_keeps_all_entries_atomic() {
         ]);
         let output = server.cli("/playlist.html", &args);
         assert!(!output.status.success());
-        assert!(output.stdout.is_empty());
+        if json {
+            assert!(output.stdout.is_empty());
+        } else {
+            only_screen_lines(&output);
+        }
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     }
     for path in ["/low.mp4", "/medium.mp4", "/high.mp4"] {
@@ -537,6 +558,7 @@ fn indexed_playlist_failure_is_atomic_before_json_and_downloads() {
     let directory = tempfile::tempdir().unwrap();
     let template = directory.path().join("%(id)s.%(ext)s");
     for mode in [vec!["-j", "-s"], Vec::new()] {
+        let json = !mode.is_empty();
         let mut args = mode;
         args.extend([
             "-f",
@@ -546,7 +568,11 @@ fn indexed_playlist_failure_is_atomic_before_json_and_downloads() {
         ]);
         let output = server.cli("/playlist.html", &args);
         assert!(!output.status.success());
-        assert!(output.stdout.is_empty());
+        if json {
+            assert!(output.stdout.is_empty());
+        } else {
+            only_screen_lines(&output);
+        }
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     }
     for path in ["/low.mp4", "/medium.mp4", "/high.mp4"] {

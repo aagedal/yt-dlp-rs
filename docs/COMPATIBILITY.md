@@ -12,9 +12,9 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-j`, `--dump-json` | One selected `VideoInfo` JSON object per video, including each HTML5 playlist entry; no downloads; with `-F`, a table precedes JSON |
 | `-J`, `--dump-single-json` | One JSON object per URL after selection: the `-j` object for videos; playlists add `_type`, `playlist_count`, `requested_entries` and selected `entries`; implies quiet simulation; native field shape like `-j`, not upstream `sanitize_info` output |
 | `-F`, `--list-formats` | List eligible alternatives without selection or downloads; combined `-j`/`-s` retain normal selection; native table styling |
-| `-q`, `--quiet`, `--no-quiet` | Suppress informational `[...]` stderr lines (upstream `to_screen`); implied by printing/JSON unless `--no-quiet`; errors and warnings remain; last flag wins |
+| `-q`, `--quiet`, `--no-quiet` | Suppress informational `[...]` stdout lines (upstream `to_screen`); implied by printing/JSON unless `--no-quiet`; errors and warnings remain; last flag wins |
 | `--no-warnings` | Suppress `WARNING:` lines |
-| `-s`, `--simulate`, `--no-simulate` | Extract metadata, write diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
+| `-s`, `--simulate`, `--no-simulate` | Extract metadata, print screen lines to stdout and diagnostics to stderr, create no media files; `--no-simulate` downloads even with printing/JSON/listing; last flag wins; resolution matches upstream (`tools/compare_simulate.py`) |
 | `-O`, `--print [WHEN:]TEMPLATE` | Print a field list or unsanitized output template per selected video at the `video`, `before_dl`, `post_process`, `after_move` or `after_video` stage; implies quiet, and simulation unless a later stage prints; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-filename` | Hidden upstream aliases printing title, ID, selected URLs and prepared filename after `--print` lines; imply quiet simulation |
 | `-f`, `--format` | Bounded single-source ranking/IDs, audio/video selectors, two-stream `+` pairs, grouped `/` fallbacks, aliases and bare/chained numeric/text filters; see selection policy below; format IDs follow upstream for direct, HLS and DASH results (see below) |
@@ -96,8 +96,10 @@ Downloading 1 format(s): FORMAT` after selection. Archived or filtered entries
 are reported before the first item rather than interleaved, and the updated
 playlist info JSON is not rewritten after the entries are processed.
 
-Informational lines go to stderr natively (upstream writes them to stdout
-unless quiet). Option validations that upstream reports through `parser.error`
+Informational `to_screen` lines and progress go to stdout like upstream's
+`_out_files`, or to stderr when the default output template is `-`
+(`logtostderr`; `-o -` itself is not supported yet); `WARNING:`/`ERROR:` lines
+and the STDIN batch prompt use stderr. Option validations that upstream reports through `parser.error`
 (audio/remux/recode/subtitle/thumbnail formats, audio quality, playlist
 start/end/items, sleep intervals, file sizes, rate limit, dates and a missing
 URL) print upstream's blank line, `Usage: yt-dlp-rs [OPTIONS] URL [URL...]`,
@@ -510,7 +512,7 @@ by a callback immediately before publication.
 The CLI renders upstream `FileDownloader.report_progress` lines (ported
 `format_bytes`/`format_seconds`/`format_eta`/`format_speed`/`format_percent` and
 templates, checked against actual upstream output in
-`tests/fixtures/progress/cases.json`) on stderr through a port of
+`tests/fixtures/progress/cases.json`) on stdout through a port of
 `minicurses`' single-line printer: each status starts with `\r` and is padded
 over the previous one, the `100% of SIZE in TIME at SPEED` finished line ends
 with a newline, `--newline` prints one line per status, and quiet output with
@@ -1407,7 +1409,7 @@ templates; FILE is a sanitized output template. Both are validated at startup.
 For each processed video, every destination and line is rendered first, then
 lines are appended (UTF-8, parent directories created) before any download.
 Unlike `--print` it does not imply simulation; the `[info] Writing 'TEMPLATE'
-to: FILE` notice (Python `repr`) goes to stderr and is suppressed while quiet.
+to: FILE` notice (Python `repr`) is a screen line, suppressed while quiet.
 
 A 19-case fixture compares exact printed lines with actual pinned upstream
 `parseOpts` and `__forced_printings`, plus five source-only rejection cases.

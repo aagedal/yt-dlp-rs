@@ -210,9 +210,14 @@ fn json_with_listing_follows_table_and_retains_all_formats_after_explicit_select
     for mode in ["-j", "-s"] {
         let output = server.cli("/page.html", &["-F", mode, "-f", "999"]);
         assert!(!output.status.success());
+        // Only screen lines remain (none with -j): no table and no JSON.
+        let stdout = String::from_utf8_lossy(&output.stdout);
         assert!(
-            output.stdout.is_empty(),
-            "selection failure must precede listing output"
+            stdout
+                .lines()
+                .all(|line| line.trim_start_matches('\r').starts_with('['))
+                && (mode != "-j" || stdout.is_empty()),
+            "selection failure must precede listing output: {stdout}"
         );
     }
 }

@@ -1224,7 +1224,9 @@ fn cli_extraction_retries_apply_to_json_and_simulation_without_downloads() {
             let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
             assert_eq!(info["ext"], "mp4");
         } else {
-            assert!(output.stdout.is_empty());
+            // Simulation prints no JSON: stdout holds only screen lines.
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            assert!(stdout.lines().all(|line| line.starts_with('[')), "{stdout}");
         }
     }
 }
@@ -1589,11 +1591,11 @@ fn cli_part_files_resume_across_runs_or_restart_with_no_continue() {
             "{}",
             String::from_utf8_lossy(&output.stderr)
         );
-        let stderr = String::from_utf8_lossy(&output.stderr);
+        let stdout = String::from_utf8_lossy(&output.stdout);
         assert_eq!(
-            stderr.contains("[download] Resuming download at byte 9"),
+            stdout.contains("[download] Resuming download at byte 9"),
             resumed,
-            "{stderr}"
+            "{stdout}"
         );
         assert_eq!(
             std::fs::read(directory.path().join("clip.mp4")).unwrap(),

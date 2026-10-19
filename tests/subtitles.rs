@@ -463,7 +463,7 @@ fn existing_sidecars_follow_overwrite_modes_and_existing_media_is_already_downlo
         directory.path(),
     );
     success(&output);
-    assert!(String::from_utf8_lossy(&output.stderr).contains("has already been downloaded"));
+    assert!(String::from_utf8_lossy(&output.stdout).contains("has already been downloaded"));
     assert_eq!(
         std::fs::read(directory.path().join("video.mp4")).unwrap(),
         b"existing"
@@ -479,7 +479,7 @@ fn existing_sidecars_follow_overwrite_modes_and_existing_media_is_already_downlo
         directory.path(),
     );
     success(&output);
-    assert!(String::from_utf8_lossy(&output.stderr).contains("Deleting existing file video.mp4"));
+    assert!(String::from_utf8_lossy(&output.stdout).contains("Deleting existing file video.mp4"));
     assert_eq!(
         std::fs::read(directory.path().join("video.mp4")).unwrap(),
         b"media"

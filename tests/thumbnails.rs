@@ -132,8 +132,16 @@ fn list_thumbnails_prints_the_sanitized_poster_table_without_downloads() {
         directory.path(),
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
+    // Listing does not imply quiet: extraction screen lines precede the table.
+    let listing = |output: &Output| -> String {
+        text(&output.stdout)
+            .lines()
+            .filter(|line| !line.starts_with("[generic] "))
+            .map(|line| format!("{line}\n"))
+            .collect()
+    };
     assert_eq!(
-        text(&output.stdout),
+        listing(&output),
         format!(
             "[info] Available thumbnails for page-1:\nID Width   Height  URL\n0  unknown unknown {}\n",
             server.url("/poster.jpg")
@@ -143,7 +151,7 @@ fn list_thumbnails_prints_the_sanitized_poster_table_without_downloads() {
         &["--list-thumbnails", &server.url("/plain.html")],
         directory.path(),
     );
-    assert_eq!(text(&output.stdout), "plain-1 has no thumbnails\n");
+    assert_eq!(listing(&output), "plain-1 has no thumbnails\n");
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     let json = cli(&["-j", &server.url("/page.html")], directory.path());
     let value: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();
@@ -167,8 +175,8 @@ fn write_thumbnail_follows_upstream_messages_overwrites_and_flag_order() {
         directory.path(),
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
-    assert!(text(&output.stderr).contains("[info] Downloading video thumbnail 0 ..."));
-    assert!(text(&output.stderr).contains("[info] Writing video thumbnail 0 to: video.jpg"));
+    assert!(text(&output.stdout).contains("[info] Downloading video thumbnail 0 ..."));
+    assert!(text(&output.stdout).contains("[info] Writing video thumbnail 0 to: video.jpg"));
     assert_eq!(
         std::fs::read(directory.path().join("video.jpg")).unwrap(),
         b"jpeg"
@@ -186,7 +194,7 @@ fn write_thumbnail_follows_upstream_messages_overwrites_and_flag_order() {
         ],
         directory.path(),
     );
-    assert!(text(&output.stderr).contains("[info] Video thumbnail is already present"));
+    assert!(text(&output.stdout).contains("[info] Video thumbnail is already present"));
     assert_eq!(
         std::fs::read(directory.path().join("video.jpg")).unwrap(),
         b"old"
@@ -218,7 +226,7 @@ fn write_thumbnail_follows_upstream_messages_overwrites_and_flag_order() {
         missing.path(),
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
-    assert!(text(&output.stderr).contains("[info] Video Thumbnail 0 does not exist"));
+    assert!(text(&output.stdout).contains("[info] Video Thumbnail 0 does not exist"));
     assert!(missing.path().join("video.mp4").exists());
     assert!(!missing.path().join("video.jpg").exists());
     // --no-write-thumbnail after --write-thumbnail disables writing.
@@ -255,7 +263,7 @@ fn write_thumbnail_follows_upstream_messages_overwrites_and_flag_order() {
         ],
         all.path(),
     );
-    assert!(text(&none.stderr).contains("[info] There are no video thumbnails to download"));
+    assert!(text(&none.stdout).contains("[info] There are no video thumbnails to download"));
 }
 
 /// Fake ffmpeg/ffprobe pair built from the shared video pipeline helper.
@@ -338,7 +346,7 @@ fn embed_thumbnail_writes_embeds_and_deletes_unless_written_explicitly() {
         directory.path(),
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
-    assert!(text(&output.stderr).contains("[info] Writing video thumbnail 0 to: video.jpg"));
+    assert!(text(&output.stdout).contains("[info] Writing video thumbnail 0 to: video.jpg"));
     // The fake ffmpeg writes "source video" for two inputs.
     assert_eq!(names(directory.path()), ["video.mp4"]);
     assert_eq!(
@@ -380,7 +388,7 @@ fn embed_thumbnail_writes_embeds_and_deletes_unless_written_explicitly() {
         plain.path(),
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
-    assert!(text(&output.stderr).contains("[EmbedThumbnail] There aren't any thumbnails to embed"));
+    assert!(text(&output.stdout).contains("[EmbedThumbnail] There aren't any thumbnails to embed"));
     assert_eq!(
         std::fs::read(plain.path().join("video.mp4")).unwrap(),
         b"media"
@@ -448,14 +456,14 @@ fn convert_thumbnails_follows_mappings_and_keep_video() {
         directory.path(),
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
-    let stderr = text(&output.stderr);
+    let stdout = text(&output.stdout);
     assert!(
-        stderr.contains("[ThumbnailsConvertor] Converting thumbnail \"video.jpg\" to png"),
-        "{stderr}"
+        stdout.contains("[ThumbnailsConvertor] Converting thumbnail \"video.jpg\" to png"),
+        "{stdout}"
     );
     assert!(
-        stderr.contains("Deleting original file video.jpg (pass -k to keep)"),
-        "{stderr}"
+        stdout.contains("Deleting original file video.jpg (pass -k to keep)"),
+        "{stdout}"
     );
     assert_eq!(names(directory.path()), ["video.png"]);
     assert!(tools.log().contains("-update\n1\n-movflags\n+faststart\n"));
@@ -475,7 +483,7 @@ fn convert_thumbnails_follows_mappings_and_keep_video() {
         kept.path(),
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
-    assert!(!text(&output.stderr).contains("Deleting original file"));
+    assert!(!text(&output.stdout).contains("Deleting original file"));
     assert_eq!(names(kept.path()), ["video.jpg", "video.png"]);
     let skipped = tempfile::tempdir().unwrap();
     let output = tools.cli(
@@ -492,9 +500,9 @@ fn convert_thumbnails_follows_mappings_and_keep_video() {
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
     assert!(
-        text(&output.stderr).contains("[ThumbnailsConvertor] Not converting thumbnail \"video.jpg\"; could not find a mapping for jpg"),
+        text(&output.stdout).contains("[ThumbnailsConvertor] Not converting thumbnail \"video.jpg\"; could not find a mapping for jpg"),
         "{}",
-        text(&output.stderr)
+        text(&output.stdout)
     );
     assert_eq!(names(skipped.path()), ["video.jpg"]);
     // Invalid formats fail before any request.

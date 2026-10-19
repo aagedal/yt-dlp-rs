@@ -119,7 +119,8 @@ fn page_and_direct_metadata_follow_upstream_generic_fields() {
     assert_eq!(plain["thumbnail"], format!("{}/p.jpg", server.origin));
 }
 
-fn simulate(args: &[&str]) -> (Option<i32>, String) {
+/// Exit code, stdout (screen lines) and stderr (warnings and errors).
+fn simulate(args: &[&str]) -> (Option<i32>, String, String) {
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .args(["--proxy", "", "-s"])
         .args(args)
@@ -127,6 +128,7 @@ fn simulate(args: &[&str]) -> (Option<i32>, String) {
         .unwrap();
     (
         output.status.code(),
+        String::from_utf8_lossy(&output.stdout).into_owned(),
         String::from_utf8_lossy(&output.stderr).into_owned(),
     )
 }
@@ -172,21 +174,21 @@ fn date_age_view_and_title_selection_follow_upstream_match_entry() {
             Some("[download] \"Meta page (1)\" title matched reject pattern \"p.ge\""),
         ),
     ] {
-        let (code, stderr) = simulate(&[args.as_slice(), &[url.as_str()]].concat());
+        let (code, stdout, stderr) = simulate(&[args.as_slice(), &[url.as_str()]].concat());
         assert_eq!(code, Some(0), "{args:?}: {stderr}");
         match reason {
-            Some(reason) => assert!(stderr.contains(reason), "{args:?}: {stderr}"),
-            None => assert!(!stderr.contains("[download] "), "{args:?}: {stderr}"),
+            Some(reason) => assert!(stdout.contains(reason), "{args:?}: {stdout}"),
+            None => assert!(!stdout.contains("[download] "), "{args:?}: {stdout}"),
         }
     }
     // --break-on-reject turns any rejection into upstream's cancellation.
-    let (code, stderr) = simulate(&["--break-on-reject", "--age-limit", "1", &page]);
+    let (code, stdout, _) = simulate(&["--break-on-reject", "--age-limit", "1", &page]);
     assert_eq!(code, Some(101));
-    assert!(stderr.contains(
+    assert!(stdout.contains(
         "[download] Skipping \"Meta page (1)\" because it is age restricted\n[info] Encountered a video that did not match filter, stopping due to --break-match-filter\nAborting remaining downloads"
-    ), "{stderr}");
+    ), "{stdout}");
     // --date wins over --dateafter/--datebefore with upstream warnings.
-    let (code, stderr) = simulate(&[
+    let (code, _, stderr) = simulate(&[
         "--dateafter",
         "20990101",
         "--datebefore",
@@ -206,14 +208,14 @@ fn date_age_view_and_title_selection_follow_upstream_match_entry() {
             "time data '20200001' does not match format '%Y%m%d'",
         ),
     ] {
-        let (code, stderr) = simulate(&["--date", value, "http://127.0.0.1:9/never"]);
+        let (code, _, stderr) = simulate(&["--date", value, "http://127.0.0.1:9/never"]);
         assert_eq!(code, Some(2));
         assert!(
             stderr.ends_with(&format!("yt-dlp-rs: error: {message}\n")),
             "{value}: {stderr}"
         );
     }
-    let (_, stderr) = simulate(&[
+    let (_, _, stderr) = simulate(&[
         "--dateafter",
         "20200102",
         "--datebefore",
@@ -264,43 +266,48 @@ fn mtime_sets_media_modification_times_from_last_modified() {
 #[test]
 fn generic_extraction_reports_upstream_screen_lines() {
     let server = Server::new();
-    let lines = |args: &[&str], path: &str| -> Vec<String> {
-        let (code, stderr) =
+    // Screen lines go to stdout and warnings to stderr, like upstream.
+    let lines = |args: &[&str], path: &str| -> (Vec<String>, Vec<String>) {
+        let (code, stdout, stderr) =
             simulate(&[args, &[format!("{}{path}", server.origin).as_str()]].concat());
         assert_eq!(code, Some(0), "{stderr}");
-        stderr
-            .lines()
-            .filter(|line| line.starts_with("[generic]") || line.starts_with("WARNING"))
-            .map(|line| line.replace(&server.origin, "<O>"))
-            .collect()
+        let normalize = |text: &str| -> Vec<String> {
+            text.lines()
+                .filter(|line| line.starts_with("[generic]") || line.starts_with("WARNING"))
+                .map(|line| line.replace(&server.origin, "<O>"))
+                .collect()
+        };
+        (normalize(&stdout), normalize(&stderr))
     };
+    let warning = "WARNING: [generic] Falling back on generic information extractor";
+    let (screen, warnings) = lines(&[], "/media/clip.mp4");
     assert_eq!(
-        lines(&[], "/media/clip.mp4"),
+        screen,
         [
             "[generic] Extracting URL: <O>/media/clip.mp4",
             "[generic] clip: Downloading webpage",
         ]
     );
+    assert!(warnings.is_empty(), "{warnings:?}");
+    let page_screen = [
+        "[generic] Extracting URL: <O>/meta.html",
+        "[generic] meta: Downloading webpage",
+        "[generic] meta: Extracting information",
+    ];
     assert_eq!(
         lines(&[], "/meta.html"),
-        [
-            "[generic] Extracting URL: <O>/meta.html",
-            "[generic] meta: Downloading webpage",
-            "WARNING: [generic] Falling back on generic information extractor",
-            "[generic] meta: Extracting information",
-        ]
+        (
+            page_screen.map(String::from).to_vec(),
+            vec![warning.to_owned()]
+        )
     );
     assert_eq!(
         lines(&["--no-warnings"], "/meta.html"),
-        [
-            "[generic] Extracting URL: <O>/meta.html",
-            "[generic] meta: Downloading webpage",
-            "[generic] meta: Extracting information",
-        ]
+        (page_screen.map(String::from).to_vec(), Vec::new())
     );
     assert_eq!(
         lines(&["-q"], "/meta.html"),
-        ["WARNING: [generic] Falling back on generic information extractor"]
+        (Vec::new(), vec![warning.to_owned()])
     );
 }
 
@@ -309,9 +316,9 @@ fn sleep_requests_waits_before_later_extraction_requests() {
     let server = Server::new();
     let page = format!("{}/meta.html", server.origin);
     let direct = format!("{}/media/clip.mp4", server.origin);
-    let (code, stderr) = simulate(&["--sleep-requests", "0.2", &direct, &page]);
+    let (code, stdout, stderr) = simulate(&["--sleep-requests", "0.2", &direct, &page]);
     assert_eq!(code, Some(0), "{stderr}");
-    let lines: Vec<_> = stderr
+    let lines: Vec<_> = stdout
         .lines()
         .filter(|line| line.starts_with("[generic]"))
         .map(|line| line.replace(&server.origin, "<O>"))
@@ -329,7 +336,7 @@ fn sleep_requests_waits_before_later_extraction_requests() {
             "[generic] meta: Extracting information",
         ]
     );
-    let (code, stderr) = simulate(&["--sleep-requests", "-1", &direct]);
+    let (code, _, stderr) = simulate(&["--sleep-requests", "-1", &direct]);
     assert_eq!(code, Some(2));
     assert!(stderr.contains("requests sleep interval \"-1.0\" must be positive or 0"));
 }

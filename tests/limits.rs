@@ -97,6 +97,10 @@ fn stderr(output: &Output) -> String {
     String::from_utf8_lossy(&output.stderr).into_owned()
 }
 
+fn stdout(output: &Output) -> String {
+    String::from_utf8_lossy(&output.stdout).into_owned()
+}
+
 #[test]
 fn max_downloads_stops_after_processed_videos_with_exit_101() {
     let server = Server::new();
@@ -105,7 +109,7 @@ fn max_downloads_stops_after_processed_videos_with_exit_101() {
     let output = cli(&["--max-downloads", "1", &a, &b], directory.path(), None);
     assert_eq!(output.status.code(), Some(101), "{}", stderr(&output));
     assert!(
-        stderr(&output).contains(
+        stdout(&output).contains(
             "[info] Maximum number of downloads reached, stopping due to --max-downloads"
         )
     );
@@ -159,9 +163,9 @@ fn filesize_limits_skip_media_without_error_or_archive() {
         );
         assert!(output.status.success(), "{}", stderr(&output));
         assert!(
-            stderr(&output).contains(&format!("[download] {message}")),
+            stdout(&output).contains(&format!("[download] {message}")),
             "{}",
-            stderr(&output)
+            stdout(&output)
         );
         assert!(!archive.exists());
         assert!(!directory.path().join("a [a].mp4").exists());
@@ -181,6 +185,7 @@ fn quiet_and_no_warnings_suppress_screen_and_warning_lines() {
     let url = server.url("/a.mp4");
     let output = cli(&["-q", &url], directory.path(), None);
     assert!(output.status.success());
+    assert_eq!(stdout(&output), "");
     assert_eq!(stderr(&output), "");
     assert!(directory.path().join("a [a].mp4").exists());
     // Errors are still reported when quiet.
@@ -193,7 +198,7 @@ fn quiet_and_no_warnings_suppress_screen_and_warning_lines() {
         directory.path(),
         None,
     );
-    assert!(stderr(&output).contains("[download] Destination:"));
+    assert!(stdout(&output).contains("[download] Destination:"));
     let output = cli(
         &[
             "--no-warnings",
@@ -260,7 +265,7 @@ fn sleep_interval_pauses_before_media_and_validates_like_upstream() {
     );
     assert!(output.status.success(), "{}", stderr(&output));
     assert!(start.elapsed() >= Duration::from_millis(400));
-    let slept: f64 = stderr(&output)
+    let slept: f64 = stdout(&output)
         .split("[download] Sleeping ")
         .nth(1)
         .and_then(|rest| rest.split(' ').next())
@@ -270,7 +275,7 @@ fn sleep_interval_pauses_before_media_and_validates_like_upstream() {
     // Already-downloaded files do not sleep.
     let output = cli(&["--sleep-interval", "5", &url], directory.path(), None);
     assert!(output.status.success());
-    assert!(!stderr(&output).contains("Sleeping"));
+    assert!(!stdout(&output).contains("Sleeping"));
     for (args, message) in [
         (
             vec!["--max-sleep-interval", "1"],
@@ -316,7 +321,7 @@ fn match_filters_skip_or_break_like_upstream() {
         directory.path(),
         None,
     );
-    assert!(stderr(&output).contains("[download] b does not pass filter (title=a), skipping .."));
+    assert!(stdout(&output).contains("[download] b does not pass filter (title=a), skipping .."));
     // Repeated filters are alternatives; --no-match-filters discards earlier ones.
     let output = cli(
         &[
@@ -361,7 +366,7 @@ fn match_filters_skip_or_break_like_upstream() {
         None,
     );
     assert_eq!(output.status.code(), Some(101), "{}", stderr(&output));
-    assert!(stderr(&output).contains(
+    assert!(stdout(&output).contains(
         "[download] b does not pass filter (id!=b), skipping ..\n[info] Encountered a video that did not match filter, stopping due to --break-match-filter\nAborting remaining downloads"
     ));
     assert!(directory.path().join("a [a].mp4").exists());
@@ -382,7 +387,7 @@ fn write_description_reports_missing_descriptions_without_files() {
         None,
     );
     assert!(output.status.success());
-    assert!(stderr(&output).contains("[info] There's no video description to write"));
+    assert!(stdout(&output).contains("[info] There's no video description to write"));
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     // Simulation never writes descriptions; the last flag wins.
     let output = cli(
@@ -390,5 +395,5 @@ fn write_description_reports_missing_descriptions_without_files() {
         directory.path(),
         None,
     );
-    assert!(!stderr(&output).contains("description"));
+    assert!(!stdout(&output).contains("description"));
 }

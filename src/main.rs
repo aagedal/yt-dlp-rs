@@ -26,11 +26,18 @@ use yt_dlp_rs::{
 static QUIET: AtomicBool = AtomicBool::new(false);
 /// `--no-warnings`: suppress `WARNING:` lines.
 static NO_WARNINGS: AtomicBool = AtomicBool::new(false);
+/// Upstream `logtostderr` (`-o -`): screen and progress output use stderr.
+static LOG_TO_STDERR: AtomicBool = AtomicBool::new(false);
 
+/// Upstream `to_screen`: stdout, or stderr with `logtostderr`.
 macro_rules! screen {
     ($($arg:tt)*) => {
         if !QUIET.load(Ordering::Relaxed) {
-            eprintln!($($arg)*);
+            if LOG_TO_STDERR.load(Ordering::Relaxed) {
+                eprintln!($($arg)*);
+            } else {
+                println!($($arg)*);
+            }
         }
     };
 }
@@ -1146,6 +1153,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         None
     };
     let templates = OutputTemplates::parse(&args.output, args.restrict_filenames);
+    LOG_TO_STDERR.store(templates.get(None) == "-", Ordering::Relaxed);
     let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
@@ -2402,7 +2410,8 @@ struct ProgressOptions {
 }
 
 /// `FileDownloader.report_progress` through one status printer per
-/// downloaded stream, written to stderr like other informational output.
+/// downloaded stream, written to upstream's `_out_files.out` (stdout, or
+/// stderr with `logtostderr`).
 struct ProgressReporter<'a> {
     options: &'a ProgressOptions,
     active: Option<ActiveDownload>,
@@ -2425,9 +2434,15 @@ impl<'a> ProgressReporter<'a> {
     }
 
     fn write(text: &str) {
-        let mut stderr = io::stderr().lock();
-        let _ = stderr.write_all(text.as_bytes());
-        let _ = stderr.flush();
+        if LOG_TO_STDERR.load(Ordering::Relaxed) {
+            let mut stderr = io::stderr().lock();
+            let _ = stderr.write_all(text.as_bytes());
+            let _ = stderr.flush();
+        } else {
+            let mut stdout = io::stdout().lock();
+            let _ = stdout.write_all(text.as_bytes());
+            let _ = stdout.flush();
+        }
     }
 
     fn event(&mut self, progress: &yt_dlp_rs::DownloadProgress) {
