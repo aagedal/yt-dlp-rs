@@ -5,6 +5,7 @@ mod bild;
 pub(crate) mod blogger;
 mod cjsw;
 mod cozytv;
+mod crtvg;
 mod cultureunplugged;
 mod dash;
 pub(crate) mod direct;
@@ -59,6 +60,7 @@ pub use bild::{Bild, suitable as bild_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
 pub use cozytv::{CozyTv, suitable as cozytv_suitable};
+pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
@@ -134,8 +136,21 @@ pub(crate) fn request_error_text(
     format!("[{extractor}] {id}: Unable to download {what}: {text} (caused by {cause})")
 }
 
+/// Upstream `_report_ignoring_subs(NAME)` for `_extract_m3u8_formats` and
+/// `_extract_mpd_formats`, which drop a manifest's subtitles.
+fn ignore_subtitles(info: &mut crate::VideoInfo, extractor: &str, name: &str) {
+    if !info.subtitles.is_empty() {
+        crate::screen::warning_once(&format!(
+            "[{extractor}] Ignoring subtitle tracks found in the {name} manifest; if any subtitle tracks are missing, {}",
+            crate::BUG_REPORTS_MESSAGE
+        ));
+        info.subtitles = Default::default();
+    }
+}
+
 /// Upstream fatal `_extract_m3u8_formats_and_subtitles(url, video_id,
-/// m3u8_id=M3U8_ID)`: `[EXTRACTOR] ID: Downloading m3u8 information`, the
+/// m3u8_id=M3U8_ID)` (or `_extract_m3u8_formats` without
+/// `keep_subtitles`): `[EXTRACTOR] ID: Downloading m3u8 information`, the
 /// request (an HTTP error is `Failed to download m3u8 information`), and the
 /// playlist's formats and subtitles.
 pub(crate) fn extract_m3u8_fatal(
@@ -144,6 +159,7 @@ pub(crate) fn extract_m3u8_fatal(
     extractor: &'static str,
     id: &str,
     m3u8_id: Option<&str>,
+    keep_subtitles: bool,
 ) -> crate::Result<crate::VideoInfo> {
     let note = format!("[{extractor}] {id}: Downloading m3u8 information");
     crate::screen::expect_page(id, Some(note.clone()), None);
@@ -164,9 +180,13 @@ pub(crate) fn extract_m3u8_fatal(
         })
         .and_then(|response| hls::from_response(client, response, manifest, None, true, m3u8_id));
     crate::screen::clear_page();
-    parsed?.ok_or_else(|| {
+    let mut info = parsed?.ok_or_else(|| {
         crate::Error::UnsupportedHtml5(format!("the {extractor} stream is not an HLS playlist"))
-    })
+    })?;
+    if !keep_subtitles {
+        ignore_subtitles(&mut info, extractor, "HLS");
+    }
+    Ok(info)
 }
 
 /// Upstream `_extract_m3u8_formats_and_subtitles(..., fatal=False)`: the
@@ -178,21 +198,68 @@ pub(crate) fn extract_m3u8_optional(
     extractor: &'static str,
     id: &str,
     m3u8_id: Option<&str>,
+    keep_subtitles: bool,
 ) -> Option<crate::VideoInfo> {
-    let note = format!("[{extractor}] {id}: Downloading m3u8 information");
+    extract_manifest_optional(
+        client,
+        manifest,
+        extractor,
+        id,
+        keep_subtitles,
+        &|response| hls::from_response(client, response, manifest, None, true, m3u8_id),
+        ("m3u8 information", "HLS"),
+    )
+}
+
+/// Upstream `_extract_mpd_formats_and_subtitles(..., fatal=False)` (or
+/// `_extract_mpd_formats` without `keep_subtitles`), without an `mpd_id`.
+pub(crate) fn extract_mpd_optional(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    keep_subtitles: bool,
+) -> Option<crate::VideoInfo> {
+    extract_manifest_optional(
+        client,
+        manifest,
+        extractor,
+        id,
+        keep_subtitles,
+        &|response| dash::from_response(response, manifest, true),
+        ("MPD manifest", "DASH"),
+    )
+}
+
+/// A non-fatal manifest request: `Downloading WHAT`, else a `Failed to
+/// download WHAT` warning.
+fn extract_manifest_optional(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    keep_subtitles: bool,
+    parse: &dyn Fn(reqwest::blocking::Response) -> crate::Result<Option<crate::VideoInfo>>,
+    (what, name): (&str, &str),
+) -> Option<crate::VideoInfo> {
+    let note = format!("[{extractor}] {id}: Downloading {what}");
     crate::screen::expect_page(id, Some(note.clone()), None);
     let response = direct::request(client, manifest, None);
     if response.is_err() {
         crate::screen::screen(&note);
     }
-    let parsed = response
-        .and_then(|response| hls::from_response(client, response, manifest, None, true, m3u8_id));
+    let parsed = response.and_then(parse);
     crate::screen::clear_page();
     match parsed {
-        Ok(stream) => stream,
+        Ok(mut stream) => {
+            if !keep_subtitles && let Some(stream) = &mut stream {
+                ignore_subtitles(stream, extractor, name);
+            }
+            stream
+        }
         Err(error) => {
             crate::screen::warning(&format!(
-                "[{extractor}] {id}: Failed to download m3u8 information: {}",
+                "[{extractor}] {id}: Failed to download {what}: {}",
                 crate::upstream_error_text(&error)
             ));
             None

@@ -45,7 +45,7 @@ impl Extractor for CozyTv {
         let manifest = Url::parse(&format!(
             "https://cozycdn.foxtrotstream.xyz/replays/{uploader}/{date}/index.m3u8"
         ))?;
-        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &id, None)?;
+        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &id, None, true)?;
         info.id = id;
         match data.get("title").and_then(Value::as_str) {
             Some(title) if !title.is_empty() => info.title = title.to_owned(),

@@ -1216,6 +1216,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("like_count", Assign),
             ("comment_count", Assign),
         ],
+        // `CrtvgIE._real_extract`'s dict.
+        "crtvg" => &[
+            ("id", Take),
+            ("_old_archive_ids", Assign),
+            ("formats", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),

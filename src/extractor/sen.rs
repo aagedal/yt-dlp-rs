@@ -56,7 +56,7 @@ impl Extractor for Sen {
             .find_map(super::json_ld::url_or_none)
             .unwrap_or_else(|| format!("https://vod.sen.com/videos/{id}/manifest.m3u8"));
         let manifest = Url::parse(&manifest)?;
-        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &id, None)?;
+        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &id, None, false)?;
         // `('data', 'nodes', lambda _, v: v['id'] == 'details', any,
         // 'content', {...})`.
         let content = node("details").next().and_then(|node| node.get("content"));

@@ -58,7 +58,7 @@ impl Extractor for Masters {
             )));
         };
         let manifest = Url::parse(manifest)?;
-        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &id, None)?;
+        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &id, None, true)?;
         // `traverse_obj(content_resp, ('images', 0), default={}).items()`.
         let images = match content.get("images").and_then(|images| images.get(0)) {
             None | Some(Value::Null) => serde_json::Map::new(),

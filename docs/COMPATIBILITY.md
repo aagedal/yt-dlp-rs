@@ -323,8 +323,9 @@ processing derives from it) and OpenGraph description.
 
 Sen videos (`sen.com/video/ID`) follow upstream `SenIE`: the content API's
 `player` node video URL (else the `vod.sen.com` manifest) as fatal HLS
-formats, and the first `details` node's title (else the generic title, after
-`fulltitle`), first description and string badge tags.
+formats (its subtitles ignored with upstream's warning), and the first
+`details` node's title (else the generic title, after `fulltitle`), first
+description and string badge tags.
 
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
@@ -399,6 +400,12 @@ CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 `USER-ID` ID, the cached replay JSON's title (else the generic title), `user`
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
+
+CRTVG programmes (`crtvg.es/tvg/a-carta/ID`) follow upstream `CrtvgIE`: the
+page's fatal `var url` base, its `playlist.m3u8` (without an `ext`) and
+`manifest.mpd` as non-fatal formats (their subtitles ignored with upstream's
+warning), the `og:title`/`twitter:title` meta without ` | CRTVG`, the
+description and image metas, and a seven-digit ID suffix's old archive ID.
 
 Culture Unplugged films (`cultureunplugged.com/[documentary/watch-online/]play/ID[/SLUG]`)
 follow upstream `CultureUnpluggedIE`: the movie data JSON as an untyped

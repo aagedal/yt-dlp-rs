@@ -90,7 +90,7 @@ impl Extractor for Kommunetv {
         let mut manifest = Url::parse(file)?;
         manifest.set_query(None);
         manifest.set_fragment(None);
-        let formats = extract_m3u8_optional(client, &manifest, NAME, &id, Some("hls"))
+        let formats = extract_m3u8_optional(client, &manifest, NAME, &id, Some("hls"), false)
             .map(|stream| stream.formats)
             .unwrap_or_default();
         if formats.is_empty() {

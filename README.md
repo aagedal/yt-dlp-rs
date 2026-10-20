@@ -88,7 +88,7 @@ Supported today:
   Prize media, Bild clips, Masters videos, Sen videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, Premiership Rugby videos, CJSW episodes,
   Player.fm episodes, RTRFM shows, HitRecord records, Culture Unplugged films,
-  Zhihu videos, plus
+  Zhihu videos, CRTVG programmes, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

@@ -68,7 +68,7 @@ impl Extractor for PremiershipRugby {
         let hero = key(article, "heroMedia", &display_id)?;
         let content = key(hero, "content", &display_id)?;
         let manifest = Url::parse(text(key(content, "videoLink", &display_id)?, "videoLink")?)?;
-        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &display_id, None)?;
+        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &display_id, None, true)?;
         super::hls::without_ext(&mut info);
         let id = text(
             key(content, "sourceSystemId", &display_id)?,

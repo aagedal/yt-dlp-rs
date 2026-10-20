@@ -67,7 +67,7 @@ impl Extractor for Graspop {
                 "Graspop asset URIs without an HTTP scheme are not supported natively".into(),
             ));
         }
-        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &id, None)?;
+        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &id, None, false)?;
         let title = metadata.get("name").and_then(Value::as_str);
         let shape = if title.is_some() {
             "graspop"

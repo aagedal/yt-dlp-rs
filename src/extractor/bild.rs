@@ -58,7 +58,7 @@ impl Extractor for Bild {
                 Some("application/x-mpegURL") => {
                     let manifest = Url::parse(src)?;
                     if let Some(stream) =
-                        extract_m3u8_optional(client, &manifest, NAME, &id, Some("hls"))
+                        extract_m3u8_optional(client, &manifest, NAME, &id, Some("hls"), false)
                     {
                         formats.extend(stream.formats);
                     }

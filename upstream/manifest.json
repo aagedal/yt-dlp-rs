@@ -280,6 +280,18 @@
       "scope": "CozyTVIE replay cache metadata (title/uploader/date/duration/was_live) and CDN HLS formats and subtitles compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "crtvg",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/crtvg.py"
+      ],
+      "rust": [
+        "src/extractor/crtvg.rs",
+        "tests/fixtures/sites/crtvg/"
+      ],
+      "scope": "CrtvgIE page stream base as non-fatal HLS (ext=None) and DASH formats with ignored-subtitle warnings, meta tags and old archive IDs compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cultureunplugged",
       "status": "partial",
       "upstream": [
