@@ -202,6 +202,9 @@ pub struct FixupOptions {
     /// `never`, `ignore`, `warn`, `detect_or_warn` (default) or `force`.
     pub policy: Option<String>,
     pub hls_use_mpegts: bool,
+    /// Upstream `postprocessed_by_ffmpeg`: a remux/recode to another
+    /// container follows, so only `FixupStretched` applies.
+    pub converted: bool,
 }
 
 /// Upstream `check_formats`: `--check-formats` (`selected`),
@@ -613,7 +616,7 @@ impl YoutubeDl {
             }
         }
         // Other fixups skip FFmpegFD downloads and merges.
-        if !info.requested_formats.is_empty() || self.uses_ffmpeg_fd(info) {
+        if !info.requested_formats.is_empty() || options.converted || self.uses_ffmpeg_fd(info) {
             return Ok(());
         }
         let protocol = info.protocol.as_deref().unwrap_or("");

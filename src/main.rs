@@ -2097,6 +2097,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         fixup: Some(yt_dlp_rs::FixupOptions {
             policy: args.fixup.clone(),
             hls_use_mpegts: args.hls_use_mpegts,
+            converted: false,
         }),
         audio: args.extract_audio.then_some(audio_options),
         video: recode.or(remux),
@@ -6233,9 +6234,9 @@ impl<'a> ProgressReporter<'a> {
         });
         active.downloaded = progress.downloaded_bytes;
         // Upstream's HTTP downloader reports after each received block.
-        if !self.options.enabled
-            || (progress.downloaded_bytes == 0 && progress.fragment_index.is_none())
-        {
+        // Nothing is reported before the first data (`ProgressCalculator`
+        // ignores empty updates, and HttpFD hooks after each block).
+        if !self.options.enabled || progress.downloaded_bytes == 0 {
             return;
         }
         if let Some(delta) = self.options.delta {

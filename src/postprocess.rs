@@ -197,6 +197,16 @@ pub(crate) fn download(
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<ProcessedDownload> {
     let existing = processors.existing.as_deref();
+    // `postprocessed_by_ffmpeg`: VideoRemuxer/VideoConvertor mapping the
+    // extension to another container.
+    let converted = |fixup: &crate::FixupOptions| crate::FixupOptions {
+        converted: processors
+            .video
+            .as_ref()
+            .and_then(|video| video.plan(&info.ext).ok())
+            .is_some_and(|plan| !plan.skip),
+        ..fixup.clone()
+    };
     if existing.is_none() && !options.overwrite {
         absent(destination)?;
     }
@@ -221,8 +231,19 @@ pub(crate) fn download(
     {
         let bytes = match existing {
             Some(existing) => fs::metadata(existing)?.len(),
-            None => downloader.download_with_progress(info, destination, options, callback)?,
+            None => {
+                downloader.download_with_progress(info, destination, options, &mut *callback)?
+            }
         };
+        // `fixup()` of a fresh download precedes the processors.
+        if let Some(fixup) = &processors.fixup
+            && existing.is_none()
+        {
+            if checkpoint(callback, bytes, DownloadPhase::Completed).is_break() {
+                return Err(Error::DownloadCancelled);
+            }
+            downloader.fixup(info, destination, destination, &converted(fixup))?;
+        }
         // Upstream still runs the processors, which report why they skip.
         if let Some(audio) = &processors.audio {
             let reason = match audio.target(&info.ext) {
@@ -315,7 +336,7 @@ pub(crate) fn download(
         if checkpoint(callback, bytes, DownloadPhase::Completed).is_break() {
             return Err(Error::DownloadCancelled);
         }
-        downloader.fixup(info, &input, destination, fixup)?;
+        downloader.fixup(info, &input, destination, &converted(fixup))?;
     }
     // End the transfer's progress before processors print (upstream reports
     // the download finished before running postprocessors).

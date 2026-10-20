@@ -101,3 +101,39 @@ fn single_dash_formats_get_the_duplicate_moov_fixup() {
     );
     assert!(!String::from_utf8_lossy(&output.stdout).contains("FixupDuplicateMoov"));
 }
+
+#[test]
+fn fixups_run_before_skipped_processors_but_not_before_conversions() {
+    let url = format!("{}/v.mpd", serve());
+    let tools = tempfile::tempdir().unwrap();
+    fake_ffmpeg(tools.path());
+    // `-x` of an m4a needs no conversion; the download is still fixed.
+    let directory = tempfile::tempdir().unwrap();
+    let output = run(directory.path(), tools.path(), &["-x"], &url);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(
+        stdout.contains(
+            "[FixupM4a] Correcting container of \"o.m4a\"\n[FixupDuplicateMoov] Fixing duplicate MOOV atoms of \"o.m4a\"\n[ExtractAudio] Not converting audio o.m4a; the file is already in a common audio format\n"
+        ),
+        "{stdout}"
+    );
+    // A remux to another container is `postprocessed_by_ffmpeg`.
+    let directory = tempfile::tempdir().unwrap();
+    let output = run(
+        directory.path(),
+        tools.path(),
+        &["-f", "bv", "--remux-video", "mkv"],
+        &url,
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout.contains("[VideoRemuxer] Remuxing video from mp4 to mkv"),
+        "{stdout}"
+    );
+    assert!(!stdout.contains("FixupDuplicateMoov"), "{stdout}");
+}
