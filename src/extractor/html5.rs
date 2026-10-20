@@ -670,6 +670,29 @@ impl Extractor for GenericHttp {
             detected("RSS feed");
             return Ok(Some(rss_playlist(feed, url, &page_url)));
         }
+        // `SmoothStreamingMedia`: the generic info dict with
+        // `_parse_ism_formats_and_subtitles`.
+        if let Some(parsed) = super::ism::parse(html, url, None) {
+            let parsed = parsed?;
+            detected("ISM manifest");
+            let mut info = direct::build_at(page_url.clone(), &page_url, String::new());
+            info.formats = parsed.formats;
+            info.subtitles = parsed.subtitles;
+            info.direct = None;
+            info.id = id.clone();
+            info.webpage_url = page_url.clone();
+            info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
+            if info.formats.is_empty() {
+                return Err(Error::Reported(format!(
+                    "[generic] {id}: No video formats found!; {}",
+                    crate::BUG_REPORTS_MESSAGE
+                )));
+            }
+            return Ok(Some(ExtractResult::Video(crate::info_order::mark_info(
+                info,
+                "generic-ism",
+            ))));
+        }
         // `{http://ns.adobe.com/f4m/[12].0}manifest`: the generic info dict
         // with `_parse_f4m_formats`.
         if let Some(manifest) = super::f4m::parse(html, url.as_str(), None) {

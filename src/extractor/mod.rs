@@ -8,6 +8,7 @@ mod historicfilms;
 pub(crate) mod hls;
 pub(crate) mod html5;
 mod hypem;
+pub(crate) mod ism;
 mod json_ld;
 mod jwplayer;
 mod kvs;

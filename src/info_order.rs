@@ -284,6 +284,37 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        // `_parse_ism_formats_and_subtitles`' track.
+        "ism" => &[
+            ("format_id", Take),
+            ("url", Take),
+            ("manifest_url", Take),
+            ("ext", Take),
+            ("width", Assign),
+            ("height", Assign),
+            ("tbr", Assign),
+            ("asr", Assign),
+            ("vcodec", Take),
+            ("acodec", Take),
+            ("protocol", Take),
+            ("fragments", Take),
+            ("has_drm", Take),
+            ("language", Take),
+            ("audio_channels", Assign),
+            ("_download_params", Take),
+        ],
+        // Its text track.
+        "ism-text" => {
+            replay.steps(&[
+                ("ext", Take),
+                ("protocol", Take),
+                ("url", Take),
+                ("manifest_url", Take),
+                ("fragments", Take),
+                ("_download_params", Take),
+            ]);
+            return replay.finish();
+        }
         // `_parse_f4m_formats`' media entry.
         "f4m" => &[
             ("format_id", Take),
@@ -478,19 +509,21 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     replay.format_steps();
     let mut out = replay.finish();
     // `int_or_none(source.get('bitrate'), scale=1000)` is an int.
-    if matches!(shape, "jwplayer-source" | "f4m")
+    if matches!(shape, "jwplayer-source" | "f4m" | "ism")
         && let Some(tbr) = out.get("tbr").and_then(Value::as_f64)
         && tbr.fract() == 0.0
     {
         out.insert("tbr".into(), (tbr as i64).into());
     }
-    // An F4M audio entry's `abr` is its int `tbr`.
-    if shape == "f4m"
-        && let Some(abr) = out.get("abr").and_then(Value::as_f64)
-        && abr.fract() == 0.0
-        && out.get("tbr").is_some_and(Value::is_i64)
-    {
-        out.insert("abr".into(), (abr as i64).into());
+    // An F4M/ISM entry's `abr`/`vbr` is its int `tbr`.
+    if matches!(shape, "f4m" | "ism") && out.get("tbr").is_some_and(Value::is_i64) {
+        for key in ["abr", "vbr"] {
+            if let Some(rate) = out.get(key).and_then(Value::as_f64)
+                && rate.fract() == 0.0
+            {
+                out.insert(key.into(), (rate as i64).into());
+            }
+        }
     }
     // `_extract_kvs`' `quality = 1`.
     if shape == "kvs"
@@ -794,6 +827,14 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
+        ],
+        // GenericIE's info dict with `_parse_ism_formats_and_subtitles`.
+        "generic-ism" => &[
+            ("id", Assign),
+            ("title", Assign),
+            ("timestamp", Assign),
+            ("formats", Take),
+            ("subtitles", Dict),
         ],
         // GenericIE's info dict with `_parse_f4m_formats`.
         "generic-f4m" => &[
@@ -1293,7 +1334,27 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     ] {
         replay.take(key);
     }
-    replay.finish()
+    let mut out = replay.finish();
+    // A merge of int-`tbr` (F4M/ISM) formats sums ints.
+    let int_rates = out
+        .get("requested_formats")
+        .and_then(Value::as_array)
+        .is_some_and(|formats| {
+            !formats.is_empty()
+                && formats
+                    .iter()
+                    .all(|format| format.get("tbr").is_some_and(Value::is_i64))
+        });
+    if int_rates {
+        for key in ["tbr", "vbr", "abr"] {
+            if let Some(rate) = out.get(key).and_then(Value::as_f64)
+                && rate.fract() == 0.0
+            {
+                out.insert(key.into(), (rate as i64).into());
+            }
+        }
+    }
+    out
 }
 
 /// A generic webpage playlist dict (`-J`) in upstream order.

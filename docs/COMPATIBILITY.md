@@ -213,6 +213,14 @@ extracted when the entry is processed and overlaid with the item's title,
 description, `pubDate`, iTunes duration/image/title/episode/season/explicit
 fields; `--flat-playlist` prints the raw entries unextracted, and numbered
 episodes, seasons and chapters get upstream's `Episode N` titles.
+A Smooth Streaming manifest (`SmoothStreamingMedia`) is the generic info dict
+with `_parse_ism_formats_and_subtitles`: H264/AVC1 video and AACL/EC-3 audio
+tracks as `protocol: ism` formats (`NAME-KBPS` IDs, int `tbr`, ISO 639-2
+languages, `_download_params`) and TTML text tracks as `ismt` subtitles, each
+with fragments from the `c` timeline (`t`/`d`/`r`, a missing duration taking
+upstream's stream-end fallback); other codecs warn `FOURCC is not a supported
+codec`, and live manifests have no formats. Downloading ISM formats is an
+unsupported error (upstream's `IsmFD` is not ported).
 An F4M manifest (`{http://ns.adobe.com/f4m/1.0|2.0}manifest`, ampersands fixed
 like `fix_xml_ampersands`) is the generic info dict with `_parse_f4m_formats`:
 unencrypted `media` entries as `protocol: f4m` formats (`flv` for stream-level

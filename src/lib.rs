@@ -2039,6 +2039,17 @@ impl YoutubeDl {
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
+        // Upstream `IsmFD` is not ported yet.
+        if info.protocol.as_deref() == Some("ism")
+            || info
+                .requested_formats
+                .iter()
+                .any(|format| format.protocol.as_deref() == Some("ism"))
+        {
+            return Err(Error::UnsupportedHtml5(
+                "ISM (Smooth Streaming) downloads are not supported natively".into(),
+            ));
+        }
         // Merged F4M formats are not supported (upstream merges F4mFD files).
         if info
             .requested_formats
