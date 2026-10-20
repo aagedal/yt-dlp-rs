@@ -251,7 +251,7 @@ Supported today:
 
 Other HTML pages, general YouTube support, broader DASH/HLS delivery, site playlists, broader
 authentication, persistent resume, broader subtitle acquisition, plugins
-(`--use-postprocessor`) and `--print-traffic` remain unimplemented. Format selection
+(`--use-postprocessor`) remain unimplemented. Format selection
 and sorting follow ports of upstream's `build_format_selector` and `FormatSorter`.
 Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.

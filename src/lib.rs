@@ -44,6 +44,7 @@ mod sqlite;
 mod subtitle_convert;
 mod subtitles;
 mod thumbnail_process;
+mod traffic;
 mod video;
 mod webvtt;
 pub mod xattr;
@@ -354,7 +355,11 @@ impl YoutubeDl {
             .cookie_provider(cookies.clone())
             .redirect(reqwest::redirect::Policy::limited(10))
             // Preserve an HTML5 page's explicit referrer across media redirects.
-            .referer(false);
+            .referer(false)
+            .connection_verbose(http.print_traffic);
+        if http.print_traffic {
+            traffic::enable();
+        }
         let client = proxy.apply(builder)?.build()?;
         Ok(Self {
             client,

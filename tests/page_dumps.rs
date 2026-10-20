@@ -131,3 +131,29 @@ fn m3u8_manifests_dump_after_their_notes() {
     );
     assert!(!String::from_utf8_lossy(&output.stdout).contains("Dumping request"));
 }
+
+/// `--print-traffic`: the request bytes sent and the response status line and
+/// headers, in `http.client`'s debug format.
+#[test]
+fn print_traffic_shows_requests_and_response_headers() {
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let output = run(
+        directory.path(),
+        &format!("{origin}/v.mp4"),
+        &["--print-traffic", "--user-agent", "UA/1"],
+    );
+    assert!(output.status.success());
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let send = stdout
+        .lines()
+        .find(|line| line.starts_with("send: b'GET /v.mp4 HTTP/1.1\\r\\n"))
+        .unwrap_or_else(|| panic!("{stdout}"));
+    assert!(
+        send.contains("user-agent: UA/1\\r\\n") && send.ends_with("\\r\\n\\r\\n'"),
+        "{send}"
+    );
+    assert!(stdout.contains(
+        "reply: 'HTTP/1.1 200 OK\\r\\n'\nheader: Content-Type: video/mp4\nheader: Content-Length: 5\nheader: Connection: close\n"
+    ), "{stdout}");
+}

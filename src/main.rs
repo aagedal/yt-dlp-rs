@@ -139,6 +139,9 @@ struct Args {
     /// Write downloaded intermediary pages to files in the current directory to debug problems
     #[arg(long)]
     write_pages: bool,
+    /// Display sent and read HTTP traffic
+    #[arg(long)]
+    print_traffic: bool,
     /// Resume partially downloaded files/fragments (default)
     #[arg(short = 'c', long = "continue", overrides_with_all = ["continue_partial", "no_continue"])]
     continue_partial: bool,
@@ -1732,6 +1735,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         yt_dlp_rs::screen::Message::Warning(text) => warning!("WARNING: {text}"),
         yt_dlp_rs::screen::Message::Stderr(text) => eprintln!("{text}"),
         yt_dlp_rs::screen::Message::Debug(text) => eprintln!("[debug] {text}"),
+        yt_dlp_rs::screen::Message::Stdout(text) => println!("{text}"),
     });
     NO_WARNINGS.store(args.no_warnings, Ordering::Relaxed);
     if args.no_download_archive {
@@ -2179,6 +2183,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let args_proxy = args.proxy.clone();
     http_options.proxy = args.proxy;
     http_options.socket_timeout = args.socket_timeout;
+    http_options.print_traffic = args.print_traffic;
     http_options.no_check_certificates = args.no_check_certificates;
     http_options.client_certificate = args.client_certificate.clone();
     http_options.client_certificate_key = args.client_certificate_key.clone();

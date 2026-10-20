@@ -30,6 +30,8 @@ pub struct HttpOptions {
     pub client_certificate: Option<std::path::PathBuf>,
     pub client_certificate_key: Option<std::path::PathBuf>,
     pub client_certificate_password: Option<String>,
+    /// `--print-traffic`: report the HTTP bytes sent and response headers.
+    pub print_traffic: bool,
 }
 
 /// Connection policy shared by the normal and bounded player clients.

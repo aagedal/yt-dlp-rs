@@ -170,6 +170,32 @@ pub fn load_batch_file(spec: &str) -> std::io::Result<Vec<String>> {
     Ok(read_batch_urls(&bytes))
 }
 
+/// Python `repr(bytes)`.
+pub fn py_bytes_repr(bytes: &[u8]) -> String {
+    let quote = if bytes.contains(&b'\'') && !bytes.contains(&b'"') {
+        '"'
+    } else {
+        '\''
+    };
+    let mut text = format!("b{quote}");
+    for &byte in bytes {
+        match byte {
+            b'\\' => text.push_str("\\\\"),
+            b'\t' => text.push_str("\\t"),
+            b'\n' => text.push_str("\\n"),
+            b'\r' => text.push_str("\\r"),
+            byte if byte == quote as u8 => {
+                text.push('\\');
+                text.push(quote);
+            }
+            0x20..=0x7e => text.push(byte as char),
+            byte => text.push_str(&format!("\\x{byte:02x}")),
+        }
+    }
+    text.push(quote);
+    text
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

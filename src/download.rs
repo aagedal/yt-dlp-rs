@@ -916,6 +916,7 @@ fn chunked_attempt(
         crate::screen::load_cookies().map_err(AttemptFailure::from)?;
         let mut response = request
             .send()
+            .inspect(|_| crate::screen::flush_traffic())
             .map_err(Error::Http)
             .and_then(crate::retry::check_response)
             .map_err(AttemptFailure::request)?;
@@ -1068,6 +1069,7 @@ fn download_attempt(
     crate::screen::load_cookies().map_err(AttemptFailure::from)?;
     let mut response = build(loose)
         .send()
+        .inspect(|_| crate::screen::flush_traffic())
         .map_err(Error::Http)
         .and_then(crate::retry::check_response)
         .map_err(AttemptFailure::request)?;

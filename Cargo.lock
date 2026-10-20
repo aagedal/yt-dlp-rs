@@ -2055,6 +2055,7 @@ dependencies = [
  "httpdate",
  "icu_normalizer",
  "icu_properties",
+ "log",
  "percent-encoding",
  "regex",
  "reqwest",

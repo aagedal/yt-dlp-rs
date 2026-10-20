@@ -83,7 +83,9 @@ pub(super) fn fetch_player(client: &Client, page: &Url, html: &str, id: &str) ->
     }
     crate::screen::before_extraction_request();
     crate::screen::load_cookies()?;
-    let response = crate::retry::check_response(request.body(body.to_string()).send()?)?;
+    let response = request.body(body.to_string()).send();
+    crate::screen::flush_traffic();
+    let response = crate::retry::check_response(response?)?;
     if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
         return Err(Error::PartialResponse);
     }

@@ -20,6 +20,9 @@ pub enum Message<'a> {
     /// A `write_debug` text (without the `[debug] ` prefix); only sent with
     /// `--verbose`.
     Debug(&'a str),
+    /// A line Python's `print()` writes to stdout (`--print-traffic`),
+    /// independently of quiet modes.
+    Stdout(&'a str),
 }
 
 type Sink = Box<dyn Fn(Message<'_>) + Send + Sync>;
@@ -65,6 +68,7 @@ pub fn load_cookies() -> crate::Result<()> {
     if SINK_THREAD.get() != Some(&std::thread::current().id()) {
         return Ok(());
     }
+    flush_traffic();
     // A failed load is retried (and fails again) at every later access.
     let error = COOKIE_ERROR.lock().unwrap().clone();
     let messages = if error.is_some() {
@@ -89,8 +93,21 @@ pub fn load_cookies() -> crate::Result<()> {
     }
 }
 
+/// Print captured `--print-traffic` lines, on the sink's thread only.
+pub(crate) fn flush_traffic() {
+    if SINK_THREAD.get() != Some(&std::thread::current().id()) {
+        return;
+    }
+    if let Some(sink) = SINK.get() {
+        for line in crate::traffic::take_lines() {
+            sink(Message::Stdout(&line));
+        }
+    }
+}
+
 /// `load_cookies` where a failure cannot be returned (it stays pending).
 pub(crate) fn after_request() {
+    flush_traffic();
     if COOKIE_ERROR.lock().unwrap().is_none() {
         let _ = load_cookies();
     }
