@@ -11,12 +11,13 @@ use std::{
 };
 use url::Url;
 
-/// `--extractor-args`: per lowercased extractor key, argument lists.
-static EXTRACTOR_ARGS: LazyLock<Mutex<BTreeMap<String, BTreeMap<String, Vec<String>>>>> =
-    LazyLock::new(Default::default);
+/// Parsed `--extractor-args`: per lowercased extractor key, argument lists.
+pub type ExtractorArgs = BTreeMap<String, BTreeMap<String, Vec<String>>>;
+
+static EXTRACTOR_ARGS: LazyLock<Mutex<ExtractorArgs>> = LazyLock::new(Default::default);
 
 /// Set the parsed `--extractor-args` (see `parse_extractor_args`).
-pub fn set_extractor_args(args: BTreeMap<String, BTreeMap<String, Vec<String>>>) {
+pub fn set_extractor_args(args: ExtractorArgs) {
     *EXTRACTOR_ARGS.lock().unwrap() = args;
 }
 
@@ -35,9 +36,7 @@ pub(crate) fn configuration_arg(ie_key: &str, key: &str, casesense: bool) -> Opt
 /// Upstream `--extractor-args IE_KEY:ARGS` (`_dict_from_options_callback`
 /// with `_extractor_arg_parser`): a later value for the same extractor
 /// replaces its arguments.
-pub fn parse_extractor_args(
-    values: &[String],
-) -> std::result::Result<BTreeMap<String, BTreeMap<String, Vec<String>>>, String> {
+pub fn parse_extractor_args(values: &[String]) -> std::result::Result<ExtractorArgs, String> {
     static OPTION: LazyLock<regex::Regex> =
         LazyLock::new(|| regex::Regex::new(r"(?is)^(?P<key>[\w-]+):(?P<val>.*)$").unwrap());
     let mut parsed = BTreeMap::new();
@@ -202,7 +201,7 @@ pub(crate) fn external_key(info: &VideoInfo) -> Result<Option<[u8; 16]>> {
 }
 
 fn hex_bytes(digits: &str) -> Option<Vec<u8>> {
-    if digits.len() % 2 != 0 {
+    if !digits.len().is_multiple_of(2) {
         return None;
     }
     (0..digits.len())

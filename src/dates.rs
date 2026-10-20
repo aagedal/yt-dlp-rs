@@ -1015,7 +1015,11 @@ fn local_offset(time: i64) -> Option<i64> {
         return None;
     }
     // SAFETY: initialized by the successful call above.
-    Some(unsafe { tm.assume_init() }.tm_gmtoff as i64)
+    let offset = unsafe { tm.assume_init() }.tm_gmtoff;
+    // `c_long` is `i32` on some targets.
+    #[allow(clippy::unnecessary_cast)]
+    let offset = offset as i64;
+    Some(offset)
 }
 
 #[cfg(not(unix))]
