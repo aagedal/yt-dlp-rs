@@ -392,6 +392,11 @@ OnePlace episodes (`oneplace.com/.../listen/SLUG-ID`) follow upstream
 heading or `og:title`/`title` meta title and the `epDesc` description as an
 untyped `mp3` audio result.
 
+Photobucket media (`photobucket.com/..._ID.mp4|flv`) follow upstream
+`PhotobucketIE`: the page's `Pb.Data.Shared.MEDIA` JSON (`Extracting
+information`) with the embed code's unquoted `file=` URL, username, creation
+date, title and thumbnail as an untyped result with the URL's extension.
+
 QingTing programs (`qingting.fm`/`qtfm.cn` `[v]channels/C/programs/P`) follow
 upstream `QingTingIE`: the mobile program page's `window.__initStores` JSON
 (`_search_json`) with the program title and audio URL, channel title and

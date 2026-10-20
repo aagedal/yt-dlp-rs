@@ -318,6 +318,18 @@
       "scope": "OnePlacePodcastIE page media URL, title fallbacks and description as an untyped mp3 result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "photobucket",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/photobucket.py"
+      ],
+      "rust": [
+        "src/extractor/photobucket.rs",
+        "tests/fixtures/sites/photobucket/"
+      ],
+      "scope": "PhotobucketIE page MEDIA JSON and embed file= URL as an untyped result compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "qingting",
       "status": "partial",
       "upstream": [
