@@ -66,6 +66,7 @@ mod tweakers;
 mod twentythreevideo;
 mod vocaroo;
 mod xspf;
+mod yfanefa;
 mod youtube;
 mod zhihu;
 
@@ -129,6 +130,7 @@ pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitab
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
+pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 

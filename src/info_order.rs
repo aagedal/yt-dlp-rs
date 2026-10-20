@@ -409,6 +409,7 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         ],
         // A `{'url': url}` format.
         "url-only" => &[("url", Take)],
+        "url-ext" => &[("url", Take), ("ext", Take)],
         // `StreamableIE`'s files.
         "streamable" => &[
             ("format_id", Take),
@@ -1372,6 +1373,14 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("description", Assign),
             ("creator", Assign),
             ("release_year", Assign),
+        ],
+        // `YfanefaIE._real_extract`'s dict.
+        "yfanefa" => &[
+            ("id", Take),
+            ("title", Take),
+            ("formats", Take),
+            ("thumbnail", Take),
+            ("duration", Take),
         ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[

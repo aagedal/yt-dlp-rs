@@ -52,9 +52,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--upstream', required=True, type=Path)
     parser.add_argument('--write', action='store_true')
+    parser.add_argument('sites', nargs='*', help='only these fixture directories (default: all)')
     args = parser.parse_args()
     failed = False
     for site in sorted(path for path in SITES.iterdir() if (path / 'cases.json').is_file()):
+        if args.sites and site.name not in args.sites:
+            continue
         proxy = SiteProxy(site)
         cases = json.loads((site / 'cases.json').read_text(encoding='utf-8'))
         expected = {'upstream_commit': PINNED_UPSTREAM,

@@ -498,6 +498,13 @@ milliseconds as `timestamp`, and an empty title; an empty title gets
 `_fill_common_fields`' generic title with its debug message (`fulltitle`
 stays `''`).
 
+Yorkshire Film Archive pages (`yfanefa.com/PATH`) follow upstream `YfanefaIE`
+(`yfanefa`): the page's fatal `iwPlayer.options[...]` JSON, its URL joined
+with the signature as fatal `hls` formats (subtitles ignored with upstream's
+warning) or one `mp4` format, the `PATH` ID with slashes as dashes, the
+OpenGraph title (else the `<title>` without ` | Yorkshire Film Archive`), and
+the URL-valued preview and integer duration.
+
 Zhihu videos (`zhihu.com/zvideo/ID`) follow upstream `ZhihuIE`: the zvideos
 API's playlist qualities with a URL (`url` else `play_url`) as formats with
 their sample rate, size, FPS, dimensions and bitrate, the fatal title, the
