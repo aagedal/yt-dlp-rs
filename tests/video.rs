@@ -201,6 +201,7 @@ fn options(format: &str, mode: VideoMode, keep: bool) -> PostprocessOptions {
         video: Some(VideoOptions::new(format, mode).unwrap()),
         keep_video: keep,
         embed: None,
+        ..Default::default()
     }
 }
 

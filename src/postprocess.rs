@@ -38,6 +38,13 @@ pub struct PostprocessOptions {
     /// `--remove-chapters`: upstream `ModifyChaptersPP` after subtitle
     /// embedding.
     pub modify_chapters: Option<ModifyChapters>,
+    /// `--parse-metadata`/`--replace-in-metadata` actions with their
+    /// template options: the `post_process` ones run after the fixups and
+    /// before the other processors, changing the info dict they read.
+    pub metadata_parser: Option<(
+        crate::metadata_parser::MetadataActions,
+        crate::output::TemplateOptions,
+    )>,
     /// An already-downloaded file (the destination) to process instead of
     /// downloading, like upstream's `post_process` after `has already been
     /// downloaded`. It is replaced in place by same-named results and
@@ -97,6 +104,25 @@ pub struct ProcessedDownload {
     pub chapters: Option<(Vec<crate::info::Chapter>, Option<u64>)>,
     /// The embedded thumbnail after its WebP extension fixup.
     pub thumbnail: Option<PathBuf>,
+    /// The info dict as `post_process` metadata parsing and
+    /// `ModifyChaptersPP` left it, when they changed it.
+    pub info: Option<VideoInfo>,
+}
+
+/// The `post_process` `MetadataParserPP` on a copy of `info`, if it runs.
+fn parse_post_process(
+    processors: &PostprocessOptions,
+    info: &VideoInfo,
+) -> Result<Option<VideoInfo>> {
+    let Some((actions, options)) = &processors.metadata_parser else {
+        return Ok(None);
+    };
+    if !actions.has("post_process") {
+        return Ok(None);
+    }
+    let mut parsed = info.clone();
+    actions.run_reported("post_process", &mut parsed, options)?;
+    Ok(Some(parsed))
 }
 
 struct Stage {
@@ -245,6 +271,7 @@ pub(crate) fn download(
             }
             downloader.fixup(info, destination, destination, &converted(fixup))?;
         }
+        let parsed = parse_post_process(processors, info)?;
         // Upstream still runs the processors, which report why they skip.
         if let Some(audio) = &processors.audio {
             crate::screen::postprocessor("ExtractAudio", "started");
@@ -278,6 +305,7 @@ pub(crate) fn download(
             errors: Vec::new(),
             chapters: None,
             thumbnail: None,
+            info: parsed,
         });
     }
     let keep = processors.keep_video
@@ -348,6 +376,7 @@ pub(crate) fn download(
     if checkpoint(callback, bytes, DownloadPhase::Postprocessing).is_break() {
         return Err(Error::DownloadCancelled);
     }
+    let parsed = parse_post_process(processors, info)?;
     // HLS media is labeled `mp4` like upstream; FFmpeg reads its real container.
     let container = crate::container::sniff(&input)
         .map(str::to_owned)
@@ -379,7 +408,8 @@ pub(crate) fn download(
     }];
     let mut publishing = false;
     // Info dict changes made by processors (`ModifyChaptersPP`).
-    let mut working = info.clone();
+    let parsed_metadata = parsed.is_some();
+    let mut working = parsed.unwrap_or_else(|| info.clone());
     let mut chapters_changed = false;
     let mut embedded_thumbnail = None;
     // Files kept with -k beside the results (`NAME.uncut.EXT`).
@@ -387,10 +417,12 @@ pub(crate) fn download(
     let mut delete_subtitles = Vec::new();
     let mut warnings = Vec::new();
     let mut errors = Vec::new();
-    // Upstream `run_pp` deletion notice for a processor's replaced input.
+    // Upstream `run_pp` deletion notices for a processor's replaced inputs,
+    // printed after the processor (and its `finished` hook) returns.
+    let notices = std::cell::RefCell::new(Vec::new());
     let deleted = |path: &Path| {
         if !keep {
-            crate::screen::screen(&format!(
+            notices.borrow_mut().push(format!(
                 "Deleting original file {} (pass -k to keep)",
                 path.display()
             ));
@@ -413,6 +445,12 @@ pub(crate) fn download(
                 })();
                 if runs && outcome.is_ok() {
                     crate::screen::postprocessor($key, "finished");
+                }
+                // A failed processor deletes nothing.
+                for notice in notices.borrow_mut().drain(..) {
+                    if outcome.is_ok() {
+                        crate::screen::screen(&notice);
+                    }
                 }
                 match outcome {
                     Ok(()) => {}
@@ -686,7 +724,7 @@ pub(crate) fn download(
                     current.container = current.ext.clone();
                     // Upstream returns the embedded subtitle files for deletion.
                     for (path, _) in &delete_subtitles[subtitle_start..] {
-                        crate::screen::screen(&format!(
+                        notices.borrow_mut().push(format!(
                             "Deleting original file {} (pass -k to keep)",
                             path.display()
                         ));
@@ -1149,6 +1187,7 @@ pub(crate) fn download(
             chapters: chapters_changed
                 .then(|| (working.metadata.chapters.clone(), working.metadata.duration)),
             thumbnail: embedded_thumbnail,
+            info: (parsed_metadata || chapters_changed).then(|| working.clone()),
         })
     })();
     match process {

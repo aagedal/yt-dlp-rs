@@ -1266,6 +1266,13 @@ fn run_playlist_stage(
     if stage.concat_pp {
         postprocess_progress("Concat", "started");
     }
+    // `run_pp` deletes the inputs after the processor's `finished` hook.
+    let concat_finished = std::cell::Cell::new(false);
+    let finish_concat = || {
+        if stage.concat_pp && !concat_finished.replace(true) {
+            postprocess_progress("Concat", "finished");
+        }
+    };
     if stage.concat && !stage.simulate && !files.is_empty() {
         let concat = (|| -> yt_dlp_rs::Result<()> {
             let Some(inputs) = files.iter().cloned().collect::<Option<Vec<PathBuf>>>() else {
@@ -1338,6 +1345,7 @@ fn run_playlist_stage(
                 output.display()
             );
             downloader.concat_files(&inputs, &output)?;
+            finish_concat();
             if !stage.keep {
                 for input in &inputs {
                     screen!(
@@ -1356,9 +1364,7 @@ fn run_playlist_stage(
             return Ok(false);
         }
     }
-    if stage.concat_pp {
-        postprocess_progress("Concat", "finished");
-    }
+    finish_concat();
     // One `ExecPP` runs the stage's commands.
     let has_exec = exec.stage(Stage::Playlist).next().is_some();
     if has_exec {
@@ -1560,9 +1566,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .map_err(usage)?;
         }
         for when in yt_dlp_rs::metadata_parser::WHEN {
-            if actions.has(when) && !matches!(when, "pre_process" | "after_filter" | "video") {
+            if actions.has(when) && when == "playlist" {
                 return Err(usage(format!(
-                    "metadata parsing at {when} is not supported natively; use pre_process, after_filter or video"
+                    "metadata parsing at {when} is not supported natively"
                 ))
                 .into());
             }
@@ -2139,6 +2145,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         });
     let processors = PostprocessOptions {
         existing: None,
+        // Filled per video with the template options.
+        metadata_parser: None,
         modify_chapters,
         ignore_errors: error_mode == ErrorMode::Ignore,
         no_post_overwrites: args.no_post_overwrites,
@@ -3920,9 +3928,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 stage_paths(None, &prepared),
                             )?
                             .emit()?;
-                            // Upstream's `before_dl` processors: SubtitlesConvertor,
-                            // ThumbnailsConvertor, then `--exec before_dl:`; a
-                            // failure skips the rest.
+                            // Upstream's `before_dl` processors: MetadataParser,
+                            // SubtitlesConvertor, ThumbnailsConvertor, then
+                            // `--exec before_dl:`; a failure skips the rest.
+                            run_metadata_parser(
+                                &metadata_actions,
+                                "before_dl",
+                                &mut info,
+                                &template_options,
+                            )?;
                             let before_dl = (|| -> Result<(), String> {
                                 if let Some(conversion) = &subtitle_conversion {
                                     postprocess_progress("SubtitlesConvertor", "started");
@@ -3934,7 +3948,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         args.keep_video,
                                         &mut move_files,
                                     )?;
-                                    postprocess_progress("SubtitlesConvertor", "finished");
                                 }
                                 if let Some(conversion) = &thumbnail_conversion {
                                     postprocess_progress("ThumbnailsConvertor", "started");
@@ -3946,7 +3959,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         args.keep_video,
                                     )
                                     .map_err(|error| error.to_string())?;
-                                    postprocess_progress("ThumbnailsConvertor", "finished");
                                 }
                                 run_exec(
                                     &exec,
@@ -4052,9 +4064,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             &move_files.final_path(found),
                                         );
                                     }
+                                    // The `post_process` `MetadataParserPP`.
+                                    let mut parsed_info = None;
+                                    if metadata_actions.has("post_process") {
+                                        let mut parsed = info.clone();
+                                        run_metadata_parser(
+                                            &metadata_actions,
+                                            "post_process",
+                                            &mut parsed,
+                                            &template_options,
+                                        )?;
+                                        parsed_info = Some(parsed);
+                                    }
                                     if !after_download(
                                         &exec,
-                                        &info,
+                                        parsed_info.as_ref().unwrap_or(&info),
                                         found,
                                         &final_path,
                                         &move_files,
@@ -4063,6 +4087,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         &pending_error,
                                         &postprocess_failed,
                                         &move_print,
+                                        &metadata_actions,
                                     ) {
                                         return Ok(());
                                     }
@@ -4356,6 +4381,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                             }
                             let mut changed_chapters = None;
+                            // The info dict as `post_process` processors changed it.
+                            let mut processed_info = None;
                             let (bytes, published_paths) = if processing {
                                 // `existing_video_file` sets `ext` from the found file.
                                 let existing_info;
@@ -4371,6 +4398,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     }
                                     None => (info, &path),
                                 };
+                                processors.metadata_parser = metadata_actions
+                                    .has("post_process")
+                                    .then(|| (metadata_actions.clone(), template_options.clone()));
                                 let result = downloader.download_processed_with_progress(
                                     info,
                                     path,
@@ -4429,6 +4459,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 let mut paths = vec![result.path];
                                 paths.extend(result.kept_files);
                                 changed_chapters = result.chapters;
+                                processed_info = result.info;
                                 (result.bytes, paths)
                             } else {
                                 let bytes = downloader.download_with_progress(
@@ -4455,6 +4486,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 if let Some(fixup) = &processors.fixup {
                                     downloader.fixup(info, &path, &path, fixup)?;
                                 }
+                                // The `post_process` `MetadataParserPP` follows the fixups.
+                                if metadata_actions.has("post_process") {
+                                    let mut parsed = info.clone();
+                                    run_metadata_parser(
+                                        &metadata_actions,
+                                        "post_process",
+                                        &mut parsed,
+                                        &template_options,
+                                    )?;
+                                    processed_info = Some(parsed);
+                                }
                                 if let Some(note) = embed_note {
                                     postprocess_progress("EmbedThumbnail", "started");
                                     screen!("{note}");
@@ -4462,17 +4504,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                                 (bytes, vec![path.clone()])
                             };
-                            // `ModifyChaptersPP` changes the info dict for later stages.
+                            // `ModifyChaptersPP` and `post_process` metadata parsing
+                            // change the info dict for later stages.
                             let modified_info;
-                            let info = match changed_chapters {
-                                Some((chapters, duration)) => {
-                                    let mut modified = info.clone();
-                                    modified.metadata.chapters = chapters;
-                                    modified.metadata.duration = duration;
-                                    modified_info = modified;
+                            let info = match processed_info {
+                                Some(processed) => {
+                                    modified_info = processed;
                                     &modified_info
                                 }
-                                None => info,
+                                None => match changed_chapters {
+                                    Some((chapters, duration)) => {
+                                        let mut modified = info.clone();
+                                        modified.metadata.chapters = chapters;
+                                        modified.metadata.duration = duration;
+                                        modified_info = modified;
+                                        &modified_info
+                                    }
+                                    None => info,
+                                },
                             };
                             let mut published_paths = published_paths;
                             published_paths.extend(info_json);
@@ -4608,6 +4657,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 &pending_error,
                                 &postprocess_failed,
                                 &move_print,
+                                &metadata_actions,
                             ) {
                                 return Ok(());
                             }
@@ -4747,6 +4797,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 .map_err(|error| error.to_string())
                 .and_then(|rendered| rendered.emit().map_err(|error| error.to_string()))
                 .and_then(|()| {
+                    // `MetadataParserPP` precedes `ExecPP`.
+                    let mut info = info.clone();
+                    if metadata_actions.has("after_video") {
+                        set_pp_info(&info);
+                        metadata_actions
+                            .run_reported("after_video", &mut info, &template_options)
+                            .map_err(|error| error.to_string())?;
+                    }
                     run_exec(
                         &exec,
                         Stage::AfterVideo,
@@ -4918,37 +4976,10 @@ fn run_metadata_parser(
     info: &mut yt_dlp_rs::VideoInfo,
     options: &TemplateOptions,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    // One `MetadataParserPP` runs the stage's actions.
-    let runs = actions.has(when);
-    if runs {
+    if actions.has(when) {
         set_pp_info(info);
-        postprocess_progress("MetadataParser", "started");
     }
-    let (messages, error) = match actions.run(when, info, options) {
-        Ok(messages) => (messages, None),
-        Err((messages, error)) => (messages, Some(error)),
-    };
-    for message in messages {
-        match message {
-            yt_dlp_rs::metadata_parser::Message::Screen(text) => screen!("{text}"),
-            yt_dlp_rs::metadata_parser::Message::Warning(text) => warning!("{text}"),
-            yt_dlp_rs::metadata_parser::Message::Debug(text) => {
-                if yt_dlp_rs::screen::verbose() {
-                    eprintln!("[debug] {text}");
-                }
-            }
-        }
-    }
-    match error {
-        // Raised from the processor and reported as `ERROR: MESSAGE`.
-        Some(error) => Err(Box::new(yt_dlp_rs::Error::Reported(error))),
-        None => {
-            if runs {
-                postprocess_progress("MetadataParser", "finished");
-            }
-            Ok(())
-        }
-    }
+    Ok(actions.run_reported(when, info, options)?)
 }
 
 /// Upstream `__list_table`: the caption (or `ID has no NAME`) is a screen
@@ -6297,6 +6328,7 @@ fn after_download(
     pending: &std::cell::Cell<Option<String>>,
     failed: &std::cell::Cell<bool>,
     print_after_move: &dyn Fn(&std::path::Path, &yt_dlp_rs::VideoInfo) -> Result<(), String>,
+    metadata_actions: &yt_dlp_rs::metadata_parser::MetadataActions,
 ) -> bool {
     if let Some(error) = pending.take() {
         report_error!("ERROR: {error}");
@@ -6332,11 +6364,20 @@ fn after_download(
     if !handle(move_files.run(filepath, true).map(|path| moved = path)) {
         return false;
     }
+    // `run_all_pps('after_move')`: the prints, then `MetadataParserPP`,
+    // then `ExecPP`.
     let after_move = print_after_move(&moved, info).and_then(|()| {
+        let mut info = info.clone();
+        if metadata_actions.has("after_move") {
+            set_pp_info(&info);
+            metadata_actions
+                .run_reported("after_move", &mut info, options)
+                .map_err(|error| error.to_string())?;
+        }
         run_exec(
             exec,
             Stage::AfterMove,
-            info,
+            &info,
             Some(&moved),
             Some(filename),
             options,
@@ -7306,6 +7347,7 @@ fn convert_subtitles(
 ) -> Result<(), String> {
     let Some(requested) = &info.requested_subtitles else {
         screen!("[SubtitlesConvertor] There aren't any subtitles to convert");
+        postprocess_progress("SubtitlesConvertor", "finished");
         return Ok(());
     };
     let target = conversion.target().unwrap_or_default();
@@ -7355,7 +7397,9 @@ fn convert_subtitles(
         file.ext = converted.ext;
         file.name = None;
     }
-    // `run_pp` deletes (or with -k keeps) the processor's originals.
+    // `run_pp` deletes (or with -k keeps) the processor's originals after
+    // it returns.
+    postprocess_progress("SubtitlesConvertor", "finished");
     for original in originals {
         if keep {
             move_files.keep(original);
@@ -7383,6 +7427,7 @@ fn convert_thumbnails(
     if thumbnails.is_empty() {
         screen!("[ThumbnailsConvertor] There aren't any thumbnails to convert");
     }
+    let mut originals = Vec::new();
     for (_, path) in thumbnails.iter_mut() {
         let original = yt_dlp_rs::fixup_webp(path)?;
         if original != *path {
@@ -7419,16 +7464,21 @@ fn convert_thumbnails(
                 );
                 downloader.convert_thumbnail(&original, &converted, &target)?;
                 move_files.derive(&original, &converted, false);
-                if !keep_original {
-                    screen!(
-                        "Deleting original file {} (pass -k to keep)",
-                        original.display()
-                    );
-                    if std::fs::remove_file(&original).is_err() {
-                        warning!("WARNING: Unable to delete file {}", original.display());
-                    }
-                }
+                originals.push(original);
                 *path = converted;
+            }
+        }
+    }
+    // `run_pp` deletes the originals after the processor returns.
+    postprocess_progress("ThumbnailsConvertor", "finished");
+    if !keep_original {
+        for original in originals {
+            screen!(
+                "Deleting original file {} (pass -k to keep)",
+                original.display()
+            );
+            if std::fs::remove_file(&original).is_err() {
+                warning!("WARNING: Unable to delete file {}", original.display());
             }
         }
     }

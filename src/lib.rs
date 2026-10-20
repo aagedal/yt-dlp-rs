@@ -2152,6 +2152,10 @@ impl YoutubeDl {
             return Err(Error::DownloadCancelled);
         }
         download::persist_path(output, destination, options.overwrite)?;
+        // `run_pp` deletes the inputs after the merger returns.
+        if upstream.is_some() {
+            screen::postprocessor("Merger", "finished");
+        }
         if upstream == Some(false) {
             for path in &paths {
                 screen::screen(&format!(
@@ -2160,9 +2164,6 @@ impl YoutubeDl {
                 ));
                 fs::remove_file(path)?;
             }
-        }
-        if upstream.is_some() {
-            screen::postprocessor("Merger", "finished");
         }
         Ok(bytes)
     }

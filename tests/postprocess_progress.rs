@@ -276,3 +276,54 @@ mod pty {
         );
     }
 }
+
+#[test]
+fn metadata_parsing_runs_at_later_stages_after_their_prints() {
+    let url = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let output = run(
+        directory.path(),
+        &[
+            "--no-progress",
+            "--parse-metadata",
+            "before_dl:%(title)s-b:%(artist)s",
+            "--parse-metadata",
+            "post_process:%(artist)s-p:%(artist)s",
+            "--parse-metadata",
+            "after_move:%(artist)s-m:%(artist)s",
+            "--parse-metadata",
+            "after_video:%(title)s-v:%(album)s",
+            "--print",
+            "post_process:P %(artist)s",
+            "--print",
+            "after_move:M %(artist)s",
+            "--exec",
+            "after_move:echo EM %(artist)q",
+            "--print",
+            "after_video:V %(artist)s %(album)s",
+            "--exec",
+            "after_video:echo EV %(artist)q %(album)q",
+        ],
+        &url,
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    // `--print` implies `--quiet`, which hides the processors' screen lines.
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        [
+            "P a-b",
+            "M a-b-p",
+            "EM a-b-p-m",
+            // `after_video` has the info dict from before the download.
+            "V NA NA",
+            "EV NA a-v",
+        ],
+        "{stdout}"
+    );
+}

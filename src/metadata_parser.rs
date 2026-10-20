@@ -349,6 +349,41 @@ impl MetadataActions {
         self.stages.iter().any(|(stage, _)| stage == when)
     }
 
+    /// One `MetadataParserPP` run for `when` with its progress hooks, its
+    /// messages reported through the screen sink; an error is upstream's
+    /// raised exception (reported as `ERROR: MESSAGE`).
+    pub fn run_reported(
+        &self,
+        when: &str,
+        info: &mut VideoInfo,
+        options: &TemplateOptions,
+    ) -> crate::Result<()> {
+        if !self.has(when) {
+            return Ok(());
+        }
+        crate::screen::postprocessor("MetadataParser", "started");
+        let (messages, error) = match self.run(when, info, options) {
+            Ok(messages) => (messages, None),
+            Err((messages, error)) => (messages, Some(error)),
+        };
+        for message in messages {
+            match message {
+                Message::Screen(text) => crate::screen::screen(&text),
+                Message::Warning(text) => {
+                    crate::screen::warning(text.strip_prefix("WARNING: ").unwrap_or(&text));
+                }
+                Message::Debug(text) => crate::screen::debug(&text),
+            }
+        }
+        match error {
+            Some(error) => Err(crate::Error::Reported(error)),
+            None => {
+                crate::screen::postprocessor("MetadataParser", "finished");
+                Ok(())
+            }
+        }
+    }
+
     /// Run the actions for `when` on `info` (`MetadataParserPP.run`),
     /// returning the `[MetadataParser]` screen lines and warnings in order.
     /// An `Err` is the exception upstream raises (`re.error` text).
