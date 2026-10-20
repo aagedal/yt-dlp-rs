@@ -323,6 +323,7 @@ pub(crate) fn from_response(
                 };
                 let language = Some(subtitle.language.unwrap_or_else(|| "und".into()));
                 let format = crate::SubtitleFormat {
+                    fragments: Vec::new(),
                     name: None,
                     url: subtitle.url,
                     ext,

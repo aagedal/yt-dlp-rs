@@ -792,16 +792,43 @@ pub(crate) fn parse_with_subtitles(
                 },
             };
             if content_type == "text" {
-                // "Assuming direct URL to unfragmented media."
-                if address.kind.is_none() && explicit && !base.path().ends_with('/') {
-                    let language = attrs.get("lang").map_or("und", |lang| *lang);
+                let language = attrs.get("lang").map_or("und", |lang| *lang).to_owned();
+                let ext = crate::extractor::direct::mimetype2ext_or(mime, None);
+                if address.kind.is_none() {
+                    // "Assuming direct URL to unfragmented media."
+                    if explicit && !base.path().ends_with('/') {
+                        subtitles.push((
+                            language,
+                            crate::SubtitleFormat {
+                                fragments: Vec::new(),
+                                name: None,
+                                url: base.clone(),
+                                ext,
+                                protocol: None,
+                            },
+                        ));
+                    }
+                } else {
+                    // Segmented text: the manifest URL with its fragments.
+                    let bandwidth = attrs
+                        .get("bandwidth")
+                        .and_then(|value| positive(value).ok());
+                    let fragments = plans(
+                        &address,
+                        &base,
+                        explicit,
+                        duration_ns,
+                        representation.attribute("id"),
+                        bandwidth,
+                    )?;
                     subtitles.push((
-                        language.to_owned(),
+                        language,
                         crate::SubtitleFormat {
+                            fragments,
                             name: None,
-                            url: base.clone(),
-                            ext: crate::extractor::direct::mimetype2ext_or(mime, None),
-                            protocol: None,
+                            url: manifest.clone(),
+                            ext,
+                            protocol: Some("http_dash_segments".into()),
                         },
                     ));
                 }

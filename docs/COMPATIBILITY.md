@@ -928,7 +928,9 @@ unlike upstream's, does not point to yt-dlp's tracker). Encrypted or byte-range
 subtitle segments are unsupported. DASH text representations (`contentType` `text`, or
 a subtitle codec or TTML/XML/JSON MIME type) with a direct `BaseURL` become
 subtitles by `lang` (default `und`) with `mimetype2ext` extensions, as upstream's
-"direct URL to unfragmented media"; segmented DASH text tracks are not represented. Fragment progress lines use this port's
+"direct URL to unfragmented media"; segmented text tracks keep the manifest URL
+with protocol `http_dash_segments` and are written through DashSegmentsFD's flow
+(`[dashsegments] Total fragments: N`, the fragments appended as they are). Fragment progress lines use this port's
 renderer.
 `EXT-X-DISCONTINUITY` (and, like upstream's prefix match,
 `EXT-X-DISCONTINUITY-SEQUENCE`) lines are counted per fragment: downloads span

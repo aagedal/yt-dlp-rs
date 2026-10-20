@@ -207,6 +207,7 @@ fn process(
             return Err(error("generated captions exceed 100000 formats or 64 MiB"));
         }
         formats.push(SubtitleFormat {
+            fragments: Vec::new(),
             protocol: None,
             url: url.clone(),
             ext: ext.into(),

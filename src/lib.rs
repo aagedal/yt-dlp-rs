@@ -1635,6 +1635,17 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
+        if subtitle.protocol.as_deref() == Some("http_dash_segments") {
+            report_invoking("dashsegments", &[&subtitle.url]);
+            return download::download_dash_subtitle(
+                &self.client,
+                info,
+                subtitle,
+                destination.as_ref(),
+                options,
+                &mut callback,
+            );
+        }
         report_invoking("http", &[&subtitle.url]);
         download::download_subtitle(
             &self.client,

@@ -496,7 +496,58 @@ pub(crate) fn download_hls_subtitle(
             "an HLS subtitle rendition must be a media playlist".into(),
         ));
     };
-    crate::screen::screen(&format!("[hlsnative] Total fragments: {}", fragments.len()));
+    join_subtitle_fragments(
+        client,
+        info,
+        &fragments,
+        "hlsnative",
+        true,
+        destination,
+        options,
+        callback,
+    )
+}
+
+/// Upstream DashSegmentsFD for a segmented DASH text track: the fragments
+/// appended as they are.
+pub(crate) fn download_dash_subtitle(
+    client: &Client,
+    info: &VideoInfo,
+    subtitle: &crate::SubtitleFormat,
+    destination: &Path,
+    options: DownloadOptions,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    join_subtitle_fragments(
+        client,
+        info,
+        &subtitle.fragments,
+        "dashsegments",
+        false,
+        destination,
+        options,
+        callback,
+    )
+}
+
+/// `Total fragments`, then each fragment downloaded and joined (with WebVTT
+/// packing when `webvtt` and there are several), published without
+/// overwriting.
+#[allow(clippy::too_many_arguments)]
+fn join_subtitle_fragments(
+    client: &Client,
+    info: &VideoInfo,
+    fragments: &[crate::Fragment],
+    downloader: &str,
+    webvtt: bool,
+    destination: &Path,
+    options: DownloadOptions,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    crate::screen::screen(&format!(
+        "[{downloader}] Total fragments: {}",
+        fragments.len()
+    ));
     let parent = destination
         .parent()
         .filter(|parent| !parent.as_os_str().is_empty())
@@ -504,7 +555,7 @@ pub(crate) fn download_hls_subtitle(
     let workspace = tempfile::Builder::new()
         .prefix(".yt-dlp-rs-subtitle-")
         .tempdir_in(parent)?;
-    let single = fragments.len() == 1;
+    let single = !webvtt || fragments.len() == 1;
     let mut stored = 0_u64;
     let mut packer = crate::webvtt::Packer::default();
     let mut joined = Vec::new();
