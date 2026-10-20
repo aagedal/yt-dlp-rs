@@ -212,12 +212,15 @@ upstream conversions in `tests/fixtures/js_to_json/`): one playlist item's
 direct sources become formats (label-derived heights, `bitrate` as `tbr`,
 audio types as audio-only), with `tracks` captions, title, description, image,
 `pubdate`, int or float `duration` and the other `_parse_jwplayer_data` fields,
-merged with the page fields. JW Player playlists, playlist URLs, manifest,
-SMIL, RTMP and YouTube sources are unsupported errors. A Video.js embed
+merged with the page fields; HLS and DASH sources add their manifests'
+formats (`fatal=False`, warning that manifest subtitle tracks are ignored).
+JW Player playlists, playlist URLs, SMIL, RTMP and YouTube sources are
+unsupported errors. A Video.js embed
 (`videojs(...)...VAR.src([...]);`) comes next: like upstream, only the first
 direct source becomes a format (with the page as Referer), and
-`VAR.addRemoteTextTrack({...}, true|false)` tracks become subtitles; manifest
-and YouTube sources are unsupported. Then JSON-LD: `_search_json_ld`'s
+`VAR.addRemoteTextTrack({...}, true|false)` tracks become subtitles; HLS and
+DASH sources add their manifests' formats and subtitles (`hls-`/`dash-` IDs)
+with `_extra_manifest_info`'s live check; YouTube sources are unsupported. Then JSON-LD: `_search_json_ld`'s
 `VideoObject`/`AudioObject`, episode, movie and article fields (checked against
 saved pinned results in `tests/fixtures/json_ld/`) with an absolute media URL
 other than the page make upstream's `url_transparent` result: the smuggled URL
@@ -232,8 +235,9 @@ iframes (`[redirect] Following redirect to URL`, extracted again). Found
 direct media URLs become upstream's entries (basename ID, the domain as
 `uploader`, the page title, a Referer header; one URL merged with the page's
 `timestamp`/`description`/`thumbnail`, several as a playlist with numbered
-titles); HLS/DASH/SMIL/XSPF/F4M, RTMP and YouTube URLs found this way are
-unsupported errors, as are pages where upstream's earlier KVS player step
+titles); one found HLS or DASH URL is requested with the page as Referer and
+gets `_extra_manifest_info` (several, and SMIL/XSPF/F4M, RTMP and YouTube URLs,
+are unsupported errors), as are pages where upstream's earlier KVS player step
 would answer. Output templates render a JW
 Player integer `tbr` as a float (JSON keeps upstream's int). Otherwise
 the result is upstream's `ERROR: Unsupported URL: URL`.

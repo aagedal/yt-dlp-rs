@@ -845,8 +845,8 @@ impl VideoInfo {
         self.stream_kind = StreamKind::Standalone;
         self.fragments.clear();
         self.extra.remove("format_index");
-        // The merged dict has no `http_headers` or `cookies`.
-        self.extra.remove("http_headers");
+        // The merged dict has no `http_headers` or `cookies`: the info's own
+        // `http_headers` (an extractor's entry headers) remain.
         self.extra.remove("cookies");
         self.requested_formats = formats;
     }

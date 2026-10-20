@@ -8,6 +8,9 @@ use serde_json::{Map, Value};
 use std::sync::LazyLock;
 use url::Url;
 
+/// A manifest source to expand (`_extract_m3u8_formats`/`_extract_mpd_formats`).
+pub(crate) const MANIFEST: &str = "__yt_dlp_rs_jwplayer_manifest";
+
 fn unsupported(reason: &str) -> Error {
     Error::UnsupportedHtml5(reason.into())
 }
@@ -191,16 +194,24 @@ pub(crate) fn parse(
         let ext = super::direct::determine_ext(url.as_str()).or_else(|| {
             Some(super::direct::mimetype2ext_or(kind, None)).filter(|ext| !ext.is_empty())
         });
-        if kind == "hls"
+        // Manifest sources are expanded by the caller (`MANIFEST` marks).
+        let hls = kind == "hls"
             || ext.as_deref() == Some("m3u8")
-            || url.as_str().contains("format=m3u8-aapl")
+            || url.as_str().contains("format=m3u8-aapl");
+        if hls
             || kind == "dash"
             || ext.as_deref() == Some("mpd")
             || url.as_str().contains("format=mpd-time-csf")
-            || ext.as_deref() == Some("smil")
         {
+            let mut source = Map::new();
+            source.insert(MANIFEST.into(), url.as_str().into());
+            source.insert("dash".into(), (!hls).into());
+            formats.push(Value::Object(source));
+            continue;
+        }
+        if ext.as_deref() == Some("smil") {
             return Err(unsupported(
-                "JW Player manifest sources are not supported natively",
+                "JW Player SMIL sources are not supported natively",
             ));
         }
         if url.scheme().starts_with("rtmp") {
@@ -250,8 +261,9 @@ pub(crate) fn parse(
         Regex::new(r"^(?:http|//).*(?:youtube\.com|youtu\.be)/.+").expect("static pattern")
     });
     if formats.len() == 1
-        && formats[0]["url"]
-            .as_str()
+        && formats[0]
+            .get("url")
+            .and_then(Value::as_str)
             .is_some_and(|url| YOUTUBE.is_match(url))
     {
         return Err(unsupported(

@@ -221,14 +221,14 @@ pub fn upstream_shape(value: &mut Value) {
             }
         }
     }
-    // `_merge`'s dict has no URL or headers of its own.
+    // `_merge`'s dict has no URL or headers of its own (the info keeps
+    // headers its extractor set).
     if map
         .get("requested_formats")
         .and_then(Value::as_array)
         .is_some_and(|formats| !formats.is_empty())
     {
         map.remove("url");
-        map.remove("http_headers");
     }
     *map = crate::info_order::video(std::mem::take(map));
 }

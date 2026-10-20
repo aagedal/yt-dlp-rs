@@ -628,12 +628,51 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         "videojs" => &[
             ("formats", Take),
             ("subtitles", Dict),
+            ("extra_param_to_segment_url", Take),
+            ("extra_param_to_key_url", Take),
+            ("hls_aes", Take),
+            ("live_status", Take),
+            ("duration", Take),
             ("id", Take),
             ("title", Take),
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
             ("age_limit", Take),
+        ],
+        // A found manifest URL: the entry, the manifest's formats and
+        // `_extra_manifest_info`, then the page fields.
+        "generic-found-hls" => &[
+            ("id", Take),
+            ("uploader", Take),
+            ("title", Take),
+            ("age_limit", Take),
+            ("http_headers", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("extra_param_to_segment_url", Take),
+            ("extra_param_to_key_url", Take),
+            ("hls_aes", Take),
+            ("live_status", Take),
+            ("duration", Take),
+            ("timestamp", Take),
+            ("description", Take),
+            ("thumbnail", Take),
+        ],
+        "generic-found-dash" => &[
+            ("id", Take),
+            ("uploader", Take),
+            ("title", Take),
+            ("age_limit", Take),
+            ("http_headers", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("extra_param_to_segment_url", Take),
+            ("extra_param_to_key_url", Take),
+            ("hls_aes", Take),
+            ("timestamp", Take),
+            ("description", Take),
+            ("thumbnail", Take),
         ],
         // One of several found URLs (a playlist entry keeps `age_limit`).
         "generic-found-entry" => &[
@@ -723,7 +762,12 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         && let Some(Value::Object(languages)) = replay.out.get_mut("subtitles")
     {
         for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
-            for track in tracks.iter_mut().filter_map(Value::as_object_mut) {
+            // `addRemoteTextTrack` tracks (manifest tracks keep theirs).
+            for track in tracks
+                .iter_mut()
+                .filter_map(Value::as_object_mut)
+                .filter(|track| track.contains_key("http_headers"))
+            {
                 let mut ordered = Map::new();
                 for key in ["url", "name", "http_headers", "ext"] {
                     ordered.insert(key.to_owned(), track.remove(key).unwrap_or(Value::Null));

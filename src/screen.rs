@@ -147,6 +147,18 @@ pub(crate) fn postprocess<T>(
     Ok(result)
 }
 
+/// `report_warning(..., only_once=True)`.
+pub(crate) fn warning_once(text: &str) {
+    static SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+    let mut seen = SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    warning(text);
+}
+
 pub(crate) fn warning(text: &str) {
     if let Some(sink) = SINK.get() {
         sink(Message::Warning(text));

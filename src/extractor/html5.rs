@@ -871,14 +871,17 @@ impl GenericHttp {
                 ));
             }
             let video_id = crate::screen::generic_id(url.as_str());
-            if let Some(entry) = super::jwplayer::parse(&data, &video_id, url)? {
-                crate::screen::debug("Identified a JW Player data");
-                return jwplayer_info(entry, page_url, html, timestamp).map(Some);
+            if let Some(entry) = super::jwplayer::parse(&data, &video_id, url)?
+                && let Some(result) =
+                    jwplayer_info(client, entry, page_url, html, timestamp, &video_id)?
+            {
+                return Ok(Some(result));
             }
         }
-        if let Some(embed) = super::generic_urls::videojs(html, url, page_url)? {
-            crate::screen::debug("Identified a video.js embed");
-            return videojs_info(embed, url, page_url, html, timestamp).map(Some);
+        if let Some(embed) = super::generic_urls::videojs(html, url, page_url)?
+            && let Some(result) = videojs_info(client, embed, url, page_url, html, timestamp)?
+        {
+            return Ok(Some(result));
         }
         if let Some(step) = unported_step(html) {
             return Err(unsupported(&format!("{step} are not supported natively")));
@@ -933,10 +936,13 @@ impl GenericHttp {
                 return Err(unsupported("RTMP URLs are not supported natively"));
             }
             let ext = direct::determine_ext(media.as_str());
-            if matches!(
-                ext.as_deref(),
-                Some("smil" | "xspf" | "f4m" | "m3u8" | "mpd")
-            ) {
+            let manifest = matches!(ext.as_deref(), Some("m3u8" | "mpd")) && count == 1;
+            if !manifest
+                && matches!(
+                    ext.as_deref(),
+                    Some("smil" | "xspf" | "f4m" | "m3u8" | "mpd")
+                )
+            {
                 return Err(unsupported(&format!(
                     "{} URLs found on a page are not supported natively",
                     ext.unwrap_or_default()
@@ -951,6 +957,45 @@ impl GenericHttp {
                 }
                 _ => basename.into_owned(),
             };
+            if manifest {
+                let info =
+                    found_manifest(client, &media, page_url, &id, ext.as_deref() == Some("mpd"))?;
+                let mut info = info;
+                info.id = id;
+                info.title = title.clone();
+                info.webpage_url = page_url.clone();
+                info.direct = None;
+                info.extractor = "generic".into();
+                info.extractor_key = "Generic".into();
+                if let Some(uploader) = &uploader {
+                    info.extra
+                        .insert("uploader".into(), uploader.clone().into());
+                }
+                info.metadata.age_limit = age_limit;
+                info.metadata.timestamp = timestamp;
+                info.metadata.description = description.clone();
+                info.metadata.thumbnail = thumbnail.clone();
+                for format in &mut info.formats {
+                    format.http_headers = Some(serde_json::Map::from_iter([(
+                        "referer".to_owned(),
+                        page_url.as_str().into(),
+                    )]));
+                }
+                // The entry's own `http_headers` (`HTTPHeaderDict` title case).
+                info.extra.insert(
+                    "http_headers".into(),
+                    serde_json::json!({"Referer": page_url.as_str()}),
+                );
+                entries.push(crate::info_order::mark_info(
+                    info,
+                    if ext.as_deref() == Some("mpd") {
+                        "generic-found-dash"
+                    } else {
+                        "generic-found-hls"
+                    },
+                ));
+                continue;
+            }
             let ext = ext
                 .filter(|ext| crate::output::allowed_extension(ext))
                 .unwrap_or_else(|| "unknown_video".into());
@@ -1161,36 +1206,162 @@ impl GenericHttp {
     }
 }
 
-/// `{'formats': ..., 'subtitles': ...}` merged with the page fields.
+/// A found manifest URL: `_extract_m3u8_formats_and_subtitles` /
+/// `_extract_mpd_formats_and_subtitles` with the page as Referer, then
+/// `_extra_manifest_info` (and HLS's live status check).
+fn found_manifest(
+    client: &Client,
+    media: &Url,
+    page_url: &Url,
+    id: &str,
+    dash_hint: bool,
+) -> Result<VideoInfo> {
+    use crate::screen::screen;
+    let note = if dash_hint {
+        format!("[generic] {id}: Downloading MPD manifest")
+    } else {
+        format!("[generic] {id}: Downloading m3u8 information")
+    };
+    crate::screen::expect_page(id, Some(note), None);
+    let manifest = direct::request(client, media, Some(page_url)).and_then(|response| {
+        if dash_hint {
+            dash::from_response(response, media, true)
+        } else {
+            hls::from_response(client, response, media, Some(page_url), true, None)
+        }
+    });
+    crate::screen::clear_page();
+    let mut info = manifest?
+        .ok_or_else(|| unsupported("the found manifest URL is not a supported manifest"))?;
+    match crate::manifest_args::extra_manifest_info(&mut info, media) {
+        Some(live) => {
+            info.metadata.live_status = Some(
+                if live == "false" {
+                    "not_live"
+                } else {
+                    "is_live"
+                }
+                .into(),
+            );
+        }
+        None if !dash_hint => {
+            screen(&format!("[generic] {id}: Checking m3u8 live status"));
+            crate::screen::expect_page(id, None, None);
+            hls::check_live_status(client, &mut info);
+            crate::screen::clear_page();
+        }
+        None => {}
+    }
+    Ok(info)
+}
+
+/// `{'formats': ..., 'subtitles': ...}` merged with the page fields:
+/// manifest sources' formats and subtitles (`hls`/`dash` IDs,
+/// `fatal=False`), a direct source only while there are no formats yet
+/// (upstream's in-loop check), and `_extra_manifest_info`.
 fn videojs_info(
+    client: &Client,
     embed: super::generic_urls::VideoJs,
     url: &Url,
     page_url: &Url,
     html: &str,
     timestamp: Option<i64>,
-) -> Result<ExtractResult> {
+) -> Result<Option<ExtractResult>> {
     use serde_json::Value;
     let invalid = |error: serde_json::Error| unsupported(&format!("Video.js embed: {error}"));
-    let mut formats = Vec::new();
-    for mut format in embed.formats {
-        format.insert("format_id".into(), "".into());
-        let mut format: VideoFormat =
-            serde_json::from_value(Value::Object(format)).map_err(invalid)?;
-        crate::info_order::mark_format(&mut format, "videojs");
-        formats.push(format);
+    let video_id = crate::screen::generic_id(url.as_str());
+    let mut formats: Vec<VideoFormat> = Vec::new();
+    let mut manifest_subtitles = Subtitles::default();
+    for (src, kind, ext) in &embed.sources {
+        let dash = kind.as_deref() == Some("application/dash+xml") || ext == "mpd";
+        let hls = !dash && (kind.as_deref() == Some("application/x-mpegurl") || ext == "m3u8");
+        if dash || hls {
+            let note = if dash {
+                format!("[generic] {video_id}: Downloading MPD manifest")
+            } else {
+                format!("[generic] {video_id}: Downloading m3u8 information")
+            };
+            crate::screen::expect_page(&video_id, Some(note), None);
+            let parsed = direct::request(client, src, None).and_then(|response| {
+                if dash {
+                    dash::from_response(response, src, true)
+                } else {
+                    hls::from_response(client, response, src, None, true, Some("hls"))
+                }
+            });
+            crate::screen::clear_page();
+            match parsed {
+                Ok(Some(info)) => {
+                    // `mpd_id='dash'` (HLS takes `m3u8_id='hls'` itself).
+                    formats.extend(info.formats.into_iter().map(|mut format| {
+                        if dash {
+                            format.format_id = format!("dash-{}", format.format_id);
+                        }
+                        format
+                    }));
+                    for (language, tracks) in info.subtitles.entries {
+                        match manifest_subtitles
+                            .entries
+                            .iter_mut()
+                            .find(|(key, _)| *key == language)
+                        {
+                            Some((_, existing)) => existing.extend(tracks),
+                            None => manifest_subtitles.entries.push((language, tracks)),
+                        }
+                    }
+                }
+                Ok(None) => {}
+                Err(error) => crate::screen::warning(&format!(
+                    "[generic] {video_id}: Failed to download {} manifest: {error}",
+                    if dash { "MPD" } else { "m3u8" }
+                )),
+            }
+        }
+        if formats.is_empty() {
+            // `mimetype2ext(src_type) or ext if ext in KNOWN_EXTENSIONS else 'mp4'`.
+            let ext = if direct::known_extension(ext) {
+                kind.as_deref()
+                    .map(|kind| direct::mimetype2ext_or(kind, None))
+                    .filter(|mime| !mime.is_empty())
+                    .unwrap_or_else(|| ext.clone())
+            } else {
+                "mp4".into()
+            };
+            let mut format = serde_json::Map::new();
+            format.insert("url".into(), src.as_str().into());
+            format.insert("ext".into(), ext.into());
+            format.insert(
+                "http_headers".into(),
+                serde_json::json!({"Referer": page_url.as_str()}),
+            );
+            format.insert("format_id".into(), "".into());
+            let mut format: VideoFormat =
+                serde_json::from_value(Value::Object(format)).map_err(invalid)?;
+            crate::info_order::mark_format(&mut format, "videojs");
+            formats.push(format);
+        }
     }
+    if formats.is_empty() && embed.subtitles.is_empty() {
+        return Ok(None);
+    }
+    if formats.is_empty() {
+        return Err(unsupported(
+            "Video.js embeds without media sources are not supported natively",
+        ));
+    }
+    crate::screen::debug("Identified a video.js embed");
     let first = &formats[0];
     let mut info = direct::build_at(first.url.clone(), &first.url, first.ext.clone());
     info.formats = formats;
     info.webpage_url = page_url.clone();
     info.direct = None;
-    info.id = crate::screen::generic_id(url.as_str());
+    info.id = video_id;
     info.title = page_title(html).unwrap_or_else(|| "video".into());
     info.metadata.timestamp = timestamp;
     info.metadata.description = crate::html::og_search_property(html, "description");
     info.metadata.thumbnail = crate::html::og_search_property(html, "image");
     info.metadata.age_limit = crate::html::rta_search(html);
-    let mut subtitles = Subtitles::default();
+    let mut subtitles = manifest_subtitles;
     for (language, mut track) in embed.subtitles {
         let url = Url::parse(track["url"].as_str().unwrap_or_default())
             .map_err(|_| unsupported("Video.js subtitle URL is invalid"))?;
@@ -1217,23 +1388,90 @@ fn videojs_info(
         }
     }
     info.subtitles = subtitles;
-    Ok(ExtractResult::Video(crate::info_order::mark_info(
+    // `_extra_manifest_info(info_dict, src)` (the last source's URL).
+    if let Some((src, _, _)) = embed.sources.last() {
+        match crate::manifest_args::extra_manifest_info(&mut info, src) {
+            Some(live) => {
+                info.metadata.live_status = Some(
+                    if live == "false" {
+                        "not_live"
+                    } else {
+                        "is_live"
+                    }
+                    .into(),
+                );
+            }
+            None if info
+                .formats
+                .iter()
+                .any(|format| format.determine_protocol() == "m3u8_native") =>
+            {
+                crate::screen::screen("[generic] Checking m3u8 live status");
+                crate::screen::expect_page("", None, None);
+                hls::check_live_status(client, &mut info);
+                crate::screen::clear_page();
+            }
+            None => {}
+        }
+    }
+    Ok(Some(ExtractResult::Video(crate::info_order::mark_info(
         info, "videojs",
-    )))
+    ))))
 }
 
 /// `merge_dicts(jwplayer_entry, info_dict)` as an info dict.
 fn jwplayer_info(
+    client: &Client,
     entry: serde_json::Map<String, serde_json::Value>,
     page_url: &Url,
     html: &str,
     timestamp: Option<i64>,
-) -> Result<ExtractResult> {
+    video_id: &str,
+) -> Result<Option<ExtractResult>> {
     use serde_json::Value;
     let invalid = |error: serde_json::Error| unsupported(&format!("JW Player data: {error}"));
     let mut formats = Vec::new();
     for format in entry["formats"].as_array().into_iter().flatten() {
         let Value::Object(map) = format else { continue };
+        // `_extract_m3u8_formats`/`_extract_mpd_formats(..., fatal=False)`:
+        // formats only (subtitle tracks are reported as ignored).
+        if let Some(manifest) = map.get(super::jwplayer::MANIFEST).and_then(Value::as_str) {
+            let manifest =
+                Url::parse(manifest).map_err(|_| unsupported("JW Player source URL is invalid"))?;
+            let dash = map.get("dash") == Some(&Value::Bool(true));
+            let note = if dash {
+                format!("[generic] {video_id}: Downloading MPD manifest")
+            } else {
+                format!("[generic] {video_id}: Downloading m3u8 information")
+            };
+            crate::screen::expect_page(video_id, Some(note), None);
+            let parsed = direct::request(client, &manifest, None).and_then(|response| {
+                if dash {
+                    dash::from_response(response, &manifest, true)
+                } else {
+                    hls::from_response(client, response, &manifest, None, true, None)
+                }
+            });
+            crate::screen::clear_page();
+            match parsed {
+                Ok(Some(info)) => {
+                    if !info.subtitles.is_empty() {
+                        crate::screen::warning_once(&format!(
+                            "[generic] Ignoring subtitle tracks found in the {} manifest; if any subtitle tracks are missing, {}",
+                            if dash { "DASH" } else { "HLS" },
+                            crate::BUG_REPORTS_MESSAGE
+                        ));
+                    }
+                    formats.extend(info.formats);
+                }
+                Ok(None) => {}
+                Err(error) => crate::screen::warning(&format!(
+                    "[generic] {video_id}: Failed to download {} manifest: {error}",
+                    if dash { "MPD" } else { "m3u8" }
+                )),
+            }
+            continue;
+        }
         let url = Url::parse(map["url"].as_str().unwrap_or_default())
             .map_err(|_| unsupported("JW Player source URL is invalid"))?;
         let mut source = map.clone();
@@ -1265,9 +1503,12 @@ fn jwplayer_info(
         );
         formats.push(format);
     }
-    let first = formats
-        .first()
-        .ok_or_else(|| unsupported("JW Player data has no formats"))?;
+    // Without formats (failed manifests) the next steps run.
+    let Some(first) = formats.first() else {
+        return Ok(None);
+    };
+    // `report_detected` follows `_parse_jwplayer_data` (and its requests).
+    crate::screen::debug("Identified a JW Player data");
     let mut info = direct::build_at(first.url.clone(), &first.url, first.ext.clone());
     info.formats = formats;
     info.webpage_url = page_url.clone();
@@ -1320,9 +1561,9 @@ fn jwplayer_info(
         info.metadata.age_limit = crate::html::rta_search(html);
     }
     let shape = format!("jwplayer;{}", keys.join(","));
-    Ok(ExtractResult::Video(crate::info_order::mark_info(
+    Ok(Some(ExtractResult::Video(crate::info_order::mark_info(
         info, &shape,
-    )))
+    ))))
 }
 
 /// `_generic_title`: `og:title`, else the `<title>` text (whitespace

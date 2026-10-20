@@ -214,18 +214,17 @@ pub(crate) fn find(page_url: &Url, html: &str) -> Option<Found> {
     None
 }
 
-/// A Video.js embed: `player.src(...)` sources and `addRemoteTextTrack`
-/// subtitles (as upstream's dicts).
+/// A Video.js embed: `player.src(...)` sources (URL, lowercased type and
+/// extension) and `addRemoteTextTrack` subtitles (as upstream's dicts).
 pub(crate) struct VideoJs {
-    pub formats: Vec<serde_json::Map<String, serde_json::Value>>,
+    pub sources: Vec<(Url, Option<String>, String)>,
     /// Language and `{url, name, http_headers}` dicts in page order.
     pub subtitles: Vec<(String, serde_json::Map<String, serde_json::Value>)>,
 }
 
 /// Upstream's Video.js step: the first `videojs(...)...VAR.src([...]);`,
-/// its sources (only the first direct one becomes a format, as upstream's
-/// `if not formats` inside the loop does) and `VAR.addRemoteTextTrack({...},
-/// true|false)` tracks. Manifest and YouTube sources are unsupported.
+/// its sources and `VAR.addRemoteTextTrack({...}, true|false)` tracks.
+/// YouTube sources are unsupported.
 pub(crate) fn videojs(html: &str, url: &Url, actual: &Url) -> crate::Result<Option<VideoJs>> {
     use serde_json::{Map, Value};
     static PLAYER: LazyLock<Regex> = LazyLock::new(|| {
@@ -239,14 +238,13 @@ pub(crate) fn videojs(html: &str, url: &Url, actual: &Url) -> crate::Result<Opti
     // `variadic(self._parse_json(..., transform_source=js_to_json, fatal=False) or [])`.
     let parsed: Option<Value> =
         serde_json::from_str(&crate::js_to_json::js_to_json(&found[2])).ok();
-    let sources = match parsed {
+    let items = match parsed {
         Some(Value::Array(items)) => items,
         Some(value) if python_truthy(&value) => vec![value],
         _ => Vec::new(),
     };
-    let referer = || Map::from_iter([("Referer".to_owned(), Value::from(actual.as_str()))]);
-    let mut formats = Vec::new();
-    for source in &sources {
+    let mut sources = Vec::new();
+    for source in &items {
         let Some(src) = source
             .get("src")
             .and_then(Value::as_str)
@@ -267,33 +265,9 @@ pub(crate) fn videojs(html: &str, url: &Url, actual: &Url) -> crate::Result<Opti
                 "Video.js YouTube sources are not supported natively",
             ));
         }
-        if matches!(
-            kind.as_deref(),
-            Some("application/dash+xml" | "application/x-mpegurl")
-        ) || ext == "mpd"
-            || ext == "m3u8"
-        {
-            return Err(unsupported(
-                "Video.js manifest sources are not supported natively",
-            ));
-        }
-        if formats.is_empty() {
-            // `mimetype2ext(src_type) or ext if ext in KNOWN_EXTENSIONS else 'mp4'`.
-            let ext = if super::direct::known_extension(&ext) {
-                kind.as_deref()
-                    .map(|kind| super::direct::mimetype2ext_or(kind, None))
-                    .filter(|mime| !mime.is_empty())
-                    .unwrap_or(ext)
-            } else {
-                "mp4".into()
-            };
-            let mut format = Map::new();
-            format.insert("url".into(), src.as_str().into());
-            format.insert("ext".into(), ext.into());
-            format.insert("http_headers".into(), Value::Object(referer()));
-            formats.push(format);
-        }
+        sources.push((src, kind, ext));
     }
+    let referer = || Map::from_iter([("Referer".to_owned(), Value::from(actual.as_str()))]);
     let track = Regex::new(&format!(
         r"(?s){}\.addRemoteTextTrack\((\{{.+?\}})\s*,\s*(?:true|false)\)",
         regex::escape(&variable)
@@ -330,15 +304,10 @@ pub(crate) fn videojs(html: &str, url: &Url, actual: &Url) -> crate::Result<Opti
         entry.insert("http_headers".into(), Value::Object(referer()));
         subtitles.push((language, entry));
     }
-    if formats.is_empty() && subtitles.is_empty() {
+    if sources.is_empty() && subtitles.is_empty() {
         return Ok(None);
     }
-    if formats.is_empty() {
-        return Err(unsupported(
-            "Video.js embeds without media sources are not supported natively",
-        ));
-    }
-    Ok(Some(VideoJs { formats, subtitles }))
+    Ok(Some(VideoJs { sources, subtitles }))
 }
 
 /// Python truthiness.

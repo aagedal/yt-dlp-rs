@@ -295,6 +295,9 @@ pub fn parse_duration(text: &str) -> Option<PyNumber> {
     match_filter::parse_duration_number(text)
 }
 
+/// Upstream `bug_reports_message()` after a lowercase-ending text.
+pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U";
+
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
 const EXTRACTOR_NAMES: [&str; 4] = ["html5", "youtube", "generic", "end"];
