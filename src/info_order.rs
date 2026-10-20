@@ -301,6 +301,13 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         ],
         // `CrooksAndLiarsIE`'s flavor.
         "crooksandliars" => &[("url", Take), ("format_id", Take), ("quality", Take)],
+        // `MaarivIE`'s HTTP stream with `parse_resolution`'s keys.
+        "maariv" => &[
+            ("url", Take),
+            ("format_id", Take),
+            ("width", Take),
+            ("height", Take),
+        ],
         // `BildIE`'s MP4 source.
         "bild" => &[("url", Take), ("format_id", Take)],
         // `BloggerIE`'s stream.
@@ -1346,6 +1353,14 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("title", Take),
             ("duration", Take),
             ("timestamp", Take),
+        ],
+        // `MaarivIE._real_extract`'s dict.
+        "maariv" => &[
+            ("id", Take),
+            ("title", Take),
+            ("duration", Take),
+            ("timestamp", Take),
+            ("formats", Take),
         ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[

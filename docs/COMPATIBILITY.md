@@ -590,6 +590,15 @@ its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped
 `time`/`ts`, and upstream's missing-script, `KeyError` and bare `IndexError`
 messages.
 
+Maariv players (`player.maariv.co.il/public/player.html?...media=ID`) follow
+upstream `MaarivIE` (`maariv.co.il`): the Walla media API's URL-valued
+`video.url` as non-fatal `hls` formats (subtitles ignored with upstream's
+warning) and its stream URLs as `http` formats with `parse_resolution`'s
+size, the title (else the generic title, after `fulltitle`), integer
+duration and `unified_timestamp` upload date; a result without formats fails
+in processing. Its iframe embeds on generic pages follow JW Platform's in the
+embed order.
+
 Masters videos (`masters.com/en_US/watch/YYYY-MM-DD/ID`) follow upstream
 `MastersIE`: the related-content API's fatal HLS manifest (with its subtitle
 renditions; no manifest is upstream's `Failed to obtain m3u8 URL`), the API

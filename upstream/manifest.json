@@ -582,6 +582,18 @@
       "scope": "LivestreamfailsIE _VALID_URL and clip API extraction (display_id, unified_timestamp, creator/creators, format_field thumbnail, KeyError message) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "maariv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/maariv.py"
+      ],
+      "rust": [
+        "src/extractor/maariv.rs",
+        "tests/fixtures/sites/maariv/"
+      ],
+      "scope": "MaarivIE media API non-fatal HLS and parse_resolution HTTP formats, metadata, processing-time no-formats error and generic-page _EMBED_REGEX embeds compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "masters",
       "status": "partial",
       "upstream": [

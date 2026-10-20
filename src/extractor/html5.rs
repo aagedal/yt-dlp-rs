@@ -152,7 +152,7 @@ fn dimension(value: Option<&str>) -> Option<u32> {
 }
 
 /// Upstream `parse_resolution` (non-lenient): `W x H`, `NNNp`/`i`, or `4k`/`8k`.
-fn parse_resolution(text: &str) -> (Option<u32>, Option<u32>) {
+pub(crate) fn parse_resolution(text: &str) -> (Option<u32>, Option<u32>) {
     static SIZE: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
         regex::Regex::new(r"(?:^|[^a-zA-Z0-9])(\d+)\s*[xX×,]\s*(\d+)(?:$|[^a-zA-Z0-9])").unwrap()
     });
@@ -1859,7 +1859,7 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 7] = [
+static EMBED_SITES: [EmbedSite; 8] = [
     EmbedSite {
         name: super::bitmovin::NAME,
         key: super::bitmovin::KEY,
@@ -1887,6 +1887,13 @@ static EMBED_SITES: [EmbedSite; 7] = [
         extractor: Some(&super::jwplatform::JwPlatform),
         embed_urls: super::jwplatform::embed_urls,
         temp_id: super::jwplatform::temp_id,
+    },
+    EmbedSite {
+        name: super::maariv::NAME,
+        key: super::maariv::KEY,
+        extractor: Some(&super::maariv::Maariv),
+        embed_urls: super::maariv::embed_urls,
+        temp_id: super::maariv::temp_id,
     },
     EmbedSite {
         name: super::megaphone::NAME,
