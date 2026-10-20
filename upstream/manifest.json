@@ -77,7 +77,12 @@
         "tests/http.rs",
         "tests/retries.rs",
         "tests/progress.rs",
-        "docs/COMPATIBILITY.md"
+        "docs/COMPATIBILITY.md",
+        "tests/download_errors.rs",
+        "tests/chunks.rs",
+        "tests/limits.rs",
+        "tests/network.rs",
+        "tests/existing_media.rs"
       ],
       "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication, bounded download retries for selected transient HTTP statuses and connection/body failures, in-invocation range resume guarded by strong ETags, known lengths and response validation; shared transient HTTP classification/backoff with extraction; bounded Retry-After delay-seconds/preferred HTTP-date shared with extraction; byte-progress observers and cooperative cancellation checkpoints including retry-wait polling; no persistent resume, Last-Modified validators or obsolete HTTP-date Retry-After formats"
     },
@@ -99,7 +104,6 @@
         "tests/http.rs",
         "tests/retries.rs",
         "tests/progress.rs",
-        "src/selector.rs",
         "tests/format_filters.rs",
         "tests/fixtures/selectors/",
         "tools/compare_filters.py",
@@ -154,7 +158,13 @@
         "tests/config.rs",
         "tests/fixtures/config/",
         "tools/compare_shlex.py",
-        "tools/test_compare_shlex.py"
+        "tools/test_compare_shlex.py",
+        "tests/check_formats.rs",
+        "tests/usage_errors.rs",
+        "tests/verbose.rs",
+        "tests/playlist_stage.rs",
+        "tests/page_dumps.rs",
+        "tests/comments.rs"
       ],
       "scope": "Multiple URLs, simulate, per-video NDJSON, sequential HTML5 playlist entry downloads with failure continuation, bounded typed output templates with primitive metadata, alternatives/defaults and selected-context padding, literal HTML5 source-ID or bounded resolution-based default/best/worst selection applied independently to each entry, bounded --retries download option with guarded range recovery and independent opt-in --extractor-retries whole-extraction budget with bounded Retry-After delay-seconds/preferred HTTP-date; upstream report_progress lines/minicurses single-line printer and to_screen lines on stdout (stderr under logtostderr) with --newline/--no-progress/--progress/--progress-delta (actual-fixture formatting; no colors/templates); -R/--retries and --fragment-retries default 10 with inf/infinite and parse_retries errors, RetryManager Got error/Giving up messages, --retry-sleep http/fragment parse_sleep_func delays and --skip-unavailable-fragments/--abort-on-unavailable-fragments fragment skipping (native transient classification for whole-file retries); no CLI cancellation/signal handling or general option parity; bounded audio/video selectors, two-stream + pairs and / fallbacks in upstream FormatSorter order; chained typed numeric/text format predicates with unknown inclusion, quoted delimiters and upstream unit conventions before FormatSorter-ordered selection; parenthesized choices/merges, group input filters, best/worst aliases and bare-filter selectors through a bounded expression AST; positive one-based indexed best/worst aliases after native filtered ranking; upstream best/worst complete-stream and incomplete_formats fallback, starred bv*/ba*/b* and extension selectors, _merge duplicate-stream dropping and bestvideo*+bestaudio/best default with a merger (tests/fixtures/selectors/kinds.json from actual build_format_selector); no regexes, arbitrary metadata filters or multiselection; -F eligible format inventories through unselected extraction, combined -j/-s normal selection, pure bounded native table renderer and selector syntax preflight; no upstream table/sorter parity or no-simulate listing downloads; --print video-stage field lists/templates with unsanitized typed rendering, j conversion, filename/urls and title/id/url/filename --get-* aliases under quiet simulation; --print/--print-to-file at video/before_dl/post_process/after_move/after_video stages with filepath/_filename, print_only simulation rule and repr Writing notices; no pre_process/after_filter/playlist print stages; -a/--batch-file and --no-batch-file with actual upstream get_urls comment/BOM/universal-newline/strip semantics, stdin and ~/$VAR expansion; no ~user expansion or -q; -w/--force-overwrites/--no-force-overwrites media already-downloaded/delete and info JSON/subtitle overwrite decisions from actual process_info; existing media with postprocessing is an explicit error; no final_ext candidates or --no-post-overwrites; --continue/--no-continue/--part/--no-part HttpFD .part files with plain-Range resume, Unable to resume restart and kept parts (whole-file media only); -J/--dump-single-json per-URL object with playlist _type/playlist_count/requested_entries/entries under quiet simulation (native -j field shape); --no-simulate and upstream simulate/list_only/quiet resolution from actual parse_options; --max-downloads processed-video counting with exit 101; --min/max-filesize parse_bytes limits on whole-file HTTP media Content-Length (no fragment checks); -r/--limit-rate upstream slow_down per media transfer/fragment request; --sleep-interval/--max-sleep-interval/--sleep-subtitles with upstream validation messages and --sleep-requests before every extraction request but the first (native probes excluded); --embed-metadata/--add-metadata final FFmpegMetadataPP stage (common tags, id3v1, stream languages; no chapters or info JSON attachment); --list-thumbnails table, --write-thumbnail/--write-all-thumbnails with upstream flag folding, best-first attempts, 404 skips and overwrite rules, HTML5 poster thumbnails and _sanitize_thumbnails; --write-description (video/playlist, overwrite-aware) and --(no-)write-playlist-metafiles; --match-filters/--break-match-filters with resets via actual-match_str fixture, pre-selection format-field incompleteness and post-selection recheck, Rust regex engine; --date/--datebefore/--dateafter via actual-fixture DateRange/date_from_str (pinned now) with report_conflict warnings, --age-limit, hidden --min-views/--max-views/--match-title/--reject-title/--break-on-reject in _match_entry order with upstream messages; RejectedVideoReached fixed message; -i/--no-abort-on-error/--abort-on-error ignoreerrors folding with queue abort on the first reported error and run_pp-style processor skipping under -i; --exec/--no-exec/--exec-before-download ExecPP stages video/before_dl/post_process/after_move/after_video with safe d/i/f/q templates, {} quoting and run_pp/pending error handling (POSIX shell only); --mtime/--no-mtime try_utime via actual-fixture timeconvert for media/subtitle/fragment downloads and oldest-input mtime inheritance for every FFmpeg output; --write-link/--write-url-link/--write-webloc-link/--write-desktop-link _write_link_file with actual-fixture iri_to_uri/LINK_TEMPLATES and upstream overwrite quirk; --load-info-json download_with_info_file with sanitize_info(remove_private_keys) reselection, URL-ignored warning and playlist EntryNotInPlaylist URL fallback; __process_playlist progress lines and process_video_result format-count line (no updated playlist info JSON rewrite); _default_format_spec best/bestvideo+bestaudio without a merger with the ffmpeg-not-found warning and unmerged format-file downloads (abort under --abort-on-error); HLS formats labeled mp4 with FixupM3u8/FixupM4a and --fixup/--hls-use-mpegts (content-sniffed demuxers); get_compatible_ext merge containers with --merge-output-format preferences (avi/flv/mkv/mov/mp4/webm/ts muxers); upstream NAME.fID.EXT merge format files with per-format Destination/Total fragments lines, reuse, [Merger] and Deleting original file messages and standalone -k for unprocessed merges; CLI ffmpeg/ffprobe discovery via PATH and directory/file --ffmpeg-location like _determine_executables (no version probe); validate_options parser.error usage/exit 2 layout and messages for represented options (clap value errors keep clap text); configuration files (portable/home/user/system with yt-dlp-rs names, --config-locations nesting, --ignore-config, shlex port) and optparse-style last-value-wins repeated options"
     },
@@ -193,7 +203,8 @@
         "src/extractor/youtube/integration/captions.rs",
         "tools/compare_youtube_captions.py",
         "tools/test_compare_youtube_captions.py",
-        "upstream/notes/youtube-captions.md"
+        "upstream/notes/youtube-captions.md",
+        "src/extractor/youtube/chapters.rs"
       ],
       "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API direct formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; native finite HLS VOD discovery for initial/anonymous WEB responses under optional HLS token policy, shared path-n and direct URL challenge batch, native hls format IDs/groups; no other API clients, token acquisition, authentication, live, fragmented direct adaptive delivery, DASH discovery, SABR or playlists; bounded manual/ASR caption URL/name metadata, translation/original aliases and audio-language inference under WEB subtitle token policy; no caption token acquisition or URL deciphering; player-response descriptive metadata (description, duration, channel/uploader IDs/URLs, views, rating, age limit, categories, tags, embed/live/media type, upload date/timestamp, availability without badges) compared against upstream for six saved cases; upstream thumbnail candidates/preferences/dedupe and best thumbnail; no ytInitialData or meta-tag metadata"
     },
@@ -265,7 +276,8 @@
         "tests/fixtures/dash/",
         "tools/compare_dash.py",
         "tools/test_compare_dash.py",
-        "upstream/notes/dash-static.md"
+        "upstream/notes/dash-static.md",
+        "tests/hls_discontinuity.rs"
       ],
       "scope": "Native finite clear/identity-AES-128 HLS master/media parsing, direct and HTML5 acquisition, single initialization map, TS/AAC/fMP4 ordered assembly, exact byte ranges, per-fragment whole retries/cancellation and no-clobber publication; pinned offline HlsFD fragment-plan comparison; lazy exact-length key retrieval/cache, sequence/explicit IVs, rotation and bounded RustCrypto CBC/PKCS7 decryption; external AUDIO rendition groups with language/name/default metadata, compatible automatic pair selection, audio-only masters and copy merging; parse_codecs vcodec/acodec/dynamic_range for HLS/DASH formats; upstream protocol fields (m3u8_native/http_dash_segments/determine_protocol, +-joined merges) and single-download [hlsnative]/[dashsegments] Total fragments lines (no HlsFD manifest refetch line); static single-period DASH BaseURL inheritance, templates/timelines, lists/ranges, explicit resources and native fragment representation downloads/merging; no dynamic/multi-period/SIDX/DRM DASH, SAMPLE-AES/DRM, live, discontinuities, external video/subtitle renditions, nested masters or remux parity"
     },
@@ -343,7 +355,9 @@
         "yt_dlp/YoutubeDL.py",
         "yt_dlp/utils/_utils.py",
         "yt_dlp/options.py",
-        "test/test_YoutubeDL.py"
+        "test/test_YoutubeDL.py",
+        "yt_dlp/utils/traversal.py",
+        "yt_dlp/postprocessor/movefilesafterdownload.py"
       ],
       "rust": [
         "src/output.rs",
@@ -366,7 +380,10 @@
         "tests/fixtures/paths/",
         "tools/compare_paths.py",
         "tools/test_compare_paths.py",
-        "upstream/notes/output-paths.md"
+        "upstream/notes/output-paths.md",
+        "src/output/traverse.rs",
+        "tests/derived_fields.rs",
+        "tests/temp_paths.rs"
       ],
       "scope": "Whitelist of represented root string/integer/boolean filename fields; s/d/i/u/f/F flags-width-precision and inert length modifiers, known-field alternatives/literal defaults/global NA option, upstream float numeric casting and exact bare-s playlist padding before archive filtering; bounded grammar/output, upstream default/restricted/minimal sanitize_filename with NFKC/accents, forced non-Windows sanitize_path, trim_file_name and restricted default template, native dot-only path-component guard, typed -o subtitle/infojson/pl_infojson templates with forced extensions and empty-template skips, -P home/type paths with posix join and ~/$VAR template/path expansion, and explicit unsupported errors; no -P temp relocation; no arbitrary metadata/traversal/math/date/replacement/custom conversions, S conversion, filename-sanitization compat option or Windows-host sanitize_path"
     },
@@ -444,7 +461,8 @@
         "tests/fixtures/headers/",
         "tools/compare_headers.py",
         "tools/test_compare_headers.py",
-        "upstream/notes/http-headers.md"
+        "upstream/notes/http-headers.md",
+        "tests/client_cert.rs"
       ],
       "scope": "Bounded global header defaults, repeated add-headers and explicit singular alias, convenience User-Agent/Referer normalization, extractor/transport request precedence across native clients/transfers, local retry/redirect propagation; explicit raw Cookie rejection; scoped cookies tracked separately; no general authentication/proxy/impersonation/default browser headers or upstream redirect/legacy-byte parity"
     },
@@ -456,7 +474,8 @@
         "yt_dlp/options.py",
         "yt_dlp/YoutubeDL.py",
         "test/test_cookies.py",
-        "yt_dlp/networking/"
+        "yt_dlp/networking/",
+        "yt_dlp/aes.py"
       ],
       "rust": [
         "src/cookies.rs",
@@ -470,9 +489,16 @@
         "tests/fixtures/cookies/",
         "tools/compare_cookies.py",
         "tools/test_compare_cookies.py",
-        "upstream/notes/http-cookies.md"
+        "upstream/notes/http-cookies.md",
+        "src/browser_cookies.rs",
+        "src/sqlite.rs",
+        "src/md5.rs",
+        "src/sha1.rs",
+        "tests/browser_cookies.rs",
+        "tests/fixtures/browser_cookies/",
+        "tools/capture_browser_cookies.py"
       ],
-      "scope": "Shared bounded RFC6265-scoped in-memory response cookies across native clients and explicit Netscape import/atomic save, session/expiry/domain/path/Secure/HttpOnly and nameless values, last-wins cookies/no-cookies CLI persistence including metadata/failures; strict host-only and malformed-file native policies, no raw Cookie compatibility, browser-cookie extraction/decryption, PSL snapshot, SameSite/browser-context enforcement or account-specific YouTube authentication"
+      "scope": "Shared bounded RFC6265-scoped in-memory response cookies across native clients and explicit Netscape import/atomic save, session/expiry/domain/path/Secure/HttpOnly and nameless values, last-wins cookies/no-cookies CLI persistence including metadata/failures; strict host-only and malformed-file native policies, no raw Cookie compatibility, PSL snapshot, SameSite/browser-context enforcement or account-specific YouTube authentication; --cookies-from-browser for Firefox (native read-only SQLite), Chromium browsers (macOS keychain, Linux BASICTEXT/KWallet; no GNOME keyring or Windows DPAPI) and Safari, with lazy loading at the first request, plus the info dict cookies field"
     },
     {
       "name": "http-proxy-configuration",
@@ -554,7 +580,7 @@
         "tools/test_compare_video.py",
         "upstream/notes/video-processing.md"
       ],
-      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio→video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
+      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio\u2192video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
     },
     {
       "name": "thumbnail-processing",
@@ -654,6 +680,100 @@
         "upstream/notes/info-json.md"
       ],
       "scope": "--write-info-json/--no-write-info-json video and playlist sidecars with default clean filtering, replace_extension naming, playlist template context, Python json.dump bytes, keep-existing default and ordering before media/entries; no overwrite options, --no-clean-info-json, --load-info-json, embedding, typed infojson templates or unmodeled upstream fields"
+    },
+    {
+      "name": "format-selection",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "test/test_YoutubeDL.py"
+      ],
+      "rust": [
+        "src/format_select.rs",
+        "tests/fixtures/selectors/upstream_selection.json",
+        "tools/capture_format_selection.py"
+      ],
+      "scope": "Upstream build_format_selector (tokenizing, filters, merges, fallbacks, ordinal/group selection) over the represented format dicts, compared on saved selection cases"
+    },
+    {
+      "name": "modify-chapters-and-sponsorblock",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/modify_chapters.py",
+        "yt_dlp/postprocessor/sponsorblock.py",
+        "yt_dlp/options.py",
+        "test/test_postprocessors.py"
+      ],
+      "rust": [
+        "src/modify_chapters.rs",
+        "src/sponsorblock.rs",
+        "tests/remove_chapters.rs",
+        "tests/sponsorblock.rs",
+        "tests/fixtures/modify_chapters/",
+        "tools/capture_modify_chapters.py"
+      ],
+      "scope": "ModifyChaptersPP (--remove-chapters, --force-keyframes-at-cuts, SponsorBlock marking/removal) and SponsorBlockPP against a local API stand-in"
+    },
+    {
+      "name": "download-sections",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/downloader/external.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/options.py"
+      ],
+      "rust": [
+        "src/sections.rs",
+        "src/ffmpeg_fd.rs",
+        "tests/sections.rs"
+      ],
+      "scope": "--download-sections ranges, chapters and from-url through upstream's FFmpegFD, plus --downloader ffmpeg"
+    },
+    {
+      "name": "ffmpeg-fixups",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/ffmpeg.py",
+        "yt_dlp/YoutubeDL.py"
+      ],
+      "rust": [
+        "src/fixup.rs",
+        "src/container.rs",
+        "tests/dash_fixup.rs",
+        "tests/stretched_fixup.rs"
+      ],
+      "scope": "FixupM3u8, FixupM4a, FixupDuplicateMoov and FixupStretched with upstream policies; FixupTimestamp/FixupDuration (web socket downloads) are out of scope"
+    },
+    {
+      "name": "metadata-and-postprocessor-options",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/postprocessor/metadataparser.py",
+        "yt_dlp/postprocessor/xattrpp.py",
+        "yt_dlp/postprocessor/common.py",
+        "yt_dlp/options.py"
+      ],
+      "rust": [
+        "src/metadata_parser.rs",
+        "src/xattr.rs",
+        "src/pp_args.rs",
+        "tests/postprocessor_args.rs"
+      ],
+      "scope": "--parse-metadata/--replace-in-metadata, XAttrMetadataPP and --postprocessor-args"
+    },
+    {
+      "name": "upstream-tooling",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/version.py"
+      ],
+      "rust": [
+        "tools/upstream_report.py",
+        "tools/test_upstream_report.py"
+      ],
+      "scope": "The upstream change report used for update tasks"
     }
   ]
 }
