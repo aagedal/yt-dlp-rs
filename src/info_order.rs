@@ -571,7 +571,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     // (only) format.
     let own_format = matches!(
         shape.as_str(),
-        "generic-untyped" | "generic-found" | "generic-found-entry" | "reverbnation"
+        "generic-untyped" | "generic-found" | "generic-found-entry" | "reverbnation" | "hypem"
     ) || original
         .as_ref()
         .is_some_and(|original| !original.contains_key("formats"));
@@ -665,6 +665,17 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
+        ],
+        // `HypemIE._real_extract`'s dict (its own format).
+        "hypem" => &[
+            ("id", Take),
+            ("url", Take),
+            ("ext", Take),
+            ("title", Take),
+            ("uploader", Assign),
+            ("duration", Take),
+            ("timestamp", Assign),
+            ("track", Take),
         ],
         // `ReverbNationIE._real_extract`'s dict (its own format).
         "reverbnation" => &[

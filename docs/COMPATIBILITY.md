@@ -268,6 +268,13 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+Hypem tracks (`hypem.com/track/ID`) follow upstream `HypemIE`: the page's
+`displayList-data` script (cleaned like `_html_search_regex` before parsing),
+its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped
+`mp3` result with `song` as title and track, `artist`, `int_or_none`
+`time`/`ts`, and upstream's missing-script, `KeyError` and bare `IndexError`
+messages.
+
 ReverbNation songs (`reverbnation.com/.../song/ID`) follow upstream
 `ReverbNationIE`: the `api.reverbnation.com/song/ID` JSON (`Downloading
 information of song ID`) as an untyped `mp3` audio-only result with the artist

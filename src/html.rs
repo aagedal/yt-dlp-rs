@@ -77,6 +77,21 @@ fn og_regexes(prop: &str) -> [Regex; 2] {
 }
 
 /// `_og_search_property(prop, html, fatal=False)`.
+/// Upstream `clean_html`: tags removed, entities decoded, whitespace
+/// collapsed around newlines.
+pub fn clean_html(text: &str) -> String {
+    static BREAK: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"(?i)\s*<\s*br\s*/?\s*>\s*").expect("static pattern"));
+    static PARAGRAPH: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"(?i)<\s*/\s*p\s*>\s*<\s*p[^>]*>").expect("static pattern"));
+    static TAG: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<.*?>").expect("static pattern"));
+    let text = text.replace('\n', " ");
+    let text = BREAK.replace_all(&text, "\n");
+    let text = PARAGRAPH.replace_all(&text, "\n");
+    let text = TAG.replace_all(&text, "");
+    unescape_html(&text).trim().to_owned()
+}
+
 pub fn og_search_property(html: &str, prop: &str) -> Option<String> {
     og_regexes(prop).iter().find_map(|regex| {
         let found = regex.captures(html)?;

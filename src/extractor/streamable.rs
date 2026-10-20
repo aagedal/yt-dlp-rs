@@ -52,7 +52,8 @@ pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
     found
 }
 
-fn int_or_none(value: Option<&Value>) -> Value {
+/// `int_or_none`.
+pub(crate) fn int_or_none(value: Option<&Value>) -> Value {
     match value {
         Some(Value::Number(number)) => number
             .as_i64()

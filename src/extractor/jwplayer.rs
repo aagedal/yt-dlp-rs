@@ -94,20 +94,9 @@ fn str_or_none(value: Option<&Value>) -> Option<String> {
     }
 }
 
-/// `clean_html`: tags removed, entities decoded, whitespace collapsed
-/// around newlines.
+/// `clean_html` of a string value.
 fn clean_html(value: Option<&Value>) -> Option<String> {
-    let text = value?.as_str()?;
-    static BREAK: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r"(?i)\s*<\s*br\s*/?\s*>\s*").expect("static pattern"));
-    static PARAGRAPH: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r"(?i)<\s*/\s*p\s*>\s*<\s*p[^>]*>").expect("static pattern"));
-    static TAG: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<.*?>").expect("static pattern"));
-    let text = text.replace('\n', " ");
-    let text = BREAK.replace_all(&text, "\n");
-    let text = PARAGRAPH.replace_all(&text, "\n");
-    let text = TAG.replace_all(&text, "");
-    Some(crate::html::unescape_html(&text).trim().to_owned())
+    Some(crate::html::clean_html(value?.as_str()?))
 }
 
 /// `urljoin(base_url, self._proto_relative_url(url))` (`//` URLs get
