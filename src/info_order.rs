@@ -22,6 +22,8 @@ enum Set {
     Assign,
     /// Always, `{}` without a value.
     Dict,
+    /// Always, `[]` without a value.
+    List,
     /// `parse_codecs`'s `dynamic_range`: always when codecs are known.
     Codecs,
 }
@@ -69,6 +71,12 @@ impl Replay {
             Dict => {
                 if !self.ours.contains_key(key) && !self.out.contains_key(key) {
                     self.out.insert(key.to_owned(), Value::Object(Map::new()));
+                }
+                self.take(key);
+            }
+            List => {
+                if !self.ours.contains_key(key) && !self.out.contains_key(key) {
+                    self.out.insert(key.to_owned(), Value::Array(Vec::new()));
                 }
                 self.take(key);
             }
@@ -563,7 +571,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     // (only) format.
     let own_format = matches!(
         shape.as_str(),
-        "generic-untyped" | "generic-found" | "generic-found-entry"
+        "generic-untyped" | "generic-found" | "generic-found-entry" | "reverbnation"
     ) || original
         .as_ref()
         .is_some_and(|original| !original.contains_key("formats"));
@@ -657,6 +665,17 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
+        ],
+        // `ReverbNationIE._real_extract`'s dict (its own format).
+        "reverbnation" => &[
+            ("id", Take),
+            ("title", Take),
+            ("url", Take),
+            ("uploader", Assign),
+            ("uploader_id", Assign),
+            ("thumbnails", List),
+            ("ext", Take),
+            ("vcodec", Take),
         ],
         // `MegaphoneIE._real_extract`'s dict.
         "megaphone" => &[

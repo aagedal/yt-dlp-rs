@@ -268,6 +268,12 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+ReverbNation songs (`reverbnation.com/.../song/ID`) follow upstream
+`ReverbNationIE`: the `api.reverbnation.com/song/ID` JSON (`Downloading
+information of song ID`) as an untyped `mp3` audio-only result with the artist
+as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
+`qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
+
 On generic pages, the `_EMBED_REGEX` iframes of Megaphone and Streamable, in
 upstream extractor order (each HTML-unescaped, joined to the page URL,
 suitable and unique, with `Identified N NAME embed(s)` debug lines), are `url`

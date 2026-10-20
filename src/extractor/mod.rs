@@ -6,6 +6,7 @@ pub(crate) mod html5;
 mod json_ld;
 mod jwplayer;
 mod megaphone;
+mod reverbnation;
 mod rss;
 mod streamable;
 mod youtube;
@@ -15,6 +16,7 @@ pub(crate) use direct::from_response as direct_media_info;
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
+pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
 
@@ -62,8 +64,19 @@ pub(crate) fn download_json(
     extractor: &'static str,
     id: &str,
 ) -> Result<serde_json::Value> {
+    download_json_note(client, url, extractor, id, "Downloading JSON metadata")
+}
+
+/// [`download_json`] with its `note=` (the error note stays the default).
+pub(crate) fn download_json_note(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+) -> Result<serde_json::Value> {
     use std::io::Read;
-    crate::screen::screen(&format!("[{extractor}] {id}: Downloading JSON metadata"));
+    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
             crate::Error::ExtractorRequest {

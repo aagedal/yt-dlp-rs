@@ -74,7 +74,8 @@ Supported today:
   dimension, or the only known one; unknown resolution sorts lowest. Ties select
   the last declaration for best/default and the first for worst.
 - Streamable videos (`streamable.com/ID`) through the site's video JSON and
-  Megaphone players (`player.megaphone.fm/ID`) through their page, plus
+  Megaphone players (`player.megaphone.fm/ID`) through their page,
+  ReverbNation songs through the song API, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

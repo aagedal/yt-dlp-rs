@@ -286,14 +286,16 @@ pub struct VideoFormat {
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct Thumbnail {
     pub url: String,
+    /// An extractor's preference precedes the `id` `_sanitize_thumbnails`
+    /// adds.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub preference: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub width: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub height: Option<u32>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub preference: Option<i64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resolution: Option<String>,
 }
