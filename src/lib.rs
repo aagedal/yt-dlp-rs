@@ -1054,6 +1054,8 @@ impl YoutubeDl {
         };
         for entry in entries {
             entry.fulltitle = Some(entry.title.clone());
+            // `process_video_result`: `display_id` defaults to the ID.
+            crate::info::set_default(&mut entry.extra, "display_id", entry.id.clone());
             entry.metadata.fill_common_fields();
             entry.metadata.fill_chapters();
             entry.metadata.sanitize_thumbnails();
@@ -1313,7 +1315,10 @@ impl YoutubeDl {
         }
         for attempt in 0..=options.retries {
             match self.extract_once(&url) {
-                Ok(info) => return Ok(info),
+                Ok(mut info) => {
+                    info.add_default_extra_info(input);
+                    return Ok(info);
+                }
                 Err(error) => {
                     let Some(delay) = retry::failure_delay(&error) else {
                         return Err(error);

@@ -211,6 +211,7 @@ const FIELDS: &[&str] = &[
     "playlist_autonumber",
     "playlist_count",
     "n_entries",
+    "__last_playlist_index",
     "direct",
     "description",
     "duration",
@@ -323,6 +324,7 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
         "playlist_autonumber" => info.playlist_autonumber.map(|n| Integer(n as u64)),
         "playlist_count" => info.playlist_count.map(|n| Integer(n as u64)),
         "n_entries" => info.n_entries.map(|n| Integer(n as u64)),
+        "__last_playlist_index" => info.last_playlist_index.map(|n| Integer(n as u64)),
         // Only generic direct links have a `direct` field upstream.
         "direct" => info.direct.map(Boolean),
         "description" => info.metadata.description.as_deref().map(Text),

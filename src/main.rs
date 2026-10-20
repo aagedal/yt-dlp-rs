@@ -1283,11 +1283,20 @@ fn run_playlist_stage(
                 } else {
                     title.clone()
                 };
+                // `max(requested_entries or (0, 0))`.
+                let last = dict
+                    .get("requested_entries")
+                    .and_then(serde_json::Value::as_array)
+                    .and_then(|entries| entries.iter().filter_map(serde_json::Value::as_u64).max())
+                    .unwrap_or(0);
                 for (name, value) in [
+                    ("playlist_count", field("playlist_count")),
                     ("playlist", fallback),
                     ("playlist_id", field("id")),
                     ("playlist_title", title),
                     ("playlist_webpage_url", field("webpage_url")),
+                    ("playlist_index", 0.into()),
+                    ("__last_playlist_index", last.into()),
                 ] {
                     object.entry(name).or_insert(value);
                 }

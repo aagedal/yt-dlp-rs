@@ -153,6 +153,15 @@ fn video_info_json_is_cleaned_dumped_metadata_written_before_media() {
     let object = value.as_object_mut().unwrap();
     object.remove("epoch");
     object.remove("_type");
+    // `clean_infojson` drops `original_url`, which `-j` keeps.
+    let mut dumped = dumped;
+    assert!(
+        dumped
+            .as_object_mut()
+            .unwrap()
+            .remove("original_url")
+            .is_some()
+    );
     assert_eq!(value, dumped);
     let info = stdout
         .find(&format!(
@@ -263,6 +272,8 @@ fn playlist_info_json_precedes_entries_with_upstream_counts_and_name() {
             "id": id, "title": "Playlist selection",
             "webpage_url": server.url("/playlist.html"),
             "extractor": "generic", "extractor_key": "Generic",
+            "webpage_url_basename": "playlist.html",
+            "webpage_url_domain": server.url("/").trim_start_matches("http://").trim_end_matches('/'),
             "playlist_count": 4, "_type": "playlist",
         })
     );

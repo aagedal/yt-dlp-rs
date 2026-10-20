@@ -19,6 +19,64 @@ pub struct PlaylistInfo {
     pub extractor: String,
     pub extractor_key: String,
     pub entries: Vec<VideoInfo>,
+    /// Unmodeled info-dict keys (upstream's `add_default_extra_info`).
+    #[serde(flatten, default)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
+}
+
+/// Upstream `url_basename`: the URL path's last segment.
+pub fn url_basename(url: &Url) -> String {
+    url.path()
+        .trim_matches('/')
+        .rsplit('/')
+        .next()
+        .unwrap_or_default()
+        .to_owned()
+}
+
+/// Upstream `get_domain`: the URL's netloc without a leading `www.`.
+pub fn get_domain(url: &Url) -> Option<String> {
+    let mut netloc = String::new();
+    if !url.username().is_empty() {
+        netloc.push_str(url.username());
+        if let Some(password) = url.password() {
+            netloc.push(':');
+            netloc.push_str(password);
+        }
+        netloc.push('@');
+    }
+    netloc.push_str(url.host_str().unwrap_or_default());
+    if let Some(port) = url.port() {
+        netloc.push_str(&format!(":{port}"));
+    }
+    let domain = netloc.strip_prefix("www.").unwrap_or(&netloc).to_owned();
+    (!domain.is_empty()).then_some(domain)
+}
+
+/// `dict.setdefault` for a non-null value.
+pub(crate) fn set_default(
+    extra: &mut serde_json::Map<String, serde_json::Value>,
+    key: &str,
+    value: impl Into<serde_json::Value>,
+) {
+    let value = value.into();
+    if !value.is_null() {
+        extra.entry(key).or_insert(value);
+    }
+}
+
+impl ExtractResult {
+    /// Upstream `add_default_extra_info`: `original_url` (the input URL) and
+    /// `webpage_url_basename`/`webpage_url_domain`.
+    pub(crate) fn add_default_extra_info(&mut self, input: &str) {
+        let (extra, webpage_url) = match self {
+            Self::Video(info) => (&mut info.extra, &info.webpage_url),
+            Self::Playlist(info) => (&mut info.extra, &info.webpage_url),
+        };
+        set_default(extra, "original_url", input);
+        set_default(extra, "webpage_url_basename", url_basename(webpage_url));
+        set_default(extra, "webpage_url_domain", get_domain(webpage_url));
+    }
 }
 
 impl ExtractResult {
@@ -443,10 +501,6 @@ pub struct VideoInfo {
     /// The selected format's `downloader_options`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub downloader_options: Option<DownloaderOptions>,
-    /// Fields this port does not model, set by `--parse-metadata` or
-    /// `--replace-in-metadata` (serialized with the info dict).
-    #[serde(flatten)]
-    pub extra: serde_json::Map<String, serde_json::Value>,
     #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
     pub automatic_captions: crate::Subtitles,
     #[serde(default, skip_serializing_if = "crate::Subtitles::is_empty")]
@@ -556,6 +610,10 @@ pub struct VideoInfo {
     pub width: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub height: Option<u32>,
+    /// Fields this port does not model: loaded or derived info-dict keys and
+    /// `--parse-metadata`/`--replace-in-metadata` results (serialized last).
+    #[serde(flatten)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
 }
 
 impl VideoInfo {
@@ -1704,6 +1762,7 @@ mod tests {
             extractor: "test".into(),
             extractor_key: "Test".into(),
             entries: vec![first, second],
+            extra: Default::default(),
         });
         let before = serde_json::to_value(&playlist).unwrap();
         let error = playlist

@@ -1394,7 +1394,14 @@ Source evidence and shared comparison fixtures are recorded in
 `extractor_key`, `format_id`, `url` and `webpage_url`; integer fields `width`,
 `height`, `filesize`, `playlist_index`, `playlist_autonumber`, `playlist_count` and
 `n_entries`; and boolean `direct` (plus the other typed root fields listed in
-`FIELDS`). Every other field and any traversal use upstream `_traverse_infodict`
+`FIELDS`, including `__last_playlist_index`). The info dict also carries
+upstream's derived keys: `original_url` (the input URL of the extracted result),
+`webpage_url_basename` and `webpage_url_domain` (`add_default_extra_info`),
+`display_id` (the ID unless set), playlist entries' `playlist`, `playlist_id`,
+`playlist_title`, `playlist_webpage_url` and the playlist's basename/domain,
+HTML5 entries' `_old_archive_ids` (`generic ID[-N]`, which download-archive checks
+also match), and keys of loaded info JSON this port does not model. `http_headers`
+and the `cookies` field are not represented. Every other field and any traversal use upstream `_traverse_infodict`
 over the serialized info dict (`traverse_obj(..., traverse_string=True)`): dotted
 keys, integer indices (negative from the end), Python slices such as
 `%(title.0:20)s`, `%(formats.1:3.format_id)s` or `%(id.::-1)s`, `:` for every

@@ -178,6 +178,28 @@ impl PlaylistSelection {
             return None;
         };
         let count = playlist.entries.len();
+        // Upstream's `_playlist_infodict` extras each entry gets by default.
+        let title = Some(playlist.title.clone()).filter(|title| !title.is_empty());
+        let defaults: [(&str, serde_json::Value); 6] = [
+            (
+                "playlist",
+                title.clone().unwrap_or_else(|| playlist.id.clone()).into(),
+            ),
+            ("playlist_id", playlist.id.clone().into()),
+            ("playlist_title", title.into()),
+            (
+                "playlist_webpage_url",
+                playlist.webpage_url.to_string().into(),
+            ),
+            (
+                "webpage_url_basename",
+                crate::info::url_basename(&playlist.webpage_url).into(),
+            ),
+            (
+                "webpage_url_domain",
+                crate::info::get_domain(&playlist.webpage_url).into(),
+            ),
+        ];
         let indices = self.indices(count);
         let selected_count = indices.len();
         let last_index = indices.iter().max().map(|index| index + 1).unwrap_or(0);
@@ -192,6 +214,9 @@ impl PlaylistSelection {
                 let mut entry = entries[index]
                     .take()
                     .expect("selection positions are unique");
+                for (key, value) in defaults.clone() {
+                    crate::info::set_default(&mut entry.extra, key, value);
+                }
                 entry.last_playlist_index = Some(last_index);
                 entry.playlist_index = Some(index + 1);
                 entry.playlist_autonumber = Some(order + 1);
@@ -489,6 +514,7 @@ mod tests {
             extractor: "test".into(),
             extractor_key: "Test".into(),
             entries: (1..=4).map(|i| video(&i.to_string())).collect(),
+            extra: Default::default(),
         });
         PlaylistSelection::new(Some("4,2,4"), 1, None, true)
             .unwrap()

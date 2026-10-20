@@ -694,6 +694,19 @@ impl Extractor for GenericHttp {
             info.extractor_key = "HTML5MediaEmbed".into();
             entries.push(info);
         }
+        // `HTML5MediaEmbedIE`: archive IDs from before the embed extractor.
+        let single = entries.len() == 1;
+        for entry in &mut entries {
+            let old = if single {
+                media.id.as_str()
+            } else {
+                entry.id.as_str()
+            };
+            entry.extra.insert(
+                "_old_archive_ids".into(),
+                serde_json::json!([format!("generic {old}")]),
+            );
+        }
         crate::screen::debug(&match entries.len() {
             1 => "Identified a html5 embed".to_owned(),
             count => format!("Identified {count} html5 embeds"),
@@ -716,6 +729,7 @@ impl Extractor for GenericHttp {
             extractor: "generic".into(),
             extractor_key: "Generic".into(),
             entries,
+            extra: Default::default(),
         })))
     }
 }
