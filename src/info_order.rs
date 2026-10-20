@@ -288,6 +288,17 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         "fczenit" => &[("format_id", Take), ("url", Take), ("height", Assign)],
         // `CJSWIE`'s audio.
         "cjsw" => &[("url", Take), ("ext", Take), ("vcodec", Take)],
+        // `ZhihuIE`'s playlist quality.
+        "zhihu" => &[
+            ("asr", Assign),
+            ("filesize", Assign),
+            ("format_id", Take),
+            ("fps", Assign),
+            ("height", Assign),
+            ("tbr", Assign),
+            ("url", Take),
+            ("width", Assign),
+        ],
         // `BildIE`'s MP4 source.
         "bild" => &[("url", Take), ("format_id", Take)],
         // `BloggerIE`'s stream.
@@ -1189,6 +1200,21 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("duration", Take),
             ("view_count", Assign),
             ("thumbnails", List),
+        ],
+        // `ZhihuIE._real_extract`'s dict.
+        "zhihu" => &[
+            ("id", Take),
+            ("title", Take),
+            ("formats", Take),
+            ("thumbnail", Assign),
+            ("uploader", Assign),
+            ("timestamp", Assign),
+            ("uploader_id", Assign),
+            ("uploader_url", Assign),
+            ("duration", Take),
+            ("view_count", Assign),
+            ("like_count", Assign),
+            ("comment_count", Assign),
         ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[

@@ -663,6 +663,18 @@
       "scope": "VocarooIE media URL HEAD request, upload timestamp header, Referer headers and empty title compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "zhihu",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/zhihu.py"
+      ],
+      "rust": [
+        "src/extractor/zhihu.rs",
+        "tests/fixtures/sites/zhihu/"
+      ],
+      "scope": "ZhihuIE zvideos API playlist formats, author/count metadata, format_field uploader URL and KeyError/no-formats errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "youtube",
       "status": "partial",
       "upstream": [

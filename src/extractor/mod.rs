@@ -50,6 +50,7 @@ mod twentythreevideo;
 mod vocaroo;
 mod xspf;
 mod youtube;
+mod zhihu;
 
 pub use angel::{Angel, suitable as angel_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
@@ -95,6 +96,7 @@ pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
+pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
 use reqwest::blocking::Client;
