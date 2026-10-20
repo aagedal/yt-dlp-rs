@@ -20,6 +20,56 @@ static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
     .unwrap()
 });
 
+/// `JWPlatformIE._extract_embed_urls`: `<script>`/`<iframe>` `src` player
+/// URLs (else `<input value>`), else a `data-video-jw-id` div as
+/// `jwplatform:ID`; protocol-relative URLs as `https:`, without repeats.
+pub(crate) fn embed_urls(_url: &Url, webpage: &str) -> Vec<Url> {
+    static TAGS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+        let pattern = |tag: &str, key: &str| {
+            Regex::new(&format!(
+                r#"<{tag}[^>]+?{key}=\\?["']?((?:https?:)?//(?:content\.jwplatform|cdn\.jwplayer)\.com/players/[a-zA-Z0-9]{{8}})"#
+            ))
+            .unwrap()
+        };
+        [
+            pattern("(?:script|iframe)", "src"),
+            pattern("input", "value"),
+        ]
+    });
+    static DIV: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r#"<div\b[^>]* data-video-jw-id="([a-zA-Z0-9]{8})""#).unwrap());
+    let mut found: Vec<Url> = Vec::new();
+    let mut push = |text: &str| {
+        let text = super::proto_relative(text);
+        if let Ok(url) = Url::parse(&text)
+            && !found.contains(&url)
+        {
+            found.push(url);
+        }
+    };
+    for regex in TAGS.iter() {
+        let matches: Vec<String> = regex
+            .captures_iter(webpage)
+            .map(|found| found[1].to_owned())
+            .collect();
+        if !matches.is_empty() {
+            for text in &matches {
+                push(text);
+            }
+            return found;
+        }
+    }
+    if let Some(found_div) = DIV.captures(webpage) {
+        push(&format!("jwplatform:{}", &found_div[1]));
+    }
+    found
+}
+
+/// `_match_id`'s ID.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    VALID_URL.captures(url).map(|found| found["id"].to_owned())
+}
+
 /// `_match_id` (also for `jwplatform:ID`).
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)

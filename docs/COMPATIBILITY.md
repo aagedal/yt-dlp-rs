@@ -387,7 +387,11 @@ follow upstream `JWPlatformIE`: the `cdn.jwplayer.com/v2/media/ID` JSON through
 the ported `_parse_jwplayer_data` with `require_title=True` (a missing title is
 upstream's `KeyError`), the entry returned with its `None` fields, its HLS/DASH
 sources requested under `[JWPlatform]`, and caption tracks as subtitles. JW
-Player playlists are unsupported errors.
+Player playlists are unsupported errors. On generic pages its
+`_extract_embed_urls` (`<script>`/`<iframe>` `src` player URLs, else
+`<input value>`, else a `data-video-jw-id` div as `jwplatform:ID`) joins the
+embed detection, first in extractor order. A pseudo-URL result's
+`webpage_url_domain` is `null`, like upstream's `get_domain`.
 
 Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
 `LivestreamfailsIE`: the clip API JSON as an untyped result (`sourceId` as
@@ -424,7 +428,7 @@ information of song ID`) as an untyped `mp3` audio-only result with the artist
 as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
 `qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
 
-On generic pages, the `_EMBED_REGEX` iframes of Megaphone and Streamable, in
+On generic pages, the embeds of JW Platform, Megaphone and Streamable, in
 upstream extractor order (each HTML-unescaped, joined to the page URL,
 suitable and unique, with `Identified N NAME embed(s)` debug lines), are `url`
 results like upstream `_extract_embeds`: one is followed (`original_url` stays

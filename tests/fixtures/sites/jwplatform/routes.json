@@ -35,6 +35,34 @@
     "Content-Type": "application/json"
    },
    "body": "{}"
+  },
+  {
+   "url": "https://news.example.test/iframe",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Iframe page</title></head><body><iframe src=\\\"https://cdn.jwplayer.com/players/nPripu9l-ALJ3XQCI.html\\\"></iframe></body></html>"
+  },
+  {
+   "url": "https://news.example.test/div",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Div page</title></head><body><div class=\"v\" data-video-jw-id=\"nPripu9l\"></div></body></html>"
+  },
+  {
+   "url": "https://news.example.test/input",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Input page</title></head><body><input type=\"hidden\" value=\"//content.jwplatform.com/players/nPripu9l-x.js\"></body></html>"
+  },
+  {
+   "url": "https://news.example.test/two",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Two page</title></head><body><script src=\"https://cdn.jwplayer.com/players/nPripu9l-A.js\"></script><iframe src='https://cdn.jwplayer.com/players/Untitle1-B.html'></iframe><script src=\"https://cdn.jwplayer.com/players/nPripu9l-C.js\"></script></body></html>"
   }
  ]
 }

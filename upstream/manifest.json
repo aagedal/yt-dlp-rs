@@ -290,7 +290,7 @@
         "src/extractor/jwplayer.rs",
         "tests/fixtures/sites/jwplatform/"
       ],
-      "scope": "JWPlatformIE _VALID_URL (including jwplatform: pseudo-URLs) and v2 media JSON via _parse_jwplayer_data(require_title=True) compared with pinned upstream output through the fixture proxy; no _EMBED_REGEX iframe detection or playlists"
+      "scope": "JWPlatformIE _VALID_URL (including jwplatform: pseudo-URLs) and v2 media JSON via _parse_jwplayer_data(require_title=True) compared with pinned upstream output through the fixture proxy; _extract_embed_urls on generic pages; no playlists"
     },
     {
       "name": "livestreamfails",

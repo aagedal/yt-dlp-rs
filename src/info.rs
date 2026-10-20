@@ -88,7 +88,15 @@ impl ExtractResult {
         };
         set_default(extra, "original_url", input);
         set_default(extra, "webpage_url_basename", url_basename(webpage_url));
-        set_default(extra, "webpage_url_domain", get_domain(webpage_url));
+        // `get_domain` is `None` for a pseudo-URL (`jwplatform:ID`).
+        match get_domain(webpage_url) {
+            Some(domain) => set_default(extra, "webpage_url_domain", domain),
+            None => {
+                extra
+                    .entry("webpage_url_domain")
+                    .or_insert(serde_json::Value::Null);
+            }
+        }
     }
 }
 
