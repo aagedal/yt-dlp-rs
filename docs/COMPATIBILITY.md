@@ -397,6 +397,12 @@ upstream's warning), the page's generic title (else the generic video title),
 OpenGraph description and thumbnail (with upstream's warnings) and RTA age
 limit.
 
+CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
+upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
+ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
+section as `categories`, the author as `creators`, and the OpenGraph title,
+description and thumbnail, with upstream's warnings for missing values.
+
 CJSW episodes (`cjsw.com/program/PROGRAM/episode/ID`) follow upstream
 `CJSWIE`: the fatal episode heading (else `data-audio-title`) and audio button
 source, the source's UUID ID (else `PROGRAM/ID`), the first paragraph as the

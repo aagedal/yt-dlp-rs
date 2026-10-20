@@ -268,6 +268,18 @@
       "scope": "BreitBartIE JW Player manifest as fatal HLS formats, generic title, OpenGraph warnings and RTA age limit compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "cgtn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cgtn.py"
+      ],
+      "rust": [
+        "src/extractor/cgtn.rs",
+        "tests/fixtures/sites/cgtn/"
+      ],
+      "scope": "CGTNIE data-video HLS formats, date/section/author regexes with warnings, UTC+8 timestamp and OpenGraph metadata compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cjsw",
       "status": "partial",
       "upstream": [

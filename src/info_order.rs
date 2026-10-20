@@ -1234,6 +1234,17 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("age_limit", Assign),
             ("formats", Take),
         ],
+        // `CGTNIE._real_extract`'s dict.
+        "cgtn" => &[
+            ("id", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
+            ("formats", Take),
+            ("categories", Assign),
+            ("creators", Assign),
+            ("timestamp", Assign),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),
