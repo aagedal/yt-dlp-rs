@@ -399,6 +399,18 @@
       "scope": "SztvHuIE page player file, meta title/description and og:image as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "theintercept",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/theintercept.py"
+      ],
+      "rust": [
+        "src/extractor/theintercept.rs",
+        "tests/fixtures/sites/theintercept/"
+      ],
+      "scope": "TheInterceptIE initialStoreTree post as a url_transparent jwplatform: result compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "thisamericanlife",
       "status": "partial",
       "upstream": [

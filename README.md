@@ -82,7 +82,7 @@ Supported today:
   player XML, FC Zenit videos through the player API, BehindKink posts
   QingTing programs, OnePlace episodes, SzTV videos, Photobucket media and
   This American Life episodes through their pages, JW Platform media through
-  the media API, plus
+  the media API (and The Intercept posts that embed it), plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

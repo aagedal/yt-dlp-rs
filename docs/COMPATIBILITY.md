@@ -322,6 +322,13 @@ input codec names, `bitrate`/1000 as `vbr`), owner, float `date_added` and
 `duration`, and plays. Site extractors are compared with pinned upstream's
 output through a fixture-only proxy (`tests/fixtures/sites/`).
 
+The Intercept Field of Vision posts (`theintercept.com/fieldofvision/SLUG`)
+follow upstream `TheInterceptIE`: the page's `initialStoreTree` post with the
+slug, as a `url_transparent` result of `jwplatform:VIDEO` (extracted by the
+JW Platform extractor) overlaid with the post's display ID, raw title,
+excerpt, ISO 8601 date and comment count; no matching post is upstream's
+`Unable to find the current post`.
+
 This American Life episodes (`thisamericanlife.org/radio-archives/episode/ID`,
 `play_full.php?play=ID`) follow upstream `ThisAmericanLifeIE`: the episode
 page's fatal `twitter:title`, description meta and OpenGraph image, with the
