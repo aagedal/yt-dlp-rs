@@ -340,6 +340,11 @@ generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
 `video-thumbnail` image (else the OpenGraph image with its warning), each
 protocol-relative URL as `https:`, as an untyped result.
 
+GodTube videos (`godtube.com/watch/?v=ID`, marked broken upstream with its
+warning) follow upstream `GodTubeIE`: the player config XML (`Downloading
+player config XML`: file, author, ISO 8601 date, duration, image) and media
+XML title (`Downloading media XML`) as an untyped result.
+
 HistoricFilms tapes (`historicfilms.com/tapes/ID`, `/playID`) follow upstream
 `HistoricFilmsIE`: the fatal tape ID, OpenGraph title/description, the
 `thumbnailUrl` meta or OpenGraph image, the `duration` meta through

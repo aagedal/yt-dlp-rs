@@ -78,7 +78,8 @@ Supported today:
   ReverbNation songs through the song API, Hypem tracks through their page
   and served source, HistoricFilms tapes through their page, Livestreamfails
   clips through the clip API, EbaumsWorld videos through the player XML,
-  Glide messages through their share page, plus
+  Glide messages through their share page, GodTube videos through their
+  player XML, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

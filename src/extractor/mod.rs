@@ -4,6 +4,7 @@ mod ebaumsworld;
 mod f4m;
 mod generic_urls;
 mod glide;
+mod godtube;
 mod historicfilms;
 pub(crate) mod hls;
 pub(crate) mod html5;
@@ -26,6 +27,7 @@ pub(crate) use direct::from_response as direct_media_info;
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use glide::{Glide, suitable as glide_suitable};
+pub use godtube::{GodTube, suitable as godtube_suitable};
 pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
@@ -158,8 +160,19 @@ pub(crate) fn download_xml(
     extractor: &'static str,
     id: &str,
 ) -> Result<String> {
+    download_xml_note(client, url, extractor, id, "Downloading XML")
+}
+
+/// [`download_xml`] with its `note=` (the error note stays the default).
+pub(crate) fn download_xml_note(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+) -> Result<String> {
     use std::io::Read;
-    crate::screen::screen(&format!("[{extractor}] {id}: Downloading XML"));
+    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
             crate::Error::ExtractorRequest {
@@ -188,6 +201,30 @@ pub(crate) fn download_xml(
         ))
     })?;
     Ok(text)
+}
+
+/// Upstream `_WORKING = False`: the warning before extraction.
+pub(crate) fn broken_warning() {
+    crate::screen::warning(
+        "The program functionality for this site has been marked as broken, and will probably not work.",
+    );
+}
+
+/// `root.find(tag).text` of an XML document: `Err` (upstream's bare
+/// `AttributeError`) for a missing child, `None` for an empty one.
+pub(crate) fn find_text(root: roxmltree::Node<'_, '_>, tag: &str) -> Result<Option<String>> {
+    let child = root
+        .children()
+        .find(|child| child.is_element() && child.tag_name().name() == tag)
+        .ok_or_else(|| {
+            crate::Error::Reported("'NoneType' object has no attribute 'text'".into())
+        })?;
+    let text: String = child
+        .children()
+        .take_while(|node| !node.is_element())
+        .filter_map(|node| node.text())
+        .collect();
+    Ok((!text.is_empty()).then_some(text))
 }
 
 /// A non-fatal `_search_regex` miss: `[EXTRACTOR] unable to extract NAME`.

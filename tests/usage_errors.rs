@@ -119,7 +119,7 @@ fn extractor_listings_and_color_policies_follow_upstream() {
     assert!(output.status.success());
     assert_eq!(
         String::from_utf8_lossy(&output.stdout),
-        "EbaumsWorld\nGlide\nHistoricFilms\nhtml5\nHypem\nLivestreamfails\nmegaphone.fm\n  https://player.megaphone.fm/GLT9749789991\nReverbNation\nStreamable\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\ngeneric\n  https://example.com/v.mp4\n"
+        "EbaumsWorld\nGlide\nGodTube (CURRENTLY BROKEN)\nHistoricFilms\nhtml5\nHypem\nLivestreamfails\nmegaphone.fm\n  https://player.megaphone.fm/GLT9749789991\nReverbNation\nStreamable\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\ngeneric\n  https://example.com/v.mp4\n"
     );
     let output = run(&["--extractor-descriptions"]);
     assert_eq!(
