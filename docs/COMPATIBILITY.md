@@ -213,6 +213,15 @@ extracted when the entry is processed and overlaid with the item's title,
 description, `pubDate`, iTunes duration/image/title/episode/season/explicit
 fields; `--flat-playlist` prints the raw entries unextracted, and numbered
 episodes, seasons and chapters get upstream's `Episode N` titles.
+An F4M manifest (`{http://ns.adobe.com/f4m/1.0|2.0}manifest`, ampersands fixed
+like `fix_xml_ampersands`) is the generic info dict with `_parse_f4m_formats`:
+unencrypted `media` entries as `protocol: f4m` formats (`flv` for stream-level
+manifests with `bootstrapInfo`; otherwise each `href`/`url` joined to the
+`baseURL` or manifest directory), `bitrate` as the format ID and int `tbr`,
+an audio `mimeType` as `vcodec: none`, and none for an Akamai player
+verification challenge (upstream's `No video formats found!`). Nested
+`.f4m`/`.m3u8` media URLs are unsupported errors, as is downloading any F4M
+format (upstream's HDS `F4mFD` is not ported).
 An XSPF document (`{http://xspf.org/ns/0/}playlist`) is upstream's untitled
 `_parse_xspf` playlist: each `trackList/track` is an entry with the page's ID,
 its title (else the ID), annotation, image and millisecond duration, and its

@@ -86,3 +86,27 @@ fn site_extractors_match_saved_upstream_output() {
     }
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
+
+#[test]
+fn f4m_downloads_are_unsupported_errors() {
+    // Upstream's F4mFD (HDS) is not ported: the download fails explicitly.
+    let proxy = site_proxy::SiteProxy::start("f4m");
+    let work = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "--proxy",
+            &proxy.url,
+            "--no-check-certificate",
+        ])
+        .args(["--no-progress", "https://media.example.test/hds/clip.f4m"])
+        .current_dir(work.path())
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(1));
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .contains("F4M (HDS) downloads are not supported natively")
+    );
+    assert_eq!(std::fs::read_dir(work.path()).unwrap().count(), 0);
+}

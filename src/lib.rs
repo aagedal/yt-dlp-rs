@@ -2036,6 +2036,17 @@ impl YoutubeDl {
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
+        // Upstream `F4mFD` (HDS) is not ported.
+        if info.protocol.as_deref() == Some("f4m")
+            || info
+                .requested_formats
+                .iter()
+                .any(|format| format.protocol.as_deref() == Some("f4m"))
+        {
+            return Err(Error::UnsupportedHtml5(
+                "F4M (HDS) downloads are not supported natively".into(),
+            ));
+        }
         let announced = ANNOUNCED.with(|announced| announced.take());
         if announced.as_ref() != Some(&info.url) {
             self.report_invoking(info);

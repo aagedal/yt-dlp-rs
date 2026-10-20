@@ -1,6 +1,7 @@
 mod dash;
 pub(crate) mod direct;
 mod ebaumsworld;
+mod f4m;
 mod generic_urls;
 mod glide;
 mod historicfilms;

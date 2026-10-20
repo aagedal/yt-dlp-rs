@@ -670,6 +670,51 @@ impl Extractor for GenericHttp {
             detected("RSS feed");
             return Ok(Some(rss_playlist(feed, url, &page_url)));
         }
+        // `{http://ns.adobe.com/f4m/[12].0}manifest`: the generic info dict
+        // with `_parse_f4m_formats`.
+        if let Some(manifest) = super::f4m::parse(html, url.as_str(), None) {
+            let super::f4m::Manifest::Formats(formats) = manifest else {
+                return Err(unsupported(
+                    "F4M manifests referring to nested manifests are not supported natively",
+                ));
+            };
+            let formats = formats
+                .into_iter()
+                .map(|format| {
+                    let ext = format["ext"]
+                        .as_str()
+                        .map(str::to_owned)
+                        .unwrap_or_else(|| {
+                            direct::determine_ext(format["url"].as_str().unwrap_or_default())
+                                .unwrap_or_else(|| "unknown_video".into())
+                        });
+                    let mut value = format;
+                    value["ext"] = ext.into();
+                    let mut format: VideoFormat = serde_json::from_value(value)
+                        .map_err(|error| unsupported(&format!("F4M media: {error}")))?;
+                    format.protocol = Some("f4m".into());
+                    crate::info_order::mark_format(&mut format, "f4m");
+                    Ok(format)
+                })
+                .collect::<Result<Vec<_>>>()?;
+            detected("F4M manifest");
+            let mut info = direct::build_at(page_url.clone(), &page_url, String::new());
+            info.formats = formats;
+            info.direct = None;
+            info.id = id.clone();
+            info.webpage_url = page_url.clone();
+            info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
+            if info.formats.is_empty() {
+                return Err(Error::Reported(format!(
+                    "[generic] {id}: No video formats found!; {}",
+                    crate::BUG_REPORTS_MESSAGE
+                )));
+            }
+            return Ok(Some(ExtractResult::Video(crate::info_order::mark_info(
+                info,
+                "generic-f4m",
+            ))));
+        }
         if let Some(smil) = super::smil::parse(html) {
             let info = smil_info(client, smil, url, &crate::screen::generic_id(url.as_str()))?;
             detected("SMIL file");

@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "https://media.example.test/hds/clip.f4m",
+   "headers": {
+    "Content-Type": "application/f4m+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\">\n <id>clip</id>\n <streamType>recorded</streamType>\n <duration>10</duration>\n <bootstrapInfo profile=\"named\" id=\"bootstrap0\">AAAA</bootstrapInfo>\n <media streamId=\"hi\" url=\"clip_hi\" bitrate=\"1500\" width=\"1280\" height=\"720\" bootstrapInfoId=\"bootstrap0\"/>\n <media streamId=\"lo\" url=\"clip_lo\" bitrate=\"400\" width=\"640\" height=\"360\" bootstrapInfoId=\"bootstrap0\"/>\n <media streamId=\"drm\" url=\"clip_drm\" bitrate=\"900\" drmAdditionalHeaderId=\"d0\"/>\n</manifest>"
+  },
+  {
+   "url": "https://media.example.test/set.f4m",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<manifest xmlns=\"http://ns.adobe.com/f4m/2.0\">\n <baseURL> https://cdn.example.test/hds </baseURL>\n <mimeType>audio/mp4</mimeType>\n <media href=\"https://cdn.example.test/direct.mp4\" bitrate=\"128\"/>\n <media href=\"rel/audio.mp4\"/>\n <media url=\"old.mp4\" bitrate=\"64\"/>\n <media/>\n</manifest>"
+  },
+  {
+   "url": "https://media.example.test/pv.f4m",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\"><pv-2.0>challenge;rest</pv-2.0><media url=\"x\" bitrate=\"1\"/></manifest>"
+  }
+ ]
+}

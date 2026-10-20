@@ -284,6 +284,20 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        // `_parse_f4m_formats`' media entry.
+        "f4m" => &[
+            ("format_id", Take),
+            ("url", Take),
+            ("manifest_url", Take),
+            ("ext", Take),
+            ("protocol", Take),
+            ("tbr", Assign),
+            ("width", Assign),
+            ("height", Assign),
+            ("vcodec", Assign),
+            ("preference", Assign),
+            ("quality", Assign),
+        ],
         // `_extract_kvs`' format.
         "kvs" => &[
             ("url", Take),
@@ -464,11 +478,19 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     replay.format_steps();
     let mut out = replay.finish();
     // `int_or_none(source.get('bitrate'), scale=1000)` is an int.
-    if shape == "jwplayer-source"
+    if matches!(shape, "jwplayer-source" | "f4m")
         && let Some(tbr) = out.get("tbr").and_then(Value::as_f64)
         && tbr.fract() == 0.0
     {
         out.insert("tbr".into(), (tbr as i64).into());
+    }
+    // An F4M audio entry's `abr` is its int `tbr`.
+    if shape == "f4m"
+        && let Some(abr) = out.get("abr").and_then(Value::as_f64)
+        && abr.fract() == 0.0
+        && out.get("tbr").is_some_and(Value::is_i64)
+    {
+        out.insert("abr".into(), (abr as i64).into());
     }
     // `_extract_kvs`' `quality = 1`.
     if shape == "kvs"
@@ -772,6 +794,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
+        ],
+        // GenericIE's info dict with `_parse_f4m_formats`.
+        "generic-f4m" => &[
+            ("id", Assign),
+            ("title", Assign),
+            ("timestamp", Assign),
+            ("formats", Take),
         ],
         // `_parse_smil`'s dict.
         "smil" => &[
