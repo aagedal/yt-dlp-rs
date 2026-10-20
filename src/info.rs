@@ -1,6 +1,10 @@
 use serde::{Deserialize, Serialize};
 use url::Url;
 
+/// An extractor's `title: None` (an empty title is `''`), consumed by
+/// `process_result`'s `_fill_common_fields`.
+pub(crate) const TITLE_MISSING: &str = "__yt_dlp_rs_title_missing";
+
 /// `YoutubeDL._deprecated_multivalue_fields`.
 pub(crate) const MULTIVALUE_FIELDS: [(&str, &str); 5] = [
     ("album_artist", "album_artists"),

@@ -1,6 +1,7 @@
 mod dash;
 pub(crate) mod direct;
 mod generic_urls;
+mod historicfilms;
 pub(crate) mod hls;
 pub(crate) mod html5;
 mod hypem;
@@ -14,6 +15,7 @@ mod youtube;
 
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
+pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
 pub use hypem::{Hypem, suitable as hypem_suitable};
@@ -133,6 +135,14 @@ pub(crate) fn download_webpage(
     crate::screen::expect_page(id, None, None);
     crate::screen::page_read(&page_url, &body)?;
     Ok(String::from_utf8_lossy(&body).into_owned())
+}
+
+/// A non-fatal `_search_regex` miss: `[EXTRACTOR] unable to extract NAME`.
+pub(crate) fn search_warning(extractor: &str, name: &str) {
+    crate::screen::warning(&format!(
+        "[{extractor}] unable to extract {name}; {}",
+        crate::BUG_REPORTS_MESSAGE
+    ));
 }
 
 /// `self._proto_relative_url(url)`: `//host/...` becomes `https://host/...`.

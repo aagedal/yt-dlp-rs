@@ -304,8 +304,9 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 8] = [
+const EXTRACTOR_NAMES: [&str; 9] = [
     "html5",
+    "HistoricFilms",
     "Hypem",
     "megaphone.fm",
     "ReverbNation",
@@ -328,7 +329,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..7]),
+            "default" => Some(&EXTRACTOR_NAMES[..8]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -455,6 +456,7 @@ impl YoutubeDl {
                     cookies.clone(),
                     proxy,
                 )),
+                Box::new(extractor::HistoricFilms),
                 Box::new(extractor::Hypem),
                 Box::new(extractor::Megaphone),
                 Box::new(extractor::ReverbNation),
@@ -1222,7 +1224,17 @@ impl YoutubeDl {
             ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),
         };
         for entry in entries {
-            entry.fulltitle = Some(entry.title.clone());
+            // `_fill_common_fields`: a generic title for a missing or empty one.
+            let missing = entry.extra.remove(info::TITLE_MISSING).is_some();
+            if missing {
+                entry.fulltitle = None;
+                screen::warning(
+                    "Extractor failed to obtain \"title\". Creating a generic title instead",
+                );
+                entry.title = format!("{} video #{}", entry.extractor.replace(':', "-"), entry.id);
+            } else {
+                entry.fulltitle = Some(entry.title.clone());
+            }
             // `process_video_result`: `display_id` defaults to the ID.
             crate::info::set_default(&mut entry.extra, "display_id", entry.id.clone());
             entry.metadata.fill_common_fields();

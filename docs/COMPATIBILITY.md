@@ -268,6 +268,14 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+HistoricFilms tapes (`historicfilms.com/tapes/ID`, `/playID`) follow upstream
+`HistoricFilmsIE`: the fatal tape ID, OpenGraph title/description, the
+`thumbnailUrl` meta or OpenGraph image, the `duration` meta through
+`parse_duration`, each non-fatal miss with upstream's `unable to extract`
+warning, and the derived `.mov` URL as an untyped result. A missing title gets
+`_fill_common_fields`' generic `EXTRACTOR video #ID` title with its warning
+(`fulltitle` stays `null`).
+
 Hypem tracks (`hypem.com/track/ID`) follow upstream `HypemIE`: the page's
 `displayList-data` script (cleaned like `_html_search_regex` before parsing),
 its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped
