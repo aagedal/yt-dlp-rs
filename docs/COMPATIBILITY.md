@@ -346,6 +346,13 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+AudioBoom posts (`audioboom.com/posts|boos/ID`) follow upstream `AudioBoomIE`:
+the post page's `V5DetailPagePlayer` React props (`_search_json` with
+`unescapeHTML`) for the clip URL, title, description (else its cleaned
+formatted description), duration, author and author URL, each falling back to
+upstream's OpenGraph/meta/regex lookups with their non-fatal warnings (the
+audio URL's is fatal), as an untyped result.
+
 BehindKink posts (`behindkink.com/YYYY/MM/DD/SLUG`, marked broken upstream with
 its warning) follow upstream `BehindKinkIE`: the fatal `<source>` URL (its
 basename before `_` as the ID), OpenGraph title/image/description with

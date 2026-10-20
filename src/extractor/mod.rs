@@ -1,3 +1,4 @@
+mod audioboom;
 mod behindkink;
 mod dash;
 pub(crate) mod direct;
@@ -34,6 +35,7 @@ mod vocaroo;
 mod xspf;
 mod youtube;
 
+pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
@@ -299,6 +301,19 @@ pub(crate) fn search_json(
     html: &str,
     js: bool,
 ) -> Option<Option<serde_json::Value>> {
+    if js {
+        search_json_with(start, html, &crate::js_to_json::js_to_json)
+    } else {
+        search_json_with(start, html, &str::to_owned)
+    }
+}
+
+/// [`search_json`] with any `transform_source`.
+pub(crate) fn search_json_with(
+    start: &regex::Regex,
+    html: &str,
+    transform: &dyn Fn(&str) -> String,
+) -> Option<Option<serde_json::Value>> {
     let found = start.find(html)?;
     let rest = &html[found.end()..];
     let trimmed = rest.trim_start();
@@ -307,11 +322,7 @@ pub(crate) fn search_json(
     }
     let end = trimmed.rfind('}')?;
     let candidate = &trimmed[..=end];
-    let text = if js {
-        crate::js_to_json::js_to_json(candidate)
-    } else {
-        candidate.to_owned()
-    };
+    let text = transform(candidate);
     Some(
         serde_json::Deserializer::from_str(&text)
             .into_iter::<serde_json::Value>()
