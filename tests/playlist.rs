@@ -528,6 +528,39 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
     assert_eq!(download["_filename"], "one [one].mp4");
     assert_eq!(download["__write_download_archive"], false);
     assert!(!download.contains_key("id"));
+    // With --no-simulate, `process_info` adds the download's keys.
+    let directory = tempfile::tempdir().unwrap();
+    for real in [true, false] {
+        let template = directory.path().join("o.%(ext)s");
+        let output = server.cli(
+            "/one.mp4",
+            &[
+                "-J",
+                "--no-simulate",
+                "--user-agent",
+                "fixture",
+                "-o",
+                template.to_str().unwrap(),
+            ],
+        );
+        let value: Value = serde_json::from_str(success(&output).lines().last().unwrap()).unwrap();
+        let download = value["requested_downloads"][0].as_object().unwrap();
+        let keys: Vec<&str> = download.keys().map(String::as_str).collect();
+        assert_eq!(
+            keys[keys.len() - 7..],
+            [
+                "_filename",
+                "filename",
+                "__postprocessors",
+                "__real_download",
+                "__finaldir",
+                "filepath",
+                "__write_download_archive"
+            ]
+        );
+        assert_eq!(download["__real_download"], real);
+        assert!(download["filepath"].as_str().unwrap().ends_with("/o.mp4"));
+    }
     let both = parse(&success(
         &server.cli("/one.mp4", &["-j", "-J", "--user-agent", "fixture"]),
     ));

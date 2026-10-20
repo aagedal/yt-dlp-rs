@@ -3873,6 +3873,25 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     let found = found.as_ref().unwrap_or(&path);
                                     entry_files.borrow_mut()[entry_index] =
                                         Some(move_files.final_path(found));
+                                    if args.dump_single_json {
+                                        let target = match json_entries
+                                            .as_mut()
+                                            .and_then(|entries| entries.get_mut(entry_index))
+                                        {
+                                            Some(entry) => Some(entry),
+                                            None if playlist_title.is_none() => {
+                                                single_json.as_mut()
+                                            }
+                                            None => None,
+                                        };
+                                        annotate_download(
+                                            target,
+                                            &info,
+                                            &path,
+                                            false,
+                                            &move_files.final_path(found),
+                                        );
+                                    }
                                     if !after_download(
                                         &exec,
                                         &info,
@@ -4390,6 +4409,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                             entry_files.borrow_mut()[entry_index] =
                                 Some(move_files.final_path(&published_paths[0]));
+                            // `-J`: `process_info`'s keys on the download's dict.
+                            if args.dump_single_json {
+                                let target = match json_entries
+                                    .as_mut()
+                                    .and_then(|entries| entries.get_mut(entry_index))
+                                {
+                                    Some(entry) => Some(entry),
+                                    None if playlist_title.is_none() => single_json.as_mut(),
+                                    None => None,
+                                };
+                                annotate_download(
+                                    target,
+                                    info,
+                                    &path,
+                                    process_existing.is_none(),
+                                    &move_files.final_path(&published_paths[0]),
+                                );
+                            }
                             if !after_download(
                                 &exec,
                                 info,
@@ -6965,6 +7002,61 @@ fn write_description(
         screen!("[info] There's no video description to write");
     }
     Ok(())
+}
+
+/// `process_info`'s keys on a `-J` result's latest `requested_downloads`
+/// dict: its postprocessors (object reprs without their addresses), whether
+/// it was downloaded, the merged `.fID` files, `__finaldir` and `filepath`.
+fn annotate_download(
+    target: Option<&mut serde_json::Value>,
+    info: &yt_dlp_rs::VideoInfo,
+    path: &std::path::Path,
+    real: bool,
+    final_path: &std::path::Path,
+) {
+    let Some(download) = target
+        .and_then(|target| target.get_mut("requested_downloads"))
+        .and_then(serde_json::Value::as_array_mut)
+        .and_then(|downloads| downloads.last_mut())
+        .and_then(serde_json::Value::as_object_mut)
+    else {
+        return;
+    };
+    let merging = real && !info.requested_formats.is_empty();
+    let processors: Vec<serde_json::Value> = merging
+        .then(|| "<yt_dlp.postprocessor.ffmpeg.FFmpegMergerPP object>".into())
+        .into_iter()
+        .collect();
+    download.insert("__postprocessors".into(), processors.into());
+    download.insert("__real_download".into(), real.into());
+    if merging {
+        let files: Vec<serde_json::Value> = info
+            .requested_formats
+            .iter()
+            .map(|format| {
+                yt_dlp_rs::output::replace_extension(
+                    &path.to_string_lossy(),
+                    &format!("f{}.{}", format.format_id, format.ext),
+                    Some(&info.ext),
+                )
+                .into()
+            })
+            .collect();
+        download.insert("__files_to_merge".into(), files.into());
+    }
+    let final_file = py_abspath(final_path);
+    download.insert(
+        "__finaldir".into(),
+        final_file
+            .parent()
+            .map(|dir| dir.to_string_lossy().into_owned())
+            .unwrap_or_default()
+            .into(),
+    );
+    download.insert(
+        "filepath".into(),
+        final_file.to_string_lossy().into_owned().into(),
+    );
 }
 
 fn report_info_json(label: &str, path: &std::path::Path, written: InfoJsonWrite) {
