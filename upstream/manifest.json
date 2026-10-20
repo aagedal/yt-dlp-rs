@@ -447,6 +447,18 @@
       "scope": "ThisAmericanLifeIE page meta fields and 64k HLS stream as an untyped m3u8_native result compared with pinned upstream output through the fixture proxy (listing and JSON)"
     },
     {
+      "name": "tweakers",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tweakers.py"
+      ],
+      "rust": [
+        "src/extractor/tweakers.rs",
+        "tests/fixtures/sites/tweakers/"
+      ],
+      "scope": "TweakersIE s1playlist JSON progressive sources as formats compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "twentythreevideo",
       "status": "partial",
       "upstream": [

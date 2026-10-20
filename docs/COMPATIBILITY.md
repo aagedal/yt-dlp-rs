@@ -380,6 +380,12 @@ filesize}` thumbnails. Filmweb articles (`filmweb.no/trailere|filmnytt/articleID
 `filmnytt` pages through their `data-videoid`) follow upstream `FilmwebIE`:
 the trailer embed JSON's iframe as a `url_transparent` 23video result.
 
+Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
+`s1playlist/ID/1920/1080/playlist.json` item's progressive sources as formats
+(labels as IDs, numbered when repeated, `mimetype2ext` or URL extensions),
+with its description, poster, duration and account; an empty item list is
+upstream's bare `IndexError`.
+
 Vocaroo recordings (`vocaroo.com`/`voca.ro` `[embed/]ID`) follow upstream
 `VocarooIE`: the `media`/`media1` MP3 URL checked with a HEAD request
 (`Downloading webpage`, the site as Referer), its `x-bz-upload-timestamp`

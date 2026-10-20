@@ -286,6 +286,14 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     let extractor: &[(&str, Set)] = match shape {
         // `FczenitIE`'s quality.
         "fczenit" => &[("format_id", Take), ("url", Take), ("height", Assign)],
+        // `TweakersIE`'s progressive source.
+        "tweakers" => &[
+            ("format_id", Take),
+            ("url", Take),
+            ("width", Assign),
+            ("height", Assign),
+            ("ext", Take),
+        ],
         // `TwentyThreeVideoIE`'s audio download and video downloads.
         "23video-audio" => &[
             ("format_id", Take),
@@ -1048,6 +1056,16 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("thumbnails", List),
             ("ext", Take),
             ("vcodec", Take),
+        ],
+        // `TweakersIE._real_extract`'s dict.
+        "tweakers" => &[
+            ("id", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
+            ("duration", Assign),
+            ("uploader_id", Assign),
+            ("formats", Take),
         ],
         // `TwentyThreeVideoIE._real_extract`'s dict.
         "23video" => &[
