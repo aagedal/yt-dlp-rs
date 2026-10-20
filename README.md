@@ -81,7 +81,8 @@ Supported today:
   Format IDs are YouTube itags. This is fixture-tested groundwork, not general
   live-site support. `--youtube-js-runtime PATH` opts into bounded offline solving
   of encrypted signatures and query `n` challenges using explicitly installed
-  Deno 2.9.7 and pinned bundled EJS assets. Challenge-free extraction never inspects
+  Deno 2.9.7 (or Node.js 22+ under its permission model) and pinned bundled EJS
+  assets. Challenge-free extraction never inspects
   or launches that runtime. Initial and anonymous WEB responses can also expose
   native finite HLS VOD, including path-n solving in the same challenge batch.
   WEB DASH discovery remains excluded without GVS tokens. Additional clients,

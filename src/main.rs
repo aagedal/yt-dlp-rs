@@ -902,7 +902,7 @@ struct Args {
     /// Delete the cache directory
     #[arg(long)]
     rm_cache_dir: bool,
-    /// JavaScript runtimes (RUNTIME[:PATH]; deno is the supported runtime)
+    /// JavaScript runtimes (RUNTIME[:PATH]; deno and node are supported)
     #[arg(long, value_name = "RUNTIME[:PATH]")]
     js_runtimes: Vec<String>,
     #[arg(long, hide = true)]
@@ -2362,23 +2362,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let mut downloader = YoutubeDl::with_options(
         YoutubeOptions {
-            // `--js-runtimes deno[:PATH]` names the same Deno runtime; a bare
-            // `deno` is looked up on PATH because it was requested.
+            // `--js-runtimes deno[:PATH]`/`node[:PATH]`: the last value for
+            // each; a bare name is looked up on PATH because it was requested.
+            // Upstream prefers Deno's provider to Node.js's.
             js_runtime: args.youtube_js_runtime.or_else(|| {
                 if args.no_js_runtimes {
                     return None;
                 }
-                args.js_runtimes.iter().rev().find_map(|value| {
-                    let (name, path) = value.split_once(':').unwrap_or((value, ""));
-                    if !name.eq_ignore_ascii_case("deno") {
-                        return None;
-                    }
+                ["deno", "node"].into_iter().find_map(|runtime| {
+                    let value = args.js_runtimes.iter().rev().find(|value| {
+                        let name = value
+                            .split_once(':')
+                            .map_or(value.as_str(), |(name, _)| name);
+                        name.eq_ignore_ascii_case(runtime)
+                    })?;
+                    let path = value.split_once(':').map_or("", |(_, path)| path);
                     if !path.is_empty() {
                         return Some(PathBuf::from(path));
                     }
                     std::env::var_os("PATH").and_then(|paths| {
                         std::env::split_paths(&paths)
-                            .map(|dir| dir.join(format!("deno{}", std::env::consts::EXE_SUFFIX)))
+                            .map(|dir| {
+                                dir.join(format!("{runtime}{}", std::env::consts::EXE_SUFFIX))
+                            })
                             .find(|candidate| candidate.is_file())
                     })
                 })
@@ -5340,8 +5346,10 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
             warning!(
                 "WARNING: Ignoring unsupported JavaScript runtime(s): {name}. Supported runtimes: deno, node, bun, quickjs."
             );
-        } else if name != "deno" {
-            warning!("WARNING: JavaScript runtime {name} is not supported natively; use deno");
+        } else if !matches!(name.as_str(), "deno" | "node") {
+            warning!(
+                "WARNING: JavaScript runtime {name} is not supported natively; use deno or node"
+            );
         }
     }
     for (given, what) in [
