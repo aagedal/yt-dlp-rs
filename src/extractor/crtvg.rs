@@ -68,12 +68,7 @@ impl Extractor for Crtvg {
         if let Some(stream) = extract_mpd_optional(client, &dash, NAME, &id, false) {
             formats.extend(stream.formats);
         }
-        if formats.is_empty() {
-            return Err(Error::Reported(format!(
-                "[{NAME}] {id}: No video formats found!; {}",
-                crate::BUG_REPORTS_MESSAGE
-            )));
-        }
+
         // `make_archive_id(self, old_id)`.
         let old_ids = OLD_ID.captures(&id).map_or(Value::Null, |found| {
             serde_json::json!([format!("crtvg {}", &found["old_id"])])
@@ -83,9 +78,16 @@ impl Extractor for Crtvg {
                 .strip_suffix(" | CRTVG")
                 .map_or_else(|| title.clone(), str::to_owned)
         });
-        let first = formats[0].url.clone();
+        let no_formats = formats.is_empty();
+        let first = formats
+            .first()
+            .map_or_else(|| url.clone(), |format| format.url.clone());
         let mut info = super::direct::build_at(first.clone(), &first, String::new());
         info.formats = formats;
+        if no_formats {
+            info.extra
+                .insert(crate::info::NO_FORMATS.into(), Value::Bool(true));
+        }
         info.direct = None;
         info.id = id;
         match title {

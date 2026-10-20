@@ -311,7 +311,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 49] = [
+const EXTRACTOR_NAMES: [&str; 50] = [
     "Angel",
     "AudioBoom",
     "BehindKink",
@@ -324,6 +324,7 @@ const EXTRACTOR_NAMES: [&str; 49] = [
     "Crtvg",
     "CultureUnplugged",
     "EbaumsWorld",
+    "Ebay",
     "Epoch",
     "Fczenit",
     "Filmweb",
@@ -376,7 +377,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..48]),
+            "default" => Some(&EXTRACTOR_NAMES[..49]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -515,6 +516,7 @@ impl YoutubeDl {
                 Box::new(extractor::Crtvg),
                 Box::new(extractor::CultureUnplugged),
                 Box::new(extractor::EbaumsWorld),
+                Box::new(extractor::Ebay),
                 Box::new(extractor::Epoch),
                 Box::new(extractor::Fczenit),
                 Box::new(extractor::Filmweb),
@@ -1333,6 +1335,14 @@ impl YoutubeDl {
                 entry.title = format!("{} video #{}", entry.extractor.replace(':', "-"), entry.id);
             } else {
                 entry.fulltitle = Some(entry.title.clone());
+            }
+            // `process_video_result`: `raise_no_formats` for a result
+            // without formats.
+            if entry.extra.shift_remove(info::NO_FORMATS).is_some() {
+                return Err(Error::Reported(format!(
+                    "[{}] {}: No video formats found!; {}",
+                    entry.extractor, entry.id, BUG_REPORTS_MESSAGE
+                )));
             }
             // `process_video_result`: `display_id` defaults to the ID.
             // (a `None` value too, in its place).

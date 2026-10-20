@@ -5,6 +5,10 @@ use url::Url;
 /// `process_result`'s `_fill_common_fields`.
 pub(crate) const TITLE_MISSING: &str = "__yt_dlp_rs_title_missing";
 
+/// An extractor result without formats: `process_video_result`'s
+/// `raise_no_formats` after `_fill_common_fields`.
+pub(crate) const NO_FORMATS: &str = "__yt_dlp_rs_no_formats";
+
 /// `YoutubeDL._deprecated_multivalue_fields`.
 pub(crate) const MULTIVALUE_FIELDS: [(&str, &str); 5] = [
     ("album_artist", "album_artists"),

@@ -431,6 +431,13 @@ result, empty elements as `None` (a generic title for an empty title) and a
 missing element as upstream's bare `AttributeError` text. XML parse errors
 carry this port's parser message rather than expat's.
 
+eBay items (`ebay.com/itm/ID`) follow upstream `EbayIE`: the page's fatal
+`"video":` JSON `playlistMap`, its `HLS` (without an `ext`) and `DASH`
+manifests as non-fatal formats (subtitles ignored with upstream's warnings),
+an `Unsupported format KEY` warning for other keys, and the `<title>` without
+` | eBay`; a result without formats fails in processing after the generic
+title, like upstream's `raise_no_formats`.
+
 The Epoch Times videos (`www.theepochtimes.com/SLUG_ID.html`) follow upstream
 `EpochIE`: the `videobox` element (upstream's `html.parser`-based
 `get_element_html_by_id`, with its parse errors) `data-id` attribute as the
