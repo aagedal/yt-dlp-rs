@@ -1,0 +1,30 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] Available formats for BaW_jenozKc:",
+    "ID      EXT  RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC       VBR ACODEC      ABR ASR MORE INFO",
+    "------------------------------------------------------------------------------------------------------------------",
+    "251-drc webm audio only      2 |  778.00B 100k https | audio only       opus       100k 48k medium, DRC, webm_dash",
+    "140     m4a  audio only      2 |  778.00B 129k https | audio only       mp4a.40.2  129k 44k medium, m4a_dash",
+    "18      mp4  640x360     30  2 |  792.00B 100k https | avc1.42001E      mp4a.40.2       44k 360p",
+    "136     mp4  1280x720    30    |  792.00B 100k https | avc1.4d401f 100k video only          720p, mp4_dash",
+    "137     mp4  1920x1080   30    |  792.00B  90k https | avc1.640028  90k video only          1080p, mp4_dash"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  }
+ ]
+}

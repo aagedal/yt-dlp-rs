@@ -9,9 +9,26 @@ use std::process::Command;
 
 fn normalize(text: &str) -> Vec<String> {
     let epoch = regex::Regex::new(r#""epoch": \d+, "#).unwrap();
+    // YouTube's `available_at` is the extraction time (plus any ad wait).
+    let available = regex::Regex::new(r#""available_at": \d+"#).unwrap();
     text.lines()
-        .map(|line| epoch.replace(line, "").into_owned())
+        .map(|line| {
+            let line = epoch.replace(line, "");
+            available
+                .replace_all(&line, r#""available_at": 0"#)
+                .into_owned()
+        })
         .collect()
+}
+
+/// Whether `deno` (upstream's default JavaScript runtime) is on `PATH`.
+fn deno_available() -> bool {
+    std::env::var_os("PATH").is_some_and(|paths| {
+        std::env::split_paths(&paths).any(|dir| {
+            dir.join(format!("deno{}", std::env::consts::EXE_SUFFIX))
+                .is_file()
+        })
+    })
 }
 
 #[test]
@@ -31,6 +48,13 @@ fn site_extractors_match_saved_upstream_output() {
         let proxy = site_proxy::SiteProxy::start(&name);
         let expected: serde_json::Value = serde_json::from_str(&text).unwrap();
         for case in expected["cases"].as_array().unwrap() {
+            // Cases solving YouTube challenges need upstream's default runtime.
+            let requires_deno = case["requires"]
+                .as_array()
+                .is_some_and(|requires| requires.iter().any(|value| value == "deno"));
+            if requires_deno && !deno_available() {
+                continue;
+            }
             let work = tempfile::tempdir().unwrap();
             let args: Vec<&str> = case["args"]
                 .as_array()
@@ -140,9 +164,8 @@ fn a_single_youtube_embed_is_followed_by_the_youtube_extractor() {
         .unwrap();
     let requests = proxy.requests.lock().unwrap();
     assert!(
-        requests
-            .iter()
-            .any(|url| url == "https://www.youtube.com/watch?v=BaW_jenozKc"),
+        requests.iter().any(|url| url
+            == "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1"),
         "{requests:?}"
     );
 }

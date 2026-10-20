@@ -26,6 +26,27 @@ pub(crate) fn request_with_headers(
     probe_with_headers(client, url, referer, headers)
 }
 
+/// An extractor's POST request with a body (`data=`) and headers.
+pub(crate) fn post(
+    client: &Client,
+    url: &Url,
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<Response> {
+    crate::screen::before_extraction_request();
+    let mut request = client
+        .post(url.clone())
+        .header(ACCEPT_ENCODING, "identity")
+        .body(body);
+    for (name, value) in headers {
+        request = request.header(*name, *value);
+    }
+    crate::screen::load_cookies()?;
+    let response = request.send();
+    crate::screen::flush_traffic();
+    crate::retry::check_response(response?)
+}
+
 /// A request this port adds to inspect media or child playlists that
 /// upstream does not fetch during extraction; never delayed.
 pub(crate) fn probe(client: &Client, url: &Url, referer: Option<&Url>) -> Result<Response> {

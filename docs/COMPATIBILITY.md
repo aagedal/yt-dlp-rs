@@ -706,96 +706,64 @@ from each other (`', '` split, or joined with commas as fullwidth commas); the
 deprecation warning for extractors returning both is not represented, since no
 supported extractor does.
 
-Watch pages must be uncompressed UTF-8/ASCII `text/html`, at most 2 MiB. Parse
-JSON assigned to `ytInitialPlayerResponse` in a script, including quoted window
-property assignments. Require `playabilityStatus.status=OK`, the requested video
-ID, and a nonempty title. JavaScript runs only for eligible signature/query-n formats when an explicit
-runtime is configured. Authentication, age/consent gates,
-additional API clients, cookies, and token acquisition are unsupported.
+YouTube acquisition follows upstream `_initial_extract` and
+`_extract_player_responses` for an anonymous session. The watch page is
+requested as `watch?v=ID&bpctr=9999999999&has_verified=1`, and its first
+`ytcfg.set({...});` object is the page client's `ytcfg`. The page's
+`ytInitialData` (kept when it has `contents`) and `ytInitialPlayerResponse` are
+read too; the latter is kept, without streaming data, for metadata. The
+requested clients follow `_get_requested_clients`:
+- **JS runtime available:** `tv_samsung`, `visionos`, `web`.
+- **No runtime:** `visionos`, with upstream's deprecation warning.
+- **`--extractor-args "youtube:player_client=..."`:** `default`, `all`,
+  `-NAME` exclusions and names from upstream's `INNERTUBE_CLIENTS` table, which
+  `src/extractor/youtube/innertube.rs` reproduces from the pinned checkout.
 
-Only when the initial response is absent, make one WEB player API POST to the
-canonical page origin at `/youtubei/v1/player?prettyPrint=false`; the shared
-HTTP redirect policy still applies. Require literal
-`ytcfg.set({...})` script configuration with `INNERTUBE_CONTEXT.client` naming
-`WEB` and a nonempty digits/dots client version (at most 128 bytes). Multiple
-literal objects merge in declaration order. Construct a fresh context with that
-name/version, `hl=en`, `gl=US`, and optional visitor data (at most 4096 bytes, no
-control characters); send matching client/visitor headers and page Origin/Referer.
-Page host overrides, API keys, user/session context, and credentials are ignored.
-The body contains video ID, this client context, and HTML5 playback preference.
-No signature timestamp, content/racy check overrides, player token, or auth is
-sent. JSON responses must be uncompressed, at most 2 MiB, and pass the same
-identity/playability/format validation. Malformed or unsupported initial
-responses never invoke fallback. API errors fail explicitly; opt-in extraction
-retries restart the whole page/API sequence after transient status/read failures.
+The `web` client reuses the page's player response. Every other client makes
+one `Downloading CLIENT player API JSON` POST to `/youtubei/v1/player`. The
+request carries upstream's context (`hl=en`, `timeZone=UTC`), the page's `STS`
+as `signatureTimestamp`, the content and racy check flags, and the
+`X-YouTube-Client-Name`/`-Version`, `Origin`, `X-Goog-Visitor-Id` and
+`User-Agent` headers. Without a player URL, a JS-requiring client takes
+upstream's iframe API fallback. Responses for another video are skipped with
+upstream's warning.
 
-WEB player requests need no PLAYER PO token at the pinned baseline. Its direct
-HTTPS and DASH media require a GVS PO token except direct itag 18; HLS tokens are
-optional. API-derived direct formats therefore retain only itag 18 before any
-media probe; eligible HLS is considered independently. No surviving format is an
-unsupported error.
-This policy does not acquire tokens or assert that exempt URLs always work.
-The original initial-response path retains its prior token/probe behavior.
+Formats follow `_extract_formats_and_subtitles`. First every `n` and
+`signatureCipher` challenge across the responses is collected. Then each
+response's HTTPS formats are built with `process_format_stream`: the format ID,
+note, quality rank, source and language preferences, size, codecs, `EXT_dash`
+container, `available_at`, and the 10 MiB `http_chunk_size`. Upstream's filters
+apply:
+- **Duplicates:** stream IDs already seen are skipped.
+- **Live and OTF:** live adaptive formats and OTF streams are skipped.
+- **PO tokens:** formats whose client policy requires a GVS PO token are skipped
+  with upstream's message; no token providers exist.
+- **SABR:** formats missing a URL get upstream's SABR warning.
+- **DRM:** upstream's DRM and damaged-format warnings apply.
 
-Expose `streamingData.formats` followed by `adaptiveFormats` entries resolving
-to direct HTTP(S) media, with MP4/M4A/WebM MIME types and recognized audio
-and/or video codecs. Classify sources as standalone, video-only or audio-only. Preserve numeric itags as
-format IDs and positive declared dimensions. Skip DRM, OTF/fragments, unknown
-source types and live fragments. Encrypted `signatureCipher`/legacy `cipher` and
-query-n URLs require explicit `--youtube-js-runtime PATH` or library configuration;
-reject player responses with DRM license information. Eligible HLS manifests
-are expanded through the native VOD pipeline described below. DASH discovery
-remains disabled because the WEB GVS token is unavailable.
-If no supported direct or HLS format remains, return an explicit unsupported error.
-Supported alternatives retain declaration order and use the existing resolution
-ranking or literal itag selection, not upstream's full sorter. Every eligible direct
-URL must pass a direct media probe; a failing probe fails the entire extraction,
-including when a different format was requested. Filesizes and final URLs come
-from those probes. Token-protected formats can therefore prevent extraction even
-if another format might work. Metadata uses `youtube` / `Youtube`, `direct=false`,
-and the canonical watch page. The shared downloader sends that page as referrer.
+After that come the response's HLS and DASH manifests, with upstream's `n`
+path replacement, itag-based IDs, quality and preference adjustments.
+Challenges are solved once through the configured runtime: the player JS
+(`Downloading player ID-main`, `[jsc:deno] Solving JS challenges using deno`),
+the pinned EJS batch, and signature permutations of `chr(0..LENGTH)` like
+upstream's `sigfuncs`. Unsolved challenges get upstream's warnings, and their
+formats are skipped. Like upstream, deno is enabled by default (`--js-runtimes`
+adds Node.js, `--no-js-runtimes` clears them). The executable must be Deno
+2.9.7 or Node.js 22+.
 
-This is fixture-tested groundwork, not general live-site YouTube support. Modern
-YouTube may require other API clients, PO tokens, SABR, DASH discovery, or fragmented direct adaptive delivery; those remain
-unimplemented.
+Metadata still comes from the first player response with video details, as
+described above. Live, upcoming and post-live videos are unsupported errors.
+Authentication, cookies-based clients, PO token providers, age-gate client
+fallbacks and upstream's remaining `_real_extract` fields are not implemented.
 
-An optional offline EJS/Deno pipeline solves encrypted signatures and query-n challenges during public
-extraction with `--youtube-js-runtime PATH` or
-`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path), ..Default::default() })`.
-The explicit executable must be Deno 2.9.7. Configuration is inert until an
-eligible challenge needs solving; canonical path/version validation is cached
-once per configured extractor. Token/live/DRM/format filtering precedes solving,
-and complete-batch validation precedes every media probe. Player network failures
-retain whole-extraction retry policy; runtime/protocol failures are permanent.
-The [n extraction slice](../upstream/notes/youtube-n-extraction.md) records exact
-behavior, cross-platform runtime evidence and deterministic extraction tests.
-The [signature slice](../upstream/notes/youtube-signature-extraction.md) adds
-exact cipher/default/custom-sp/combined-n extraction and download tests. The
-optional comparison also accepts `--deno PATH` to run upstream's actual offline
-EJS signature-permutation path against the same saved fixture. Without that flag,
-the signature case is explicitly skipped.
-
-An unsupported page cannot fall through to generic HTML5 and appear successful.
-The deterministic Rust tests cover URL dispatch, player response validation,
-format rejection, source probes, selection, and a local download. The optional
-upstream parser comparison uses the same saved response and expected metadata:
-
-```sh
-python3 tools/compare_youtube.py --upstream /path/to/yt-dlp
-```
-
-Only ID, title, extractor identity, canonical webpage URL, and ordered formats'
-itag, extension, dimensions, URL, and filesize are compared. Normalize only the
-exact fixture origin to `{{ORIGIN}}`; all other compared values remain exact.
-The harness bypasses upstream network/client acquisition and allows missing PO
-tokens for the original watch-page fixture only. The additional saved API
-response uses ordinary upstream WEB token policy and compares the retained
-itag 18 metadata. These comparisons verify parsing and that token-policy subset,
-not API acquisition/request parity, full ranking, or live-site usability. Local
-Rust HTTP tests separately assert API requests, rejected responses, fallback
-boundaries, whole-extraction retries, and token filtering before probes. See
-[the watch-page brief](../upstream/notes/youtube-watch-page.md) and
-[the API brief](../upstream/notes/youtube-player-api.md).
+`tests/fixtures/sites/youtube` (jsless `visionos`) and `youtube-js` compare
+these paths with pinned upstream output through the site-fixture proxy. The
+`youtube-js` fixture uses the saved real player `74edf1a3` and its known
+challenge vectors. Player API routes are matched by their
+`X-YouTube-Client-Name` header. The capture tool gives upstream a temporary
+cache seeded with the vendored EJS 0.8.0 release, and the volatile
+`available_at` is normalized to 0. Cases that solve challenges are skipped when
+`deno` is not on `PATH`.
 
 ## HTML5 extraction
 

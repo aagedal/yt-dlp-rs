@@ -22,6 +22,8 @@ const SERVER_CERT: &[u8] = include_bytes!("../fixtures/proxies/tls/server.der");
 const SERVER_KEY: &[u8] = include_bytes!("../fixtures/proxies/tls/key.der");
 
 struct Route {
+    /// Lowercase request header names and values the request must carry.
+    request_headers: Vec<(String, String)>,
     status: u16,
     headers: Vec<(String, String)>,
     body: Vec<u8>,
@@ -39,7 +41,7 @@ pub fn site(name: &str) -> PathBuf {
         .join(name)
 }
 
-fn load(directory: &Path) -> HashMap<String, Route> {
+fn load(directory: &Path) -> HashMap<String, Vec<Route>> {
     let text = std::fs::read_to_string(directory.join("routes.json")).unwrap();
     let data: serde_json::Value = serde_json::from_str(&text).unwrap();
     data["routes"]
@@ -61,16 +63,58 @@ fn load(directory: &Path) -> HashMap<String, Route> {
                 .flatten()
                 .map(|(name, value)| (name.clone(), value.as_str().unwrap_or_default().to_owned()))
                 .collect();
+            let request_headers = route["request_headers"]
+                .as_object()
+                .into_iter()
+                .flatten()
+                .map(|(name, value)| {
+                    (
+                        name.to_ascii_lowercase(),
+                        value.as_str().unwrap_or_default().to_owned(),
+                    )
+                })
+                .collect();
             (
                 route["url"].as_str().unwrap().to_owned(),
                 Route {
+                    request_headers,
                     status: route["status"].as_u64().unwrap_or(200) as u16,
                     headers,
                     body,
                 },
             )
         })
+        .fold(
+            HashMap::new(),
+            |mut routes: HashMap<String, Vec<Route>>, (url, route)| {
+                routes.entry(url).or_default().push(route);
+                routes
+            },
+        )
+}
+
+/// A request head's headers with lowercase names.
+fn header_map(head: &str) -> HashMap<String, String> {
+    head.split("\r\n")
+        .skip(1)
+        .filter_map(|line| line.split_once(':'))
+        .map(|(name, value)| (name.trim().to_ascii_lowercase(), value.trim().to_owned()))
         .collect()
+}
+
+/// Read (and drop) a request body of `Content-Length` bytes.
+fn read_body(stream: &mut impl Read, headers: &HashMap<String, String>) {
+    let mut remaining: usize = headers
+        .get("content-length")
+        .and_then(|length| length.parse().ok())
+        .unwrap_or(0);
+    let mut buffer = [0; 65536];
+    while remaining > 0 {
+        match stream.read(&mut buffer[..remaining.min(65536)]) {
+            Ok(0) | Err(_) => break,
+            Ok(read) => remaining -= read,
+        }
+    }
 }
 
 fn read_head(stream: &mut impl Read) -> Option<String> {
@@ -85,13 +129,31 @@ fn read_head(stream: &mut impl Read) -> Option<String> {
     Some(String::from_utf8_lossy(&head).into_owned())
 }
 
-fn respond(stream: &mut impl Write, routes: &HashMap<String, Route>, url: &str) {
+fn respond<S: Read + Write>(
+    stream: &mut S,
+    routes: &HashMap<String, Vec<Route>>,
+    url: &str,
+    head: &str,
+) {
+    let headers = header_map(head);
+    read_body(stream, &headers);
     let not_found = Route {
+        request_headers: Vec::new(),
         status: 404,
         headers: vec![("Content-Type".into(), "text/plain".into())],
         body: b"not found".to_vec(),
     };
-    let route = routes.get(url).unwrap_or(&not_found);
+    let route = routes
+        .get(url)
+        .and_then(|routes| {
+            routes.iter().find(|route| {
+                route
+                    .request_headers
+                    .iter()
+                    .all(|(name, value)| headers.get(name) == Some(value))
+            })
+        })
+        .unwrap_or(&not_found);
     let reason = match route.status {
         200 => "OK",
         206 => "Partial Content",
@@ -115,7 +177,7 @@ fn respond(stream: &mut impl Write, routes: &HashMap<String, Route>, url: &str) 
 
 fn handle(
     mut stream: TcpStream,
-    routes: &HashMap<String, Route>,
+    routes: &HashMap<String, Vec<Route>>,
     config: &Arc<ServerConfig>,
     requests: &Mutex<Vec<String>>,
 ) {
@@ -143,12 +205,13 @@ fn handle(
         let path = inner.split_whitespace().nth(1).unwrap_or("/").to_owned();
         let url = format!("https://{host}{path}");
         requests.lock().unwrap().push(url.clone());
-        respond(&mut tls, routes, &url);
+        respond(&mut tls, routes, &url, &inner);
         tls.conn.send_close_notify();
         let _ = tls.flush();
     } else {
         requests.lock().unwrap().push(target.to_owned());
-        respond(&mut stream, routes, target);
+        let target = target.to_owned();
+        respond(&mut stream, routes, &target, &head);
     }
 }
 

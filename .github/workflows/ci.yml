@@ -40,6 +40,8 @@ jobs:
         shell: bash
         run: deno eval 'console.log("YT_DLP_RS_TEST_DENO=" + Deno.execPath())' >> "$GITHUB_ENV"
       - run: cargo test --locked --lib extractor::youtube
+      # Site fixtures whose YouTube cases solve challenges need deno on PATH.
+      - run: cargo test --locked --test sites
 
   direct-adaptive-merge:
     runs-on: ubuntu-latest

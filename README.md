@@ -96,21 +96,17 @@ Supported today:
   Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
-- YouTube single-video watch, short-link, Shorts, embed, and live URL shapes
-  canonicalized to a watch page (actual live content is rejected). Direct combined or separate audio/video MP4/M4A/WebM formats in
-  `ytInitialPlayerResponse` are eligible;
-  when that response is absent, one anonymous WEB player API request can supply
-  token-exempt itag 18 using literal page client configuration.
-  Format IDs are YouTube itags. This is fixture-tested groundwork, not general
-  live-site support. `--youtube-js-runtime PATH` opts into bounded offline solving
-  of encrypted signatures and query `n` challenges using explicitly installed
-  Deno 2.9.7 (or Node.js 22+ under its permission model) and pinned bundled EJS
-  assets. Challenge-free extraction never inspects
-  or launches that runtime. Initial and anonymous WEB responses can also expose
-  native finite HLS VOD, including path-n solving in the same challenge batch.
-  WEB DASH discovery remains excluded without GVS tokens. Additional clients,
-  token acquisition, fragmented direct adaptive streams and playlists remain
-  unsupported; many current videos will fail.
+- YouTube single-video watch, short-link, Shorts, embed and live URL shapes,
+  extracted like upstream from the watch page plus one player API request per
+  default InnerTube client. With a JS runtime (deno, enabled by default as
+  upstream does, or `--js-runtimes node`) the clients are `tv_samsung`,
+  `visionos` and `web`, and `n`/signature challenges are solved through the
+  bundled pinned EJS release. Without one, only `visionos` is used, with
+  upstream's warning. HTTPS, HLS and DASH formats follow upstream's
+  `_extract_formats_and_subtitles`: PO-token policies skip token-requiring
+  formats, since no token providers exist. Live videos, playlists, channels,
+  login and upstream's remaining metadata fields are not supported yet. This is
+  fixture-tested against pinned upstream, not verified against the live site.
 - Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
   `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.
   `--ffmpeg-location PATH` configures an explicit FFmpeg executable for local

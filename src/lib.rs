@@ -511,12 +511,7 @@ impl YoutubeDl {
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
-                Box::new(Youtube::with_http_options(
-                    youtube,
-                    headers,
-                    cookies.clone(),
-                    proxy,
-                )),
+                Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),
                 Box::new(extractor::AudioBoom),
                 Box::new(extractor::BehindKink),

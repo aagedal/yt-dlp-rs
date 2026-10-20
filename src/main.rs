@@ -2359,18 +2359,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let mut downloader = YoutubeDl::with_options(
         YoutubeOptions {
-            // `--js-runtimes deno[:PATH]`/`node[:PATH]`: the last value for
-            // each; a bare name is looked up on PATH because it was requested.
-            // Upstream prefers Deno's provider to Node.js's.
+            // `--js-runtimes deno[:PATH]`/`node[:PATH]` (`deno` is enabled by
+            // default; `--no-js-runtimes` clears it): the last value for each,
+            // a bare name looked up on PATH. Upstream prefers Deno's provider
+            // to Node.js's.
             js_runtime: args.youtube_js_runtime.or_else(|| {
-                if args.no_js_runtimes {
-                    return None;
-                }
+                let mut enabled: Vec<&str> = if args.no_js_runtimes {
+                    Vec::new()
+                } else {
+                    vec!["deno"]
+                };
+                enabled.extend(args.js_runtimes.iter().map(String::as_str));
                 ["deno", "node"].into_iter().find_map(|runtime| {
-                    let value = args.js_runtimes.iter().rev().find(|value| {
-                        let name = value
-                            .split_once(':')
-                            .map_or(value.as_str(), |(name, _)| name);
+                    let value = enabled.iter().rev().find(|value| {
+                        let name = value.split_once(':').map_or(**value, |(name, _)| name);
                         name.eq_ignore_ascii_case(runtime)
                     })?;
                     let path = value.split_once(':').map_or("", |(_, path)| path);

@@ -95,6 +95,15 @@ impl DenoRuntime {
         }
     }
 
+    /// The JS challenge provider's name (`deno` or `node`).
+    pub(in crate::extractor::youtube) fn name(&self) -> &'static str {
+        if std::ptr::eq(self.args, ARGS) {
+            "deno"
+        } else {
+            "node"
+        }
+    }
+
     pub(in crate::extractor::youtube) fn solve(&self, batch: &Batch) -> Result<Solutions> {
         let script = batch.script()?;
         let output = execute(
