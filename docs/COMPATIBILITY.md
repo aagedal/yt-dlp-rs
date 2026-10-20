@@ -377,6 +377,11 @@ its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped
 `time`/`ts`, and upstream's missing-script, `KeyError` and bare `IndexError`
 messages.
 
+OnePlace episodes (`oneplace.com/.../listen/SLUG-ID`) follow upstream
+`OnePlacePodcastIE`: the fatal `mp3-url`/player `data-media-url`, the details
+heading or `og:title`/`title` meta title and the `epDesc` description as an
+untyped `mp3` audio result.
+
 QingTing programs (`qingting.fm`/`qtfm.cn` `[v]channels/C/programs/P`) follow
 upstream `QingTingIE`: the mobile program page's `window.__initStores` JSON
 (`_search_json`) with the program title and audio URL, channel title and
