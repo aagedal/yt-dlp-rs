@@ -1396,6 +1396,18 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("modified_timestamp", Take),
         ],
+        // `PopcornTVIE._real_extract`'s dict.
+        "popcorntv" => &[
+            ("id", Take),
+            ("display_id", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
+            ("timestamp", Assign),
+            ("duration", Take),
+            ("view_count", Assign),
+            ("formats", Take),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),

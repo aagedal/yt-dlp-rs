@@ -93,7 +93,7 @@ Supported today:
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
   ScreenRec shares, Ku6 shows, Fuyin TV videos, Moving Image Archive films,
   Fathom shares, Maariv players (and their embeds), Harpodeon films,
-  Yorkshire Film Archive pages, GodResource videos, plus
+  Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

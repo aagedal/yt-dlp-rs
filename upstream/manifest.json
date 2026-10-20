@@ -716,6 +716,18 @@
       "scope": "PlayerFmIE episode JSON as an untyped audio result (clean_podcast_url, integer ID, metadata traversal, missing-ID/no-formats errors, generic title) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "popcorntv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/popcorntv.py"
+      ],
+      "rust": [
+        "src/extractor/popcorntv.rs",
+        "tests/fixtures/sites/popcorntv/"
+      ],
+      "scope": "PopcornTVIE link href HLS formats, microdata/OpenGraph metadata with warnings and KeyError/content errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "premiershiprugby",
       "status": "partial",
       "upstream": [

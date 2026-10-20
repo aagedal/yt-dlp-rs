@@ -662,6 +662,13 @@ URL (else `No video formats found!`), title (else the generic title, after
 `fulltitle`), cleaned description, integer duration/size/timestamp, the first
 URL-valued episode or series image and the series author as `creators`.
 
+PopcornTV videos (`SUB.popcorntv.it/guarda/SLUG/ID`) follow upstream
+`PopcornTVIE`: the fatal `contentUrl`/`embedUrl` link's `href` as `hls`
+formats (subtitles ignored with upstream's warning), the `name` heading
+(else the OpenGraph title), description article, OpenGraph thumbnail and
+`uploadDate`/`duration` (minutes)/`interactionCount` metas, each with
+upstream's warning, and upstream's `KeyError` messages.
+
 Premiership Rugby videos (`SUB.premiershiprugby.com/watch/SLUG`) follow
 upstream `PremiershipRugbyIE`: the article CMS's hero media `videoLink` as fatal
 HLS formats and subtitles without an `ext` (a media playlist keeps its URL's
