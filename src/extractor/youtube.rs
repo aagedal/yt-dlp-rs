@@ -3,6 +3,7 @@
 mod captions;
 mod challenge;
 mod chapters;
+mod dict;
 mod innertube;
 mod metadata;
 mod streams;
@@ -108,33 +109,6 @@ pub(crate) fn temp_id(url: &str) -> Option<String> {
 /// Upstream `YoutubeIE.suitable`: a supported single-video URL.
 pub fn suitable(url: &str) -> bool {
     Url::parse(url).is_ok_and(|url| matches!(video_id(&url, false), Ok(Some(_))))
-}
-
-/// Upstream `_real_extract`: `start_time` from a `start`/`t` and `end_time`
-/// from an `end` parameter of the URL fragment, then its query (the first
-/// occurrence wins, even when it does not parse).
-fn url_times(url: &Url, metadata: &mut crate::Metadata) {
-    let (mut start, mut end) = (None, None);
-    for component in [url.fragment().unwrap_or(""), url.query().unwrap_or("")] {
-        // `parse_qs` keeps the first value of each non-blank key.
-        let mut seen = Vec::new();
-        for (key, value) in url::form_urlencoded::parse(component.as_bytes()) {
-            if value.is_empty() || seen.contains(&key) {
-                continue;
-            }
-            seen.push(key.clone());
-            let slot = match key.as_ref() {
-                "start" | "t" => &mut start,
-                "end" => &mut end,
-                _ => continue,
-            };
-            if slot.is_none() {
-                *slot = Some(crate::match_filter::parse_duration_number(&value));
-            }
-        }
-    }
-    metadata.start_time = start.flatten();
-    metadata.end_time = end.flatten();
 }
 
 // Claim all URLs on these exact hosts so unsupported site pages cannot fall
@@ -301,6 +275,7 @@ impl streams::Solver for JsSolver<'_> {
 /// Upstream `_real_extract` over every requested client's player response.
 fn extract_clients(
     client: &Client,
+    url: &Url,
     id: &str,
     runtime: Option<&challenge::Runtime>,
     translated_manual: bool,
@@ -403,20 +378,119 @@ fn extract_clients(
     }
     let player = acquired
         .player_responses
-        .first()
+        .iter()
+        .find(|response| response.get("captions").is_some())
+        .or_else(|| acquired.player_responses.first())
         .cloned()
         .unwrap_or(Value::Null);
     let captions = captions::parse(&player, translated_manual)?;
     let Some(first_format) = formats.first() else {
         return Err(no_formats());
     };
-    let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-    let mut metadata = metadata::parse(&player);
-    metadata.chapters = chapters::extract(
+    let microformats: Vec<&Value> = acquired
+        .player_responses
+        .iter()
+        .filter_map(|response| response.pointer("/microformat/playerMicroformatRenderer"))
+        .collect();
+    // `original_description if original_description is not None else
+    // translated_description`, else the initial data's.
+    let description = acquired
+        .player_responses
+        .iter()
+        .find_map(|response| {
+            response
+                .pointer("/videoDetails/shortDescription")
+                .filter(|value| !value.is_null())
+        })
+        .map(|value| value.as_str().unwrap_or_default().to_owned())
+        .or_else(|| {
+            microformats
+                .iter()
+                .find_map(|micro| micro.get("description").and_then(metadata::text))
+        })
+        .or_else(|| {
+            acquired.initial_data.as_ref().and_then(|data| {
+                data.get("engagementPanels")?
+                    .as_array()?
+                    .iter()
+                    .filter_map(|panel| {
+                        panel.pointer(
+                            "/engagementPanelSectionListRenderer/content/structuredDescriptionContentRenderer/items",
+                        )
+                    })
+                    .filter_map(Value::as_array)
+                    .flatten()
+                    .find_map(|item| {
+                        item.pointer(
+                            "/expandableVideoDescriptionBodyRenderer/attributedDescriptionBodyText/content",
+                        )?
+                        .as_str()
+                        .map(str::to_owned)
+                    })
+            })
+        });
+    // `get_first(video_details, 'keywords', list) or [og:video:tag...]`.
+    let mut keywords: Vec<String> = details
+        .get("keywords")
+        .and_then(Value::as_array)
+        .map(|keywords| {
+            keywords
+                .iter()
+                .filter_map(|keyword| keyword.as_str().map(str::to_owned))
+                .collect()
+        })
+        .unwrap_or_default();
+    if keywords.is_empty() {
+        static TAG: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            regex::Regex::new(
+                r#"(?is)<meta[^>]+?(?:itemprop|name|property|id|http-equiv)=(?:"og:video:tag"|'og:video:tag')[^>]+?content=(?:"([^"]*)"|'([^']*)')"#,
+            )
+            .unwrap()
+        });
+        keywords = TAG
+            .captures_iter(&acquired.webpage)
+            .filter_map(|found| found.get(1).or_else(|| found.get(2)))
+            .map(|value| crate::html::unescape_html(value.as_str()))
+            .collect();
+    }
+    let chapters = chapters::extract(
         acquired.initial_data.as_ref(),
-        metadata.description.as_deref(),
-        metadata.duration.map(crate::info::PyNumber::whole_seconds),
+        description.as_deref(),
+        duration.and_then(|duration| u64::try_from(duration).ok()),
     );
+    // `_list_formats`' manifest subtitles are the automatic captions'
+    // container.
+    let mut automatic = streams.subtitles;
+    for (language, tracks) in captions.automatic.entries {
+        match automatic
+            .entries
+            .iter_mut()
+            .find(|(known, _)| *known == language)
+        {
+            Some((_, existing)) => existing.extend(tracks),
+            None => automatic.entries.push((language, tracks)),
+        }
+    }
+    let dict = dict::build(&dict::Input {
+        video_id: id,
+        url,
+        webpage: &acquired.webpage,
+        player_responses: &acquired.player_responses,
+        initial_data: acquired.initial_data.as_ref(),
+        title: &title,
+        description: description.as_deref(),
+        duration,
+        live_status,
+        keywords,
+        chapters: if chapters.is_empty() {
+            Value::Null
+        } else {
+            serde_json::to_value(&chapters).unwrap_or(Value::Null)
+        },
+        automatic_captions: serde_json::to_value(&automatic).unwrap_or(Value::Null),
+        subtitles: serde_json::to_value(&captions.subtitles).unwrap_or(Value::Null),
+    });
+    let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
     let mut info = direct::build_at(first_format.url.clone(), &page, first_format.ext.clone());
     info.direct = None;
     info.id = id.into();
@@ -424,14 +498,6 @@ fn extract_clients(
     info.webpage_url = page;
     info.extractor = "youtube".into();
     info.extractor_key = "Youtube".into();
-    info.metadata = metadata;
-    info.automatic_captions = captions.automatic;
-    info.subtitles = captions.subtitles;
-    let mut subtitles = streams.subtitles;
-    for (language, tracks) in std::mem::take(&mut info.subtitles.entries) {
-        subtitles.entries.push((language, tracks));
-    }
-    info.subtitles = subtitles;
     info.format_sort_fields = [
         "quality",
         "res",
@@ -451,7 +517,35 @@ fn extract_clients(
     .map(str::to_owned)
     .to_vec();
     info.formats = formats;
-    Ok(info)
+    let mut keys: Vec<String> = Vec::new();
+    for (key, value) in dict {
+        keys.push(key.clone());
+        if key == "title" {
+            keys.push("formats".into());
+        }
+        if key == "release_timestamp" {
+            keys.push("_format_sort_fields".into());
+        }
+        match key.as_str() {
+            "id" | "title" | "webpage_url" => {}
+            "subtitles" | "automatic_captions" => {
+                let parsed: crate::Subtitles = serde_json::from_value(value).unwrap_or_default();
+                if key == "subtitles" {
+                    info.subtitles = parsed;
+                } else {
+                    info.automatic_captions = parsed;
+                }
+            }
+            _ if value.is_null() => {
+                info.extra.insert(key, Value::Null);
+            }
+            _ => crate::metadata_parser::set_field(&mut info, &key, value),
+        }
+    }
+    Ok(crate::info_order::mark_info(
+        info,
+        &format!("youtube;{}", keys.join(",")),
+    ))
 }
 
 impl Extractor for Youtube {
@@ -465,8 +559,7 @@ impl Extractor for Youtube {
         crate::screen::set_extractor("youtube");
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
         let _ = page;
-        let mut info = extract_clients(client, &id, None, false)?;
-        url_times(url, &mut info.metadata);
+        let info = extract_clients(client, url, &id, None, false)?;
         Ok(Some(info))
     }
 }
@@ -482,13 +575,13 @@ impl Extractor for ConfiguredYoutube {
         crate::screen::set_extractor("youtube");
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
         let _ = page;
-        let mut info = extract_clients(
+        let info = extract_clients(
             client,
+            url,
             &id,
             self.runtime.as_ref(),
             self.include_translated_subtitles,
         )?;
-        url_times(url, &mut info.metadata);
         Ok(Some(info))
     }
 }
@@ -540,32 +633,6 @@ mod tests {
                 "{input}"
             );
         }
-    }
-
-    #[test]
-    fn url_start_and_end_times_follow_upstream() {
-        let times = |input: &str| {
-            let mut metadata = crate::Metadata::default();
-            url_times(&Url::parse(input).unwrap(), &mut metadata);
-            serde_json::to_value((metadata.start_time, metadata.end_time)).unwrap()
-        };
-        let base = "https://www.youtube.com/watch?v=BaW_jenozKc";
-        assert_eq!(
-            times(&format!("{base}&t=1m30s&end=120.5")),
-            serde_json::json!([90, 120.5])
-        );
-        assert_eq!(
-            times(&format!("{base}&start=5#t=7")),
-            serde_json::json!([7, null])
-        );
-        assert_eq!(
-            times(&format!("{base}&t=bad&start=5")),
-            serde_json::json!([null, null])
-        );
-        assert_eq!(
-            times(&format!("{base}&t=&end=3")),
-            serde_json::json!([null, 3])
-        );
     }
 
     #[test]

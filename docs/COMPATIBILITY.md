@@ -185,17 +185,31 @@ use the canonical HTTPS watch URL. Reject channels, playlists, malformed IDs,
 and URLs containing `list=` before making a request. `/live/` is a URL shape;
 live, upcoming, and post-live player responses remain unsupported.
 
-Descriptive metadata follows upstream `_real_extract` for fields derivable from
-the player response alone: `description` (original before microformat text),
-`duration`, `channel_id`/`channel_url`, `uploader_id`/`uploader_url` (owner
-handle), `view_count`, `average_rating`, `age_limit`, `categories`, `tags`,
-`playable_in_embed`, `live_status`, `media_type`, `upload_date`/`timestamp`
-(microformat `uploadDate` with zone) and `availability` (without initial-data
-badges). `ytInitialData`-derived fields (`uploader`, `channel`, likes, comments,
-chapters) and watch-page meta fallbacks are not extracted. Thumbnails follow
-upstream: saved `videoDetails`/microformat thumbnails, 38 generated `i.ytimg.com`
-candidates with name/WebP preferences, URL deduplication and the best saved
-thumbnail as `thumbnail`. HTML5 media `poster` attributes become thumbnails.
+The info dict follows upstream `_real_extract` after `_list_formats`, in its
+key order, over every player response, the page's meta tags and `ytInitialData`:
+- **From the player responses:** title, original (else translated, else
+  initial-data) description, duration, view count, average rating, age limit,
+  categories, keywords (else `og:video:tag` metas) as tags, playability, live
+  status and media type.
+- **Thumbnails:** every response's saved ones and the page's image, then the
+  generated `i.ytimg.com` names with their preferences and URL deduplication.
+  The best saved thumbnail is `thumbnail`.
+- **Captions:** automatic captions (the manifests' subtitles first) and
+  subtitles.
+- **URL times:** the URL's `t`/`start`/`end` times.
+- **Music metadata:** from YouTube Music's auto-generated descriptions.
+- **From the initial data:** the comment count, a live chat replay track,
+  chapters and heatmap.
+- **From the primary info renderer:** location or series/season/episode,
+  like counts and the view count.
+- **From the secondary info renderer:** the channel, followers, collaborators
+  as creators, license/album/artist/song rows and the verified badge.
+- **Uploader, timestamp and availability:** uploader and handle, the
+  `uploadDate` timestamp (only with a time and zone) and date (else the
+  `dateText`), and availability from the badges.
+
+Relative `dateText` values are not resolved. Comments and storyboard formats
+are not extracted. HTML5 media `poster` attributes become thumbnails.
 Generic results follow upstream `GenericIE`: the first response's
 `Last-Modified` header becomes `timestamp` through a port of
 `unified_timestamp` (pinned `DATE_FORMATS`, `extract_timezone`,

@@ -1,8 +1,6 @@
-//! Descriptive metadata from one player response, following upstream
-//! `YoutubeIE._real_extract` for fields derivable without `ytInitialData`,
-//! watch-page meta tags or thumbnails.
+//! Text and upload-date helpers shared by the YouTube info dict
+//! ([`super::dict`]).
 
-use crate::Metadata;
 use serde_json::Value;
 
 /// Upstream `_get_text`: `simpleText`, else the joined `runs[].text`.
@@ -21,56 +19,6 @@ pub(super) fn text(value: &Value) -> Option<String> {
         .filter_map(|run| run.get("text").and_then(Value::as_str))
         .collect();
     (!joined.is_empty()).then_some(joined)
-}
-
-/// Python `int_or_none` for JSON integers and integer strings.
-fn int(value: &Value) -> Option<i64> {
-    match value {
-        Value::Number(number) => number.as_i64().or_else(|| {
-            number
-                .as_f64()
-                .filter(|v| v.is_finite())
-                .map(|v| v.trunc() as i64)
-        }),
-        Value::String(text) => crate::batch::py_strip(text).parse().ok(),
-        Value::Bool(value) => Some(i64::from(*value)),
-        _ => None,
-    }
-}
-
-fn present(value: &Value) -> Option<&Value> {
-    (!value.is_null()).then_some(value)
-}
-
-fn is_word(c: char) -> bool {
-    c.is_alphanumeric() || c == '_'
-}
-
-/// `^(UC[\w-]{22})$`.
-fn ucid(value: &str) -> Option<String> {
-    let rest = value.strip_prefix("UC")?;
-    (rest.chars().count() == 22 && rest.chars().all(|c| is_word(c) || c == '-'))
-        .then(|| value.to_owned())
-}
-
-/// `handle_from_url`: `^(?:https?://(?:www\.)?youtube\.com)?/(@[\w.-]{3,30})`.
-fn handle(url: &str) -> Option<String> {
-    let decoded = percent_encoding::percent_decode_str(url).decode_utf8_lossy();
-    let mut rest = decoded.as_ref();
-    for prefix in ["https://", "http://"] {
-        if let Some(tail) = rest.strip_prefix(prefix) {
-            let tail = tail.strip_prefix("www.").unwrap_or(tail);
-            rest = tail.strip_prefix("youtube.com")?;
-            break;
-        }
-    }
-    let name = rest.strip_prefix("/@")?;
-    let length = name
-        .chars()
-        .take_while(|&c| is_word(c) || c == '.' || c == '-')
-        .take(30)
-        .count();
-    (length >= 3).then(|| format!("@{}", name.chars().take(length).collect::<String>()))
 }
 
 /// Days since 1970-01-01 for a proleptic Gregorian date.
@@ -117,7 +65,7 @@ fn valid_date(year: i64, month: i64, day: i64) -> bool {
 /// The microformat `uploadDate` subset: `YYYY-MM-DD[THH:MM:SS[.f+][Z|±HH[:]MM]]`.
 /// A timestamp requires both time and zone (`parse_iso8601(timezone=NO_DEFAULT)`);
 /// otherwise the date part is the upload date (`unified_strdate`).
-fn upload_time(value: &str) -> (Option<String>, Option<i64>) {
+pub(super) fn upload_time(value: &str) -> (Option<String>, Option<i64>) {
     let bytes = value.as_bytes();
     let digits = |range: std::ops::Range<usize>| -> Option<i64> {
         let part = value.get(range)?;
@@ -184,224 +132,6 @@ fn upload_time(value: &str) -> (Option<String>, Option<i64>) {
     )
 }
 
-/// Upstream `url_or_none` scheme check.
-fn url_or_none(url: &str) -> Option<&str> {
-    let url = url.trim();
-    let rest = &url[..url.find("//")?];
-    let scheme = rest.strip_suffix(':').unwrap_or(rest);
-    let known = [
-        "", "http", "https", "rtmp", "rtmpt", "rtmpe", "rtmps", "rtmpte", "rtmpts", "rtmfp",
-        "rtsp", "rtsps", "rtspu", "mms", "ftp", "ftps", "ws", "wss",
-    ];
-    (known.contains(&scheme.to_ascii_lowercase().as_str())
-        && (rest.is_empty() || rest.ends_with(':')))
-    .then_some(url)
-}
-
-const THUMBNAIL_NAMES: [&str; 19] = [
-    "maxresdefault",
-    "hq720",
-    "sddefault",
-    "hqdefault",
-    "0",
-    "mqdefault",
-    "default",
-    "sd1",
-    "sd2",
-    "sd3",
-    "hq1",
-    "hq2",
-    "hq3",
-    "mq1",
-    "mq2",
-    "mq3",
-    "1",
-    "2",
-    "3",
-];
-
-/// Upstream thumbnail candidates: saved `videoDetails`/microformat thumbnails,
-/// then generated `i.ytimg.com` names, with preferences and URL deduplication.
-/// Returns the deduplicated list and the best saved thumbnail URL.
-fn thumbnails(player: &Value, id: &str) -> (Vec<crate::Thumbnail>, Option<String>) {
-    let mut saved = Vec::new();
-    for root in [
-        "/videoDetails/thumbnail/thumbnails",
-        "/microformat/playerMicroformatRenderer/thumbnail/thumbnails",
-    ] {
-        for thumbnail in player
-            .pointer(root)
-            .and_then(Value::as_array)
-            .into_iter()
-            .flatten()
-        {
-            let Some(url) = thumbnail
-                .get("url")
-                .and_then(Value::as_str)
-                .and_then(url_or_none)
-            else {
-                continue;
-            };
-            let url = if url.contains("maxresdefault") {
-                url.split('?').next().unwrap_or(url)
-            } else {
-                url
-            };
-            let dimension = |key: &str| {
-                thumbnail
-                    .get(key)
-                    .and_then(int)
-                    .and_then(|v| u32::try_from(v).ok())
-            };
-            saved.push(crate::Thumbnail {
-                url: url.to_owned(),
-                width: dimension("width"),
-                height: dimension("height"),
-                ..Default::default()
-            });
-        }
-    }
-    let preference = |url: &str| {
-        let index = THUMBNAIL_NAMES
-            .iter()
-            .position(|name| url.contains(&format!("/{id}/{name}")))
-            .unwrap_or(THUMBNAIL_NAMES.len()) as i64;
-        i64::from(if url.contains(".webp") { 0 } else { -1 }) - 2 * index
-    };
-    for thumbnail in &mut saved {
-        thumbnail.preference = Some(preference(&thumbnail.url));
-    }
-    let mut best = saved.clone();
-    // `_sort_thumbnails` on the saved copy: the last is the best known thumbnail.
-    best.sort_by(|a, b| {
-        let key = |t: &crate::Thumbnail| {
-            (
-                t.preference.unwrap_or(-1),
-                t.width.map_or(-1, i64::from),
-                t.height.map_or(-1, i64::from),
-            )
-        };
-        key(a).cmp(&key(b)).then_with(|| a.url.cmp(&b.url))
-    });
-    let thumbnail = best.last().map(|t| t.url.clone());
-    let mut all = saved;
-    for name in THUMBNAIL_NAMES {
-        for ext in ["webp", "jpg"] {
-            let webp = if ext == "webp" { "_webp" } else { "" };
-            let url = format!("https://i.ytimg.com/vi{webp}/{id}/{name}.{ext}");
-            all.push(crate::Thumbnail {
-                preference: Some(preference(&url)),
-                url,
-                ..Default::default()
-            });
-        }
-    }
-    let mut seen = std::collections::HashSet::new();
-    all.retain(|thumbnail| seen.insert(thumbnail.url.clone()));
-    (all, thumbnail)
-}
-
-/// Metadata for the supported (non-live) player responses.
-pub(super) fn parse(player: &Value) -> Metadata {
-    let details = &player["videoDetails"];
-    let id = details["videoId"].as_str().unwrap_or_default();
-    let (thumbnails, thumbnail) = thumbnails(player, id);
-    let micro = player
-        .pointer("/microformat/playerMicroformatRenderer")
-        .unwrap_or(&Value::Null);
-    let description = match present(&details["shortDescription"]) {
-        Some(original) => original.as_str().map(str::to_owned),
-        None => text(&micro["description"]),
-    };
-    let duration = [&details["lengthSeconds"], &micro["lengthSeconds"]]
-        .into_iter()
-        .filter_map(int)
-        .find(|&seconds| seconds != 0)
-        .and_then(|seconds| u64::try_from(seconds).ok());
-    let channel_id = present(&details["channelId"])
-        .or_else(|| present(&micro["externalChannelId"]))
-        .and_then(Value::as_str)
-        .and_then(ucid);
-    let view_count = present(&details["viewCount"])
-        .or_else(|| present(&micro["viewCount"]))
-        .and_then(int)
-        .and_then(|count| u64::try_from(count).ok());
-    let age_limit = if micro["isFamilySafe"] == Value::Bool(false) {
-        18
-    } else {
-        0
-    };
-    let category = micro["category"].as_str().filter(|c| !c.is_empty());
-    let tags = details["keywords"]
-        .as_array()
-        .map(|keywords| {
-            keywords
-                .iter()
-                .filter_map(|keyword| keyword.as_str().map(str::to_owned))
-                .collect()
-        })
-        .unwrap_or_default();
-    let is_live = present(&details["isLive"]).or_else(|| {
-        player
-            .pointer("/microformat/playerMicroformatRenderer/liveBroadcastDetails/isLiveNow")
-            .and_then(present)
-    });
-    let live_content = present(&details["isLiveContent"]);
-    let live_status = [is_live, live_content]
-        .into_iter()
-        .any(|value| value == Some(&Value::Bool(false)))
-        .then(|| "not_live".to_owned());
-    let media_type = if micro["isShortsEligible"].as_bool() == Some(true) {
-        "short"
-    } else {
-        "video"
-    };
-    let uploader_id = micro["ownerProfileUrl"].as_str().and_then(handle);
-    let (upload_date, timestamp) = micro["uploadDate"]
-        .as_str()
-        .map_or((None, None), upload_time);
-    // `_availability` without initial-data badges: only private, sign-in and
-    // unlisted states can be known.
-    let is_private = details["isPrivate"].as_bool();
-    let availability = if is_private == Some(true) {
-        Some("private")
-    } else if age_limit >= 18 {
-        Some("needs_auth")
-    } else if is_private.is_some() && micro["isUnlisted"].as_bool() == Some(true) {
-        Some("unlisted")
-    } else {
-        None
-    };
-    Metadata {
-        description,
-        duration: duration.map(|duration| crate::info::PyNumber::Int(duration as i64)),
-        channel_url: channel_id
-            .as_ref()
-            .map(|id| format!("https://www.youtube.com/channel/{id}")),
-        channel_id,
-        uploader_url: uploader_id
-            .as_ref()
-            .map(|handle| format!("https://www.youtube.com/{handle}")),
-        uploader_id,
-        view_count,
-        average_rating: details["averageRating"].as_f64(),
-        age_limit: Some(age_limit),
-        categories: category.map(|category| vec![category.to_owned()]),
-        tags: Some(tags),
-        playable_in_embed: player
-            .pointer("/playabilityStatus/playableInEmbed")
-            .and_then(Value::as_bool),
-        live_status,
-        media_type: Some(media_type.into()),
-        upload_date,
-        timestamp: timestamp.map(crate::info::PyNumber::Int),
-        availability: availability.map(str::to_owned),
-        thumbnail,
-        thumbnails,
-        ..Default::default()
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -422,15 +152,5 @@ mod tests {
             (Some("20080529".into()), None)
         );
         assert_eq!(upload_time("2008-02-30"), (None, None));
-        assert_eq!(
-            handle("http://www.youtube.com/@BlenderOfficial").as_deref(),
-            Some("@BlenderOfficial")
-        );
-        assert_eq!(handle("/@ab"), None);
-        assert_eq!(
-            ucid("UCSMOQeBJ2RAnuFungnQOxLg").as_deref(),
-            Some("UCSMOQeBJ2RAnuFungnQOxLg")
-        );
-        assert_eq!(ucid("UCshort"), None);
     }
 }

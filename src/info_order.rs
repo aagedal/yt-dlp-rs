@@ -308,6 +308,33 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ("width", Take),
             ("height", Take),
         ],
+        // `YoutubeIE`'s `process_format_stream` dict.
+        "youtube-https" => &[
+            ("asr", Assign),
+            ("filesize", Assign),
+            ("format_id", Take),
+            ("format_note", Assign),
+            ("source_preference", Take),
+            ("fps", Assign),
+            ("audio_channels", Assign),
+            ("height", Assign),
+            ("quality", Take),
+            ("has_drm", Take),
+            ("tbr", Assign),
+            ("filesize_approx", Assign),
+            ("width", Assign),
+            ("language", Assign),
+            ("language_preference", Take),
+            ("preference", Assign),
+            ("ext", Take),
+            ("vcodec", Take),
+            ("acodec", Take),
+            ("dynamic_range", Assign),
+            ("container", Take),
+            ("url", Take),
+            ("available_at", Take),
+            ("downloader_options", Take),
+        ],
         // `BildIE`'s MP4 source.
         "bild" => &[("url", Take), ("format_id", Take)],
         // `BloggerIE`'s stream.
@@ -1714,6 +1741,33 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // `JWPlatformIE`: the `_parse_jwplayer_data` entry itself (with its
     // `None` values).
+    // `YoutubeIE._real_extract`'s dict, every key set (`None` included).
+    if let Some(keys) = shape.strip_prefix("youtube;") {
+        for key in keys.split(',') {
+            replay.set(
+                key,
+                match key {
+                    "formats" => Take,
+                    "subtitles" | "automatic_captions" => Dict,
+                    _ => Assign,
+                },
+            );
+        }
+        // `_extract_thumbnails`' `{url, height, width}` (only keys present:
+        // generated names have just a URL), then `preference` and the ID.
+        if let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails") {
+            for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
+                let mut ordered = Map::new();
+                for key in ["url", "height", "width", "preference", "id"] {
+                    if let Some(value) = thumbnail.shift_remove(key) {
+                        ordered.insert(key.to_owned(), value);
+                    }
+                }
+                ordered.append(thumbnail);
+                *thumbnail = ordered;
+            }
+        }
+    }
     if let Some(keys) = shape.strip_prefix("jwplatform;") {
         for key in keys.split(',') {
             replay.set(key, if key == "subtitles" { Dict } else { Assign });
