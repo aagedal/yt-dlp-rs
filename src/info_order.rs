@@ -1305,6 +1305,22 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // `merge_dicts(jwplayer_entry, info_dict)`: the entry's keys, then the
     // page's.
+    // `AngelIE`: `merge_dicts(info_dict, json_ld)`.
+    if let Some(keys) = shape.strip_prefix("angel;") {
+        for (key, how) in [
+            ("id", Take),
+            ("title", Take),
+            ("description", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("thumbnail", Take),
+        ] {
+            replay.set(key, how);
+        }
+        for key in keys.split(',').filter(|key| !key.is_empty()) {
+            replay.take(key);
+        }
+    }
     // `JWPlatformIE`: the `_parse_jwplayer_data` entry itself (with its
     // `None` values).
     if let Some(keys) = shape.strip_prefix("jwplatform;") {

@@ -346,6 +346,12 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+Angel episodes (`angel.com/watch/SERIES/episode/ID/season-N/episode-N/SLUG`)
+follow upstream `AngelIE`: the page's JSON-LD `url` as a fatal HLS manifest
+(`Downloading HD m3u8 information`), the OpenGraph title, description and
+image (Cloudinary transformations removed), then `merge_dicts` with the
+remaining JSON-LD fields after the extractor's own.
+
 AudioBoom posts (`audioboom.com/posts|boos/ID`) follow upstream `AudioBoomIE`:
 the post page's `V5DetailPagePlayer` React props (`_search_json` with
 `unescapeHTML`) for the clip URL, title, description (else its cleaned

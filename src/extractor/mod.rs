@@ -1,3 +1,4 @@
+mod angel;
 mod audioboom;
 mod behindkink;
 mod dash;
@@ -36,6 +37,7 @@ mod vocaroo;
 mod xspf;
 mod youtube;
 
+pub use angel::{Angel, suitable as angel_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use direct::DirectHttp;
