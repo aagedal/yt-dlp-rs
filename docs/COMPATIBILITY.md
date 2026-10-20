@@ -253,6 +253,15 @@ and `thumbnail` finalization (no `--check-formats` URL testing). These
 fields appear in JSON, info JSON, match filters and (scalar ones) output
 templates; see [the source slice](../upstream/notes/youtube-metadata.md).
 
+Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
+`StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
+metadata`), its unavailable-status error, `reddit_title`/`title`, every file
+with a URL as a format (proto-relative URLs as `https:`, `parse_codecs` of the
+input codec names, `bitrate`/1000 as `vbr`), owner, float `date_added` and
+`duration`, and plays. Site extractors are compared with pinned upstream's
+output through a fixture-only proxy (`tests/fixtures/sites/`); iframe embeds of
+these sites on other pages are not detected.
+
 Watch pages must be uncompressed UTF-8/ASCII `text/html`, at most 2 MiB. Parse
 JSON assigned to `ytInitialPlayerResponse` in a script, including quoted window
 property assignments. Require `playabilityStatus.status=OK`, the requested video

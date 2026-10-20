@@ -394,7 +394,7 @@ pub(super) fn parse(player: &Value) -> Metadata {
         live_status,
         media_type: Some(media_type.into()),
         upload_date,
-        timestamp,
+        timestamp: timestamp.map(crate::info::PyNumber::Int),
         availability: availability.map(str::to_owned),
         thumbnail,
         thumbnails,

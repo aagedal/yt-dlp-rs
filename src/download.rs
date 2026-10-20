@@ -540,7 +540,12 @@ pub(crate) fn download_file(
     }
     temporary.flush()?;
     if options.update_time {
-        crate::filetime::apply(temporary.as_file(), info.metadata.timestamp);
+        crate::filetime::apply(
+            temporary.as_file(),
+            info.metadata
+                .timestamp
+                .map(crate::info::PyNumber::floor_i64),
+        );
     }
     reporter.report(DownloadPhase::Publishing, copied)?;
     Target::Private(temporary).publish(destination, options.overwrite)?;

@@ -364,8 +364,10 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
         "timestamp" => info
             .metadata
             .timestamp
-            .and_then(|t| u64::try_from(t).ok())
-            .map(Integer),
+            .and_then(|timestamp| match timestamp {
+                crate::info::PyNumber::Int(value) => u64::try_from(value).ok().map(Integer),
+                crate::info::PyNumber::Float(value) => Some(Float(value)),
+            }),
         "availability" => info.metadata.availability.as_deref().map(Text),
         "format" => info.format.as_deref().map(Text),
         "resolution" => info.resolution.as_deref().map(Text),

@@ -97,7 +97,7 @@ impl Extractor for DirectHttp {
         let timestamp = last_modified(&response);
         let mime = response_mime(&response);
         Ok(from_response(&response, url).map(|mut info| {
-            info.metadata.timestamp = timestamp;
+            info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
             with_format(info, &mime)
         }))
     }
@@ -432,7 +432,8 @@ pub(crate) fn from_file(url: &Url) -> crate::Result<VideoInfo> {
         .modified()
         .ok()
         .and_then(|time| time.duration_since(std::time::UNIX_EPOCH).ok())
-        .map(|age| age.as_secs() as i64);
+        .map(|age| age.as_secs() as i64)
+        .map(crate::info::PyNumber::Int);
     Ok(info)
 }
 

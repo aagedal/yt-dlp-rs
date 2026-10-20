@@ -2862,7 +2862,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     flush_validation_warnings();
     if args.verbose {
         // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 3 extractors");
+        eprintln!("[debug] Loaded 4 extractors");
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
@@ -2981,17 +2981,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // (sorted, `generic` last); the generic extractor lists unmatched URLs.
     if args.list_extractors {
         let mut out = io::stdout().lock();
-        let (youtube, generic): (Vec<&String>, Vec<&String>) = urls
-            .iter()
-            .partition(|url| yt_dlp_rs::extractor::youtube_suitable(url));
-        writeln!(out, "html5")?;
-        writeln!(out, "youtube")?;
-        for url in youtube {
-            writeln!(out, "  {url}")?;
-        }
-        writeln!(out, "generic")?;
-        for url in generic {
-            writeln!(out, "  {url}")?;
+        // Sorted by `IE_NAME.lower()`, generic last; each URL under the
+        // first extractor that is suitable.
+        let mut remaining: Vec<&String> = urls.iter().collect();
+        type Suitable = fn(&str) -> bool;
+        let suitable: [(&str, Suitable); 4] = [
+            ("html5", |_| false),
+            ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
+            ("youtube", yt_dlp_rs::extractor::youtube_suitable),
+            ("generic", |_| true),
+        ];
+        for (name, matches) in suitable {
+            writeln!(out, "{name}")?;
+            let (matched, rest): (Vec<&String>, Vec<&String>) =
+                remaining.into_iter().partition(|url| matches(url));
+            for url in matched {
+                writeln!(out, "  {url}")?;
+            }
+            remaining = rest;
         }
         return Ok(true);
     }
@@ -2999,7 +3006,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "html5\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
+            "html5\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
@@ -3145,6 +3152,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 match &error {
                     yt_dlp_rs::Error::Reported(message) => report_error!("ERROR: {message}"),
                     error @ (yt_dlp_rs::Error::Webpage { .. }
+                    | yt_dlp_rs::Error::ExtractorRequest { .. }
                     | yt_dlp_rs::Error::UnsupportedUrl(_)) => {
                         report_error!("ERROR: {error}")
                     }

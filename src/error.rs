@@ -32,6 +32,19 @@ pub enum Error {
         #[source]
         source: Box<Error>,
     },
+    /// An extractor request's `ExtractorError`:
+    /// `[EXTRACTOR] ID: Unable to download WHAT: ERR (caused by REPR)`.
+    #[error(
+        "{}",
+        crate::extractor::request_error_text(extractor, id, what, source)
+    )]
+    ExtractorRequest {
+        extractor: &'static str,
+        id: String,
+        what: &'static str,
+        #[source]
+        source: Box<Error>,
+    },
     /// Upstream raises `DownloadError(MESSAGE)` without reporting it first:
     /// `--load-info-json` then retries the webpage URL, otherwise it is
     /// reported as `ERROR: MESSAGE`.

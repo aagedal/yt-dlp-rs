@@ -1,0 +1,8 @@
+[
+ {"url": "https://streamable.com/dnd1", "args": ["-j"]},
+ {"url": "https://streamable.com/e/dnd1", "args": ["-F"]},
+ {"url": "https://streamable.com/dnd1", "args": ["--print", "%(title)s|%(uploader)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(duration_string)s|%(view_count)s|%(format_id)s"]},
+ {"url": "https://streamable.com/dnd1", "args": ["--no-progress", "-f", "mp4", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://streamable.com/busy", "args": ["-j"]},
+ {"url": "https://streamable.com/gone", "args": ["-j"]}
+]

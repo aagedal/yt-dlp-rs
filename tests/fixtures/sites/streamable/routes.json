@@ -1,0 +1,6 @@
+{"routes": [
+ {"url": "https://ajax.streamable.com/videos/dnd1", "headers": {"Content-Type": "application/json"}, "body_file": "dnd1.json"},
+ {"url": "https://ajax.streamable.com/videos/busy", "headers": {"Content-Type": "application/json"}, "body": "{\"status\": 1, \"files\": {}}"},
+ {"url": "https://cdn-cf-east.streamable.com/video/mp4/dnd1.mp4", "headers": {"Content-Type": "video/mp4"}, "body_file": "media.mp4"},
+ {"url": "https://cdn-cf-east.streamable.com/video/mp4-mobile/dnd1.mp4", "headers": {"Content-Type": "video/mp4"}, "body_file": "media.mp4"}
+]}

@@ -268,6 +268,18 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        // `StreamableIE`'s files.
+        "streamable" => &[
+            ("format_id", Take),
+            ("url", Take),
+            ("width", Assign),
+            ("height", Assign),
+            ("filesize", Assign),
+            ("fps", Assign),
+            ("vbr", Assign),
+            ("vcodec", Assign),
+            ("acodec", Assign),
+        ],
         // `_parse_jwplayer_formats`' direct source.
         "jwplayer-source" => &[
             ("url", Take),
@@ -641,6 +653,18 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
+        ],
+        // `StreamableIE._real_extract`'s dict.
+        "streamable" => &[
+            ("id", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
+            ("uploader", Assign),
+            ("timestamp", Assign),
+            ("duration", Assign),
+            ("view_count", Assign),
+            ("formats", Take),
         ],
         // A Video.js embed's `{'formats', 'subtitles'}`, then the page fields.
         "videojs" => &[

@@ -487,7 +487,7 @@ impl Extractor for GenericHttp {
         // Upstream sets the timestamp before inspecting the response.
         let timestamp = direct::last_modified(&response);
         let stamp = |mut info: VideoInfo| {
-            info.metadata.timestamp = timestamp;
+            info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
             if let Some(smuggled) = &smuggled {
                 // `force_videoid` and `headers['Referer']` (the formats'
                 // `http_headers`).
@@ -828,7 +828,10 @@ impl Extractor for GenericHttp {
         if entries.len() == 1 {
             // `merge_dicts(embed, info_dict)`: page fields fill missing values.
             let mut info = crate::info_order::mark_info(entries.pop().expect("one entry"), "html5");
-            info.metadata.timestamp = info.metadata.timestamp.or(timestamp);
+            info.metadata.timestamp = info
+                .metadata
+                .timestamp
+                .or(timestamp.map(crate::info::PyNumber::Int));
             info.metadata.description = crate::html::og_search_property(html, "description");
             if info.metadata.thumbnail.is_none() {
                 info.metadata.thumbnail = crate::html::og_search_property(html, "image");
@@ -992,7 +995,7 @@ impl GenericHttp {
                 }
                 info.metadata.age_limit = age_limit;
                 if count == 1 {
-                    info.metadata.timestamp = timestamp;
+                    info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
                     info.metadata.description = description.clone();
                     info.metadata.thumbnail = thumbnail.clone();
                 }
@@ -1035,7 +1038,7 @@ impl GenericHttp {
             }
             info.metadata.age_limit = age_limit;
             if count == 1 {
-                info.metadata.timestamp = timestamp;
+                info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
                 info.metadata.description = description.clone();
                 info.metadata.thumbnail = thumbnail.clone();
             }
@@ -1453,7 +1456,7 @@ fn videojs_info(
     info.direct = None;
     info.id = video_id;
     info.title = page_title(html).unwrap_or_else(|| "video".into());
-    info.metadata.timestamp = timestamp;
+    info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
     info.metadata.description = crate::html::og_search_property(html, "description");
     info.metadata.thumbnail = crate::html::og_search_property(html, "image");
     info.metadata.age_limit = crate::html::rta_search(html);
@@ -1645,7 +1648,7 @@ fn jwplayer_info(
         info.title = page_title(html).unwrap_or_else(|| "video".into());
     }
     if !keys.iter().any(|key| key == "timestamp") {
-        info.metadata.timestamp = timestamp;
+        info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
     }
     if !keys.iter().any(|key| key == "description") {
         info.metadata.description = crate::html::og_search_property(html, "description");
@@ -1693,16 +1696,7 @@ fn webpage_error(id: &str, error: Error) -> Error {
 
 /// `Unable to download webpage: ERR (caused by REPR)` for `Error::Webpage`.
 pub(crate) fn webpage_error_text(id: &str, error: &Error) -> String {
-    let text = crate::upstream_error_text(error);
-    let status = match error {
-        Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
-        _ => None,
-    };
-    let cause = match status {
-        Some(_) => format!("<{}>", text.replacen("HTTP Error ", "HTTPError ", 1)),
-        None => format!("TransportError({})", crate::batch::py_repr(&text)),
-    };
-    format!("[generic] {id}: Unable to download webpage: {text} (caused by {cause})")
+    super::request_error_text("generic", id, "webpage", error)
 }
 
 #[cfg(test)]

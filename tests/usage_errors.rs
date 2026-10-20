@@ -118,12 +118,12 @@ fn extractor_listings_and_color_policies_follow_upstream() {
     assert!(output.status.success());
     assert_eq!(
         String::from_utf8_lossy(&output.stdout),
-        "html5\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\ngeneric\n  https://example.com/v.mp4\n"
+        "html5\nStreamable\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\ngeneric\n  https://example.com/v.mp4\n"
     );
     let output = run(&["--extractor-descriptions"]);
     assert_eq!(
         String::from_utf8_lossy(&output.stdout),
-        "html5\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
+        "html5\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
     );
     let output = run(&["--color", "x", "https://example.com/"]);
     assert_eq!(output.status.code(), Some(2));

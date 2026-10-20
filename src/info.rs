@@ -384,7 +384,7 @@ pub struct Metadata {
     pub upload_date: Option<String>,
     /// UNIX seconds.
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub timestamp: Option<i64>,
+    pub timestamp: Option<PyNumber>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub availability: Option<String>,
     /// The best thumbnail known to exist, as upstream extractors report it.
@@ -401,7 +401,10 @@ impl Metadata {
             self.duration_string = Some(format_seconds(duration.whole_seconds()));
         }
         if self.upload_date.is_none() {
-            self.upload_date = self.timestamp.and_then(crate::dates::strftime_date);
+            self.upload_date = self
+                .timestamp
+                .map(PyNumber::floor_i64)
+                .and_then(crate::dates::strftime_date);
         }
     }
 
@@ -1038,6 +1041,14 @@ impl PyNumber {
         match self {
             Self::Int(value) => value.max(0) as u64,
             Self::Float(value) => value.max(0.0) as u64,
+        }
+    }
+
+    /// `int(math.floor(value))`, as `datetime.fromtimestamp` dates a float.
+    pub fn floor_i64(self) -> i64 {
+        match self {
+            Self::Int(value) => value,
+            Self::Float(value) => value.floor() as i64,
         }
     }
 
