@@ -364,6 +364,8 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
                     url: format.url.clone(),
                     byte_range: None,
                     encryption: None,
+                    path: None,
+                    duration: None,
                 }];
             }
         }

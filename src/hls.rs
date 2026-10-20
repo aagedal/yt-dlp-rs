@@ -519,6 +519,8 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 url,
                 byte_range: range,
                 encryption,
+                path: None,
+                duration: None,
             });
             discontinuity.push(discontinuities);
             has_map = true;
@@ -646,6 +648,8 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 url,
                 byte_range: range,
                 encryption,
+                path: None,
+                duration: None,
             });
             discontinuity.push(discontinuities);
             sequence = number.checked_add(1);

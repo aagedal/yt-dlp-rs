@@ -786,6 +786,8 @@ fn fetch_key(
         url: url.clone(),
         byte_range: None,
         encryption: None,
+        path: None,
+        duration: None,
     };
     let expected = validate(&response, &key_fragment, true)?;
     if expected.is_some_and(|length| length != 16) {

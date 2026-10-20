@@ -144,16 +144,28 @@ fn range(text: &str) -> Result<ByteRange> {
         .ok_or_else(|| bad("DASH byte range overflow"))?;
     Ok(ByteRange { offset, length })
 }
-fn fragment(base: &Url, source: Option<&str>, bytes: Option<&str>) -> Result<Fragment> {
+fn fragment(
+    base: &Url,
+    source: Option<&str>,
+    bytes: Option<&str>,
+    duration: Option<f64>,
+) -> Result<Fragment> {
     let url = match source {
         Some(source) => uri(base, source)?,
         None if bytes.is_some() && !base.path().ends_with('/') => base.clone(),
         _ => return Err(bad("DASH fragment has no resource URI")),
     };
+    // Upstream `location_key`: `url` for absolute HTTP(S) locations.
+    let absolute = |source: &str| {
+        let lower = source.get(..8).unwrap_or(source).to_ascii_lowercase();
+        lower.starts_with("http://") || lower.starts_with("https://")
+    };
     Ok(Fragment {
         url,
         byte_range: bytes.map(range).transpose()?,
         encryption: None,
+        path: source.filter(|source| !absolute(source)).map(str::to_owned),
+        duration,
     })
 }
 #[derive(Clone)]
@@ -387,7 +399,8 @@ fn expand_template(
     Ok(output)
 }
 
-fn times(address: &Address, duration_ns: Option<u128>) -> Result<Vec<(u64, u64)>> {
+/// Segment numbers, start times and durations (timescale units).
+fn times(address: &Address, duration_ns: Option<u128>) -> Result<Vec<(u64, u64, u64)>> {
     let scale = address.integer("timescale", 1, true)?;
     let pto = address.integer("presentationTimeOffset", 0, false)?;
     let first_number = address.integer("startNumber", 1, false)?;
@@ -439,7 +452,7 @@ fn times(address: &Address, duration_ns: Option<u128>) -> Result<Vec<(u64, u64)>
                 let number = first_number
                     .checked_add(times.len() as u64)
                     .ok_or_else(|| bad("DASH segment number overflow"))?;
-                times.push((number, current));
+                times.push((number, current, entry.d));
                 current = current
                     .checked_add(entry.d)
                     .ok_or_else(|| bad("DASH timeline overflow"))?;
@@ -471,7 +484,7 @@ fn times(address: &Address, duration_ns: Option<u128>) -> Result<Vec<(u64, u64)>
                         .ok_or_else(|| bad("DASH timeline overflow"))?,
                 )
                 .ok_or_else(|| bad("DASH timeline overflow"))?;
-            times.push((number, time));
+            times.push((number, time, segment_duration));
         }
     }
     Ok(times)
@@ -509,6 +522,8 @@ fn plans(
             url: base.clone(),
             byte_range: None,
             encryption: None,
+            path: None,
+            duration: None,
         }]);
     }
     let mut fragments = Vec::new();
@@ -524,14 +539,21 @@ fn plans(
                 return Err(bad("ambiguous DASH initialization"));
             }
             let init = expand_template(initialization, id, bandwidth, 0, 0, true)?;
-            fragments.push(fragment(base, Some(&init), None)?);
+            fragments.push(fragment(base, Some(&init), None, None)?);
         } else if let Some((source, range)) = &address.initialization {
-            fragments.push(fragment(base, source.as_deref(), range.as_deref())?);
+            fragments.push(fragment(base, source.as_deref(), range.as_deref(), None)?);
         }
-        // Like upstream, initialization is optional.
-        for (number, time) in schedule {
+        // Like upstream, initialization is optional; each fragment's duration
+        // is `d / timescale` (the constant `duration` without a timeline).
+        let scale = address.integer("timescale", 1, true)? as f64;
+        for (number, time, length) in schedule {
             let media = expand(media, id, bandwidth, number, time)?;
-            fragments.push(fragment(base, Some(&media), None)?);
+            fragments.push(fragment(
+                base,
+                Some(&media),
+                None,
+                Some(length as f64 / scale),
+            )?);
         }
     } else {
         address.integer("timescale", 1, true)?;
@@ -542,14 +564,21 @@ fn plans(
         }
         // Like upstream, initialization is optional.
         if let Some((source, bytes)) = &address.initialization {
-            fragments.push(fragment(base, source.as_deref(), bytes.as_deref())?);
+            fragments.push(fragment(base, source.as_deref(), bytes.as_deref(), None)?);
         }
         let segments = address
             .segments
             .as_ref()
             .filter(|segments| !segments.is_empty())
             .ok_or_else(|| bad("empty DASH SegmentList"))?;
-        if address.timeline.is_some() && times(address, duration_ns)?.len() != segments.len() {
+        let timeline = match address.timeline {
+            Some(_) => Some(times(address, duration_ns)?),
+            None => None,
+        };
+        if timeline
+            .as_ref()
+            .is_some_and(|timeline| timeline.len() != segments.len())
+        {
             return Err(bad("DASH timeline and SegmentList counts disagree"));
         }
         // Upstream includes every SegmentURL regardless of the Period end.
@@ -560,8 +589,24 @@ fn plans(
         {
             positive(duration)?;
         }
-        for (source, bytes) in segments {
-            fragments.push(fragment(base, source.as_deref(), bytes.as_deref())?);
+        // Upstream: timeline durations, else the constant `duration`.
+        let scale = address.integer("timescale", 1, true)? as f64;
+        let constant = address
+            .attrs
+            .get("duration")
+            .and_then(|value| positive(value).ok())
+            .map(|value| value as f64 / scale);
+        for (index, (source, bytes)) in segments.iter().enumerate() {
+            let duration = match &timeline {
+                Some(timeline) => Some(timeline[index].2 as f64 / scale),
+                None => constant,
+            };
+            fragments.push(fragment(
+                base,
+                source.as_deref(),
+                bytes.as_deref(),
+                duration,
+            )?);
         }
     }
     if fragments.len() > LIMIT {
@@ -874,9 +919,26 @@ pub(crate) fn parse_with_subtitles(
                 None => content_type.to_owned(),
             };
             // Upstream `**parse_codecs(codecs)`: no codec keys without one.
+            // Upstream keys: the MPD as `manifest_url`, the representation
+            // base for relative fragment paths, and `_merge_mpd_periods`'s
+            // `is_dash_periods`.
+            let mut extra = serde_json::Map::new();
+            extra.insert("manifest_url".into(), manifest.as_str().into());
+            if address.kind.is_some() {
+                // Without a BaseURL, upstream's base is the MPD's directory.
+                let directory;
+                let fragment_base = if explicit {
+                    base.as_str()
+                } else {
+                    directory = base.join(".")?;
+                    directory.as_str()
+                };
+                extra.insert("fragment_base_url".into(), fragment_base.into());
+            }
+            extra.insert("is_dash_periods".into(), true.into());
             formats.push(VideoFormat {
                 http_headers: None,
-                extra: Default::default(),
+                extra,
                 protocol: Some("http_dash_segments".into()),
                 vcodec: codecs.as_ref().map(|codecs| codecs.vcodec.clone()),
                 acodec: codecs.as_ref().map(|codecs| codecs.acodec.clone()),

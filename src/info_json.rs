@@ -117,12 +117,37 @@ pub fn upstream_shape(value: &mut Value) {
         for key in INTERNAL_FORMAT_KEYS {
             map.remove(key);
         }
-        if map
-            .get("protocol")
-            .and_then(Value::as_str)
-            .is_some_and(|protocol| protocol.starts_with("m3u8"))
-        {
+        let protocol = map.get("protocol").and_then(Value::as_str).unwrap_or("");
+        if protocol.starts_with("m3u8") {
             map.remove("fragments");
+        } else if let Some(Value::Array(fragments)) = map.get_mut("fragments") {
+            fragments
+                .iter_mut()
+                .filter_map(Value::as_object_mut)
+                .for_each(upstream_fragment);
+        }
+        // `_fill_sorting_fields` sets `vbr`/`abr` to the integer 0 for a
+        // missing stream.
+        for key in ["vbr", "abr"] {
+            if map.get(key).and_then(Value::as_f64) == Some(0.0) {
+                map.insert(key.into(), 0.into());
+            }
+        }
+    }
+    // Upstream fragment dicts: `path` (relative to `fragment_base_url`) or
+    // `url`, `duration`, and `byte_range` as `start`/`end` (exclusive).
+    fn upstream_fragment(fragment: &mut Map<String, Value>) {
+        if let Some(path) = fragment.remove("path") {
+            fragment.remove("url");
+            fragment.insert("path".into(), path);
+        }
+        if let Some(Value::Object(range)) = fragment.get_mut("byte_range") {
+            let offset = range.get("offset").and_then(Value::as_u64).unwrap_or(0);
+            let length = range.get("length").and_then(Value::as_u64).unwrap_or(0);
+            *range = Map::from_iter([
+                ("start".to_owned(), offset.into()),
+                ("end".to_owned(), offset.saturating_add(length).into()),
+            ]);
         }
     }
     let Some(map) = value.as_object_mut() else {
@@ -446,6 +471,8 @@ fn sanitize_loaded(value: Value) -> Value {
 /// `acodec` `"none"`, and a missing top-level `url`/`ext` (a merged
 /// selection) comes from the last format, to be replaced by format selection.
 fn normalize_loaded(map: &mut serde_json::Map<String, Value>) -> Result<()> {
+    // The top level holds the selected format's fields.
+    loaded_fragments(map)?;
     if let Some(Value::Array(formats)) = map.get_mut("formats") {
         for format in formats.iter_mut().filter_map(Value::as_object_mut) {
             let protocol = format
@@ -460,6 +487,7 @@ fn normalize_loaded(map: &mut serde_json::Map<String, Value>) -> Result<()> {
                     "loaded format protocol {protocol:?} is unsupported"
                 )));
             }
+            loaded_fragments(format)?;
             if !format.contains_key("stream_kind") {
                 let none = |key: &str| format.get(key).and_then(Value::as_str) == Some("none");
                 let kind = match (none("vcodec"), none("acodec")) {
@@ -483,6 +511,49 @@ fn normalize_loaded(map: &mut serde_json::Map<String, Value>) -> Result<()> {
                 .cloned()
         {
             map.insert(key.into(), value);
+        }
+    }
+    Ok(())
+}
+
+/// Upstream-shaped fragments: `path` resolves against `fragment_base_url`
+/// and a `start`/`end` byte range becomes this port's offset and length.
+fn loaded_fragments(format: &mut Map<String, Value>) -> Result<()> {
+    let base = format
+        .get("fragment_base_url")
+        .and_then(Value::as_str)
+        .map(url::Url::parse)
+        .transpose()
+        .map_err(|error| Error::InfoJson(format!("invalid fragment_base_url: {error}")))?;
+    let Some(Value::Array(fragments)) = format.get_mut("fragments") else {
+        return Ok(());
+    };
+    for fragment in fragments.iter_mut().filter_map(Value::as_object_mut) {
+        if !fragment.contains_key("url")
+            && let Some(path) = fragment.get("path").and_then(Value::as_str)
+        {
+            let base = base.as_ref().ok_or_else(|| {
+                Error::InfoJson("a fragment path needs the format's fragment_base_url".into())
+            })?;
+            let url = base
+                .join(path)
+                .map_err(|error| Error::InfoJson(format!("invalid fragment path: {error}")))?;
+            fragment.insert("url".into(), url.as_str().into());
+        }
+        if let Some(Value::Object(range)) = fragment.get_mut("byte_range")
+            && let (Some(start), Some(end)) = (
+                range.get("start").and_then(Value::as_u64),
+                range.get("end").and_then(Value::as_u64),
+            )
+        {
+            let length = end
+                .checked_sub(start)
+                .filter(|length| *length > 0)
+                .ok_or_else(|| Error::InfoJson("invalid fragment byte_range".into()))?;
+            *range = Map::from_iter([
+                ("offset".to_owned(), start.into()),
+                ("length".to_owned(), length.into()),
+            ]);
         }
     }
     Ok(())

@@ -165,13 +165,20 @@ pub struct HlsAes128 {
 }
 
 /// An ordered whole-resource or byte-range media fragment.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Fragment {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub encryption: Option<HlsAes128>,
     pub url: Url,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub byte_range: Option<ByteRange>,
+    /// The manifest's relative location, upstream's `path` (resolved
+    /// against the format's `fragment_base_url`); `None` when absolute.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path: Option<String>,
+    /// Upstream's fragment `duration` in seconds.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration: Option<f64>,
 }
 
 /// A direct source or finite manifest plan, with an extractor-assigned format ID.
