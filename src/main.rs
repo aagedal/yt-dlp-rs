@@ -3234,7 +3234,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     }
                     emit_listing(&mut stdout, &render_subtitles(&info))?;
                 }
-                if args.list_formats {
+                // `-f -`: interactive format selection lists the formats too.
+                let interactive = !list_only && format == Some("-");
+                if args.list_formats || interactive {
                     emit_listing(
                         &mut stdout,
                         &yt_dlp_rs::output::render_formats_listing(&info, !args.list_formats_old),
@@ -3243,7 +3245,40 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 // Upstream `process_video_result` format selection; the info
                 // dict is updated with the last selected format.
                 let mut selections = Vec::new();
-                if !list_only {
+                if interactive {
+                    // `input('\nEnter format selector ...')` until a selector
+                    // selects something; an empty answer is the default.
+                    loop {
+                        write!(
+                            stdout,
+                            "\nEnter format selector (Press ENTER for default, or Ctrl+C to quit): "
+                        )?;
+                        stdout.flush()?;
+                        let mut answer = String::new();
+                        if io::stdin().read_line(&mut answer)? == 0 {
+                            return Err(
+                                EntryExtractionError("EOF when reading a line".into()).into()
+                            );
+                        }
+                        let answer = answer.strip_suffix('\n').unwrap_or(&answer);
+                        let requested = (!answer.is_empty()).then_some(answer);
+                        match downloader.select_videos(&info, requested) {
+                            Ok(selected) if !selected.is_empty() => {
+                                selections = selected;
+                                break;
+                            }
+                            // Reported without counting as a failure.
+                            Err(yt_dlp_rs::Error::Reported(message)) => {
+                                report_error!("ERROR: {message}");
+                            }
+                            Ok(_) | Err(yt_dlp_rs::Error::FormatSelection(_)) => {
+                                report_error!("ERROR: Requested format is not available");
+                            }
+                            Err(error) => return Err(error.into()),
+                        }
+                    }
+                    info = selections.last().cloned().expect("a nonempty selection");
+                } else if !list_only {
                     selections = downloader.select_videos(&info, format).map_err(
                         |error| -> Box<dyn std::error::Error> {
                             match error {
@@ -3336,6 +3371,37 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         if !match_filters.is_empty() {
                             match match_filters.check(&info, false)? {
                                 MatchOutcome::Pass => {}
+                                // `_match_entry`'s `Download "FILE"? (Y/n): `.
+                                MatchOutcome::Ask => {
+                                    let filename =
+                                        prepare_media(&templates, &info, &template_options)
+                                            .map(|path| path.display().to_string())
+                                            .unwrap_or_default();
+                                    loop {
+                                        let mut stdout = io::stdout().lock();
+                                        write!(stdout, "Download \"{filename}\"? (Y/n): ")?;
+                                        stdout.flush()?;
+                                        drop(stdout);
+                                        let mut reply = String::new();
+                                        if io::stdin().read_line(&mut reply)? == 0 {
+                                            return Err(yt_dlp_rs::Error::Reported(
+                                                "EOF when reading a line".into(),
+                                            )
+                                            .into());
+                                        }
+                                        match yt_dlp_rs::batch::py_strip(&reply.to_lowercase()) {
+                                            "y" | "" => break,
+                                            "n" => {
+                                                let title = Some(info.title.as_str())
+                                                    .filter(|title| !title.is_empty())
+                                                    .unwrap_or(&info.id);
+                                                screen!("[download] Skipping {title}");
+                                                return Ok(());
+                                            }
+                                            _ => {}
+                                        }
+                                    }
+                                }
                                 MatchOutcome::Reject(reason) => {
                                     screen!("[download] {reason}");
                                     return Ok(());
@@ -7179,7 +7245,7 @@ fn prefilter(
     }
     let mut keep = |info: &yt_dlp_rs::VideoInfo| -> yt_dlp_rs::Result<Option<bool>> {
         Ok(match filters.check(info, true)? {
-            MatchOutcome::Pass => Some(true),
+            MatchOutcome::Pass | MatchOutcome::Ask => Some(true),
             MatchOutcome::Reject(reason) => {
                 screen!("[download] {reason}");
                 Some(false)

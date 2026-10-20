@@ -690,6 +690,8 @@ pub struct MatchFilters {
     filters: Vec<Conjunction>,
     breaking: Vec<Conjunction>,
     selection: EntrySelection,
+    /// `--match-filters -`: ask whether to download each passing video.
+    interactive: bool,
 }
 
 /// The outcome for one video.
@@ -700,11 +702,14 @@ pub enum MatchOutcome {
     Reject(String),
     /// A `--break-match-filters` rejection: cancel with this reason.
     Break(String),
+    /// `--match-filters -` (upstream `NO_DEFAULT`): ask the user.
+    Ask,
 }
 
 impl MatchFilters {
     /// Parse repeated `--match-filters` and `--break-match-filters` values.
-    /// Like upstream, filters are a set; `-` (interactive) is unsupported.
+    /// Like upstream, filters are a set; `-` among the filters asks before
+    /// each download (unsupported among the breaking filters).
     pub fn parse(filters: &[String], breaking: &[String]) -> Result<Self> {
         let parse = |values: &[String]| -> Result<Vec<Conjunction>> {
             let mut seen = std::collections::HashSet::new();
@@ -713,17 +718,26 @@ impl MatchFilters {
                 .filter(|value| seen.insert(value.as_str()))
                 .map(|value| {
                     if value == "-" {
-                        Err(invalid("interactive --match-filters - is unsupported"))
+                        Err(invalid(
+                            "interactive --break-match-filters - is unsupported",
+                        ))
                     } else {
                         Conjunction::parse(value)
                     }
                 })
                 .collect()
         };
+        let interactive = filters.iter().any(|value| value == "-");
+        let filters: Vec<String> = filters
+            .iter()
+            .filter(|value| *value != "-")
+            .cloned()
+            .collect();
         Ok(Self {
-            filters: parse(filters)?,
+            filters: parse(&filters)?,
             breaking: parse(breaking)?,
             selection: EntrySelection::default(),
+            interactive,
         })
     }
 
@@ -734,7 +748,10 @@ impl MatchFilters {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.filters.is_empty() && self.breaking.is_empty() && self.selection.is_empty()
+        self.filters.is_empty()
+            && self.breaking.is_empty()
+            && self.selection.is_empty()
+            && !self.interactive
     }
 
     fn rejection(
@@ -793,6 +810,7 @@ impl MatchFilters {
         }
         Ok(match Self::rejection(&self.filters, dict, &incomplete)? {
             Some(reason) => reject(reason),
+            None if self.interactive && !before_selection => MatchOutcome::Ask,
             None => MatchOutcome::Pass,
         })
     }
