@@ -264,3 +264,45 @@ fn simulation_skip_download_validation_and_resets() {
     ));
     assert_eq!(log(skipped.path()), "new\n");
 }
+
+#[test]
+fn use_postprocessor_exec_runs_before_exec_commands_of_its_stage() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = cli(
+        &[
+            "--exec",
+            "after_move:echo exec >> log #",
+            "--use-postprocessor",
+            "ExecPP:exec_cmd=echo added %(id)q >> log;when=after_move",
+            "--use-postprocessor",
+            "Exec:exec_cmd=echo default >> log #",
+            &server.url,
+        ],
+        directory.path(),
+    );
+    assert!(output.status.success(), "{}", stderr(&output));
+    assert_eq!(log(directory.path()), "default\nadded clip\nexec\n");
+    for (value, message) in [
+        (
+            "FFmpegMetadata",
+            "postprocessor \"FFmpegMetadata\" is not available natively",
+        ),
+        (
+            "Exec:when=video",
+            "the Exec postprocessor needs exec_cmd=COMMAND",
+        ),
+        ("Exec:oops", "invalid --use-postprocessor argument \"oops\""),
+    ] {
+        let output = cli(
+            &["--use-postprocessor", value, &server.url],
+            directory.path(),
+        );
+        assert!(!output.status.success(), "{value}");
+        assert!(
+            stderr(&output).contains(message),
+            "{value}: {}",
+            stderr(&output)
+        );
+    }
+}

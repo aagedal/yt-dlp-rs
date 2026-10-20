@@ -142,6 +142,9 @@ struct Args {
     /// Display sent and read HTTP traffic
     #[arg(long)]
     print_traffic: bool,
+    /// Enable a postprocessor by NAME with ARGS (NAME=VALUE pairs separated by ";", including "when"); natively only Exec (exec_cmd=CMD)
+    #[arg(long, value_name = "NAME[:ARGS]")]
+    use_postprocessor: Vec<String>,
     /// Resume partially downloaded files/fragments (default)
     #[arg(short = 'c', long = "continue", overrides_with_all = ["continue_partial", "no_continue"])]
     continue_partial: bool,
@@ -2338,9 +2341,51 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // --exec-before-download is ignored when "--exec before_dl:" is given.
     let exec_values = after_reset("exec", "no_exec");
     let before_download = after_reset("exec_before_download", "no_exec_before_download");
-    let mut exec_specs: Vec<(Option<&str>, &str)> = exec_values
+    // Upstream `--use-postprocessor NAME[:ARGS]` definitions come before
+    // the other postprocessors of their stage.
+    let mut added_pps: Vec<(String, String)> = Vec::new();
+    for value in &args.use_postprocessor {
+        let (name, rest) = value.split_once(':').unwrap_or((value, ""));
+        let key = name.strip_suffix("PP").unwrap_or(name);
+        let mut when = "post_process".to_owned();
+        let mut exec_cmd = None;
+        for item in rest.split(';').filter(|_| !rest.is_empty()) {
+            let (field, setting) = item.split_once('=').ok_or_else(|| {
+                usage(format!(
+                    "invalid --use-postprocessor argument \"{item}\" (expected NAME=VALUE)"
+                ))
+            })?;
+            match field {
+                "when" => when = setting.to_owned(),
+                "exec_cmd" if key == "Exec" => exec_cmd = Some(setting.to_owned()),
+                other => {
+                    return Err(yt_dlp_rs::Error::Reported(format!(
+                        "postprocessor argument {other:?} of {key} is not supported natively"
+                    ))
+                    .into());
+                }
+            }
+        }
+        match (key, exec_cmd) {
+            ("Exec", Some(command)) => added_pps.push((when, command)),
+            ("Exec", None) => {
+                return Err(yt_dlp_rs::Error::Reported(
+                    "the Exec postprocessor needs exec_cmd=COMMAND".into(),
+                )
+                .into());
+            }
+            (key, _) => {
+                return Err(yt_dlp_rs::Error::Reported(format!(
+                    "postprocessor {key:?} is not available natively (plugins are not supported)"
+                ))
+                .into());
+            }
+        }
+    }
+    let mut exec_specs: Vec<(Option<&str>, &str)> = added_pps
         .iter()
-        .map(|value| (None, value.as_str()))
+        .map(|(when, command)| (Some(when.as_str()), command.as_str()))
+        .chain(exec_values.iter().map(|value| (None, value.as_str())))
         .collect();
     let mut exec = ExecCommands::parse(&exec_specs, &template_options)?;
     if !before_download.is_empty() {
