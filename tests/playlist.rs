@@ -488,10 +488,11 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
     // Only extraction probes; -J implies simulation.
     assert_eq!(server.count("/three.mp4"), 1);
     // A single video prints the same object as -j, and both flags print both.
-    let single = success(&server.cli("/one.mp4", &["-J"]));
-    let json = success(&server.cli("/one.mp4", &["-j"]));
+    // (A fixed User-Agent keeps the formats' `http_headers` comparable.)
+    let single = success(&server.cli("/one.mp4", &["-J", "--user-agent", "fixture"]));
+    let json = success(&server.cli("/one.mp4", &["-j", "--user-agent", "fixture"]));
     assert_eq!(single, json);
-    let both = success(&server.cli("/one.mp4", &["-j", "-J"]));
+    let both = success(&server.cli("/one.mp4", &["-j", "-J", "--user-agent", "fixture"]));
     assert_eq!(both, format!("{json}{json}"));
 }
 

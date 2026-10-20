@@ -87,6 +87,8 @@ impl Server {
     fn cli(&self, dir: &Path, path: &str, args: &[&str]) -> Output {
         Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
             .current_dir(dir)
+            // A fixed User-Agent keeps `http_headers` comparable across runs.
+            .args(["--user-agent", "fixture"])
             .args(args)
             .arg(self.url(path))
             .output()

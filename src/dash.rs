@@ -819,6 +819,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
             };
             // Upstream `**parse_codecs(codecs)`: no codec keys without one.
             formats.push(VideoFormat {
+                http_headers: None,
                 protocol: Some("http_dash_segments".into()),
                 vcodec: codecs.as_ref().map(|codecs| codecs.vcodec.clone()),
                 acodec: codecs.as_ref().map(|codecs| codecs.acodec.clone()),

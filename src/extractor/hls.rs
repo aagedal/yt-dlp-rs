@@ -264,6 +264,7 @@ pub(crate) fn from_response(
         } => {
             // A media playlist is returned as one format (per section).
             let format = VideoFormat {
+                http_headers: None,
                 protocol: Some("m3u8_native".into()),
                 vcodec: None,
                 acodec: None,
@@ -354,6 +355,7 @@ pub(crate) fn from_response(
                 let codecs = variant.codecs.unwrap_or_default();
                 let known = |codec: String| (!codec.is_empty()).then_some(codec);
                 let format = VideoFormat {
+                    http_headers: None,
                     protocol: Some("m3u8_native".into()),
                     vcodec: known(codecs.vcodec),
                     acodec: known(codecs.acodec),
@@ -418,6 +420,7 @@ pub(crate) fn from_response(
                     ));
                 }
                 let format = VideoFormat {
+                    http_headers: None,
                     protocol: Some("m3u8_native".into()),
                     vcodec: Some("none".into()),
                     acodec: None,

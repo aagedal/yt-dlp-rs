@@ -117,6 +117,7 @@ pub(crate) fn with_format(mut info: VideoInfo, mime: &str) -> VideoInfo {
     }
     info.format_id = Some(format_id.clone());
     info.formats = vec![crate::VideoFormat {
+        http_headers: None,
         protocol: None,
         vcodec: (kind == "audio").then(|| "none".to_owned()),
         acodec: None,

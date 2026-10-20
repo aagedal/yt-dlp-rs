@@ -177,6 +177,9 @@ pub struct Fragment {
 /// A direct source or finite manifest plan, with an extractor-assigned format ID.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoFormat {
+    /// Upstream `_calc_headers`: the request headers for this format.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub http_headers: Option<serde_json::Map<String, serde_json::Value>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub audio_group: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -809,10 +812,24 @@ impl VideoInfo {
         self.stream_kind = StreamKind::Standalone;
         self.fragments.clear();
         self.extra.remove("format_index");
+        // The merged dict has no `http_headers`.
+        self.extra.remove("http_headers");
         self.requested_formats = formats;
     }
 
     fn apply_single(&mut self, selected: &VideoFormat) {
+        // `info_dict.update(format)`: the format's request headers.
+        match &selected.http_headers {
+            Some(headers) => {
+                self.extra.insert(
+                    "http_headers".into(),
+                    serde_json::Value::Object(headers.clone()),
+                );
+            }
+            None => {
+                self.extra.remove("http_headers");
+            }
+        }
         self.fragments = selected.fragments.clone();
         self.url = selected.url.clone();
         self.ext = selected.ext.clone();
@@ -1181,6 +1198,7 @@ mod tests {
     ) -> VideoFormat {
         // Like extracted formats, separate streams name their missing codec.
         VideoFormat {
+            http_headers: None,
             protocol: None,
             vcodec: (kind == StreamKind::AudioOnly).then(|| "none".into()),
             acodec: (kind == StreamKind::VideoOnly).then(|| "none".into()),

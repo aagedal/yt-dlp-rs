@@ -90,6 +90,7 @@ impl Candidate {
     fn into_format(self, url: Url) -> VideoFormat {
         let codecs = self.codecs.as_ref();
         VideoFormat {
+            http_headers: None,
             protocol: None,
             vcodec: codecs.map(|codecs| codecs.vcodec.clone()),
             acodec: codecs.map(|codecs| codecs.acodec.clone()),

@@ -100,7 +100,7 @@ fn header_lines(network: &Network<'_>, info: &VideoInfo, url: &url::Url) -> Stri
 }
 
 /// Python `str.title()` for header names, as `HTTPHeaderDict` stores them.
-fn py_title(name: &str) -> String {
+pub(crate) fn py_title(name: &str) -> String {
     let mut previous_letter = false;
     name.chars()
         .map(|c| {

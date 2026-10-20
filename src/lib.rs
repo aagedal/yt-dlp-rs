@@ -112,6 +112,9 @@ pub struct YoutubeDl {
     prefer_best: bool,
     /// Global request headers and proxy for FFmpeg network inputs.
     headers: reqwest::header::HeaderMap,
+    /// Upstream `params['http_headers']` as `_calc_headers` starts from it
+    /// (title-cased names in order).
+    info_headers: Vec<(String, String)>,
     proxy: Option<String>,
     ffmpeg_settings: ffmpeg_fd::Settings,
     /// `--http-chunk-size` and `--test`.
@@ -359,6 +362,15 @@ impl YoutubeDl {
             format_sort: FormatSortOptions::default(),
             prefer_best: false,
             headers: headers.clone(),
+            info_headers: headers
+                .iter()
+                .map(|(name, value)| {
+                    (
+                        ffmpeg_fd::py_title(name.as_str()),
+                        String::from_utf8_lossy(value.as_bytes()).into_owned(),
+                    )
+                })
+                .collect(),
             proxy: proxy_url,
             ffmpeg_settings: ffmpeg_fd::Settings::default(),
             http_chunk_size: None,
@@ -1060,6 +1072,35 @@ impl YoutubeDl {
             entry.metadata.fill_chapters();
             entry.metadata.sanitize_thumbnails();
             info::fill_format_fields(&mut entry.formats);
+            // `format['http_headers'] = _calc_headers(ChainMap(format, info))`;
+            // HTML5 media carries the page as its Referer.
+            let html5 = entry.extractor_key == "HTML5MediaEmbed";
+            for format in &mut entry.formats {
+                let mut own: Vec<(String, serde_json::Value)> = format
+                    .http_headers
+                    .take()
+                    .map(|headers| headers.into_iter().collect())
+                    .unwrap_or_else(|| {
+                        if html5 {
+                            vec![("Referer".into(), entry.webpage_url.to_string().into())]
+                        } else {
+                            Vec::new()
+                        }
+                    });
+                let mut merged: Vec<(String, serde_json::Value)> = self
+                    .info_headers
+                    .iter()
+                    .map(|(name, value)| (name.clone(), value.clone().into()))
+                    .collect();
+                for (name, value) in own.drain(..) {
+                    let name = ffmpeg_fd::py_title(&name);
+                    match merged.iter_mut().find(|(existing, _)| *existing == name) {
+                        Some(entry) => entry.1 = value,
+                        None => merged.push((name, value)),
+                    }
+                }
+                format.http_headers = (!merged.is_empty()).then(|| merged.into_iter().collect());
+            }
             let extractor: Vec<&str> = entry
                 .format_sort_fields
                 .iter()

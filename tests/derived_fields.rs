@@ -96,3 +96,34 @@ fn entries_and_results_carry_upstreams_derived_keys() {
     );
     assert_eq!(String::from_utf8_lossy(&output.stdout), "two-1\n");
 }
+
+/// Upstream `_calc_headers`: the global headers, then the format's own (an
+/// HTML5 source's page Referer); merged selections have none at the top.
+#[test]
+fn formats_carry_their_request_headers() {
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    let page = format!("{origin}/two.html");
+    let output = run(
+        directory.path(),
+        &[
+            "-s",
+            "--user-agent",
+            "UA/1",
+            "--add-headers",
+            "x-a:1",
+            "--print",
+            "%(http_headers)j",
+            "-I",
+            "1",
+            &page,
+        ],
+    );
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout),
+        format!(
+            "{{\"User-Agent\": \"UA/1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \
+             \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-A\": \"1\", \"Referer\": \"{page}\"}}\n"
+        )
+    );
+}
