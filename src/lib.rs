@@ -1791,13 +1791,28 @@ impl YoutubeDl {
             None => target.to_owned(),
         };
         let mut raw = serde_json::Map::new();
-        raw.insert("_type".into(), "url_transparent".into());
-        raw.insert("url".into(), shown.clone().into());
+        // An embed's `url_result(url, ie)` (`ie_key` set) and its
+        // `add_default_extra_info(info, ie, None)`.
+        let ie_key = marker["ie_key"].as_str();
+        if let Some(ie_key) = ie_key {
+            raw.insert("ie_key".into(), ie_key.into());
+            raw.insert("_type".into(), "url".into());
+            raw.insert("url".into(), shown.clone().into());
+            raw.insert("extractor".into(), ie_key.into());
+            raw.insert("extractor_key".into(), ie_key.into());
+        } else {
+            raw.insert("_type".into(), "url_transparent".into());
+            raw.insert("url".into(), shown.clone().into());
+        }
         if let Some(fields) = marker["fields"].as_object() {
             raw.extend(fields.clone());
         }
         raw.insert("__x_forwarded_for_ip".into(), Value::Null);
         let mut full = raw.clone();
+        if ie_key.is_some() {
+            // `ie.get_temp_id(url)`.
+            full.insert("id".into(), entry.id.clone().into());
+        }
         full.insert("webpage_url".into(), shown.clone().into());
         full.insert("original_url".into(), shown.clone().into());
         if let Ok(url) = Url::parse(&shown) {
@@ -1830,8 +1845,10 @@ impl YoutubeDl {
             "__last_playlist_index".into(),
             number(entry.last_playlist_index),
         );
-        full.insert("extractor".into(), "generic".into());
-        full.insert("extractor_key".into(), "Generic".into());
+        if ie_key.is_none() {
+            full.insert("extractor".into(), "generic".into());
+            full.insert("extractor_key".into(), "Generic".into());
+        }
         full.insert(
             "playlist_autonumber".into(),
             number(entry.playlist_autonumber),

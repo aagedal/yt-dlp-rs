@@ -671,9 +671,19 @@ impl Extractor for GenericHttp {
             return Ok(Some(rss_playlist(feed, url, &page_url)));
         }
         crate::screen::debug("Looking for embeds");
+        // Other extractors' `_EMBED_REGEX` iframes (`StreamableIE`).
+        let embeds = super::streamable::embed_urls(url, html);
         let Some(media) = parse_page(&page_url, html)? else {
+            if !embeds.is_empty() {
+                return self.embed_results(client, url, &page_url, html, timestamp, embeds);
+            }
             return self.found_urls(client, url, &page_url, html, timestamp);
         };
+        if !embeds.is_empty() {
+            return Err(unsupported(
+                "pages with both HTML5 media and Streamable embeds are not supported natively",
+            ));
+        }
         let mut entries = Vec::new();
         for (index, entry) in media.entries.iter().enumerate() {
             let mut formats = Vec::new();
@@ -866,6 +876,86 @@ impl Extractor for GenericHttp {
 }
 
 impl GenericHttp {
+    /// `_extract_embeds`' result for other extractors' embeds: one is
+    /// followed as a `url` result (the page fields are dropped), several
+    /// are `url` entries of the page's playlist that
+    /// [`crate::YoutubeDl::resolve_entry`] extracts when processed.
+    fn embed_results(
+        &self,
+        client: &Client,
+        url: &Url,
+        page_url: &Url,
+        html: &str,
+        timestamp: Option<i64>,
+        embeds: Vec<Url>,
+    ) -> Result<Option<ExtractResult>> {
+        crate::screen::debug(&match embeds.len() {
+            1 => "Identified a Streamable embed".to_owned(),
+            count => format!("Identified {count} Streamable embeds"),
+        });
+        if let [embed] = embeds.as_slice() {
+            return super::streamable::Streamable.extract_result(client, embed);
+        }
+        let entries = embeds
+            .into_iter()
+            .map(|embed| {
+                let mut info = direct::build_at(embed.clone(), &embed, String::new());
+                info.formats.clear();
+                info.direct = None;
+                info.id = super::streamable::temp_id(embed.as_str()).unwrap_or_default();
+                info.extra.insert(
+                    crate::TRANSPARENT.into(),
+                    serde_json::json!({
+                        "url": embed.as_str(),
+                        "force_videoid": null,
+                        "fields": {},
+                        "ie_key": "Streamable",
+                    }),
+                );
+                info
+            })
+            .collect();
+        // `playlist_result(entries, **info_dict)`.
+        let mut extra = serde_json::Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.to_owned(),
+            "html5-playlist".into(),
+        );
+        if let Some(timestamp) = timestamp {
+            extra.insert("timestamp".into(), timestamp.into());
+            if let Some(date) = crate::dates::strftime_date(timestamp) {
+                extra.insert("upload_date".into(), date.into());
+            }
+        }
+        for (key, value) in [
+            (
+                "description",
+                crate::html::og_search_property(html, "description").map(serde_json::Value::from),
+            ),
+            (
+                "thumbnail",
+                crate::html::og_search_property(html, "image").map(serde_json::Value::from),
+            ),
+            (
+                "age_limit",
+                crate::html::rta_search(html).map(serde_json::Value::from),
+            ),
+        ] {
+            if let Some(value) = value {
+                extra.insert(key.into(), value);
+            }
+        }
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: crate::screen::generic_id(url.as_str()),
+            title: page_title(html).unwrap_or_else(|| "video".into()),
+            webpage_url: page_url.clone(),
+            extractor: "generic".into(),
+            extractor_key: "Generic".into(),
+            entries,
+            extra,
+        })))
+    }
+
     /// `_extract_embeds`' URL patterns for a page without HTML5 media:
     /// direct media URLs as entries (`merge_dicts(entry, info_dict)` for
     /// one), or a refresh/`twitter:player` redirect.

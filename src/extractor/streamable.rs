@@ -20,6 +20,38 @@ pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
 }
 
+/// `_match_id`'s ID of a suitable URL.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    VALID_URL.captures(url).map(|found| found["id"].to_owned())
+}
+
+/// `_EMBED_REGEX` (`q1` is one quote character, so the backreference is
+/// an alternation of both).
+static EMBED: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r#"<iframe[^>]+\bsrc=(?:"(?P<a>(?:https?:)?//streamable\.com/.+?)"|'(?P<b>(?:https?:)?//streamable\.com/.+?)')"#,
+    )
+    .unwrap()
+});
+
+/// `_extract_embed_urls` under `orderedSet`: the page's suitable iframe
+/// URLs, unescaped and joined to `url`, without repeats.
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    let mut found: Vec<Url> = Vec::new();
+    for captures in EMBED.captures_iter(webpage) {
+        let Some(group) = captures.name("a").or_else(|| captures.name("b")) else {
+            continue;
+        };
+        let Ok(embed) = url.join(&crate::html::unescape_html(group.as_str())) else {
+            continue;
+        };
+        if suitable(embed.as_str()) && !found.contains(&embed) {
+            found.push(embed);
+        }
+    }
+    found
+}
+
 fn int_or_none(value: Option<&Value>) -> Value {
     match value {
         Some(Value::Number(number)) => number
@@ -169,5 +201,22 @@ mod tests {
         assert!(suitable("https://streamable.com/e/dnd1"));
         assert!(suitable("https://streamable.com/s/okkqk/drxjds"));
         assert!(!suitable("https://example.com/dnd1"));
+    }
+
+    #[test]
+    fn embeds_follow_upstream_embed_regex() {
+        let page = Url::parse("http://blog.invalid/post").unwrap();
+        let html = r#"<iframe src='//streamable.com/e/a1?x=1&amp;y=2'></iframe>
+            <iframe width="1" src="https://streamable.com/s/b2/c"></iframe>
+            <iframe src="//streamable.com/e/a1?x=1&amp;y=2"></iframe>
+            <iframe src="https://streamable.com/"></iframe><a src="https://streamable.com/z">"#;
+        let found: Vec<String> = embed_urls(&page, html).iter().map(Url::to_string).collect();
+        assert_eq!(
+            found,
+            [
+                "http://streamable.com/e/a1?x=1&y=2",
+                "https://streamable.com/s/b2/c"
+            ]
+        );
     }
 }

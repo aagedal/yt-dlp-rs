@@ -191,7 +191,8 @@
       "status": "partial",
       "upstream": [
         "yt_dlp/extractor/streamable.py",
-        "yt_dlp/extractor/common.py"
+        "yt_dlp/extractor/common.py",
+        "yt_dlp/extractor/generic.py"
       ],
       "rust": [
         "src/extractor/streamable.rs",
@@ -203,7 +204,7 @@
         "tools/capture_sites.py",
         "tools/test_capture_sites.py"
       ],
-      "scope": "StreamableIE _VALID_URL and ajax API extraction (status, reddit_title/title, files as formats with parse_codecs codecs, owner, float date_added/duration, plays) compared with pinned upstream output through the fixture proxy; _EMBED_REGEX iframe embeds are not detected"
+      "scope": "StreamableIE _VALID_URL and ajax API extraction (status, reddit_title/title, files as formats with parse_codecs codecs, owner, float date_added/duration, plays) compared with pinned upstream output through the fixture proxy; _EMBED_REGEX iframes on generic pages via _extract_embeds url results (single followed, several as a playlist with flat url entries); pages mixing HTML5 media and embeds are an unsupported error"
     },
     {
       "name": "youtube",

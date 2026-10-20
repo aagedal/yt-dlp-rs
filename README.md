@@ -73,8 +73,9 @@ Supported today:
   `width`, `height`, and fallback `res` attributes. Ranking uses the smaller known
   dimension, or the only known one; unknown resolution sorts lowest. Ties select
   the last declaration for best/default and the first for worst.
-- Streamable videos (`streamable.com/ID`) through the site's video JSON, compared
-  with pinned upstream output on saved responses.
+- Streamable videos (`streamable.com/ID`) through the site's video JSON, and
+  their iframe embeds on other pages (one is followed; several form a
+  playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes
   canonicalized to a watch page (actual live content is rejected). Direct combined or separate audio/video MP4/M4A/WebM formats in
   `ytInitialPlayerResponse` are eligible;
