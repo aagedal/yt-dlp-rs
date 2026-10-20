@@ -256,6 +256,18 @@
       "scope": "BloggerIE VIDEO_CONFIG (unicode_escape) streams as formats and _EMBED_REGEX iframes on generic pages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "cozytv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cozytv.py"
+      ],
+      "rust": [
+        "src/extractor/cozytv.rs",
+        "tests/fixtures/sites/cozytv/"
+      ],
+      "scope": "CozyTVIE replay cache metadata (title/uploader/date/duration/was_live) and CDN HLS formats and subtitles compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "ebaumsworld",
       "status": "partial",
       "upstream": [

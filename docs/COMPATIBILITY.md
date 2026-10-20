@@ -383,6 +383,11 @@ upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
 format IDs), the iframe ID as ID and title, the thumbnail and the first
 stream's `dur`; its `_EMBED_REGEX` iframes join the generic embed detection.
 
+CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
+`USER-ID` ID, the cached replay JSON's title (else the generic title), `user`
+(else the URL user) uploader, `unified_strdate` date, raw duration and
+`was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
+
 EbaumsWorld videos (`ebaumsworld.com/videos/SLUG/ID`) follow upstream
 `EbaumsWorldIE`: the player config XML (`Downloading XML`) as an untyped
 result, empty elements as `None` (a generic title for an empty title) and a

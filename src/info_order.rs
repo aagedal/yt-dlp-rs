@@ -1105,6 +1105,17 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("thumbnail", Take),
         ],
         "graspop-untitled" => &[("id", Take), ("formats", Take), ("thumbnail", Take)],
+        // `CozyTVIE._real_extract`'s dict.
+        "cozytv" => &[
+            ("id", Take),
+            ("title", Take),
+            ("uploader", Take),
+            ("upload_date", Assign),
+            ("was_live", Take),
+            ("duration", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),
