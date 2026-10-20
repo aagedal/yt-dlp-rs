@@ -10,7 +10,8 @@ removed; nothing else is normalized.
 
 The cases cover GenericIE's typed direct link (`clip.mp4`), its untyped
 "URL could be a direct video link" result (`clip.qqq`), a single HTML5 embed
-(`one.html`), an HTML5 playlist with a `<source>` (`three.html`), an HLS
+(`one.html`), one with a poster, subtitle tracks and Open Graph metadata
+(`rich.html`), an HTML5 playlist with a `<source>` (`three.html`), an HLS
 master with subtitle renditions, a typed and an untyped (`#EXTM3U` body,
 `text/plain`) media playlist, and DASH manifests with segmented and direct text
 tracks.

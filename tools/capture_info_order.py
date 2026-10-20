@@ -32,8 +32,9 @@ CONTENT_TYPES = {
     '.m3u8': 'application/vnd.apple.mpegurl',
     '.mpd': 'application/dash+xml',
     '.vtt': 'text/vtt',
+    '.jpg': 'image/jpeg',
 }
-CASES = ['clip.mp4', 'clip.qqq', 'one.html', 'three.html', 'master.m3u8',
+CASES = ['clip.mp4', 'clip.qqq', 'one.html', 'rich.html', 'three.html', 'master.m3u8',
          'video.m3u8', 'plain.m3u8', 'segmented.mpd', 'text.mpd']
 
 

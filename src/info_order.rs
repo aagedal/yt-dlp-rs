@@ -360,6 +360,7 @@ const PROCESSED_INFO_KEYS: &[&str] = &[
     "__last_playlist_index",
     "playlist_autonumber",
     "thumbnail",
+    "thumbnails",
     "display_id",
     "fulltitle",
     "duration_string",
@@ -531,6 +532,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         "html5" => &[
             ("formats", Take),
             ("subtitles", Dict),
+            ("thumbnail", Take),
             ("id", Take),
             ("title", Take),
             ("_old_archive_ids", Take),
@@ -604,7 +606,9 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         replay.assign("playlist");
         replay.assign("playlist_index");
     }
-    // `process_video_result` and `_fill_common_fields`.
+    // `process_video_result`: `_sanitize_thumbnails`, then `thumbnail`
+    // and `_fill_common_fields`.
+    replay.take("thumbnails");
     replay.take("thumbnail");
     replay.assign("display_id");
     replay.assign("fulltitle");
