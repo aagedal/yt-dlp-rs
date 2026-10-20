@@ -284,6 +284,16 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        // `_extract_kvs`' format.
+        "kvs" => &[
+            ("url", Take),
+            ("format_id", Take),
+            ("ext", Take),
+            ("width", Take),
+            ("height", Take),
+            ("http_headers", Take),
+            ("quality", Take),
+        ],
         // `_parse_smil_formats_and_subtitles`' HTTP source.
         "smil-http" => &[
             ("url", Take),
@@ -459,6 +469,13 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         && tbr.fract() == 0.0
     {
         out.insert("tbr".into(), (tbr as i64).into());
+    }
+    // `_extract_kvs`' `quality = 1`.
+    if shape == "kvs"
+        && let Some(quality) = out.get("quality").and_then(Value::as_f64)
+        && quality.fract() == 0.0
+    {
+        out.insert("quality".into(), (quality as i64).into());
     }
     out
 }
@@ -692,6 +709,27 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         ],
         // A media URL found on the page (`_extract_embeds`' patterns), then
         // `merge_dicts(entry, info_dict)`'s page fields.
+        // `_extract_kvs`' dict, then `merge_dicts`' page fields.
+        "kvs" => &[
+            ("id", Take),
+            ("display_id", Take),
+            ("title", Take),
+            ("thumbnail", Take),
+            ("formats", Take),
+            ("timestamp", Take),
+            ("description", Take),
+            ("age_limit", Take),
+        ],
+        // Without a canonical link (`processing` adds `display_id` later).
+        "kvs-without-display-id" => &[
+            ("id", Take),
+            ("title", Take),
+            ("thumbnail", Take),
+            ("formats", Take),
+            ("timestamp", Take),
+            ("description", Take),
+            ("age_limit", Take),
+        ],
         // A found SMIL URL: `{**smil_info, **entry_info_dict}` merged with
         // the page fields (`None` values dropped).
         "generic-found-smil" => &[

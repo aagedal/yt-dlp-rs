@@ -3,10 +3,6 @@
 //! parameters, the JW Player JS loader, Flow Player, Cinerama, Twitter
 //! `player:stream` cards and Open Graph `og:video`/`og:audio`, then
 //! `http-equiv="refresh"` redirects and `twitter:player` iframes.
-//!
-//! The upstream KVS player step (after JW Player setup data and Video.js,
-//! before JSON-LD) are recognized and reported as unsupported rather than
-//! answered with a later pattern's different result.
 use regex::Regex;
 use std::sync::LazyLock;
 use url::Url;
@@ -22,16 +18,6 @@ pub(crate) enum Found {
 
 fn regex(pattern: &str) -> Regex {
     Regex::new(pattern).expect("static pattern")
-}
-
-/// An earlier `_extract_embeds` step this port does not implement.
-pub(crate) fn unported_step(html: &str) -> Option<&'static str> {
-    static KVS: LazyLock<Regex> = LazyLock::new(|| {
-        regex(
-            r#"(?:<script\b[^>]+?\bsrc\s*=\s*["']https?://[^?#"']+/kt_player\.js\?v=\d+(?:\.\d+)+["']|kt_player\s*\(\s*["'].+?["']\s*,\s*["']https?://[^?#"']+/kt_player\.swf\?v=\d+(?:\.\d+)+["']\s*,)"#,
-        )
-    });
-    KVS.is_match(html).then_some("KVS players")
 }
 
 /// Upstream `determine_ext(path, None)` exclusions (`check_video`).

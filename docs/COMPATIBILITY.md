@@ -269,9 +269,15 @@ direct media URLs become upstream's entries (basename ID, the domain as
 `uploader`, the page title, a Referer header; one URL merged with the page's
 `timestamp`/`description`/`thumbnail`, several as a playlist with numbered
 titles); found HLS or DASH URLs are requested with the page as Referer and
-get `_extra_manifest_info` (SMIL/XSPF/F4M, RTMP and YouTube URLs are
-unsupported errors), as are pages where upstream's earlier KVS player step
-would answer. Output templates render a JW
+get `_extra_manifest_info` (XSPF/F4M, RTMP and YouTube URLs are
+unsupported errors). Before JSON-LD, a KVS player (`kt_player.js`/`.swf`
+version, with upstream's untested-major-version warning) is `_extract_kvs`:
+the `flashvars` object (`_search_json` with `js_to_json`), canonical-link
+`display_id`, `<title>`/`<h1>` title, protocol-fixed preview thumbnail, and
+`video_url`/`video_alt_urlN` `/get_file/` URLs (unscrambled with
+`_kvs_get_real_url`'s license token) as `mp4` formats labeled by their
+`_text`, with `parse_resolution` dimensions or `quality` 1 and the page as
+Referer, merged with the page fields. Output templates render a JW
 Player integer `tbr` as a float (JSON keeps upstream's int). Otherwise
 the result is upstream's `ERROR: Unsupported URL: URL`.
 All videos then get upstream `_sanitize_thumbnails` ordering, IDs, resolutions

@@ -973,7 +973,7 @@ impl GenericHttp {
         html: &str,
         timestamp: Option<i64>,
     ) -> Result<Option<ExtractResult>> {
-        use super::generic_urls::{Found, find, unported_step};
+        use super::generic_urls::{Found, find};
         // `_find_jwplayer_data`, then `_parse_jwplayer_data` with formats.
         if let Some(data) = super::jwplayer::find_data(html) {
             if data
@@ -997,8 +997,15 @@ impl GenericHttp {
         {
             return Ok(Some(result));
         }
-        if let Some(step) = unported_step(html) {
-            return Err(unsupported(&format!("{step} are not supported natively")));
+        // The KVS player (before JSON-LD).
+        if let Some(version) = super::kvs::player_version(html) {
+            crate::screen::debug("Identified a KVS Player");
+            if !matches!(version.split('.').next(), Some("4" | "5" | "6")) {
+                crate::screen::warning(&format!(
+                    "[generic] Untested major version ({version}) in player engine - download may fail."
+                ));
+            }
+            return kvs_info(url, page_url, html, timestamp).map(Some);
         }
         // `_search_json_ld`: a media URL other than the page's.
         let json_ld = super::json_ld::search(html);
@@ -1262,6 +1269,158 @@ fn download_smil(client: &Client, url: &Url, video_id: &str) -> Result<(super::s
     let smil = super::smil::parse(text)
         .ok_or_else(|| unsupported("the found SMIL URL does not serve a SMIL document"))?;
     Ok((smil, final_url))
+}
+
+/// `_extract_kvs(url, webpage, video_id)` merged with the page fields
+/// (`merge_dicts` drops its `None` values).
+fn kvs_info(
+    url: &Url,
+    page_url: &Url,
+    html: &str,
+    timestamp: Option<i64>,
+) -> Result<ExtractResult> {
+    use serde_json::Value;
+    static DISPLAY_ID: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(
+            r#"(?:<link href="https?://[^"]+/(.+?)/?" rel="canonical"\s*/?>|<link rel="canonical" href="https?://[^"]+/(.+?)/?"\s*/?>)"#,
+        )
+        .expect("static pattern")
+    });
+    static TITLE: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"<(?:h1|title)>(?:Video: )?(.+?)</(?:h1|title)>")
+            .expect("static pattern")
+    });
+    let report =
+        |message: String| Error::Reported(format!("{message}; {}", crate::BUG_REPORTS_MESSAGE));
+    let key_error = |key: &str| {
+        report(format!(
+            "An extractor error has occurred. (caused by KeyError('{key}'))"
+        ))
+    };
+    let flashvars = match super::kvs::flashvars(html) {
+        None => return Err(report("[generic] Unable to extract flashvars".into())),
+        Some(None) => {
+            return Err(unsupported(
+                "KVS flashvars that do not parse as a JSON object are not supported natively",
+            ));
+        }
+        Some(Some(flashvars)) => flashvars,
+    };
+    let display_id = DISPLAY_ID.captures(html).and_then(|found| {
+        found
+            .iter()
+            .skip(1)
+            .flatten()
+            .next()
+            .map(|found| found.as_str().to_owned())
+    });
+    if display_id.is_none() {
+        super::search_warning("generic", "display_id");
+    }
+    let title = TITLE
+        .captures(html)
+        .map(|found| crate::html::clean_html(&found[1]))
+        .ok_or_else(|| report("[generic] Unable to extract title".into()))?;
+    let text = |key: &str| -> Result<String> {
+        match flashvars.get(key) {
+            Some(Value::String(text)) => Ok(text.clone()),
+            Some(_) => Err(unsupported(&format!(
+                "non-string KVS {key} values are not supported natively"
+            ))),
+            None => Err(key_error(key)),
+        }
+    };
+    let mut thumbnail = text("preview_url")?;
+    if thumbnail.starts_with("//") {
+        // `url.partition('/')[0]`: the scheme with its colon.
+        let scheme = url.as_str().split('/').next().unwrap_or_default();
+        thumbnail = format!("{scheme}{thumbnail}");
+    }
+    let thumbnail = url
+        .join(&thumbnail)
+        .map_err(|_| unsupported("KVS preview URLs must be joinable"))?;
+    static URL_KEY: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"^video_(?:url|alt_url\d*)$").expect("static pattern")
+    });
+    let mut formats = Vec::new();
+    for key in flashvars.keys().filter(|key| URL_KEY.is_match(key)) {
+        let video_url = text(key)?;
+        if !video_url.contains("/get_file/") {
+            continue;
+        }
+        let format_id = match flashvars.get(&format!("{key}_text")) {
+            Some(Value::String(text)) => text.clone(),
+            Some(_) => {
+                return Err(unsupported(
+                    "non-string KVS format labels are not supported natively",
+                ));
+            }
+            None => key.clone(),
+        };
+        let real = super::kvs::real_url(&video_url, &text("license_code")?)
+            .ok_or_else(|| unsupported("KVS license codes or URLs upstream cannot decode"))?;
+        let media = url
+            .join(&real)
+            .map_err(|_| unsupported("KVS video URLs must be joinable"))?;
+        // `parse_resolution(format_id) or parse_resolution(video_url)`.
+        let (mut width, mut height) = parse_resolution(&format_id);
+        if width.is_none() && height.is_none() {
+            (width, height) = parse_resolution(&video_url);
+        }
+        let mut format: VideoFormat = serde_json::from_value(serde_json::json!({
+            "format_id": format_id,
+            "url": media.as_str(),
+            "ext": "mp4",
+            "width": width,
+            "height": height,
+        }))
+        .map_err(|error| unsupported(&format!("KVS format: {error}")))?;
+        format.http_headers = Some(serde_json::Map::from_iter([(
+            "Referer".to_owned(),
+            url.as_str().into(),
+        )]));
+        if height.is_none() {
+            format.quality = Some(1.0);
+        }
+        crate::info_order::mark_format(&mut format, "kvs");
+        formats.push(format);
+    }
+    let (id, id_is_string) = match flashvars.get("video_id") {
+        Some(Value::String(id)) => (id.clone(), true),
+        Some(Value::Number(number)) => (number.to_string(), false),
+        Some(_) => {
+            return Err(unsupported(
+                "non-string KVS video IDs are not supported natively",
+            ));
+        }
+        None => return Err(key_error("video_id")),
+    };
+    let mut info = direct::build_at(page_url.clone(), page_url, String::new());
+    info.formats = formats;
+    info.direct = None;
+    info.id = id;
+    info.title = title;
+    info.webpage_url = page_url.clone();
+    let shape = if display_id.is_some() {
+        "kvs"
+    } else {
+        "kvs-without-display-id"
+    };
+    if let Some(display_id) = display_id {
+        info.extra.insert("display_id".into(), display_id.into());
+    }
+    info.metadata.thumbnail = Some(thumbnail.to_string());
+    info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
+    info.metadata.description = crate::html::og_search_property(html, "description");
+    info.metadata.age_limit = crate::html::rta_search(html);
+    if !id_is_string {
+        crate::screen::warning(
+            "\"id\" field is not a string - forcing string conversion, there is an error in extractor",
+        );
+    }
+    Ok(ExtractResult::Video(crate::info_order::mark_info(
+        info, shape,
+    )))
 }
 
 /// `_merge_subtitles(source, target=target)`: tracks append per language.

@@ -8,6 +8,7 @@ pub(crate) mod html5;
 mod hypem;
 mod json_ld;
 mod jwplayer;
+mod kvs;
 mod livestreamfails;
 mod megaphone;
 mod reverbnation;
