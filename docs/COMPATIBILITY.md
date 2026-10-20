@@ -488,6 +488,13 @@ warning, and the derived `.mov` URL as an untyped result. A missing title gets
 `_fill_common_fields`' generic `EXTRACTOR video #ID` title with its warning
 (`fulltitle` stays `null`).
 
+JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal
+chapters ID, the chapters XML's root `video` attribute (`Downloading chapters
+XML`; none is upstream's `Failed to get the video URL`) as an untyped result,
+the `citation_title`/`citation_publication_date` metas, OpenGraph thumbnail,
+summary paragraph and comment count, each with upstream's warning, and the
+escaped `int(None)` error without a comment count.
+
 JW Platform media (`content.jwplatform.com`/`cdn.jwplayer.com`
 `players|feeds|thumbs|previews|manifests|jw6|v2/media/ID`, and `jwplatform:ID`)
 follow upstream `JWPlatformIE`: the `cdn.jwplayer.com/v2/media/ID` JSON through
