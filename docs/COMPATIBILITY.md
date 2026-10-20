@@ -34,7 +34,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--convert-subs`, `--convert-sub`, `--convert-subtitles` | Convert written sidecars to one of srt/vtt/ass/lrc; `none` disables; no implied subtitle writing |
 | `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
 | `--skip-download`, `--no-download` | Skip media while allowing selected subtitle and info JSON sidecars; never record a completed media archive entry |
-| `--write-info-json`, `--no-write-info-json` | Write cleaned video/playlist `.info.json` files before media/entries; existing files are replaced unless `-w`; never with JSON/simulation/listing; last flag wins; see [info JSON](../upstream/notes/info-json.md) |
+| `--write-info-json`, `--no-write-info-json` | Write cleaned video/playlist `.info.json` files before media/entries, in upstream's key order (see `-j`); a playlist file written before its entries is rewritten after them (`[info] Writing updated playlist metadata as JSON to: FILE`, before `playlist`-stage processing; with `--no-clean-info-json` it still lacks upstream's processed `entries`); existing files are replaced unless `-w`; never with JSON/simulation/listing; last flag wins; see [info JSON](../upstream/notes/info-json.md) |
 | `--restrict-filenames`, `--no-restrict-filenames` | ASCII-only upstream sanitization and space-free default template; last flag wins |
 | `--windows-filenames`, `--no-windows-filenames` | Force upstream path sanitization, or minimal `/`-only sanitization outside Windows; last flag wins |
 | `--trim-filenames`, `--trim-file-names LENGTH` | Trim rendered names excluding the last two dot-separated parts; 0 disables |

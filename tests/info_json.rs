@@ -527,3 +527,47 @@ fn internet_shortcuts_follow_upstream_write_link_file() {
     run(&server.cli(simulated.path(), "/one.mp4", &["--write-link", "-s"]));
     assert!(names(simulated.path()).is_empty());
 }
+
+#[test]
+fn playlist_info_json_is_rewritten_after_its_entries() {
+    let server = Server::new();
+    let dir = tempfile::tempdir().unwrap();
+    // One name for every info JSON: entries overwrite the playlist's file,
+    // and upstream's "updated playlist" write restores it at the end.
+    let (stdout, _) = run(&server.cli(
+        dir.path(),
+        "/playlist.html",
+        &["--skip-download", "--write-info-json", "-o", "o.%(ext)s"],
+    ));
+    let writes: Vec<&str> = stdout
+        .lines()
+        .filter(|line| line.contains("metadata as JSON"))
+        .collect();
+    assert_eq!(
+        writes.first(),
+        Some(&"[info] Writing playlist metadata as JSON to: o.info.json")
+    );
+    assert_eq!(
+        writes.last(),
+        Some(&"[info] Writing updated playlist metadata as JSON to: o.info.json")
+    );
+    let finished = stdout
+        .find("[download] Finished downloading playlist")
+        .unwrap();
+    assert!(stdout.find("updated playlist").unwrap() < finished);
+    let (_, value) = read(&dir.path().join("o.info.json"));
+    assert_eq!(value["_type"], "playlist");
+    // Not rewritten when the first write found the file present.
+    let (stdout, _) = run(&server.cli(
+        dir.path(),
+        "/playlist.html",
+        &[
+            "--skip-download",
+            "--write-info-json",
+            "--no-overwrites",
+            "-o",
+            "o.%(ext)s",
+        ],
+    ));
+    assert!(!stdout.contains("updated playlist"), "{stdout}");
+}

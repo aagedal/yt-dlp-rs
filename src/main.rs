@@ -3045,6 +3045,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         if let Some(title) = &playlist_title {
             screen!("[download] Downloading playlist: {title}");
         }
+        // The playlist info JSON written before the entries, rewritten after
+        // them (`_infojson_written is True`).
+        let mut playlist_info_json: Option<(PathBuf, serde_json::Value)> = None;
         if let (ExtractResult::Playlist(playlist), Some(counts), true) = (
             &extracted,
             counts,
@@ -3069,6 +3072,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         !args.no_clean_info_json,
                     )?;
                     let written = write_info_json_with(&path, &value, overwrites != Some(false))?;
+                    if matches!(written, InfoJsonWrite::Written) {
+                        playlist_info_json = Some((path.clone(), value));
+                    }
                     report_info_json("playlist", &path, written);
                 }
                 if writes_description
@@ -4603,6 +4609,22 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
         if url_cancelled {
             continue;
+        }
+        // "Write the updated info to json": the cleaned dict loses its
+        // entries, so the content is the playlist's again.
+        if let Some((path, value)) = &playlist_info_json {
+            match write_info_json_with(path, value, true) {
+                Ok(written) => report_info_json("updated playlist", path, written),
+                // Upstream reports the failure without the OS error.
+                Err(_) => {
+                    report_error!(
+                        "ERROR: Cannot write updated playlist metadata to JSON file {}",
+                        path.display()
+                    );
+                    failed = true;
+                    continue;
+                }
+            }
         }
         if let Some(dict) = &playlist_dict
             && !run_playlist_stage(
