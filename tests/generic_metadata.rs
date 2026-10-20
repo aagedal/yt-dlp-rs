@@ -309,6 +309,11 @@ fn generic_extraction_reports_upstream_screen_lines() {
         lines(&["-q"], "/meta.html"),
         (Vec::new(), vec![warning.to_owned()])
     );
+    // `--force-generic-extractor` words it as forcing.
+    assert_eq!(
+        lines(&["--force-generic-extractor"], "/meta.html").1,
+        ["WARNING: [generic] Forcing generic information extractor"]
+    );
 }
 
 #[test]

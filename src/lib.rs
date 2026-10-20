@@ -957,6 +957,7 @@ impl YoutubeDl {
     /// `--force-generic-extractor`: only the generic extractor is used.
     pub fn with_force_generic_extractor(mut self, force: bool) -> Self {
         self.force_generic = force;
+        extractor::html5::FORCE_GENERIC.store(force, std::sync::atomic::Ordering::Relaxed);
         self
     }
 

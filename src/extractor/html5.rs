@@ -92,6 +92,11 @@ fn subtitle_extension(url: &Url) -> String {
     }
 }
 
+/// `--force-generic-extractor` (GenericIE's `force_generic_extractor`),
+/// which words the generic warning.
+pub(crate) static FORCE_GENERIC: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
 struct Html5Source {
     url: Url,
     hls_hint: bool,
@@ -452,7 +457,15 @@ impl Extractor for GenericHttp {
             });
             MEDIA.is_match(&content_type)
         };
-        let fallback = || warning("[generic] Falling back on generic information extractor");
+        let fallback = || {
+            warning(
+                if FORCE_GENERIC.load(std::sync::atomic::Ordering::Relaxed) {
+                    "[generic] Forcing generic information extractor"
+                } else {
+                    "[generic] Falling back on generic information extractor"
+                },
+            )
+        };
         // Upstream `GenericIE.report_detected`.
         let detected = |name: &str| crate::screen::debug(&format!("Identified a {name}"));
         if media_type {
