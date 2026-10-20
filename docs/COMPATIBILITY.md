@@ -498,6 +498,13 @@ Photobucket media (`photobucket.com/..._ID.mp4|flv`) follow upstream
 information`) with the embed code's unquoted `file=` URL, username, creation
 date, title and thumbnail as an untyped result with the URL's extension.
 
+Premiership Rugby videos (`SUB.premiershiprugby.com/watch/SLUG`) follow
+upstream `PremiershipRugbyIE`: the article CMS's hero media `videoLink` as fatal
+HLS formats and subtitles without an `ext` (a media playlist keeps its URL's
+extension), the `sourceSystemId` ID with the slug as `display_id`, hero title
+(else the generic title), thumbnail, `int_or_none(msDuration, scale=1000)`
+duration, raw tags and category texts, with upstream's `KeyError` messages.
+
 QingTing programs (`qingting.fm`/`qtfm.cn` `[v]channels/C/programs/P`) follow
 upstream `QingTingIE`: the mobile program page's `window.__initStores` JSON
 (`_search_json`) with the program title and audio URL, channel title and

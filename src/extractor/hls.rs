@@ -189,6 +189,28 @@ fn split_sections(format: VideoFormat, discontinuity: &[u32], count: u32) -> Vec
         .collect()
 }
 
+/// Upstream `_extract_m3u8_formats(..., ext=None)`: a variant is `m4a`
+/// when audio-only, else `mp4`; a media playlist or rendition keeps no
+/// `ext`, so processing takes its URL's (`determine_ext`).
+pub(crate) fn without_ext(info: &mut VideoInfo) {
+    for format in &mut info.formats {
+        let shape = format
+            .extra
+            .get(crate::info_order::FORMAT_SHAPE)
+            .and_then(serde_json::Value::as_str);
+        format.ext = match shape {
+            Some("hls-variant") if format.vcodec.as_deref() == Some("none") => "m4a".into(),
+            Some("hls-variant") => "mp4".into(),
+            _ => direct::determine_ext(format.url.as_str())
+                .unwrap_or_else(|| "unknown_video".into())
+                .to_lowercase(),
+        };
+    }
+    if let Some(first) = info.formats.first() {
+        info.ext = first.ext.clone();
+    }
+}
+
 pub(crate) fn from_response(
     client: &Client,
     response: Response,

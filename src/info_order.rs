@@ -1116,6 +1116,18 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("formats", Take),
             ("subtitles", Dict),
         ],
+        // `PremiershipRugbyIE._real_extract`'s dict.
+        "premiershiprugby" => &[
+            ("id", Take),
+            ("display_id", Take),
+            ("title", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("thumbnail", Assign),
+            ("duration", Take),
+            ("tags", Assign),
+            ("categories", List),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),
