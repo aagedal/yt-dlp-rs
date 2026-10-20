@@ -729,6 +729,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "playerfm"
             | "rtrfm"
             | "hitrecord"
+            | "cultureunplugged"
     ) || shape.starts_with("nobelprize;")
         || original
             .as_ref()
@@ -1177,6 +1178,18 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("comment_count", Assign),
             ("tags", Assign),
         ],
+        // `CultureUnpluggedIE._real_extract`'s dict (its own format).
+        "cultureunplugged" => &[
+            ("id", Take),
+            ("display_id", Take),
+            ("url", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("creator", Assign),
+            ("duration", Take),
+            ("view_count", Assign),
+            ("thumbnails", List),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),
@@ -1400,7 +1413,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // `_parse_smil`'s images are `{id, url, width, height}` dicts, 23video's
     // `{id, url, width, height, filesize}`.
-    if (shape.contains("smil") || shape == "23video" || shape == "masters")
+    if (shape.contains("smil")
+        || matches!(shape.as_str(), "23video" | "masters" | "cultureunplugged"))
         && let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails")
     {
         for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
@@ -1410,6 +1424,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             } else if shape == "masters" {
                 // `MastersIE`'s `{id, url}` image dicts.
                 &["id", "url"]
+            } else if shape == "cultureunplugged" {
+                &["url", "id", "preference"]
             } else {
                 &["id", "url", "width", "height"]
             };

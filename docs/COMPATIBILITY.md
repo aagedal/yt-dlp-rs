@@ -400,6 +400,12 @@ CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
 
+Culture Unplugged films (`cultureunplugged.com/[documentary/watch-online/]play/ID[/SLUG]`)
+follow upstream `CultureUnpluggedIE`: the movie data JSON as an untyped
+result with its URL and title (upstream's `KeyError` messages), synopsis,
+producer `creator` (and the derived `creators`), integer duration and views
+and the truthy small/large thumbnails with their preferences.
+
 EbaumsWorld videos (`ebaumsworld.com/videos/SLUG/ID`) follow upstream
 `EbaumsWorldIE`: the player config XML (`Downloading XML`) as an untyped
 result, empty elements as `None` (a generic title for an empty title) and a

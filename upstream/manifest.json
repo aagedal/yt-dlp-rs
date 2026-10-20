@@ -280,6 +280,18 @@
       "scope": "CozyTVIE replay cache metadata (title/uploader/date/duration/was_live) and CDN HLS formats and subtitles compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "cultureunplugged",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cultureunplugged.py"
+      ],
+      "rust": [
+        "src/extractor/cultureunplugged.rs",
+        "tests/fixtures/sites/cultureunplugged/"
+      ],
+      "scope": "CultureUnpluggedIE movie data JSON as an untyped result (metadata, creator/creators, preference thumbnails, KeyError messages) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "ebaumsworld",
       "status": "partial",
       "upstream": [
