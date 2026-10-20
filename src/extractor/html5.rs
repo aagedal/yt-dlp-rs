@@ -1190,6 +1190,16 @@ impl GenericHttp {
     }
 }
 
+/// `_merge_subtitles(source, target=target)`: tracks append per language.
+fn merge_subtitles(target: &mut Subtitles, source: Subtitles) {
+    for (language, tracks) in source.entries {
+        match target.entries.iter_mut().find(|(key, _)| *key == language) {
+            Some((_, existing)) => existing.extend(tracks),
+            None => target.entries.push((language, tracks)),
+        }
+    }
+}
+
 /// GenericIE's `_parse_smil(doc, url, video_id)` for HTTP media sources;
 /// other source kinds are unsupported errors.
 fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<VideoInfo> {
@@ -1218,6 +1228,8 @@ fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<Vide
     let mut formats = Vec::new();
     let mut sources: Vec<String> = Vec::new();
     let mut http_count = 0;
+    let mut m3u8_count = 0;
+    let mut subtitles = Subtitles::default();
     for medium in &smil.media {
         let Some(src) = get(medium, "src").filter(|src| !src.is_empty()) else {
             continue;
@@ -1261,12 +1273,84 @@ fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<Vide
                 .map_err(|_| unsupported("SMIL source URLs must be absolute or joinable"))?
         };
         let src_url = src_url.trim().to_owned();
-        if proto == Some("m3u8")
-            || matches!(src_ext.as_str(), "m3u8" | "f4m" | "mpd")
-            || ISM.is_match(&src_url)
-        {
+        let hls = proto == Some("m3u8") || src_ext == "m3u8";
+        if hls || src_ext == "mpd" {
+            // `_extract_m3u8_formats_and_subtitles(src_url, video_id, ext or
+            // 'mp4', m3u8_id='hls', fatal=False)` or the `mpd_id='dash'` MPD.
+            let manifest_url = Url::parse(&src_url)?;
+            let (note, errnote) = if hls {
+                (
+                    "Downloading m3u8 information",
+                    "Failed to download m3u8 information",
+                )
+            } else {
+                (
+                    "Downloading MPD manifest",
+                    "Failed to download MPD manifest",
+                )
+            };
+            let note = format!("[generic] {video_id}: {note}");
+            crate::screen::expect_page(&video_id, Some(note.clone()), None);
+            let response = direct::request(client, &manifest_url, None);
+            if response.is_err() {
+                // The note precedes a failed request too.
+                crate::screen::screen(&note);
+            }
+            let parsed = response.and_then(|response| {
+                if hls {
+                    hls::from_response(client, response, &manifest_url, None, true, Some("hls"))
+                } else {
+                    dash::from_response(response, &manifest_url, true)
+                }
+            });
+            crate::screen::clear_page();
+            let manifest = match parsed {
+                Ok(manifest) => manifest,
+                Err(error) => {
+                    crate::screen::warning(&format!(
+                        "[generic] {video_id}: {errnote}: {}",
+                        crate::upstream_error_text(&error)
+                    ));
+                    None
+                }
+            };
+            let Some(manifest) = manifest else {
+                continue;
+            };
+            let mut found: Vec<VideoFormat> = manifest.formats;
+            for format in &mut found {
+                if hls {
+                    if let Some(ext) = ext {
+                        format.ext = ext.to_owned();
+                    }
+                } else {
+                    format.format_id = format!("dash-{}", format.format_id);
+                }
+            }
+            if hls && found.len() == 1 {
+                m3u8_count += 1;
+                let format = &mut found[0];
+                format.format_id = match bitrate {
+                    Some(bitrate) => format!("hls-{}", bitrate.trunc() as i64),
+                    None => format!("hls-{m3u8_count}"),
+                };
+                format.tbr = bitrate;
+                format.width = width;
+                format.height = height;
+                if let Some(serde_json::Value::String(shape)) =
+                    format.extra.get(crate::info_order::FORMAT_SHAPE)
+                {
+                    let shape = format!("{shape}|update:tbr,width,height");
+                    crate::info_order::mark_format(format, &shape);
+                }
+            }
+            formats.extend(found);
+            merge_subtitles(&mut subtitles, manifest.subtitles);
+            continue;
+        }
+        if src_ext == "f4m" || ISM.is_match(&src_url) {
             return Err(unsupported(
-                "SMIL manifest sources are not supported natively",
+                "SMIL F4M and ISM sources are not supported natively",
             ));
         }
         if !src_url.starts_with("http") {
@@ -1303,8 +1387,8 @@ fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<Vide
         crate::info_order::mark_format(&mut format, "smil-http");
         formats.push(format);
     }
-    // `_parse_smil_subtitles(smil, namespace)`.
-    let mut subtitles = Subtitles::default();
+    // `_parse_smil_subtitles(smil, namespace)`, merged after the manifests'.
+    let mut smil_subtitles = Subtitles::default();
     let mut subtitle_urls: Vec<String> = Vec::new();
     for stream in &smil.textstreams {
         let Some(src) = get(stream, "src").filter(|src| !src.is_empty()) else {
@@ -1339,15 +1423,14 @@ fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<Vide
             fragments: Vec::new(),
             extra: Default::default(),
         };
-        match subtitles
-            .entries
-            .iter_mut()
-            .find(|(key, _)| key.as_deref() == Some(language.as_str()))
-        {
-            Some((_, tracks)) => tracks.push(track),
-            None => subtitles.entries.push((Some(language), vec![track])),
-        }
+        merge_subtitles(
+            &mut smil_subtitles,
+            Subtitles {
+                entries: vec![(Some(language), vec![track])],
+            },
+        );
     }
+    merge_subtitles(&mut subtitles, smil_subtitles);
     // `_parse_smil`'s head metadata.
     let (mut title, mut description, mut upload_date) = (None, None, None);
     for meta in &smil.meta {

@@ -227,9 +227,13 @@ width and height; absolute sources get `_is_valid_url`'s `Checking video URL`
 request and are skipped with its `URL is invalid` notice. Head metadata gives
 the title (else the URL basename), description/abstract and `unified_strdate`
 date; `image`s are `{id, url, width, height}` thumbnails and `textstream`s are
-subtitles by language (default `en`). RTMP, HLS, F4M, DASH and ISM sources,
-imagestream storyboards, extension-less sources (upstream's HEAD request) and
-relative text streams are unsupported errors.
+subtitles by language (default `en`), merged after the manifests' tracks. HLS
+sources (`proto="m3u8"` or `.m3u8`, the `ext` attribute as the formats' `ext`)
+and DASH sources add their manifests' formats (`hls-`/`dash-` IDs,
+`fatal=False` with upstream's `Failed to download ...` warnings); a playlist
+with one format takes `hls-BITRATE`/`hls-N`, `tbr`, width and height. RTMP,
+F4M and ISM sources, imagestream storyboards, extension-less sources
+(upstream's HEAD request) and relative text streams are unsupported errors.
 A page without HTML5 media first tries upstream's JW Player setup data
 (`_find_jwplayer_data` with a port of `js_to_json`, checked against pinned
 upstream conversions in `tests/fixtures/js_to_json/`): one playlist item's

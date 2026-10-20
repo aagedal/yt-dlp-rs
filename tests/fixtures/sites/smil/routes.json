@@ -56,6 +56,55 @@
     "Content-Type": "text/vtt"
    },
    "body": "WEBVTT\n\n00:00.000 --> 00:01.000\nHi\n"
+  },
+  {
+   "url": "https://media.example.test/manifests.smil",
+   "headers": {
+    "Content-Type": "application/smil+xml"
+   },
+   "body": "<smil><head><meta base=\"https://cdn.example.test/live\"/></head><body><switch>\n<video src=\"two.m3u8\"/>\n<video src=\"single.m3u8\" system-bitrate=\"900000\" width=\"1920\" height=\"1080\"/>\n<video src=\"stream\" proto=\"m3u8\" ext=\"ts\"/>\n<video src=\"segmented.mpd\"/>\n<video src=\"missing.m3u8\"/>\n</switch></body></smil>"
+  },
+  {
+   "url": "https://cdn.example.test/live/two.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "two.m3u8"
+  },
+  {
+   "url": "https://cdn.example.test/live/single.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "single.m3u8"
+  },
+  {
+   "url": "https://cdn.example.test/live/stream",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "single.m3u8"
+  },
+  {
+   "url": "https://cdn.example.test/live/segmented.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "segmented.mpd"
+  },
+  {
+   "url": "https://cdn.example.test/live/low/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "single.m3u8"
+  },
+  {
+   "url": "https://cdn.example.test/live/high/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "single.m3u8"
   }
  ]
 }

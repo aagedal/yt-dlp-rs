@@ -269,6 +269,14 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some((shape, original)) = shape_of(map.remove(FORMAT_SHAPE)) else {
         return map;
     };
+    // Keys a caller's `format.update(...)` adds after the extractor's.
+    let (shape, update) = match shape.split_once("|update:") {
+        Some((shape, keys)) => (
+            shape.to_owned(),
+            keys.split(',').map(str::to_owned).collect::<Vec<_>>(),
+        ),
+        None => (shape, Vec::new()),
+    };
     // `_parse_html5_media_entries` adds the page Referer to every format.
     let (html5, shape) = match shape.strip_prefix("html5+") {
         Some(shape) => (true, shape),
@@ -432,6 +440,9 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         _ => &[],
     };
     replay.steps(extractor);
+    for key in &update {
+        replay.assign(key);
+    }
     if let Some(original) = &original {
         replay.loaded(original);
     }
