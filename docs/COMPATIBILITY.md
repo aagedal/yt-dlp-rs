@@ -590,12 +590,14 @@ size estimate from the average fragment so far (upstream also counts the current
 fragment's announced length). `--no-progress` (implied by quiet unless
 `--progress`) prints `[download] Download completed` instead; `--progress-delta
 SECONDS` limits updates. Colors and other terminal control sequences are not
-implemented. `--console-title` follows upstream on Unix terminals: when stderr
-(else stdout) is a terminal and `TERM` is set, the title is saved
+implemented. `--console-title` follows upstream: when stderr (else stdout) is a
+terminal and `TERM` is set (on Windows, when `windows_enable_vt_mode`'s
+`ENABLE_VIRTUAL_TERMINAL_PROCESSING` succeeds; otherwise titles fall back to
+`SetConsoleTitleW`), the title is saved
 (`ESC[22;0t`) and restored (`ESC[23;0t`) around the run unless simulating, and
 each progress status sets the title (`yt-dlp %(progress._default_template)s`
 by default) and ConEmu progress state (`ESC]9;4;STATE;PERCENT BEL`), including
-with `--no-progress`. Windows consoles get no titles. JSON and simulation do not download
+with `--no-progress`. The Windows paths are not covered by local tests. JSON and simulation do not download
 and emit no download progress. The CLI does not install signal handlers or
 expose cancellation flags.
 

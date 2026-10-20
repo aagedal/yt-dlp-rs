@@ -6437,12 +6437,77 @@ fn set_pp_info(info: &yt_dlp_rs::VideoInfo) {
     }
 }
 
+/// Windows console calls: upstream `windows_enable_vt_mode` and the
+/// `SetConsoleTitleW` fallback.
+#[cfg(windows)]
+mod windows_console {
+    use std::os::windows::io::AsRawHandle;
+
+    type Handle = *mut std::ffi::c_void;
+
+    #[link(name = "kernel32")]
+    unsafe extern "system" {
+        fn GetConsoleMode(handle: Handle, mode: *mut u32) -> i32;
+        fn SetConsoleMode(handle: Handle, mode: u32) -> i32;
+        fn GetConsoleWindow() -> Handle;
+        fn SetConsoleTitleW(title: *const u16) -> i32;
+    }
+
+    /// `ENABLE_VIRTUAL_TERMINAL_PROCESSING` on `CONOUT$` (fails before
+    /// Windows 10 1511, like upstream's version check).
+    pub fn vt_mode() -> bool {
+        static VT_MODE: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+        *VT_MODE.get_or_init(|| {
+            let Ok(console) = std::fs::OpenOptions::new()
+                .read(true)
+                .write(true)
+                .open("CONOUT$")
+            else {
+                return false;
+            };
+            let handle = console.as_raw_handle() as Handle;
+            let mut mode = 0u32;
+            // SAFETY: `handle` is the open console buffer and `mode` a valid
+            // out-pointer for the duration of the calls.
+            unsafe {
+                GetConsoleMode(handle, &mut mode) != 0 && SetConsoleMode(handle, mode | 0x0004) != 0
+            }
+        })
+    }
+
+    /// `ctypes.windll.kernel32.SetConsoleTitleW(message)` when a console
+    /// window exists.
+    pub fn set_title(title: &str) {
+        // SAFETY: no arguments; returns null without a console window.
+        if unsafe { GetConsoleWindow() }.is_null() {
+            return;
+        }
+        let wide: Vec<u16> = title.encode_utf16().chain(std::iter::once(0)).collect();
+        // SAFETY: `wide` is a NUL-terminated UTF-16 string alive for the call.
+        unsafe {
+            SetConsoleTitleW(wide.as_ptr());
+        }
+    }
+}
+
+/// Upstream `supports_terminal_sequences` before the stream check: VT mode
+/// on Windows, a nonempty `TERM` elsewhere.
+fn terminal_sequences() -> bool {
+    #[cfg(windows)]
+    {
+        windows_console::vt_mode()
+    }
+    #[cfg(not(windows))]
+    {
+        std::env::var_os("TERM").is_some_and(|term| !term.is_empty())
+    }
+}
+
 /// Upstream `_send_console_code`: written to `_out_files.console`, the
-/// first of stderr and stdout that is a terminal (with `TERM` set; Windows
-/// consoles are not addressed).
+/// first of stderr and stdout that is a terminal supporting sequences.
 fn send_console_code(code: &str) -> bool {
     use std::io::IsTerminal;
-    if cfg!(windows) || std::env::var_os("TERM").is_none_or(|term| term.is_empty()) {
+    if !terminal_sequences() {
         return false;
     }
     if io::stderr().is_terminal() {
@@ -6472,10 +6537,16 @@ fn to_console_title(message: Option<&str>, state: Option<u8>, percent: Option<f6
         return;
     }
     if let Some(message) = message.filter(|message| !message.is_empty()) {
-        send_console_code(&format!(
+        let sent = send_console_code(&format!(
             "\x1b]0;{}\x07",
             remove_terminal_sequences(message)
         ));
+        #[cfg(windows)]
+        if !sent {
+            windows_console::set_title(message);
+        }
+        #[cfg(not(windows))]
+        let _ = sent;
     }
     if let Some(state) = state {
         let percent = percent.map_or(0, |percent| percent as i64);
