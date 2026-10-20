@@ -1926,15 +1926,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .any(|template| template.stage() == stage)
             || print_files.iter().any(|pair| pair.stage() == stage)
     };
-    // Like upstream, printing implies quiet simulation unless --no-simulate.
-    let printing = !print_templates.is_empty();
     // `quiet` was applied to screen output at startup.
     let Simulation {
         simulate,
         list_only,
         ..
     } = args.simulation();
-    let listing = args.list_formats || args.list_subs || args.list_thumbnails;
     let quiet_screen = QUIET.load(Ordering::Relaxed);
     let progress_options = ProgressOptions {
         enabled: if args.no_progress {
@@ -3421,7 +3418,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 {
                     *value = Some(serde_json::to_value(&info)?);
                 }
-                if listing && !args.dump_json && !printing && simulate {
+                // `simulate == 'list_only'` ends after listing; an explicit
+                // `--simulate` still selects (and announces) formats.
+                if list_only {
                     return Ok(());
                 }
                 // Upstream `process_video_result` after format selection.

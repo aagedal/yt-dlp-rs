@@ -28,6 +28,7 @@ mod http;
 mod info;
 mod info_json;
 mod info_order;
+pub mod js_to_json;
 pub mod manifest_args;
 mod match_filter;
 mod md5;

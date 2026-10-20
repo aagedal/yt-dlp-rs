@@ -374,7 +374,7 @@ pub(super) fn parse(player: &Value) -> Metadata {
     };
     Metadata {
         description,
-        duration,
+        duration: duration.map(|duration| crate::info::PyNumber::Int(duration as i64)),
         channel_url: channel_id
             .as_ref()
             .map(|id| format!("https://www.youtube.com/channel/{id}")),

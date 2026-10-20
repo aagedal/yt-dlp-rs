@@ -230,7 +230,7 @@ fn float(value: PyNumber) -> f64 {
 /// chapters and whether some segments came from a different duration.
 pub(crate) fn chapters(
     segments: &[serde_json::Value],
-    duration: Option<u64>,
+    duration: Option<PyNumber>,
 ) -> Result<(Vec<SponsorChapter>, bool)> {
     let invalid = || Error::Postprocess("invalid SponsorBlock segment".into());
     let mut chapters = Vec::new();
@@ -254,14 +254,14 @@ pub(crate) fn chapters(
                 PyNumber::Float(end) => PyNumber::Float(end + 1.0),
             };
         }
-        if let Some(duration) = duration.filter(|duration| *duration != 0)
-            && duration as f64 - float(end) <= 1.0
+        if let Some(duration) = duration.filter(|duration| duration.as_f64() != 0.0)
+            && duration.as_f64() - float(end) <= 1.0
         {
-            end = PyNumber::Int(duration as i64);
+            end = duration;
         }
         let video_duration = segment["videoDuration"].as_f64().unwrap_or(0.0);
         let diff = if video_duration != 0.0 {
-            (duration.unwrap_or(0) as f64 - video_duration).abs()
+            (duration.map_or(0.0, PyNumber::as_f64) - video_duration).abs()
         } else {
             0.0
         };

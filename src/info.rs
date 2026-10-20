@@ -349,8 +349,9 @@ pub struct Metadata {
     pub start_time: Option<PyNumber>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub end_time: Option<PyNumber>,
+    /// An int or float, as the extractor gave it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration: Option<u64>,
+    pub duration: Option<PyNumber>,
     /// `formatSeconds(duration)`, filled by `_fill_common_fields`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_string: Option<String>,
@@ -397,7 +398,7 @@ impl Metadata {
     /// Upstream `_fill_common_fields`: derive `upload_date` from `timestamp`.
     pub fn fill_common_fields(&mut self) {
         if let Some(duration) = self.duration {
-            self.duration_string = Some(format_seconds(duration));
+            self.duration_string = Some(format_seconds(duration.whole_seconds()));
         }
         if self.upload_date.is_none() {
             self.upload_date = self.timestamp.and_then(crate::dates::strftime_date);
@@ -422,10 +423,7 @@ impl Metadata {
                 },
             );
         }
-        let duration = self
-            .duration
-            .and_then(|duration| i64::try_from(duration).ok())
-            .map(PyNumber::Int);
+        let duration = self.duration;
         let truthy = |value: Option<PyNumber>| value.filter(|value| value.as_f64() != 0.0);
         for index in 0..chapters.len() {
             // The dummy neighbours: `end_time` 0 before, the duration after.
@@ -1035,6 +1033,14 @@ pub enum PyNumber {
 }
 
 impl PyNumber {
+    /// Whole seconds (truncated, at least 0), as `timetuple_from_msec`.
+    pub fn whole_seconds(self) -> u64 {
+        match self {
+            Self::Int(value) => value.max(0) as u64,
+            Self::Float(value) => value.max(0.0) as u64,
+        }
+    }
+
     pub fn as_f64(self) -> f64 {
         match self {
             Self::Int(value) => value as f64,
@@ -1083,7 +1089,7 @@ pub static COMPAT_MANIFEST_FILESIZE_APPROX: std::sync::atomic::AtomicBool =
 /// `resolution`, `aspect_ratio`, `format` (`'{id} - {res}{note}'`) and
 /// `filesize_approx` (`filesize_from_tbr(tbr, duration)` for formats without
 /// a size or a `manifest_url`, since "tbr" is often a maximum for those).
-pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat], duration: Option<u64>) {
+pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat], duration: Option<PyNumber>) {
     let manifests = COMPAT_MANIFEST_FILESIZE_APPROX.load(std::sync::atomic::Ordering::Relaxed);
     for format in formats.iter_mut() {
         // Python truthiness: a zero or null size is no size.
@@ -1098,7 +1104,7 @@ pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat], duration: Op
             && let (Some(tbr), Some(duration)) = (format.tbr, duration)
         {
             // `int(duration * tbr * (1000 / 8))`.
-            let size = (duration as f64 * tbr * (1000.0 / 8.0)).trunc();
+            let size = (duration.as_f64() * tbr * (1000.0 / 8.0)).trunc();
             if size.is_finite() && size.abs() < 9.0e15 {
                 format
                     .extra
@@ -1272,7 +1278,7 @@ mod tests {
             .extra
             .insert("manifest_url".into(), "https://e.invalid/m.mpd".into());
         formats[2].filesize = Some(7);
-        fill_format_descriptions(&mut formats, Some(61));
+        fill_format_descriptions(&mut formats, Some(PyNumber::Int(61)));
         let approx: Vec<_> = formats
             .iter()
             .map(|format| format.extra.get("filesize_approx").cloned())

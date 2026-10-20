@@ -4,8 +4,8 @@
 //! `player:stream` cards and Open Graph `og:video`/`og:audio`, then
 //! `http-equiv="refresh"` redirects and `twitter:player` iframes.
 //!
-//! The earlier upstream steps (JW Player setup data, Video.js, KVS players,
-//! JSON-LD) are recognized and reported as unsupported rather than
+//! The earlier upstream steps after JW Player setup data (Video.js, KVS
+//! players, JSON-LD) are recognized and reported as unsupported rather than
 //! answered with a later pattern's different result.
 use regex::Regex;
 use std::sync::LazyLock;
@@ -26,11 +26,6 @@ fn regex(pattern: &str) -> Regex {
 
 /// An earlier `_extract_embeds` step this port does not implement.
 pub(crate) fn unported_step(html: &str) -> Option<&'static str> {
-    static JWPLAYER: LazyLock<Regex> = LazyLock::new(|| {
-        regex(
-            r#"(?s)(?:^|[^-\w])jwplayer\s*\(\s*(?:'[^']+'|"[^"]+")\s*\).*?\.\s*(?:setup\s*\(|load\s*\(\s*\[)"#,
-        )
-    });
     static VIDEOJS: LazyLock<Regex> = LazyLock::new(|| {
         regex(r"(?s)\bvideojs\s*\(.+?([a-zA-Z0-9_$]+)\.src\s*\(\s*(?:\[.+?\]|\{.+?\})\s*\)\s*;")
     });
@@ -46,9 +41,7 @@ pub(crate) fn unported_step(html: &str) -> Option<&'static str> {
             r#"(?is)<script[^>]+type\s*=\s*["']?application/ld\+json["']?[^>]*>.*?"(?:contentUrl|embedUrl)"\s*:\s*"(?:[a-z][a-z0-9+.-]*:)?//.*?</script>"#,
         )
     });
-    if JWPLAYER.is_match(html) {
-        Some("JW Player setup data")
-    } else if VIDEOJS.is_match(html) {
+    if VIDEOJS.is_match(html) {
         Some("Video.js embeds")
     } else if KVS.is_match(html) {
         Some("KVS players")

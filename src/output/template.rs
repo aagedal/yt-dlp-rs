@@ -346,7 +346,10 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
         // Only generic direct links have a `direct` field upstream.
         "direct" => info.direct.map(Boolean),
         "description" => info.metadata.description.as_deref().map(Text),
-        "duration" => info.metadata.duration.map(Integer),
+        "duration" => info.metadata.duration.map(|duration| match duration {
+            crate::info::PyNumber::Int(value) => Integer(value.max(0) as u64),
+            crate::info::PyNumber::Float(value) => Float(value),
+        }),
         "channel_id" => info.metadata.channel_id.as_deref().map(Text),
         "channel_url" => info.metadata.channel_url.as_deref().map(Text),
         "uploader_id" => info.metadata.uploader_id.as_deref().map(Text),

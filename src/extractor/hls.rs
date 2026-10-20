@@ -135,7 +135,10 @@ pub(crate) fn check_live_status(client: &Client, info: &mut VideoInfo) {
         return;
     }
     let duration = vod_duration(&String::from_utf8_lossy(&bytes));
-    info.metadata.duration = info.metadata.duration.or(duration);
+    info.metadata.duration = info
+        .metadata
+        .duration
+        .or(duration.map(|duration| crate::info::PyNumber::Int(duration as i64)));
 }
 
 /// Upstream `_parse_m3u8_vod_duration`: `int(sum(EXTINF))`, `None` for zero

@@ -742,7 +742,7 @@ fn extract_watch_page_with_caption_options(
             metadata.chapters = chapters::extract(
                 initial_data(html).as_ref(),
                 metadata.description.as_deref(),
-                metadata.duration,
+                metadata.duration.map(crate::info::PyNumber::whole_seconds),
             );
             metadata
         },

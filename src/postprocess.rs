@@ -101,7 +101,7 @@ pub struct ProcessedDownload {
     /// Processor failures skipped under `ignore_errors`.
     pub errors: Vec<String>,
     /// Chapters and duration after `--remove-chapters` changed them.
-    pub chapters: Option<(Vec<crate::info::Chapter>, Option<u64>)>,
+    pub chapters: Option<(Vec<crate::info::Chapter>, Option<crate::info::PyNumber>)>,
     /// The embedded thumbnail after its WebP extension fixup.
     pub thumbnail: Option<PathBuf>,
     /// The info dict as `post_process` metadata parsing and
@@ -831,10 +831,8 @@ pub(crate) fn download(
                     let end = working
                         .metadata
                         .duration
-                        .filter(|duration| *duration != 0)
-                        .map_or(PyNumber::Float(real), |duration| {
-                            PyNumber::Int(duration as i64)
-                        });
+                        .filter(|duration| duration.as_f64() != 0.0)
+                        .unwrap_or(PyNumber::Float(real));
                     segments.push(Segment::chapter(
                         PyNumber::Int(0),
                         end,
@@ -873,9 +871,14 @@ pub(crate) fn download(
                     );
                     return Ok(());
                 };
-                let original = working.metadata.duration.map(|duration| duration as f64);
+                let original = working.metadata.duration.map(PyNumber::as_f64);
                 let duration = last.end.as_f64();
-                working.metadata.duration = Some(duration.max(0.0) as u64);
+                // `info['duration'] = info['chapters'][-1]['end_time']`.
+                working.metadata.duration = Some(if duration < 0.0 {
+                    PyNumber::Int(0)
+                } else {
+                    last.end
+                });
                 // `_duration_mismatch`.
                 let mismatch = |a: Option<f64>, b: f64, tolerance: f64| {
                     a.is_some_and(|a| a != 0.0 && b != 0.0 && (a - b).abs() > tolerance)

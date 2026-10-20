@@ -160,12 +160,11 @@ impl DownloadSections {
         let duration = info
             .metadata
             .duration
-            .filter(|duration| *duration > 0)
-            .and_then(|duration| i64::try_from(duration).ok());
+            .filter(|duration| duration.as_f64() > 0.0);
         // `_handle_negative_timestamp`.
         let resolve = |time: PyNumber| match duration {
             Some(duration) if float(time) < 0.0 => {
-                let sum = add(PyNumber::Int(duration), time);
+                let sum = add(duration, time);
                 if float(sum) >= 0.0 {
                     sum
                 } else {
@@ -242,9 +241,8 @@ pub fn apply(info: &VideoInfo, section: Option<&Section>) -> VideoInfo {
     let duration = info
         .metadata
         .duration
-        .filter(|duration| *duration > 0)
-        .and_then(|duration| i64::try_from(duration).ok())
-        .map_or(PyNumber::Float(f64::INFINITY), PyNumber::Int);
+        .filter(|duration| duration.as_f64() > 0.0)
+        .unwrap_or(PyNumber::Float(f64::INFINITY));
     let end = section.map_or(duration, |section| section.end_time);
     let end_time = add(offset, min(end, duration));
     // Durations may be inaccurate, so deviations under a second are allowed.
@@ -279,7 +277,7 @@ mod tests {
             "url":"https://example.test/v.mp4","webpage_url":"https://example.test/v.mp4",
             "ext":"mp4","extractor":"generic","extractor_key":"Generic"}))
         .unwrap();
-        info.metadata.duration = duration;
+        info.metadata.duration = duration.map(|duration| PyNumber::Int(duration as i64));
         info
     }
 

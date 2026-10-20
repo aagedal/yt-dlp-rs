@@ -268,6 +268,17 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        // `_parse_jwplayer_formats`' direct source.
+        "jwplayer-source" => &[
+            ("url", Take),
+            ("width", Assign),
+            ("height", Assign),
+            ("tbr", Assign),
+            ("filesize", Assign),
+            ("ext", Assign),
+            ("format_id", Assign),
+        ],
+        "jwplayer-audio" => &[("url", Take), ("vcodec", Assign), ("ext", Assign)],
         // GenericIE's direct link: `vcodec` is `none` for audio, else `None`.
         "direct" => &[
             ("format_id", Take),
@@ -388,7 +399,15 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     // Keys this port has beyond the extractor's, before processing.
     replay.rest_except(&|key| PROCESSED_FORMAT_KEYS.contains(&key));
     replay.format_steps();
-    replay.finish()
+    let mut out = replay.finish();
+    // `int_or_none(source.get('bitrate'), scale=1000)` is an int.
+    if shape == "jwplayer-source"
+        && let Some(tbr) = out.get("tbr").and_then(Value::as_f64)
+        && tbr.fract() == 0.0
+    {
+        out.insert("tbr".into(), (tbr as i64).into());
+    }
+    out
 }
 
 /// Keys `process_video_result` adds to formats.
@@ -674,6 +693,22 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     if let Some(original) = &original {
         replay.loaded(original);
     }
+    // `merge_dicts(jwplayer_entry, info_dict)`: the entry's keys, then the
+    // page's.
+    if let Some(keys) = shape.strip_prefix("jwplayer;") {
+        for key in keys.split(',') {
+            replay.set(key, if key == "subtitles" { Dict } else { Take });
+        }
+        for key in [
+            "title",
+            "timestamp",
+            "description",
+            "thumbnail",
+            "age_limit",
+        ] {
+            replay.take(key);
+        }
+    }
     let held = |key: &str| {
         PROCESSED_INFO_KEYS.contains(&key)
             || (untyped && PROCESSED_FORMAT_KEYS.contains(&key))
@@ -794,7 +829,19 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                 replay.out.insert(key.clone(), value.clone());
             }
             _ if merged => replay.assign(key),
-            _ => replay.take(key),
+            _ => {
+                replay.take(key);
+                // The format's int where this port keeps an equal float.
+                if let (Some(Value::Number(format)), Some(Value::Number(ours))) =
+                    (selected_format.get(key), replay.out.get(key))
+                    && format.is_i64()
+                    && ours.as_f64() == format.as_f64()
+                {
+                    replay
+                        .out
+                        .insert(key.clone(), Value::Number(format.clone()));
+                }
+            }
         }
     }
     for key in [

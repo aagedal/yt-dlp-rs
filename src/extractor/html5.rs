@@ -839,6 +839,22 @@ impl GenericHttp {
         timestamp: Option<i64>,
     ) -> Result<Option<ExtractResult>> {
         use super::generic_urls::{Found, find, unported_step};
+        // `_find_jwplayer_data`, then `_parse_jwplayer_data` with formats.
+        if let Some(data) = super::jwplayer::find_data(html) {
+            if data
+                .get("playlist")
+                .is_some_and(serde_json::Value::is_string)
+            {
+                return Err(unsupported(
+                    "JW Player playlist URLs are not supported natively",
+                ));
+            }
+            let video_id = crate::screen::generic_id(url.as_str());
+            if let Some(entry) = super::jwplayer::parse(&data, &video_id, url)? {
+                crate::screen::debug("Identified a JW Player data");
+                return jwplayer_info(entry, page_url, html, timestamp).map(Some);
+            }
+        }
         if let Some(step) = unported_step(html) {
             return Err(unsupported(&format!("{step} are not supported natively")));
         }
@@ -971,6 +987,109 @@ impl GenericHttp {
             extra,
         })))
     }
+}
+
+/// `merge_dicts(jwplayer_entry, info_dict)` as an info dict.
+fn jwplayer_info(
+    entry: serde_json::Map<String, serde_json::Value>,
+    page_url: &Url,
+    html: &str,
+    timestamp: Option<i64>,
+) -> Result<ExtractResult> {
+    use serde_json::Value;
+    let invalid = |error: serde_json::Error| unsupported(&format!("JW Player data: {error}"));
+    let mut formats = Vec::new();
+    for format in entry["formats"].as_array().into_iter().flatten() {
+        let Value::Object(map) = format else { continue };
+        let url = Url::parse(map["url"].as_str().unwrap_or_default())
+            .map_err(|_| unsupported("JW Player source URL is invalid"))?;
+        let mut source = map.clone();
+        let audio = source.get("vcodec").and_then(Value::as_str) == Some("none");
+        if source.get("ext").is_none_or(Value::is_null) {
+            source.insert(
+                "ext".into(),
+                direct::determine_ext(url.as_str())
+                    .unwrap_or_else(|| "unknown_video".into())
+                    .to_lowercase()
+                    .into(),
+            );
+        }
+        if source.get("format_id").is_none_or(Value::is_null) {
+            source.insert("format_id".into(), "".into());
+        }
+        if audio {
+            source.insert("stream_kind".into(), "audio_only".into());
+        }
+        let mut format: VideoFormat =
+            serde_json::from_value(Value::Object(source)).map_err(invalid)?;
+        crate::info_order::mark_format(
+            &mut format,
+            if audio {
+                "jwplayer-audio"
+            } else {
+                "jwplayer-source"
+            },
+        );
+        formats.push(format);
+    }
+    let first = formats
+        .first()
+        .ok_or_else(|| unsupported("JW Player data has no formats"))?;
+    let mut info = direct::build_at(first.url.clone(), &first.url, first.ext.clone());
+    info.formats = formats;
+    info.webpage_url = page_url.clone();
+    info.direct = None;
+    // The entry's keys (their order is the info dict's), then the page's.
+    let keys: Vec<String> = entry.keys().cloned().collect();
+    let mut subtitles = crate::Subtitles::default();
+    for (key, value) in entry {
+        match key.as_str() {
+            "formats" => {}
+            "id" => info.id = value.as_str().unwrap_or_default().to_owned(),
+            "title" => info.title = value.as_str().unwrap_or_default().to_owned(),
+            "subtitles" => {
+                for (language, tracks) in value.as_object().into_iter().flatten() {
+                    let tracks = tracks
+                        .as_array()
+                        .into_iter()
+                        .flatten()
+                        .filter_map(|track| track["url"].as_str())
+                        .filter_map(|url| Url::parse(url).ok())
+                        .map(|url| SubtitleFormat {
+                            name: None,
+                            ext: subtitle_extension(&url),
+                            url,
+                            protocol: None,
+                            fragments: Vec::new(),
+                            extra: Default::default(),
+                        })
+                        .collect();
+                    subtitles.insert(Some(language.clone()), tracks);
+                }
+            }
+            _ => crate::metadata_parser::set_field(&mut info, &key, value),
+        }
+    }
+    info.subtitles = subtitles;
+    if !keys.iter().any(|key| key == "title") {
+        info.title = page_title(html).unwrap_or_else(|| "video".into());
+    }
+    if !keys.iter().any(|key| key == "timestamp") {
+        info.metadata.timestamp = timestamp;
+    }
+    if !keys.iter().any(|key| key == "description") {
+        info.metadata.description = crate::html::og_search_property(html, "description");
+    }
+    if !keys.iter().any(|key| key == "thumbnail") {
+        info.metadata.thumbnail = crate::html::og_search_property(html, "image");
+    }
+    if !keys.iter().any(|key| key == "age_limit") {
+        info.metadata.age_limit = crate::html::rta_search(html);
+    }
+    let shape = format!("jwplayer;{}", keys.join(","));
+    Ok(ExtractResult::Video(crate::info_order::mark_info(
+        info, &shape,
+    )))
 }
 
 /// `_generic_title`: `og:title`, else the `<title>` text (whitespace
