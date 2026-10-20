@@ -1859,7 +1859,14 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 5] = [
+static EMBED_SITES: [EmbedSite; 6] = [
+    EmbedSite {
+        name: super::bitmovin::NAME,
+        key: super::bitmovin::KEY,
+        extractor: Some(&super::bitmovin::Bitmovin),
+        embed_urls: super::bitmovin::embed_urls,
+        temp_id: super::bitmovin::temp_id,
+    },
     EmbedSite {
         name: super::blogger::NAME,
         key: super::blogger::KEY,

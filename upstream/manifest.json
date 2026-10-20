@@ -244,6 +244,18 @@
       "scope": "BildIE view=json clip sources (non-fatal HLS, http-mp4, unsupported-type warning) and metadata compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bitmovin",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bitmovin.py"
+      ],
+      "rust": [
+        "src/extractor/bitmovin.rs",
+        "tests/fixtures/sites/bitmovin/"
+      ],
+      "scope": "BitmovinIE player config HLS formats and subtitles, title/poster traversal, KeyError messages and generic-page _EMBED_REGEX embeds compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "blogger",
       "status": "partial",
       "upstream": [

@@ -385,6 +385,12 @@ sources as non-fatal HLS formats, `video/mp4` sources as `http-mp4` and an
 unescaped stripped title, description, poster thumbnail and integer
 `durationSec` duration.
 
+Bitmovin streams (`streams.bitmovin.com/ID`) follow upstream `BitmovinIE`:
+the player config's `sources.hls` as fatal HLS formats and subtitles with the
+string title (else the generic title, after `fulltitle`) and poster, with
+upstream's `KeyError` messages; its `_EMBED_REGEX` iframes on generic pages
+are found first among the embeds (one is followed, several form a playlist).
+
 Blogger videos (`blogger.com/video.g?token=TOKEN`, `blogger.com`) follow
 upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
 `unicode_escape`, its streams as formats (`mime`-query extensions, string

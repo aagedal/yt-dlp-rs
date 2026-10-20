@@ -89,7 +89,8 @@ Supported today:
   Graspop concerts, CozyTV replays, Premiership Rugby videos, CJSW episodes,
   Player.fm episodes, RTRFM shows, HitRecord records, Culture Unplugged films,
   Zhihu videos, CRTVG programmes, Breitbart videos, CGTN news videos, JoVE
-  videos, ParlView videos, The Epoch Times videos, eBay items, plus
+  videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
+  streams (and their embeds), plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes
