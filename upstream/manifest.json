@@ -306,6 +306,18 @@
       "scope": "MegaphoneIE _VALID_URL/_EMBED_REGEX and page extraction (fatal og:audio:title/artist, og:image thumbnail warning, js_to_json episode object, KeyError messages) compared with pinned upstream output through the fixture proxy; generic-page embeds in extractor order with Streamable; _fill_common_fields deprecated multivalue fields (no deprecation warning)"
     },
     {
+      "name": "qingting",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/qingting.py"
+      ],
+      "rust": [
+        "src/extractor/qingting.rs",
+        "tests/fixtures/sites/qingting/"
+      ],
+      "scope": "QingTingIE mobile page __initStores JSON (_search_json, traverse_obj fields) as an untyped m4a result compared with pinned upstream output through the fixture proxy; JSON decode error texts differ"
+    },
+    {
       "name": "reverbnation",
       "status": "partial",
       "upstream": [

@@ -17,6 +17,7 @@ mod jwplayer;
 mod kvs;
 mod livestreamfails;
 mod megaphone;
+mod qingting;
 mod reverbnation;
 mod rss;
 mod smil;
@@ -38,6 +39,7 @@ pub use html5::GenericHttp;
 pub use hypem::{Hypem, suitable as hypem_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
+pub use qingting::{QingTing, suitable as qingting_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
@@ -229,6 +231,36 @@ pub(crate) fn find_text(root: roxmltree::Node<'_, '_>, tag: &str) -> Result<Opti
         .filter_map(|node| node.text())
         .collect();
     Ok((!text.is_empty()).then_some(text))
+}
+
+/// `_search_json(start_pattern, string, ...)`: the greedy `{...}` after the
+/// start (`contains_pattern=r'{(?s:.+)}'`), optionally converted with
+/// `js_to_json`, and its first JSON value (`ignore_extra=True`); `None`
+/// without a match, `Some(None)` when it does not parse.
+pub(crate) fn search_json(
+    start: &regex::Regex,
+    html: &str,
+    js: bool,
+) -> Option<Option<serde_json::Value>> {
+    let found = start.find(html)?;
+    let rest = &html[found.end()..];
+    let trimmed = rest.trim_start();
+    if !trimmed.starts_with('{') {
+        return None;
+    }
+    let end = trimmed.rfind('}')?;
+    let candidate = &trimmed[..=end];
+    let text = if js {
+        crate::js_to_json::js_to_json(candidate)
+    } else {
+        candidate.to_owned()
+    };
+    Some(
+        serde_json::Deserializer::from_str(&text)
+            .into_iter::<serde_json::Value>()
+            .next()
+            .and_then(std::result::Result::ok),
+    )
 }
 
 /// A non-fatal `_search_regex` miss: `[EXTRACTOR] unable to extract NAME`.

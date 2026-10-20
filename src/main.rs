@@ -2862,7 +2862,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     flush_validation_warnings();
     if args.verbose {
         // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 14 extractors");
+        eprintln!("[debug] Loaded 15 extractors");
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
@@ -2985,7 +2985,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 14] = [
+        let suitable: [(&str, Suitable); 15] = [
             (
                 "BehindKink (CURRENTLY BROKEN)",
                 yt_dlp_rs::extractor::behindkink_suitable,
@@ -3009,6 +3009,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 yt_dlp_rs::extractor::livestreamfails_suitable,
             ),
             ("megaphone.fm", yt_dlp_rs::extractor::megaphone_suitable),
+            ("QingTing", yt_dlp_rs::extractor::qingting_suitable),
             ("ReverbNation", yt_dlp_rs::extractor::reverbnation_suitable),
             ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
             ("youtube", yt_dlp_rs::extractor::youtube_suitable),
@@ -3029,7 +3030,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "EbaumsWorld\nFczenit\nGlide: Glide mobile video messages (glide.me)\nHistoricFilms\nhtml5\nHypem\nLivestreamfails\nmegaphone.fm: megaphone.fm embedded players\nReverbNation\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
+            "EbaumsWorld\nFczenit\nGlide: Glide mobile video messages (glide.me)\nHistoricFilms\nhtml5\nHypem\nLivestreamfails\nmegaphone.fm: megaphone.fm embedded players\nQingTing\nReverbNation\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }

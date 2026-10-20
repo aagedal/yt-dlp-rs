@@ -377,6 +377,12 @@ its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped
 `time`/`ts`, and upstream's missing-script, `KeyError` and bare `IndexError`
 messages.
 
+QingTing programs (`qingting.fm`/`qtfm.cn` `[v]channels/C/programs/P`) follow
+upstream `QingTingIE`: the mobile program page's `window.__initStores` JSON
+(`_search_json`) with the program title and audio URL, channel title and
+podcaster as an untyped `m4a` audio result; a missing audio URL is upstream's
+`No video formats found!`.
+
 ReverbNation songs (`reverbnation.com/.../song/ID`) follow upstream
 `ReverbNationIE`: the `api.reverbnation.com/song/ID` JSON (`Downloading
 information of song ID`) as an untyped `mp3` audio-only result with the artist
