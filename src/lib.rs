@@ -16,6 +16,7 @@ mod embed_subtitles;
 mod error;
 mod external_fd;
 pub mod extractor;
+mod f4m_fd;
 mod ffmpeg_fd;
 mod filetime;
 mod fixup;
@@ -956,6 +957,8 @@ impl YoutubeDl {
             "ffmpeg"
         } else if let Some(external) = &external {
             external.basename()
+        } else if info.protocol.as_deref() == Some("f4m") {
+            "f4m"
         } else if info
             .protocol
             .as_deref()
@@ -2036,15 +2039,14 @@ impl YoutubeDl {
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
-        // Upstream `F4mFD` (HDS) is not ported.
-        if info.protocol.as_deref() == Some("f4m")
-            || info
-                .requested_formats
-                .iter()
-                .any(|format| format.protocol.as_deref() == Some("f4m"))
+        // Merged F4M formats are not supported (upstream merges F4mFD files).
+        if info
+            .requested_formats
+            .iter()
+            .any(|format| format.protocol.as_deref() == Some("f4m"))
         {
             return Err(Error::UnsupportedHtml5(
-                "F4M (HDS) downloads are not supported natively".into(),
+                "merging F4M (HDS) formats is not supported natively".into(),
             ));
         }
         let announced = ANNOUNCED.with(|announced| announced.take());
@@ -2090,6 +2092,18 @@ impl YoutubeDl {
         }
         if !info.requested_formats.is_empty() {
             return self.download_merged(info, destination.as_ref(), options, &mut callback);
+        }
+        // Upstream `F4mFD`.
+        if info.protocol.as_deref() == Some("f4m") {
+            return f4m_fd::download(
+                &self.client,
+                info,
+                destination.as_ref(),
+                options,
+                self.keep_fragments,
+                self.test,
+                &mut callback,
+            );
         }
         // A loaded HLS format reads its fragments from the playlist now.
         let refreshed = if info.fragments.is_empty() {

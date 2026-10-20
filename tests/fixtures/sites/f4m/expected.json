@@ -99,6 +99,97 @@
     "ERROR: [generic] pv: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://media.example.test/hds/real.f4m",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[generic] Extracting URL: https://media.example.test/hds/real.f4m",
+    "[generic] real: Downloading webpage",
+    "[generic] real: Extracting information",
+    "[info] real: Downloading 1 format(s): 1500",
+    "[f4m] Downloading f4m manifest",
+    "[f4m] Total fragments: 2",
+    "[download] Destination: real.flv",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {
+    "real.flv": 449
+   }
+  },
+  {
+   "url": "https://media.example.test/hds/real.f4m",
+   "args": [
+    "--no-progress",
+    "-f",
+    "400",
+    "-o",
+    "%(id)s-lo.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[generic] Extracting URL: https://media.example.test/hds/real.f4m",
+    "[generic] real: Downloading webpage",
+    "[generic] real: Extracting information",
+    "[info] real: Downloading 1 format(s): 400",
+    "[f4m] Downloading f4m manifest",
+    "[f4m] Total fragments: 2",
+    "[download] Destination: real-lo.flv",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {
+    "real-lo.flv": 413
+   }
+  },
+  {
+   "url": "https://media.example.test/hds/real.f4m",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"real\", \"title\": \"real\", \"timestamp\": null, \"formats\": [{\"format_id\": \"400\", \"url\": \"https://media.example.test/hds/real.f4m\", \"manifest_url\": \"https://media.example.test/hds/real.f4m\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 400, \"width\": null, \"height\": null, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"400 - unknown\"}, {\"format_id\": \"1500\", \"url\": \"https://media.example.test/hds/real.f4m\", \"manifest_url\": \"https://media.example.test/hds/real.f4m\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1500 - 1280x720\"}], \"webpage_url\": \"https://media.example.test/hds/real.f4m\", \"original_url\": \"https://media.example.test/hds/real.f4m\", \"webpage_url_basename\": \"real.f4m\", \"webpage_url_domain\": \"media.example.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"real\", \"fulltitle\": \"real\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"1500\", \"url\": \"https://media.example.test/hds/real.f4m\", \"manifest_url\": \"https://media.example.test/hds/real.f4m\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1500 - 1280x720\", \"_filename\": \"real [real].flv\", \"filename\": \"real [real].flv\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://media.example.test/hds/byurl.f4m",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[generic] Extracting URL: https://media.example.test/hds/byurl.f4m",
+    "[generic] byurl: Downloading webpage",
+    "[generic] byurl: Extracting information",
+    "[info] byurl: Downloading 1 format(s): 800",
+    "[f4m] Downloading f4m manifest",
+    "[f4m] Total fragments: 2",
+    "[download] Destination: byurl.flv",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {
+    "byurl.flv": 413
+   }
   }
  ]
 }

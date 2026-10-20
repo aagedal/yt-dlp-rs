@@ -220,8 +220,15 @@ manifests with `bootstrapInfo`; otherwise each `href`/`url` joined to the
 `baseURL` or manifest directory), `bitrate` as the format ID and int `tbr`,
 an audio `mimeType` as `vcodec: none`, and none for an Akamai player
 verification challenge (upstream's `No video formats found!`). Nested
-`.f4m`/`.m3u8` media URLs are unsupported errors, as is downloading any F4M
-format (upstream's HDS `F4mFD` is not ported).
+`.f4m`/`.m3u8` media URLs are unsupported errors. F4M formats download through
+a port of upstream's `F4mFD`: `[f4m] Downloading f4m manifest`, the media of
+the requested bitrate (else the highest), DRM checks, inline or URL bootstrap
+info (`abst`/`asrt`/`afrt`), `SegN-FragM` fragment URLs with the media's query,
+the Akamai `pv-2.0` token and `extra_param_to_segment_url`, then the FLV header,
+metadata tag and each fragment's `mdat` payload through the fragment
+downloader (`.part`/`.ytdl` resume, retries, `--keep-fragments`; `--test`
+takes the first fragment). Live HDS streams and merged F4M formats are
+unsupported errors.
 An XSPF document (`{http://xspf.org/ns/0/}playlist`) is upstream's untitled
 `_parse_xspf` playlist: each `trackList/track` is an entry with the page's ID,
 its title (else the ID), annotation, image and millisecond duration, and its

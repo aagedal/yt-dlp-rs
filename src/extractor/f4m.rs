@@ -26,7 +26,7 @@ fn text(node: roxmltree::Node<'_, '_>) -> Option<String> {
 }
 
 /// `fix_xml_ampersands(manifest).strip()`.
-fn fix_ampersands(text: &str) -> String {
+pub(crate) fn fix_ampersands(text: &str) -> String {
     static AMP: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
         regex::Regex::new(r"&(amp;|lt;|gt;|apos;|quot;|#x[0-9a-fA-F]{0,4};|#[0-9]{0,4};)?")
             .expect("static pattern")

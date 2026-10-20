@@ -88,8 +88,9 @@ fn site_extractors_match_saved_upstream_output() {
 }
 
 #[test]
-fn f4m_downloads_are_unsupported_errors() {
-    // Upstream's F4mFD (HDS) is not ported: the download fails explicitly.
+fn hds_downloads_assemble_flv_like_upstream_f4mfd() {
+    // The FLV header, the media's metadata tag, then each fragment's
+    // `mdat` payload (md5-identical to pinned upstream's file).
     let proxy = site_proxy::SiteProxy::start("f4m");
     let work = tempfile::tempdir().unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
@@ -99,14 +100,23 @@ fn f4m_downloads_are_unsupported_errors() {
             &proxy.url,
             "--no-check-certificate",
         ])
-        .args(["--no-progress", "https://media.example.test/hds/clip.f4m"])
+        .args(["--no-progress", "-o", "o.%(ext)s"])
+        .arg("https://media.example.test/hds/real.f4m")
         .current_dir(work.path())
         .output()
         .unwrap();
-    assert_eq!(output.status.code(), Some(1));
     assert!(
+        output.status.success(),
+        "{}",
         String::from_utf8_lossy(&output.stderr)
-            .contains("F4M (HDS) downloads are not supported natively")
     );
-    assert_eq!(std::fs::read_dir(work.path()).unwrap().count(), 0);
+    let metadata = b"\x02\x00\x0aonMetaData\x08\x00\x00\x00\x00\x00\x00\x09";
+    let mut expected = b"FLV\x01\x05\x00\x00\x00\x09\x00\x00\x00\x00\x12".to_vec();
+    expected.extend_from_slice(&(metadata.len() as u32).to_be_bytes()[1..]);
+    expected.extend_from_slice(&[0; 7]);
+    expected.extend_from_slice(metadata);
+    expected.extend_from_slice(&(11 + metadata.len() as u32).to_be_bytes());
+    expected.extend(b"TAG1".repeat(50));
+    expected.extend(b"TAG2".repeat(50));
+    assert_eq!(std::fs::read(work.path().join("o.flv")).unwrap(), expected);
 }

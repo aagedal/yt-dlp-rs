@@ -23,6 +23,7 @@ mod youtube;
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
+pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use glide::{Glide, suitable as glide_suitable};
 pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;

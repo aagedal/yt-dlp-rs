@@ -93,6 +93,52 @@ pub(crate) fn download(
     keep_fragments: bool,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
+    download_with(
+        client,
+        info,
+        destination,
+        options,
+        concurrency,
+        keep_fragments,
+        None,
+        callback,
+    )
+}
+
+/// Upstream `F4mFD`'s assembly: the FLV `header` first (unless resuming),
+/// then each fragment's `mdat` payload, sequentially.
+pub(crate) fn download_f4m(
+    client: &Client,
+    info: &VideoInfo,
+    destination: &Path,
+    options: DownloadOptions,
+    keep_fragments: bool,
+    header: &[u8],
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    download_with(
+        client,
+        info,
+        destination,
+        options,
+        1,
+        keep_fragments,
+        Some(header),
+        callback,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn download_with(
+    client: &Client,
+    info: &VideoInfo,
+    destination: &Path,
+    options: DownloadOptions,
+    concurrency: usize,
+    keep_fragments: bool,
+    f4m: Option<&[u8]>,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
     crate::download::check_destination(destination, &options)?;
     // The extractor-argument queries and key apply to the requests.
     let adjusted = crate::manifest_args::download_fragments(info).map(|fragments| {
@@ -261,6 +307,13 @@ pub(crate) fn download(
             (_, Some((file, _))) => file,
             _ => unreachable!("one output file is open"),
         };
+        // `write_flv_header` (and the metadata tag) before any fragment.
+        if let Some(header) = f4m
+            && stored == 0
+        {
+            output.write_all(header)?;
+            stored = header.len() as u64;
+        }
         if concurrency > 1 && info.fragments.len() - start > 1 {
             let (written, latest) = download_concurrent(
                 client,
@@ -304,6 +357,18 @@ pub(crate) fn download(
                         let mut file = fs::File::open(&output_path)?;
                         file.seek(SeekFrom::Start(prefix))?;
                         keep_fragment(index, &mut file.take(stored - prefix))?;
+                    }
+                    // F4mFD appends only the fragment's `mdat` box data.
+                    if f4m.is_some() {
+                        let mut raw = Vec::new();
+                        let mut file = fs::File::open(&output_path)?;
+                        file.seek(SeekFrom::Start(prefix))?;
+                        file.take(stored - prefix).read_to_end(&mut raw)?;
+                        let payload = crate::f4m_fd::mdat(&raw)?;
+                        output.set_len(prefix)?;
+                        output.seek(SeekFrom::Start(prefix))?;
+                        output.write_all(payload)?;
+                        stored = prefix + payload.len() as u64;
                     }
                     appended(index)?;
                 }
