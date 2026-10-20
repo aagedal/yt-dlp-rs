@@ -168,6 +168,18 @@ fn fragment(
         duration,
     })
 }
+/// Upstream's text representation keys: the MPD as `manifest_url` and, when
+/// segmented, the base of relative fragment paths.
+fn text_extra(manifest: &Url, base: Option<Url>) -> serde_json::Map<String, serde_json::Value> {
+    let mut extra = serde_json::Map::new();
+    extra.insert(crate::info_order::FORMAT_SHAPE.into(), "dash-text".into());
+    extra.insert("manifest_url".into(), manifest.as_str().into());
+    if let Some(base) = base {
+        extra.insert("fragment_base_url".into(), base.as_str().into());
+    }
+    extra
+}
+
 #[derive(Clone)]
 struct Entry {
     t: Option<u64>,
@@ -845,6 +857,7 @@ pub(crate) fn parse_with_subtitles(
                         subtitles.push((
                             language,
                             crate::SubtitleFormat {
+                                extra: text_extra(manifest, None),
                                 fragments: Vec::new(),
                                 name: None,
                                 url: base.clone(),
@@ -869,6 +882,14 @@ pub(crate) fn parse_with_subtitles(
                     subtitles.push((
                         language,
                         crate::SubtitleFormat {
+                            extra: text_extra(
+                                manifest,
+                                Some(if explicit {
+                                    base.clone()
+                                } else {
+                                    base.join(".")?
+                                }),
+                            ),
                             fragments,
                             name: None,
                             url: manifest.clone(),
@@ -923,6 +944,7 @@ pub(crate) fn parse_with_subtitles(
             // base for relative fragment paths, and `_merge_mpd_periods`'s
             // `is_dash_periods`.
             let mut extra = serde_json::Map::new();
+            extra.insert(crate::info_order::FORMAT_SHAPE.into(), "dash".into());
             extra.insert("manifest_url".into(), manifest.as_str().into());
             if address.kind.is_some() {
                 // Without a BaseURL, upstream's base is the MPD's directory.

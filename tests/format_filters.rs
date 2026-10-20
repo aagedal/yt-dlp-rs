@@ -270,7 +270,8 @@ fn unknown_numeric_values_require_explicit_inclusion() {
     let server = Server::new();
     let info = server.json("/formats.html", "best[height<=?100][ext=mp4]");
     assert_eq!(info["format_id"], "0");
-    assert!(info.get("height").is_none());
+    // Upstream's `<source>` formats carry `height: None`.
+    assert!(info["height"].is_null());
     let output = server.cli(
         "/formats.html",
         &["-j", "-s", "-f", "best[height<=100][ext=mp4]"],

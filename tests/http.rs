@@ -1466,14 +1466,27 @@ fn html5_formats_carry_upstream_content_type_codecs() {
     };
     let text = |value: &str| Some(serde_json::json!(value));
     // The element's own src ignores type codecs; <source> codecs keep their
-    // acodec, but vcodec is reset like upstream's `f.update(formats[0])`.
+    // acodec, but vcodec is reset to `None` like upstream's
+    // `f.update(formats[0])`.
     // Sorted like pinned upstream: the source with a known acodec ranks best.
     assert_eq!(
         codecs(0),
         [
-            (None, None, serde_json::json!("SDR")),
-            (None, None, serde_json::json!("SDR")),
-            (None, text("mp4a.40.2"), serde_json::json!("SDR")),
+            (
+                Some(serde_json::Value::Null),
+                None,
+                serde_json::json!("SDR")
+            ),
+            (
+                Some(serde_json::Value::Null),
+                None,
+                serde_json::json!("SDR")
+            ),
+            (
+                Some(serde_json::Value::Null),
+                text("mp4a.40.2"),
+                serde_json::json!("SDR")
+            ),
         ]
     );
     // Inside <audio>, vcodec is `none` (no dynamic range), and the mp3

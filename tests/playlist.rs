@@ -197,7 +197,11 @@ fn playlist_flags_do_not_filter_or_annotate_a_single_direct_video() {
         "playlist_count",
         "n_entries",
     ] {
-        assert!(info.get(key).is_none(), "{key}")
+        // Upstream assigns `None` to a single video's playlist index.
+        assert!(
+            info.get(key).is_none_or(serde_json::Value::is_null),
+            "{key}"
+        )
     }
     assert_eq!(server.count("/one.mp4"), 1);
 }
@@ -468,7 +472,7 @@ fn later_urls_continue_after_playlist_format_failure_and_keep_their_own_selectio
     let items = entries(&String::from_utf8(output.stdout).unwrap());
     assert_eq!(items.len(), 1);
     assert_eq!(items[0]["id"], "one");
-    assert!(items[0].get("playlist_index").is_none());
+    assert!(items[0]["playlist_index"].is_null());
 }
 
 #[test]

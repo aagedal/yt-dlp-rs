@@ -68,7 +68,7 @@ pub fn video_info_json(info: &VideoInfo, epoch: u64) -> Result<Value> {
 /// [`video_info_json`] with upstream `clean_infojson` (`--no-clean-info-json`
 /// keeps `None` values and private keys).
 pub fn video_info_json_with(info: &VideoInfo, epoch: u64, clean: bool) -> Result<Value> {
-    finish(to_value(info)?, "video", epoch, clean)
+    finish(raw_value(info)?, "video", epoch, clean)
 }
 
 /// The cleaned playlist dictionary written before its entries are processed.
@@ -87,16 +87,19 @@ pub fn playlist_info_json_with(
     epoch: u64,
     clean: bool,
 ) -> Result<Value> {
-    let mut value = to_value(info)?;
+    let mut value = raw_value(info)?;
     if let Value::Object(map) = &mut value {
         map.insert("playlist_count".into(), counts.playlist_count.into());
     }
     finish(value, "playlist", epoch, clean)
 }
 
+fn raw_value(value: impl serde::Serialize) -> Result<Value> {
+    serde_json::to_value(value).map_err(|error| Error::InfoJson(error.to_string()))
+}
+
 fn to_value(value: impl serde::Serialize) -> Result<Value> {
-    let mut value =
-        serde_json::to_value(value).map_err(|error| Error::InfoJson(error.to_string()))?;
+    let mut value = raw_value(value)?;
     upstream_shape(&mut value);
     Ok(value)
 }
@@ -137,35 +140,93 @@ pub fn upstream_shape(value: &mut Value) {
     // Upstream fragment dicts: `path` (relative to `fragment_base_url`) or
     // `url`, `duration`, and `byte_range` as `start`/`end` (exclusive).
     fn upstream_fragment(fragment: &mut Map<String, Value>) {
-        if let Some(path) = fragment.remove("path") {
-            fragment.remove("url");
-            fragment.insert("path".into(), path);
+        let mut shaped = Map::new();
+        match fragment.remove("path") {
+            Some(path) => {
+                shaped.insert("path".into(), path);
+            }
+            None => {
+                if let Some(url) = fragment.remove("url") {
+                    shaped.insert("url".into(), url);
+                }
+            }
         }
-        if let Some(Value::Object(range)) = fragment.get_mut("byte_range") {
-            let offset = range.get("offset").and_then(Value::as_u64).unwrap_or(0);
-            let length = range.get("length").and_then(Value::as_u64).unwrap_or(0);
-            *range = Map::from_iter([
-                ("start".to_owned(), offset.into()),
-                ("end".to_owned(), offset.saturating_add(length).into()),
-            ]);
+        if let Some(duration) = fragment.remove("duration") {
+            shaped.insert("duration".into(), duration);
         }
+        match fragment.remove("byte_range") {
+            Some(Value::Object(range)) if !range.contains_key("start") => {
+                let offset = range.get("offset").and_then(Value::as_u64).unwrap_or(0);
+                let length = range.get("length").and_then(Value::as_u64).unwrap_or(0);
+                shaped.insert(
+                    "byte_range".into(),
+                    Value::Object(Map::from_iter([
+                        ("start".to_owned(), offset.into()),
+                        ("end".to_owned(), offset.saturating_add(length).into()),
+                    ])),
+                );
+            }
+            Some(range) => {
+                shaped.insert("byte_range".into(), range);
+            }
+            None => {}
+        }
+        fragment.remove("url");
+        // Other keys (HLS encryption) are not upstream's; DASH has none.
+        *fragment = shaped;
     }
     let Some(map) = value.as_object_mut() else {
         return;
     };
+    if let Some(Value::Array(entries)) = map.get_mut("entries") {
+        entries.iter_mut().for_each(upstream_shape);
+        *map = crate::info_order::playlist(std::mem::take(map));
+        return;
+    }
     // The top level is the merged selected format.
     format(map);
     for key in ["formats", "requested_formats"] {
         if let Some(Value::Array(items)) = map.get_mut(key) {
-            items
-                .iter_mut()
-                .filter_map(Value::as_object_mut)
-                .for_each(format);
+            for item in items.iter_mut() {
+                if let Value::Object(item) = item {
+                    format(item);
+                    *item = crate::info_order::format(std::mem::take(item));
+                }
+            }
         }
     }
-    if let Some(Value::Array(entries)) = map.get_mut("entries") {
-        entries.iter_mut().for_each(upstream_shape);
+    // Subtitle dicts (DASH text tracks have upstream's shape).
+    for key in ["subtitles", "automatic_captions", "requested_subtitles"] {
+        if let Some(Value::Object(languages)) = map.get_mut(key) {
+            for tracks in languages.values_mut() {
+                let tracks = match tracks {
+                    Value::Array(tracks) => tracks.iter_mut().collect::<Vec<_>>(),
+                    track => vec![track],
+                };
+                for track in tracks {
+                    if let Value::Object(track) = track {
+                        if let Some(Value::Array(fragments)) = track.get_mut("fragments") {
+                            fragments
+                                .iter_mut()
+                                .filter_map(Value::as_object_mut)
+                                .for_each(upstream_fragment);
+                        }
+                        *track = crate::info_order::format(std::mem::take(track));
+                    }
+                }
+            }
+        }
     }
+    // `_merge`'s dict has no URL or headers of its own.
+    if map
+        .get("requested_formats")
+        .and_then(Value::as_array)
+        .is_some_and(|formats| !formats.is_empty())
+    {
+        map.remove("url");
+        map.remove("http_headers");
+    }
+    *map = crate::info_order::video(std::mem::take(map));
 }
 
 /// A video's info dict shaped like upstream's ([`upstream_shape`]).
@@ -179,13 +240,14 @@ pub(crate) fn to_shaped_value(value: impl serde::Serialize) -> Result<Value> {
 }
 
 fn finish(value: Value, kind: &str, epoch: u64, cleaned: bool) -> Result<Value> {
-    let value = if cleaned { clean(value) } else { value };
     let Value::Object(mut map) = value else {
         return Err(Error::InfoJson("info is not a JSON object".into()));
     };
     map.entry("epoch").or_insert(epoch.into());
     map.entry("_type").or_insert(kind.into());
-    Ok(Value::Object(map))
+    let mut value = Value::Object(map);
+    upstream_shape(&mut value);
+    Ok(if cleaned { clean(value) } else { value })
 }
 
 fn clean(value: Value) -> Value {
@@ -473,6 +535,17 @@ fn sanitize_loaded(value: Value) -> Value {
 fn normalize_loaded(map: &mut serde_json::Map<String, Value>) -> Result<()> {
     // The top level holds the selected format's fields.
     loaded_fragments(map)?;
+    for key in ["subtitles", "automatic_captions"] {
+        if let Some(Value::Object(languages)) = map.get_mut(key) {
+            for tracks in languages.values_mut() {
+                if let Value::Array(tracks) = tracks {
+                    for track in tracks.iter_mut().filter_map(Value::as_object_mut) {
+                        loaded_fragments(track)?;
+                    }
+                }
+            }
+        }
+    }
     if let Some(Value::Array(formats)) = map.get_mut("formats") {
         for format in formats.iter_mut().filter_map(Value::as_object_mut) {
             let protocol = format

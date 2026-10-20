@@ -84,6 +84,9 @@ pub struct SubtitleFormat {
     /// A segmented DASH text track's fragments.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub fragments: Vec<crate::Fragment>,
+    /// Keys this port does not model (a DASH track's `manifest_url`).
+    #[serde(flatten, default)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
 }
 pub type Subtitles = SubtitleMap<Vec<SubtitleFormat>>;
 pub type RequestedSubtitles = SubtitleMap<SubtitleFormat>;
@@ -316,6 +319,7 @@ mod tests {
 
     fn format(ext: &str, id: &str) -> SubtitleFormat {
         SubtitleFormat {
+            extra: Default::default(),
             fragments: Vec::new(),
             protocol: None,
             name: None,
@@ -400,6 +404,7 @@ mod tests {
     fn inventory_matches_upstream_table() {
         let mut info = info();
         let named = |ext: &str, name: Option<&str>| SubtitleFormat {
+            extra: Default::default(),
             fragments: Vec::new(),
             protocol: None,
             name: name.map(str::to_owned),
@@ -722,6 +727,7 @@ mod tests {
                 entries: vec![(
                     case["language"].as_str().map(str::to_owned),
                     SubtitleFormat {
+                        extra: Default::default(),
                         fragments: Vec::new(),
                         protocol: None,
                         name: None,

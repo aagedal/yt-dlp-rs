@@ -108,6 +108,8 @@ struct Html5Source {
     label: Option<String>,
     /// `parse_bitrate` of the labels.
     tbr: Option<f64>,
+    /// A `<source>` element (rather than the media element's `src`).
+    element: bool,
 }
 
 /// Upstream `parse_content_type`'s `codecs` group:
@@ -305,6 +307,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                 codecs,
                 label,
                 tbr,
+                element: child,
                 hls_hint: hint.contains("mpegurl"),
                 dash_hint: hint.contains("dash+xml"),
             });
@@ -343,6 +346,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                 .or_else(|| track.value().attr("label"))
                 .map(str::to_owned);
             let format = SubtitleFormat {
+                extra: Default::default(),
                 fragments: Vec::new(),
                 protocol: None,
                 name: None,
@@ -478,7 +482,9 @@ impl Extractor for GenericHttp {
             if manifest.is_some() && !media_type {
                 detected("DASH manifest");
             }
-            return Ok(manifest.map(stamp));
+            return Ok(manifest
+                .map(|info| crate::info_order::mark_info(info, "generic-dash"))
+                .map(stamp));
         }
         let hls_path = url.path().to_ascii_lowercase().ends_with(".m3u8")
             || response
@@ -498,7 +504,18 @@ impl Extractor for GenericHttp {
             } else {
                 direct::from_response(&response, url)
             }
-            .map(|info| direct::with_format(info, &mime));
+            .map(|info| direct::with_format(info, &mime))
+            // Without a media Content-Type, upstream returns the bare URL.
+            .map(|info| {
+                crate::info_order::mark_info(
+                    info,
+                    if media_type {
+                        "generic-direct"
+                    } else {
+                        "generic-untyped"
+                    },
+                )
+            });
             if !media_type {
                 fallback();
             }
@@ -521,6 +538,16 @@ impl Extractor for GenericHttp {
             } else if direct.is_some() && !media_type {
                 warning("[generic] URL could be a direct video link, returning it as such.");
             }
+            let hls = hls.map(|info| {
+                crate::info_order::mark_info(
+                    info,
+                    if media_type {
+                        "generic-hls"
+                    } else {
+                        "generic-m3u"
+                    },
+                )
+            });
             return Ok(hls.or(direct).map(stamp));
         }
         fallback();
@@ -636,6 +663,13 @@ impl Extractor for GenericHttp {
                     formats.extend(info.formats.iter().cloned().map(|mut format| {
                         format.audio_group =
                             format.audio_group.map(|group| format!("{index}-{group}"));
+                        // The page's Referer is added after the manifest's keys.
+                        if let Some(serde_json::Value::String(shape)) =
+                            format.extra.get(crate::info_order::FORMAT_SHAPE)
+                        {
+                            let shape = format!("html5+{shape}");
+                            crate::info_order::mark_format(&mut format, &shape);
+                        }
                         format
                     }));
                     first_info.get_or_insert(info);
@@ -684,6 +718,14 @@ impl Extractor for GenericHttp {
                     width: source.width,
                     height: source.height,
                 });
+                if let Some(format) = formats.last_mut() {
+                    let shape = if source.element {
+                        "html5-source"
+                    } else {
+                        "html5-src"
+                    };
+                    crate::info_order::mark_format(format, shape);
+                }
                 first_info.get_or_insert(info);
             }
             let mut info = first_info.expect("parsed HTML5 media has at least one source");
@@ -696,7 +738,7 @@ impl Extractor for GenericHttp {
             info.direct = None;
             info.extractor = "html5".into();
             info.extractor_key = "HTML5MediaEmbed".into();
-            entries.push(info);
+            entries.push(crate::info_order::mark_info(info, "html5-entry"));
         }
         // `HTML5MediaEmbedIE`: archive IDs from before the embed extractor.
         let single = entries.len() == 1;
@@ -717,7 +759,7 @@ impl Extractor for GenericHttp {
         });
         if entries.len() == 1 {
             // `merge_dicts(embed, info_dict)`: page fields fill missing values.
-            let mut info = entries.pop().expect("one entry");
+            let mut info = crate::info_order::mark_info(entries.pop().expect("one entry"), "html5");
             info.metadata.timestamp = info.metadata.timestamp.or(timestamp);
             info.metadata.description = crate::html::og_search_property(html, "description");
             if info.metadata.thumbnail.is_none() {
@@ -733,7 +775,10 @@ impl Extractor for GenericHttp {
             extractor: "generic".into(),
             extractor_key: "Generic".into(),
             entries,
-            extra: Default::default(),
+            extra: serde_json::Map::from_iter([(
+                crate::info_order::INFO_SHAPE.to_owned(),
+                "html5-playlist".into(),
+            )]),
         })))
     }
 }

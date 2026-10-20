@@ -585,7 +585,7 @@
         "tools/test_compare_video.py",
         "upstream/notes/video-processing.md"
       ],
-      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio\u2192video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
+      "scope": "Pinned remux/recode target mappings, same-extension/unmapped skips, source stream-map/copy and AVI-Xvid plans, explicit bounded local FFmpeg with container defaults/faststart; ordered audio→video pipeline, all-stage keep retention, latest completed input on failure and no-clobber final publication; no generic postprocessor chains, encoder/preset configuration, separate pre-merge input retention, embedding or fixups; literal alac/vorbis video suffixes fail without a muxer"
     },
     {
       "name": "thumbnail-processing",
@@ -670,7 +670,10 @@
         "yt_dlp/YoutubeDL.py",
         "yt_dlp/utils/_utils.py",
         "yt_dlp/options.py",
-        "yt_dlp/__init__.py"
+        "yt_dlp/__init__.py",
+        "yt_dlp/extractor/generic.py",
+        "yt_dlp/extractor/genericembeds.py",
+        "yt_dlp/extractor/common.py"
       ],
       "rust": [
         "src/info_json.rs",
@@ -682,7 +685,12 @@
         "tests/fixtures/info_json/",
         "tools/compare_info_json.py",
         "tools/test_compare_info_json.py",
-        "upstream/notes/info-json.md"
+        "upstream/notes/info-json.md",
+        "src/info_order.rs",
+        "tests/info_order.rs",
+        "tests/fixtures/info_order/",
+        "tools/capture_info_order.py",
+        "tools/test_capture_info_order.py"
       ],
       "scope": "--write-info-json/--no-write-info-json video and playlist sidecars with default clean filtering, replace_extension naming, playlist template context, Python json.dump bytes, keep-existing default and ordering before media/entries; no overwrite options, --no-clean-info-json, --load-info-json, embedding, typed infojson templates or unmodeled upstream fields"
     },

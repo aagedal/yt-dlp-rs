@@ -771,10 +771,12 @@ impl MatchFilters {
     /// Evaluate a video. Before format selection, pass `before_selection` so
     /// format fields are incomplete (missing ones pass).
     pub fn check(&self, info: &VideoInfo, before_selection: bool) -> Result<MatchOutcome> {
-        let value = serde_json::to_value(info).map_err(|error| invalid(error.to_string()))?;
+        let mut value = serde_json::to_value(info).map_err(|error| invalid(error.to_string()))?;
         let dict = value
-            .as_object()
+            .as_object_mut()
             .expect("video info serializes to an object");
+        crate::info_order::strip_markers(dict);
+        let dict = &*dict;
         let incomplete = |key: &str| before_selection && FORMAT_FIELDS.contains(&key);
         let reject = |reason| {
             if self.selection.break_on_reject {

@@ -679,6 +679,7 @@ impl VideoInfo {
             let mut info = serde_json::to_value(self).unwrap_or_default();
             if let Some(object) = info.as_object_mut() {
                 object.remove("formats");
+                crate::info_order::strip_markers(object);
             }
             return vec![info];
         }
@@ -688,6 +689,7 @@ impl VideoInfo {
                 let mut value = serde_json::to_value(format).unwrap_or_default();
                 if let Some(object) = value.as_object_mut() {
                     object.remove("fragments");
+                    crate::info_order::strip_markers(object);
                 }
                 value
             })
@@ -785,6 +787,17 @@ impl VideoInfo {
         self.format = text("format").filter(|format| !format.is_empty());
         self.filesize = None;
         self.tbr = number("tbr");
+        // `_merge`'s joined `language`/`format_note` and summed size.
+        for key in ["language", "format_note", "filesize_approx"] {
+            match merged.get(key).filter(|value| !value.is_null()) {
+                Some(value) => {
+                    self.extra.insert(key.into(), value.clone());
+                }
+                None => {
+                    self.extra.remove(key);
+                }
+            }
+        }
         if present("vcodec") {
             self.width = merged
                 .get("width")

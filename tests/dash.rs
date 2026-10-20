@@ -317,7 +317,8 @@ fn json_simulation_does_not_request_initialization_or_media_or_create_files() {
     assert_eq!(info["requested_formats"][1]["format_note"], "DASH audio");
     assert_eq!(info["requested_formats"][1]["audio_ext"], "m4a");
     assert_eq!(info["requested_formats"][1]["video_ext"], "none");
-    assert!(info["requested_formats"][1].get("dynamic_range").is_none());
+    // `parse_codecs` gives audio a `None` dynamic range, as upstream prints.
+    assert!(info["requested_formats"][1]["dynamic_range"].is_null());
     assert_eq!(info["requested_formats"][0]["acodec"], "none");
     assert_eq!(
         info["requested_formats"][1]["protocol"],

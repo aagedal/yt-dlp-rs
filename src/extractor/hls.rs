@@ -35,8 +35,9 @@ fn recognized(response: &Response) -> bool {
 /// Upstream `_extract_m3u8_formats` keys this port does not model as fields:
 /// `has_drm` (always false: DRM playlists are rejected) and, for formats from
 /// a master playlist, its `manifest_url`.
-fn hls_extra(master: Option<&Url>) -> serde_json::Map<String, serde_json::Value> {
+fn hls_extra(master: Option<&Url>, shape: &str) -> serde_json::Map<String, serde_json::Value> {
     let mut extra = serde_json::Map::new();
+    extra.insert(crate::info_order::FORMAT_SHAPE.into(), shape.into());
     if let Some(master) = master {
         extra.insert("manifest_url".into(), master.as_str().into());
     }
@@ -277,7 +278,7 @@ pub(crate) fn from_response(
             // A media playlist is returned as one format (per section).
             let format = VideoFormat {
                 http_headers: None,
-                extra: hls_extra(None),
+                extra: hls_extra(None, "hls-media"),
                 protocol: Some("m3u8_native".into()),
                 vcodec: None,
                 acodec: None,
@@ -335,6 +336,7 @@ pub(crate) fn from_response(
                 };
                 let language = Some(subtitle.language.unwrap_or_else(|| "und".into()));
                 let format = crate::SubtitleFormat {
+                    extra: Default::default(),
                     fragments: Vec::new(),
                     name: None,
                     url: subtitle.url,
@@ -402,7 +404,7 @@ pub(crate) fn from_response(
                 let known = |codec: String| (!codec.is_empty()).then_some(codec);
                 let format = VideoFormat {
                     http_headers: None,
-                    extra: hls_extra(Some(&manifest_url)),
+                    extra: hls_extra(Some(&manifest_url), "hls-variant"),
                     protocol: Some("m3u8_native".into()),
                     vcodec: known(codecs.vcodec),
                     acodec: known(codecs.acodec),
@@ -468,7 +470,7 @@ pub(crate) fn from_response(
                 }
                 let format = VideoFormat {
                     http_headers: None,
-                    extra: hls_extra(Some(&manifest_url)),
+                    extra: hls_extra(Some(&manifest_url), "hls-rendition"),
                     protocol: Some("m3u8_native".into()),
                     vcodec: Some("none".into()),
                     acodec: None,

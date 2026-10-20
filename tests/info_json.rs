@@ -146,7 +146,8 @@ fn video_info_json_is_cleaned_dumped_metadata_written_before_media() {
     );
     let (text, mut value) = read(&dir.path().join(format!("{base}.info.json")));
     assert!(
-        text.starts_with("{\"id\": ") && text.contains("\", \""),
+        // Upstream's HTML5 embed dict starts with its formats.
+        text.starts_with("{\"formats\": ") && text.contains("\", \""),
         "{text}"
     );
     assert!(!text.ends_with('\n'));
@@ -162,6 +163,18 @@ fn video_info_json_is_cleaned_dumped_metadata_written_before_media() {
     for key in ["original_url", "_filename", "filename", "epoch", "_type"] {
         assert!(object.remove(key).is_some(), "{key}");
     }
+    // ... and `None` values, which `-j` prints as `null`.
+    fn without_nulls(value: &mut serde_json::Value) {
+        match value {
+            serde_json::Value::Object(map) => {
+                map.retain(|_, value| !value.is_null());
+                map.values_mut().for_each(without_nulls);
+            }
+            serde_json::Value::Array(items) => items.iter_mut().for_each(without_nulls),
+            _ => {}
+        }
+    }
+    without_nulls(&mut dumped);
     assert_eq!(value, dumped);
     let info = stdout
         .find(&format!(

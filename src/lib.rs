@@ -26,6 +26,7 @@ mod html;
 mod http;
 mod info;
 mod info_json;
+mod info_order;
 mod match_filter;
 mod md5;
 mod merge;

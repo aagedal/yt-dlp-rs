@@ -156,6 +156,9 @@ pub(crate) fn with_format(mut info: VideoInfo, mime: &str) -> VideoInfo {
         width: None,
         height: None,
     }];
+    if media {
+        crate::info_order::mark_format(&mut info.formats[0], "direct");
+    }
     info
 }
 
@@ -411,7 +414,10 @@ pub(crate) fn from_file(url: &Url) -> crate::Result<VideoInfo> {
             )
         })?;
     let ext = determine_ext(url.as_str()).unwrap_or_else(|| mimetype2ext_or(mime, None));
-    let mut info = with_format(build_at(url.clone(), url, ext), mime);
+    let mut info = crate::info_order::mark_info(
+        with_format(build_at(url.clone(), url, ext), mime),
+        "generic-direct",
+    );
     info.protocol = Some("file".into());
     for format in &mut info.formats {
         format.protocol = Some("file".into());
