@@ -601,7 +601,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             .unwrap_or_default()
     };
     let untyped = own_format;
-    let entry = matches!(shape.as_str(), "html5-entry" | "generic-found-entry");
+    let entry = matches!(
+        shape.as_str(),
+        "html5-entry"
+            | "generic-found-entry"
+            | "generic-found-hls-entry"
+            | "generic-found-dash-entry"
+    );
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape.as_str() {
         "generic-direct" => &[
@@ -685,6 +691,33 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
+        ],
+        // Several found manifest URLs: unmerged, `None` keys stay.
+        "generic-found-hls-entry" => &[
+            ("id", Take),
+            ("uploader", Take),
+            ("title", Take),
+            ("age_limit", Assign),
+            ("http_headers", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("extra_param_to_segment_url", Take),
+            ("extra_param_to_key_url", Take),
+            ("hls_aes", Assign),
+            ("live_status", Take),
+            ("duration", Take),
+        ],
+        "generic-found-dash-entry" => &[
+            ("id", Take),
+            ("uploader", Take),
+            ("title", Take),
+            ("age_limit", Assign),
+            ("http_headers", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("extra_param_to_segment_url", Take),
+            ("extra_param_to_key_url", Take),
+            ("hls_aes", Assign),
         ],
         // One of several found URLs (a playlist entry keeps `age_limit`).
         "generic-found-entry" => &[

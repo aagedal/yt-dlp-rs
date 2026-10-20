@@ -242,9 +242,9 @@ iframes (`[redirect] Following redirect to URL`, extracted again). Found
 direct media URLs become upstream's entries (basename ID, the domain as
 `uploader`, the page title, a Referer header; one URL merged with the page's
 `timestamp`/`description`/`thumbnail`, several as a playlist with numbered
-titles); one found HLS or DASH URL is requested with the page as Referer and
-gets `_extra_manifest_info` (several, and SMIL/XSPF/F4M, RTMP and YouTube URLs,
-are unsupported errors), as are pages where upstream's earlier KVS player step
+titles); found HLS or DASH URLs are requested with the page as Referer and
+get `_extra_manifest_info` (SMIL/XSPF/F4M, RTMP and YouTube URLs are
+unsupported errors), as are pages where upstream's earlier KVS player step
 would answer. Output templates render a JW
 Player integer `tbr` as a float (JSON keeps upstream's int). Otherwise
 the result is upstream's `ERROR: Unsupported URL: URL`.

@@ -951,7 +951,7 @@ impl GenericHttp {
                 return Err(unsupported("RTMP URLs are not supported natively"));
             }
             let ext = direct::determine_ext(media.as_str());
-            let manifest = matches!(ext.as_deref(), Some("m3u8" | "mpd")) && count == 1;
+            let manifest = matches!(ext.as_deref(), Some("m3u8" | "mpd"));
             if !manifest
                 && matches!(
                     ext.as_deref(),
@@ -977,7 +977,11 @@ impl GenericHttp {
                     found_manifest(client, &media, page_url, &id, ext.as_deref() == Some("mpd"))?;
                 let mut info = info;
                 info.id = id;
-                info.title = title.clone();
+                info.title = if count > 1 {
+                    format!("{title} ({})", index + 1)
+                } else {
+                    title.clone()
+                };
                 info.webpage_url = page_url.clone();
                 info.direct = None;
                 info.extractor = "generic".into();
@@ -987,9 +991,11 @@ impl GenericHttp {
                         .insert("uploader".into(), uploader.clone().into());
                 }
                 info.metadata.age_limit = age_limit;
-                info.metadata.timestamp = timestamp;
-                info.metadata.description = description.clone();
-                info.metadata.thumbnail = thumbnail.clone();
+                if count == 1 {
+                    info.metadata.timestamp = timestamp;
+                    info.metadata.description = description.clone();
+                    info.metadata.thumbnail = thumbnail.clone();
+                }
                 for format in &mut info.formats {
                     format.http_headers = Some(serde_json::Map::from_iter([(
                         "referer".to_owned(),
@@ -1001,14 +1007,14 @@ impl GenericHttp {
                     "http_headers".into(),
                     serde_json::json!({"Referer": page_url.as_str()}),
                 );
-                entries.push(crate::info_order::mark_info(
-                    info,
-                    if ext.as_deref() == Some("mpd") {
-                        "generic-found-dash"
-                    } else {
-                        "generic-found-hls"
-                    },
-                ));
+                let dash = ext.as_deref() == Some("mpd");
+                let shape = match (dash, count == 1) {
+                    (true, true) => "generic-found-dash",
+                    (true, false) => "generic-found-dash-entry",
+                    (false, true) => "generic-found-hls",
+                    (false, false) => "generic-found-hls-entry",
+                };
+                entries.push(crate::info_order::mark_info(info, shape));
                 continue;
             }
             let ext = ext
