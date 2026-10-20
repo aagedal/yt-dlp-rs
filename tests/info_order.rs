@@ -120,3 +120,38 @@ fn json_lines_match_saved_upstream_key_order_none_keys_and_downloads() {
     }
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
+
+/// `--load-info-json` processes the loaded dict in place: its keys keep the
+/// file's order and new keys follow, like the pinned upstream's saved
+/// `-j`/`-J` lines (`tests/fixtures/info_order/loaded/`, written by upstream
+/// with `--user-agent UA`; `epoch` and `_version` are not compared).
+#[test]
+fn loaded_info_json_keeps_upstream_key_order() {
+    let directory =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/info_order/loaded");
+    let epoch = regex::Regex::new(r#""epoch": \d+, "#).unwrap();
+    let version = regex::Regex::new(r#", "_version": \{[^}]*\}"#).unwrap();
+    for name in ["direct", "dash"] {
+        for (flag, suffix) in [("-j", "dump-json"), ("-J", "dump-single-json")] {
+            let output = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+                .args(["--ignore-config", "--load-info-json"])
+                .arg(directory.join(format!("{name}.info.json")))
+                .arg(flag)
+                .current_dir(std::env::temp_dir())
+                .output()
+                .unwrap();
+            assert!(
+                output.status.success(),
+                "{}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+            let text = String::from_utf8(output.stdout).unwrap();
+            let text = version
+                .replace_all(&epoch.replace_all(&text, ""), "")
+                .into_owned();
+            let expected =
+                std::fs::read_to_string(directory.join(format!("{name}.{suffix}.txt"))).unwrap();
+            assert_eq!(text, expected, "{name} {flag}");
+        }
+    }
+}

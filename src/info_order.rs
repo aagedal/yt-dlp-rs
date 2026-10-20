@@ -80,6 +80,24 @@ impl Replay {
         }
     }
 
+    /// A loaded info JSON dict's keys in file order: this port's value, or
+    /// the file's for keys it does not represent.
+    fn loaded(&mut self, original: &Map<String, Value>) {
+        for (key, value) in original {
+            if self.ours.contains_key(key) {
+                self.take(key);
+                // Subtitle tracks keep their loaded key order too.
+                if matches!(key.as_str(), "subtitles" | "automatic_captions")
+                    && let Some(Value::Object(languages)) = self.out.get_mut(key)
+                {
+                    reorder_tracks(languages, value);
+                }
+            } else if !self.out.contains_key(key) {
+                self.out.insert(key.clone(), value.clone());
+            }
+        }
+    }
+
     fn steps(&mut self, steps: &[(&str, Set)]) {
         for (key, how) in steps {
             self.set(key, *how);
@@ -181,6 +199,58 @@ pub(crate) fn mark_info(mut info: crate::VideoInfo, shape: &str) -> crate::Video
     info
 }
 
+/// Order each loaded subtitle track's keys like the file's track.
+fn reorder_tracks(languages: &mut Map<String, Value>, original: &Value) {
+    for (language, tracks) in languages.iter_mut() {
+        let (Value::Array(tracks), Some(Value::Array(loaded))) = (tracks, original.get(language))
+        else {
+            continue;
+        };
+        for (track, loaded) in tracks.iter_mut().zip(loaded) {
+            let (Value::Object(track), Value::Object(loaded)) = (track, loaded) else {
+                continue;
+            };
+            let mut ordered = Map::new();
+            for key in loaded.keys() {
+                if let Some(value) = track.remove(key) {
+                    ordered.insert(key.clone(), value);
+                }
+            }
+            ordered.append(track);
+            *track = ordered;
+        }
+    }
+}
+
+/// The shape of a dict loaded from info JSON: its sanitized original, whose
+/// key order (and unrepresented values) the replay starts from.
+const LOADED: &str = "loaded";
+
+/// Mark a dict loaded with `--load-info-json` (`original` without its
+/// formats' contents).
+pub(crate) fn loaded_shape(original: &Map<String, Value>) -> Value {
+    let mut original = original.clone();
+    if original.contains_key("formats") {
+        original.insert("formats".into(), Value::Null);
+    }
+    Value::Object(Map::from_iter([(
+        LOADED.to_owned(),
+        Value::Object(original),
+    )]))
+}
+
+/// A marker's shape name and, for loaded dicts, the original.
+fn shape_of(marker: Option<Value>) -> Option<(String, Option<Map<String, Value>>)> {
+    match marker? {
+        Value::String(shape) => Some((shape, None)),
+        Value::Object(mut map) => match map.remove(LOADED) {
+            Some(Value::Object(original)) => Some((LOADED.to_owned(), Some(original))),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
 /// Record the upstream code path that built a format dict.
 pub(crate) fn mark_format(format: &mut crate::VideoFormat, shape: &str) {
     format.extra.insert(FORMAT_SHAPE.into(), shape.into());
@@ -188,7 +258,7 @@ pub(crate) fn mark_format(format: &mut crate::VideoFormat, shape: &str) {
 
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
-    let Some(Value::String(shape)) = map.remove(FORMAT_SHAPE) else {
+    let Some((shape, original)) = shape_of(map.remove(FORMAT_SHAPE)) else {
         return map;
     };
     // `_parse_html5_media_entries` adds the page Referer to every format.
@@ -309,6 +379,9 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         _ => &[],
     };
     replay.steps(extractor);
+    if let Some(original) = &original {
+        replay.loaded(original);
+    }
     if html5 {
         replay.take("http_headers");
     }
@@ -417,7 +490,7 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.remove(FORMAT_SHAPE);
-    let Some(Value::String(shape)) = map.remove(INFO_SHAPE) else {
+    let Some((shape, original)) = shape_of(map.remove(INFO_SHAPE)) else {
         return map;
     };
     // The selected format's keys, which `info_dict.update(format)` merges.
@@ -425,8 +498,12 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         .get("requested_formats")
         .and_then(Value::as_array)
         .is_some_and(|formats| !formats.is_empty());
-    // An untyped result is its own (only) format.
-    let own_format = shape == "generic-untyped";
+    // An untyped result (or a loaded one without formats) is its own
+    // (only) format.
+    let own_format = shape == "generic-untyped"
+        || original
+            .as_ref()
+            .is_some_and(|original| !original.contains_key("formats"));
     let selected_format: Map<String, Value> = if merged || own_format {
         Map::new()
     } else {
@@ -476,7 +553,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             .map(|format| format.keys().cloned().collect())
             .unwrap_or_default()
     };
-    let untyped = shape == "generic-untyped";
+    let untyped = own_format;
     let entry = shape == "html5-entry";
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape.as_str() {
@@ -570,6 +647,9 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         replay.ours.remove("formats");
     }
     replay.steps(extractor);
+    if let Some(original) = &original {
+        replay.loaded(original);
+    }
     let held = |key: &str| {
         PROCESSED_INFO_KEYS.contains(&key)
             || (untyped && PROCESSED_FORMAT_KEYS.contains(&key))
@@ -650,10 +730,11 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             .out
             .iter()
             .map(|(key, value)| {
-                let value = if selected.contains(key) {
-                    Value::Null
-                } else {
-                    value.clone()
+                // A loaded dict already held its selected format's values.
+                let value = match original.as_ref().and_then(|original| original.get(key)) {
+                    Some(loaded) if selected.contains(key) => loaded.clone(),
+                    _ if selected.contains(key) => Value::Null,
+                    _ => value.clone(),
                 };
                 (key.clone(), value)
             })

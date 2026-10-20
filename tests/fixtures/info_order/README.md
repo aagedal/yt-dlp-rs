@@ -19,3 +19,8 @@ tracks.
 Regenerate with `python3 tools/capture_info_order.py --upstream PATH --write`
 (without `--write` it checks the saved lines). `tests/info_order.rs` serves the
 same files and headers to the native CLI and compares its lines exactly.
+
+`loaded/` holds info JSON written by the pinned upstream (`--skip-download
+--write-info-json --user-agent UA`, host replaced by `media.invalid`,
+`epoch` fixed) and upstream's `--load-info-json` `-j`/`-J` lines for it
+(`epoch` and `_version` removed).

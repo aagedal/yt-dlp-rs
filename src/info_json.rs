@@ -662,9 +662,27 @@ pub fn load_info_json(path: &std::path::Path) -> Result<Vec<crate::ExtractResult
                 .to_owned();
             match kind.as_str() {
                 "video" => {
+                    // Upstream processes the loaded dict in place: its keys
+                    // keep their order, new ones follow.
+                    let original = map.clone();
                     normalize_loaded(&mut map)?;
                     let mut info: crate::VideoInfo = serde_json::from_value(Value::Object(map))
                         .map_err(|error| Error::InfoJson(error.to_string()))?;
+                    info.extra.insert(
+                        crate::info_order::INFO_SHAPE.into(),
+                        crate::info_order::loaded_shape(&original),
+                    );
+                    let formats = original.get("formats").and_then(Value::as_array);
+                    for (format, loaded) in
+                        info.formats.iter_mut().zip(formats.into_iter().flatten())
+                    {
+                        if let Value::Object(loaded) = loaded {
+                            format.extra.insert(
+                                crate::info_order::FORMAT_SHAPE.into(),
+                                crate::info_order::loaded_shape(loaded),
+                            );
+                        }
+                    }
                     info.metadata.fill_common_fields();
                     info.metadata.sanitize_thumbnails();
                     Ok(crate::ExtractResult::Video(info))
