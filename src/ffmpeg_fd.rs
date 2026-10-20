@@ -65,7 +65,7 @@ pub(crate) struct Settings {
     /// `-loglevel quiet` (upstream `quiet`).
     pub quiet: bool,
     /// `--hls-use-mpegts`: MPEG-TS instead of MP4 for HLS inputs.
-    pub hls_use_mpegts: bool,
+    pub hls_use_mpegts: Option<bool>,
 }
 
 /// The `-headers` value for one input (title-cased names): the defaults, a User-Agent,
@@ -190,7 +190,11 @@ fn arguments(
         }
     }
     let format = if protocol.starts_with("m3u8") {
-        if settings.hls_use_mpegts {
+        // `use_mpegts`: `--hls-use-mpegts`, else whether the stream is live.
+        if settings
+            .hls_use_mpegts
+            .unwrap_or_else(|| crate::is_live(info))
+        {
             "mpegts"
         } else {
             "mp4"

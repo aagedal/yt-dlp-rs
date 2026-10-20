@@ -496,6 +496,10 @@ impl Extractor for GenericHttp {
                 detected("DASH manifest");
             }
             return Ok(manifest
+                .map(|mut info| {
+                    crate::manifest_args::extra_manifest_info(&mut info, url);
+                    info
+                })
                 .map(|info| crate::info_order::mark_info(info, "generic-dash"))
                 .map(stamp));
         }
@@ -544,10 +548,25 @@ impl Extractor for GenericHttp {
                 if !media_type {
                     detected("M3U playlist");
                 }
-                screen(&format!("[generic] {id}: Checking m3u8 live status"));
-                crate::screen::expect_page(&id, None, None);
-                hls::check_live_status(client, info);
-                crate::screen::clear_page();
+                // `_extra_manifest_info`; `is_live` replaces the check.
+                match crate::manifest_args::extra_manifest_info(info, url) {
+                    Some(live) => {
+                        info.metadata.live_status = Some(
+                            if live == "false" {
+                                "not_live"
+                            } else {
+                                "is_live"
+                            }
+                            .into(),
+                        );
+                    }
+                    None => {
+                        screen(&format!("[generic] {id}: Checking m3u8 live status"));
+                        crate::screen::expect_page(&id, None, None);
+                        hls::check_live_status(client, info);
+                        crate::screen::clear_page();
+                    }
+                }
             } else if direct.is_some() && !media_type {
                 warning("[generic] URL could be a direct video link, returning it as such.");
             }

@@ -94,6 +94,25 @@ pub(crate) fn download(
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
     crate::download::check_destination(destination, &options)?;
+    // The extractor-argument queries and key apply to the requests.
+    let adjusted = crate::manifest_args::download_fragments(info).map(|fragments| {
+        let mut adjusted = info.clone();
+        adjusted.fragments = fragments;
+        adjusted
+    });
+    let info = adjusted.as_ref().unwrap_or(info);
+    let external_key = crate::manifest_args::external_key(info)?;
+    let initial_keys = || -> HashMap<url::Url, [u8; 16]> {
+        external_key
+            .map(|key| {
+                info.fragments
+                    .iter()
+                    .filter_map(|fragment| fragment.encryption.as_ref())
+                    .map(|encryption| (encryption.key_url.clone(), key))
+                    .collect()
+            })
+            .unwrap_or_default()
+    };
     if info.fragments.is_empty() || info.fragments.len() > 10_000 {
         return Err(unsupported("fragment count must be between 1 and 10000"));
     }
@@ -199,7 +218,7 @@ pub(crate) fn download(
     }
     let resumed_bytes = named.as_ref().map_or(0, |(_, length)| *length);
     let mut stored = resumed_bytes;
-    let mut keys = HashMap::new();
+    let mut keys = initial_keys();
     // Upstream keeps the latest nonzero fragment filetime.
     let mut filetime = None;
     let mut reporter = Reporter {
@@ -431,7 +450,16 @@ fn download_concurrent(
         for _ in 0..concurrency.min(count - start) {
             let (next, cancelled, sender) = (next.clone(), cancelled.clone(), sender.clone());
             scope.spawn(move || {
-                let mut keys = HashMap::new();
+                let mut keys: HashMap<url::Url, [u8; 16]> =
+                    match crate::manifest_args::external_key(info).ok().flatten() {
+                        Some(key) => info
+                            .fragments
+                            .iter()
+                            .filter_map(|fragment| fragment.encryption.as_ref())
+                            .map(|encryption| (encryption.key_url.clone(), key))
+                            .collect(),
+                        None => HashMap::new(),
+                    };
                 loop {
                     let index = next.fetch_add(1, Ordering::Relaxed);
                     if index >= count || cancelled.load(Ordering::Relaxed) {

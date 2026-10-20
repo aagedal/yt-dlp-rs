@@ -27,6 +27,7 @@ mod http;
 mod info;
 mod info_json;
 mod info_order;
+pub mod manifest_args;
 mod match_filter;
 mod md5;
 mod merge;
@@ -119,6 +120,8 @@ pub struct YoutubeDl {
     merge_output_format: Option<Vec<String>>,
     /// `--video-multistreams`/`--audio-multistreams`.
     multistreams: (bool, bool),
+    /// `--live-from-start`.
+    live_from_start: bool,
     format_sort: FormatSortOptions,
     prefer_best: bool,
     /// Global request headers and proxy for FFmpeg network inputs.
@@ -147,6 +150,11 @@ pub struct YoutubeDl {
     /// `--downloader [PROTO:]NAME` choices by simplified protocol (`default`
     /// for the rest): `true` selects FFmpegFD, `false` the native downloaders.
     downloaders: std::collections::HashMap<String, bool>,
+}
+
+/// `info_dict.get('is_live')` (from `live_status`).
+pub(crate) fn is_live(info: &VideoInfo) -> bool {
+    info.metadata.live_status.as_deref() == Some("is_live")
 }
 
 /// A transport error as urllib words it: `[Errno N] TEXT` for an OS error.
@@ -206,7 +214,9 @@ fn simplify_protocol(protocol: &str) -> &str {
 pub struct FixupOptions {
     /// `never`, `ignore`, `warn`, `detect_or_warn` (default) or `force`.
     pub policy: Option<String>,
-    pub hls_use_mpegts: bool,
+    /// `--hls-use-mpegts`/`--no-hls-use-mpegts` (`None` when not given:
+    /// MPEG-TS for live streams).
+    pub hls_use_mpegts: Option<bool>,
     /// Upstream `postprocessed_by_ffmpeg`: a remux/recode to another
     /// container follows, so only `FixupStretched` applies.
     pub converted: bool,
@@ -378,6 +388,7 @@ impl YoutubeDl {
             ffmpeg: None,
             merge_output_format: None,
             multistreams: (false, false),
+            live_from_start: false,
             format_sort: FormatSortOptions::default(),
             prefer_best: false,
             headers: headers.clone(),
@@ -621,12 +632,18 @@ impl YoutubeDl {
                 self.fixup_stretched_as(info, ratio.as_f64().unwrap_or(1.0), path, shown)?;
             }
         }
+        let protocol = info.protocol.as_deref().unwrap_or("");
+        // `(is_live and hls_use_mpegts is None)` also follows FFmpegFD.
+        let live_m3u8 = is_live(info) && options.hls_use_mpegts.is_none();
         // Other fixups skip FFmpegFD downloads and merges.
-        if !info.requested_formats.is_empty() || options.converted || self.uses_ffmpeg_fd(info) {
+        let ffmpeg_fd = self.uses_ffmpeg_fd(info);
+        if !info.requested_formats.is_empty() || options.converted || (ffmpeg_fd && !live_m3u8) {
             return Ok(());
         }
-        let protocol = info.protocol.as_deref().unwrap_or("");
-        let m3u8 = protocol.starts_with("m3u8") && !options.hls_use_mpegts;
+        let m3u8 = live_m3u8
+            || (!ffmpeg_fd
+                && protocol.starts_with("m3u8")
+                && !options.hls_use_mpegts.unwrap_or(false));
         let m4a = info.ext == "m4a" && info.container.as_deref() == Some("m4a_dash");
         // Every MPD format is `is_dash_periods` upstream.
         let dash = protocol == "http_dash_segments" && !info.fragments.is_empty();
@@ -1005,6 +1022,17 @@ impl YoutubeDl {
         if sections::is_partial(info) {
             return true;
         }
+        // `_get_suitable_downloader`: live HLS uses FFmpegFD.
+        let hls = |protocol: &str| protocol.starts_with("m3u8");
+        if is_live(info)
+            && (info.protocol.as_deref().is_some_and(hls)
+                || info
+                    .requested_formats
+                    .iter()
+                    .any(|format| hls(&format.determine_protocol())))
+        {
+            return true;
+        }
         let protocols: Vec<String> = if info.requested_formats.is_empty() {
             vec![
                 info.protocol
@@ -1067,7 +1095,7 @@ impl YoutubeDl {
     }
 
     /// `--hls-use-mpegts` for FFmpeg HLS downloads.
-    pub fn with_hls_use_mpegts(mut self, mpegts: bool) -> Self {
+    pub fn with_hls_use_mpegts(mut self, mpegts: Option<bool>) -> Self {
         self.ffmpeg_settings.hls_use_mpegts = mpegts;
         self
     }
@@ -1096,6 +1124,24 @@ impl YoutubeDl {
             // `process_video_result`: `display_id` defaults to the ID.
             crate::info::set_default(&mut entry.extra, "display_id", entry.id.clone());
             entry.metadata.fill_common_fields();
+            // `_fill_common_fields`: `is_live`/`was_live` from `live_status`.
+            if let Some(status) = entry.metadata.live_status.clone() {
+                for key in ["is_live", "was_live"] {
+                    crate::info::set_default(
+                        &mut entry.extra,
+                        key,
+                        serde_json::Value::Bool(status == key),
+                    );
+                }
+                if status == "post_live" {
+                    entry.extra.insert("was_live".into(), true.into());
+                }
+            }
+            // `process_video_result`: a live stream not downloaded from the
+            // start is titled with the local time.
+            if self.live_from_now(entry) {
+                entry.title = format!("{} {}", entry.title, dates::local_now_minutes());
+            }
             entry.metadata.fill_chapters();
             entry.metadata.sanitize_thumbnails();
             info::fill_format_fields(&mut entry.formats);
@@ -1172,6 +1218,18 @@ impl YoutubeDl {
     pub fn with_merge_output_format(mut self, formats: Vec<String>) -> Self {
         self.merge_output_format = Some(formats);
         self
+    }
+
+    /// `--live-from-start`: live streams keep their title and default format.
+    pub fn with_live_from_start(mut self, from_start: bool) -> Self {
+        self.live_from_start = from_start;
+        self
+    }
+
+    /// Whether `info` is live and downloaded from now (upstream's
+    /// `not get_from_start`).
+    pub fn live_from_now(&self, info: &VideoInfo) -> bool {
+        is_live(info) && !self.live_from_start
     }
 
     /// Upstream `allow_multiple_video_streams`/`allow_multiple_audio_streams`:
@@ -1338,10 +1396,11 @@ impl YoutubeDl {
     /// Upstream `formats_to_download`: one result per selected format, each
     /// downloaded on its own by `process_info`.
     pub fn select_videos(&self, info: &VideoInfo, format: Option<&str>) -> Result<Vec<VideoInfo>> {
-        if format.is_none() && self.prefer_best {
+        let prefer_best = self.prefer_best || self.live_from_now(info);
+        if format.is_none() && prefer_best {
             screen::debug("Default format spec: best/bestvideo+bestaudio");
         }
-        let format = format.or(self.prefer_best.then_some("best/bestvideo+bestaudio"));
+        let format = format.or(prefer_best.then_some("best/bestvideo+bestaudio"));
         let options = format_select::Options {
             merge_output_format: self.merge_output_format.clone(),
             prefer_free: self.format_sort.prefer_free,

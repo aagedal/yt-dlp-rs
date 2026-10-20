@@ -369,6 +369,8 @@ const PROCESSED_INFO_KEYS: &[&str] = &[
     "modified_date",
     "release_year",
     "live_status",
+    "is_live",
+    "was_live",
     "requested_subtitles",
     "_has_drm",
     "epoch",
@@ -506,7 +508,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("formats", Take),
             ("subtitles", Dict),
             ("http_headers", Assign),
+            ("extra_param_to_segment_url", Take),
+            ("extra_param_to_key_url", Take),
             ("hls_aes", Assign),
+            ("live_status", Take),
             ("duration", Take),
         ],
         // An `#EXTM3U` body without an HLS Content-Type.
@@ -516,7 +521,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Assign),
             ("formats", Take),
             ("subtitles", Dict),
+            ("extra_param_to_segment_url", Take),
+            ("extra_param_to_key_url", Take),
             ("hls_aes", Assign),
+            ("live_status", Take),
             ("duration", Take),
         ],
         "generic-dash" => &[
@@ -526,6 +534,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("formats", Take),
             ("subtitles", Dict),
             ("live_status", Assign),
+            ("extra_param_to_segment_url", Take),
+            ("extra_param_to_key_url", Take),
             ("hls_aes", Assign),
         ],
         // `merge_dicts(embed, info_dict)` drops the embed's `None` values.
@@ -622,6 +632,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     replay.assign("release_year");
     replay.take("live_status");
+    replay.take("is_live");
+    replay.take("was_live");
     replay.assign("requested_subtitles");
     replay.assign("_has_drm");
     if untyped {

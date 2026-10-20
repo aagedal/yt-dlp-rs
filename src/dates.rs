@@ -970,6 +970,59 @@ fn capitalized(name: &str) -> String {
     name[..1].to_uppercase() + &name[1..]
 }
 
+/// `datetime.now().strftime('%Y-%m-%d %H:%M')` in local time (UTC where
+/// the C library's `localtime_r` is unavailable).
+pub fn local_now_minutes() -> String {
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |elapsed| elapsed.as_secs() as i64);
+    let offset = local_offset(now).unwrap_or(0);
+    let local = now + offset;
+    let (year, month, day) = civil_from_days(local.div_euclid(86_400));
+    let seconds = local.rem_euclid(86_400);
+    format!(
+        "{year:04}-{month:02}-{day:02} {:02}:{:02}",
+        seconds / 3600,
+        seconds % 3600 / 60
+    )
+}
+
+/// The local UTC offset in seconds at `time` (`tm_gmtoff`).
+#[cfg(unix)]
+fn local_offset(time: i64) -> Option<i64> {
+    #[repr(C)]
+    struct Tm {
+        tm_sec: std::ffi::c_int,
+        tm_min: std::ffi::c_int,
+        tm_hour: std::ffi::c_int,
+        tm_mday: std::ffi::c_int,
+        tm_mon: std::ffi::c_int,
+        tm_year: std::ffi::c_int,
+        tm_wday: std::ffi::c_int,
+        tm_yday: std::ffi::c_int,
+        tm_isdst: std::ffi::c_int,
+        tm_gmtoff: std::ffi::c_long,
+        tm_zone: *const std::ffi::c_char,
+    }
+    unsafe extern "C" {
+        fn localtime_r(time: *const i64, result: *mut Tm) -> *mut Tm;
+    }
+    let mut tm = std::mem::MaybeUninit::<Tm>::zeroed();
+    // SAFETY: `localtime_r` writes the `struct tm` it is given and returns
+    // null on failure; both pointers are valid for the call.
+    let result = unsafe { localtime_r(&time, tm.as_mut_ptr()) };
+    if result.is_null() {
+        return None;
+    }
+    // SAFETY: initialized by the successful call above.
+    Some(unsafe { tm.assume_init() }.tm_gmtoff as i64)
+}
+
+#[cfg(not(unix))]
+fn local_offset(_: i64) -> Option<i64> {
+    None
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

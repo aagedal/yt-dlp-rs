@@ -1562,6 +1562,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
+    // `--extractor-args`: GenericIE's are used; other extractors' are not.
+    let extractor_args =
+        yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
+    for key in extractor_args.keys().filter(|key| *key != "generic") {
+        warning!(
+            "WARNING: extractor arguments for {key} are not supported natively and are ignored"
+        );
+    }
+    yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
     // HttpFD's initial block size and resizing.
     if let Some(size) = args.buffer_size.as_deref().and_then(parse_bytes) {
         yt_dlp_rs::BUFFER_SIZE.store(size as usize, Ordering::Relaxed);
@@ -2114,7 +2123,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         infojson: None,
         fixup: Some(yt_dlp_rs::FixupOptions {
             policy: args.fixup.clone(),
-            hls_use_mpegts: args.hls_use_mpegts,
+            hls_use_mpegts: hls_use_mpegts(&args),
             converted: false,
         }),
         audio: args.extract_audio.then_some(audio_options),
@@ -2403,7 +2412,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let downloader = downloader
         .with_prefer_best_format(templates.get(None) == "-")
         .with_external_quiet(QUIET.load(Ordering::Relaxed))
-        .with_hls_use_mpegts(args.hls_use_mpegts);
+        .with_hls_use_mpegts(if args.hls_use_mpegts {
+            Some(true)
+        } else if args.no_hls_use_mpegts {
+            Some(false)
+        } else {
+            None
+        })
+        .with_live_from_start(args.live_from_start);
     let output_paths = yt_dlp_rs::output::parse_paths(&args.paths)?;
     let template_options = TemplateOptions {
         na_placeholder: args.output_na_placeholder,
@@ -5107,6 +5123,17 @@ fn compat_options(values: &[String]) -> Result<Vec<String>, UsageError> {
     Ok(requested)
 }
 
+/// `--hls-use-mpegts`/`--no-hls-use-mpegts` (the last given), else `None`.
+fn hls_use_mpegts(args: &Args) -> Option<bool> {
+    if args.hls_use_mpegts {
+        Some(true)
+    } else if args.no_hls_use_mpegts {
+        Some(false)
+    } else {
+        None
+    }
+}
+
 fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
     for (name, value, strict) in [
         ("buffer size", &args.buffer_size, true),
@@ -5181,7 +5208,6 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         (args.console_title, "--console-title"),
         (args.legacy_server_connect, "--legacy-server-connect"),
         (args.bidi_workaround, "--bidi-workaround"),
-        (!args.extractor_args.is_empty(), "--extractor-args"),
         (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
     ] {
         if given {
