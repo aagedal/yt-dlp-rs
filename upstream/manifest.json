@@ -374,6 +374,18 @@
       "scope": "SztvHuIE page player file, meta title/description and og:image as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "thisamericanlife",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/thisamericanlife.py"
+      ],
+      "rust": [
+        "src/extractor/thisamericanlife.rs",
+        "tests/fixtures/sites/thisamericanlife/"
+      ],
+      "scope": "ThisAmericanLifeIE page meta fields and 64k HLS stream as an untyped m3u8_native result compared with pinned upstream output through the fixture proxy (listing and JSON)"
+    },
+    {
       "name": "youtube",
       "status": "partial",
       "upstream": [

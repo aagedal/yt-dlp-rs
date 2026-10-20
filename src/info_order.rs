@@ -688,6 +688,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "qingting"
             | "oneplace"
             | "sztvhu"
+            | "thisamericanlife"
     ) || original
         .as_ref()
         .is_some_and(|original| !original.contains_key("formats"));
@@ -868,6 +869,19 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("thumbnail", Assign),
             ("duration", Take),
             ("formats", Take),
+        ],
+        // `ThisAmericanLifeIE._real_extract`'s dict (its own format).
+        "thisamericanlife" => &[
+            ("id", Take),
+            ("url", Take),
+            ("protocol", Take),
+            ("ext", Take),
+            ("acodec", Take),
+            ("vcodec", Take),
+            ("abr", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
         ],
         // `SztvHuIE._real_extract`'s dict (its own format).
         "sztvhu" => &[
@@ -1412,7 +1426,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                     .iter()
                     .all(|format| format.get("tbr").is_some_and(Value::is_i64))
         });
-    if int_rates {
+    // `'abr': 64` (and the `tbr` it gives) of ThisAmericanLifeIE.
+    if int_rates || shape == "thisamericanlife" {
         for key in ["tbr", "vbr", "abr"] {
             if let Some(rate) = out.get(key).and_then(Value::as_f64)
                 && rate.fract() == 0.0

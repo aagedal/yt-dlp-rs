@@ -80,8 +80,8 @@ Supported today:
   clips through the clip API, EbaumsWorld videos through the player XML,
   Glide messages through their share page, GodTube videos through their
   player XML, FC Zenit videos through the player API, BehindKink posts
-  QingTing programs, OnePlace episodes and SzTV videos through their pages,
-  plus
+  QingTing programs, OnePlace episodes, SzTV videos and This American Life
+  episodes through their pages, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

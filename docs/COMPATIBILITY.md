@@ -322,6 +322,11 @@ input codec names, `bitrate`/1000 as `vbr`), owner, float `date_added` and
 `duration`, and plays. Site extractors are compared with pinned upstream's
 output through a fixture-only proxy (`tests/fixtures/sites/`).
 
+This American Life episodes (`thisamericanlife.org/radio-archives/episode/ID`,
+`play_full.php?play=ID`) follow upstream `ThisAmericanLifeIE`: the episode
+page's fatal `twitter:title`, description meta and OpenGraph image, with the
+`ID_64k.m3u8` stream as an untyped `m3u8_native` `m4a` AAC 64k result.
+
 SzTV pages (`sztv.hu`/`tvszombathely.hu` `.../SLUG-ID`) follow upstream
 `SztvHuIE`: the fatal player `file` (under `media.sztv.hu/vod/`) and meta
 title, the meta description and OpenGraph image with upstream's non-fatal
