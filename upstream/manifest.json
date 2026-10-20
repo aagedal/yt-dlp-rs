@@ -535,6 +535,18 @@
       "scope": "OnePlacePodcastIE page media URL, title fallbacks and description as an untyped mp3 result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "parlview",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/parlview.py"
+      ],
+      "rust": [
+        "src/extractor/parlview.rs",
+        "tests/fixtures/sites/parlview/"
+      ],
+      "scope": "ParlviewIE API file as fatal HLS formats and subtitles, metadata traversal (title fallback, duration, ISO 8601 timestamp, thumbnail) and KeyError messages compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "photobucket",
       "status": "partial",
       "upstream": [

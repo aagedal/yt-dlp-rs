@@ -549,6 +549,13 @@ OnePlace episodes (`oneplace.com/.../listen/SLUG-ID`) follow upstream
 heading or `og:title`/`title` meta title and the `epDesc` description as an
 untyped `mp3` audio result.
 
+ParlView videos (`aph.gov.au/News_and_Events/Watch_Read_Listen/ParlView/video/ID`)
+follow upstream `ParlviewIE`: the API's `videoDetails.files.file.url` as fatal
+HLS formats and subtitles, the first string `parlViewTitle`/`title` (else the
+generic title, after `fulltitle`), description, `H:M:S:F` duration, ISO 8601
+`recordingFrom` timestamp and URL-valued thumbnail, with upstream's `KeyError`
+messages.
+
 Photobucket media (`photobucket.com/..._ID.mp4|flv`) follow upstream
 `PhotobucketIE`: the page's `Pb.Data.Shared.MEDIA` JSON (`Extracting
 information`) with the embed code's unquoted `file=` URL, username, creation

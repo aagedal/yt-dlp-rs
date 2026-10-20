@@ -119,12 +119,12 @@ fn extractor_listings_and_color_policies_follow_upstream() {
     assert!(output.status.success());
     assert_eq!(
         String::from_utf8_lossy(&output.stdout),
-        "23video\nAngel\nAudioBoom\nBehindKink (CURRENTLY BROKEN)\nBild\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrtvg\nCultureUnplugged\nEbaumsWorld\nFczenit\nFilmweb\nGlide\nGodTube (CURRENTLY BROKEN)\nGraspop\nHistoricFilms\nHitRecord\nhtml5\nHypem\nJove\nJWPlatform\nKommunetv\nLivestreamfails\nMasters\nmegaphone.fm\n  https://player.megaphone.fm/GLT9749789991\nNobelPrize\nOnePlacePodcast\nPhotobucket\nPlayerFm\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\nZhihu\ngeneric\n  https://example.com/v.mp4\n"
+        "23video\nAngel\nAudioBoom\nBehindKink (CURRENTLY BROKEN)\nBild\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrtvg\nCultureUnplugged\nEbaumsWorld\nFczenit\nFilmweb\nGlide\nGodTube (CURRENTLY BROKEN)\nGraspop\nHistoricFilms\nHitRecord\nhtml5\nHypem\nJove\nJWPlatform\nKommunetv\nLivestreamfails\nMasters\nmegaphone.fm\n  https://player.megaphone.fm/GLT9749789991\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\nZhihu\ngeneric\n  https://example.com/v.mp4\n"
     );
     let output = run(&["--extractor-descriptions"]);
     assert_eq!(
         String::from_utf8_lossy(&output.stdout),
-        "23video\nAngel\nAudioBoom\nBild\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrtvg\nCultureUnplugged\nEbaumsWorld\nFczenit\nFilmweb\nGlide: Glide mobile video messages (glide.me)\nGraspop\nHistoricFilms\nHitRecord\nhtml5\nHypem\nJove\nJWPlatform\nKommunetv\nLivestreamfails\nMasters\nmegaphone.fm: megaphone.fm embedded players\nNobelPrize\nOnePlacePodcast\nPhotobucket\nPlayerFm\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyoutube: [youtube] YouTube\nZhihu\ngeneric: Generic downloader that works on some sites"
+        "23video\nAngel\nAudioBoom\nBild\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrtvg\nCultureUnplugged\nEbaumsWorld\nFczenit\nFilmweb\nGlide: Glide mobile video messages (glide.me)\nGraspop\nHistoricFilms\nHitRecord\nhtml5\nHypem\nJove\nJWPlatform\nKommunetv\nLivestreamfails\nMasters\nmegaphone.fm: megaphone.fm embedded players\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyoutube: [youtube] YouTube\nZhihu\ngeneric: Generic downloader that works on some sites"
     );
     let output = run(&["--color", "x", "https://example.com/"]);
     assert_eq!(output.status.code(), Some(2));

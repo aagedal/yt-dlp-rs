@@ -1256,6 +1256,17 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("upload_date", Assign),
             ("comment_count", Take),
         ],
+        // `ParlviewIE._real_extract`'s dict.
+        "parlview" => &[
+            ("id", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("title", Take),
+            ("description", Take),
+            ("duration", Take),
+            ("timestamp", Take),
+            ("thumbnail", Take),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),
