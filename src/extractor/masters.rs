@@ -1,6 +1,6 @@
 //! Upstream `MastersIE` (`yt_dlp/extractor/masters.py`): the related-content
 //! API's HLS stream, title and first image set, dated from the URL.
-use super::{Extractor, download_json, hls, request_error_text};
+use super::{Extractor, download_json, extract_m3u8_fatal};
 use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -58,28 +58,7 @@ impl Extractor for Masters {
             )));
         };
         let manifest = Url::parse(manifest)?;
-        let note = format!("[{NAME}] {id}: Downloading m3u8 information");
-        crate::screen::expect_page(&id, Some(note.clone()), None);
-        let response = super::direct::request(client, &manifest, None);
-        if response.is_err() {
-            crate::screen::screen(&note);
-        }
-        let parsed = response
-            .map_err(|error| match error {
-                Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(
-                    request_error_text(NAME, &id, "m3u8 information", &error).replacen(
-                        ": Unable to download ",
-                        ": Failed to download ",
-                        1,
-                    ),
-                ),
-                error => error,
-            })
-            .and_then(|response| hls::from_response(client, response, &manifest, None, true, None));
-        crate::screen::clear_page();
-        let mut info = parsed?.ok_or_else(|| {
-            Error::UnsupportedHtml5("the Masters stream is not an HLS playlist".into())
-        })?;
+        let mut info = extract_m3u8_fatal(client, &manifest, NAME, &id, None)?;
         // `traverse_obj(content_resp, ('images', 0), default={}).items()`.
         let images = match content.get("images").and_then(|images| images.get(0)) {
             None | Some(Value::Null) => serde_json::Map::new(),

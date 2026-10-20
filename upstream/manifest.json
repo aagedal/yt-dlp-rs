@@ -451,6 +451,18 @@
       "scope": "ReverbNationIE _VALID_URL and song API extraction (custom download note, untyped mp3 result, artist uploader fields, qualities-ranked thumbnails, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "sen",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sen.py"
+      ],
+      "rust": [
+        "src/extractor/sen.rs",
+        "tests/fixtures/sites/sen/"
+      ],
+      "scope": "SenIE content API player/details nodes (fatal HLS formats, VOD manifest fallback, title/description/tags traversal, generic title) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "streamable",
       "status": "partial",
       "upstream": [

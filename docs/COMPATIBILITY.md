@@ -314,6 +314,11 @@ and `thumbnail` finalization (no `--check-formats` URL testing). These
 fields appear in JSON, info JSON, match filters and (scalar ones) output
 templates; see [the source slice](../upstream/notes/youtube-metadata.md).
 
+Sen videos (`sen.com/video/ID`) follow upstream `SenIE`: the content API's
+`player` node video URL (else the `vod.sen.com` manifest) as fatal HLS
+formats, and the first `details` node's title (else the generic title, after
+`fulltitle`), first description and string badge tags.
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file

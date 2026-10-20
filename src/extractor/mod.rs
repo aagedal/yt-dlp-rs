@@ -30,6 +30,7 @@ mod photobucket;
 mod qingting;
 mod reverbnation;
 mod rss;
+mod sen;
 mod smil;
 mod streamable;
 mod sztvhu;
@@ -67,6 +68,7 @@ pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
 pub use qingting::{QingTing, suitable as qingting_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
+pub use sen::{Sen, suitable as sen_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
@@ -110,6 +112,41 @@ pub(crate) fn request_error_text(
         None => format!("TransportError({})", crate::batch::py_repr(&text)),
     };
     format!("[{extractor}] {id}: Unable to download {what}: {text} (caused by {cause})")
+}
+
+/// Upstream fatal `_extract_m3u8_formats_and_subtitles(url, video_id,
+/// m3u8_id=M3U8_ID)`: `[EXTRACTOR] ID: Downloading m3u8 information`, the
+/// request (an HTTP error is `Failed to download m3u8 information`), and the
+/// playlist's formats and subtitles.
+pub(crate) fn extract_m3u8_fatal(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+) -> crate::Result<crate::VideoInfo> {
+    let note = format!("[{extractor}] {id}: Downloading m3u8 information");
+    crate::screen::expect_page(id, Some(note.clone()), None);
+    let response = direct::request(client, manifest, None);
+    if response.is_err() {
+        crate::screen::screen(&note);
+    }
+    let parsed = response
+        .map_err(|error| match error {
+            crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => crate::Error::Reported(
+                request_error_text(extractor, id, "m3u8 information", &error).replacen(
+                    ": Unable to download ",
+                    ": Failed to download ",
+                    1,
+                ),
+            ),
+            error => error,
+        })
+        .and_then(|response| hls::from_response(client, response, manifest, None, true, m3u8_id));
+    crate::screen::clear_page();
+    parsed?.ok_or_else(|| {
+        crate::Error::UnsupportedHtml5(format!("the {extractor} stream is not an HLS playlist"))
+    })
 }
 
 /// Upstream `_download_json(url, video_id)`: `[EXTRACTOR] ID: Downloading

@@ -1081,6 +1081,20 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("upload_date", Assign),
             ("thumbnails", List),
         ],
+        // `SenIE._real_extract`'s dict.
+        "sen" => &[
+            ("id", Take),
+            ("formats", Take),
+            ("title", Take),
+            ("description", Take),
+            ("tags", Take),
+        ],
+        "sen-untitled" => &[
+            ("id", Take),
+            ("formats", Take),
+            ("description", Take),
+            ("tags", Take),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),
@@ -1394,8 +1408,12 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             replay.take(key);
         }
     }
+    // A dict without `title` (an `-untitled` shape): `_fill_common_fields`
+    // adds the generic one after `fulltitle`.
+    let untitled = shape.ends_with("-untitled");
     let held = |key: &str| {
-        transparent.iter().any(|outer| outer == key)
+        (untitled && key == "title")
+            || transparent.iter().any(|outer| outer == key)
             || derived.iter().any(|derived| derived == key)
             || PROCESSED_INFO_KEYS.contains(&key)
             || (untyped && PROCESSED_FORMAT_KEYS.contains(&key))
@@ -1480,6 +1498,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     replay.take("thumbnail");
     replay.assign("display_id");
     replay.assign("fulltitle");
+    replay.take("title");
     for key in [
         "duration_string",
         "upload_date",
