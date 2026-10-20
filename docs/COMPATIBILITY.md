@@ -503,6 +503,13 @@ Photobucket media (`photobucket.com/..._ID.mp4|flv`) follow upstream
 information`) with the embed code's unquoted `file=` URL, username, creation
 date, title and thumbnail as an untyped result with the URL's extension.
 
+Player.fm episodes (`player.fm/[series/]SERIES/SLUG`) follow upstream
+`PlayerFmIE`: the episode's `.json` document as an untyped audio result with
+the integer ID (else upstream's `Missing "id" field`), `clean_podcast_url`
+URL (else `No video formats found!`), title (else the generic title, after
+`fulltitle`), cleaned description, integer duration/size/timestamp, the first
+URL-valued episode or series image and the series author as `creators`.
+
 Premiership Rugby videos (`SUB.premiershiprugby.com/watch/SLUG`) follow
 upstream `PremiershipRugbyIE`: the article CMS's hero media `videoLink` as fatal
 HLS formats and subtitles without an `ext` (a media playlist keeps its URL's

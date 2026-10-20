@@ -695,6 +695,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             None => (shape, Vec::new(), false),
         },
     };
+    // An `-untitled` shape: upstream's dict has no `title`, so
+    // `_fill_common_fields` adds the generic one after `fulltitle`.
+    let untitled = shape.ends_with("-untitled");
+    let shape = shape.strip_suffix("-untitled").unwrap_or(&shape).to_owned();
     // The selected format's keys, which `info_dict.update(format)` merges.
     let merged = map
         .get("requested_formats")
@@ -722,6 +726,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "photobucket"
             | "vocaroo"
             | "audioboom"
+            | "playerfm"
     ) || shape.starts_with("nobelprize;")
         || original
             .as_ref()
@@ -1091,12 +1096,6 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("description", Take),
             ("tags", Take),
         ],
-        "sen-untitled" => &[
-            ("id", Take),
-            ("formats", Take),
-            ("description", Take),
-            ("tags", Take),
-        ],
         // `KommunetvIE._real_extract`'s dict.
         "kommunetv" => &[("id", Take), ("formats", Take), ("title", Take)],
         // `GraspopIE._real_extract`'s dict.
@@ -1106,7 +1105,6 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("title", Take),
             ("thumbnail", Take),
         ],
-        "graspop-untitled" => &[("id", Take), ("formats", Take), ("thumbnail", Take)],
         // `CozyTVIE._real_extract`'s dict.
         "cozytv" => &[
             ("id", Take),
@@ -1138,6 +1136,20 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("formats", Take),
             ("series", Take),
             ("episode_id", Take),
+        ],
+        // `PlayerFmIE._real_extract`'s dict (its own format).
+        "playerfm" => &[
+            ("display_id", Take),
+            ("vcodec", Take),
+            ("id", Take),
+            ("url", Take),
+            ("title", Take),
+            ("description", Take),
+            ("duration", Take),
+            ("thumbnail", Take),
+            ("filesize", Take),
+            ("timestamp", Take),
+            ("creators", Take),
         ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
@@ -1347,7 +1359,16 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         // Upstream has no `formats`: the info dict is the only format.
         replay.ours.shift_remove("formats");
     }
-    replay.steps(extractor);
+    if untitled {
+        let titled: Vec<(&str, Set)> = extractor
+            .iter()
+            .filter(|(key, _)| *key != "title")
+            .copied()
+            .collect();
+        replay.steps(&titled);
+    } else {
+        replay.steps(extractor);
+    }
     if let Some(original) = &original {
         replay.loaded(original);
     }
@@ -1452,9 +1473,6 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             replay.take(key);
         }
     }
-    // A dict without `title` (an `-untitled` shape): `_fill_common_fields`
-    // adds the generic one after `fulltitle`.
-    let untitled = shape.ends_with("-untitled");
     let held = |key: &str| {
         (untitled && key == "title")
             || transparent.iter().any(|outer| outer == key)
