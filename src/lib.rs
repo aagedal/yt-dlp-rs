@@ -306,7 +306,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 20] = [
+const EXTRACTOR_NAMES: [&str; 21] = [
     "BehindKink",
     "EbaumsWorld",
     "Fczenit",
@@ -315,6 +315,7 @@ const EXTRACTOR_NAMES: [&str; 20] = [
     "GodTube",
     "HistoricFilms",
     "Hypem",
+    "JWPlatform",
     "Livestreamfails",
     "megaphone.fm",
     "OnePlacePodcast",
@@ -342,7 +343,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..19]),
+            "default" => Some(&EXTRACTOR_NAMES[..20]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -476,6 +477,7 @@ impl YoutubeDl {
                 Box::new(extractor::GodTube),
                 Box::new(extractor::HistoricFilms),
                 Box::new(extractor::Hypem),
+                Box::new(extractor::JwPlatform),
                 Box::new(extractor::Livestreamfails),
                 Box::new(extractor::Megaphone),
                 Box::new(extractor::OnePlacePodcast),
@@ -1673,7 +1675,8 @@ impl YoutubeDl {
         if url.scheme() == "file" {
             return self.extract_file(&url);
         }
-        if !matches!(url.scheme(), "http" | "https") {
+        // Extractor pseudo-URLs (`jwplatform:ID`) reach their extractor.
+        if !matches!(url.scheme(), "http" | "https") && !extractor::pseudo_url(input) {
             return Err(Error::UnsupportedScheme(url.scheme().into()));
         }
         for attempt in 0..=options.retries {

@@ -1227,6 +1227,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // `merge_dicts(jwplayer_entry, info_dict)`: the entry's keys, then the
     // page's.
+    // `JWPlatformIE`: the `_parse_jwplayer_data` entry itself (with its
+    // `None` values).
+    if let Some(keys) = shape.strip_prefix("jwplatform;") {
+        for key in keys.split(',') {
+            replay.set(key, if key == "subtitles" { Dict } else { Assign });
+        }
+    }
     if let Some(keys) = shape.strip_prefix("jwplayer;") {
         for key in keys.split(',') {
             replay.set(key, if key == "subtitles" { Dict } else { Take });

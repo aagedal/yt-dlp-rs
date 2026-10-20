@@ -280,6 +280,19 @@
       "scope": "HypemIE _VALID_URL, displayList-data JSON (clean_html before parsing), serve/source JSON URL as an untyped mp3 result, error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "jwplatform",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/jwplatform.py"
+      ],
+      "rust": [
+        "src/extractor/jwplatform.rs",
+        "src/extractor/jwplayer.rs",
+        "tests/fixtures/sites/jwplatform/"
+      ],
+      "scope": "JWPlatformIE _VALID_URL (including jwplatform: pseudo-URLs) and v2 media JSON via _parse_jwplayer_data(require_title=True) compared with pinned upstream output through the fixture proxy; no _EMBED_REGEX iframe detection or playlists"
+    },
+    {
       "name": "livestreamfails",
       "status": "partial",
       "upstream": [

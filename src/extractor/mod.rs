@@ -13,6 +13,7 @@ pub(crate) mod html5;
 mod hypem;
 pub(crate) mod ism;
 mod json_ld;
+mod jwplatform;
 mod jwplayer;
 mod kvs;
 mod livestreamfails;
@@ -41,6 +42,7 @@ pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
 pub use hypem::{Hypem, suitable as hypem_suitable};
+pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
@@ -269,6 +271,11 @@ pub(crate) fn search_json(
             .next()
             .and_then(std::result::Result::ok),
     )
+}
+
+/// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
+pub fn pseudo_url(url: &str) -> bool {
+    url.starts_with("jwplatform:") && jwplatform::suitable(url)
 }
 
 /// A non-fatal `_search_regex` miss: `[EXTRACTOR] unable to extract NAME`.

@@ -144,6 +144,26 @@ pub(crate) fn parse(
     video_id: &str,
     base: &Url,
 ) -> Result<Option<Map<String, Value>>> {
+    parse_with(data, video_id, base, false)
+}
+
+/// [`parse`] as `_parse_jwplayer_data(..., require_title=True)` returns it
+/// to an extractor: `video_data['title']` is required and the entry keeps
+/// its `None` values.
+pub(crate) fn parse_required(
+    data: &Value,
+    video_id: &str,
+    base: &Url,
+) -> Result<Option<Map<String, Value>>> {
+    parse_with(data, video_id, base, true)
+}
+
+fn parse_with(
+    data: &Value,
+    video_id: &str,
+    base: &Url,
+    required: bool,
+) -> Result<Option<Map<String, Value>>> {
     let Some(object) = data.as_object() else {
         return Ok(None);
     };
@@ -290,11 +310,21 @@ pub(crate) fn parse(
             .and_then(Value::as_str)
             .map(crate::html::unescape_html)
     };
+    if required && !item.contains_key("title") {
+        return Err(Error::Reported(format!(
+            "{video_id}: An extractor error has occurred. (caused by KeyError('title')); {}",
+            crate::BUG_REPORTS_MESSAGE
+        )));
+    }
     let mut entry = Map::new();
-    let mut put = |key: &str, value: Option<Value>| {
-        if let Some(value) = value.filter(|value| !value.is_null()) {
+    let mut put = |key: &str, value: Option<Value>| match value.filter(|value| !value.is_null()) {
+        Some(value) => {
             entry.insert(key.to_owned(), value);
         }
+        None if required => {
+            entry.insert(key.to_owned(), Value::Null);
+        }
+        None => {}
     };
     put("id", Some(video_id.into()));
     put("title", text("title").map(Value::from));

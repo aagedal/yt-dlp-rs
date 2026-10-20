@@ -1,0 +1,9 @@
+[
+ {"url": "http://content.jwplatform.com/players/nPripu9l-ALJ3XQCI.js", "args": ["-j"]},
+ {"url": "http://content.jwplatform.com/players/nPripu9l-ALJ3XQCI.js", "args": ["-F"]},
+ {"url": "http://content.jwplatform.com/players/nPripu9l-ALJ3XQCI.js", "args": ["--list-subs"]},
+ {"url": "http://content.jwplatform.com/players/nPripu9l-ALJ3XQCI.js", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(duration)s|%(format_id)s"]},
+ {"url": "http://content.jwplatform.com/players/nPripu9l-ALJ3XQCI.js", "args": ["--no-progress", "-f", "720p", "-o", "%(id)s.%(ext)s"]},
+ {"url": "jwplatform:Untitle1", "args": ["-j"]},
+ {"url": "https://cdn.jwplayer.com/v2/media/Missing1", "args": ["-j"]}
+]

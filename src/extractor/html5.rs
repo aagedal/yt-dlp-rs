@@ -2312,6 +2312,43 @@ fn jwplayer_info(
     timestamp: Option<i64>,
     video_id: &str,
 ) -> Result<Option<ExtractResult>> {
+    let Some((mut info, keys)) = jwplayer_entry_info(client, entry, page_url, video_id, "generic")?
+    else {
+        return Ok(None);
+    };
+    // `report_detected` follows `_parse_jwplayer_data` (and its requests).
+    crate::screen::debug("Identified a JW Player data");
+    if !keys.iter().any(|key| key == "title") {
+        info.title = page_title(html).unwrap_or_else(|| "video".into());
+    }
+    if !keys.iter().any(|key| key == "timestamp") {
+        info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
+    }
+    if !keys.iter().any(|key| key == "description") {
+        info.metadata.description = crate::html::og_search_property(html, "description");
+    }
+    if !keys.iter().any(|key| key == "thumbnail") {
+        info.metadata.thumbnail = crate::html::og_search_property(html, "image");
+    }
+    if !keys.iter().any(|key| key == "age_limit") {
+        info.metadata.age_limit = crate::html::rta_search(html);
+    }
+    let shape = format!("jwplayer;{}", keys.join(","));
+    Ok(Some(ExtractResult::Video(crate::info_order::mark_info(
+        info, &shape,
+    ))))
+}
+
+/// A `_parse_jwplayer_data` entry as an info dict (`None` without formats):
+/// its manifests requested under `extractor`, its sources as formats, and
+/// its keys (in order).
+pub(crate) fn jwplayer_entry_info(
+    client: &Client,
+    entry: serde_json::Map<String, serde_json::Value>,
+    page_url: &Url,
+    video_id: &str,
+    extractor: &str,
+) -> Result<Option<(VideoInfo, Vec<String>)>> {
     use serde_json::Value;
     let invalid = |error: serde_json::Error| unsupported(&format!("JW Player data: {error}"));
     let mut formats = Vec::new();
@@ -2324,9 +2361,9 @@ fn jwplayer_info(
                 Url::parse(manifest).map_err(|_| unsupported("JW Player source URL is invalid"))?;
             let dash = map.get("dash") == Some(&Value::Bool(true));
             let note = if dash {
-                format!("[generic] {video_id}: Downloading MPD manifest")
+                format!("[{extractor}] {video_id}: Downloading MPD manifest")
             } else {
-                format!("[generic] {video_id}: Downloading m3u8 information")
+                format!("[{extractor}] {video_id}: Downloading m3u8 information")
             };
             crate::screen::expect_page(video_id, Some(note), None);
             let parsed = direct::request(client, &manifest, None).and_then(|response| {
@@ -2341,7 +2378,7 @@ fn jwplayer_info(
                 Ok(Some(info)) => {
                     if !info.subtitles.is_empty() {
                         crate::screen::warning_once(&format!(
-                            "[generic] Ignoring subtitle tracks found in the {} manifest; if any subtitle tracks are missing, {}",
+                            "[{extractor}] Ignoring subtitle tracks found in the {} manifest; if any subtitle tracks are missing, {}",
                             if dash { "DASH" } else { "HLS" },
                             crate::BUG_REPORTS_MESSAGE
                         ));
@@ -2350,7 +2387,7 @@ fn jwplayer_info(
                 }
                 Ok(None) => {}
                 Err(error) => crate::screen::warning(&format!(
-                    "[generic] {video_id}: Failed to download {} manifest: {error}",
+                    "[{extractor}] {video_id}: Failed to download {} manifest: {error}",
                     if dash { "MPD" } else { "m3u8" }
                 )),
             }
@@ -2391,8 +2428,6 @@ fn jwplayer_info(
     let Some(first) = formats.first() else {
         return Ok(None);
     };
-    // `report_detected` follows `_parse_jwplayer_data` (and its requests).
-    crate::screen::debug("Identified a JW Player data");
     let mut info = direct::build_at(first.url.clone(), &first.url, first.ext.clone());
     info.formats = formats;
     info.webpage_url = page_url.clone();
@@ -2429,25 +2464,7 @@ fn jwplayer_info(
         }
     }
     info.subtitles = subtitles;
-    if !keys.iter().any(|key| key == "title") {
-        info.title = page_title(html).unwrap_or_else(|| "video".into());
-    }
-    if !keys.iter().any(|key| key == "timestamp") {
-        info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
-    }
-    if !keys.iter().any(|key| key == "description") {
-        info.metadata.description = crate::html::og_search_property(html, "description");
-    }
-    if !keys.iter().any(|key| key == "thumbnail") {
-        info.metadata.thumbnail = crate::html::og_search_property(html, "image");
-    }
-    if !keys.iter().any(|key| key == "age_limit") {
-        info.metadata.age_limit = crate::html::rta_search(html);
-    }
-    let shape = format!("jwplayer;{}", keys.join(","));
-    Ok(Some(ExtractResult::Video(crate::info_order::mark_info(
-        info, &shape,
-    ))))
+    Ok(Some((info, keys)))
 }
 
 /// `_generic_title`: `og:title`, else the `<title>` text (whitespace

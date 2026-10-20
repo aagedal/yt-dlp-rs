@@ -374,6 +374,14 @@ warning, and the derived `.mov` URL as an untyped result. A missing title gets
 `_fill_common_fields`' generic `EXTRACTOR video #ID` title with its warning
 (`fulltitle` stays `null`).
 
+JW Platform media (`content.jwplatform.com`/`cdn.jwplayer.com`
+`players|feeds|thumbs|previews|manifests|jw6|v2/media/ID`, and `jwplatform:ID`)
+follow upstream `JWPlatformIE`: the `cdn.jwplayer.com/v2/media/ID` JSON through
+the ported `_parse_jwplayer_data` with `require_title=True` (a missing title is
+upstream's `KeyError`), the entry returned with its `None` fields, its HLS/DASH
+sources requested under `[JWPlatform]`, and caption tracks as subtitles. JW
+Player playlists are unsupported errors.
+
 Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
 `LivestreamfailsIE`: the clip API JSON as an untyped result (`sourceId` as
 `display_id`, `unified_timestamp` of `createdAt`, the streamer label as
