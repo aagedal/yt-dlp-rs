@@ -1565,6 +1565,75 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .map(|(_, value)| value.clone())
             .collect()
     };
+    // Upstream `set_compat_opts`: compatibility options change the defaults
+    // of options not given (an option overriding one shows `*NAME` in the
+    // debug header).
+    let compat = compat_options(&args.compat_options)?;
+    let given = |ids: &[&str]| {
+        ids.iter()
+            .any(|id| matches.value_source(id) == Some(clap::parser::ValueSource::CommandLine))
+    };
+    let mut compat_shown = Vec::new();
+    let (mut compat_abort, mut keep_subs, mut compat_format_sort) = (false, true, false);
+    for name in &compat {
+        let used = match name.as_str() {
+            "abort-on-error" => {
+                compat_abort = !given(&["ignore_errors", "no_abort_on_error", "abort_on_error"]);
+                compat_abort
+            }
+            "no-playlist-metafiles" => {
+                let unset = !given(&["write_playlist_metafiles", "no_write_playlist_metafiles"]);
+                args.no_write_playlist_metafiles |= unset;
+                unset
+            }
+            "no-clean-infojson" => {
+                let unset = !given(&["clean_info_json", "no_clean_info_json"]);
+                args.no_clean_info_json |= unset;
+                unset
+            }
+            "no-attach-info-json" => {
+                args.no_embed_info_json |= !args.embed_info_json;
+                !args.embed_info_json
+            }
+            "mtime-by-default" => {
+                let unset = !given(&["mtime", "no_mtime"]);
+                args.mtime |= unset;
+                unset
+            }
+            "filename" => {
+                let unset = !OutputTemplates::sets_default(&args.output);
+                if unset {
+                    args.output.insert(0, "%(title)s-%(id)s.%(ext)s".into());
+                }
+                unset
+            }
+            "format-sort" => {
+                compat_format_sort = true;
+                true
+            }
+            "no-keep-subs" => {
+                keep_subs = false;
+                true
+            }
+            // Features this port does not have, so nothing changes.
+            "no-certifi"
+            | "prefer-legacy-http-handler"
+            | "no-live-chat"
+            | "no-external-downloader-progress"
+            | "embed-thumbnail-atomicparsley" => true,
+            other => {
+                warning!(
+                    "WARNING: compatibility option {other} is not supported natively and is ignored"
+                );
+                true
+            }
+        };
+        compat_shown.push(if used {
+            name.clone()
+        } else {
+            format!("*{name}")
+        });
+    }
     // Upstream `ignoreerrors`: -i (True), --no-abort-on-error ("only_download",
     // the default) and --abort-on-error (False); the last flag wins.
     let error_mode = [
@@ -1582,7 +1651,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .map(move |i| (i, mode))
     })
     .max_by_key(|(index, _)| *index)
-    .map_or(ErrorMode::OnlyDownload, |(_, mode)| mode);
+    .map_or(
+        if compat_abort {
+            ErrorMode::Abort
+        } else {
+            ErrorMode::OnlyDownload
+        },
+        |(_, mode)| mode,
+    );
     // Upstream `writethumbnail`: --write-thumbnail keeps an earlier "all",
     // --no-write-thumbnail clears it, --write-all-thumbnails sets "all".
     let thumbnail_mode = {
@@ -1794,6 +1870,30 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     static SORT_FIELD: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
         regex::Regex::new(r"^ *(?:\+?[a-zA-Z0-9_]+(?:[~:].*?)?)? *$").unwrap()
     });
+    if compat_format_sort {
+        // `FormatSorter.ytdl_default`.
+        format_sort.extend(
+            [
+                "hasaud",
+                "lang",
+                "quality",
+                "tbr",
+                "filesize",
+                "vbr",
+                "height",
+                "width",
+                "proto",
+                "vext",
+                "abr",
+                "aext",
+                "fps",
+                "fs_approx",
+                "source",
+                "id",
+            ]
+            .map(str::to_owned),
+        );
+    }
     if let Some(field) = format_sort.iter().find(|field| !SORT_FIELD.is_match(field)) {
         return Err(usage(format!("invalid format sorting \"{field}\" given")).into());
     }
@@ -2141,6 +2241,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             downloader.ffmpeg_path(),
             ffprobe.as_deref(),
             args_proxy.as_deref(),
+            &compat_shown,
         );
         // Upstream's request director (`Request Handlers`) loads the jar.
         if let Err(error) = yt_dlp_rs::screen::load_cookies() {
@@ -3788,7 +3889,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             if args.embed_subs {
                                 processors.embed = Some(SubtitleEmbedding {
                                     subtitles: embedding_files,
-                                    keep_subtitles: args.write_subs || args.keep_video,
+                                    keep_subtitles: (args.write_subs && keep_subs)
+                                        || args.keep_video,
                                 });
                             }
                             let processing = processors.audio.is_some()
@@ -4450,6 +4552,121 @@ fn command() -> clap::Command {
 
 /// Upstream validation for options this port accepts without acting on
 /// them, and warnings where upstream would behave differently.
+/// Upstream `--compat-options` values.
+const COMPAT: [&str; 29] = [
+    "abort-on-error",
+    "allow-unsafe-exec-expansion",
+    "allow-unsafe-ext",
+    "embed-metadata",
+    "embed-thumbnail-atomicparsley",
+    "filename",
+    "filename-sanitization",
+    "format-sort",
+    "format-spec",
+    "list-formats",
+    "manifest-filesize-approx",
+    "mtime-by-default",
+    "multistreams",
+    "no-attach-info-json",
+    "no-certifi",
+    "no-clean-infojson",
+    "no-direct-merge",
+    "no-external-downloader-progress",
+    "no-keep-subs",
+    "no-live-chat",
+    "no-playlist-metafiles",
+    "no-youtube-channel-redirect",
+    "no-youtube-prefer-utc-upload-date",
+    "no-youtube-unavailable-videos",
+    "playlist-index",
+    "playlist-match-filter",
+    "prefer-legacy-http-handler",
+    "prefer-vp9-sort",
+    "seperate-video-versions",
+];
+
+/// Upstream `_set_from_options_callback` with `orderedSet_from_options`:
+/// aliases expand, `-NAME` removes, and `all` is every option.
+fn compat_options(values: &[String]) -> Result<Vec<String>, UsageError> {
+    fn alias(name: &str) -> Option<Vec<&'static str>> {
+        Some(match name {
+            "all" => COMPAT.to_vec(),
+            "youtube-dl" => vec![
+                "all",
+                "-multistreams",
+                "-playlist-match-filter",
+                "-manifest-filesize-approx",
+                "-allow-unsafe-ext",
+                "-prefer-vp9-sort",
+                "-allow-unsafe-exec-expansion",
+            ],
+            "youtube-dlc" => vec![
+                "all",
+                "-no-youtube-channel-redirect",
+                "-no-live-chat",
+                "-playlist-match-filter",
+                "-manifest-filesize-approx",
+                "-allow-unsafe-ext",
+                "-prefer-vp9-sort",
+                "-allow-unsafe-exec-expansion",
+            ],
+            "2021" => vec!["2022", "no-certifi", "filename-sanitization"],
+            "2022" => vec![
+                "2023",
+                "no-external-downloader-progress",
+                "playlist-match-filter",
+                "prefer-legacy-http-handler",
+                "manifest-filesize-approx",
+            ],
+            "2023" => vec!["2024", "prefer-vp9-sort"],
+            "2024" => vec!["2025", "mtime-by-default"],
+            "2025" => vec![],
+            _ => return None,
+        })
+    }
+    fn apply(values: &[String], requested: &mut Vec<String>) -> Result<(), String> {
+        for value in values {
+            let (discard, name) = match value.strip_prefix('-') {
+                Some(name) => (true, name),
+                None => (false, value.as_str()),
+            };
+            if let Some(expansion) = alias(name) {
+                let expansion: Vec<String> = expansion
+                    .iter()
+                    .map(|item| match (discard, item.strip_prefix('-')) {
+                        (false, _) => (*item).to_owned(),
+                        (true, Some(rest)) => rest.to_owned(),
+                        (true, None) => format!("-{item}"),
+                    })
+                    .collect();
+                apply(&expansion, requested)?;
+                continue;
+            }
+            if !COMPAT.contains(&name) {
+                return Err(name.to_owned());
+            }
+            if discard {
+                requested.retain(|item| item != name);
+            } else {
+                requested.push(name.to_owned());
+            }
+        }
+        Ok(())
+    }
+    let mut requested = Vec::new();
+    for value in values {
+        let parts: Vec<String> = value
+            .split(',')
+            .map(|part| part.trim().to_lowercase())
+            .collect();
+        apply(&parts, &mut requested)
+            .map_err(|name| usage(format!("wrong OPTS for --compat-options: {name}")))?;
+    }
+    let mut seen = std::collections::HashSet::new();
+    requested.retain(|item| seen.insert(item.clone()));
+    Ok(requested)
+}
+
 fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
     for (name, value, strict) in [
         ("buffer size", &args.buffer_size, true),
@@ -4501,61 +4718,7 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
             }
         }
     }
-    // Upstream `_set_from_options_callback` for --compat-options.
-    const COMPAT: [&str; 29] = [
-        "abort-on-error",
-        "allow-unsafe-exec-expansion",
-        "allow-unsafe-ext",
-        "embed-metadata",
-        "embed-thumbnail-atomicparsley",
-        "filename",
-        "filename-sanitization",
-        "format-sort",
-        "format-spec",
-        "list-formats",
-        "manifest-filesize-approx",
-        "mtime-by-default",
-        "multistreams",
-        "no-attach-info-json",
-        "no-certifi",
-        "no-clean-infojson",
-        "no-direct-merge",
-        "no-external-downloader-progress",
-        "no-keep-subs",
-        "no-live-chat",
-        "no-playlist-metafiles",
-        "no-youtube-channel-redirect",
-        "no-youtube-prefer-utc-upload-date",
-        "no-youtube-unavailable-videos",
-        "playlist-index",
-        "playlist-match-filter",
-        "prefer-legacy-http-handler",
-        "prefer-vp9-sort",
-        "seperate-video-versions",
-    ];
-    for value in args
-        .compat_options
-        .iter()
-        .flat_map(|value| value.split(','))
-    {
-        let name = value.trim().to_lowercase();
-        let name = name.strip_prefix('-').unwrap_or(&name);
-        if !(COMPAT.contains(&name)
-            || matches!(
-                name,
-                "all" | "youtube-dl" | "youtube-dlc" | "2021" | "2022" | "2023" | "2024" | "2025"
-            ))
-        {
-            return Err(usage(format!(
-                "wrong OPTS for --compat-options: {}",
-                value.trim()
-            )));
-        }
-        warning!(
-            "WARNING: compatibility option {} is not supported natively and is ignored",
-            value.trim()
-        );
-    }
+    compat_options(&args.compat_options)?;
     for value in &args.js_runtimes {
         let name = value.split(':').next().unwrap_or(value).to_lowercase();
         if !matches!(name.as_str(), "deno" | "node" | "bun" | "quickjs") {
@@ -5999,6 +6162,7 @@ fn print_debug_header(
     ffmpeg: Option<&Path>,
     ffprobe: Option<&Path>,
     proxy: Option<&str>,
+    compat: &[String],
 ) {
     use std::io::IsTerminal;
     let term = std::env::var("TERM").unwrap_or_default();
@@ -6031,6 +6195,9 @@ fn print_debug_header(
         encoding(screen)
     ));
     debug(&format!("yt-dlp-rs version {}", env!("CARGO_PKG_VERSION")));
+    if !compat.is_empty() {
+        debug(&format!("Compatibility options: {}", compat.join(", ")));
+    }
     debug(&format!(
         "Rust native build ({}) - {}",
         std::env::consts::ARCH,
