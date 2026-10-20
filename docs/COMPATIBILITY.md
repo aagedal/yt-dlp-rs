@@ -219,6 +219,17 @@ its title (else the ID), annotation, image and millisecond duration, and its
 `location`s (joined to the final URL, empty ones skipped) as formats with the
 `s1:label`/`s1:width`/`s1:height` attributes and the document as
 `manifest_url`. XSPF URLs found on HTML pages remain unsupported.
+A SMIL document (root `smil`, any namespace) is upstream's `_parse_smil` result
+for HTTP sources: `video`, then `audio`, then `media` elements (repeats
+skipped) joined to the head `base`/`httpBase` (else the document URL) as
+`http-BITRATE`/`http-N` formats with `system-bitrate`/1000 as `tbr`, size,
+width and height; absolute sources get `_is_valid_url`'s `Checking video URL`
+request and are skipped with its `URL is invalid` notice. Head metadata gives
+the title (else the URL basename), description/abstract and `unified_strdate`
+date; `image`s are `{id, url, width, height}` thumbnails and `textstream`s are
+subtitles by language (default `en`). RTMP, HLS, F4M, DASH and ISM sources,
+imagestream storyboards, extension-less sources (upstream's HEAD request) and
+relative text streams are unsupported errors.
 A page without HTML5 media first tries upstream's JW Player setup data
 (`_find_jwplayer_data` with a port of `js_to_json`, checked against pinned
 upstream conversions in `tests/fixtures/js_to_json/`): one playlist item's

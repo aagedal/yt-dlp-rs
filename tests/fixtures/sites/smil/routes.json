@@ -1,0 +1,61 @@
+{
+ "routes": [
+  {
+   "url": "https://media.example.test/shows/clip.smil",
+   "headers": {
+    "Content-Type": "application/smil+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<smil xmlns=\"http://www.w3.org/2001/SMIL20/Language\">\n <head>\n  <meta name=\"title\" content=\"Show &amp; tell\"/>\n  <meta name=\"abstract\" content=\"An abstract\"/>\n  <meta name=\"description\" content=\"ignored\"/>\n  <meta name=\"date\" content=\"2021-05-04\"/>\n  <meta base=\"https://cdn.example.test/vod\"/>\n </head>\n <body>\n  <switch>\n   <video src=\"hi.mp4\" system-bitrate=\"1500000\" width=\"1280\" height=\"720\" size=\"12345\"/>\n   <video src=\"lo.mp4\" systemBitrate=\"400000\" width=\"640\" height=\"360\"/>\n   <video src=\"hi.mp4\" system-bitrate=\"9\"/>\n   <video src=\"https://other.example.test/abs.mp4\"/>\n   <video src=\"https://other.example.test/gone.mp4\" ext=\"webm\"/>\n   <audio src=\"sound.m4a\"/>\n   <image src=\"https://media.example.test/poster.jpg\" type=\"poster\" width=\"640\" height=\"360\"/>\n   <image src=\"https://media.example.test/thumb.jpg\"/>\n   <textstream src=\"https://media.example.test/en.vtt\" systemLanguage=\"en\"/>\n   <textstream src=\"https://media.example.test/de.srt\" lang=\"de\" type=\"application/x-subrip\"/>\n   <textstream src=\"https://media.example.test/x.ttml\"/>\n  </switch>\n </body>\n</smil>"
+  },
+  {
+   "url": "https://media.example.test/plain.smil",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<smil><body><video src=\"https://cdn.example.test/vod/lo.mp4\"/></body></smil>"
+  },
+  {
+   "url": "https://cdn.example.test/vod/hi.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://cdn.example.test/vod/lo.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://cdn.example.test/vod/sound.m4a",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://other.example.test/abs.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://other.example.test/gone.mp4",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "gone"
+  },
+  {
+   "url": "https://media.example.test/en.vtt",
+   "headers": {
+    "Content-Type": "text/vtt"
+   },
+   "body": "WEBVTT\n\n00:00.000 --> 00:01.000\nHi\n"
+  }
+ ]
+}

@@ -276,6 +276,16 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        // `_parse_smil_formats_and_subtitles`' HTTP source.
+        "smil-http" => &[
+            ("url", Take),
+            ("ext", Take),
+            ("format_id", Take),
+            ("tbr", Assign),
+            ("filesize", Assign),
+            ("width", Assign),
+            ("height", Assign),
+        ],
         // `_parse_xspf`'s location.
         "xspf" => &[
             ("url", Take),
@@ -682,6 +692,16 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("description", Take),
             ("thumbnail", Take),
         ],
+        // `_parse_smil`'s dict.
+        "smil" => &[
+            ("id", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("upload_date", Assign),
+            ("thumbnails", List),
+            ("formats", Take),
+            ("subtitles", Dict),
+        ],
         // `_parse_xspf`'s track.
         "xspf-entry" => &[
             ("id", Take),
@@ -921,6 +941,19 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     replay.steps(extractor);
     if let Some(original) = &original {
         replay.loaded(original);
+    }
+    // `_parse_smil`'s images are `{id, url, width, height}` dicts.
+    if shape == "smil"
+        && let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails")
+    {
+        for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
+            let mut ordered = Map::new();
+            for key in ["id", "url", "width", "height"] {
+                ordered.insert(key.to_owned(), thumbnail.remove(key).unwrap_or(Value::Null));
+            }
+            ordered.append(thumbnail);
+            *thumbnail = ordered;
+        }
     }
     // Video.js tracks are `{url, name, http_headers}`, then `ext`.
     if shape == "videojs"

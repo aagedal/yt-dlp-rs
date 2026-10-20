@@ -670,6 +670,11 @@ impl Extractor for GenericHttp {
             detected("RSS feed");
             return Ok(Some(rss_playlist(feed, url, &page_url)));
         }
+        if let Some(smil) = super::smil::parse(html) {
+            let info = smil_info(client, smil, url)?;
+            detected("SMIL file");
+            return Ok(Some(ExtractResult::Video(info)));
+        }
         if let Some(tracks) = super::xspf::parse(html, &page_url) {
             detected("XSPF playlist");
             return xspf_playlist(tracks, url, &page_url).map(Some);
@@ -1183,6 +1188,207 @@ impl GenericHttp {
             extra,
         })))
     }
+}
+
+/// GenericIE's `_parse_smil(doc, url, video_id)` for HTTP media sources;
+/// other source kinds are unsupported errors.
+fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<VideoInfo> {
+    use super::smil::get;
+    let video_id = crate::screen::generic_id(url.as_str());
+    let int = |value: Option<&str>| value.and_then(|value| value.trim().parse::<u32>().ok());
+    // `_parse_smil_formats_and_subtitles`.
+    let base = smil
+        .meta
+        .iter()
+        .find_map(|meta| {
+            get(meta, "base")
+                .filter(|base| !base.is_empty())
+                .or_else(|| get(meta, "httpBase").filter(|base| !base.is_empty()))
+        })
+        .unwrap_or(url.as_str())
+        .to_owned();
+    if !smil.imagestreams.is_empty() {
+        return Err(unsupported(
+            "SMIL imagestream storyboards are not supported natively",
+        ));
+    }
+    let mut formats = Vec::new();
+    let mut sources: Vec<String> = Vec::new();
+    let mut http_count = 0;
+    for medium in &smil.media {
+        let Some(src) = get(medium, "src").filter(|src| !src.is_empty()) else {
+            continue;
+        };
+        if sources.iter().any(|seen| seen == src) {
+            continue;
+        }
+        sources.push(src.to_owned());
+        let float = |key: &str, alternative: &str| {
+            get(medium, key)
+                .filter(|value| !value.is_empty())
+                .or_else(|| get(medium, alternative))
+                .and_then(|value| value.trim().parse::<f64>().ok())
+        };
+        let bitrate = float("system-bitrate", "systemBitrate").map(|bitrate| bitrate / 1000.0);
+        let filesize = get(medium, "size")
+            .filter(|value| !value.is_empty())
+            .or_else(|| get(medium, "fileSize"))
+            .and_then(|value| value.trim().parse::<u64>().ok());
+        let width = int(get(medium, "width"));
+        let height = int(get(medium, "height"));
+        let proto = get(medium, "proto");
+        let ext = get(medium, "ext").filter(|ext| !ext.is_empty());
+        let streamer = get(medium, "streamer")
+            .filter(|value| !value.is_empty())
+            .unwrap_or(&base);
+        if proto == Some("rtmp") || streamer.starts_with("rtmp") {
+            return Err(unsupported("SMIL RTMP sources are not supported natively"));
+        }
+        let Some(src_ext) = direct::determine_ext(src).or(ext.map(str::to_owned)) else {
+            return Err(unsupported(
+                "SMIL sources without an extension are not supported natively",
+            ));
+        };
+        let src_url = if src.starts_with("http") {
+            src.to_owned()
+        } else {
+            Url::parse(&format!("{base}/"))
+                .and_then(|base| base.join(src))
+                .map(String::from)
+                .map_err(|_| unsupported("SMIL source URLs must be absolute or joinable"))?
+        };
+        let src_url = src_url.trim().to_owned();
+        if proto == Some("m3u8")
+            || matches!(src_ext.as_str(), "m3u8" | "f4m" | "mpd")
+            || regex::Regex::new(r"\.ism/[Mm]anifest")
+                .expect("static pattern")
+                .is_match(&src_url)
+        {
+            return Err(unsupported(
+                "SMIL manifest sources are not supported natively",
+            ));
+        }
+        if !src_url.starts_with("http") {
+            continue;
+        }
+        // `_is_valid_url(src, video_id)`: absolute sources are requested.
+        let checked = crate::extractor::proto_relative_http(src);
+        if checked.starts_with("http://") || checked.starts_with("https://") {
+            crate::screen::screen(&format!("[generic] {video_id}: Checking video URL"));
+            let target = Url::parse(&checked)?;
+            if let Err(error) = direct::request(client, &target, None) {
+                crate::screen::screen(&format!(
+                    "[generic] {video_id}: video URL is invalid, skipping: {}",
+                    crate::upstream_error_text(&error)
+                ));
+                continue;
+            }
+        }
+        http_count += 1;
+        let format_id = match bitrate.filter(|bitrate| *bitrate != 0.0) {
+            Some(bitrate) => format!("http-{}", bitrate.trunc() as i64),
+            None => format!("http-{http_count}"),
+        };
+        let mut format: VideoFormat = serde_json::from_value(serde_json::json!({
+            "format_id": format_id,
+            "url": src_url,
+            "ext": ext.map(str::to_owned).unwrap_or(src_ext),
+            "tbr": bitrate,
+            "filesize": filesize,
+            "width": width,
+            "height": height,
+        }))
+        .map_err(|error| unsupported(&format!("SMIL source: {error}")))?;
+        crate::info_order::mark_format(&mut format, "smil-http");
+        formats.push(format);
+    }
+    // `_parse_smil_subtitles(smil, namespace)`.
+    let mut subtitles = Subtitles::default();
+    let mut subtitle_urls: Vec<String> = Vec::new();
+    for stream in &smil.textstreams {
+        let Some(src) = get(stream, "src").filter(|src| !src.is_empty()) else {
+            continue;
+        };
+        if subtitle_urls.iter().any(|seen| seen == src) {
+            continue;
+        }
+        subtitle_urls.push(src.to_owned());
+        let ext = get(stream, "ext")
+            .filter(|ext| !ext.is_empty())
+            .map(str::to_owned)
+            .or_else(|| {
+                get(stream, "type")
+                    .map(|mime| direct::mimetype2ext_or(mime, None))
+                    .filter(|ext| !ext.is_empty())
+            })
+            .or_else(|| direct::determine_ext(src))
+            .unwrap_or_else(|| "unknown_video".into());
+        let language = ["systemLanguage", "systemLanguageName", "lang"]
+            .iter()
+            .find_map(|key| get(stream, key).filter(|value| !value.is_empty()))
+            .unwrap_or("en")
+            .to_owned();
+        let track = SubtitleFormat {
+            name: None,
+            url: Url::parse(src).map_err(|_| {
+                unsupported("relative SMIL text stream URLs are not supported natively")
+            })?,
+            ext,
+            protocol: None,
+            fragments: Vec::new(),
+            extra: Default::default(),
+        };
+        match subtitles
+            .entries
+            .iter_mut()
+            .find(|(key, _)| key.as_deref() == Some(language.as_str()))
+        {
+            Some((_, tracks)) => tracks.push(track),
+            None => subtitles.entries.push((Some(language), vec![track])),
+        }
+    }
+    // `_parse_smil`'s head metadata.
+    let (mut title, mut description, mut upload_date) = (None, None, None);
+    for meta in &smil.meta {
+        let (Some(name), Some(content)) = (
+            get(meta, "name").filter(|name| !name.is_empty()),
+            get(meta, "content").filter(|content| !content.is_empty()),
+        ) else {
+            continue;
+        };
+        if title.is_none() && name == "title" {
+            title = Some(content.to_owned());
+        } else if description.is_none() && matches!(name, "description" | "abstract") {
+            description = Some(content.to_owned());
+        } else if upload_date.is_none() && name == "date" {
+            upload_date = crate::dates::unified_strdate(content, true);
+        }
+    }
+    let thumbnails = smil
+        .images
+        .iter()
+        .filter_map(|image| {
+            Some(crate::info::Thumbnail {
+                url: get(image, "src").filter(|src| !src.is_empty())?.to_owned(),
+                id: get(image, "type").map(str::to_owned),
+                width: int(get(image, "width")),
+                height: int(get(image, "height")),
+                preference: None,
+                resolution: None,
+            })
+        })
+        .collect();
+    let mut info = direct::build_at(url.clone(), url, String::new());
+    info.formats = formats;
+    info.direct = None;
+    info.id = video_id.clone();
+    info.title = title.unwrap_or(video_id);
+    info.webpage_url = url.clone();
+    info.subtitles = subtitles;
+    info.metadata.description = description;
+    info.metadata.upload_date = upload_date;
+    info.metadata.thumbnails = thumbnails;
+    Ok(crate::info_order::mark_info(info, "smil"))
 }
 
 /// GenericIE's `playlist_result(self._parse_xspf(doc, video_id, ...),

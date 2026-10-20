@@ -12,6 +12,7 @@ mod livestreamfails;
 mod megaphone;
 mod reverbnation;
 mod rss;
+mod smil;
 mod streamable;
 mod xspf;
 mod youtube;
@@ -189,6 +190,14 @@ pub(crate) fn search_warning(extractor: &str, name: &str) {
         "[{extractor}] unable to extract {name}; {}",
         crate::BUG_REPORTS_MESSAGE
     ));
+}
+
+/// `self._proto_relative_url(url, scheme='http:')`.
+pub(crate) fn proto_relative_http(url: &str) -> String {
+    match url.strip_prefix("//") {
+        Some(rest) => format!("http://{rest}"),
+        None => url.to_owned(),
+    }
 }
 
 /// `self._proto_relative_url(url)`: `//host/...` becomes `https://host/...`.

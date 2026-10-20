@@ -670,6 +670,32 @@ pub fn unified_timestamp(date: &str, day_first: bool) -> Option<i64> {
         .checked_sub(timezone)
 }
 
+/// Upstream `unified_strdate(date_str, day_first)`: `YYYYMMDD` of the last
+/// matching `date_formats` entry (no timezone shift), else `parsedate_tz`.
+pub fn unified_strdate(date: &str, day_first: bool) -> Option<String> {
+    static MERIDIEM: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r"(?i)[\s\x1c-\x1f]*(?:AM|PM)(?:[\s\x1c-\x1f]+[A-Z]+)?").unwrap()
+    });
+    let date = date.replace(',', " ");
+    let date = MERIDIEM.replace_all(&date, "");
+    let (_, rest) = extract_timezone(&date);
+    let regexes = if day_first {
+        &*DAY_FIRST_REGEXES
+    } else {
+        &*MONTH_FIRST_REGEXES
+    };
+    let valid = |value: &DateTime| {
+        timegm(value).map(|_| format!("{:04}{:02}{:02}", value.year, value.month, value.day))
+    };
+    let mut found = None;
+    for regex in regexes {
+        if let Some(parsed) = strptime(regex, &rest) {
+            found = valid(&parsed).or(found);
+        }
+    }
+    found.or_else(|| valid(&parsedate_tz(&rest)?.0))
+}
+
 /// Upstream `parse_iso8601(date)`: fractions removed, `extract_timezone`,
 /// then exactly `%Y-%m-%dT%H:%M:%S`.
 pub fn parse_iso8601(date: &str) -> Option<i64> {
@@ -1040,6 +1066,25 @@ fn local_offset(_: i64) -> Option<i64> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn unified_strdate_matches_pinned_upstream() {
+        // Values from the pinned upstream `unified_strdate`.
+        for (input, expected) in [
+            ("2021-05-04", Some("20210504")),
+            ("May 4, 2021 10:00 PM EST", Some("20210504")),
+            ("04.05.2021", Some("20210504")),
+            ("Tue, 04 May 2021 10:00:00 +0200", Some("20210504")),
+            ("2021/13/40", None),
+            ("x", None),
+        ] {
+            assert_eq!(
+                super::unified_strdate(input, true).as_deref(),
+                expected,
+                "{input}"
+            );
+        }
+    }
+
     use super::*;
 
     #[test]
