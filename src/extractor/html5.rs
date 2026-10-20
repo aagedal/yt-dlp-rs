@@ -2384,7 +2384,7 @@ fn jwplayer_info(
 
 /// `_generic_title`: `og:title`, else the `<title>` text (whitespace
 /// collapsed), `None` when both are empty.
-fn page_title(html: &str) -> Option<String> {
+pub(crate) fn page_title(html: &str) -> Option<String> {
     let document = Html::parse_document(html);
     let title = document
         .select(&selector("meta[property='og:title']"))

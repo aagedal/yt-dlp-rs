@@ -306,6 +306,11 @@ result, empty elements as `None` (a generic title for an empty title) and a
 missing element as upstream's bare `AttributeError` text. XML parse errors
 carry this port's parser message rather than expat's.
 
+Glide messages (`share.glide.me/ID`) follow upstream `GlideIE`: the page's
+generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
+`video-thumbnail` image (else the OpenGraph image with its warning), each
+protocol-relative URL as `https:`, as an untyped result.
+
 HistoricFilms tapes (`historicfilms.com/tapes/ID`, `/playID`) follow upstream
 `HistoricFilmsIE`: the fatal tape ID, OpenGraph title/description, the
 `thumbnailUrl` meta or OpenGraph image, the `duration` meta through

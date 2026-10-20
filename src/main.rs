@@ -2862,7 +2862,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     flush_validation_warnings();
     if args.verbose {
         // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 10 extractors");
+        eprintln!("[debug] Loaded 11 extractors");
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
@@ -2985,8 +2985,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 10] = [
+        let suitable: [(&str, Suitable); 11] = [
             ("EbaumsWorld", yt_dlp_rs::extractor::ebaumsworld_suitable),
+            ("Glide", yt_dlp_rs::extractor::glide_suitable),
             (
                 "HistoricFilms",
                 yt_dlp_rs::extractor::historicfilms_suitable,
@@ -3018,7 +3019,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "EbaumsWorld\nHistoricFilms\nhtml5\nHypem\nLivestreamfails\nmegaphone.fm: megaphone.fm embedded players\nReverbNation\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
+            "EbaumsWorld\nGlide: Glide mobile video messages (glide.me)\nHistoricFilms\nhtml5\nHypem\nLivestreamfails\nmegaphone.fm: megaphone.fm embedded players\nReverbNation\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
