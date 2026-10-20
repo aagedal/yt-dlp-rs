@@ -1484,9 +1484,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     let mut argv = std::env::args();
     let program = argv.next().unwrap_or_else(|| "yt-dlp-rs".into());
     let (arguments, config_debug) = config_arguments(argv.collect())?;
-    let (arguments, deprecated) = strip_deprecated_options(arguments);
     let arguments = expand_preset_aliases(arguments).map_err(UsageError)?;
-    let matches = command().get_matches_from(std::iter::once(program).chain(arguments));
+    let (arguments, deprecated) = strip_deprecated_options(arguments);
+    let matches = match command().try_get_matches_from(std::iter::once(program).chain(arguments)) {
+        Ok(matches) => matches,
+        Err(error) if error.kind() == clap::error::ErrorKind::UnknownArgument => {
+            return Err(UsageError(unknown_option(&error)).into());
+        }
+        Err(error) => error.exit(),
+    };
     // Upstream `parseOpts` prints the configuration tree with `--verbose`.
     if matches.get_flag("verbose") {
         for line in &config_debug {
@@ -4439,9 +4445,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         aborted = true;
                         false
                     }
-                    // Upstream skips the transfer without an error or archive record.
+                    // Upstream skips the transfer without an error or archive
+                    // record: HttpFD's `\r`-prefixed message, then (as
+                    // `real_download` returns) the status printer's `end()`.
                     Some(yt_dlp_rs::Error::FileSizeLimit(message)) => {
-                        screen!("[download] {message}");
+                        screen!("\r[download] {message}");
+                        if progress_options.enabled && !progress_options.newline {
+                            ProgressReporter::write(if progress_options.quiet {
+                                "\r\r"
+                            } else {
+                                "\n"
+                            });
+                        }
                         true
                     }
                     // A raised DownloadError: reported here unless the loaded
@@ -4749,6 +4764,100 @@ impl std::fmt::Display for UsageError {
 
 impl std::error::Error for UsageError {}
 
+/// optparse's `BadOptionError` text for an unknown option.
+fn unknown_option(error: &clap::Error) -> String {
+    let argument = error
+        .get(clap::error::ContextKind::InvalidArg)
+        .map(ToString::to_string)
+        .unwrap_or_default();
+    format!(
+        "no such option: {}",
+        argument.split('=').next().unwrap_or_default()
+    )
+}
+
+/// Every long option (with its aliases and the deprecated ones stripped
+/// before parsing) and whether it takes a separate value.
+fn long_options() -> Vec<(String, bool)> {
+    let mut options: Vec<(String, bool)> = command()
+        .get_arguments()
+        .filter(|argument| !argument.is_positional())
+        .flat_map(|argument| {
+            let takes_value = argument.get_action().takes_values();
+            argument
+                .get_long_and_visible_aliases()
+                .into_iter()
+                .flatten()
+                .chain(argument.get_all_aliases().into_iter().flatten())
+                .map(move |name| (format!("--{name}"), takes_value))
+                .collect::<Vec<_>>()
+        })
+        .collect();
+    options.extend(
+        DEPRECATED_SWITCHES
+            .iter()
+            .map(|name| ((*name).to_owned(), false)),
+    );
+    options.extend(
+        DEPRECATED_ARGUMENTS
+            .iter()
+            .map(|name| ((*name).to_owned(), true)),
+    );
+    // Expanded before the parser runs.
+    options.extend(["--alias", "--preset-alias"].map(|name| (name.to_owned(), true)));
+    options.sort();
+    options.dedup();
+    options
+}
+
+/// optparse `_match_long_opt` for `--NAME[=VALUE]`: an unambiguous prefix
+/// of a long option (or a defined `--alias`) stands for it, an ambiguous one
+/// is an error listing the sorted candidates, and an unknown one is left for
+/// the parser. A switch given a value is optparse's error.
+fn resolve_long(
+    token: &str,
+    options: &[(String, bool)],
+    aliases: &[(String, usize, String, usize)],
+) -> Result<String, String> {
+    let (name, value) = match token.split_once('=') {
+        Some((name, value)) => (name, Some(value)),
+        None => (token, None),
+    };
+    let mut candidates: Vec<(&str, bool)> = options
+        .iter()
+        .map(|(option, takes_value)| (option.as_str(), *takes_value))
+        .chain(
+            aliases
+                .iter()
+                .map(|(alias, nargs, ..)| (alias.as_str(), *nargs > 0)),
+        )
+        .collect();
+    candidates.sort();
+    candidates.dedup();
+    let matched: Vec<(&str, bool)> = match candidates.iter().find(|(option, _)| *option == name) {
+        Some(exact) => vec![*exact],
+        None => candidates
+            .iter()
+            .filter(|(option, _)| option.starts_with(name))
+            .copied()
+            .collect(),
+    };
+    match matched.as_slice() {
+        [] => Ok(token.to_owned()),
+        [(option, false)] if value.is_some() => {
+            Err(format!("{option} option does not take a value"))
+        }
+        [(option, _)] => Ok(match value {
+            Some(value) => format!("{option}={value}"),
+            None => (*option).to_owned(),
+        }),
+        many => {
+            let names: Vec<&str> = many.iter().map(|(option, _)| *option).collect();
+            Err(format!("ambiguous option: {name} ({}?)", names.join(", ")))
+        }
+    }
+}
+
 /// The parser, with optparse's value handling: an option that takes a
 /// value consumes the next argument even when it starts with `-`.
 fn command() -> clap::Command {
@@ -5022,6 +5131,9 @@ fn expand_preset_aliases(arguments: Vec<String>) -> Result<Vec<String>, String> 
     let mut command = Args::command();
     command.build();
     let takes_value = |token: &str| -> bool {
+        if DEPRECATED_ARGUMENTS.contains(&token) {
+            return true;
+        }
         let found = if let Some(long) = token.strip_prefix("--") {
             command.get_arguments().find(|argument| {
                 argument.get_long() == Some(long)
@@ -5058,12 +5170,31 @@ fn expand_preset_aliases(arguments: Vec<String>) -> Result<Vec<String>, String> 
     // Upstream `--alias ALIASES OPTIONS`: option strings with their argument
     // count, template and trigger count.
     let mut aliases: Vec<(String, usize, String, usize)> = Vec::new();
+    let options = long_options();
+    let shorts: Vec<(char, bool)> = command
+        .get_arguments()
+        .filter_map(|argument| {
+            argument.get_short().map(|short| {
+                (
+                    short,
+                    argument
+                        .get_num_args()
+                        .is_some_and(|range| range.takes_values()),
+                )
+            })
+        })
+        .collect();
     while let Some(token) = queue.pop_front() {
         if token == "--" {
             output.push(token);
             output.extend(queue);
             break;
         }
+        let token = if token.starts_with("--") {
+            resolve_long(&token, &options, &aliases)?
+        } else {
+            token
+        };
         if token == "--alias" {
             let (Some(names), Some(options)) = (queue.pop_front(), queue.pop_front()) else {
                 return Err("--alias option requires 2 arguments".into());
@@ -5136,6 +5267,22 @@ fn expand_preset_aliases(arguments: Vec<String>) -> Result<Vec<String>, String> 
                 .ok_or_else(|| format!("Unknown preset alias: {name}"))?;
             output.extend(preset.1.iter().map(|value| (*value).to_owned()));
             continue;
+        }
+        // A short option's attached value is the rest of the argument,
+        // verbatim (`-f=best` is `=best`).
+        if !token.starts_with("--") && token.starts_with('-') && token.len() > 2 {
+            let cluster = &token[1..];
+            let attached = cluster.char_indices().find_map(|(index, short)| {
+                shorts
+                    .iter()
+                    .find(|(name, takes_value)| *name == short && *takes_value)
+                    .map(|_| index + short.len_utf8())
+            });
+            if let Some(end) = attached.filter(|end| *end < cluster.len()) {
+                output.push(format!("-{}", &cluster[..end]));
+                output.push(cluster[end..].to_owned());
+                continue;
+            }
         }
         // Keep option values with their option.
         let inline = token.starts_with("--") && token.contains('=');
@@ -5253,43 +5400,46 @@ fn format_alias(template: &str, values: &[String]) -> Result<String, String> {
     Ok(output)
 }
 
+/// Upstream's deprecated switches, which take no effect.
+const DEPRECATED_SWITCHES: &[&str] = &[
+    "--xattr-set-filesize",
+    "--dump-user-agent",
+    "--youtube-include-dash-manifest",
+    "--no-youtube-skip-dash-manifest",
+    "--youtube-skip-dash-manifest",
+    "--no-youtube-include-dash-manifest",
+    "--youtube-include-hls-manifest",
+    "--no-youtube-skip-hls-manifest",
+    "--youtube-skip-hls-manifest",
+    "--no-youtube-include-hls-manifest",
+    "--youtube-print-sig-code",
+    "--sponskrub",
+    "--no-sponskrub",
+    "--sponskrub-cut",
+    "--no-sponskrub-cut",
+    "--sponskrub-force",
+    "--no-sponskrub-force",
+    "--prefer-avconv",
+    "--no-prefer-ffmpeg",
+    "--prefer-ffmpeg",
+    "--no-prefer-avconv",
+    "-C",
+    "--call-home",
+    "--no-call-home",
+    "--include-ads",
+    "--no-include-ads",
+    "--write-annotations",
+    "--no-write-annotations",
+];
+/// Upstream's deprecated options with a value.
+const DEPRECATED_ARGUMENTS: &[&str] = &[
+    "--sponskrub-location",
+    "--sponskrub-args",
+    "--cn-verification-proxy",
+];
+
 /// Upstream `deprecated_switches`/`deprecated_arguments`: accepted no-ops.
 fn strip_deprecated_options(arguments: Vec<String>) -> (Vec<String>, Vec<String>) {
-    const SWITCHES: &[&str] = &[
-        "--xattr-set-filesize",
-        "--dump-user-agent",
-        "--youtube-include-dash-manifest",
-        "--no-youtube-skip-dash-manifest",
-        "--youtube-skip-dash-manifest",
-        "--no-youtube-include-dash-manifest",
-        "--youtube-include-hls-manifest",
-        "--no-youtube-skip-hls-manifest",
-        "--youtube-skip-hls-manifest",
-        "--no-youtube-include-hls-manifest",
-        "--youtube-print-sig-code",
-        "--sponskrub",
-        "--no-sponskrub",
-        "--sponskrub-cut",
-        "--no-sponskrub-cut",
-        "--sponskrub-force",
-        "--no-sponskrub-force",
-        "--prefer-avconv",
-        "--no-prefer-ffmpeg",
-        "--prefer-ffmpeg",
-        "--no-prefer-avconv",
-        "-C",
-        "--call-home",
-        "--no-call-home",
-        "--include-ads",
-        "--no-include-ads",
-        "--write-annotations",
-        "--no-write-annotations",
-    ];
-    const ARGUMENTS: &[&str] = &[
-        "--sponskrub-location",
-        "--sponskrub-args",
-        "--cn-verification-proxy",
-    ];
     let mut kept = Vec::with_capacity(arguments.len());
     let mut deprecated = Vec::new();
     let mut iter = arguments.into_iter();
@@ -5302,9 +5452,9 @@ fn strip_deprecated_options(arguments: Vec<String>) -> (Vec<String>, Vec<String>
         let name = argument
             .split_once('=')
             .map_or(argument.as_str(), |(name, _)| name);
-        if SWITCHES.contains(&argument.as_str()) {
+        if DEPRECATED_SWITCHES.contains(&argument.as_str()) {
             deprecated.push(argument);
-        } else if ARGUMENTS.contains(&name) {
+        } else if DEPRECATED_ARGUMENTS.contains(&name) {
             if !argument.contains('=') {
                 iter.next();
             }
@@ -7022,6 +7172,54 @@ mod tests {
         assert_eq!(
             expand(&["--alias", "bad", "-f {0"]).unwrap_err(),
             "wrong --alias OPTIONS formatting; expected '}' before end of string"
+        );
+    }
+
+    #[test]
+    fn long_option_abbreviations_follow_optparse() {
+        let expand = |args: &[&str]| {
+            let args: Vec<String> = args.iter().map(|arg| (*arg).to_owned()).collect();
+            with_stack(move || expand_preset_aliases(args))
+        };
+        // Unique prefixes (also of deprecated options and defined aliases)
+        // expand; option values and `--` are left alone.
+        assert_eq!(
+            expand(&[
+                "--match-filter",
+                "--no-c",
+                "--call-h",
+                "-o",
+                "--yo",
+                "--",
+                "--x"
+            ])
+            .unwrap(),
+            [
+                "--match-filters",
+                "--no-c",
+                "--call-home",
+                "-o",
+                "--yo",
+                "--",
+                "--x"
+            ]
+        );
+        assert_eq!(
+            expand(&["--ali", "quiet-sim", "-q", "--quiet-s"]).unwrap(),
+            ["-q"]
+        );
+        assert_eq!(
+            expand(&["--no-ch"]).unwrap_err(),
+            "ambiguous option: --no-ch (--no-check-certificates, --no-check-formats?)"
+        );
+        assert_eq!(
+            expand(&["--restrict=x"]).unwrap_err(),
+            "--restrict-filenames option does not take a value"
+        );
+        // A short option's attached value is kept verbatim.
+        assert_eq!(
+            expand(&["-f=best", "-sfbest"]).unwrap(),
+            ["-f", "=best", "-sf", "best"]
         );
     }
 
