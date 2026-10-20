@@ -13,6 +13,62 @@
     "Content-Type": "text/xml"
    },
    "body": "<SmoothStreamingMedia IsLive=\"TRUE\" Duration=\"0\"><StreamIndex Type=\"video\" Url=\"x\"><QualityLevel Bitrate=\"1\" FourCC=\"H264\"/></StreamIndex></SmoothStreamingMedia>"
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/QualityLevels(400000)/Fragments(video=0)",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "v0.mp4"
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/QualityLevels(400000)/Fragments(video=20000000)",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "v1.mp4"
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/QualityLevels(400000)/Fragments(video=40000000)",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "v2.mp4"
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/QualityLevels(128000)/Fragments(audio_eng=0)",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a0.mp4"
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/QualityLevels(128000)/Fragments(audio_eng=132300)",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a1.mp4"
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/QualityLevels(1500000)/Fragments(video=0)",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "v0.mp4"
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/QualityLevels(1500000)/Fragments(video=20000000)",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "v1.mp4"
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/QualityLevels(1500000)/Fragments(video=40000000)",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "v2.mp4"
   }
  ]
 }

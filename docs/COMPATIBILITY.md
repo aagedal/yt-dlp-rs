@@ -219,8 +219,13 @@ tracks as `protocol: ism` formats (`NAME-KBPS` IDs, int `tbr`, ISO 639-2
 languages, `_download_params`) and TTML text tracks as `ismt` subtitles, each
 with fragments from the `c` timeline (`t`/`d`/`r`, a missing duration taking
 upstream's stream-end fallback); other codecs warn `FOURCC is not a supported
-codec`, and live manifests have no formats. Downloading ISM formats is an
-unsupported error (upstream's `IsmFD` is not ported).
+codec`, and live manifests have no formats. ISM formats download through a
+port of upstream's `IsmFD` (`[ism] Total fragments: N`): the fragments
+appended raw through the fragment downloader after the PIFF `ftyp`/`moov`
+header built from `_download_params` and the first fragment's `tfhd` track ID
+(byte-identical to upstream's `write_piff_header` apart from its `time.time()`
+creation times), with `ism_track_written` in the `.ytdl` state; `--test` takes
+the first fragment, and selected video+audio pairs merge with ffmpeg.
 An F4M manifest (`{http://ns.adobe.com/f4m/1.0|2.0}manifest`, ampersands fixed
 like `fix_xml_ampersands`) is the generic info dict with `_parse_f4m_formats`:
 unencrypted `media` entries as `protocol: f4m` formats (`flv` for stream-level

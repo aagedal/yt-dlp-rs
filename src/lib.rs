@@ -29,6 +29,7 @@ mod http;
 mod info;
 mod info_json;
 mod info_order;
+mod ism_fd;
 pub mod js_to_json;
 pub mod manifest_args;
 mod match_filter;
@@ -959,6 +960,8 @@ impl YoutubeDl {
             external.basename()
         } else if info.protocol.as_deref() == Some("f4m") {
             "f4m"
+        } else if info.protocol.as_deref() == Some("ism") {
+            "ism"
         } else if info
             .protocol
             .as_deref()
@@ -2039,17 +2042,6 @@ impl YoutubeDl {
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
-        // Upstream `IsmFD` is not ported yet.
-        if info.protocol.as_deref() == Some("ism")
-            || info
-                .requested_formats
-                .iter()
-                .any(|format| format.protocol.as_deref() == Some("ism"))
-        {
-            return Err(Error::UnsupportedHtml5(
-                "ISM (Smooth Streaming) downloads are not supported natively".into(),
-            ));
-        }
         // Merged F4M formats are not supported (upstream merges F4mFD files).
         if info
             .requested_formats
@@ -2103,6 +2095,27 @@ impl YoutubeDl {
         }
         if !info.requested_formats.is_empty() {
             return self.download_merged(info, destination.as_ref(), options, &mut callback);
+        }
+        // Upstream `IsmFD` (`--test` takes the first fragment).
+        if info.protocol.as_deref() == Some("ism") {
+            let params = info
+                .extra
+                .get("_download_params")
+                .cloned()
+                .ok_or_else(|| Error::Reported("KeyError: '_download_params'".into()))?;
+            let mut plan = info.clone();
+            if self.test {
+                plan.fragments.truncate(1);
+            }
+            return fragment::download_ism(
+                &self.client,
+                &plan,
+                destination.as_ref(),
+                options,
+                self.keep_fragments,
+                &params,
+                &mut callback,
+            );
         }
         // Upstream `F4mFD`.
         if info.protocol.as_deref() == Some("f4m") {
@@ -2361,6 +2374,15 @@ impl YoutubeDl {
             part.protocol = Some(stream.determine_protocol());
             part.stream_kind = stream.stream_kind;
             part.format_id = Some(stream.format_id.clone());
+            // IsmFD reads the stream's `_download_params`.
+            match stream.extra.get("_download_params") {
+                Some(params) => {
+                    part.extra.insert("_download_params".into(), params.clone());
+                }
+                None => {
+                    part.extra.remove("_download_params");
+                }
+            }
             match stream.format_index {
                 Some(index) => {
                     part.extra.insert("format_index".into(), index.into());
@@ -2393,6 +2415,7 @@ impl YoutubeDl {
                 if !part.fragments.is_empty() {
                     let downloader = match part.protocol.as_deref() {
                         Some("http_dash_segments") => "dashsegments",
+                        Some("ism") => "ism",
                         _ => "hlsnative",
                     };
                     screen::screen(&format!(

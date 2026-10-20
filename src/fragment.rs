@@ -100,7 +100,41 @@ pub(crate) fn download(
         options,
         concurrency,
         keep_fragments,
-        None,
+        Assembly::Raw,
+        callback,
+    )
+}
+
+/// How fragments are written.
+#[derive(Clone, Copy)]
+enum Assembly<'a> {
+    /// Appended as received (HlsFD, DashSegmentsFD).
+    Raw,
+    /// `F4mFD`: the FLV header, then each fragment's `mdat` payload.
+    F4m(&'a [u8]),
+    /// `IsmFD`: the PIFF header (from these `_download_params` and the first
+    /// fragment's track ID) before the raw fragments.
+    Ism(&'a serde_json::Value),
+}
+
+/// Upstream `IsmFD`'s assembly, sequentially.
+pub(crate) fn download_ism(
+    client: &Client,
+    info: &VideoInfo,
+    destination: &Path,
+    options: DownloadOptions,
+    keep_fragments: bool,
+    params: &serde_json::Value,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    download_with(
+        client,
+        info,
+        destination,
+        options,
+        1,
+        keep_fragments,
+        Assembly::Ism(params),
         callback,
     )
 }
@@ -123,7 +157,7 @@ pub(crate) fn download_f4m(
         options,
         1,
         keep_fragments,
-        Some(header),
+        Assembly::F4m(header),
         callback,
     )
 }
@@ -136,7 +170,7 @@ fn download_with(
     options: DownloadOptions,
     concurrency: usize,
     keep_fragments: bool,
-    f4m: Option<&[u8]>,
+    assembly: Assembly<'_>,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
     crate::download::check_destination(destination, &options)?;
@@ -201,13 +235,24 @@ fn download_with(
         name.push(".ytdl");
         std::path::PathBuf::from(name)
     };
-    // HlsFD keeps an (empty) `extra_state`; DashSegmentsFD has none.
+    // HlsFD keeps an (empty) `extra_state`, IsmFD whether its header is
+    // written; DashSegmentsFD and F4mFD have none.
     let hls = info
         .protocol
         .as_deref()
         .is_some_and(|protocol| protocol.starts_with("m3u8"));
+    let ism = matches!(assembly, Assembly::Ism(_));
     let write_state = |index: usize| -> Result<()> {
-        let extra = if hls { ", \"extra_state\": {}" } else { "" };
+        let extra = if ism {
+            format!(
+                ", \"extra_state\": {{\"ism_track_written\": {}}}",
+                if index > 0 { "true" } else { "false" }
+            )
+        } else if hls {
+            ", \"extra_state\": {}".to_owned()
+        } else {
+            String::new()
+        };
         fs::write(
             &ytdl_path,
             format!("{{\"downloader\": {{\"current_fragment\": {{\"index\": {index}}}{extra}}}}}"),
@@ -308,12 +353,14 @@ fn download_with(
             _ => unreachable!("one output file is open"),
         };
         // `write_flv_header` (and the metadata tag) before any fragment.
-        if let Some(header) = f4m
+        if let Assembly::F4m(header) = assembly
             && stored == 0
         {
             output.write_all(header)?;
             stored = header.len() as u64;
         }
+        // IsmFD's header follows the first fragment's download.
+        let mut track_written = start > 0;
         if concurrency > 1 && info.fragments.len() - start > 1 {
             let (written, latest) = download_concurrent(
                 client,
@@ -358,8 +405,27 @@ fn download_with(
                         file.seek(SeekFrom::Start(prefix))?;
                         keep_fragment(index, &mut file.take(stored - prefix))?;
                     }
+                    if let Assembly::Ism(params) = assembly
+                        && !track_written
+                    {
+                        let mut raw = Vec::new();
+                        let mut file = fs::File::open(&output_path)?;
+                        file.seek(SeekFrom::Start(prefix))?;
+                        file.take(stored - prefix).read_to_end(&mut raw)?;
+                        let id = crate::ism_fd::track_id(&raw)?;
+                        let now = std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .map_or(0, |elapsed| elapsed.as_secs());
+                        let header = crate::ism_fd::piff_header(params, id, now)?;
+                        output.set_len(prefix)?;
+                        output.seek(SeekFrom::Start(prefix))?;
+                        output.write_all(&header)?;
+                        output.write_all(&raw)?;
+                        stored = prefix + (header.len() + raw.len()) as u64;
+                        track_written = true;
+                    }
                     // F4mFD appends only the fragment's `mdat` box data.
-                    if f4m.is_some() {
+                    if matches!(assembly, Assembly::F4m(_)) {
                         let mut raw = Vec::new();
                         let mut file = fs::File::open(&output_path)?;
                         file.seek(SeekFrom::Start(prefix))?;

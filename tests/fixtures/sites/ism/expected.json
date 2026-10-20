@@ -91,6 +91,62 @@
     "ERROR: [generic] Manifest: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/Manifest",
+   "args": [
+    "--no-progress",
+    "-f",
+    "video-400",
+    "-o",
+    "v.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[generic] Extracting URL: https://media.example.test/vod/clip.ism/Manifest",
+    "[generic] Manifest: Downloading webpage",
+    "[generic] Manifest: Extracting information",
+    "[info] Manifest: Downloading 1 format(s): video-400",
+    "[ism] Total fragments: 3",
+    "[download] Destination: v.ismv",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [generic] WVC1 is not a supported codec",
+    "WARNING: [generic] VP90 is not a supported codec"
+   ],
+   "files": {
+    "v.ismv": 1335
+   }
+  },
+  {
+   "url": "https://media.example.test/vod/clip.ism/Manifest",
+   "args": [
+    "--no-progress",
+    "-f",
+    "audio_eng-128",
+    "-o",
+    "a.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[generic] Extracting URL: https://media.example.test/vod/clip.ism/Manifest",
+    "[generic] Manifest: Downloading webpage",
+    "[generic] Manifest: Extracting information",
+    "[info] Manifest: Downloading 1 format(s): audio_eng-128",
+    "[ism] Total fragments: 2",
+    "[download] Destination: a.isma",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [generic] WVC1 is not a supported codec",
+    "WARNING: [generic] VP90 is not a supported codec"
+   ],
+   "files": {
+    "a.isma": 1021
+   }
   }
  ]
 }

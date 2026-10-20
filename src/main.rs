@@ -4289,6 +4289,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     // Upstream `_prepare_frag_download`.
                                     let downloader = match info.protocol.as_deref() {
                                         Some("http_dash_segments") => "dashsegments",
+                                        Some("ism") => "ism",
                                         _ => "hlsnative",
                                     };
                                     screen!(
@@ -4451,6 +4452,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         if !stream.fragments.is_empty() {
                                             let downloader = match stream.protocol.as_deref() {
                                                 Some("http_dash_segments") => "dashsegments",
+                                                Some("ism") => "ism",
                                                 _ => "hlsnative",
                                             };
                                             screen!(
