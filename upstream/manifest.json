@@ -523,6 +523,18 @@
       "scope": "ReverbNationIE _VALID_URL and song API extraction (custom download note, untyped mp3 result, artist uploader fields, qualities-ranked thumbnails, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "rtrfm",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rtrfm.py"
+      ],
+      "rust": [
+        "src/extractor/rtrfm.rs",
+        "tests/fixtures/sites/rtrfm/"
+      ],
+      "scope": "RTRFMIE playShow details, restream MP3 URL as an untyped result, expired-episode/details/KeyError errors and release_year processing compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "sen",
       "status": "partial",
       "upstream": [

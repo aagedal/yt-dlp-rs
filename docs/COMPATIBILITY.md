@@ -314,6 +314,13 @@ and `thumbnail` finalization (no `--check-formats` URL testing). These
 fields appear in JSON, info JSON, match filters and (scalar ones) output
 templates; see [the source slice](../upstream/notes/youtube-metadata.md).
 
+RTRFM shows (`rtrfm.com.au/shows|show-episode/ID`) follow upstream `RTRFMIE`:
+the page's fatal `playShow[From]` show, date and title, the restream API's
+`u` MP3 URL (`Downloading MP3 URL`) as an untyped result, upstream's expected
+`Expired or no episode on this date` error for an MP4 URL, the `SHOW-DATE`
+ID, `TITLE DATE` title, series, release date (and the `release_year`
+processing derives from it) and OpenGraph description.
+
 Sen videos (`sen.com/video/ID`) follow upstream `SenIE`: the content API's
 `player` node video URL (else the `vod.sen.com` manifest) as fatal HLS
 formats, and the first `details` node's title (else the generic title, after

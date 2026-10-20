@@ -310,7 +310,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 39] = [
+const EXTRACTOR_NAMES: [&str; 40] = [
     "Angel",
     "AudioBoom",
     "BehindKink",
@@ -339,6 +339,7 @@ const EXTRACTOR_NAMES: [&str; 39] = [
     "PremiershipRugby",
     "QingTing",
     "ReverbNation",
+    "RTRFM",
     "Sen",
     "Streamable",
     "SztvHu",
@@ -365,7 +366,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..38]),
+            "default" => Some(&EXTRACTOR_NAMES[..39]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -519,6 +520,7 @@ impl YoutubeDl {
                 Box::new(extractor::PremiershipRugby),
                 Box::new(extractor::QingTing),
                 Box::new(extractor::ReverbNation),
+                Box::new(extractor::Rtrfm),
                 Box::new(extractor::Sen),
                 Box::new(extractor::Streamable),
                 Box::new(extractor::SztvHu),
@@ -1325,6 +1327,40 @@ impl YoutubeDl {
                     .insert("display_id".into(), entry.id.clone().into());
             }
             entry.metadata.fill_common_fields();
+            // `_fill_common_fields`: release and modification dates from
+            // their timestamps, then `release_year` from `release_date`.
+            for (timestamp, date) in [
+                ("release_timestamp", "release_date"),
+                ("modified_timestamp", "modified_date"),
+            ] {
+                if entry.extra.get(date).is_none_or(serde_json::Value::is_null)
+                    && let Some(day) = entry
+                        .extra
+                        .get(timestamp)
+                        .and_then(serde_json::Value::as_f64)
+                        .and_then(|value| dates::strftime_date(value.floor() as i64))
+                {
+                    entry.extra.insert(date.into(), day.into());
+                }
+            }
+            let year_set = entry
+                .extra
+                .get("release_year")
+                .is_some_and(|year| match year {
+                    serde_json::Value::Null | serde_json::Value::Bool(false) => false,
+                    serde_json::Value::Number(number) => number.as_f64() != Some(0.0),
+                    serde_json::Value::String(text) => !text.is_empty(),
+                    _ => true,
+                });
+            if !year_set
+                && let Some(year) = entry
+                    .extra
+                    .get("release_date")
+                    .and_then(serde_json::Value::as_str)
+                    .and_then(|date| dates::py_int(&date.chars().take(4).collect::<String>()))
+            {
+                entry.extra.insert("release_year".into(), year.into());
+            }
             // `_fill_common_fields`: `is_live`/`was_live` from `live_status`.
             if let Some(status) = entry.metadata.live_status.clone() {
                 for key in ["is_live", "was_live"] {

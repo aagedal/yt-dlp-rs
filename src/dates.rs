@@ -332,7 +332,7 @@ fn strptime_checked(regex: &Regex, data: &str, format: &str) -> Result<DateTime,
 }
 
 /// Python `int(text)` for ASCII digits with an optional sign and underscores.
-fn py_int(text: &str) -> Option<i64> {
+pub(crate) fn py_int(text: &str) -> Option<i64> {
     let text = text.trim_matches(is_py_space);
     let (negative, digits) = match text.as_bytes().first()? {
         b'-' => (true, &text[1..]),
