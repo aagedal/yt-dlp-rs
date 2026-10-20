@@ -2862,7 +2862,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     flush_validation_warnings();
     if args.verbose {
         // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 52 extractors");
+        eprintln!("[debug] Loaded 53 extractors");
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
@@ -2985,7 +2985,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 52] = [
+        let suitable: [(&str, Suitable); 53] = [
             ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
             ("Angel", yt_dlp_rs::extractor::angel_suitable),
             ("AudioBoom", yt_dlp_rs::extractor::audioboom_suitable),
@@ -3050,6 +3050,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("QingTing", yt_dlp_rs::extractor::qingting_suitable),
             ("ReverbNation", yt_dlp_rs::extractor::reverbnation_suitable),
             ("RTRFM", yt_dlp_rs::extractor::rtrfm_suitable),
+            ("ScreenRec", yt_dlp_rs::extractor::screenrec_suitable),
             ("Sen", yt_dlp_rs::extractor::sen_suitable),
             ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
             ("SztvHu", yt_dlp_rs::extractor::sztvhu_suitable),
@@ -3079,7 +3080,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nAngel\nAudioBoom\nBild\nBitmovin\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEbay\nEpoch\nFczenit\nFilmweb\nGlide: Glide mobile video messages (glide.me)\nGraspop\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nJove\nJWPlatform\nKommunetv\nLivestreamfails\nMasters\nmegaphone.fm: megaphone.fm embedded players\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyoutube: [youtube] YouTube\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "23video\nAngel\nAudioBoom\nBild\nBitmovin\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEbay\nEpoch\nFczenit\nFilmweb\nGlide: Glide mobile video messages (glide.me)\nGraspop\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nJove\nJWPlatform\nKommunetv\nLivestreamfails\nMasters\nmegaphone.fm: megaphone.fm embedded players\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nScreenRec\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyoutube: [youtube] YouTube\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }

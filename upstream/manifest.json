@@ -680,6 +680,18 @@
       "scope": "RTRFMIE playShow details, restream MP3 URL as an untyped result, expired-episode/details/KeyError errors and release_year processing compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "screenrec",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/screenrec.py"
+      ],
+      "rust": [
+        "src/extractor/screenrec.rs",
+        "tests/fixtures/sites/screenrec/"
+      ],
+      "scope": "ScreenRecIE customUrl HLS formats, OpenGraph/<title> fallback and warnings compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "sen",
       "status": "partial",
       "upstream": [

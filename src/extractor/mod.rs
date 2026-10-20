@@ -49,6 +49,7 @@ mod qingting;
 mod reverbnation;
 mod rss;
 mod rtrfm;
+mod screenrec;
 mod sen;
 mod smil;
 mod streamable;
@@ -107,6 +108,7 @@ pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitab
 pub use qingting::{QingTing, suitable as qingting_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
+pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};

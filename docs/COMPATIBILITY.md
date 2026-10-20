@@ -321,6 +321,11 @@ the page's fatal `playShow[From]` show, date and title, the restream API's
 ID, `TITLE DATE` title, series, release date (and the `release_year`
 processing derives from it) and OpenGraph description.
 
+ScreenRec shares (`screenrec.com/share/ID`) follow upstream `ScreenRecIE`: the
+page's fatal `customUrl` manifest as HLS formats (subtitles ignored with
+upstream's warning), the OpenGraph title (else the `<title>` text) and the
+OpenGraph description and thumbnail with upstream's warnings.
+
 Sen videos (`sen.com/video/ID`) follow upstream `SenIE`: the content API's
 `player` node video URL (else the `vod.sen.com` manifest) as fatal HLS
 formats (its subtitles ignored with upstream's warning), and the first
