@@ -391,6 +391,12 @@ upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
 format IDs), the iframe ID as ID and title, the thumbnail and the first
 stream's `dur`; its `_EMBED_REGEX` iframes join the generic embed detection.
 
+Breitbart videos (`breitbart.com/videos/v/ID`) follow upstream `BreitBartIE`:
+the JW Player `manifests/ID.m3u8` as fatal HLS formats (subtitles ignored with
+upstream's warning), the page's generic title (else the generic video title),
+OpenGraph description and thumbnail (with upstream's warnings) and RTA age
+limit.
+
 CJSW episodes (`cjsw.com/program/PROGRAM/episode/ID`) follow upstream
 `CJSWIE`: the fatal episode heading (else `data-audio-title`) and audio button
 source, the source's UUID ID (else `PROGRAM/ID`), the first paragraph as the

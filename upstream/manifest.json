@@ -256,6 +256,18 @@
       "scope": "BloggerIE VIDEO_CONFIG (unicode_escape) streams as formats and _EMBED_REGEX iframes on generic pages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "breitbart",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/breitbart.py"
+      ],
+      "rust": [
+        "src/extractor/breitbart.rs",
+        "tests/fixtures/sites/breitbart/"
+      ],
+      "scope": "BreitBartIE JW Player manifest as fatal HLS formats, generic title, OpenGraph warnings and RTA age limit compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cjsw",
       "status": "partial",
       "upstream": [
