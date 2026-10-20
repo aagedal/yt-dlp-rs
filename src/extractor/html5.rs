@@ -1194,6 +1194,9 @@ impl GenericHttp {
 /// other source kinds are unsupported errors.
 fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<VideoInfo> {
     use super::smil::get;
+    static ISM: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"\.ism/[Mm]anifest").expect("static pattern")
+    });
     let video_id = crate::screen::generic_id(url.as_str());
     let int = |value: Option<&str>| value.and_then(|value| value.trim().parse::<u32>().ok());
     // `_parse_smil_formats_and_subtitles`.
@@ -1260,9 +1263,7 @@ fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<Vide
         let src_url = src_url.trim().to_owned();
         if proto == Some("m3u8")
             || matches!(src_ext.as_str(), "m3u8" | "f4m" | "mpd")
-            || regex::Regex::new(r"\.ism/[Mm]anifest")
-                .expect("static pattern")
-                .is_match(&src_url)
+            || ISM.is_match(&src_url)
         {
             return Err(unsupported(
                 "SMIL manifest sources are not supported natively",
