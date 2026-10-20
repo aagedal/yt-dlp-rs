@@ -578,6 +578,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "hypem"
             | "historicfilms"
             | "livestreamfails"
+            | "ebaumsworld"
     ) || original
         .as_ref()
         .is_some_and(|original| !original.contains_key("formats"));
@@ -671,6 +672,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
+        ],
+        // `EbaumsWorldIE._real_extract`'s dict (its own format).
+        "ebaumsworld" => &[
+            ("id", Take),
+            ("title", Take),
+            ("url", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
+            ("uploader", Assign),
         ],
         // `LivestreamfailsIE._real_extract`'s dict (its own format).
         "livestreamfails" => &[

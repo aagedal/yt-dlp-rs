@@ -77,7 +77,7 @@ Supported today:
   Megaphone players (`player.megaphone.fm/ID`) through their page,
   ReverbNation songs through the song API, Hypem tracks through their page
   and served source, HistoricFilms tapes through their page, Livestreamfails
-  clips through the clip API, plus
+  clips through the clip API, EbaumsWorld videos through the player XML, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

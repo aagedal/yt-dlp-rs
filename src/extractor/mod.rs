@@ -1,5 +1,6 @@
 mod dash;
 pub(crate) mod direct;
+mod ebaumsworld;
 mod generic_urls;
 mod historicfilms;
 pub(crate) mod hls;
@@ -16,6 +17,7 @@ mod youtube;
 
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
+pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
@@ -137,6 +139,47 @@ pub(crate) fn download_webpage(
     crate::screen::expect_page(id, None, None);
     crate::screen::page_read(&page_url, &body)?;
     Ok(String::from_utf8_lossy(&body).into_owned())
+}
+
+/// Upstream `_download_xml(url, video_id)`: `[EXTRACTOR] ID: Downloading
+/// XML`, the request, and the body. Parse errors are this port's text
+/// (upstream reports expat's).
+pub(crate) fn download_xml(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+) -> Result<String> {
+    use std::io::Read;
+    crate::screen::screen(&format!("[{extractor}] {id}: Downloading XML"));
+    let wrap = |error: crate::Error| match error {
+        crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
+            crate::Error::ExtractorRequest {
+                extractor,
+                id: id.to_owned(),
+                what: "XML",
+                source: Box::new(error),
+            }
+        }
+        error => error,
+    };
+    let mut response = direct::request(client, url, None).map_err(wrap)?;
+    let mut body = Vec::new();
+    response
+        .read_to_end(&mut body)
+        .map_err(crate::Error::ExtractionRead)?;
+    let text = String::from_utf8(body).map_err(|_| {
+        crate::Error::Reported(format!(
+            "[{extractor}] {id}: Failed to parse XML (not UTF-8)"
+        ))
+    })?;
+    roxmltree::Document::parse(text.trim_start_matches('\u{feff}')).map_err(|error| {
+        crate::Error::Reported(format!(
+            "[{extractor}] {id}: Failed to parse XML ({error}); {}",
+            crate::BUG_REPORTS_MESSAGE
+        ))
+    })?;
+    Ok(text)
 }
 
 /// A non-fatal `_search_regex` miss: `[EXTRACTOR] unable to extract NAME`.

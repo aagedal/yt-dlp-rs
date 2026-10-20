@@ -268,6 +268,12 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+EbaumsWorld videos (`ebaumsworld.com/videos/SLUG/ID`) follow upstream
+`EbaumsWorldIE`: the player config XML (`Downloading XML`) as an untyped
+result, empty elements as `None` (a generic title for an empty title) and a
+missing element as upstream's bare `AttributeError` text. XML parse errors
+carry this port's parser message rather than expat's.
+
 HistoricFilms tapes (`historicfilms.com/tapes/ID`, `/playID`) follow upstream
 `HistoricFilmsIE`: the fatal tape ID, OpenGraph title/description, the
 `thumbnailUrl` meta or OpenGraph image, the `duration` meta through
