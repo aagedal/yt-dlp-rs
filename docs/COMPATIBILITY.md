@@ -213,6 +213,12 @@ extracted when the entry is processed and overlaid with the item's title,
 description, `pubDate`, iTunes duration/image/title/episode/season/explicit
 fields; `--flat-playlist` prints the raw entries unextracted, and numbered
 episodes, seasons and chapters get upstream's `Episode N` titles.
+An XSPF document (`{http://xspf.org/ns/0/}playlist`) is upstream's untitled
+`_parse_xspf` playlist: each `trackList/track` is an entry with the page's ID,
+its title (else the ID), annotation, image and millisecond duration, and its
+`location`s (joined to the final URL, empty ones skipped) as formats with the
+`s1:label`/`s1:width`/`s1:height` attributes and the document as
+`manifest_url`. XSPF URLs found on HTML pages remain unsupported.
 A page without HTML5 media first tries upstream's JW Player setup data
 (`_find_jwplayer_data` with a port of `js_to_json`, checked against pinned
 upstream conversions in `tests/fixtures/js_to_json/`): one playlist item's

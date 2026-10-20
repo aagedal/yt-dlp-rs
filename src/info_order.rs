@@ -276,6 +276,14 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        // `_parse_xspf`'s location.
+        "xspf" => &[
+            ("url", Take),
+            ("manifest_url", Take),
+            ("format_id", Take),
+            ("width", Assign),
+            ("height", Assign),
+        ],
         // A `{'url': url}` format.
         "url-only" => &[("url", Take)],
         // `StreamableIE`'s files.
@@ -638,6 +646,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "generic-found-entry"
             | "generic-found-hls-entry"
             | "generic-found-dash-entry"
+            | "xspf-entry"
     );
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape.as_str() {
@@ -672,6 +681,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
+        ],
+        // `_parse_xspf`'s track.
+        "xspf-entry" => &[
+            ("id", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
+            ("duration", Take),
+            ("formats", Take),
         ],
         // `EbaumsWorldIE._real_extract`'s dict (its own format).
         "ebaumsworld" => &[
@@ -1133,11 +1151,18 @@ pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some(Value::String(shape)) = map.remove(INFO_SHAPE) else {
         return map;
     };
-    if !matches!(shape.as_str(), "html5-playlist" | "rss-playlist") {
+    if !matches!(
+        shape.as_str(),
+        "html5-playlist" | "rss-playlist" | "xspf-playlist"
+    ) {
         return map;
     }
     let mut replay = Replay::new(map);
-    let steps: &[(&str, Set)] = if shape == "rss-playlist" {
+    let steps: &[(&str, Set)] = if shape == "xspf-playlist" {
+        // `playlist_result(entries, video_id)`: no title.
+        replay.ours.remove("title");
+        &[("id", Take), ("_type", Take), ("entries", Take)]
+    } else if shape == "rss-playlist" {
         // `_extract_rss`'s dict.
         &[
             ("_type", Take),

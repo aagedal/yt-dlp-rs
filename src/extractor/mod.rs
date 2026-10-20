@@ -13,6 +13,7 @@ mod megaphone;
 mod reverbnation;
 mod rss;
 mod streamable;
+mod xspf;
 mod youtube;
 
 pub use direct::DirectHttp;

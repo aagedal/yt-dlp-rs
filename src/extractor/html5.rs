@@ -670,6 +670,10 @@ impl Extractor for GenericHttp {
             detected("RSS feed");
             return Ok(Some(rss_playlist(feed, url, &page_url)));
         }
+        if let Some(tracks) = super::xspf::parse(html, &page_url) {
+            detected("XSPF playlist");
+            return xspf_playlist(tracks, url, &page_url).map(Some);
+        }
         crate::screen::debug("Looking for embeds");
         // Other extractors' `_EMBED_REGEX` iframes, in extractor order.
         let embeds = embeds(url, html);
@@ -1179,6 +1183,61 @@ impl GenericHttp {
             extra,
         })))
     }
+}
+
+/// GenericIE's `playlist_result(self._parse_xspf(doc, video_id, ...),
+/// video_id)`: untitled, each track an entry with the page's ID.
+fn xspf_playlist(
+    tracks: Vec<super::xspf::Track>,
+    url: &Url,
+    page_url: &Url,
+) -> Result<ExtractResult> {
+    let id = crate::screen::generic_id(url.as_str());
+    let mut entries = Vec::new();
+    for track in tracks {
+        let mut formats = Vec::new();
+        for location in track.locations {
+            let ext = direct::determine_ext(location.url.as_str())
+                .unwrap_or_else(|| "unknown_video".into());
+            let mut format: VideoFormat = serde_json::from_value(serde_json::json!({
+                "format_id": location.label.unwrap_or_default(),
+                "url": location.url.as_str(),
+                "ext": ext,
+                "width": location.width,
+                "height": location.height,
+            }))
+            .map_err(|error| unsupported(&format!("XSPF location: {error}")))?;
+            format
+                .extra
+                .insert("manifest_url".into(), page_url.as_str().into());
+            crate::info_order::mark_format(&mut format, "xspf");
+            formats.push(format);
+        }
+        let mut info = direct::build_at(page_url.clone(), page_url, String::new());
+        info.formats = formats;
+        info.direct = None;
+        info.id = id.clone();
+        info.title = track.title.unwrap_or_else(|| id.clone());
+        info.webpage_url = page_url.clone();
+        info.metadata.description = track.description;
+        info.metadata.thumbnail = track.thumbnail;
+        info.metadata.duration = track.duration.map(crate::info::PyNumber::Float);
+        entries.push(crate::info_order::mark_info(info, "xspf-entry"));
+    }
+    let mut extra = serde_json::Map::new();
+    extra.insert(
+        crate::info_order::INFO_SHAPE.to_owned(),
+        "xspf-playlist".into(),
+    );
+    Ok(ExtractResult::Playlist(PlaylistInfo {
+        id,
+        title: String::new(),
+        webpage_url: page_url.clone(),
+        extractor: "generic".into(),
+        extractor_key: "Generic".into(),
+        entries,
+        extra,
+    }))
 }
 
 /// An extractor with `_EMBED_REGEX` iframes (upstream `_extract_embeds`
