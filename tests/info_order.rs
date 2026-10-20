@@ -1,4 +1,4 @@
-//! `-j` lines compared exactly with saved pinned upstream output
+//! `-j` and `-J` lines compared exactly with saved pinned upstream output
 //! (`tools/capture_info_order.py`): upstream's key order and `None` keys for
 //! each represented extractor path, over the same files and headers.
 use std::{
@@ -78,15 +78,20 @@ fn normalize(line: &str, origin: &str) -> String {
 }
 
 #[test]
-fn json_lines_match_saved_upstream_key_order_and_none_keys() {
+fn json_lines_match_saved_upstream_key_order_none_keys_and_downloads() {
     let fixture = fixture();
     let origin = serve(&fixture);
     let directory = tempfile::tempdir().unwrap();
     let mut failures = Vec::new();
-    for case in fixture["cases"].as_array().unwrap() {
+    for (case, key, flag) in fixture["cases"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .flat_map(|case| [(case, "lines", "-j"), (case, "single", "-J")])
+    {
         let name = case["name"].as_str().unwrap();
         let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
-            .args(["--ignore-config", "-j", "--user-agent", "fixture"])
+            .args(["--ignore-config", flag, "--user-agent", "fixture"])
             .arg(format!("{origin}/{name}"))
             .current_dir(directory.path())
             .output()
@@ -101,7 +106,7 @@ fn json_lines_match_saved_upstream_key_order_and_none_keys() {
             .lines()
             .map(|line| normalize(line, &origin))
             .collect();
-        let expected: Vec<&str> = case["lines"]
+        let expected: Vec<&str> = case[key]
             .as_array()
             .unwrap()
             .iter()
@@ -109,7 +114,7 @@ fn json_lines_match_saved_upstream_key_order_and_none_keys() {
             .collect();
         if lines != expected {
             failures.push(format!(
-                "{name}:\n  native   {lines:?}\n  upstream {expected:?}"
+                "{name} {flag}:\n  native   {lines:?}\n  upstream {expected:?}"
             ));
         }
     }

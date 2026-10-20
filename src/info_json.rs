@@ -183,6 +183,10 @@ pub fn upstream_shape(value: &mut Value) {
         *map = crate::info_order::playlist(std::mem::take(map));
         return;
     }
+    // `-J`'s processed downloads are each shaped like a `-j` dict.
+    if let Some(Value::Array(downloads)) = map.get_mut("requested_downloads") {
+        downloads.iter_mut().for_each(upstream_shape);
+    }
     // The top level is the merged selected format.
     format(map);
     for key in ["formats", "requested_formats"] {

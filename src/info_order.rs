@@ -372,8 +372,10 @@ const PROCESSED_INFO_KEYS: &[&str] = &[
     "_has_drm",
     "epoch",
     "requested_formats",
+    "requested_downloads",
     "_filename",
     "filename",
+    "__write_download_archive",
     "_type",
     "_version",
 ];
@@ -415,7 +417,9 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         .get("requested_formats")
         .and_then(Value::as_array)
         .is_some_and(|formats| !formats.is_empty());
-    let selected_format: Map<String, Value> = if merged {
+    // An untyped result is its own (only) format.
+    let own_format = shape == "generic-untyped";
+    let selected_format: Map<String, Value> = if merged || own_format {
         Map::new()
     } else {
         let id = map.get("format_id").cloned();
@@ -449,6 +453,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             keys.extend(MERGED_AUDIO_KEYS);
         }
         keys.into_iter().map(str::to_owned).collect()
+    } else if own_format {
+        Vec::new()
     } else {
         let id = map.get("format_id").cloned();
         map.get("formats")
@@ -614,6 +620,39 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // The first `prepare_outtmpl` sets `epoch` before format selection.
     replay.take("epoch");
+    // `-J`: `requested_downloads`, each without the keys whose values equal
+    // the info dict's ("Remove copied info"); the selected format's keys are
+    // merged afterwards (`info_dict.update(best_format)`), so the dict still
+    // has the extractor's values (`None`) for them.
+    if let Some(Value::Array(downloads)) = replay.ours.remove("requested_downloads") {
+        let before: Map<String, Value> = replay
+            .out
+            .iter()
+            .map(|(key, value)| {
+                let value = if selected.contains(key) {
+                    Value::Null
+                } else {
+                    value.clone()
+                };
+                (key.clone(), value)
+            })
+            .collect();
+        let downloads = downloads
+            .into_iter()
+            .map(|download| match download {
+                Value::Object(download) => Value::Object(
+                    download
+                        .into_iter()
+                        .filter(|(key, value)| before.get(key).unwrap_or(&Value::Null) != value)
+                        .collect(),
+                ),
+                other => other,
+            })
+            .collect();
+        replay
+            .out
+            .insert("requested_downloads".into(), Value::Array(downloads));
+    }
     // `info_dict.update(format)` (or `_merge`'s dict, whose keys are all
     // assigned): the format's values, including its `None`s.
     for key in &selected {
@@ -628,6 +667,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     for key in [
         "_filename",
         "filename",
+        "__write_download_archive",
         "__last_playlist_index",
         "_type",
         "_version",

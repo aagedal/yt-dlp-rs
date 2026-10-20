@@ -3,7 +3,7 @@
 
 Development only: serves tests/fixtures/info_order/site on 127.0.0.1 with
 fixed headers (HEADERS below) and runs the pinned upstream checkout's
-`yt_dlp -j --user-agent fixture` for each case. Lines are saved exactly,
+`yt_dlp -j --user-agent fixture` (and `-J`) for each case. Lines are saved exactly,
 except that the origin becomes {ORIGIN} (its host {HOST}) and the volatile `epoch` and
 `_version` (upstream's release) are removed. The Rust test
 tests/info_order.rs serves the same files with the same headers and compares
@@ -72,13 +72,15 @@ def capture(upstream):
     cases = []
     try:
         for name in CASES:
-            result = subprocess.run(
-                [sys.executable, '-m', 'yt_dlp', '--ignore-config', '-j', '--user-agent', 'fixture',
-                 f'{origin}/{name}'],
-                capture_output=True, text=True, timeout=60, check=True,
-                env=dict(os.environ, PYTHONPATH=str(upstream)))
-            cases.append({'name': name, 'lines': [normalize(line, origin)
-                                                  for line in result.stdout.splitlines()]})
+            case = {'name': name}
+            for key, flag in (('lines', '-j'), ('single', '-J')):
+                result = subprocess.run(
+                    [sys.executable, '-m', 'yt_dlp', '--ignore-config', flag, '--user-agent', 'fixture',
+                     f'{origin}/{name}'],
+                    capture_output=True, text=True, timeout=60, check=True,
+                    env=dict(os.environ, PYTHONPATH=str(upstream)))
+                case[key] = [normalize(line, origin) for line in result.stdout.splitlines()]
+            cases.append(case)
     finally:
         server.shutdown()
     return cases

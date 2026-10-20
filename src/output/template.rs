@@ -314,7 +314,13 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
                 "playlist_index" => Some(Integer(0)),
                 "playlist_count" => Some(Integer(playlist_count as u64)),
                 "n_entries" => n_entries.map(|n| Integer(n as u64)),
-                _ => None,
+                // Other playlist keys (such as the page's timestamp).
+                _ => info
+                    .extra
+                    .get(name)
+                    .filter(|value| !value.is_null())
+                    .cloned()
+                    .map(Value::from_json),
             });
         }
     };

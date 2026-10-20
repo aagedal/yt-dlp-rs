@@ -22,8 +22,8 @@ class InfoOrderCaptureTests(unittest.TestCase):
         self.assertEqual([case['name'] for case in fixture['cases']], CASES)
         for case in fixture['cases']:
             self.assertTrue((ROOT / 'site' / case['name']).is_file())
-            self.assertTrue(case['lines'])
-            for line in case['lines']:
+            self.assertTrue(case['lines'] and case['single'])
+            for line in case['lines'] + case['single']:
                 self.assertNotIn('"epoch"', line)
                 self.assertNotIn('"_version"', line)
                 self.assertNotIn('127.0.0.1', line)

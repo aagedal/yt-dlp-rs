@@ -516,7 +516,18 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
             "one [one].mp4"
         );
     }
-    assert_eq!(single, [without_names]);
+    // `-J` adds the processed download, without the keys it shares.
+    let mut single_video = single[0].clone();
+    let downloads = single_video
+        .as_object_mut()
+        .unwrap()
+        .remove("requested_downloads")
+        .unwrap();
+    assert_eq!(single_video, without_names);
+    let download = downloads[0].as_object().unwrap();
+    assert_eq!(download["_filename"], "one [one].mp4");
+    assert_eq!(download["__write_download_archive"], false);
+    assert!(!download.contains_key("id"));
     let both = parse(&success(
         &server.cli("/one.mp4", &["-j", "-J", "--user-agent", "fixture"]),
     ));

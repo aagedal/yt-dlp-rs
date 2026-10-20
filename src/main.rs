@@ -3236,6 +3236,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     .and_then(|entries| entries.get_mut(entry_index))
                 {
                     *entry = serde_json::to_value(&info)?;
+                    if let (Some(index), Some(entry)) =
+                        (info.last_playlist_index, entry.as_object_mut())
+                    {
+                        entry.insert("__last_playlist_index".into(), index.into());
+                    }
                 } else if let Some(value @ Some(_)) =
                     (playlist_title.is_none() && args.dump_single_json).then_some(&mut single_json)
                 {
@@ -3351,6 +3356,39 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             },
                         )?
                         .emit()?;
+                        // Upstream `-J`: each processed download's dict joins
+                        // the result's `requested_downloads`.
+                        if args.dump_single_json {
+                            let mut download = serde_json::to_value(&info)?;
+                            if let Some(object) = download.as_object_mut() {
+                                if let Some(index) = info.last_playlist_index {
+                                    object.insert("__last_playlist_index".into(), index.into());
+                                }
+                                if let Ok(filename) = &print_filename {
+                                    object.insert("_filename".into(), filename.clone().into());
+                                    object.insert("filename".into(), filename.clone().into());
+                                }
+                                object.insert(
+                                    "__write_download_archive".into(),
+                                    (!simulate || args.force_write_archive).into(),
+                                );
+                            }
+                            let target = match json_entries
+                                .as_mut()
+                                .and_then(|entries| entries.get_mut(entry_index))
+                            {
+                                Some(entry) => Some(entry),
+                                None if playlist_title.is_none() => single_json.as_mut(),
+                                None => None,
+                            };
+                            if let Some(serde_json::Value::Object(target)) = target
+                                && let serde_json::Value::Array(downloads) = target
+                                    .entry("requested_downloads")
+                                    .or_insert_with(|| serde_json::Value::Array(Vec::new()))
+                            {
+                                downloads.push(download);
+                            }
+                        }
                         // Upstream `forcejson`: `--dump-json` or `--print-json`.
                         if args.dump_json || args.print_json {
                             // `sanitize_info` of the dict `process_info` has given

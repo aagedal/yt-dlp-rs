@@ -775,10 +775,21 @@ impl Extractor for GenericHttp {
             extractor: "generic".into(),
             extractor_key: "Generic".into(),
             entries,
-            extra: serde_json::Map::from_iter([(
-                crate::info_order::INFO_SHAPE.to_owned(),
-                "html5-playlist".into(),
-            )]),
+            extra: {
+                // The page's Last-Modified, with `_fill_common_fields`'s date.
+                let mut extra = serde_json::Map::new();
+                extra.insert(
+                    crate::info_order::INFO_SHAPE.to_owned(),
+                    "html5-playlist".into(),
+                );
+                if let Some(timestamp) = timestamp {
+                    extra.insert("timestamp".into(), timestamp.into());
+                    if let Some(date) = crate::dates::strftime_date(timestamp) {
+                        extra.insert("upload_date".into(), date.into());
+                    }
+                }
+                extra
+            },
         })))
     }
 }

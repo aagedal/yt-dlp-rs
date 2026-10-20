@@ -3,7 +3,7 @@
 Pinned official yt-dlp: `897341241f2bfb2439fe0367f4c7c9ccd29a3828`.
 
 `site/` holds the served files; `cases.json` the exact `-j --user-agent fixture`
-lines pinned upstream printed for each, with the `Content-Type` and
+lines (`lines`) and `-J` lines (`single`) pinned upstream printed for each, with the `Content-Type` and
 `Last-Modified` headers it was served with. The origin is `{ORIGIN}` (its host
 `{HOST}`), and the volatile `epoch` and `_version` (upstream's release) are
 removed; nothing else is normalized.
