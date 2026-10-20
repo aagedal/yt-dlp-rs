@@ -497,6 +497,12 @@ their sample rate, size, FPS, dimensions and bitrate, the fatal title, the
 video thumbnail (else `image_url`), author name/ID and `people/` URL (`''`
 without a token), timestamp, duration and counts.
 
+Fuyin TV videos (`fuyin.tv/html/N/ID.html`) follow upstream `FuyinTVIE`: the
+movie API's `data.url` as an untyped `mp4` result with its title (else the
+generic title) and the non-fatal page's description meta (with its warning);
+a failed page download warns and then fails with upstream's escaped
+`TypeError` text.
+
 Glide messages (`share.glide.me/ID`) follow upstream `GlideIE`: the page's
 generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
 `video-thumbnail` image (else the OpenGraph image with its warning), each

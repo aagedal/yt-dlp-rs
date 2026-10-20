@@ -413,6 +413,18 @@
       "scope": "FilmwebIE trailer embed JSON as a url_transparent 23video result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "fuyintv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/fuyintv.py"
+      ],
+      "rust": [
+        "src/extractor/fuyintv.rs",
+        "tests/fixtures/sites/fuyintv/"
+      ],
+      "scope": "FuyinTVIE movie API URL as an untyped mp4 result, non-fatal webpage description and the escaped TypeError after a failed page compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "glide",
       "status": "partial",
       "upstream": [
