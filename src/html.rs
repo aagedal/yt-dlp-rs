@@ -80,12 +80,21 @@ fn og_regexes(prop: &str) -> [Regex; 2] {
 /// Upstream `clean_html`: tags removed, entities decoded, whitespace
 /// collapsed around newlines.
 pub fn clean_html(text: &str) -> String {
-    static BREAK: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r"(?i)\s*<\s*br\s*/?\s*>\s*").expect("static pattern"));
-    static PARAGRAPH: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r"(?i)<\s*/\s*p\s*>\s*<\s*p[^>]*>").expect("static pattern"));
+    // Python's `\s` (for `str`) also matches `\x1c`-`\x1f`.
+    static SPACE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"[\s\x1c-\x1f]+").expect("static pattern"));
+    static BREAK: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r"[\s\x1c-\x1f]?<[\s\x1c-\x1f]?br[\s\x1c-\x1f]?/?[\s\x1c-\x1f]?>[\s\x1c-\x1f]?")
+            .expect("static pattern")
+    });
+    static PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(
+            r"<[\s\x1c-\x1f]?/[\s\x1c-\x1f]?p[\s\x1c-\x1f]?>[\s\x1c-\x1f]?<[\s\x1c-\x1f]?p[^>]*>",
+        )
+        .expect("static pattern")
+    });
     static TAG: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<.*?>").expect("static pattern"));
-    let text = text.replace('\n', " ");
+    let text = SPACE.replace_all(text, " ");
     let text = BREAK.replace_all(&text, "\n");
     let text = PARAGRAPH.replace_all(&text, "\n");
     let text = TAG.replace_all(&text, "");
@@ -143,6 +152,15 @@ pub fn html_search_meta(html: &str, prop: &str) -> Option<String> {
     None
 }
 
+/// Upstream `_html_extract_title(html)`: the cleaned `<title>` text.
+pub fn html_extract_title(html: &str) -> Option<String> {
+    static TITLE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"(?s)<title\b[^>]*>([^<]+)</title>").unwrap());
+    TITLE
+        .captures(html)
+        .map(|found| clean_html(&found[1]).trim().to_owned())
+}
+
 /// `_rta_search(html)`. Ages that do not fit in `u32` are ignored.
 pub fn rta_search(html: &str) -> Option<u32> {
     static RTA: LazyLock<Regex> = LazyLock::new(|| {
@@ -181,6 +199,22 @@ pub fn rta_search(html: &str) -> Option<u32> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn clean_html_follows_pinned_upstream() {
+        // Values from the pinned upstream `clean_html`.
+        for (input, expected) in [
+            ("Rex Lee\n on  apps", "Rex Lee on apps"),
+            ("a<br>b", "a\nb"),
+            ("a < br / > b", "a\nb"),
+            ("a<BR>b", "ab"),
+            ("x</p> <p class=q>y", "x\ny"),
+            ("x</P><P>y", "xy"),
+            (" t&amp;<b>u</b>\t", "t&u"),
+        ] {
+            assert_eq!(clean_html(input), expected, "{input:?}");
+        }
+    }
 
     #[test]
     fn saved_upstream_html_helper_cases() {

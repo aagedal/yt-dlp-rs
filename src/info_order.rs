@@ -1267,6 +1267,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("thumbnail", Take),
         ],
+        // `EpochIE._real_extract`'s dict.
+        "epoch" => &[
+            ("id", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("title", Take),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),

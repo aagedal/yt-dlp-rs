@@ -340,6 +340,19 @@
       "scope": "EbaumsWorldIE _VALID_URL and player XML extraction (_download_xml note/errors, find().text None/AttributeError) compared with pinned upstream output through the fixture proxy; XML parse error text differs from expat"
     },
     {
+      "name": "epoch",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/epoch.py"
+      ],
+      "rust": [
+        "src/extractor/epoch.rs",
+        "src/html_elements.rs",
+        "tests/fixtures/sites/epoch/"
+      ],
+      "scope": "EpochIE videobox data-id (get_element_html_by_id/extract_attributes over an html.parser-like tokenizer, with its parse errors), fatal HLS formats and subtitles and <title> compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "fczenit",
       "status": "partial",
       "upstream": [

@@ -2862,7 +2862,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     flush_validation_warnings();
     if args.verbose {
         // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 47 extractors");
+        eprintln!("[debug] Loaded 48 extractors");
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
@@ -2985,7 +2985,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 47] = [
+        let suitable: [(&str, Suitable); 48] = [
             ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
             ("Angel", yt_dlp_rs::extractor::angel_suitable),
             ("AudioBoom", yt_dlp_rs::extractor::audioboom_suitable),
@@ -3005,6 +3005,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 yt_dlp_rs::extractor::cultureunplugged_suitable,
             ),
             ("EbaumsWorld", yt_dlp_rs::extractor::ebaumsworld_suitable),
+            ("Epoch", yt_dlp_rs::extractor::epoch_suitable),
             ("Fczenit", yt_dlp_rs::extractor::fczenit_suitable),
             ("Filmweb", yt_dlp_rs::extractor::filmweb_suitable),
             ("Glide", yt_dlp_rs::extractor::glide_suitable),
@@ -3071,7 +3072,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nAngel\nAudioBoom\nBild\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrtvg\nCultureUnplugged\nEbaumsWorld\nFczenit\nFilmweb\nGlide: Glide mobile video messages (glide.me)\nGraspop\nHistoricFilms\nHitRecord\nhtml5\nHypem\nJove\nJWPlatform\nKommunetv\nLivestreamfails\nMasters\nmegaphone.fm: megaphone.fm embedded players\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyoutube: [youtube] YouTube\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "23video\nAngel\nAudioBoom\nBild\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEpoch\nFczenit\nFilmweb\nGlide: Glide mobile video messages (glide.me)\nGraspop\nHistoricFilms\nHitRecord\nhtml5\nHypem\nJove\nJWPlatform\nKommunetv\nLivestreamfails\nMasters\nmegaphone.fm: megaphone.fm embedded players\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyoutube: [youtube] YouTube\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }

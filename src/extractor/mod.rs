@@ -12,6 +12,7 @@ mod cultureunplugged;
 mod dash;
 pub(crate) mod direct;
 mod ebaumsworld;
+mod epoch;
 mod f4m;
 mod fczenit;
 mod filmweb;
@@ -71,6 +72,7 @@ pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitab
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
+pub use epoch::{Epoch, suitable as epoch_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};

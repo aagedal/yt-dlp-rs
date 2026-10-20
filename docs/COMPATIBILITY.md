@@ -431,6 +431,12 @@ result, empty elements as `None` (a generic title for an empty title) and a
 missing element as upstream's bare `AttributeError` text. XML parse errors
 carry this port's parser message rather than expat's.
 
+The Epoch Times videos (`www.theepochtimes.com/SLUG_ID.html`) follow upstream
+`EpochIE`: the `videobox` element (upstream's `html.parser`-based
+`get_element_html_by_id`, with its parse errors) `data-id` attribute as the
+ID, its YouMaker `playlist.m3u8` as fatal `hls` formats and subtitles, and
+the cleaned `<title>` text (with upstream's warning when missing).
+
 FC Zenit videos (`fc-zenit.ru/video/ID`) follow upstream `FczenitIE`: the
 page's `config` MSI video ID (fatal), then the player's `msi/video?video=ID`
 JSON: name, preview, float duration, int date, labeled qualities with URLs as
