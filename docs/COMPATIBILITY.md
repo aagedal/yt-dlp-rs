@@ -322,6 +322,11 @@ input codec names, `bitrate`/1000 as `vbr`), owner, float `date_added` and
 `duration`, and plays. Site extractors are compared with pinned upstream's
 output through a fixture-only proxy (`tests/fixtures/sites/`).
 
+SzTV pages (`sztv.hu`/`tvszombathely.hu` `.../SLUG-ID`) follow upstream
+`SztvHuIE`: the fatal player `file` (under `media.sztv.hu/vod/`) and meta
+title, the meta description and OpenGraph image with upstream's non-fatal
+warnings, as an untyped result.
+
 Megaphone players (`https://player.megaphone.fm/ID`, `megaphone.fm`) follow
 upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 (`creators`), non-fatal `og:image` (with upstream's warning), and the

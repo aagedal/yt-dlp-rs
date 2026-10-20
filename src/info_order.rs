@@ -687,6 +687,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "behindkink"
             | "qingting"
             | "oneplace"
+            | "sztvhu"
     ) || original
         .as_ref()
         .is_some_and(|original| !original.contains_key("formats"));
@@ -867,6 +868,14 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("thumbnail", Assign),
             ("duration", Take),
             ("formats", Take),
+        ],
+        // `SztvHuIE._real_extract`'s dict (its own format).
+        "sztvhu" => &[
+            ("id", Take),
+            ("url", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
         ],
         // `OnePlacePodcastIE._real_extract`'s dict (its own format).
         "oneplace" => &[

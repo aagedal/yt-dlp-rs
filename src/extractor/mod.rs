@@ -23,6 +23,7 @@ mod reverbnation;
 mod rss;
 mod smil;
 mod streamable;
+mod sztvhu;
 mod xspf;
 mod youtube;
 
@@ -44,6 +45,7 @@ pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use qingting::{QingTing, suitable as qingting_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
+pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
