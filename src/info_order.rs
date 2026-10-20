@@ -45,7 +45,7 @@ impl Replay {
 
     /// A key upstream sets when it has a value.
     fn take(&mut self, key: &str) {
-        if let Some(value) = self.ours.remove(key) {
+        if let Some(value) = self.ours.shift_remove(key) {
             self.out.insert(key.to_owned(), value);
         }
     }
@@ -53,7 +53,7 @@ impl Replay {
     /// A key upstream always assigns, `None` without a value. An already
     /// placed key keeps its position.
     fn assign(&mut self, key: &str) {
-        match self.ours.remove(key) {
+        match self.ours.shift_remove(key) {
             Some(value) => {
                 self.out.insert(key.to_owned(), value);
             }
@@ -197,8 +197,8 @@ impl Replay {
 
 /// Drop the code-path markers from a dict other code reads as upstream's.
 pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
-    map.remove(INFO_SHAPE);
-    map.remove(FORMAT_SHAPE);
+    map.shift_remove(INFO_SHAPE);
+    map.shift_remove(FORMAT_SHAPE);
 }
 
 /// Record the upstream code path that built an info dict.
@@ -220,7 +220,7 @@ fn reorder_tracks(languages: &mut Map<String, Value>, original: &Value) {
             };
             let mut ordered = Map::new();
             for key in loaded.keys() {
-                if let Some(value) = track.remove(key) {
+                if let Some(value) = track.shift_remove(key) {
                     ordered.insert(key.clone(), value);
                 }
             }
@@ -251,7 +251,7 @@ pub(crate) fn loaded_shape(original: &Map<String, Value>) -> Value {
 fn shape_of(marker: Option<Value>) -> Option<(String, Option<Map<String, Value>>)> {
     match marker? {
         Value::String(shape) => Some((shape, None)),
-        Value::Object(mut map) => match map.remove(LOADED) {
+        Value::Object(mut map) => match map.shift_remove(LOADED) {
             Some(Value::Object(original)) => Some((LOADED.to_owned(), Some(original))),
             _ => None,
         },
@@ -266,7 +266,7 @@ pub(crate) fn mark_format(format: &mut crate::VideoFormat, shape: &str) {
 
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
-    let Some((shape, original)) = shape_of(map.remove(FORMAT_SHAPE)) else {
+    let Some((shape, original)) = shape_of(map.shift_remove(FORMAT_SHAPE)) else {
         return map;
     };
     // Keys a caller's `format.update(...)` adds after the extractor's.
@@ -660,8 +660,8 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// One video info dict in upstream order (unmarked dicts are unchanged).
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
-    map.remove(FORMAT_SHAPE);
-    let Some((shape, original)) = shape_of(map.remove(INFO_SHAPE)) else {
+    map.shift_remove(FORMAT_SHAPE);
+    let Some((shape, original)) = shape_of(map.shift_remove(INFO_SHAPE)) else {
         return map;
     };
     // A `url_transparent` result: the outer keys its update adds after the
@@ -1255,7 +1255,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     if untyped {
         // Upstream has no `formats`: the info dict is the only format.
-        replay.ours.remove("formats");
+        replay.ours.shift_remove("formats");
     }
     replay.steps(extractor);
     if let Some(original) = &original {
@@ -1276,7 +1276,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             for key in keys {
                 ordered.insert(
                     (*key).to_owned(),
-                    thumbnail.remove(*key).unwrap_or(Value::Null),
+                    thumbnail.shift_remove(*key).unwrap_or(Value::Null),
                 );
             }
             ordered.append(thumbnail);
@@ -1296,7 +1296,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             {
                 let mut ordered = Map::new();
                 for key in ["url", "name", "http_headers", "ext"] {
-                    ordered.insert(key.to_owned(), track.remove(key).unwrap_or(Value::Null));
+                    ordered.insert(
+                        key.to_owned(),
+                        track.shift_remove(key).unwrap_or(Value::Null),
+                    );
                 }
                 ordered.append(track);
                 *track = ordered;
@@ -1459,7 +1462,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     // the info dict's ("Remove copied info"); the selected format's keys are
     // merged afterwards (`info_dict.update(best_format)`), so the dict still
     // has the extractor's values (`None`) for them.
-    if let Some(Value::Array(downloads)) = replay.ours.remove("requested_downloads") {
+    if let Some(Value::Array(downloads)) = replay.ours.shift_remove("requested_downloads") {
         let before: Map<String, Value> = replay
             .out
             .iter()
@@ -1553,7 +1556,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
 
 /// A generic webpage playlist dict (`-J`) in upstream order.
 pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
-    let Some(Value::String(shape)) = map.remove(INFO_SHAPE) else {
+    let Some(Value::String(shape)) = map.shift_remove(INFO_SHAPE) else {
         return map;
     };
     if !matches!(
@@ -1565,7 +1568,7 @@ pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     let mut replay = Replay::new(map);
     let steps: &[(&str, Set)] = if shape == "xspf-playlist" {
         // `playlist_result(entries, video_id)`: no title.
-        replay.ours.remove("title");
+        replay.ours.shift_remove("title");
         &[("id", Take), ("_type", Take), ("entries", Take)]
     } else if shape == "rss-playlist" {
         // `_extract_rss`'s dict.

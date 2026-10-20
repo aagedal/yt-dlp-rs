@@ -561,7 +561,7 @@ pub fn set_field(info: &mut VideoInfo, key: &str, value: Value) {
             .and_then(|dict| dict.get(key).cloned())
             == Some(value.clone());
         if represented {
-            updated.extra.remove(key);
+            updated.extra.shift_remove(key);
         } else {
             updated.extra.insert(key.to_owned(), value);
         }

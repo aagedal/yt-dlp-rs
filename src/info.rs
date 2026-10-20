@@ -705,7 +705,7 @@ impl VideoInfo {
         if self.formats.is_empty() {
             let mut info = serde_json::to_value(self).unwrap_or_default();
             if let Some(object) = info.as_object_mut() {
-                object.remove("formats");
+                object.shift_remove("formats");
                 crate::info_order::strip_markers(object);
             }
             return vec![info];
@@ -715,7 +715,7 @@ impl VideoInfo {
             .map(|format| {
                 let mut value = serde_json::to_value(format).unwrap_or_default();
                 if let Some(object) = value.as_object_mut() {
-                    object.remove("fragments");
+                    object.shift_remove("fragments");
                     crate::info_order::strip_markers(object);
                 }
                 value
@@ -824,7 +824,7 @@ impl VideoInfo {
                     self.extra.insert(key.into(), value.clone());
                 }
                 None => {
-                    self.extra.remove(key);
+                    self.extra.shift_remove(key);
                 }
             }
         }
@@ -854,7 +854,7 @@ impl VideoInfo {
                     self.extra.insert("stretched_ratio".into(), ratio.clone());
                 }
                 None => {
-                    self.extra.remove("stretched_ratio");
+                    self.extra.shift_remove("stretched_ratio");
                 }
             }
         }
@@ -873,16 +873,16 @@ impl VideoInfo {
         self.audio_ext = None;
         self.stream_kind = StreamKind::Standalone;
         self.fragments.clear();
-        self.extra.remove("format_index");
+        self.extra.shift_remove("format_index");
         // The merged dict has no `http_headers` or `cookies`: the info's own
         // `http_headers` (an extractor's entry headers) remain.
-        self.extra.remove("cookies");
+        self.extra.shift_remove("cookies");
         self.requested_formats = formats;
     }
 
     fn apply_single(&mut self, selected: &VideoFormat) {
         // `info_dict.update(format)`: unmodeled format keys, then its headers.
-        self.extra.remove("cookies");
+        self.extra.shift_remove("cookies");
         for (key, value) in &selected.extra {
             self.extra.insert(key.clone(), value.clone());
         }
@@ -894,7 +894,7 @@ impl VideoInfo {
                 );
             }
             None => {
-                self.extra.remove("http_headers");
+                self.extra.shift_remove("http_headers");
             }
         }
         self.fragments = selected.fragments.clone();
@@ -928,7 +928,7 @@ impl VideoInfo {
                 self.extra.insert("format_index".into(), index.into());
             }
             None => {
-                self.extra.remove("format_index");
+                self.extra.shift_remove("format_index");
             }
         }
         self.requested_formats.clear();

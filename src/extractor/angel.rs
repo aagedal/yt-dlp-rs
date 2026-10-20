@@ -156,7 +156,7 @@ impl Extractor for Angel {
             match key.as_str() {
                 "title" => {
                     info.title = value.as_str().unwrap_or_default().to_owned();
-                    info.extra.remove(crate::info::TITLE_MISSING);
+                    info.extra.shift_remove(crate::info::TITLE_MISSING);
                 }
                 _ => crate::metadata_parser::set_field(&mut info, &key, value),
             }

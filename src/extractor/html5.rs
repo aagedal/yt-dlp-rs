@@ -2275,9 +2275,9 @@ fn videojs_info(
     for (language, mut track) in embed.subtitles {
         let url = Url::parse(track["url"].as_str().unwrap_or_default())
             .map_err(|_| unsupported("Video.js subtitle URL is invalid"))?;
-        track.remove("url");
+        track.shift_remove("url");
         let name = track
-            .remove("name")
+            .shift_remove("name")
             .and_then(|name| name.as_str().map(str::to_owned));
         let format = SubtitleFormat {
             name,

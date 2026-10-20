@@ -118,11 +118,11 @@ const INTERNAL_FORMAT_KEYS: [&str; 4] = [
 pub fn upstream_shape(value: &mut Value) {
     fn format(map: &mut Map<String, Value>) {
         for key in INTERNAL_FORMAT_KEYS {
-            map.remove(key);
+            map.shift_remove(key);
         }
         let protocol = map.get("protocol").and_then(Value::as_str).unwrap_or("");
         if protocol.starts_with("m3u8") {
-            map.remove("fragments");
+            map.shift_remove("fragments");
         } else if let Some(Value::Array(fragments)) = map.get_mut("fragments") {
             fragments
                 .iter_mut()
@@ -141,20 +141,20 @@ pub fn upstream_shape(value: &mut Value) {
     // `url`, `duration`, and `byte_range` as `start`/`end` (exclusive).
     fn upstream_fragment(fragment: &mut Map<String, Value>) {
         let mut shaped = Map::new();
-        match fragment.remove("path") {
+        match fragment.shift_remove("path") {
             Some(path) => {
                 shaped.insert("path".into(), path);
             }
             None => {
-                if let Some(url) = fragment.remove("url") {
+                if let Some(url) = fragment.shift_remove("url") {
                     shaped.insert("url".into(), url);
                 }
             }
         }
-        if let Some(duration) = fragment.remove("duration") {
+        if let Some(duration) = fragment.shift_remove("duration") {
             shaped.insert("duration".into(), duration);
         }
-        match fragment.remove("byte_range") {
+        match fragment.shift_remove("byte_range") {
             Some(Value::Object(range)) if !range.contains_key("start") => {
                 let offset = range.get("offset").and_then(Value::as_u64).unwrap_or(0);
                 let length = range.get("length").and_then(Value::as_u64).unwrap_or(0);
@@ -171,7 +171,7 @@ pub fn upstream_shape(value: &mut Value) {
             }
             None => {}
         }
-        fragment.remove("url");
+        fragment.shift_remove("url");
         // Other keys (HLS encryption) are not upstream's; DASH has none.
         *fragment = shaped;
     }
@@ -228,7 +228,7 @@ pub fn upstream_shape(value: &mut Value) {
         .and_then(Value::as_array)
         .is_some_and(|formats| !formats.is_empty())
     {
-        map.remove("url");
+        map.shift_remove("url");
     }
     *map = crate::info_order::video(std::mem::take(map));
 }

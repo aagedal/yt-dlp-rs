@@ -870,8 +870,8 @@ pub(crate) fn comparable_info(info: &VideoInfo) -> Value {
     if let Some(thumbnails) = value.get_mut("thumbnails").and_then(Value::as_array_mut) {
         for thumbnail in thumbnails {
             let object = thumbnail.as_object_mut().unwrap();
-            object.remove("id");
-            object.remove("resolution");
+            object.shift_remove("id");
+            object.shift_remove("resolution");
             for key in ["width", "height", "preference"] {
                 object.entry(key).or_insert(Value::Null);
             }
@@ -1092,7 +1092,7 @@ mod tests {
         let formats = data["streamingData"]
             .as_object_mut()
             .unwrap()
-            .remove("formats")
+            .shift_remove("formats")
             .unwrap();
         data["streamingData"]["adaptiveFormats"] = formats;
         for source in data["streamingData"]["adaptiveFormats"]

@@ -1188,7 +1188,7 @@ fn single_json(
             let object = value
                 .as_object_mut()
                 .expect("playlist serializes to an object");
-            let entries = object.remove("entries");
+            let entries = object.shift_remove("entries");
             object.insert("_type".into(), "playlist".into());
             if let Some(counts) = counts {
                 object.insert("playlist_count".into(), counts.playlist_count.into());

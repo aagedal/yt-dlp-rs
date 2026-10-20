@@ -449,7 +449,7 @@ mod tests {
         let text = source
             .as_object_mut()
             .unwrap()
-            .remove("signatureCipher")
+            .shift_remove("signatureCipher")
             .unwrap();
         let prepared = Prepared::new(&json!({"cipher":text})).unwrap();
         assert_eq!(

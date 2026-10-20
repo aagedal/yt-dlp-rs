@@ -81,7 +81,7 @@ fn format(itag: u64, url: &str) -> Value {
 }
 fn cipher_format(itag: u64, url: &str, parameter: Option<&str>, legacy: bool) -> Value {
     let mut source = format(itag, url);
-    source.as_object_mut().unwrap().remove("url");
+    source.as_object_mut().unwrap().shift_remove("url");
     let mut cipher = url::form_urlencoded::Serializer::new(String::new());
     cipher.append_pair("url", url).append_pair("s", "secret");
     if let Some(parameter) = parameter {

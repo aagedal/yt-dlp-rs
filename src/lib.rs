@@ -1273,7 +1273,7 @@ impl YoutubeDl {
         };
         for entry in entries {
             // `_fill_common_fields`: a generic title for a missing or empty one.
-            let missing = entry.extra.remove(info::TITLE_MISSING).is_some();
+            let missing = entry.extra.shift_remove(info::TITLE_MISSING).is_some();
             if missing {
                 entry.fulltitle = None;
                 screen::warning(
@@ -1415,7 +1415,7 @@ impl YoutubeDl {
                         format.extra.insert("cookies".into(), cookies.into());
                     }
                     None => {
-                        format.extra.remove("cookies");
+                        format.extra.shift_remove("cookies");
                     }
                 }
             }
@@ -2434,7 +2434,7 @@ impl YoutubeDl {
                     part.extra.insert("_download_params".into(), params.clone());
                 }
                 None => {
-                    part.extra.remove("_download_params");
+                    part.extra.shift_remove("_download_params");
                 }
             }
             match stream.format_index {
@@ -2442,7 +2442,7 @@ impl YoutubeDl {
                     part.extra.insert("format_index".into(), index.into());
                 }
                 None => {
-                    part.extra.remove("format_index");
+                    part.extra.shift_remove("format_index");
                 }
             }
             // `new_info.update(fmt)`: the format's request headers.
@@ -2454,7 +2454,7 @@ impl YoutubeDl {
                     );
                 }
                 None => {
-                    part.extra.remove("http_headers");
+                    part.extra.shift_remove("http_headers");
                 }
             }
             part.filesize = stream.filesize;
