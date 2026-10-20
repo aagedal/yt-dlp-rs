@@ -1633,6 +1633,19 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 true
             }
+            // `set_default_compat('multistreams', ..., False,
+            // remove_compat=False)` for both stream kinds.
+            "multistreams" => {
+                let video = given(&["video_multistreams", "no_video_multistreams"]);
+                let audio = given(&["audio_multistreams", "no_audio_multistreams"]);
+                if !video {
+                    args.video_multistreams = true;
+                }
+                if !audio {
+                    args.audio_multistreams = true;
+                }
+                !(video && audio)
+            }
             "manifest-filesize-approx" => {
                 yt_dlp_rs::COMPAT_MANIFEST_FILESIZE_APPROX.store(true, Ordering::Relaxed);
                 true
@@ -2324,6 +2337,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         force: args.format_sort_force,
         prefer_free: args.prefer_free_formats,
     });
+    downloader = downloader.with_multistreams(args.video_multistreams, args.audio_multistreams);
     if let Some(formats) = &args.merge_output_format {
         downloader =
             downloader.with_merge_output_format(formats.split('/').map(str::to_owned).collect());
@@ -5098,10 +5112,6 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         (args.bidi_workaround, "--bidi-workaround"),
         (!args.extractor_args.is_empty(), "--extractor-args"),
         (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
-        (
-            args.video_multistreams || args.audio_multistreams,
-            "multiple video/audio streams",
-        ),
     ] {
         if given {
             warning!("WARNING: {what} is not supported natively and is ignored");

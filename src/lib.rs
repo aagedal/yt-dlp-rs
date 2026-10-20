@@ -114,6 +114,8 @@ pub struct YoutubeDl {
     ffmpeg: Option<PathBuf>,
     ffprobe: Option<PathBuf>,
     merge_output_format: Option<Vec<String>>,
+    /// `--video-multistreams`/`--audio-multistreams`.
+    multistreams: (bool, bool),
     format_sort: FormatSortOptions,
     prefer_best: bool,
     /// Global request headers and proxy for FFmpeg network inputs.
@@ -372,6 +374,7 @@ impl YoutubeDl {
             client,
             ffmpeg: None,
             merge_output_format: None,
+            multistreams: (false, false),
             format_sort: FormatSortOptions::default(),
             prefer_best: false,
             headers: headers.clone(),
@@ -1167,6 +1170,13 @@ impl YoutubeDl {
         self
     }
 
+    /// Upstream `allow_multiple_video_streams`/`allow_multiple_audio_streams`:
+    /// merges may combine several video or audio streams.
+    pub fn with_multistreams(mut self, video: bool, audio: bool) -> Self {
+        self.multistreams = (video, audio);
+        self
+    }
+
     /// Download and extract audio, publishing the result without overwriting.
     pub fn download_audio_with_options(
         &self,
@@ -1331,7 +1341,8 @@ impl YoutubeDl {
         let options = format_select::Options {
             merge_output_format: self.merge_output_format.clone(),
             prefer_free: self.format_sort.prefer_free,
-            ..Default::default()
+            multiple_video: self.multistreams.0,
+            multiple_audio: self.multistreams.1,
         };
         if self.check_formats != CheckFormats::Selected {
             return info.select_formats(format, self.ffmpeg.is_some(), &options);
@@ -1721,25 +1732,23 @@ impl YoutubeDl {
         use std::{fs, ops::ControlFlow};
         download::check_destination(destination, &options)?;
         let streams = &info.requested_formats;
-        if streams.len() != 2 {
+        if streams.len() < 2 || streams.len() > usize::from(u8::MAX) {
             return Err(Error::Postprocess(
-                "exactly two selected streams are required".into(),
+                "merging needs two or more selected streams".into(),
             ));
         }
+        let count = streams.len() as u8;
+        // A video-only plus an audio-only stream is the usual pair; more
+        // streams come from `--video-multistreams`/`--audio-multistreams`.
         let video = streams
             .iter()
             .position(|stream| stream.stream_kind == StreamKind::VideoOnly);
         let audio = streams
             .iter()
             .position(|stream| stream.stream_kind == StreamKind::AudioOnly);
-        let (Some(video), Some(audio)) = (video, audio) else {
-            return Err(Error::Postprocess(
-                "merging requires one video-only and one audio-only stream".into(),
-            ));
-        };
-        let video_ext = streams[video].ext.as_str();
-        let audio_ext = streams[audio].ext.as_str();
-        if !info::mergeable(&streams[video], &streams[audio]) {
+        if let (2, Some(video), Some(audio)) = (streams.len(), video, audio)
+            && !info::mergeable(&streams[video], &streams[audio])
+        {
             return Err(Error::Postprocess("unsupported stream containers".into()));
         }
         // The selected container (upstream `get_compatible_ext`).
@@ -1811,7 +1820,7 @@ impl YoutubeDl {
                     total_bytes: Some(bytes),
                     phase: DownloadPhase::Publishing,
                     stream_index: Some(index as u8 + 1),
-                    stream_count: Some(2),
+                    stream_count: Some(count),
                     fragment_index: None,
                     fragment_count: None,
                 })
@@ -1888,7 +1897,7 @@ impl YoutubeDl {
                         return ControlFlow::Continue(());
                     }
                     progress.stream_index = Some(index as u8 + 1);
-                    progress.stream_count = Some(2);
+                    progress.stream_count = Some(count);
                     callback(progress)
                 },
             )?;
@@ -1916,27 +1925,39 @@ impl YoutubeDl {
             .tempfile_in(workspace.path())?
             .into_temp_path();
         let oldest = filetime::oldest(paths.iter().map(PathBuf::as_path));
-        merge::merge(
-            &executable,
-            &paths[video],
-            video_ext,
-            &paths[audio],
-            audio_ext,
-            &output,
-            output_ext,
-            &mut || {
-                callback(DownloadProgress {
-                    attempt: 1,
-                    downloaded_bytes: stored,
-                    total_bytes: Some(stored),
-                    phase: DownloadPhase::Merging,
-                    stream_index: None,
-                    stream_count: Some(2),
-                    fragment_index: None,
-                    fragment_count: None,
-                })
-            },
-        )?;
+        // Each input's streams: by its kind, else upstream's codec test.
+        let inputs: Vec<merge::Input<'_>> = streams
+            .iter()
+            .zip(&paths)
+            .map(|(stream, path)| {
+                let (audio, video) = match stream.stream_kind {
+                    StreamKind::AudioOnly => (true, false),
+                    StreamKind::VideoOnly => (false, true),
+                    StreamKind::Standalone => (
+                        stream.acodec.as_deref() != Some("none"),
+                        stream.vcodec.as_deref() != Some("none"),
+                    ),
+                };
+                merge::Input {
+                    path,
+                    ext: &stream.ext,
+                    audio,
+                    video,
+                }
+            })
+            .collect();
+        merge::merge_inputs(&executable, &inputs, &output, output_ext, &mut || {
+            callback(DownloadProgress {
+                attempt: 1,
+                downloaded_bytes: stored,
+                total_bytes: Some(stored),
+                phase: DownloadPhase::Merging,
+                stream_index: None,
+                stream_count: Some(count),
+                fragment_index: None,
+                fragment_count: None,
+            })
+        })?;
         filetime::inherit(&output, oldest);
         let bytes = fs::metadata(&output)?.len();
         fs::OpenOptions::new()
@@ -1949,7 +1970,7 @@ impl YoutubeDl {
             total_bytes: Some(bytes),
             phase: DownloadPhase::Publishing,
             stream_index: None,
-            stream_count: Some(2),
+            stream_count: Some(count),
             fragment_index: None,
             fragment_count: None,
         })

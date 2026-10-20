@@ -15,6 +15,7 @@ const DEADLINE: Duration = Duration::from_secs(600);
 const MAX_STDOUT: usize = 64 * 1024;
 const MAX_STDERR: usize = 256 * 1024;
 
+#[cfg(test)]
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn merge(
     executable: &Path,
@@ -31,6 +32,16 @@ pub(crate) fn merge(
     )
 }
 
+/// One merge input: a downloaded stream and which of its streams to map.
+pub(crate) struct Input<'a> {
+    pub path: &'a Path,
+    pub ext: &'a str,
+    /// Upstream `acodec != 'none'` / `vcodec != 'none'`.
+    pub audio: bool,
+    pub video: bool,
+}
+
+#[cfg(test)]
 #[allow(clippy::too_many_arguments)]
 fn merge_with_deadline(
     executable: &Path,
@@ -43,23 +54,66 @@ fn merge_with_deadline(
     callback: &mut dyn FnMut() -> ControlFlow<()>,
     deadline: Duration,
 ) -> Result<()> {
-    let started = Instant::now();
     // HLS inputs are labeled `mp4` but may hold MPEG-TS or raw AAC.
     let video_ext = crate::container::sniff(video).unwrap_or(video_ext);
-    let audio_ext = crate::container::sniff(audio).unwrap_or(audio_ext);
-    let video_demuxer = match video_ext {
-        "mp4" => "mov",
-        "ts" => "mpegts",
-        "webm" => "matroska",
-        _ => return Err(failure("unsupported video container")),
-    };
-    let audio_demuxer = match audio_ext {
-        "m4a" | "mp4" => "mov",
-        "aac" => "aac",
-        "ts" => "mpegts",
-        "webm" => "matroska",
-        _ => return Err(failure("unsupported audio container")),
-    };
+    if !matches!(video_ext, "mp4" | "ts" | "webm") {
+        return Err(failure("unsupported video container"));
+    }
+    merge_inputs_with_deadline(
+        executable,
+        &[
+            Input {
+                path: video,
+                ext: video_ext,
+                audio: false,
+                video: true,
+            },
+            Input {
+                path: audio,
+                ext: audio_ext,
+                audio: true,
+                video: false,
+            },
+        ],
+        output,
+        output_ext,
+        callback,
+        deadline,
+    )
+}
+
+/// Upstream `FFmpegMergerPP` over any number of inputs (`--video-multistreams`
+/// and `--audio-multistreams`).
+pub(crate) fn merge_inputs(
+    executable: &Path,
+    inputs: &[Input<'_>],
+    output: &Path,
+    output_ext: &str,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+) -> Result<()> {
+    merge_inputs_with_deadline(executable, inputs, output, output_ext, callback, DEADLINE)
+}
+
+fn merge_inputs_with_deadline(
+    executable: &Path,
+    inputs: &[Input<'_>],
+    output: &Path,
+    output_ext: &str,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+    deadline: Duration,
+) -> Result<()> {
+    let started = Instant::now();
+    let mut demuxers = Vec::with_capacity(inputs.len());
+    for input in inputs {
+        let ext = crate::container::sniff(input.path).unwrap_or(input.ext);
+        demuxers.push(match ext {
+            "m4a" | "mp4" => "mov",
+            "aac" => "aac",
+            "ts" => "mpegts",
+            "webm" => "matroska",
+            _ => return Err(failure("unsupported input container")),
+        });
+    }
     // FFmpegMergerPP.SUPPORTED_EXTS, plus `ts` that get_compatible_ext can pick.
     let muxer = match output_ext {
         "mp4" => "mp4",
@@ -72,9 +126,11 @@ fn merge_with_deadline(
         _ => return Err(failure("unsupported output container")),
     };
     let executable = executable.canonicalize()?;
-    let video = video.canonicalize()?;
-    let audio = audio.canonicalize()?;
-    if !executable.is_file() || !video.is_file() || !audio.is_file() {
+    let paths = inputs
+        .iter()
+        .map(|input| input.path.canonicalize())
+        .collect::<std::io::Result<Vec<_>>>()?;
+    if !executable.is_file() || paths.iter().any(|path| !path.is_file()) {
         return Err(failure("executable and inputs must be files"));
     }
     let directory = output
@@ -93,7 +149,7 @@ fn merge_with_deadline(
     {
         return Err(failure("output must be a regular file"));
     }
-    if output == video || output == audio {
+    if paths.contains(&output) {
         return Err(failure("output must differ from inputs"));
     }
     let version = execute(
@@ -110,36 +166,31 @@ fn merge_with_deadline(
         ));
     }
     // `--postprocessor-args` go before each `-i` and the output file.
-    let args: Vec<OsString> = [
-        "-nostdin",
-        "-hide_banner",
-        "-loglevel",
-        "repeat+info",
-        "-y",
-        "-f",
-        video_demuxer,
-        "-protocol_whitelist",
-        "file",
-    ]
-    .into_iter()
-    .map(OsString::from)
-    .chain(crate::pp_args::input("Merger", 1))
-    .chain(["-i".into(), video.into_os_string()])
-    .chain(
-        ["-f", audio_demuxer, "-protocol_whitelist", "file"]
-            .into_iter()
-            .map(OsString::from),
-    )
-    .chain(crate::pp_args::input("Merger", 2))
-    .chain(["-i".into(), audio.into_os_string()])
-    .chain(
-        ["-map", "0:v:0", "-map", "1:a:0", "-c", "copy", "-f", muxer]
-            .into_iter()
-            .map(OsString::from),
-    )
-    .chain(crate::pp_args::output("Merger"))
-    .chain(std::iter::once(output.clone().into_os_string()))
-    .collect();
+    let mut args: Vec<OsString> = ["-nostdin", "-hide_banner", "-loglevel", "repeat+info", "-y"]
+        .into_iter()
+        .map(OsString::from)
+        .collect();
+    for (index, (path, demuxer)) in paths.iter().zip(&demuxers).enumerate() {
+        args.extend(
+            ["-f", demuxer, "-protocol_whitelist", "file"]
+                .into_iter()
+                .map(OsString::from),
+        );
+        args.extend(crate::pp_args::input("Merger", index + 1));
+        args.extend(["-i".into(), path.clone().into_os_string()]);
+    }
+    // Upstream maps each input's audio, then its video.
+    for (index, input) in inputs.iter().enumerate() {
+        if input.audio {
+            args.extend(["-map".into(), format!("{index}:a:0").into()]);
+        }
+        if input.video {
+            args.extend(["-map".into(), format!("{index}:v:0").into()]);
+        }
+    }
+    args.extend(["-c", "copy", "-f", muxer].into_iter().map(OsString::from));
+    args.extend(crate::pp_args::output("Merger"));
+    args.push(output.clone().into_os_string());
     execute(&executable, &args, &directory, started, deadline, callback)?;
     if !output.is_file() || output.metadata()?.len() == 0 {
         return Err(failure("FFmpeg produced no nonempty output"));

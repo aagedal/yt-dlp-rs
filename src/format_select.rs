@@ -849,6 +849,48 @@ fn truthy(value: &Value) -> bool {
     }
 }
 
+/// CPython's `sum()` from 0: exact integers until the first float, then
+/// Neumaier-compensated float addition (integers added plainly), with the
+/// compensation applied at the end when finite.
+fn py_sum(values: impl Iterator<Item = PyNumber>) -> PyNumber {
+    let mut total = PyNumber::Int(0);
+    let mut compensation = 0.0f64;
+    let mut float: Option<f64> = None;
+    for value in values {
+        match (float, value) {
+            (None, PyNumber::Int(_)) => total = add(total, value),
+            (None, PyNumber::Float(x)) => {
+                float = Some(total.as_f64());
+                let f = float.unwrap();
+                let t = f + x;
+                compensation += if f.abs() >= x.abs() {
+                    (f - t) + x
+                } else {
+                    (x - t) + f
+                };
+                float = Some(t);
+            }
+            (Some(f), PyNumber::Float(x)) => {
+                let t = f + x;
+                compensation += if f.abs() >= x.abs() {
+                    (f - t) + x
+                } else {
+                    (x - t) + f
+                };
+                float = Some(t);
+            }
+            (Some(f), PyNumber::Int(n)) => float = Some(f + n as f64),
+        }
+    }
+    match float {
+        Some(f) if compensation != 0.0 && compensation.is_finite() => {
+            PyNumber::Float(f + compensation)
+        }
+        Some(f) => PyNumber::Float(f),
+        None => total,
+    }
+}
+
 fn add(a: PyNumber, b: PyNumber) -> PyNumber {
     match (a, b) {
         (PyNumber::Int(a), PyNumber::Int(b)) => a
@@ -1201,10 +1243,11 @@ impl Evaluator<'_> {
             Some(parts.join("+"))
         };
         let sum = |keys: &[&str]| {
-            filtered(keys)
-                .iter()
-                .filter_map(|value| serde_json::from_value::<PyNumber>(value.clone()).ok())
-                .fold(PyNumber::Int(0), add)
+            py_sum(
+                filtered(keys)
+                    .iter()
+                    .filter_map(|value| serde_json::from_value::<PyNumber>(value.clone()).ok()),
+            )
         };
         let mut merged = serde_json::Map::new();
         merged.insert("format".into(), joined(&["format"], false).into());
@@ -1300,6 +1343,22 @@ impl FormatSelector {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn sums_follow_cpython_compensated_float_sum() {
+        use super::{PyNumber, py_sum};
+        let floats = |values: &[f64]| py_sum(values.iter().map(|v| PyNumber::Float(*v)));
+        // `sum([56.115, 69.248, 69.248])`, unlike left-to-right addition.
+        assert_eq!(
+            floats(&[56.115, 69.248, 69.248]).as_f64(),
+            194.61100000000002
+        );
+        assert_eq!(floats(&[0.1, 0.2, 0.3]).as_f64(), 0.6);
+        assert!(matches!(
+            py_sum([PyNumber::Int(1), PyNumber::Int(2)].into_iter()),
+            PyNumber::Int(3)
+        ));
+    }
+
     use super::*;
 
     fn fixture() -> Value {

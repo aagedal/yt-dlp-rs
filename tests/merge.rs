@@ -118,10 +118,17 @@ fn main() {
     if args == ["-version"] { println!("ffmpeg version merge-fixture"); return; }
     let inputs: Vec<_> = args.windows(2).filter(|pair| pair[0] == "-i").map(|pair| &pair[1]).collect();
     assert_eq!(inputs.len(),2);
-    assert_eq!(std::fs::read(inputs[0]).unwrap(),b"video-bytes");
-    assert_eq!(std::fs::read(inputs[1]).unwrap(),b"audio-bytes");
+    // FFmpegMergerPP: inputs in selection order, each input's streams mapped.
+    let first = std::fs::read(inputs[0]).unwrap();
     let maps: Vec<_> = args.windows(2).filter(|pair| pair[0] == "-map").map(|pair| &pair[1]).collect();
-    assert_eq!(maps,["0:v:0","1:a:0"]);
+    if first == b"video-bytes" {
+        assert_eq!(std::fs::read(inputs[1]).unwrap(),b"audio-bytes");
+        assert_eq!(maps,["0:v:0","1:a:0"]);
+    } else {
+        assert_eq!(first,b"audio-bytes");
+        assert_eq!(std::fs::read(inputs[1]).unwrap(),b"video-bytes");
+        assert_eq!(maps,["0:a:0","1:v:0"]);
+    }
     let output = args.last().unwrap();
     std::fs::write(output,b"merged-video-audio").unwrap();
     if std::env::current_exe().unwrap().file_stem().unwrap() == "failure" { eprintln!("fixture failed after writing output"); std::process::exit(1); }
@@ -142,7 +149,7 @@ fn clean(directory: &Path, expected: &[&str]) {
 }
 
 #[test]
-fn selected_order_and_bytes_are_preserved_but_ffmpeg_inputs_are_video_then_audio() {
+fn selected_order_and_bytes_are_preserved_with_ffmpeg_inputs_in_selection_order() {
     for reversed in [false, true] {
         let server = Server::new();
         let directory = tempfile::tempdir().unwrap();

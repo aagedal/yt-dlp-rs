@@ -735,7 +735,10 @@ impl VideoInfo {
             }
         }
         let expression = requested.unwrap_or(if prefer_merge {
-            if COMPAT_FORMAT_SPEC.load(std::sync::atomic::Ordering::Relaxed) {
+            // `allow_multiple_audio_streams or 'format-spec' in compat_opts`.
+            if options.multiple_audio
+                || COMPAT_FORMAT_SPEC.load(std::sync::atomic::Ordering::Relaxed)
+            {
                 "bestvideo+bestaudio/best"
             } else {
                 "bestvideo*+bestaudio/best"
