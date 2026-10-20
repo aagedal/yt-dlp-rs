@@ -259,13 +259,29 @@ metadata`), its unavailable-status error, `reddit_title`/`title`, every file
 with a URL as a format (proto-relative URLs as `https:`, `parse_codecs` of the
 input codec names, `bitrate`/1000 as `vbr`), owner, float `date_added` and
 `duration`, and plays. Site extractors are compared with pinned upstream's
-output through a fixture-only proxy (`tests/fixtures/sites/`). On generic
-pages, Streamable's `_EMBED_REGEX` iframes (HTML-unescaped, joined to the page
-URL, suitable and unique) are `url` results like upstream `_extract_embeds`:
-one is followed (`original_url` stays the page), several form the page's
-playlist (`--flat-playlist` keeps `ie_key`/`extractor` entries with the
-`_match_id` temporary ID). A page with both HTML5 media and Streamable embeds is
-an unsupported error; other sites' embeds are not detected.
+output through a fixture-only proxy (`tests/fixtures/sites/`).
+
+Megaphone players (`https://player.megaphone.fm/ID`, `megaphone.fm`) follow
+upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
+(`creators`), non-fatal `og:image` (with upstream's warning), and the
+`var episode = {...};` script object through `js_to_json` (`mediaUrl`
+proto-relative as `https:` as the single format, raw `duration`; missing keys are
+upstream's `KeyError` extractor errors).
+
+On generic pages, the `_EMBED_REGEX` iframes of Megaphone and Streamable, in
+upstream extractor order (each HTML-unescaped, joined to the page URL,
+suitable and unique, with `Identified N NAME embed(s)` debug lines), are `url`
+results like upstream `_extract_embeds`: one is followed (`original_url` stays
+the page), several form the page's playlist (`--flat-playlist` keeps
+`ie_key`/`extractor` entries with the `_match_id` temporary ID). A page with
+both HTML5 media and these embeds is an unsupported error; other sites' embeds
+are not detected.
+
+`_fill_common_fields` derives the deprecated single-value fields
+(`album_artist`, `artist`, `composer`, `creator`, `genre`) and their lists
+from each other (`', '` split, or joined with commas as fullwidth commas); the
+deprecation warning for extractors returning both is not represented, since no
+supported extractor does.
 
 Watch pages must be uncompressed UTF-8/ASCII `text/html`, at most 2 MiB. Parse
 JSON assigned to `ytInitialPlayerResponse` in a script, including quoted window

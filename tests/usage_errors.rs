@@ -113,17 +113,18 @@ fn extractor_listings_and_color_policies_follow_upstream() {
     let output = run(&[
         "--list-extractors",
         "https://www.youtube.com/watch?v=BaW_jenozKc",
+        "https://player.megaphone.fm/GLT9749789991",
         "https://example.com/v.mp4",
     ]);
     assert!(output.status.success());
     assert_eq!(
         String::from_utf8_lossy(&output.stdout),
-        "html5\nStreamable\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\ngeneric\n  https://example.com/v.mp4\n"
+        "html5\nmegaphone.fm\n  https://player.megaphone.fm/GLT9749789991\nStreamable\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\ngeneric\n  https://example.com/v.mp4\n"
     );
     let output = run(&["--extractor-descriptions"]);
     assert_eq!(
         String::from_utf8_lossy(&output.stdout),
-        "html5\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
+        "html5\nmegaphone.fm: megaphone.fm embedded players\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
     );
     let output = run(&["--color", "x", "https://example.com/"]);
     assert_eq!(output.status.code(), Some(2));

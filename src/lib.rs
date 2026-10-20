@@ -304,7 +304,14 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 5] = ["html5", "Streamable", "youtube", "generic", "end"];
+const EXTRACTOR_NAMES: [&str; 6] = [
+    "html5",
+    "megaphone.fm",
+    "Streamable",
+    "youtube",
+    "generic",
+    "end",
+];
 
 /// Upstream `orderedSet_from_options(names, {'all', 'default'}, use_regex=True)`.
 fn ordered_extractors(
@@ -319,7 +326,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..4]),
+            "default" => Some(&EXTRACTOR_NAMES[..5]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -446,6 +453,7 @@ impl YoutubeDl {
                     cookies.clone(),
                     proxy,
                 )),
+                Box::new(extractor::Megaphone),
                 Box::new(extractor::Streamable),
                 Box::new(GenericHttp),
             ],
@@ -1249,6 +1257,41 @@ impl YoutubeDl {
                         .insert(field.into(), format!("{name} {number}").into());
                 }
             }
+            // `_fill_common_fields`: the deprecated single-value fields and
+            // their lists, each from the other (the derived keys are noted
+            // for `info_order`).
+            let mut derived = Vec::new();
+            for (old, new) in info::MULTIVALUE_FIELDS {
+                if entry.extra.contains_key(new) && entry.extra.contains_key(old) {
+                    continue;
+                }
+                match (entry.extra.get(old), entry.extra.get(new)) {
+                    (Some(serde_json::Value::String(text)), _) if !text.is_empty() => {
+                        let values: Vec<serde_json::Value> =
+                            text.split(", ").map(serde_json::Value::from).collect();
+                        entry.extra.insert(new.into(), values.into());
+                        derived.push(new);
+                    }
+                    (_, Some(serde_json::Value::Array(values))) if !values.is_empty() => {
+                        let joined = values
+                            .iter()
+                            .map(|value| {
+                                value.as_str().unwrap_or_default().replace(',', "\u{ff0c}")
+                            })
+                            .collect::<Vec<_>>()
+                            .join(", ");
+                        entry.extra.insert(old.into(), joined.into());
+                        derived.push(old);
+                    }
+                    _ => {}
+                }
+            }
+            if !derived.is_empty()
+                && let Some(serde_json::Value::String(shape)) =
+                    entry.extra.get_mut(info_order::INFO_SHAPE)
+            {
+                shape.push_str(&format!("|multivalue:{}", derived.join(",")));
+            }
             // `process_video_result`: a live stream not downloaded from the
             // start is titled with the local time.
             if self.live_from_now(entry) {
@@ -1798,7 +1841,10 @@ impl YoutubeDl {
             raw.insert("ie_key".into(), ie_key.into());
             raw.insert("_type".into(), "url".into());
             raw.insert("url".into(), shown.clone().into());
-            raw.insert("extractor".into(), ie_key.into());
+            raw.insert(
+                "extractor".into(),
+                marker["extractor"].as_str().unwrap_or(ie_key).into(),
+            );
             raw.insert("extractor_key".into(), ie_key.into());
         } else {
             raw.insert("_type".into(), "url_transparent".into());

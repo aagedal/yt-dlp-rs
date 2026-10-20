@@ -268,6 +268,8 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        // A `{'url': url}` format.
+        "url-only" => &[("url", Take)],
         // `StreamableIE`'s files.
         "streamable" => &[
             ("format_id", Take),
@@ -543,6 +545,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             )
         })
     };
+    // `_fill_common_fields`' multivalue keys (always the last suffix).
+    let (shape, derived) = split(&shape, "|multivalue:").unwrap_or((shape, Vec::new()));
     let (shape, transparent, transparent_entry) = match split(&shape, "|transparent-entry:") {
         Some((inner, keys)) => (inner, keys, true),
         None => match split(&shape, "|transparent:") {
@@ -653,6 +657,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("timestamp", Take),
             ("description", Take),
             ("thumbnail", Take),
+        ],
+        // `MegaphoneIE._real_extract`'s dict.
+        "megaphone" => &[
+            ("id", Take),
+            ("thumbnail", Assign),
+            ("title", Take),
+            ("creators", Assign),
+            ("duration", Take),
+            ("formats", Take),
         ],
         // `StreamableIE._real_extract`'s dict.
         "streamable" => &[
@@ -864,6 +877,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     let held = |key: &str| {
         transparent.iter().any(|outer| outer == key)
+            || derived.iter().any(|derived| derived == key)
             || PROCESSED_INFO_KEYS.contains(&key)
             || (untyped && PROCESSED_FORMAT_KEYS.contains(&key))
             || selected.iter().any(|selected| selected == key)
@@ -962,6 +976,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     // Titles generated from `chapter_number`/`season_number`/`episode_number`.
     for key in ["chapter", "season", "episode"] {
         replay.take(key);
+    }
+    for (old, new) in crate::info::MULTIVALUE_FIELDS {
+        replay.take(new);
+        replay.take(old);
     }
     replay.assign("requested_subtitles");
     replay.assign("_has_drm");

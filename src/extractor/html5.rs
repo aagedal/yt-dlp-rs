@@ -671,8 +671,8 @@ impl Extractor for GenericHttp {
             return Ok(Some(rss_playlist(feed, url, &page_url)));
         }
         crate::screen::debug("Looking for embeds");
-        // Other extractors' `_EMBED_REGEX` iframes (`StreamableIE`).
-        let embeds = super::streamable::embed_urls(url, html);
+        // Other extractors' `_EMBED_REGEX` iframes, in extractor order.
+        let embeds = embeds(url, html);
         let Some(media) = parse_page(&page_url, html)? else {
             if !embeds.is_empty() {
                 return self.embed_results(client, url, &page_url, html, timestamp, embeds);
@@ -681,7 +681,7 @@ impl Extractor for GenericHttp {
         };
         if !embeds.is_empty() {
             return Err(unsupported(
-                "pages with both HTML5 media and Streamable embeds are not supported natively",
+                "pages with both HTML5 media and other extractors' embeds are not supported natively",
             ));
         }
         let mut entries = Vec::new();
@@ -887,29 +887,26 @@ impl GenericHttp {
         page_url: &Url,
         html: &str,
         timestamp: Option<i64>,
-        embeds: Vec<Url>,
+        embeds: Vec<(&'static EmbedSite, Url)>,
     ) -> Result<Option<ExtractResult>> {
-        crate::screen::debug(&match embeds.len() {
-            1 => "Identified a Streamable embed".to_owned(),
-            count => format!("Identified {count} Streamable embeds"),
-        });
-        if let [embed] = embeds.as_slice() {
-            return super::streamable::Streamable.extract_result(client, embed);
+        if let [(site, embed)] = embeds.as_slice() {
+            return site.extractor.extract_result(client, embed);
         }
         let entries = embeds
             .into_iter()
-            .map(|embed| {
+            .map(|(site, embed)| {
                 let mut info = direct::build_at(embed.clone(), &embed, String::new());
                 info.formats.clear();
                 info.direct = None;
-                info.id = super::streamable::temp_id(embed.as_str()).unwrap_or_default();
+                info.id = (site.temp_id)(embed.as_str()).unwrap_or_default();
                 info.extra.insert(
                     crate::TRANSPARENT.into(),
                     serde_json::json!({
                         "url": embed.as_str(),
                         "force_videoid": null,
                         "fields": {},
-                        "ie_key": "Streamable",
+                        "ie_key": site.key,
+                        "extractor": site.name,
                     }),
                 );
                 info
@@ -1182,6 +1179,48 @@ impl GenericHttp {
             extra,
         })))
     }
+}
+
+/// An extractor with `_EMBED_REGEX` iframes (upstream `_extract_embeds`
+/// asks every extractor, in `gen_extractor_classes` order).
+pub(crate) struct EmbedSite {
+    name: &'static str,
+    key: &'static str,
+    extractor: &'static dyn super::Extractor,
+    embed_urls: fn(&Url, &str) -> Vec<Url>,
+    temp_id: fn(&str) -> Option<String>,
+}
+
+static EMBED_SITES: [EmbedSite; 2] = [
+    EmbedSite {
+        name: super::megaphone::NAME,
+        key: super::megaphone::KEY,
+        extractor: &super::megaphone::Megaphone,
+        embed_urls: super::megaphone::embed_urls,
+        temp_id: super::megaphone::temp_id,
+    },
+    EmbedSite {
+        name: "Streamable",
+        key: "Streamable",
+        extractor: &super::streamable::Streamable,
+        embed_urls: super::streamable::embed_urls,
+        temp_id: super::streamable::temp_id,
+    },
+];
+
+/// Every embed site's URLs with `report_detected(f'{IE_NAME} embed', n)`.
+fn embeds(url: &Url, html: &str) -> Vec<(&'static EmbedSite, Url)> {
+    let mut found = Vec::new();
+    for site in &EMBED_SITES {
+        let urls = (site.embed_urls)(url, html);
+        match urls.len() {
+            0 => {}
+            1 => crate::screen::debug(&format!("Identified a {} embed", site.name)),
+            count => crate::screen::debug(&format!("Identified {count} {} embeds", site.name)),
+        }
+        found.extend(urls.into_iter().map(|embed| (site, embed)));
+    }
+    found
 }
 
 /// `_extract_rss`'s playlist: `url_transparent` placeholder entries that

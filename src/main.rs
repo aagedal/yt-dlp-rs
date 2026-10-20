@@ -2862,7 +2862,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     flush_validation_warnings();
     if args.verbose {
         // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 4 extractors");
+        eprintln!("[debug] Loaded 5 extractors");
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
@@ -2985,8 +2985,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 4] = [
+        let suitable: [(&str, Suitable); 5] = [
             ("html5", |_| false),
+            ("megaphone.fm", yt_dlp_rs::extractor::megaphone_suitable),
             ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
             ("youtube", yt_dlp_rs::extractor::youtube_suitable),
             ("generic", |_| true),
@@ -3006,7 +3007,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "html5\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
+            "html5\nmegaphone.fm: megaphone.fm embedded players\nStreamable\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }

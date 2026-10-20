@@ -5,6 +5,7 @@ pub(crate) mod hls;
 pub(crate) mod html5;
 mod json_ld;
 mod jwplayer;
+mod megaphone;
 mod rss;
 mod streamable;
 mod youtube;
@@ -13,6 +14,7 @@ pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
+pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
 
@@ -83,6 +85,39 @@ pub(crate) fn download_json(
             "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
         ))
     })
+}
+
+/// Upstream `_download_webpage(url, video_id)`: `[EXTRACTOR] ID: Downloading
+/// webpage`, the request (`--dump-pages`/`--write-pages` like other
+/// pages), and the body as UTF-8.
+pub(crate) fn download_webpage(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+) -> Result<String> {
+    use std::io::Read;
+    crate::screen::screen(&format!("[{extractor}] {id}: Downloading webpage"));
+    let wrap = |error: crate::Error| match error {
+        crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
+            crate::Error::ExtractorRequest {
+                extractor,
+                id: id.to_owned(),
+                what: "webpage",
+                source: Box::new(error),
+            }
+        }
+        error => error,
+    };
+    let mut response = direct::request(client, url, None).map_err(wrap)?;
+    let page_url = response.url().clone();
+    let mut body = Vec::new();
+    response
+        .read_to_end(&mut body)
+        .map_err(crate::Error::ExtractionRead)?;
+    crate::screen::expect_page(id, None, None);
+    crate::screen::page_read(&page_url, &body)?;
+    Ok(String::from_utf8_lossy(&body).into_owned())
 }
 
 /// `self._proto_relative_url(url)`: `//host/...` becomes `https://host/...`.

@@ -1,6 +1,15 @@
 use serde::{Deserialize, Serialize};
 use url::Url;
 
+/// `YoutubeDL._deprecated_multivalue_fields`.
+pub(crate) const MULTIVALUE_FIELDS: [(&str, &str); 5] = [
+    ("album_artist", "album_artists"),
+    ("artist", "artists"),
+    ("composer", "composers"),
+    ("creator", "creators"),
+    ("genre", "genres"),
+];
+
 /// Fully extracted results; playlists contain videos, never unresolved URLs.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 // Preserve the public unboxed Video(VideoInfo) constructor while metadata grows.
