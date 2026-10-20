@@ -1100,6 +1100,15 @@ impl YoutubeDl {
                     }
                 }
                 format.http_headers = (!merged.is_empty()).then(|| merged.into_iter().collect());
+                // Cookies for the format URL become its `cookies` field.
+                match self.cookies.info_field(&format.url) {
+                    Some(cookies) => {
+                        format.extra.insert("cookies".into(), cookies.into());
+                    }
+                    None => {
+                        format.extra.remove("cookies");
+                    }
+                }
             }
             let extractor: Vec<&str> = entry
                 .format_sort_fields

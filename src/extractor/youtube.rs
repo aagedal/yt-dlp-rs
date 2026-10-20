@@ -91,6 +91,7 @@ impl Candidate {
         let codecs = self.codecs.as_ref();
         VideoFormat {
             http_headers: None,
+            extra: Default::default(),
             protocol: None,
             vcodec: codecs.map(|codecs| codecs.vcodec.clone()),
             acodec: codecs.map(|codecs| codecs.acodec.clone()),

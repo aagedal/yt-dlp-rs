@@ -644,6 +644,7 @@ impl Extractor for GenericHttp {
                 let codecs = source.codecs.as_ref();
                 formats.push(VideoFormat {
                     http_headers: None,
+                    extra: Default::default(),
                     protocol: None,
                     vcodec: source.vcodec.clone(),
                     acodec: codecs.map(|codecs| codecs.acodec.clone()),

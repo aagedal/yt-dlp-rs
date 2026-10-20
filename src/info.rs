@@ -261,6 +261,9 @@ pub struct VideoFormat {
     pub width: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub height: Option<u32>,
+    /// Format keys this port does not model (loaded info JSON, `cookies`).
+    #[serde(flatten, default)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
 }
 
 /// One upstream thumbnail dictionary.
@@ -812,13 +815,18 @@ impl VideoInfo {
         self.stream_kind = StreamKind::Standalone;
         self.fragments.clear();
         self.extra.remove("format_index");
-        // The merged dict has no `http_headers`.
+        // The merged dict has no `http_headers` or `cookies`.
         self.extra.remove("http_headers");
+        self.extra.remove("cookies");
         self.requested_formats = formats;
     }
 
     fn apply_single(&mut self, selected: &VideoFormat) {
-        // `info_dict.update(format)`: the format's request headers.
+        // `info_dict.update(format)`: unmodeled format keys, then its headers.
+        self.extra.remove("cookies");
+        for (key, value) in &selected.extra {
+            self.extra.insert(key.clone(), value.clone());
+        }
         match &selected.http_headers {
             Some(headers) => {
                 self.extra.insert(
@@ -1199,6 +1207,7 @@ mod tests {
         // Like extracted formats, separate streams name their missing codec.
         VideoFormat {
             http_headers: None,
+            extra: Default::default(),
             protocol: None,
             vcodec: (kind == StreamKind::AudioOnly).then(|| "none".into()),
             acodec: (kind == StreamKind::VideoOnly).then(|| "none".into()),

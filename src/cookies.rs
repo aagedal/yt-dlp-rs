@@ -92,6 +92,30 @@ fn target(path: &Path) -> Result<bool> {
         Err(_) => Err(error("cannot inspect cookie file")),
     }
 }
+/// Python `http.cookies._quote`.
+fn py_cookie_quote(value: &str) -> String {
+    const LEGAL: &str = "!#$%&'*+-.^_`|~:";
+    const UNESCAPED: &str = "!#$%&'*+-.^_`|~: ()/<=>?@[]{}";
+    if value
+        .chars()
+        .all(|c| c.is_ascii_alphanumeric() || LEGAL.contains(c))
+    {
+        return value.to_owned();
+    }
+    let mut quoted = String::from("\"");
+    for c in value.chars() {
+        match c {
+            '"' => quoted.push_str("\\\""),
+            '\\' => quoted.push_str("\\\\"),
+            c if c.is_ascii_alphanumeric() || UNESCAPED.contains(c) || (c as u32) >= 256 => {
+                quoted.push(c)
+            }
+            c => quoted.push_str(&format!("\\{:03o}", c as u32)),
+        }
+    }
+    quoted.push('"');
+    quoted
+}
 fn valid_name(value: &str) -> bool {
     !value.is_empty() && HeaderName::from_bytes(value.as_bytes()).is_ok()
 }
@@ -148,6 +172,52 @@ impl CookieJar {
         // Upstream loads its jar lazily: at the first request (or the save).
         crate::screen::defer_until_request(extracted.messages, extracted.error);
         Ok(jar)
+    }
+
+    /// Upstream `_calc_headers`' `cookies` field for `url`: each matching
+    /// cookie as `NAME=VALUE; Domain=…; Path=…[; Secure][; Expires=…]`
+    /// (values quoted like `SimpleCookie`), in jar order.
+    pub fn info_field(&self, url: &Url) -> Option<String> {
+        let state = self.state.read().ok()?;
+        if !matches!(url.scheme(), "http" | "https") {
+            return None;
+        }
+        let mut cookies: Vec<_> = state
+            .store
+            .matches(url)
+            .into_iter()
+            .filter(|cookie| !cookie.secure().unwrap_or(false) || url.scheme() == "https")
+            .collect();
+        cookies.sort_by_key(|cookie| {
+            state
+                .creation
+                .get(&key(cookie))
+                .copied()
+                .unwrap_or(u64::MAX)
+        });
+        let mut values = Vec::new();
+        for cookie in cookies {
+            values.push(format!(
+                "{}={}",
+                cookie.name(),
+                py_cookie_quote(cookie.value())
+            ));
+            match &cookie.domain {
+                CookieDomain::HostOnly(domain) => values.push(format!("Domain={domain}")),
+                CookieDomain::Suffix(domain) => values.push(format!("Domain=.{domain}")),
+                _ => {}
+            }
+            if !cookie.path.is_empty() {
+                values.push(format!("Path={}", String::from(&cookie.path)));
+            }
+            if cookie.secure().unwrap_or(false) {
+                values.push("Secure".into());
+            }
+            if let CookieExpiration::AtUtc(time) = cookie.expires {
+                values.push(format!("Expires={}", time.unix_timestamp()));
+            }
+        }
+        (!values.is_empty()).then(|| values.join("; "))
     }
 
     /// The text of a bounded UTF-8 cookie file, or `None` when it is missing.

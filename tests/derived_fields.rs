@@ -127,3 +127,34 @@ fn formats_carry_their_request_headers() {
         )
     );
 }
+
+/// Upstream `_calc_headers` also records the format URL's cookies.
+#[test]
+fn formats_record_their_cookies() {
+    let origin = serve();
+    let directory = tempfile::tempdir().unwrap();
+    std::fs::write(
+        directory.path().join("cookies.txt"),
+        "# Netscape HTTP Cookie File\n127.0.0.1\tFALSE\t/\tFALSE\t4102444800\tsid\tabc 123\n\
+         127.0.0.1\tFALSE\t/v.mp4\tFALSE\t0\tdeep\tx\"y\n127.0.0.1\tFALSE\t/other\tFALSE\t0\tno\tpe\n",
+    )
+    .unwrap();
+    let output = run(
+        directory.path(),
+        &[
+            "-s",
+            "--cookies",
+            "cookies.txt",
+            "--print",
+            "%(cookies)s",
+            "--print",
+            "%(formats.0.cookies)s",
+            &format!("{origin}/v.mp4"),
+        ],
+    );
+    let field = "sid=\"abc 123\"; Domain=127.0.0.1; Path=/; Expires=4102444800; deep=\"x\\\"y\"; Domain=127.0.0.1; Path=/v.mp4";
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout),
+        format!("{field}\n{field}\n")
+    );
+}
