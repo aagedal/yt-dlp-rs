@@ -316,6 +316,18 @@
       "scope": "CozyTVIE replay cache metadata (title/uploader/date/duration/was_live) and CDN HLS formats and subtitles compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "crooksandliars",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/crooksandliars.py"
+      ],
+      "rust": [
+        "src/extractor/crooksandliars.rs",
+        "tests/fixtures/sites/crooksandliars/"
+      ],
+      "scope": "CrooksAndLiarsIE manifest JSON flavors with qualities() ranking, metadata, KeyError/no-formats errors and generic-page _EMBED_REGEX embeds compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "crtvg",
       "status": "partial",
       "upstream": [

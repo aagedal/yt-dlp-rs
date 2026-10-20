@@ -299,6 +299,8 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ("url", Take),
             ("width", Assign),
         ],
+        // `CrooksAndLiarsIE`'s flavor.
+        "crooksandliars" => &[("url", Take), ("format_id", Take), ("quality", Take)],
         // `BildIE`'s MP4 source.
         "bild" => &[("url", Take), ("format_id", Take)],
         // `BloggerIE`'s stream.
@@ -566,8 +568,8 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             }
         }
     }
-    // `_extract_kvs`' `quality = 1`.
-    if shape == "kvs"
+    // `_extract_kvs`' `quality = 1` and `qualities()`' indices are ints.
+    if matches!(shape, "kvs" | "crooksandliars")
         && let Some(quality) = out.get("quality").and_then(Value::as_f64)
         && quality.fract() == 0.0
     {
@@ -1283,6 +1285,18 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("subtitles", Dict),
             ("title", Take),
             ("thumbnail", Take),
+        ],
+        // `CrooksAndLiarsIE._real_extract`'s dict.
+        "crooksandliars" => &[
+            ("url", Take),
+            ("id", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("thumbnail", Assign),
+            ("timestamp", Assign),
+            ("uploader", Assign),
+            ("duration", Take),
+            ("formats", Take),
         ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[

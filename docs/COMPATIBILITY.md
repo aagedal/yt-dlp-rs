@@ -419,6 +419,14 @@ CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
 
+Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
+`CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
+`video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,
+mp4_high)`, the title, description, protocol-relative poster, integer
+`created`/duration and author, with upstream's `KeyError` messages and a
+processing-time error without formats; its iframe/param embeds on generic
+pages follow Blogger's in the embed order.
+
 CRTVG programmes (`crtvg.es/tvg/a-carta/ID`) follow upstream `CrtvgIE`: the
 page's fatal `var url` base, its `playlist.m3u8` (without an `ext`) and
 `manifest.mpd` as non-fatal formats (their subtitles ignored with upstream's
