@@ -79,7 +79,8 @@ Supported today:
   and served source, HistoricFilms tapes through their page, Livestreamfails
   clips through the clip API, EbaumsWorld videos through the player XML,
   Glide messages through their share page, GodTube videos through their
-  player XML, FC Zenit videos through the player API, plus
+  player XML, FC Zenit videos through the player API, BehindKink posts
+  through their page, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

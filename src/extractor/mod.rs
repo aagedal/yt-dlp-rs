@@ -1,3 +1,4 @@
+mod behindkink;
 mod dash;
 pub(crate) mod direct;
 mod ebaumsworld;
@@ -23,6 +24,7 @@ mod streamable;
 mod xspf;
 mod youtube;
 
+pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};

@@ -2862,7 +2862,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     flush_validation_warnings();
     if args.verbose {
         // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 13 extractors");
+        eprintln!("[debug] Loaded 14 extractors");
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
@@ -2985,7 +2985,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 13] = [
+        let suitable: [(&str, Suitable); 14] = [
+            (
+                "BehindKink (CURRENTLY BROKEN)",
+                yt_dlp_rs::extractor::behindkink_suitable,
+            ),
             ("EbaumsWorld", yt_dlp_rs::extractor::ebaumsworld_suitable),
             ("Fczenit", yt_dlp_rs::extractor::fczenit_suitable),
             ("Glide", yt_dlp_rs::extractor::glide_suitable),

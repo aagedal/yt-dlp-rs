@@ -329,6 +329,12 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+BehindKink posts (`behindkink.com/YYYY/MM/DD/SLUG`, marked broken upstream with
+its warning) follow upstream `BehindKinkIE`: the fatal `<source>` URL (its
+basename before `_` as the ID), OpenGraph title/image/description with
+upstream's non-fatal warnings, the URL's date as `upload_date` and
+`age_limit` 18, as an untyped result.
+
 EbaumsWorld videos (`ebaumsworld.com/videos/SLUG/ID`) follow upstream
 `EbaumsWorldIE`: the player config XML (`Downloading XML`) as an untyped
 result, empty elements as `None` (a generic title for an empty title) and a
