@@ -3346,9 +3346,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         "{}",
                         template.render_dict(&full, &template_options)?
                     )?;
+                    // One `write_string` call per message.
+                    stdout.flush()?;
                 }
                 if args.dump_json || args.print_json {
                     writeln!(stdout, "{}", yt_dlp_rs::output::python_json_dumps(&full))?;
+                    // One `write_string` call per message.
+                    stdout.flush()?;
                 }
                 continue;
             }
@@ -3687,6 +3691,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             }
                             yt_dlp_rs::upstream_shape(&mut value);
                             writeln!(stdout, "{}", yt_dlp_rs::output::python_json_dumps(&value))?;
+                            // One `write_string` call per message.
+                            stdout.flush()?;
                         }
                         // --force-write-archive records simulated or skipped videos.
                         let mut force_record = |info: &yt_dlp_rs::VideoInfo| -> Result<(), String> {
@@ -5052,6 +5058,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }
             yt_dlp_rs::upstream_shape(&mut value);
             writeln!(stdout, "{}", yt_dlp_rs::output::python_json_dumps(&value))?;
+            // One `write_string` call per message.
+            stdout.flush()?;
         }
     }
     for warning in downloader.cookie_jar().take_warnings() {
@@ -5095,7 +5103,8 @@ fn run_metadata_parser(
 fn emit_listing(stdout: &mut impl Write, text: &str) -> io::Result<()> {
     let (caption, table) = text.split_once('\n').unwrap_or((text, ""));
     screen!("{caption}");
-    stdout.write_all(table.as_bytes())
+    stdout.write_all(table.as_bytes())?;
+    stdout.flush()
 }
 
 /// An entry `ExtractorError` from upstream `process_video_result`, reported
@@ -6203,6 +6212,8 @@ impl StagePrint {
         let mut stdout = out_stream();
         for line in &self.lines {
             writeln!(stdout, "{line}")?;
+            // One `write_string` call per message.
+            stdout.flush()?;
         }
         stdout.flush()?;
         for (template, path, line) in &self.files {

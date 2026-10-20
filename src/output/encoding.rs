@@ -1,7 +1,7 @@
 //! `--encoding`: Python's `str.encode(ENCODING, 'ignore')` for the codecs
 //! this port implements (characters a codec cannot represent are dropped).
-//! Codecs that write a BOM on every call (`utf-16`, `utf-32`) are not
-//! implemented.
+//! `utf-16`/`utf-32` start every encoded call with a little-endian BOM, as
+//! CPython does on little-endian hosts.
 
 /// A supported Python codec.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -14,6 +14,10 @@ pub enum Encoding {
     Utf16Be,
     Utf32Le,
     Utf32Be,
+    /// `utf-16`: a BOM, then little-endian units.
+    Utf16,
+    /// `utf-32`: a BOM, then little-endian code points.
+    Utf32,
 }
 
 /// cp1252's 0x80-0x9F (`None`: undefined bytes Python cannot encode).
@@ -69,12 +73,32 @@ impl Encoding {
             "utf_16_be" | "utf_16be" | "unicodebigunmarked" => Self::Utf16Be,
             "utf_32_le" | "utf_32le" => Self::Utf32Le,
             "utf_32_be" | "utf_32be" => Self::Utf32Be,
+            "utf_16" | "utf16" | "u16" => Self::Utf16,
+            "utf_32" | "utf32" | "u32" => Self::Utf32,
             _ => return None,
         })
     }
 
+    /// Whether every `encode` call starts with a BOM.
+    pub fn has_bom(self) -> bool {
+        matches!(self, Self::Utf16 | Self::Utf32)
+    }
+
     /// `text.encode(self, 'ignore')`.
     pub fn encode(self, text: &str) -> Vec<u8> {
+        match self {
+            Self::Utf16 => {
+                let mut bytes = vec![0xFF, 0xFE];
+                bytes.extend(Self::Utf16Le.encode(text));
+                return bytes;
+            }
+            Self::Utf32 => {
+                let mut bytes = vec![0xFF, 0xFE, 0, 0];
+                bytes.extend(Self::Utf32Le.encode(text));
+                return bytes;
+            }
+            _ => {}
+        }
         let mut bytes = Vec::with_capacity(text.len());
         for c in text.chars() {
             let code = u32::from(c);
@@ -105,7 +129,7 @@ impl Encoding {
                 }
                 Self::Utf32Le => bytes.extend_from_slice(&code.to_le_bytes()),
                 Self::Utf32Be => bytes.extend_from_slice(&code.to_be_bytes()),
-                Self::Ascii | Self::Latin1 => {}
+                Self::Ascii | Self::Latin1 | Self::Utf16 | Self::Utf32 => {}
             }
         }
         bytes
@@ -141,8 +165,10 @@ pub fn write_message(stderr: bool, text: &str) {
 }
 
 /// A writer encoding the UTF-8 text written to it (incomplete sequences
-/// wait for the next write; invalid bytes pass through unchanged).
-pub struct EncodingWriter<W> {
+/// wait for the next write; invalid bytes pass through unchanged). A BOM
+/// codec encodes what was written since the last `flush` as one call, so
+/// callers flush after each upstream `write_string` message.
+pub struct EncodingWriter<W: std::io::Write> {
     inner: W,
     encoding: Encoding,
     pending: Vec<u8>,
@@ -164,6 +190,9 @@ impl<W: std::io::Write> std::io::Write for EncodingWriter<W> {
             return self.inner.write(buf);
         }
         self.pending.extend_from_slice(buf);
+        if self.encoding.has_bom() {
+            return Ok(buf.len());
+        }
         let mut out = Vec::new();
         let mut rest: &[u8] = &self.pending;
         loop {
@@ -199,7 +228,20 @@ impl<W: std::io::Write> std::io::Write for EncodingWriter<W> {
     }
 
     fn flush(&mut self) -> std::io::Result<()> {
+        if self.encoding.has_bom() && !self.pending.is_empty() {
+            let text = String::from_utf8_lossy(&self.pending).into_owned();
+            self.pending.clear();
+            self.inner.write_all(&self.encoding.encode(&text))?;
+        }
         self.inner.flush()
+    }
+}
+
+impl<W: std::io::Write> Drop for EncodingWriter<W> {
+    fn drop(&mut self) {
+        if self.encoding.has_bom() {
+            let _ = std::io::Write::flush(self);
+        }
     }
 }
 
@@ -209,11 +251,31 @@ mod tests {
     use std::io::Write;
 
     #[test]
+    fn bom_codecs_mark_every_call() {
+        assert_eq!(Encoding::lookup("UTF-16"), Some(Encoding::Utf16));
+        assert_eq!(Encoding::Utf16.encode("a"), b"\xff\xfea\x00");
+        assert_eq!(
+            Encoding::Utf32.encode("a"),
+            b"\xff\xfe\x00\x00a\x00\x00\x00"
+        );
+        let mut writer = EncodingWriter::new(Vec::new(), Encoding::Utf16);
+        write!(writer, "a").unwrap();
+        write!(writer, "b").unwrap();
+        writer.flush().unwrap();
+        writeln!(writer, "c").unwrap();
+        writer.flush().unwrap();
+        assert_eq!(
+            writer.inner,
+            b"\xff\xfea\x00b\x00\xff\xfec\x00\n\x00".to_vec()
+        );
+    }
+
+    #[test]
     fn encodings_drop_unrepresentable_characters_like_python_ignore() {
         let text = "Ünï ☃ 日本 café €";
         assert_eq!(Encoding::lookup("Latin-1"), Some(Encoding::Latin1));
         assert_eq!(Encoding::lookup("bogus"), None);
-        assert_eq!(Encoding::lookup("utf-16"), None);
+        assert_eq!(Encoding::lookup("utf-16"), Some(Encoding::Utf16));
         assert_eq!(Encoding::Ascii.encode(text), b"n   caf ");
         assert_eq!(Encoding::Latin1.encode(text), b"\xdcn\xef   caf\xe9 ");
         assert_eq!(Encoding::Cp1252.encode(text), b"\xdcn\xef   caf\xe9 \x80");

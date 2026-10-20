@@ -64,12 +64,33 @@ fn messages_drop_characters_the_encoding_cannot_represent() {
 }
 
 #[test]
+fn bom_encodings_mark_every_message_like_upstream() {
+    // Checked against pinned upstream: each `write_string` call is encoded
+    // separately, so every printed line starts with the BOM.
+    let url = serve();
+    let output = run(
+        &["--encoding", "utf-16", "--print", "title", "--print", "id"],
+        &url,
+    );
+    let utf16 = |text: &str| {
+        let mut bytes = vec![0xFF, 0xFE];
+        for unit in text.encode_utf16() {
+            bytes.extend_from_slice(&unit.to_le_bytes());
+        }
+        bytes
+    };
+    let mut expected = utf16("Ünï ☃ café (1)\n");
+    expected.extend(utf16("p-1\n"));
+    assert_eq!(output.stdout, expected);
+}
+
+#[test]
 fn unimplemented_encodings_warn_and_keep_utf8() {
     let url = serve();
-    let output = run(&["--encoding", "utf-16", "--print", "title"], &url);
+    let output = run(&["--encoding", "cp437", "--print", "title"], &url);
     assert_eq!(String::from_utf8_lossy(&output.stdout), "Ünï ☃ café (1)\n");
     assert!(
         String::from_utf8_lossy(&output.stderr)
-            .contains("WARNING: --encoding utf-16 is not supported natively; output is UTF-8")
+            .contains("WARNING: --encoding cp437 is not supported natively; output is UTF-8")
     );
 }
