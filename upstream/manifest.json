@@ -473,6 +473,18 @@
       "scope": "GraspopIE festival stream (http: HLS manifest as fatal formats, name/poster traversal, generic title, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "harpodeon",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/harpodeon.py"
+      ],
+      "rust": [
+        "src/extractor/harpodeon.rs",
+        "tests/fixtures/sites/harpodeon/"
+      ],
+      "scope": "HarpodeonIE hpBase/hpInjectVideo MP4 untyped result with Referer, videoInfo title/creator/year regex and description warnings compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "historicfilms",
       "status": "partial",
       "upstream": [

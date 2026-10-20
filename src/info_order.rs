@@ -753,6 +753,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "jove"
             | "ku6"
             | "fuyintv"
+            | "harpodeon"
     ) || shape.starts_with("nobelprize;")
         || original
             .as_ref()
@@ -1361,6 +1362,16 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("duration", Take),
             ("timestamp", Take),
             ("formats", Take),
+        ],
+        // `HarpodeonIE._real_extract`'s dict (its own format).
+        "harpodeon" => &[
+            ("id", Take),
+            ("title", Take),
+            ("url", Take),
+            ("http_headers", Take),
+            ("description", Assign),
+            ("creator", Assign),
+            ("release_year", Assign),
         ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[

@@ -525,6 +525,12 @@ Proximus festival stream's `source.assetUri` over `http:` as fatal HLS
 formats, the string `name` title (else the generic title) and the URL-valued
 `source.poster` thumbnail, with upstream's `KeyError` messages.
 
+Harpodeon films (`harpodeon.com/video|preview/SLUG/ID`) follow upstream
+`HarpodeonIE`: the fatal `hpBase` and `hpInjectVideo` MP4 as an untyped result
+with the page as Referer, the `videoInfo` heading's title, creator (and the
+derived `creators`) and year (one warning when absent), and the description
+meta with its warning.
+
 HistoricFilms tapes (`historicfilms.com/tapes/ID`, `/playID`) follow upstream
 `HistoricFilmsIE`: the fatal tape ID, OpenGraph title/description, the
 `thumbnailUrl` meta or OpenGraph image, the `duration` meta through
