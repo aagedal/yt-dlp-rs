@@ -12,16 +12,38 @@ pub struct DirectHttp;
 /// An extraction request upstream also makes (`_request_webpage`), subject
 /// to `--sleep-requests`.
 pub(crate) fn request(client: &Client, url: &Url, referer: Option<&Url>) -> Result<Response> {
+    request_with_headers(client, url, referer, &[])
+}
+
+/// [`request`] with an extractor's `headers=`.
+pub(crate) fn request_with_headers(
+    client: &Client,
+    url: &Url,
+    referer: Option<&Url>,
+    headers: &[(&str, &str)],
+) -> Result<Response> {
     crate::screen::before_extraction_request();
-    probe(client, url, referer)
+    probe_with_headers(client, url, referer, headers)
 }
 
 /// A request this port adds to inspect media or child playlists that
 /// upstream does not fetch during extraction; never delayed.
 pub(crate) fn probe(client: &Client, url: &Url, referer: Option<&Url>) -> Result<Response> {
+    probe_with_headers(client, url, referer, &[])
+}
+
+fn probe_with_headers(
+    client: &Client,
+    url: &Url,
+    referer: Option<&Url>,
+    headers: &[(&str, &str)],
+) -> Result<Response> {
     let mut request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
     if let Some(referer) = referer {
         request = request.header(REFERER, referer.as_str());
+    }
+    for (name, value) in headers {
+        request = request.header(*name, *value);
     }
     crate::screen::load_cookies()?;
     let response = request.send();

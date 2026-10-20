@@ -447,6 +447,12 @@ Player playlists are unsupported errors. On generic pages its
 embed detection, first in extractor order. A pseudo-URL result's
 `webpage_url_domain` is `null`, like upstream's `get_domain`.
 
+Kommunetv archives (`SUBDOMAIN.kommunetv.no/archive/ID`) follow upstream
+`KommunetvIE`: the Oslo streams API (requested with `Accept:
+application/json`), its `stream.title` and first playlist's first file
+without query or fragment as non-fatal `hls` formats, with upstream's
+`KeyError`, bare `IndexError` and `No video formats found!` errors.
+
 Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
 `LivestreamfailsIE`: the clip API JSON as an untyped result (`sourceId` as
 `display_id`, `unified_timestamp` of `createdAt`, the streamer label as

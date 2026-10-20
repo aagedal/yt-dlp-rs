@@ -1,6 +1,6 @@
 //! Upstream `BildIE` (`yt_dlp/extractor/bild.py`): the article's
 //! `,view=json` clip data with its HLS and MP4 sources as formats.
-use super::{Extractor, download_json, hls};
+use super::{Extractor, download_json, extract_m3u8_optional};
 use crate::{Error, Result, VideoFormat, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
@@ -57,28 +57,10 @@ impl Extractor for Bild {
             match source.get("type").and_then(Value::as_str) {
                 Some("application/x-mpegURL") => {
                     let manifest = Url::parse(src)?;
-                    crate::screen::expect_page(
-                        &id,
-                        Some(format!("[{NAME}] {id}: Downloading m3u8 information")),
-                        None,
-                    );
-                    let response = super::direct::request(client, &manifest, None);
-                    if response.is_err() {
-                        crate::screen::screen(&format!(
-                            "[{NAME}] {id}: Downloading m3u8 information"
-                        ));
-                    }
-                    let parsed = response.and_then(|response| {
-                        hls::from_response(client, response, &manifest, None, true, Some("hls"))
-                    });
-                    crate::screen::clear_page();
-                    match parsed {
-                        Ok(Some(stream)) => formats.extend(stream.formats),
-                        Ok(None) => {}
-                        Err(error) => crate::screen::warning(&format!(
-                            "[{NAME}] {id}: Failed to download m3u8 information: {}",
-                            crate::upstream_error_text(&error)
-                        )),
+                    if let Some(stream) =
+                        extract_m3u8_optional(client, &manifest, NAME, &id, Some("hls"))
+                    {
+                        formats.extend(stream.formats);
                     }
                 }
                 Some("video/mp4") => {

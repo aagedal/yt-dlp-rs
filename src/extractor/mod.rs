@@ -20,6 +20,7 @@ pub(crate) mod ism;
 mod json_ld;
 mod jwplatform;
 mod jwplayer;
+mod kommunetv;
 mod kvs;
 mod livestreamfails;
 mod masters;
@@ -60,6 +61,7 @@ pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
 pub use hypem::{Hypem, suitable as hypem_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
+pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
@@ -149,6 +151,37 @@ pub(crate) fn extract_m3u8_fatal(
     })
 }
 
+/// Upstream `_extract_m3u8_formats_and_subtitles(..., fatal=False)`: the
+/// playlist, or `None` after a `Failed to download m3u8 information`
+/// warning.
+pub(crate) fn extract_m3u8_optional(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+) -> Option<crate::VideoInfo> {
+    let note = format!("[{extractor}] {id}: Downloading m3u8 information");
+    crate::screen::expect_page(id, Some(note.clone()), None);
+    let response = direct::request(client, manifest, None);
+    if response.is_err() {
+        crate::screen::screen(&note);
+    }
+    let parsed = response
+        .and_then(|response| hls::from_response(client, response, manifest, None, true, m3u8_id));
+    crate::screen::clear_page();
+    match parsed {
+        Ok(stream) => stream,
+        Err(error) => {
+            crate::screen::warning(&format!(
+                "[{extractor}] {id}: Failed to download m3u8 information: {}",
+                crate::upstream_error_text(&error)
+            ));
+            None
+        }
+    }
+}
+
 /// Upstream `_download_json(url, video_id)`: `[EXTRACTOR] ID: Downloading
 /// JSON metadata`, the request, and the parsed body.
 pub(crate) fn download_json(
@@ -178,6 +211,25 @@ pub(crate) fn download_json_note(
     )
 }
 
+/// [`download_json`] with the request's `headers=`.
+pub(crate) fn download_json_headers(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    headers: &[(&str, &str)],
+) -> Result<serde_json::Value> {
+    download_json_with(
+        client,
+        url,
+        extractor,
+        id,
+        "Downloading JSON metadata",
+        &|text| Ok(text.to_owned()),
+        headers,
+    )
+}
+
 /// [`download_json_note`] with `transform_source` applied to the body.
 pub(crate) fn download_json_transformed(
     client: &Client,
@@ -186,6 +238,18 @@ pub(crate) fn download_json_transformed(
     id: &str,
     note: &str,
     transform: &dyn Fn(&str) -> Result<String>,
+) -> Result<serde_json::Value> {
+    download_json_with(client, url, extractor, id, note, transform, &[])
+}
+
+fn download_json_with(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+    transform: &dyn Fn(&str) -> Result<String>,
+    headers: &[(&str, &str)],
 ) -> Result<serde_json::Value> {
     use std::io::Read;
     crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
@@ -200,7 +264,7 @@ pub(crate) fn download_json_transformed(
         }
         error => error,
     };
-    let mut response = direct::request(client, url, None).map_err(wrap)?;
+    let mut response = direct::request_with_headers(client, url, None, headers).map_err(wrap)?;
     let mut body = Vec::new();
     response
         .read_to_end(&mut body)
