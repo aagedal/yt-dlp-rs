@@ -365,6 +365,18 @@
       "scope": "LivestreamfailsIE _VALID_URL and clip API extraction (display_id, unified_timestamp, creator/creators, format_field thumbnail, KeyError message) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "masters",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/masters.py"
+      ],
+      "rust": [
+        "src/extractor/masters.rs",
+        "tests/fixtures/sites/masters/"
+      ],
+      "scope": "MastersIE related-content API (fatal HLS formats and subtitles, missing-manifest error, URL upload_date, first image set thumbnails) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "megaphone",
       "status": "partial",
       "upstream": [

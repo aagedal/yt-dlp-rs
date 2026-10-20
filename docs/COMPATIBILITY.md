@@ -455,6 +455,12 @@ its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped
 `time`/`ts`, and upstream's missing-script, `KeyError` and bare `IndexError`
 messages.
 
+Masters videos (`masters.com/en_US/watch/YYYY-MM-DD/ID`) follow upstream
+`MastersIE`: the related-content API's fatal HLS manifest (with its subtitle
+renditions; no manifest is upstream's `Failed to obtain m3u8 URL`), the API
+title (else the generic title), the URL date as `upload_date` and the first
+image set's named images as thumbnails.
+
 Nobel Prize media (`[www.|mediaplayer.]nobelprize.org/mediaplayer/?id|qid=ID`)
 follow upstream `NobelPrizeIE`: the integer `id` (else `qid`) query value (no
 ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's

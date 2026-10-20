@@ -1072,6 +1072,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             // Processing drops a `None` duration.
             ("duration", Take),
         ],
+        // `MastersIE._real_extract`'s dict.
+        "masters" => &[
+            ("id", Take),
+            ("title", Take),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("upload_date", Assign),
+            ("thumbnails", List),
+        ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),
@@ -1286,13 +1295,16 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // `_parse_smil`'s images are `{id, url, width, height}` dicts, 23video's
     // `{id, url, width, height, filesize}`.
-    if (shape.contains("smil") || shape == "23video")
+    if (shape.contains("smil") || shape == "23video" || shape == "masters")
         && let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails")
     {
         for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
             let mut ordered = Map::new();
             let keys: &[&str] = if shape == "23video" {
                 &["id", "url", "width", "height", "filesize"]
+            } else if shape == "masters" {
+                // `MastersIE`'s `{id, url}` image dicts.
+                &["id", "url"]
             } else {
                 &["id", "url", "width", "height"]
             };
