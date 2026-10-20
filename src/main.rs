@@ -1562,6 +1562,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
+    // HttpFD's initial block size and resizing.
+    if let Some(size) = args.buffer_size.as_deref().and_then(parse_bytes) {
+        yt_dlp_rs::BUFFER_SIZE.store(size as usize, Ordering::Relaxed);
+    }
+    yt_dlp_rs::RESIZE_BUFFER.store(!args.no_resize_buffer, Ordering::Relaxed);
     // `--no-match-filters` resets values given before it (optparse store_const).
     let after_reset = |values: &str, reset: &str| -> Vec<String> {
         // Defaulted flags also report an index, so require a command-line source.
@@ -6186,6 +6191,16 @@ struct ActiveDownload {
     downloaded: u64,
     printer: yt_dlp_rs::output::progress::StatusPrinter,
     next: Instant,
+    /// FragmentFD's progress state for fragmented downloads.
+    fragments: Option<FragmentState>,
+}
+
+/// FragmentFD `frag_progress_hook` state: completed fragments, the running
+/// `complete_frags_downloaded_bytes` and the `ProgressCalculator`.
+struct FragmentState {
+    index: u32,
+    complete: u64,
+    calculator: yt_dlp_rs::output::progress::ProgressCalculator,
 }
 
 impl<'a> ProgressReporter<'a> {
@@ -6286,8 +6301,13 @@ impl<'a> ProgressReporter<'a> {
                 !self.options.quiet,
             ),
             next: now,
+            fragments: None,
         });
         active.downloaded = progress.downloaded_bytes;
+        // FragmentFD reports each fragment's HttpFD progress (only).
+        if progress.fragment_count.is_some() && progress.fragment.is_none() {
+            return;
+        }
         // Upstream's HTTP downloader reports after each received block.
         // Nothing is reported before the first data (`ProgressCalculator`
         // ignores empty updates, and HttpFD hooks after each block).
@@ -6299,6 +6319,45 @@ impl<'a> ProgressReporter<'a> {
                 return;
             }
             active.next += delta;
+        }
+        if let (Some(fragment), Some(count)) = (progress.fragment, progress.fragment_count) {
+            let state = active.fragments.get_or_insert_with(|| FragmentState {
+                index: 0,
+                complete: 0,
+                calculator: yt_dlp_rs::output::progress::ProgressCalculator::new(0),
+            });
+            // Upstream's estimate counts the running total (not only the
+            // completed fragments) plus this fragment's length.
+            let estimate = (state.complete as f64 + fragment.total.unwrap_or(0) as f64)
+                / (f64::from(state.index) + 1.0)
+                * f64::from(count);
+            state.calculator.set_total(Some(estimate));
+            state.calculator.update(fragment.downloaded);
+            if fragment.finished {
+                state.index += 1;
+                state.calculator.thread_reset();
+            }
+            state.complete = state.calculator.downloaded;
+            let status = ProgressStatus {
+                downloaded_bytes: state.complete,
+                total_bytes: None,
+                total_bytes_estimate: state.calculator.total(),
+                elapsed: Some(state.calculator.elapsed),
+                speed: state.calculator.speed(),
+                eta: state.calculator.eta(),
+                fragment_index: Some(state.index),
+                fragment_count: Some(count),
+            };
+            let line = if self.options.template.is_some() {
+                self.render(yt_dlp_rs::output::progress::downloading_dict(
+                    &status,
+                    self.filename.as_deref(),
+                ))
+            } else {
+                format!("[download] {}", downloading_line(&status))
+            };
+            let active = self.active.as_mut().expect("active download");
+            return Self::write(&active.printer.print(&line));
         }
         let elapsed = now.duration_since(active.start).as_secs_f64();
         let downloaded = progress.downloaded_bytes as f64;

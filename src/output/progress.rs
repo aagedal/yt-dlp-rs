@@ -58,6 +58,147 @@ pub fn format_percent(percent: Option<f64>) -> String {
     }
 }
 
+/// Upstream `utils.progress.SmoothValue`.
+#[derive(Debug, Clone, Copy)]
+struct SmoothValue {
+    initial: Option<f64>,
+    smooth: Option<f64>,
+    value: Option<f64>,
+    smoothing: f64,
+}
+
+impl SmoothValue {
+    fn new(initial: Option<f64>, smoothing: f64) -> Self {
+        Self {
+            initial,
+            smooth: initial,
+            value: initial,
+            smoothing,
+        }
+    }
+
+    fn set(&mut self, value: f64) {
+        self.value = Some(value);
+        self.smooth = Some(match self.smooth {
+            None => value,
+            Some(smooth) => (1.0 - self.smoothing) * value + self.smoothing * smooth,
+        });
+    }
+
+    fn reset(&mut self) {
+        self.value = self.initial;
+        self.smooth = self.initial;
+    }
+}
+
+/// Upstream `utils.progress.ProgressCalculator` (FragmentFD's progress), for
+/// one downloading thread: sizes are per fragment, reset between them.
+#[derive(Debug, Clone)]
+pub struct ProgressCalculator {
+    pub downloaded: u64,
+    pub elapsed: f64,
+    total: Option<f64>,
+    start: std::time::Instant,
+    last_update: f64,
+    thread_size: u64,
+    times: Vec<f64>,
+    sizes: Vec<u64>,
+    speed: SmoothValue,
+    eta: SmoothValue,
+}
+
+impl ProgressCalculator {
+    const SAMPLING_WINDOW: f64 = 3.0;
+    const SAMPLING_RATE: f64 = 0.05;
+    const GRACE_PERIOD: f64 = 1.0;
+
+    pub fn new(initial: u64) -> Self {
+        Self {
+            downloaded: initial,
+            elapsed: 0.0,
+            total: Some(0.0),
+            start: std::time::Instant::now(),
+            last_update: 0.0,
+            thread_size: 0,
+            times: vec![0.0],
+            sizes: vec![initial],
+            speed: SmoothValue::new(Some(0.0), 0.7),
+            eta: SmoothValue::new(None, 0.9),
+        }
+    }
+
+    pub fn total(&self) -> Option<f64> {
+        self.total
+    }
+
+    /// The `total` setter: never below what was downloaded.
+    pub fn set_total(&mut self, value: Option<f64>) {
+        self.total = match value {
+            Some(value) if value < self.downloaded as f64 => Some(self.downloaded as f64),
+            other => other,
+        };
+    }
+
+    pub fn thread_reset(&mut self) {
+        self.thread_size = 0;
+    }
+
+    pub fn speed(&self) -> Option<f64> {
+        self.speed.smooth
+    }
+
+    pub fn eta(&self) -> Option<f64> {
+        self.eta.smooth
+    }
+
+    /// `update(size)`: this thread's bytes so far.
+    pub fn update(&mut self, size: u64) {
+        if size == 0 {
+            return;
+        }
+        let delta = size.saturating_sub(self.thread_size);
+        self.thread_size = size;
+        let now = self.start.elapsed().as_secs_f64();
+        self.downloaded += delta;
+        self.elapsed = now;
+        if let Some(total) = self.total
+            && self.downloaded as f64 > total
+        {
+            self.total = Some(self.downloaded as f64);
+        }
+        if self.last_update + Self::SAMPLING_RATE > now {
+            return;
+        }
+        self.last_update = now;
+        self.times.push(now);
+        self.sizes.push(self.downloaded);
+        let offset = self
+            .times
+            .partition_point(|time| *time < now - Self::SAMPLING_WINDOW);
+        self.times.drain(..offset);
+        self.sizes.drain(..offset);
+        if self.times.len() < 2 {
+            self.speed.reset();
+            self.eta.reset();
+            return;
+        }
+        let download_time = now - self.times[0];
+        if download_time == 0.0 {
+            return;
+        }
+        self.speed
+            .set((self.downloaded - self.sizes[0]) as f64 / download_time);
+        match (self.total, self.speed.value) {
+            (Some(total), Some(speed))
+                if total != 0.0 && speed != 0.0 && self.elapsed > Self::GRACE_PERIOD =>
+            {
+                self.eta.set((total - self.downloaded as f64) / speed);
+            }
+            _ => self.eta.reset(),
+        }
+    }
+}
+
 /// One `report_progress` status for a download.
 #[derive(Debug, Clone, Copy, Default)]
 pub struct ProgressStatus {

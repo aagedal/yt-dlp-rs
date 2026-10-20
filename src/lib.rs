@@ -53,7 +53,10 @@ pub mod xattr;
 pub use archive::{DownloadArchive, archive_id};
 pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
 pub use cookies::CookieJar;
-pub use download::{DownloadOptions, DownloadPhase, DownloadProgress, MergeFiles, PartFiles};
+pub use download::{
+    BUFFER_SIZE, DownloadOptions, DownloadPhase, DownloadProgress, FragmentBytes, MergeFiles,
+    PartFiles, RESIZE_BUFFER,
+};
 pub use embed_metadata::COMPAT_EMBED_METADATA;
 pub use embed_subtitles::{SubtitleEmbedding, SubtitleFile};
 pub use error::{Error, Result};
@@ -1823,6 +1826,7 @@ impl YoutubeDl {
                     stream_count: Some(count),
                     fragment_index: None,
                     fragment_count: None,
+                    fragment: None,
                 })
                 .is_break()
                 {
@@ -1956,6 +1960,7 @@ impl YoutubeDl {
                 stream_count: Some(count),
                 fragment_index: None,
                 fragment_count: None,
+                fragment: None,
             })
         })?;
         filetime::inherit(&output, oldest);
@@ -1973,6 +1978,7 @@ impl YoutubeDl {
             stream_count: Some(count),
             fragment_index: None,
             fragment_count: None,
+            fragment: None,
         })
         .is_break()
         {

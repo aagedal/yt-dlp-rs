@@ -122,6 +122,7 @@ fn progress(
         stream_count: None,
         fragment_index: None,
         fragment_count: None,
+        fragment: None,
     })
 }
 

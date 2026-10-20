@@ -523,3 +523,35 @@ fn destination_created_during_publication_is_preserved_and_temp_is_removed() {
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
     assert_eq!(server.requests().len(), 2);
 }
+
+#[test]
+fn cli_progress_follows_httpfd_block_sizes() {
+    let server = Server::start(|_| Response::media());
+    let percents = |args: &[&str]| -> Vec<String> {
+        let directory = tempfile::tempdir().unwrap();
+        let output = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--newline", "-o", "clip.mp4"])
+            .args(args)
+            .arg(&server.url)
+            .current_dir(directory.path())
+            .output()
+            .unwrap();
+        String::from_utf8(output.stdout)
+            .unwrap()
+            .lines()
+            .filter_map(|line| line.strip_prefix("[download] "))
+            .filter(|line| line.contains("% of ") && !line.starts_with("100% "))
+            .map(|line| line.split_whitespace().next().unwrap().to_owned())
+            .collect()
+    };
+    // `data.read(block_size)` with a fixed block of 5 bytes.
+    assert_eq!(
+        percents(&["--buffer-size", "5", "--no-resize-buffer"]),
+        ["35.7%", "71.4%", "100.0%"]
+    );
+    // `best_block_size` doubles the block on a fast link: 2, 4, then 8 bytes.
+    assert_eq!(
+        percents(&["--buffer-size", "2"]),
+        ["14.3%", "42.9%", "100.0%"]
+    );
+}

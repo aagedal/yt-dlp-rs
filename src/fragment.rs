@@ -21,9 +21,15 @@ struct Reporter<'a> {
     count: u32,
     /// `--limit-rate`, applied per fragment request like upstream.
     rate_limit: Option<u64>,
+    /// The current fragment's HttpFD progress, reported with its data.
+    fragment: Option<crate::FragmentBytes>,
 }
 impl Reporter<'_> {
     fn report(&mut self, phase: DownloadPhase, bytes: u64) -> Result<()> {
+        let fragment = self
+            .fragment
+            .take()
+            .filter(|_| phase == DownloadPhase::Downloading);
         if (self.callback)(DownloadProgress {
             attempt: self.attempt,
             downloaded_bytes: bytes,
@@ -33,6 +39,7 @@ impl Reporter<'_> {
             stream_count: None,
             fragment_index: Some(self.index),
             fragment_count: Some(self.count),
+            fragment,
         })
         .is_break()
         {
@@ -201,6 +208,7 @@ pub(crate) fn download(
         index: start as u32 + 1,
         count: info.fragments.len() as u32,
         rate_limit: options.rate_limit,
+        fragment: None,
     };
     // Upstream `--keep-fragments`: `TMPFILENAME-FragN` beside the output.
     let keep = keep_fragments.then(|| part_path.as_os_str().to_owned());
@@ -265,6 +273,13 @@ pub(crate) fn download(
                     &mut stored,
                     &mut reporter,
                 )? {
+                    // HttpFD's `finished` status for the fragment.
+                    reporter.fragment = Some(crate::FragmentBytes {
+                        downloaded: stored - prefix,
+                        total: Some(stored - prefix),
+                        finished: true,
+                    });
+                    reporter.report(DownloadPhase::Downloading, stored)?;
                     filetime = crate::filetime::filetime(modified.as_deref()).or(filetime);
                     if keep.is_some() {
                         let mut file = fs::File::open(&output_path)?;
@@ -441,6 +456,7 @@ fn download_concurrent(
                         index: index as u32 + 1,
                         count: count as u32,
                         rate_limit: options.rate_limit,
+                        fragment: None,
                     };
                     let result = (|| {
                         let mut file = tempfile::Builder::new()
@@ -583,35 +599,42 @@ fn fetch(
             .map(|()| modified);
     }
     let mut received = 0_u64;
-    // Buffer enough leading bytes to recognize split HTML/manifest responses
-    // even when a server omits Content-Type or sends one byte per network read.
-    let mut prefix = Vec::new();
-    response
-        .by_ref()
-        .take(512)
-        .read_to_end(&mut prefix)
-        .map_err(|error| body_failure(Error::Io(error)))?;
-    sniff(&prefix)?;
+    // HttpFD's blocks; enough leading bytes are buffered to recognize split
+    // HTML/manifest responses before anything is written.
     let mut limiter = crate::download::RateLimit::new(reporter.rate_limit);
-    append(file, &prefix, stored, &mut received, expected, reporter)?;
-    limiter.consume(prefix.len());
-    let mut buffer = [0; 64 * 1024];
+    let mut blocks = crate::download::Blocks::new();
+    let mut pending: Option<Vec<u8>> = Some(Vec::new());
     loop {
-        let count = match response.read(&mut buffer) {
-            Ok(0) => break,
-            Ok(count) => count,
-            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
-            Err(error) => return Err(body_failure(Error::Io(error))),
-        };
+        let block = blocks
+            .read(&mut response, None)
+            .map_err(|error| body_failure(Error::Io(error)))?
+            .to_vec();
+        let count = block.len();
         limiter.consume(count);
-        append(
-            file,
-            &buffer[..count],
-            stored,
-            &mut received,
-            expected,
-            reporter,
-        )?;
+        blocks.finished(count);
+        let data = match &mut pending {
+            Some(buffered) => {
+                buffered.extend_from_slice(&block);
+                if buffered.len() < 512 && count > 0 {
+                    continue;
+                }
+                sniff(&buffered[..buffered.len().min(512)])?;
+                pending.take().unwrap()
+            }
+            None if count == 0 => break,
+            None => block,
+        };
+        if !data.is_empty() {
+            reporter.fragment = Some(crate::FragmentBytes {
+                downloaded: received + data.len() as u64,
+                total: expected,
+                finished: false,
+            });
+            append(file, &data, stored, &mut received, expected, reporter)?;
+        }
+        if count == 0 {
+            break;
+        }
     }
     if let Some(expected) = expected
         && received != expected

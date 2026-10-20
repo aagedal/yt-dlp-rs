@@ -170,6 +170,7 @@ fn checkpoint(
         stream_count: None,
         fragment_index: None,
         fragment_count: None,
+        fragment: None,
     })
 }
 fn probe_path(downloader: &YoutubeDl) -> Result<PathBuf> {

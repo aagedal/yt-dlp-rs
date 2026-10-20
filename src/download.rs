@@ -45,6 +45,102 @@ pub struct DownloadProgress {
     /// One-based fragment position in the finite selected playlist.
     pub fragment_index: Option<u32>,
     pub fragment_count: Option<u32>,
+    /// The current fragment's own bytes, as its HttpFD reports them.
+    pub fragment: Option<FragmentBytes>,
+}
+
+/// One fragment's HttpFD progress: bytes so far and its total (the
+/// response length; its size once finished).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FragmentBytes {
+    pub downloaded: u64,
+    pub total: Option<u64>,
+    pub finished: bool,
+}
+
+/// `--buffer-size` (upstream `buffersize`, default 1024).
+pub static BUFFER_SIZE: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(1024);
+/// `--no-resize-buffer` clears this (upstream `noresizebuffer`).
+pub static RESIZE_BUFFER: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(true);
+
+/// HttpFD's reads: `data.read(block_size)` returns a full block (urllib's
+/// buffered read) until the end, and each loop run resizes the block with
+/// `best_block_size(elapsed, len(block))`.
+pub(crate) struct Blocks {
+    size: usize,
+    resize: bool,
+    before: std::time::Instant,
+    buffer: Vec<u8>,
+    /// A read error after part of a block, returned by the next read.
+    pending: Option<std::io::Error>,
+}
+
+impl Blocks {
+    pub(crate) fn new() -> Self {
+        use std::sync::atomic::Ordering::Relaxed;
+        Self {
+            size: BUFFER_SIZE.load(Relaxed).max(1),
+            resize: RESIZE_BUFFER.load(Relaxed),
+            before: std::time::Instant::now(),
+            buffer: Vec::new(),
+            pending: None,
+        }
+    }
+
+    /// The next block (at most `limit` bytes); empty at the end.
+    pub(crate) fn read(
+        &mut self,
+        reader: &mut impl Read,
+        limit: Option<u64>,
+    ) -> std::io::Result<&[u8]> {
+        if let Some(error) = self.pending.take() {
+            return Err(error);
+        }
+        let want = limit.map_or(self.size, |limit| self.size.min(limit as usize));
+        self.buffer.resize(want, 0);
+        let mut filled = 0;
+        while filled < want {
+            match reader.read(&mut self.buffer[filled..]) {
+                Ok(0) => break,
+                Ok(count) => filled += count,
+                Err(error) if error.kind() == std::io::ErrorKind::Interrupted => {}
+                Err(error) if filled > 0 => {
+                    // Keep the data read so far; report the error next.
+                    self.pending = Some(error);
+                    break;
+                }
+                Err(error) => return Err(error),
+            }
+        }
+        Ok(&self.buffer[..filled])
+    }
+
+    /// The end of one loop run (after writing and rate limiting).
+    pub(crate) fn finished(&mut self, length: usize) {
+        let now = std::time::Instant::now();
+        if self.resize {
+            self.size = best_block_size(now.duration_since(self.before).as_secs_f64(), length);
+        }
+        self.before = now;
+    }
+}
+
+/// Upstream `FileDownloader.best_block_size`.
+fn best_block_size(elapsed: f64, bytes: usize) -> usize {
+    let bytes = bytes as f64;
+    let new_min = (bytes / 2.0).max(1.0);
+    let new_max = (bytes * 2.0).clamp(1.0, 4_194_304.0);
+    if elapsed < 0.001 {
+        return new_max as usize;
+    }
+    let rate = bytes / elapsed;
+    if rate > new_max {
+        new_max as usize
+    } else if rate < new_min {
+        new_min as usize
+    } else {
+        rate as usize
+    }
 }
 
 struct Reporter<'a> {
@@ -64,6 +160,7 @@ impl Reporter<'_> {
             stream_count: None,
             fragment_index: None,
             fragment_count: None,
+            fragment: None,
         }) {
             ControlFlow::Continue(()) => Ok(()),
             ControlFlow::Break(()) => Err(Error::DownloadCancelled),
@@ -598,6 +695,7 @@ fn join_subtitle_fragments(
                     total_bytes: None,
                     fragment_index: Some(index as u32 + 1),
                     fragment_count: Some(fragments.len() as u32),
+                    fragment: None,
                     ..progress
                 })
             },
@@ -631,6 +729,7 @@ fn join_subtitle_fragments(
         stream_count: None,
         fragment_index: None,
         fragment_count: None,
+        fragment: None,
     })
     .is_break()
     {
@@ -983,24 +1082,23 @@ fn chunked_attempt(
         reporter.total = whole;
         reporter.report(DownloadPhase::Downloading, *actual)?;
         let mut limiter = RateLimit::new(resource.rate_limit);
-        let mut buffer = [0; 64 * 1024];
+        let mut blocks = Blocks::new();
         loop {
-            let want = data_len.map_or(buffer.len() as u64, |length| {
-                length.saturating_sub(*actual).min(buffer.len() as u64)
-            }) as usize;
-            if want == 0 {
+            let limit = data_len.map(|length| length.saturating_sub(*actual));
+            if limit == Some(0) {
                 break;
             }
-            let count = match response.read(&mut buffer[..want]) {
-                Ok(0) => break,
-                Ok(count) => count,
-                Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+            let block = match blocks.read(&mut response, limit) {
+                Ok([]) => break,
+                Ok(block) => block,
                 Err(error) => return Err(AttemptFailure::retry(Error::Io(error))),
             };
-            temporary.write_all(&buffer[..count])?;
+            let count = block.len();
+            temporary.write_all(block)?;
             *actual += count as u64;
-            reporter.report(DownloadPhase::Downloading, *actual)?;
             limiter.consume(count);
+            blocks.finished(count);
+            reporter.report(DownloadPhase::Downloading, *actual)?;
         }
         if !chunk.test
             && let Some(length) = content_len
@@ -1137,25 +1235,26 @@ fn download_attempt(
     reporter.total = expected;
     reporter.report(DownloadPhase::Downloading, *actual)?;
     let mut limiter = RateLimit::new(resource.rate_limit);
-    let mut buffer = [0; 64 * 1024];
+    let mut blocks = Blocks::new();
     loop {
         // Separate network reads from filesystem writes: only the former retry.
-        let count = match response.read(&mut buffer) {
-            Ok(0) => break,
-            Ok(count) => count,
-            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+        let block = match blocks.read(&mut response, None) {
+            Ok([]) => break,
+            Ok(block) => block,
             Err(error) => return Err(AttemptFailure::retry(Error::Io(error))),
         };
+        let count = block.len();
         let next = actual
             .checked_add(count as u64)
             .ok_or(Error::InvalidRangeResponse)?;
         if expected.is_some_and(|expected| next > expected) {
             return Err(Error::InvalidRangeResponse.into());
         }
-        temporary.write_all(&buffer[..count])?;
+        temporary.write_all(block)?;
         *actual = next;
-        reporter.report(DownloadPhase::Downloading, *actual)?;
         limiter.consume(count);
+        blocks.finished(count);
+        reporter.report(DownloadPhase::Downloading, *actual)?;
     }
     if let Some(expected) = expected
         && *actual != expected
