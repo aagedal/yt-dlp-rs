@@ -286,6 +286,8 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     let extractor: &[(&str, Set)] = match shape {
         // `FczenitIE`'s quality.
         "fczenit" => &[("format_id", Take), ("url", Take), ("height", Assign)],
+        // `CJSWIE`'s audio.
+        "cjsw" => &[("url", Take), ("ext", Take), ("vcodec", Take)],
         // `BildIE`'s MP4 source.
         "bild" => &[("url", Take), ("format_id", Take)],
         // `BloggerIE`'s stream.
@@ -1127,6 +1129,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("duration", Take),
             ("tags", Assign),
             ("categories", List),
+        ],
+        // `CJSWIE._real_extract`'s dict.
+        "cjsw" => &[
+            ("id", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("formats", Take),
+            ("series", Take),
+            ("episode_id", Take),
         ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[

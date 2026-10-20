@@ -383,6 +383,11 @@ upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
 format IDs), the iframe ID as ID and title, the thumbnail and the first
 stream's `dur`; its `_EMBED_REGEX` iframes join the generic embed detection.
 
+CJSW episodes (`cjsw.com/program/PROGRAM/episode/ID`) follow upstream
+`CJSWIE`: the fatal episode heading (else `data-audio-title`) and audio button
+source, the source's UUID ID (else `PROGRAM/ID`), the first paragraph as the
+description, `data-showname` (else the program) series and the episode ID.
+
 CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 `USER-ID` ID, the cached replay JSON's title (else the generic title), `user`
 (else the URL user) uploader, `unified_strdate` date, raw duration and
