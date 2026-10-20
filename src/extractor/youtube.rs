@@ -152,6 +152,53 @@ fn valid_id(id: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
 }
 
+/// `YoutubeIE._EMBED_REGEX` through the default `_extract_embed_urls`:
+/// matches unescaped, joined to `url`, kept when suitable, without repeats.
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    static PATTERNS: std::sync::LazyLock<[regex::Regex; 2]> = std::sync::LazyLock::new(|| {
+        let quoted = |q: &str| {
+            format!(
+                r#"{q}(?P<u{}>(?:https?:)?//(?:www\.)?youtube(?:-nocookie)?\.com/(?:embed|v|p)/[0-9A-Za-z_-]{{11}}[^\n]*?){q}"#,
+                if q == "\"" { 1 } else { 2 }
+            )
+        };
+        [
+            regex::Regex::new(&format!(
+                r#"(?:<(?:[0-9A-Za-z-]+?)?iframe[^>]+?src=|data-video-url=|<embed[^>]+?src=|embedSWF\(?:\s*|<object[^>]+data=|new\s+SWFObject\()(?:{}|{})"#,
+                quoted("\""),
+                quoted("'")
+            ))
+            .expect("static pattern"),
+            regex::Regex::new(
+                r#"(?s)<a\s[^>]*\bhref="(?P<u1>https://www\.youtube\.com/watch\?v=[0-9A-Za-z_-]{11})"\s[^>]*\bclass="[^"]*\blazy-load-youtube"#,
+            )
+            .expect("static pattern"),
+        ]
+    });
+    let mut found: Vec<Url> = Vec::new();
+    for regex in PATTERNS.iter() {
+        for captures in regex.captures_iter(webpage) {
+            let Some(group) = captures.name("u1").or_else(|| captures.name("u2")) else {
+                continue;
+            };
+            let Ok(embed) = url.join(&crate::html::unescape_html(group.as_str())) else {
+                continue;
+            };
+            if suitable(embed.as_str()) && !found.contains(&embed) {
+                found.push(embed);
+            }
+        }
+    }
+    found
+}
+
+/// `_match_id`'s ID of a suitable URL.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    Url::parse(url)
+        .ok()
+        .and_then(|url| video_id(&url, false).ok().flatten())
+}
+
 /// Upstream `YoutubeIE.suitable`: a supported single-video URL.
 pub fn suitable(url: &str) -> bool {
     Url::parse(url).is_ok_and(|url| matches!(video_id(&url, false), Ok(Some(_))))

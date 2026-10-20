@@ -120,3 +120,29 @@ fn hds_downloads_assemble_flv_like_upstream_f4mfd() {
     expected.extend(b"TAG2".repeat(50));
     assert_eq!(std::fs::read(work.path().join("o.flv")).unwrap(), expected);
 }
+
+#[test]
+fn a_single_youtube_embed_is_followed_by_the_youtube_extractor() {
+    // Upstream's `url_result(embed)`: the configured YouTube extractor
+    // requests the watch page (which this fixture does not serve).
+    let proxy = site_proxy::SiteProxy::start("youtube-embeds");
+    let work = tempfile::tempdir().unwrap();
+    Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "--proxy",
+            &proxy.url,
+            "--no-check-certificate",
+        ])
+        .args(["-s", "https://blog.example.test/one"])
+        .current_dir(work.path())
+        .output()
+        .unwrap();
+    let requests = proxy.requests.lock().unwrap();
+    assert!(
+        requests
+            .iter()
+            .any(|url| url == "https://www.youtube.com/watch?v=BaW_jenozKc"),
+        "{requests:?}"
+    );
+}

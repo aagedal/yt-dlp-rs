@@ -967,7 +967,16 @@ impl GenericHttp {
         embeds: Vec<(&'static EmbedSite, Url)>,
     ) -> Result<Option<ExtractResult>> {
         if let [(site, embed)] = embeds.as_slice() {
-            return site.extractor.extract_result(client, embed);
+            if let Some(extractor) = site.extractor {
+                return extractor.extract_result(client, embed);
+            }
+            // `url_result(embed)`: followed by the downloader.
+            let mut info = direct::build_at(embed.clone(), embed, String::new());
+            info.formats.clear();
+            info.direct = None;
+            info.extra
+                .insert(crate::FOLLOW_URL.into(), embed.as_str().into());
+            return Ok(Some(ExtractResult::Video(info)));
         }
         let entries = embeds
             .into_iter()
@@ -1842,32 +1851,41 @@ fn xspf_playlist(
 pub(crate) struct EmbedSite {
     name: &'static str,
     key: &'static str,
-    extractor: &'static dyn super::Extractor,
+    /// `None`: a configured extractor (YouTube), followed through
+    /// [`crate::YoutubeDl`]'s registry.
+    extractor: Option<&'static dyn super::Extractor>,
     embed_urls: fn(&Url, &str) -> Vec<Url>,
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 3] = [
+static EMBED_SITES: [EmbedSite; 4] = [
     EmbedSite {
         name: "JWPlatform",
         key: "JWPlatform",
-        extractor: &super::jwplatform::JwPlatform,
+        extractor: Some(&super::jwplatform::JwPlatform),
         embed_urls: super::jwplatform::embed_urls,
         temp_id: super::jwplatform::temp_id,
     },
     EmbedSite {
         name: super::megaphone::NAME,
         key: super::megaphone::KEY,
-        extractor: &super::megaphone::Megaphone,
+        extractor: Some(&super::megaphone::Megaphone),
         embed_urls: super::megaphone::embed_urls,
         temp_id: super::megaphone::temp_id,
     },
     EmbedSite {
         name: "Streamable",
         key: "Streamable",
-        extractor: &super::streamable::Streamable,
+        extractor: Some(&super::streamable::Streamable),
         embed_urls: super::streamable::embed_urls,
         temp_id: super::streamable::temp_id,
+    },
+    EmbedSite {
+        name: "youtube",
+        key: "Youtube",
+        extractor: None,
+        embed_urls: super::youtube::embed_urls,
+        temp_id: super::youtube::temp_id,
     },
 ];
 

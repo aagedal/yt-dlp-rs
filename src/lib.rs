@@ -301,6 +301,10 @@ pub fn parse_duration(text: &str) -> Option<PyNumber> {
 /// [`YoutubeDl::resolve_entry`]).
 pub(crate) const TRANSPARENT: &str = "__yt_dlp_rs_url_transparent";
 
+/// A `url` result an extractor returns for the downloader to follow with
+/// every registered extractor (a configured one, like YouTube's).
+pub(crate) const FOLLOW_URL: &str = "__yt_dlp_rs_follow_url";
+
 /// Upstream `bug_reports_message()` after a lowercase-ending text.
 pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U";
 
@@ -2007,6 +2011,15 @@ impl YoutubeDl {
         };
         for extractor in extractors {
             if let Some(mut info) = extractor.extract_result(&self.client, url)? {
+                if let ExtractResult::Video(video) = &info
+                    && let Some(target) = video
+                        .extra
+                        .get(FOLLOW_URL)
+                        .and_then(serde_json::Value::as_str)
+                {
+                    let target = Url::parse(target)?;
+                    return self.extract_once_with(&target, before_processing);
+                }
                 before_processing(&mut info)?;
                 self.process_result(&mut info)?;
                 return Ok(info);

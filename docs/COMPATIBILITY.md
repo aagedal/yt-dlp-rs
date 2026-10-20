@@ -428,7 +428,10 @@ information of song ID`) as an untyped `mp3` audio-only result with the artist
 as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
 `qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
 
-On generic pages, the embeds of JW Platform, Megaphone and Streamable, in
+On generic pages, the embeds of JW Platform, Megaphone, Streamable and YouTube
+(`YoutubeIE._EMBED_REGEX`: iframe/embed/object/SWFObject/`data-video-url`
+`youtube[-nocookie].com/embed|v|p/ID` URLs and lazy-load watch links, kept when
+this port's YouTube extractor accepts them), in
 upstream extractor order (each HTML-unescaped, joined to the page URL,
 suitable and unique, with `Identified N NAME embed(s)` debug lines), are `url`
 results like upstream `_extract_embeds`: one is followed (`original_url` stays
