@@ -316,6 +316,18 @@
       "scope": "GodTubeIE (_WORKING = False warning and listing) player config/media XML extraction compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "graspop",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/graspop.py"
+      ],
+      "rust": [
+        "src/extractor/graspop.rs",
+        "tests/fixtures/sites/graspop/"
+      ],
+      "scope": "GraspopIE festival stream (http: HLS manifest as fatal formats, name/poster traversal, generic title, KeyError messages) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "historicfilms",
       "status": "partial",
       "upstream": [

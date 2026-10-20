@@ -1097,6 +1097,14 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         ],
         // `KommunetvIE._real_extract`'s dict.
         "kommunetv" => &[("id", Take), ("formats", Take), ("title", Take)],
+        // `GraspopIE._real_extract`'s dict.
+        "graspop" => &[
+            ("id", Take),
+            ("formats", Take),
+            ("title", Take),
+            ("thumbnail", Take),
+        ],
+        "graspop-untitled" => &[("id", Take), ("formats", Take), ("thumbnail", Take)],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
             ("id", Take),

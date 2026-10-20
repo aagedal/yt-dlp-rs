@@ -86,7 +86,7 @@ Supported today:
   (and Filmweb articles that embed them), Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Sen videos, Kommunetv archives,
-  plus
+  Graspop concerts, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

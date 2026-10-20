@@ -427,6 +427,11 @@ warning) follow upstream `GodTubeIE`: the player config XML (`Downloading
 player config XML`: file, author, ISO 8601 date, duration, image) and media
 XML title (`Downloading media XML`) as an untyped result.
 
+Graspop concerts (`vod.graspop.be/LL/ID/`) follow upstream `GraspopIE`: the
+Proximus festival stream's `source.assetUri` over `http:` as fatal HLS
+formats, the string `name` title (else the generic title) and the URL-valued
+`source.poster` thumbnail, with upstream's `KeyError` messages.
+
 HistoricFilms tapes (`historicfilms.com/tapes/ID`, `/playID`) follow upstream
 `HistoricFilmsIE`: the fatal tape ID, OpenGraph title/description, the
 `thumbnailUrl` meta or OpenGraph image, the `duration` meta through
