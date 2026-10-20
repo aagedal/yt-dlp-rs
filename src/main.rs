@@ -2286,6 +2286,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.source_address
     };
     http_options.validate()?;
+    let external_source_address = http_options.source_address.clone();
     if let Some(spec) = &browser_cookies {
         // Upstream `load_cookies`: browser cookies, then the cookie file's.
         let extracted = yt_dlp_rs::browser_cookies::extract(spec);
@@ -2670,11 +2671,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .file_stem()
             .map(|stem| stem.to_string_lossy().to_lowercase())
             .unwrap_or_default();
-        let ffmpeg = if name == "native" {
-            false
-        } else if base.contains("ffmpeg") || base.contains("avconv") {
-            true
-        } else {
+        if name != "native" && !(base.contains("ffmpeg") || base.contains("avconv")) {
             let known = ["aria2c", "axel", "curl", "httpie", "http", "wget"]
                 .iter()
                 .any(|exe| base.contains(exe));
@@ -2685,15 +2682,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             if !known {
                 return Err(usage(format!("No such {proto}external downloader \"{name}\"")).into());
             }
-            // Upstream falls back to its native downloaders when the tool
-            // cannot download; this port has no other external downloaders.
-            warning!(
-                "WARNING: {proto}external downloader \"{name}\" is not supported natively; using the native downloader"
-            );
-            false
-        };
+        }
         for key in keys {
-            downloader = downloader.with_downloader(&key, ffmpeg);
+            downloader = downloader.with_downloader_name(&key, name);
         }
     }
     // Upstream `--downloader-args` (shlex-split, by downloader key).
@@ -2739,6 +2730,28 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     for (key, parts) in downloader_args {
         downloader = downloader.with_downloader_args(&key, parts);
     }
+    // The external downloaders' `params`.
+    downloader = downloader.with_external_settings(yt_dlp_rs::ExternalSettings {
+        no_progress: if args.no_progress {
+            true
+        } else if args.progress {
+            false
+        } else {
+            QUIET.load(Ordering::Relaxed)
+        },
+        continue_download: !args.no_continue,
+        update_time: if args.mtime {
+            Some(true)
+        } else if args.no_mtime {
+            Some(false)
+        } else {
+            None
+        },
+        source_address: external_source_address,
+        no_check_certificate: args.no_check_certificates,
+        cookie_file: args.cookies.clone(),
+        ..Default::default()
+    });
     // Upstream `--postprocessor-args` (shlex-split, by postprocessor key).
     let mut postprocessor_args: std::collections::HashMap<String, Vec<String>> = Default::default();
     // optparse names the option as given.

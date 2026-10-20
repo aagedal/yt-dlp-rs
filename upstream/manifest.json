@@ -742,9 +742,11 @@
       "rust": [
         "src/sections.rs",
         "src/ffmpeg_fd.rs",
+        "src/external_fd.rs",
+        "tests/external_downloaders.rs",
         "tests/sections.rs"
       ],
-      "scope": "--download-sections ranges, chapters and from-url through upstream's FFmpegFD, plus --downloader ffmpeg"
+      "scope": "--download-sections ranges, chapters and from-url through upstream's FFmpegFD, plus --downloader ffmpeg and the CurlFD/WgetFD/Aria2cFD/AxelFD/HttpieFD whole-file command lines (no external fragment downloads)"
     },
     {
       "name": "ffmpeg-fixups",

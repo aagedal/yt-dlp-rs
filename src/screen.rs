@@ -306,6 +306,22 @@ pub(crate) fn truncate_string(text: &str, left: usize, right: usize) -> String {
 
 /// Upstream `_debug_cmd`/`real_run_ffmpeg`: `ffmpeg command line: …` with
 /// the shell-quoted executable and arguments.
+/// `_debug_cmd(args)`: `EXE command line: ARGS` with `basename(args[0])`.
+pub(crate) fn debug_named_command(executable: &str, args: &[std::ffi::OsString]) {
+    if !verbose() {
+        return;
+    }
+    let name = std::path::Path::new(executable)
+        .file_name()
+        .map(|name| name.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let quoted: Vec<String> = std::iter::once(executable.to_owned())
+        .chain(args.iter().map(|arg| arg.to_string_lossy().into_owned()))
+        .map(|arg| crate::output::exec::shell_quote(&arg))
+        .collect();
+    debug(&format!("{name} command line: {}", quoted.join(" ")));
+}
+
 pub(crate) fn debug_command(executable: &std::path::Path, args: &[std::ffi::OsString]) {
     if !verbose() {
         return;

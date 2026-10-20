@@ -14,6 +14,7 @@ mod download;
 mod embed_metadata;
 mod embed_subtitles;
 mod error;
+mod external_fd;
 pub mod extractor;
 mod ffmpeg_fd;
 mod filetime;
@@ -148,8 +149,22 @@ pub struct YoutubeDl {
     /// `--enable-file-urls`.
     enable_file_urls: bool,
     /// `--downloader [PROTO:]NAME` choices by simplified protocol (`default`
-    /// for the rest): `true` selects FFmpegFD, `false` the native downloaders.
-    downloaders: std::collections::HashMap<String, bool>,
+    /// for the rest): `native`, FFmpeg (`ffmpeg`/`avconv` names or paths) or
+    /// an external downloader name or path.
+    downloaders: std::collections::HashMap<String, String>,
+    /// The external downloaders' parameters.
+    external_settings: external_fd::ExternalSettings,
+}
+
+pub use external_fd::ExternalSettings;
+
+/// Upstream `get_external_downloader` names FFmpegFD/AVconvFD.
+fn is_ffmpeg_name(name: &str) -> bool {
+    let base = Path::new(name)
+        .file_stem()
+        .map(|stem| stem.to_string_lossy().to_lowercase())
+        .unwrap_or_default();
+    name != "native" && (base.contains("ffmpeg") || base.contains("avconv"))
 }
 
 /// `info_dict.get('is_live')` (from `live_status`).
@@ -413,6 +428,7 @@ impl YoutubeDl {
             keep_fragments: false,
             enable_file_urls: false,
             downloaders: Default::default(),
+            external_settings: Default::default(),
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
@@ -899,8 +915,11 @@ impl YoutubeDl {
         if !(ffmpeg_fd || info.requested_formats.is_empty()) {
             return;
         }
+        let external = self.external_downloader(info, Path::new(""));
         let name = if ffmpeg_fd {
             "ffmpeg"
+        } else if let Some(external) = &external {
+            external.basename()
         } else if info
             .protocol
             .as_deref()
@@ -998,15 +1017,65 @@ impl YoutubeDl {
 
     /// `--downloader`: `ffmpeg` (FFmpegFD) or `native` per simplified
     /// protocol key (`http`, `ftp`, `m3u8`, `dash`, `rtmp`, `default`).
-    pub fn with_downloader(mut self, protocol: &str, ffmpeg: bool) -> Self {
-        self.downloaders.insert(protocol.to_owned(), ffmpeg);
+    pub fn with_downloader(self, protocol: &str, ffmpeg: bool) -> Self {
+        self.with_downloader_name(protocol, if ffmpeg { "ffmpeg" } else { "native" })
+    }
+
+    /// `--downloader [PROTO:]NAME` with the given name or path (`native`,
+    /// `ffmpeg`, `curl`, `wget`, `aria2c`, `axel`, `httpie`, ...).
+    pub fn with_downloader_name(mut self, protocol: &str, name: &str) -> Self {
+        self.downloaders
+            .insert(protocol.to_owned(), name.to_owned());
         self
+    }
+
+    /// Parameters for the external downloaders (`--downloader-args` are
+    /// added by [`Self::with_downloader_args`]).
+    pub fn with_external_settings(mut self, settings: ExternalSettings) -> Self {
+        let args = std::mem::take(&mut self.external_settings.args);
+        self.external_settings = ExternalSettings { args, ..settings };
+        self
+    }
+
+    /// The `--downloader` name for a protocol.
+    fn downloader_name(&self, protocol: &str) -> Option<&str> {
+        self.downloaders
+            .get(simplify_protocol(protocol))
+            .or_else(|| self.downloaders.get("default"))
+            .map(String::as_str)
+    }
+
+    /// Upstream `_get_suitable_downloader`'s external downloader for a
+    /// single-format download (`ed.can_download(info_dict, name)`).
+    fn external_downloader(
+        &self,
+        info: &VideoInfo,
+        destination: &Path,
+    ) -> Option<external_fd::Available> {
+        if !info.requested_formats.is_empty() || self.uses_ffmpeg_fd(info) {
+            return None;
+        }
+        let protocol = info
+            .protocol
+            .clone()
+            .unwrap_or_else(|| info.url.scheme().to_owned());
+        let name = self.downloader_name(&protocol)?;
+        if name.eq_ignore_ascii_case("native") || is_ffmpeg_name(name) {
+            return None;
+        }
+        let to_stdout = destination == Path::new("-");
+        external_fd::supports(info, &protocol, to_stdout)
+            .then(|| external_fd::available(name))
+            .flatten()
     }
 
     /// `--downloader-args NAME:ARGS` for FFmpegFD (`ffmpeg`, `ffmpeg_o`,
     /// `ffmpeg_oN`, `ffmpeg_i`, `ffmpeg_iN`, `default`).
     pub fn with_downloader_args(mut self, key: &str, args: Vec<String>) -> Self {
-        self.ffmpeg_settings.args.insert(key.to_lowercase(), args);
+        self.ffmpeg_settings
+            .args
+            .insert(key.to_lowercase(), args.clone());
+        self.external_settings.args.insert(key.to_lowercase(), args);
         self
     }
 
@@ -1022,14 +1091,21 @@ impl YoutubeDl {
         if sections::is_partial(info) {
             return true;
         }
-        // `_get_suitable_downloader`: live HLS uses FFmpegFD.
-        let hls = |protocol: &str| protocol.starts_with("m3u8");
+        // `_get_suitable_downloader`: live HLS uses FFmpegFD, as does live
+        // DASH unless the downloader is `native`.
+        let live = |protocol: &str| {
+            protocol.starts_with("m3u8")
+                || (protocol == "http_dash_segments"
+                    && !self
+                        .downloader_name(protocol)
+                        .is_some_and(|name| name.eq_ignore_ascii_case("native")))
+        };
         if is_live(info)
-            && (info.protocol.as_deref().is_some_and(hls)
+            && (info.protocol.as_deref().is_some_and(live)
                 || info
                     .requested_formats
                     .iter()
-                    .any(|format| hls(&format.determine_protocol())))
+                    .any(|format| live(&format.determine_protocol())))
         {
             return true;
         }
@@ -1045,13 +1121,9 @@ impl YoutubeDl {
                 .map(VideoFormat::determine_protocol)
                 .collect()
         };
-        protocols.iter().all(|protocol| {
-            self.downloaders
-                .get(simplify_protocol(protocol))
-                .or_else(|| self.downloaders.get("default"))
-                .copied()
-                .unwrap_or(false)
-        })
+        protocols
+            .iter()
+            .all(|protocol| self.downloader_name(protocol).is_some_and(is_ffmpeg_name))
     }
 
     /// Upstream `check_formats`.
@@ -1655,6 +1727,21 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
+        if let Some(external) = self.external_downloader(info, destination.as_ref()) {
+            let params = external_fd::Params {
+                settings: &self.external_settings,
+                cookies: &self.cookies,
+                proxy: self.proxy.as_deref(),
+                options: &options,
+            };
+            return external_fd::download(
+                &external,
+                &params,
+                info,
+                destination.as_ref(),
+                &mut callback,
+            );
+        }
         if !info.requested_formats.is_empty() {
             return self.download_merged(info, destination.as_ref(), options, &mut callback);
         }
@@ -1909,6 +1996,18 @@ impl YoutubeDl {
                 }
                 None => {
                     part.extra.remove("format_index");
+                }
+            }
+            // `new_info.update(fmt)`: the format's request headers.
+            match &stream.http_headers {
+                Some(headers) => {
+                    part.extra.insert(
+                        "http_headers".into(),
+                        serde_json::Value::Object(headers.clone()),
+                    );
+                }
+                None => {
+                    part.extra.remove("http_headers");
                 }
             }
             part.filesize = stream.filesize;

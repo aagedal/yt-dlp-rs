@@ -439,6 +439,15 @@ impl CookieJar {
         }
         Ok(text)
     }
+    /// Upstream `_really_save` lines (no header), as curl reads them from stdin.
+    pub(crate) fn netscape_lines(&self) -> Result<String> {
+        Ok(self.snapshot()?.trim_start_matches(HEADER).to_owned())
+    }
+    /// Upstream `cookiejar.get_cookie_header(url)`.
+    pub(crate) fn cookie_header(&self, url: &Url) -> Option<String> {
+        self.cookies(url)
+            .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
+    }
     /// Drain bounded generic warnings produced by response insertion/header limits.
     pub fn take_warnings(&self) -> Vec<String> {
         match self.state.write() {
