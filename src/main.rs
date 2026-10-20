@@ -3246,7 +3246,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         .emit()?;
                         // Upstream `forcejson`: `--dump-json` or `--print-json`.
                         if args.dump_json || args.print_json {
-                            serde_json::to_writer(&mut stdout, &info)?;
+                            // `sanitize_info` of the dict `process_info` has given
+                            // `_filename`/`filename`; `epoch` and `_type` default.
+                            let mut value = serde_json::to_value(&info)?;
+                            if let Some(object) = value.as_object_mut() {
+                                if let Some(index) = info.last_playlist_index {
+                                    object.insert("__last_playlist_index".into(), index.into());
+                                }
+                                if let Ok(filename) = &print_filename {
+                                    object.insert("_filename".into(), filename.clone().into());
+                                    object.insert("filename".into(), filename.clone().into());
+                                }
+                                object.entry("epoch").or_insert(epoch().into());
+                                object.entry("_type").or_insert("video".into());
+                            }
+                            serde_json::to_writer(&mut stdout, &value)?;
                             writeln!(stdout)?;
                         }
                         // --force-write-archive records simulated or skipped videos.
@@ -4451,7 +4465,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         ) {
             object.insert("entries".into(), entries);
         }
-        if let Some(value) = single_json {
+        if let Some(mut value) = single_json {
+            // `sanitize_info` defaults on the printed result.
+            if let Some(object) = value.as_object_mut() {
+                object.entry("epoch").or_insert(epoch().into());
+                object.entry("_type").or_insert("video".into());
+            }
             serde_json::to_writer(&mut stdout, &value)?;
             writeln!(stdout)?;
         }

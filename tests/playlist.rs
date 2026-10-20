@@ -487,13 +487,36 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
     assert!(entries[0]["format_id"].is_string(), "entries are selected");
     // Only extraction probes; -J implies simulation.
     assert_eq!(server.count("/three.mp4"), 1);
-    // A single video prints the same object as -j, and both flags print both.
+    // A single video prints the -j object without the prepared filenames
+    // (-J simulates), and both flags print both.
     // (A fixed User-Agent keeps the formats' `http_headers` comparable.)
-    let single = success(&server.cli("/one.mp4", &["-J", "--user-agent", "fixture"]));
-    let json = success(&server.cli("/one.mp4", &["-j", "--user-agent", "fixture"]));
-    assert_eq!(single, json);
-    let both = success(&server.cli("/one.mp4", &["-j", "-J", "--user-agent", "fixture"]));
-    assert_eq!(both, format!("{json}{json}"));
+    let parse = |text: &str| -> Vec<Value> {
+        text.lines()
+            .map(|line| {
+                let mut value: Value = serde_json::from_str(line).unwrap();
+                value.as_object_mut().unwrap().remove("epoch");
+                value
+            })
+            .collect()
+    };
+    let single = parse(&success(
+        &server.cli("/one.mp4", &["-J", "--user-agent", "fixture"]),
+    ));
+    let json = parse(&success(
+        &server.cli("/one.mp4", &["-j", "--user-agent", "fixture"]),
+    ));
+    let mut without_names = json[0].clone();
+    for key in ["_filename", "filename"] {
+        assert_eq!(
+            without_names.as_object_mut().unwrap().remove(key).unwrap(),
+            "one [one].mp4"
+        );
+    }
+    assert_eq!(single, [without_names]);
+    let both = parse(&success(
+        &server.cli("/one.mp4", &["-j", "-J", "--user-agent", "fixture"]),
+    ));
+    assert_eq!(both, [json[0].clone(), single[0].clone()]);
 }
 
 #[test]

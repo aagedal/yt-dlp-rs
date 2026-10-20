@@ -226,7 +226,8 @@ fn playlist_padding_uses_selected_original_max_and_selected_count_not_full_count
     for line in String::from_utf8(json.stdout).unwrap().lines() {
         let info: Value = serde_json::from_str(line).unwrap();
         assert!(info.get("last_playlist_index").is_none());
-        assert!(info.get("__last_playlist_index").is_none());
+        // Upstream's dumped dict keeps the private padding key.
+        assert_eq!(info["__last_playlist_index"], 12);
     }
 }
 

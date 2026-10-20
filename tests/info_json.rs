@@ -155,15 +155,13 @@ fn video_info_json_is_cleaned_dumped_metadata_written_before_media() {
     let object = value.as_object_mut().unwrap();
     object.remove("epoch");
     object.remove("_type");
-    // `clean_infojson` drops `original_url`, which `-j` keeps.
+    // `clean_infojson` drops `original_url` and the filenames, which `-j`
+    // keeps; `epoch` and `_type` were compared above.
     let mut dumped = dumped;
-    assert!(
-        dumped
-            .as_object_mut()
-            .unwrap()
-            .remove("original_url")
-            .is_some()
-    );
+    let object = dumped.as_object_mut().unwrap();
+    for key in ["original_url", "_filename", "filename", "epoch", "_type"] {
+        assert!(object.remove(key).is_some(), "{key}");
+    }
     assert_eq!(value, dumped);
     let info = stdout
         .find(&format!(
