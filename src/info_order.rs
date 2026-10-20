@@ -692,6 +692,37 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         ],
         // A media URL found on the page (`_extract_embeds`' patterns), then
         // `merge_dicts(entry, info_dict)`'s page fields.
+        // A found SMIL URL: `{**smil_info, **entry_info_dict}` merged with
+        // the page fields (`None` values dropped).
+        "generic-found-smil" => &[
+            ("id", Take),
+            ("title", Take),
+            ("description", Take),
+            ("upload_date", Take),
+            ("thumbnails", List),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("uploader", Take),
+            ("age_limit", Take),
+            ("http_headers", Take),
+            ("timestamp", Take),
+            ("thumbnail", Take),
+        ],
+        // The same with the page's description (the SMIL file has none).
+        "generic-found-smil-page-description" => &[
+            ("id", Take),
+            ("title", Take),
+            ("upload_date", Take),
+            ("thumbnails", List),
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("uploader", Take),
+            ("age_limit", Take),
+            ("http_headers", Take),
+            ("timestamp", Take),
+            ("description", Take),
+            ("thumbnail", Take),
+        ],
         "generic-found" => &[
             ("id", Take),
             ("uploader", Take),
@@ -954,7 +985,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         replay.loaded(original);
     }
     // `_parse_smil`'s images are `{id, url, width, height}` dicts.
-    if shape == "smil"
+    if shape.contains("smil")
         && let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails")
     {
         for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {

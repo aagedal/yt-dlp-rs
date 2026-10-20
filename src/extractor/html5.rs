@@ -671,7 +671,7 @@ impl Extractor for GenericHttp {
             return Ok(Some(rss_playlist(feed, url, &page_url)));
         }
         if let Some(smil) = super::smil::parse(html) {
-            let info = smil_info(client, smil, url)?;
+            let info = smil_info(client, smil, url, &crate::screen::generic_id(url.as_str()))?;
             detected("SMIL file");
             return Ok(Some(ExtractResult::Video(info)));
         }
@@ -1051,7 +1051,14 @@ impl GenericHttp {
             }
             let ext = direct::determine_ext(media.as_str());
             let manifest = matches!(ext.as_deref(), Some("m3u8" | "mpd"));
+            let smil = ext.as_deref() == Some("smil");
+            if smil && count > 1 {
+                return Err(unsupported(
+                    "several SMIL URLs found on a page are not supported natively",
+                ));
+            }
             if !manifest
+                && !smil
                 && matches!(
                     ext.as_deref(),
                     Some("smil" | "xspf" | "f4m" | "m3u8" | "mpd")
@@ -1071,6 +1078,46 @@ impl GenericHttp {
                 }
                 _ => basename.into_owned(),
             };
+            if smil {
+                // `{**self._extract_smil_info(video_url, video_id),
+                // **entry_info_dict}`, then `merge_dicts(entry, info_dict)`
+                // (which drops the entry's `None` values).
+                let (document, smil_url) = download_smil(client, &media, &id)?;
+                let mut info = smil_info(client, document, &smil_url, &id)?;
+                let own_description = info.metadata.description.is_some();
+                info.id = id;
+                info.title = title.clone();
+                info.webpage_url = page_url.clone();
+                info.extractor = "generic".into();
+                info.extractor_key = "Generic".into();
+                if let Some(uploader) = &uploader {
+                    info.extra
+                        .insert("uploader".into(), uploader.clone().into());
+                }
+                info.metadata.age_limit = age_limit;
+                info.metadata.timestamp = timestamp.map(crate::info::PyNumber::Int);
+                if !own_description {
+                    info.metadata.description = description.clone();
+                }
+                info.metadata.thumbnail = thumbnail.clone();
+                for format in &mut info.formats {
+                    format.http_headers = Some(serde_json::Map::from_iter([(
+                        "referer".to_owned(),
+                        page_url.as_str().into(),
+                    )]));
+                }
+                info.extra.insert(
+                    "http_headers".into(),
+                    serde_json::json!({"Referer": page_url.as_str()}),
+                );
+                let shape = if own_description {
+                    "generic-found-smil"
+                } else {
+                    "generic-found-smil-page-description"
+                };
+                entries.push(crate::info_order::mark_info(info, shape));
+                continue;
+            }
             if manifest {
                 let info =
                     found_manifest(client, &media, page_url, &id, ext.as_deref() == Some("mpd"))?;
@@ -1190,6 +1237,33 @@ impl GenericHttp {
     }
 }
 
+/// `_download_smil(smil_url, video_id)`: the parsed document and its final
+/// URL.
+fn download_smil(client: &Client, url: &Url, video_id: &str) -> Result<(super::smil::Smil, Url)> {
+    use std::io::Read;
+    crate::screen::screen(&format!("[generic] {video_id}: Downloading SMIL file"));
+    let response = direct::request(client, url, None).map_err(|error| match error {
+        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
+            extractor: "generic",
+            id: video_id.to_owned(),
+            what: "SMIL file",
+            source: Box::new(error),
+        },
+        error => error,
+    })?;
+    let final_url = response.url().clone();
+    let mut body = Vec::new();
+    response
+        .take(MAX_HTML_BYTES + 1)
+        .read_to_end(&mut body)
+        .map_err(Error::ExtractionRead)?;
+    let text = std::str::from_utf8(&body)
+        .map_err(|_| unsupported("only UTF-8 SMIL files are supported"))?;
+    let smil = super::smil::parse(text)
+        .ok_or_else(|| unsupported("the found SMIL URL does not serve a SMIL document"))?;
+    Ok((smil, final_url))
+}
+
 /// `_merge_subtitles(source, target=target)`: tracks append per language.
 fn merge_subtitles(target: &mut Subtitles, source: Subtitles) {
     for (language, tracks) in source.entries {
@@ -1202,12 +1276,16 @@ fn merge_subtitles(target: &mut Subtitles, source: Subtitles) {
 
 /// GenericIE's `_parse_smil(doc, url, video_id)` for HTTP media sources;
 /// other source kinds are unsupported errors.
-fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<VideoInfo> {
+fn smil_info(
+    client: &Client,
+    smil: super::smil::Smil,
+    url: &Url,
+    video_id: &str,
+) -> Result<VideoInfo> {
     use super::smil::get;
     static ISM: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
         regex::Regex::new(r"\.ism/[Mm]anifest").expect("static pattern")
     });
-    let video_id = crate::screen::generic_id(url.as_str());
     let int = |value: Option<&str>| value.and_then(|value| value.trim().parse::<u32>().ok());
     // `_parse_smil_formats_and_subtitles`.
     let base = smil
@@ -1290,7 +1368,7 @@ fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<Vide
                 )
             };
             let note = format!("[generic] {video_id}: {note}");
-            crate::screen::expect_page(&video_id, Some(note.clone()), None);
+            crate::screen::expect_page(video_id, Some(note.clone()), None);
             let response = direct::request(client, &manifest_url, None);
             if response.is_err() {
                 // The note precedes a failed request too.
@@ -1465,8 +1543,10 @@ fn smil_info(client: &Client, smil: super::smil::Smil, url: &Url) -> Result<Vide
     let mut info = direct::build_at(url.clone(), url, String::new());
     info.formats = formats;
     info.direct = None;
-    info.id = video_id.clone();
-    info.title = title.unwrap_or(video_id);
+    // `video_id = os.path.splitext(url_basename(smil_url))[0]`.
+    let id = crate::screen::generic_id(url.as_str());
+    info.id = id.clone();
+    info.title = title.unwrap_or(id);
     info.webpage_url = url.clone();
     info.subtitles = subtitles;
     info.metadata.description = description;

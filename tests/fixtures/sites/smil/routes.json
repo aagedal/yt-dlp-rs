@@ -105,6 +105,28 @@
     "Content-Type": "application/vnd.apple.mpegurl"
    },
    "body_file": "single.m3u8"
+  },
+  {
+   "url": "https://www.example.test/watch",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8",
+    "Last-Modified": "Tue, 04 May 2021 10:00:00 GMT"
+   },
+   "body": "<html><head><title>Watch page</title><meta property=\"og:video\" content=\"https://media.example.test/shows/clip.smil\"><meta property=\"og:description\" content=\"Page description\"><meta property=\"og:image\" content=\"https://www.example.test/og.jpg\"></head><body>hi</body></html>"
+  },
+  {
+   "url": "https://www.example.test/plainwatch",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Plain watch</title><meta property=\"og:video\" content=\"https://media.example.test/plain.smil\"><meta name=\"rating\" content=\"RTA-5042-1996-1400-1577-RTA\"></head><body>hi</body></html>"
+  },
+  {
+   "url": "https://www.example.test/gonewatch",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Gone</title><meta property=\"og:video\" content=\"https://media.example.test/gone.smil\"></head><body>hi</body></html>"
   }
  ]
 }

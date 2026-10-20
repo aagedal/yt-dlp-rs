@@ -234,6 +234,11 @@ and DASH sources add their manifests' formats (`hls-`/`dash-` IDs,
 with one format takes `hls-BITRATE`/`hls-N`, `tbr`, width and height. RTMP,
 F4M and ISM sources, imagestream storyboards, extension-less sources
 (upstream's HEAD request) and relative text streams are unsupported errors.
+A single SMIL URL found on an HTML page (`Downloading SMIL file`) is the same
+result overlaid with the found entry's ID, page title, domain uploader, age
+limit and Referer, then merged with the page fields without its `None`
+values; several found SMIL URLs and found XSPF URLs (an upstream crash) are
+unsupported errors.
 A page without HTML5 media first tries upstream's JW Player setup data
 (`_find_jwplayer_data` with a port of `js_to_json`, checked against pinned
 upstream conversions in `tests/fixtures/js_to_json/`): one playlist item's
