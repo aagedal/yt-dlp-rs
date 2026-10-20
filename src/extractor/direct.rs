@@ -192,14 +192,20 @@ pub(crate) fn from_response(response: &Response, url: &Url) -> Option<VideoInfo>
     Some(build(response, url, ext?.to_owned()))
 }
 
+/// Upstream `KNOWN_EXTENSIONS`.
+pub(crate) fn known_extension(ext: &str) -> bool {
+    KNOWN.contains(&ext)
+}
+
+const KNOWN: &[&str] = &[
+    "avi", "flv", "mkv", "mov", "mp4", "webm", "3g2", "3gp", "f4v", "mk3d", "divx", "mpg", "ogv",
+    "m4v", "wmv", "aiff", "alac", "flac", "m4a", "mka", "mp3", "ogg", "opus", "wav", "aac", "ape",
+    "asf", "f4a", "f4b", "m4b", "m4r", "oga", "ogx", "spx", "vorbis", "wma", "weba", "f4f", "f4m",
+    "m3u8", "smil", "mpd",
+];
+
 /// Upstream `determine_ext(url, default_ext=None)`.
 pub(crate) fn determine_ext(url: &str) -> Option<String> {
-    const KNOWN: &[&str] = &[
-        "avi", "flv", "mkv", "mov", "mp4", "webm", "3g2", "3gp", "f4v", "mk3d", "divx", "mpg",
-        "ogv", "m4v", "wmv", "aiff", "alac", "flac", "m4a", "mka", "mp3", "ogg", "opus", "wav",
-        "aac", "ape", "asf", "f4a", "f4b", "m4b", "m4r", "oga", "ogx", "spx", "vorbis", "wma",
-        "weba", "f4f", "f4m", "m3u8", "smil", "mpd",
-    ];
     if !url.contains('.') {
         return None;
     }

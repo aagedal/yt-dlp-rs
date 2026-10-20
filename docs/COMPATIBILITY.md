@@ -213,7 +213,11 @@ direct sources become formats (label-derived heights, `bitrate` as `tbr`,
 audio types as audio-only), with `tracks` captions, title, description, image,
 `pubdate`, int or float `duration` and the other `_parse_jwplayer_data` fields,
 merged with the page fields. JW Player playlists, playlist URLs, manifest,
-SMIL, RTMP and YouTube sources are unsupported errors. Then come
+SMIL, RTMP and YouTube sources are unsupported errors. A Video.js embed
+(`videojs(...)...VAR.src([...]);`) comes next: like upstream, only the first
+direct source becomes a format (with the page as Referer), and
+`VAR.addRemoteTextTrack({...}, true|false)` tracks become subtitles; manifest
+and YouTube sources are unsupported. Then come
 `_extract_embeds`' URL patterns in upstream order: SWFObject `flashvars`, JW Player `file:` options, `file=`/
 `source=` parameters, the JW Player JS loader, Flow Player, Cinerama, Twitter
 `player:stream` cards and `og:video`/`og:audio` (with `check_video`'s image and
@@ -223,8 +227,8 @@ direct media URLs become upstream's entries (basename ID, the domain as
 `uploader`, the page title, a Referer header; one URL merged with the page's
 `timestamp`/`description`/`thumbnail`, several as a playlist with numbered
 titles); HLS/DASH/SMIL/XSPF/F4M, RTMP and YouTube URLs found this way are
-unsupported errors, as are pages where upstream's earlier Video.js, KVS player
-or absolute JSON-LD media steps would answer. Output templates render a JW
+unsupported errors, as are pages where upstream's earlier KVS player or
+absolute JSON-LD media steps would answer. Output templates render a JW
 Player integer `tbr` as a float (JSON keeps upstream's int). Otherwise
 the result is upstream's `ERROR: Unsupported URL: URL`.
 All videos then get upstream `_sanitize_thumbnails` ordering, IDs, resolutions

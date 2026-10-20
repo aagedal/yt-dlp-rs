@@ -855,6 +855,10 @@ impl GenericHttp {
                 return jwplayer_info(entry, page_url, html, timestamp).map(Some);
             }
         }
+        if let Some(embed) = super::generic_urls::videojs(html, url, page_url)? {
+            crate::screen::debug("Identified a video.js embed");
+            return videojs_info(embed, url, page_url, html, timestamp).map(Some);
+        }
         if let Some(step) = unported_step(html) {
             return Err(unsupported(&format!("{step} are not supported natively")));
         }
@@ -987,6 +991,67 @@ impl GenericHttp {
             extra,
         })))
     }
+}
+
+/// `{'formats': ..., 'subtitles': ...}` merged with the page fields.
+fn videojs_info(
+    embed: super::generic_urls::VideoJs,
+    url: &Url,
+    page_url: &Url,
+    html: &str,
+    timestamp: Option<i64>,
+) -> Result<ExtractResult> {
+    use serde_json::Value;
+    let invalid = |error: serde_json::Error| unsupported(&format!("Video.js embed: {error}"));
+    let mut formats = Vec::new();
+    for mut format in embed.formats {
+        format.insert("format_id".into(), "".into());
+        let mut format: VideoFormat =
+            serde_json::from_value(Value::Object(format)).map_err(invalid)?;
+        crate::info_order::mark_format(&mut format, "videojs");
+        formats.push(format);
+    }
+    let first = &formats[0];
+    let mut info = direct::build_at(first.url.clone(), &first.url, first.ext.clone());
+    info.formats = formats;
+    info.webpage_url = page_url.clone();
+    info.direct = None;
+    info.id = crate::screen::generic_id(url.as_str());
+    info.title = page_title(html).unwrap_or_else(|| "video".into());
+    info.metadata.timestamp = timestamp;
+    info.metadata.description = crate::html::og_search_property(html, "description");
+    info.metadata.thumbnail = crate::html::og_search_property(html, "image");
+    info.metadata.age_limit = crate::html::rta_search(html);
+    let mut subtitles = Subtitles::default();
+    for (language, mut track) in embed.subtitles {
+        let url = Url::parse(track["url"].as_str().unwrap_or_default())
+            .map_err(|_| unsupported("Video.js subtitle URL is invalid"))?;
+        track.remove("url");
+        let name = track
+            .remove("name")
+            .and_then(|name| name.as_str().map(str::to_owned));
+        let format = SubtitleFormat {
+            name,
+            ext: subtitle_extension(&url),
+            url,
+            protocol: None,
+            fragments: Vec::new(),
+            extra: track,
+        };
+        // `subtitles.setdefault(lang, []).append(...)`.
+        match subtitles
+            .entries
+            .iter_mut()
+            .find(|(key, _)| key.as_deref() == Some(language.as_str()))
+        {
+            Some((_, tracks)) => tracks.push(format),
+            None => subtitles.entries.push((Some(language), vec![format])),
+        }
+    }
+    info.subtitles = subtitles;
+    Ok(ExtractResult::Video(crate::info_order::mark_info(
+        info, "videojs",
+    )))
 }
 
 /// `merge_dicts(jwplayer_entry, info_dict)` as an info dict.

@@ -4,7 +4,7 @@
 //! `player:stream` cards and Open Graph `og:video`/`og:audio`, then
 //! `http-equiv="refresh"` redirects and `twitter:player` iframes.
 //!
-//! The earlier upstream steps after JW Player setup data (Video.js, KVS
+//! The earlier upstream steps after JW Player setup data and Video.js (KVS
 //! players, JSON-LD) are recognized and reported as unsupported rather than
 //! answered with a later pattern's different result.
 use regex::Regex;
@@ -26,9 +26,6 @@ fn regex(pattern: &str) -> Regex {
 
 /// An earlier `_extract_embeds` step this port does not implement.
 pub(crate) fn unported_step(html: &str) -> Option<&'static str> {
-    static VIDEOJS: LazyLock<Regex> = LazyLock::new(|| {
-        regex(r"(?s)\bvideojs\s*\(.+?([a-zA-Z0-9_$]+)\.src\s*\(\s*(?:\[.+?\]|\{.+?\})\s*\)\s*;")
-    });
     static KVS: LazyLock<Regex> = LazyLock::new(|| {
         regex(
             r#"(?:<script\b[^>]+?\bsrc\s*=\s*["']https?://[^?#"']+/kt_player\.js\?v=\d+(?:\.\d+)+["']|kt_player\s*\(\s*["'].+?["']\s*,\s*["']https?://[^?#"']+/kt_player\.swf\?v=\d+(?:\.\d+)+["']\s*,)"#,
@@ -41,9 +38,7 @@ pub(crate) fn unported_step(html: &str) -> Option<&'static str> {
             r#"(?is)<script[^>]+type\s*=\s*["']?application/ld\+json["']?[^>]*>.*?"(?:contentUrl|embedUrl)"\s*:\s*"(?:[a-z][a-z0-9+.-]*:)?//.*?</script>"#,
         )
     });
-    if VIDEOJS.is_match(html) {
-        Some("Video.js embeds")
-    } else if KVS.is_match(html) {
+    if KVS.is_match(html) {
         Some("KVS players")
     } else if JSON_LD.is_match(html) {
         Some("JSON-LD metadata")
@@ -230,6 +225,146 @@ pub(crate) fn find(page_url: &Url, html: &str) -> Option<Found> {
         return Some(Found::Redirect(url));
     }
     None
+}
+
+/// A Video.js embed: `player.src(...)` sources and `addRemoteTextTrack`
+/// subtitles (as upstream's dicts).
+pub(crate) struct VideoJs {
+    pub formats: Vec<serde_json::Map<String, serde_json::Value>>,
+    /// Language and `{url, name, http_headers}` dicts in page order.
+    pub subtitles: Vec<(String, serde_json::Map<String, serde_json::Value>)>,
+}
+
+/// Upstream's Video.js step: the first `videojs(...)...VAR.src([...]);`,
+/// its sources (only the first direct one becomes a format, as upstream's
+/// `if not formats` inside the loop does) and `VAR.addRemoteTextTrack({...},
+/// true|false)` tracks. Manifest and YouTube sources are unsupported.
+pub(crate) fn videojs(html: &str, url: &Url, actual: &Url) -> crate::Result<Option<VideoJs>> {
+    use serde_json::{Map, Value};
+    static PLAYER: LazyLock<Regex> = LazyLock::new(|| {
+        regex(r"(?s)\bvideojs\s*\(.+?([a-zA-Z0-9_$]+)\.src\s*\(\s*(\[.+?\]|\{.+?\})\s*\)\s*;")
+    });
+    let unsupported = |reason: &str| crate::Error::UnsupportedHtml5(reason.into());
+    let Some(found) = PLAYER.captures(html) else {
+        return Ok(None);
+    };
+    let variable = found[1].to_owned();
+    // `variadic(self._parse_json(..., transform_source=js_to_json, fatal=False) or [])`.
+    let parsed: Option<Value> =
+        serde_json::from_str(&crate::js_to_json::js_to_json(&found[2])).ok();
+    let sources = match parsed {
+        Some(Value::Array(items)) => items,
+        Some(value) if python_truthy(&value) => vec![value],
+        _ => Vec::new(),
+    };
+    let referer = || Map::from_iter([("Referer".to_owned(), Value::from(actual.as_str()))]);
+    let mut formats = Vec::new();
+    for source in &sources {
+        let Some(src) = source
+            .get("src")
+            .and_then(Value::as_str)
+            .filter(|src| !src.is_empty())
+        else {
+            continue;
+        };
+        let Ok(src) = url.join(src) else { continue };
+        let kind = source
+            .get("type")
+            .and_then(Value::as_str)
+            .map(str::to_lowercase);
+        let ext = super::direct::determine_ext(src.as_str())
+            .unwrap_or_else(|| "unknown_video".into())
+            .to_lowercase();
+        if kind.as_deref() == Some("video/youtube") {
+            return Err(unsupported(
+                "Video.js YouTube sources are not supported natively",
+            ));
+        }
+        if matches!(
+            kind.as_deref(),
+            Some("application/dash+xml" | "application/x-mpegurl")
+        ) || ext == "mpd"
+            || ext == "m3u8"
+        {
+            return Err(unsupported(
+                "Video.js manifest sources are not supported natively",
+            ));
+        }
+        if formats.is_empty() {
+            // `mimetype2ext(src_type) or ext if ext in KNOWN_EXTENSIONS else 'mp4'`.
+            let ext = if super::direct::known_extension(&ext) {
+                kind.as_deref()
+                    .map(|kind| super::direct::mimetype2ext_or(kind, None))
+                    .filter(|mime| !mime.is_empty())
+                    .unwrap_or(ext)
+            } else {
+                "mp4".into()
+            };
+            let mut format = Map::new();
+            format.insert("url".into(), src.as_str().into());
+            format.insert("ext".into(), ext.into());
+            format.insert("http_headers".into(), Value::Object(referer()));
+            formats.push(format);
+        }
+    }
+    let track = Regex::new(&format!(
+        r"(?s){}\.addRemoteTextTrack\((\{{.+?\}})\s*,\s*(?:true|false)\)",
+        regex::escape(&variable)
+    ))
+    .expect("escaped pattern");
+    let mut subtitles = Vec::new();
+    for found in track.captures_iter(html) {
+        let sub: Value =
+            serde_json::from_str(&crate::js_to_json::js_to_json(&found[1])).unwrap_or(Value::Null);
+        let Some(src) = sub
+            .get("src")
+            .and_then(|src| match src {
+                Value::String(text) => Some(text.clone()),
+                Value::Number(number) => Some(number.to_string()),
+                _ => None,
+            })
+            .filter(|src| !src.is_empty())
+        else {
+            continue;
+        };
+        let Ok(src) = url.join(&src) else { continue };
+        let language = ["language", "srclang"]
+            .iter()
+            .find_map(|key| sub.get(*key).filter(|value| python_truthy(value)))
+            .and_then(Value::as_str)
+            .unwrap_or("und")
+            .to_owned();
+        let mut entry = Map::new();
+        entry.insert("url".into(), src.as_str().into());
+        entry.insert(
+            "name".into(),
+            sub.get("label").cloned().unwrap_or(Value::Null),
+        );
+        entry.insert("http_headers".into(), Value::Object(referer()));
+        subtitles.push((language, entry));
+    }
+    if formats.is_empty() && subtitles.is_empty() {
+        return Ok(None);
+    }
+    if formats.is_empty() {
+        return Err(unsupported(
+            "Video.js embeds without media sources are not supported natively",
+        ));
+    }
+    Ok(Some(VideoJs { formats, subtitles }))
+}
+
+/// Python truthiness.
+fn python_truthy(value: &serde_json::Value) -> bool {
+    use serde_json::Value;
+    match value {
+        Value::Null => false,
+        Value::Bool(value) => *value,
+        Value::Number(number) => number.as_f64() != Some(0.0),
+        Value::String(text) => !text.is_empty(),
+        Value::Array(items) => !items.is_empty(),
+        Value::Object(map) => !map.is_empty(),
+    }
 }
 
 #[cfg(test)]

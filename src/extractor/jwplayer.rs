@@ -122,28 +122,6 @@ fn join(base: &Url, value: Option<&Value>) -> Option<Url> {
     base.join(&text).ok()
 }
 
-/// `mimetype2ext` for the source types JW Player data names.
-fn mimetype_ext(kind: &str) -> Option<String> {
-    let kind = kind.to_lowercase();
-    let subtype = kind.rsplit('/').next().unwrap_or(&kind);
-    Some(
-        match subtype {
-            "mp4" | "x-m4v" => "mp4",
-            "webm" => "webm",
-            "mpeg" | "mp3" => "mp3",
-            "ogg" => "ogg",
-            "x-flv" | "flv" => "flv",
-            "aac" => "aac",
-            "x-mpegurl" | "vnd.apple.mpegurl" | "hls" => "m3u8",
-            "dash+xml" | "dash" => "mpd",
-            "" => return None,
-            other if !kind.contains('/') => return (!other.is_empty()).then(|| other.to_owned()),
-            other => other,
-        }
-        .to_owned(),
-    )
-}
-
 /// `parse_resolution(label)['height']` for labels like `720p` or `1080`.
 fn label_height(label: &str) -> Option<i64> {
     static DIMENSIONS: LazyLock<Regex> = LazyLock::new(|| {
@@ -210,7 +188,9 @@ pub(crate) fn parse(
         }
         seen.push(url.clone());
         let kind = source.get("type").and_then(Value::as_str).unwrap_or("");
-        let ext = super::direct::determine_ext(url.as_str()).or_else(|| mimetype_ext(kind));
+        let ext = super::direct::determine_ext(url.as_str()).or_else(|| {
+            Some(super::direct::mimetype2ext_or(kind, None)).filter(|ext| !ext.is_empty())
+        });
         if kind == "hls"
             || ext.as_deref() == Some("m3u8")
             || url.as_str().contains("format=m3u8-aapl")

@@ -279,6 +279,8 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ("format_id", Assign),
         ],
         "jwplayer-audio" => &[("url", Take), ("vcodec", Assign), ("ext", Assign)],
+        // A Video.js source with the page as its Referer.
+        "videojs" => &[("url", Take), ("ext", Take), ("http_headers", Take)],
         // GenericIE's direct link: `vcodec` is `none` for audio, else `None`.
         "direct" => &[
             ("format_id", Take),
@@ -610,6 +612,17 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("description", Take),
             ("thumbnail", Take),
         ],
+        // A Video.js embed's `{'formats', 'subtitles'}`, then the page fields.
+        "videojs" => &[
+            ("formats", Take),
+            ("subtitles", Dict),
+            ("id", Take),
+            ("title", Take),
+            ("timestamp", Take),
+            ("description", Take),
+            ("thumbnail", Take),
+            ("age_limit", Take),
+        ],
         // One of several found URLs (a playlist entry keeps `age_limit`).
         "generic-found-entry" => &[
             ("id", Take),
@@ -692,6 +705,21 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     replay.steps(extractor);
     if let Some(original) = &original {
         replay.loaded(original);
+    }
+    // Video.js tracks are `{url, name, http_headers}`, then `ext`.
+    if shape == "videojs"
+        && let Some(Value::Object(languages)) = replay.out.get_mut("subtitles")
+    {
+        for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
+            for track in tracks.iter_mut().filter_map(Value::as_object_mut) {
+                let mut ordered = Map::new();
+                for key in ["url", "name", "http_headers", "ext"] {
+                    ordered.insert(key.to_owned(), track.remove(key).unwrap_or(Value::Null));
+                }
+                ordered.append(track);
+                *track = ordered;
+            }
+        }
     }
     // `merge_dicts(jwplayer_entry, info_dict)`: the entry's keys, then the
     // page's.
