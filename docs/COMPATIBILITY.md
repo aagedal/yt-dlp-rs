@@ -589,6 +589,12 @@ renditions; no manifest is upstream's `Failed to obtain m3u8 URL`), the API
 title (else the generic title), the URL date as `upload_date` and the first
 image set's named images as thumbnails.
 
+Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
+`MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles
+ignored with upstream's warning), the fatal `Title` field without
+surrounding brackets, the `Description` and `Running time` fields (each
+warning as `title`, like upstream) and the player image.
+
 Nobel Prize media (`[www.|mediaplayer.]nobelprize.org/mediaplayer/?id|qid=ID`)
 follow upstream `NobelPrizeIE`: the integer `id` (else `qid`) query value (no
 ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's
