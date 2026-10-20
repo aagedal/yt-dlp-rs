@@ -85,6 +85,49 @@ pub fn og_search_property(html: &str, prop: &str) -> Option<String> {
     })
 }
 
+/// Upstream `_html_search_meta(prop, html)` (`_meta_regex`): the first
+/// `<meta>` whose `itemprop`/`name`/`property`/`id`/`http-equiv` is `prop`
+/// (quoted, or unquoted as a prefix like upstream's empty `\1`) with a later
+/// quoted `content`, cleaned like `_html_search_regex`.
+pub fn html_search_meta(html: &str, prop: &str) -> Option<String> {
+    static CONTENT: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r#"(?is)^[^>]+?content=(?:"(.*?)"|'(.*?)')"#).expect("static pattern")
+    });
+    let lower = html.to_ascii_lowercase();
+    let prop_lower = prop.to_ascii_lowercase();
+    let mut start = 0;
+    while let Some(offset) = lower[start..].find("<meta") {
+        let tag_start = start + offset + "<meta".len();
+        start = tag_start;
+        let tag_end = lower[tag_start..]
+            .find('>')
+            .map_or(lower.len(), |end| tag_start + end);
+        let attributes = &lower[tag_start..tag_end];
+        let named = ["itemprop=", "name=", "property=", "id=", "http-equiv="]
+            .iter()
+            .any(|key| {
+                attributes.match_indices(key).any(|(index, _)| {
+                    let rest = &attributes[index + key.len()..];
+                    [format!("\"{prop_lower}\""), format!("'{prop_lower}'")]
+                        .iter()
+                        .any(|quoted| rest.starts_with(quoted.as_str()))
+                        || rest.starts_with(prop_lower.as_str())
+                })
+            });
+        if !named {
+            continue;
+        }
+        if let Some(found) = CONTENT.captures(&html[tag_start..]) {
+            let value = found
+                .get(1)
+                .or_else(|| found.get(2))
+                .map_or("", |value| value.as_str());
+            return Some(unescape_html(value).trim().to_owned());
+        }
+    }
+    None
+}
+
 /// `_rta_search(html)`. Ages that do not fit in `u32` are ignored.
 pub fn rta_search(html: &str) -> Option<u32> {
     static RTA: LazyLock<Regex> = LazyLock::new(|| {

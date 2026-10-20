@@ -636,7 +636,7 @@ impl Extractor for GenericHttp {
             .map_err(|_| unsupported("only UTF-8/ASCII HTML is supported"))?;
         crate::screen::debug("Looking for embeds");
         let Some(media) = parse_page(&page_url, html)? else {
-            return Ok(None);
+            return self.found_urls(client, url, &page_url, html, timestamp);
         };
         let mut entries = Vec::new();
         for (index, entry) in media.entries.iter().enumerate() {
@@ -824,6 +824,171 @@ impl Extractor for GenericHttp {
             },
         })))
     }
+}
+
+impl GenericHttp {
+    /// `_extract_embeds`' URL patterns for a page without HTML5 media:
+    /// direct media URLs as entries (`merge_dicts(entry, info_dict)` for
+    /// one), or a refresh/`twitter:player` redirect.
+    fn found_urls(
+        &self,
+        client: &Client,
+        url: &Url,
+        page_url: &Url,
+        html: &str,
+        timestamp: Option<i64>,
+    ) -> Result<Option<ExtractResult>> {
+        use super::generic_urls::{Found, find, unported_step};
+        if let Some(step) = unported_step(html) {
+            return Err(unsupported(&format!("{step} are not supported natively")));
+        }
+        let urls = match find(url, html) {
+            None => return Ok(None),
+            Some(Found::Redirect(target)) => {
+                crate::screen::screen(&format!("[redirect] Following redirect to {target}"));
+                if super::youtube_suitable(target.as_str()) {
+                    return Err(unsupported(
+                        "redirects to YouTube are not supported natively",
+                    ));
+                }
+                return self.extract_result(client, &target);
+            }
+            Some(Found::Urls(name, urls)) => {
+                // `report_detected(name)` (no count).
+                crate::screen::debug(&format!("Identified a {name}"));
+                urls
+            }
+        };
+        // `_generic_title('', webpage, default='video')` and the page fields.
+        let title = page_title(html).unwrap_or_else(|| "video".into());
+        let description = crate::html::og_search_property(html, "description");
+        let thumbnail = crate::html::og_search_property(html, "image");
+        let age_limit = crate::html::rta_search(html);
+        static DOMAIN: std::sync::LazyLock<regex::Regex> =
+            std::sync::LazyLock::new(|| regex::Regex::new(r"^(?:https?://)?([^/]*)/").unwrap());
+        let uploader = DOMAIN
+            .captures(url.as_str())
+            .map(|found| found[1].to_owned());
+        let count = urls.len();
+        let mut entries = Vec::new();
+        for (index, media) in urls.into_iter().enumerate() {
+            if super::youtube_suitable(media.as_str()) {
+                return Err(unsupported(
+                    "embedded YouTube URLs are not supported natively",
+                ));
+            }
+            if media.scheme().starts_with("rtmp") {
+                return Err(unsupported("RTMP URLs are not supported natively"));
+            }
+            let ext = direct::determine_ext(media.as_str());
+            if matches!(
+                ext.as_deref(),
+                Some("smil" | "xspf" | "f4m" | "m3u8" | "mpd")
+            ) {
+                return Err(unsupported(&format!(
+                    "{} URLs found on a page are not supported natively",
+                    ext.unwrap_or_default()
+                )));
+            }
+            // `os.path.splitext(unquote(basename(video_url)))[0]`.
+            let basename = media.as_str().rsplit('/').next().unwrap_or("");
+            let basename = percent_decode_str(basename).decode_utf8_lossy();
+            let id = match basename.rfind('.') {
+                Some(dot) if !basename[..dot].trim_start_matches('.').is_empty() => {
+                    basename[..dot].to_owned()
+                }
+                _ => basename.into_owned(),
+            };
+            let ext = ext
+                .filter(|ext| crate::output::allowed_extension(ext))
+                .unwrap_or_else(|| "unknown_video".into());
+            let mut info = direct::with_format(direct::build_at(media.clone(), &media, ext), "");
+            info.id = id;
+            info.title = if count > 1 {
+                format!("{title} ({})", index + 1)
+            } else {
+                title.clone()
+            };
+            info.webpage_url = page_url.clone();
+            info.direct = None;
+            if let Some(uploader) = &uploader {
+                info.extra
+                    .insert("uploader".into(), uploader.clone().into());
+            }
+            info.metadata.age_limit = age_limit;
+            if count == 1 {
+                info.metadata.timestamp = timestamp;
+                info.metadata.description = description.clone();
+                info.metadata.thumbnail = thumbnail.clone();
+            }
+            // `headers = {'referer': actual_url}`.
+            for format in &mut info.formats {
+                format.http_headers = Some(serde_json::Map::from_iter([(
+                    "referer".to_owned(),
+                    page_url.as_str().into(),
+                )]));
+            }
+            entries.push(crate::info_order::mark_info(
+                info,
+                if count == 1 {
+                    "generic-found"
+                } else {
+                    "generic-found-entry"
+                },
+            ));
+        }
+        if entries.len() == 1 {
+            return Ok(entries.pop().map(ExtractResult::Video));
+        }
+        // `playlist_result(entries, **info_dict)`.
+        let mut extra = serde_json::Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.to_owned(),
+            "html5-playlist".into(),
+        );
+        if let Some(timestamp) = timestamp {
+            extra.insert("timestamp".into(), timestamp.into());
+            if let Some(date) = crate::dates::strftime_date(timestamp) {
+                extra.insert("upload_date".into(), date.into());
+            }
+        }
+        for (key, value) in [
+            ("description", description.map(serde_json::Value::from)),
+            ("thumbnail", thumbnail.map(serde_json::Value::from)),
+            ("age_limit", age_limit.map(serde_json::Value::from)),
+        ] {
+            if let Some(value) = value {
+                extra.insert(key.into(), value);
+            }
+        }
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: crate::screen::generic_id(url.as_str()),
+            title,
+            webpage_url: page_url.clone(),
+            extractor: "generic".into(),
+            extractor_key: "Generic".into(),
+            entries,
+            extra,
+        })))
+    }
+}
+
+/// `_generic_title`: `og:title`, else the `<title>` text (whitespace
+/// collapsed), `None` when both are empty.
+fn page_title(html: &str) -> Option<String> {
+    let document = Html::parse_document(html);
+    let title = document
+        .select(&selector("meta[property='og:title']"))
+        .find_map(|meta| nonempty(meta.value().attr("content")))
+        .map(str::to_owned)
+        .or_else(|| {
+            document
+                .select(&selector("title"))
+                .next()
+                .map(|title| title.text().collect::<String>())
+        })?;
+    let title = title.split_whitespace().collect::<Vec<_>>().join(" ");
+    (!title.is_empty()).then_some(title)
 }
 
 /// The generic page request's failure (see `Error::Webpage`).

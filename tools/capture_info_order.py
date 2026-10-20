@@ -35,7 +35,8 @@ CONTENT_TYPES = {
     '.jpg': 'image/jpeg',
 }
 CASES = ['clip.mp4', 'clip.qqq', 'one.html', 'rich.html', 'three.html', 'master.m3u8',
-         'video.m3u8', 'plain.m3u8', 'segmented.mpd', 'text.mpd']
+         'video.m3u8', 'plain.m3u8', 'segmented.mpd', 'text.mpd', 'og.html', 'twitter.html',
+         'flow.html', 'cine.html', 'two.html', 'refresh.html']
 
 
 def content_type(name):

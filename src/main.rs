@@ -3147,7 +3147,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 match &error {
                     yt_dlp_rs::Error::Reported(message) => report_error!("ERROR: {message}"),
-                    error @ yt_dlp_rs::Error::Webpage { .. } => report_error!("ERROR: {error}"),
+                    error @ (yt_dlp_rs::Error::Webpage { .. }
+                    | yt_dlp_rs::Error::UnsupportedUrl(_)) => {
+                        report_error!("ERROR: {error}")
+                    }
                     _ => report_error!("ERROR: {url}: {error}"),
                 }
                 failed = true;

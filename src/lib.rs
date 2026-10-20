@@ -1194,6 +1194,8 @@ impl YoutubeDl {
     /// an extracted or loaded result: common fields, thumbnails, per-format
     /// fills, `FormatSorter` order (worst first) and format ID cleanup.
     pub fn process_result(&self, result: &mut ExtractResult) -> Result<()> {
+        // A playlist's entries report their sort order as each is processed.
+        let playlist = matches!(result, ExtractResult::Playlist(_));
         let entries = match result {
             ExtractResult::Video(video) => std::slice::from_mut(video),
             ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),
@@ -1262,25 +1264,9 @@ impl YoutubeDl {
                     }
                 }
             }
-            let extractor: Vec<&str> = entry
-                .format_sort_fields
-                .iter()
-                .map(String::as_str)
-                .collect();
-            let sorter = format_sort::FormatSorter::new(
-                &self.format_sort.fields,
-                &extractor,
-                self.format_sort.force,
-                self.format_sort.prefer_free,
-            )
-            .map_err(|error| {
-                Error::FormatSelection(format!(
-                    "Invalid format sort string \"{}\" given by extractor",
-                    error.0
-                ))
-            })?;
+            let sorter = self.sorter(entry)?;
             // Upstream sorts (and reports the order) only with formats.
-            if !entry.formats.is_empty() && screen::verbose() {
+            if !playlist && !entry.formats.is_empty() && screen::verbose() {
                 for line in sorter.verbose_info() {
                     screen::debug(&line);
                 }
@@ -1290,6 +1276,27 @@ impl YoutubeDl {
             info::fill_format_descriptions(&mut entry.formats, entry.metadata.duration);
         }
         Ok(())
+    }
+
+    /// `FormatSorter` for an entry: the user's and the extractor's fields.
+    fn sorter(&self, entry: &VideoInfo) -> Result<format_sort::FormatSorter> {
+        let extractor: Vec<&str> = entry
+            .format_sort_fields
+            .iter()
+            .map(String::as_str)
+            .collect();
+        format_sort::FormatSorter::new(
+            &self.format_sort.fields,
+            &extractor,
+            self.format_sort.force,
+            self.format_sort.prefer_free,
+        )
+        .map_err(|error| {
+            Error::FormatSelection(format!(
+                "Invalid format sort string \"{}\" given by extractor",
+                error.0
+            ))
+        })
     }
 
     /// Upstream `--merge-output-format`: ordered containers that a merge may
@@ -1475,6 +1482,12 @@ impl YoutubeDl {
     /// Upstream `formats_to_download`: one result per selected format, each
     /// downloaded on its own by `process_info`.
     pub fn select_videos(&self, info: &VideoInfo, format: Option<&str>) -> Result<Vec<VideoInfo>> {
+        // A playlist entry's `sort_formats` report (see `process_result`).
+        if info.playlist_index.is_some() && !info.formats.is_empty() && screen::verbose() {
+            for line in self.sorter(info)?.verbose_info() {
+                screen::debug(&line);
+            }
+        }
         let prefer_best = self.prefer_best || self.live_from_now(info);
         if format.is_none() && prefer_best {
             screen::debug("Default format spec: best/bestvideo+bestaudio");

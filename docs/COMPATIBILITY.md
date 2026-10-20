@@ -206,6 +206,19 @@ timestamp), and every video derives `upload_date` from `timestamp` like
 `og:description` (unescaped) as `description`, `og:image` verbatim as the
 thumbnail when no poster exists, and `_rta_search` markers as `age_limit`
 (playlists do not represent these page-level fields).
+A page without HTML5 media goes through `_extract_embeds`' URL patterns in
+upstream order: SWFObject `flashvars`, JW Player `file:` options, `file=`/
+`source=` parameters, the JW Player JS loader, Flow Player, Cinerama, Twitter
+`player:stream` cards and `og:video`/`og:audio` (with `check_video`'s image and
+subtitle exclusions), then `http-equiv="refresh"` redirects and `twitter:player`
+iframes (`[redirect] Following redirect to URL`, extracted again). Found
+direct media URLs become upstream's entries (basename ID, the domain as
+`uploader`, the page title, a Referer header; one URL merged with the page's
+`timestamp`/`description`/`thumbnail`, several as a playlist with numbered
+titles); HLS/DASH/SMIL/XSPF/F4M, RTMP and YouTube URLs found this way are
+unsupported errors, as are pages where upstream's earlier JW Player setup data,
+Video.js, KVS player or absolute JSON-LD media steps would answer. Otherwise
+the result is upstream's `ERROR: Unsupported URL: URL`.
 All videos then get upstream `_sanitize_thumbnails` ordering, IDs, resolutions
 and `thumbnail` finalization (no `--check-formats` URL testing). These
 fields appear in JSON, info JSON, match filters and (scalar ones) output

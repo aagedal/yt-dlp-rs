@@ -45,9 +45,8 @@ pub enum Error {
     InvalidUrl(#[from] url::ParseError),
     #[error("unsupported URL scheme: {0}; expected http or https")]
     UnsupportedScheme(String),
-    #[error(
-        "no extractor supports {0}; expected direct HTTP media, a HTML5 media page, or supported HLS/DASH VOD"
-    )]
+    /// GenericIE's `UnsupportedError` (no supported media on the page).
+    #[error("Unsupported URL: {0}")]
     UnsupportedUrl(String),
     #[error("unsupported YouTube behavior: {0}")]
     UnsupportedYoutube(String),

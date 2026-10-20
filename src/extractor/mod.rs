@@ -1,5 +1,6 @@
 mod dash;
 pub(crate) mod direct;
+mod generic_urls;
 pub(crate) mod hls;
 pub(crate) mod html5;
 mod youtube;

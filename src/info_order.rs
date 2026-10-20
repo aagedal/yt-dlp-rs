@@ -500,10 +500,12 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         .is_some_and(|formats| !formats.is_empty());
     // An untyped result (or a loaded one without formats) is its own
     // (only) format.
-    let own_format = shape == "generic-untyped"
-        || original
-            .as_ref()
-            .is_some_and(|original| !original.contains_key("formats"));
+    let own_format = matches!(
+        shape.as_str(),
+        "generic-untyped" | "generic-found" | "generic-found-entry"
+    ) || original
+        .as_ref()
+        .is_some_and(|original| !original.contains_key("formats"));
     let selected_format: Map<String, Value> = if merged || own_format {
         Map::new()
     } else {
@@ -554,7 +556,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             .unwrap_or_default()
     };
     let untyped = own_format;
-    let entry = shape == "html5-entry";
+    let entry = matches!(shape.as_str(), "html5-entry" | "generic-found-entry");
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape.as_str() {
         "generic-direct" => &[
@@ -575,6 +577,28 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("direct", Take),
             ("url", Take),
             ("ext", Take),
+        ],
+        // A media URL found on the page (`_extract_embeds`' patterns), then
+        // `merge_dicts(entry, info_dict)`'s page fields.
+        "generic-found" => &[
+            ("id", Take),
+            ("uploader", Take),
+            ("title", Take),
+            ("age_limit", Take),
+            ("http_headers", Take),
+            ("url", Take),
+            ("timestamp", Take),
+            ("description", Take),
+            ("thumbnail", Take),
+        ],
+        // One of several found URLs (a playlist entry keeps `age_limit`).
+        "generic-found-entry" => &[
+            ("id", Take),
+            ("uploader", Take),
+            ("title", Take),
+            ("age_limit", Assign),
+            ("http_headers", Take),
+            ("url", Take),
         ],
         // A typed (Content-Type) HLS link; `_extra_manifest_info` adds
         // `hls_aes` and the "Checking m3u8 live status" duration.
@@ -682,6 +706,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             replay.set(key, always);
         }
     } else {
+        // A `url_result` chain (a followed redirect) passes `original_url`
+        // as extra info before `add_default_extra_info`'s keys.
+        if replay.get("original_url").is_some()
+            && replay.get("original_url") != replay.get("webpage_url")
+        {
+            replay.take("original_url");
+        }
         for key in [
             "webpage_url",
             "original_url",

@@ -430,7 +430,7 @@ pub(crate) fn from_file(url: &Url) -> crate::Result<VideoInfo> {
     Ok(info)
 }
 
-fn build_at(final_url: Url, url: &Url, ext: String) -> VideoInfo {
+pub(crate) fn build_at(final_url: Url, url: &Url, ext: String) -> VideoInfo {
     let filename = final_url
         .path_segments()
         .and_then(|mut p| p.next_back())
