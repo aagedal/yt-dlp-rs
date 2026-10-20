@@ -4,6 +4,7 @@ pub(crate) mod direct;
 mod ebaumsworld;
 mod f4m;
 mod fczenit;
+mod filmweb;
 mod generic_urls;
 mod glide;
 mod godtube;
@@ -28,6 +29,7 @@ mod streamable;
 mod sztvhu;
 mod theintercept;
 mod thisamericanlife;
+mod twentythreevideo;
 mod xspf;
 mod youtube;
 
@@ -37,6 +39,7 @@ pub(crate) use direct::from_response as direct_media_info;
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
+pub use filmweb::{Filmweb, suitable as filmweb_suitable};
 pub use glide::{Glide, suitable as glide_suitable};
 pub use godtube::{GodTube, suitable as godtube_suitable};
 pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
@@ -54,6 +57,7 @@ pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
+pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
@@ -111,6 +115,25 @@ pub(crate) fn download_json_note(
     id: &str,
     note: &str,
 ) -> Result<serde_json::Value> {
+    download_json_transformed(
+        client,
+        url,
+        extractor,
+        id,
+        note,
+        &|text| Ok(text.to_owned()),
+    )
+}
+
+/// [`download_json_note`] with `transform_source` applied to the body.
+pub(crate) fn download_json_transformed(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+    transform: &dyn Fn(&str) -> Result<String>,
+) -> Result<serde_json::Value> {
     use std::io::Read;
     crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
     let wrap = |error: crate::Error| match error {
@@ -129,11 +152,31 @@ pub(crate) fn download_json_note(
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
-    serde_json::from_slice(&body).map_err(|error| {
+    let text = transform(&String::from_utf8_lossy(&body))?;
+    serde_json::from_str(&text).map_err(|error| {
         crate::Error::Reported(format!(
             "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
         ))
     })
+}
+
+/// Upstream `update_url_query(url, query)`: the query decoded, updated and
+/// re-encoded like `urlencode`.
+pub(crate) fn update_url_query(url: &Url, updates: &[(&str, &str)]) -> Url {
+    let mut pairs: Vec<(String, String)> = url
+        .query_pairs()
+        .map(|(key, value)| (key.into_owned(), value.into_owned()))
+        .collect();
+    for (key, value) in updates {
+        pairs.retain(|(existing, _)| existing != key);
+        pairs.push(((*key).to_owned(), (*value).to_owned()));
+    }
+    let mut url = url.clone();
+    let query = url::form_urlencoded::Serializer::new(String::new())
+        .extend_pairs(&pairs)
+        .finish();
+    url.set_query((!query.is_empty()).then_some(query.as_str()));
+    url
 }
 
 /// Upstream `_download_webpage(url, video_id)`: `[EXTRACTOR] ID: Downloading

@@ -232,6 +232,18 @@
       "scope": "FczenitIE page MSI id and msi/video JSON (qualities as formats, tags, duration, date) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "filmweb",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/filmweb.py"
+      ],
+      "rust": [
+        "src/extractor/filmweb.rs",
+        "tests/fixtures/sites/twentythreevideo/"
+      ],
+      "scope": "FilmwebIE trailer embed JSON as a url_transparent 23video result compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "glide",
       "status": "partial",
       "upstream": [
@@ -421,6 +433,18 @@
         "tests/fixtures/sites/thisamericanlife/"
       ],
       "scope": "ThisAmericanLifeIE page meta fields and 64k HLS stream as an untyped m3u8_native result compared with pinned upstream output through the fixture proxy (listing and JSON)"
+    },
+    {
+      "name": "twentythreevideo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/twentythreevideo.py"
+      ],
+      "rust": [
+        "src/extractor/twentythreevideo.rs",
+        "tests/fixtures/sites/twentythreevideo/"
+      ],
+      "scope": "TwentyThreeVideoIE api/photo/list JSON (update_url_query, transform_source, formats and filesize thumbnails) compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "youtube",

@@ -1773,6 +1773,7 @@ fn smil_info(
                 height: int(get(image, "height")),
                 preference: None,
                 resolution: None,
+                extra: Default::default(),
             })
         })
         .collect();

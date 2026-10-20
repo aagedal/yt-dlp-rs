@@ -310,6 +310,9 @@ pub struct Thumbnail {
     pub height: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resolution: Option<String>,
+    /// Keys this port does not model (an extractor's `filesize`).
+    #[serde(flatten, default)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
 }
 
 /// Upstream `sanitize_url`: protocol-relative URLs use `http:` and common

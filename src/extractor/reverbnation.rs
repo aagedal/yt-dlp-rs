@@ -87,6 +87,7 @@ impl Extractor for ReverbNation {
                 height: None,
                 preference: Some(preference as i64),
                 resolution: None,
+                extra: Default::default(),
             });
         }
         let title = match song.get("name") {

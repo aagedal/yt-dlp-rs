@@ -363,6 +363,16 @@ page's `config` MSI video ID (fatal), then the player's `msi/video?video=ID`
 JSON: name, preview, float duration, int date, labeled qualities with URLs as
 formats (`int_or_none` label heights) and labeled tags.
 
+23video players (`*.twentythree.net`/`23video.com`/`filmweb.no`
+`v.ihtml/player.html?...photo_id=ID`) follow upstream `TwentyThreeVideoIE`:
+the `api/photo/list` JSON (the player query re-encoded like
+`update_url_query` with `format=json`, the body's `{...}` taken like its
+`transform_source`) with the audio and `mobile_high`/`medium`/`hd`/`1080p`/`4k`
+downloads as formats and the named images as `{id, url, width, height,
+filesize}` thumbnails. Filmweb articles (`filmweb.no/trailere|filmnytt/articleID.ece`,
+`filmnytt` pages through their `data-videoid`) follow upstream `FilmwebIE`:
+the trailer embed JSON's iframe as a `url_transparent` 23video result.
+
 Glide messages (`share.glide.me/ID`) follow upstream `GlideIE`: the page's
 generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
 `video-thumbnail` image (else the OpenGraph image with its warning), each

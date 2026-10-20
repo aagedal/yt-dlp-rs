@@ -286,6 +286,20 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     let extractor: &[(&str, Set)] = match shape {
         // `FczenitIE`'s quality.
         "fczenit" => &[("format_id", Take), ("url", Take), ("height", Assign)],
+        // `TwentyThreeVideoIE`'s audio download and video downloads.
+        "23video-audio" => &[
+            ("format_id", Take),
+            ("url", Take),
+            ("filesize", Assign),
+            ("vcodec", Take),
+        ],
+        "23video" => &[
+            ("format_id", Take),
+            ("url", Take),
+            ("width", Assign),
+            ("height", Assign),
+            ("filesize", Assign),
+        ],
         // `_parse_ism_formats_and_subtitles`' track.
         "ism" => &[
             ("format_id", Take),
@@ -658,6 +672,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     // `_fill_common_fields`' multivalue keys (always the last suffix).
     let (shape, derived) = split(&shape, "|multivalue:").unwrap_or((shape, Vec::new()));
+    // A `url_transparent` result, even one without overlaid keys.
+    let transparent_result = shape.contains("|transparent:");
     let (shape, transparent, transparent_entry) = match split(&shape, "|transparent-entry:") {
         Some((inner, keys)) => (inner, keys, true),
         None => match split(&shape, "|transparent:") {
@@ -1011,6 +1027,19 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("ext", Take),
             ("vcodec", Take),
         ],
+        // `TwentyThreeVideoIE._real_extract`'s dict.
+        "23video" => &[
+            ("id", Take),
+            ("title", Take),
+            ("timestamp", Assign),
+            ("duration", Assign),
+            ("view_count", Assign),
+            ("comment_count", Assign),
+            ("uploader_id", Assign),
+            ("uploader", Assign),
+            ("thumbnails", List),
+            ("formats", Take),
+        ],
         // `MegaphoneIE._real_extract`'s dict.
         "megaphone" => &[
             ("id", Take),
@@ -1192,14 +1221,23 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     if let Some(original) = &original {
         replay.loaded(original);
     }
-    // `_parse_smil`'s images are `{id, url, width, height}` dicts.
-    if shape.contains("smil")
+    // `_parse_smil`'s images are `{id, url, width, height}` dicts, 23video's
+    // `{id, url, width, height, filesize}`.
+    if (shape.contains("smil") || shape == "23video")
         && let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails")
     {
         for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
             let mut ordered = Map::new();
-            for key in ["id", "url", "width", "height"] {
-                ordered.insert(key.to_owned(), thumbnail.remove(key).unwrap_or(Value::Null));
+            let keys: &[&str] = if shape == "23video" {
+                &["id", "url", "width", "height", "filesize"]
+            } else {
+                &["id", "url", "width", "height"]
+            };
+            for key in keys {
+                ordered.insert(
+                    (*key).to_owned(),
+                    thumbnail.remove(*key).unwrap_or(Value::Null),
+                );
             }
             ordered.append(thumbnail);
             *thumbnail = ordered;
@@ -1286,7 +1324,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         // as extra info before `add_default_extra_info`'s keys.
         if !transparent_entry
             && replay.get("original_url").is_some()
-            && (!transparent.is_empty() || replay.get("original_url") != replay.get("webpage_url"))
+            && (transparent_result || replay.get("original_url") != replay.get("webpage_url"))
         {
             replay.take("original_url");
         }
