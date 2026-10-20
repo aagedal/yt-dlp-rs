@@ -1568,5 +1568,5 @@ fn output_template_dash_streams_media_to_stdout_like_upstream() {
         .output()
         .unwrap();
     assert!(output.stdout.is_empty());
-    assert!(String::from_utf8_lossy(&output.stderr).contains("\"id\":\"clip\""));
+    assert!(String::from_utf8_lossy(&output.stderr).contains("\"id\": \"clip\""));
 }

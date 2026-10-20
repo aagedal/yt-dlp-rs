@@ -256,7 +256,9 @@ fn json_simulation_retains_audio_metadata_and_does_not_fetch_keys_or_segments() 
         String::from_utf8_lossy(&output.stderr)
     );
     let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(info["requested_formats"][1]["audio_group"], "a");
+    // The audio group is internal; upstream's rendition dicts lack it.
+    assert!(info["requested_formats"][1].get("audio_group").is_none());
+    assert_eq!(info["requested_formats"][1]["format_id"], "a-Main__English");
     assert_eq!(info["requested_formats"][1]["language"], "en");
     // Upstream: a variant with external audio gets acodec `none`, its
     // renditions vcodec `none` without a known audio codec.

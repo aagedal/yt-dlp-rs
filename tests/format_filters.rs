@@ -289,13 +289,8 @@ fn quoted_filter_delimiters_do_not_split_hls_pair_or_fallback_expression() {
     assert_eq!(info["format_id"], "500+main-English__Main");
     assert_eq!(info["requested_formats"][1]["language"], "en");
     assert_eq!(info["requested_formats"][1]["format_note"], "English/+Main");
-    assert_eq!(
-        info["requested_formats"][0]["fragments"]
-            .as_array()
-            .unwrap()
-            .len(),
-        2
-    );
+    // Like upstream, HLS formats carry no fragments.
+    assert!(info["requested_formats"][0].get("fragments").is_none());
     assert_eq!(server.count("/segment.m4s"), 0);
     assert_eq!(*server.requests.lock().unwrap(), MASTER_EXTRACTION);
 }
@@ -458,13 +453,7 @@ fn nested_hls_pair_groups_filter_audio_before_fallback_without_launching_ffmpeg(
     assert_eq!(info["format_id"], "500+main-English__Main");
     assert_eq!(info["requested_formats"][1]["language"], "en");
     assert_eq!(info["requested_formats"][0]["height"], 720);
-    assert_eq!(
-        info["requested_formats"][1]["fragments"]
-            .as_array()
-            .unwrap()
-            .len(),
-        2
-    );
+    assert!(info["requested_formats"][1].get("fragments").is_none());
     assert_eq!(*server.requests.lock().unwrap(), MASTER_EXTRACTION);
     assert_eq!(server.count("/init.mp4"), 0);
     assert_eq!(server.count("/segment.m4s"), 0);
@@ -581,12 +570,6 @@ fn indexed_hls_audio_follows_upstream_sort_order_without_merger_launch() {
         // Upstream sanitizes `/` and `+` in rendition names to `_`.
         assert_eq!(info["format_id"], format!("500+{expected_id}"));
         assert_eq!(info["requested_formats"][1]["language"], language);
-        assert_eq!(
-            info["requested_formats"][1]["audio_default"]
-                .as_bool()
-                .unwrap_or(false),
-            index == 2
-        );
     }
     assert_eq!(server.count("/init.mp4"), 0);
     assert_eq!(server.count("/segment.m4s"), 0);

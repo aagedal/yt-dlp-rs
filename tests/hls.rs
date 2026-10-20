@@ -291,7 +291,9 @@ fn json_simulation_does_not_fetch_fragments_or_create_output() {
             .iter()
             .all(|format| format["protocol"] == "m3u8_native")
     );
-    assert_eq!(json["fragments"].as_array().unwrap().len(), 2);
+    // Like upstream, HLS formats carry no fragments; HlsFD reads the playlist.
+    assert!(json.get("fragments").is_none());
+    assert_eq!(json["has_drm"], false);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     // Upstream generic's "Checking m3u8 live status" refetches the first
     // `m3u8_native` format and sets duration = int(sum of EXTINF) = 4 + 2.
@@ -422,13 +424,10 @@ fn encrypted_json_and_simulation_do_not_request_keys_or_segments() {
             String::from_utf8_lossy(&output.stderr)
         );
         if flag == "-j" {
+            // The key location stays in the playlist, as upstream.
             let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-            assert_eq!(
-                info["fragments"][0]["encryption"]["key_url"],
-                server.url("/key")
-            );
-            assert_eq!(info["fragments"][0]["encryption"]["iv"][15], 7);
-            assert!(info["fragments"][0]["encryption"].get("key").is_none());
+            assert!(info.get("fragments").is_none());
+            assert!(!String::from_utf8_lossy(&output.stdout).contains("key_url"));
         }
     }
     // Per run: extraction plus the generic live-status refetch of the media
@@ -458,6 +457,44 @@ fn cli_download_reports_upstream_fragment_count_before_destination() {
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert!(
         stdout.contains("[hlsnative] Total fragments: 2\n[download] Destination: out."),
+        "{stdout}"
+    );
+}
+
+#[test]
+fn info_json_formats_have_no_fragments_and_reload_from_the_playlist() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let cli = |args: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--no-progress", "-o", "out.%(ext)s"])
+            .args(args)
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    let output = cli(&[
+        "--skip-download",
+        "--write-info-json",
+        &server.url("/master.m3u8"),
+    ]);
+    assert!(output.status.success());
+    let json: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(directory.path().join("out.info.json")).unwrap())
+            .unwrap();
+    // Upstream's HLS format dicts: no fragments, the master as manifest_url.
+    for format in json["formats"].as_array().unwrap() {
+        assert!(format.get("fragments").is_none());
+        assert_eq!(format["manifest_url"], server.url("/master.m3u8"));
+        assert_eq!(format["has_drm"], false);
+    }
+    // HlsFD reads the fragments from the playlist when downloading.
+    let output = cli(&["--load-info-json", "out.info.json"]);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout.contains(
+            "[hlsnative] Downloading m3u8 manifest\n[hlsnative] Total fragments: 2\n[download] Destination: out.mp4"
+        ),
         "{stdout}"
     );
 }

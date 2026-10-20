@@ -131,7 +131,7 @@ fn traversal_root(source: Source<'_>, options: &super::TemplateOptions) -> serde
         }
         value
     };
-    let value = |info: &VideoInfo| serde_json::to_value(info).unwrap_or_default();
+    let value = |info: &VideoInfo| crate::info_json::info_value(info).unwrap_or_default();
     let mut root = match source {
         Source::Json(value) | Source::JsonFile(value) | Source::JsonExec(value) => value.clone(),
         Source::Video(info) => value(info),
@@ -184,7 +184,7 @@ fn traversal_root(source: Source<'_>, options: &super::TemplateOptions) -> serde
             n_entries,
             ..
         } => insert(
-            serde_json::to_value(info).unwrap_or_default(),
+            crate::info_json::to_shaped_value(info).unwrap_or_default(),
             vec![
                 ("playlist_index", 0.into()),
                 ("playlist_count", playlist_count.into()),

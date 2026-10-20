@@ -290,7 +290,7 @@ pub(super) fn py_str(value: &Value) -> String {
 }
 
 /// Python `json.dumps` (default separators) with or without `ensure_ascii`.
-pub(super) fn py_json(value: &Value, ensure_ascii: bool) -> String {
+pub(crate) fn py_json(value: &Value, ensure_ascii: bool) -> String {
     dumps(value, ensure_ascii, None, 0)
 }
 

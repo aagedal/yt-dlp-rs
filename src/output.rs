@@ -118,6 +118,12 @@ impl Default for TemplateOptions {
     }
 }
 
+/// Python `json.dumps(value)` (default separators, `ensure_ascii`), as
+/// upstream prints `-j`/`-J`.
+pub fn python_json_dumps(value: &serde_json::Value) -> String {
+    traverse::py_json(value, true)
+}
+
 /// Render a supported typed template with the default missing-value placeholder.
 /// Only literal template text can introduce directories.
 pub fn render_template(template: &str, info: &VideoInfo) -> Result<PathBuf> {

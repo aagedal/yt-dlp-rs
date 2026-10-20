@@ -65,8 +65,9 @@ pub use info::{
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
 pub use info_json::{
-    InfoJsonWrite, info_json_path, load_info_json, playlist_info_json, playlist_info_json_with,
-    to_python_json, video_info_json, video_info_json_with, write_info_json, write_info_json_with,
+    InfoJsonWrite, info_json_path, info_value, load_info_json, playlist_info_json,
+    playlist_info_json_with, to_python_json, upstream_shape, video_info_json, video_info_json_with,
+    write_info_json, write_info_json_with,
 };
 pub use match_filter::{EntrySelection, MatchFilters, MatchOutcome};
 pub use output::{render_automatic_captions, render_subtitles};
@@ -543,9 +544,9 @@ impl YoutubeDl {
     /// manifest` refetches the media playlist, whose fragments are then
     /// downloaded. `None` for other downloads.
     pub fn refresh_hls(&self, info: &VideoInfo) -> Result<Option<VideoInfo>> {
-        if info.fragments.is_empty()
-            || !info.protocol.as_deref().unwrap_or("").starts_with("m3u8")
-            || self.uses_ffmpeg_fd(info)
+        // Formats loaded from info JSON have no fragments yet, like
+        // upstream's, which HlsFD always reads from the playlist.
+        if !info.protocol.as_deref().unwrap_or("").starts_with("m3u8") || self.uses_ffmpeg_fd(info)
         {
             return Ok(None);
         }
@@ -873,6 +874,12 @@ impl YoutubeDl {
         }
         let name = if ffmpeg_fd {
             "ffmpeg"
+        } else if info
+            .protocol
+            .as_deref()
+            .is_some_and(|p| p.starts_with("m3u8"))
+        {
+            "hlsnative"
         } else if info.fragments.is_empty() {
             "http"
         } else if info.protocol.as_deref() == Some("http_dash_segments") {
@@ -1573,6 +1580,13 @@ impl YoutubeDl {
         if !info.requested_formats.is_empty() {
             return self.download_merged(info, destination.as_ref(), options, &mut callback);
         }
+        // A loaded HLS format reads its fragments from the playlist now.
+        let refreshed = if info.fragments.is_empty() {
+            self.refresh_hls(info)?
+        } else {
+            None
+        };
+        let info = refreshed.as_ref().unwrap_or(info);
         if !info.fragments.is_empty() {
             return fragment::download(
                 &self.client,

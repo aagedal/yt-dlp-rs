@@ -95,7 +95,62 @@ pub fn playlist_info_json_with(
 }
 
 fn to_value(value: impl serde::Serialize) -> Result<Value> {
-    serde_json::to_value(value).map_err(|error| Error::InfoJson(error.to_string()))
+    let mut value =
+        serde_json::to_value(value).map_err(|error| Error::InfoJson(error.to_string()))?;
+    upstream_shape(&mut value);
+    Ok(value)
+}
+
+/// Format keys this port uses internally that upstream's dictionaries lack.
+const INTERNAL_FORMAT_KEYS: [&str; 4] = [
+    "stream_kind",
+    "audio_group",
+    "audio_default",
+    "audio_autoselect",
+];
+
+/// Shape a serialized info dict (video, or playlist with entries) like
+/// upstream's: internal format keys are dropped, and HLS formats carry no
+/// fragments (HlsFD reads them from the playlist when downloading).
+pub fn upstream_shape(value: &mut Value) {
+    fn format(map: &mut Map<String, Value>) {
+        for key in INTERNAL_FORMAT_KEYS {
+            map.remove(key);
+        }
+        if map
+            .get("protocol")
+            .and_then(Value::as_str)
+            .is_some_and(|protocol| protocol.starts_with("m3u8"))
+        {
+            map.remove("fragments");
+        }
+    }
+    let Some(map) = value.as_object_mut() else {
+        return;
+    };
+    // The top level is the merged selected format.
+    format(map);
+    for key in ["formats", "requested_formats"] {
+        if let Some(Value::Array(items)) = map.get_mut(key) {
+            items
+                .iter_mut()
+                .filter_map(Value::as_object_mut)
+                .for_each(format);
+        }
+    }
+    if let Some(Value::Array(entries)) = map.get_mut("entries") {
+        entries.iter_mut().for_each(upstream_shape);
+    }
+}
+
+/// A video's info dict shaped like upstream's ([`upstream_shape`]).
+pub fn info_value(info: &VideoInfo) -> Result<Value> {
+    to_value(info)
+}
+
+/// Any serializable info (a playlist) shaped like upstream's.
+pub(crate) fn to_shaped_value(value: impl serde::Serialize) -> Result<Value> {
+    to_value(value)
 }
 
 fn finish(value: Value, kind: &str, epoch: u64, cleaned: bool) -> Result<Value> {
@@ -397,7 +452,10 @@ fn normalize_loaded(map: &mut serde_json::Map<String, Value>) -> Result<()> {
                 .get("protocol")
                 .and_then(Value::as_str)
                 .unwrap_or("https");
-            if !matches!(protocol, "http" | "https") && !format.contains_key("fragments") {
+            // HLS formats read their fragments from the playlist later.
+            if !matches!(protocol, "http" | "https" | "m3u8_native")
+                && !format.contains_key("fragments")
+            {
                 return Err(Error::InfoJson(format!(
                     "loaded format protocol {protocol:?} is unsupported"
                 )));
@@ -511,10 +569,10 @@ mod load_tests {
         let error = load(json!({
             "id": "v", "title": "T", "ext": "mp4", "webpage_url": "https://e.invalid/w",
             "extractor": "x", "extractor_key": "X",
-            "formats": [{"format_id": "h", "url": "https://e.invalid/h.m3u8", "ext": "mp4", "protocol": "m3u8_native"}],
+            "formats": [{"format_id": "h", "url": "https://e.invalid/h.m3u8", "ext": "mp4", "protocol": "m3u8"}],
         }))
         .unwrap_err();
-        assert!(error.to_string().contains("\"m3u8_native\" is unsupported"));
+        assert!(error.to_string().contains("\"m3u8\" is unsupported"));
         assert!(load(json!({"_type": "url", "url": "https://e.invalid/"})).is_err());
         assert!(load(json!([1])).is_err());
     }

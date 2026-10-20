@@ -1162,9 +1162,13 @@ fn single_json(
     counts: Option<PlaylistCounts>,
 ) -> serde_json::Result<serde_json::Value> {
     match result {
-        ExtractResult::Video(info) => serde_json::to_value(info),
+        ExtractResult::Video(info) => serde_json::to_value(info).map(|mut value| {
+            yt_dlp_rs::upstream_shape(&mut value);
+            value
+        }),
         ExtractResult::Playlist(playlist) => {
             let mut value = serde_json::to_value(playlist)?;
+            yt_dlp_rs::upstream_shape(&mut value);
             let object = value
                 .as_object_mut()
                 .expect("playlist serializes to an object");
@@ -3231,11 +3235,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     .as_mut()
                     .and_then(|entries| entries.get_mut(entry_index))
                 {
-                    *entry = serde_json::to_value(&info)?;
+                    *entry = yt_dlp_rs::info_value(&info)?;
                 } else if let Some(value @ Some(_)) =
                     (playlist_title.is_none() && args.dump_single_json).then_some(&mut single_json)
                 {
-                    *value = Some(serde_json::to_value(&info)?);
+                    *value = Some(yt_dlp_rs::info_value(&info)?);
                 }
                 if listing && !args.dump_json && !printing && simulate {
                     return Ok(());
@@ -3351,7 +3355,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         if args.dump_json || args.print_json {
                             // `sanitize_info` of the dict `process_info` has given
                             // `_filename`/`filename`; `epoch` and `_type` default.
-                            let mut value = serde_json::to_value(&info)?;
+                            let mut value = yt_dlp_rs::info_value(&info)?;
                             if let Some(object) = value.as_object_mut() {
                                 if let Some(index) = info.last_playlist_index {
                                     object.insert("__last_playlist_index".into(), index.into());
@@ -3363,8 +3367,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 object.entry("epoch").or_insert(epoch().into());
                                 object.entry("_type").or_insert("video".into());
                             }
-                            serde_json::to_writer(&mut stdout, &value)?;
-                            writeln!(stdout)?;
+                            writeln!(stdout, "{}", yt_dlp_rs::output::python_json_dumps(&value))?;
                         }
                         // --force-write-archive records simulated or skipped videos.
                         let mut force_record = |info: &yt_dlp_rs::VideoInfo| -> Result<(), String> {
@@ -4596,8 +4599,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 object.entry("epoch").or_insert(epoch().into());
                 object.entry("_type").or_insert("video".into());
             }
-            serde_json::to_writer(&mut stdout, &value)?;
-            writeln!(stdout)?;
+            writeln!(stdout, "{}", yt_dlp_rs::output::python_json_dumps(&value))?;
         }
     }
     for warning in downloader.cookie_jar().take_warnings() {
@@ -5939,7 +5941,7 @@ impl<'a> ProgressReporter<'a> {
     /// The video and file a `--progress-template` describes.
     fn for_download(mut self, info: &yt_dlp_rs::VideoInfo, filename: &std::path::Path) -> Self {
         if self.options.template.is_some() {
-            self.info = serde_json::to_value(info).unwrap_or_default();
+            self.info = yt_dlp_rs::info_value(info).unwrap_or_default();
             self.filename = Some(filename.to_string_lossy().into_owned());
         }
         self

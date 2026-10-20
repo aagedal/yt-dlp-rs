@@ -332,7 +332,7 @@ fn print_to_file_runs_under_print_simulation_and_validates_at_startup() {
 fn no_simulate_downloads_after_printing_json_and_listing() {
     for (flags, stdout_check) in [
         (vec!["-O", "id"], "page-1\n"),
-        (vec!["-j"], "\"id\":\"page-1\""),
+        (vec!["-j"], "\"id\": \"page-1\""),
         (vec!["-F"], "ID"),
         (vec!["-s", "--no-simulate"], ""),
     ] {
