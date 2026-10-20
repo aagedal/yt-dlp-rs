@@ -481,6 +481,12 @@ Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
 `creator` with `creators` derived, `format_field`'s empty thumbnail without an
 image ID). A `None` `display_id` becomes the ID in place, like upstream.
 
+HitRecord records (`hitrecord.org/records/ID`) follow upstream `HitRecordIE`:
+the records API's `source_url.mp4_url` as an untyped result with its title,
+cleaned body description, millisecond duration, timestamp, uploader, Python
+`str()` of the user ID, counts and string tag texts, with upstream's
+`KeyError` messages.
+
 Hypem tracks (`hypem.com/track/ID`) follow upstream `HypemIE`: the page's
 `displayList-data` script (cleaned like `_html_search_regex` before parsing),
 its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped

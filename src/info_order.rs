@@ -728,6 +728,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "audioboom"
             | "playerfm"
             | "rtrfm"
+            | "hitrecord"
     ) || shape.starts_with("nobelprize;")
         || original
             .as_ref()
@@ -1160,6 +1161,21 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("url", Take),
             ("release_date", Take),
             ("description", Assign),
+        ],
+        // `HitRecordIE._real_extract`'s dict (its own format).
+        "hitrecord" => &[
+            ("id", Take),
+            ("url", Take),
+            ("title", Take),
+            ("description", Assign),
+            ("duration", Take),
+            ("timestamp", Assign),
+            ("uploader", Assign),
+            ("uploader_id", Assign),
+            ("view_count", Assign),
+            ("like_count", Assign),
+            ("comment_count", Assign),
+            ("tags", Assign),
         ],
         // `BloggerIE._real_extract`'s dict.
         "blogger" => &[
