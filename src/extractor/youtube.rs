@@ -660,7 +660,7 @@ fn extract_watch_page_with_caption_options(
     }
     let captions = captions::parse(&player, translated_manual)?;
     for warning in &captions.warnings {
-        eprintln!("WARNING: {id}: {warning}");
+        crate::output::encoding::write_message(true, &format!("WARNING: {id}: {warning}\n"));
     }
     let sources: Vec<_> = candidates
         .iter()

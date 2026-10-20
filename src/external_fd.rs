@@ -631,12 +631,15 @@ pub(crate) fn download(
     let code = status.code().unwrap_or(-1);
     if code != 0 {
         if !stderr.is_empty() {
-            eprintln!("{}", String::from_utf8_lossy(&stderr));
+            crate::output::encoding::write_message(
+                true,
+                &format!("{}\n", String::from_utf8_lossy(&stderr)),
+            );
         }
         if private.is_some() {
             let _ = std::fs::remove_file(&temporary);
         }
-        eprintln!("\n");
+        crate::output::encoding::write_message(true, "\n\n");
         let _ = callback(progress(DownloadPhase::Failed, 0, None));
         return Err(Error::Reported(format!(
             "{} exited with code {code}",

@@ -293,7 +293,7 @@ pub(crate) fn download(
         if private.is_some() {
             let _ = std::fs::remove_file(&temporary);
         }
-        eprintln!("\n");
+        crate::output::encoding::write_message(true, "\n\n");
         let _ = callback(progress(DownloadPhase::Failed, 0));
         return Err(Error::Reported(format!(
             "ffmpeg exited with code {}",

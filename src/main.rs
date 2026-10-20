@@ -22,6 +22,25 @@ use yt_dlp_rs::{
     write_info_json_with,
 };
 
+// Upstream `write_string` encodes every message with `--encoding`; these
+// shadow the standard printing macros for the rest of the binary.
+macro_rules! println {
+    () => {
+        yt_dlp_rs::output::encoding::write_message(false, "\n")
+    };
+    ($($arg:tt)*) => {
+        yt_dlp_rs::output::encoding::write_message(false, &format!("{}\n", format_args!($($arg)*)))
+    };
+}
+macro_rules! eprintln {
+    () => {
+        yt_dlp_rs::output::encoding::write_message(true, "\n")
+    };
+    ($($arg:tt)*) => {
+        yt_dlp_rs::output::encoding::write_message(true, &format!("{}\n", format_args!($($arg)*)))
+    };
+}
+
 /// `-q`: suppress informational `[...]` screen lines (upstream `to_screen`).
 /// `--compat-options allow-unsafe-ext` (upstream `_UnsafeExtensionError._enabled = False`).
 static ALLOW_UNSAFE_EXT: AtomicBool = AtomicBool::new(false);
@@ -44,10 +63,11 @@ static LOG_TO_STDERR: AtomicBool = AtomicBool::new(false);
 
 /// Upstream `_out_files.out`: stdout, or stderr with `logtostderr`.
 fn out_stream() -> Box<dyn Write> {
+    use yt_dlp_rs::output::encoding::{EncodingWriter, output};
     if LOG_TO_STDERR.load(Ordering::Relaxed) {
-        Box::new(io::stderr().lock())
+        Box::new(EncodingWriter::new(io::stderr().lock(), output()))
     } else {
-        Box::new(io::stdout().lock())
+        Box::new(EncodingWriter::new(io::stdout().lock(), output()))
     }
 }
 
@@ -2380,6 +2400,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ffprobe.as_deref(),
             args_proxy.as_deref(),
             &compat_shown,
+            args.encoding.as_deref(),
         );
         // Upstream's request director (`Request Handlers`) loads the jar.
         if let Err(error) = yt_dlp_rs::screen::load_cookies() {
@@ -5253,6 +5274,15 @@ fn hls_use_mpegts(args: &Args) -> Option<bool> {
 }
 
 fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
+    // `--encoding`: messages are encoded with `errors='ignore'`.
+    if let Some(name) = &args.encoding {
+        match yt_dlp_rs::output::encoding::Encoding::lookup(name) {
+            Some(encoding) => yt_dlp_rs::output::encoding::set_output(encoding),
+            None => {
+                warning!("WARNING: --encoding {name} is not supported natively; output is UTF-8")
+            }
+        }
+    }
     for (name, value, strict) in [
         ("buffer size", &args.buffer_size, true),
         ("throttled rate limit", &args.throttled_rate, false),
@@ -5313,14 +5343,6 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         } else if name != "deno" {
             warning!("WARNING: JavaScript runtime {name} is not supported natively; use deno");
         }
-    }
-    if let Some(encoding) = &args.encoding
-        && !matches!(
-            encoding.to_lowercase().replace(['-', '_'], "").as_str(),
-            "utf8"
-        )
-    {
-        warning!("WARNING: --encoding {encoding} is not supported natively; output is UTF-8");
     }
     for (given, what) in [
         (args.legacy_server_connect, "--legacy-server-connect"),
@@ -7136,6 +7158,7 @@ fn print_debug_header(
     ffprobe: Option<&Path>,
     proxy: Option<&str>,
     compat: &[String],
+    args_encoding: Option<&str>,
 ) {
     use std::io::IsTerminal;
     let term = std::env::var("TERM").unwrap_or_default();
@@ -7161,12 +7184,14 @@ fn print_debug_header(
     };
     let screen = if quiet { stderr } else { out };
     let debug = |text: &str| eprintln!("[debug] {text}");
-    debug(&format!(
-        "Encodings: locale utf-8, fs utf-8, pref utf-8, out {}, error {}, screen {}",
+    // Written without `--encoding`; `pref` is its name.
+    std::eprintln!(
+        "[debug] Encodings: locale utf-8, fs utf-8, pref {}, out {}, error {}, screen {}",
+        args_encoding.unwrap_or("utf-8"),
         encoding(out),
         encoding(stderr),
         encoding(screen)
-    ));
+    );
     debug(&format!("yt-dlp-rs version {}", env!("CARGO_PKG_VERSION")));
     if !compat.is_empty() {
         debug(&format!("Compatibility options: {}", compat.join(", ")));

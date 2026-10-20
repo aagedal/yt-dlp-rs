@@ -1,3 +1,4 @@
+pub mod encoding;
 pub(crate) mod exec;
 mod filename;
 mod formats;
