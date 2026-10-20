@@ -1,12 +1,12 @@
 //! Narrow watch-page slice of YoutubeIE at the pinned upstream revision.
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
-mod captions;
 mod challenge;
 mod chapters;
 mod dict;
 mod innertube;
 mod metadata;
 mod streams;
+mod subs;
 mod watch;
 use super::{Extractor, direct};
 use crate::{Error, Result, StreamKind, VideoInfo};
@@ -376,14 +376,40 @@ fn extract_clients(
             formats.push(format);
         }
     }
-    let player = acquired
-        .player_responses
+    for dict in streams::storyboards(&acquired.player_responses, duration, id) {
+        let mut format = streams::to_format(&dict, id)?;
+        format.extra.insert("rows".into(), dict["rows"].clone());
+        format
+            .extra
+            .insert("columns".into(), dict["columns"].clone());
+        crate::info_order::mark_format(&mut format, "youtube-storyboard");
+        formats.push(format);
+    }
+    // Captions from the client responses, into `_list_formats`' manifest
+    // subtitles (the automatic captions' container).
+    let clients: Vec<(&str, &Value)> = acquired
+        .responses
         .iter()
-        .find(|response| response.get("captions").is_some())
-        .or_else(|| acquired.player_responses.first())
-        .cloned()
-        .unwrap_or(Value::Null);
-    let captions = captions::parse(&player, translated_manual)?;
+        .map(|response| (response.client, &response.response))
+        .collect();
+    let manifest_subtitles = match serde_json::to_value(&streams.subtitles) {
+        Ok(Value::Object(map)) => map,
+        _ => Default::default(),
+    };
+    let captions = subs::extract(
+        &acquired.player_responses,
+        &clients,
+        manifest_subtitles,
+        translated_manual,
+    );
+    // `set_audio_lang_from_orig_subs_lang`: the first original language.
+    if let Some(language) = captions.audio_languages.first() {
+        for format in &mut formats {
+            if format.acodec.as_deref() != Some("none") && format.language.is_none() {
+                format.language = Some(language.clone());
+            }
+        }
+    }
     let Some(first_format) = formats.first() else {
         return Err(no_formats());
     };
@@ -458,19 +484,6 @@ fn extract_clients(
         description.as_deref(),
         duration.and_then(|duration| u64::try_from(duration).ok()),
     );
-    // `_list_formats`' manifest subtitles are the automatic captions'
-    // container.
-    let mut automatic = streams.subtitles;
-    for (language, tracks) in captions.automatic.entries {
-        match automatic
-            .entries
-            .iter_mut()
-            .find(|(known, _)| *known == language)
-        {
-            Some((_, existing)) => existing.extend(tracks),
-            None => automatic.entries.push((language, tracks)),
-        }
-    }
     let dict = dict::build(&dict::Input {
         video_id: id,
         url,
@@ -487,8 +500,8 @@ fn extract_clients(
         } else {
             serde_json::to_value(&chapters).unwrap_or(Value::Null)
         },
-        automatic_captions: serde_json::to_value(&automatic).unwrap_or(Value::Null),
-        subtitles: serde_json::to_value(&captions.subtitles).unwrap_or(Value::Null),
+        automatic_captions: Value::Object(captions.automatic),
+        subtitles: Value::Object(captions.subtitles),
     });
     let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
     let mut info = direct::build_at(first_format.url.clone(), &page, first_format.ext.clone());

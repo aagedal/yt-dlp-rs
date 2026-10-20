@@ -208,8 +208,19 @@ key order, over every player response, the page's meta tags and `ytInitialData`:
   `uploadDate` timestamp (only with a time and zone) and date (else the
   `dateText`), and availability from the badges.
 
-Relative `dateText` values are not resolved. Comments and storyboard formats
-are not extracted. HTML5 media `poster` attributes become thumbnails.
+Captions follow upstream's caption loop over the client responses with
+streaming data:
+- **Tracks:** each subtitle format's `fmt` URL (without `xosf`), carrying
+  upstream's `impersonate` and client keys.
+- **Translations:** `translationLanguages` from every response; translated
+  manual captions only with `--write-auto-subs`/`--list-subs`.
+- **`-orig` tracks:** for the original language, which also becomes the audio
+  formats' language.
+- **PO tokens:** tracks requiring a PO token are skipped.
+
+Storyboards become `sbN` `mhtml` formats with their fragments; this port cannot
+download them. Relative `dateText` values are not resolved, and comments are not
+extracted. HTML5 media `poster` attributes become thumbnails.
 Generic results follow upstream `GenericIE`: the first response's
 `Last-Modified` header becomes `timestamp` through a port of
 `unified_timestamp` (pinned `DATE_FORMATS`, `extract_timezone`,

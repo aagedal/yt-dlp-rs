@@ -1016,6 +1016,91 @@ fn solve_once<'a>(
     })
 }
 
+/// `_extract_storyboard`: `mhtml` storyboard formats from the first
+/// response's spec (the levels in reverse).
+pub(super) fn storyboards(
+    player_responses: &[Value],
+    duration: Option<i64>,
+    video_id: &str,
+) -> Vec<Map<String, Value>> {
+    let spec = player_responses
+        .iter()
+        .find_map(|response| {
+            response
+                .pointer("/storyboards/playerStoryboardSpecRenderer/spec")
+                .and_then(Value::as_str)
+        })
+        .unwrap_or_default();
+    let mut levels: Vec<&str> = spec.split('|').collect();
+    levels.reverse();
+    let base = levels.pop().filter(|base| !base.is_empty());
+    let Some(base) = base
+        .and_then(|base| Url::parse("https://i.ytimg.com/").ok()?.join(base).ok())
+        .map(String::from)
+        .and_then(|base| super::super::json_ld::url_or_none(&base))
+    else {
+        return Vec::new();
+    };
+    let Some(duration) = duration else {
+        return Vec::new();
+    };
+    let last = levels.len() as i64 - 1;
+    let mut found = Vec::new();
+    for (index, level) in levels.iter().enumerate() {
+        let args: Vec<&str> = level.split('#').collect();
+        let counts: Vec<Option<i64>> = args
+            .iter()
+            .take(5)
+            .map(|count| count.trim().parse::<i64>().ok())
+            .collect();
+        if args.len() != 8
+            || counts
+                .iter()
+                .any(|count| count.is_none_or(|count| count == 0))
+        {
+            crate::screen::warning(&format!(
+                "[youtube] {video_id}: Malformed storyboard {index}: {}; {}",
+                args.join("#"),
+                crate::BUG_REPORTS_MESSAGE
+            ));
+            continue;
+        }
+        let [width, height, frames, columns, rows] =
+            [0, 1, 2, 3, 4].map(|position| counts[position].unwrap_or_default());
+        let (name, sigh) = (args[6], args[7]);
+        let url = base
+            .replace("$L", &(last - index as i64).to_string())
+            .replace("$N", name)
+            + &format!("&sigh={sigh}");
+        let fragment_count = frames as f64 / (columns * rows) as f64;
+        let fragment_duration = duration as f64 / fragment_count;
+        let fragments: Vec<Value> = (0..fragment_count.ceil() as i64)
+            .map(|fragment| {
+                json!({
+                    "url": url.replace("$M", &fragment.to_string()),
+                    "duration": fragment_duration.min(duration as f64 - fragment as f64 * fragment_duration),
+                })
+            })
+            .collect();
+        let mut format = Map::new();
+        format.insert("format_id".into(), format!("sb{index}").into());
+        format.insert("format_note".into(), "storyboard".into());
+        format.insert("ext".into(), "mhtml".into());
+        format.insert("protocol".into(), "mhtml".into());
+        format.insert("acodec".into(), "none".into());
+        format.insert("vcodec".into(), "none".into());
+        format.insert("url".into(), url.into());
+        format.insert("width".into(), width.into());
+        format.insert("height".into(), height.into());
+        format.insert("fps".into(), (frames as f64 / duration as f64).into());
+        format.insert("rows".into(), rows.into());
+        format.insert("columns".into(), columns.into());
+        format.insert("fragments".into(), Value::Array(fragments));
+        found.push(format);
+    }
+    found
+}
+
 /// `/itag/(\d+)` in a manifest format's URL.
 fn itag_of(url: &str) -> Option<String> {
     let start = url.find("/itag/")? + "/itag/".len();

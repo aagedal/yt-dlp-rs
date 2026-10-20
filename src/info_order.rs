@@ -308,6 +308,22 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ("width", Take),
             ("height", Take),
         ],
+        // `YoutubeIE._extract_storyboard`'s format.
+        "youtube-storyboard" => &[
+            ("format_id", Take),
+            ("format_note", Take),
+            ("ext", Take),
+            ("protocol", Take),
+            ("acodec", Take),
+            ("vcodec", Take),
+            ("url", Take),
+            ("width", Take),
+            ("height", Take),
+            ("fps", Take),
+            ("rows", Take),
+            ("columns", Take),
+            ("fragments", Take),
+        ],
         // `YoutubeIE`'s `process_format_stream` dict.
         "youtube-https" => &[
             ("asr", Assign),
@@ -1755,6 +1771,23 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         }
         // `_extract_thumbnails`' `{url, height, width}` (only keys present:
         // generated names have just a URL), then `preference` and the ID.
+        // `process_language`'s `{ext, url, name, impersonate, client}` tracks.
+        for key in ["subtitles", "automatic_captions"] {
+            if let Some(Value::Object(languages)) = replay.out.get_mut(key) {
+                for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
+                    for track in tracks.iter_mut().filter_map(Value::as_object_mut) {
+                        let mut ordered = Map::new();
+                        for key in ["ext", "url", "name", "impersonate", "__yt_dlp_client"] {
+                            if let Some(value) = track.shift_remove(key) {
+                                ordered.insert(key.to_owned(), value);
+                            }
+                        }
+                        ordered.append(track);
+                        *track = ordered;
+                    }
+                }
+            }
+        }
         if let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails") {
             for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
                 let mut ordered = Map::new();
