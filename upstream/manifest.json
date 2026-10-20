@@ -208,6 +208,18 @@
       "scope": "EbaumsWorldIE _VALID_URL and player XML extraction (_download_xml note/errors, find().text None/AttributeError) compared with pinned upstream output through the fixture proxy; XML parse error text differs from expat"
     },
     {
+      "name": "fczenit",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/fczenit.py"
+      ],
+      "rust": [
+        "src/extractor/fczenit.rs",
+        "tests/fixtures/sites/fczenit/"
+      ],
+      "scope": "FczenitIE page MSI id and msi/video JSON (qualities as formats, tags, duration, date) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "glide",
       "status": "partial",
       "upstream": [

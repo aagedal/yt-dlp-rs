@@ -335,6 +335,11 @@ result, empty elements as `None` (a generic title for an empty title) and a
 missing element as upstream's bare `AttributeError` text. XML parse errors
 carry this port's parser message rather than expat's.
 
+FC Zenit videos (`fc-zenit.ru/video/ID`) follow upstream `FczenitIE`: the
+page's `config` MSI video ID (fatal), then the player's `msi/video?video=ID`
+JSON: name, preview, float duration, int date, labeled qualities with URLs as
+formats (`int_or_none` label heights) and labeled tags.
+
 Glide messages (`share.glide.me/ID`) follow upstream `GlideIE`: the page's
 generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
 `video-thumbnail` image (else the OpenGraph image with its warning), each

@@ -284,6 +284,8 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        // `FczenitIE`'s quality.
+        "fczenit" => &[("format_id", Take), ("url", Take), ("height", Assign)],
         // `_parse_ism_formats_and_subtitles`' track.
         "ism" => &[
             ("format_id", Take),
@@ -862,6 +864,16 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("thumbnail", Assign),
             ("duration", Take),
             ("formats", Take),
+        ],
+        // `FczenitIE._real_extract`'s dict.
+        "fczenit" => &[
+            ("id", Take),
+            ("title", Take),
+            ("thumbnail", Assign),
+            ("formats", Take),
+            ("duration", Take),
+            ("timestamp", Assign),
+            ("tags", List),
         ],
         // `GodTubeIE._real_extract`'s dict (its own format).
         "godtube" => &[
