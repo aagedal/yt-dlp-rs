@@ -207,6 +207,7 @@ fn process(
             return Err(error("generated captions exceed 100000 formats or 64 MiB"));
         }
         formats.push(SubtitleFormat {
+            protocol: None,
             url: url.clone(),
             ext: ext.into(),
             name: name.map(str::to_owned),

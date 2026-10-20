@@ -77,6 +77,9 @@ pub struct SubtitleFormat {
     pub name: Option<String>,
     pub url: Url,
     pub ext: String,
+    /// `m3u8_native` for an HLS subtitle rendition (downloaded by HlsFD).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub protocol: Option<String>,
 }
 pub type Subtitles = SubtitleMap<Vec<SubtitleFormat>>;
 pub type RequestedSubtitles = SubtitleMap<SubtitleFormat>;
@@ -309,6 +312,7 @@ mod tests {
 
     fn format(ext: &str, id: &str) -> SubtitleFormat {
         SubtitleFormat {
+            protocol: None,
             name: None,
             url: format!("https://example.test/{id}.{ext}").parse().unwrap(),
             ext: ext.into(),
@@ -391,6 +395,7 @@ mod tests {
     fn inventory_matches_upstream_table() {
         let mut info = info();
         let named = |ext: &str, name: Option<&str>| SubtitleFormat {
+            protocol: None,
             name: name.map(str::to_owned),
             ..format(ext, "secret-url")
         };
@@ -711,6 +716,7 @@ mod tests {
                 entries: vec![(
                     case["language"].as_str().map(str::to_owned),
                     SubtitleFormat {
+                        protocol: None,
                         name: None,
                         url: "https://example.test/sub".parse().unwrap(),
                         ext: case["ext"].as_str().unwrap().into(),

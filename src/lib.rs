@@ -45,6 +45,7 @@ mod subtitle_convert;
 mod subtitles;
 mod thumbnail_process;
 mod video;
+mod webvtt;
 pub mod xattr;
 
 pub use archive::{DownloadArchive, archive_id};
@@ -1623,6 +1624,17 @@ impl YoutubeDl {
         options: DownloadOptions,
         mut callback: impl FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<u64> {
+        if subtitle.protocol.as_deref() == Some("m3u8_native") {
+            report_invoking("hlsnative", &[&subtitle.url]);
+            return download::download_hls_subtitle(
+                &self.client,
+                info,
+                subtitle,
+                destination.as_ref(),
+                options,
+                &mut callback,
+            );
+        }
         report_invoking("http", &[&subtitle.url]);
         download::download_subtitle(
             &self.client,

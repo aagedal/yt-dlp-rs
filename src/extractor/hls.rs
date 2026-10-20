@@ -306,7 +306,39 @@ pub(crate) fn from_response(
             info.ext = "mp4".into();
             info.fragments = info.formats[0].fragments.clone();
         }
-        Playlist::Master { variants, audio } => {
+        Playlist::Master {
+            variants,
+            audio,
+            subtitles,
+        } => {
+            // Upstream `extract_media`: an m3u8 subtitle rendition is WebVTT
+            // fetched through HlsFD; other URIs keep their extension.
+            for subtitle in subtitles {
+                let ext = direct::determine_ext(subtitle.url.as_str())
+                    .unwrap_or_else(|| "unknown_video".into());
+                let (ext, protocol) = if ext == "m3u8" {
+                    ("vtt".to_owned(), Some("m3u8_native".to_owned()))
+                } else {
+                    (ext, None)
+                };
+                let language = Some(subtitle.language.unwrap_or_else(|| "und".into()));
+                let format = crate::SubtitleFormat {
+                    name: None,
+                    url: subtitle.url,
+                    ext,
+                    protocol,
+                };
+                // `subtitles.setdefault(lang, []).append(sub_info)`.
+                match info
+                    .subtitles
+                    .entries
+                    .iter_mut()
+                    .find(|(key, _)| *key == language)
+                {
+                    Some((_, formats)) => formats.push(format),
+                    None => info.subtitles.entries.push((language, vec![format])),
+                }
+            }
             if variants.len() + audio.len() > MAX_VARIANTS {
                 return Err(unsupported(
                     "HLS master exceeds the 256-variant extraction limit",

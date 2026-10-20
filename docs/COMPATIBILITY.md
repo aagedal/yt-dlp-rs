@@ -913,8 +913,19 @@ an explicit offset. All ranges are positive with checked arithmetic. Unsupported
 state is an error: live playlists without ENDLIST, SAMPLE-AES/DRM or unsupported
 key formats, gaps, low-latency tags, variables, changing maps (also a map
 after a discontinuity),
-external video/subtitle or unresolved rendition groups, mixed inband/external
+external video or unresolved rendition groups, mixed inband/external
 audio groups, nested masters and unknown EXT tags.
+`EXT-X-MEDIA:TYPE=SUBTITLES` renditions with a URI become subtitles like
+upstream's `extract_media` (by `LANGUAGE`, default `und`; an m3u8 URI is `vtt`
+with protocol `m3u8_native`), listed by `--list-subs` and written with
+`--write-subs` through upstream's HlsFD flow (`[hlsnative] Downloading m3u8
+manifest`, `Total fragments: N`): a single segment is copied as it is, several
+are joined by a port of `yt_dlp/webvtt.py` and HlsFD's WebVTT packing
+(`X-TIMESTAMP-MAP` offsets with 2^33 wraparound, cues continued across segments
+merged, header blocks after the first segment discarded with a warning that,
+unlike upstream's, does not point to yt-dlp's tracker). Encrypted or byte-range
+subtitle segments are unsupported. Fragment progress lines use this port's
+renderer.
 `EXT-X-DISCONTINUITY` (and, like upstream's prefix match,
 `EXT-X-DISCONTINUITY-SEQUENCE`) lines are counted per fragment: downloads span
 every section as HlsFD does, and `--hls-split-discontinuity` lists one format

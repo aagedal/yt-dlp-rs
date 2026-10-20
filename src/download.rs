@@ -477,6 +477,115 @@ pub(crate) fn download_subtitle(
     )
 }
 
+/// Upstream HlsFD for an `m3u8_native` WebVTT subtitle rendition: the
+/// playlist's segments joined by WebVTT packing (a single segment is copied
+/// as it is), published without overwriting.
+pub(crate) fn download_hls_subtitle(
+    client: &Client,
+    info: &VideoInfo,
+    subtitle: &crate::SubtitleFormat,
+    destination: &Path,
+    options: DownloadOptions,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    crate::screen::screen("[hlsnative] Downloading m3u8 manifest");
+    let response = crate::extractor::direct::probe(client, &subtitle.url, Some(&info.webpage_url))?;
+    let (_, playlist) = crate::extractor::hls::read_playlist(response)?;
+    let crate::hls::Playlist::Media { fragments, .. } = playlist else {
+        return Err(Error::Subtitle(
+            "an HLS subtitle rendition must be a media playlist".into(),
+        ));
+    };
+    crate::screen::screen(&format!("[hlsnative] Total fragments: {}", fragments.len()));
+    let parent = destination
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or(Path::new("."));
+    let workspace = tempfile::Builder::new()
+        .prefix(".yt-dlp-rs-subtitle-")
+        .tempdir_in(parent)?;
+    let single = fragments.len() == 1;
+    let mut stored = 0_u64;
+    let mut packer = crate::webvtt::Packer::default();
+    let mut joined = Vec::new();
+    for (index, fragment) in fragments.iter().enumerate() {
+        if fragment.byte_range.is_some() || fragment.encryption.is_some() {
+            return Err(Error::Subtitle(
+                "byte-range or encrypted HLS subtitle segments are unsupported".into(),
+            ));
+        }
+        let path = workspace.path().join(format!("fragment-{index}"));
+        download_resource(
+            client,
+            &HttpResource {
+                url: &fragment.url,
+                referrer: Some(&info.webpage_url),
+                validate_media: false,
+                subtitle: true,
+                limits: (None, None),
+                rate_limit: None,
+                update_time: false,
+                part_files: PartFiles::Private,
+                chunk: None,
+            },
+            &path,
+            DownloadOptions {
+                retries: options.fragment_retries,
+                ..options
+            },
+            // Fragment progress like FragmentFD's (one publication is
+            // reported for the joined file).
+            &mut |progress: DownloadProgress| {
+                if progress.phase == DownloadPhase::Publishing {
+                    return ControlFlow::Continue(());
+                }
+                callback(DownloadProgress {
+                    downloaded_bytes: stored + progress.downloaded_bytes,
+                    total_bytes: None,
+                    fragment_index: Some(index as u32 + 1),
+                    fragment_count: Some(fragments.len() as u32),
+                    ..progress
+                })
+            },
+        )?;
+        let content = fs::read(&path)?;
+        stored += content.len() as u64;
+        if single {
+            joined.extend(content);
+        } else {
+            joined.extend(packer.pack(&content, index + 1, &mut |message| {
+                crate::screen::warning(message)
+            })?);
+        }
+    }
+    if !single {
+        joined.extend(packer.finish());
+    }
+    let mut output = tempfile::Builder::new()
+        .prefix(".yt-dlp-rs-subtitle-")
+        .suffix(".part")
+        .tempfile_in(parent)?;
+    output.write_all(&joined)?;
+    output.flush()?;
+    let bytes = joined.len() as u64;
+    if callback(DownloadProgress {
+        attempt: 1,
+        downloaded_bytes: bytes,
+        total_bytes: Some(bytes),
+        phase: DownloadPhase::Publishing,
+        stream_index: None,
+        stream_count: None,
+        fragment_index: None,
+        fragment_count: None,
+    })
+    .is_break()
+    {
+        return Err(Error::DownloadCancelled);
+    }
+    persist(output, destination, options.overwrite)?;
+    Ok(bytes)
+}
+
 /// Copy a thumbnail with the whole-file transport (no page referrer, no media
 /// MIME check), publishing without overwriting.
 pub(crate) fn download_thumbnail(

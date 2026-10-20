@@ -11,6 +11,8 @@ pub(crate) enum Playlist {
     Master {
         variants: Vec<Variant>,
         audio: Vec<AudioRendition>,
+        /// `SUBTITLES` renditions with a URI, in document order.
+        subtitles: Vec<SubtitleRendition>,
     },
     Media {
         fragments: Vec<Fragment>,
@@ -44,6 +46,13 @@ pub(crate) struct Variant {
     /// Upstream `build_stream_name`: the variant's NAME, else its VIDEO
     /// group's first rendition NAME or the group ID.
     pub name: Option<String>,
+}
+
+/// An `EXT-X-MEDIA:TYPE=SUBTITLES` rendition (upstream `extract_media`).
+#[derive(Debug)]
+pub(crate) struct SubtitleRendition {
+    pub url: Url,
+    pub language: Option<String>,
 }
 
 #[derive(Debug)]
@@ -252,7 +261,8 @@ fn variant(
     groups: &BTreeMap<(&str, &str), bool>,
     group_names: &BTreeMap<&str, &str>,
 ) -> Result<Variant> {
-    for group_type in ["SUBTITLES", "VIDEO", "CLOSED-CAPTIONS"] {
+    // SUBTITLES groups become the result's subtitles.
+    for group_type in ["VIDEO", "CLOSED-CAPTIONS"] {
         if let Some(group) = values.get(group_type).filter(|group| **group != "NONE")
             && groups.get(&(group_type, *group)) != Some(&false)
         {
@@ -337,6 +347,7 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
     // Upstream `groups`: renditions with TYPE, GROUP-ID and NAME, by GROUP-ID.
     let mut group_names: BTreeMap<&str, &str> = BTreeMap::new();
     let mut audio = Vec::new();
+    let mut subtitles = Vec::new();
     let mut audio_names = BTreeSet::new();
     let mut default_groups = BTreeSet::new();
     let mut rendition_count = 0usize;
@@ -357,6 +368,16 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 group_names.entry(*group).or_insert(*name);
             }
             let external = attrs.contains_key("URI");
+            // TYPE, GROUP-ID and NAME are required; a URI-less one is skipped.
+            if *kind == "SUBTITLES"
+                && attrs.get("NAME").is_some_and(|name| !name.is_empty())
+                && let Some(uri) = attrs.get("URI")
+            {
+                subtitles.push(SubtitleRendition {
+                    url: absolute(base, uri)?,
+                    language: attrs.get("LANGUAGE").map(|language| (*language).to_owned()),
+                });
+            }
             rendition_count += 1;
             if rendition_count > MAX_VARIANTS {
                 return Err(invalid("HLS variant/rendition limit exceeded"));
@@ -638,7 +659,11 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         if media_seen {
             return Err(invalid("mixed HLS master/media playlist"));
         }
-        return Ok(Playlist::Master { variants, audio });
+        return Ok(Playlist::Master {
+            variants,
+            audio,
+            subtitles,
+        });
     }
     if !endlist {
         return Err(invalid("live HLS without ENDLIST is unsupported"));
@@ -741,7 +766,10 @@ mod tests {
     #[test]
     fn external_audio_metadata_classifies_referencing_video_and_allows_audio_only_master() {
         let text = "#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"English, main\",LANGUAGE=\"en\",DEFAULT=YES,AUTOSELECT=YES,URI=\"en.m3u8\"\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Norsk\",LANGUAGE=\"nb\",DEFAULT=NO,AUTOSELECT=YES,URI=\"nb.m3u8\"\n#EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS=\"avc1.4,mp4a.40.2\",AUDIO=\"a\"\nv.m3u8";
-        let Playlist::Master { variants, audio } = parse(text, &base()).unwrap() else {
+        let Playlist::Master {
+            variants, audio, ..
+        } = parse(text, &base()).unwrap()
+        else {
             panic!()
         };
         assert_eq!(variants[0].stream_kind, StreamKind::VideoOnly);
@@ -754,7 +782,7 @@ mod tests {
         assert!(!audio[1].default);
         let only_audio = text.split("#EXT-X-STREAM-INF").next().unwrap();
         assert!(
-            matches!(parse(only_audio, &base()).unwrap(), Playlist::Master { variants, audio } if variants.is_empty() && audio.len() == 2)
+            matches!(parse(only_audio, &base()).unwrap(), Playlist::Master { variants, audio, .. } if variants.is_empty() && audio.len() == 2)
         );
     }
 
@@ -915,7 +943,7 @@ mod tests {
 
     #[test]
     fn rejects_external_non_audio_rendition_groups() {
-        for group in ["SUBTITLES", "VIDEO", "CLOSED-CAPTIONS"] {
+        for group in ["VIDEO", "CLOSED-CAPTIONS"] {
             let text = format!(
                 "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,{group}=\"a\"\na.m3u8\n#EXT-X-MEDIA:TYPE={group},GROUP-ID=\"a\",NAME=\"A\",URI=\"extra.m3u8\""
             );
