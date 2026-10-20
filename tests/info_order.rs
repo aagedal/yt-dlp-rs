@@ -54,7 +54,7 @@ fn serve(fixture: &serde_json::Value) -> String {
             };
             let extension = name.rfind('.').map_or("", |index| &name[index..]);
             // Pages may name absolute media URLs (JSON-LD) on this server.
-            let body = if extension == ".html" {
+            let body = if matches!(extension, ".html" | ".xml") {
                 String::from_utf8(body)
                     .unwrap()
                     .replace("{ORIGIN}", &served_origin)
@@ -164,4 +164,40 @@ fn loaded_info_json_keeps_upstream_key_order() {
             assert_eq!(text, expected, "{name} {flag}");
         }
     }
+}
+
+/// `--flat-playlist` leaves an RSS feed's `url_transparent` entries
+/// unextracted: `-j` prints upstream's raw entry with its URL, playlist and
+/// `_fill_common_fields(final=False)` keys, `-J` the raw entry.
+#[test]
+fn flat_rss_entries_are_printed_unextracted() {
+    let fixture = fixture();
+    let origin = serve(&fixture);
+    let run = |flag: &str| {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "--flat-playlist", flag])
+            .arg(format!("{origin}/feed.xml"))
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        normalize(&String::from_utf8(output.stdout).unwrap(), &origin)
+    };
+    let smuggled = "{ORIGIN}/a.mp4#__youtubedl_smuggle=%7B%22force_videoid%22%3A+%22ep1%22%7D";
+    let lines = run("-j");
+    let first = lines.lines().next().unwrap();
+    assert_eq!(
+        first,
+        format!(
+            "{{\"_type\": \"url_transparent\", \"url\": \"{smuggled}\", \"title\": \"Ep 1\", \"description\": \"First\", \"timestamp\": 1704067200, \"duration\": 62, \"thumbnail\": null, \"episode\": null, \"episode_number\": 1, \"season_number\": 2, \"age_limit\": 0, \"__x_forwarded_for_ip\": null, \"webpage_url\": \"{smuggled}\", \"original_url\": \"{smuggled}\", \"webpage_url_basename\": \"a.mp4\", \"webpage_url_domain\": \"{{HOST}}\", \"playlist_count\": 2, \"playlist\": \"Feed\", \"playlist_id\": \"{{ORIGIN}}/feed.xml\", \"playlist_title\": \"Feed\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"{{ORIGIN}}/feed.xml\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"playlist_autonumber\": 1, \"duration_string\": \"1:02\", \"upload_date\": \"20240101\", \"release_year\": null}}"
+        )
+    );
+    let single = run("-J");
+    assert!(
+        single.contains(&format!("\"entries\": [{{\"_type\": \"url_transparent\", \"url\": \"{smuggled}\", \"title\": \"Ep 1\"")),
+        "{single}"
+    );
 }

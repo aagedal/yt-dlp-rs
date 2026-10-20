@@ -448,7 +448,9 @@ impl Extractor for GenericHttp {
         crate::screen::before_extraction_request();
         screen(&format!("[generic] {id}: Downloading webpage"));
         // Dispatch a single response so direct media does not need two probes.
-        let referer = smuggled.as_ref().map(|smuggled| &smuggled.referer);
+        let referer = smuggled
+            .as_ref()
+            .and_then(|smuggled| smuggled.referer.as_ref());
         let response =
             direct::probe(client, url, referer).map_err(|error| webpage_error(&id, error))?;
         // Upstream's direct-link Content-Type pattern; anything else falls
@@ -490,11 +492,13 @@ impl Extractor for GenericHttp {
                 // `force_videoid` and `headers['Referer']` (the formats'
                 // `http_headers`).
                 info.id = smuggled.video_id.clone();
-                for format in &mut info.formats {
-                    format.http_headers = Some(serde_json::Map::from_iter([(
-                        "Referer".to_owned(),
-                        smuggled.referer.as_str().into(),
-                    )]));
+                if let Some(referer) = &smuggled.referer {
+                    for format in &mut info.formats {
+                        format.http_headers = Some(serde_json::Map::from_iter([(
+                            "Referer".to_owned(),
+                            referer.as_str().into(),
+                        )]));
+                    }
                 }
             }
             ExtractResult::Video(info)
@@ -530,7 +534,13 @@ impl Extractor for GenericHttp {
                 .path()
                 .to_ascii_lowercase()
                 .ends_with(".m3u8");
-        if hls_path || direct::response_mime(&response) != "text/html" {
+        // XML documents (RSS feeds) are read like pages: upstream's
+        // `is_html` accepts any body starting with `<`.
+        let xml = {
+            let mime = direct::response_mime(&response);
+            mime == "text/xml" || (mime.starts_with("application/") && mime.ends_with("xml"))
+        };
+        if hls_path || (direct::response_mime(&response) != "text/html" && !xml) {
             let mime = direct::response_mime(&response);
             // Upstream: a direct-link Content-Type takes `ext` from the URL,
             // then the response headers; an untyped binary response defaults
@@ -655,6 +665,11 @@ impl Extractor for GenericHttp {
         crate::screen::page_read(&page_url, &bytes)?;
         let html = std::str::from_utf8(&bytes)
             .map_err(|_| unsupported("only UTF-8/ASCII HTML is supported"))?;
+        // `compat_etree_fromstring(webpage)`: an RSS feed.
+        if let Some(feed) = super::rss::parse(html) {
+            detected("RSS feed");
+            return Ok(Some(rss_playlist(feed, url, &page_url)));
+        }
         crate::screen::debug("Looking for embeds");
         let Some(media) = parse_page(&page_url, html)? else {
             return self.found_urls(client, url, &page_url, html, timestamp);
@@ -1070,17 +1085,92 @@ impl GenericHttp {
     }
 }
 
+/// `_extract_rss`'s playlist: `url_transparent` placeholder entries that
+/// [`crate::YoutubeDl::resolve_entry`] extracts when they are processed.
+fn rss_playlist(feed: super::rss::Feed, url: &Url, page_url: &Url) -> ExtractResult {
+    use serde_json::Value;
+    let entries = feed
+        .items
+        .into_iter()
+        .map(|item| {
+            let mut info = direct::build_at(page_url.clone(), page_url, String::new());
+            info.formats.clear();
+            info.direct = None;
+            info.id = item.guid.clone().unwrap_or_default();
+            if let Some(Value::String(title)) = item.fields.first().map(|(_, value)| value) {
+                info.title = title.clone();
+            }
+            let fields: serde_json::Map<String, Value> = item
+                .fields
+                .into_iter()
+                .map(|(key, value)| (key.to_owned(), value))
+                .collect();
+            info.extra.insert(
+                crate::TRANSPARENT.into(),
+                serde_json::json!({"url": item.url, "force_videoid": item.guid, "fields": fields}),
+            );
+            info
+        })
+        .collect();
+    let mut extra = serde_json::Map::new();
+    extra.insert(
+        crate::info_order::INFO_SHAPE.to_owned(),
+        "rss-playlist".into(),
+    );
+    extra.insert(
+        "description".into(),
+        feed.description.map_or(Value::Null, Value::from),
+    );
+    ExtractResult::Playlist(PlaylistInfo {
+        id: url.to_string(),
+        title: feed.title.unwrap_or_default(),
+        webpage_url: page_url.clone(),
+        extractor: "generic".into(),
+        extractor_key: "Generic".into(),
+        entries,
+        extra,
+    })
+}
+
 /// Upstream `smuggle_url` data for a JSON-LD `url_transparent` result:
 /// `force_videoid`, `to_generic` and `referer`.
 struct Smuggled {
     video_id: String,
-    referer: Url,
+    referer: Option<Url>,
     /// The smuggled URL as upstream prints it.
     shown: String,
 }
 
 thread_local! {
     static SMUGGLED: std::cell::RefCell<Option<Smuggled>> = const { std::cell::RefCell::new(None) };
+}
+
+/// `smuggle_url(url, {'force_videoid': id})` for the next generic
+/// extraction; returns the smuggled URL as upstream prints it.
+pub(crate) fn smuggle_video_id(url: &Url, video_id: &str) -> String {
+    let shown = smuggled_text(url.as_str(), video_id);
+    SMUGGLED.with(|smuggled| {
+        smuggled.replace(Some(Smuggled {
+            video_id: video_id.to_owned(),
+            referer: None,
+            shown: shown.clone(),
+        }))
+    });
+    shown
+}
+
+/// `smuggle_url(text, {'force_videoid': video_id})`.
+pub(crate) fn smuggled_text(text: &str, video_id: &str) -> String {
+    let data = serde_json::json!({ "force_videoid": video_id });
+    format!(
+        "{text}#__youtubedl_smuggle={}",
+        quote_plus(&crate::output::python_json_dumps(&data))
+    )
+}
+
+/// Drop smuggled data a non-generic extraction did not consume.
+pub(crate) fn clear_smuggled() {
+    SMUGGLED.with(|smuggled| smuggled.borrow_mut().take());
 }
 
 /// Python `urllib.parse.quote_plus`.
@@ -1142,7 +1232,7 @@ impl GenericHttp {
         SMUGGLED.with(|smuggled| {
             smuggled.replace(Some(Smuggled {
                 video_id,
-                referer: url.clone(),
+                referer: Some(url.clone()),
                 shown,
             }))
         });

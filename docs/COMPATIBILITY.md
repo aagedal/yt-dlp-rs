@@ -206,6 +206,13 @@ timestamp), and every video derives `upload_date` from `timestamp` like
 `og:description` (unescaped) as `description`, `og:image` verbatim as the
 thumbnail when no poster exists, and `_rta_search` markers as `age_limit`
 (playlists do not represent these page-level fields).
+An RSS document (`<rss>`, also served as XML) is upstream's `_extract_rss`
+playlist: each `channel/item` is a `url_transparent` entry (its first
+enclosure URL, else its link, smuggled with the `guid` as `force_videoid`)
+extracted when the entry is processed and overlaid with the item's title,
+description, `pubDate`, iTunes duration/image/title/episode/season/explicit
+fields; `--flat-playlist` prints the raw entries unextracted, and numbered
+episodes, seasons and chapters get upstream's `Episode N` titles.
 A page without HTML5 media first tries upstream's JW Player setup data
 (`_find_jwplayer_data` with a port of `js_to_json`, checked against pinned
 upstream conversions in `tests/fixtures/js_to_json/`): one playlist item's

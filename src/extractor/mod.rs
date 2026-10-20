@@ -5,6 +5,7 @@ pub(crate) mod hls;
 pub(crate) mod html5;
 mod json_ld;
 mod jwplayer;
+mod rss;
 mod youtube;
 
 pub use direct::DirectHttp;

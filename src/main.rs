@@ -3239,6 +3239,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     .map_or_else(|| "N/A".into(), |count| count.to_string()),
                 counts.playlist_count
             );
+            // Upstream keeps resolved entries unless `extract_flat` became
+            // `discard`/`discard_in_playlist` (nothing needs the playlist's
+            // entries but the default multi-video concatenation).
+            let keeps_entries = args.flat_playlist
+                || args.dump_single_json
+                || prints_stage(Stage::Playlist)
+                || (args.write_info_json && args.no_clean_info_json && playlist_files)
+                || exec.has(Stage::Playlist)
+                || args.concat_playlist == "always";
+            if keeps_entries && yt_dlp_rs::screen::verbose() {
+                eprintln!("[debug] The information of all playlist entries will be held in memory");
+            }
         }
         // Upstream's playlist dict for the `playlist` stage.
         let playlist_dict = playlist_title
@@ -3255,6 +3267,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .as_mut()
             .and_then(|value| value.get_mut("entries"))
             .map(serde_json::Value::take);
+        // Unresolved `url_transparent` entries are `null` unless processed.
+        if let (Some(serde_json::Value::Array(entries)), ExtractResult::Playlist(playlist)) =
+            (&mut json_entries, &extracted)
+        {
+            for (entry, info) in entries.iter_mut().zip(&playlist.entries) {
+                if YoutubeDl::is_transparent(info) {
+                    *entry = serde_json::Value::Null;
+                }
+            }
+        }
         // Each entry's downloaded file (`requested_downloads[0].filepath`).
         let entry_files = std::cell::RefCell::new(vec![None::<PathBuf>; extracted.entry_count()]);
         let mut url_cancelled = false;
@@ -3283,7 +3305,38 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     .map_or_else(|| "N/A".into(), |count| count.to_string());
                 screen!("[download] Downloading item {index} of {count}");
             }
+            // `--flat-playlist`: a `url_transparent` entry is not extracted;
+            // its forced printings see the raw entry.
+            if args.flat_playlist
+                && let Some((raw, full)) = YoutubeDl::flat_entry(&info, epoch())
+            {
+                if let Some(entry) = json_entries
+                    .as_mut()
+                    .and_then(|entries| entries.get_mut(entry_index))
+                {
+                    *entry = serde_json::Value::Object(raw);
+                }
+                let full = serde_json::Value::Object(full);
+                for template in print_templates
+                    .iter()
+                    .filter(|template| template.stage() == Stage::Video)
+                {
+                    writeln!(
+                        stdout,
+                        "{}",
+                        template.render_dict(&full, &template_options)?
+                    )?;
+                }
+                if args.dump_json || args.print_json {
+                    writeln!(stdout, "{}", yt_dlp_rs::output::python_json_dumps(&full))?;
+                }
+                continue;
+            }
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+                // A `url_transparent` entry (RSS items) is extracted now.
+                if YoutubeDl::is_transparent(&info) {
+                    info = downloader.resolve_entry(info.clone())?;
+                }
                 // Upstream `process_subtitles` names the selected languages.
                 if let Some(requested) = &info.requested_subtitles
                     && !requested.entries.is_empty()

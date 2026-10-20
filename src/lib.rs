@@ -295,6 +295,10 @@ pub fn parse_duration(text: &str) -> Option<PyNumber> {
     match_filter::parse_duration_number(text)
 }
 
+/// A `url_transparent` playlist entry's URL and fields (see
+/// [`YoutubeDl::resolve_entry`]).
+pub(crate) const TRANSPARENT: &str = "__yt_dlp_rs_url_transparent";
+
 /// Upstream `bug_reports_message()` after a lowercase-ending text.
 pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U";
 
@@ -1222,6 +1226,28 @@ impl YoutubeDl {
                     entry.extra.insert("was_live".into(), true.into());
                 }
             }
+            // `_fill_common_fields`: clean titles for numbered chapters,
+            // seasons and episodes.
+            for field in ["chapter", "season", "episode"] {
+                let number = entry
+                    .extra
+                    .get(&format!("{field}_number"))
+                    .and_then(serde_json::Value::as_i64);
+                let present = entry.extra.get(field).is_some_and(|value| match value {
+                    serde_json::Value::Null => false,
+                    serde_json::Value::String(text) => !text.is_empty(),
+                    _ => true,
+                });
+                if let Some(number) = number
+                    && !present
+                {
+                    let mut name = field.to_owned();
+                    name[..1].make_ascii_uppercase();
+                    entry
+                        .extra
+                        .insert(field.into(), format!("{name} {number}").into());
+                }
+            }
             // `process_video_result`: a live stream not downloaded from the
             // start is titled with the local time.
             if self.live_from_now(entry) {
@@ -1649,7 +1675,196 @@ impl YoutubeDl {
         )))
     }
 
+    /// Whether `entry` is an unresolved `url_transparent` entry.
+    pub fn is_transparent(entry: &VideoInfo) -> bool {
+        entry.extra.contains_key(TRANSPARENT)
+    }
+
+    /// Upstream `process_ie_result` for a `url_transparent` playlist entry
+    /// (RSS items): its URL is extracted (smuggling the `guid` as
+    /// `force_videoid`), then updated with the entry's non-`None` fields,
+    /// keeping the playlist fields. Other entries are returned unchanged.
+    pub fn resolve_entry(&self, entry: VideoInfo) -> Result<VideoInfo> {
+        let Some(marker) = entry.extra.get(TRANSPARENT).cloned() else {
+            return Ok(entry);
+        };
+        let target = marker["url"].as_str().unwrap_or_default().to_owned();
+        let Ok(url) = Url::parse(&target) else {
+            // GenericIE reports the (smuggled) input as not a URL.
+            let shown = match marker["force_videoid"].as_str() {
+                Some(id) => extractor::html5::smuggled_text(&target, id),
+                None => target,
+            };
+            screen::set_extractor("generic");
+            screen::screen(&format!(
+                "[generic] Extracting URL: {}",
+                screen::extracting_url(&shown)
+            ));
+            return Err(Error::Reported(format!(
+                "[generic] '{shown}' is not a valid URL"
+            )));
+        };
+        let shown = match marker["force_videoid"].as_str() {
+            Some(id) => extractor::html5::smuggle_video_id(&url, id),
+            None => target.clone(),
+        };
+        let fields: Vec<(String, serde_json::Value)> = marker["fields"]
+            .as_object()
+            .map(|fields| {
+                fields
+                    .iter()
+                    .filter(|(_, value)| !value.is_null())
+                    .map(|(key, value)| (key.clone(), value.clone()))
+                    .collect()
+            })
+            .unwrap_or_default();
+        let shown_url = Url::parse(&shown).unwrap_or_else(|_| url.clone());
+        let merge = |result: &mut ExtractResult| -> Result<()> {
+            let ExtractResult::Video(info) = result else {
+                return Err(Error::UnsupportedHtml5(
+                    "url_transparent playlists are not supported natively".into(),
+                ));
+            };
+            let inner_shape = match info.extra.get(info_order::INFO_SHAPE) {
+                Some(serde_json::Value::String(shape)) => shape.clone(),
+                _ => String::new(),
+            };
+            for (key, value) in &fields {
+                match key.as_str() {
+                    "title" => info.title = value.as_str().unwrap_or_default().to_owned(),
+                    _ => metadata_parser::set_field(info, key, value.clone()),
+                }
+            }
+            // Upstream extracts (and names) the smuggled URL.
+            info.webpage_url = shown_url.clone();
+            let keys: Vec<&str> = fields.iter().map(|(key, _)| key.as_str()).collect();
+            info.extra.insert(
+                info_order::INFO_SHAPE.into(),
+                format!("{inner_shape}|transparent-entry:{}", keys.join(",")).into(),
+            );
+            Ok(())
+        };
+        let result = self.extract_once_with(&url, &merge);
+        extractor::html5::clear_smuggled();
+        let mut result = result?;
+        result.add_default_extra_info(&shown);
+        let mut info = result.into_video()?;
+        // The playlist's fields stay.
+        info.playlist_index = entry.playlist_index;
+        info.playlist_autonumber = entry.playlist_autonumber;
+        info.playlist_count = entry.playlist_count;
+        info.n_entries = entry.n_entries;
+        info.last_playlist_index = entry.last_playlist_index;
+        for key in [
+            "playlist",
+            "playlist_id",
+            "playlist_title",
+            "playlist_uploader",
+            "playlist_uploader_id",
+            "playlist_channel",
+            "playlist_channel_id",
+            "playlist_webpage_url",
+        ] {
+            if let Some(value) = entry.extra.get(key) {
+                info.extra.insert(key.into(), value.clone());
+            }
+        }
+        Ok(info)
+    }
+
+    /// A `--flat-playlist` `url_transparent` entry, unextracted: upstream's
+    /// raw entry dict (`-J`) and, with `epoch`, the dict its forced
+    /// printings see (`-j`, `--print`).
+    pub fn flat_entry(
+        entry: &VideoInfo,
+        epoch: u64,
+    ) -> Option<(
+        serde_json::Map<String, serde_json::Value>,
+        serde_json::Map<String, serde_json::Value>,
+    )> {
+        use serde_json::Value;
+        let marker = entry.extra.get(TRANSPARENT)?;
+        let target = marker["url"].as_str().unwrap_or_default();
+        let shown = match marker["force_videoid"].as_str() {
+            Some(id) => extractor::html5::smuggled_text(target, id),
+            None => target.to_owned(),
+        };
+        let mut raw = serde_json::Map::new();
+        raw.insert("_type".into(), "url_transparent".into());
+        raw.insert("url".into(), shown.clone().into());
+        if let Some(fields) = marker["fields"].as_object() {
+            raw.extend(fields.clone());
+        }
+        raw.insert("__x_forwarded_for_ip".into(), Value::Null);
+        let mut full = raw.clone();
+        full.insert("webpage_url".into(), shown.clone().into());
+        full.insert("original_url".into(), shown.clone().into());
+        if let Ok(url) = Url::parse(&shown) {
+            full.insert(
+                "webpage_url_basename".into(),
+                info::url_basename(&url).into(),
+            );
+            full.insert("webpage_url_domain".into(), info::get_domain(&url).into());
+        }
+        let number = |value: Option<usize>| value.map_or(Value::Null, Value::from);
+        full.insert("playlist_count".into(), number(entry.playlist_count));
+        for key in [
+            "playlist",
+            "playlist_id",
+            "playlist_title",
+            "playlist_uploader",
+            "playlist_uploader_id",
+            "playlist_channel",
+            "playlist_channel_id",
+            "playlist_webpage_url",
+        ] {
+            full.insert(
+                key.into(),
+                entry.extra.get(key).cloned().unwrap_or(Value::Null),
+            );
+        }
+        full.insert("n_entries".into(), number(entry.n_entries));
+        full.insert("playlist_index".into(), number(entry.playlist_index));
+        full.insert(
+            "__last_playlist_index".into(),
+            number(entry.last_playlist_index),
+        );
+        full.insert("extractor".into(), "generic".into());
+        full.insert("extractor_key".into(), "Generic".into());
+        full.insert(
+            "playlist_autonumber".into(),
+            number(entry.playlist_autonumber),
+        );
+        full.insert("epoch".into(), epoch.into());
+        // `_fill_common_fields(final=False)`.
+        if let Some(duration) = raw.get("duration").and_then(Value::as_f64) {
+            full.insert(
+                "duration_string".into(),
+                info::format_seconds(duration.max(0.0) as u64).into(),
+            );
+        }
+        if let Some(date) = raw
+            .get("timestamp")
+            .and_then(Value::as_i64)
+            .and_then(dates::strftime_date)
+        {
+            full.insert("upload_date".into(), date.into());
+        }
+        full.insert("release_year".into(), Value::Null);
+        Some((raw, full))
+    }
+
     fn extract_once(&self, url: &Url) -> Result<ExtractResult> {
+        self.extract_once_with(url, &|_| Ok(()))
+    }
+
+    /// [`Self::extract_once`] with a change to the extracted result before
+    /// it is processed.
+    fn extract_once_with(
+        &self,
+        url: &Url,
+        before_processing: &dyn Fn(&mut ExtractResult) -> Result<()>,
+    ) -> Result<ExtractResult> {
         let order = self.extractor_order();
         let extractors: Vec<&Box<dyn Extractor>> = match &order {
             None => self.extractors.iter().collect(),
@@ -1670,6 +1885,7 @@ impl YoutubeDl {
         };
         for extractor in extractors {
             if let Some(mut info) = extractor.extract_result(&self.client, url)? {
+                before_processing(&mut info)?;
                 self.process_result(&mut info)?;
                 return Ok(info);
             }

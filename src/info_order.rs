@@ -465,6 +465,9 @@ const PROCESSED_INFO_KEYS: &[&str] = &[
     "live_status",
     "is_live",
     "was_live",
+    "chapter",
+    "season",
+    "episode",
     "requested_subtitles",
     "_has_drm",
     "epoch",
@@ -516,15 +519,24 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     // A `url_transparent` result: the outer keys its update adds after the
     // inner extraction's.
-    let (shape, transparent): (String, Vec<String>) = match shape.split_once("|transparent:") {
-        Some((inner, keys)) => (
-            inner.to_owned(),
-            keys.split(',')
-                .filter(|key| !key.is_empty())
-                .map(str::to_owned)
-                .collect(),
-        ),
-        None => (shape, Vec::new()),
+    // A playlist entry's (`transparent-entry`) has the playlist's keys next.
+    let split = |shape: &str, marker: &str| {
+        shape.split_once(marker).map(|(inner, keys)| {
+            (
+                inner.to_owned(),
+                keys.split(',')
+                    .filter(|key| !key.is_empty())
+                    .map(str::to_owned)
+                    .collect::<Vec<_>>(),
+            )
+        })
+    };
+    let (shape, transparent, transparent_entry) = match split(&shape, "|transparent-entry:") {
+        Some((inner, keys)) => (inner, keys, true),
+        None => match split(&shape, "|transparent:") {
+            Some((inner, keys)) => (inner, keys, false),
+            None => (shape, Vec::new(), false),
+        },
     };
     // The selected format's keys, which `info_dict.update(format)` merges.
     let merged = map
@@ -828,7 +840,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     } else {
         // A `url_result` chain (a followed redirect) passes `original_url`
         // as extra info before `add_default_extra_info`'s keys.
-        if replay.get("original_url").is_some()
+        if !transparent_entry
+            && replay.get("original_url").is_some()
             && (!transparent.is_empty() || replay.get("original_url") != replay.get("webpage_url"))
         {
             replay.take("original_url");
@@ -846,9 +859,30 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         for key in &transparent {
             replay.take(key);
         }
-        // `process_video_result`: not part of a playlist.
-        replay.assign("playlist");
-        replay.assign("playlist_index");
+        if transparent_entry {
+            // The playlist entry's extra info.
+            for (key, how) in [
+                ("playlist_count", Take),
+                ("playlist", Assign),
+                ("playlist_id", Assign),
+                ("playlist_title", Assign),
+                ("playlist_uploader", Assign),
+                ("playlist_uploader_id", Assign),
+                ("playlist_channel", Assign),
+                ("playlist_channel_id", Assign),
+                ("playlist_webpage_url", Assign),
+                ("n_entries", Take),
+                ("playlist_index", Take),
+                ("__last_playlist_index", Take),
+                ("playlist_autonumber", Take),
+            ] {
+                replay.set(key, how);
+            }
+        } else {
+            // `process_video_result`: not part of a playlist.
+            replay.assign("playlist");
+            replay.assign("playlist_index");
+        }
     }
     // `process_video_result`: `_sanitize_thumbnails`, then `thumbnail`
     // and `_fill_common_fields`.
@@ -868,6 +902,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     replay.take("live_status");
     replay.take("is_live");
     replay.take("was_live");
+    // Titles generated from `chapter_number`/`season_number`/`episode_number`.
+    for key in ["chapter", "season", "episode"] {
+        replay.take(key);
+    }
     replay.assign("requested_subtitles");
     replay.assign("_has_drm");
     if untyped {
@@ -955,22 +993,34 @@ pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some(Value::String(shape)) = map.remove(INFO_SHAPE) else {
         return map;
     };
-    if shape != "html5-playlist" {
+    if !matches!(shape.as_str(), "html5-playlist" | "rss-playlist") {
         return map;
     }
     let mut replay = Replay::new(map);
-    // `playlist_result(entries, **info_dict)` of GenericIE's page fields.
-    for (key, always) in [
-        ("id", Take),
-        ("title", Take),
-        ("timestamp", Assign),
-        ("description", Assign),
-        ("thumbnail", Assign),
-        ("age_limit", Assign),
-        ("_type", Take),
-        ("entries", Take),
-    ] {
-        replay.set(key, always);
+    let steps: &[(&str, Set)] = if shape == "rss-playlist" {
+        // `_extract_rss`'s dict.
+        &[
+            ("_type", Take),
+            ("id", Take),
+            ("title", Assign),
+            ("description", Assign),
+            ("entries", Take),
+        ]
+    } else {
+        // `playlist_result(entries, **info_dict)` of GenericIE's page fields.
+        &[
+            ("id", Take),
+            ("title", Take),
+            ("timestamp", Assign),
+            ("description", Assign),
+            ("thumbnail", Assign),
+            ("age_limit", Assign),
+            ("_type", Take),
+            ("entries", Take),
+        ]
+    };
+    for (key, always) in steps {
+        replay.set(key, *always);
     }
     let late = [
         "webpage_url",

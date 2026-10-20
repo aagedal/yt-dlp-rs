@@ -33,10 +33,11 @@ CONTENT_TYPES = {
     '.mpd': 'application/dash+xml',
     '.vtt': 'text/vtt',
     '.jpg': 'image/jpeg',
+    '.xml': 'application/rss+xml',
 }
 CASES = ['clip.mp4', 'clip.qqq', 'one.html', 'rich.html', 'three.html', 'master.m3u8',
          'video.m3u8', 'plain.m3u8', 'segmented.mpd', 'text.mpd', 'og.html', 'twitter.html',
-         'flow.html', 'cine.html', 'two.html', 'refresh.html', 'jw.html', 'jwaudio.html', 'vjs.html', 'vjs2.html', 'ld.html', 'oghls.html', 'ogdash.html', 'jwhls.html', 'vjshls.html', 'vjsmix.html']
+         'flow.html', 'cine.html', 'two.html', 'refresh.html', 'jw.html', 'jwaudio.html', 'vjs.html', 'vjs2.html', 'ld.html', 'oghls.html', 'ogdash.html', 'jwhls.html', 'vjshls.html', 'vjsmix.html', 'feed.xml']
 
 
 def content_type(name):
@@ -59,7 +60,7 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_error(404)
             return
         body = path.read_bytes()
-        if path.suffix == '.html':
+        if path.suffix in ('.html', '.xml'):
             # Pages may name absolute media URLs (JSON-LD) on this server.
             body = body.replace(b'{ORIGIN}', f'http://127.0.0.1:{self.server.server_port}'.encode())
         self.send_response(200)
