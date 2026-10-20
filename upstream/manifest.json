@@ -943,7 +943,6 @@
         "tools/compare_youtube_hls.py",
         "tools/test_compare_youtube_hls.py",
         "upstream/notes/youtube-hls.md",
-        "src/extractor/youtube/captions.rs",
         "tools/compare_youtube_captions.py",
         "tools/test_compare_youtube_captions.py",
         "upstream/notes/youtube-captions.md",
@@ -952,9 +951,14 @@
         "src/extractor/youtube/streams.rs",
         "src/extractor/youtube/watch.rs",
         "tests/fixtures/sites/youtube/",
-        "tests/fixtures/sites/youtube-js/"
+        "tests/fixtures/sites/youtube-js/",
+        "src/extractor/youtube/dict.rs",
+        "src/extractor/youtube/subs.rs",
+        "src/extractor/youtube/tab.rs",
+        "tests/fixtures/sites/youtube-rich/",
+        "tests/fixtures/sites/youtube-playlist/"
       ],
-      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API direct formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; native finite HLS VOD discovery for initial/anonymous WEB responses under optional HLS token policy, shared path-n and direct URL challenge batch, native hls format IDs/groups; no other API clients, token acquisition, authentication, live, fragmented direct adaptive delivery, DASH discovery, SABR or playlists; bounded manual/ASR caption URL/name metadata, translation/original aliases and audio-language inference under WEB subtitle token policy; no caption token acquisition or URL deciphering; player-response descriptive metadata (description, duration, channel/uploader IDs/URLs, views, rating, age limit, categories, tags, embed/live/media type, upload date/timestamp, availability without badges) compared against upstream for six saved cases; upstream thumbnail candidates/preferences/dedupe and best thumbnail; no ytInitialData or meta-tag metadata; YoutubeIE._EMBED_REGEX embeds on generic pages (a single embed followed through the extractor registry, several as url playlist entries; site fixture tests/fixtures/sites/youtube-embeds/)"
+      "scope": "Upstream YoutubeIE._real_extract over the InnerTube client flow (watch page, ytcfg, per-client player API requests, default tv_samsung/visionos/web clients with a JS runtime, visionos only without), _extract_formats_and_subtitles (https, HLS/DASH manifests, storyboards), JS challenge solving through the vendored EJS solver under Deno/Node, captions/automatic captions, and the full info dict in upstream key order; YoutubeTabIE playlist pages (/playlist?list=, watch?v=…&list=) with tab metadata, the unavailable-videos reload, browse API continuations and url entries in upstream key order (channel tabs, search, mixes, live, age-gate clients, PO tokens, authentication and SABR are not supported); saved site fixtures tests/fixtures/sites/youtube*/ compared against pinned upstream output; YoutubeIE._EMBED_REGEX embeds on generic pages"
     },
     {
       "name": "youtube-challenge-runtime",

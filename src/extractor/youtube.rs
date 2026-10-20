@@ -7,6 +7,7 @@ mod innertube;
 mod metadata;
 mod streams;
 mod subs;
+pub(crate) mod tab;
 mod watch;
 use super::{Extractor, direct};
 use crate::{Error, Result, StreamKind, VideoInfo};
@@ -630,9 +631,8 @@ mod tests {
                     .is_none()
             );
         }
+        // Playlist URLs belong to `youtube:tab` (its site fixture).
         for input in [
-            "https://youtube.com/playlist?list=foo",
-            "https://youtube.com/watch?v=BaW_jenozKc&list=foo",
             "https://youtu.be/BaW_jenozKc/extra",
             "https://youtube.com/watch?v=bad",
             "https://youtube.com/watch?v=BaW_jenozKc&v=BaW_jenozKc",

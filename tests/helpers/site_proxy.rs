@@ -24,6 +24,8 @@ const SERVER_KEY: &[u8] = include_bytes!("../fixtures/proxies/tls/key.der");
 struct Route {
     /// Lowercase request header names and values the request must carry.
     request_headers: Vec<(String, String)>,
+    /// Substrings the request body must contain.
+    request_body: Vec<String>,
     status: u16,
     headers: Vec<(String, String)>,
     body: Vec<u8>,
@@ -74,10 +76,17 @@ fn load(directory: &Path) -> HashMap<String, Vec<Route>> {
                     )
                 })
                 .collect();
+            let request_body = route["request_body"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter_map(|part| part.as_str().map(str::to_owned))
+                .collect();
             (
                 route["url"].as_str().unwrap().to_owned(),
                 Route {
                     request_headers,
+                    request_body,
                     status: route["status"].as_u64().unwrap_or(200) as u16,
                     headers,
                     body,
@@ -102,19 +111,24 @@ fn header_map(head: &str) -> HashMap<String, String> {
         .collect()
 }
 
-/// Read (and drop) a request body of `Content-Length` bytes.
-fn read_body(stream: &mut impl Read, headers: &HashMap<String, String>) {
+/// Read a request body of `Content-Length` bytes.
+fn read_body(stream: &mut impl Read, headers: &HashMap<String, String>) -> Vec<u8> {
     let mut remaining: usize = headers
         .get("content-length")
         .and_then(|length| length.parse().ok())
         .unwrap_or(0);
     let mut buffer = [0; 65536];
+    let mut body = Vec::new();
     while remaining > 0 {
         match stream.read(&mut buffer[..remaining.min(65536)]) {
             Ok(0) | Err(_) => break,
-            Ok(read) => remaining -= read,
+            Ok(read) => {
+                body.extend_from_slice(&buffer[..read]);
+                remaining -= read;
+            }
         }
     }
+    body
 }
 
 fn read_head(stream: &mut impl Read) -> Option<String> {
@@ -136,9 +150,11 @@ fn respond<S: Read + Write>(
     head: &str,
 ) {
     let headers = header_map(head);
-    read_body(stream, &headers);
+    let body = read_body(stream, &headers);
+    let body = String::from_utf8_lossy(&body);
     let not_found = Route {
         request_headers: Vec::new(),
+        request_body: Vec::new(),
         status: 404,
         headers: vec![("Content-Type".into(), "text/plain".into())],
         body: b"not found".to_vec(),
@@ -151,6 +167,10 @@ fn respond<S: Read + Write>(
                     .request_headers
                     .iter()
                     .all(|(name, value)| headers.get(name) == Some(value))
+                    && route
+                        .request_body
+                        .iter()
+                        .all(|part| body.contains(part.as_str()))
             })
         })
         .unwrap_or(&not_found);

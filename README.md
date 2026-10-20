@@ -104,8 +104,10 @@ Supported today:
   bundled pinned EJS release. Without one, only `visionos` is used, with
   upstream's warning. HTTPS, HLS and DASH formats follow upstream's
   `_extract_formats_and_subtitles`: PO-token policies skip token-requiring
-  formats, since no token providers exist. Live videos, playlists, channels,
-  login and upstream's remaining metadata fields are not supported yet. This is
+  formats, since no token providers exist. Playlists (`/playlist?list=` and
+  `watch?v=…&list=`) are extracted like upstream's `youtube:tab`, with every
+  continuation page. Live videos, channels, search, login and upstream's
+  remaining metadata fields are not supported yet. This is
   fixture-tested against pinned upstream, not verified against the live site.
 - Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
   `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.

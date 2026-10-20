@@ -118,6 +118,35 @@ fn player_url(ytcfgs: &[&Map<String, Value>]) -> Option<String> {
         .map(String::from)
 }
 
+/// `_extract_response(ep=ENDPOINT)` for the web client (tab pages).
+pub(super) fn innertube_api(
+    client: &Client,
+    endpoint: &str,
+    item_id: &str,
+    ytcfg: &Map<String, Value>,
+    visitor: Option<&str>,
+    query: Map<String, Value>,
+    note: &str,
+) -> Result<Value> {
+    let config = innertube::client(WEBPAGE_CLIENT).expect("the web client is defined");
+    call_api(
+        client,
+        config,
+        endpoint,
+        super::tab::NAME,
+        item_id,
+        ytcfg,
+        visitor,
+        query,
+        note,
+    )
+}
+
+/// `_extract_visitor_data` of one source.
+pub(super) fn visitor_from(source: &Value) -> Option<String> {
+    visitor_data(&[source])
+}
+
 /// `_extract_visitor_data`.
 fn visitor_data(sources: &[&Value]) -> Option<String> {
     for source in sources {
@@ -167,7 +196,6 @@ fn player_response(
     player_url: Option<&str>,
     visitor: Option<&str>,
 ) -> Result<Value> {
-    let default = default_ytcfg(config);
     let mut query = Map::new();
     query.insert("videoId".into(), video_id.into());
     if let Some(params) = config.player_params {
@@ -191,6 +219,38 @@ fn player_response(
     );
     query.insert("contentCheckOk".into(), true.into());
     query.insert("racyCheckOk".into(), true.into());
+    let note = format!(
+        "Downloading {} player API JSON",
+        config.name.replace('_', " ").trim()
+    );
+    call_api(
+        client,
+        config,
+        "player",
+        "youtube",
+        video_id,
+        player_ytcfg,
+        visitor,
+        query,
+        &note,
+    )
+}
+
+/// `_call_api`: one POST to `/youtubei/v1/ENDPOINT` with the client's
+/// `generate_api_headers`.
+#[allow(clippy::too_many_arguments)]
+fn call_api(
+    client: &Client,
+    config: &innertube::ClientConfig,
+    endpoint: &str,
+    extractor: &'static str,
+    item_id: &str,
+    player_ytcfg: &Map<String, Value>,
+    visitor: Option<&str>,
+    query: Map<String, Value>,
+    note: &str,
+) -> Result<Value> {
+    let default = default_ytcfg(config);
     let mut body = Map::new();
     body.insert("context".into(), api_context(player_ytcfg, &default));
     body.extend(query);
@@ -232,14 +292,10 @@ fn player_response(
     }
     headers.push(("content-type", "application/json".into()));
     let url = Url::parse(&format!(
-        "https://{}/youtubei/v1/player?prettyPrint=false",
+        "https://{}/youtubei/v1/{endpoint}?prettyPrint=false",
         config.host
     ))?;
-    let note = format!(
-        "Downloading {} player API JSON",
-        config.name.replace('_', " ").trim()
-    );
-    crate::screen::screen(&format!("[youtube] {video_id}: {note}"));
+    crate::screen::screen(&format!("[{extractor}] {item_id}: {note}"));
     let headers: Vec<(&str, &str)> = headers
         .iter()
         .map(|(name, value)| (*name, value.as_str()))
@@ -249,8 +305,8 @@ fn player_response(
     let response =
         super::super::direct::post(client, &url, &headers, body).map_err(|error| match error {
             Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor: "youtube",
-                id: video_id.to_owned(),
+                extractor,
+                id: item_id.to_owned(),
                 what: "API page",
                 source: Box::new(error),
             },
@@ -259,7 +315,7 @@ fn player_response(
     let text = response.text().map_err(Error::Http)?;
     serde_json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[youtube] {video_id}: Failed to parse JSON  (caused by {error})"
+            "[{extractor}] {item_id}: Failed to parse JSON  (caused by {error})"
         ))
     })
 }

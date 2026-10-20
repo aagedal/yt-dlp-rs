@@ -128,7 +128,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--id` | Hidden deprecated upstream option: `-o "%(id)s.%(ext)s"` with its deprecation warning, or `--id is ignored since --output was given` |
 | `--print-json`, `--all-subs` | Hidden deprecated upstream aliases: quiet JSON printing without simulation; `--sub-langs all --write-subs` |
 | Removed upstream switches | `--call-home`, `-C`, `--dump-user-agent`, `--sponskrub*`, `--prefer-ffmpeg`, `--write-annotations` and the other options in upstream's deprecated list are accepted and dropped (with their values) and reported once with upstream's `Deprecated Feature:` notice |
-| `--no-playlist`, `--yes-playlist` | Upstream `noplaylist`: a YouTube `watch?v=ID&list=...` URL downloads just the video (`[youtube:tab] Downloading just the video ID because of --no-playlist`); without it such URLs remain an explicit unsupported-playlist error. HTML5 playlists are unaffected, as upstream's generic extractor ignores the option |
+| `--no-playlist`, `--yes-playlist` | Upstream `noplaylist`: a YouTube `watch?v=ID&list=...` URL downloads just the video (`[youtube:tab] Downloading just the video ID because of --no-playlist`); without it the playlist is extracted (`Downloading playlist LIST - add --no-playlist to download just the video ID`, see "YouTube playlists"). HTML5 playlists are unaffected, as upstream's generic extractor ignores the option |
 | `--flat-playlist`, `--no-flat-playlist` | Accepted; supported playlists contain fully extracted entries rather than URL results, which upstream processes either way |
 | `--skip-playlist-after-errors N` | Upstream `__process_playlist` `failures`: after N entries fail extraction/selection, `ERROR: Skipping the remaining entries in playlist "TITLE" since N items failed extraction`; 0 is unlimited |
 | `--playlist-random` | Upstream `random.shuffle` of the selected entries (clock-seeded; `playlist_autonumber` follows the new order); `--playlist-reverse is ignored since --playlist-random was given` |
@@ -181,8 +181,9 @@ The built-in `Youtube` extractor runs before the generic HTTP fallback. Exact
 `www.youtu.be`, `youtube-nocookie.com`, and `www.youtube-nocookie.com` hosts are
 claimed. Accept watch URLs with one `v` parameter, short links, `/shorts/`,
 `/embed/`, and `/live/` paths with exactly an 11-character video ID. Watch-page requests
-use the canonical HTTPS watch URL. Reject channels, playlists, malformed IDs,
-and URLs containing `list=` before making a request. `/live/` is a URL shape;
+use the canonical HTTPS watch URL. Reject channels, malformed IDs and other
+paths before making a request; `/playlist` URLs and URLs containing `list=`
+belong to `youtube:tab` (see "YouTube playlists"). `/live/` is a URL shape;
 live, upcoming, and post-live player responses remain unsupported.
 
 The info dict follows upstream `_real_extract` after `_list_formats`, in its
@@ -1660,6 +1661,32 @@ negative repeats or apply presentationTimeOffset: native range expectations are
 checked independently, and those timing behaviors are excluded from upstream
 parity claims. See [the source slice](../upstream/notes/dash-static.md).
 
+
+## YouTube playlists
+
+`youtube:tab` ports upstream `YoutubeTabIE` (`yt_dlp/extractor/youtube/_tab.py`)
+for `/playlist?list=ID` and `watch?v=ID&list=ID` URLs (the latter only without
+`--no-playlist`; `watch?list=ID` warns and downloads the playlist). It reads the
+page's `ytInitialData` and `ytcfg`, makes upstream's web-client browse request
+for unavailable videos (`Redownloading playlist API JSON with unavailable
+videos`, `params: wgYCCAA=`), reports alerts like `_report_alerts`, and follows
+every continuation (`Downloading API JSON`, item `ID page N`) until none is
+left or a token repeats. The playlist has `_extract_metadata_from_tabs`' fields
+(title, availability, follower count, description, tags, thumbnails, modified
+date, view and video counts, channel/uploader) in upstream's key order, and its
+entries are `_extract_video`'s `url` dicts (`ie_key: Youtube`), which
+`--flat-playlist` and `-J` print as upstream does and normal runs resolve
+through the `youtube` extractor. An inline watch-page playlist is followed to
+its playlist page. The saved site fixture `tests/fixtures/sites/youtube-playlist/`
+(page, reload and continuation responses) is compared with pinned upstream
+output.
+
+Unlike upstream's lazy generator, all continuation pages are fetched before
+the first entry is processed. Channel tabs, feeds, hashtags, mixes (`RD…`),
+YouTube Music and search remain explicit unsupported errors. The lockup,
+grid and rich-item renderers are ported, but only `playlistVideoRenderer`
+entries have fixture coverage; shelf, music and post renderers are skipped
+with a warning.
 
 ## YouTube HLS discovery
 

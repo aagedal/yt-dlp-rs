@@ -135,6 +135,8 @@ pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
+pub(crate) use youtube::tab::YoutubeTab;
+pub use youtube::tab::suitable as youtube_tab_suitable;
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 

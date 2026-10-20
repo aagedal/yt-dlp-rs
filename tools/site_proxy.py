@@ -10,8 +10,9 @@ URLs are 404s. tests/helpers/site_proxy.rs implements the same routing.
 routes.json: {"routes": [{"url": "https://host/path?query", "status": 200,
 "headers": {"Content-Type": "..."}, "body_file": "name" | "body": "text"}]}
 A route may also list "request_headers" ({"Name": "value"}) that the request
-must carry; the first matching route for a URL answers (for one API endpoint
-answering several clients).
+must carry and "request_body" substrings its body must contain; the first
+matching route for a URL answers (for one API endpoint answering several
+clients or requests).
 """
 import base64
 import json
@@ -42,7 +43,8 @@ def load_routes(site_dir):
             body = route.get('body', '').encode()
         wanted = {name.lower(): value for name, value in route.get('request_headers', {}).items()}
         routes.setdefault(route['url'], []).append(
-            (wanted, (route.get('status', 200), route.get('headers', {}), body)))
+            (wanted, route.get('request_body', []),
+             (route.get('status', 200), route.get('headers', {}), body)))
     return routes
 
 
@@ -55,9 +57,11 @@ def request_headers(head):
     return headers
 
 
-def match_route(routes, url, headers):
-    for wanted, route in routes.get(url, []):
-        if all(headers.get(name) == value for name, value in wanted.items()):
+def match_route(routes, url, headers, body=b''):
+    text = body.decode('utf-8', 'replace')
+    for wanted, contains, route in routes.get(url, []):
+        if (all(headers.get(name) == value for name, value in wanted.items())
+                and all(part in text for part in contains)):
             return route
     return None
 
@@ -98,17 +102,20 @@ class SiteProxy:
     @staticmethod
     def _read_body(stream, headers):
         remaining = int(headers.get('content-length') or 0)
+        body = b''
         while remaining > 0:
             chunk = stream.recv(min(remaining, 65536))
             if not chunk:
                 break
+            body += chunk
             remaining -= len(chunk)
+        return body
 
     def _respond(self, stream, url, head):
         self.requests.append(url)
         headers = request_headers(head)
-        self._read_body(stream, headers)
-        status, headers, body = match_route(self.routes, url, headers) or (
+        request_body = self._read_body(stream, headers)
+        status, headers, body = match_route(self.routes, url, headers, request_body) or (
             404, {'Content-Type': 'text/plain'}, b'not found')
         reason = {200: 'OK', 206: 'Partial Content', 302: 'Found', 403: 'Forbidden', 404: 'Not Found'}.get(status, 'OK')
         lines = [f'HTTP/1.1 {status} {reason}']

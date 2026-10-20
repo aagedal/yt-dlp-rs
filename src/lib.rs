@@ -311,7 +311,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 63] = [
+const EXTRACTOR_NAMES: [&str; 64] = [
     "Angel",
     "AudioBoom",
     "BehindKink",
@@ -372,6 +372,7 @@ const EXTRACTOR_NAMES: [&str; 63] = [
     "Vocaroo",
     "yfanefa",
     "youtube",
+    "youtube:tab",
     "Zhihu",
     "generic",
     "end",
@@ -390,7 +391,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..62]),
+            "default" => Some(&EXTRACTOR_NAMES[..63]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -511,6 +512,9 @@ impl YoutubeDl {
             ffprobe: None,
             cookies: cookies.clone(),
             extractors: vec![
+                Box::new(extractor::YoutubeTab {
+                    no_playlist: youtube.no_playlist,
+                }),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),
                 Box::new(extractor::AudioBoom),
@@ -2027,7 +2031,10 @@ impl YoutubeDl {
         // An embed's `url_result(url, ie)` (`ie_key` set) and its
         // `add_default_extra_info(info, ie, None)`.
         let ie_key = marker["ie_key"].as_str();
-        if let Some(ie_key) = ie_key {
+        if let Some(entry) = marker["entry"].as_object() {
+            // A playlist extractor's own entry dict (`YoutubeTabIE`).
+            raw.extend(entry.clone());
+        } else if let Some(ie_key) = ie_key {
             raw.insert("ie_key".into(), ie_key.into());
             raw.insert("_type".into(), "url".into());
             raw.insert("url".into(), shown.clone().into());
