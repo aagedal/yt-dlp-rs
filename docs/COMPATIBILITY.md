@@ -365,6 +365,12 @@ basename before `_` as the ID), OpenGraph title/image/description with
 upstream's non-fatal warnings, the URL's date as `upload_date` and
 `age_limit` 18, as an untyped result.
 
+Blogger videos (`blogger.com/video.g?token=TOKEN`, `blogger.com`) follow
+upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
+`unicode_escape`, its streams as formats (`mime`-query extensions, string
+format IDs), the iframe ID as ID and title, the thumbnail and the first
+stream's `dur`; its `_EMBED_REGEX` iframes join the generic embed detection.
+
 EbaumsWorld videos (`ebaumsworld.com/videos/SLUG/ID`) follow upstream
 `EbaumsWorldIE`: the player config XML (`Downloading XML`) as an untyped
 result, empty elements as `None` (a generic title for an empty title) and a
@@ -464,7 +470,7 @@ information of song ID`) as an untyped `mp3` audio-only result with the artist
 as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
 `qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
 
-On generic pages, the embeds of JW Platform, Megaphone, Streamable and YouTube
+On generic pages, the embeds of Blogger, JW Platform, Megaphone, Streamable and YouTube
 (`YoutubeIE._EMBED_REGEX`: iframe/embed/object/SWFObject/`data-video-url`
 `youtube[-nocookie].com/embed|v|p/ID` URLs and lazy-load watch links, kept when
 this port's YouTube extractor accepts them), in

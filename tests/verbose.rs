@@ -108,7 +108,7 @@ fn verbose_reports_configuration_selection_and_download() {
     );
     for expected in [
         "[debug] Proxy map: {}".to_owned(),
-        "[debug] Loaded 27 extractors".to_owned(),
+        "[debug] Loaded 28 extractors".to_owned(),
         "[debug] Loading archive file 'archive.txt'".to_owned(),
         "[debug] Identified a direct video link".to_owned(),
         "[debug] Formats sorted by: hasvid, ie_pref, lang, quality, res, fps, hdr:12(7), vcodec, channels, acodec, size, br, asr, proto, vext, aext, hasaud, source, id".to_owned(),

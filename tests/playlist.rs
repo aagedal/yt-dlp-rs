@@ -498,7 +498,7 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
         text.lines()
             .map(|line| {
                 let mut value: Value = serde_json::from_str(line).unwrap();
-                value.as_object_mut().unwrap().remove("epoch");
+                value.as_object_mut().unwrap().shift_remove("epoch");
                 value
             })
             .collect()
@@ -512,7 +512,11 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
     let mut without_names = json[0].clone();
     for key in ["_filename", "filename"] {
         assert_eq!(
-            without_names.as_object_mut().unwrap().remove(key).unwrap(),
+            without_names
+                .as_object_mut()
+                .unwrap()
+                .shift_remove(key)
+                .unwrap(),
             "one [one].mp4"
         );
     }
@@ -521,7 +525,7 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
     let downloads = single_video
         .as_object_mut()
         .unwrap()
-        .remove("requested_downloads")
+        .shift_remove("requested_downloads")
         .unwrap();
     assert_eq!(single_video, without_names);
     let download = downloads[0].as_object().unwrap();

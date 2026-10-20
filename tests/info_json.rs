@@ -154,14 +154,14 @@ fn video_info_json_is_cleaned_dumped_metadata_written_before_media() {
     assert!(value["epoch"].as_u64().unwrap() > 1_700_000_000);
     assert_eq!(value["_type"], "video");
     let object = value.as_object_mut().unwrap();
-    object.remove("epoch");
-    object.remove("_type");
+    object.shift_remove("epoch");
+    object.shift_remove("_type");
     // `clean_infojson` drops `original_url` and the filenames, which `-j`
     // keeps; `epoch` and `_type` were compared above.
     let mut dumped = dumped;
     let object = dumped.as_object_mut().unwrap();
     for key in ["original_url", "_filename", "filename", "epoch", "_type"] {
-        assert!(object.remove(key).is_some(), "{key}");
+        assert!(object.shift_remove(key).is_some(), "{key}");
     }
     // ... and `None` values, which `-j` prints as `null`.
     fn without_nulls(value: &mut serde_json::Value) {
@@ -277,7 +277,7 @@ fn playlist_info_json_precedes_entries_with_upstream_counts_and_name() {
     );
     let (_, mut playlist) = read(&dir.path().join("Playlist selection-0-2.info.json"));
     assert!(playlist["epoch"].is_u64());
-    playlist.as_object_mut().unwrap().remove("epoch");
+    playlist.as_object_mut().unwrap().shift_remove("epoch");
     let id = playlist["id"].clone();
     assert_eq!(
         playlist,

@@ -1859,7 +1859,14 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 4] = [
+static EMBED_SITES: [EmbedSite; 5] = [
+    EmbedSite {
+        name: super::blogger::NAME,
+        key: super::blogger::KEY,
+        extractor: Some(&super::blogger::Blogger),
+        embed_urls: super::blogger::embed_urls,
+        temp_id: super::blogger::temp_id,
+    },
     EmbedSite {
         name: "JWPlatform",
         key: "JWPlatform",

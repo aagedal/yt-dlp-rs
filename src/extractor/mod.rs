@@ -1,6 +1,7 @@
 mod angel;
 mod audioboom;
 mod behindkink;
+pub(crate) mod blogger;
 mod dash;
 pub(crate) mod direct;
 mod ebaumsworld;
@@ -40,6 +41,7 @@ mod youtube;
 pub use angel::{Angel, suitable as angel_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
+pub use blogger::{Blogger, suitable as blogger_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
