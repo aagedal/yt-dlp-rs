@@ -310,7 +310,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 24] = [
+const EXTRACTOR_NAMES: [&str; 25] = [
     "BehindKink",
     "EbaumsWorld",
     "Fczenit",
@@ -332,6 +332,7 @@ const EXTRACTOR_NAMES: [&str; 24] = [
     "TheIntercept",
     "ThisAmericanLife",
     "23video",
+    "Vocaroo",
     "youtube",
     "generic",
     "end",
@@ -350,7 +351,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..23]),
+            "default" => Some(&EXTRACTOR_NAMES[..24]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -497,6 +498,7 @@ impl YoutubeDl {
                 Box::new(extractor::TheIntercept),
                 Box::new(extractor::ThisAmericanLife),
                 Box::new(extractor::TwentyThreeVideo),
+                Box::new(extractor::Vocaroo),
                 Box::new(GenericHttp),
             ],
         })
@@ -1271,6 +1273,14 @@ impl YoutubeDl {
                 screen::warning(
                     "Extractor failed to obtain \"title\". Creating a generic title instead",
                 );
+                entry.title = format!("{} video #{}", entry.extractor.replace(':', "-"), entry.id);
+            } else if entry.title.is_empty()
+                && entry.fulltitle.is_none()
+                && !entry.extractor.is_empty()
+            {
+                // `title == ''`.
+                entry.fulltitle = Some(String::new());
+                screen::debug("Extractor gave empty title. Creating a generic title");
                 entry.title = format!("{} video #{}", entry.extractor.replace(':', "-"), entry.id);
             } else {
                 entry.fulltitle = Some(entry.title.clone());

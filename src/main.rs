@@ -2862,7 +2862,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     flush_validation_warnings();
     if args.verbose {
         // `html5`, `youtube` and `generic` (see `--list-extractors`).
-        eprintln!("[debug] Loaded 23 extractors");
+        eprintln!("[debug] Loaded 24 extractors");
         if let Some(path) = &archive_path {
             eprintln!(
                 "[debug] Loading archive file {}",
@@ -2985,7 +2985,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 23] = [
+        let suitable: [(&str, Suitable); 24] = [
             ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
             (
                 "BehindKink (CURRENTLY BROKEN)",
@@ -3023,6 +3023,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 "ThisAmericanLife",
                 yt_dlp_rs::extractor::thisamericanlife_suitable,
             ),
+            ("Vocaroo", yt_dlp_rs::extractor::vocaroo_suitable),
             ("youtube", yt_dlp_rs::extractor::youtube_suitable),
             ("generic", |_| true),
         ];
@@ -3041,7 +3042,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nEbaumsWorld\nFczenit\nFilmweb\nGlide: Glide mobile video messages (glide.me)\nHistoricFilms\nhtml5\nHypem\nJWPlatform\nLivestreamfails\nmegaphone.fm: megaphone.fm embedded players\nOnePlacePodcast\nPhotobucket\nQingTing\nReverbNation\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
+            "23video\nEbaumsWorld\nFczenit\nFilmweb\nGlide: Glide mobile video messages (glide.me)\nHistoricFilms\nhtml5\nHypem\nJWPlatform\nLivestreamfails\nmegaphone.fm: megaphone.fm embedded players\nOnePlacePodcast\nPhotobucket\nQingTing\nReverbNation\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nVocaroo\nyoutube: [youtube] YouTube\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }

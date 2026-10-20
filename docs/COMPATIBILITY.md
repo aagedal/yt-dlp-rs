@@ -373,6 +373,13 @@ filesize}` thumbnails. Filmweb articles (`filmweb.no/trailere|filmnytt/articleID
 `filmnytt` pages through their `data-videoid`) follow upstream `FilmwebIE`:
 the trailer embed JSON's iframe as a `url_transparent` 23video result.
 
+Vocaroo recordings (`vocaroo.com`/`voca.ro` `[embed/]ID`) follow upstream
+`VocarooIE`: the `media`/`media1` MP3 URL checked with a HEAD request
+(`Downloading webpage`, the site as Referer), its `x-bz-upload-timestamp`
+milliseconds as `timestamp`, and an empty title; an empty title gets
+`_fill_common_fields`' generic title with its debug message (`fulltitle`
+stays `''`).
+
 Glide messages (`share.glide.me/ID`) follow upstream `GlideIE`: the page's
 generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
 `video-thumbnail` image (else the OpenGraph image with its warning), each

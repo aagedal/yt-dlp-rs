@@ -447,6 +447,18 @@
       "scope": "TwentyThreeVideoIE api/photo/list JSON (update_url_query, transform_source, formats and filesize thumbnails) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "vocaroo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vocaroo.py"
+      ],
+      "rust": [
+        "src/extractor/vocaroo.rs",
+        "tests/fixtures/sites/vocaroo/"
+      ],
+      "scope": "VocarooIE media URL HEAD request, upload timestamp header, Referer headers and empty title compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "youtube",
       "status": "partial",
       "upstream": [

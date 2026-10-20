@@ -30,6 +30,7 @@ mod sztvhu;
 mod theintercept;
 mod thisamericanlife;
 mod twentythreevideo;
+mod vocaroo;
 mod xspf;
 mod youtube;
 
@@ -58,6 +59,7 @@ pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
+pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
