@@ -645,7 +645,9 @@ impl YoutubeDl {
                     info.id
                 ));
             } else {
-                self.fixup_stretched_as(info, ratio.as_f64().unwrap_or(1.0), path, shown)?;
+                screen::postprocess("FixupStretched", || {
+                    self.fixup_stretched_as(info, ratio.as_f64().unwrap_or(1.0), path, shown)
+                })?;
             }
         }
         let protocol = info.protocol.as_deref().unwrap_or("");
@@ -687,13 +689,18 @@ impl YoutubeDl {
                     info.id
                 ));
             } else if fixup == "m3u8" {
-                if matches!(info.ext.as_str(), "mp4" | "m4a") {
-                    self.fixup_m3u8_as(path, shown)?;
-                }
+                screen::postprocess("FixupM3u8", || {
+                    if matches!(info.ext.as_str(), "mp4" | "m4a") {
+                        self.fixup_m3u8_as(path, shown)?;
+                    }
+                    Ok(())
+                })?;
             } else if fixup == "moov" {
-                self.fixup_duplicate_moov_as(info, path, shown)?;
+                screen::postprocess("FixupDuplicateMoov", || {
+                    self.fixup_duplicate_moov_as(info, path, shown)
+                })?;
             } else {
-                self.fixup_m4a_as(path, shown)?;
+                screen::postprocess("FixupM4a", || self.fixup_m4a_as(path, shown))?;
             }
         }
         Ok(())
@@ -2077,6 +2084,7 @@ impl YoutubeDl {
             return Ok(stored);
         };
         if upstream.is_some() {
+            screen::postprocessor("Merger", "started");
             screen::screen(&format!(
                 "[Merger] Merging formats into \"{}\"",
                 destination.display()
@@ -2152,6 +2160,9 @@ impl YoutubeDl {
                 ));
                 fs::remove_file(path)?;
             }
+        }
+        if upstream.is_some() {
+            screen::postprocessor("Merger", "finished");
         }
         Ok(bytes)
     }

@@ -23,6 +23,12 @@ pub enum Message<'a> {
     /// A line Python's `print()` writes to stdout (`--print-traffic`),
     /// independently of quiet modes.
     Stdout(&'a str),
+    /// A postprocessor progress hook (`PostProcessor._hook_progress`):
+    /// `started` before its run, `finished` after a successful one.
+    Postprocess {
+        postprocessor: &'a str,
+        status: &'a str,
+    },
 }
 
 type Sink = Box<dyn Fn(Message<'_>) + Send + Sync>;
@@ -117,6 +123,28 @@ pub(crate) fn screen(text: &str) {
     if let Some(sink) = SINK.get() {
         sink(Message::Screen(text));
     }
+}
+
+/// `PostProcessor._hook_progress({'status': status}, info)`.
+pub(crate) fn postprocessor(postprocessor: &str, status: &str) {
+    if let Some(sink) = SINK.get() {
+        sink(Message::Postprocess {
+            postprocessor,
+            status,
+        });
+    }
+}
+
+/// Upstream `run_wrapper`: `started`, the run, then `finished` unless it
+/// failed.
+pub(crate) fn postprocess<T>(
+    postprocessor: &str,
+    run: impl FnOnce() -> crate::Result<T>,
+) -> crate::Result<T> {
+    self::postprocessor(postprocessor, "started");
+    let result = run()?;
+    self::postprocessor(postprocessor, "finished");
+    Ok(result)
 }
 
 pub(crate) fn warning(text: &str) {

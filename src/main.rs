@@ -1225,6 +1225,8 @@ fn std_headers() -> Vec<(String, String)> {
 struct PlaylistStage {
     simulate: bool,
     concat: bool,
+    /// `FFmpegConcatPP` runs (`--concat-playlist` is not `never`).
+    concat_pp: bool,
     keep: bool,
 }
 
@@ -1261,6 +1263,9 @@ fn run_playlist_stage(
         files: printed,
     }
     .emit()?;
+    if stage.concat_pp {
+        postprocess_progress("Concat", "started");
+    }
     if stage.concat && !stage.simulate && !files.is_empty() {
         let concat = (|| -> yt_dlp_rs::Result<()> {
             let Some(inputs) = files.iter().cloned().collect::<Option<Vec<PathBuf>>>() else {
@@ -1351,6 +1356,14 @@ fn run_playlist_stage(
             return Ok(false);
         }
     }
+    if stage.concat_pp {
+        postprocess_progress("Concat", "finished");
+    }
+    // One `ExecPP` runs the stage's commands.
+    let has_exec = exec.stage(Stage::Playlist).next().is_some();
+    if has_exec {
+        postprocess_progress("Exec", "started");
+    }
     for command in exec.stage(Stage::Playlist) {
         let command = command.render_dict(dict, options)?;
         screen!("[Exec] Executing command: {command}");
@@ -1358,6 +1371,9 @@ fn run_playlist_stage(
             report_error!("ERROR: Postprocessing: {error}");
             return Ok(false);
         }
+    }
+    if has_exec {
+        postprocess_progress("Exec", "finished");
     }
     Ok(true)
 }
@@ -1819,6 +1835,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         yt_dlp_rs::screen::Message::Stderr(text) => eprintln!("{text}"),
         yt_dlp_rs::screen::Message::Debug(text) => eprintln!("[debug] {text}"),
         yt_dlp_rs::screen::Message::Stdout(text) => println!("{text}"),
+        yt_dlp_rs::screen::Message::Postprocess {
+            postprocessor,
+            status,
+        } => postprocess_progress(postprocessor, status),
     });
     NO_WARNINGS.store(args.no_warnings, Ordering::Relaxed);
     if args.no_download_archive {
@@ -1899,10 +1919,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             .progress_delta
             .filter(|delta| *delta > 0.0 && delta.is_finite())
             .map(Duration::from_secs_f64),
-        // Upstream `progress_template` (`_dict_from_options_callback` keys);
-        // titles and postprocessor progress are not printed by this port.
+        // Upstream `progress_template` (`_dict_from_options_callback` keys).
         template: {
             let mut template = None;
+            let mut console = ConsoleOptions {
+                title: args.console_title,
+                ..Default::default()
+            };
             for value in &args.progress_template {
                 static KEYS: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
                     regex::Regex::new(r"(?is)^(?P<keys>(?:download|postprocess)(?:-title)?(?:,(?:download|postprocess)(?:-title)?)*):(?P<val>.*)$")
@@ -1915,10 +1938,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     ),
                     None => ("download".into(), value.clone()),
                 };
-                if keys.split(',').any(|key| key == "download") {
-                    template = Some(text);
+                for key in keys.split(',') {
+                    let slot = match key {
+                        "download" => &mut template,
+                        "download-title" => &mut console.download_title,
+                        "postprocess" => &mut console.postprocess,
+                        _ => &mut console.postprocess_title,
+                    };
+                    *slot = Some(text.clone());
                 }
             }
+            let _ = CONSOLE.set(console);
             template
         },
     };
@@ -2947,6 +2977,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // Upstream compares against `float(max_downloads or 'inf')`.
     let max_downloads = args.max_downloads.filter(|&limit| limit != 0);
     let abort_on_error = error_mode == ErrorMode::Abort;
+    let _console_title = ConsoleTitle::enter(simulate);
     let mut aborted = false;
     let mut processed: i64 = 0;
     let mut videos: u64 = 0;
@@ -3239,19 +3270,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 // Upstream `SponsorBlockPP`, the last `after_filter` processor.
                 // Its failure is a deferred preprocessing error, like upstream's
                 // `__pending_error`.
-                if !sponsorblock_query.is_empty()
-                    && let Err(error) = downloader.fetch_sponsorblock(
+                if !sponsorblock_query.is_empty() {
+                    set_pp_info(&info);
+                    postprocess_progress("SponsorBlock", "started");
+                    match downloader.fetch_sponsorblock(
                         &mut info,
                         &sponsorblock_query,
                         &args.sponsorblock_api,
                         u32::from(args.extractor_retries),
-                    )
-                {
-                    let text = match error {
-                        yt_dlp_rs::Error::Postprocess(text) => text,
-                        other => other.to_string(),
-                    };
-                    defer(text);
+                    ) {
+                        Ok(()) => postprocess_progress("SponsorBlock", "finished"),
+                        Err(error) => {
+                            let text = match error {
+                                yt_dlp_rs::Error::Postprocess(text) => text,
+                                other => other.to_string(),
+                            };
+                            defer(text);
+                        }
+                    }
                 }
                 // Upstream lists thumbnails, then subtitles, then formats.
                 if args.list_thumbnails {
@@ -3454,6 +3490,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         template_options.autonumber.set(Some(
                             (args.autonumber_start - 1 + processed + 1).max(0) as u64,
                         ));
+                        // The info postprocessor progress templates describe.
+                        set_pp_info(&info);
                         if let Err(error) =
                             run_exec(&exec, Stage::Video, &info, None, None, &template_options)
                         {
@@ -3556,6 +3594,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 && !prints_stage(Stage::BeforeDownload)
                                 && !(write_subs || args.write_auto_subs)
                             {
+                                // `MoveFilesAfterDownloadPP(downloaded=False)` has
+                                // nothing to move.
+                                postprocess_progress("MoveFiles", "started");
+                                postprocess_progress("MoveFiles", "finished");
                                 force_record(&info)?;
                                 return Ok(());
                             }
@@ -3883,6 +3925,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             // failure skips the rest.
                             let before_dl = (|| -> Result<(), String> {
                                 if let Some(conversion) = &subtitle_conversion {
+                                    postprocess_progress("SubtitlesConvertor", "started");
                                     convert_subtitles(
                                         &downloader,
                                         &info,
@@ -3891,8 +3934,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         args.keep_video,
                                         &mut move_files,
                                     )?;
+                                    postprocess_progress("SubtitlesConvertor", "finished");
                                 }
                                 if let Some(conversion) = &thumbnail_conversion {
+                                    postprocess_progress("ThumbnailsConvertor", "started");
                                     convert_thumbnails(
                                         &downloader,
                                         &mut thumbnail_files,
@@ -3901,6 +3946,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         args.keep_video,
                                     )
                                     .map_err(|error| error.to_string())?;
+                                    postprocess_progress("ThumbnailsConvertor", "finished");
                                 }
                                 run_exec(
                                     &exec,
@@ -4350,7 +4396,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     warning!("WARNING: {warning}");
                                 }
                                 if let Some(note) = embed_note {
+                                    postprocess_progress("EmbedThumbnail", "started");
                                     screen!("{note}");
+                                    postprocess_progress("EmbedThumbnail", "finished");
                                 }
                                 // Upstream `run_pp` under --ignore-errors.
                                 for error in result.errors {
@@ -4408,7 +4456,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     downloader.fixup(info, &path, &path, fixup)?;
                                 }
                                 if let Some(note) = embed_note {
+                                    postprocess_progress("EmbedThumbnail", "started");
                                     screen!("{note}");
+                                    postprocess_progress("EmbedThumbnail", "finished");
                                 }
                                 (bytes, vec![path.clone()])
                             };
@@ -4456,6 +4506,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             // Upstream `FFmpegSplitChaptersPP`, the last
                             // `post_process` processor before `--exec`.
                             if args.split_chapters {
+                                postprocess_progress("SplitChapters", "started");
                                 let split = (|| -> yt_dlp_rs::Result<()> {
                                     if info.metadata.chapters.is_empty() {
                                         screen!(
@@ -4488,23 +4539,28 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                         args.force_keyframes_at_cuts,
                                     )
                                 })();
-                                if let Err(error) = split {
-                                    postprocess_failed.set(true);
-                                    if error_mode == ErrorMode::Ignore {
-                                        report_error!("ERROR: {error}");
-                                    } else {
-                                        report_error!("ERROR: Postprocessing: {error}");
-                                        return Ok(());
+                                match split {
+                                    Ok(()) => postprocess_progress("SplitChapters", "finished"),
+                                    Err(error) => {
+                                        postprocess_failed.set(true);
+                                        if error_mode == ErrorMode::Ignore {
+                                            report_error!("ERROR: {error}");
+                                        } else {
+                                            report_error!("ERROR: Postprocessing: {error}");
+                                            return Ok(());
+                                        }
                                     }
                                 }
                             }
                             // Upstream `XAttrMetadataPP`, after SplitChapters.
                             if args.xattrs {
+                                postprocess_progress("XAttrMetadata", "started");
                                 match yt_dlp_rs::xattr::write_metadata(&published_paths[0], info) {
                                     Ok(warnings) => {
                                         for warning in warnings {
                                             warning!("WARNING: {warning}");
                                         }
+                                        postprocess_progress("XAttrMetadata", "finished");
                                     }
                                     Err(error) => {
                                         let error = match error {
@@ -4806,6 +4862,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 PlaylistStage {
                     simulate,
                     concat: args.concat_playlist == "always",
+                    concat_pp: args.concat_playlist != "never",
                     keep: args.keep_video,
                 },
             )?
@@ -4861,6 +4918,12 @@ fn run_metadata_parser(
     info: &mut yt_dlp_rs::VideoInfo,
     options: &TemplateOptions,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    // One `MetadataParserPP` runs the stage's actions.
+    let runs = actions.has(when);
+    if runs {
+        set_pp_info(info);
+        postprocess_progress("MetadataParser", "started");
+    }
     let (messages, error) = match actions.run(when, info, options) {
         Ok(messages) => (messages, None),
         Err((messages, error)) => (messages, Some(error)),
@@ -4879,7 +4942,12 @@ fn run_metadata_parser(
     match error {
         // Raised from the processor and reported as `ERROR: MESSAGE`.
         Some(error) => Err(Box::new(yt_dlp_rs::Error::Reported(error))),
-        None => Ok(()),
+        None => {
+            if runs {
+                postprocess_progress("MetadataParser", "finished");
+            }
+            Ok(())
+        }
     }
 }
 
@@ -5218,7 +5286,6 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         warning!("WARNING: --encoding {encoding} is not supported natively; output is UTF-8");
     }
     for (given, what) in [
-        (args.console_title, "--console-title"),
         (args.legacy_server_connect, "--legacy-server-connect"),
         (args.bidi_workaround, "--bidi-workaround"),
         (!args.plugin_dirs.is_empty(), "--plugin-dirs"),
@@ -6071,6 +6138,11 @@ fn run_exec(
     let text =
         |path: Option<&std::path::Path>| path.map(|path| path.to_string_lossy().into_owned());
     let (filepath, filename) = (text(filepath), text(filename));
+    // One `ExecPP` runs the stage's commands.
+    if exec.stage(stage).next().is_none() {
+        return Ok(());
+    }
+    postprocess_progress("Exec", "started");
     for command in exec.stage(stage) {
         let command = command
             .render(info, filepath.as_deref(), filename.as_deref(), options)
@@ -6078,6 +6150,7 @@ fn run_exec(
         screen!("[Exec] Executing command: {command}");
         ExecCommand::run(&command)?;
     }
+    postprocess_progress("Exec", "finished");
     Ok(())
 }
 
@@ -6152,6 +6225,13 @@ impl MoveFiles {
     /// final media path. Files deleted by earlier processors (which upstream
     /// removes from the map) are skipped.
     fn run(&self, filepath: &std::path::Path, downloaded: bool) -> Result<PathBuf, String> {
+        postprocess_progress("MoveFiles", "started");
+        let moved = self.move_files(filepath, downloaded)?;
+        postprocess_progress("MoveFiles", "finished");
+        Ok(moved)
+    }
+
+    fn move_files(&self, filepath: &std::path::Path, downloaded: bool) -> Result<PathBuf, String> {
         let final_path = self.final_path(filepath);
         let mut files = self.files.clone();
         if downloaded {
@@ -6268,6 +6348,167 @@ fn after_download(
     true
 }
 
+/// `--console-title` and the `--progress-template` title and postprocessor
+/// templates (`download-title`, `postprocess`, `postprocess-title`).
+#[derive(Debug, Default)]
+struct ConsoleOptions {
+    title: bool,
+    download_title: Option<String>,
+    postprocess: Option<String>,
+    postprocess_title: Option<String>,
+}
+
+static CONSOLE: std::sync::OnceLock<ConsoleOptions> = std::sync::OnceLock::new();
+
+/// The info dict of the video being processed, for postprocessor templates.
+static PP_INFO: std::sync::Mutex<Option<serde_json::Value>> = std::sync::Mutex::new(None);
+
+/// The default console title template.
+const DEFAULT_TITLE: &str = "yt-dlp %(progress._default_template)s";
+
+/// `_ProgressState` values.
+const PROGRESS_HIDDEN: u8 = 0;
+const PROGRESS_VISIBLE: u8 = 1;
+const PROGRESS_INDETERMINATE: u8 = 3;
+
+/// `--console-title`.
+fn console_title() -> bool {
+    CONSOLE.get().is_some_and(|console| console.title)
+}
+
+/// Whether postprocessor templates need the current info dict.
+fn wants_pp_info() -> bool {
+    CONSOLE
+        .get()
+        .is_some_and(|console| console.postprocess.is_some() || console.title)
+}
+
+/// Remember `info` for postprocessor progress templates.
+fn set_pp_info(info: &yt_dlp_rs::VideoInfo) {
+    if wants_pp_info() {
+        *PP_INFO.lock().unwrap() = yt_dlp_rs::info_value(info).ok();
+    }
+}
+
+/// Upstream `_send_console_code`: written to `_out_files.console`, the
+/// first of stderr and stdout that is a terminal (with `TERM` set; Windows
+/// consoles are not addressed).
+fn send_console_code(code: &str) -> bool {
+    use std::io::IsTerminal;
+    if cfg!(windows) || std::env::var_os("TERM").is_none_or(|term| term.is_empty()) {
+        return false;
+    }
+    if io::stderr().is_terminal() {
+        let mut stderr = io::stderr().lock();
+        let _ = stderr.write_all(code.as_bytes());
+        let _ = stderr.flush();
+    } else if io::stdout().is_terminal() {
+        let mut stdout = io::stdout().lock();
+        let _ = stdout.write_all(code.as_bytes());
+        let _ = stdout.flush();
+    } else {
+        return false;
+    }
+    true
+}
+
+/// Upstream `remove_terminal_sequences` (`\033[...m`).
+fn remove_terminal_sequences(text: &str) -> String {
+    static SEQUENCE: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new("\x1b\\[[^m]+m").unwrap());
+    SEQUENCE.replace_all(text, "").into_owned()
+}
+
+/// Upstream `to_console_title(message, progress_state, percent)`.
+fn to_console_title(message: Option<&str>, state: Option<u8>, percent: Option<f64>) {
+    if !CONSOLE.get().is_some_and(|console| console.title) {
+        return;
+    }
+    if let Some(message) = message.filter(|message| !message.is_empty()) {
+        send_console_code(&format!(
+            "\x1b]0;{}\x07",
+            remove_terminal_sequences(message)
+        ));
+    }
+    if let Some(state) = state {
+        let percent = percent.map_or(0, |percent| percent as i64);
+        send_console_code(&format!("\x1b]9;4;{state};{percent}\x07"));
+    }
+}
+
+/// Upstream `with YoutubeDL(...)`: `save_console_title` (unless
+/// simulating) and an indeterminate progress state; dropping restores the
+/// title and hides the progress.
+struct ConsoleTitle {
+    simulate: bool,
+}
+
+impl ConsoleTitle {
+    fn enter(simulate: bool) -> Self {
+        if CONSOLE.get().is_some_and(|console| console.title) {
+            if !simulate {
+                send_console_code("\x1b[22;0t");
+            }
+            to_console_title(None, Some(PROGRESS_INDETERMINATE), None);
+        }
+        Self { simulate }
+    }
+}
+
+impl Drop for ConsoleTitle {
+    fn drop(&mut self) {
+        if CONSOLE.get().is_some_and(|console| console.title) {
+            if !self.simulate {
+                send_console_code("\x1b[23;0t");
+            }
+            to_console_title(None, Some(PROGRESS_HIDDEN), None);
+        }
+    }
+}
+
+/// Upstream `PostProcessor.report_progress`: the `postprocess` template
+/// (printed even when quiet) and the `postprocess-title`.
+fn postprocess_progress(postprocessor: &str, status: &str) {
+    let Some(console) = CONSOLE.get() else {
+        return;
+    };
+    if console.postprocess.is_none() && !console.title {
+        return;
+    }
+    let info = PP_INFO
+        .lock()
+        .unwrap()
+        .clone()
+        .unwrap_or_else(|| serde_json::json!({}));
+    let dict = serde_json::json!({
+        "info": info,
+        "progress": {
+            "status": status,
+            "postprocessor": postprocessor,
+            "_default_template": format!("{postprocessor} {status}"),
+        },
+    });
+    let render = |template: &str| {
+        yt_dlp_rs::output::evaluate_dict_template(template, &dict, &TemplateOptions::default())
+            .unwrap_or_default()
+    };
+    if let Some(template) = &console.postprocess {
+        let line = render(template);
+        if QUIET.load(Ordering::Relaxed) || LOG_TO_STDERR.load(Ordering::Relaxed) {
+            eprintln!("{line}");
+        } else {
+            println!("{line}");
+        }
+    }
+    let title = render(
+        console
+            .postprocess_title
+            .as_deref()
+            .unwrap_or(DEFAULT_TITLE),
+    );
+    to_console_title(Some(&title), Some(PROGRESS_INDETERMINATE), None);
+}
+
 /// Upstream progress parameters: `noprogress` (quiet unless `--progress`),
 /// `progress_with_newline` and `progress_delta`.
 struct ProgressOptions {
@@ -6320,7 +6561,7 @@ impl<'a> ProgressReporter<'a> {
 
     /// The video and file a `--progress-template` describes.
     fn for_download(mut self, info: &yt_dlp_rs::VideoInfo, filename: &std::path::Path) -> Self {
-        if self.options.template.is_some() {
+        if self.options.template.is_some() || console_title() {
             self.info = yt_dlp_rs::info_value(info).unwrap_or_default();
             self.filename = Some(filename.to_string_lossy().into_owned());
         }
@@ -6347,6 +6588,29 @@ impl<'a> ProgressReporter<'a> {
         }
     }
 
+    /// `_report_progress_status`'s `to_console_title` (the `download-title`
+    /// template), visible with a percentage while downloading.
+    fn title(&self, progress: serde_json::Value) {
+        let Some(console) = CONSOLE.get().filter(|console| console.title) else {
+            return;
+        };
+        let finished = progress["status"] == "finished";
+        let percent = progress["_percent"].as_f64();
+        let dict = serde_json::json!({"info": self.info, "progress": progress});
+        let message = yt_dlp_rs::output::evaluate_dict_template(
+            console.download_title.as_deref().unwrap_or(DEFAULT_TITLE),
+            &dict,
+            &TemplateOptions::default(),
+        )
+        .unwrap_or_default();
+        let state = if finished || percent.is_none() {
+            PROGRESS_INDETERMINATE
+        } else {
+            PROGRESS_VISIBLE
+        };
+        to_console_title(Some(&message), Some(state), percent);
+    }
+
     fn write(text: &str) {
         if LOG_TO_STDERR.load(Ordering::Relaxed) {
             let mut stderr = io::stderr().lock();
@@ -6360,7 +6624,7 @@ impl<'a> ProgressReporter<'a> {
     }
 
     fn event(&mut self, progress: &yt_dlp_rs::DownloadProgress) {
-        use yt_dlp_rs::output::progress::{ProgressStatus, downloading_line};
+        use yt_dlp_rs::output::progress::ProgressStatus;
         match progress.phase {
             DownloadPhase::Downloading => {}
             // A reused merge input: upstream reports it finished without timing.
@@ -6416,7 +6680,8 @@ impl<'a> ProgressReporter<'a> {
         // Upstream's HTTP downloader reports after each received block.
         // Nothing is reported before the first data (`ProgressCalculator`
         // ignores empty updates, and HttpFD hooks after each block).
-        if !self.options.enabled || progress.downloaded_bytes == 0 {
+        // `noprogress` hides the lines; console titles are still updated.
+        if (!self.options.enabled && !console_title()) || progress.downloaded_bytes == 0 {
             return;
         }
         if let Some(delta) = self.options.delta {
@@ -6453,16 +6718,7 @@ impl<'a> ProgressReporter<'a> {
                 fragment_index: Some(state.index),
                 fragment_count: Some(count),
             };
-            let line = if self.options.template.is_some() {
-                self.render(yt_dlp_rs::output::progress::downloading_dict(
-                    &status,
-                    self.filename.as_deref(),
-                ))
-            } else {
-                format!("[download] {}", downloading_line(&status))
-            };
-            let active = self.active.as_mut().expect("active download");
-            return Self::write(&active.printer.print(&line));
+            return self.downloading(&status);
         }
         let elapsed = now.duration_since(active.start).as_secs_f64();
         let downloaded = progress.downloaded_bytes as f64;
@@ -6497,21 +6753,40 @@ impl<'a> ProgressReporter<'a> {
             fragment_index,
             fragment_count: progress.fragment_count,
         };
-        let line = if self.options.template.is_some() {
-            self.render(yt_dlp_rs::output::progress::downloading_dict(
-                &status,
-                self.filename.as_deref(),
-            ))
-        } else {
-            format!("[download] {}", downloading_line(&status))
-        };
-        let active = self.active.as_mut().expect("active download");
-        Self::write(&active.printer.print(&line));
+        self.downloading(&status);
+    }
+
+    /// One `downloading` status: the line (unless `noprogress`) and title.
+    fn downloading(&mut self, status: &yt_dlp_rs::output::progress::ProgressStatus) {
+        let dict =
+            || yt_dlp_rs::output::progress::downloading_dict(status, self.filename.as_deref());
+        if self.options.enabled {
+            let line = if self.options.template.is_some() {
+                self.render(dict())
+            } else {
+                format!(
+                    "[download] {}",
+                    yt_dlp_rs::output::progress::downloading_line(status)
+                )
+            };
+            let active = self.active.as_mut().expect("active download");
+            Self::write(&active.printer.print(&line));
+        }
+        if console_title() {
+            self.title(dict());
+        }
     }
 
     /// `FileDownloader.download`'s `finished` status for an existing file
     /// (no timing).
     fn already_downloaded(&self, bytes: u64) {
+        if console_title() {
+            self.title(yt_dlp_rs::output::progress::finished_dict(
+                bytes,
+                None,
+                self.filename.as_deref(),
+            ));
+        }
         if !self.options.enabled {
             screen!("[download] Download completed");
         } else {
@@ -6530,18 +6805,20 @@ impl<'a> ProgressReporter<'a> {
         let Some(mut active) = self.active.take() else {
             return;
         };
-        if !self.options.enabled {
-            screen!("[download] Download completed");
-            return;
-        }
         let elapsed = active.start.elapsed().as_secs_f64();
-        let line = self.render(yt_dlp_rs::output::progress::finished_dict(
+        let dict = yt_dlp_rs::output::progress::finished_dict(
             active.downloaded,
             Some(elapsed),
             self.filename.as_deref(),
-        ));
-        Self::write(&active.printer.print(&line));
-        Self::write(&active.printer.end());
+        );
+        if !self.options.enabled {
+            screen!("[download] Download completed");
+        } else {
+            let line = self.render(dict.clone());
+            Self::write(&active.printer.print(&line));
+            Self::write(&active.printer.end());
+        }
+        self.title(dict);
     }
 }
 

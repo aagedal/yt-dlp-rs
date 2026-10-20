@@ -247,6 +247,7 @@ pub(crate) fn download(
         }
         // Upstream still runs the processors, which report why they skip.
         if let Some(audio) = &processors.audio {
+            crate::screen::postprocessor("ExtractAudio", "started");
             let reason = match audio.target(&info.ext) {
                 None => format!("could not find a mapping for {}", info.ext),
                 Some(_) => "the file is already in a common audio format".into(),
@@ -255,15 +256,18 @@ pub(crate) fn download(
                 "[ExtractAudio] Not converting audio {}; {reason}",
                 destination.display()
             ));
+            crate::screen::postprocessor("ExtractAudio", "finished");
         }
-        if let Some(video) = &processors.video
-            && let Some(reason) = video.skip_reason(&info.ext)
-        {
+        if let Some(video) = &processors.video {
             let (action, name) = video.action();
-            crate::screen::screen(&format!(
-                "[{name}] Not {action} media file \"{}\"; {reason}",
-                destination.display()
-            ));
+            crate::screen::postprocessor(name, "started");
+            if let Some(reason) = video.skip_reason(&info.ext) {
+                crate::screen::screen(&format!(
+                    "[{name}] Not {action} media file \"{}\"; {reason}",
+                    destination.display()
+                ));
+            }
+            crate::screen::postprocessor(name, "finished");
         }
         return Ok(ProcessedDownload {
             path: destination.into(),
@@ -395,13 +399,21 @@ pub(crate) fn download(
     let process = (|| -> Result<ProcessedDownload> {
         // Upstream `run_pp`: with --ignore-errors a failed processor is
         // reported and skipped without its file deletions.
+        // `run_wrapper`'s progress hooks surround a processor that runs.
         macro_rules! stage {
-            ($body:block) => {{
+            ($key:expr, $runs:expr, $body:block) => {{
                 let subtitle_count = delete_subtitles.len();
+                let runs: bool = $runs;
+                if runs {
+                    crate::screen::postprocessor($key, "started");
+                }
                 let outcome = (|| -> Result<()> {
                     $body
                     Ok(())
                 })();
+                if runs && outcome.is_ok() {
+                    crate::screen::postprocessor($key, "finished");
+                }
                 match outcome {
                     Ok(()) => {}
                     Err(Error::DownloadCancelled) => return Err(Error::DownloadCancelled),
@@ -413,7 +425,7 @@ pub(crate) fn download(
                 }
             }};
         }
-        stage!({
+        stage!("ExtractAudio", processors.audio.is_some(), {
             if needs_audio {
                 let current = stages.last().unwrap();
                 if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
@@ -518,71 +530,80 @@ pub(crate) fn download(
                 }
             }
         });
-        stage!({
-            if let Some(video) = &processors.video {
-                let current = stages.last().unwrap();
-                let plan = video.plan(&current.ext)?;
-                let (action, name) = video.action();
-                if let Some(reason) = video.skip_reason(&current.ext).filter(|_| plan.skip) {
-                    crate::screen::screen(&format!(
-                        "[{name}] Not {action} media file \"{}\"; {reason}",
-                        current.path.display()
-                    ));
-                }
-                if !plan.skip {
-                    let path = audio_output_path(
-                        &current.path,
-                        &current.ext.to_lowercase(),
-                        &plan.extension,
-                    )?;
-                    let mut title = action.to_owned();
-                    title[..1].make_ascii_uppercase();
-                    crate::screen::screen(&format!(
-                        "[{name}] {title} video from {} to {}; Destination: {}",
-                        current.ext.to_lowercase(),
-                        plan.extension,
-                        path.display()
-                    ));
-                    writable(&path)?;
-                    if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break()
-                    {
-                        return Err(Error::DownloadCancelled);
+        stage!(
+            processors
+                .video
+                .as_ref()
+                .map_or("", |video| video.action().1),
+            processors.video.is_some(),
+            {
+                if let Some(video) = &processors.video {
+                    let current = stages.last().unwrap();
+                    let plan = video.plan(&current.ext)?;
+                    let (action, name) = video.action();
+                    if let Some(reason) = video.skip_reason(&current.ext).filter(|_| plan.skip) {
+                        crate::screen::screen(&format!(
+                            "[{name}] Not {action} media file \"{}\"; {reason}",
+                            current.path.display()
+                        ));
                     }
-                    let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                        Error::Postprocess(
-                            "video processing requires an explicit --ffmpeg-location PATH".into(),
-                        )
-                    })?;
-                    let output = workspace.path().join(format!("video.{}", plan.extension));
-                    let mut observe =
-                        || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
-                    crate::video::ffmpeg::convert(
-                        executable,
-                        &current.disk,
-                        &current.container,
-                        &output,
-                        &plan,
-                        &mut observe,
-                    )?;
-                    // Upstream FFmpeg outputs take the oldest input mtime.
-                    crate::filetime::inherit(
-                        &output,
-                        crate::filetime::oldest([current.disk.as_path()]),
-                    );
-                    let bytes = fs::metadata(&output)?.len();
-                    let original = current.path.clone();
-                    stages.push(Stage {
-                        disk: output,
-                        path,
-                        ext: plan.extension.clone(),
-                        container: plan.extension,
-                        bytes,
-                    });
-                    deleted(&original);
+                    if !plan.skip {
+                        let path = audio_output_path(
+                            &current.path,
+                            &current.ext.to_lowercase(),
+                            &plan.extension,
+                        )?;
+                        let mut title = action.to_owned();
+                        title[..1].make_ascii_uppercase();
+                        crate::screen::screen(&format!(
+                            "[{name}] {title} video from {} to {}; Destination: {}",
+                            current.ext.to_lowercase(),
+                            plan.extension,
+                            path.display()
+                        ));
+                        writable(&path)?;
+                        if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing)
+                            .is_break()
+                        {
+                            return Err(Error::DownloadCancelled);
+                        }
+                        let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
+                            Error::Postprocess(
+                                "video processing requires an explicit --ffmpeg-location PATH"
+                                    .into(),
+                            )
+                        })?;
+                        let output = workspace.path().join(format!("video.{}", plan.extension));
+                        let mut observe =
+                            || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
+                        crate::video::ffmpeg::convert(
+                            executable,
+                            &current.disk,
+                            &current.container,
+                            &output,
+                            &plan,
+                            &mut observe,
+                        )?;
+                        // Upstream FFmpeg outputs take the oldest input mtime.
+                        crate::filetime::inherit(
+                            &output,
+                            crate::filetime::oldest([current.disk.as_path()]),
+                        );
+                        let bytes = fs::metadata(&output)?.len();
+                        let original = current.path.clone();
+                        stages.push(Stage {
+                            disk: output,
+                            path,
+                            ext: plan.extension.clone(),
+                            container: plan.extension,
+                            bytes,
+                        });
+                        deleted(&original);
+                    }
                 }
             }
-        });
-        stage!({
+        );
+        stage!("EmbedSubtitle", processors.embed.is_some(), {
             if let Some(embedding) = &processors.embed {
                 let subtitle_start = delete_subtitles.len();
                 let current = stages.last_mut().unwrap();
@@ -673,7 +694,7 @@ pub(crate) fn download(
                 }
             }
         });
-        stage!({
+        stage!("ModifyChapters", processors.modify_chapters.is_some(), {
             if let Some(modify) = &processors.modify_chapters {
                 use crate::{
                     info::PyNumber,
@@ -946,93 +967,99 @@ pub(crate) fn download(
                 }
             }
         });
-        stage!({
-            if processors.metadata || processors.chapters || processors.infojson.is_some() {
-                let current = stages.last_mut().unwrap();
-                let chapters = processors.chapters && !working.metadata.chapters.is_empty();
-                // `_get_infojson_opts`: only mkv/mka files take the attachment.
-                let mut attachment = None;
-                if let Some(embed) = &processors.infojson {
-                    if matches!(current.ext.to_lowercase().as_str(), "mkv" | "mka") {
-                        attachment = match embed.written.as_ref().filter(|path| path.is_file()) {
-                            // FFmpeg runs in the workspace, so name it absolutely.
-                            Some(path) => Some(path.canonicalize()?),
-                            None if embed.explicit => {
-                                let path = workspace.path().join("info.json.temp");
-                                fs::write(&path, &embed.json)?;
-                                Some(path)
-                            }
-                            None => None,
-                        };
-                    } else if embed.explicit {
-                        crate::screen::screen(
-                            "[Metadata] The info-json can only be attached to mkv/mka files",
-                        );
+        stage!(
+            "Metadata",
+            processors.metadata || processors.chapters || processors.infojson.is_some(),
+            {
+                if processors.metadata || processors.chapters || processors.infojson.is_some() {
+                    let current = stages.last_mut().unwrap();
+                    let chapters = processors.chapters && !working.metadata.chapters.is_empty();
+                    // `_get_infojson_opts`: only mkv/mka files take the attachment.
+                    let mut attachment = None;
+                    if let Some(embed) = &processors.infojson {
+                        if matches!(current.ext.to_lowercase().as_str(), "mkv" | "mka") {
+                            attachment = match embed.written.as_ref().filter(|path| path.is_file())
+                            {
+                                // FFmpeg runs in the workspace, so name it absolutely.
+                                Some(path) => Some(path.canonicalize()?),
+                                None if embed.explicit => {
+                                    let path = workspace.path().join("info.json.temp");
+                                    fs::write(&path, &embed.json)?;
+                                    Some(path)
+                                }
+                                None => None,
+                            };
+                        } else if embed.explicit {
+                            crate::screen::screen(
+                                "[Metadata] The info-json can only be attached to mkv/mka files",
+                            );
+                        }
                     }
-                }
-                let Some(args) = crate::embed_metadata::plan_args(
-                    &working,
-                    &current.ext,
-                    processors.metadata,
-                    chapters,
-                    attachment.as_deref(),
-                ) else {
-                    crate::screen::screen("[Metadata] There isn't any metadata to add");
-                    return Ok(());
-                };
-                if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
-                    return Err(Error::DownloadCancelled);
-                }
-                let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
-                    Error::Postprocess(
-                        "metadata embedding requires an explicit --ffmpeg-location PATH".into(),
-                    )
-                })?;
-                // Upstream writes `NAME.meta` beside the media and deletes it.
-                let metadata_input = if chapters {
-                    let path = workspace.path().join("chapters.meta");
-                    fs::write(
-                        &path,
-                        crate::embed_metadata::ffmetadata(&working.metadata.chapters),
+                    let Some(args) = crate::embed_metadata::plan_args(
+                        &working,
+                        &current.ext,
+                        processors.metadata,
+                        chapters,
+                        attachment.as_deref(),
+                    ) else {
+                        crate::screen::screen("[Metadata] There isn't any metadata to add");
+                        return Ok(());
+                    };
+                    if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break()
+                    {
+                        return Err(Error::DownloadCancelled);
+                    }
+                    let executable = downloader.ffmpeg.as_ref().ok_or_else(|| {
+                        Error::Postprocess(
+                            "metadata embedding requires an explicit --ffmpeg-location PATH".into(),
+                        )
+                    })?;
+                    // Upstream writes `NAME.meta` beside the media and deletes it.
+                    let metadata_input = if chapters {
+                        let path = workspace.path().join("chapters.meta");
+                        fs::write(
+                            &path,
+                            crate::embed_metadata::ffmetadata(&working.metadata.chapters),
+                        )?;
+                        Some(path)
+                    } else {
+                        None
+                    };
+                    let plan = crate::video::VideoPlan {
+                        extension: current.ext.clone(),
+                        args,
+                        muxer: crate::embed_metadata::muxer(&current.ext.to_lowercase()).into(),
+                        skip: false,
+                        metadata_input,
+                        pp: "Metadata",
+                    };
+                    crate::screen::screen(&format!(
+                        "[Metadata] Adding metadata to \"{}\"",
+                        current.path.display()
+                    ));
+                    let output = workspace.path().join(format!("metadata.{}", current.ext));
+                    let mut observe =
+                        || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
+                    crate::video::ffmpeg::convert(
+                        executable,
+                        &current.disk,
+                        &current.container,
+                        &output,
+                        &plan,
+                        &mut observe,
                     )?;
-                    Some(path)
-                } else {
-                    None
-                };
-                let plan = crate::video::VideoPlan {
-                    extension: current.ext.clone(),
-                    args,
-                    muxer: crate::embed_metadata::muxer(&current.ext.to_lowercase()).into(),
-                    skip: false,
-                    metadata_input,
-                    pp: "Metadata",
-                };
-                crate::screen::screen(&format!(
-                    "[Metadata] Adding metadata to \"{}\"",
-                    current.path.display()
-                ));
-                let output = workspace.path().join(format!("metadata.{}", current.ext));
-                let mut observe =
-                    || checkpoint(callback, current.bytes, DownloadPhase::Postprocessing);
-                crate::video::ffmpeg::convert(
-                    executable,
-                    &current.disk,
-                    &current.container,
-                    &output,
-                    &plan,
-                    &mut observe,
-                )?;
-                crate::filetime::inherit(
-                    &output,
-                    crate::filetime::oldest([current.disk.as_path()]),
-                );
-                // Like upstream, metadata replaces the current file in place.
-                current.bytes = fs::metadata(&output)?.len();
-                current.disk = output;
-                current.container = current.ext.to_lowercase();
+                    crate::filetime::inherit(
+                        &output,
+                        crate::filetime::oldest([current.disk.as_path()]),
+                    );
+                    // Like upstream, metadata replaces the current file in place.
+                    current.bytes = fs::metadata(&output)?.len();
+                    current.disk = output;
+                    current.container = current.ext.to_lowercase();
+                }
             }
-        });
-        stage!({
+        );
+        stage!("EmbedThumbnail", processors.thumbnail.is_some(), {
             if let Some(thumbnail) = &processors.thumbnail {
                 let current = stages.last_mut().unwrap();
                 if checkpoint(callback, current.bytes, DownloadPhase::Postprocessing).is_break() {
