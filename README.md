@@ -92,7 +92,7 @@ Supported today:
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
   ScreenRec shares, Ku6 shows, Fuyin TV videos, Moving Image Archive films,
-  plus
+  Fathom shares, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

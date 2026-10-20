@@ -463,6 +463,13 @@ The Epoch Times videos (`www.theepochtimes.com/SLUG_ID.html`) follow upstream
 ID, its YouMaker `playlist.m3u8` as fatal `hls` formats and subtitles, and
 the cleaned `<title>` text (with upstream's warning when missing).
 
+Fathom shares (`fathom.video/share/ID`) follow upstream `FathomIE`: the `app`
+element's `data-page` JSON props (upstream's `TypeError` text without them),
+the call's ID and fatal `video_url` HLS formats (subtitles ignored with
+upstream's warning), the head title (else the generic title, after
+`fulltitle`), float duration and ISO 8601 `started_at` timestamp, with
+upstream's `KeyError` messages.
+
 FC Zenit videos (`fc-zenit.ru/video/ID`) follow upstream `FczenitIE`: the
 page's `config` MSI video ID (fatal), then the player's `msi/video?video=ID`
 JSON: name, preview, float duration, int date, labeled qualities with URLs as

@@ -389,6 +389,18 @@
       "scope": "EpochIE videobox data-id (get_element_html_by_id/extract_attributes over an html.parser-like tokenizer, with its parse errors), fatal HLS formats and subtitles and <title> compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "fathom",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/fathom.py"
+      ],
+      "rust": [
+        "src/extractor/fathom.rs",
+        "tests/fixtures/sites/fathom/"
+      ],
+      "scope": "FathomIE app element data-page props (get_element_html_by_id/extract_attributes), fatal HLS formats, metadata traversal and KeyError/TypeError messages compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "fczenit",
       "status": "partial",
       "upstream": [
