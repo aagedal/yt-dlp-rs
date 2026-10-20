@@ -355,7 +355,7 @@ impl MetadataActions {
     pub fn run_reported(
         &self,
         when: &str,
-        info: &mut VideoInfo,
+        info: &mut impl Target,
         options: &TemplateOptions,
     ) -> crate::Result<()> {
         if !self.has(when) {
@@ -390,7 +390,7 @@ impl MetadataActions {
     pub fn run(
         &self,
         when: &str,
-        info: &mut VideoInfo,
+        info: &mut impl Target,
         options: &TemplateOptions,
     ) -> Result<Vec<Message>, (Vec<Message>, String)> {
         let mut messages = Vec::new();
@@ -409,8 +409,7 @@ impl MetadataActions {
                     regex,
                     pattern,
                 } => {
-                    let data = crate::output::evaluate_template(template, info, options)
-                        .unwrap_or_default();
+                    let data = info.render(template, options);
                     messages.push(Message::Debug(format!(
                         "Searching for {} in {}",
                         crate::output::traverse::py_repr_str(pattern),
@@ -432,7 +431,7 @@ impl MetadataActions {
                             continue;
                         };
                         let value = value.as_str().to_owned();
-                        set_field(info, name, Value::String(value.clone()));
+                        info.set(name, Value::String(value.clone()));
                         screen(
                             &mut messages,
                             format!(
@@ -449,10 +448,7 @@ impl MetadataActions {
                     regex,
                     replace,
                 } => {
-                    let value = serde_json::to_value(&*info)
-                        .ok()
-                        .and_then(|dict| dict.get(field).cloned())
-                        .filter(|value| !value.is_null());
+                    let value = info.get(field).filter(|value| !value.is_null());
                     let Some(value) = value else {
                         screen(&mut messages, format!("Video does not have a {field}"));
                         continue;
@@ -481,7 +477,7 @@ impl MetadataActions {
                         Err(error) => return Err((messages, error)),
                     };
                     let replaced = regex.replace_all(&text, replace.as_str()).into_owned();
-                    set_field(info, field, Value::String(replaced.clone()));
+                    info.set(field, Value::String(replaced.clone()));
                     if count > 0 {
                         screen(&mut messages, format!("Changed {field} to: {replaced}"));
                     } else {
@@ -497,6 +493,45 @@ impl MetadataActions {
             }
         }
         Ok(messages)
+    }
+}
+
+/// What `MetadataParserPP` reads and changes: a video's info dict or a
+/// playlist's dict.
+pub trait Target {
+    /// The rendered (unsanitized) output template.
+    fn render(&self, template: &str, options: &TemplateOptions) -> String;
+    /// `info.get(key)`.
+    fn get(&self, key: &str) -> Option<Value>;
+    /// `info[key] = value`.
+    fn set(&mut self, key: &str, value: Value);
+}
+
+impl Target for VideoInfo {
+    fn render(&self, template: &str, options: &TemplateOptions) -> String {
+        crate::output::evaluate_template(template, self, options).unwrap_or_default()
+    }
+    fn get(&self, key: &str) -> Option<Value> {
+        serde_json::to_value(self)
+            .ok()
+            .and_then(|dict| dict.get(key).cloned())
+    }
+    fn set(&mut self, key: &str, value: Value) {
+        set_field(self, key, value);
+    }
+}
+
+impl Target for Value {
+    fn render(&self, template: &str, options: &TemplateOptions) -> String {
+        crate::output::evaluate_dict_template(template, self, options).unwrap_or_default()
+    }
+    fn get(&self, key: &str) -> Option<Value> {
+        self.as_object().and_then(|dict| dict.get(key).cloned())
+    }
+    fn set(&mut self, key: &str, value: Value) {
+        if let Some(dict) = self.as_object_mut() {
+            dict.insert(key.to_owned(), value);
+        }
     }
 }
 

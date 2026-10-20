@@ -327,3 +327,61 @@ fn metadata_parsing_runs_at_later_stages_after_their_prints() {
         "{stdout}"
     );
 }
+
+/// A page with two videos (an HTML5 playlist) titled `Two`.
+fn serve_playlist() -> String {
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    let origin = format!("http://{}", listener.local_addr().unwrap());
+    thread::spawn(move || {
+        for stream in listener.incoming() {
+            let Ok(mut stream) = stream else { continue };
+            let mut request = [0; 4096];
+            let read = stream.read(&mut request).unwrap_or(0);
+            let request = String::from_utf8_lossy(&request[..read]);
+            let path = request.split_whitespace().nth(1).unwrap_or("/").to_owned();
+            let (mime, body): (&str, &[u8]) = if path == "/two.html" {
+                (
+                    "text/html",
+                    b"<html><head><title>Two</title></head><body><video src=\"a.mp4\"></video><video src=\"b.mp4\"></video></body></html>",
+                )
+            } else {
+                ("video/mp4", b"\0\0\0\x18ftypisom media")
+            };
+            let _ = write!(
+                stream,
+                "HTTP/1.1 200 OK\r\nContent-Type: {mime}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            );
+            let _ = stream.write_all(body);
+        }
+    });
+    format!("{origin}/two.html")
+}
+
+#[test]
+fn playlist_metadata_parsing_follows_playlist_prints() {
+    let url = serve_playlist();
+    let directory = tempfile::tempdir().unwrap();
+    let output = run(
+        directory.path(),
+        &[
+            "-s",
+            "--replace-in-metadata",
+            "playlist:title",
+            "T",
+            "Z",
+            "--print",
+            "playlist:P %(title)s",
+            "--exec",
+            "playlist:echo E %(title)q",
+        ],
+        &url,
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(stdout.ends_with("P Two\nE Zwo\n"), "{stdout}");
+}

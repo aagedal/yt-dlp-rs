@@ -1244,6 +1244,7 @@ fn run_playlist_stage(
     options: &TemplateOptions,
     downloader: &YoutubeDl,
     stage: PlaylistStage,
+    metadata_actions: &yt_dlp_rs::metadata_parser::MetadataActions,
 ) -> Result<bool, Box<dyn std::error::Error>> {
     let lines = print_templates
         .iter()
@@ -1263,6 +1264,18 @@ fn run_playlist_stage(
         files: printed,
     }
     .emit()?;
+    // `MetadataParserPP` follows the prints and precedes Concat and Exec.
+    let mut parsed = dict.clone();
+    if metadata_actions.has("playlist") {
+        if wants_pp_info() {
+            *PP_INFO.lock().unwrap() = Some(dict.clone());
+        }
+        if let Err(error) = metadata_actions.run_reported("playlist", &mut parsed, options) {
+            report_error!("ERROR: {error}");
+            return Ok(false);
+        }
+    }
+    let dict = &parsed;
     if stage.concat_pp {
         postprocess_progress("Concat", "started");
     }
@@ -1564,14 +1577,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 _ => unreachable!("clap arity"),
             }
             .map_err(usage)?;
-        }
-        for when in yt_dlp_rs::metadata_parser::WHEN {
-            if actions.has(when) && when == "playlist" {
-                return Err(usage(format!(
-                    "metadata parsing at {when} is not supported natively"
-                ))
-                .into());
-            }
         }
         actions
     };
@@ -4923,6 +4928,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     concat_pp: args.concat_playlist != "never",
                     keep: args.keep_video,
                 },
+                &metadata_actions,
             )?
         {
             failed = true;
