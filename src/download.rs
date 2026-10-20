@@ -19,6 +19,9 @@ pub enum DownloadPhase {
     /// An external downloader finished with `downloaded_bytes` on disk
     /// (upstream's single `finished` progress hook).
     Completed,
+    /// A downloader stopped without raising (upstream `real_download`
+    /// returning `False`), which ends its status line.
+    Failed,
     WaitingToRetry,
     Publishing,
     Merging,

@@ -6205,6 +6205,14 @@ impl<'a> ProgressReporter<'a> {
             DownloadPhase::Merging | DownloadPhase::Postprocessing | DownloadPhase::Publishing => {
                 return self.finish();
             }
+            // `_finish_multiline_status` after a `False` real_download.
+            DownloadPhase::Failed => {
+                self.active = None;
+                if self.options.enabled && !self.options.newline {
+                    Self::write(if self.options.quiet { "\r\r" } else { "\n" });
+                }
+                return;
+            }
             // An external downloader's single `finished` status.
             DownloadPhase::Completed => {
                 if let Some(active) = self.active.as_mut() {

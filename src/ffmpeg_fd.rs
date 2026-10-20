@@ -289,6 +289,7 @@ pub(crate) fn download(
             let _ = std::fs::remove_file(&temporary);
         }
         eprintln!("\n");
+        let _ = callback(progress(DownloadPhase::Failed, 0));
         return Err(Error::Reported(format!(
             "ffmpeg exited with code {}",
             status.code().unwrap_or(-1)
