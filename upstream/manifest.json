@@ -449,6 +449,18 @@
       "scope": "GlideIE _VALID_URL and share page extraction (generic title, source/og:video URL, thumbnail fallbacks and warnings) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "godresource",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/godresource.py"
+      ],
+      "rust": [
+        "src/extractor/godresource.rs",
+        "tests/fixtures/sites/godresource/"
+      ],
+      "scope": "GodResourceIE VOD HLS/mp4 stream URL, metadata traversal, unexpected-format and KeyError errors (live streams unsupported) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "godtube",
       "status": "partial",
       "upstream": [

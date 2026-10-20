@@ -522,6 +522,14 @@ generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
 `video-thumbnail` image (else the OpenGraph image with its warning), each
 protocol-relative URL as `https:`, as an untyped result.
 
+GodResource videos (`new.godresource.com/video/ID`) follow upstream
+`GodResourceIE`: the streams API's `streamUrl` as fatal HLS formats and
+subtitles or one `mp4` format (other extensions are upstream's `Unexpected
+video format`), the string title (else `''`, so processing's generic title),
+`is_live`, URL-valued thumbnail, integer views, channel name and ID and
+`unified_timestamp` creation/modification times; live streams are reported
+as unsupported.
+
 GodTube videos (`godtube.com/watch/?v=ID`, marked broken upstream with its
 warning) follow upstream `GodTubeIE`: the player config XML (`Downloading
 player config XML`: file, author, ISO 8601 date, duration, image) and media
