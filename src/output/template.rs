@@ -684,7 +684,22 @@ impl<'a> Lookup<'a, '_> {
         match name {
             "autonumber" => Ok(self.options.autonumber.get().map(Value::Integer)),
             "video_autonumber" => Ok(self.options.video_autonumber.get().map(Value::Integer)),
-            _ if typed => field(name, self.info),
+            _ if typed => Ok(match field(name, self.info)? {
+                Some(value) => Some(value),
+                // A represented field holding another type (an integer
+                // `uploader_id`) keeps its value in `extra`.
+                None => match self.info {
+                    Source::Video(info)
+                    | Source::Print { info, .. }
+                    | Source::Exec { info, .. } => info
+                        .extra
+                        .get(name)
+                        .filter(|value| !value.is_null())
+                        .cloned()
+                        .map(Value::from_json),
+                    _ => None,
+                },
+            }),
             _ => {
                 let (info, options) = (self.info, self.options);
                 super::traverse::traverse(

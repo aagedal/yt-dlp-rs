@@ -552,6 +552,14 @@ cleaned body description, millisecond duration, timestamp, uploader, Python
 `str()` of the user ID, counts and string tag texts, with upstream's
 `KeyError` messages.
 
+Huajiao lives (`huajiao.com/l/ID`) follow upstream `HuajiaoIE`: the page's
+fatal `var feed` JSON, its `formated_title` (upstream's `KeyError`), the
+description meta (with its warning), `parse_duration`, image, space-delimited
+ISO 8601 `creatime` timestamp, author nickname and raw `uid`, and the feed's
+`m3u8` as fatal HLS formats (subtitles ignored with upstream's warning).
+Output templates now read represented fields holding another type (such as an
+integer `uploader_id`) from the info dict.
+
 Hypem tracks (`hypem.com/track/ID`) follow upstream `HypemIE`: the page's
 `displayList-data` script (cleaned like `_html_search_regex` before parsing),
 its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped

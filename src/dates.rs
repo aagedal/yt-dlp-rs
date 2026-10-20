@@ -699,11 +699,21 @@ pub fn unified_strdate(date: &str, day_first: bool) -> Option<String> {
 /// Upstream `parse_iso8601(date)`: fractions removed, `extract_timezone`,
 /// then exactly `%Y-%m-%dT%H:%M:%S`.
 pub fn parse_iso8601(date: &str) -> Option<i64> {
-    static FRACTION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\.[0-9]+").unwrap());
     static FORMAT: LazyLock<Regex> = LazyLock::new(|| strptime_regex("%Y-%m-%dT%H:%M:%S"));
+    parse_iso8601_with(date, &FORMAT)
+}
+
+/// Upstream `parse_iso8601(date, delimiter=' ')`.
+pub fn parse_iso8601_space(date: &str) -> Option<i64> {
+    static FORMAT: LazyLock<Regex> = LazyLock::new(|| strptime_regex("%Y-%m-%d %H:%M:%S"));
+    parse_iso8601_with(date, &FORMAT)
+}
+
+fn parse_iso8601_with(date: &str, format: &Regex) -> Option<i64> {
+    static FRACTION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\.[0-9]+").unwrap());
     let stripped = FRACTION.replace_all(date, "");
     let (timezone, rest) = extract_timezone(&stripped);
-    let parsed = strptime(&FORMAT, &rest)?;
+    let parsed = strptime(format, &rest)?;
     timegm(&shift(&parsed, -timezone)?)
 }
 
