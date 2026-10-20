@@ -3,6 +3,7 @@ pub(crate) mod direct;
 mod generic_urls;
 pub(crate) mod hls;
 pub(crate) mod html5;
+mod json_ld;
 mod jwplayer;
 mod youtube;
 

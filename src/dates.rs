@@ -670,6 +670,17 @@ pub fn unified_timestamp(date: &str, day_first: bool) -> Option<i64> {
         .checked_sub(timezone)
 }
 
+/// Upstream `parse_iso8601(date)`: fractions removed, `extract_timezone`,
+/// then exactly `%Y-%m-%dT%H:%M:%S`.
+pub fn parse_iso8601(date: &str) -> Option<i64> {
+    static FRACTION: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\.[0-9]+").unwrap());
+    static FORMAT: LazyLock<Regex> = LazyLock::new(|| strptime_regex("%Y-%m-%dT%H:%M:%S"));
+    let stripped = FRACTION.replace_all(date, "");
+    let (timezone, rest) = extract_timezone(&stripped);
+    let parsed = strptime(&FORMAT, &rest)?;
+    timegm(&shift(&parsed, -timezone)?)
+}
+
 const MIN_DAY: i64 = -719_162; // 0001-01-01
 const MAX_DAY: i64 = 2_932_896; // 9999-12-31
 

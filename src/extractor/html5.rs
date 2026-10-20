@@ -429,18 +429,28 @@ impl Extractor for GenericHttp {
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         use crate::screen::{generic_id, screen, warning};
         crate::screen::set_extractor("generic");
+        // A JSON-LD `url_transparent` result's smuggled data.
+        let smuggled = SMUGGLED.with(|smuggled| smuggled.borrow_mut().take());
         // Upstream `InfoExtractor.extract` and `GenericIE._real_extract` lines.
         screen(&format!(
             "[generic] Extracting URL: {}",
-            crate::screen::extracting_url(url.as_str())
+            crate::screen::extracting_url(
+                smuggled
+                    .as_ref()
+                    .map_or(url.as_str(), |smuggled| smuggled.shown.as_str())
+            )
         ));
-        let id = generic_id(url.as_str());
+        let id = smuggled.as_ref().map_or_else(
+            || generic_id(url.as_str()),
+            |smuggled| smuggled.video_id.clone(),
+        );
         // `_request_webpage` sleeps before announcing the download.
         crate::screen::before_extraction_request();
         screen(&format!("[generic] {id}: Downloading webpage"));
         // Dispatch a single response so direct media does not need two probes.
+        let referer = smuggled.as_ref().map(|smuggled| &smuggled.referer);
         let response =
-            direct::probe(client, url, None).map_err(|error| webpage_error(&id, error))?;
+            direct::probe(client, url, referer).map_err(|error| webpage_error(&id, error))?;
         // Upstream's direct-link Content-Type pattern; anything else falls
         // back to sniffing the body.
         let content_type = response
@@ -476,6 +486,17 @@ impl Extractor for GenericHttp {
         let timestamp = direct::last_modified(&response);
         let stamp = |mut info: VideoInfo| {
             info.metadata.timestamp = timestamp;
+            if let Some(smuggled) = &smuggled {
+                // `force_videoid` and `headers['Referer']` (the formats'
+                // `http_headers`).
+                info.id = smuggled.video_id.clone();
+                for format in &mut info.formats {
+                    format.http_headers = Some(serde_json::Map::from_iter([(
+                        "Referer".to_owned(),
+                        smuggled.referer.as_str().into(),
+                    )]));
+                }
+            }
             ExtractResult::Video(info)
         };
         let dash_path = url.path().to_ascii_lowercase().ends_with(".mpd");
@@ -862,6 +883,17 @@ impl GenericHttp {
         if let Some(step) = unported_step(html) {
             return Err(unsupported(&format!("{step} are not supported natively")));
         }
+        // `_search_json_ld`: a media URL other than the page's.
+        let json_ld = super::json_ld::search(html);
+        if let Some(target) = json_ld
+            .get("url")
+            .and_then(serde_json::Value::as_str)
+            .filter(|target| *target != url.as_str())
+            .map(str::to_owned)
+        {
+            crate::screen::debug("Identified a JSON LD");
+            return self.json_ld_result(client, url, page_url, html, timestamp, &target, json_ld);
+        }
         let urls = match find(url, html) {
             None => return Ok(None),
             Some(Found::Redirect(target)) => {
@@ -990,6 +1022,142 @@ impl GenericHttp {
             entries,
             extra,
         })))
+    }
+}
+
+/// Upstream `smuggle_url` data for a JSON-LD `url_transparent` result:
+/// `force_videoid`, `to_generic` and `referer`.
+struct Smuggled {
+    video_id: String,
+    referer: Url,
+    /// The smuggled URL as upstream prints it.
+    shown: String,
+}
+
+thread_local! {
+    static SMUGGLED: std::cell::RefCell<Option<Smuggled>> = const { std::cell::RefCell::new(None) };
+}
+
+/// Python `urllib.parse.quote_plus`.
+fn quote_plus(text: &str) -> String {
+    let mut out = String::new();
+    for byte in text.bytes() {
+        match byte {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'_' | b'.' | b'-' | b'~' => {
+                out.push(char::from(byte));
+            }
+            b' ' => out.push('+'),
+            other => out.push_str(&format!("%{other:02X}")),
+        }
+    }
+    out
+}
+
+impl GenericHttp {
+    /// Upstream's JSON-LD embed: a `url_transparent` result of the
+    /// smuggled media URL (re-extracted by GenericIE with the page's ID and
+    /// Referer), overlaid with the JSON-LD and page fields.
+    #[allow(clippy::too_many_arguments)]
+    fn json_ld_result(
+        &self,
+        client: &Client,
+        url: &Url,
+        page_url: &Url,
+        html: &str,
+        timestamp: Option<i64>,
+        target: &str,
+        json_ld: serde_json::Map<String, serde_json::Value>,
+    ) -> Result<Option<ExtractResult>> {
+        use serde_json::Value;
+        // An `ext` makes a `video` result of the bare URL instead.
+        if json_ld.contains_key("ext") {
+            return Err(unsupported(
+                "JSON-LD media with an encoding format is not supported natively",
+            ));
+        }
+        let target = url
+            .join(target)
+            .map_err(|_| unsupported("JSON-LD media URL is invalid"))?;
+        if super::youtube_suitable(target.as_str()) || !matches!(target.scheme(), "http" | "https")
+        {
+            return Err(unsupported(
+                "JSON-LD media URLs other than HTTP are not supported natively",
+            ));
+        }
+        let video_id = crate::screen::generic_id(url.as_str());
+        let data = serde_json::json!({
+            "force_videoid": video_id,
+            "to_generic": true,
+            "referer": url.as_str(),
+        });
+        let shown = format!(
+            "{target}#__youtubedl_smuggle={}",
+            quote_plus(&crate::output::python_json_dumps(&data))
+        );
+        SMUGGLED.with(|smuggled| {
+            smuggled.replace(Some(Smuggled {
+                video_id,
+                referer: url.clone(),
+                shown,
+            }))
+        });
+        let inner = self.extract_result(client, &target);
+        SMUGGLED.with(|smuggled| smuggled.borrow_mut().take());
+        let Some(ExtractResult::Video(mut info)) = inner? else {
+            return Err(unsupported(
+                "JSON-LD media that is not direct media is not supported natively",
+            ));
+        };
+        let inner_shape = match info.extra.get(crate::info_order::INFO_SHAPE) {
+            Some(Value::String(shape))
+                if matches!(shape.as_str(), "generic-direct" | "generic-untyped") =>
+            {
+                shape.clone()
+            }
+            _ => {
+                return Err(unsupported(
+                    "JSON-LD media that is not direct media is not supported natively",
+                ));
+            }
+        };
+        // `merge_dicts({...}, json_ld)` then the page's `info_dict`; the
+        // `url_transparent` update skips `_type`, `url`, `id`, `extractor`.
+        let mut outer: Vec<(String, Value)> = json_ld
+            .into_iter()
+            .filter(|(key, _)| key != "url")
+            .collect();
+        let page = [
+            ("title", page_title(html).map(Value::from)),
+            ("timestamp", timestamp.map(Value::from)),
+            (
+                "description",
+                crate::html::og_search_property(html, "description").map(Value::from),
+            ),
+            (
+                "thumbnail",
+                crate::html::og_search_property(html, "image").map(Value::from),
+            ),
+            ("age_limit", crate::html::rta_search(html).map(Value::from)),
+        ];
+        for (key, value) in page {
+            if let Some(value) = value
+                && !outer.iter().any(|(existing, _)| existing == key)
+            {
+                outer.push((key.to_owned(), value));
+            }
+        }
+        let keys: Vec<String> = outer.iter().map(|(key, _)| key.clone()).collect();
+        for (key, value) in outer {
+            match key.as_str() {
+                "title" => info.title = value.as_str().unwrap_or_default().to_owned(),
+                _ => crate::metadata_parser::set_field(&mut info, &key, value),
+            }
+        }
+        info.webpage_url = page_url.clone();
+        let shape = format!("{inner_shape}|transparent:{}", keys.join(","));
+        Ok(Some(ExtractResult::Video(crate::info_order::mark_info(
+            info, &shape,
+        ))))
     }
 }
 

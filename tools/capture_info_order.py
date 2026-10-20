@@ -36,7 +36,7 @@ CONTENT_TYPES = {
 }
 CASES = ['clip.mp4', 'clip.qqq', 'one.html', 'rich.html', 'three.html', 'master.m3u8',
          'video.m3u8', 'plain.m3u8', 'segmented.mpd', 'text.mpd', 'og.html', 'twitter.html',
-         'flow.html', 'cine.html', 'two.html', 'refresh.html', 'jw.html', 'jwaudio.html', 'vjs.html', 'vjs2.html']
+         'flow.html', 'cine.html', 'two.html', 'refresh.html', 'jw.html', 'jwaudio.html', 'vjs.html', 'vjs2.html', 'ld.html']
 
 
 def content_type(name):
@@ -59,6 +59,9 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_error(404)
             return
         body = path.read_bytes()
+        if path.suffix == '.html':
+            # Pages may name absolute media URLs (JSON-LD) on this server.
+            body = body.replace(b'{ORIGIN}', f'http://127.0.0.1:{self.server.server_port}'.encode())
         self.send_response(200)
         self.send_header('Content-Type', content_type(path.name))
         self.send_header('Content-Length', str(len(body)))

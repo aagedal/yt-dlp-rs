@@ -217,8 +217,14 @@ SMIL, RTMP and YouTube sources are unsupported errors. A Video.js embed
 (`videojs(...)...VAR.src([...]);`) comes next: like upstream, only the first
 direct source becomes a format (with the page as Referer), and
 `VAR.addRemoteTextTrack({...}, true|false)` tracks become subtitles; manifest
-and YouTube sources are unsupported. Then come
-`_extract_embeds`' URL patterns in upstream order: SWFObject `flashvars`, JW Player `file:` options, `file=`/
+and YouTube sources are unsupported. Then JSON-LD: `_search_json_ld`'s
+`VideoObject`/`AudioObject`, episode, movie and article fields (checked against
+saved pinned results in `tests/fixtures/json_ld/`) with an absolute media URL
+other than the page make upstream's `url_transparent` result: the smuggled URL
+(shown as upstream prints it) is extracted again by the generic extractor with
+the page's ID and Referer, then overlaid with the JSON-LD and page fields;
+media that is not direct HTTP media, or that has an `encodingFormat`, is an
+unsupported error. Then come `_extract_embeds`' URL patterns in upstream order: SWFObject `flashvars`, JW Player `file:` options, `file=`/
 `source=` parameters, the JW Player JS loader, Flow Player, Cinerama, Twitter
 `player:stream` cards and `og:video`/`og:audio` (with `check_video`'s image and
 subtitle exclusions), then `http-equiv="refresh"` redirects and `twitter:player`
@@ -227,8 +233,8 @@ direct media URLs become upstream's entries (basename ID, the domain as
 `uploader`, the page title, a Referer header; one URL merged with the page's
 `timestamp`/`description`/`thumbnail`, several as a playlist with numbered
 titles); HLS/DASH/SMIL/XSPF/F4M, RTMP and YouTube URLs found this way are
-unsupported errors, as are pages where upstream's earlier KVS player or
-absolute JSON-LD media steps would answer. Output templates render a JW
+unsupported errors, as are pages where upstream's earlier KVS player step
+would answer. Output templates render a JW
 Player integer `tbr` as a float (JSON keeps upstream's int). Otherwise
 the result is upstream's `ERROR: Unsupported URL: URL`.
 All videos then get upstream `_sanitize_thumbnails` ordering, IDs, resolutions

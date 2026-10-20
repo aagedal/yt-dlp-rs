@@ -4,8 +4,8 @@
 //! `player:stream` cards and Open Graph `og:video`/`og:audio`, then
 //! `http-equiv="refresh"` redirects and `twitter:player` iframes.
 //!
-//! The earlier upstream steps after JW Player setup data and Video.js (KVS
-//! players, JSON-LD) are recognized and reported as unsupported rather than
+//! The upstream KVS player step (after JW Player setup data and Video.js,
+//! before JSON-LD) are recognized and reported as unsupported rather than
 //! answered with a later pattern's different result.
 use regex::Regex;
 use std::sync::LazyLock;
@@ -31,20 +31,7 @@ pub(crate) fn unported_step(html: &str) -> Option<&'static str> {
             r#"(?:<script\b[^>]+?\bsrc\s*=\s*["']https?://[^?#"']+/kt_player\.js\?v=\d+(?:\.\d+)+["']|kt_player\s*\(\s*["'].+?["']\s*,\s*["']https?://[^?#"']+/kt_player\.swf\?v=\d+(?:\.\d+)+["']\s*,)"#,
         )
     });
-    // JSON-LD only answers with an absolute media URL (`url_or_none` of
-    // `contentUrl`/`embedUrl`).
-    static JSON_LD: LazyLock<Regex> = LazyLock::new(|| {
-        regex(
-            r#"(?is)<script[^>]+type\s*=\s*["']?application/ld\+json["']?[^>]*>.*?"(?:contentUrl|embedUrl)"\s*:\s*"(?:[a-z][a-z0-9+.-]*:)?//.*?</script>"#,
-        )
-    });
-    if KVS.is_match(html) {
-        Some("KVS players")
-    } else if JSON_LD.is_match(html) {
-        Some("JSON-LD metadata")
-    } else {
-        None
-    }
+    KVS.is_match(html).then_some("KVS players")
 }
 
 /// Upstream `determine_ext(path, None)` exclusions (`check_video`).

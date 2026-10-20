@@ -514,6 +514,18 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some((shape, original)) = shape_of(map.remove(INFO_SHAPE)) else {
         return map;
     };
+    // A `url_transparent` result: the outer keys its update adds after the
+    // inner extraction's.
+    let (shape, transparent): (String, Vec<String>) = match shape.split_once("|transparent:") {
+        Some((inner, keys)) => (
+            inner.to_owned(),
+            keys.split(',')
+                .filter(|key| !key.is_empty())
+                .map(str::to_owned)
+                .collect(),
+        ),
+        None => (shape, Vec::new()),
+    };
     // The selected format's keys, which `info_dict.update(format)` merges.
     let merged = map
         .get("requested_formats")
@@ -738,7 +750,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         }
     }
     let held = |key: &str| {
-        PROCESSED_INFO_KEYS.contains(&key)
+        transparent.iter().any(|outer| outer == key)
+            || PROCESSED_INFO_KEYS.contains(&key)
             || (untyped && PROCESSED_FORMAT_KEYS.contains(&key))
             || selected.iter().any(|selected| selected == key)
     };
@@ -772,7 +785,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         // A `url_result` chain (a followed redirect) passes `original_url`
         // as extra info before `add_default_extra_info`'s keys.
         if replay.get("original_url").is_some()
-            && replay.get("original_url") != replay.get("webpage_url")
+            && (!transparent.is_empty() || replay.get("original_url") != replay.get("webpage_url"))
         {
             replay.take("original_url");
         }
@@ -784,6 +797,9 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             "extractor",
             "extractor_key",
         ] {
+            replay.take(key);
+        }
+        for key in &transparent {
             replay.take(key);
         }
         // `process_video_result`: not part of a playlist.

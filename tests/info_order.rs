@@ -24,6 +24,7 @@ fn serve(fixture: &serde_json::Value) -> String {
     let origin = format!("http://{}", listener.local_addr().unwrap());
     let types = fixture["content_types"].as_object().unwrap().clone();
     let modified = fixture["last_modified"].as_str().unwrap().to_owned();
+    let served_origin = origin.clone();
     thread::spawn(move || {
         for stream in listener.incoming() {
             let Ok(mut stream) = stream else { continue };
@@ -52,6 +53,15 @@ fn serve(fixture: &serde_json::Value) -> String {
                 continue;
             };
             let extension = name.rfind('.').map_or("", |index| &name[index..]);
+            // Pages may name absolute media URLs (JSON-LD) on this server.
+            let body = if extension == ".html" {
+                String::from_utf8(body)
+                    .unwrap()
+                    .replace("{ORIGIN}", &served_origin)
+                    .into_bytes()
+            } else {
+                body
+            };
             let content_type = types
                 .get(name)
                 .or_else(|| types.get(extension))
