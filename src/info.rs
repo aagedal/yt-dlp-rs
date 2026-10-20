@@ -1058,9 +1058,38 @@ pub(crate) fn format_resolution(format: &VideoFormat, default: Option<&str>) -> 
     }
 }
 
+/// `--compat-options manifest-filesize-approx`: manifest formats also get
+/// `filesize_approx` from their bitrate.
+pub static COMPAT_MANIFEST_FILESIZE_APPROX: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
 /// Upstream `process_video_result` description fields, after format IDs:
-/// `resolution`, `aspect_ratio` and `format` (`'{id} - {res}{note}'`).
-pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat]) {
+/// `resolution`, `aspect_ratio`, `format` (`'{id} - {res}{note}'`) and
+/// `filesize_approx` (`filesize_from_tbr(tbr, duration)` for formats without
+/// a size or a `manifest_url`, since "tbr" is often a maximum for those).
+pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat], duration: Option<u64>) {
+    let manifests = COMPAT_MANIFEST_FILESIZE_APPROX.load(std::sync::atomic::Ordering::Relaxed);
+    for format in formats.iter_mut() {
+        // Python truthiness: a zero or null size is no size.
+        let sized = |value: Option<&serde_json::Value>| {
+            value
+                .and_then(serde_json::Value::as_f64)
+                .is_some_and(|size| size != 0.0)
+        };
+        if (manifests || !format.extra.contains_key("manifest_url"))
+            && format.filesize.is_none_or(|size| size == 0)
+            && !sized(format.extra.get("filesize_approx"))
+            && let (Some(tbr), Some(duration)) = (format.tbr, duration)
+        {
+            // `int(duration * tbr * (1000 / 8))`.
+            let size = (duration as f64 * tbr * (1000.0 / 8.0)).trunc();
+            if size.is_finite() && size.abs() < 9.0e15 {
+                format
+                    .extra
+                    .insert("filesize_approx".into(), (size as i64).into());
+            }
+        }
+    }
     for format in formats {
         if format.resolution.is_none() {
             format.resolution = format_resolution(format, None);
@@ -1211,6 +1240,42 @@ fn selection_error(message: impl Into<String>) -> crate::Error {
 mod tests {
     use super::*;
     use serde_json::{Value, json};
+
+    #[test]
+    fn filesize_approx_follows_filesize_from_tbr_for_non_manifest_formats() {
+        let mut formats = vec![
+            source("a", StreamKind::Standalone, "mp4", None, None, Some(128.5)),
+            source("b", StreamKind::Standalone, "mp4", None, None, Some(128.5)),
+            source("c", StreamKind::Standalone, "mp4", None, None, Some(128.5)),
+            source("d", StreamKind::Standalone, "mp4", None, None, None),
+        ];
+        for format in &mut formats {
+            format.filesize = None;
+        }
+        formats[1]
+            .extra
+            .insert("manifest_url".into(), "https://e.invalid/m.mpd".into());
+        formats[2].filesize = Some(7);
+        fill_format_descriptions(&mut formats, Some(61));
+        let approx: Vec<_> = formats
+            .iter()
+            .map(|format| format.extra.get("filesize_approx").cloned())
+            .collect();
+        // `int(61 * 128.5 * 125)`; manifests, sized and bitrate-less formats
+        // get none.
+        assert_eq!(approx, [Some(json!(979_812)), None, None, None]);
+        let mut formats = vec![source(
+            "a",
+            StreamKind::Standalone,
+            "mp4",
+            None,
+            None,
+            Some(1.0),
+        )];
+        formats[0].filesize = None;
+        fill_format_descriptions(&mut formats, None);
+        assert!(!formats[0].extra.contains_key("filesize_approx"));
+    }
 
     fn source(
         id: &str,

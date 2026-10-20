@@ -1631,6 +1631,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 true
             }
+            "manifest-filesize-approx" => {
+                yt_dlp_rs::COMPAT_MANIFEST_FILESIZE_APPROX.store(true, Ordering::Relaxed);
+                true
+            }
             "format-spec" => {
                 yt_dlp_rs::COMPAT_FORMAT_SPEC.store(true, Ordering::Relaxed);
                 true

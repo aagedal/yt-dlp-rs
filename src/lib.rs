@@ -59,11 +59,11 @@ pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
 pub use format_sort::FormatSorter;
 pub use http::HttpOptions;
-pub use info::COMPAT_FORMAT_SPEC;
 pub use info::{
     ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
+pub use info::{COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX};
 pub use info_json::{
     InfoJsonWrite, info_json_path, info_value, load_info_json, playlist_info_json,
     playlist_info_json_with, to_python_json, upstream_shape, video_info_json, video_info_json_with,
@@ -1151,7 +1151,7 @@ impl YoutubeDl {
             }
             info::sort_formats(&mut entry.formats, &sorter);
             info::sanitize_format_ids(&mut entry.formats);
-            info::fill_format_descriptions(&mut entry.formats);
+            info::fill_format_descriptions(&mut entry.formats, entry.metadata.duration);
         }
         Ok(())
     }
