@@ -19,6 +19,7 @@ pub struct PlaylistSelection {
     reverse: bool,
     random: bool,
     lazy: bool,
+    selection_index: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -82,7 +83,15 @@ impl PlaylistSelection {
             reverse,
             random: false,
             lazy: false,
+            selection_index: false,
         })
+    }
+
+    /// `--compat-options playlist-index`: an entry's `playlist_index` is the
+    /// index selected at its position before reversing or shuffling.
+    pub fn selection_index(mut self, enabled: bool) -> Self {
+        self.selection_index = enabled;
+        self
     }
 
     /// Upstream `--playlist-random`: shuffle the selected entries.
@@ -201,6 +210,16 @@ impl PlaylistSelection {
             ),
         ];
         let indices = self.indices(count);
+        let requested = if self.selection_index && !self.lazy {
+            Self {
+                reverse: false,
+                random: false,
+                ..self.clone()
+            }
+            .indices(count)
+        } else {
+            indices.clone()
+        };
         let selected_count = indices.len();
         let last_index = indices.iter().max().map(|index| index + 1).unwrap_or(0);
         let mut entries: Vec<_> = std::mem::take(&mut playlist.entries)
@@ -218,7 +237,7 @@ impl PlaylistSelection {
                     crate::info::set_default(&mut entry.extra, key, value);
                 }
                 entry.last_playlist_index = Some(last_index);
-                entry.playlist_index = Some(index + 1);
+                entry.playlist_index = Some(requested[order] + 1);
                 entry.playlist_autonumber = Some(order + 1);
                 entry.playlist_count = Some(count);
                 entry.n_entries = (!self.lazy).then_some(selected_count);

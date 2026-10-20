@@ -821,6 +821,155 @@ pub fn strftime_date(timestamp: i64) -> Option<String> {
         .then(|| format!("{year:04}{month:02}{day:02}"))
 }
 
+/// A `strftime_or_none` input: a Unix timestamp (`int`/`float`) or a
+/// `YYYYMMDD` string.
+pub enum StrftimeInput<'a> {
+    Integer(i64),
+    Float(f64),
+    Text(&'a str),
+}
+
+static YYYYMMDD: LazyLock<Regex> = LazyLock::new(|| strptime_regex("%Y%m%d"));
+
+const WEEKDAYS: [&str; 7] = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+];
+
+/// Upstream `strftime_or_none(value, format)`: timestamps become aware UTC
+/// datetimes (`%Z` is `UTC`), `YYYYMMDD` strings naive ones. `Ok(None)` is
+/// upstream's caught `ValueError`/`OverflowError`; directives the C-locale
+/// port does not know, and `%s` of a naive (local-time) date, are errors.
+pub fn strftime_or_none(value: StrftimeInput<'_>, format: &str) -> Result<Option<String>, String> {
+    // Days since the epoch, microseconds of the day, and whether aware.
+    let (days, micros, aware) = match value {
+        StrftimeInput::Integer(seconds) => (
+            seconds.div_euclid(86_400),
+            seconds.rem_euclid(86_400) as i128 * 1_000_000,
+            true,
+        ),
+        StrftimeInput::Float(seconds) => {
+            // `timedelta(seconds=…)` rounds to microseconds, half to even.
+            let total = (seconds * 1e6).round_ties_even();
+            if !total.is_finite() || total.abs() > 1e18 {
+                return Ok(None);
+            }
+            let total = total as i128;
+            (
+                total.div_euclid(86_400_000_000) as i64,
+                total.rem_euclid(86_400_000_000),
+                true,
+            )
+        }
+        StrftimeInput::Text(text) => match strptime_checked(&YYYYMMDD, text, "%Y%m%d") {
+            Ok(date) => (days_from_civil(date.year, date.month, date.day), 0, false),
+            Err(_) => return Ok(None),
+        },
+    };
+    let (year, month, day) = civil_from_days(days);
+    if !(1..=9999).contains(&year) {
+        return Ok(None);
+    }
+    let seconds = (micros / 1_000_000) as i64;
+    let (hour, minute, second) = (seconds / 3600, seconds % 3600 / 60, seconds % 60);
+    let microsecond = micros % 1_000_000;
+    // Monday is 0, like `datetime.weekday()`.
+    let weekday = (days + 3).rem_euclid(7);
+    let year_day = days - days_from_civil(year, 1, 1) + 1;
+    // ISO 8601 year and week: the week containing the year's first Thursday.
+    let iso = |days: i64| {
+        let thursday = days - (days + 3).rem_euclid(7) + 3;
+        let (iso_year, _, _) = civil_from_days(thursday);
+        (
+            iso_year,
+            (thursday - days_from_civil(iso_year, 1, 1)) / 7 + 1,
+        )
+    };
+    let (iso_year, iso_week) = iso(days);
+    let hour12 = if hour % 12 == 0 { 12 } else { hour % 12 };
+    let mut output = String::new();
+    let mut chars = format.chars();
+    while let Some(c) = chars.next() {
+        if c != '%' {
+            output.push(c);
+            continue;
+        }
+        let Some(mut directive) = chars.next() else {
+            output.push('%');
+            break;
+        };
+        let colon = directive == ':';
+        if colon {
+            directive = chars.next().unwrap_or(':');
+            if directive != 'z' {
+                return Err(format!("unsupported strftime directive %:{directive}"));
+            }
+        }
+        let text = match directive {
+            'a' => WEEKDAYS[weekday as usize][..3].to_owned(),
+            'A' => WEEKDAYS[weekday as usize].to_owned(),
+            'b' | 'h' => capitalized(&MONTHS[month as usize - 1][..3]),
+            'B' => capitalized(MONTHS[month as usize - 1]),
+            'c' => format!(
+                "{} {} {day:2} {hour:02}:{minute:02}:{second:02} {year:04}",
+                &WEEKDAYS[weekday as usize][..3],
+                capitalized(&MONTHS[month as usize - 1][..3]),
+            ),
+            'C' => format!("{:02}", year / 100),
+            'd' => format!("{day:02}"),
+            'D' | 'x' => format!("{month:02}/{day:02}/{:02}", year % 100),
+            'e' => format!("{day:2}"),
+            'f' => format!("{microsecond:06}"),
+            'F' => format!("{year:04}-{month:02}-{day:02}"),
+            'g' => format!("{:02}", iso_year % 100),
+            'G' => format!("{iso_year:04}"),
+            'H' => format!("{hour:02}"),
+            'I' => format!("{hour12:02}"),
+            'j' => format!("{year_day:03}"),
+            'k' => format!("{hour:2}"),
+            'l' => format!("{hour12:2}"),
+            'm' => format!("{month:02}"),
+            'M' => format!("{minute:02}"),
+            'n' => "\n".into(),
+            'p' => if hour < 12 { "AM" } else { "PM" }.into(),
+            'r' => format!(
+                "{hour12:02}:{minute:02}:{second:02} {}",
+                if hour < 12 { "AM" } else { "PM" }
+            ),
+            'R' => format!("{hour:02}:{minute:02}"),
+            's' if aware => (days * 86_400 + seconds).to_string(),
+            's' => return Err("%s of a naive date needs the local time zone".into()),
+            'S' => format!("{second:02}"),
+            't' => "\t".into(),
+            'T' | 'X' => format!("{hour:02}:{minute:02}:{second:02}"),
+            'u' => (weekday + 1).to_string(),
+            'U' => format!("{:02}", (year_day + 6 - (weekday + 1) % 7) / 7),
+            'V' => format!("{iso_week:02}"),
+            'w' => ((weekday + 1) % 7).to_string(),
+            'W' => format!("{:02}", (year_day + 6 - weekday) / 7),
+            'y' => format!("{:02}", year % 100),
+            'Y' => format!("{year:04}"),
+            'z' if aware && colon => "+00:00".into(),
+            'z' if aware => "+0000".into(),
+            'Z' if aware => "UTC".into(),
+            'z' | 'Z' => String::new(),
+            '%' => "%".into(),
+            other => return Err(format!("unsupported strftime directive %{other}")),
+        };
+        output.push_str(&text);
+    }
+    Ok(Some(output))
+}
+
+fn capitalized(name: &str) -> String {
+    name[..1].to_uppercase() + &name[1..]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

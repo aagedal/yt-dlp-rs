@@ -53,11 +53,13 @@ pub use archive::{DownloadArchive, archive_id};
 pub use audio::{AudioDownload, AudioOptions, audio_original_path, audio_output_path};
 pub use cookies::CookieJar;
 pub use download::{DownloadOptions, DownloadPhase, DownloadProgress, MergeFiles, PartFiles};
+pub use embed_metadata::COMPAT_EMBED_METADATA;
 pub use embed_subtitles::{SubtitleEmbedding, SubtitleFile};
 pub use error::{Error, Result};
 pub use extractor::YoutubeOptions;
 pub use format_sort::FormatSorter;
 pub use http::HttpOptions;
+pub use info::COMPAT_FORMAT_SPEC;
 pub use info::{
     ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
@@ -976,13 +978,14 @@ impl YoutubeDl {
     /// Upstream `get_suitable_downloader(...) == FFmpegFD`: partial downloads,
     /// or every selected protocol assigned to `ffmpeg` by `--downloader`.
     pub fn uses_ffmpeg_fd(&self, info: &VideoInfo) -> bool {
-        if sections::is_partial(info) {
-            return true;
-        }
         // `FFmpegFD.can_download` needs ffmpeg; otherwise the native
-        // downloaders are used.
+        // downloaders are used (a partial download without ffmpeg is an
+        // error unless `--compat-options no-direct-merge`).
         if self.ffmpeg.is_none() {
             return false;
+        }
+        if sections::is_partial(info) {
+            return true;
         }
         let protocols: Vec<String> = if info.requested_formats.is_empty() {
             vec![

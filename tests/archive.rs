@@ -212,7 +212,7 @@ fn failed_download_existing_destination_and_invalid_template_are_not_recorded() 
                 "0",
                 "-o",
                 if template {
-                    "%(id.a-b)s"
+                    "%(id)z"
                 } else {
                     target.to_str().unwrap()
                 },

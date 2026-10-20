@@ -242,6 +242,49 @@ pub const DEFAULT: &[&str] = &[
     "id",
 ];
 
+/// `FormatSorter._prefer_vp9_sort`.
+const PREFER_VP9: &[&str] = &[
+    "hidden",
+    "aud_or_vid",
+    "hasvid",
+    "ie_pref",
+    "lang",
+    "quality",
+    "res",
+    "fps",
+    "hdr:12",
+    "vcodec:vp9.2",
+    "channels",
+    "acodec",
+    "size",
+    "br",
+    "asr",
+    "proto",
+    "ext",
+    "hasaud",
+    "source",
+    "id",
+];
+
+/// `--compat-options prefer-vp9-sort`: `FormatSorter.default` becomes
+/// `_prefer_vp9_sort`.
+pub static PREFER_VP9_SORT: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// Whether `prefer-vp9-sort` is among the compatibility options at all
+/// (YouTube's `_format_sort_fields` then prefer `vcodec:vp9.2`).
+pub static PREFER_VP9_COMPAT: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// The current `FormatSorter.default`.
+fn default_fields() -> &'static [&'static str] {
+    if PREFER_VP9_SORT.load(std::sync::atomic::Ordering::Relaxed) {
+        PREFER_VP9
+    } else {
+        DEFAULT
+    }
+}
+
 fn settings() -> BTreeMap<&'static str, Setting> {
     use Type::*;
     let mut map = BTreeMap::new();
@@ -484,7 +527,7 @@ impl FormatSorter {
             user: user.to_vec(),
             extractor: extractor.iter().map(|field| (*field).to_owned()).collect(),
         };
-        let forced: Vec<String> = DEFAULT
+        let forced: Vec<String> = default_fields()
             .iter()
             .filter(|field| sorter.settings.get(**field).is_some_and(|s| s.forced))
             .map(|field| (*field).to_owned())
@@ -492,7 +535,7 @@ impl FormatSorter {
         let priority: Vec<String> = if force {
             Vec::new()
         } else {
-            DEFAULT
+            default_fields()
                 .iter()
                 .filter(|field| sorter.settings.get(**field).is_some_and(|s| s.priority))
                 .map(|field| (*field).to_owned())
@@ -503,7 +546,7 @@ impl FormatSorter {
             .chain(priority)
             .chain(user.iter().cloned())
             .chain(extractor.iter().map(|field| (*field).to_owned()))
-            .chain(DEFAULT.iter().map(|field| (*field).to_owned()))
+            .chain(default_fields().iter().map(|field| (*field).to_owned()))
             .collect();
         static PATTERN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
             regex::Regex::new(

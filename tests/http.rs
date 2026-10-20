@@ -602,7 +602,7 @@ fn templates_are_explicit_and_metadata_cannot_inject_paths_or_fields() {
         render_template("%(unknown)s", &info).unwrap(),
         std::path::PathBuf::from("NA")
     );
-    for invalid in ["%(id.a-b)s", "%(title)q", "%", "", "-"] {
+    for invalid in ["%(id)z", "%(title+)s", "%", "", "-"] {
         assert!(render_template(invalid, &info).is_err(), "{invalid}");
     }
 }

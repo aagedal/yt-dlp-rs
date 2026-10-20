@@ -247,13 +247,7 @@ fn filename_errors_only_fail_templates_that_use_filename() {
 fn unsupported_print_stages_and_templates_fail_before_requests() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
-    for spec in [
-        "pre_process:id",
-        "after_filter:id",
-        "%(id.a-b)s",
-        "%(id.{x)s",
-        "%(id)q",
-    ] {
+    for spec in ["pre_process:id", "after_filter:id", "%(id)z", "%(id+)s"] {
         let output = server.cli(&["/page.html"], &["-O", spec], directory.path());
         assert!(!output.status.success(), "{spec}");
         assert!(output.stdout.is_empty(), "{spec}");
@@ -325,8 +319,8 @@ fn print_to_file_runs_under_print_simulation_and_validates_at_startup() {
         "2\n3\n"
     );
     for args in [
-        ["--print-to-file", "id", "%(id.a-b)s.txt"],
-        ["--print-to-file", "%(id.{x)s", "x.txt"],
+        ["--print-to-file", "id", "%(id)z.txt"],
+        ["--print-to-file", "%(id+)s", "x.txt"],
     ] {
         let output = server.cli(&["/page.html"], &args, directory.path());
         assert!(!output.status.success(), "{args:?}");

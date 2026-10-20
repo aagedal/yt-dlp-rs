@@ -203,10 +203,11 @@ Supported today:
   print with `filepath`/`_filename` and download without simulation;
   `pre_process`, `after_filter` and `playlist` are not implemented; see
   [print templates](docs/COMPATIBILITY.md#print-templates).
-- Typed output fields include IDs/titles, dimensions, filesize and playlist indices,
-  with string `s`, integer `d/i/u` and fixed-point `f/F` width/precision formatting.
-  For example, `%(playlist_index)03d-%(title).80s.%(ext)s`. Known-field alternatives
-  and defaults such as `%(width,height|unknown)s` are supported;
+- Output templates follow upstream's key grammar and conversions: traversal
+  (`%(formats.0.format_id)s`, `%(title.:80)s`), maths (`%(epoch-3600)d`), dates
+  (`%(timestamp>%Y-%m-%d)s`), alternates and defaults (`%(width,height|unknown)s`),
+  replacements (`%(height&{}p|)s`) and every conversion (`diuoxXeEfFgGcrsa` plus
+  upstream's `ljhqBUDS`), with Python-style width/precision formatting.
   `--output-na-placeholder TEXT` changes the default `NA`. Literal `%%` is supported.
   Metadata is sanitized like upstream (full-width look-alikes for reserved
   characters); `--restrict-filenames`, `--windows-filenames`/`--no-windows-filenames`

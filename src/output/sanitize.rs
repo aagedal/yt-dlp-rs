@@ -188,13 +188,78 @@ pub fn sanitize_filename(value: &str, restricted: bool) -> String {
     }
 }
 
-/// Sanitize one represented metadata value for a filename in `mode`.
-pub fn sanitize_component(value: &str, mode: FilenameMode) -> String {
-    match mode {
-        FilenameMode::Default => sanitize_filename(value, false),
-        FilenameMode::Restricted => sanitize_filename(value, true),
-        FilenameMode::Minimal => value.replace('/', "\u{29f8}").replace('\0', ""),
+/// Upstream `sanitize_filename(value, restricted, is_id=…)` with an explicit
+/// `is_id` (`--compat-options filename-sanitization`): youtube-dl's rules,
+/// without full-width look-alikes or substitute-character collapsing; IDs
+/// keep their underscores, dots and leading `-`.
+pub fn sanitize_filename_legacy(value: &str, restricted: bool, is_id: bool) -> String {
+    if value.is_empty() {
+        return String::new();
     }
+    let normalized;
+    let value = if restricted && !is_id {
+        normalized = ComposingNormalizerBorrowed::new_nfkc().normalize(value);
+        &*normalized
+    } else {
+        value
+    };
+    let mut result = String::with_capacity(value.len());
+    for c in timestamps(value).chars() {
+        if restricted && let Some(replacement) = accent(c) {
+            result.push_str(replacement);
+        } else if !restricted && c == '\n' {
+            result.push(' ');
+        } else if c == '?' || (c as u32) < 32 || c as u32 == 127 {
+        } else if c == '"' {
+            if !restricted {
+                result.push('\'');
+            }
+        } else if c == ':' {
+            result.push_str(if restricted { "_-" } else { " -" });
+        } else if "\\/|*<>".contains(c) {
+            result.push('_');
+        } else if restricted && ("!&'()[]{}$;`^,#".contains(c) || is_py_space(c) || c as u32 > 127)
+        {
+            if !is_control_or_mark(c) {
+                result.push('_');
+            }
+        } else {
+            result.push(c);
+        }
+    }
+    let mut result = if result.is_empty() {
+        "_".to_owned()
+    } else {
+        result
+    };
+    if !is_id {
+        while result.contains("__") {
+            result = result.replace("__", "_");
+        }
+        result = result.trim_matches('_').to_owned();
+        if restricted && result.starts_with("-_") {
+            result.drain(..2);
+        }
+        if let Some(rest) = result.strip_prefix('-') {
+            result = format!("_{rest}");
+        }
+        result = result.trim_start_matches('.').to_owned();
+        if result.is_empty() {
+            result = "_".into();
+        }
+    }
+    result
+}
+
+/// Upstream `filename_sanitizer(key, value, restricted)`: the default rules,
+/// or with `legacy` (`filename-sanitization`) `is_id` from the field name.
+pub fn filename_sanitizer(key: &str, value: &str, restricted: bool, legacy: bool) -> String {
+    if !legacy {
+        return sanitize_filename(value, restricted);
+    }
+    static ID: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"(^|[_.])id(\.|$)").unwrap());
+    sanitize_filename_legacy(value, restricted, ID.is_match(key))
 }
 
 /// Upstream non-Windows `sanitize_path(path, force=True)` (`--windows-filenames`):

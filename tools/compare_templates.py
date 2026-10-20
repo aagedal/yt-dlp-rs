@@ -30,7 +30,8 @@ for key in ('cases', 'source_only_cases'):
     result[key] = []
     for case in fixture[key]:
         ydl = YoutubeDL({'quiet': True, 'no_warnings': True,
-                        'outtmpl_na_placeholder': case['na_placeholder']}, auto_init=False)
+                        'outtmpl_na_placeholder': case['na_placeholder'],
+                        'compat_opts': case.get('compat_opts', [])}, auto_init=False)
         rendered = ydl.evaluate_outtmpl(case['template'], copy.deepcopy(case['info']), sanitize=True)
         result[key].append({'name': case['name'], 'rendered': rendered})
 print(json.dumps(result, ensure_ascii=False))

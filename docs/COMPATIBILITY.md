@@ -22,7 +22,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `-O`, `--print [WHEN:]TEMPLATE` | Print a field list or unsanitized output template per selected video at the `video`, `before_dl`, `post_process`, `after_move` or `after_video` stage, or once per playlist at `playlist` (after its entries, over the playlist dict: `id`, `title`, `playlist_count`, `requested_entries` and the extracted entries); implies quiet, and simulation unless a later stage prints; repeatable; see [print templates](#print-templates) |
 | `-e`/`--get-title`, `--get-id`, `-g`/`--get-url`, `--get-thumbnail`, `--get-description`, `--get-filename`, `--get-duration`, `--get-format` | Hidden upstream aliases printing, after `--print` lines and in upstream `__forced_printings` order, title, ID, selected URLs, thumbnail, description, prepared filename, `formatSeconds` duration and `format`; thumbnail, description and duration print only when present; imply quiet simulation |
 | `-f`, `--format` | A port of upstream `build_format_selector`: atoms, ranks, extensions, IDs, `all`/`mergeall`, filters, groups, `/`, `+` and `,`; see [Format selection](#format-selection); format IDs follow upstream for direct, HLS and DASH results (see below); exactly `-f best` or `-f mp4` prints upstream's common-mistake warning, ordered with the other `validate_options` conflict warnings |
-| `-o`, `--output [TYPES:]TEMPLATE` | Represented root metadata, `s/d/i/u/f/F` conversions, flags/width/precision, known alternatives/defaults and literal `%%`; upstream metadata sanitization; typed `subtitle`/`infojson`/`pl_infojson` templates (empty skips that file), `~`/`$VAR` template expansion; no overwrite; see [output paths](../upstream/notes/output-paths.md) |
+| `-o`, `--output [TYPES:]TEMPLATE` | Upstream's template keys (traversal, maths, `>` dates, alternates, `&` replacements, defaults) and conversions (`diuoxXeEfFgGcrsa` plus `ljhqBUDS`), flags/width/precision and literal `%%`; upstream metadata sanitization; typed `subtitle`/`infojson`/`pl_infojson` templates (empty skips that file), `~`/`$VAR` template expansion; no overwrite; see [output paths](../upstream/notes/output-paths.md) |
 | `-P`, `--paths [TYPES:]PATH` | `home` (default) and output-type directories joined like upstream `get_output_path`; absolute templates ignore them with a warning. `temp:` names the download beside `HOME/TEMP/NAME` (also checked for an existing download). Upstream's `MoveFilesAfterDownloadPP` runs after the `post_process` stage (and with `--skip-download`): subtitles and thumbnails are written beside the (temporary) media name and moved to their typed names (also without `temp:`, e.g. `-P subtitle:DIR`), converted subtitles/thumbnails follow their originals, `-k` sources go to the final directory, and the media moves to the absolute final directory with `[MoveFiles] Moving file "OLD" to "NEW"`. Existing targets print `Replacing existing file "NEW"` (removed first), or with `--no-overwrites` `Cannot move file "OLD" out of temporary directory since "NEW" already exists. ` and stay. Info JSON, descriptions, links and split chapters are written to their final names. Files deleted by earlier processors are skipped silently, so upstream's `File "OLD" cannot be found` warning is not printed |
 | `--list-subs` | Upstream `render_subtitles_table` (`Language Name Formats`, formats in reverse order, `ID has no subtitles`); list-only unless combined with `-j`/`-s`, which retain normal format selection; no sidecar downloads |
 | `--write-subs`, `--write-srt` | Select normal subtitles and write sidecars before actual media downloads; JSON/simulation/listing only expose selection; each video with a selection first prints upstream's `[info] ID: Downloading subtitles: LANGS` |
@@ -106,7 +106,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--postprocessor-args NAME:ARGS`, `--ppa` | Upstream `_configuration_args` for this port's FFmpeg postprocessors (`Merger`, `ExtractAudio`, `VideoRemuxer`, `VideoConvertor`, `Metadata`, `EmbedSubtitle`, `EmbedThumbnail`, `SubtitlesConvertor`, `ThumbnailsConvertor`, `SplitChapters`, `FixupM3u8`, `FixupM4a`): shlex-split values by case-insensitive `PP[+EXE][_i[N]\|_o[N]]` key (a later value replaces an earlier one); `PP+ffmpeg_iN`/`PP+ffmpeg_i` go before each input's `-i`, and `PP+ffmpeg_o1`/`PP+ffmpeg_o`/`PP+ffmpeg`, then `PP` and `ffmpeg` together, then `default` before the output file (a key given without arguments still ends the search). Unnamed values print `Post-Processor arguments given without specifying name. The arguments will be given to all post-processors` and become `default`; `wrong --ppa formatting; …` usage errors. The arguments join this port's own FFmpeg command lines, which differ from upstream's; ffprobe, AtomicParsley and unimplemented postprocessors (`ModifyChapters`, `FixupStretched`, `FixupTimestamp`, `FixupDuration`) take none |
 | `--keep-fragments`, `--no-keep-fragments` | Upstream fragment files `TMPFILENAME-FragN` (`NAME.part-FragN`, or `NAME-FragN` with `--no-part`) are kept beside the output, byte-identical to the assembled fragments, for unprocessed fragmented downloads; processed downloads keep them in their private workspace (removed) |
 | `--progress-template [TYPES:]TEMPLATE` | Upstream `_report_progress_status`: `download:` (default) templates render over `{'info': ..., 'progress': ...}` with `report_progress`'s fields (`status`, `downloaded_bytes`, `total_bytes`, `eta`, `speed`, `elapsed`, `fragment_index`/`fragment_count`, `filename`, `_percent_str`, `_speed_str`, `_eta_str`, `_total_bytes_str`, `_default_template`, ...) for downloading and finished statuses. `postprocess:` and the `-title` types are accepted but not rendered, because postprocessor progress hooks and console titles are not implemented |
-| `--compat-options OPTS` | Upstream `_set_from_options_callback`/`orderedSet_from_options` (`all`, `youtube-dl`, `youtube-dlc` and year aliases, `-NAME` removal, `wrong OPTS for --compat-options: …`) and `set_compat_opts` for the defaults this port has: `abort-on-error`, `no-playlist-metafiles`, `no-clean-infojson`, `no-attach-info-json`, `mtime-by-default`, `filename` (`%(title)s-%(id)s.%(ext)s`), `format-sort` (`FormatSorter.ytdl_default` appended) and `no-keep-subs`; an explicitly given option marks the compatibility option `*NAME` in `-v`'s `Compatibility options:` line. `no-certifi`, `prefer-legacy-http-handler`, `no-live-chat`, `no-external-downloader-progress` and `embed-thumbnail-atomicparsley` concern features this port does not have; the others warn that they are not supported natively. `all` lists the options in this port's table order (upstream's set order varies) |
+| `--compat-options OPTS` | Upstream `_set_from_options_callback`/`orderedSet_from_options` (`all`, `youtube-dl`, `youtube-dlc` and year aliases, `-NAME` removal, `wrong OPTS for --compat-options: …`) and `set_compat_opts`: `abort-on-error`, `no-playlist-metafiles`, `no-clean-infojson`, `no-attach-info-json`, `mtime-by-default`, `filename` (`%(title)s-%(id)s.%(ext)s`), `format-sort` (`FormatSorter.ytdl_default` appended) and `no-keep-subs` change defaults, and an explicitly given option marks the compatibility option `*NAME` in `-v`'s `Compatibility options:` line. The others take effect where upstream reads them: `filename-sanitization` (youtube-dl's `sanitize_filename` with `is_id` from the field name), `allow-unsafe-exec-expansion` (no `--exec` template validation), `allow-unsafe-ext` (upstream's warning, and no unusual-extension check; path separators in an extension stay a native error), `embed-metadata` (`comment` is the description and `synopsis` is dropped), `format-spec` (`bestvideo+bestaudio/best` merge default), `list-formats` (the legacy `-F` layout), `playlist-index` (an entry's index is the one selected at its position before `--playlist-reverse`/`--playlist-random`), `prefer-vp9-sort` (`vcodec:vp9.2` in the default sort unless `format-sort`, and in YouTube's sort fields) and `no-direct-merge` (a partial download without ffmpeg downloads the whole file natively instead of aborting; merges FFmpegFD would download per format are a native error). `no-certifi`, `prefer-legacy-http-handler`, `no-live-chat`, `no-external-downloader-progress`, `embed-thumbnail-atomicparsley`, `no-youtube-channel-redirect` and `no-youtube-unavailable-videos` concern features this port does not have; pinned upstream never reads `no-youtube-prefer-utc-upload-date` or `seperate-video-versions`; and `playlist-match-filter` only affects unresolved (`url`) entries, which this port's playlists do not have. `multistreams` and `manifest-filesize-approx` warn that they are not supported natively. `all` lists the options in this port's table order (upstream's set order varies) |
 | Accepted tuning and environment options | `--buffer-size`, `--resize-buffer`/`--no-resize-buffer`, `--file-access-retries`, `--throttled-rate`, `--wait-for-video`/`--no-wait-for-video`, `--live-from-start`, `--mark-watched`, `--no-update`, `--cache-dir`/`--no-cache-dir`, `--no-plugin-dirs`, `--remote-components`, `--prefer-insecure`/`--prefer-unsecure`, `--ignore-no-formats-error`, `--allow-dynamic-mpd`/`--no-ignore-dynamic-mpd`/`--ignore-dynamic-mpd`/`--no-allow-dynamic-mpd`, the account (`-u`, `-p`, `-2`, `-n`, `--netrc-*`, `--video-password`, `--ap-*`) and geo (`--geo-verification-proxy`, `--xff`, `--geo-bypass*`) options are validated with upstream's messages (`buffer size "0" must be positive`, `invalid file access retry count "X" given`, `invalid time range to wait for video "X" given`, ...) and otherwise have no effect: the supported extractors use no logins, geo bypass or live streams, and reads use a fixed buffer. `--rm-cache-dir` prints upstream's `Removing cache dir DIR ..` for this port's (unused) `yt-dlp-rs` cache directory. `-U`/`--update`/`--update-to` are errors (no self-update). `--js-runtimes deno[:PATH]` selects the Deno runtime (a bare `deno` is looked up on PATH); other runtimes, `--extractor-args`, `--plugin-dirs`, multistreams, `--console-title`, `--legacy-server-connect`, `--bidi-workaround` and non-UTF-8 `--encoding` warn that they are not supported natively. `--impersonate` reports upstream's unavailable-target error and `--list-impersonate-targets` its table of unavailable `curl_cffi` targets; `--ap-list-mso` lists no providers |
 | `--client-certificate CERTFILE`, `--client-certificate-key KEYFILE`, `--client-certificate-password PASSWORD` | TLS client authentication for every request: a PEM certificate (optionally containing its key) plus an optional separate PEM key. Encrypted keys and `--client-certificate-password` are an explicit native error, because the rustls transport needs unencrypted keys |
 | `--enable-file-urls`, `file:` URLs | Upstream refuses `file:` URLs after `[generic] Extracting URL`/`Downloading webpage` with `file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk.`; with the option, local media files are direct links like urllib's file handler gives upstream (guessed Content-Type, mtime timestamp, protocol `file`) and are copied with progress. Local HTML pages and manifests remain an explicit native error |
@@ -1436,15 +1436,39 @@ upstream. Lists and dicts render as Python `str()`/`repr()` text, `l` joins list
 items with `, ` (newlines with `#`) and `j` emits Python `json.dumps` (indented
 with `#`), sanitized in filenames. The serialized dict holds the represented
 fields only (with this port's key order inside formats), so fields upstream
-extractors would add are missing. Malformed traversal syntax remains an error.
+extractors would add are missing. As upstream's `prepare_outtmpl` does, every
+template's dict also gets `epoch` (the current time) unless it has one.
 
-Named substitutions use `%(field)FORMAT`, where conversions are `s`, `d`, `i`,
-`u`, `f` and `F`. Formats support Python-style `#`, `0`, `-`, `+` and space flags,
+Keys follow upstream's `INTERNAL_FORMAT_RE` (the regex crate's leftmost-first
+captures, with its `(?<!\\),` lookbehind applied by hand): an optional `-`
+negation, the field, `+`/`-`/`*` maths with numbers or other fields
+(`%(epoch-3600)d`, `%(duration*1000)d`; floats, and a missing operand makes the
+value missing), `>FORMAT` datetime formatting of timestamps or `YYYYMMDD`
+strings (`%(timestamp>%Y-%m-%d)s`; `\,` escapes a comma), `,` alternates,
+`&REPLACEMENT` (Python `str.format` with `{}`/`{0}`, `!r`/`!s`/`!a` and `{{`/`}}`;
+a `ValueError` such as `{name}` makes the value missing with the global
+placeholder) and `|DEFAULT`. A key that does not match is a missing value, like
+upstream. Native boundaries: datetime formatting ports the C-locale directives
+`aAbBcCdDeFfgGhHIjklmMnprRsStTuUVwWxXyYzZ%` and `%:z` (timestamps are UTC, so
+`%Z` is `UTC`; other directives and `%s` of a `YYYYMMDD` date, which needs the
+local time zone, are errors), replacement format specs (`{:>5}`) are errors, and
+an operator without an operand is an error where upstream raises `IndexError`.
+
+Named substitutions use `%(field)FORMAT` with upstream's conversions:
+`d`/`i`/`u` (truncating), `f`/`F`, `e`/`E`, `g`/`G` (Python's rules), `s`, `r`
+(Python `repr`), `a` (`ascii`), `c` (the first character, or `%s` of a falsy
+value), and upstream's `l` (joined list items or dict keys), `j` (JSON), `h`
+(HTML escaping), `q` (shell quoting; `#` quotes each list item), `B` (width and
+precision in UTF-8 bytes, decoded with `errors='ignore'`), `U` (NFC; `+` for
+NFKC, `#` for NFD; non-strings are an error where upstream raises
+`TypeError`), `D` (`format_decimal_suffix`: `1.79G`, `#` for powers of 1024, a
+negative value renders `None`) and `S` (`sanitize_filename`, `#` restricted).
+`o`/`x`/`X` fail as upstream does (it passes a float: `%x requires an integer,
+not float`). Formats support Python-style `#`, `0`, `-`, `+` and space flags,
 ASCII minimum width, `.PRECISION` and one inert `h`/`l`/`L` length modifier. Width
 is a minimum, string precision counts Unicode characters, integer precision
-pads digits and floating precision defaults to six. Integer aliases truncate
-numeric values toward zero; `F` uppercases nonfinite output. Nonfinite integer
-conversion is an explicit error. Naked precision dots, unsupported conversions,
+pads digits and floating precision defaults to six. Nonfinite integer
+conversion is an explicit error. Naked precision dots, unknown conversions,
 raw percent escapes and malformed named tokens fail; only `%%` escapes a percent.
 These strict syntax limits differ from upstream's more permissive escaping.
 
@@ -1454,7 +1478,7 @@ a chosen string that fails numeric casting uses the default instead. Explicit
 `|TEXT` overrides `--output-na-placeholder` (default `NA`); either can be empty.
 Unavailable and failed numeric conversions discard *all* formatting flags,
 width and precision, so `%(width|0)04d` with missing width renders `0`, not `0000`.
-All alternate field names are validated even after an available first candidate.
+Alternates after an available value are not evaluated.
 Default text is literal, sanitized and never recursively evaluated.
 
 For numeric conversions, pinned upstream first casts values through a float.
@@ -1475,7 +1499,9 @@ rendering; its internal maximum-index context is accepted as
 `__last_playlist_index` on input but omitted from JSON output. Explicit widths
 avoid depending on that context after a JSON round trip.
 
-String values/defaults use upstream `sanitize_filename` (default `is_id`) before
+String values/defaults use upstream `sanitize_filename` (default `is_id`; with
+`--compat-options filename-sanitization`, youtube-dl's rules with `is_id` from
+the field name) before
 width or precision. By default `"*:<>?|` become full-width look-alikes, `/` and
 `\` become `⧸`/`⧹`, newlines become spaces, other controls are removed and
 `H:MM:SS`-style timestamps use `_`. `--restrict-filenames` applies NFKC, accent
@@ -1509,13 +1535,14 @@ listing paths leave output templates inert, including invalid ones; this
 existing native timing is not general upstream option-normalization parity. Library `output::render_template` uses default options;
 `render_template_with_options` accepts `TemplateOptions` with `na_placeholder`,
 `filename_mode`, `windows_filenames` and `trim_file_name`.
-Arithmetic/dates, replacements, scientific/general/hex/octal/repr and other custom
-conversions (`h`, `B`, `U`, `D`, `S`, `c`), environment expansion
-and full filename/platform compatibility remain open.
+Environment expansion of metadata and full filename/platform compatibility
+remain open.
 
-The shared 182-case comparison (including traversal and slice ranges) uses actual pinned `evaluate_outtmpl` in filename
-sanitization mode on portable fields. Native safety/resource cases are separate;
-unsafe-character output is not normalized to hide policy differences. Six
+The shared 213-case comparison (including traversal, slices, maths, dates,
+replacements, every conversion and `filename-sanitization`) uses actual pinned
+`evaluate_outtmpl` in filename sanitization mode on portable fields
+(`tools/compare_templates.py`). Native safety/resource cases are separate;
+unsafe-character output is not normalized to hide policy differences. Three
 source-only cases record unsupported behavior. See
 [the source slice](../upstream/notes/typed-output-templates.md).
 
@@ -1548,9 +1575,9 @@ indentation is inert for scalar fields) formatted with the remaining `%s` flags.
 `requested_formats` URL on its own line) are added as upstream `_forceprint`
 does. Unknown fields print `NA` and traversal works as in filenames; shorthand
 follows upstream `format_tmpl` (`-O id.0`, `-O "{id,title}"` as `%(.{id,title})j`,
-`-O field=` as `field = %(field)#j`). Arithmetic, `q`/other custom conversions
-and `formats_table`-style fields are rejected before extraction, whereas
-upstream evaluates them.
+`-O field=` as `field = %(field)#j`). `_forceprint`'s `formats_table`
+(the `-F` table, legacy with `--list-formats-old`), `thumbnails_table`,
+`subtitles_table` and `automatic_captions_table` are available too.
 
 Hidden `-e`/`--get-title`, `--get-id`, `-g`/`--get-url` and `--get-filename`
 print after all `--print` lines in upstream order (title, ID, URLs, filename),

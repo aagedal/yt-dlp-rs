@@ -82,6 +82,11 @@ pub(crate) fn ffmetadata(chapters: &[crate::info::Chapter]) -> String {
     content
 }
 
+/// `--compat-options embed-metadata`: `comment` is the description and
+/// `synopsis` is not written.
+pub static COMPAT_EMBED_METADATA: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
 /// `FFmpegMetadataPP._options(ext)` followed by `_get_metadata_opts(info)`.
 pub(crate) fn args(info: &VideoInfo, ext: &str) -> Vec<String> {
     let value = serde_json::to_value(info).unwrap_or(Value::Null);
@@ -141,6 +146,10 @@ pub(crate) fn args(info: &VideoInfo, ext: &str) -> Vec<String> {
     add(&["season_number"], &["season_number"]);
     add(&["episode_id"], &["episode", "episode_id"]);
     add(&["episode_sort"], &["episode_number"]);
+    if COMPAT_EMBED_METADATA.load(std::sync::atomic::Ordering::Relaxed) {
+        add(&["comment"], &["description"]);
+        common.retain(|(name, _)| name != "synopsis");
+    }
     args.extend(["-write_id3v1", "1"].map(String::from));
     for (name, value) in common {
         args.push("-metadata".into());

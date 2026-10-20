@@ -339,16 +339,12 @@ mod tests {
             print("filename,urls"),
             "out/a.mp4\nhttps://example.com/m.mp4"
         );
-        for spec in [
-            "pre_process:%(id)s",
-            "-1",
-            "pre-1",
-            "unknown:id",
-            "id,",
-            "%(id)q",
-        ] {
-            assert!(PrintTemplate::parse(spec).is_err(), "{spec}");
-        }
+        assert!(PrintTemplate::parse("pre_process:%(id)s").is_err());
+        assert_eq!(print("unknown:id"), "NA");
+        // Upstream's key grammar: unmatched keys and missing traversals are NA.
+        assert_eq!(print("-1"), "NA");
+        assert_eq!(print("pre-1"), "NA");
+        assert_eq!(print("%(id)q"), "a/b");
         assert!(PrintTemplate::parse("%(id)j").is_ok());
         let staged = PrintTemplate::parse("Before_DL:%(id)s %(_filename)s %(filepath)s").unwrap();
         assert_eq!(staged.stage(), Stage::BeforeDownload);
@@ -389,7 +385,15 @@ mod tests {
                 .unwrap(),
             "a/b"
         );
+        // Alternates after an available value are not evaluated.
         let template = PrintTemplate::parse("%(id,filename)s").unwrap();
+        assert_eq!(
+            template
+                .render(&info(), Err(&error), &TemplateOptions::default())
+                .unwrap(),
+            "a/b"
+        );
+        let template = PrintTemplate::parse("%(height,filename)s").unwrap();
         assert!(
             template
                 .render(&info(), Err(&error), &TemplateOptions::default())
@@ -473,12 +477,23 @@ mod tests {
                 case["name"]
             );
         }
+        // Source-only cases are rejected when parsed or rendered.
         for case in fixture["source_only_cases"].as_array().unwrap() {
-            assert!(
-                templates(case["args"].as_array().unwrap()).is_err(),
-                "{}",
-                case["name"]
-            );
+            let info: VideoInfo = serde_json::from_value(case["info"].clone()).unwrap();
+            let rejected = templates(case["args"].as_array().unwrap()).is_err()
+                || templates(case["args"].as_array().unwrap())
+                    .unwrap()
+                    .iter()
+                    .any(|template| {
+                        template
+                            .render(
+                                &info,
+                                Ok(case["filename"].as_str().unwrap()),
+                                &TemplateOptions::default(),
+                            )
+                            .is_err()
+                    });
+            assert!(rejected, "{}", case["name"]);
         }
     }
 
@@ -492,7 +507,7 @@ mod tests {
         assert_eq!(path, PathBuf::from("lists/Épisode： ＂1＂.txt"));
         assert_eq!(line, "a/b\nmp4");
         assert!(PrintToFile::parse("playlist:id", "x.txt").is_ok());
-        assert!(PrintToFile::parse("id", "%(id.a-b)s.txt").is_err());
+        assert!(PrintToFile::parse("id", "%(id.a-b)s.txt").is_ok());
         assert!(PrintToFile::parse("id", "").is_err());
     }
 

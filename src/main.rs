@@ -23,6 +23,8 @@ use yt_dlp_rs::{
 };
 
 /// `-q`: suppress informational `[...]` screen lines (upstream `to_screen`).
+/// `--compat-options allow-unsafe-ext` (upstream `_UnsafeExtensionError._enabled = False`).
+static ALLOW_UNSAFE_EXT: AtomicBool = AtomicBool::new(false);
 static QUIET: AtomicBool = AtomicBool::new(false);
 /// `--no-warnings`: suppress `WARNING:` lines.
 static NO_WARNINGS: AtomicBool = AtomicBool::new(false);
@@ -1617,16 +1619,57 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 compat_format_sort = true;
                 true
             }
+            // `elif`: only without format-sort.
+            "prefer-vp9-sort" => {
+                yt_dlp_rs::format_sort::PREFER_VP9_COMPAT.store(true, Ordering::Relaxed);
+                if !compat.iter().any(|name| name == "format-sort") {
+                    yt_dlp_rs::format_sort::PREFER_VP9_SORT.store(true, Ordering::Relaxed);
+                }
+                true
+            }
+            "format-spec" => {
+                yt_dlp_rs::COMPAT_FORMAT_SPEC.store(true, Ordering::Relaxed);
+                true
+            }
+            "list-formats" => {
+                args.list_formats_old = true;
+                true
+            }
             "no-keep-subs" => {
                 keep_subs = false;
                 true
             }
-            // Features this port does not have, so nothing changes.
+            "filename-sanitization"
+            | "allow-unsafe-exec-expansion"
+            | "playlist-index"
+            | "no-direct-merge" => true,
+            "embed-metadata" => {
+                yt_dlp_rs::COMPAT_EMBED_METADATA.store(true, Ordering::Relaxed);
+                true
+            }
+            "allow-unsafe-ext" => {
+                ALLOW_UNSAFE_EXT.store(true, Ordering::Relaxed);
+                validation_warning(
+                    12,
+                    "Using allow-unsafe-ext opens you up to potential attacks. Use with great care!"
+                        .into(),
+                );
+                true
+            }
+            // Features this port does not have (YouTube tabs, live chat,
+            // certifi, ...) or that pinned upstream never reads, so nothing
+            // changes. This port's playlist entries are always complete
+            // videos, which `playlist-match-filter` does not affect.
             "no-certifi"
             | "prefer-legacy-http-handler"
             | "no-live-chat"
             | "no-external-downloader-progress"
-            | "embed-thumbnail-atomicparsley" => true,
+            | "embed-thumbnail-atomicparsley"
+            | "no-youtube-channel-redirect"
+            | "no-youtube-unavailable-videos"
+            | "no-youtube-prefer-utc-upload-date"
+            | "seperate-video-versions"
+            | "playlist-match-filter" => true,
             other => {
                 warning!(
                     "WARNING: compatibility option {other} is not supported natively and is ignored"
@@ -2127,7 +2170,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         args.playlist_end,
         playlist_reverse,
     )
-    .map(|selection| selection.random(playlist_random).lazy(args.lazy_playlist))
+    .map(|selection| {
+        selection
+            .random(playlist_random)
+            .lazy(args.lazy_playlist)
+            .selection_index(compat.iter().any(|name| name == "playlist-index"))
+    })
     .map_err(|error| -> Box<dyn std::error::Error> {
         match (&error, &args.playlist_items) {
             // Upstream validates start/end, then parses the item segments.
@@ -2336,6 +2384,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         autonumber: Default::default(),
         autonumber_size: args.autonumber_size.map_or(5, |size| size as usize),
         video_autonumber: Default::default(),
+        legacy_sanitization: compat.iter().any(|name| name == "filename-sanitization"),
+        allow_unsafe_exec: compat
+            .iter()
+            .any(|name| name == "allow-unsafe-exec-expansion"),
+        list_formats_old: args.list_formats_old,
     };
     // Upstream `exec_cmd`: --no-exec clears earlier values; the hidden
     // --exec-before-download is ignored when "--exec before_dl:" is given.
@@ -3791,7 +3844,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                             // download's `replace_extension` calls.
                             if let Some(ext) = std::iter::once(&info.ext)
                                 .chain(info.requested_formats.iter().map(|format| &format.ext))
-                                .find(|ext| !yt_dlp_rs::output::allowed_extension(ext))
+                                .find(|ext| {
+                                    // allow-unsafe-ext disables the check, but path
+                                    // separators stay rejected natively.
+                                    if ALLOW_UNSAFE_EXT.load(Ordering::Relaxed) {
+                                        ext.contains(['/', '\\'])
+                                    } else {
+                                        !yt_dlp_rs::output::allowed_extension(ext)
+                                    }
+                                })
                             {
                                 return Err(format!(
                             "The extracted extension ({}) is unusual and will be skipped for safety reasons. If you believe this is an error, please report it",
@@ -3806,7 +3867,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 // `get_suitable_downloader(...) == FFmpegFD`.
                                 let ffmpeg_fd = downloader.uses_ffmpeg_fd(&info);
                                 // Upstream `process_info`: a partial download needs FFmpegFD.
-                                if partial && !downloader.has_ffmpeg() {
+                                let no_direct_merge =
+                                    compat.iter().any(|name| name == "no-direct-merge");
+                                if no_direct_merge
+                                    && ffmpeg_fd
+                                    && !info.requested_formats.is_empty()
+                                {
+                                    // Upstream downloads each format with FFmpegFD
+                                    // and merges them afterwards.
+                                    return Err(yt_dlp_rs::Error::Reported(
+                                        "--compat-options no-direct-merge with formats FFmpegFD would merge is not supported natively"
+                                            .into(),
+                                    )
+                                    .into());
+                                }
+                                if partial && !downloader.has_ffmpeg() && !no_direct_merge {
                                     return Err(yt_dlp_rs::Error::Reported(
                                 "You have requested downloading the video partially, but ffmpeg is not installed. Aborting"
                                     .into(),

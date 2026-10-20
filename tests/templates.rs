@@ -298,8 +298,8 @@ fn sanitize_before_precision_keeps_metadata_and_defaults_inside_literal_director
 #[test]
 fn unsupported_malformed_and_excessive_formats_fail_after_probe_without_download_or_archive() {
     for template in [
-        "%(id.a-b)s",
-        "%(id)q",
+        "%(id)z",
+        "%(id+)s",
         "%(id",
         "%(height)1000000000d",
         "%(height).9999999f",

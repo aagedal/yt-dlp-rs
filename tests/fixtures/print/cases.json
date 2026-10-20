@@ -749,9 +749,7 @@
       "expected": [
         "{\"id\": \"a/b\", \"ext\": \"mp4\"}"
       ]
-    }
-  ],
-  "source_only_cases": [
+    },
     {
       "name": "quoted-conversion",
       "args": [
@@ -780,9 +778,43 @@
       },
       "filename": "out/Épisode [a_b].mp4",
       "na_placeholder": "NA",
-      "native_policy": "rejected before extraction",
       "expected": [
         "'Épisode: \"1\"\n𝐀'"
+      ]
+    }
+  ],
+  "source_only_cases": [
+    {
+      "name": "replacement-format-spec",
+      "args": [
+        "-O",
+        "%(width&{:>6})s"
+      ],
+      "info": {
+        "id": "a/b",
+        "title": "Épisode: \"1\"\n𝐀",
+        "ext": "mp4",
+        "url": "https://example.test/m.mp4",
+        "webpage_url": "https://example.test/watch",
+        "extractor": "html5",
+        "extractor_key": "HTML5",
+        "direct": false,
+        "formats": [],
+        "format_id": "",
+        "filesize": 1024,
+        "width": 1280,
+        "height": null,
+        "playlist_index": 3,
+        "playlist_autonumber": 2,
+        "playlist_count": 12,
+        "n_entries": 4,
+        "__last_playlist_index": 120
+      },
+      "filename": "out/Épisode [a_b].mp4",
+      "na_placeholder": "NA",
+      "native_policy": "replacement format specs are rejected before extraction",
+      "expected": [
+        "  1280"
       ]
     }
   ]

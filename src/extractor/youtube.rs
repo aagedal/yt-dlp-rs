@@ -697,9 +697,21 @@ fn extract_watch_page_with_caption_options(
     let first = formats.first().ok_or_else(no_formats)?;
     Ok(VideoInfo {
         protocol: None,
-        // Upstream YouTube `_format_sort_fields` (without `prefer-vp9-sort`).
+        // Upstream YouTube `_format_sort_fields`.
         format_sort_fields: [
-            "quality", "res", "fps", "hdr:12", "source", "vcodec", "channels", "acodec", "lang",
+            "quality",
+            "res",
+            "fps",
+            "hdr:12",
+            "source",
+            if crate::format_sort::PREFER_VP9_COMPAT.load(std::sync::atomic::Ordering::Relaxed) {
+                "vcodec:vp9.2"
+            } else {
+                "vcodec"
+            },
+            "channels",
+            "acodec",
+            "lang",
             "proto",
         ]
         .map(str::to_owned)

@@ -77,6 +77,14 @@ pub struct TemplateOptions {
     pub autonumber_size: usize,
     /// Upstream `video_autonumber` (videos processed so far).
     pub video_autonumber: std::cell::Cell<Option<u64>>,
+    /// `--compat-options filename-sanitization`: youtube-dl's `is_id` rules.
+    pub legacy_sanitization: bool,
+    /// `--compat-options allow-unsafe-exec-expansion`: skip `ExecPP`'s
+    /// template safety validation.
+    pub allow_unsafe_exec: bool,
+    /// `--list-formats-old` (or `--compat-options list-formats`): the
+    /// legacy layout for `--print`'s `formats_table`.
+    pub list_formats_old: bool,
 }
 
 impl TemplateOptions {
@@ -103,6 +111,9 @@ impl Default for TemplateOptions {
             autonumber: Default::default(),
             autonumber_size: 5,
             video_autonumber: Default::default(),
+            legacy_sanitization: false,
+            allow_unsafe_exec: false,
+            list_formats_old: false,
         }
     }
 }

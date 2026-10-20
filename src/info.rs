@@ -499,6 +499,11 @@ impl Metadata {
     }
 }
 
+/// `--compat-options format-spec`: the merging default format is
+/// `bestvideo+bestaudio/best` (upstream `_default_format_spec`).
+pub static COMPAT_FORMAT_SPEC: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
 /// Small, explicitly supported subset of yt-dlp's info dictionary.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VideoInfo {
@@ -721,7 +726,11 @@ impl VideoInfo {
             }
         }
         let expression = requested.unwrap_or(if prefer_merge {
-            "bestvideo*+bestaudio/best"
+            if COMPAT_FORMAT_SPEC.load(std::sync::atomic::Ordering::Relaxed) {
+                "bestvideo+bestaudio/best"
+            } else {
+                "bestvideo*+bestaudio/best"
+            }
         } else {
             "best/bestvideo+bestaudio"
         });

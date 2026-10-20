@@ -81,9 +81,7 @@ fn parse(fields: &str) -> Result<Vec<Step>> {
     if parts.last().is_some_and(String::is_empty) {
         parts.pop();
     }
-    if parts.is_empty() {
-        return Err(invalid("empty template field"));
-    }
+    // An empty path (`%()s`) is the whole info dict.
     parts
         .iter()
         .map(|part| match part.strip_prefix('{') {
@@ -262,7 +260,7 @@ fn py_number(number: &serde_json::Number) -> String {
 }
 
 /// Python `repr` of a JSON value (nested items in `str()` of containers).
-fn py_repr(value: &Value) -> String {
+pub(super) fn py_repr(value: &Value) -> String {
     match value {
         Value::String(text) => py_repr_str(text),
         other => py_str(other),

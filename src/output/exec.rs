@@ -92,7 +92,12 @@ impl ExecCommand {
     /// {}, _exec=True)`) plus this port's template field checks.
     fn validate(template: &str, options: &TemplateOptions) -> Result<Self> {
         let repr = crate::batch::py_repr(template);
-        for (conversion, default) in template::exec_fields(template) {
+        let checked = if options.allow_unsafe_exec {
+            Vec::new()
+        } else {
+            template::exec_fields(template)
+        };
+        for (conversion, default) in checked {
             if !conversion.is_some_and(|c| "difq".contains(c)) {
                 return Err(Error::Exec(format!(
                     "Unsafe conversion(s) in exec command: {repr}\nConversions such as %()s are too dangerous to be used in --exec command templates; use %()q instead. {ADVISORY}"

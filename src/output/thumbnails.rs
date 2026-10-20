@@ -28,9 +28,17 @@ fn render_table(header: &[&str], rows: &[Vec<String>]) -> String {
 
 /// `[info] Available thumbnails for ID:` and the table, or `ID has no thumbnails`.
 pub fn render_thumbnails(info: &VideoInfo) -> String {
+    match render_thumbnails_table(info) {
+        Some(table) => format!("[info] Available thumbnails for {}:\n{table}\n", info.id),
+        None => format!("{} has no thumbnails\n", info.id),
+    }
+}
+
+/// Upstream `render_thumbnails_table`: `None` without thumbnails.
+pub fn render_thumbnails_table(info: &VideoInfo) -> Option<String> {
     let thumbnails = &info.metadata.thumbnails;
     if thumbnails.is_empty() {
-        return format!("{} has no thumbnails\n", info.id);
+        return None;
     }
     let rows: Vec<Vec<String>> = thumbnails
         .iter()
@@ -48,11 +56,7 @@ pub fn render_thumbnails(info: &VideoInfo) -> String {
             ]
         })
         .collect();
-    format!(
-        "[info] Available thumbnails for {}:\n{}\n",
-        info.id,
-        render_table(&["ID", "Width", "Height", "URL"], &rows)
-    )
+    Some(render_table(&["ID", "Width", "Height", "URL"], &rows))
 }
 
 #[cfg(test)]
