@@ -20,7 +20,9 @@ pub(crate) fn recognized(response: &Response) -> bool {
         || response.url().path().to_ascii_lowercase().ends_with(".mpd")
 }
 
-fn read_manifest(response: Response) -> Result<(Url, Vec<VideoFormat>)> {
+fn read_manifest(
+    response: Response,
+) -> Result<(Url, Vec<VideoFormat>, crate::dash::ManifestSubtitles)> {
     if response
         .content_length()
         .is_some_and(|size| size > MAX_MANIFEST_BYTES)
@@ -81,7 +83,8 @@ fn read_manifest(response: Response) -> Result<(Url, Vec<VideoFormat>)> {
     crate::screen::page_read(&base, &bytes)?;
     let text = std::str::from_utf8(&bytes)
         .map_err(|_| unsupported("only UTF-8/ASCII DASH playlists are supported"))?;
-    Ok((base.clone(), crate::dash::parse(text, &base)?))
+    let (formats, subtitles) = crate::dash::parse_with_subtitles(text, &base)?;
+    Ok((base.clone(), formats, subtitles))
 }
 
 pub(crate) fn from_response(
@@ -94,7 +97,20 @@ pub(crate) fn from_response(
     }
     // Upstream's generic and HTML5 DASH extraction pass no `mpd_id`, so
     // representation IDs are used as they are.
-    let (manifest_url, formats) = read_manifest(response)?;
+    let (manifest_url, formats, subtitle_list) = read_manifest(response)?;
+    // `period_entry['subtitles'][lang or 'und'].append(f)`.
+    let mut subtitles = crate::Subtitles::default();
+    for (language, format) in subtitle_list {
+        let language = Some(language);
+        match subtitles
+            .entries
+            .iter_mut()
+            .find(|(key, _)| *key == language)
+        {
+            Some((_, formats)) => formats.push(format),
+            None => subtitles.entries.push((language, vec![format])),
+        }
+    }
     let first = formats
         .first()
         .ok_or_else(|| unsupported("DASH manifest has no supported representations"))?;
@@ -133,7 +149,7 @@ pub(crate) fn from_response(
         audio_ext: None,
         metadata: Default::default(),
         automatic_captions: Default::default(),
-        subtitles: Default::default(),
+        subtitles,
         requested_subtitles: None,
         last_playlist_index: None,
         playlist_index: None,

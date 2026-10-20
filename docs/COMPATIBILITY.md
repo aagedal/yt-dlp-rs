@@ -924,7 +924,10 @@ are joined by a port of `yt_dlp/webvtt.py` and HlsFD's WebVTT packing
 (`X-TIMESTAMP-MAP` offsets with 2^33 wraparound, cues continued across segments
 merged, header blocks after the first segment discarded with a warning that,
 unlike upstream's, does not point to yt-dlp's tracker). Encrypted or byte-range
-subtitle segments are unsupported. Fragment progress lines use this port's
+subtitle segments are unsupported. DASH text representations (`contentType` `text`, or
+a subtitle codec or TTML/XML/JSON MIME type) with a direct `BaseURL` become
+subtitles by `lang` (default `und`) with `mimetype2ext` extensions, as upstream's
+"direct URL to unfragmented media"; segmented DASH text tracks are not represented. Fragment progress lines use this port's
 renderer.
 `EXT-X-DISCONTINUITY` (and, like upstream's prefix match,
 `EXT-X-DISCONTINUITY-SEQUENCE`) lines are counted per fragment: downloads span

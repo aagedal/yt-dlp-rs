@@ -570,7 +570,21 @@ fn plans(
     Ok(fragments)
 }
 
+#[cfg(test)]
 pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
+    Ok(parse_with_subtitles(text, manifest)?.0)
+}
+
+/// Subtitles by language, in manifest order.
+pub(crate) type ManifestSubtitles = Vec<(String, crate::SubtitleFormat)>;
+
+/// Upstream `_parse_mpd_formats_and_subtitles`: the formats and, from text
+/// representations with a direct resource, the subtitles by language
+/// (`und` without one). Segmented text tracks are not represented.
+pub(crate) fn parse_with_subtitles(
+    text: &str,
+    manifest: &Url,
+) -> Result<(Vec<VideoFormat>, ManifestSubtitles)> {
     if !matches!(manifest.scheme(), "http" | "https")
         || manifest.host_str().is_none()
         || manifest.fragment().is_some()
@@ -713,6 +727,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
     let (period_base, period_explicit) = base_url(period, &root_base, root_explicit)?;
     let address = Address::default().inherit(root)?.inherit(period)?;
     let mut formats = Vec::new();
+    let mut subtitles = Vec::new();
     let mut total_fragments = 0usize;
     // Upstream `stream_numbers[mpd_url]`: video, audio and image
     // representations count in manifest order.
@@ -752,9 +767,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 .copied()
                 .unwrap_or_else(|| mime.split_once('/').map_or(mime, |(kind, _)| kind));
             let content_type = match declared {
-                "video" | "audio" => declared,
-                // Text tracks (subtitles) are not represented yet.
-                "text" => continue,
+                "video" | "audio" | "text" => declared,
                 _ if matches!(mime, "image/avif" | "image/jpeg") => {
                     stream_number += 1;
                     continue;
@@ -762,13 +775,13 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                 _ => match &codecs {
                     Some(codecs) if codecs.vcodec != "none" => "video",
                     Some(codecs) if codecs.acodec != "none" => "audio",
-                    Some(codecs) if codecs.scodec.is_some() => continue,
+                    Some(codecs) if codecs.scodec.is_some() => "text",
                     _ if matches!(
                         crate::extractor::direct::mimetype2ext_or(mime, None).as_str(),
                         "tt" | "dfxp" | "ttml" | "xml" | "json"
                     ) =>
                     {
-                        continue;
+                        "text"
                     }
                     _ => {
                         crate::screen::warning(&format!(
@@ -778,6 +791,22 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
                     }
                 },
             };
+            if content_type == "text" {
+                // "Assuming direct URL to unfragmented media."
+                if address.kind.is_none() && explicit && !base.path().ends_with('/') {
+                    let language = attrs.get("lang").map_or("und", |lang| *lang);
+                    subtitles.push((
+                        language.to_owned(),
+                        crate::SubtitleFormat {
+                            name: None,
+                            url: base.clone(),
+                            ext: crate::extractor::direct::mimetype2ext_or(mime, None),
+                            protocol: None,
+                        },
+                    ));
+                }
+                continue;
+            }
             // Selection kinds follow upstream's codec fields (`none` marks a
             // missing stream); without codecs the stream counts as complete.
             let kind = match &codecs {
@@ -881,7 +910,7 @@ pub(crate) fn parse(text: &str, manifest: &Url) -> Result<Vec<VideoFormat>> {
     if formats.is_empty() {
         return Err(bad("DASH has no supported representations"));
     }
-    Ok(formats)
+    Ok((formats, subtitles))
 }
 
 #[cfg(test)]
@@ -894,6 +923,33 @@ mod tests {
         format!(
             "<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"static\" mediaPresentationDuration=\"PT2.5S\"><Period>{body}</Period></MPD>"
         )
+    }
+    #[test]
+    fn direct_text_representations_become_subtitles() {
+        let text = wrap(&format!(
+            "{}<AdaptationSet contentType=\"text\" mimeType=\"text/vtt\" lang=\"en\"><Representation id=\"s\" bandwidth=\"1\"><BaseURL>en.vtt</BaseURL></Representation></AdaptationSet>\
+             <AdaptationSet mimeType=\"application/ttml+xml\"><Representation id=\"t\" bandwidth=\"1\"><BaseURL>t.ttml</BaseURL></Representation></AdaptationSet>",
+            template("")
+                .split("<Period>")
+                .nth(1)
+                .unwrap()
+                .split("</Period>")
+                .next()
+                .unwrap()
+        ));
+        let (formats, subtitles) = parse_with_subtitles(&text, &manifest()).unwrap();
+        assert_eq!(formats.len(), 1);
+        let subtitles: Vec<_> = subtitles
+            .iter()
+            .map(|(language, format)| (language.as_str(), format.url.as_str(), format.ext.as_str()))
+            .collect();
+        assert_eq!(
+            subtitles,
+            [
+                ("en", "https://example.com/path/en.vtt", "vtt"),
+                ("und", "https://example.com/path/t.ttml", "ttml")
+            ]
+        );
     }
     fn template(extra: &str) -> String {
         wrap(&format!(
