@@ -718,9 +718,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "photobucket"
             | "vocaroo"
             | "audioboom"
-    ) || original
-        .as_ref()
-        .is_some_and(|original| !original.contains_key("formats"));
+    ) || shape.starts_with("nobelprize;")
+        || original
+            .as_ref()
+            .is_some_and(|original| !original.contains_key("formats"));
     let selected_format: Map<String, Value> = if merged || own_format {
         Map::new()
     } else {
@@ -1318,6 +1319,20 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // `merge_dicts(jwplayer_entry, info_dict)`: the entry's keys, then the
     // page's.
+    // `NobelPrizeIE`: `{**json_ld, 'id', 'title', 'description',
+    // 'duration'}` (an untyped result).
+    if let Some(keys) = shape.strip_prefix("nobelprize;") {
+        for key in keys.split(',').filter(|key| !key.is_empty()) {
+            replay.set(
+                key,
+                if matches!(key, "title" | "description" | "duration") {
+                    Assign
+                } else {
+                    Take
+                },
+            );
+        }
+    }
     // `AngelIE`: `merge_dicts(info_dict, json_ld)`.
     if let Some(keys) = shape.strip_prefix("angel;") {
         for (key, how) in [

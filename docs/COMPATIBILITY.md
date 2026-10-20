@@ -448,6 +448,12 @@ its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped
 `time`/`ts`, and upstream's missing-script, `KeyError` and bare `IndexError`
 messages.
 
+Nobel Prize media (`[www.|mediaplayer.]nobelprize.org/mediaplayer/?id|qid=ID`)
+follow upstream `NobelPrizeIE`: the integer `id` (else `qid`) query value (no
+ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's
+fatal JSON-LD as an untyped result overlaid with the `caption` meta title, the
+`itemprop="description"` span and the `duration` meta.
+
 OnePlace episodes (`oneplace.com/.../listen/SLUG-ID`) follow upstream
 `OnePlacePodcastIE`: the fatal `mp3-url`/player `data-media-url`, the details
 heading or `og:title`/`title` meta title and the `epDesc` description as an
