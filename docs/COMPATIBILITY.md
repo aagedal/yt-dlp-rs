@@ -365,6 +365,13 @@ basename before `_` as the ID), OpenGraph title/image/description with
 upstream's non-fatal warnings, the URL's date as `upload_date` and
 `age_limit` 18, as an untyped result.
 
+Bild clips (`bild.de/.../SLUG-ID[,auto=true].bild.html`) follow upstream
+`BildIE`: the `,view=json` clip data, the first clip's `application/x-mpegURL`
+sources as non-fatal HLS formats, `video/mp4` sources as `http-mp4` and an
+`Skipping unsupported format type` warning for any other type, with the
+unescaped stripped title, description, poster thumbnail and integer
+`durationSec` duration.
+
 Blogger videos (`blogger.com/video.g?token=TOKEN`, `blogger.com`) follow
 upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
 `unicode_escape`, its streams as formats (`mime`-query extensions, string

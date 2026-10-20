@@ -232,6 +232,18 @@
       "scope": "BehindKinkIE (_WORKING = False) page source URL and OpenGraph fields compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bild",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bild.py"
+      ],
+      "rust": [
+        "src/extractor/bild.rs",
+        "tests/fixtures/sites/bild/"
+      ],
+      "scope": "BildIE view=json clip sources (non-fatal HLS, http-mp4, unsupported-type warning) and metadata compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "blogger",
       "status": "partial",
       "upstream": [
