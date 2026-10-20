@@ -333,6 +333,19 @@ fn json_simulation_does_not_request_initialization_or_media_or_create_files() {
     );
     assert_eq!(server.requests.lock().unwrap().len(), 1);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    // `_merge`'s dict has no URL, so templates see none, as upstream.
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "-O",
+            "%(url)s|%(format_id)s",
+            "--ffmpeg-location",
+            ffmpeg.to_str().unwrap(),
+            &server.url("/manifest.mpd"),
+        ])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "NA|video+audio\n");
 }
 
 #[test]

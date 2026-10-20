@@ -331,6 +331,8 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
         "extractor" => Some(Text(&info.extractor)),
         "extractor_key" => Some(Text(&info.extractor_key)),
         "format_id" => info.format_id.as_deref().map(Text),
+        // `_merge`'s dict has no URL.
+        "url" if !info.requested_formats.is_empty() => None,
         "url" => Some(Text(info.url.as_str())),
         "webpage_url" => Some(Text(info.webpage_url.as_str())),
         "width" => info.width.map(|n| Integer(n.into())),
