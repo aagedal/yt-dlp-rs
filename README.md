@@ -76,7 +76,8 @@ Supported today:
 - Streamable videos (`streamable.com/ID`) through the site's video JSON and
   Megaphone players (`player.megaphone.fm/ID`) through their page,
   ReverbNation songs through the song API, Hypem tracks through their page
-  and served source, HistoricFilms tapes through their page, plus
+  and served source, HistoricFilms tapes through their page, Livestreamfails
+  clips through the clip API, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed, and live URL shapes

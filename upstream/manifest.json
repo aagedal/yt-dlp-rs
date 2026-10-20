@@ -211,6 +211,18 @@
       "scope": "HypemIE _VALID_URL, displayList-data JSON (clean_html before parsing), serve/source JSON URL as an untyped mp3 result, error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "livestreamfails",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/livestreamfails.py"
+      ],
+      "rust": [
+        "src/extractor/livestreamfails.rs",
+        "tests/fixtures/sites/livestreamfails/"
+      ],
+      "scope": "LivestreamfailsIE _VALID_URL and clip API extraction (display_id, unified_timestamp, creator/creators, format_field thumbnail, KeyError message) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "megaphone",
       "status": "partial",
       "upstream": [

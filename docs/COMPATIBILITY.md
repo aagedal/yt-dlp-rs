@@ -276,6 +276,12 @@ warning, and the derived `.mov` URL as an untyped result. A missing title gets
 `_fill_common_fields`' generic `EXTRACTOR video #ID` title with its warning
 (`fulltitle` stays `null`).
 
+Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
+`LivestreamfailsIE`: the clip API JSON as an untyped result (`sourceId` as
+`display_id`, `unified_timestamp` of `createdAt`, the streamer label as
+`creator` with `creators` derived, `format_field`'s empty thumbnail without an
+image ID). A `None` `display_id` becomes the ID in place, like upstream.
+
 Hypem tracks (`hypem.com/track/ID`) follow upstream `HypemIE`: the page's
 `displayList-data` script (cleaned like `_html_search_regex` before parsing),
 its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped

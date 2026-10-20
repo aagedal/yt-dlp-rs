@@ -304,10 +304,11 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 9] = [
+const EXTRACTOR_NAMES: [&str; 10] = [
     "html5",
     "HistoricFilms",
     "Hypem",
+    "Livestreamfails",
     "megaphone.fm",
     "ReverbNation",
     "Streamable",
@@ -329,7 +330,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..8]),
+            "default" => Some(&EXTRACTOR_NAMES[..9]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -458,6 +459,7 @@ impl YoutubeDl {
                 )),
                 Box::new(extractor::HistoricFilms),
                 Box::new(extractor::Hypem),
+                Box::new(extractor::Livestreamfails),
                 Box::new(extractor::Megaphone),
                 Box::new(extractor::ReverbNation),
                 Box::new(extractor::Streamable),
@@ -1236,7 +1238,16 @@ impl YoutubeDl {
                 entry.fulltitle = Some(entry.title.clone());
             }
             // `process_video_result`: `display_id` defaults to the ID.
-            crate::info::set_default(&mut entry.extra, "display_id", entry.id.clone());
+            // (a `None` value too, in its place).
+            if entry
+                .extra
+                .get("display_id")
+                .is_none_or(serde_json::Value::is_null)
+            {
+                entry
+                    .extra
+                    .insert("display_id".into(), entry.id.clone().into());
+            }
             entry.metadata.fill_common_fields();
             // `_fill_common_fields`: `is_live`/`was_live` from `live_status`.
             if let Some(status) = entry.metadata.live_status.clone() {
