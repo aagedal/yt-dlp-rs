@@ -545,6 +545,11 @@ application/json`), its `stream.title` and first playlist's first file
 without query or fragment as non-fatal `hls` formats, with upstream's
 `KeyError`, bare `IndexError` and `No video formats found!` errors.
 
+Ku6 shows (`v.ku6.com/show/ID[...].html`) follow upstream `Ku6IE`: the page's
+fatal greedy `<h1 title=...>` heading (often empty, so processing's generic
+title) and the player JSON's `data.f` URL as an untyped result, with
+upstream's `KeyError` messages.
+
 Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
 `LivestreamfailsIE`: the clip API JSON as an untyped result (`sourceId` as
 `display_id`, `unified_timestamp` of `createdAt`, the streamer label as

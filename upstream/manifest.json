@@ -534,6 +534,18 @@
       "scope": "KommunetvIE streams API (Accept header, title, query-less first file as non-fatal HLS formats, KeyError/IndexError/no-formats errors) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "ku6",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ku6.py"
+      ],
+      "rust": [
+        "src/extractor/ku6.rs",
+        "tests/fixtures/sites/ku6/"
+      ],
+      "scope": "Ku6IE heading title and player JSON URL as an untyped result with KeyError/title errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "livestreamfails",
       "status": "partial",
       "upstream": [
