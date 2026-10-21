@@ -107,7 +107,7 @@ Supported today:
   posts and reels (logged out; carousels as playlists), Facebook videos
   (relay data with DASH, progressive URLs and captions), Vimeo player and
   clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
-  plus
+  Bandcamp tracks, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed and live URL shapes,

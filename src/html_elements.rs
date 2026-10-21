@@ -285,6 +285,28 @@ pub(crate) fn elements_text_and_html_by_attribute(
     if unquoted {
         values.push(escaped);
     }
+    elements_matching(attribute, &values, html)
+}
+
+/// Upstream `get_elements_text_and_html_by_class(class_name, html)`: the
+/// elements whose `class` contains the name as a whole word.
+pub(crate) fn elements_text_and_html_by_class(
+    class: &str,
+    html: &str,
+) -> Result<Vec<(String, String)>, String> {
+    let escaped = regex::escape(class);
+    let values = [
+        format!(r#""(?:[^"]*\s)?{escaped}(?:\s[^"]*)?""#),
+        format!(r"'(?:[^']*\s)?{escaped}(?:\s[^']*)?'"),
+    ];
+    elements_matching("class", &values, html)
+}
+
+fn elements_matching(
+    attribute: &str,
+    values: &[String],
+    html: &str,
+) -> Result<Vec<(String, String)>, String> {
     let pattern = format!(
         r#"<(?P<tag>[\w:.-]+)(?:\s(?:[^>"']|"[^"]*"|'[^']*')*)?\s{}\s*=\s*(?:{})"#,
         regex::escape(attribute),

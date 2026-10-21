@@ -420,6 +420,17 @@ basename before `_` as the ID), OpenGraph title/image/description with
 upstream's non-fatal warnings, the URL's date as `upload_date` and
 `age_limit` 18, as an untyped result.
 
+Bandcamp tracks (`ARTIST.bandcamp.com/track/SLUG`) follow upstream
+`BandcampIE`: the page's `data-tralbum` and `data-embed` JSON (the attribute
+search is fatal, as upstream), the track's streaming files (`mp3-128` and
+the like), and for free downloads the download page's `data-blob` formats
+through their stat URLs' retry URLs, with the track, artist, album artist,
+dates, duration and tags. A page without a title warns like upstream's
+`_html_extract_title`; a client challenge page (which needs impersonation)
+is an explicit error. Albums, artist pages and weekly shows are not
+supported. `tests/fixtures/sites/bandcamp/` is compared with pinned
+upstream output.
+
 Bild clips (`bild.de/.../SLUG-ID[,auto=true].bild.html`) follow upstream
 `BildIE`: the `,view=json` clip data, the first clip's `application/x-mpegURL`
 sources as non-fatal HLS formats, `video/mp4` sources as `http-mp4` and an

@@ -220,6 +220,19 @@
       "scope": "AudioBoomIE React props (_search_json with unescapeHTML) and OpenGraph/meta fallbacks with warnings compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bandcamp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bandcamp.py"
+      ],
+      "rust": [
+        "src/extractor/bandcamp.rs",
+        "src/html_elements.rs",
+        "tests/fixtures/sites/bandcamp/"
+      ],
+      "scope": "BandcampIE track pages: tralbum/embed data, streaming files, free download formats via stat URLs, metadata and tags; no albums, artist pages or weekly shows; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "behindkink",
       "status": "partial",
       "upstream": [

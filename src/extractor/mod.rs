@@ -1,5 +1,6 @@
 mod angel;
 mod audioboom;
+mod bandcamp;
 mod behindkink;
 mod bild;
 pub(crate) mod bitmovin;
@@ -83,6 +84,7 @@ mod zhihu;
 
 pub use angel::{Angel, suitable as angel_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
+pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use bild::{Bild, suitable as bild_suitable};
 pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
