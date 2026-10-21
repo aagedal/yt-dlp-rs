@@ -853,6 +853,14 @@ Photobucket media (`photobucket.com/..._ID.mp4|flv`) follow upstream
 information`) with the embed code's unquoted `file=` URL, username, creation
 date, title and thumbnail as an untyped result with the URL's extension.
 
+Pinterest pins (`pinterest.TLD/pin/[SLUG--]ID`) follow upstream
+`PinterestIE`: the Pin resource API, the pin's video list (HLS with the
+list key as `m3u8_id`, or progressive formats with their duration) or a
+story pin's video, image thumbnails and metadata; a pin embedding another
+site's video is a `url_transparent` result of the embed. Boards and
+collections are not supported. `tests/fixtures/sites/pinterest/` is
+compared with pinned upstream output.
+
 Player.fm episodes (`player.fm/[series/]SERIES/SLUG`) follow upstream
 `PlayerFmIE`: the episode's `.json` document as an untyped audio result with
 the integer ID (else upstream's `Missing "id" field`), `clean_podcast_url`

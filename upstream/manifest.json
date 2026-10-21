@@ -789,6 +789,18 @@
       "scope": "PhotobucketIE page MEDIA JSON and embed file= URL as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "pinterest",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/pinterest.py"
+      ],
+      "rust": [
+        "src/extractor/pinterest.rs",
+        "tests/fixtures/sites/pinterest/"
+      ],
+      "scope": "PinterestIE Pin resource API video lists (HLS/progressive), story pin videos, thumbnails, metadata and url_transparent embeds; no boards or collections; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "playerfm",
       "status": "partial",
       "upstream": [

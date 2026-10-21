@@ -260,7 +260,8 @@ impl Extractor for KickVod {
                 ("thumbnail", url(at(&live, &["thumbnail"]))),
                 (
                     "categories",
-                    at(&live, &["categories"]).map(|_| Value::Array(categories)),
+                    // A branching path without results is omitted.
+                    (!categories.is_empty()).then_some(Value::Array(categories)),
                 ),
                 ("view_count", int(response.get("views"))),
                 ("age_limit", age(at(&live, &["is_mature"]))),
@@ -419,7 +420,9 @@ impl Extractor for KickLive {
                 ("thumbnail", url(at(&live, &["thumbnail", "url"]))),
                 (
                     "categories",
-                    Some(Value::Array(names(response.get("recent_categories")))),
+                    Some(names(response.get("recent_categories")))
+                        .filter(|categories| !categories.is_empty())
+                        .map(Value::Array),
                 ),
                 ("concurrent_view_count", int(live.get("viewer_count"))),
                 ("age_limit", age(live.get("is_mature"))),
