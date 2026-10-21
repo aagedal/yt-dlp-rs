@@ -1868,38 +1868,117 @@ pub(super) fn entry_info(entry: Map<String, Value>) -> Result<VideoInfo> {
     Ok(info)
 }
 
-/// `_extract_data`'s webpage: `ytInitialData` and `ytcfg`.
+/// Upstream's default `extractor_retries` (this port's `--extractor-retries`
+/// retries whole extractions instead).
+const EXTRACTOR_RETRIES: u32 = 3;
+
+/// `_extract_data(fatal=True, webpage_fatal=False)`: the webpage's
+/// `ytInitialData` and `ytcfg`, else the `navigation/resolve_url` endpoint's
+/// browse response.
 fn page_data(client: &Client, url: &Url, item_id: &str) -> Result<(Value, Map<String, Value>)> {
-    let webpage = super::super::download_webpage(client, url, NAME, item_id)?;
-    let ytcfg = watch::extract_ytcfg(&webpage);
     static INITIAL_DATA: LazyLock<Regex> = LazyLock::new(|| {
         Regex::new(r#"(?:window\s*\[\s*["']ytInitialData["']\s*\]|ytInitialData)\s*="#).unwrap()
     });
-    let data = match super::super::search_json(&INITIAL_DATA, &webpage, false) {
-        Some(Some(data)) => data,
-        _ => {
-            return Err(Error::UnsupportedYoutube(
-                "tab pages without embedded initial data are not supported natively".into(),
+    let complete = |data: &Value| {
+        [
+            "contents",
+            "currentVideoEndpoint",
+            "onResponseReceivedActions",
+        ]
+        .iter()
+        .any(|key| truthy(data.get(*key)))
+    };
+    // `_extract_webpage(fatal=False)`: incomplete data is retried; errors
+    // become warnings.
+    let mut ytcfg = Map::new();
+    let mut data: Option<Value> = None;
+    for attempt in 1..=EXTRACTOR_RETRIES + 1 {
+        let webpage = match super::super::download_webpage(client, url, NAME, item_id) {
+            Ok(webpage) => webpage,
+            Err(error) => {
+                crate::screen::warning(&crate::upstream_error_text(&error));
+                break;
+            }
+        };
+        ytcfg = watch::extract_ytcfg(&webpage);
+        let found = match super::super::search_json(&INITIAL_DATA, &webpage, false) {
+            Some(Some(found)) => found,
+            Some(None) => {
+                crate::screen::warning(&format!("[{NAME}] {item_id}: Failed to parse JSON"));
+                json!({})
+            }
+            None => {
+                super::super::search_warning(NAME, "yt initial data");
+                json!({})
+            }
+        };
+        if let Err(error) = report_alerts(&found, None, false) {
+            crate::screen::warning(&format!("[{NAME}] {error}"));
+            data = Some(found);
+            break;
+        }
+        if complete(&found) {
+            data = Some(found);
+            break;
+        }
+        const INCOMPLETE: &str = "Incomplete yt initial data received";
+        if attempt <= EXTRACTOR_RETRIES {
+            crate::screen::warning(&format!(
+                "[{NAME}] {INCOMPLETE}. Retrying ({attempt}/{EXTRACTOR_RETRIES})..."
+            ));
+        } else {
+            // The unexpected error's message carries the bug report hint.
+            crate::screen::warning(&format!(
+                "[{NAME}] {INCOMPLETE}; {}. Giving up after {EXTRACTOR_RETRIES} retries",
+                crate::BUG_REPORTS_MESSAGE
             ));
         }
-    };
-    if ![
-        "contents",
-        "currentVideoEndpoint",
-        "onResponseReceivedActions",
-    ]
-    .iter()
-    .any(|key| truthy(data.get(*key)))
-    {
-        return Err(Error::UnsupportedYoutube(
-            "incomplete YouTube initial data".into(),
-        ));
     }
-    Ok((data, ytcfg))
+    if let Some(data) = data.filter(|data| data.as_object().is_some_and(|data| !data.is_empty())) {
+        return Ok((data, ytcfg));
+    }
+    // `_extract_tab_endpoint`.
+    let mut query = Map::new();
+    query.insert("url".into(), url.as_str().into());
+    let resolved = watch::innertube_api(
+        client,
+        "navigation/resolve_url",
+        NAME,
+        item_id,
+        &ytcfg,
+        None,
+        query,
+        "Downloading API parameters API JSON",
+    )?;
+    for (key, endpoint) in [("browseEndpoint", "browse"), ("watchEndpoint", "next")] {
+        if let Some(Value::Object(params)) = resolved.get("endpoint").and_then(|e| e.get(key)) {
+            let data = watch::innertube_api(
+                client,
+                endpoint,
+                NAME,
+                item_id,
+                &ytcfg,
+                None,
+                params.clone(),
+                "Downloading API JSON",
+            )?;
+            return Ok((data, ytcfg));
+        }
+    }
+    Err(Error::Reported(format!(
+        "[{NAME}] {item_id}: Failed to resolve url (does the playlist exist?)"
+    )))
 }
 
 /// `_report_alerts`: warnings, then the last error as an error.
-fn report_alerts(data: &Value, item_id: &str) -> Result<()> {
+fn report_alerts(data: &Value, item_id: Option<&str>, once: bool) -> Result<()> {
+    let warn = |text: &str| {
+        if once {
+            crate::screen::warning_once(text);
+        } else {
+            crate::screen::warning(text);
+        }
+    };
     let mut errors = Vec::new();
     for alert in data
         .get("alerts")
@@ -1925,14 +2004,18 @@ fn report_alerts(data: &Value, item_id: &str) -> Result<()> {
             message.as_str(),
             "Unavailable videos will be hidden during playback" | "Unavailable videos are hidden"
         ) {
-            crate::screen::warning_once(&format!("[youtube:tab] YouTube said: {kind} - {message}"));
+            warn(&format!("[youtube:tab] YouTube said: {kind} - {message}"));
         }
     }
     if let Some((_, last)) = errors.pop() {
         for (kind, message) in errors {
-            crate::screen::warning_once(&format!("[youtube:tab] YouTube said: {kind} - {message}"));
+            warn(&format!("[youtube:tab] YouTube said: {kind} - {message}"));
         }
-        return Err(fail(item_id, &format!("YouTube said: {last}")));
+        let message = format!("YouTube said: {last}");
+        return Err(match item_id {
+            Some(item_id) => fail(item_id, &message),
+            None => Error::Reported(message),
+        });
     }
     Ok(())
 }
@@ -2151,7 +2234,7 @@ impl super::super::Extractor for YoutubeTab {
                 data = reloaded;
             }
         }
-        report_alerts(&data, &parts.id)?;
+        report_alerts(&data, Some(&parts.id), true)?;
         let tabs = tab_renderers(&data);
         if !tabs.is_empty() {
             let mut metadata = tab_metadata(&item_id, &data);
