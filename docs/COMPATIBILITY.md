@@ -574,6 +574,21 @@ supported. `twitter:card` (`i/cards/tfw/v1/ID`, `i/videos[/tweet]/ID`) is
 followed to `statuses/ID`. `tests/fixtures/sites/twitter/` is compared with
 pinned upstream output.
 
+Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel and
+`user` clip URLs) follow upstream `VimeoIE` as it runs without login or
+impersonation (with upstream's impersonation warning): player pages'
+`playerConfig`, and vimeo.com pages' clip page config (or a channel page's
+`data-config-url`) with its config JSON, through `_parse_config`
+(progressive `http-QUALITY` formats, per-CDN HLS formats with audio
+qualities from the group ID, per-CDN DASH formats including the `sep`
+variants and `json=1` redirects, text tracks, thumbnails, chapters, live
+status), merged with the page's description, timestamp, counts and license.
+Unlisted-hash URLs and pages without a config need the logged-in API
+client, which is upstream's login-required error; passwords, albums,
+showcases, on-demand, reviews, events and original formats are not
+supported. `tests/fixtures/sites/vimeo/` is compared with pinned upstream
+output.
+
 Vocaroo recordings (`vocaroo.com`/`voca.ro` `[embed/]ID`) follow upstream
 `VocarooIE`: the `media`/`media1` MP3 URL checked with a HEAD request
 (`Downloading webpage`, the site as Referer), its `x-bz-upload-timestamp`

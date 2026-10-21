@@ -71,6 +71,7 @@ mod tiktok;
 mod tweakers;
 mod twentythreevideo;
 mod twitter;
+mod vimeo;
 mod vocaroo;
 mod xspf;
 mod yfanefa;
@@ -150,6 +151,7 @@ pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitab
 pub use twitter::{
     Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
 };
+pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
@@ -303,7 +305,82 @@ fn extract_manifest_optional(
     parse: &dyn Fn(reqwest::blocking::Response) -> crate::Result<Option<crate::VideoInfo>>,
     (what, name): (&str, &str),
 ) -> Option<crate::VideoInfo> {
-    let note = format!("[{extractor}] {id}: Downloading {what}");
+    extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        keep_subtitles,
+        parse,
+        (what, name),
+        &format!("Downloading {what}"),
+    )
+}
+
+/// [`extract_m3u8_optional`] with its `note=`.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn extract_m3u8_optional_note(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+    keep_subtitles: bool,
+    live: bool,
+    note: &str,
+) -> Option<crate::VideoInfo> {
+    let _ = live;
+    extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        keep_subtitles,
+        &|response| hls::from_response(client, response, manifest, None, true, m3u8_id),
+        ("m3u8 information", "HLS"),
+        note,
+    )
+}
+
+/// `_extract_mpd_formats_and_subtitles(url, id, mpd_id, note, fatal=False)`.
+pub(crate) fn extract_mpd_optional_note(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    mpd_id: Option<&str>,
+    note: &str,
+) -> Option<crate::VideoInfo> {
+    let mut stream = extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        true,
+        &|response| dash::from_response(response, manifest, true),
+        ("MPD manifest", "DASH"),
+        note,
+    )?;
+    if let Some(mpd_id) = mpd_id {
+        for format in &mut stream.formats {
+            format.format_id = format!("{mpd_id}-{}", format.format_id);
+        }
+    }
+    Some(stream)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn extract_manifest_optional_note(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    keep_subtitles: bool,
+    parse: &dyn Fn(reqwest::blocking::Response) -> crate::Result<Option<crate::VideoInfo>>,
+    (what, name): (&str, &str),
+    note: &str,
+) -> Option<crate::VideoInfo> {
+    let note = format!("[{extractor}] {id}: {note}");
     crate::screen::expect_page(id, Some(note.clone()), None);
     let response = direct::request(client, manifest, None);
     if response.is_err() {

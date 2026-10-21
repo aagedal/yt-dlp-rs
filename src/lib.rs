@@ -315,7 +315,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 75] = [
+const EXTRACTOR_NAMES: [&str; 76] = [
     "Angel",
     "AudioBoom",
     "BehindKink",
@@ -381,6 +381,7 @@ const EXTRACTOR_NAMES: [&str; 75] = [
     "twitter",
     "twitter:card",
     "23video",
+    "vimeo",
     "vm.tiktok",
     "Vocaroo",
     "yfanefa",
@@ -406,7 +407,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..74]),
+            "default" => Some(&EXTRACTOR_NAMES[..75]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -542,6 +543,7 @@ impl YoutubeDl {
                 Box::new(extractor::Facebook),
                 Box::new(extractor::FacebookReel),
                 Box::new(extractor::FacebookPluginsVideo),
+                Box::new(extractor::Vimeo),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),
@@ -1543,6 +1545,18 @@ impl YoutubeDl {
             }
             entry.metadata.fill_chapters();
             entry.metadata.sanitize_thumbnails();
+            // Thumbnails this port keeps as upstream's dicts (`None` values).
+            if let Some(serde_json::Value::Array(thumbnails)) = entry.extra.get_mut("thumbnails") {
+                info::sanitize_thumbnail_values(thumbnails);
+                if entry.metadata.thumbnail.is_none()
+                    && let Some(best) = thumbnails
+                        .last()
+                        .and_then(|thumbnail| thumbnail.get("url"))
+                        .and_then(serde_json::Value::as_str)
+                {
+                    entry.metadata.thumbnail = Some(best.to_owned());
+                }
+            }
             info::fill_format_fields(&mut entry.formats);
             // `format['http_headers'] = _calc_headers(ChainMap(format, info))`;
             // HTML5 media carries the page as its Referer.

@@ -941,6 +941,18 @@
       "scope": "TwitterIE GraphQL status (guest token or auth cookies), _graphql_to_legacy errors, HLS/MP4 variants, thumbnails, metadata, multi-video playlists, /video/N with --no-playlist, unified/player/summary cards and followed links; TwitterCardIE redirects; no legacy/syndication APIs, broadcasts, Spaces or VMAP cards; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "vimeo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vimeo.py"
+      ],
+      "rust": [
+        "src/extractor/vimeo.rs",
+        "tests/fixtures/sites/vimeo/"
+      ],
+      "scope": "VimeoIE without login: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; API-only URLs are the login-required error; no passwords, albums, on-demand, events or original formats; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "vocaroo",
       "status": "partial",
       "upstream": [

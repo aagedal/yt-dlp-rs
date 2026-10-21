@@ -1898,7 +1898,11 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         let keys = parts.next().unwrap_or_default();
         let mut thumbnail_keys = None;
         let mut subtitle_keys = None;
+        let mut chapter_keys = None;
         for part in parts {
+            if let Some(found) = part.strip_prefix("chapter=") {
+                chapter_keys = Some(found);
+            }
             if let Some(found) = part.strip_prefix("thumbnail=") {
                 thumbnail_keys = Some(found);
             } else if let Some(found) = part.strip_prefix("subtitle=") {
@@ -1915,12 +1919,32 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                 },
             );
         }
+        // The extractor's chapter keys, then processing's `end_time`.
+        if let Some(chapter_keys) = chapter_keys
+            && let Some(Value::Array(chapters)) = replay.out.get_mut("chapters")
+        {
+            for chapter in chapters.iter_mut().filter_map(Value::as_object_mut) {
+                let mut ordered = Map::new();
+                for key in chapter_keys.split(',') {
+                    if let Some(value) = chapter.shift_remove(key) {
+                        ordered.insert(key.to_owned(), value);
+                    }
+                }
+                ordered.append(chapter);
+                *chapter = ordered;
+            }
+        }
         // The extractor's subtitle track keys, then processing's `ext`.
         if let Some(subtitle_keys) = subtitle_keys {
             for key in ["subtitles", "automatic_captions"] {
                 if let Some(Value::Object(languages)) = replay.out.get_mut(key) {
                     for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
-                        for track in tracks.iter_mut().filter_map(Value::as_object_mut) {
+                        // Manifest tracks keep their parser's order.
+                        for track in tracks
+                            .iter_mut()
+                            .filter_map(Value::as_object_mut)
+                            .filter(|track| !track.contains_key("manifest_url"))
+                        {
                             let mut ordered = Map::new();
                             for key in subtitle_keys.split(',') {
                                 if let Some(value) = track.shift_remove(key) {
