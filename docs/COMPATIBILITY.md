@@ -460,6 +460,16 @@ upstream `BloggerIE`: the page's `VIDEO_CONFIG` line decoded like Python's
 format IDs), the iframe ID as ID and title, the thumbnail and the first
 stream's `dur`; its `_EMBED_REGEX` iframes join the generic embed detection.
 
+Bluesky posts (`bsky.app/profile/HANDLE/post/ID`, `main.bsky.dev`, and
+`at://HANDLE/app.bsky.feed.post/ID`) follow upstream `BlueskyIE`: the
+public API's post thread, each video embed's HLS playlist plus its PDS blob
+(the service endpoint from the PLC directory or `did:web` document, else
+bsky.social) with captions, external links followed as `url` results, media
+with records and quoted posts, and the post's metadata, labels and age limit.
+Several videos form a playlist; posts mixing videos and links are not
+supported. `tests/fixtures/sites/bluesky/` is compared with pinned upstream
+output.
+
 Breitbart videos (`breitbart.com/videos/v/ID`) follow upstream `BreitBartIE`:
 the JW Player `manifests/ID.m3u8` as fatal HLS formats (subtitles ignored with
 upstream's warning), the page's generic title (else the generic video title),

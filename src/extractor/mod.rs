@@ -5,6 +5,7 @@ mod behindkink;
 mod bild;
 pub(crate) mod bitmovin;
 mod blogger;
+mod bluesky;
 mod breitbart;
 mod cgtn;
 mod cjsw;
@@ -91,6 +92,7 @@ pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use bild::{Bild, suitable as bild_suitable};
 pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
+pub use bluesky::{Bluesky, suitable as bluesky_suitable};
 pub use breitbart::{BreitBart, suitable as breitbart_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
@@ -767,7 +769,9 @@ pub(crate) fn search_json_with(
 
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
-    (url.starts_with("jwplatform:") && jwplatform::suitable(url)) || youtube::search::suitable(url)
+    (url.starts_with("jwplatform:") && jwplatform::suitable(url))
+        || youtube::search::suitable(url)
+        || (url.starts_with("at://") && bluesky::suitable(url))
 }
 
 /// Upstream `noplaylist` (`--no-playlist`), for `_yes_playlist`.
