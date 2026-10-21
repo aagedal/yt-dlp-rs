@@ -315,7 +315,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 78] = [
+const EXTRACTOR_NAMES: [&str; 80] = [
     "Angel",
     "AudioBoom",
     "BehindKink",
@@ -380,6 +380,8 @@ const EXTRACTOR_NAMES: [&str; 78] = [
     "ThisAmericanLife",
     "TikTok",
     "Tweakers",
+    "twitch:clips",
+    "twitch:vod",
     "twitter",
     "twitter:card",
     "23video",
@@ -409,7 +411,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..77]),
+            "default" => Some(&EXTRACTOR_NAMES[..79]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -548,6 +550,8 @@ impl YoutubeDl {
                 Box::new(extractor::Vimeo),
                 Box::new(extractor::Dailymotion),
                 Box::new(extractor::Soundcloud),
+                Box::new(extractor::TwitchVod),
+                Box::new(extractor::TwitchClips),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),

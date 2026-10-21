@@ -72,6 +72,7 @@ mod thisamericanlife;
 mod tiktok;
 mod tweakers;
 mod twentythreevideo;
+mod twitch;
 mod twitter;
 mod vimeo;
 mod vocaroo;
@@ -152,6 +153,10 @@ pub use tiktok::{
 };
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
+pub use twitch::{
+    TwitchClips, TwitchVod, clips_suitable as twitch_clips_suitable,
+    vod_suitable as twitch_vod_suitable,
+};
 pub use twitter::{
     Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
 };

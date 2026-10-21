@@ -575,6 +575,20 @@ Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 with its description, poster, duration and account; an empty item list is
 upstream's bare `IndexError`.
 
+Twitch VODs (`twitch.tv/videos/ID`, `/CHANNEL/v/ID`, player and schedule
+URLs) follow upstream `TwitchVodIE`: the persisted GraphQL metadata,
+chapter-moment and storyboard operations, the video playback access token,
+the usher HLS master (Twitch's `#EXT-X-TWITCH-*` tags are ignored, as
+upstream does), the source rendition preferred, storyboard `mhtml` formats,
+thumbnails, chapters and the URL's `t` start time. Twitch clips
+(`clips.twitch.tv/SLUG`, `twitch.tv/[CHANNEL/]clip/SLUG`) follow
+`TwitchClipsIE`: the clip GraphQL, signed default and portrait quality URLs,
+thumbnails and metadata. Live streams, collections and channel video lists
+are not supported. The usher URL's random `p` parameter makes VOD `-J`
+output non-deterministic upstream too, so `tests/fixtures/sites/twitch/`
+compares VODs through `--print` and `-F` (fixture routes may now ignore named
+query parameters).
+
 X/Twitter posts (`twitter.com`, `x.com`, `mobile.`/`m.`/`www.` and the onion
 host: `NAME/status/ID`, `i/web/status/ID`, `statuses/ID`, optionally
 `/video/N`) follow upstream `TwitterIE` with its default GraphQL API: a guest

@@ -953,6 +953,18 @@
       "scope": "TwentyThreeVideoIE api/photo/list JSON (update_url_query, transform_source, formats and filesize thumbnails) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "twitch",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/twitch.py"
+      ],
+      "rust": [
+        "src/extractor/twitch.rs",
+        "tests/fixtures/sites/twitch/"
+      ],
+      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference; TwitchClipsIE signed qualities, thumbnails and metadata; no live streams, collections or channel lists; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "twitter",
       "status": "partial",
       "upstream": [

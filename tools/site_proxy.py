@@ -10,7 +10,8 @@ URLs are 404s. tests/helpers/site_proxy.rs implements the same routing.
 routes.json: {"routes": [{"url": "https://host/path?query", "status": 200,
 "headers": {"Content-Type": "..."}, "body_file": "name" | "body": "text"}]}
 A route may also list "request_headers" ({"Name": "value"}) that the request
-must carry and "request_body" substrings its body must contain; the first
+must carry, "request_body" substrings its body must contain and
+"ignore_query" parameter names left out of the URL comparison; the first
 matching route for a URL answers (for one API endpoint answering several
 clients or requests).
 """
@@ -44,8 +45,18 @@ def load_routes(site_dir):
         wanted = {name.lower(): value for name, value in route.get('request_headers', {}).items()}
         routes.setdefault(route['url'], []).append(
             (wanted, route.get('request_body', []),
-             (route.get('status', 200), route.get('headers', {}), body)))
+             (route.get('status', 200), route.get('headers', {}), body),
+             route.get('ignore_query', [])))
     return routes
+
+
+def strip_query(url, names):
+    """`url` without the named query parameters."""
+    base, sep, query = url.partition('?')
+    if not sep:
+        return url
+    kept = [pair for pair in query.split('&') if pair.split('=')[0] not in names]
+    return f'{base}?{"&".join(kept)}' if kept else base
 
 
 def request_headers(head):
@@ -59,10 +70,19 @@ def request_headers(head):
 
 def match_route(routes, url, headers, body=b''):
     text = body.decode('utf-8', 'replace')
-    for wanted, contains, route in routes.get(url, []):
-        if (all(headers.get(name) == value for name, value in wanted.items())
-                and all(part in text for part in contains)):
+
+    def matches(wanted, contains):
+        return (all(headers.get(name) == value for name, value in wanted.items())
+                and all(part in text for part in contains))
+
+    for wanted, contains, route, _ in routes.get(url, []):
+        if matches(wanted, contains):
             return route
+    # Routes ignoring some (random) query parameters.
+    for key, candidates in routes.items():
+        for wanted, contains, route, ignored in candidates:
+            if ignored and strip_query(url, ignored) == key and matches(wanted, contains):
+                return route
     return None
 
 
