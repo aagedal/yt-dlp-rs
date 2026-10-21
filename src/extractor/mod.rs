@@ -51,6 +51,7 @@ mod livestreamfails;
 mod maariv;
 mod masters;
 mod megaphone;
+mod mixcloud;
 mod movingimage;
 mod nobelprize;
 mod oneplace;
@@ -139,6 +140,7 @@ pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable}
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
+pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};

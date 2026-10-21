@@ -817,6 +817,13 @@ renditions; no manifest is upstream's `Failed to obtain m3u8 URL`), the API
 title (else the generic title), the URL date as `upload_date` and the first
 image set's named images as thumbnails.
 
+Mixcloud shows (`mixcloud.com/USER/SLUG`) follow upstream `MixcloudIE`: the
+GraphQL cloudcast lookup (with upstream's impersonation warning), its
+XOR-encrypted progressive (5 MiB chunks), HLS and DASH stream URLs, the
+restriction and exclusive-content errors, comments and metadata. User
+uploads, playlists and favorites are not supported.
+`tests/fixtures/sites/mixcloud/` is compared with pinned upstream output.
+
 Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
 `MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles
 ignored with upstream's warning), the fatal `Title` field without
