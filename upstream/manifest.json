@@ -208,6 +208,18 @@
       "scope": "AngelIE JSON-LD HLS stream, OpenGraph fields, Cloudinary thumbnail rewrite and merge_dicts with JSON-LD compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "archiveorg",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/archiveorg.py"
+      ],
+      "rust": [
+        "src/extractor/archiveorg.rs",
+        "tests/fixtures/sites/archiveorg/"
+      ],
+      "scope": "ArchiveOrgIE embed playlist, metadata API item/file fields, known-extension formats, thumbnails, reviews and playlists; no YoutubeWebArchiveIE; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "audioboom",
       "status": "partial",
       "upstream": [

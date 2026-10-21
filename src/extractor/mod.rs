@@ -1,4 +1,5 @@
 mod angel;
+mod archiveorg;
 mod audioboom;
 mod bandcamp;
 mod behindkink;
@@ -98,6 +99,7 @@ mod youtube;
 mod zhihu;
 
 pub use angel::{Angel, suitable as angel_suitable};
+pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};

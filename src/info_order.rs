@@ -2328,6 +2328,10 @@ fn youtube_tab_playlist(
     // `_fill_common_fields(final=False)`.
     replay.take("upload_date");
     replay.assign("release_year");
+    for (old, new) in crate::info::MULTIVALUE_FIELDS {
+        replay.take(old);
+        replay.take(new);
+    }
     for key in ["requested_entries", "playlist_count", "epoch"] {
         replay.take(key);
     }

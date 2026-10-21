@@ -315,8 +315,9 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 106] = [
+const EXTRACTOR_NAMES: [&str; 107] = [
     "Angel",
+    "archive.org",
     "AudioBoom",
     "Bandcamp",
     "BehindKink",
@@ -437,7 +438,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..105]),
+            "default" => Some(&EXTRACTOR_NAMES[..106]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -610,6 +611,7 @@ impl YoutubeDl {
                 Box::new(extractor::RutubeEmbed),
                 Box::new(extractor::Rutube),
                 Box::new(extractor::LinkedIn),
+                Box::new(extractor::ArchiveOrg),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),
@@ -1455,6 +1457,32 @@ impl YoutubeDl {
                 .and_then(|timestamp| dates::strftime_date(timestamp.floor() as i64))
         {
             playlist.extra.insert("upload_date".into(), date.into());
+        }
+        // `_fill_common_fields(final=False)`: the deprecated multivalue fields.
+        if let ExtractResult::Playlist(playlist) = result {
+            for (old, new) in info::MULTIVALUE_FIELDS {
+                if playlist.extra.contains_key(new) && playlist.extra.contains_key(old) {
+                    continue;
+                }
+                match (playlist.extra.get(old), playlist.extra.get(new)) {
+                    (Some(serde_json::Value::String(text)), _) if !text.is_empty() => {
+                        let values: Vec<serde_json::Value> =
+                            text.split(", ").map(serde_json::Value::from).collect();
+                        playlist.extra.insert(new.into(), values.into());
+                    }
+                    (_, Some(serde_json::Value::Array(values))) if !values.is_empty() => {
+                        let joined = values
+                            .iter()
+                            .map(|value| {
+                                value.as_str().unwrap_or_default().replace(',', "\u{ff0c}")
+                            })
+                            .collect::<Vec<_>>()
+                            .join(", ");
+                        playlist.extra.insert(old.into(), joined.into());
+                    }
+                    _ => {}
+                }
+            }
         }
         let entries = match result {
             ExtractResult::Video(video) => std::slice::from_mut(video),

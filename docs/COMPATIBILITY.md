@@ -439,6 +439,18 @@ follow upstream `AngelIE`: the page's JSON-LD `url` as a fatal HLS manifest
 image (Cloudinary transformations removed), then `merge_dicts` with the
 remaining JSON-LD fields after the extractor's own.
 
+Internet Archive items (`archive.org/details|embed/ID[/FILE]`) follow
+upstream `ArchiveOrgIE`: the embed page's `<play-av>` playlist (one entry
+when the URL names a file; subtitle tracks stored under their labels, as
+upstream does), the metadata API's item fields (title, joined description,
+uploader, creators, license, dates, venue, year) and per-file fields, formats
+for files with known media extensions (originals preferred through
+`source_preference`, private files skipped without a `logged-in-sig`
+cookie), thumbnails and reviews as `comments`. One entry is merged into the
+item's dict; several make a playlist. Wayback Machine YouTube captures
+(`web.archive:youtube`) are not supported. `tests/fixtures/sites/archiveorg/`
+is compared with pinned upstream output.
+
 AudioBoom posts (`audioboom.com/posts|boos/ID`) follow upstream `AudioBoomIE`:
 the post page's `V5DetailPagePlayer` React props (`_search_json` with
 `unescapeHTML`) for the clip URL, title, description (else its cleaned
