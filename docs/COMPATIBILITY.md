@@ -890,6 +890,20 @@ ignored with upstream's warning), the fatal `Title` field without
 surrounding brackets, the `Description` and `Running time` fields (each
 warning as `title`, like upstream) and the player image.
 
+Niconico videos (`[www.|sp.|embed.]nicovideo.jp/watch|shorts/ID`) follow
+upstream `NiconicoIE`: the watch API (`v3_guest`, or `v3` with a
+`user_session` cookie; 400/404 answers read) with upstream's error map,
+geo-restriction, sensitive/scheduled/login-required messages and
+availability, the domand `access-rights/hls` request (every available
+video/audio pair) and its HLS formats (audio renditions with the API's
+bitrate, sampling rate, ID and quality; variants sorted by rate, deduplicated
+by URL, named after their playlists, with the lowest audio bitrate
+subtracted), thumbnails with lenient resolutions, and the owner/channel,
+genre, tag and count fields. The comment "subtitles" (inline JSON data)
+are an unsupported error with `--write-subs`/`--list-subs`; logins,
+playlists, series, search, live and user pages are not supported.
+`tests/fixtures/sites/niconico/` is compared with pinned upstream output.
+
 Nobel Prize media (`[www.|mediaplayer.]nobelprize.org/mediaplayer/?id|qid=ID`)
 follow upstream `NobelPrizeIE`: the integer `id` (else `qid`) query value (no
 ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's

@@ -777,6 +777,18 @@
       "scope": "MovingImageIE player HLS formats and labelled field regexes (fatal title, warnings) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "niconico",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/niconico.py"
+      ],
+      "rust": [
+        "src/extractor/niconico.rs",
+        "tests/fixtures/sites/niconico/"
+      ],
+      "scope": "NiconicoIE watch API with its errors, domand access-rights HLS formats, thumbnails and metadata; no comment subtitles, logins, playlists, series, search, live or user pages; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "nobelprize",
       "status": "partial",
       "upstream": [
