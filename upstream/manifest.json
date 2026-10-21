@@ -1146,6 +1146,18 @@
       "scope": "VocarooIE media URL HEAD request, upload timestamp header, Referer headers and empty title compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "weibo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/weibo.py"
+      ],
+      "rust": [
+        "src/extractor/weibo.rs",
+        "tests/fixtures/sites/weibo/"
+      ],
+      "scope": "WeiboIE statuses JSON with the visitor cookie handshake, playback-list and fallback formats, mixed-media playlists and metadata; WeiboVideoIE TV component lookups; no WeiboUserIE; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "yfanefa",
       "status": "partial",
       "upstream": [

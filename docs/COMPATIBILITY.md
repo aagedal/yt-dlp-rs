@@ -684,6 +684,18 @@ Sibnet embeds and VK's JS challenge (which needs upstream's
 wall posts are not supported. `tests/fixtures/sites/vk/` is compared with
 pinned upstream output.
 
+Weibo posts (`weibo.com/UID/ID`, `m.weibo.cn/status|detail/ID`) follow
+upstream `WeiboIE`: the `ajax/statuses/show` JSON (a redirect to
+`passport.weibo.com` runs the visitor `genvisitor`/`incarnate` handshake for
+guest cookies, then retries), the playback list formats (or the media URLs'
+`label=`/`template=` fallback, in document order where upstream iterates a
+set), mixed-media posts as untitled playlists of their videos, and the
+post's title (72-character truncation), alt title, uploader, counts, tags and
+`_old_archive_ids`. `tv/show` and `video.weibo.com/show?fid=` pages follow
+`WeiboVideoIE` through the TV component API to the post. User pages are not
+supported. `tests/fixtures/sites/weibo/` is compared with pinned upstream
+output.
+
 Vocaroo recordings (`vocaroo.com`/`voca.ro` `[embed/]ID`) follow upstream
 `VocarooIE`: the `media`/`media1` MP3 URL checked with a HEAD request
 (`Downloading webpage`, the site as Referer), its `x-bz-upload-timestamp`

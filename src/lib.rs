@@ -315,7 +315,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 97] = [
+const EXTRACTOR_NAMES: [&str; 99] = [
     "Angel",
     "AudioBoom",
     "Bandcamp",
@@ -405,6 +405,8 @@ const EXTRACTOR_NAMES: [&str; 97] = [
     "vk",
     "vm.tiktok",
     "Vocaroo",
+    "Weibo",
+    "WeiboVideo",
     "yfanefa",
     "youtube",
     "youtube:search",
@@ -428,7 +430,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..96]),
+            "default" => Some(&EXTRACTOR_NAMES[..98]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -505,6 +507,12 @@ impl YoutubeDl {
         let cookies = http.cookies.unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        if let Ok(mut agent) = extractor::USER_AGENT.write() {
+            *agent = headers
+                .get(reqwest::header::USER_AGENT)
+                .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
+                .unwrap_or_default();
+        }
         let builder = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
             .default_headers(headers.clone())
@@ -586,6 +594,8 @@ impl YoutubeDl {
                 Box::new(extractor::BiliBili),
                 Box::new(extractor::Vk),
                 Box::new(extractor::Niconico),
+                Box::new(extractor::Weibo),
+                Box::new(extractor::WeiboVideo),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),

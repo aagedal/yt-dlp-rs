@@ -88,6 +88,7 @@ mod twitter;
 mod vimeo;
 mod vk;
 mod vocaroo;
+mod weibo;
 mod xspf;
 mod yfanefa;
 mod youtube;
@@ -194,6 +195,9 @@ pub use twitter::{
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{Vk, suitable as vk_suitable};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
+pub use weibo::{
+    Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
+};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
 pub use youtube::search::{
@@ -792,6 +796,17 @@ pub fn pseudo_url(url: &str) -> bool {
         || youtube::search::suitable(url)
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
+}
+
+/// Upstream `params['http_headers']['User-Agent']`.
+pub(crate) static USER_AGENT: std::sync::RwLock<String> = std::sync::RwLock::new(String::new());
+
+/// `self.get_param('http_headers')['User-Agent']`.
+pub(crate) fn user_agent() -> String {
+    USER_AGENT
+        .read()
+        .map(|agent| agent.clone())
+        .unwrap_or_default()
 }
 
 /// Upstream `noplaylist` (`--no-playlist`), for `_yes_playlist`.

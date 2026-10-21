@@ -2277,8 +2277,23 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
 /// `_real_extract`'s `extractor_key`/`extractor`/`webpage_url` update).
 /// `KEYS[;after=KEYS]`: the dict's keys before `_type`/`entries`, and those
 /// a later `result.update(...)` adds after them.
-fn youtube_tab_playlist(map: Map<String, Value>, keys: &str, updated: bool) -> Map<String, Value> {
+fn youtube_tab_playlist(
+    mut map: Map<String, Value>,
+    keys: &str,
+    updated: bool,
+) -> Map<String, Value> {
     let (keys, after) = keys.split_once(";after=").unwrap_or((keys, ""));
+    // `playlist_result(entries, id)` without a title has no `title` key.
+    if !keys
+        .split(',')
+        .chain(after.split(','))
+        .any(|key| key == "title")
+        && map
+            .get("title")
+            .is_some_and(|title| title.is_null() || title.as_str() == Some(""))
+    {
+        map.shift_remove("title");
+    }
     let mut replay = Replay::new(map);
     for key in keys.split(',') {
         replay.set(key, Assign);
