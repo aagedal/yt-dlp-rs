@@ -47,6 +47,7 @@ mod kick;
 mod kommunetv;
 mod ku6;
 mod kvs;
+mod lbry;
 mod livestreamfails;
 mod maariv;
 mod masters;
@@ -137,6 +138,7 @@ pub use kick::{
 };
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
+pub use lbry::{Lbry, suitable as lbry_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
@@ -776,6 +778,7 @@ pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url))
         || youtube::search::suitable(url)
         || (url.starts_with("at://") && bluesky::suitable(url))
+        || (url.starts_with("lbry://") && lbry::suitable(url))
 }
 
 /// Upstream `noplaylist` (`--no-playlist`), for `_yes_playlist`.

@@ -775,6 +775,15 @@ fatal greedy `<h1 title=...>` heading (often empty, so processing's generic
 title) and the player JSON's `data.f` URL as an untyped result, with
 upstream's `KeyError` messages.
 
+Odysee/LBRY streams (`odysee.com`, `lbry.tv` and `lbry://` claim URLs,
+`$/embed/` and `$/download/` paths) follow upstream `LBRYIE`: the API
+proxy's `resolve` and `get`, the v3 API's original file (when the answer is
+not an m3u8), the streaming URL's redirect to its HLS master, livestreams
+through `api.odysee.live` (`This stream is not live` otherwise), the
+claim's metadata and channel URL, and upstream's `lbry said: CODE -
+MESSAGE` errors. Channels and playlists are not supported.
+`tests/fixtures/sites/lbry/` is compared with pinned upstream output.
+
 Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
 `LivestreamfailsIE`: the clip API JSON as an untyped result (`sourceId` as
 `display_id`, `unified_timestamp` of `createdAt`, the streamer label as
