@@ -2988,7 +2988,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 94] = [
+        let suitable: [(&str, Suitable); 95] = [
             ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
             ("Angel", yt_dlp_rs::extractor::angel_suitable),
             ("AudioBoom", yt_dlp_rs::extractor::audioboom_suitable),
@@ -3108,6 +3108,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("twitter", yt_dlp_rs::extractor::twitter_suitable),
             ("twitter:card", yt_dlp_rs::extractor::twitter_card_suitable),
             ("vimeo", yt_dlp_rs::extractor::vimeo_suitable),
+            ("vk", yt_dlp_rs::extractor::vk_suitable),
             ("vm.tiktok", yt_dlp_rs::extractor::tiktok_vm_suitable),
             ("Vocaroo", yt_dlp_rs::extractor::vocaroo_suitable),
             ("yfanefa", yt_dlp_rs::extractor::yfanefa_suitable),
@@ -3155,7 +3156,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nAngel\nAudioBoom\nBandcamp\nBild\nBiliBili\nBitmovin\nblogger.com\nBluesky\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nImgur\nimgur:album\nimgur:gallery\nInstagram\nJove\nJWPlatform\nkick:clips\nkick:live\nkick:vod\nKommunetv\nKu6\nlbry: odysee.com\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nmixcloud\nMovingImage\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPinterest\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nRumble\nRumbleEmbed\nScreenRec\nSen\nsoundcloud: [soundcloud]\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTikTok\nTumblr: [tumblr]\nTweakers\ntwitch:clips: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:card\nvimeo: [vimeo]\nvm.tiktok\nVocaroo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:tab: [youtube] YouTube Tabs\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "23video\nAngel\nAudioBoom\nBandcamp\nBild\nBiliBili\nBitmovin\nblogger.com\nBluesky\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nImgur\nimgur:album\nimgur:gallery\nInstagram\nJove\nJWPlatform\nkick:clips\nkick:live\nkick:vod\nKommunetv\nKu6\nlbry: odysee.com\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nmixcloud\nMovingImage\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPinterest\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nRumble\nRumbleEmbed\nScreenRec\nSen\nsoundcloud: [soundcloud]\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTikTok\nTumblr: [tumblr]\nTweakers\ntwitch:clips: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:card\nvimeo: [vimeo]\nvk: [vk] VK\nvm.tiktok\nVocaroo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:tab: [youtube] YouTube Tabs\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }

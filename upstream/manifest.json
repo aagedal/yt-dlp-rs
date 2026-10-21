@@ -1110,6 +1110,18 @@
       "scope": "VimeoIE without login: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; API-only URLs are the login-required error; no passwords, albums, on-demand, events or original formats; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "vk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vk.py"
+      ],
+      "rust": [
+        "src/extractor/vk.rs",
+        "tests/fixtures/sites/vk/"
+      ],
+      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; no JS challenge, other embeds, logins, VKUserVideosIE, VKWallPostIE or VK Play; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "vocaroo",
       "status": "partial",
       "upstream": [

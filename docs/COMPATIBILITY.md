@@ -671,6 +671,19 @@ showcases, on-demand, reviews, events and original formats are not
 supported. `tests/fixtures/sites/vimeo/` is compared with pinned upstream
 output.
 
+VK videos and clips (`vk.com`/`vkvideo.ru` `video|clip` IDs, `?z=` and
+`list=` shapes, `video_ext.php` embeds) follow upstream `VKIE`: the
+`al_video.php` `show` payload (`3` as login required, `8` as its message),
+the embed page's error messages, security check and known error pages,
+`playerParams`, the progressive `url*`/`cache*`, HLS (`hls*`), DASH
+(`dash*`) and RTMP formats, subtitles, chapters (`time_codes` with int
+times), the info page's date and view count and `_format_sort_fields`.
+A YouTube embed is followed; Vimeo, Rutube, Dailymotion, Odnoklassniki and
+Sibnet embeds and VK's JS challenge (which needs upstream's
+`JSInterpreter`) are unsupported errors, and logins, user video lists and
+wall posts are not supported. `tests/fixtures/sites/vk/` is compared with
+pinned upstream output.
+
 Vocaroo recordings (`vocaroo.com`/`voca.ro` `[embed/]ID`) follow upstream
 `VocarooIE`: the `media`/`media1` MP3 URL checked with a HEAD request
 (`Downloading webpage`, the site as Referer), its `x-bz-upload-timestamp`

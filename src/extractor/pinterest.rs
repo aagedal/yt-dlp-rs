@@ -121,7 +121,7 @@ impl Extractor for Pinterest {
             "timestamp".into(),
             data.get("created_at")
                 .and_then(Value::as_str)
-                .and_then(|date| crate::dates::unified_timestamp(date, false))
+                .and_then(|date| crate::dates::unified_timestamp(date, true))
                 .into(),
         );
         info.insert("thumbnails".into(), Value::Array(thumbnails));

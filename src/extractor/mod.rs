@@ -85,6 +85,7 @@ mod twentythreevideo;
 mod twitch;
 mod twitter;
 mod vimeo;
+mod vk;
 mod vocaroo;
 mod xspf;
 mod yfanefa;
@@ -189,6 +190,7 @@ pub use twitter::{
     Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
 };
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
+pub use vk::{Vk, suitable as vk_suitable};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
