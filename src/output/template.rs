@@ -1060,16 +1060,23 @@ fn substitution(
                     last_playlist_index,
                     ..
                 } => Some(last_playlist_index),
-                Source::Json(_) | Source::JsonFile(_) | Source::JsonExec(_) => None,
+                // `len(str(info_dict.get('__last_playlist_index') or 0))`.
+                Source::Json(dict) | Source::JsonFile(dict) | Source::JsonExec(dict) => Some(
+                    dict.get("__last_playlist_index")
+                        .and_then(serde_json::Value::as_u64)
+                        .unwrap_or(0) as usize,
+                ),
             },
             "playlist_autonumber" => match info {
                 Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
                     Some(info.n_entries.unwrap_or(0))
                 }
-                Source::Playlist { .. }
-                | Source::Json(_)
-                | Source::JsonFile(_)
-                | Source::JsonExec(_) => None,
+                Source::Playlist { .. } => None,
+                Source::Json(dict) | Source::JsonFile(dict) | Source::JsonExec(dict) => Some(
+                    dict.get("n_entries")
+                        .and_then(serde_json::Value::as_u64)
+                        .unwrap_or(0) as usize,
+                ),
             },
             "autonumber" => Some(options.autonumber_size),
             _ => None,
