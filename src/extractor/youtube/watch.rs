@@ -119,9 +119,11 @@ fn player_url(ytcfgs: &[&Map<String, Value>]) -> Option<String> {
 }
 
 /// `_extract_response(ep=ENDPOINT)` for the web client (tab pages).
+#[allow(clippy::too_many_arguments)]
 pub(super) fn innertube_api(
     client: &Client,
     endpoint: &str,
+    extractor: &'static str,
     item_id: &str,
     ytcfg: &Map<String, Value>,
     visitor: Option<&str>,
@@ -130,15 +132,7 @@ pub(super) fn innertube_api(
 ) -> Result<Value> {
     let config = innertube::client(WEBPAGE_CLIENT).expect("the web client is defined");
     call_api(
-        client,
-        config,
-        endpoint,
-        super::tab::NAME,
-        item_id,
-        ytcfg,
-        visitor,
-        query,
-        note,
+        client, config, endpoint, extractor, item_id, ytcfg, visitor, query, note,
     )
 }
 

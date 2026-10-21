@@ -1694,10 +1694,28 @@ its playlist page. Playlist thumbnails are sorted and given IDs and resolutions 
 compared with pinned upstream output.
 
 Unlike upstream's lazy generator, all continuation pages are fetched before
-the first entry is processed. Feeds, hashtags, mixes (`RD…`), YouTube Music
-and search remain explicit unsupported errors. Grid, channel and playlist
+the first entry is processed. Feeds, hashtags, mixes (`RD…`) and YouTube Music
+remain explicit unsupported errors. Grid, channel and playlist
 renderers are ported without fixture coverage; shelf, music and post
 renderers are skipped with a warning.
+
+## YouTube search
+
+`youtube:search` ports `YoutubeSearchIE` for `ytsearch:QUERY` (one result),
+`ytsearchN:QUERY` and `ytsearchall:QUERY`, with upstream's videos-only
+`params`; `youtube:search_url` ports `YoutubeSearchURLIE` for
+`youtube.com/results?search_query=…` (or `q=`) URLs and their `sp` filter.
+Both download the web client config (`Downloading web client config`), then
+search API pages (`query "QUERY" page N: Downloading API JSON`) with the
+previous page's visitor data and continuation, stopping once the requested
+number of results is reached, as upstream's `islice` does. Results are
+`_extract_entries`' video and channel `url` entries in a playlist titled by
+the query. `tests/fixtures/sites/youtube-search/` is compared with pinned
+upstream output. The URL parser percent-encodes non-ASCII query text, which is
+decoded again; a non-ASCII query's `webpage_url` stays percent-encoded.
+`--list-extractor-descriptions` draws the search example at random, as
+upstream does. Other search prefixes (`ytsearchdate`, `ytmusic`, …) and
+`--default-search` are not supported.
 
 ## YouTube HLS discovery
 

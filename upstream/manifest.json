@@ -957,9 +957,11 @@
         "src/extractor/youtube/tab.rs",
         "tests/fixtures/sites/youtube-rich/",
         "tests/fixtures/sites/youtube-playlist/",
-        "tests/fixtures/sites/youtube-channel/"
+        "tests/fixtures/sites/youtube-channel/",
+        "src/extractor/youtube/search.rs",
+        "tests/fixtures/sites/youtube-search/"
       ],
-      "scope": "Upstream YoutubeIE._real_extract over the InnerTube client flow (watch page, ytcfg, per-client player API requests, default tv_samsung/visionos/web clients with a JS runtime, visionos only without), _extract_formats_and_subtitles (https, HLS/DASH manifests, storyboards), JS challenge solving through the vendored EJS solver under Deno/Node, captions/automatic captions, and the full info dict in upstream key order; YoutubeTabIE playlist pages (/playlist?list=, watch?v=…&list=) with tab metadata, the unavailable-videos reload, browse API continuations and url entries in upstream key order and channel tabs (single tabs; nested multi-tab channel playlists, search, mixes, live, age-gate clients, PO tokens, authentication and SABR are not supported); saved site fixtures tests/fixtures/sites/youtube*/ compared against pinned upstream output; YoutubeIE._EMBED_REGEX embeds on generic pages"
+      "scope": "Upstream YoutubeIE._real_extract over the InnerTube client flow (watch page, ytcfg, per-client player API requests, default tv_samsung/visionos/web clients with a JS runtime, visionos only without), _extract_formats_and_subtitles (https, HLS/DASH manifests, storyboards), JS challenge solving through the vendored EJS solver under Deno/Node, captions/automatic captions, and the full info dict in upstream key order; YoutubeTabIE playlist pages (/playlist?list=, watch?v=…&list=) with tab metadata, the unavailable-videos reload, browse API continuations and url entries in upstream key order and channel tabs (single tabs; nested multi-tab channel playlists, mixes, live, age-gate clients, PO tokens, authentication and SABR are not supported); saved site fixtures tests/fixtures/sites/youtube*/ compared against pinned upstream output; YoutubeIE._EMBED_REGEX embeds on generic pages; YoutubeSearchIE (ytsearch[N|all]:) and YoutubeSearchURLIE result pages with continuations"
     },
     {
       "name": "youtube-challenge-runtime",

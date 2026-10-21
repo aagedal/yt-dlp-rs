@@ -81,7 +81,7 @@ pub fn suitable(url: &str) -> bool {
 }
 
 /// Python truthiness of a JSON value.
-fn truthy(value: Option<&Value>) -> bool {
+pub(super) fn truthy(value: Option<&Value>) -> bool {
     match value {
         None | Some(Value::Null) => false,
         Some(Value::Bool(value)) => *value,
@@ -92,7 +92,7 @@ fn truthy(value: Option<&Value>) -> bool {
     }
 }
 
-fn at<'a>(value: &'a Value, path: &[&str]) -> Option<&'a Value> {
+pub(super) fn at<'a>(value: &'a Value, path: &[&str]) -> Option<&'a Value> {
     let mut current = value;
     for key in path {
         current = match current {
@@ -1167,7 +1167,7 @@ fn extract_continuation(renderer: &Value) -> Option<Map<String, Value>> {
 
 /// `_extract_entries`: the entries of a section list or rich grid and its
 /// continuation.
-fn extract_entries(
+pub(super) fn extract_entries(
     parent: &Value,
     entries: &mut Vec<Map<String, Value>>,
 ) -> Option<Map<String, Value>> {
@@ -1274,7 +1274,7 @@ fn unsupported_renderer(key: &str) {
 }
 
 /// A browse API request (`_extract_response(ep='browse')`).
-fn browse(
+pub(super) fn browse(
     client: &Client,
     item_id: &str,
     ytcfg: &Map<String, Value>,
@@ -1282,7 +1282,7 @@ fn browse(
     query: Map<String, Value>,
     note: &str,
 ) -> Result<Value> {
-    watch::innertube_api(client, "browse", item_id, ytcfg, visitor, query, note)
+    watch::innertube_api(client, "browse", NAME, item_id, ytcfg, visitor, query, note)
 }
 
 /// `_entries`: the selected tab's entries and every continuation page.
@@ -1828,7 +1828,7 @@ fn tab_metadata(item_id: &str, data: &Value) -> Map<String, Value> {
 }
 
 /// A `url` entry for this port's playlist (resolved when processed).
-fn entry_info(entry: Map<String, Value>) -> Result<VideoInfo> {
+pub(super) fn entry_info(entry: Map<String, Value>) -> Result<VideoInfo> {
     let url_text = entry
         .get("url")
         .and_then(Value::as_str)
@@ -2294,7 +2294,7 @@ fn empty_playlist(item_id: &str, data: &Value, page_url: &str) -> Result<Extract
 
 /// `playlist_result(entries, **metadata)` with upstream's
 /// `extractor_key`/`extractor`/`webpage_url` update.
-fn tab_playlist(
+pub(super) fn tab_playlist(
     metadata: Map<String, Value>,
     entries: Vec<VideoInfo>,
     page_url: &str,

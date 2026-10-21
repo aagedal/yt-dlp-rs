@@ -311,7 +311,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 64] = [
+const EXTRACTOR_NAMES: [&str; 66] = [
     "Angel",
     "AudioBoom",
     "BehindKink",
@@ -372,6 +372,8 @@ const EXTRACTOR_NAMES: [&str; 64] = [
     "Vocaroo",
     "yfanefa",
     "youtube",
+    "youtube:search",
+    "youtube:search_url",
     "youtube:tab",
     "Zhihu",
     "generic",
@@ -391,7 +393,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..63]),
+            "default" => Some(&EXTRACTOR_NAMES[..65]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -515,6 +517,8 @@ impl YoutubeDl {
                 Box::new(extractor::YoutubeTab {
                     no_playlist: youtube.no_playlist,
                 }),
+                Box::new(extractor::YoutubeSearchUrl),
+                Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),
                 Box::new(extractor::AudioBoom),
@@ -2071,6 +2075,8 @@ impl YoutubeDl {
             full.insert("webpage_url_domain".into(), info::get_domain(&url).into());
         }
         let number = |value: Option<usize>| value.map_or(Value::Null, Value::from);
+        // `add_extra_info` keeps an entry's own keys.
+        let own: Vec<String> = raw.keys().cloned().collect();
         full.insert("playlist_count".into(), number(entry.playlist_count));
         for key in [
             "playlist",
@@ -2101,6 +2107,9 @@ impl YoutubeDl {
             "playlist_autonumber".into(),
             number(entry.playlist_autonumber),
         );
+        for key in &own {
+            full.insert(key.clone(), raw[key].clone());
+        }
         full.insert("epoch".into(), epoch.into());
         // `_fill_common_fields(final=False)`.
         if let Some(duration) = raw.get("duration").and_then(Value::as_f64) {

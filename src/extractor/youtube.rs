@@ -5,6 +5,7 @@ mod chapters;
 mod dict;
 mod innertube;
 mod metadata;
+pub(crate) mod search;
 mod streams;
 mod subs;
 pub(crate) mod tab;

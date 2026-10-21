@@ -2065,7 +2065,7 @@ fn youtube_tab_playlist(map: Map<String, Value>, keys: &str, updated: bool) -> M
         replay.take(key);
     }
     replay.assign("release_year");
-    for key in ["requested_entries", "epoch"] {
+    for key in ["requested_entries", "playlist_count", "epoch"] {
         replay.take(key);
     }
     replay.set("__files_to_move", Dict);

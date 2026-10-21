@@ -135,6 +135,10 @@ pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
+pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
+pub use youtube::search::{
+    suitable as youtube_search_suitable, url_suitable as youtube_search_url_suitable,
+};
 pub(crate) use youtube::tab::YoutubeTab;
 pub use youtube::tab::suitable as youtube_tab_suitable;
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
@@ -430,8 +434,19 @@ pub(crate) fn download_webpage(
     extractor: &'static str,
     id: &str,
 ) -> Result<String> {
+    download_webpage_note(client, url, extractor, id, "Downloading webpage")
+}
+
+/// [`download_webpage`] with another `note`.
+pub(crate) fn download_webpage_note(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+) -> Result<String> {
     use std::io::Read;
-    crate::screen::screen(&format!("[{extractor}] {id}: Downloading webpage"));
+    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
             crate::Error::ExtractorRequest {
@@ -571,7 +586,7 @@ pub(crate) fn search_json_with(
 
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
-    url.starts_with("jwplatform:") && jwplatform::suitable(url)
+    (url.starts_with("jwplatform:") && jwplatform::suitable(url)) || youtube::search::suitable(url)
 }
 
 /// A non-fatal `_search_regex` miss: `[EXTRACTOR] unable to extract NAME`.

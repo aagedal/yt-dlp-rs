@@ -108,7 +108,9 @@ Supported today:
   `watch?v=…&list=`) are extracted like upstream's `youtube:tab`, with every
   continuation page, and so are channel tabs (`/@NAME/videos`, `/shorts`,
   ...); a channel URL without a tab reads `/videos` but is an error when the
-  channel also has live or shorts tabs. Live videos, search, login and upstream's
+  channel also has live or shorts tabs. `ytsearch[N|all]:QUERY` and
+  `/results?search_query=` searches work like upstream's `youtube:search`.
+  Live videos, login and upstream's
   remaining metadata fields are not supported yet. This is
   fixture-tested against pinned upstream, not verified against the live site.
 - Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
