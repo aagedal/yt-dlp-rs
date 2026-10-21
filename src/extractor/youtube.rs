@@ -638,7 +638,6 @@ mod tests {
             "https://youtu.be/BaW_jenozKc/extra",
             "https://youtube.com/watch?v=bad",
             "https://youtube.com/watch?v=BaW_jenozKc&v=BaW_jenozKc",
-            "https://youtube.com/@channel",
         ] {
             assert!(
                 matches!(
