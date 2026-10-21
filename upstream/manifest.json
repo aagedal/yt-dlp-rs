@@ -594,6 +594,18 @@
       "scope": "HypemIE _VALID_URL, displayList-data JSON (clean_html before parsing), serve/source JSON URL as an untyped mp3 result, error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "imgur",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/imgur.py"
+      ],
+      "rust": [
+        "src/extractor/imgur.rs",
+        "tests/fixtures/sites/imgur/"
+      ],
+      "scope": "ImgurIE post API media, gifv page sources, GIF and Twitter formats and metadata; ImgurGalleryIE/ImgurAlbumIE album API playlists and url_transparent single videos; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "instagram",
       "status": "partial",
       "upstream": [

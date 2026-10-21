@@ -2239,13 +2239,19 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
 /// `YoutubeTabIE`'s `playlist_result(entries, **metadata)`: the tab
 /// metadata's keys (`KEYS`), then the processing fields (`updated`: after
 /// `_real_extract`'s `extractor_key`/`extractor`/`webpage_url` update).
+/// `KEYS[;after=KEYS]`: the dict's keys before `_type`/`entries`, and those
+/// a later `result.update(...)` adds after them.
 fn youtube_tab_playlist(map: Map<String, Value>, keys: &str, updated: bool) -> Map<String, Value> {
+    let (keys, after) = keys.split_once(";after=").unwrap_or((keys, ""));
     let mut replay = Replay::new(map);
     for key in keys.split(',') {
         replay.set(key, Assign);
     }
     replay.take("_type");
     replay.take("entries");
+    for key in after.split(',').filter(|key| !key.is_empty()) {
+        replay.set(key, Assign);
+    }
     let late: &[&str] = if updated {
         &[
             "extractor_key",
