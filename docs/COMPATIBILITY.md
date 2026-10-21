@@ -990,6 +990,18 @@ ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's
 fatal JSON-LD as an untyped result overlaid with the `caption` meta title, the
 `itemprop="description"` span and the `duration` meta.
 
+OK.ru (Odnoklassniki) videos (`ok.ru`/`odnoklassniki.ru` `video`,
+`videoembed`, `live`, `web-api/video/moviePlayer` and `dk?...st.mvId=`
+shapes, `fromTime` as `start_time`) follow upstream `OdnoklassnikiIE`: the
+page's stub error text and restricted-access login error, the player
+`data-options` (external players as `url` results), flashvars metadata or the
+POSTed metadata URL, progressive, HLS, DASH, live HLS and RTMP formats with
+upstream's `type` qualities (CDN cookies cleared after each manifest),
+subtitles, page meta upload date and age limit, and YouTube-hosted videos as
+`url_transparent` results. Inline embedded DASH manifests are an unsupported
+error; upstream's boosty branch calls a missing method and fails the same way.
+`tests/fixtures/sites/odnoklassniki/` is compared with pinned upstream output.
+
 OnePlace episodes (`oneplace.com/.../listen/SLUG-ID`) follow upstream
 `OnePlacePodcastIE`: the fatal `mp3-url`/player `data-media-url`, the details
 heading or `og:title`/`title` meta title and the `epDesc` description as an

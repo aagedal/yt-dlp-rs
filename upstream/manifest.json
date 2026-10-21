@@ -861,6 +861,18 @@
       "scope": "NobelPrizeIE query ID, JSON-LD untyped result and meta/description overlay compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "odnoklassniki",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/odnoklassniki.py"
+      ],
+      "rust": [
+        "src/extractor/odnoklassniki.rs",
+        "tests/fixtures/sites/odnoklassniki/"
+      ],
+      "scope": "OdnoklassnikiIE player options, flashvars or POSTed metadata, progressive/HLS/DASH/RTMP formats, subtitles, errors and url/url_transparent results; no embedded DASH manifests; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "oneplace",
       "status": "partial",
       "upstream": [
