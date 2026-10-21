@@ -743,6 +743,17 @@ Player playlists are unsupported errors. On generic pages its
 embed detection, first in extractor order. A pseudo-URL result's
 `webpage_url_domain` is `null`, like upstream's `get_domain`.
 
+Kick (`kick.com`) follows upstream's three extractors, each requesting the
+site API with upstream's impersonation warning: `kick:vod`
+(`CHANNEL/videos/UUID`, the VOD's HLS source and livestream metadata),
+`kick:clips` (`CHANNEL/clips/clip_ID`, `CHANNEL?clip=clip_ID`; HLS or direct
+clip URLs) and `kick:live` (a channel's live HLS stream, with upstream's
+`live=True` format IDs, or `The channel is not currently live`). Live
+downloads have this port's live HLS limits. `--use-extractors` now matches
+every extractor by its upstream name (`twitch:vod`, `kick:clips`,
+`vm.tiktok`, ...). `tests/fixtures/sites/kick/` is compared with pinned
+upstream output.
+
 Kommunetv archives (`SUBDOMAIN.kommunetv.no/archive/ID`) follow upstream
 `KommunetvIE`: the Oslo streams API (requested with `Accept:
 application/json`), its `stream.title` and first playlist's first file

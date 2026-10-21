@@ -619,6 +619,18 @@
       "scope": "JWPlatformIE _VALID_URL (including jwplatform: pseudo-URLs) and v2 media JSON via _parse_jwplayer_data(require_title=True) compared with pinned upstream output through the fixture proxy; _extract_embed_urls on generic pages; no playlists"
     },
     {
+      "name": "kick",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kick.py"
+      ],
+      "rust": [
+        "src/extractor/kick.rs",
+        "tests/fixtures/sites/kick/"
+      ],
+      "scope": "KickVODIE, KickClipIE and KickIE API metadata with HLS (live IDs as upstream's live=True) or direct formats; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "kommunetv",
       "status": "partial",
       "upstream": [

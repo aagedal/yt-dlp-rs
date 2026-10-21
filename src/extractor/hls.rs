@@ -211,6 +211,22 @@ pub(crate) fn without_ext(info: &mut VideoInfo) {
     }
 }
 
+/// `_parse_m3u8_formats(..., live=True)`: a live variant keeps only its
+/// `m3u8_id` (its bandwidth changes over time), so unnamed IDs become
+/// indexes when processed.
+pub(crate) fn live_format_ids(formats: &mut [VideoFormat], m3u8_id: Option<&str>) {
+    for format in formats {
+        if format
+            .extra
+            .get(crate::info_order::FORMAT_SHAPE)
+            .and_then(serde_json::Value::as_str)
+            .is_some_and(|shape| shape.starts_with("hls-variant"))
+        {
+            format.format_id = m3u8_id.unwrap_or_default().to_owned();
+        }
+    }
+}
+
 pub(crate) fn from_response(
     client: &Client,
     response: Response,

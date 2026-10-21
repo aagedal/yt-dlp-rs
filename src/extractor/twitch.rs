@@ -216,7 +216,7 @@ fn thumbnails(thumbnail: Option<&str>) -> Value {
 
 impl Extractor for TwitchVod {
     fn key(&self) -> &'static str {
-        VOD_KEY
+        VOD_NAME
     }
 
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
@@ -518,7 +518,7 @@ impl Extractor for TwitchVod {
 
 impl Extractor for TwitchClips {
     fn key(&self) -> &'static str {
-        CLIPS_KEY
+        CLIPS_NAME
     }
 
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {

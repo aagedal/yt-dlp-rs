@@ -42,6 +42,7 @@ mod jove;
 mod json_ld;
 mod jwplatform;
 mod jwplayer;
+mod kick;
 mod kommunetv;
 mod ku6;
 mod kvs;
@@ -126,6 +127,10 @@ pub use hypem::{Hypem, suitable as hypem_suitable};
 pub use instagram::{Instagram, suitable as instagram_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
+pub use kick::{
+    KickClip, KickLive, KickVod, clip_suitable as kick_clip_suitable,
+    live_suitable as kick_live_suitable, vod_suitable as kick_vod_suitable,
+};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
@@ -344,8 +349,7 @@ pub(crate) fn extract_m3u8_optional_note(
     live: bool,
     note: &str,
 ) -> Option<crate::VideoInfo> {
-    let _ = live;
-    extract_manifest_optional_note(
+    let mut stream = extract_manifest_optional_note(
         client,
         manifest,
         extractor,
@@ -354,7 +358,11 @@ pub(crate) fn extract_m3u8_optional_note(
         &|response| hls::from_response(client, response, manifest, None, true, m3u8_id),
         ("m3u8 information", "HLS"),
         note,
-    )
+    )?;
+    if live {
+        hls::live_format_ids(&mut stream.formats, m3u8_id);
+    }
+    Some(stream)
 }
 
 /// `_extract_mpd_formats_and_subtitles(url, id, mpd_id, note, fatal=False)`.
@@ -446,6 +454,26 @@ pub(crate) fn download_json_note(
         id,
         note,
         &|text| Ok(text.to_owned()),
+    )
+}
+
+/// [`download_json_note`] with the request's `headers=`.
+pub(crate) fn download_json_note_headers(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+    headers: &[(&str, &str)],
+) -> Result<serde_json::Value> {
+    download_json_with(
+        client,
+        url,
+        extractor,
+        id,
+        note,
+        &|text| Ok(text.to_owned()),
+        headers,
     )
 }
 
