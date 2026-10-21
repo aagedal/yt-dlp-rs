@@ -248,7 +248,7 @@ pub(super) fn extract(
                         values.iter().any(|value| value == "xpe" || value == "xpv")
                     });
             if requires_pot {
-                crate::screen::debug(&format!(
+                crate::screen::extractor_debug(&format!(
                     "Some {client} client subtitles require a PO Token which was not provided. They will be discarded since they are not downloadable as-is. You can manually pass a Subtitles PO Token for this client with --extractor-args \"youtube:po_token={client}.subs+XXX\" . For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
                 ));
                 break;

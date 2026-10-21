@@ -466,7 +466,7 @@ fn report_pot_format_skipped(video_id: &str, client_name: &str, proto: &str) {
         "{video_id}: {client_name} client {proto} formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token={client_name}.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
     );
     if super::watch::is_default_client(client_name) {
-        crate::screen::debug(&message);
+        crate::screen::extractor_debug(&message);
     } else {
         crate::screen::warning_once(&format!("[youtube] {message}"));
     }
@@ -655,7 +655,7 @@ pub(super) fn extract(
                             )
                         };
                         if matches!(client_name, "web" | "web_safari") {
-                            crate::screen::debug(&template(
+                            crate::screen::extractor_debug(&template(
                                 &format!("{}: ", context.video_id),
                                 "YouTube is forcing SABR streaming for this client",
                             ));

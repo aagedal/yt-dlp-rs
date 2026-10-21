@@ -715,6 +715,110 @@ fn requested_clients(session: &ClientSelection) -> Vec<&'static str> {
     ordered
 }
 
+/// `_get_available_at_timestamp`: now, plus the pre-roll ads' durations
+/// (or their skip offsets), which must pass before the formats are served.
+fn available_at(response: &Value, video_id: &str, client: &str) -> i64 {
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0.0, |elapsed| elapsed.as_secs_f64());
+    let mut renderers: Vec<&Value> = Vec::new();
+    for placement in response
+        .get("adPlacements")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
+        if placement
+            .pointer("/adPlacementRenderer/config/adPlacementConfig/kind")
+            .and_then(Value::as_str)
+            == Some("AD_PLACEMENT_KIND_START")
+        {
+            renderers
+                .extend(placement.pointer("/adPlacementRenderer/renderer/instreamVideoAdRenderer"));
+        }
+    }
+    for slot in response
+        .get("adSlots")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
+        if slot
+            .pointer("/adSlotRenderer/adSlotMetadata/triggerEvent")
+            .and_then(Value::as_str)
+            != Some("SLOT_TRIGGER_EVENT_BEFORE_CONTENT")
+        {
+            continue;
+        }
+        let Some(content) = slot.pointer(
+            "/adSlotRenderer/fulfillmentContent/fulfilledLayout/playerBytesAdLayoutRenderer/renderingContent",
+        ) else {
+            continue;
+        };
+        renderers.extend(content.get("instreamVideoAdRenderer"));
+        for layout in content
+            .pointer("/playerBytesSequentialLayoutRenderer/sequentialLayouts")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+        {
+            renderers.extend(
+                layout.pointer(
+                    "/playerBytesAdLayoutRenderer/renderingContent/instreamVideoAdRenderer",
+                ),
+            );
+        }
+    }
+    let mut wait = 0.0;
+    for renderer in renderers
+        .into_iter()
+        .filter(|renderer| renderer.is_object())
+    {
+        // `parse_qs(playerVars)['length_seconds'][-1]`.
+        let mut duration: Option<f64> = renderer
+            .get("playerVars")
+            .and_then(Value::as_str)
+            .and_then(|vars| {
+                url::form_urlencoded::parse(vars.as_bytes())
+                    .filter(|(key, value)| key == "length_seconds" && !value.is_empty())
+                    .last()
+                    .and_then(|(_, value)| value.trim().parse::<i64>().ok())
+            })
+            .map(|seconds| seconds as f64);
+        let mut ad = match duration {
+            Some(seconds) => format!("a {seconds}s ad"),
+            None => "an ad".to_owned(),
+        };
+        let skip = renderer
+            .get("skipOffsetMilliseconds")
+            .and_then(|value| match value {
+                Value::Number(number) => number.as_f64(),
+                Value::String(text) => text.trim().parse().ok(),
+                _ => None,
+            });
+        if let Some(milliseconds) = skip {
+            let seconds = milliseconds / 1000.0;
+            // `skip_time if skip_time % 1 else int(skip_time)`.
+            let shown = if seconds.fract() == 0.0 {
+                format!("{}", seconds as i64)
+            } else {
+                crate::screen::py_float(seconds)
+            };
+            ad.push_str(&format!(" skippable after {shown}s"));
+            duration = Some(seconds);
+        }
+        if let Some(duration) = duration {
+            crate::screen::extractor_debug(&format!("{video_id}: Detected {ad} for {client}"));
+            wait += duration;
+        }
+    }
+    if wait != 0.0 {
+        (now.ceil() + wait) as i64
+    } else {
+        now as i64
+    }
+}
+
 /// `_is_premium_subscriber`: the topbar's YouTube Premium logo.
 fn is_premium_subscriber(authenticated: bool, initial_data: Option<&Value>) -> bool {
     let Some(logo) = initial_data
@@ -918,9 +1022,7 @@ pub(super) fn acquire(
                 client: config.name,
                 response: response.clone(),
                 player_token_provided: false,
-                available_at: std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .map_or(0, |elapsed| elapsed.as_secs() as i64),
+                available_at: available_at(&response, video_id, config.name),
             });
         }
         // A "made for kids" video android_vr/visionos cannot play may play
@@ -955,7 +1057,7 @@ pub(super) fn acquire(
             status.as_deref(),
             Some("OK" | "LIVE_STREAM_OFFLINE" | "AGE_CHECK_REQUIRED" | "AGE_VERIFICATION_REQUIRED")
         ) {
-            crate::screen::debug(&format!(
+            crate::screen::extractor_debug(&format!(
                 "{video_id}: {name} player response playability status: {}",
                 status.as_deref().unwrap_or("None")
             ));
@@ -989,4 +1091,52 @@ pub(super) fn acquire(
         player_url: player_url_found,
         premium,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn available_at_adds_pre_roll_ads_like_upstream() {
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs() as i64;
+        let ad = |vars: &str, skip: Option<i64>| {
+            let mut renderer = json!({"playerVars": vars});
+            if let Some(skip) = skip {
+                renderer["skipOffsetMilliseconds"] = skip.into();
+            }
+            json!({"instreamVideoAdRenderer": renderer})
+        };
+        let layout =
+            |content: Value| json!({"playerBytesAdLayoutRenderer": {"renderingContent": content}});
+        let response = json!({
+            "adPlacements": [
+                {"adPlacementRenderer": {
+                    "config": {"adPlacementConfig": {"kind": "AD_PLACEMENT_KIND_START"}},
+                    "renderer": ad("length_seconds=15&x=1", Some(5000)),
+                }},
+                {"adPlacementRenderer": {
+                    "config": {"adPlacementConfig": {"kind": "AD_PLACEMENT_KIND_MILLISECONDS"}},
+                    "renderer": ad("length_seconds=99", None),
+                }},
+            ],
+            "adSlots": [{"adSlotRenderer": {
+                "adSlotMetadata": {"triggerEvent": "SLOT_TRIGGER_EVENT_BEFORE_CONTENT"},
+                "fulfillmentContent": {"fulfilledLayout": layout(json!({
+                    "playerBytesSequentialLayoutRenderer": {"sequentialLayouts": [
+                        layout(ad("length_seconds=7", None)),
+                        layout(ad("", None)),
+                    ]},
+                }))},
+            }}],
+        });
+        // 5s (skippable) + 7s; the mid-roll and the ad without a length are ignored.
+        let at = available_at(&response, "id", "tv_samsung");
+        assert!((now + 12..=now + 14).contains(&at), "{at} {now}");
+        let plain = available_at(&json!({}), "id", "tv_samsung");
+        assert!((now..=now + 1).contains(&plain));
+    }
 }

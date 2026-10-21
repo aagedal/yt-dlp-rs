@@ -197,6 +197,14 @@ pub(crate) fn debug(text: &str) {
     }
 }
 
+/// An extractor's `write_debug`: `[EXTRACTOR] TEXT`.
+pub(crate) fn extractor_debug(text: &str) {
+    if verbose() {
+        let name = EXTRACTOR.with(std::cell::Cell::get);
+        debug(&format!("[{name}] {text}"));
+    }
+}
+
 pub(crate) fn stderr(text: &str) {
     if let Some(sink) = SINK.get() {
         sink(Message::Stderr(text));

@@ -1473,25 +1473,41 @@ impl SleepPolicy {
         })
     }
 
-    fn pause(seconds: f64) {
+    fn pause(seconds: f64, note: &str) {
         if seconds > 0.0 {
-            screen!("[download] Sleeping {seconds:.2} seconds ...");
+            screen!("[download] Sleeping {seconds:.2} seconds {note}...");
             std::thread::sleep(Duration::from_secs_f64(seconds));
         }
     }
 
-    /// `random.uniform(min, max or min)`.
-    fn media(&self) {
-        let max = if self.max == 0.0 { self.min } else { self.max };
+    /// `random.uniform(min, max or min)`, raised to a stream's `available_at`
+    /// (YouTube's pre-roll ad time) like upstream's forced sleep interval.
+    fn media(&self, available_at: Option<i64>) {
+        let (mut min, mut max) = (self.min, self.max);
+        let mut note = "";
+        if let Some(available_at) = available_at.filter(|at| *at != 0) {
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map_or(0, |elapsed| elapsed.as_secs() as i64);
+            let forced = (available_at - now) as f64;
+            if forced > min {
+                note = "as required by the site";
+                min = forced;
+            }
+            if forced > max {
+                max = forced;
+            }
+        }
+        let max = if max == 0.0 { min } else { max };
         let unit = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map_or(0, |elapsed| elapsed.subsec_nanos()) as f64
             / 1e9;
-        Self::pause(self.min + (max - self.min) * unit);
+        Self::pause(min + (max - min) * unit, note);
     }
 
     fn subtitle(&self) {
-        Self::pause(self.subtitles);
+        Self::pause(self.subtitles, "");
     }
 }
 
@@ -4648,8 +4664,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     }
                                 }
                                 // Upstream sleeps before each stream's FileDownloader.download.
-                                for _ in 0..info.requested_formats.len().max(1) {
-                                    sleep.media();
+                                let available_at =
+                                    |extra: &serde_json::Map<String, serde_json::Value>| {
+                                        extra
+                                            .get("available_at")
+                                            .and_then(serde_json::Value::as_i64)
+                                    };
+                                if info.requested_formats.is_empty() {
+                                    sleep.media(available_at(&info.extra));
+                                }
+                                for stream in &info.requested_formats {
+                                    sleep.media(available_at(&stream.extra));
                                 }
                                 refreshed
                             } else {

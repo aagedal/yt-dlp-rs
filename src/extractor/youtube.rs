@@ -77,7 +77,7 @@ pub(crate) fn initialize() {
     crate::cookies::set_cookie(".youtube.com", "PREF", &pref);
     if has_auth_cookies() {
         // `_initialize_cookie_auth`.
-        crate::screen::debug("Found YouTube account cookies");
+        crate::screen::extractor_debug("Found YouTube account cookies");
         return;
     }
     // A SOCS value not starting with `CAA` records a choice; keep it.

@@ -1172,8 +1172,14 @@ requests carry `generate_api_headers`' session headers (`Authorization`
 SAPISIDHASH values, `X-Origin`, `X-Goog-AuthUser`/`X-Goog-PageId` from the
 session index and data-sync ID, `X-Youtube-Bootstrap-Logged-In`). The
 `youtube-auth` fixture (with a `copy`-ed cookies file) compares these against
-pinned upstream. Cookie rotation warnings, PO token providers, InnerTube request
-retries and upstream's remaining `_real_extract` fields are not implemented.
+pinned upstream. A player response's pre-roll ads (`adPlacements` starting the
+video and `adSlots` before content, by length or skip offset) set its formats'
+`available_at` like `_get_available_at_timestamp` (`Detected a 15s ad skippable
+after 5s for CLIENT` with `-v`), and the download of each stream first sleeps
+until then (`Sleeping N seconds as required by the site...`), raising
+`--sleep-interval` like upstream's forced sleep. Cookie rotation warnings, PO
+token providers, InnerTube request retries and upstream's remaining
+`_real_extract` fields are not implemented.
 
 `tests/fixtures/sites/youtube` (jsless `visionos`), `youtube-playability`
 (age gate, unavailable and private videos), `youtube-consent` and `youtube-js` compare

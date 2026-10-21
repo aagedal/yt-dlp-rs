@@ -1367,7 +1367,7 @@ pub(crate) fn fetch_pages(
         if let Some(token) = &token
             && !seen.insert(token.clone())
         {
-            crate::screen::debug("Detected YouTube feed looping - assuming end of feed.");
+            crate::screen::extractor_debug("Detected YouTube feed looping - assuming end of feed.");
             break;
         }
         let response = browse(
@@ -2323,7 +2323,7 @@ impl YoutubeTab {
                 .find(|tab| truthy(tab.get("selected")))
                 .ok_or_else(|| fail(&parts.id, "Unable to find selected tab"))?;
             let (selected_id, selected_name) = tab_id_and_name(selected);
-            crate::screen::debug(&format!(
+            crate::screen::extractor_debug(&format!(
                 "Selected tab: '{selected_id}' ({selected_name}), Requested tab: '{original_tab}'"
             ));
             // `/about` is no longer a tab.
@@ -2611,7 +2611,9 @@ fn tab_id_and_name(tab: &Value) -> (String, String) {
         Some(id) => id,
         None => {
             if !name.is_empty() {
-                crate::screen::debug(&format!("Falling back to selected tab name: {name}"));
+                crate::screen::extractor_debug(&format!(
+                    "Falling back to selected tab name: {name}"
+                ));
             }
             match name.as_str() {
                 "home" => "featured".into(),
