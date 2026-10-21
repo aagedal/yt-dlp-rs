@@ -443,7 +443,14 @@ fn embed_thumbnail_fixes_webp_extensions_and_converts_them_to_png() {
         ],
         directory.path(),
     );
-    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert!(
+        output.status.success(),
+        "{:?}\n{}\n{}\n{}",
+        output.status,
+        text(&output.stdout),
+        text(&output.stderr),
+        tools.log()
+    );
     // The kept original is renamed to its real WebP extension; the PNG
     // conversion used for embedding is temporary.
     assert_eq!(names(directory.path()), ["video.mp4", "video.webp"]);
