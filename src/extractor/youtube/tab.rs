@@ -1899,7 +1899,7 @@ fn page_data(client: &Client, url: &Url, item_id: &str) -> Result<(Value, Map<St
 }
 
 /// `_report_alerts`: warnings, then the last error as an error.
-fn report_alerts(data: &Value) -> Result<()> {
+fn report_alerts(data: &Value, item_id: &str) -> Result<()> {
     let mut errors = Vec::new();
     for alert in data
         .get("alerts")
@@ -1932,9 +1932,7 @@ fn report_alerts(data: &Value) -> Result<()> {
         for (kind, message) in errors {
             crate::screen::warning_once(&format!("[youtube:tab] YouTube said: {kind} - {message}"));
         }
-        return Err(Error::Reported(format!(
-            "[youtube:tab] YouTube said: {last}"
-        )));
+        return Err(fail(item_id, &format!("YouTube said: {last}")));
     }
     Ok(())
 }
@@ -1971,12 +1969,14 @@ impl super::super::Extractor for YoutubeTab {
         ));
         let item_id = parts.id.clone();
         let is_channel = parts.not_channel.is_empty();
-        if is_channel || !parts.not_channel.starts_with(['p', 'w']) {
-            // Channel tabs, feeds and hashtags have no saved-fixture coverage yet.
+        if !is_channel && !parts.not_channel.starts_with(['p', 'w']) {
+            // Feeds and hashtags have no saved-fixture coverage yet.
             return Err(Error::UnsupportedYoutube(
-                "channel, feed and hashtag tabs are not supported yet; only playlists are".into(),
+                "feed and hashtag pages are not supported yet".into(),
             ));
         }
+        let mut item_id = item_id;
+        let original_tab = parts.tab.trim_start_matches('/').to_owned();
         let display_id = format!("{item_id}{}", parts.tab);
         let mut page_url = url.to_string();
         if is_channel && parts.tab.is_empty() {
@@ -1996,9 +1996,7 @@ impl super::super::Extractor for YoutubeTab {
         let (video_id, playlist_id) = (first("v"), first("list"));
         if video_id.is_none() && parts.not_channel.starts_with("watch") {
             let Some(playlist_id) = playlist_id else {
-                return Err(Error::Reported(
-                    "[youtube:tab] A video URL was given without video ID".into(),
-                ));
+                return Err(fail(&parts.id, "A video URL was given without video ID"));
             };
             crate::screen::warning(&format!(
                 "[youtube:tab] A video URL was given without video ID. Trying to download playlist {playlist_id}"
@@ -2022,36 +2020,113 @@ impl super::super::Extractor for YoutubeTab {
             ));
         }
         let fetch_url = Url::parse(&page_url)?;
-        let (mut data, ytcfg) = page_data(client, &fetch_url, &display_id)?;
+        let (mut data, mut ytcfg) = page_data(client, &fetch_url, &display_id)?;
+        // The URL redirected to the home page (`FEwhat_to_watch`).
+        if tab_renderers(&data)
+            .iter()
+            .find(|tab| truthy(tab.get("selected")))
+            .and_then(|tab| tab.get("tabIdentifier"))
+            .and_then(Value::as_str)
+            == Some("FEwhat_to_watch")
+        {
+            return Err(fail(
+                &parts.id,
+                "The channel/playlist does not exist and the URL redirected to youtube.com home page",
+            ));
+        }
+        // A conditional redirect to the regional channel.
+        if let Some(redirect) = data
+            .get("onResponseReceivedActions")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+            .find_map(|action| {
+                at(
+                    action,
+                    &[
+                        "navigateAction",
+                        "endpoint",
+                        "commandMetadata",
+                        "webCommandMetadata",
+                        "url",
+                    ],
+                )
+                .and_then(Value::as_str)
+            })
+        {
+            let target = Url::parse("https://www.youtube.com")?.join(redirect)?;
+            let target = format!("{target}{}{}", parts.tab, parts.post);
+            crate::screen::screen(&format!(
+                "[{NAME}] This playlist is likely not available in your region. Following conditional redirect to {target}"
+            ));
+            return self.extract_result(client, &Url::parse(&target)?);
+        }
         let tabs = tab_renderers(&data);
         if is_channel && !tabs.is_empty() {
             let selected = tabs
                 .iter()
                 .find(|tab| truthy(tab.get("selected")))
-                .ok_or_else(|| {
-                    Error::Reported("[youtube:tab] Unable to find selected tab".into())
-                })?;
-            let selected_id = tab_id(selected);
-            let requested = parts.tab.trim_start_matches('/');
-            if !requested.is_empty() && requested != selected_id && requested != "about" {
-                return Err(Error::Reported(format!(
-                    "[youtube:tab] This channel does not have a {requested} tab"
-                )));
+                .ok_or_else(|| fail(&parts.id, "Unable to find selected tab"))?;
+            let (selected_id, selected_name) = tab_id_and_name(selected);
+            crate::screen::debug(&format!(
+                "Selected tab: '{selected_id}' ({selected_name}), Requested tab: '{original_tab}'"
+            ));
+            // `/about` is no longer a tab.
+            if original_tab == "about" {
+                return Ok(Some(empty_playlist(&item_id, &data, &page_url)?));
             }
-            if parts.tab.is_empty() {
+            if original_tab.is_empty() && !selected_name.is_empty() {
                 crate::screen::screen(&format!(
                     "[{NAME}] Downloading all uploads of the channel. To download only the videos in a specific tab, pass the tab's URL"
                 ));
-                let extra: Vec<&&Value> = tabs
-                    .iter()
-                    .filter(|tab| matches!(tab_id(tab).as_str(), "streams" | "shorts"))
-                    .collect();
-                if !extra.is_empty() {
-                    return Err(Error::UnsupportedYoutube(
-                        "channels with streams or shorts tabs are not supported natively; pass the tab's URL"
-                            .into(),
+                let has = |id: &str| tabs.iter().any(|tab| tab_id_and_name(tab).0 == id);
+                if has("streams") || has("shorts") {
+                    // Upstream returns a playlist of the tabs' playlists.
+                    return Err(Error::UnsupportedYoutube(format!(
+                        "channels with live or shorts tabs are downloaded as nested playlists, which are not supported natively; pass a tab's URL (such as {}/videos) or the channel's uploads playlist",
+                        parts.pre
+                    )));
+                }
+                if selected_id != "videos" {
+                    if !item_id.starts_with("UC") {
+                        return Ok(Some(empty_playlist(&item_id, &data, &page_url)?));
+                    }
+                    // Topic channels have no /videos: use their uploads playlist.
+                    let uploads = format!("UU{}", &item_id[2..]);
+                    let uploads_url = format!("https://www.youtube.com/playlist?list={uploads}");
+                    match page_data(client, &Url::parse(&uploads_url)?, &uploads) {
+                        Ok((found, found_ytcfg)) => {
+                            data = found;
+                            if ytcfg.is_empty() {
+                                ytcfg = found_ytcfg;
+                            }
+                            item_id = uploads.clone();
+                            page_url = uploads_url;
+                            crate::screen::screen(&format!(
+                                "[{NAME}] The channel does not have a videos, shorts, or live tab. Redirecting to playlist {uploads} instead"
+                            ));
+                        }
+                        Err(_) => return Ok(Some(empty_playlist(&item_id, &data, &page_url)?)),
+                    }
+                }
+            } else if (if original_tab.is_empty() {
+                "videos"
+            } else {
+                &original_tab
+            }) != selected_id
+            {
+                if original_tab == "live" {
+                    return Err(Error::Reported(format!(
+                        "[youtube:tab] {item_id}: The channel is not currently live"
+                    )));
+                }
+                if !selected_name.is_empty() {
+                    return Err(fail(
+                        &parts.id,
+                        &format!("This channel does not have a {original_tab} tab"),
                     ));
                 }
+                page_url = format!("{}{}", parts.pre, parts.post);
             }
         }
         // `_reload_with_unavailable_videos`.
@@ -2075,16 +2150,14 @@ impl super::super::Extractor for YoutubeTab {
                 data = reloaded;
             }
         }
-        report_alerts(&data)?;
+        report_alerts(&data, &parts.id)?;
         let tabs = tab_renderers(&data);
         if !tabs.is_empty() {
             let mut metadata = tab_metadata(&item_id, &data);
             let selected = tabs
                 .iter()
                 .find(|tab| truthy(tab.get("selected")))
-                .ok_or_else(|| {
-                    Error::Reported("[youtube:tab] Unable to find selected tab".into())
-                })?;
+                .ok_or_else(|| fail(&parts.id, "Unable to find selected tab"))?;
             let mut title = metadata
                 .get("title")
                 .and_then(Value::as_str)
@@ -2112,23 +2185,7 @@ impl super::super::Extractor for YoutubeTab {
                 .into_iter()
                 .map(entry_info)
                 .collect::<Result<Vec<_>>>()?;
-            let keys: Vec<String> = metadata.keys().cloned().collect();
-            let mut extra = metadata.clone();
-            extra.shift_remove("id");
-            extra.shift_remove("title");
-            extra.insert(
-                crate::info_order::INFO_SHAPE.into(),
-                format!("youtube-tab;{}", keys.join(",")).into(),
-            );
-            return Ok(Some(ExtractResult::Playlist(PlaylistInfo {
-                id,
-                title,
-                webpage_url: Url::parse(&page_url)?,
-                extractor: NAME.into(),
-                extractor_key: KEY.into(),
-                entries,
-                extra,
-            })));
+            return Ok(Some(tab_playlist(metadata, entries, &page_url, true)?));
         }
         // An inline (watch page) playlist that links to its playlist page.
         if let Some(playlist) = at(
@@ -2177,14 +2234,18 @@ impl super::super::Extractor for YoutubeTab {
             let target = Url::parse(&format!("https://www.youtube.com/watch?v={video_id}"))?;
             return Ok(Some(follow(&target)));
         }
-        Err(Error::Reported(
-            "[youtube:tab] Unable to recognize tab page".into(),
-        ))
+        Err(fail(&parts.id, "Unable to recognize tab page"))
     }
 }
 
-/// `_extract_tab_id_and_name`'s ID.
-fn tab_id(tab: &Value) -> String {
+/// An `ExtractorError` with `extract`'s temporary ID.
+fn fail(item_id: &str, message: &str) -> Error {
+    Error::Reported(format!("[{NAME}] {item_id}: {message}"))
+}
+
+/// `_extract_tab_id_and_name`: the tab's ID (from its URL, else its
+/// identifier, else its name) and lowercase name.
+fn tab_id_and_name(tab: &Value) -> (String, String) {
     let name = tab
         .get("title")
         .and_then(Value::as_str)
@@ -2203,17 +2264,76 @@ fn tab_id(tab: &Value) -> String {
     let id = from_url.or_else(|| {
         tab.get("tabIdentifier")
             .and_then(Value::as_str)
+            .filter(|id| !id.is_empty())
             .map(str::to_owned)
     });
-    match id {
+    let id = match id {
         Some(id) if id == "TAB_ID_SPONSORSHIPS" => "membership".into(),
         Some(id) => id,
-        None => match name.as_str() {
-            "home" => "featured".into(),
-            "live" => "streams".into(),
-            _ => name,
-        },
-    }
+        None => {
+            if !name.is_empty() {
+                crate::screen::debug(&format!("Falling back to selected tab name: {name}"));
+            }
+            match name.as_str() {
+                "home" => "featured".into(),
+                "live" => "streams".into(),
+                _ => name.clone(),
+            }
+        }
+    };
+    (id, name)
+}
+
+/// `_empty_playlist`: the tab metadata without entries.
+fn empty_playlist(item_id: &str, data: &Value, page_url: &str) -> Result<ExtractResult> {
+    let mut metadata = tab_metadata(item_id, data);
+    // `playlist_result(entries, item_id, **metadata)`.
+    metadata.insert("id".into(), item_id.into());
+    tab_playlist(metadata, Vec::new(), page_url, false)
+}
+
+/// `playlist_result(entries, **metadata)` with upstream's
+/// `extractor_key`/`extractor`/`webpage_url` update.
+fn tab_playlist(
+    metadata: Map<String, Value>,
+    entries: Vec<VideoInfo>,
+    page_url: &str,
+    updated: bool,
+) -> Result<ExtractResult> {
+    let keys: Vec<String> = metadata.keys().cloned().collect();
+    let text = |key: &str| {
+        metadata
+            .get(key)
+            .and_then(Value::as_str)
+            .unwrap_or_default()
+            .to_owned()
+    };
+    let (id, title) = (text("id"), text("title"));
+    let mut extra = metadata;
+    extra.shift_remove("id");
+    extra.shift_remove("title");
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!(
+            "{};{}",
+            if updated {
+                "youtube-tab"
+            } else {
+                "youtube-tab-plain"
+            },
+            keys.join(",")
+        )
+        .into(),
+    );
+    Ok(ExtractResult::Playlist(PlaylistInfo {
+        id,
+        title,
+        webpage_url: Url::parse(page_url)?,
+        extractor: NAME.into(),
+        extractor_key: KEY.into(),
+        entries,
+        extra,
+    }))
 }
 
 /// `url_result(url, YoutubeIE)`: followed by the downloader.

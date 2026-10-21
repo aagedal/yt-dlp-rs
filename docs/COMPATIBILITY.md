@@ -1666,7 +1666,16 @@ parity claims. See [the source slice](../upstream/notes/dash-static.md).
 
 `youtube:tab` ports upstream `YoutubeTabIE` (`yt_dlp/extractor/youtube/_tab.py`)
 for `/playlist?list=ID` and `watch?v=ID&list=ID` URLs (the latter only without
-`--no-playlist`; `watch?list=ID` warns and downloads the playlist). It reads the
+`--no-playlist`; `watch?list=ID` warns and downloads the playlist) and channel
+tabs (`/@HANDLE/TAB`, `/channel/UC…/TAB`, `/c/NAME`, `/user/NAME`). A channel
+URL without a tab reads its `/videos` tab (`Downloading all uploads of the
+channel`); upstream then also downloads the live and shorts tabs as nested
+playlists, which this port does not support, so such channels are an explicit
+error naming the tab URLs to pass instead. Topic channels without tabs are
+redirected to their uploads (`UU…`) playlist; `/about` gives the empty
+playlist; a missing tab is `This channel does not have a TAB tab`, a missing
+live tab `The channel is not currently live`, and a home-page redirect or
+conditional regional redirect is handled as upstream. It reads the
 page's `ytInitialData` and `ytcfg`, makes upstream's web-client browse request
 for unavailable videos (`Redownloading playlist API JSON with unavailable
 videos`, `params: wgYCCAA=`), reports alerts like `_report_alerts`, and follows
@@ -1674,19 +1683,21 @@ every continuation (`Downloading API JSON`, item `ID page N`) until none is
 left or a token repeats. The playlist has `_extract_metadata_from_tabs`' fields
 (title, availability, follower count, description, tags, thumbnails, modified
 date, view and video counts, channel/uploader) in upstream's key order, and its
-entries are `_extract_video`'s `url` dicts (`ie_key: Youtube`), which
+entries are `_extract_video`'s, `_extract_lockup_view_model`'s and the Shorts
+lockups' `url` dicts (`ie_key: Youtube`), which
 `--flat-playlist` and `-J` print as upstream does and normal runs resolve
 through the `youtube` extractor. An inline watch-page playlist is followed to
-its playlist page. The saved site fixture `tests/fixtures/sites/youtube-playlist/`
-(page, reload and continuation responses) is compared with pinned upstream
-output.
+its playlist page. Playlist thumbnails are sorted and given IDs and resolutions like
+`_sanitize_thumbnails`. The saved site fixtures `tests/fixtures/sites/youtube-playlist/`
+(page, reload and continuation responses) and `tests/fixtures/sites/youtube-channel/`
+(video, Shorts and lockup entries, `/about`, a missing tab, a channel root) are
+compared with pinned upstream output.
 
 Unlike upstream's lazy generator, all continuation pages are fetched before
-the first entry is processed. Channel tabs, feeds, hashtags, mixes (`RD…`),
-YouTube Music and search remain explicit unsupported errors. The lockup,
-grid and rich-item renderers are ported, but only `playlistVideoRenderer`
-entries have fixture coverage; shelf, music and post renderers are skipped
-with a warning.
+the first entry is processed. Feeds, hashtags, mixes (`RD…`), YouTube Music
+and search remain explicit unsupported errors. Grid, channel and playlist
+renderers are ported without fixture coverage; shelf, music and post
+renderers are skipped with a warning.
 
 ## YouTube HLS discovery
 

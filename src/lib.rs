@@ -1337,6 +1337,11 @@ impl YoutubeDl {
     pub fn process_result(&self, result: &mut ExtractResult) -> Result<()> {
         // A playlist's entries report their sort order as each is processed.
         let playlist = matches!(result, ExtractResult::Playlist(_));
+        if let ExtractResult::Playlist(playlist) = result
+            && let Some(serde_json::Value::Array(thumbnails)) = playlist.extra.get_mut("thumbnails")
+        {
+            info::sanitize_thumbnail_values(thumbnails);
+        }
         let entries = match result {
             ExtractResult::Video(video) => std::slice::from_mut(video),
             ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),

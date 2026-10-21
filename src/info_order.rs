@@ -2033,22 +2033,35 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
 
 /// A generic webpage playlist dict (`-J`) in upstream order.
 /// `YoutubeTabIE`'s `playlist_result(entries, **metadata)`: the tab
-/// metadata's keys (`KEYS`), then the processing fields.
-fn youtube_tab_playlist(map: Map<String, Value>, keys: &str) -> Map<String, Value> {
+/// metadata's keys (`KEYS`), then the processing fields (`updated`: after
+/// `_real_extract`'s `extractor_key`/`extractor`/`webpage_url` update).
+fn youtube_tab_playlist(map: Map<String, Value>, keys: &str, updated: bool) -> Map<String, Value> {
     let mut replay = Replay::new(map);
     for key in keys.split(',') {
         replay.set(key, Assign);
     }
     replay.take("_type");
     replay.take("entries");
-    for key in [
-        "extractor_key",
-        "extractor",
-        "webpage_url",
-        "original_url",
-        "webpage_url_basename",
-        "webpage_url_domain",
-    ] {
+    let late: &[&str] = if updated {
+        &[
+            "extractor_key",
+            "extractor",
+            "webpage_url",
+            "original_url",
+            "webpage_url_basename",
+            "webpage_url_domain",
+        ]
+    } else {
+        &[
+            "webpage_url",
+            "original_url",
+            "webpage_url_basename",
+            "webpage_url_domain",
+            "extractor",
+            "extractor_key",
+        ]
+    };
+    for key in late {
         replay.take(key);
     }
     replay.assign("release_year");
@@ -2065,7 +2078,10 @@ pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
         return map;
     };
     if let Some(keys) = shape.strip_prefix("youtube-tab;") {
-        return youtube_tab_playlist(map, keys);
+        return youtube_tab_playlist(map, keys, true);
+    }
+    if let Some(keys) = shape.strip_prefix("youtube-tab-plain;") {
+        return youtube_tab_playlist(map, keys, false);
     }
     if !matches!(
         shape.as_str(),
