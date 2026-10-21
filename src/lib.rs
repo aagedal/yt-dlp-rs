@@ -315,20 +315,27 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 75] = [
+const EXTRACTOR_NAMES: [&str; 111] = [
     "Angel",
+    "archive.org",
     "AudioBoom",
+    "Bandcamp",
     "BehindKink",
     "Bild",
+    "BiliBili",
+    "BitChute",
     "Bitmovin",
     "blogger.com",
+    "Bluesky",
     "BreitBart",
     "CGTN",
     "CJSW",
+    "Coub",
     "CozyTV",
     "CrooksAndLiars",
     "Crtvg",
     "CultureUnplugged",
+    "dailymotion",
     "EbaumsWorld",
     "Ebay",
     "Epoch",
@@ -349,20 +356,33 @@ const EXTRACTOR_NAMES: [&str; 75] = [
     "HitRecord",
     "Huajiao",
     "Hypem",
+    "Imgur",
+    "imgur:album",
+    "imgur:gallery",
     "Instagram",
     "Jove",
     "JWPlatform",
+    "kick:clips",
+    "kick:live",
+    "kick:vod",
     "Kommunetv",
     "Ku6",
+    "lbry",
+    "LinkedIn",
     "Livestreamfails",
+    "loom",
     "maariv.co.il",
     "Masters",
     "megaphone.fm",
+    "mixcloud",
     "MovingImage",
+    "niconico",
     "NobelPrize",
+    "Odnoklassniki",
     "OnePlacePodcast",
     "Parlview",
     "Photobucket",
+    "Pinterest",
     "PlayerFm",
     "PopcornTV",
     "PremiershipRugby",
@@ -370,19 +390,35 @@ const EXTRACTOR_NAMES: [&str; 75] = [
     "Reddit",
     "ReverbNation",
     "RTRFM",
+    "Rumble",
+    "RumbleEmbed",
+    "rutube",
+    "rutube:embed",
     "ScreenRec",
     "Sen",
+    "soundcloud",
     "Streamable",
     "SztvHu",
+    "TedEmbed",
+    "TedPlaylist",
+    "TedSeries",
+    "TedTalk",
     "TheIntercept",
     "ThisAmericanLife",
     "TikTok",
+    "Tumblr",
     "Tweakers",
+    "twitch:clips",
+    "twitch:vod",
     "twitter",
     "twitter:card",
     "23video",
+    "vimeo",
+    "vk",
     "vm.tiktok",
     "Vocaroo",
+    "Weibo",
+    "WeiboVideo",
     "yfanefa",
     "youtube",
     "youtube:search",
@@ -406,7 +442,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..74]),
+            "default" => Some(&EXTRACTOR_NAMES[..110]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -483,6 +519,12 @@ impl YoutubeDl {
         let cookies = http.cookies.unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        if let Ok(mut agent) = extractor::USER_AGENT.write() {
+            *agent = headers
+                .get(reqwest::header::USER_AGENT)
+                .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
+                .unwrap_or_default();
+        }
         let builder = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
             .default_headers(headers.clone())
@@ -542,6 +584,42 @@ impl YoutubeDl {
                 Box::new(extractor::Facebook),
                 Box::new(extractor::FacebookReel),
                 Box::new(extractor::FacebookPluginsVideo),
+                Box::new(extractor::Vimeo),
+                Box::new(extractor::Dailymotion),
+                Box::new(extractor::Soundcloud),
+                Box::new(extractor::TwitchVod),
+                Box::new(extractor::TwitchClips),
+                Box::new(extractor::Bandcamp),
+                Box::new(extractor::RumbleEmbed),
+                Box::new(extractor::Rumble),
+                Box::new(extractor::KickVod),
+                Box::new(extractor::KickClip),
+                Box::new(extractor::KickLive),
+                Box::new(extractor::Bluesky),
+                Box::new(extractor::Mixcloud),
+                Box::new(extractor::Pinterest),
+                Box::new(extractor::Lbry),
+                Box::new(extractor::Tumblr),
+                Box::new(extractor::ImgurAlbum),
+                Box::new(extractor::ImgurGallery),
+                Box::new(extractor::Imgur),
+                Box::new(extractor::BiliBili),
+                Box::new(extractor::Vk),
+                Box::new(extractor::Niconico),
+                Box::new(extractor::Weibo),
+                Box::new(extractor::WeiboVideo),
+                Box::new(extractor::TedEmbed),
+                Box::new(extractor::TedPlaylist),
+                Box::new(extractor::TedSeries),
+                Box::new(extractor::TedTalk),
+                Box::new(extractor::RutubeEmbed),
+                Box::new(extractor::Rutube),
+                Box::new(extractor::LinkedIn),
+                Box::new(extractor::ArchiveOrg),
+                Box::new(extractor::BitChute),
+                Box::new(extractor::Coub),
+                Box::new(extractor::Loom),
+                Box::new(extractor::Odnoklassniki),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),
@@ -1311,6 +1389,10 @@ impl YoutubeDl {
 
     /// Upstream `check_formats`.
     pub fn with_check_formats(mut self, check: CheckFormats) -> Self {
+        extractor::CHECK_FORMATS_NEVER.store(
+            check == CheckFormats::Never,
+            std::sync::atomic::Ordering::Relaxed,
+        );
         self.check_formats = check;
         self
     }
@@ -1387,6 +1469,32 @@ impl YoutubeDl {
                 .and_then(|timestamp| dates::strftime_date(timestamp.floor() as i64))
         {
             playlist.extra.insert("upload_date".into(), date.into());
+        }
+        // `_fill_common_fields(final=False)`: the deprecated multivalue fields.
+        if let ExtractResult::Playlist(playlist) = result {
+            for (old, new) in info::MULTIVALUE_FIELDS {
+                if playlist.extra.contains_key(new) && playlist.extra.contains_key(old) {
+                    continue;
+                }
+                match (playlist.extra.get(old), playlist.extra.get(new)) {
+                    (Some(serde_json::Value::String(text)), _) if !text.is_empty() => {
+                        let values: Vec<serde_json::Value> =
+                            text.split(", ").map(serde_json::Value::from).collect();
+                        playlist.extra.insert(new.into(), values.into());
+                    }
+                    (_, Some(serde_json::Value::Array(values))) if !values.is_empty() => {
+                        let joined = values
+                            .iter()
+                            .map(|value| {
+                                value.as_str().unwrap_or_default().replace(',', "\u{ff0c}")
+                            })
+                            .collect::<Vec<_>>()
+                            .join(", ");
+                        playlist.extra.insert(old.into(), joined.into());
+                    }
+                    _ => {}
+                }
+            }
         }
         let entries = match result {
             ExtractResult::Video(video) => std::slice::from_mut(video),
@@ -1543,6 +1651,18 @@ impl YoutubeDl {
             }
             entry.metadata.fill_chapters();
             entry.metadata.sanitize_thumbnails();
+            // Thumbnails this port keeps as upstream's dicts (`None` values).
+            if let Some(serde_json::Value::Array(thumbnails)) = entry.extra.get_mut("thumbnails") {
+                info::sanitize_thumbnail_values(thumbnails);
+                if entry.metadata.thumbnail.is_none()
+                    && let Some(best) = thumbnails
+                        .last()
+                        .and_then(|thumbnail| thumbnail.get("url"))
+                        .and_then(serde_json::Value::as_str)
+                {
+                    entry.metadata.thumbnail = Some(best.to_owned());
+                }
+            }
             info::fill_format_fields(&mut entry.formats);
             // `format['http_headers'] = _calc_headers(ChainMap(format, info))`;
             // HTML5 media carries the page as its Referer.

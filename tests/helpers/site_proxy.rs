@@ -26,6 +26,8 @@ struct Route {
     request_headers: Vec<(String, String)>,
     /// Substrings the request body must contain.
     request_body: Vec<String>,
+    /// Query parameters left out when matching the URL (random values).
+    ignore_query: Vec<String>,
     status: u16,
     headers: Vec<(String, String)>,
     body: Vec<u8>,
@@ -82,11 +84,18 @@ fn load(directory: &Path) -> HashMap<String, Vec<Route>> {
                 .flatten()
                 .filter_map(|part| part.as_str().map(str::to_owned))
                 .collect();
+            let ignore_query = route["ignore_query"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter_map(|part| part.as_str().map(str::to_owned))
+                .collect();
             (
                 route["url"].as_str().unwrap().to_owned(),
                 Route {
                     request_headers,
                     request_body,
+                    ignore_query,
                     status: route["status"].as_u64().unwrap_or(200) as u16,
                     headers,
                     body,
@@ -100,6 +109,25 @@ fn load(directory: &Path) -> HashMap<String, Vec<Route>> {
                 routes
             },
         )
+}
+
+/// `url` without the named query parameters.
+fn strip_query(url: &str, names: &[String]) -> String {
+    let Some((base, query)) = url.split_once('?') else {
+        return url.to_owned();
+    };
+    let kept: Vec<&str> = query
+        .split('&')
+        .filter(|pair| {
+            let name = pair.split('=').next().unwrap_or_default();
+            !names.iter().any(|ignored| ignored == name)
+        })
+        .collect();
+    if kept.is_empty() {
+        base.to_owned()
+    } else {
+        format!("{base}?{}", kept.join("&"))
+    }
 }
 
 /// A request head's headers with lowercase names.
@@ -155,22 +183,32 @@ fn respond<S: Read + Write>(
     let not_found = Route {
         request_headers: Vec::new(),
         request_body: Vec::new(),
+        ignore_query: Vec::new(),
         status: 404,
         headers: vec![("Content-Type".into(), "text/plain".into())],
         body: b"not found".to_vec(),
     };
+    let matches = |route: &&Route| {
+        route
+            .request_headers
+            .iter()
+            .all(|(name, value)| headers.get(name) == Some(value))
+            && route
+                .request_body
+                .iter()
+                .all(|part| body.contains(part.as_str()))
+    };
     let route = routes
         .get(url)
-        .and_then(|routes| {
-            routes.iter().find(|route| {
-                route
-                    .request_headers
+        .and_then(|routes| routes.iter().find(matches))
+        .or_else(|| {
+            // Routes ignoring some query parameters.
+            routes.iter().find_map(|(key, routes)| {
+                routes
                     .iter()
-                    .all(|(name, value)| headers.get(name) == Some(value))
-                    && route
-                        .request_body
-                        .iter()
-                        .all(|part| body.contains(part.as_str()))
+                    .filter(|route| !route.ignore_query.is_empty())
+                    .filter(|route| strip_query(url, &route.ignore_query) == *key)
+                    .find(matches)
             })
         })
         .unwrap_or(&not_found);

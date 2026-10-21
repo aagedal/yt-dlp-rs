@@ -292,12 +292,15 @@ fn download_with(
             }
             write_state(0)?;
         }
-        let file = fs::OpenOptions::new()
+        // Not `append`: an append-only Windows handle cannot `sync_all`
+        // ("Access is denied"); resumed writes start at the end instead.
+        let mut file = fs::OpenOptions::new()
             .create(true)
             .write(true)
-            .append(resume_len > 0)
+            .read(true)
             .truncate(resume_len == 0)
             .open(&part_path)?;
+        file.seek(SeekFrom::Start(resume_len))?;
         named = Some((file, resume_len));
     } else {
         private = Some(
@@ -450,6 +453,8 @@ fn download_with(
     match private {
         Some(temporary) => crate::download::persist(temporary, destination, options.overwrite)?,
         None => {
+            // The part file must be closed before it is renamed (Windows).
+            drop(named);
             // `_finish_frag_download`: drop the state, then rename the part file.
             let _ = fs::remove_file(&ytdl_path);
             if part_path != destination {

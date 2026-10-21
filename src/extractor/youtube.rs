@@ -2,6 +2,7 @@
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
 mod challenge;
 mod chapters;
+pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
 mod metadata;
@@ -637,7 +638,6 @@ mod tests {
             "https://youtu.be/BaW_jenozKc/extra",
             "https://youtube.com/watch?v=bad",
             "https://youtube.com/watch?v=BaW_jenozKc&v=BaW_jenozKc",
-            "https://youtube.com/@channel",
         ] {
             assert!(
                 matches!(

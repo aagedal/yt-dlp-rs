@@ -199,6 +199,7 @@ impl Replay {
 pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(INFO_SHAPE);
     map.shift_remove(FORMAT_SHAPE);
+    map.shift_remove(INT_QUALITY);
 }
 
 /// Record the upstream code path that built an info dict.
@@ -295,8 +296,22 @@ pub(crate) fn mark_int_rates(format: &mut crate::VideoFormat) {
     }
 }
 
+/// A format whose extractor gave an int `quality` (stored as a float).
+const INT_QUALITY: &str = "__yt_dlp_rs_int_quality";
+
+/// The format's `quality` is an int.
+pub(crate) fn mark_int_quality(format: &mut crate::VideoFormat) {
+    format.extra.insert(INT_QUALITY.into(), Value::Bool(true));
+}
+
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
+    if map.shift_remove(INT_QUALITY).is_some()
+        && let Some(quality) = map.get("quality").and_then(Value::as_f64)
+        && quality.fract() == 0.0
+    {
+        map.insert("quality".into(), (quality as i64).into());
+    }
     let Some((shape, original)) = shape_of(map.shift_remove(FORMAT_SHAPE)) else {
         return map;
     };
@@ -821,6 +836,13 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    // The selected format's int `quality`.
+    if map.shift_remove(INT_QUALITY).is_some()
+        && let Some(quality) = map.get("quality").and_then(Value::as_f64)
+        && quality.fract() == 0.0
+    {
+        map.insert("quality".into(), (quality as i64).into());
+    }
     let Some((shape, original)) = shape_of(map.shift_remove(INFO_SHAPE)) else {
         return map;
     };
@@ -1898,7 +1920,11 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         let keys = parts.next().unwrap_or_default();
         let mut thumbnail_keys = None;
         let mut subtitle_keys = None;
+        let mut chapter_keys = None;
         for part in parts {
+            if let Some(found) = part.strip_prefix("chapter=") {
+                chapter_keys = Some(found);
+            }
             if let Some(found) = part.strip_prefix("thumbnail=") {
                 thumbnail_keys = Some(found);
             } else if let Some(found) = part.strip_prefix("subtitle=") {
@@ -1915,12 +1941,32 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                 },
             );
         }
+        // The extractor's chapter keys, then processing's `end_time`.
+        if let Some(chapter_keys) = chapter_keys
+            && let Some(Value::Array(chapters)) = replay.out.get_mut("chapters")
+        {
+            for chapter in chapters.iter_mut().filter_map(Value::as_object_mut) {
+                let mut ordered = Map::new();
+                for key in chapter_keys.split(',') {
+                    if let Some(value) = chapter.shift_remove(key) {
+                        ordered.insert(key.to_owned(), value);
+                    }
+                }
+                ordered.append(chapter);
+                *chapter = ordered;
+            }
+        }
         // The extractor's subtitle track keys, then processing's `ext`.
         if let Some(subtitle_keys) = subtitle_keys {
             for key in ["subtitles", "automatic_captions"] {
                 if let Some(Value::Object(languages)) = replay.out.get_mut(key) {
                     for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
-                        for track in tracks.iter_mut().filter_map(Value::as_object_mut) {
+                        // Manifest tracks keep their parser's order.
+                        for track in tracks
+                            .iter_mut()
+                            .filter_map(Value::as_object_mut)
+                            .filter(|track| !track.contains_key("manifest_url"))
+                        {
                             let mut ordered = Map::new();
                             for key in subtitle_keys.split(',') {
                                 if let Some(value) = track.shift_remove(key) {
@@ -2090,6 +2136,20 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     // merged afterwards (`info_dict.update(best_format)`), so the dict still
     // has the extractor's values (`None`) for them.
     if let Some(Value::Array(downloads)) = replay.ours.shift_remove("requested_downloads") {
+        // Keys an extractor's own dict set (a format's `duration` too) held
+        // that value, not `None`; this port keeps one value per key, the
+        // (equal) format's. The info's own `http_headers` always differ from
+        // a format's processed headers.
+        let own_keys: Vec<&str> = shape
+            .strip_prefix("dict;")
+            .or_else(|| shape.strip_prefix("dict-untitled;"))
+            .and_then(|rest| rest.split(';').next())
+            .map(|keys| {
+                keys.split(',')
+                    .filter(|key| *key != "http_headers")
+                    .collect()
+            })
+            .unwrap_or_default();
         let before: Map<String, Value> = replay
             .out
             .iter()
@@ -2097,7 +2157,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                 // A loaded dict already held its selected format's values.
                 let value = match original.as_ref().and_then(|original| original.get(key)) {
                     Some(loaded) if selected.contains(key) => loaded.clone(),
-                    _ if selected.contains(key) => Value::Null,
+                    _ if selected.contains(key) && !own_keys.contains(&key.as_str()) => Value::Null,
                     _ => value.clone(),
                 };
                 (key.clone(), value)
@@ -2174,6 +2234,22 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                         .is_none_or(|tbr| tbr.is_i64() || tbr.is_null())
                 })
         });
+    // No rates at all: the sum is the int 0.
+    let no_rates = out
+        .get("requested_formats")
+        .and_then(Value::as_array)
+        .is_some_and(|formats| {
+            !formats.is_empty()
+                && formats
+                    .iter()
+                    .all(|format| format.get("tbr").is_none_or(Value::is_null))
+        });
+    if no_rates
+        && let Some(tbr) = out.get("tbr").and_then(Value::as_f64)
+        && tbr == 0.0
+    {
+        out.insert("tbr".into(), 0.into());
+    }
     // `'abr': 64` (and the `tbr` it gives) of ThisAmericanLifeIE.
     if int_rates || shape == "thisamericanlife" {
         for key in ["tbr", "vbr", "abr"] {
@@ -2215,13 +2291,34 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
 /// `YoutubeTabIE`'s `playlist_result(entries, **metadata)`: the tab
 /// metadata's keys (`KEYS`), then the processing fields (`updated`: after
 /// `_real_extract`'s `extractor_key`/`extractor`/`webpage_url` update).
-fn youtube_tab_playlist(map: Map<String, Value>, keys: &str, updated: bool) -> Map<String, Value> {
+/// `KEYS[;after=KEYS]`: the dict's keys before `_type`/`entries`, and those
+/// a later `result.update(...)` adds after them.
+fn youtube_tab_playlist(
+    mut map: Map<String, Value>,
+    keys: &str,
+    updated: bool,
+) -> Map<String, Value> {
+    let (keys, after) = keys.split_once(";after=").unwrap_or((keys, ""));
+    // `playlist_result(entries, id)` without a title has no `title` key.
+    if !keys
+        .split(',')
+        .chain(after.split(','))
+        .any(|key| key == "title")
+        && map
+            .get("title")
+            .is_some_and(|title| title.is_null() || title.as_str() == Some(""))
+    {
+        map.shift_remove("title");
+    }
     let mut replay = Replay::new(map);
     for key in keys.split(',') {
         replay.set(key, Assign);
     }
     replay.take("_type");
     replay.take("entries");
+    for key in after.split(',').filter(|key| !key.is_empty()) {
+        replay.set(key, Assign);
+    }
     let late: &[&str] = if updated {
         &[
             "extractor_key",
@@ -2247,6 +2344,10 @@ fn youtube_tab_playlist(map: Map<String, Value>, keys: &str, updated: bool) -> M
     // `_fill_common_fields(final=False)`.
     replay.take("upload_date");
     replay.assign("release_year");
+    for (old, new) in crate::info::MULTIVALUE_FIELDS {
+        replay.take(old);
+        replay.take(new);
+    }
     for key in ["requested_entries", "playlist_count", "epoch"] {
         replay.take(key);
     }

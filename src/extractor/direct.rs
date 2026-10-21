@@ -77,6 +77,17 @@ pub(crate) fn post(
     headers: &[(&str, &str)],
     body: String,
 ) -> Result<Response> {
+    post_expecting(client, url, headers, body, &[])
+}
+
+/// [`post`] answering the `expected` statuses instead of erroring.
+pub(crate) fn post_expecting(
+    client: &Client,
+    url: &Url,
+    headers: &[(&str, &str)],
+    body: String,
+    expected: &[u16],
+) -> Result<Response> {
     crate::screen::before_extraction_request();
     let mut request = client
         .post(url.clone())
@@ -88,7 +99,11 @@ pub(crate) fn post(
     crate::screen::load_cookies()?;
     let response = request.send();
     crate::screen::flush_traffic();
-    crate::retry::check_response(response?)
+    let response = response?;
+    if expected.contains(&response.status().as_u16()) {
+        return Ok(response);
+    }
+    crate::retry::check_response(response)
 }
 
 /// A request this port adds to inspect media or child playlists that

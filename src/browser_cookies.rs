@@ -1481,10 +1481,30 @@ mod tests {
                         Message::Warning(text) => ("warning", text),
                         Message::Error(text) => ("error", text),
                     };
-                    serde_json::json!([kind, text.replace(&*root.to_string_lossy(), "FIXTURES")])
+                    // The saved paths use `/`; Windows joins with `\\`.
+                    let text = text.replace(&*root.to_string_lossy(), "FIXTURES");
+                    serde_json::json!([kind, normalize_separators(&text)])
                 })
                 .collect();
             assert_eq!(messages, *case["messages"].as_array().unwrap());
+        }
+    }
+
+    /// `FIXTURES\\a\\b` (a Windows path inside quotes) as `FIXTURES/a/b`.
+    fn normalize_separators(text: &str) -> String {
+        match text.find("FIXTURES") {
+            Some(start) => {
+                let end = text[start..]
+                    .find('"')
+                    .map_or(text.len(), |offset| start + offset);
+                format!(
+                    "{}{}{}",
+                    &text[..start],
+                    text[start..end].replace('\\', "/"),
+                    &text[end..]
+                )
+            }
+            None => text.to_owned(),
         }
     }
 

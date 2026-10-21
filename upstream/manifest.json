@@ -208,6 +208,18 @@
       "scope": "AngelIE JSON-LD HLS stream, OpenGraph fields, Cloudinary thumbnail rewrite and merge_dicts with JSON-LD compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "archiveorg",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/archiveorg.py"
+      ],
+      "rust": [
+        "src/extractor/archiveorg.rs",
+        "tests/fixtures/sites/archiveorg/"
+      ],
+      "scope": "ArchiveOrgIE embed playlist, metadata API item/file fields, known-extension formats, thumbnails, reviews and playlists; no YoutubeWebArchiveIE; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "audioboom",
       "status": "partial",
       "upstream": [
@@ -218,6 +230,19 @@
         "tests/fixtures/sites/audioboom/"
       ],
       "scope": "AudioBoomIE React props (_search_json with unescapeHTML) and OpenGraph/meta fallbacks with warnings compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "bandcamp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bandcamp.py"
+      ],
+      "rust": [
+        "src/extractor/bandcamp.rs",
+        "src/html_elements.rs",
+        "tests/fixtures/sites/bandcamp/"
+      ],
+      "scope": "BandcampIE track pages: tralbum/embed data, streaming files, free download formats via stat URLs, metadata and tags; no albums, artist pages or weekly shows; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "behindkink",
@@ -244,6 +269,30 @@
       "scope": "BildIE view=json clip sources (non-fatal HLS, http-mp4, unsupported-type warning) and metadata compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bilibili",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bilibili.py"
+      ],
+      "rust": [
+        "src/extractor/bilibili.rs",
+        "tests/fixtures/sites/bilibili/"
+      ],
+      "scope": "BiliBiliIE initial state, anthology playlists and parts, WBI-signed playurl DASH and legacy durl formats, chapters, danmaku subtitles and errors; no interactive videos, multi-part FLV, SRT subtitles, comments or other Bilibili extractors; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "bitchute",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bitchute.py"
+      ],
+      "rust": [
+        "src/extractor/bitchute.rs",
+        "tests/fixtures/sites/bitchute/"
+      ],
+      "scope": "BitChuteIE beta API media URL with seed-host checks, video/channel metadata and geo errors; no BitChuteChannelIE; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "bitmovin",
       "status": "partial",
       "upstream": [
@@ -266,6 +315,18 @@
         "tests/fixtures/sites/blogger/"
       ],
       "scope": "BloggerIE VIDEO_CONFIG (unicode_escape) streams as formats and _EMBED_REGEX iframes on generic pages compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "bluesky",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bluesky.py"
+      ],
+      "rust": [
+        "src/extractor/bluesky.rs",
+        "tests/fixtures/sites/bluesky/"
+      ],
+      "scope": "BlueskyIE post threads: video embed HLS and PDS blob formats with captions, external links, record media and quoted posts, metadata; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "breitbart",
@@ -302,6 +363,18 @@
         "tests/fixtures/sites/cjsw/"
       ],
       "scope": "CJSWIE episode page (fatal title/audio regexes, UUID ID, description, series, episode ID, audio format and download) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "coub",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/coub.py"
+      ],
+      "rust": [
+        "src/extractor/coub.rs",
+        "tests/fixtures/sites/coub/"
+      ],
+      "scope": "CoubIE v2 API formats and metadata, including coub: pseudo-URLs; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "cozytv",
@@ -350,6 +423,18 @@
         "tests/fixtures/sites/cultureunplugged/"
       ],
       "scope": "CultureUnpluggedIE movie data JSON as an untyped result (metadata, creator/creators, preference thumbnails, KeyError messages) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "dailymotion",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dailymotion.py"
+      ],
+      "rust": [
+        "src/extractor/dailymotion.rs",
+        "tests/fixtures/sites/dailymotion/"
+      ],
+      "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors; no playlists; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "ebaumsworld",
@@ -557,6 +642,18 @@
       "scope": "HypemIE _VALID_URL, displayList-data JSON (clean_html before parsing), serve/source JSON URL as an untyped mp3 result, error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "imgur",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/imgur.py"
+      ],
+      "rust": [
+        "src/extractor/imgur.rs",
+        "tests/fixtures/sites/imgur/"
+      ],
+      "scope": "ImgurIE post API media, gifv page sources, GIF and Twitter formats and metadata; ImgurGalleryIE/ImgurAlbumIE album API playlists and url_transparent single videos; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "instagram",
       "status": "partial",
       "upstream": [
@@ -594,6 +691,18 @@
       "scope": "JWPlatformIE _VALID_URL (including jwplatform: pseudo-URLs) and v2 media JSON via _parse_jwplayer_data(require_title=True) compared with pinned upstream output through the fixture proxy; _extract_embed_urls on generic pages; no playlists"
     },
     {
+      "name": "kick",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kick.py"
+      ],
+      "rust": [
+        "src/extractor/kick.rs",
+        "tests/fixtures/sites/kick/"
+      ],
+      "scope": "KickVODIE, KickClipIE and KickIE API metadata with HLS (live IDs as upstream's live=True) or direct formats; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "kommunetv",
       "status": "partial",
       "upstream": [
@@ -618,6 +727,30 @@
       "scope": "Ku6IE heading title and player JSON URL as an untyped result with KeyError/title errors compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "lbry",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lbry.py"
+      ],
+      "rust": [
+        "src/extractor/lbry.rs",
+        "tests/fixtures/sites/lbry/"
+      ],
+      "scope": "LBRYIE resolve/get API proxy, original files, streaming-redirect HLS formats, livestreams, claim metadata and API errors; no channels or playlists; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "linkedin",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/linkedin.py"
+      ],
+      "rust": [
+        "src/extractor/linkedin.rs",
+        "tests/fixtures/sites/linkedin/"
+      ],
+      "scope": "LinkedInIE public post video sources, captions and metadata; no LinkedIn Learning or events; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "livestreamfails",
       "status": "partial",
       "upstream": [
@@ -628,6 +761,18 @@
         "tests/fixtures/sites/livestreamfails/"
       ],
       "scope": "LivestreamfailsIE _VALID_URL and clip API extraction (display_id, unified_timestamp, creator/creators, format_field thumbnail, KeyError message) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "loom",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/loom.py"
+      ],
+      "rust": [
+        "src/extractor/loom.rs",
+        "tests/fixtures/sites/loom/"
+      ],
+      "scope": "LoomIE GraphQL metadata, source and chapters, session URL formats (HLS/DASH/progressive) and transcript subtitles; no LoomFolderIE; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "maariv",
@@ -668,6 +813,18 @@
       "scope": "MegaphoneIE _VALID_URL/_EMBED_REGEX and page extraction (fatal og:audio:title/artist, og:image thumbnail warning, js_to_json episode object, KeyError messages) compared with pinned upstream output through the fixture proxy; generic-page embeds in extractor order with Streamable; _fill_common_fields deprecated multivalue fields (no deprecation warning)"
     },
     {
+      "name": "mixcloud",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mixcloud.py"
+      ],
+      "rust": [
+        "src/extractor/mixcloud.rs",
+        "tests/fixtures/sites/mixcloud/"
+      ],
+      "scope": "MixcloudIE GraphQL cloudcast lookup, XOR-decrypted progressive/HLS/DASH stream URLs, restriction errors, comments and metadata; no user, playlist or favorites lists; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "movingimage",
       "status": "partial",
       "upstream": [
@@ -680,6 +837,18 @@
       "scope": "MovingImageIE player HLS formats and labelled field regexes (fatal title, warnings) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "niconico",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/niconico.py"
+      ],
+      "rust": [
+        "src/extractor/niconico.rs",
+        "tests/fixtures/sites/niconico/"
+      ],
+      "scope": "NiconicoIE watch API with its errors, domand access-rights HLS formats, thumbnails and metadata; no comment subtitles, logins, playlists, series, search, live or user pages; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "nobelprize",
       "status": "partial",
       "upstream": [
@@ -690,6 +859,18 @@
         "tests/fixtures/sites/nobelprize/"
       ],
       "scope": "NobelPrizeIE query ID, JSON-LD untyped result and meta/description overlay compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "odnoklassniki",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/odnoklassniki.py"
+      ],
+      "rust": [
+        "src/extractor/odnoklassniki.rs",
+        "tests/fixtures/sites/odnoklassniki/"
+      ],
+      "scope": "OdnoklassnikiIE player options, flashvars or POSTed metadata, progressive/HLS/DASH/RTMP formats, subtitles, errors and url/url_transparent results; no embedded DASH manifests; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "oneplace",
@@ -726,6 +907,18 @@
         "tests/fixtures/sites/photobucket/"
       ],
       "scope": "PhotobucketIE page MEDIA JSON and embed file= URL as an untyped result compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "pinterest",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/pinterest.py"
+      ],
+      "rust": [
+        "src/extractor/pinterest.rs",
+        "tests/fixtures/sites/pinterest/"
+      ],
+      "scope": "PinterestIE Pin resource API video lists (HLS/progressive), story pin videos, thumbnails, metadata and url_transparent embeds; no boards or collections; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "playerfm",
@@ -813,6 +1006,30 @@
       "scope": "RTRFMIE playShow details, restream MP3 URL as an untyped result, expired-episode/details/KeyError errors and release_year processing compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "rumble",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rumble.py"
+      ],
+      "rust": [
+        "src/extractor/rumble.rs",
+        "tests/fixtures/sites/rumble/"
+      ],
+      "scope": "RumbleEmbedIE embed JS formats, live status, captions, thumbnails and metadata; RumbleIE pages as url_transparent embeds with page counts; no channels; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "rutube",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rutube.py"
+      ],
+      "rust": [
+        "src/extractor/rutube.rs",
+        "tests/fixtures/sites/rutube/"
+      ],
+      "scope": "RutubeIE and RutubeEmbedIE video API metadata and description chapters, play options balancer/live HLS and progressive formats and captions; no F4M formats or playlist extractors; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "screenrec",
       "status": "partial",
       "upstream": [
@@ -835,6 +1052,18 @@
         "tests/fixtures/sites/sen/"
       ],
       "scope": "SenIE content API player/details nodes (fatal HLS formats, VOD manifest fallback, title/description/tags traversal, generic title) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "soundcloud",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/soundcloud.py"
+      ],
+      "rust": [
+        "src/extractor/soundcloud.rs",
+        "tests/fixtures/sites/soundcloud/"
+      ],
+      "scope": "SoundcloudIE client ID discovery, resolved track JSON, default transcoding formats, artwork thumbnails and metadata, DRM/geo errors; no original downloads, login, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "streamable",
@@ -867,6 +1096,18 @@
         "tests/fixtures/sites/sztvhu/"
       ],
       "scope": "SztvHuIE page player file, meta title/description and og:image as an untyped result compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ted",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ted.py"
+      ],
+      "rust": [
+        "src/extractor/ted.rs",
+        "tests/fixtures/sites/ted/"
+      ],
+      "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "theintercept",
@@ -905,6 +1146,18 @@
       "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; no app API, subtitles, slideshows, user/sound/tag/collection lists or Douyin; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tumblr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tumblr.py"
+      ],
+      "rust": [
+        "src/extractor/tumblr.rs",
+        "tests/fixtures/sites/tumblr/"
+      ],
+      "scope": "TumblrIE anonymous API token, post page and permalink API, iframe/post-media video formats, provider embeds as url results and post metadata; no logins; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tweakers",
       "status": "partial",
       "upstream": [
@@ -929,6 +1182,18 @@
       "scope": "TwentyThreeVideoIE api/photo/list JSON (update_url_query, transform_source, formats and filesize thumbnails) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "twitch",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/twitch.py"
+      ],
+      "rust": [
+        "src/extractor/twitch.rs",
+        "tests/fixtures/sites/twitch/"
+      ],
+      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference; TwitchClipsIE signed qualities, thumbnails and metadata; no live streams, collections or channel lists; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "twitter",
       "status": "partial",
       "upstream": [
@@ -941,6 +1206,30 @@
       "scope": "TwitterIE GraphQL status (guest token or auth cookies), _graphql_to_legacy errors, HLS/MP4 variants, thumbnails, metadata, multi-video playlists, /video/N with --no-playlist, unified/player/summary cards and followed links; TwitterCardIE redirects; no legacy/syndication APIs, broadcasts, Spaces or VMAP cards; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "vimeo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vimeo.py"
+      ],
+      "rust": [
+        "src/extractor/vimeo.rs",
+        "tests/fixtures/sites/vimeo/"
+      ],
+      "scope": "VimeoIE without login: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; API-only URLs are the login-required error; no passwords, albums, on-demand, events or original formats; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "vk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/vk.py"
+      ],
+      "rust": [
+        "src/extractor/vk.rs",
+        "tests/fixtures/sites/vk/"
+      ],
+      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; no JS challenge, other embeds, logins, VKUserVideosIE, VKWallPostIE or VK Play; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "vocaroo",
       "status": "partial",
       "upstream": [
@@ -951,6 +1240,18 @@
         "tests/fixtures/sites/vocaroo/"
       ],
       "scope": "VocarooIE media URL HEAD request, upload timestamp header, Referer headers and empty title compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "weibo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/weibo.py"
+      ],
+      "rust": [
+        "src/extractor/weibo.rs",
+        "tests/fixtures/sites/weibo/"
+      ],
+      "scope": "WeiboIE statuses JSON with the visitor cookie handshake, playback-list and fallback formats, mixed-media playlists and metadata; WeiboVideoIE TV component lookups; no WeiboUserIE; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "yfanefa",

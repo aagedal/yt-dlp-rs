@@ -43,6 +43,14 @@ pub(crate) fn set_cookie(domain: &str, name: &str, value: &str) {
     jar.set_cookies(&mut std::iter::once(&header), &url);
 }
 
+/// `cookiejar.clear(domain=DOMAIN)`: every cookie stored for exactly that
+/// domain (`.DOMAIN` for domain cookies, `DOMAIN` for host-only ones).
+pub(crate) fn clear_domain(domain: &str) {
+    if let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) {
+        jar.clear_domain(domain);
+    }
+}
+
 /// `cookiejar.clear(domain=DOMAIN, path='/', name=NAME)`: an expired
 /// cookie replaces it.
 pub(crate) fn clear_cookie(domain: &str, name: &str) {
@@ -505,6 +513,29 @@ impl CookieJar {
         self.cookies(url)
             .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
     }
+    /// Python `CookieJar.clear(domain)`.
+    pub(crate) fn clear_domain(&self, domain: &str) {
+        let Ok(mut state) = self.state.write() else {
+            return;
+        };
+        let matching: Vec<(Key, usize)> = state
+            .store
+            .iter_any()
+            .filter(|cookie| match &cookie.domain {
+                CookieDomain::HostOnly(host) => !domain.starts_with('.') && host == domain,
+                CookieDomain::Suffix(suffix) => domain.strip_prefix('.') == Some(suffix.as_str()),
+                _ => false,
+            })
+            .map(|cookie| (key(cookie), size(cookie)))
+            .collect();
+        for (key, bytes) in matching {
+            state.store.remove(&key.domain, &key.path, &key.name);
+            state.creation.remove(&key);
+            state.nameless.remove(&key);
+            state.bytes = state.bytes.saturating_sub(bytes);
+        }
+    }
+
     /// Drain bounded generic warnings produced by response insertion/header limits.
     pub fn take_warnings(&self) -> Vec<String> {
         match self.state.write() {

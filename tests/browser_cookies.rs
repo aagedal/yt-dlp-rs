@@ -91,7 +91,8 @@ fn a_missing_database_fails_the_run_at_the_first_request() {
         String::from_utf8_lossy(&output.stderr),
         format!(
             "ERROR: could not find firefox cookies database in '{}'\n",
-            missing.display()
+            // Python's `repr()` of the path doubles Windows backslashes.
+            missing.display().to_string().replace('\\', "\\\\")
         )
     );
     // Unsupported names are usage errors.

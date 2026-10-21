@@ -4,7 +4,7 @@ use std::{
     io::{Read, Write},
     net::TcpListener,
     path::Path,
-    process::{Command, Output, Stdio},
+    process::{Command, Output},
     thread,
 };
 
@@ -46,6 +46,7 @@ fn run(directory: &Path, args: &[&str], url: &str) -> Output {
 const TEMPLATE: &str = "postprocess:PP %(info.id)s %(progress.postprocessor)s %(progress.status)s";
 
 #[test]
+#[cfg_attr(windows, ignore = "--exec is unsupported on Windows")]
 fn postprocessor_hooks_surround_each_processor_run() {
     let url = serve();
     let directory = tempfile::tempdir().unwrap();
@@ -193,8 +194,8 @@ mod pty {
             .unwrap();
         let mut child = command
             .env("TERM", "xterm")
-            .stdout(Stdio::piped())
-            .stderr(Stdio::from(slave))
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::from(slave))
             .spawn()
             .unwrap();
         let reader = thread::spawn(move || {
@@ -278,6 +279,7 @@ mod pty {
 }
 
 #[test]
+#[cfg_attr(windows, ignore = "--exec is unsupported on Windows")]
 fn metadata_parsing_runs_at_later_stages_after_their_prints() {
     let url = serve();
     let directory = tempfile::tempdir().unwrap();
@@ -359,6 +361,7 @@ fn serve_playlist() -> String {
 }
 
 #[test]
+#[cfg_attr(windows, ignore = "--exec is unsupported on Windows")]
 fn playlist_metadata_parsing_follows_playlist_prints() {
     let url = serve_playlist();
     let directory = tempfile::tempdir().unwrap();

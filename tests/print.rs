@@ -359,9 +359,15 @@ fn no_simulate_downloads_after_printing_json_and_listing() {
 fn later_print_stages_follow_upstream_order_and_disable_implied_simulation() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
-    let absolute = std::fs::canonicalize(directory.path())
-        .unwrap()
-        .join("page-1.mp4");
+    // The working directory as the process sees it (macOS resolves the
+    // `/var` symlink; Windows keeps the short temp path, as `abspath` does).
+    let absolute = if cfg!(windows) {
+        directory.path().join("page-1.mp4")
+    } else {
+        std::fs::canonicalize(directory.path())
+            .unwrap()
+            .join("page-1.mp4")
+    };
     let output = server.cli(
         &["/page.html"],
         &[

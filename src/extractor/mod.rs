@@ -1,16 +1,23 @@
 mod angel;
+mod archiveorg;
 mod audioboom;
+mod bandcamp;
 mod behindkink;
 mod bild;
-pub(crate) mod bitmovin;
+mod bilibili;
+pub(crate) mod bitchute;
+mod bitmovin;
 mod blogger;
+mod bluesky;
 mod breitbart;
 mod cgtn;
 mod cjsw;
+mod coub;
 mod cozytv;
 mod crooksandliars;
 mod crtvg;
 mod cultureunplugged;
+mod dailymotion;
 mod dash;
 pub(crate) mod direct;
 mod ebaumsworld;
@@ -34,24 +41,33 @@ pub(crate) mod hls;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
+mod imgur;
 mod instagram;
 pub(crate) mod ism;
 mod jove;
 mod json_ld;
 mod jwplatform;
 mod jwplayer;
+mod kick;
 mod kommunetv;
 mod ku6;
 mod kvs;
+mod lbry;
+mod linkedin;
 mod livestreamfails;
+mod loom;
 mod maariv;
 mod masters;
 mod megaphone;
+mod mixcloud;
 mod movingimage;
+mod niconico;
 mod nobelprize;
+mod odnoklassniki;
 mod oneplace;
 mod parlview;
 mod photobucket;
+mod pinterest;
 mod playerfm;
 mod popcorntv;
 mod premiershiprugby;
@@ -60,36 +76,52 @@ mod reddit;
 mod reverbnation;
 mod rss;
 mod rtrfm;
+mod rumble;
+mod rutube;
 mod screenrec;
 mod sen;
 mod smil;
+mod soundcloud;
 mod streamable;
 mod sztvhu;
+mod ted;
 mod theintercept;
 mod thisamericanlife;
 mod tiktok;
+mod tumblr;
 mod tweakers;
 mod twentythreevideo;
+mod twitch;
 mod twitter;
+mod vimeo;
+mod vk;
 mod vocaroo;
+mod weibo;
 mod xspf;
 mod yfanefa;
 mod youtube;
 mod zhihu;
 
 pub use angel::{Angel, suitable as angel_suitable};
+pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
+pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use bild::{Bild, suitable as bild_suitable};
+pub use bilibili::{BiliBili, suitable as bilibili_suitable};
+pub use bitchute::{BitChute, suitable as bitchute_suitable};
 pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
+pub use bluesky::{Bluesky, suitable as bluesky_suitable};
 pub use breitbart::{BreitBart, suitable as breitbart_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
+pub use coub::{Coub, suitable as coub_suitable};
 pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
+pub use dailymotion::{Dailymotion, suitable as dailymotion_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
@@ -115,20 +147,35 @@ pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
+pub use imgur::{
+    Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
+    gallery_suitable as imgur_gallery_suitable, suitable as imgur_suitable,
+};
 pub use instagram::{Instagram, suitable as instagram_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
+pub use kick::{
+    KickClip, KickLive, KickVod, clip_suitable as kick_clip_suitable,
+    live_suitable as kick_live_suitable, vod_suitable as kick_vod_suitable,
+};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
+pub use lbry::{Lbry, suitable as lbry_suitable};
+pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
+pub use loom::{Loom, suitable as loom_suitable};
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
+pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
+pub use niconico::{Niconico, suitable as niconico_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
+pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
+pub use pinterest::{Pinterest, suitable as pinterest_suitable};
 pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
 pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
 pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitable};
@@ -136,21 +183,43 @@ pub use qingting::{QingTing, suitable as qingting_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
+pub use rumble::{
+    Rumble, RumbleEmbed, embed_suitable as rumble_embed_suitable, suitable as rumble_suitable,
+};
+pub use rutube::{
+    Rutube, RutubeEmbed, embed_suitable as rutube_embed_suitable, suitable as rutube_suitable,
+};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
+pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
+pub use ted::{
+    TedEmbed, TedPlaylist, TedSeries, TedTalk, embed_suitable as ted_embed_suitable,
+    playlist_suitable as ted_playlist_suitable, series_suitable as ted_series_suitable,
+    talk_suitable as ted_talk_suitable,
+};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use tiktok::{
     TikTok, TikTokVm, suitable as tiktok_suitable, vm_suitable as tiktok_vm_suitable,
 };
+pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
+pub use twitch::{
+    TwitchClips, TwitchVod, clips_suitable as twitch_clips_suitable,
+    vod_suitable as twitch_vod_suitable,
+};
 pub use twitter::{
     Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
 };
+pub use vimeo::{Vimeo, suitable as vimeo_suitable};
+pub use vk::{Vk, suitable as vk_suitable};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
+pub use weibo::{
+    Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
+};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
 pub use youtube::search::{
@@ -303,7 +372,85 @@ fn extract_manifest_optional(
     parse: &dyn Fn(reqwest::blocking::Response) -> crate::Result<Option<crate::VideoInfo>>,
     (what, name): (&str, &str),
 ) -> Option<crate::VideoInfo> {
-    let note = format!("[{extractor}] {id}: Downloading {what}");
+    extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        keep_subtitles,
+        parse,
+        (what, name),
+        &format!("Downloading {what}"),
+    )
+}
+
+/// [`extract_m3u8_optional`] with its `note=`.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn extract_m3u8_optional_note(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+    keep_subtitles: bool,
+    live: bool,
+    note: &str,
+) -> Option<crate::VideoInfo> {
+    let mut stream = extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        keep_subtitles,
+        &|response| hls::from_response(client, response, manifest, None, true, m3u8_id),
+        ("m3u8 information", "HLS"),
+        note,
+    )?;
+    if live {
+        hls::live_format_ids(&mut stream.formats, m3u8_id);
+    }
+    Some(stream)
+}
+
+/// `_extract_mpd_formats_and_subtitles(url, id, mpd_id, note, fatal=False)`.
+pub(crate) fn extract_mpd_optional_note(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    mpd_id: Option<&str>,
+    note: &str,
+) -> Option<crate::VideoInfo> {
+    let mut stream = extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        true,
+        &|response| dash::from_response(response, manifest, true),
+        ("MPD manifest", "DASH"),
+        note,
+    )?;
+    if let Some(mpd_id) = mpd_id {
+        for format in &mut stream.formats {
+            format.format_id = format!("{mpd_id}-{}", format.format_id);
+        }
+    }
+    Some(stream)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn extract_manifest_optional_note(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    keep_subtitles: bool,
+    parse: &dyn Fn(reqwest::blocking::Response) -> crate::Result<Option<crate::VideoInfo>>,
+    (what, name): (&str, &str),
+    note: &str,
+) -> Option<crate::VideoInfo> {
+    let note = format!("[{extractor}] {id}: {note}");
     crate::screen::expect_page(id, Some(note.clone()), None);
     let response = direct::request(client, manifest, None);
     if response.is_err() {
@@ -354,6 +501,26 @@ pub(crate) fn download_json_note(
         id,
         note,
         &|text| Ok(text.to_owned()),
+    )
+}
+
+/// [`download_json_note`] with the request's `headers=`.
+pub(crate) fn download_json_note_headers(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+    headers: &[(&str, &str)],
+) -> Result<serde_json::Value> {
+    download_json_with(
+        client,
+        url,
+        extractor,
+        id,
+        note,
+        &|text| Ok(text.to_owned()),
+        headers,
     )
 }
 
@@ -645,9 +812,81 @@ pub(crate) fn search_json_with(
     )
 }
 
+/// `_search_nextjs_data(webpage, video_id)` (fatal): the `__NEXT_DATA__`
+/// script's JSON (greedy to the last `}` before a `</script>`).
+pub(crate) fn search_nextjs_data(
+    html: &str,
+    extractor: &str,
+    id: &str,
+) -> crate::Result<serde_json::Value> {
+    static NEXT_DATA: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(
+            r#"(?s)<script[^>]+id=['"]__NEXT_DATA__['"][^>]*>\s*(\{.+\})\s*</script>"#,
+        )
+        .expect("static pattern")
+    });
+    let Some(found) = NEXT_DATA.captures(html) else {
+        return Err(crate::Error::Reported(format!(
+            "[{extractor}] {id}: Unable to extract next.js data; {}",
+            crate::BUG_REPORTS_MESSAGE
+        )));
+    };
+    serde_json::Deserializer::from_str(&found[1])
+        .into_iter::<serde_json::Value>()
+        .next()
+        .and_then(std::result::Result::ok)
+        .ok_or_else(|| {
+            crate::Error::Reported(format!(
+                "[{extractor}] {id}: Unable to extract next.js data - Failed to parse JSON"
+            ))
+        })
+}
+
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
-    (url.starts_with("jwplatform:") && jwplatform::suitable(url)) || youtube::search::suitable(url)
+    (url.starts_with("jwplatform:") && jwplatform::suitable(url))
+        || youtube::search::suitable(url)
+        || (url.starts_with("at://") && bluesky::suitable(url))
+        || (url.starts_with("lbry://") && lbry::suitable(url))
+        || (url.starts_with("coub:") && coub::suitable(url))
+}
+
+/// Upstream `params['http_headers']['User-Agent']`.
+pub(crate) static USER_AGENT: std::sync::RwLock<String> = std::sync::RwLock::new(String::new());
+
+/// `self.get_param('http_headers')['User-Agent']`.
+pub(crate) fn user_agent() -> String {
+    USER_AGENT
+        .read()
+        .map(|agent| agent.clone())
+        .unwrap_or_default()
+}
+
+/// Upstream `params['videopassword']` (`--video-password`).
+static VIDEO_PASSWORD: std::sync::RwLock<Option<String>> = std::sync::RwLock::new(None);
+
+/// Set `--video-password` for extractors that read it.
+pub fn set_video_password(password: Option<String>) {
+    if let Ok(mut slot) = VIDEO_PASSWORD.write() {
+        *slot = password;
+    }
+}
+
+/// `self.get_param('videopassword')`.
+pub(crate) fn video_password() -> Option<String> {
+    VIDEO_PASSWORD
+        .read()
+        .ok()
+        .and_then(|password| password.clone())
+}
+
+/// `self.get_param('check_formats') is False` (`--no-check-formats`).
+pub(crate) static CHECK_FORMATS_NEVER: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// `self.get_param('check_formats') is False`.
+pub(crate) fn check_formats_never() -> bool {
+    CHECK_FORMATS_NEVER.load(std::sync::atomic::Ordering::Relaxed)
 }
 
 /// Upstream `noplaylist` (`--no-playlist`), for `_yes_playlist`.

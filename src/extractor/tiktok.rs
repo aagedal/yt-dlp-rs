@@ -16,7 +16,6 @@ pub struct TikTokVm;
 
 const NAME: &str = "TikTok";
 const VM_NAME: &str = "vm.tiktok";
-const VM_KEY: &str = "TikTokVM";
 const QUALITIES: [&str; 4] = ["360p", "540p", "720p", "1080p"];
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
@@ -739,7 +738,7 @@ impl Extractor for TikTok {
 
 impl Extractor for TikTokVm {
     fn key(&self) -> &'static str {
-        VM_KEY
+        VM_NAME
     }
 
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {

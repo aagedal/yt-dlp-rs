@@ -214,7 +214,7 @@ fn real_external_audio_rendition_merges_complete_native_fragment_downloads() {
     let info = dl
         .extract_info(&format!("{}/audio-video/master.m3u8", server.origin))
         .unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("hls-0+hls-audio-0"));
+    assert_eq!(info.format_id.as_deref(), Some("140+main-English"));
     assert_eq!(info.ext, "mp4");
     assert_eq!(
         info.requested_formats[0].audio_group.as_deref(),

@@ -400,7 +400,8 @@ fn embed_thumbnail_writes_embeds_and_deletes_unless_written_explicitly() {
     // Reported when the processor runs, after the download.
     assert!(
         text(&output.stdout)
-            .ends_with("s     \n[EmbedThumbnail] There aren't any thumbnails to embed\n"),
+            // The progress line's padding depends on the measured speed.
+            .ends_with("\n[EmbedThumbnail] There aren't any thumbnails to embed\n"),
         "{}",
         text(&output.stdout)
     );
@@ -443,15 +444,21 @@ fn embed_thumbnail_fixes_webp_extensions_and_converts_them_to_png() {
         ],
         directory.path(),
     );
-    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert!(
+        output.status.success(),
+        "{:?}\n{}\n{}\n{}",
+        output.status,
+        text(&output.stdout),
+        text(&output.stderr),
+        tools.log()
+    );
     // The kept original is renamed to its real WebP extension; the PNG
     // conversion used for embedding is temporary.
     assert_eq!(names(directory.path()), ["video.mp4", "video.webp"]);
     let stdout = text(&output.stdout);
     assert!(
         stdout.contains(
-            "s     \n\
-             [ThumbnailsConvertor] Correcting thumbnail \"video.jpg\" extension to webp\n\
+            "\n[ThumbnailsConvertor] Correcting thumbnail \"video.jpg\" extension to webp\n\
              [ThumbnailsConvertor] Converting thumbnail \"video.webp\" to png\n"
         ),
         "{stdout}"

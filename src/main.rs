@@ -1618,6 +1618,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         );
     }
     yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
+    yt_dlp_rs::extractor::set_video_password(args.video_password.clone());
     // HttpFD's initial block size and resizing.
     if let Some(size) = args.buffer_size.as_deref().and_then(parse_bytes) {
         yt_dlp_rs::BUFFER_SIZE.store(size as usize, Ordering::Relaxed);
@@ -2988,20 +2989,26 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 74] = [
+        let suitable: [(&str, Suitable); 110] = [
             ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
             ("Angel", yt_dlp_rs::extractor::angel_suitable),
+            ("archive.org", yt_dlp_rs::extractor::archiveorg_suitable),
             ("AudioBoom", yt_dlp_rs::extractor::audioboom_suitable),
+            ("Bandcamp", yt_dlp_rs::extractor::bandcamp_suitable),
             (
                 "BehindKink (CURRENTLY BROKEN)",
                 yt_dlp_rs::extractor::behindkink_suitable,
             ),
             ("Bild", yt_dlp_rs::extractor::bild_suitable),
+            ("BiliBili", yt_dlp_rs::extractor::bilibili_suitable),
+            ("BitChute", yt_dlp_rs::extractor::bitchute_suitable),
             ("Bitmovin", yt_dlp_rs::extractor::bitmovin_suitable),
             ("blogger.com", yt_dlp_rs::extractor::blogger_suitable),
+            ("Bluesky", yt_dlp_rs::extractor::bluesky_suitable),
             ("BreitBart", yt_dlp_rs::extractor::breitbart_suitable),
             ("CGTN", yt_dlp_rs::extractor::cgtn_suitable),
             ("CJSW", yt_dlp_rs::extractor::cjsw_suitable),
+            ("Coub", yt_dlp_rs::extractor::coub_suitable),
             ("CozyTV", yt_dlp_rs::extractor::cozytv_suitable),
             (
                 "CrooksAndLiars",
@@ -3012,6 +3019,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 "CultureUnplugged",
                 yt_dlp_rs::extractor::cultureunplugged_suitable,
             ),
+            ("dailymotion", yt_dlp_rs::extractor::dailymotion_suitable),
             ("EbaumsWorld", yt_dlp_rs::extractor::ebaumsworld_suitable),
             ("Ebay", yt_dlp_rs::extractor::ebay_suitable),
             ("Epoch", yt_dlp_rs::extractor::epoch_suitable),
@@ -3045,23 +3053,42 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("html5", |_| false),
             ("Huajiao", yt_dlp_rs::extractor::huajiao_suitable),
             ("Hypem", yt_dlp_rs::extractor::hypem_suitable),
+            ("Imgur", yt_dlp_rs::extractor::imgur_suitable),
+            ("imgur:album", yt_dlp_rs::extractor::imgur_album_suitable),
+            (
+                "imgur:gallery",
+                yt_dlp_rs::extractor::imgur_gallery_suitable,
+            ),
             ("Instagram", yt_dlp_rs::extractor::instagram_suitable),
             ("Jove", yt_dlp_rs::extractor::jove_suitable),
             ("JWPlatform", yt_dlp_rs::extractor::jwplatform_suitable),
+            ("kick:clips", yt_dlp_rs::extractor::kick_clip_suitable),
+            ("kick:live", yt_dlp_rs::extractor::kick_live_suitable),
+            ("kick:vod", yt_dlp_rs::extractor::kick_vod_suitable),
             ("Kommunetv", yt_dlp_rs::extractor::kommunetv_suitable),
             ("Ku6", yt_dlp_rs::extractor::ku6_suitable),
+            ("lbry", yt_dlp_rs::extractor::lbry_suitable),
+            ("LinkedIn", yt_dlp_rs::extractor::linkedin_suitable),
             (
                 "Livestreamfails",
                 yt_dlp_rs::extractor::livestreamfails_suitable,
             ),
+            ("loom", yt_dlp_rs::extractor::loom_suitable),
             ("maariv.co.il", yt_dlp_rs::extractor::maariv_suitable),
             ("Masters", yt_dlp_rs::extractor::masters_suitable),
             ("megaphone.fm", yt_dlp_rs::extractor::megaphone_suitable),
+            ("mixcloud", yt_dlp_rs::extractor::mixcloud_suitable),
             ("MovingImage", yt_dlp_rs::extractor::movingimage_suitable),
+            ("niconico", yt_dlp_rs::extractor::niconico_suitable),
             ("NobelPrize", yt_dlp_rs::extractor::nobelprize_suitable),
+            (
+                "Odnoklassniki",
+                yt_dlp_rs::extractor::odnoklassniki_suitable,
+            ),
             ("OnePlacePodcast", yt_dlp_rs::extractor::oneplace_suitable),
             ("Parlview", yt_dlp_rs::extractor::parlview_suitable),
             ("Photobucket", yt_dlp_rs::extractor::photobucket_suitable),
+            ("Pinterest", yt_dlp_rs::extractor::pinterest_suitable),
             ("PlayerFm", yt_dlp_rs::extractor::playerfm_suitable),
             ("PopcornTV", yt_dlp_rs::extractor::popcorntv_suitable),
             (
@@ -3072,21 +3099,37 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("Reddit", yt_dlp_rs::extractor::reddit_suitable),
             ("ReverbNation", yt_dlp_rs::extractor::reverbnation_suitable),
             ("RTRFM", yt_dlp_rs::extractor::rtrfm_suitable),
+            ("Rumble", yt_dlp_rs::extractor::rumble_suitable),
+            ("RumbleEmbed", yt_dlp_rs::extractor::rumble_embed_suitable),
+            ("rutube", yt_dlp_rs::extractor::rutube_suitable),
+            ("rutube:embed", yt_dlp_rs::extractor::rutube_embed_suitable),
             ("ScreenRec", yt_dlp_rs::extractor::screenrec_suitable),
             ("Sen", yt_dlp_rs::extractor::sen_suitable),
+            ("soundcloud", yt_dlp_rs::extractor::soundcloud_suitable),
             ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
             ("SztvHu", yt_dlp_rs::extractor::sztvhu_suitable),
+            ("TedEmbed", yt_dlp_rs::extractor::ted_embed_suitable),
+            ("TedPlaylist", yt_dlp_rs::extractor::ted_playlist_suitable),
+            ("TedSeries", yt_dlp_rs::extractor::ted_series_suitable),
+            ("TedTalk", yt_dlp_rs::extractor::ted_talk_suitable),
             ("TheIntercept", yt_dlp_rs::extractor::theintercept_suitable),
             (
                 "ThisAmericanLife",
                 yt_dlp_rs::extractor::thisamericanlife_suitable,
             ),
             ("TikTok", yt_dlp_rs::extractor::tiktok_suitable),
+            ("Tumblr", yt_dlp_rs::extractor::tumblr_suitable),
             ("Tweakers", yt_dlp_rs::extractor::tweakers_suitable),
+            ("twitch:clips", yt_dlp_rs::extractor::twitch_clips_suitable),
+            ("twitch:vod", yt_dlp_rs::extractor::twitch_vod_suitable),
             ("twitter", yt_dlp_rs::extractor::twitter_suitable),
             ("twitter:card", yt_dlp_rs::extractor::twitter_card_suitable),
+            ("vimeo", yt_dlp_rs::extractor::vimeo_suitable),
+            ("vk", yt_dlp_rs::extractor::vk_suitable),
             ("vm.tiktok", yt_dlp_rs::extractor::tiktok_vm_suitable),
             ("Vocaroo", yt_dlp_rs::extractor::vocaroo_suitable),
+            ("Weibo", yt_dlp_rs::extractor::weibo_suitable),
+            ("WeiboVideo", yt_dlp_rs::extractor::weibo_video_suitable),
             ("yfanefa", yt_dlp_rs::extractor::yfanefa_suitable),
             ("youtube", yt_dlp_rs::extractor::youtube_suitable),
             (
@@ -3132,7 +3175,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nAngel\nAudioBoom\nBild\nBitmovin\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nInstagram\nJove\nJWPlatform\nKommunetv\nKu6\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nMovingImage\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nScreenRec\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTikTok\nTweakers\ntwitter\ntwitter:card\nvm.tiktok\nVocaroo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:tab: [youtube] YouTube Tabs\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "23video\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBreitBart\nCGTN\nCJSW\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nImgur\nimgur:album\nimgur:gallery\nInstagram\nJove\nJWPlatform\nkick:clips\nkick:live\nkick:vod\nKommunetv\nKu6\nlbry: odysee.com\nLinkedIn\nLivestreamfails\nloom\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nmixcloud\nMovingImage\nniconico: [niconico] ニコニコ動画\nNobelPrize\nOdnoklassniki\nOnePlacePodcast\nParlview\nPhotobucket\nPinterest\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nScreenRec\nSen\nsoundcloud: [soundcloud]\nStreamable\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTheIntercept\nThisAmericanLife\nTikTok\nTumblr: [tumblr]\nTweakers\ntwitch:clips: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:card\nvimeo: [vimeo]\nvk: [vk] VK\nvm.tiktok\nVocaroo\nWeibo\nWeiboVideo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:tab: [youtube] YouTube Tabs\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
@@ -3287,6 +3330,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 failed = true;
                 if abort_on_error {
                     break;
+                }
+                // `ignoreerrors` returns `None` from `extract_info`, which
+                // `-J` still dumps.
+                if args.dump_single_json {
+                    writeln!(stdout, "null")?;
+                    stdout.flush()?;
                 }
                 continue;
             }

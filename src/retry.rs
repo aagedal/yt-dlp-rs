@@ -243,6 +243,11 @@ pub(crate) fn urllib_error(error: &reqwest::Error) -> String {
             let text = text
                 .strip_suffix(&format!(" (os error {code})"))
                 .unwrap_or(&text);
+            // CPython words Windows socket errors as `[WinError N]`, with
+            // FormatMessage's trailing dots stripped.
+            if cfg!(windows) {
+                return format!("[WinError {code}] {}", text.trim_end_matches('.'));
+            }
             return format!("[Errno {code}] {text}");
         }
         source = current.source();

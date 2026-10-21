@@ -105,7 +105,11 @@ Supported today:
   (GraphQL with a guest token; videos, multi-video playlists, cards), TikTok
   videos (webpage data, the page's JS challenge, short links), Instagram
   posts and reels (logged out; carousels as playlists), Facebook videos
-  (relay data with DASH, progressive URLs and captions), plus
+  (relay data with DASH, progressive URLs and captions), Vimeo player and
+  clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
+  Bandcamp tracks, Rumble videos, Kick VODs, clips and live channels, Bluesky
+  posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,
+  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, Niconico videos, Weibo posts, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, OK.ru videos, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed and live URL shapes,

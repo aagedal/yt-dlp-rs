@@ -211,6 +211,22 @@ pub(crate) fn without_ext(info: &mut VideoInfo) {
     }
 }
 
+/// `_parse_m3u8_formats(..., live=True)`: a live variant keeps only its
+/// `m3u8_id` (its bandwidth changes over time), so unnamed IDs become
+/// indexes when processed.
+pub(crate) fn live_format_ids(formats: &mut [VideoFormat], m3u8_id: Option<&str>) {
+    for format in formats {
+        if format
+            .extra
+            .get(crate::info_order::FORMAT_SHAPE)
+            .and_then(serde_json::Value::as_str)
+            .is_some_and(|shape| shape.starts_with("hls-variant"))
+        {
+            format.format_id = m3u8_id.unwrap_or_default().to_owned();
+        }
+    }
+}
+
 pub(crate) fn from_response(
     client: &Client,
     response: Response,
@@ -467,8 +483,19 @@ pub(crate) fn from_response(
                     height: variant.height,
                     fragments,
                 };
+                // `PROGRESSIVE-URI`: an `http-` copy without the manifest.
+                let progressive = variant.progressive.map(|progressive| {
+                    let mut http = format.clone();
+                    http.extra.shift_remove("manifest_url");
+                    http.format_id = http.format_id.replacen("hls-", "http-", 1);
+                    http.protocol = Some("http".into());
+                    http.url = progressive;
+                    http.fragments = Vec::new();
+                    http
+                });
                 info.formats
                     .extend(split_sections(format, &discontinuity, discontinuities));
+                info.formats.extend(progressive);
             }
             let mut rendition_formats = Vec::new();
             let mut alternates: Vec<bool> = Vec::new();

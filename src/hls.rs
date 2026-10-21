@@ -46,6 +46,8 @@ pub(crate) struct Variant {
     /// Upstream `build_stream_name`: the variant's NAME, else its VIDEO
     /// group's first rendition NAME or the group ID.
     pub name: Option<String>,
+    /// `PROGRESSIVE-URI`: the same stream as a progressive HTTP format.
+    pub progressive: Option<Url>,
 }
 
 /// An `EXT-X-MEDIA:TYPE=SUBTITLES` rendition (upstream `extract_media`).
@@ -123,6 +125,17 @@ fn absolute(base: &Url, value: &str) -> Result<Url> {
         || url.fragment().is_some()
     {
         return Err(invalid("HLS URI must be an HTTP(S) URL without a fragment"));
+    }
+    Ok(url)
+}
+
+/// A variant (or `PROGRESSIVE-URI`) URL: upstream keeps a fragment, which
+/// is never sent.
+fn absolute_variant(base: &Url, value: &str) -> Result<Url> {
+    let (without, _) = value.split_once('#').unwrap_or((value, ""));
+    let mut url = absolute(base, without)?;
+    if let Some((_, fragment)) = value.split_once('#') {
+        url.set_fragment(Some(fragment));
     }
     Ok(url)
 }
@@ -330,6 +343,7 @@ fn variant(
                     .map(|group| group_names.get(group).unwrap_or(group))
             })
             .map(|name| (*name).to_owned()),
+        progressive: None,
     })
 }
 
@@ -578,6 +592,9 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         } else if line == "#EXT-X-INDEPENDENT-SEGMENTS"
             || line.starts_with("#EXT-X-PROGRAM-DATE-TIME:")
             || line.starts_with("#EXT-X-MEDIA:")
+            // Twitch's informational vendor tags (`#EXT-X-TWITCH-INFO`,
+            // `-ELAPSED-SECS`, `-TOTAL-SECS`), which upstream ignores.
+            || line.starts_with("#EXT-X-TWITCH-")
         {
             // Informational metadata; media groups are validated against references above.
         } else if line.starts_with("#EXT-X-") || line.starts_with("#EXT") {
@@ -588,12 +605,22 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         } else if line.starts_with('#') {
             continue;
         } else {
-            let url = absolute(base, line)?;
+            let url = if pending_variant.is_some() {
+                absolute_variant(base, line)?
+            } else {
+                absolute(base, line)?
+            };
             if let Some(attrs) = pending_variant.take() {
                 if variants.len() + rendition_count == MAX_VARIANTS {
                     return Err(invalid("HLS variant limit exceeded"));
                 }
-                variants.push(variant(&attrs, url, &groups, &group_names)?);
+                let mut found = variant(&attrs, url, &groups, &group_names)?;
+                found.progressive = attrs
+                    .get("PROGRESSIVE-URI")
+                    .filter(|uri| !uri.is_empty())
+                    .map(|uri| absolute_variant(base, uri))
+                    .transpose()?;
+                variants.push(found);
                 continue;
             }
             if endlist || !pending_duration || !variants.is_empty() {

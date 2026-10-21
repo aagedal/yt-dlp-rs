@@ -7,7 +7,7 @@ use serde_json::{Map, Value};
 use std::sync::LazyLock;
 
 /// `_yield_json_ld`: the dicts of every parseable JSON-LD script.
-fn yield_json_ld(html: &str) -> Vec<Value> {
+pub(crate) fn yield_json_ld(html: &str) -> Vec<Value> {
     static SCRIPT: LazyLock<Regex> = LazyLock::new(|| {
         Regex::new(
             r#"(?is)<script[^>]+type=(?:"application/ld\+json"|'application/ld\+json'|application/ld\+json)[^>]*>\s*(\{.+?\}|\[.+?\])\s*</script>"#,

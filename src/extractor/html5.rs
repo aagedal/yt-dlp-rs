@@ -2022,7 +2022,7 @@ pub(crate) fn clear_smuggled() {
 }
 
 /// Python `urllib.parse.quote_plus`.
-fn quote_plus(text: &str) -> String {
+pub(crate) fn quote_plus(text: &str) -> String {
     let mut out = String::new();
     for byte in text.bytes() {
         match byte {

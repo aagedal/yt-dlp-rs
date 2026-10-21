@@ -4,7 +4,7 @@
 use std::{
     io::{Read, Write},
     net::TcpListener,
-    path::{Path, PathBuf},
+    path::Path,
     process::{Command, Output},
     thread,
 };
@@ -40,7 +40,7 @@ fn serve() -> String {
 /// A recording stand-in: arguments go to `args.txt` (one per line) and the
 /// output file (`file:` prefix stripped) receives fixed bytes.
 #[cfg(unix)]
-fn fake_ffmpeg(directory: &Path, status: u8) -> PathBuf {
+fn fake_ffmpeg(directory: &Path, status: u8) -> std::path::PathBuf {
     use std::os::unix::fs::PermissionsExt;
     let path = directory.join("ffmpeg");
     std::fs::write(
