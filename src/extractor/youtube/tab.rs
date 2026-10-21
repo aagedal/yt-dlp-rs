@@ -34,6 +34,7 @@ struct UrlParts {
     post: String,
     id: String,
     not_channel: String,
+    channel_type: Option<String>,
 }
 
 /// `_get_url_mobj`: `pre`, the channel `tab` and the `post` remainder.
@@ -72,6 +73,7 @@ fn url_parts(url: &str) -> Option<UrlParts> {
         post,
         id: id.to_owned(),
         not_channel: not_channel.to_owned(),
+        channel_type: channel_type.map(str::to_owned),
     })
 }
 
@@ -1328,6 +1330,7 @@ pub(crate) fn fetch_pages(
         return fetch_inline_pages(client, state, limit, out);
     }
     let item_id = state["item_id"].as_str().unwrap_or_default().to_owned();
+    let music = state["music"] == true;
     let ytcfg = state["ytcfg"].as_object().cloned().unwrap_or_default();
     let mut visitor = state["visitor"].as_str().map(str::to_owned);
     let mut seen: std::collections::HashSet<String> = state["seen"]
@@ -1349,6 +1352,7 @@ pub(crate) fn fetch_pages(
             "query": query,
             "seen": seen.into_iter().collect::<Vec<_>>(),
             "page": page,
+            "music": music,
         })
     };
     let satisfied = |out: &Vec<VideoInfo>| limit.is_some_and(|limit| out.len() >= limit);
@@ -1447,7 +1451,11 @@ pub(crate) fn fetch_pages(
             continuation = extract_continuation(&json!({"contents": [first]}));
         }
         for entry in entries {
-            out.push(entry_info(entry)?);
+            let mut entry = entry_info(entry)?;
+            if music {
+                music_entry(&mut entry);
+            }
+            out.push(entry);
         }
         if continuation.is_none() && !renderer_found {
             break;
@@ -1997,32 +2005,43 @@ fn page_data(client: &Client, url: &Url, item_id: &str) -> Result<(Value, Map<St
     if let Some(data) = data.filter(|data| data.as_object().is_some_and(|data| !data.is_empty())) {
         return Ok((data, ytcfg));
     }
-    // `_extract_tab_endpoint`.
+    let data = tab_endpoint(client, "web", url.as_str(), item_id, &ytcfg)?;
+    Ok((data, ytcfg))
+}
+
+/// `_extract_tab_endpoint(url, item_id, ytcfg, default_client=CLIENT)`: the
+/// `navigation/resolve_url` endpoint's browse (or next) response.
+fn tab_endpoint(
+    client: &Client,
+    client_name: &str,
+    url: &str,
+    item_id: &str,
+    ytcfg: &Map<String, Value>,
+) -> Result<Value> {
     let mut query = Map::new();
-    query.insert("url".into(), url.as_str().into());
-    let resolved = watch::innertube_api(
+    query.insert("url".into(), url.into());
+    let resolved = watch::innertube_api_for(
         client,
+        client_name,
         "navigation/resolve_url",
         NAME,
         item_id,
-        &ytcfg,
-        None,
+        ytcfg,
         query,
         "Downloading API parameters API JSON",
     )?;
     for (key, endpoint) in [("browseEndpoint", "browse"), ("watchEndpoint", "next")] {
         if let Some(Value::Object(params)) = resolved.get("endpoint").and_then(|e| e.get(key)) {
-            let data = watch::innertube_api(
+            return watch::innertube_api_for(
                 client,
+                client_name,
                 endpoint,
                 NAME,
                 item_id,
-                &ytcfg,
-                None,
+                ytcfg,
                 params.clone(),
                 "Downloading API JSON",
-            )?;
-            return Ok((data, ytcfg));
+            );
         }
     }
     Err(Error::Reported(format!(
@@ -2119,7 +2138,11 @@ fn fetch_inline_pages(
             .cloned()
             .into();
         for entry in maps.into_iter().skip(start) {
-            out.push(entry_info(entry)?);
+            let mut entry = entry_info(entry)?;
+            if state["music"] == true {
+                music_entry(&mut entry);
+            }
+            out.push(entry);
         }
         state["playlist"] = next;
         state["page"] = (page + 1).into();
@@ -2196,6 +2219,9 @@ impl super::super::Extractor for YoutubeTab {
         if !suitable(url.as_str()) {
             return Ok(None);
         }
+        let input = url;
+        // `is_music_url` (`passthrough_smuggled_data`).
+        let music = input.host_str() == Some("music.youtube.com");
         let mut url = url.clone();
         let _ = url.set_host(Some("www.youtube.com"));
         let Some(parts) = url_parts(url.as_str()) else {
@@ -2205,9 +2231,20 @@ impl super::super::Extractor for YoutubeTab {
         super::initialize();
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",
-            crate::screen::extracting_url(url.as_str())
+            crate::screen::extracting_url(input.as_str())
         ));
-        self.real_extract(client, url, parts)
+        let mut result = self.real_extract(client, url, parts, music)?;
+        // `passthrough_smuggled_data`: a music URL's URL entries stay music URLs.
+        if music && let Some(ExtractResult::Playlist(playlist)) = &mut result {
+            for entry in &mut playlist.entries {
+                music_entry(entry);
+            }
+            // Its lazily fetched entries too.
+            if let Some(pending) = &mut playlist.pending {
+                pending.state["music"] = true.into();
+            }
+        }
+        Ok(result)
     }
 }
 
@@ -2218,9 +2255,39 @@ impl YoutubeTab {
         client: &Client,
         url: Url,
         parts: UrlParts,
+        music: bool,
     ) -> Result<Option<ExtractResult>> {
         let item_id = parts.id.clone();
         let is_channel = parts.not_channel.is_empty();
+        if is_channel && music {
+            let target = if let Some(playlist) = item_id.strip_prefix("VL") {
+                // Music VL channels have an equivalent playlist.
+                Some(format!(
+                    "https://music.youtube.com/playlist?list={playlist}"
+                ))
+            } else if item_id.starts_with("MP") {
+                // An album (`/browse/MP…`) resolves to its playlist.
+                let browse = format!("https://music.youtube.com/browse/{item_id}");
+                let data = tab_endpoint(client, "web_music", &browse, &item_id, &Map::new())?;
+                let canonical = at(
+                    &data,
+                    &["microformat", "microformatDataRenderer", "urlCanonical"],
+                )
+                .and_then(Value::as_str)
+                .ok_or_else(|| fail(&parts.id, "Failed to resolve album to playlist"))?;
+                Some(canonical.to_owned())
+            } else if parts.channel_type.as_deref() == Some("browse") {
+                Some(format!(
+                    "https://music.youtube.com/channel/{item_id}{}{}",
+                    parts.tab, parts.post
+                ))
+            } else {
+                None
+            };
+            if let Some(target) = target {
+                return Ok(Some(follow(&Url::parse(&target)?)));
+            }
+        }
         if !is_channel && !parts.not_channel.starts_with(['p', 'w']) {
             // Feeds and hashtags have no saved-fixture coverage yet.
             return Err(Error::UnsupportedYoutube(
@@ -2233,6 +2300,11 @@ impl YoutubeTab {
         let mut page_url = url.to_string();
         if is_channel && parts.tab.is_empty() {
             page_url = format!("{}/videos{}", parts.pre, parts.post);
+        }
+        if music {
+            crate::screen::warning(&format!(
+                "[{NAME}] YouTube Music is not directly supported. Redirecting to {page_url}"
+            ));
         }
         let query: Vec<(String, String)> = url
             .query_pairs()
@@ -2455,7 +2527,7 @@ impl YoutubeTab {
             let Some(tab_parts) = url_parts(tab_url.as_str()) else {
                 continue;
             };
-            if let Some(result) = self.real_extract(client, tab_url, tab_parts)? {
+            if let Some(result) = self.real_extract(client, tab_url, tab_parts, false)? {
                 results.push(result);
             }
         }
@@ -2677,6 +2749,34 @@ pub(super) fn tab_playlist(
         entries,
         extra,
     }))
+}
+
+/// `_smuggle`: a `www`/`music.youtube.com` URL entry on `music.youtube.com`.
+fn music_entry(entry: &mut VideoInfo) {
+    let Some(marker) = entry.extra.get_mut(crate::TRANSPARENT) else {
+        return;
+    };
+    let music = |value: &mut Value| {
+        let Some(mut url) = value.as_str().and_then(|text| Url::parse(text).ok()) else {
+            return;
+        };
+        if matches!(
+            url.host_str(),
+            Some("www.youtube.com" | "music.youtube.com")
+        ) {
+            let _ = url.set_host(Some("music.youtube.com"));
+            *value = url.as_str().into();
+        }
+    };
+    if let Some(url) = marker.get_mut("url") {
+        music(url);
+    }
+    if let Some(url) = marker
+        .get_mut("entry")
+        .and_then(|entry| entry.get_mut("url"))
+    {
+        music(url);
+    }
 }
 
 /// `url_result(url, YoutubeIE)`: followed by the downloader.

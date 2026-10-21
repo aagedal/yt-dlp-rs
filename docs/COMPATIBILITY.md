@@ -2119,8 +2119,14 @@ With `--lazy-playlist`, the requested pages are still fetched before the
 first entry is processed. An inline watch-page playlist without a playlist page
 (mixes, `RD…`) is `_extract_inline_playlist`'s: the page's videos, then `next`
 API pages (`ID page N`) as needed until a page adds no new video; the fixture
-`tests/fixtures/sites/youtube-mix/` covers it. Feeds, hashtags and YouTube
-Music remain explicit unsupported errors. Grid, channel and playlist
+`tests/fixtures/sites/youtube-mix/` covers it. YouTube Music URLs are handled
+like upstream's: `music.youtube.com` playlists and channels are read on
+`www.youtube.com` after `YouTube Music is not directly supported. Redirecting to
+URL`, `/browse/VL…` becomes its playlist, `/browse/UC…` its channel and an album
+(`/browse/MP…`) its canonical playlist (through the `web_music` client's
+`navigation/resolve_url`), and a music playlist's URL entries stay
+`music.youtube.com` URLs. Feeds and hashtags remain explicit unsupported
+errors. Grid, channel and playlist
 renderers are ported without fixture coverage; shelf, music and post
 renderers are skipped with a warning.
 

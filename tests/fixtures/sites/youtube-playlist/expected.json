@@ -66,6 +66,65 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://music.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(url)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://music.youtube.com/watch?v=BaW_jenozKc|https://music.youtube.com/watch?v=BaW_jenozKc",
+    "https://music.youtube.com/watch?v=YYYYYYYYYYY|https://music.youtube.com/watch?v=YYYYYYYYYYY",
+    "https://music.youtube.com/watch?v=ZZZZZZZZZZZ|https://music.youtube.com/watch?v=ZZZZZZZZZZZ"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] YouTube Music is not directly supported. Redirecting to https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://music.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re\", \"title\": \"Test Playlist\", \"availability\": \"public\", \"channel_follower_count\": null, \"description\": \"A playlist description\", \"tags\": [\"one\", \"two\"], \"thumbnails\": [], \"modified_date\": \"20240105\", \"view_count\": 5678, \"playlist_count\": 3, \"channel\": \"Playlist Owner\", \"channel_id\": \"UCabcdefghijklmnopqrstuv\", \"uploader_id\": \"@Owner\", \"uploader\": \"Playlist Owner\", \"channel_url\": \"https://www.youtube.com/channel/UCabcdefghijklmnopqrstuv\", \"uploader_url\": \"https://www.youtube.com/@Owner\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"BaW_jenozKc\", \"url\": \"https://music.youtube.com/watch?v=BaW_jenozKc\", \"title\": \"First video\", \"description\": null, \"duration\": 10, \"channel_id\": \"UC0123456789abcdefghijkl\", \"channel\": \"Uploader Name\", \"channel_url\": \"https://www.youtube.com/channel/UC0123456789abcdefghijkl\", \"uploader\": \"Uploader Name\", \"uploader_id\": \"@Uploader\", \"uploader_url\": \"https://www.youtube.com/@Uploader\", \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/BaW_jenozKc/hqdefault.jpg\", \"height\": 94, \"width\": 168}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1200, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re\", \"original_url\": \"https://music.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re\", \"webpage_url_basename\": \"playlist\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"requested_entries\": [1], \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] YouTube Music is not directly supported. Redirecting to https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://music.youtube.com/browse/VLPLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://music.youtube.com/browse/VLPLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] Extracting URL: https://music.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] YouTube Music is not directly supported. Redirecting to https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re"
+   ],
+   "files": {}
   }
  ]
 }

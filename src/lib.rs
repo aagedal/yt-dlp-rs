@@ -2227,6 +2227,9 @@ impl YoutubeDl {
             })
             .unwrap_or_default();
         let shown_url = Url::parse(&shown).unwrap_or_else(|_| url.clone());
+        // A playlist extractor's `url` entry (`_type: url`) keeps the
+        // extracted video's own `webpage_url`.
+        let plain_url = marker["entry"]["_type"] == "url";
         let merge = |result: &mut ExtractResult| -> Result<()> {
             let ExtractResult::Video(info) = result else {
                 return Err(Error::UnsupportedHtml5(
@@ -2244,7 +2247,9 @@ impl YoutubeDl {
                 }
             }
             // Upstream extracts (and names) the smuggled URL.
-            info.webpage_url = shown_url.clone();
+            if !plain_url {
+                info.webpage_url = shown_url.clone();
+            }
             let keys: Vec<&str> = fields.iter().map(|(key, _)| key.as_str()).collect();
             info.extra.insert(
                 info_order::INFO_SHAPE.into(),

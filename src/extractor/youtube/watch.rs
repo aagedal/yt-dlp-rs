@@ -326,6 +326,34 @@ pub(super) fn innertube_api(
     )
 }
 
+/// `_extract_response(ep=ENDPOINT, default_client=CLIENT)` without a
+/// visitor ID (`_extract_tab_endpoint`).
+#[allow(clippy::too_many_arguments)]
+pub(super) fn innertube_api_for(
+    client: &Client,
+    client_name: &str,
+    endpoint: &str,
+    extractor: &'static str,
+    item_id: &str,
+    ytcfg: &Map<String, Value>,
+    query: Map<String, Value>,
+    note: &str,
+) -> Result<Value> {
+    let config = innertube::client(client_name).expect("a defined client");
+    call_api(
+        client,
+        config,
+        endpoint,
+        extractor,
+        item_id,
+        ytcfg,
+        visitor_data(&[&Value::Object(ytcfg.clone())]).as_deref(),
+        query,
+        note,
+        Session::default(),
+    )
+}
+
 /// `_extract_visitor_data` of one source.
 pub(super) fn visitor_from(source: &Value) -> Option<String> {
     visitor_data(&[source])
