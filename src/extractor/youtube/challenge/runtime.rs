@@ -23,7 +23,8 @@ const ARGS: &[&str] = &[
     "--cached-only",
     "-",
 ];
-const PINNED_DENO: &str = "2.9.7";
+/// Upstream `DenoJsRuntime.MIN_SUPPORTED_VERSION`.
+const MIN_DENO: (u64, u64, u64) = (2, 3, 0);
 const MAX_STDERR: usize = 64 * 1024;
 const DEADLINE: Duration = Duration::from_secs(15);
 
@@ -32,6 +33,8 @@ const MIN_NODE: (u64, u64, u64) = (22, 0, 0);
 
 pub(in crate::extractor::youtube) struct DenoRuntime {
     executable: PathBuf,
+    /// `deno` or `node`.
+    name: &'static str,
     /// The runtime's arguments before the script read from stdin.
     args: &'static [&'static str],
 }
@@ -50,9 +53,9 @@ fn node_args(version: (u64, u64, u64)) -> &'static [&'static str] {
     }
 }
 
-/// `vMAJOR.MINOR.PATCH` (`version_tuple(..., lenient=True)`).
-fn node_version(line: &str) -> Option<(u64, u64, u64)> {
-    let mut parts = line.strip_prefix('v')?.split('.').map(|part| {
+/// `MAJOR.MINOR.PATCH` (`version_tuple(..., lenient=True)`).
+fn version_tuple(text: &str) -> Option<(u64, u64, u64)> {
+    let mut parts = text.split('.').map(|part| {
         part.chars()
             .take_while(char::is_ascii_digit)
             .collect::<String>()
@@ -64,9 +67,27 @@ fn node_version(line: &str) -> Option<(u64, u64, u64)> {
     Some((major, minor, patch))
 }
 
+/// The provider name and arguments for a `--version` line: upstream's
+/// supported Deno (`detect_exe_version(out, r'^deno (\S+)')`) or Node.js
+/// (`vX.Y.Z`) versions.
+fn select(line: &str) -> Result<(&'static str, &'static [&'static str])> {
+    if let Some(version) = line.strip_prefix("deno ") {
+        let version = version.split_whitespace().next().unwrap_or_default();
+        return match version_tuple(version) {
+            Some(found) if found >= MIN_DENO => Ok(("deno", ARGS)),
+            _ => Err("YouTube solving requires Deno 2.3.0 or newer".into()),
+        };
+    }
+    match line.strip_prefix('v').and_then(version_tuple) {
+        Some(version) if version >= MIN_NODE => Ok(("node", node_args(version))),
+        Some(_) => Err("YouTube solving requires Node.js 22.0.0 or newer".into()),
+        None => Err("YouTube solving requires Deno 2.3.0+ or Node.js 22.0.0+".into()),
+    }
+}
+
 impl DenoRuntime {
     /// Explicit path only: discovery and installation are the caller's
-    /// concern. The pinned Deno or Node.js 22+ (by its `--version` line).
+    /// concern. Deno 2.3+ or Node.js 22+ (by its `--version` line).
     pub(in crate::extractor::youtube) fn new(executable: &Path) -> Result<Self> {
         let executable = executable
             .canonicalize()
@@ -74,34 +95,17 @@ impl DenoRuntime {
         let output = execute(&executable, &["--version"], Vec::new(), DEADLINE, 4096)?;
         let version = std::str::from_utf8(&output).map_err(|_| "invalid runtime version output")?;
         let line = version.lines().next().unwrap_or_default();
-        if line == format!("deno {PINNED_DENO} (stable, release)")
-            || (line.starts_with(&format!("deno {PINNED_DENO} (stable, release, "))
-                && line.ends_with(')'))
-        {
-            return Ok(Self {
-                executable,
-                args: ARGS,
-            });
-        }
-        match node_version(line) {
-            Some(version) if version >= MIN_NODE => Ok(Self {
-                executable,
-                args: node_args(version),
-            }),
-            Some(_) => Err("YouTube solving requires Node.js 22.0.0 or newer".into()),
-            None => Err(format!(
-                "YouTube solving requires pinned Deno {PINNED_DENO}"
-            )),
-        }
+        let (name, args) = select(line)?;
+        Ok(Self {
+            executable,
+            name,
+            args,
+        })
     }
 
     /// The JS challenge provider's name (`deno` or `node`).
     pub(in crate::extractor::youtube) fn name(&self) -> &'static str {
-        if std::ptr::eq(self.args, ARGS) {
-            "deno"
-        } else {
-            "node"
-        }
+        self.name
     }
 
     pub(in crate::extractor::youtube) fn solve(&self, batch: &Batch) -> Result<Solutions> {
@@ -386,10 +390,28 @@ console.log('denied');
     }
 
     #[test]
+    fn deno_versions_from_upstream_minimum_are_supported() {
+        for line in [
+            "deno 2.3.0 (stable, release, x86_64-unknown-linux-gnu)",
+            "deno 2.9.7 (stable, release, aarch64-apple-darwin)",
+            "deno 3.0.0-rc.1 (canary)",
+        ] {
+            assert_eq!(select(line).unwrap(), ("deno", ARGS), "{line}");
+        }
+        for line in ["deno 2.2.12 (stable, release)", "deno x", "bun 1.2.0", ""] {
+            assert!(select(line).is_err(), "{line}");
+        }
+    }
+
+    #[test]
     fn node_versions_select_upstream_permission_flags() {
-        assert_eq!(node_version("v26.12.0"), Some((26, 12, 0)));
-        assert_eq!(node_version("v22.1"), Some((22, 1, 0)));
-        assert_eq!(node_version("deno 2.9.7"), None);
+        assert_eq!(version_tuple("26.12.0"), Some((26, 12, 0)));
+        assert_eq!(version_tuple("22.1"), Some((22, 1, 0)));
+        assert_eq!(
+            select("v26.12.0").unwrap(),
+            ("node", &["--permission", "-"][..])
+        );
+        assert!(select("v21.9.0").is_err());
         assert_eq!(node_args((23, 4, 9))[0], "--experimental-permission");
         assert_eq!(node_args((23, 5, 0)), ["--permission", "-"]);
     }

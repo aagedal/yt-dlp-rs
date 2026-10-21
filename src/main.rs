@@ -508,7 +508,7 @@ struct Args {
     /// Default HTTP Referer (extractor request headers can override it)
     #[arg(long, value_name = "URL", overrides_with = "referer")]
     referer: Option<String>,
-    /// Explicit path to Deno 2.9.7 for YouTube player challenges (no runtime discovery or installation)
+    /// Explicit path to Deno 2.3+ or Node.js 22+ for YouTube player challenges (no runtime discovery or installation)
     #[arg(long, value_name = "PATH")]
     youtube_js_runtime: Option<PathBuf>,
     /// Extract audio with local ffmpeg/ffprobe after downloading
