@@ -154,28 +154,31 @@ fn template_exec_extension_playlist_and_listing_options() {
             format!("{expected}\n")
         );
     }
-    // `allow-unsafe-exec-expansion` skips ExecPP's template validation.
-    let url = format!("{origin}/v.mp4");
-    let command = "video:echo %(title)s >> log";
-    let output = run(directory.path(), &["-s", "--exec", command, &url]);
-    assert_eq!(output.status.code(), Some(1));
-    assert!(String::from_utf8_lossy(&output.stderr).starts_with("ERROR: Unsafe conversion(s)"));
-    let output = run(
-        directory.path(),
-        &[
-            "--compat-options",
-            "allow-unsafe-exec-expansion",
-            "-s",
-            "--exec",
-            command,
-            &url,
-        ],
-    );
-    assert!(output.status.success());
-    assert_eq!(
-        std::fs::read_to_string(directory.path().join("log")).unwrap(),
-        "v\n"
-    );
+    // `allow-unsafe-exec-expansion` skips ExecPP's template validation
+    // (`--exec` is unsupported on Windows).
+    if !cfg!(windows) {
+        let url = format!("{origin}/v.mp4");
+        let command = "video:echo %(title)s >> log";
+        let output = run(directory.path(), &["-s", "--exec", command, &url]);
+        assert_eq!(output.status.code(), Some(1));
+        assert!(String::from_utf8_lossy(&output.stderr).starts_with("ERROR: Unsafe conversion(s)"));
+        let output = run(
+            directory.path(),
+            &[
+                "--compat-options",
+                "allow-unsafe-exec-expansion",
+                "-s",
+                "--exec",
+                command,
+                &url,
+            ],
+        );
+        assert!(output.status.success());
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("log")).unwrap(),
+            "v\n"
+        );
+    }
     // `allow-unsafe-ext` downloads unusual extensions, with upstream's warning.
     let url = format!("{origin}/clip.weird");
     let output = run(directory.path(), &["-o", "o.%(ext)s", &url]);

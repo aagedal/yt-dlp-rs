@@ -203,9 +203,19 @@ fn transport_errors_use_urllib_errno_text() {
     assert_eq!(output.status.code(), Some(1));
     let stdout = text(&output.stdout);
     let retry = stdout.lines().nth(1).unwrap();
+    let (prefix, refused) = if cfg!(windows) {
+        (
+            "[download] Got error: [WinError ",
+            "] No connection could be made because the target machine actively refused it. Retrying (1/1)...",
+        )
+    } else {
+        (
+            "[download] Got error: [Errno ",
+            "] Connection refused. Retrying (1/1)...",
+        )
+    };
     assert!(
-        retry.starts_with("[download] Got error: [Errno ")
-            && retry.ends_with("] Connection refused. Retrying (1/1)..."),
+        retry.starts_with(prefix) && retry.ends_with(refused),
         "{stdout}"
     );
     assert!(text(&output.stderr).ends_with("] Connection refused. Giving up after 1 retries\n"));

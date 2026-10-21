@@ -563,7 +563,7 @@ fn dump_single_json_prints_one_object_per_url_with_selected_entries() {
             ]
         );
         assert_eq!(download["__real_download"], real);
-        assert!(download["filepath"].as_str().unwrap().ends_with("/o.mp4"));
+        assert!(std::path::Path::new(download["filepath"].as_str().unwrap()).ends_with("o.mp4"));
     }
     let both = parse(&success(
         &server.cli("/one.mp4", &["-j", "-J", "--user-agent", "fixture"]),

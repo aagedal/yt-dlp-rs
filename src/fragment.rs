@@ -450,6 +450,8 @@ fn download_with(
     match private {
         Some(temporary) => crate::download::persist(temporary, destination, options.overwrite)?,
         None => {
+            // The part file must be closed before it is renamed (Windows).
+            drop(named);
             // `_finish_frag_download`: drop the state, then rename the part file.
             let _ = fs::remove_file(&ytdl_path);
             if part_path != destination {
