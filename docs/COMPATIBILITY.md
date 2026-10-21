@@ -448,6 +448,21 @@ sources as non-fatal HLS formats, `video/mp4` sources as `http-mp4` and an
 unescaped stripped title, description, poster thumbnail and integer
 `durationSec` duration.
 
+Bilibili videos (`bilibili.com/video/BV…|av…`, festival `?bvid=` pages)
+follow upstream `BiliBiliIE`: the page's `__INITIAL_STATE__` (with the
+rate-limit, `-403`/`-404` and missing-state errors), anthologies as
+playlists of their `?p=N` parts (`_yes_playlist`), the WBI-signed `playurl`
+API (nav key, `_dm_params` fingerprint values) with its DASH audio/video and
+legacy `durl` formats (each missing `accept_quality` requested on its own,
+the premium-format note and incompatible-FLV drop), chapters from the
+player API, `_old_archive_ids` and, with `--write-subs`/`--list-subs`, the
+danmaku XML track. Logged-in `__playinfo__` use follows the `SESSDATA`
+cookie. Interactive videos, multi-part FLV results, inline SRT subtitle
+tracks, comments and bangumi/cheese/space/audio pages are not supported.
+`tests/fixtures/sites/bilibili/` is compared with pinned upstream output
+(the random fingerprint, `wts` and `w_rid` query values are ignored by the
+fixture proxy).
+
 Bitmovin streams (`streams.bitmovin.com/ID`) follow upstream `BitmovinIE`:
 the player config's `sources.hls` as fatal HLS formats and subtitles with the
 string title (else the generic title, after `fulltitle`) and poster, with

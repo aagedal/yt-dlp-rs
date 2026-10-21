@@ -199,6 +199,7 @@ impl Replay {
 pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(INFO_SHAPE);
     map.shift_remove(FORMAT_SHAPE);
+    map.shift_remove(INT_QUALITY);
 }
 
 /// Record the upstream code path that built an info dict.
@@ -295,8 +296,22 @@ pub(crate) fn mark_int_rates(format: &mut crate::VideoFormat) {
     }
 }
 
+/// A format whose extractor gave an int `quality` (stored as a float).
+const INT_QUALITY: &str = "__yt_dlp_rs_int_quality";
+
+/// The format's `quality` is an int.
+pub(crate) fn mark_int_quality(format: &mut crate::VideoFormat) {
+    format.extra.insert(INT_QUALITY.into(), Value::Bool(true));
+}
+
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
+    if map.shift_remove(INT_QUALITY).is_some()
+        && let Some(quality) = map.get("quality").and_then(Value::as_f64)
+        && quality.fract() == 0.0
+    {
+        map.insert("quality".into(), (quality as i64).into());
+    }
     let Some((shape, original)) = shape_of(map.shift_remove(FORMAT_SHAPE)) else {
         return map;
     };
@@ -821,6 +836,13 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    // The selected format's int `quality`.
+    if map.shift_remove(INT_QUALITY).is_some()
+        && let Some(quality) = map.get("quality").and_then(Value::as_f64)
+        && quality.fract() == 0.0
+    {
+        map.insert("quality".into(), (quality as i64).into());
+    }
     let Some((shape, original)) = shape_of(map.shift_remove(INFO_SHAPE)) else {
         return map;
     };
@@ -2114,6 +2136,20 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     // merged afterwards (`info_dict.update(best_format)`), so the dict still
     // has the extractor's values (`None`) for them.
     if let Some(Value::Array(downloads)) = replay.ours.shift_remove("requested_downloads") {
+        // Keys an extractor's own dict set (a format's `duration` too) held
+        // that value, not `None`; this port keeps one value per key, the
+        // (equal) format's. The info's own `http_headers` always differ from
+        // a format's processed headers.
+        let own_keys: Vec<&str> = shape
+            .strip_prefix("dict;")
+            .or_else(|| shape.strip_prefix("dict-untitled;"))
+            .and_then(|rest| rest.split(';').next())
+            .map(|keys| {
+                keys.split(',')
+                    .filter(|key| *key != "http_headers")
+                    .collect()
+            })
+            .unwrap_or_default();
         let before: Map<String, Value> = replay
             .out
             .iter()
@@ -2121,7 +2157,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                 // A loaded dict already held its selected format's values.
                 let value = match original.as_ref().and_then(|original| original.get(key)) {
                     Some(loaded) if selected.contains(key) => loaded.clone(),
-                    _ if selected.contains(key) => Value::Null,
+                    _ if selected.contains(key) && !own_keys.contains(&key.as_str()) => Value::Null,
                     _ => value.clone(),
                 };
                 (key.clone(), value)
