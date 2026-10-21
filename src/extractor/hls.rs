@@ -467,8 +467,19 @@ pub(crate) fn from_response(
                     height: variant.height,
                     fragments,
                 };
+                // `PROGRESSIVE-URI`: an `http-` copy without the manifest.
+                let progressive = variant.progressive.map(|progressive| {
+                    let mut http = format.clone();
+                    http.extra.shift_remove("manifest_url");
+                    http.format_id = http.format_id.replacen("hls-", "http-", 1);
+                    http.protocol = Some("http".into());
+                    http.url = progressive;
+                    http.fragments = Vec::new();
+                    http
+                });
                 info.formats
                     .extend(split_sections(format, &discontinuity, discontinuities));
+                info.formats.extend(progressive);
             }
             let mut rendition_formats = Vec::new();
             let mut alternates: Vec<bool> = Vec::new();

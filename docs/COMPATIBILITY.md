@@ -470,6 +470,17 @@ result with its URL and title (upstream's `KeyError` messages), synopsis,
 producer `creator` (and the derived `creators`), integer duration and views
 and the truthy small/large thumbnails with their preferences.
 
+Dailymotion videos (`dailymotion.TLD/video/ID`, `dai.ly/ID`, embed, swf and
+player URLs, `lequipe.fr`) follow upstream `DailymotionIE`: the family-filter
+cookie, a client-credentials token, the GraphQL media object (its errors are
+upstream's), the player metadata (geo and other errors), the qualities' HLS
+manifests requested with upstream's randomized headers (the impersonated
+retries are unavailable, as upstream without `curl_cffi`), including
+`PROGRESSIVE-URI` `http-` formats, and progressive H264 URLs with sizes and
+`@60` frame rates, plus subtitles, posters and metadata. Playlist URLs (and
+`?playlist=` without `--no-playlist`) are not supported.
+`tests/fixtures/sites/dailymotion/` is compared with pinned upstream output.
+
 EbaumsWorld videos (`ebaumsworld.com/videos/SLUG/ID`) follow upstream
 `EbaumsWorldIE`: the player config XML (`Downloading XML`) as an untyped
 result, empty elements as `None` (a generic title for an empty title) and a
