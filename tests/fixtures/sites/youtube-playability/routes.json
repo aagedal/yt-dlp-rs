@@ -1,0 +1,111 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=AgeGated001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "agegated.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "AgeGated001"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "agegated-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "56"
+   },
+   "request_body": [
+    "AgeGated001",
+    "HOSTFLAGS123",
+    "https://www.reddit.com/",
+    "20001"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "agegated-embedded.json"
+  },
+  {
+   "url": "https://www.youtube.com/embed/AgeGated001?html5=1",
+   "request_headers": {
+    "Referer": "https://www.reddit.com/"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed.html"
+  },
+  {
+   "url": "https://www.youtube.com/s/player/abcd1234/player_ias.vflset/en_US/base.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body_file": "player.js"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=136&client=web_embedded",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&client=web_embedded",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a.m4a"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Unavailabl1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "unavailable.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "Unavailabl1"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "unavailable-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=PrivateVid1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "private.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "PrivateVid1"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "private-visionos.json"
+  }
+ ]
+}

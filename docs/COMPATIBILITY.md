@@ -1145,10 +1145,21 @@ adds Node.js, `--no-js-runtimes` clears them). The executable must be Deno
 
 Metadata still comes from the first player response with video details, as
 described above. Live, upcoming and post-live videos are unsupported errors.
-Authentication, cookies-based clients, PO token providers, age-gate client
-fallbacks and upstream's remaining `_real_extract` fields are not implemented.
+Like upstream's anonymous `_extract_player_responses`, an age-gated response
+adds the `web_embedded` client (and a "made for kids" video the
+android_vr/visionos clients cannot play adds it given a JS runtime), with its
+embed-page `ytcfg` (`_download_ytcfg`), `encryptedHostFlags` and the player
+JS's signature timestamp when the `ytcfg` has no `STS`; responses for another
+video are skipped, responses without details are kept. Without formats, the
+playability status's reason is reported like upstream (DRM, sign-in hint,
+captcha, rate limit); geo restrictions omit upstream's available-country line.
+Before extraction the `PREF` (`hl=en`, `tz=UTC`) and `SOCS` consent cookies are
+set like `_initialize_pref`/`_initialize_consent`. Authentication,
+cookies-based clients, PO token providers and upstream's remaining
+`_real_extract` fields are not implemented.
 
-`tests/fixtures/sites/youtube` (jsless `visionos`) and `youtube-js` compare
+`tests/fixtures/sites/youtube` (jsless `visionos`), `youtube-playability`
+(age gate, unavailable and private videos), `youtube-consent` and `youtube-js` compare
 these paths with pinned upstream output through the site-fixture proxy. The
 `youtube-js` fixture uses the saved real player `74edf1a3` and its known
 challenge vectors. Player API routes are matched by their

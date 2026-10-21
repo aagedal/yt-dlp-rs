@@ -668,11 +668,34 @@ pub(crate) fn download_webpage_handle(
     download_webpage_handle_quiet(client, url, extractor, id)
 }
 
+/// [`download_webpage_note`] with the request's `headers=`.
+pub(crate) fn download_webpage_note_headers(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+    headers: &[(&str, &str)],
+) -> Result<String> {
+    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    download_webpage_handle_headers(client, url, extractor, id, headers).map(|(text, _)| text)
+}
+
 fn download_webpage_handle_quiet(
     client: &Client,
     url: &Url,
     extractor: &'static str,
     id: &str,
+) -> Result<(String, Url)> {
+    download_webpage_handle_headers(client, url, extractor, id, &[])
+}
+
+fn download_webpage_handle_headers(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    headers: &[(&str, &str)],
 ) -> Result<(String, Url)> {
     use std::io::Read;
     let wrap = |error: crate::Error| match error {
@@ -686,7 +709,7 @@ fn download_webpage_handle_quiet(
         }
         error => error,
     };
-    let mut response = direct::request(client, url, None).map_err(wrap)?;
+    let mut response = direct::request_with_headers(client, url, None, headers).map_err(wrap)?;
     let page_url = response.url().clone();
     let mut body = Vec::new();
     response

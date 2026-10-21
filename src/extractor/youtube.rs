@@ -23,7 +23,7 @@ pub struct Youtube;
 /// Opt-in YouTube challenge runtime. Defaults to challenge-free extraction.
 #[derive(Debug, Clone, Default)]
 pub struct YoutubeOptions {
-    /// Explicit Deno 2.9.7 executable path; never discovered or installed.
+    /// Explicit Deno 2.3+ or Node.js 22+ executable path; never discovered or installed.
     /// Inspected only when an eligible format has a supported URL challenge.
     pub js_runtime: Option<PathBuf>,
     /// Include translated manual captions in automatic-caption metadata.
@@ -213,6 +213,79 @@ fn video_id(url: &Url, no_playlist: bool) -> Result<Option<String>> {
         .map(Some)
         .ok_or_else(|| unsupported("expected a single video URL with an 11-character ID"))
 }
+/// `_real_extract`'s reasons for a video without formats: DRM, then the
+/// playability status's error screen (`raise_no_formats(reason)`).
+fn unplayable_reason(id: &str, player_responses: &[Value]) -> Option<Error> {
+    let fail = |message: &str| Error::Reported(format!("[youtube] {id}: {message}"));
+    if player_responses.iter().any(|response| {
+        response
+            .pointer("/streamingData/licenseInfos")
+            .is_some_and(|infos| infos.as_array().is_some_and(|infos| !infos.is_empty()))
+    }) {
+        return Some(fail("This video is DRM protected"));
+    }
+    let statuses: Vec<&Value> = player_responses
+        .iter()
+        .filter_map(|response| response.get("playabilityStatus").filter(|s| s.is_object()))
+        .collect();
+    let pemr = statuses
+        .iter()
+        .find_map(|status| {
+            status
+                .pointer("/errorScreen/playerErrorMessageRenderer")
+                .filter(|renderer| renderer.is_object())
+        })
+        .cloned()
+        .unwrap_or(Value::Null);
+    let mut reason = pemr.get("reason").and_then(metadata::text).or_else(|| {
+        statuses
+            .iter()
+            .find_map(|status| status.get("reason").and_then(Value::as_str))
+            .map(str::to_owned)
+    })?;
+    let subreason = pemr
+        .get("subreason")
+        .and_then(metadata::text)
+        .map(|text| crate::html::clean_html(&text))
+        .unwrap_or_default();
+    if !subreason.is_empty() {
+        if subreason.starts_with("The uploader has not made this video available in your country") {
+            // `raise_geo_restricted` (the available countries are not listed).
+            return Some(Error::Reported(format!(
+                "{subreason}\nYou might want to use a VPN or a proxy server (with --proxy) to workaround."
+            )));
+        }
+        reason.push_str(&format!(". {subreason}"));
+    }
+    if reason.is_empty() {
+        return None;
+    }
+    if reason.to_lowercase().contains("sign in") {
+        let trimmed = reason
+            .strip_suffix("This helps protect our community. Learn more")
+            .unwrap_or(&reason)
+            .trim();
+        reason = format!(
+            "{}. {}",
+            trimmed.strip_suffix('.').unwrap_or(trimmed),
+            watch::LOGIN_HINT
+        );
+    } else if statuses.iter().any(|status| {
+        status
+            .pointer("/errorScreen/playerCaptchaViewModel")
+            .is_some_and(Value::is_object)
+    }) {
+        reason.push_str(". YouTube is requiring a captcha challenge before playback");
+    } else if reason.contains("This content isn't available, try again later") {
+        let trimmed = reason.trim();
+        reason = format!(
+            "{}. The current session has been rate-limited by YouTube for up to an hour. It is recommended to use `-t sleep` to add a delay between video requests to avoid exceeding the rate limit. For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#this-content-isnt-available-try-again-later",
+            trimmed.strip_suffix('.').unwrap_or(trimmed)
+        );
+    }
+    Some(fail(&reason))
+}
+
 fn no_formats() -> Error {
     unsupported(
         "no eligible media formats; signature/n URL challenges require an explicit runtime; WEB DASH requires a GVS token; SABR, live and DRM are unsupported",
@@ -245,27 +318,7 @@ impl streams::Solver for JsSolver<'_> {
         let Ok(runtime) = runtime.checked() else {
             return (n_results, sig_results);
         };
-        let Ok(url) = Url::parse(player_url) else {
-            return (n_results, sig_results);
-        };
-        // `_player_js_cache_key`: `PLAYER_ID-VARIANT`.
-        let key = player_url
-            .split("/s/player/")
-            .nth(1)
-            .and_then(|rest| rest.split('/').next())
-            .map(|id| format!("{id}-main"))
-            .unwrap_or_default();
-        crate::screen::screen(&format!(
-            "[youtube] {}: Downloading player {key}",
-            self.video_id
-        ));
-        let Ok(player) = direct::request(self.client, &url, None)
-            .and_then(|response| response.text().map_err(Error::Http))
-        else {
-            crate::screen::warning(&format!(
-                "[youtube] {}: Download of {key} failed",
-                self.video_id
-            ));
+        let Some(player) = watch::load_player(self.client, self.video_id, player_url) else {
             return (n_results, sig_results);
         };
         // Signature specs are solved as `chr(0..LENGTH)` permutations.
@@ -452,7 +505,7 @@ fn extract_clients(
         }
     }
     let Some(first_format) = formats.first() else {
-        return Err(no_formats());
+        return Err(unplayable_reason(id, &acquired.player_responses).unwrap_or_else(no_formats));
     };
     let microformats: Vec<&Value> = acquired
         .player_responses

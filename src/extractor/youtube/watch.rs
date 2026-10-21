@@ -19,6 +19,187 @@ const EJS_WIKI_URL: &str = "https://github.com/yt-dlp/yt-dlp/wiki/EJS";
 /// `_PLAYER_JS_VARIANT_MAP['main']`.
 const MAIN_PLAYER_VARIANT: &str = "player_ias.vflset/en_US/base.js";
 
+/// `_youtube_login_hint`.
+pub(super) const LOGIN_HINT: &str = "Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies";
+
+/// `_split_innertube_client`: the client, its base client and variant
+/// (`web_embedded.tv` is `web_embedded` for base `tv`).
+fn split_client(name: &str) -> (&str, &str, Option<&str>) {
+    if let Some((variant, base)) = name.rsplit_once('.') {
+        return (variant, base, Some(variant));
+    }
+    match name.split_once('_') {
+        Some((base, variant)) => (name, base, Some(variant)),
+        None => (name, name, None),
+    }
+}
+
+fn playability_status(response: &Value) -> Option<&str> {
+    response
+        .get("playabilityStatus")
+        .and_then(|status| status.get("status"))
+        .and_then(Value::as_str)
+}
+
+/// `_is_agegated`.
+fn is_agegated(response: &Value) -> bool {
+    let status = response.get("playabilityStatus");
+    if status
+        .and_then(|status| status.get("desktopLegacyAgeGateReason"))
+        .is_some_and(|reason| super::tab::truthy(Some(reason)))
+    {
+        return true;
+    }
+    const REASONS: [&str; 5] = [
+        "confirm your age",
+        "age-restricted",
+        "inappropriate",
+        "age_verification_required",
+        "age_check_required",
+    ];
+    ["status", "reason"].iter().any(|key| {
+        status
+            .and_then(|status| status.get(*key))
+            .and_then(Value::as_str)
+            .is_some_and(|reason| REASONS.iter().any(|expected| reason.contains(expected)))
+    })
+}
+
+/// `_download_ytcfg`: the `ytcfg` of a client's own page, for the clients
+/// that have one (`{}` otherwise or when the page fails).
+fn download_ytcfg(
+    client: &Client,
+    config: &innertube::ClientConfig,
+    video_id: &str,
+) -> Map<String, Value> {
+    let url = match config.name {
+        "mweb" => "https://m.youtube.com".to_owned(),
+        "web" | "web_safari" => "https://www.youtube.com".to_owned(),
+        "web_music" => "https://music.youtube.com".to_owned(),
+        "web_creator" => "https://studio.youtube.com".to_owned(),
+        "web_embedded" => format!("https://www.youtube.com/embed/{video_id}?html5=1"),
+        "tv" => "https://www.youtube.com/tv".to_owned(),
+        _ => return Map::new(),
+    };
+    // Authenticated sessions are not supported natively.
+    if config.require_auth {
+        return Map::new();
+    }
+    let Ok(url) = Url::parse(&url) else {
+        return Map::new();
+    };
+    let default = default_ytcfg(config);
+    let context = default.get("INNERTUBE_CONTEXT");
+    let text = |path: &[&str]| {
+        let mut value = context?;
+        for key in path {
+            value = value.get(*key)?;
+        }
+        value.as_str()
+    };
+    let mut headers = Vec::new();
+    if let Some(user_agent) = text(&["client", "userAgent"]) {
+        headers.push(("User-Agent", user_agent));
+    }
+    if let Some(referer) = text(&["thirdParty", "embedUrl"]) {
+        headers.push(("Referer", referer));
+    }
+    let note = format!(
+        "Downloading {} client config",
+        config.name.replace('_', " ").trim()
+    );
+    // `_download_webpage_with_retries(fatal=False)`: a warning, no ytcfg.
+    let webpage = match super::super::download_webpage_note_headers(
+        client, &url, "youtube", video_id, &note, &headers,
+    ) {
+        Ok(webpage) => webpage,
+        Err(error) => {
+            crate::screen::warning(&crate::upstream_error_text(&error));
+            return Map::new();
+        }
+    };
+    let mut ytcfg = extract_ytcfg(&webpage);
+    // `_fix_embedded_ytcfg`.
+    if split_client(config.name).2 == Some("embedded")
+        && let Some(Value::Object(context)) = ytcfg.get_mut("INNERTUBE_CONTEXT")
+    {
+        let third_party = context.entry("thirdParty").or_insert_with(|| json!({}));
+        if let Some(third_party) = third_party.as_object_mut() {
+            third_party.insert("embedUrl".into(), "https://www.reddit.com/".into());
+        }
+    }
+    if config.name == "tv"
+        && let Some(Value::Object(info)) = ytcfg
+            .get_mut("INNERTUBE_CONTEXT")
+            .and_then(|context| context.get_mut("client"))
+            .and_then(|client| client.get_mut("configInfo"))
+    {
+        info.shift_remove("appInstallData");
+    }
+    ytcfg
+}
+
+/// `_load_player(fatal=False)`: the player JS, downloaded once per
+/// `_player_js_cache_key` (`PLAYER_ID-VARIANT`) and process.
+pub(super) fn load_player(client: &Client, video_id: &str, player_url: &str) -> Option<String> {
+    static CODE: LazyLock<std::sync::Mutex<std::collections::HashMap<String, String>>> =
+        LazyLock::new(Default::default);
+    let key = player_url
+        .split("/s/player/")
+        .nth(1)
+        .and_then(|rest| rest.split('/').next())
+        .map(|id| format!("{id}-main"))
+        .unwrap_or_default();
+    if let Some(code) = CODE.lock().ok()?.get(&key) {
+        return Some(code.clone());
+    }
+    crate::screen::screen(&format!("[youtube] {video_id}: Downloading player {key}"));
+    let code = Url::parse(player_url)
+        .map_err(Error::from)
+        .and_then(|url| super::super::direct::request(client, &url, None))
+        .and_then(|response| response.text().map_err(Error::Http));
+    match code {
+        Ok(code) => {
+            if let Ok(mut cache) = CODE.lock() {
+                cache.insert(key, code.clone());
+            }
+            Some(code)
+        }
+        Err(_) => {
+            crate::screen::warning(&format!("[youtube] {video_id}: Download of {key} failed"));
+            None
+        }
+    }
+}
+
+/// `_extract_signature_timestamp(fatal=False)`: the `ytcfg`'s `STS`, else
+/// the player JS's.
+fn signature_timestamp(
+    client: &Client,
+    video_id: &str,
+    player_url: &str,
+    ytcfg: &Map<String, Value>,
+) -> Option<i64> {
+    if let Some(sts) = ytcfg
+        .get("STS")
+        .and_then(|sts| sts.as_i64().or_else(|| sts.as_str()?.parse().ok()))
+        .filter(|sts| *sts != 0)
+    {
+        return Some(sts);
+    }
+    static STS: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r"(?:signatureTimestamp|sts)\s*:\s*(?P<sts>[0-9]{5})").unwrap()
+    });
+    let code = load_player(client, video_id, player_url)?;
+    match STS.captures(&code) {
+        Some(found) => found["sts"].parse().ok(),
+        None => {
+            super::super::search_warning("youtube", "JS player signature timestamp");
+            None
+        }
+    }
+}
+
 /// Whether `_report_pot_format_skipped` only writes a debug message.
 pub(super) fn is_default_client(client: &str) -> bool {
     DEFAULT_CLIENTS.contains(&client) || DEFAULT_AUTHED_CLIENTS.contains(&client)
@@ -195,17 +376,21 @@ fn player_response(
     if let Some(params) = config.player_params {
         query.insert("params".into(), params.into());
     }
-    // `_extract_signature_timestamp`: the page's `STS`.
-    let sts = player_url.and_then(|_| {
-        webpage_ytcfg
-            .get("STS")
-            .and_then(|sts| sts.as_i64().or_else(|| sts.as_str()?.parse().ok()))
-            .filter(|sts| *sts != 0)
-    });
+    let sts = player_url.and_then(|url| signature_timestamp(client, video_id, url, webpage_ytcfg));
     let mut playback = Map::new();
     playback.insert("html5Preference".into(), "HTML5_PREF_WANTS".into());
     if let Some(sts) = sts {
         playback.insert("signatureTimestamp".into(), sts.into());
+    }
+    // Embedded player requests may need their page's `encryptedHostFlags`.
+    if split_client(config.name).2 == Some("embedded")
+        && let Some(flags) = player_ytcfg
+            .get("WEB_PLAYER_CONTEXT_CONFIGS")
+            .and_then(|configs| configs.get("WEB_PLAYER_CONTEXT_CONFIG_ID_EMBEDDED_PLAYER"))
+            .and_then(|config| config.get("encryptedHostFlags"))
+            .filter(|flags| super::tab::truthy(Some(flags)))
+    {
+        playback.insert("encryptedHostFlags".into(), flags.clone());
     }
     query.insert(
         "playbackContext".into(),
@@ -424,12 +609,14 @@ pub(super) fn acquire(
         data.get("contents")
             .is_some_and(|contents| !contents.is_null())
     });
+    // `_get_requested_clients` runs before `_extract_player_responses`
+    // searches the initial player response.
+    let clients = requested_clients(runtime.is_some());
     let initial_pr = search_initial(
         &webpage,
         &INITIAL_PLAYER_RESPONSE,
         &format!("{WEBPAGE_CLIENT} client initial player response"),
     );
-    let clients = requested_clients(runtime.is_some());
 
     let mut player_responses: Vec<Value> = Vec::new();
     let mut responses: Vec<streams::ClientResponse> = Vec::new();
@@ -451,19 +638,46 @@ pub(super) fn acquire(
     let mut tried_iframe_fallback = false;
     let mut visitor: Option<String> = None;
     let mut skipped: Vec<(&'static str, String)> = Vec::new();
-    let empty = Map::new();
     let webpage_ytcfg_value = Value::Object(webpage_ytcfg.clone());
-    for name in clients {
+    let skip_configs = crate::manifest_args::configuration_arg("youtube", "player_skip", false)
+        .is_some_and(|skip| skip.iter().any(|value| value == "configs"));
+    // `append_client` adds the first named client not yet requested.
+    let mut all_clients: Vec<&str> = clients.clone();
+    let mut pending: Vec<String> = clients
+        .iter()
+        .rev()
+        .map(|name| (*name).to_owned())
+        .collect();
+    let mut append_client = |pending: &mut Vec<String>, names: &[String]| {
+        for name in names {
+            let actual = split_client(name).0;
+            if let Some(config) = innertube::client(actual) {
+                if !all_clients.contains(&config.name) {
+                    pending.push(name.clone());
+                    all_clients.push(config.name);
+                }
+                return;
+            }
+        }
+    };
+    while let Some(requested) = pending.pop() {
+        let (name, base, variant) = split_client(&requested);
         let Some(config) = innertube::client(name) else {
             continue;
         };
-        let player_ytcfg = if name == WEBPAGE_CLIENT {
-            &webpage_ytcfg
+        let mut player_ytcfg = if config.name == WEBPAGE_CLIENT {
+            webpage_ytcfg.clone()
         } else {
-            &empty
+            Map::new()
         };
+        if !skip_configs && config.name != WEBPAGE_CLIENT {
+            let downloaded = download_ytcfg(client, config, video_id);
+            if !downloaded.is_empty() {
+                player_ytcfg = downloaded;
+            }
+        }
         if player_url_found.is_none() {
-            player_url_found = player_url(&[&webpage_ytcfg, player_ytcfg]);
+            player_url_found = player_url(&[&webpage_ytcfg, &player_ytcfg]);
         }
         if player_url_found.is_none() && !tried_iframe_fallback && config.require_js_player {
             player_url_found = iframe_player_url(client, video_id);
@@ -477,7 +691,7 @@ pub(super) fn acquire(
                 &Value::Object(player_ytcfg.clone()),
             ]);
         }
-        let reused = (name == WEBPAGE_CLIENT)
+        let reused = (config.name == WEBPAGE_CLIENT)
             .then(|| initial_pr.clone())
             .flatten();
         let response = match reused {
@@ -489,9 +703,9 @@ pub(super) fn acquire(
                 if player_ytcfg.is_empty() {
                     &webpage_ytcfg
                 } else {
-                    player_ytcfg
+                    &player_ytcfg
                 },
-                player_ytcfg,
+                &player_ytcfg,
                 player_url_found.as_deref(),
                 visitor.as_deref(),
             ) {
@@ -502,29 +716,51 @@ pub(super) fn acquire(
                 }
             },
         };
+        // `_invalid_player_response`: only another video's response is
+        // skipped (one without details is kept).
         let id = response
             .get("videoDetails")
             .and_then(|details| details.get("videoId"))
-            .and_then(Value::as_str)
-            .map(str::to_owned);
-        if id.as_deref() != Some(video_id) {
-            skipped.push((name, id.unwrap_or_else(|| "None".into())));
-            continue;
+            .map(|id| match id {
+                Value::String(text) => text.clone(),
+                other => other.to_string(),
+            });
+        let status = playability_status(&response).map(str::to_owned);
+        if id.as_deref().is_some_and(|id| id != video_id) {
+            skipped.push((config.name, id.unwrap_or_default()));
+        } else if response
+            .as_object()
+            .is_some_and(|object| !object.is_empty())
+        {
+            player_responses.push(response.clone());
+            responses.push(streams::ClientResponse {
+                client: config.name,
+                response: response.clone(),
+                player_token_provided: false,
+                available_at: std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .map_or(0, |elapsed| elapsed.as_secs() as i64),
+            });
         }
-        let status = response
-            .get("playabilityStatus")
-            .and_then(|status| status.get("status"))
-            .and_then(Value::as_str)
-            .map(str::to_owned);
-        player_responses.push(response.clone());
-        responses.push(streams::ClientResponse {
-            client: config.name,
-            response,
-            player_token_provided: false,
-            available_at: std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .map_or(0, |elapsed| elapsed.as_secs() as i64),
-        });
+        // A "made for kids" video android_vr/visionos cannot play may play
+        // through web_embedded, given a JS runtime.
+        if matches!(config.name, "android_vr" | "visionos")
+            && matches!(status.as_deref(), Some("UNPLAYABLE" | "ERROR"))
+            && webpage.contains("made for kids")
+            && runtime.is_some()
+        {
+            append_client(&mut pending, &["web_embedded".into()]);
+        }
+        // web_embedded can work around the age gate of embeddable videos.
+        let agegated = is_agegated(&response);
+        if agegated && variant != Some("web_embedded") {
+            append_client(&mut pending, &[format!("web_embedded.{base}")]);
+        }
+        if agegated {
+            crate::screen::screen_once(&format!(
+                "[youtube] {video_id}: This video is age-restricted; some formats may be missing without authentication. {LOGIN_HINT}"
+            ));
+        }
         if !matches!(
             status.as_deref(),
             Some("OK" | "LIVE_STREAM_OFFLINE" | "AGE_CHECK_REQUIRED" | "AGE_VERIFICATION_REQUIRED")
