@@ -348,10 +348,13 @@ fn unplayable_reason(id: &str, player_responses: &[Value]) -> Option<Error> {
     Some(fail(&reason))
 }
 
-fn no_formats() -> Error {
-    unsupported(
-        "no eligible media formats; signature/n URL challenges require an explicit runtime; WEB DASH requires a GVS token; SABR, live and DRM are unsupported",
-    )
+/// `process_video_result`'s `raise_no_formats` for a video without formats
+/// or a reason (skipped formats were warned about while extracting).
+fn no_formats(id: &str) -> Error {
+    Error::Reported(format!(
+        "[youtube] {id}: No video formats found!; {}",
+        crate::BUG_REPORTS_MESSAGE
+    ))
 }
 
 /// `solve_js_challenges` through the configured runtime: the player JS
@@ -571,7 +574,9 @@ fn extract_clients(
         }
     }
     let Some(first_format) = formats.first() else {
-        return Err(unplayable_reason(id, &acquired.player_responses).unwrap_or_else(no_formats));
+        return Err(
+            unplayable_reason(id, &acquired.player_responses).unwrap_or_else(|| no_formats(id))
+        );
     };
     let microformats: Vec<&Value> = acquired
         .player_responses

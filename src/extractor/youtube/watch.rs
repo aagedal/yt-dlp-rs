@@ -528,6 +528,9 @@ fn auth_headers(
     headers
 }
 
+/// Upstream's default `extractor_retries` for InnerTube requests.
+const API_RETRIES: u32 = 3;
+
 /// `_call_api`: one POST to `/youtubei/v1/ENDPOINT` with the client's
 /// `generate_api_headers`.
 #[allow(clippy::too_many_arguments)]
@@ -589,23 +592,44 @@ fn call_api(
         "https://{}/youtubei/v1/{endpoint}?prettyPrint=false",
         config.host
     ))?;
-    crate::screen::screen(&format!("[{extractor}] {item_id}: {note}"));
     let headers: Vec<(&str, &str)> = headers
         .iter()
         .map(|(name, value)| (*name, value.as_str()))
         .collect();
     let body = serde_json::to_string(&Value::Object(body))
         .map_err(|error| Error::Reported(error.to_string()))?;
-    let response =
-        super::super::direct::post(client, &url, &headers, body).map_err(|error| match error {
-            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                extractor,
-                id: item_id.to_owned(),
-                what: "API page",
-                source: Box::new(error),
-            },
-            error => error,
-        })?;
+    // `_extract_response`: network errors and HTTP errors other than 403 and
+    // 429 (intermittent 5xx, sometimes 404) are retried.
+    let mut retries = 0;
+    let response = loop {
+        crate::screen::screen(&format!("[{extractor}] {item_id}: {note}"));
+        match super::super::direct::post(client, &url, &headers, body.clone()) {
+            Ok(response) => break response,
+            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+                let status = match &error {
+                    Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
+                    _ => None,
+                };
+                if retries < API_RETRIES
+                    && status.is_none_or(|status| !matches!(status.as_u16(), 403 | 429))
+                {
+                    retries += 1;
+                    crate::screen::warning(&format!(
+                        "[{extractor}] {}. Retrying ({retries}/{API_RETRIES})...",
+                        crate::upstream_error_text(&error)
+                    ));
+                    continue;
+                }
+                return Err(Error::ExtractorRequest {
+                    extractor,
+                    id: item_id.to_owned(),
+                    what: "API page",
+                    source: Box::new(error),
+                });
+            }
+            Err(error) => return Err(error),
+        }
+    };
     let text = response.text().map_err(Error::Http)?;
     serde_json::from_str(&text).map_err(|error| {
         Error::Reported(format!(

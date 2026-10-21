@@ -126,6 +126,24 @@
     "Content-Type": "application/json"
    },
    "body_file": "private2-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=ServerErr01&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "server-error.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_body": [
+    "ServerErr01"
+   ],
+   "status": 500,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
   }
  ]
 }
