@@ -50,6 +50,7 @@ mod kommunetv;
 mod ku6;
 mod kvs;
 mod lbry;
+mod linkedin;
 mod livestreamfails;
 mod maariv;
 mod masters;
@@ -152,6 +153,7 @@ pub use kick::{
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
 pub use lbry::{Lbry, suitable as lbry_suitable};
+pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};

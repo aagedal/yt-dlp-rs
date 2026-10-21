@@ -703,6 +703,18 @@
       "scope": "LBRYIE resolve/get API proxy, original files, streaming-redirect HLS formats, livestreams, claim metadata and API errors; no channels or playlists; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "linkedin",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/linkedin.py"
+      ],
+      "rust": [
+        "src/extractor/linkedin.rs",
+        "tests/fixtures/sites/linkedin/"
+      ],
+      "scope": "LinkedInIE public post video sources, captions and metadata; no LinkedIn Learning or events; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "livestreamfails",
       "status": "partial",
       "upstream": [

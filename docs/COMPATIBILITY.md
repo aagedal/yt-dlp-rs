@@ -869,6 +869,15 @@ claim's metadata and channel URL, and upstream's `lbry said: CODE -
 MESSAGE` errors. Channels and playlists are not supported.
 `tests/fixtures/sites/lbry/` is compared with pinned upstream output.
 
+LinkedIn posts (`linkedin.com/posts/SLUG-ID-XXXX`,
+`feed/update/urn:li:activity:ID`) follow upstream `LinkedInIE`: the page's
+first `<video>` `data-sources` formats (MIME type, `data-bitrate`/1000 as
+`tbr`) and `data-captions-url` (`en`, `vtt`), the OpenGraph or `<title>`
+title, reaction count, JSON-LD `SocialMediaPosting` author, thumbnail (with
+upstream's warning when missing) and description. LinkedIn Learning and
+events (login required) are not supported. `tests/fixtures/sites/linkedin/`
+is compared with pinned upstream output.
+
 Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
 `LivestreamfailsIE`: the clip API JSON as an untyped result (`sourceId` as
 `display_id`, `unified_timestamp` of `createdAt`, the streamer label as
