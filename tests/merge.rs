@@ -361,7 +361,8 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
         let server = Server::with_bodies(video, audio, video_mime, audio_mime);
         let mut info = server.info(true);
         info.ext = output_ext.into();
-        // Reversed selection must still map the video to the first output track.
+        // A reversed (audio first) selection: upstream's FFmpegMergerPP maps
+        // each requested format's streams in selection order.
         info.requested_formats[0].ext = audio_ext.into();
         info.requested_formats[1].ext = video_ext.into();
         // TS files exercise the fragment route used by HLS extraction.
@@ -407,15 +408,15 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
         let info: serde_json::Value = serde_json::from_slice(&probe.stdout).unwrap();
         let streams = info["streams"].as_array().unwrap();
         assert_eq!(streams.len(), 2);
-        assert_eq!(streams[0]["codec_type"], "video");
-        assert_eq!(streams[0]["codec_name"], video_codec);
-        assert_eq!(streams[1]["codec_type"], "audio");
-        assert_eq!(streams[1]["codec_name"], audio_codec);
+        assert_eq!(streams[0]["codec_type"], "audio");
+        assert_eq!(streams[0]["codec_name"], audio_codec);
+        assert_eq!(streams[1]["codec_type"], "video");
+        assert_eq!(streams[1]["codec_name"], video_codec);
         if output_ext == "mp4" && audio_codec == "aac" {
             // FFmpeg's MP4 muxer automatically inserts aac_adtstoasc for ADTS
             // AAC copied from elementary AAC or MPEG-TS inputs.
             assert!(
-                streams[1]["extradata_size"]
+                streams[0]["extradata_size"]
                     .as_u64()
                     .is_some_and(|size| size > 0)
             );
