@@ -2359,18 +2359,20 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let mut downloader = YoutubeDl::with_options(
         YoutubeOptions {
-            // `--js-runtimes deno[:PATH]`/`node[:PATH]`: the last value for
-            // each; a bare name is looked up on PATH because it was requested.
-            // Upstream prefers Deno's provider to Node.js's.
+            // `--js-runtimes deno[:PATH]`/`node[:PATH]` (`deno` is enabled by
+            // default; `--no-js-runtimes` clears it): the last value for each,
+            // a bare name looked up on PATH. Upstream prefers Deno's provider
+            // to Node.js's.
             js_runtime: args.youtube_js_runtime.or_else(|| {
-                if args.no_js_runtimes {
-                    return None;
-                }
+                let mut enabled: Vec<&str> = if args.no_js_runtimes {
+                    Vec::new()
+                } else {
+                    vec!["deno"]
+                };
+                enabled.extend(args.js_runtimes.iter().map(String::as_str));
                 ["deno", "node"].into_iter().find_map(|runtime| {
-                    let value = args.js_runtimes.iter().rev().find(|value| {
-                        let name = value
-                            .split_once(':')
-                            .map_or(value.as_str(), |(name, _)| name);
+                    let value = enabled.iter().rev().find(|value| {
+                        let name = value.split_once(':').map_or(**value, |(name, _)| name);
                         name.eq_ignore_ascii_case(runtime)
                     })?;
                     let path = value.split_once(':').map_or("", |(_, path)| path);
@@ -2391,6 +2393,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         },
         http_options,
     )?;
+    downloader = downloader.with_subtitles_requested(args.write_subs || args.list_subs);
     let (ffmpeg, ffprobe) = ffmpeg_executables(args.ffmpeg_location.as_deref());
     if let Some(path) = ffmpeg {
         downloader = downloader.with_ffmpeg(path);
@@ -2985,7 +2988,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 62] = [
+        let suitable: [(&str, Suitable); 74] = [
             ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
             ("Angel", yt_dlp_rs::extractor::angel_suitable),
             ("AudioBoom", yt_dlp_rs::extractor::audioboom_suitable),
@@ -3012,6 +3015,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("EbaumsWorld", yt_dlp_rs::extractor::ebaumsworld_suitable),
             ("Ebay", yt_dlp_rs::extractor::ebay_suitable),
             ("Epoch", yt_dlp_rs::extractor::epoch_suitable),
+            ("facebook", yt_dlp_rs::extractor::facebook_suitable),
+            (
+                "facebook:reel",
+                yt_dlp_rs::extractor::facebook_reel_suitable,
+            ),
+            (
+                "FacebookPluginsVideo",
+                yt_dlp_rs::extractor::facebook_plugins_suitable,
+            ),
             ("Fathom", yt_dlp_rs::extractor::fathom_suitable),
             ("Fczenit", yt_dlp_rs::extractor::fczenit_suitable),
             ("Filmweb", yt_dlp_rs::extractor::filmweb_suitable),
@@ -3033,6 +3045,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("html5", |_| false),
             ("Huajiao", yt_dlp_rs::extractor::huajiao_suitable),
             ("Hypem", yt_dlp_rs::extractor::hypem_suitable),
+            ("Instagram", yt_dlp_rs::extractor::instagram_suitable),
             ("Jove", yt_dlp_rs::extractor::jove_suitable),
             ("JWPlatform", yt_dlp_rs::extractor::jwplatform_suitable),
             ("Kommunetv", yt_dlp_rs::extractor::kommunetv_suitable),
@@ -3056,6 +3069,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 yt_dlp_rs::extractor::premiershiprugby_suitable,
             ),
             ("QingTing", yt_dlp_rs::extractor::qingting_suitable),
+            ("Reddit", yt_dlp_rs::extractor::reddit_suitable),
             ("ReverbNation", yt_dlp_rs::extractor::reverbnation_suitable),
             ("RTRFM", yt_dlp_rs::extractor::rtrfm_suitable),
             ("ScreenRec", yt_dlp_rs::extractor::screenrec_suitable),
@@ -3067,10 +3081,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 "ThisAmericanLife",
                 yt_dlp_rs::extractor::thisamericanlife_suitable,
             ),
+            ("TikTok", yt_dlp_rs::extractor::tiktok_suitable),
             ("Tweakers", yt_dlp_rs::extractor::tweakers_suitable),
+            ("twitter", yt_dlp_rs::extractor::twitter_suitable),
+            ("twitter:card", yt_dlp_rs::extractor::twitter_card_suitable),
+            ("vm.tiktok", yt_dlp_rs::extractor::tiktok_vm_suitable),
             ("Vocaroo", yt_dlp_rs::extractor::vocaroo_suitable),
             ("yfanefa", yt_dlp_rs::extractor::yfanefa_suitable),
             ("youtube", yt_dlp_rs::extractor::youtube_suitable),
+            (
+                "youtube:search",
+                yt_dlp_rs::extractor::youtube_search_suitable,
+            ),
+            (
+                "youtube:search_url",
+                yt_dlp_rs::extractor::youtube_search_url_suitable,
+            ),
+            ("youtube:tab", yt_dlp_rs::extractor::youtube_tab_suitable),
             ("Zhihu", yt_dlp_rs::extractor::zhihu_suitable),
             ("generic", |_| true),
         ];
@@ -3086,10 +3113,26 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         return Ok(true);
     }
     if args.extractor_descriptions {
+        // `description(search_examples=...)`: a random count and example.
+        use std::hash::{BuildHasher, Hasher};
+        let mut hasher = std::collections::hash_map::RandomState::new().build_hasher();
+        hasher.write_u64(epoch());
+        let random = hasher.finish();
+        let count = ["", "5", "10", "all"][(random % 4) as usize];
+        let example = [
+            "cute kittens",
+            "slithering pythons",
+            "falling cat",
+            "angry poodle",
+            "purple fish",
+            "running tortoise",
+            "sleeping bunny",
+            "burping cow",
+        ][((random / 4) % 8) as usize];
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nAngel\nAudioBoom\nBild\nBitmovin\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEbay\nEpoch\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nJove\nJWPlatform\nKommunetv\nKu6\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nMovingImage\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nScreenRec\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyfanefa\nyoutube: [youtube] YouTube\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "23video\nAngel\nAudioBoom\nBild\nBitmovin\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nInstagram\nJove\nJWPlatform\nKommunetv\nKu6\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nMovingImage\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nScreenRec\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTikTok\nTweakers\ntwitter\ntwitter:card\nvm.tiktok\nVocaroo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:tab: [youtube] YouTube Tabs\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }

@@ -128,7 +128,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--id` | Hidden deprecated upstream option: `-o "%(id)s.%(ext)s"` with its deprecation warning, or `--id is ignored since --output was given` |
 | `--print-json`, `--all-subs` | Hidden deprecated upstream aliases: quiet JSON printing without simulation; `--sub-langs all --write-subs` |
 | Removed upstream switches | `--call-home`, `-C`, `--dump-user-agent`, `--sponskrub*`, `--prefer-ffmpeg`, `--write-annotations` and the other options in upstream's deprecated list are accepted and dropped (with their values) and reported once with upstream's `Deprecated Feature:` notice |
-| `--no-playlist`, `--yes-playlist` | Upstream `noplaylist`: a YouTube `watch?v=ID&list=...` URL downloads just the video (`[youtube:tab] Downloading just the video ID because of --no-playlist`); without it such URLs remain an explicit unsupported-playlist error. HTML5 playlists are unaffected, as upstream's generic extractor ignores the option |
+| `--no-playlist`, `--yes-playlist` | Upstream `noplaylist`: a YouTube `watch?v=ID&list=...` URL downloads just the video (`[youtube:tab] Downloading just the video ID because of --no-playlist`); without it the playlist is extracted (`Downloading playlist LIST - add --no-playlist to download just the video ID`, see "YouTube playlists"). HTML5 playlists are unaffected, as upstream's generic extractor ignores the option |
 | `--flat-playlist`, `--no-flat-playlist` | Accepted; supported playlists contain fully extracted entries rather than URL results, which upstream processes either way |
 | `--skip-playlist-after-errors N` | Upstream `__process_playlist` `failures`: after N entries fail extraction/selection, `ERROR: Skipping the remaining entries in playlist "TITLE" since N items failed extraction`; 0 is unlimited |
 | `--playlist-random` | Upstream `random.shuffle` of the selected entries (clock-seeded; `playlist_autonumber` follows the new order); `--playlist-reverse is ignored since --playlist-random was given` |
@@ -181,21 +181,47 @@ The built-in `Youtube` extractor runs before the generic HTTP fallback. Exact
 `www.youtu.be`, `youtube-nocookie.com`, and `www.youtube-nocookie.com` hosts are
 claimed. Accept watch URLs with one `v` parameter, short links, `/shorts/`,
 `/embed/`, and `/live/` paths with exactly an 11-character video ID. Watch-page requests
-use the canonical HTTPS watch URL. Reject channels, playlists, malformed IDs,
-and URLs containing `list=` before making a request. `/live/` is a URL shape;
+use the canonical HTTPS watch URL. Reject channels, malformed IDs and other
+paths before making a request; `/playlist` URLs and URLs containing `list=`
+belong to `youtube:tab` (see "YouTube playlists"). `/live/` is a URL shape;
 live, upcoming, and post-live player responses remain unsupported.
 
-Descriptive metadata follows upstream `_real_extract` for fields derivable from
-the player response alone: `description` (original before microformat text),
-`duration`, `channel_id`/`channel_url`, `uploader_id`/`uploader_url` (owner
-handle), `view_count`, `average_rating`, `age_limit`, `categories`, `tags`,
-`playable_in_embed`, `live_status`, `media_type`, `upload_date`/`timestamp`
-(microformat `uploadDate` with zone) and `availability` (without initial-data
-badges). `ytInitialData`-derived fields (`uploader`, `channel`, likes, comments,
-chapters) and watch-page meta fallbacks are not extracted. Thumbnails follow
-upstream: saved `videoDetails`/microformat thumbnails, 38 generated `i.ytimg.com`
-candidates with name/WebP preferences, URL deduplication and the best saved
-thumbnail as `thumbnail`. HTML5 media `poster` attributes become thumbnails.
+The info dict follows upstream `_real_extract` after `_list_formats`, in its
+key order, over every player response, the page's meta tags and `ytInitialData`:
+- **From the player responses:** title, original (else translated, else
+  initial-data) description, duration, view count, average rating, age limit,
+  categories, keywords (else `og:video:tag` metas) as tags, playability, live
+  status and media type.
+- **Thumbnails:** every response's saved ones and the page's image, then the
+  generated `i.ytimg.com` names with their preferences and URL deduplication.
+  The best saved thumbnail is `thumbnail`.
+- **Captions:** automatic captions (the manifests' subtitles first) and
+  subtitles.
+- **URL times:** the URL's `t`/`start`/`end` times.
+- **Music metadata:** from YouTube Music's auto-generated descriptions.
+- **From the initial data:** the comment count, a live chat replay track,
+  chapters and heatmap.
+- **From the primary info renderer:** location or series/season/episode,
+  like counts and the view count.
+- **From the secondary info renderer:** the channel, followers, collaborators
+  as creators, license/album/artist/song rows and the verified badge.
+- **Uploader, timestamp and availability:** uploader and handle, the
+  `uploadDate` timestamp (only with a time and zone) and date (else the
+  `dateText`), and availability from the badges.
+
+Captions follow upstream's caption loop over the client responses with
+streaming data:
+- **Tracks:** each subtitle format's `fmt` URL (without `xosf`), carrying
+  upstream's `impersonate` and client keys.
+- **Translations:** `translationLanguages` from every response; translated
+  manual captions only with `--write-auto-subs`/`--list-subs`.
+- **`-orig` tracks:** for the original language, which also becomes the audio
+  formats' language.
+- **PO tokens:** tracks requiring a PO token are skipped.
+
+Storyboards become `sbN` `mhtml` formats with their fragments; this port cannot
+download them. Relative `dateText` values are not resolved, and comments are not
+extracted. HTML5 media `poster` attributes become thumbnails.
 Generic results follow upstream `GenericIE`: the first response's
 `Last-Modified` header becomes `timestamp` through a port of
 `unified_timestamp` (pinned `DATE_FORMATS`, `extract_timezone`,
@@ -463,6 +489,22 @@ The Epoch Times videos (`www.theepochtimes.com/SLUG_ID.html`) follow upstream
 ID, its YouMaker `playlist.m3u8` as fatal `hls` formats and subtitles, and
 the cleaned `<title>` text (with upstream's warning when missing).
 
+Facebook videos (`facebook.com` watch, video, post, story, permalink,
+event, group and watch-party URL shapes and `facebook:ID`) follow upstream
+`FacebookIE` through the page's relay prefetched data, the path current pages
+use: `parse_graphql_video` over node attachments, media sets, event cover
+videos and the page's `video` (legacy `playable_url` fields, inline or linked
+DASH manifests from `videoDeliveryResponseFragment`, progressive and HLS URLs,
+captions by locale), each format with upstream's `facebookexternalhit`
+User-Agent and 250 MiB HTTP chunks, merged with `extract_metadata`'s
+webpage title, description, uploader, timestamp, thumbnail and counts. Several
+videos form a playlist. Login and interstitial pages are upstream's errors;
+older server JS/pagelet pages, watch parties, the tahoe player fallback,
+JSON-LD metadata, ads and comments are not supported. `facebook:reel`
+(`/reel/ID`) and `FacebookPluginsVideo` (`plugins/video.php?href=`) are
+followed like upstream. `tests/fixtures/sites/facebook/` is compared with
+pinned upstream output.
+
 Fathom shares (`fathom.video/share/ID`) follow upstream `FathomIE`: the `app`
 element's `data-page` JSON props (upstream's `TypeError` text without them),
 the call's ID and fatal `video_url` HLS formats (subtitles ignored with
@@ -485,11 +527,52 @@ filesize}` thumbnails. Filmweb articles (`filmweb.no/trailere|filmnytt/articleID
 `filmnytt` pages through their `data-videoid`) follow upstream `FilmwebIE`:
 the trailer embed JSON's iframe as a `url_transparent` 23video result.
 
+TikTok videos (`www.tiktok[v].com/@USER/video/ID`, `/embed/ID`,
+`/share/video/ID`) follow upstream `TikTokIE`'s webpage path (no app API
+without `app_info`): upstream's impersonation warning (this port cannot
+impersonate a browser, like upstream without `curl_cffi`), the webpage's
+`__UNIVERSAL_DATA_FOR_REHYDRATION__`, else the page's proof-of-work challenge
+solved natively (SHA-256 over up to a million candidates, as
+`_solve_challenge_and_set_cookies`) and the page refetched with its cookie.
+Status codes 10216/10222 and 10204 and the `/login` redirect are upstream's
+errors. `_parse_aweme_video_web` gives the bitrate renditions (URL-key IDs,
+codecs, int bitrates, qualities and dimensions; `bytevc2` unplayable), the
+`play` and watermarked `download` URLs, the music track as an audio format,
+author, music, stats and cover thumbnails, with the page as every format's
+Referer. Formats upstream marks `__needs_testing` (the watermarked download,
+HEVC `media-video-hvc1` renditions) are tested when selected, as
+`_check_formats` does by default, and `-F` lists them as `Untested`.
+Subtitles, slideshows, user/sound/tag/collection pages and Douyin are not
+supported. `vm.tiktok` short links (`vm.`/`vt.tiktok.com/ID`,
+`tiktok.com/t/ID`) are resolved with a HEAD request and followed.
+`tests/fixtures/sites/tiktok/` is compared with pinned upstream output.
+
 Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 `s1playlist/ID/1920/1080/playlist.json` item's progressive sources as formats
 (labels as IDs, numbered when repeated, `mimetype2ext` or URL extensions),
 with its description, poster, duration and account; an empty item list is
 upstream's bare `IndexError`.
+
+X/Twitter posts (`twitter.com`, `x.com`, `mobile.`/`m.`/`www.` and the onion
+host: `NAME/status/ID`, `i/web/status/ID`, `statuses/ID`, optionally
+`/video/N`) follow upstream `TwitterIE` with its default GraphQL API: a guest
+token (`guest/activate.json`, unless an `auth_token` cookie is present, with
+`ct0` as the CSRF token), then `TweetResultByRestId` and `_graphql_to_legacy`
+(tombstones, unavailable/protected/NSFW reasons, visibility results,
+retweets, quoted posts and card bindings). Each video's HLS variants (an
+audio rendition's `tbr` from its `hls-audio-BITRATE` ID) and MP4 variants
+(`http-KBPS` with dimensions from the URL), size-named thumbnails, duration
+and upstream's `_format_sort_fields` are combined with the post's title
+(`UPLOADER - TEXT`, links removed, 72 characters), description, timestamp,
+counts, age limit and hashtags. Several videos form a playlist with `#N`
+titles; `/video/N` selects one only with `--no-playlist`, as upstream's
+`_yes_playlist`. Unified cards' videos are extracted and player/summary cards
+and a post's only link are followed through the extractor registry;
+broadcast, Spaces, Periscope and VMAP (amplify) cards, the legacy and
+syndication APIs (and the rate-limit fallback to syndication) are not
+supported. `twitter:card` (`i/cards/tfw/v1/ID`, `i/videos[/tweet]/ID`) is
+followed to `statuses/ID`. `tests/fixtures/sites/twitter/` is compared with
+pinned upstream output.
 
 Vocaroo recordings (`vocaroo.com`/`voca.ro` `[embed/]ID`) follow upstream
 `VocarooIE`: the `media`/`media1` MP3 URL checked with a HEAD request
@@ -553,6 +636,21 @@ HistoricFilms tapes (`historicfilms.com/tapes/ID`, `/playID`) follow upstream
 warning, and the derived `.mov` URL as an untyped result. A missing title gets
 `_fill_common_fields`' generic `EXTRACTOR video #ID` title with its warning
 (`fulltitle` stays `null`).
+
+Instagram posts and reels (`instagram.com[/USER]/{p,tv,reel,reels}/ID`, not
+`/share/` links or reel audio) follow upstream `InstagramIE` as it runs
+without browser impersonation (no `curl_cffi`): the session's LSD token from
+the home page (`Setting up session`), the non-fatal `get_ruling_for_content`
+check (with upstream's CSRF/access warnings and its restricted/error answers),
+then, since the GraphQL request requires impersonation, the post page's
+prefetched `xig_polaris_media` (a login redirect, private long shortcodes and
+an empty response are upstream's errors). `_extract_product` gives the
+`video_versions` formats, reversed image candidates, duration, the post's
+user, caption, timestamp, counts and comments, and a carousel's videos as a
+playlist. Inline DASH manifests (`video_dash_manifest`) are not parsed (the
+progressive versions are used), and logged-in extraction through the media
+info API, stories, user and tag pages are not supported.
+`tests/fixtures/sites/instagram/` is compared with pinned upstream output.
 
 JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal
 chapters ID, the chapters XML's root `video` attribute (`Downloading chapters
@@ -669,6 +767,26 @@ formats (subtitles ignored with upstream's warning), the `name` heading
 `uploadDate`/`duration` (minutes)/`interactionCount` metas, each with
 upstream's warning, and upstream's `KeyError` messages.
 
+Reddit posts (`SUB.reddit.com/[r/SUB/|user/NAME/]comments/ID`, also
+`redditmedia.com`) follow upstream `RedditIE`. Without a `reddit_session`
+cookie it first sets up an anonymous session from old Reddit (else the
+shreddit fallback when no `loid` cookie was set), sets the `over18` and
+`_options` (`pref_gated_sr_optin`) cookies, then reads the post's `.json`
+listing (a 403 answer's `quarantined`/`private` reasons are upstream's
+login-required errors). The info dict has the preview thumbnails (with
+`Accept: */*` headers), age limit, 72-character title with the full
+`alt_title`, description, float timestamp, uploader, subreddit as
+`channel_id` and vote/comment counts. A Reddit-hosted video (the post's or a
+crosspost's) gets the `fallback` MP4 plus non-fatal HLS (`f=…,subsAll`) and
+`dash-` DASH formats with their subtitles; only with `--write-subs` or
+`--list-subs` and no manifest subtitles is `wh_ben_en.vtt` checked, as
+upstream's lazy `extract_subtitles`. A text post's embedded `RedditVideo`
+media form a playlist; other links are `url_transparent` results followed
+through the extractor registry with the post's fields. Format sorting now
+sees `filesize_approx` (computed before sorting, as upstream), and playlist
+entries get `playlist_uploader`/`playlist_channel` fields.
+`tests/fixtures/sites/reddit/` is compared with pinned upstream output.
+
 Premiership Rugby videos (`SUB.premiershiprugby.com/watch/SLUG`) follow
 upstream `PremiershipRugbyIE`: the article CMS's hero media `videoLink` as fatal
 HLS formats and subtitles without an `ext` (a media playlist keeps its URL's
@@ -706,96 +824,64 @@ from each other (`', '` split, or joined with commas as fullwidth commas); the
 deprecation warning for extractors returning both is not represented, since no
 supported extractor does.
 
-Watch pages must be uncompressed UTF-8/ASCII `text/html`, at most 2 MiB. Parse
-JSON assigned to `ytInitialPlayerResponse` in a script, including quoted window
-property assignments. Require `playabilityStatus.status=OK`, the requested video
-ID, and a nonempty title. JavaScript runs only for eligible signature/query-n formats when an explicit
-runtime is configured. Authentication, age/consent gates,
-additional API clients, cookies, and token acquisition are unsupported.
+YouTube acquisition follows upstream `_initial_extract` and
+`_extract_player_responses` for an anonymous session. The watch page is
+requested as `watch?v=ID&bpctr=9999999999&has_verified=1`, and its first
+`ytcfg.set({...});` object is the page client's `ytcfg`. The page's
+`ytInitialData` (kept when it has `contents`) and `ytInitialPlayerResponse` are
+read too; the latter is kept, without streaming data, for metadata. The
+requested clients follow `_get_requested_clients`:
+- **JS runtime available:** `tv_samsung`, `visionos`, `web`.
+- **No runtime:** `visionos`, with upstream's deprecation warning.
+- **`--extractor-args "youtube:player_client=..."`:** `default`, `all`,
+  `-NAME` exclusions and names from upstream's `INNERTUBE_CLIENTS` table, which
+  `src/extractor/youtube/innertube.rs` reproduces from the pinned checkout.
 
-Only when the initial response is absent, make one WEB player API POST to the
-canonical page origin at `/youtubei/v1/player?prettyPrint=false`; the shared
-HTTP redirect policy still applies. Require literal
-`ytcfg.set({...})` script configuration with `INNERTUBE_CONTEXT.client` naming
-`WEB` and a nonempty digits/dots client version (at most 128 bytes). Multiple
-literal objects merge in declaration order. Construct a fresh context with that
-name/version, `hl=en`, `gl=US`, and optional visitor data (at most 4096 bytes, no
-control characters); send matching client/visitor headers and page Origin/Referer.
-Page host overrides, API keys, user/session context, and credentials are ignored.
-The body contains video ID, this client context, and HTML5 playback preference.
-No signature timestamp, content/racy check overrides, player token, or auth is
-sent. JSON responses must be uncompressed, at most 2 MiB, and pass the same
-identity/playability/format validation. Malformed or unsupported initial
-responses never invoke fallback. API errors fail explicitly; opt-in extraction
-retries restart the whole page/API sequence after transient status/read failures.
+The `web` client reuses the page's player response. Every other client makes
+one `Downloading CLIENT player API JSON` POST to `/youtubei/v1/player`. The
+request carries upstream's context (`hl=en`, `timeZone=UTC`), the page's `STS`
+as `signatureTimestamp`, the content and racy check flags, and the
+`X-YouTube-Client-Name`/`-Version`, `Origin`, `X-Goog-Visitor-Id` and
+`User-Agent` headers. Without a player URL, a JS-requiring client takes
+upstream's iframe API fallback. Responses for another video are skipped with
+upstream's warning.
 
-WEB player requests need no PLAYER PO token at the pinned baseline. Its direct
-HTTPS and DASH media require a GVS PO token except direct itag 18; HLS tokens are
-optional. API-derived direct formats therefore retain only itag 18 before any
-media probe; eligible HLS is considered independently. No surviving format is an
-unsupported error.
-This policy does not acquire tokens or assert that exempt URLs always work.
-The original initial-response path retains its prior token/probe behavior.
+Formats follow `_extract_formats_and_subtitles`. First every `n` and
+`signatureCipher` challenge across the responses is collected. Then each
+response's HTTPS formats are built with `process_format_stream`: the format ID,
+note, quality rank, source and language preferences, size, codecs, `EXT_dash`
+container, `available_at`, and the 10 MiB `http_chunk_size`. Upstream's filters
+apply:
+- **Duplicates:** stream IDs already seen are skipped.
+- **Live and OTF:** live adaptive formats and OTF streams are skipped.
+- **PO tokens:** formats whose client policy requires a GVS PO token are skipped
+  with upstream's message; no token providers exist.
+- **SABR:** formats missing a URL get upstream's SABR warning.
+- **DRM:** upstream's DRM and damaged-format warnings apply.
 
-Expose `streamingData.formats` followed by `adaptiveFormats` entries resolving
-to direct HTTP(S) media, with MP4/M4A/WebM MIME types and recognized audio
-and/or video codecs. Classify sources as standalone, video-only or audio-only. Preserve numeric itags as
-format IDs and positive declared dimensions. Skip DRM, OTF/fragments, unknown
-source types and live fragments. Encrypted `signatureCipher`/legacy `cipher` and
-query-n URLs require explicit `--youtube-js-runtime PATH` or library configuration;
-reject player responses with DRM license information. Eligible HLS manifests
-are expanded through the native VOD pipeline described below. DASH discovery
-remains disabled because the WEB GVS token is unavailable.
-If no supported direct or HLS format remains, return an explicit unsupported error.
-Supported alternatives retain declaration order and use the existing resolution
-ranking or literal itag selection, not upstream's full sorter. Every eligible direct
-URL must pass a direct media probe; a failing probe fails the entire extraction,
-including when a different format was requested. Filesizes and final URLs come
-from those probes. Token-protected formats can therefore prevent extraction even
-if another format might work. Metadata uses `youtube` / `Youtube`, `direct=false`,
-and the canonical watch page. The shared downloader sends that page as referrer.
+After that come the response's HLS and DASH manifests, with upstream's `n`
+path replacement, itag-based IDs, quality and preference adjustments.
+Challenges are solved once through the configured runtime: the player JS
+(`Downloading player ID-main`, `[jsc:deno] Solving JS challenges using deno`),
+the pinned EJS batch, and signature permutations of `chr(0..LENGTH)` like
+upstream's `sigfuncs`. Unsolved challenges get upstream's warnings, and their
+formats are skipped. Like upstream, deno is enabled by default (`--js-runtimes`
+adds Node.js, `--no-js-runtimes` clears them). The executable must be Deno
+2.9.7 or Node.js 22+.
 
-This is fixture-tested groundwork, not general live-site YouTube support. Modern
-YouTube may require other API clients, PO tokens, SABR, DASH discovery, or fragmented direct adaptive delivery; those remain
-unimplemented.
+Metadata still comes from the first player response with video details, as
+described above. Live, upcoming and post-live videos are unsupported errors.
+Authentication, cookies-based clients, PO token providers, age-gate client
+fallbacks and upstream's remaining `_real_extract` fields are not implemented.
 
-An optional offline EJS/Deno pipeline solves encrypted signatures and query-n challenges during public
-extraction with `--youtube-js-runtime PATH` or
-`YoutubeDl::with_youtube_options(YoutubeOptions { js_runtime: Some(path), ..Default::default() })`.
-The explicit executable must be Deno 2.9.7. Configuration is inert until an
-eligible challenge needs solving; canonical path/version validation is cached
-once per configured extractor. Token/live/DRM/format filtering precedes solving,
-and complete-batch validation precedes every media probe. Player network failures
-retain whole-extraction retry policy; runtime/protocol failures are permanent.
-The [n extraction slice](../upstream/notes/youtube-n-extraction.md) records exact
-behavior, cross-platform runtime evidence and deterministic extraction tests.
-The [signature slice](../upstream/notes/youtube-signature-extraction.md) adds
-exact cipher/default/custom-sp/combined-n extraction and download tests. The
-optional comparison also accepts `--deno PATH` to run upstream's actual offline
-EJS signature-permutation path against the same saved fixture. Without that flag,
-the signature case is explicitly skipped.
-
-An unsupported page cannot fall through to generic HTML5 and appear successful.
-The deterministic Rust tests cover URL dispatch, player response validation,
-format rejection, source probes, selection, and a local download. The optional
-upstream parser comparison uses the same saved response and expected metadata:
-
-```sh
-python3 tools/compare_youtube.py --upstream /path/to/yt-dlp
-```
-
-Only ID, title, extractor identity, canonical webpage URL, and ordered formats'
-itag, extension, dimensions, URL, and filesize are compared. Normalize only the
-exact fixture origin to `{{ORIGIN}}`; all other compared values remain exact.
-The harness bypasses upstream network/client acquisition and allows missing PO
-tokens for the original watch-page fixture only. The additional saved API
-response uses ordinary upstream WEB token policy and compares the retained
-itag 18 metadata. These comparisons verify parsing and that token-policy subset,
-not API acquisition/request parity, full ranking, or live-site usability. Local
-Rust HTTP tests separately assert API requests, rejected responses, fallback
-boundaries, whole-extraction retries, and token filtering before probes. See
-[the watch-page brief](../upstream/notes/youtube-watch-page.md) and
-[the API brief](../upstream/notes/youtube-player-api.md).
+`tests/fixtures/sites/youtube` (jsless `visionos`) and `youtube-js` compare
+these paths with pinned upstream output through the site-fixture proxy. The
+`youtube-js` fixture uses the saved real player `74edf1a3` and its known
+challenge vectors. Player API routes are matched by their
+`X-YouTube-Client-Name` header. The capture tool gives upstream a temporary
+cache seeded with the vendored EJS 0.8.0 release, and the volatile
+`available_at` is normalized to 0. Cases that solve challenges are skipped when
+`deno` is not on `PATH`.
 
 ## HTML5 extraction
 
@@ -1667,6 +1753,61 @@ negative repeats or apply presentationTimeOffset: native range expectations are
 checked independently, and those timing behaviors are excluded from upstream
 parity claims. See [the source slice](../upstream/notes/dash-static.md).
 
+
+## YouTube playlists
+
+`youtube:tab` ports upstream `YoutubeTabIE` (`yt_dlp/extractor/youtube/_tab.py`)
+for `/playlist?list=ID` and `watch?v=ID&list=ID` URLs (the latter only without
+`--no-playlist`; `watch?list=ID` warns and downloads the playlist) and channel
+tabs (`/@HANDLE/TAB`, `/channel/UC…/TAB`, `/c/NAME`, `/user/NAME`). A channel
+URL without a tab reads its `/videos` tab (`Downloading all uploads of the
+channel`); upstream then also downloads the live and shorts tabs as nested
+playlists, which this port does not support, so such channels are an explicit
+error naming the tab URLs to pass instead. Topic channels without tabs are
+redirected to their uploads (`UU…`) playlist; `/about` gives the empty
+playlist; a missing tab is `This channel does not have a TAB tab`, a missing
+live tab `The channel is not currently live`, and a home-page redirect or
+conditional regional redirect is handled as upstream. It reads the
+page's `ytInitialData` and `ytcfg`, makes upstream's web-client browse request
+for unavailable videos (`Redownloading playlist API JSON with unavailable
+videos`, `params: wgYCCAA=`), reports alerts like `_report_alerts`, and follows
+every continuation (`Downloading API JSON`, item `ID page N`) until none is
+left or a token repeats. The playlist has `_extract_metadata_from_tabs`' fields
+(title, availability, follower count, description, tags, thumbnails, modified
+date, view and video counts, channel/uploader) in upstream's key order, and its
+entries are `_extract_video`'s, `_extract_lockup_view_model`'s and the Shorts
+lockups' `url` dicts (`ie_key: Youtube`), which
+`--flat-playlist` and `-J` print as upstream does and normal runs resolve
+through the `youtube` extractor. An inline watch-page playlist is followed to
+its playlist page. Playlist thumbnails are sorted and given IDs and resolutions like
+`_sanitize_thumbnails`. The saved site fixtures `tests/fixtures/sites/youtube-playlist/`
+(page, reload and continuation responses) and `tests/fixtures/sites/youtube-channel/`
+(video, Shorts and lockup entries, `/about`, a missing tab, a channel root) are
+compared with pinned upstream output.
+
+Unlike upstream's lazy generator, all continuation pages are fetched before
+the first entry is processed. Feeds, hashtags, mixes (`RD…`) and YouTube Music
+remain explicit unsupported errors. Grid, channel and playlist
+renderers are ported without fixture coverage; shelf, music and post
+renderers are skipped with a warning.
+
+## YouTube search
+
+`youtube:search` ports `YoutubeSearchIE` for `ytsearch:QUERY` (one result),
+`ytsearchN:QUERY` and `ytsearchall:QUERY`, with upstream's videos-only
+`params`; `youtube:search_url` ports `YoutubeSearchURLIE` for
+`youtube.com/results?search_query=…` (or `q=`) URLs and their `sp` filter.
+Both download the web client config (`Downloading web client config`), then
+search API pages (`query "QUERY" page N: Downloading API JSON`) with the
+previous page's visitor data and continuation, stopping once the requested
+number of results is reached, as upstream's `islice` does. Results are
+`_extract_entries`' video and channel `url` entries in a playlist titled by
+the query. `tests/fixtures/sites/youtube-search/` is compared with pinned
+upstream output. The URL parser percent-encodes non-ASCII query text, which is
+decoded again; a non-ASCII query's `webpage_url` stays percent-encoded.
+`--list-extractor-descriptions` draws the search example at random, as
+upstream does. Other search prefixes (`ytsearchdate`, `ytmusic`, …) and
+`--default-search` are not supported.
 
 ## YouTube HLS discovery
 

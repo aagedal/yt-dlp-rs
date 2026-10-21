@@ -264,10 +264,45 @@ pub(crate) fn mark_format(format: &mut crate::VideoFormat, shape: &str) {
     format.extra.insert(FORMAT_SHAPE.into(), shape.into());
 }
 
+/// A caller's `format[key] = ...` after the format was built.
+pub(crate) fn mark_format_update(format: &mut crate::VideoFormat, key: &str) {
+    let Some(Value::String(shape)) = format.extra.get(FORMAT_SHAPE).cloned() else {
+        return;
+    };
+    let (shape, int_rates) = match shape.strip_suffix("|int-rates") {
+        Some(shape) => (shape.to_owned(), true),
+        None => (shape, false),
+    };
+    let mut shape = if shape.contains("|update:") {
+        format!("{shape},{key}")
+    } else {
+        format!("{shape}|update:{key}")
+    };
+    if int_rates {
+        shape.push_str("|int-rates");
+    }
+    format.extra.insert(FORMAT_SHAPE.into(), shape.into());
+}
+
+/// The format's `tbr` (and the `abr`/`vbr` derived from it) is an int.
+pub(crate) fn mark_int_rates(format: &mut crate::VideoFormat) {
+    if let Some(Value::String(shape)) = format.extra.get(FORMAT_SHAPE).cloned()
+        && !shape.ends_with("|int-rates")
+    {
+        format
+            .extra
+            .insert(FORMAT_SHAPE.into(), format!("{shape}|int-rates").into());
+    }
+}
+
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some((shape, original)) = shape_of(map.shift_remove(FORMAT_SHAPE)) else {
         return map;
+    };
+    let (shape, int_rates) = match shape.strip_suffix("|int-rates") {
+        Some(shape) => (shape.to_owned(), true),
+        None => (shape, false),
     };
     // Keys a caller's `format.update(...)` adds after the extractor's.
     let (shape, update) = match shape.split_once("|update:") {
@@ -282,8 +317,27 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         Some(shape) => (true, shape),
         None => (shape.starts_with("html5-"), shape.as_str()),
     };
+    // An extractor's own format dict (`dict:KEYS`), every key set.
+    let dict_keys: Vec<(String, Set)> = shape
+        .strip_prefix("dict:")
+        .map(|keys| {
+            keys.split(',')
+                .map(|key| {
+                    (
+                        key.to_owned(),
+                        if key.starts_with("__") { Take } else { Assign },
+                    )
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    let dict_steps: Vec<(&str, Set)> = dict_keys
+        .iter()
+        .map(|(key, how)| (key.as_str(), *how))
+        .collect();
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        _ if shape.starts_with("dict:") => &dict_steps,
         // `FczenitIE`'s quality.
         "fczenit" => &[("format_id", Take), ("url", Take), ("height", Assign)],
         // `CJSWIE`'s audio.
@@ -307,6 +361,49 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ("format_id", Take),
             ("width", Take),
             ("height", Take),
+        ],
+        // `YoutubeIE._extract_storyboard`'s format.
+        "youtube-storyboard" => &[
+            ("format_id", Take),
+            ("format_note", Take),
+            ("ext", Take),
+            ("protocol", Take),
+            ("acodec", Take),
+            ("vcodec", Take),
+            ("url", Take),
+            ("width", Take),
+            ("height", Take),
+            ("fps", Take),
+            ("rows", Take),
+            ("columns", Take),
+            ("fragments", Take),
+        ],
+        // `YoutubeIE`'s `process_format_stream` dict.
+        "youtube-https" => &[
+            ("asr", Assign),
+            ("filesize", Assign),
+            ("format_id", Take),
+            ("format_note", Assign),
+            ("source_preference", Take),
+            ("fps", Assign),
+            ("audio_channels", Assign),
+            ("height", Assign),
+            ("quality", Take),
+            ("has_drm", Take),
+            ("tbr", Assign),
+            ("filesize_approx", Assign),
+            ("width", Assign),
+            ("language", Assign),
+            ("language_preference", Take),
+            ("preference", Assign),
+            ("ext", Take),
+            ("vcodec", Take),
+            ("acodec", Take),
+            ("dynamic_range", Assign),
+            ("container", Take),
+            ("url", Take),
+            ("available_at", Take),
+            ("downloader_options", Take),
         ],
         // `BildIE`'s MP4 source.
         "bild" => &[("url", Take), ("format_id", Take)],
@@ -410,6 +507,26 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         // A `{'url': url}` format.
         "url-only" => &[("url", Take)],
         "url-ext" => &[("url", Take), ("ext", Take)],
+        // `TwitterBaseIE._extract_variant_formats`' MP4 variant.
+        "twitter-http" => &[
+            ("url", Take),
+            ("format_id", Take),
+            ("tbr", Take),
+            ("width", Take),
+            ("height", Take),
+        ],
+        // `RedditIE`'s fallback MP4.
+        "reddit-fallback" => &[
+            ("url", Take),
+            ("height", Assign),
+            ("width", Assign),
+            ("tbr", Assign),
+            ("acodec", Take),
+            ("vcodec", Take),
+            ("ext", Take),
+            ("format_id", Take),
+            ("format_note", Take),
+        ],
         // `StreamableIE`'s files.
         "streamable" => &[
             ("format_id", Take),
@@ -559,15 +676,31 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     replay.rest_except(&|key| PROCESSED_FORMAT_KEYS.contains(&key));
     replay.format_steps();
     let mut out = replay.finish();
+    // `_check_formats`' `f['__working']` is set after processing.
+    if let Some(working) = out.shift_remove("__working") {
+        out.insert("__working".into(), working);
+    }
+    if int_rates {
+        for key in ["tbr", "abr", "vbr", "quality"] {
+            if let Some(rate) = out.get(key).and_then(Value::as_f64)
+                && rate.fract() == 0.0
+                && out.get(key).is_some_and(|value| !value.is_i64())
+            {
+                out.insert(key.into(), (rate as i64).into());
+            }
+        }
+    }
     // `int_or_none(source.get('bitrate'), scale=1000)` is an int.
-    if matches!(shape, "jwplayer-source" | "f4m" | "ism")
+    if matches!(shape, "jwplayer-source" | "f4m" | "ism" | "reddit-fallback")
         && let Some(tbr) = out.get("tbr").and_then(Value::as_f64)
         && tbr.fract() == 0.0
     {
         out.insert("tbr".into(), (tbr as i64).into());
     }
     // An F4M/ISM entry's `abr`/`vbr` is its int `tbr`.
-    if matches!(shape, "f4m" | "ism") && out.get("tbr").is_some_and(Value::is_i64) {
+    if matches!(shape, "f4m" | "ism" | "reddit-fallback")
+        && out.get("tbr").is_some_and(Value::is_i64)
+    {
         for key in ["abr", "vbr"] {
             if let Some(rate) = out.get(key).and_then(Value::as_f64)
                 && rate.fract() == 0.0
@@ -816,7 +949,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "generic-found-hls-entry"
             | "generic-found-dash-entry"
             | "xspf-entry"
-    );
+    ) || (shape.starts_with("dict;")
+        && map.get("n_entries").is_some_and(|n| !n.is_null()));
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape.as_str() {
         "generic-direct" => &[
@@ -1714,6 +1848,109 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // `JWPlatformIE`: the `_parse_jwplayer_data` entry itself (with its
     // `None` values).
+    // `YoutubeIE._real_extract`'s dict, every key set (`None` included).
+    if let Some(keys) = shape.strip_prefix("youtube;") {
+        for key in keys.split(',') {
+            replay.set(
+                key,
+                match key {
+                    "formats" => Take,
+                    "subtitles" | "automatic_captions" => Dict,
+                    _ => Assign,
+                },
+            );
+        }
+        // `_extract_thumbnails`' `{url, height, width}` (only keys present:
+        // generated names have just a URL), then `preference` and the ID.
+        // `process_language`'s `{ext, url, name, impersonate, client}` tracks.
+        for key in ["subtitles", "automatic_captions"] {
+            if let Some(Value::Object(languages)) = replay.out.get_mut(key) {
+                for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
+                    for track in tracks.iter_mut().filter_map(Value::as_object_mut) {
+                        let mut ordered = Map::new();
+                        for key in ["ext", "url", "name", "impersonate", "__yt_dlp_client"] {
+                            if let Some(value) = track.shift_remove(key) {
+                                ordered.insert(key.to_owned(), value);
+                            }
+                        }
+                        ordered.append(track);
+                        *track = ordered;
+                    }
+                }
+            }
+        }
+        if let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails") {
+            for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
+                let mut ordered = Map::new();
+                for key in ["url", "height", "width", "preference", "id"] {
+                    if let Some(value) = thumbnail.shift_remove(key) {
+                        ordered.insert(key.to_owned(), value);
+                    }
+                }
+                ordered.append(thumbnail);
+                *thumbnail = ordered;
+            }
+        }
+    }
+    // An extractor's own dict (`dict;KEYS[;thumbnail=KEYS]`), every key set.
+    if let Some(spec) = shape.strip_prefix("dict;") {
+        let mut parts = spec.split(';');
+        let keys = parts.next().unwrap_or_default();
+        let mut thumbnail_keys = None;
+        let mut subtitle_keys = None;
+        for part in parts {
+            if let Some(found) = part.strip_prefix("thumbnail=") {
+                thumbnail_keys = Some(found);
+            } else if let Some(found) = part.strip_prefix("subtitle=") {
+                subtitle_keys = Some(found);
+            }
+        }
+        for key in keys.split(',') {
+            replay.set(
+                key,
+                match key {
+                    "formats" => Take,
+                    "subtitles" | "automatic_captions" => Dict,
+                    _ => Assign,
+                },
+            );
+        }
+        // The extractor's subtitle track keys, then processing's `ext`.
+        if let Some(subtitle_keys) = subtitle_keys {
+            for key in ["subtitles", "automatic_captions"] {
+                if let Some(Value::Object(languages)) = replay.out.get_mut(key) {
+                    for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
+                        for track in tracks.iter_mut().filter_map(Value::as_object_mut) {
+                            let mut ordered = Map::new();
+                            for key in subtitle_keys.split(',') {
+                                if let Some(value) = track.shift_remove(key) {
+                                    ordered.insert(key.to_owned(), value);
+                                }
+                            }
+                            ordered.append(track);
+                            *track = ordered;
+                        }
+                    }
+                }
+            }
+        }
+        // The extractor's thumbnail keys, then `_sanitize_thumbnails`' `id`
+        // and `resolution`.
+        if let Some(thumbnail_keys) = thumbnail_keys
+            && let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails")
+        {
+            for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
+                let mut ordered = Map::new();
+                for key in thumbnail_keys.split(',') {
+                    if let Some(value) = thumbnail.shift_remove(key) {
+                        ordered.insert(key.to_owned(), value);
+                    }
+                }
+                ordered.append(thumbnail);
+                *thumbnail = ordered;
+            }
+        }
+    }
     if let Some(keys) = shape.strip_prefix("jwplatform;") {
         for key in keys.split(',') {
             replay.set(key, if key == "subtitles" { Dict } else { Assign });
@@ -1927,9 +2164,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         .and_then(Value::as_array)
         .is_some_and(|formats| {
             !formats.is_empty()
+                // `sum(f.get('tbr') or 0 ...)`: missing rates add an int 0.
                 && formats
                     .iter()
-                    .all(|format| format.get("tbr").is_some_and(Value::is_i64))
+                    .any(|format| format.get("tbr").is_some_and(Value::is_i64))
+                && formats.iter().all(|format| {
+                    format
+                        .get("tbr")
+                        .is_none_or(|tbr| tbr.is_i64() || tbr.is_null())
+                })
         });
     // `'abr': 64` (and the `tbr` it gives) of ThisAmericanLifeIE.
     if int_rates || shape == "thisamericanlife" {
@@ -1941,14 +2184,90 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             }
         }
     }
+    // `_merge`'s `vbr`/`abr` are the video/audio format's own (int) values.
+    let requested: Vec<Map<String, Value>> = out
+        .get("requested_formats")
+        .and_then(Value::as_array)
+        .map(|formats| {
+            formats
+                .iter()
+                .filter_map(Value::as_object)
+                .cloned()
+                .collect()
+        })
+        .unwrap_or_default();
+    for (key, codec) in [("vbr", "vcodec"), ("abr", "acodec")] {
+        let own = requested.iter().find_map(|format| {
+            (format.get(codec).and_then(Value::as_str) != Some("none"))
+                .then(|| format.get(key).filter(|rate| rate.is_i64()).cloned())
+                .flatten()
+        });
+        if let Some(own) = own
+            && out.get(key).and_then(Value::as_f64) == own.as_f64()
+        {
+            out.insert(key.into(), own);
+        }
+    }
     out
 }
 
 /// A generic webpage playlist dict (`-J`) in upstream order.
+/// `YoutubeTabIE`'s `playlist_result(entries, **metadata)`: the tab
+/// metadata's keys (`KEYS`), then the processing fields (`updated`: after
+/// `_real_extract`'s `extractor_key`/`extractor`/`webpage_url` update).
+fn youtube_tab_playlist(map: Map<String, Value>, keys: &str, updated: bool) -> Map<String, Value> {
+    let mut replay = Replay::new(map);
+    for key in keys.split(',') {
+        replay.set(key, Assign);
+    }
+    replay.take("_type");
+    replay.take("entries");
+    let late: &[&str] = if updated {
+        &[
+            "extractor_key",
+            "extractor",
+            "webpage_url",
+            "original_url",
+            "webpage_url_basename",
+            "webpage_url_domain",
+        ]
+    } else {
+        &[
+            "webpage_url",
+            "original_url",
+            "webpage_url_basename",
+            "webpage_url_domain",
+            "extractor",
+            "extractor_key",
+        ]
+    };
+    for key in late {
+        replay.take(key);
+    }
+    // `_fill_common_fields(final=False)`.
+    replay.take("upload_date");
+    replay.assign("release_year");
+    for key in ["requested_entries", "playlist_count", "epoch"] {
+        replay.take(key);
+    }
+    replay.set("__files_to_move", Dict);
+    replay.take("_version");
+    replay.finish()
+}
+
 pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some(Value::String(shape)) = map.shift_remove(INFO_SHAPE) else {
         return map;
     };
+    if let Some(keys) = shape.strip_prefix("youtube-tab;") {
+        return youtube_tab_playlist(map, keys, true);
+    }
+    if let Some(keys) = shape
+        .strip_prefix("youtube-tab-plain;")
+        .or_else(|| shape.strip_prefix("playlist-dict;"))
+    {
+        return youtube_tab_playlist(map, keys, false);
+    }
     if !matches!(
         shape.as_str(),
         "html5-playlist" | "rss-playlist" | "xspf-playlist"

@@ -389,6 +389,18 @@
       "scope": "EpochIE videobox data-id (get_element_html_by_id/extract_attributes over an html.parser-like tokenizer, with its parse errors), fatal HLS formats and subtitles and <title> compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "facebook",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/facebook.py"
+      ],
+      "rust": [
+        "src/extractor/facebook.rs",
+        "tests/fixtures/sites/facebook/"
+      ],
+      "scope": "FacebookIE relay prefetched data (parse_graphql_video legacy/delivery formats, inline DASH, progressive/HLS URLs, captions) merged with extract_metadata, login/interstitial errors; FacebookReelIE and FacebookPluginsVideoIE redirects; no server JS/pagelet pages, watch parties, tahoe fallback, JSON-LD or ads; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "fathom",
       "status": "partial",
       "upstream": [
@@ -543,6 +555,18 @@
         "tests/fixtures/sites/hypem/"
       ],
       "scope": "HypemIE _VALID_URL, displayList-data JSON (clean_html before parsing), serve/source JSON URL as an untyped mp3 result, error messages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "instagram",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/instagram.py"
+      ],
+      "rust": [
+        "src/extractor/instagram.rs",
+        "tests/fixtures/sites/instagram/"
+      ],
+      "scope": "InstagramIE logged-out path without impersonation: LSD session token, accessibility check warnings/errors, post page prefetched media, _extract_product formats/thumbnails/metadata/comments and carousel playlists; no inline DASH, logged-in API, stories, user or tag pages; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "jove",
@@ -752,6 +776,19 @@
       "scope": "QingTingIE mobile page __initStores JSON (_search_json, traverse_obj fields) as an untyped m4a result compared with pinned upstream output through the fixture proxy; JSON decode error texts differ"
     },
     {
+      "name": "reddit",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/reddit.py"
+      ],
+      "rust": [
+        "src/extractor/reddit.rs",
+        "src/cookies.rs",
+        "tests/fixtures/sites/reddit/"
+      ],
+      "scope": "RedditIE anonymous session and opt-in cookies, .json listing with 403 reasons, hosted video fallback/HLS/DASH formats and subtitles, crossposts, text-post RedditVideo playlists and url_transparent links, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "reverbnation",
       "status": "partial",
       "upstream": [
@@ -856,6 +893,18 @@
       "scope": "ThisAmericanLifeIE page meta fields and 64k HLS stream as an untyped m3u8_native result compared with pinned upstream output through the fixture proxy (listing and JSON)"
     },
     {
+      "name": "tiktok",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tiktok.py"
+      ],
+      "rust": [
+        "src/extractor/tiktok.rs",
+        "tests/fixtures/sites/tiktok/"
+      ],
+      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; no app API, subtitles, slideshows, user/sound/tag/collection lists or Douyin; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tweakers",
       "status": "partial",
       "upstream": [
@@ -878,6 +927,18 @@
         "tests/fixtures/sites/twentythreevideo/"
       ],
       "scope": "TwentyThreeVideoIE api/photo/list JSON (update_url_query, transform_source, formats and filesize thumbnails) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "twitter",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/twitter.py"
+      ],
+      "rust": [
+        "src/extractor/twitter.rs",
+        "tests/fixtures/sites/twitter/"
+      ],
+      "scope": "TwitterIE GraphQL status (guest token or auth cookies), _graphql_to_legacy errors, HLS/MP4 variants, thumbnails, metadata, multi-video playlists, /video/N with --no-playlist, unified/player/summary cards and followed links; TwitterCardIE redirects; no legacy/syndication APIs, broadcasts, Spaces or VMAP cards; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "vocaroo",
@@ -925,8 +986,6 @@
       ],
       "rust": [
         "src/extractor/youtube.rs",
-        "src/extractor/youtube/client.rs",
-        "src/extractor/youtube/integration.rs",
         "src/extractor/mod.rs",
         "src/lib.rs",
         "src/error.rs",
@@ -942,18 +1001,28 @@
         "upstream/notes/youtube-n-extraction.md",
         "upstream/notes/youtube-signature-extraction.md",
         "upstream/notes/youtube-adaptive-merge.md",
-        "src/extractor/youtube/integration/manifests.rs",
         "tools/compare_youtube_hls.py",
         "tools/test_compare_youtube_hls.py",
         "upstream/notes/youtube-hls.md",
-        "src/extractor/youtube/captions.rs",
-        "src/extractor/youtube/integration/captions.rs",
         "tools/compare_youtube_captions.py",
         "tools/test_compare_youtube_captions.py",
         "upstream/notes/youtube-captions.md",
-        "src/extractor/youtube/chapters.rs"
+        "src/extractor/youtube/chapters.rs",
+        "src/extractor/youtube/innertube.rs",
+        "src/extractor/youtube/streams.rs",
+        "src/extractor/youtube/watch.rs",
+        "tests/fixtures/sites/youtube/",
+        "tests/fixtures/sites/youtube-js/",
+        "src/extractor/youtube/dict.rs",
+        "src/extractor/youtube/subs.rs",
+        "src/extractor/youtube/tab.rs",
+        "tests/fixtures/sites/youtube-rich/",
+        "tests/fixtures/sites/youtube-playlist/",
+        "tests/fixtures/sites/youtube-channel/",
+        "src/extractor/youtube/search.rs",
+        "tests/fixtures/sites/youtube-search/"
       ],
-      "scope": "Strict single-video URL dispatch and bounded watch-page/player response parsing; playable matching ID, direct standalone or separate MP4/M4A/WebM formats with numeric itags and dimensions, media probes and resolution/itag selection; missing initial response permits one isolated anonymous WEB API request using literal page client config, API direct formats limited to token-exempt itag 18; saved-fixture parser/token policy comparison only, no live-site reliability claim; opt-in progressive signatureCipher/legacy cipher and query-n solving with lazy explicit pinned-Deno configuration after eligibility/token filtering and before probes; actual saved-player upstream EJS signature-permutation metadata comparison; direct adaptive stream-kind and declared bitrate metadata with bounded selection and explicit FFmpeg merging; native finite HLS VOD discovery for initial/anonymous WEB responses under optional HLS token policy, shared path-n and direct URL challenge batch, native hls format IDs/groups; no other API clients, token acquisition, authentication, live, fragmented direct adaptive delivery, DASH discovery, SABR or playlists; bounded manual/ASR caption URL/name metadata, translation/original aliases and audio-language inference under WEB subtitle token policy; no caption token acquisition or URL deciphering; player-response descriptive metadata (description, duration, channel/uploader IDs/URLs, views, rating, age limit, categories, tags, embed/live/media type, upload date/timestamp, availability without badges) compared against upstream for six saved cases; upstream thumbnail candidates/preferences/dedupe and best thumbnail; no ytInitialData or meta-tag metadata; YoutubeIE._EMBED_REGEX embeds on generic pages (a single embed followed through the extractor registry, several as url playlist entries; site fixture tests/fixtures/sites/youtube-embeds/)"
+      "scope": "Upstream YoutubeIE._real_extract over the InnerTube client flow (watch page, ytcfg, per-client player API requests, default tv_samsung/visionos/web clients with a JS runtime, visionos only without), _extract_formats_and_subtitles (https, HLS/DASH manifests, storyboards), JS challenge solving through the vendored EJS solver under Deno/Node, captions/automatic captions, and the full info dict in upstream key order; YoutubeTabIE playlist pages (/playlist?list=, watch?v=…&list=) with tab metadata, the unavailable-videos reload, browse API continuations and url entries in upstream key order and channel tabs (single tabs; nested multi-tab channel playlists, mixes, live, age-gate clients, PO tokens, authentication and SABR are not supported); saved site fixtures tests/fixtures/sites/youtube*/ compared against pinned upstream output; YoutubeIE._EMBED_REGEX embeds on generic pages; YoutubeSearchIE (ytsearch[N|all]:) and YoutubeSearchURLIE result pages with continuations"
     },
     {
       "name": "youtube-challenge-runtime",
@@ -966,12 +1035,8 @@
       "rust": [
         "src/extractor/youtube/challenge.rs",
         "src/extractor/youtube/challenge/runtime.rs",
-        "src/extractor/youtube/challenge/urls.rs",
-        "src/extractor/youtube/player.rs",
-        "src/extractor/youtube/client.rs",
         "tests/helpers/challenge_runtime.rs",
         "tests/helpers/youtube_runtime.rs",
-        "src/extractor/youtube/integration.rs",
         "tests/fixtures/youtube/challenges/",
         "vendor/ejs/",
         "tools/compare_ejs.py",
@@ -1180,7 +1245,6 @@
       ],
       "rust": [
         "src/extractor/youtube/captions.rs",
-        "src/extractor/youtube/integration/captions.rs",
         "src/subtitles.rs",
         "src/main.rs",
         "src/output/subtitles.rs",
@@ -1207,7 +1271,6 @@
         "src/main.rs",
         "src/extractor/youtube.rs",
         "src/extractor/youtube/challenge.rs",
-        "src/extractor/youtube/player.rs",
         "tests/headers.rs",
         "tests/fixtures/headers/",
         "tools/compare_headers.py",
@@ -1235,7 +1298,6 @@
         "src/main.rs",
         "src/extractor/youtube.rs",
         "src/extractor/youtube/challenge.rs",
-        "src/extractor/youtube/player.rs",
         "tests/cookies.rs",
         "tests/fixtures/cookies/",
         "tools/compare_cookies.py",
@@ -1270,7 +1332,6 @@
         "src/main.rs",
         "src/extractor/youtube.rs",
         "src/extractor/youtube/challenge.rs",
-        "src/extractor/youtube/player.rs",
         "tests/proxies.rs",
         "tests/fixtures/proxies/",
         "tools/compare_proxies.py",

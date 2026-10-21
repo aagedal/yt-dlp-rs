@@ -119,12 +119,26 @@ fn extractor_listings_and_color_policies_follow_upstream() {
     assert!(output.status.success());
     assert_eq!(
         String::from_utf8_lossy(&output.stdout),
-        "23video\nAngel\nAudioBoom\nBehindKink (CURRENTLY BROKEN)\nBild\nBitmovin\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEbay\nEpoch\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide\nGodResource\nGodTube (CURRENTLY BROKEN)\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao\nHypem\nJove\nJWPlatform\nKommunetv\nKu6\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm\n  https://player.megaphone.fm/GLT9749789991\nMovingImage\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nScreenRec\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyfanefa\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\nZhihu\ngeneric\n  https://example.com/v.mp4\n"
+        "23video\nAngel\nAudioBoom\nBehindKink (CURRENTLY BROKEN)\nBild\nBitmovin\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide\nGodResource\nGodTube (CURRENTLY BROKEN)\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao\nHypem\nInstagram\nJove\nJWPlatform\nKommunetv\nKu6\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm\n  https://player.megaphone.fm/GLT9749789991\nMovingImage\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nScreenRec\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTikTok\nTweakers\ntwitter\ntwitter:card\nvm.tiktok\nVocaroo\nyfanefa\nyoutube\n  https://www.youtube.com/watch?v=BaW_jenozKc\nyoutube:search\nyoutube:search_url\nyoutube:tab\nZhihu\ngeneric\n  https://example.com/v.mp4\n"
     );
     let output = run(&["--extractor-descriptions"]);
-    assert_eq!(
-        String::from_utf8_lossy(&output.stdout),
-        "23video\nAngel\nAudioBoom\nBild\nBitmovin\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEbay\nEpoch\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nJove\nJWPlatform\nKommunetv\nKu6\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nMovingImage\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReverbNation\nRTRFM\nScreenRec\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTweakers\nVocaroo\nyfanefa\nyoutube: [youtube] YouTube\nZhihu\ngeneric: Generic downloader that works on some sites"
+    // Upstream draws the search example's count and query at random.
+    let pattern = format!(
+        "^{}{}{}$",
+        regex::escape(
+            "23video\nAngel\nAudioBoom\nBild\nBitmovin\nblogger.com\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nInstagram\nJove\nJWPlatform\nKommunetv\nKu6\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nMovingImage\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nScreenRec\nSen\nStreamable\nSztvHu\nTheIntercept\nThisAmericanLife\nTikTok\nTweakers\ntwitter\ntwitter:card\nvm.tiktok\nVocaroo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch"
+        ),
+        "(|5|10|all):(cute kittens|slithering pythons|falling cat|angry poodle|purple fish|running tortoise|sleeping bunny|burping cow)",
+        regex::escape(
+            "\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:tab: [youtube] YouTube Tabs\nZhihu\ngeneric: Generic downloader that works on some sites"
+        )
+    );
+    assert!(
+        regex::Regex::new(&pattern)
+            .unwrap()
+            .is_match(&String::from_utf8_lossy(&output.stdout)),
+        "{}",
+        String::from_utf8_lossy(&output.stdout)
     );
     let output = run(&["--color", "x", "https://example.com/"]);
     assert_eq!(output.status.code(), Some(2));

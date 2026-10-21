@@ -26,6 +26,71 @@ pub(crate) fn request_with_headers(
     probe_with_headers(client, url, referer, headers)
 }
 
+/// [`request`] that also accepts the `expected` error statuses
+/// (`expected_status=`).
+pub(crate) fn request_expecting(
+    client: &Client,
+    url: &Url,
+    headers: &[(&str, &str)],
+    expected: &[u16],
+) -> Result<Response> {
+    crate::screen::before_extraction_request();
+    let mut request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
+    for (name, value) in headers {
+        request = request.header(*name, *value);
+    }
+    crate::screen::load_cookies()?;
+    let response = request.send();
+    crate::screen::flush_traffic();
+    let response = response?;
+    if expected.contains(&response.status().as_u16()) {
+        return Ok(response);
+    }
+    let response = crate::retry::check_response(response)?;
+    if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
+        return Err(Error::PartialResponse);
+    }
+    Ok(response)
+}
+
+/// An extractor's `HEADRequest(url)` with headers (redirects followed).
+pub(crate) fn head_with_headers(
+    client: &Client,
+    url: &Url,
+    headers: &[(&str, &str)],
+) -> Result<Response> {
+    crate::screen::before_extraction_request();
+    let mut request = client.head(url.clone());
+    for (name, value) in headers {
+        request = request.header(*name, *value);
+    }
+    crate::screen::load_cookies()?;
+    let response = request.send();
+    crate::screen::flush_traffic();
+    crate::retry::check_response(response?)
+}
+
+/// An extractor's POST request with a body (`data=`) and headers.
+pub(crate) fn post(
+    client: &Client,
+    url: &Url,
+    headers: &[(&str, &str)],
+    body: String,
+) -> Result<Response> {
+    crate::screen::before_extraction_request();
+    let mut request = client
+        .post(url.clone())
+        .header(ACCEPT_ENCODING, "identity")
+        .body(body);
+    for (name, value) in headers {
+        request = request.header(*name, *value);
+    }
+    crate::screen::load_cookies()?;
+    let response = request.send();
+    crate::screen::flush_traffic();
+    crate::retry::check_response(response?)
+}
+
 /// A request this port adds to inspect media or child playlists that
 /// upstream does not fetch during extraction; never delayed.
 pub(crate) fn probe(client: &Client, url: &Url, referer: Option<&Url>) -> Result<Response> {

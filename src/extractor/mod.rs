@@ -17,6 +17,7 @@ mod ebaumsworld;
 mod ebay;
 mod epoch;
 mod f4m;
+mod facebook;
 mod fathom;
 mod fczenit;
 mod filmweb;
@@ -33,6 +34,7 @@ pub(crate) mod hls;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
+mod instagram;
 pub(crate) mod ism;
 mod jove;
 mod json_ld;
@@ -54,6 +56,7 @@ mod playerfm;
 mod popcorntv;
 mod premiershiprugby;
 mod qingting;
+mod reddit;
 mod reverbnation;
 mod rss;
 mod rtrfm;
@@ -64,8 +67,10 @@ mod streamable;
 mod sztvhu;
 mod theintercept;
 mod thisamericanlife;
+mod tiktok;
 mod tweakers;
 mod twentythreevideo;
+mod twitter;
 mod vocaroo;
 mod xspf;
 mod yfanefa;
@@ -91,6 +96,10 @@ pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub use ebay::{Ebay, suitable as ebay_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
+pub use facebook::{
+    Facebook, FacebookPluginsVideo, FacebookReel, plugins_suitable as facebook_plugins_suitable,
+    reel_suitable as facebook_reel_suitable, suitable as facebook_suitable,
+};
 pub use fathom::{Fathom, suitable as fathom_suitable};
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
@@ -106,6 +115,7 @@ pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
+pub use instagram::{Instagram, suitable as instagram_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
@@ -123,6 +133,7 @@ pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
 pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
 pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitable};
 pub use qingting::{QingTing, suitable as qingting_suitable};
+pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
@@ -131,10 +142,22 @@ pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
+pub use tiktok::{
+    TikTok, TikTokVm, suitable as tiktok_suitable, vm_suitable as tiktok_vm_suitable,
+};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
+pub use twitter::{
+    Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
+};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
+pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
+pub use youtube::search::{
+    suitable as youtube_search_suitable, url_suitable as youtube_search_url_suitable,
+};
+pub(crate) use youtube::tab::YoutubeTab;
+pub use youtube::tab::suitable as youtube_tab_suitable;
 pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 
@@ -403,14 +426,28 @@ fn download_json_with(
 /// Upstream `update_url_query(url, query)`: the query decoded, updated and
 /// re-encoded like `urlencode`.
 pub(crate) fn update_url_query(url: &Url, updates: &[(&str, &str)]) -> Url {
-    let mut pairs: Vec<(String, String)> = url
-        .query_pairs()
-        .map(|(key, value)| (key.into_owned(), value.into_owned()))
-        .collect();
-    for (key, value) in updates {
-        pairs.retain(|(existing, _)| existing != key);
-        pairs.push(((*key).to_owned(), (*value).to_owned()));
+    // `parse_qs` (blank values dropped, repeated keys grouped) and
+    // `dict.update` (an updated key keeps its place).
+    let mut groups: Vec<(String, Vec<String>)> = Vec::new();
+    for (key, value) in url.query_pairs() {
+        if value.is_empty() {
+            continue;
+        }
+        match groups.iter_mut().find(|(existing, _)| *existing == key) {
+            Some((_, values)) => values.push(value.into_owned()),
+            None => groups.push((key.into_owned(), vec![value.into_owned()])),
+        }
     }
+    for (key, value) in updates {
+        match groups.iter_mut().find(|(existing, _)| existing == key) {
+            Some((_, values)) => *values = vec![(*value).to_owned()],
+            None => groups.push(((*key).to_owned(), vec![(*value).to_owned()])),
+        }
+    }
+    let pairs: Vec<(String, String)> = groups
+        .into_iter()
+        .flat_map(|(key, values)| values.into_iter().map(move |value| (key.clone(), value)))
+        .collect();
     let mut url = url.clone();
     let query = url::form_urlencoded::Serializer::new(String::new())
         .extend_pairs(&pairs)
@@ -428,8 +465,49 @@ pub(crate) fn download_webpage(
     extractor: &'static str,
     id: &str,
 ) -> Result<String> {
-    use std::io::Read;
+    download_webpage_note(client, url, extractor, id, "Downloading webpage")
+}
+
+/// [`download_webpage`] with another `note`.
+pub(crate) fn download_webpage_note(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+) -> Result<String> {
+    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    download_webpage_handle_quiet(client, url, extractor, id).map(|(text, _)| text)
+}
+
+/// `_download_webpage(url, None, note)`: the note was printed by the caller.
+pub(crate) fn download_webpage_quiet(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+) -> Result<String> {
+    download_webpage_handle_quiet(client, url, extractor, id).map(|(text, _)| text)
+}
+
+/// `_download_webpage_handle(url, video_id)`: the page and its final URL.
+pub(crate) fn download_webpage_handle(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+) -> Result<(String, Url)> {
     crate::screen::screen(&format!("[{extractor}] {id}: Downloading webpage"));
+    download_webpage_handle_quiet(client, url, extractor, id)
+}
+
+fn download_webpage_handle_quiet(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+) -> Result<(String, Url)> {
+    use std::io::Read;
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
             crate::Error::ExtractorRequest {
@@ -449,7 +527,7 @@ pub(crate) fn download_webpage(
         .map_err(crate::Error::ExtractionRead)?;
     crate::screen::expect_page(id, None, None);
     crate::screen::page_read(&page_url, &body)?;
-    Ok(String::from_utf8_lossy(&body).into_owned())
+    Ok((String::from_utf8_lossy(&body).into_owned(), page_url))
 }
 
 /// Upstream `_download_xml(url, video_id)`: `[EXTRACTOR] ID: Downloading
@@ -569,7 +647,25 @@ pub(crate) fn search_json_with(
 
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
-    url.starts_with("jwplatform:") && jwplatform::suitable(url)
+    (url.starts_with("jwplatform:") && jwplatform::suitable(url)) || youtube::search::suitable(url)
+}
+
+/// Upstream `noplaylist` (`--no-playlist`), for `_yes_playlist`.
+pub(crate) static NO_PLAYLIST: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// `self.get_param('noplaylist')`.
+pub(crate) fn no_playlist() -> bool {
+    NO_PLAYLIST.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// Upstream `writesubtitles or listsubtitles` (`InfoExtractor.extract_subtitles`).
+pub(crate) static SUBTITLES_REQUESTED: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// `extract_subtitles`: whether an extractor's `_get_subtitles` runs.
+pub(crate) fn subtitles_requested() -> bool {
+    SUBTITLES_REQUESTED.load(std::sync::atomic::Ordering::Relaxed)
 }
 
 /// A non-fatal `_search_regex` miss: `[EXTRACTOR] unable to extract NAME`.

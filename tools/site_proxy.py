@@ -9,6 +9,10 @@ URLs are 404s. tests/helpers/site_proxy.rs implements the same routing.
 
 routes.json: {"routes": [{"url": "https://host/path?query", "status": 200,
 "headers": {"Content-Type": "..."}, "body_file": "name" | "body": "text"}]}
+A route may also list "request_headers" ({"Name": "value"}) that the request
+must carry and "request_body" substrings its body must contain; the first
+matching route for a URL answers (for one API endpoint answering several
+clients or requests).
 """
 import base64
 import json
@@ -37,8 +41,29 @@ def load_routes(site_dir):
             body = (site_dir / route['body_file']).read_bytes()
         else:
             body = route.get('body', '').encode()
-        routes[route['url']] = (route.get('status', 200), route.get('headers', {}), body)
+        wanted = {name.lower(): value for name, value in route.get('request_headers', {}).items()}
+        routes.setdefault(route['url'], []).append(
+            (wanted, route.get('request_body', []),
+             (route.get('status', 200), route.get('headers', {}), body)))
     return routes
+
+
+def request_headers(head):
+    headers = {}
+    for line in head.split('\r\n')[1:]:
+        if ':' in line:
+            name, value = line.split(':', 1)
+            headers[name.strip().lower()] = value.strip()
+    return headers
+
+
+def match_route(routes, url, headers, body=b''):
+    text = body.decode('utf-8', 'replace')
+    for wanted, contains, route in routes.get(url, []):
+        if (all(headers.get(name) == value for name, value in wanted.items())
+                and all(part in text for part in contains)):
+            return route
+    return None
 
 
 class SiteProxy:
@@ -74,9 +99,24 @@ class SiteProxy:
             data += chunk
         return data.decode('latin-1')
 
-    def _respond(self, stream, url):
+    @staticmethod
+    def _read_body(stream, headers):
+        remaining = int(headers.get('content-length') or 0)
+        body = b''
+        while remaining > 0:
+            chunk = stream.recv(min(remaining, 65536))
+            if not chunk:
+                break
+            body += chunk
+            remaining -= len(chunk)
+        return body
+
+    def _respond(self, stream, url, head):
         self.requests.append(url)
-        status, headers, body = self.routes.get(url, (404, {'Content-Type': 'text/plain'}, b'not found'))
+        headers = request_headers(head)
+        request_body = self._read_body(stream, headers)
+        status, headers, body = match_route(self.routes, url, headers, request_body) or (
+            404, {'Content-Type': 'text/plain'}, b'not found')
         reason = {200: 'OK', 206: 'Partial Content', 302: 'Found', 403: 'Forbidden', 404: 'Not Found'}.get(status, 'OK')
         lines = [f'HTTP/1.1 {status} {reason}']
         lines += [f'{name}: {value}' for name, value in headers.items()]
@@ -96,10 +136,10 @@ class SiteProxy:
                 if inner:
                     path = inner.split('\r\n', 1)[0].split(' ', 2)[1]
                     host = target.rsplit(':', 1)[0] if target.endswith(':443') else target
-                    self._respond(tls, f'https://{host}{path}')
+                    self._respond(tls, f'https://{host}{path}', inner)
                 tls.close()
             else:
-                self._respond(client, target)
+                self._respond(client, target, head)
         except (OSError, ValueError, ssl.SSLError):
             pass
         finally:

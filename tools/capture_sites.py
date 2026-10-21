@@ -22,11 +22,32 @@ from site_proxy import SiteProxy
 
 PINNED_UPSTREAM = '897341241f2bfb2439fe0367f4c7c9ccd29a3828'
 SITES = Path(__file__).resolve().parents[1] / 'tests/fixtures/sites'
+EJS = Path(__file__).resolve().parents[1] / 'vendor/ejs'
 
 
 def normalize(text):
     text = re.sub(r'"epoch": \d+, ', '', text)
+    # YouTube's `available_at` is the extraction time (plus any ad wait).
+    text = re.sub(r'"available_at": \d+', '"available_at": 0', text)
     return re.sub(r', "_version": \{[^{}]*\}', '', text)
+
+
+def seeded_cache():
+    """A fresh upstream cache holding the pinned EJS release (vendor/ejs).
+
+    Upstream would otherwise need `yt_dlp_ejs` or a `--remote-components`
+    download to solve YouTube challenges; a per-run directory also keeps
+    cached signature solutions from leaking between runs.
+    """
+    root = Path(tempfile.mkdtemp())
+    manifest = json.loads((EJS / 'manifest.json').read_text(encoding='utf-8'))
+    (root / 'challenge-solver').mkdir()
+    for kind in ('lib', 'core'):
+        data = {'version': manifest['version'], 'variant': 'unminified',
+                'code': (EJS / f'yt.solver.{kind}.js').read_text(encoding='utf-8')}
+        (root / 'challenge-solver' / f'{kind}.json').write_text(
+            json.dumps({'yt-dlp_version': '2099.01.01', 'data': data}), encoding='utf-8')
+    return root
 
 
 def run(upstream, proxy, case):
@@ -34,7 +55,8 @@ def run(upstream, proxy, case):
     env = dict(os.environ, PYTHONPATH=str(upstream))
     result = subprocess.run(
         [sys.executable, '-m', 'yt_dlp', '--ignore-config', '--proxy', proxy.url,
-         '--no-check-certificate', '--user-agent', 'fixture', *case['args'], case['url']],
+         '--no-check-certificate', '--user-agent', 'fixture', '--cache-dir', str(seeded_cache()),
+         *case['args'], case['url']],
         capture_output=True, text=True, env=env, cwd=directory, timeout=120)
     files = {}
     for name in sorted(os.listdir(directory)):

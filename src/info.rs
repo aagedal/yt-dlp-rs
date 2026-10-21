@@ -321,6 +321,48 @@ pub struct Thumbnail {
 
 /// Upstream `sanitize_url`: protocol-relative URLs use `http:` and common
 /// scheme typos are repaired.
+/// Upstream `_sanitize_thumbnails` over a playlist's thumbnail dicts:
+/// `_sort_thumbnails` (preference, width, height, id, url ascending), index
+/// IDs, resolutions and sanitized URLs.
+pub(crate) fn sanitize_thumbnail_values(thumbnails: &mut [serde_json::Value]) {
+    use serde_json::Value;
+    let number = |t: &Value, key: &str| t.get(key).and_then(Value::as_i64).unwrap_or(-1);
+    let text = |t: &Value, key: &str| {
+        t.get(key)
+            .and_then(Value::as_str)
+            .unwrap_or_default()
+            .to_owned()
+    };
+    thumbnails.sort_by(|a, b| {
+        let key = |t: &Value| {
+            (
+                number(t, "preference"),
+                number(t, "width"),
+                number(t, "height"),
+                text(t, "id"),
+                text(t, "url"),
+            )
+        };
+        key(a).cmp(&key(b))
+    });
+    for (index, thumbnail) in thumbnails.iter_mut().enumerate() {
+        let Some(object) = thumbnail.as_object_mut() else {
+            continue;
+        };
+        if object.get("id").is_none_or(Value::is_null) {
+            object.insert("id".into(), index.to_string().into());
+        }
+        let size = |key: &str| object.get(key).and_then(Value::as_i64).filter(|n| *n != 0);
+        if let (Some(width), Some(height)) = (size("width"), size("height")) {
+            object.insert("resolution".into(), format!("{width}x{height}").into());
+        }
+        if let Some(url) = object.get("url").and_then(Value::as_str) {
+            let url = sanitize_url(url);
+            object.insert("url".into(), url.into());
+        }
+    }
+}
+
 pub fn sanitize_url(url: &str) -> String {
     if url.starts_with("//") {
         return format!("http:{url}");
@@ -1131,6 +1173,14 @@ pub static COMPAT_MANIFEST_FILESIZE_APPROX: std::sync::atomic::AtomicBool =
 /// `filesize_approx` (`filesize_from_tbr(tbr, duration)` for formats without
 /// a size or a `manifest_url`, since "tbr" is often a maximum for those).
 pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat], duration: Option<PyNumber>) {
+    fill_filesize_approx(formats, duration);
+    for format in formats {
+        fill_description(format);
+    }
+}
+
+/// `process_video_result`'s `filesize_approx` (before `sort_formats`).
+pub(crate) fn fill_filesize_approx(formats: &mut [VideoFormat], duration: Option<PyNumber>) {
     let manifests = COMPAT_MANIFEST_FILESIZE_APPROX.load(std::sync::atomic::Ordering::Relaxed);
     for format in formats.iter_mut() {
         // Python truthiness: a zero or null size is no size.
@@ -1153,7 +1203,11 @@ pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat], duration: Op
             }
         }
     }
-    for format in formats {
+}
+
+/// `resolution`, `aspect_ratio` and the `format` description.
+fn fill_description(format: &mut VideoFormat) {
+    {
         if format.resolution.is_none() {
             format.resolution = format_resolution(format, None);
         }
@@ -1211,8 +1265,22 @@ fn sort_fields(format: &VideoFormat) -> crate::format_sort::Fields {
     number("abr", format.abr);
     number("filesize", format.filesize.map(|size| size as f64));
     number(
+        "filesize_approx",
+        format
+            .extra
+            .get("filesize_approx")
+            .and_then(serde_json::Value::as_f64),
+    );
+    number(
         "source_preference",
         format.source_preference.map(|p| p as f64),
+    );
+    number(
+        "preference",
+        format
+            .extra
+            .get("preference")
+            .and_then(serde_json::Value::as_f64),
     );
     number("quality", format.quality);
     number("fps", format.fps.map(PyNumber::as_f64));

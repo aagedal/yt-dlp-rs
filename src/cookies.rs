@@ -15,6 +15,63 @@ use std::{
 };
 use url::Url;
 
+/// The extraction client's jar, for extractors' `_set_cookie` and
+/// `_get_cookies`.
+static ACTIVE: RwLock<Option<std::sync::Arc<CookieJar>>> = RwLock::new(None);
+
+/// Make `jar` the one extractors read and write.
+pub(crate) fn register(jar: &std::sync::Arc<CookieJar>) {
+    if let Ok(mut active) = ACTIVE.write() {
+        *active = Some(jar.clone());
+    }
+}
+
+/// Upstream `_set_cookie(domain, name, value)`: a session cookie for the
+/// domain and its subdomains, path `/`.
+pub(crate) fn set_cookie(domain: &str, name: &str, value: &str) {
+    let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) else {
+        return;
+    };
+    let domain = domain.trim_start_matches('.');
+    let Ok(url) = Url::parse(&format!("https://{domain}/")) else {
+        return;
+    };
+    let Ok(header) = HeaderValue::from_str(&format!("{name}={value}; Domain={domain}; Path=/"))
+    else {
+        return;
+    };
+    jar.set_cookies(&mut std::iter::once(&header), &url);
+}
+
+/// `cookiejar.clear(domain=DOMAIN, path='/', name=NAME)`: an expired
+/// cookie replaces it.
+pub(crate) fn clear_cookie(domain: &str, name: &str) {
+    let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) else {
+        return;
+    };
+    let host = domain.trim_start_matches('.');
+    let Ok(url) = Url::parse(&format!("https://{host}/")) else {
+        return;
+    };
+    let Ok(header) = HeaderValue::from_str(&format!(
+        "{name}=; Domain={host}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+    )) else {
+        return;
+    };
+    jar.set_cookies(&mut std::iter::once(&header), &url);
+}
+
+/// Upstream `_get_cookies(url).get(name)`: the value sent to `url`.
+pub(crate) fn get_cookie(url: &str, name: &str) -> Option<String> {
+    let jar = ACTIVE.read().ok().and_then(|active| active.clone())?;
+    let url = Url::parse(url).ok()?;
+    let header = jar.cookies(&url)?;
+    header.to_str().ok()?.split("; ").find_map(|pair| {
+        let (key, value) = pair.split_once('=')?;
+        (key == name).then(|| value.to_owned())
+    })
+}
+
 const MAX_FILE: usize = 4 * 1024 * 1024;
 const MAX_COOKIES: usize = 10_000;
 const MAX_LINE: usize = 16 * 1024;

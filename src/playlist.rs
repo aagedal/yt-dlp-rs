@@ -189,13 +189,24 @@ impl PlaylistSelection {
         let count = playlist.entries.len();
         // Upstream's `_playlist_infodict` extras each entry gets by default.
         let title = Some(playlist.title.clone()).filter(|title| !title.is_empty());
-        let defaults: [(&str, serde_json::Value); 6] = [
+        let field = |key: &str| {
+            playlist
+                .extra
+                .get(key)
+                .cloned()
+                .unwrap_or(serde_json::Value::Null)
+        };
+        let defaults: [(&str, serde_json::Value); 10] = [
             (
                 "playlist",
                 title.clone().unwrap_or_else(|| playlist.id.clone()).into(),
             ),
             ("playlist_id", playlist.id.clone().into()),
             ("playlist_title", title.into()),
+            ("playlist_uploader", field("uploader")),
+            ("playlist_uploader_id", field("uploader_id")),
+            ("playlist_channel", field("channel")),
+            ("playlist_channel_id", field("channel_id")),
             (
                 "playlist_webpage_url",
                 playlist.webpage_url.to_string().into(),

@@ -3,7 +3,14 @@
 An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 It downloads direct HTTP media and a limited subset of HTML5 media pages, with
 a foundation for porting extractors and tracking upstream changes. This is an
-early prototype; YouTube has a narrow watch-page subset, described below.
+early prototype. YouTube (videos, playlists, channel tabs, search), Reddit,
+X/Twitter, TikTok, Instagram and Facebook are extracted like pinned upstream on
+saved fixtures, but have not been verified against the live sites.
+
+Pre-release binaries for Linux, macOS and Windows are attached to the
+[GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases): pushing a
+`vX.Y.Z[-PRE]` tag runs `.github/workflows/release.yml`, and a tag with a
+pre-release suffix publishes a pre-release.
 
 Requires current stable Rust (including standard-library file locking). Python 3.10+ and Git are needed
 only for the upstream development tools. The Rust binary does not invoke Python
@@ -93,24 +100,31 @@ Supported today:
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
   ScreenRec shares, Ku6 shows, Fuyin TV videos, Moving Image Archive films,
   Fathom shares, Maariv players (and their embeds), Harpodeon films,
-  Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, plus
+  Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
+  posts (hosted videos, text-post videos and followed links), X/Twitter posts
+  (GraphQL with a guest token; videos, multi-video playlists, cards), TikTok
+  videos (webpage data, the page's JS challenge, short links), Instagram
+  posts and reels (logged out; carousels as playlists), Facebook videos
+  (relay data with DASH, progressive URLs and captions), plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
-- YouTube single-video watch, short-link, Shorts, embed, and live URL shapes
-  canonicalized to a watch page (actual live content is rejected). Direct combined or separate audio/video MP4/M4A/WebM formats in
-  `ytInitialPlayerResponse` are eligible;
-  when that response is absent, one anonymous WEB player API request can supply
-  token-exempt itag 18 using literal page client configuration.
-  Format IDs are YouTube itags. This is fixture-tested groundwork, not general
-  live-site support. `--youtube-js-runtime PATH` opts into bounded offline solving
-  of encrypted signatures and query `n` challenges using explicitly installed
-  Deno 2.9.7 (or Node.js 22+ under its permission model) and pinned bundled EJS
-  assets. Challenge-free extraction never inspects
-  or launches that runtime. Initial and anonymous WEB responses can also expose
-  native finite HLS VOD, including path-n solving in the same challenge batch.
-  WEB DASH discovery remains excluded without GVS tokens. Additional clients,
-  token acquisition, fragmented direct adaptive streams and playlists remain
-  unsupported; many current videos will fail.
+- YouTube single-video watch, short-link, Shorts, embed and live URL shapes,
+  extracted like upstream from the watch page plus one player API request per
+  default InnerTube client. With a JS runtime (deno, enabled by default as
+  upstream does, or `--js-runtimes node`) the clients are `tv_samsung`,
+  `visionos` and `web`, and `n`/signature challenges are solved through the
+  bundled pinned EJS release. Without one, only `visionos` is used, with
+  upstream's warning. HTTPS, HLS and DASH formats follow upstream's
+  `_extract_formats_and_subtitles`: PO-token policies skip token-requiring
+  formats, since no token providers exist. Playlists (`/playlist?list=` and
+  `watch?v=…&list=`) are extracted like upstream's `youtube:tab`, with every
+  continuation page, and so are channel tabs (`/@NAME/videos`, `/shorts`,
+  ...); a channel URL without a tab reads `/videos` but is an error when the
+  channel also has live or shorts tabs. `ytsearch[N|all]:QUERY` and
+  `/results?search_query=` searches work like upstream's `youtube:search`.
+  Live videos, login and upstream's
+  remaining metadata fields are not supported yet. This is
+  fixture-tested against pinned upstream, not verified against the live site.
 - Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
   `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.
   `--ffmpeg-location PATH` configures an explicit FFmpeg executable for local

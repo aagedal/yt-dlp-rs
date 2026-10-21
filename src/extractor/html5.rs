@@ -1501,7 +1501,7 @@ fn kvs_info(
 }
 
 /// `_merge_subtitles(source, target=target)`: tracks append per language.
-fn merge_subtitles(target: &mut Subtitles, source: Subtitles) {
+pub(super) fn merge_subtitles(target: &mut Subtitles, source: Subtitles) {
     for (language, tracks) in source.entries {
         match target.entries.iter_mut().find(|(key, _)| *key == language) {
             Some((_, existing)) => existing.extend(tracks),

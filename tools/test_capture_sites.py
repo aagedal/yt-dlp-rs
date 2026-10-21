@@ -10,6 +10,9 @@ class SiteCaptureTests(unittest.TestCase):
         line = '{"id": "a", "epoch": 1792000000, "_type": "video", "_version": {"version": "x"}}'
         self.assertEqual(normalize(line), '{"id": "a", "_type": "video"}')
 
+    def test_normalization_zeroes_youtube_available_at(self):
+        self.assertEqual(normalize('{"available_at": 1792534964}'), '{"available_at": 0}')
+
     def test_every_site_has_routes_and_saved_cases(self):
         for site in SITES.iterdir():
             if not (site / 'cases.json').is_file():
