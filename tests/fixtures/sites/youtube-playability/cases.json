@@ -2,5 +2,6 @@
  {"url": "https://www.youtube.com/watch?v=AgeGated001", "args": ["--no-js-runtimes", "--print", "%(id)s|%(title)s|%(format_id)s|%(age_limit)s|%(availability)s"]},
  {"url": "https://www.youtube.com/watch?v=AgeGated001", "args": ["--no-js-runtimes", "-F"]},
  {"url": "https://www.youtube.com/watch?v=Unavailabl1", "args": ["--no-js-runtimes", "-s"]},
- {"url": "https://www.youtube.com/watch?v=PrivateVid1", "args": ["--no-js-runtimes", "-s"]}
+ {"url": "https://www.youtube.com/watch?v=PrivateVid1", "args": ["--no-js-runtimes", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=PrivateVid2", "args": ["--no-js-runtimes", "-s"]}
 ]

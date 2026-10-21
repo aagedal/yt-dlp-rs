@@ -620,14 +620,19 @@ pub(super) fn acquire(
 
     let mut player_responses: Vec<Value> = Vec::new();
     let mut responses: Vec<streams::ClientResponse> = Vec::new();
+    // `not _invalid_player_response`: a response without video details is
+    // kept (it may carry the playability error).
     let valid = |response: &Value| {
         response
             .get("videoDetails")
             .and_then(|details| details.get("videoId"))
-            .and_then(Value::as_str)
-            == Some(video_id)
+            .is_none_or(|id| id.as_str() == Some(video_id))
     };
-    if let Some(initial) = initial_pr.as_ref().filter(|initial| valid(initial)) {
+    if let Some(initial) = initial_pr
+        .as_ref()
+        .filter(|initial| initial.as_object().is_some_and(|object| !object.is_empty()))
+        .filter(|initial| valid(initial))
+    {
         let mut stripped = initial.clone();
         if let Some(object) = stripped.as_object_mut() {
             object.insert("streamingData".into(), Value::Null);
