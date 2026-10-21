@@ -358,6 +358,17 @@ formats (its subtitles ignored with upstream's warning), and the first
 `details` node's title (else the generic title, after `fulltitle`), first
 description and string badge tags.
 
+SoundCloud tracks (`soundcloud.com/USER/TRACK[/SECRET]`,
+`api[-v2].soundcloud.com/tracks/ID`) follow upstream `SoundcloudIE`: the web
+client ID from the home page's JS assets (last first; refreshed after a
+401/403, kept for the run), the resolved track JSON, each requested
+transcoding's (`http`/`hls` × `aac`/`opus`/`mp3`) stream URL (`abr` and DRM
+transcodings skipped, previews deprioritized, `hls-aes` as m3u8), artwork
+thumbnails with the HEAD-checked original, and the track's metadata. DRM-only
+and geo-blocked tracks are upstream's errors. Original downloads, logins,
+comments, sets, users, stations and search are not supported.
+`tests/fixtures/sites/soundcloud/` is compared with pinned upstream output.
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file
