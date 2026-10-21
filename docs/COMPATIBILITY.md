@@ -387,6 +387,18 @@ input codec names, `bitrate`/1000 as `vbr`), owner, float `date_added` and
 `duration`, and plays. Site extractors are compared with pinned upstream's
 output through a fixture-only proxy (`tests/fixtures/sites/`).
 
+TED talks (`www.ted.com/talks/[lang/L/]SLUG`) follow upstream `TedTalkIE`:
+the page's Next.js `videoData` (`Unable to extract next.js data` without
+it), HLS (`hls-`), H.264 (`h264-RATEk`), RTMP and audio-download formats,
+an external video as a `url` result when there are none, and the title,
+presenter, thumbnail (resize query trimmed), description, duration, view
+count, dates and tags with OpenGraph fallbacks. Upstream's `http-` bitrate
+variants never apply (they look for `m3u8` rather than `m3u8_native`
+formats), so none are made. Playlists (`TedPlaylistIE`) and series, or one
+`#season_N` (`TedSeriesIE`), are playlists of talk `url` results;
+`embed[-ssl].ted.com` URLs (`TedEmbedIE`) are rewritten to `www`.
+`tests/fixtures/sites/ted/` is compared with pinned upstream output.
+
 The Intercept Field of Vision posts (`theintercept.com/fieldofvision/SLUG`)
 follow upstream `TheInterceptIE`: the page's `initialStoreTree` post with the
 slug, as a `url_transparent` result of `jwplatform:VIDEO` (extracted by the

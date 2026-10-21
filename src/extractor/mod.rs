@@ -77,6 +77,7 @@ mod smil;
 mod soundcloud;
 mod streamable;
 mod sztvhu;
+mod ted;
 mod theintercept;
 mod thisamericanlife;
 mod tiktok;
@@ -177,6 +178,11 @@ pub use sen::{Sen, suitable as sen_suitable};
 pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
+pub use ted::{
+    TedEmbed, TedPlaylist, TedSeries, TedTalk, embed_suitable as ted_embed_suitable,
+    playlist_suitable as ted_playlist_suitable, series_suitable as ted_series_suitable,
+    talk_suitable as ted_talk_suitable,
+};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use tiktok::{
@@ -788,6 +794,36 @@ pub(crate) fn search_json_with(
             .next()
             .and_then(std::result::Result::ok),
     )
+}
+
+/// `_search_nextjs_data(webpage, video_id)` (fatal): the `__NEXT_DATA__`
+/// script's JSON (greedy to the last `}` before a `</script>`).
+pub(crate) fn search_nextjs_data(
+    html: &str,
+    extractor: &str,
+    id: &str,
+) -> crate::Result<serde_json::Value> {
+    static NEXT_DATA: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(
+            r#"(?s)<script[^>]+id=['"]__NEXT_DATA__['"][^>]*>\s*(\{.+\})\s*</script>"#,
+        )
+        .expect("static pattern")
+    });
+    let Some(found) = NEXT_DATA.captures(html) else {
+        return Err(crate::Error::Reported(format!(
+            "[{extractor}] {id}: Unable to extract next.js data; {}",
+            crate::BUG_REPORTS_MESSAGE
+        )));
+    };
+    serde_json::Deserializer::from_str(&found[1])
+        .into_iter::<serde_json::Value>()
+        .next()
+        .and_then(std::result::Result::ok)
+        .ok_or_else(|| {
+            crate::Error::Reported(format!(
+                "[{extractor}] {id}: Unable to extract next.js data - Failed to parse JSON"
+            ))
+        })
 }
 
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.

@@ -1014,6 +1014,18 @@
       "scope": "SztvHuIE page player file, meta title/description and og:image as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "ted",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ted.py"
+      ],
+      "rust": [
+        "src/extractor/ted.rs",
+        "tests/fixtures/sites/ted/"
+      ],
+      "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "theintercept",
       "status": "partial",
       "upstream": [
