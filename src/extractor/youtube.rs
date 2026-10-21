@@ -423,8 +423,8 @@ fn extract_clients(
     } else {
         None
     };
-    if matches!(live_status, Some("is_live" | "is_upcoming" | "post_live")) {
-        return Err(unsupported("live, upcoming and post-live videos"));
+    if matches!(live_status, Some("is_upcoming" | "post_live")) {
+        return Err(unsupported("upcoming and post-live videos"));
     }
     let context = streams::Context {
         client,

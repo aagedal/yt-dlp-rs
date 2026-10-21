@@ -853,13 +853,16 @@ pub(super) fn extract(
             let mut manifest_url = parsed.clone();
             manifest_url.set_path(&format!("{path}{suffix}"));
             let stream = if proto == "hls" {
-                super::super::extract_m3u8_optional(
+                // `_extract_m3u8_formats_and_subtitles(..., live=is_live)`.
+                super::super::extract_m3u8_optional_note(
                     context.client,
                     &manifest_url,
                     "youtube",
                     context.video_id,
                     None,
                     true,
+                    context.live_status == Some("is_live"),
+                    "Downloading m3u8 information",
                 )
             } else {
                 super::super::extract_mpd_optional(

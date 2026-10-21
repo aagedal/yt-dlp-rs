@@ -235,6 +235,23 @@ pub(crate) fn from_response(
     force_hls: bool,
     m3u8_id: Option<&str>,
 ) -> Result<Option<VideoInfo>> {
+    from_response_with(
+        client, response, original, referer, force_hls, m3u8_id, false,
+    )
+}
+
+/// [`from_response`]; a `live` master's variants and renditions are not
+/// fetched (upstream never reads them; a live playlist has no fixed
+/// fragments), so their formats have no fragments and download through FFmpeg.
+pub(crate) fn from_response_with(
+    client: &Client,
+    response: Response,
+    original: &Url,
+    referer: Option<&Url>,
+    force_hls: bool,
+    m3u8_id: Option<&str>,
+    live: bool,
+) -> Result<Option<VideoInfo>> {
     if !force_hls && !recognized(&response) {
         return Ok(None);
     }
@@ -407,16 +424,21 @@ pub(crate) fn from_response(
             // unnamed variants); playlists are still fetched variants first.
             let renditions = audio.len();
             for variant in variants {
-                let response = direct::probe(client, &variant.url, referer)?;
-                let (url, playlist) = read_playlist(response)?;
-                let Playlist::Media {
-                    fragments,
-                    discontinuity,
-                    discontinuities,
-                    ..
-                } = playlist
-                else {
-                    return Err(unsupported("nested HLS master playlists are not supported"));
+                let (url, fragments, discontinuity, discontinuities) = if live {
+                    (variant.url.clone(), Vec::new(), Vec::new(), 0)
+                } else {
+                    let response = direct::probe(client, &variant.url, referer)?;
+                    let (url, playlist) = read_playlist(response)?;
+                    let Playlist::Media {
+                        fragments,
+                        discontinuity,
+                        discontinuities,
+                        ..
+                    } = playlist
+                    else {
+                        return Err(unsupported("nested HLS master playlists are not supported"));
+                    };
+                    (url, fragments, discontinuity, discontinuities)
                 };
                 total_fragments = total_fragments
                     .checked_add(fragments.len())
@@ -501,16 +523,21 @@ pub(crate) fn from_response(
             let mut alternates: Vec<bool> = Vec::new();
             for rendition in audio {
                 let alternate = rendition.alternate;
-                let response = direct::probe(client, &rendition.url, referer)?;
-                let (url, playlist) = read_playlist(response)?;
-                let Playlist::Media {
-                    fragments,
-                    discontinuity,
-                    discontinuities,
-                    ..
-                } = playlist
-                else {
-                    return Err(unsupported("nested HLS master playlists are not supported"));
+                let (url, fragments, discontinuity, discontinuities) = if live {
+                    (rendition.url.clone(), Vec::new(), Vec::new(), 0)
+                } else {
+                    let response = direct::probe(client, &rendition.url, referer)?;
+                    let (url, playlist) = read_playlist(response)?;
+                    let Playlist::Media {
+                        fragments,
+                        discontinuity,
+                        discontinuities,
+                        ..
+                    } = playlist
+                    else {
+                        return Err(unsupported("nested HLS master playlists are not supported"));
+                    };
+                    (url, fragments, discontinuity, discontinuities)
                 };
                 total_fragments = total_fragments
                     .checked_add(fragments.len())

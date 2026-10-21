@@ -402,7 +402,7 @@ pub(crate) fn extract_m3u8_optional_note(
         extractor,
         id,
         keep_subtitles,
-        &|response| hls::from_response(client, response, manifest, None, true, m3u8_id),
+        &|response| hls::from_response_with(client, response, manifest, None, true, m3u8_id, live),
         ("m3u8 information", "HLS"),
         note,
     )?;

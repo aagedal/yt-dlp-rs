@@ -1,0 +1,45 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=LiveStream1",
+   "args": [
+    "--no-js-runtimes",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=LiveStream1",
+    "[youtube] LiveStream1: Downloading webpage",
+    "[youtube] LiveStream1: Downloading visionos player API JSON",
+    "[youtube] LiveStream1: Downloading m3u8 information",
+    "[info] Available formats for LiveStream1:",
+    "ID  EXT RESOLUTION FPS |   TBR PROTO | VCODEC        VBR ACODEC     MORE INFO",
+    "-----------------------------------------------------------------------------",
+    "234 mp4 audio only     |       m3u8  | audio only        unknown    Default",
+    "230 mp4 640x360     30 |  962k m3u8  | avc1.4D401E  962k video only",
+    "232 mp4 1280x720    30 | 2448k m3u8  | avc1.4D401F 2448k video only"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=LiveStream1",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(is_live)s|%(was_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(release_timestamp)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "LiveStream1|True|False|is_live|232+234|m3u8_native+m3u8_native|1790812800"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  }
+ ]
+}

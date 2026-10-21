@@ -1144,7 +1144,14 @@ adds Node.js, `--no-js-runtimes` clears them). The executable must be Deno
 2.3+ or Node.js 22+ (upstream's minimums; CI exercises Deno 2.9.7).
 
 Metadata still comes from the first player response with video details, as
-described above. Live, upcoming and post-live videos are unsupported errors.
+described above. A live video's formats come from its HLS master playlist
+parsed like upstream's `live=True` (variant and rendition playlists are not
+fetched), its title gets the local `YYYY-MM-DD HH:MM` suffix, and it downloads
+through FFmpeg like upstream's FFmpegFD; on Unix an interrupt (SIGINT) asks
+FFmpeg to quit, prints `[ffmpeg] Interrupted by user` and completes the
+download (publication and post-processing) as upstream does for live
+streams. `--live-from-start` DASH formats, upcoming and post-live videos remain
+unsupported errors.
 Like upstream's anonymous `_extract_player_responses`, an age-gated response
 adds the `web_embedded` client (and a "made for kids" video the
 android_vr/visionos clients cannot play adds it given a JS runtime), with its
