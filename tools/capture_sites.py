@@ -14,6 +14,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -50,8 +51,18 @@ def seeded_cache():
     return root
 
 
-def run(upstream, proxy, case):
+def prepare(site, case, directory):
+    """Copy the case's `copy` input files (such as a cookies file) into its
+    working directory; their names are left out of the compared files."""
+    copied = case.get('copy', [])
+    for name in copied:
+        shutil.copyfile(site / name, os.path.join(directory, name))
+    return set(copied)
+
+
+def run(upstream, proxy, case, site=None):
     directory = tempfile.mkdtemp()
+    copied = prepare(site, case, directory) if site else set()
     env = dict(os.environ, PYTHONPATH=str(upstream))
     result = subprocess.run(
         [sys.executable, '-m', 'yt_dlp', '--ignore-config', '--proxy', proxy.url,
@@ -60,7 +71,8 @@ def run(upstream, proxy, case):
         capture_output=True, text=True, env=env, cwd=directory, timeout=120)
     files = {}
     for name in sorted(os.listdir(directory)):
-        files[name] = os.path.getsize(os.path.join(directory, name))
+        if name not in copied:
+            files[name] = os.path.getsize(os.path.join(directory, name))
     return {
         'exit': result.returncode,
         'stdout': normalize(result.stdout).splitlines(),
@@ -83,7 +95,7 @@ def main():
         proxy = SiteProxy(site)
         cases = json.loads((site / 'cases.json').read_text(encoding='utf-8'))
         expected = {'upstream_commit': PINNED_UPSTREAM,
-                    'cases': [{**case, **run(args.upstream, proxy, case)} for case in cases]}
+                    'cases': [{**case, **run(args.upstream, proxy, case, site)} for case in cases]}
         text = json.dumps(expected, indent=1, ensure_ascii=False) + '\n'
         path = site / 'expected.json'
         if args.write:

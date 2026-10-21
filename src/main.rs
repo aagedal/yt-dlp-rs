@@ -1608,13 +1608,27 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
-    // `--extractor-args`: GenericIE's are used; other extractors' are not.
+    // `--extractor-args`: GenericIE's and YouTube's client selection are
+    // used; other extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
-    for key in extractor_args.keys().filter(|key| *key != "generic") {
-        warning!(
-            "WARNING: extractor arguments for {key} are not supported natively and are ignored"
-        );
+    for (key, values) in &extractor_args {
+        match key.as_str() {
+            "generic" => {}
+            "youtube" => {
+                for name in values
+                    .keys()
+                    .filter(|name| !matches!(name.as_str(), "player_client" | "player_skip"))
+                {
+                    warning!(
+                        "WARNING: extractor argument youtube:{name} is not supported natively and is ignored"
+                    );
+                }
+            }
+            _ => warning!(
+                "WARNING: extractor arguments for {key} are not supported natively and are ignored"
+            ),
+        }
     }
     yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
     yt_dlp_rs::extractor::set_video_password(args.video_password.clone());

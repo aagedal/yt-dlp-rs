@@ -75,11 +75,9 @@ pub(crate) fn initialize() {
         .extend_pairs(&pref)
         .finish();
     crate::cookies::set_cookie(".youtube.com", "PREF", &pref);
-    let has_auth_cookies = crate::cookies::get_cookie(HOME, "LOGIN_INFO").is_some()
-        && ["SAPISID", "__Secure-3PAPISID", "__Secure-1PAPISID"]
-            .iter()
-            .any(|name| crate::cookies::get_cookie(HOME, name).is_some_and(|v| !v.is_empty()));
-    if has_auth_cookies {
+    if has_auth_cookies() {
+        // `_initialize_cookie_auth`.
+        crate::screen::debug("Found YouTube account cookies");
         return;
     }
     // A SOCS value not starting with `CAA` records a choice; keep it.
@@ -87,6 +85,70 @@ pub(crate) fn initialize() {
         return;
     }
     crate::cookies::set_cookie(".youtube.com", "SOCS", "CAI");
+}
+
+const YOUTUBE_HOME: &str = "https://www.youtube.com";
+
+/// `_get_sid_cookies`: SAPISID (else `__Secure-3PAPISID`), `__Secure-1PAPISID`
+/// and `__Secure-3PAPISID`.
+fn sid_cookies() -> [Option<String>; 3] {
+    let cookie = |name: &str| {
+        crate::cookies::get_cookie(YOUTUBE_HOME, name).filter(|value| !value.is_empty())
+    };
+    let third = cookie("__Secure-3PAPISID");
+    [
+        cookie("SAPISID").or_else(|| third.clone()),
+        cookie("__Secure-1PAPISID"),
+        third,
+    ]
+}
+
+/// `_has_auth_cookies` (`is_authenticated`): `LOGIN_INFO` and a SID cookie.
+pub(crate) fn has_auth_cookies() -> bool {
+    crate::cookies::get_cookie(YOUTUBE_HOME, "LOGIN_INFO").is_some()
+        && sid_cookies().iter().any(Option::is_some)
+}
+
+/// `_get_sid_authorization_header`: one `SCHEME TIMESTAMP_HASH[_u]` per SID
+/// cookie, hashing `[USER_SESSION_ID ]TIMESTAMP SID ORIGIN` with SHA-1.
+pub(super) fn sid_authorization(origin: &str, user_session_id: Option<&str>) -> Option<String> {
+    let timestamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |elapsed| elapsed.as_secs_f64().round() as u64)
+        .to_string();
+    sid_authorization_at(origin, user_session_id, &timestamp, sid_cookies())
+}
+
+fn sid_authorization_at(
+    origin: &str,
+    user_session_id: Option<&str>,
+    timestamp: &str,
+    sids: [Option<String>; 3],
+) -> Option<String> {
+    let timestamp = timestamp.to_owned();
+    let authorizations: Vec<String> = ["SAPISIDHASH", "SAPISID1PHASH", "SAPISID3PHASH"]
+        .into_iter()
+        .zip(sids)
+        .filter_map(|(scheme, sid)| {
+            let sid = sid?;
+            let mut hashed = Vec::new();
+            if let Some(user) = user_session_id {
+                hashed.push(user.to_owned());
+            }
+            hashed.extend([timestamp.clone(), sid, origin.to_owned()]);
+            let hash: String = crate::sha1::digest(hashed.join(" ").as_bytes())
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect();
+            let mut parts = vec![timestamp.clone(), hash];
+            if user_session_id.is_some() {
+                // `''.join(additional_parts)` joins the dict's keys.
+                parts.push("u".into());
+            }
+            Some(format!("{scheme} {}", parts.join("_")))
+        })
+        .collect();
+    (!authorizations.is_empty()).then(|| authorizations.join(" "))
 }
 
 fn unsupported(reason: &str) -> Error {
@@ -378,7 +440,9 @@ fn extract_clients(
         "[youtube] Extracting URL: {}",
         crate::screen::extracting_url(&format!("https://www.youtube.com/watch?v={id}"))
     ));
-    let acquired = watch::acquire(client, id, runtime)?;
+    // `is_music_url`.
+    let music_url = url.host_str() == Some("music.youtube.com");
+    let acquired = watch::acquire(client, id, runtime, music_url)?;
     let first = |key: &str| {
         acquired
             .player_responses
@@ -441,7 +505,7 @@ fn extract_clients(
         missing_pot: false,
         skip_player_js: false,
         skip_manifests: Default::default(),
-        premium: false,
+        premium: acquired.premium,
     };
     let mut solver = JsSolver {
         client,
@@ -696,6 +760,31 @@ impl Extractor for ConfiguredYoutube {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn sid_authorization_matches_pinned_upstream() {
+        // Recorded from pinned upstream's request for the youtube-auth fixture.
+        let sid = || Some("sapisid-fixture/AbCdEf".to_owned());
+        let hash = "1792620452_3448a83fcbe06bc33db20790bfab51bca47748db_u";
+        assert_eq!(
+            sid_authorization_at(
+                "https://www.youtube.com",
+                Some("USER123"),
+                "1792620452",
+                [sid(), sid(), sid()]
+            )
+            .unwrap(),
+            format!("SAPISIDHASH {hash} SAPISID1PHASH {hash} SAPISID3PHASH {hash}")
+        );
+        let anonymous =
+            sid_authorization_at("https://www.youtube.com", None, "1", [sid(), None, None])
+                .unwrap();
+        assert!(anonymous.starts_with("SAPISIDHASH 1_") && !anonymous.ends_with("_u"));
+        assert_eq!(
+            sid_authorization_at("o", None, "1", [None, None, None]),
+            None
+        );
+    }
 
     #[test]
     fn exact_hosts_and_supported_video_url_shapes() {

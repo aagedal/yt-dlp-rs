@@ -1,0 +1,5 @@
+[
+ {"url": "https://www.youtube.com/watch?v=AuthVideo01", "copy": ["cookies.txt"], "args": ["--no-js-runtimes", "--cookies", "cookies.txt", "-v", "-F"]},
+ {"url": "https://www.youtube.com/watch?v=AuthVideo01", "copy": ["cookies.txt"], "args": ["--no-js-runtimes", "--cookies", "cookies.txt", "--print", "%(id)s|%(title)s|%(format_id)s"]},
+ {"url": "https://www.youtube.com/watch?v=AuthVideo01", "copy": ["cookies.txt"], "args": ["--cookies", "cookies.txt", "--extractor-args", "youtube:player_client=tv_samsung,visionos", "--print", "%(format_id)s"]}
+]

@@ -1,0 +1,76 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=AuthVideo01",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--no-js-runtimes",
+    "--cookies",
+    "cookies.txt",
+    "-v",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=AuthVideo01",
+    "[youtube] AuthVideo01: Downloading webpage",
+    "[youtube] AuthVideo01: Downloading web embedded client config",
+    "[youtube] AuthVideo01: Downloading web embedded player API JSON",
+    "[youtube] AuthVideo01: Downloading tv samsung player API JSON",
+    "[info] Available formats for AuthVideo01:",
+    "ID  EXT RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC       VBR ACODEC      ABR ASR MORE INFO",
+    "-------------------------------------------------------------------------------------------------------------",
+    "140 m4a audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k medium, TV-S, m4a_dash",
+    "18  mp4 640x360           |               https | avc1.42001E      mp4a.40.2           360p, WEB",
+    "136 mp4 1280x720    30    |  792.00B 100k https | avc1.4d401f 100k video only          720p, WEB-E, mp4_dash",
+    "137 mp4 1920x1080   30    |  792.00B 100k https | avc1.640028 100k video only          1080p, TV-S, mp4_dash"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=AuthVideo01",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--no-js-runtimes",
+    "--cookies",
+    "cookies.txt",
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "AuthVideo01|youtube-dl test video \"'/\\ä↭𝕐|137+140"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=AuthVideo01",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "youtube:player_client=tv_samsung,visionos",
+    "--print",
+    "%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Skipping client \"visionos\" since it does not support cookies"
+   ],
+   "files": {}
+  }
+ ]
+}

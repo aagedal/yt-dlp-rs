@@ -14,6 +14,7 @@ use url::Url;
 const DEFAULT_CLIENTS: [&str; 3] = ["tv_samsung", "visionos", "web"];
 const DEFAULT_JSLESS_CLIENTS: [&str; 1] = ["visionos"];
 const DEFAULT_AUTHED_CLIENTS: [&str; 3] = ["web_embedded", "tv_samsung", "web"];
+const DEFAULT_PREMIUM_CLIENTS: [&str; 3] = ["web_creator", "tv_samsung", "web"];
 const WEBPAGE_CLIENT: &str = "web";
 const EJS_WIKI_URL: &str = "https://github.com/yt-dlp/yt-dlp/wiki/EJS";
 /// `_PLAYER_JS_VARIANT_MAP['main']`.
@@ -81,8 +82,7 @@ fn download_ytcfg(
         "tv" => "https://www.youtube.com/tv".to_owned(),
         _ => return Map::new(),
     };
-    // Authenticated sessions are not supported natively.
-    if config.require_auth {
+    if config.require_auth && !super::has_auth_cookies() {
         return Map::new();
     }
     let Ok(url) = Url::parse(&url) else {
@@ -313,7 +313,16 @@ pub(super) fn innertube_api(
 ) -> Result<Value> {
     let config = innertube::client(WEBPAGE_CLIENT).expect("the web client is defined");
     call_api(
-        client, config, endpoint, extractor, item_id, ytcfg, visitor, query, note,
+        client,
+        config,
+        endpoint,
+        extractor,
+        item_id,
+        ytcfg,
+        visitor,
+        query,
+        note,
+        Session::default(),
     )
 }
 
@@ -370,6 +379,8 @@ fn player_response(
     player_ytcfg: &Map<String, Value>,
     player_url: Option<&str>,
     visitor: Option<&str>,
+    initial_pr: &Value,
+    data_sync: Option<&str>,
 ) -> Result<Value> {
     let mut query = Map::new();
     query.insert("videoId".into(), video_id.into());
@@ -402,6 +413,17 @@ fn player_response(
         "Downloading {} player API JSON",
         config.name.replace('_', " ").trim()
     );
+    // The session index and IDs of `_extract_player_response`.
+    let (webpage, player) = (
+        Value::Object(webpage_ytcfg.clone()),
+        Value::Object(player_ytcfg.clone()),
+    );
+    let (delegated, user) = parse_data_sync_id(data_sync);
+    let session = Session {
+        index: session_index(&[&webpage, &player]),
+        delegated: delegated.or_else(|| delegated_session_id(&[&webpage, initial_pr, &player])),
+        user: user.or_else(|| user_session_id(&[&webpage, initial_pr, &player])),
+    };
     call_api(
         client,
         config,
@@ -412,7 +434,98 @@ fn player_response(
         visitor,
         query,
         &note,
+        session,
     )
+}
+
+/// An account session's request values (`generate_api_headers` arguments);
+/// missing ones come from the request's `ytcfg`.
+#[derive(Default)]
+struct Session {
+    index: Option<i64>,
+    delegated: Option<String>,
+    user: Option<String>,
+}
+
+fn first_text(sources: &[&Value], key: &str) -> Option<String> {
+    sources
+        .iter()
+        .find_map(|source| source.get(key)?.as_str().map(str::to_owned))
+}
+
+/// `_extract_session_index`.
+fn session_index(sources: &[&Value]) -> Option<i64> {
+    sources
+        .iter()
+        .find_map(|source| match source.get("SESSION_INDEX")? {
+            Value::Number(number) => number.as_i64(),
+            Value::String(text) => text.trim().parse().ok(),
+            _ => None,
+        })
+}
+
+/// `_extract_data_sync_id`.
+fn data_sync_id(sources: &[&Value]) -> Option<String> {
+    sources.iter().find_map(|source| {
+        source
+            .get("DATASYNC_ID")
+            .or_else(|| source.pointer("/responseContext/mainAppWebResponseContext/datasyncId"))?
+            .as_str()
+            .map(str::to_owned)
+    })
+}
+
+/// `_parse_data_sync_id`: `DELEGATED||USER`, or `USER||`.
+fn parse_data_sync_id(id: Option<&str>) -> (Option<String>, Option<String>) {
+    let Some(id) = id.filter(|id| !id.is_empty()) else {
+        return (None, None);
+    };
+    match id.split_once("||") {
+        Some((first, second)) if !second.is_empty() => {
+            (Some(first.to_owned()), Some(second.to_owned()))
+        }
+        Some((first, _)) => (None, Some(first.to_owned())),
+        None => (None, Some(id.to_owned())),
+    }
+}
+
+/// `_extract_delegated_session_id`.
+fn delegated_session_id(sources: &[&Value]) -> Option<String> {
+    first_text(sources, "DELEGATED_SESSION_ID")
+        .or_else(|| parse_data_sync_id(data_sync_id(sources).as_deref()).0)
+}
+
+/// `_extract_user_session_id`.
+fn user_session_id(sources: &[&Value]) -> Option<String> {
+    first_text(sources, "USER_SESSION_ID")
+        .or_else(|| parse_data_sync_id(data_sync_id(sources).as_deref()).1)
+}
+
+/// `_generate_cookie_auth_headers`.
+fn auth_headers(
+    ytcfg: &Map<String, Value>,
+    session: Session,
+    origin: &str,
+) -> Vec<(&'static str, String)> {
+    let own = Value::Object(ytcfg.clone());
+    let delegated = session.delegated.or_else(|| delegated_session_id(&[&own]));
+    let index = session.index.or_else(|| session_index(&[&own]));
+    let user = session.user.or_else(|| user_session_id(&[&own]));
+    let mut headers = Vec::new();
+    if let Some(delegated) = &delegated {
+        headers.push(("X-Goog-PageId", delegated.clone()));
+    }
+    if delegated.is_some() || index.is_some() {
+        headers.push(("X-Goog-AuthUser", index.unwrap_or(0).to_string()));
+    }
+    if let Some(authorization) = super::sid_authorization(origin, user.as_deref()) {
+        headers.push(("Authorization", authorization));
+        headers.push(("X-Origin", origin.to_owned()));
+    }
+    if ytcfg.get("LOGGED_IN").and_then(Value::as_bool) == Some(true) {
+        headers.push(("X-Youtube-Bootstrap-Logged-In", "true".into()));
+    }
+    headers
 }
 
 /// `_call_api`: one POST to `/youtubei/v1/ENDPOINT` with the client's
@@ -428,6 +541,7 @@ fn call_api(
     visitor: Option<&str>,
     query: Map<String, Value>,
     note: &str,
+    session: Session,
 ) -> Result<Value> {
     let default = default_ytcfg(config);
     let mut body = Map::new();
@@ -461,7 +575,7 @@ fn call_api(
     let mut headers: Vec<(&str, String)> = vec![
         ("X-YouTube-Client-Name", name_id),
         ("X-YouTube-Client-Version", version),
-        ("Origin", origin),
+        ("Origin", origin.clone()),
     ];
     if let Some(visitor) = visitor {
         headers.push(("X-Goog-Visitor-Id", visitor.to_owned()));
@@ -469,6 +583,7 @@ fn call_api(
     if let Some(user_agent) = user_agent {
         headers.push(("User-Agent", user_agent));
     }
+    headers.extend(auth_headers(player_ytcfg, session, &origin));
     headers.push(("content-type", "application/json".into()));
     let url = Url::parse(&format!(
         "https://{}/youtubei/v1/{endpoint}?prettyPrint=false",
@@ -527,12 +642,24 @@ fn iframe_player_url(client: &Client, video_id: &str) -> Option<String> {
     ))
 }
 
-/// `_get_requested_clients` for an anonymous session.
-fn requested_clients(js_available: bool) -> Vec<&'static str> {
-    let defaults: &[&'static str] = if js_available {
-        &DEFAULT_CLIENTS
-    } else {
+/// The session `_get_requested_clients` chooses clients for.
+struct ClientSelection {
+    js_available: bool,
+    authenticated: bool,
+    premium: bool,
+    music_url: bool,
+}
+
+/// `_get_requested_clients`.
+fn requested_clients(session: &ClientSelection) -> Vec<&'static str> {
+    let defaults: &[&'static str] = if session.premium {
+        &DEFAULT_PREMIUM_CLIENTS
+    } else if session.authenticated {
+        &DEFAULT_AUTHED_CLIENTS
+    } else if !session.js_available {
         &DEFAULT_JSLESS_CLIENTS
+    } else {
+        &DEFAULT_CLIENTS
     };
     let mut requested: Vec<&'static str> = Vec::new();
     let mut excluded: Vec<String> = Vec::new();
@@ -556,7 +683,7 @@ fn requested_clients(js_available: bool) -> Vec<&'static str> {
             },
         }
     }
-    if requested.is_empty() && excluded.is_empty() && !js_available {
+    if requested.is_empty() && excluded.is_empty() && defaults == DEFAULT_JSLESS_CLIENTS {
         crate::screen::warning_once(&format!(
             "[youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  {EJS_WIKI_URL}  for details on installing one"
         ));
@@ -565,6 +692,20 @@ fn requested_clients(js_available: bool) -> Vec<&'static str> {
         requested.extend(defaults);
     }
     requested.retain(|client| !excluded.iter().any(|excluded| excluded == client));
+    if session.authenticated {
+        if session.music_url && !requested.contains(&"web_music") {
+            requested.push("web_music");
+        }
+        requested.retain(|name| {
+            let supported = innertube::client(name).is_some_and(|config| config.supports_cookies);
+            if !supported {
+                crate::screen::warning_once(&format!(
+                    "[youtube] Skipping client \"{name}\" since it does not support cookies"
+                ));
+            }
+            supported
+        });
+    }
     let mut ordered = Vec::new();
     for client in requested {
         if !ordered.contains(&client) {
@@ -572,6 +713,21 @@ fn requested_clients(js_available: bool) -> Vec<&'static str> {
         }
     }
     ordered
+}
+
+/// `_is_premium_subscriber`: the topbar's YouTube Premium logo.
+fn is_premium_subscriber(authenticated: bool, initial_data: Option<&Value>) -> bool {
+    let Some(logo) = initial_data
+        .filter(|_| authenticated)
+        .and_then(|data| data.pointer("/topbar/desktopTopbarRenderer/logo/topbarLogoRenderer"))
+    else {
+        return false;
+    };
+    logo.pointer("/iconImage/iconType").and_then(Value::as_str) == Some("YOUTUBE_PREMIUM_LOGO")
+        || logo
+            .get("tooltipText")
+            .and_then(super::metadata::text)
+            .is_some_and(|text| text.to_lowercase().contains("premium"))
 }
 
 /// The acquisition result `_real_extract` continues with.
@@ -583,6 +739,8 @@ pub(super) struct Acquired {
     /// first), for metadata.
     pub player_responses: Vec<Value>,
     pub player_url: Option<String>,
+    /// `is_premium_subscriber`.
+    pub premium: bool,
 }
 
 /// `_initial_extract` for an anonymous session.
@@ -590,6 +748,7 @@ pub(super) fn acquire(
     client: &Client,
     video_id: &str,
     runtime: Option<&challenge::Runtime>,
+    music_url: bool,
 ) -> Result<Acquired> {
     let webpage_url = Url::parse(&format!(
         "https://www.youtube.com/watch?v={video_id}&bpctr=9999999999&has_verified=1"
@@ -611,7 +770,14 @@ pub(super) fn acquire(
     });
     // `_get_requested_clients` runs before `_extract_player_responses`
     // searches the initial player response.
-    let clients = requested_clients(runtime.is_some());
+    let authenticated = super::has_auth_cookies();
+    let premium = is_premium_subscriber(authenticated, initial_data.as_ref());
+    let clients = requested_clients(&ClientSelection {
+        js_available: runtime.is_some(),
+        authenticated,
+        premium,
+        music_url,
+    });
     let initial_pr = search_initial(
         &webpage,
         &INITIAL_PLAYER_RESPONSE,
@@ -642,6 +808,7 @@ pub(super) fn acquire(
     let mut player_url_found: Option<String> = None;
     let mut tried_iframe_fallback = false;
     let mut visitor: Option<String> = None;
+    let mut data_sync: Option<String> = None;
     let mut skipped: Vec<(&'static str, String)> = Vec::new();
     let webpage_ytcfg_value = Value::Object(webpage_ytcfg.clone());
     let skip_configs = crate::manifest_args::configuration_arg("youtube", "player_skip", false)
@@ -689,6 +856,13 @@ pub(super) fn acquire(
             tried_iframe_fallback = true;
         }
         let initial_value = initial_pr.clone().unwrap_or(Value::Null);
+        if data_sync.is_none() {
+            data_sync = data_sync_id(&[
+                &webpage_ytcfg_value,
+                &initial_value,
+                &Value::Object(player_ytcfg.clone()),
+            ]);
+        }
         if visitor.is_none() {
             visitor = visitor_data(&[
                 &webpage_ytcfg_value,
@@ -713,6 +887,8 @@ pub(super) fn acquire(
                 &player_ytcfg,
                 player_url_found.as_deref(),
                 visitor.as_deref(),
+                &initial_value,
+                data_sync.as_deref(),
             ) {
                 Ok(response) => response,
                 Err(error) => {
@@ -761,10 +937,19 @@ pub(super) fn acquire(
         if agegated && variant != Some("web_embedded") {
             append_client(&mut pending, &[format!("web_embedded.{base}")]);
         }
-        if agegated {
+        if agegated && !authenticated {
             crate::screen::screen_once(&format!(
                 "[youtube] {video_id}: This video is age-restricted; some formats may be missing without authentication. {LOGIN_HINT}"
             ));
+        }
+        // EU accounts need age verification; web_creator may work around it.
+        let embedding_disabled =
+            variant == Some("web_embedded") && status.as_deref() == Some("UNPLAYABLE");
+        if authenticated && (agegated || embedding_disabled) {
+            crate::screen::screen_once(&format!(
+                "[youtube] {video_id}: This video is age-restricted and YouTube is requiring account age-verification; some formats may be missing"
+            ));
+            append_client(&mut pending, &["web_creator".into()]);
         }
         if !matches!(
             status.as_deref(),
@@ -802,5 +987,6 @@ pub(super) fn acquire(
         responses,
         player_responses,
         player_url: player_url_found,
+        premium,
     })
 }

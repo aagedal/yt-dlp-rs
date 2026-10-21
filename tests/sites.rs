@@ -62,6 +62,16 @@ fn site_extractors_match_saved_upstream_output() {
                 .iter()
                 .map(|arg| arg.as_str().unwrap())
                 .collect();
+            // `copy`: input files (such as a cookies file), not compared.
+            let copied: Vec<&str> = case["copy"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter_map(|name| name.as_str())
+                .collect();
+            for name in &copied {
+                std::fs::copy(directory.join(name), work.path().join(name)).unwrap();
+            }
             let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
                 .args([
                     "--ignore-config",
@@ -86,6 +96,7 @@ fn site_extractors_match_saved_upstream_output() {
                 .map(|entry| entry.unwrap())
                 .collect();
             names.sort_by_key(|entry| entry.file_name());
+            names.retain(|entry| !copied.iter().any(|name| entry.file_name() == **name));
             for entry in names {
                 files.insert(
                     entry.file_name().to_string_lossy().into_owned(),
