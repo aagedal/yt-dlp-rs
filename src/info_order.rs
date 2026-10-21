@@ -1894,10 +1894,17 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // An extractor's own dict (`dict;KEYS[;thumbnail=KEYS]`), every key set.
     if let Some(spec) = shape.strip_prefix("dict;") {
-        let (keys, thumbnail_keys) = match spec.split_once(";thumbnail=") {
-            Some((keys, thumbnail)) => (keys, Some(thumbnail)),
-            None => (spec, None),
-        };
+        let mut parts = spec.split(';');
+        let keys = parts.next().unwrap_or_default();
+        let mut thumbnail_keys = None;
+        let mut subtitle_keys = None;
+        for part in parts {
+            if let Some(found) = part.strip_prefix("thumbnail=") {
+                thumbnail_keys = Some(found);
+            } else if let Some(found) = part.strip_prefix("subtitle=") {
+                subtitle_keys = Some(found);
+            }
+        }
         for key in keys.split(',') {
             replay.set(
                 key,
@@ -1907,6 +1914,25 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                     _ => Assign,
                 },
             );
+        }
+        // The extractor's subtitle track keys, then processing's `ext`.
+        if let Some(subtitle_keys) = subtitle_keys {
+            for key in ["subtitles", "automatic_captions"] {
+                if let Some(Value::Object(languages)) = replay.out.get_mut(key) {
+                    for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
+                        for track in tracks.iter_mut().filter_map(Value::as_object_mut) {
+                            let mut ordered = Map::new();
+                            for key in subtitle_keys.split(',') {
+                                if let Some(value) = track.shift_remove(key) {
+                                    ordered.insert(key.to_owned(), value);
+                                }
+                            }
+                            ordered.append(track);
+                            *track = ordered;
+                        }
+                    }
+                }
+            }
         }
         // The extractor's thumbnail keys, then `_sanitize_thumbnails`' `id`
         // and `resolution`.

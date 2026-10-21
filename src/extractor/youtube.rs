@@ -2,7 +2,7 @@
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
 mod challenge;
 mod chapters;
-mod dict;
+pub(crate) mod dict;
 mod innertube;
 mod metadata;
 pub(crate) mod search;

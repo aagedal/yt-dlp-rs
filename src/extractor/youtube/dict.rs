@@ -92,7 +92,7 @@ fn str_to_int(text: &str) -> Option<i64> {
 }
 
 /// `parse_count`.
-pub(super) fn parse_count(text: &str) -> Option<i64> {
+pub(crate) fn parse_count(text: &str) -> Option<i64> {
     static PREFIX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[^\d]+\s").unwrap());
     static DIGITS: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[\d,.]+$").unwrap());
     static UNIT: LazyLock<Regex> = LazyLock::new(|| {

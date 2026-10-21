@@ -489,6 +489,22 @@ The Epoch Times videos (`www.theepochtimes.com/SLUG_ID.html`) follow upstream
 ID, its YouMaker `playlist.m3u8` as fatal `hls` formats and subtitles, and
 the cleaned `<title>` text (with upstream's warning when missing).
 
+Facebook videos (`facebook.com` watch, video, post, story, permalink,
+event, group and watch-party URL shapes and `facebook:ID`) follow upstream
+`FacebookIE` through the page's relay prefetched data, the path current pages
+use: `parse_graphql_video` over node attachments, media sets, event cover
+videos and the page's `video` (legacy `playable_url` fields, inline or linked
+DASH manifests from `videoDeliveryResponseFragment`, progressive and HLS URLs,
+captions by locale), each format with upstream's `facebookexternalhit`
+User-Agent and 250 MiB HTTP chunks, merged with `extract_metadata`'s
+webpage title, description, uploader, timestamp, thumbnail and counts. Several
+videos form a playlist. Login and interstitial pages are upstream's errors;
+older server JS/pagelet pages, watch parties, the tahoe player fallback,
+JSON-LD metadata, ads and comments are not supported. `facebook:reel`
+(`/reel/ID`) and `FacebookPluginsVideo` (`plugins/video.php?href=`) are
+followed like upstream. `tests/fixtures/sites/facebook/` is compared with
+pinned upstream output.
+
 Fathom shares (`fathom.video/share/ID`) follow upstream `FathomIE`: the `app`
 element's `data-page` JSON props (upstream's `TypeError` text without them),
 the call's ID and fatal `video_url` HLS formats (subtitles ignored with

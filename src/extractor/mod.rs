@@ -17,6 +17,7 @@ mod ebaumsworld;
 mod ebay;
 mod epoch;
 mod f4m;
+mod facebook;
 mod fathom;
 mod fczenit;
 mod filmweb;
@@ -95,6 +96,10 @@ pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub use ebay::{Ebay, suitable as ebay_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
+pub use facebook::{
+    Facebook, FacebookPluginsVideo, FacebookReel, plugins_suitable as facebook_plugins_suitable,
+    reel_suitable as facebook_reel_suitable, suitable as facebook_suitable,
+};
 pub use fathom::{Fathom, suitable as fathom_suitable};
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
