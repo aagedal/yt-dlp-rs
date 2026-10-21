@@ -62,6 +62,7 @@ mod reddit;
 mod reverbnation;
 mod rss;
 mod rtrfm;
+mod rumble;
 mod screenrec;
 mod sen;
 mod smil;
@@ -143,6 +144,9 @@ pub use qingting::{QingTing, suitable as qingting_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
+pub use rumble::{
+    Rumble, RumbleEmbed, embed_suitable as rumble_embed_suitable, suitable as rumble_suitable,
+};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
 pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};

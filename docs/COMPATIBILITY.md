@@ -347,6 +347,16 @@ the page's fatal `playShow[From]` show, date and title, the restream API's
 ID, `TITLE DATE` title, series, release date (and the `release_year`
 processing derives from it) and OpenGraph description.
 
+Rumble embeds (`rumble.com/embed/ID`) follow upstream `RumbleEmbedIE`: the
+embed JS API's `ua` formats (progressive by height, audio, timeline; HLS
+manifests non-fatally; tar archives skipped), live status, captions,
+thumbnails and metadata, with the API's `sys.msg` warning. Rumble video
+pages (`rumble.com/vID-SLUG.html`) follow `RumbleIE`: the page's embed (or
+`Rumble("play", ...)` script) as a `url_transparent` result with the page's
+release time, view, like and dislike counts and description. Channels are
+not supported. `tests/fixtures/sites/rumble/` is compared with pinned
+upstream output.
+
 ScreenRec shares (`screenrec.com/share/ID`) follow upstream `ScreenRecIE`: the
 page's fatal `customUrl` manifest as HLS formats (subtitles ignored with
 upstream's warning), the OpenGraph title (else the `<title>` text) and the

@@ -838,6 +838,18 @@
       "scope": "RTRFMIE playShow details, restream MP3 URL as an untyped result, expired-episode/details/KeyError errors and release_year processing compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "rumble",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rumble.py"
+      ],
+      "rust": [
+        "src/extractor/rumble.rs",
+        "tests/fixtures/sites/rumble/"
+      ],
+      "scope": "RumbleEmbedIE embed JS formats, live status, captions, thumbnails and metadata; RumbleIE pages as url_transparent embeds with page counts; no channels; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "screenrec",
       "status": "partial",
       "upstream": [
