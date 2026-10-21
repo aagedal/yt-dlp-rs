@@ -149,7 +149,8 @@ static DESCRIPTION_TIME_FIRST: LazyLock<Regex> =
 static DESCRIPTION_TIME_LAST: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(?m)^\s*(.+?)\b\W*\s((?:\d+:)?\d{1,2}:\d{2})\s*$").unwrap());
 
-fn from_description(description: Option<&str>, duration: Option<u64>) -> Vec<Chapter> {
+/// `_extract_chapters_from_description(description, duration)`.
+pub(crate) fn from_description(description: Option<&str>, duration: Option<u64>) -> Vec<Chapter> {
     let description = description.unwrap_or("");
     let found = |regex: &Regex, time: usize, title: usize| {
         regex

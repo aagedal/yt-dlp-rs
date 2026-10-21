@@ -946,6 +946,18 @@
       "scope": "RumbleEmbedIE embed JS formats, live status, captions, thumbnails and metadata; RumbleIE pages as url_transparent embeds with page counts; no channels; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "rutube",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rutube.py"
+      ],
+      "rust": [
+        "src/extractor/rutube.rs",
+        "tests/fixtures/sites/rutube/"
+      ],
+      "scope": "RutubeIE and RutubeEmbedIE video API metadata and description chapters, play options balancer/live HLS and progressive formats and captions; no F4M formats or playlist extractors; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "screenrec",
       "status": "partial",
       "upstream": [

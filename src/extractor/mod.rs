@@ -71,6 +71,7 @@ mod reverbnation;
 mod rss;
 mod rtrfm;
 mod rumble;
+mod rutube;
 mod screenrec;
 mod sen;
 mod smil;
@@ -172,6 +173,9 @@ pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
 pub use rumble::{
     Rumble, RumbleEmbed, embed_suitable as rumble_embed_suitable, suitable as rumble_suitable,
+};
+pub use rutube::{
+    Rutube, RutubeEmbed, embed_suitable as rutube_embed_suitable, suitable as rutube_suitable,
 };
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};

@@ -357,6 +357,16 @@ release time, view, like and dislike counts and description. Channels are
 not supported. `tests/fixtures/sites/rumble/` is compared with pinned
 upstream output.
 
+Rutube videos (`rutube.ru/[live/]video[/private]/ID`, `[play/]embed/ID`
+with 32-character IDs) follow upstream `RutubeIE`: the video API (the URL's
+query, such as a private `p` token, passed on) for metadata and description
+chapters, and the play options' balancer HLS and progressive formats, live
+HLS streams and captions (`ru` without a code). Numeric embeds
+(`rutube:embed`) read the options' `effective_video` first and report
+`extractor_key` `Rutube`. F4M balancer entries are an unsupported error;
+channels, playlists, tags, people and movies are not supported.
+`tests/fixtures/sites/rutube/` is compared with pinned upstream output.
+
 ScreenRec shares (`screenrec.com/share/ID`) follow upstream `ScreenRecIE`: the
 page's fatal `customUrl` manifest as HLS formats (subtitles ignored with
 upstream's warning), the OpenGraph title (else the `<title>` text) and the
