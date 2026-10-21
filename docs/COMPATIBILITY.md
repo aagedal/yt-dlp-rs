@@ -775,6 +775,16 @@ fatal greedy `<h1 title=...>` heading (often empty, so processing's generic
 title) and the player JSON's `data.f` URL as an untyped result, with
 upstream's `KeyError` messages.
 
+Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
+shapes) follow upstream `TumblrIE`: the anonymous API token from the login
+page, the post page and its permalink API JSON, Tumblr-hosted video from the
+iframe's `<source>` and `data-crt-options` HD URL (with upstream's JSON parse
+warning and the post-media fallback), external provider embeds as `url`
+results, and the post's title, description, uploader and tags. Posts with
+several videos form a playlist and dashboard-only posts report upstream's
+errors, but neither is covered by fixtures yet; logins are not supported.
+`tests/fixtures/sites/tumblr/` is compared with pinned upstream output.
+
 Odysee/LBRY streams (`odysee.com`, `lbry.tv` and `lbry://` claim URLs,
 `$/embed/` and `$/download/` paths) follow upstream `LBRYIE`: the API
 proxy's `resolve` and `get`, the v3 API's original file (when the answer is

@@ -77,6 +77,7 @@ mod sztvhu;
 mod theintercept;
 mod thisamericanlife;
 mod tiktok;
+mod tumblr;
 mod tweakers;
 mod twentythreevideo;
 mod twitch;
@@ -170,6 +171,7 @@ pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitab
 pub use tiktok::{
     TikTok, TikTokVm, suitable as tiktok_suitable, vm_suitable as tiktok_vm_suitable,
 };
+pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub use twitch::{

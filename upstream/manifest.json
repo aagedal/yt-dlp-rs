@@ -1014,6 +1014,18 @@
       "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; no app API, subtitles, slideshows, user/sound/tag/collection lists or Douyin; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tumblr",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tumblr.py"
+      ],
+      "rust": [
+        "src/extractor/tumblr.rs",
+        "tests/fixtures/sites/tumblr/"
+      ],
+      "scope": "TumblrIE anonymous API token, post page and permalink API, iframe/post-media video formats, provider embeds as url results and post metadata; no logins; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tweakers",
       "status": "partial",
       "upstream": [
