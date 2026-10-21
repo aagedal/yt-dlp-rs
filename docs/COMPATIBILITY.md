@@ -511,6 +511,26 @@ filesize}` thumbnails. Filmweb articles (`filmweb.no/trailere|filmnytt/articleID
 `filmnytt` pages through their `data-videoid`) follow upstream `FilmwebIE`:
 the trailer embed JSON's iframe as a `url_transparent` 23video result.
 
+TikTok videos (`www.tiktok[v].com/@USER/video/ID`, `/embed/ID`,
+`/share/video/ID`) follow upstream `TikTokIE`'s webpage path (no app API
+without `app_info`): upstream's impersonation warning (this port cannot
+impersonate a browser, like upstream without `curl_cffi`), the webpage's
+`__UNIVERSAL_DATA_FOR_REHYDRATION__`, else the page's proof-of-work challenge
+solved natively (SHA-256 over up to a million candidates, as
+`_solve_challenge_and_set_cookies`) and the page refetched with its cookie.
+Status codes 10216/10222 and 10204 and the `/login` redirect are upstream's
+errors. `_parse_aweme_video_web` gives the bitrate renditions (URL-key IDs,
+codecs, int bitrates, qualities and dimensions; `bytevc2` unplayable), the
+`play` and watermarked `download` URLs, the music track as an audio format,
+author, music, stats and cover thumbnails, with the page as every format's
+Referer. Formats upstream marks `__needs_testing` (the watermarked download,
+HEVC `media-video-hvc1` renditions) are tested when selected, as
+`_check_formats` does by default, and `-F` lists them as `Untested`.
+Subtitles, slideshows, user/sound/tag/collection pages and Douyin are not
+supported. `vm.tiktok` short links (`vm.`/`vt.tiktok.com/ID`,
+`tiktok.com/t/ID`) are resolved with a HEAD request and followed.
+`tests/fixtures/sites/tiktok/` is compared with pinned upstream output.
+
 Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 `s1playlist/ID/1920/1080/playlist.json` item's progressive sources as formats
 (labels as IDs, numbered when repeated, `mimetype2ext` or URL extensions),

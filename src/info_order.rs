@@ -317,8 +317,27 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         Some(shape) => (true, shape),
         None => (shape.starts_with("html5-"), shape.as_str()),
     };
+    // An extractor's own format dict (`dict:KEYS`), every key set.
+    let dict_keys: Vec<(String, Set)> = shape
+        .strip_prefix("dict:")
+        .map(|keys| {
+            keys.split(',')
+                .map(|key| {
+                    (
+                        key.to_owned(),
+                        if key.starts_with("__") { Take } else { Assign },
+                    )
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    let dict_steps: Vec<(&str, Set)> = dict_keys
+        .iter()
+        .map(|(key, how)| (key.as_str(), *how))
+        .collect();
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape {
+        _ if shape.starts_with("dict:") => &dict_steps,
         // `FczenitIE`'s quality.
         "fczenit" => &[("format_id", Take), ("url", Take), ("height", Assign)],
         // `CJSWIE`'s audio.
@@ -657,8 +676,12 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     replay.rest_except(&|key| PROCESSED_FORMAT_KEYS.contains(&key));
     replay.format_steps();
     let mut out = replay.finish();
+    // `_check_formats`' `f['__working']` is set after processing.
+    if let Some(working) = out.shift_remove("__working") {
+        out.insert("__working".into(), working);
+    }
     if int_rates {
-        for key in ["tbr", "abr", "vbr"] {
+        for key in ["tbr", "abr", "vbr", "quality"] {
             if let Some(rate) = out.get(key).and_then(Value::as_f64)
                 && rate.fract() == 0.0
                 && out.get(key).is_some_and(|value| !value.is_i64())
@@ -2115,9 +2138,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         .and_then(Value::as_array)
         .is_some_and(|formats| {
             !formats.is_empty()
+                // `sum(f.get('tbr') or 0 ...)`: missing rates add an int 0.
                 && formats
                     .iter()
-                    .all(|format| format.get("tbr").is_some_and(Value::is_i64))
+                    .any(|format| format.get("tbr").is_some_and(Value::is_i64))
+                && formats.iter().all(|format| {
+                    format
+                        .get("tbr")
+                        .is_none_or(|tbr| tbr.is_i64() || tbr.is_null())
+                })
         });
     // `'abr': 64` (and the `tbr` it gives) of ThisAmericanLifeIE.
     if int_rates || shape == "thisamericanlife" {

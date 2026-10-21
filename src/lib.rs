@@ -315,7 +315,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 69] = [
+const EXTRACTOR_NAMES: [&str; 71] = [
     "Angel",
     "AudioBoom",
     "BehindKink",
@@ -372,10 +372,12 @@ const EXTRACTOR_NAMES: [&str; 69] = [
     "SztvHu",
     "TheIntercept",
     "ThisAmericanLife",
+    "TikTok",
     "Tweakers",
     "twitter",
     "twitter:card",
     "23video",
+    "vm.tiktok",
     "Vocaroo",
     "yfanefa",
     "youtube",
@@ -400,7 +402,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..68]),
+            "default" => Some(&EXTRACTOR_NAMES[..70]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -530,6 +532,8 @@ impl YoutubeDl {
                 Box::new(extractor::Reddit),
                 Box::new(extractor::Twitter),
                 Box::new(extractor::TwitterCard),
+                Box::new(extractor::TikTok),
+                Box::new(extractor::TikTokVm),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),
@@ -1535,11 +1539,22 @@ impl YoutubeDl {
             // `format['http_headers'] = _calc_headers(ChainMap(format, info))`;
             // HTML5 media carries the page as its Referer.
             let html5 = entry.extractor_key == "HTML5MediaEmbed";
+            let info_own: Option<Vec<(String, serde_json::Value)>> = entry
+                .extra
+                .get("http_headers")
+                .and_then(serde_json::Value::as_object)
+                .map(|headers| {
+                    headers
+                        .iter()
+                        .map(|(name, value)| (name.clone(), value.clone()))
+                        .collect()
+                });
             for format in &mut entry.formats {
                 let mut own: Vec<(String, serde_json::Value)> = format
                     .http_headers
                     .take()
                     .map(|headers| headers.into_iter().collect())
+                    .or_else(|| info_own.clone())
                     .unwrap_or_else(|| {
                         if html5 {
                             vec![("Referer".into(), entry.webpage_url.to_string().into())]
@@ -1806,30 +1821,64 @@ impl YoutubeDl {
             multiple_video: self.multistreams.0,
             multiple_audio: self.multistreams.1,
         };
-        if self.check_formats != CheckFormats::Selected {
+        // By default, only formats with DRM or `__needs_testing` are tested.
+        let needs_testing = |format: &VideoFormat| {
+            format.extra.get("has_drm") == Some(&serde_json::Value::Bool(true))
+                || format
+                    .extra
+                    .get("__needs_testing")
+                    .is_some_and(|value| value.as_bool() != Some(false) && !value.is_null())
+        };
+        let default =
+            self.check_formats == CheckFormats::Default && info.formats.iter().any(needs_testing);
+        if self.check_formats != CheckFormats::Selected && !default {
             return info.select_formats(format, self.ffmpeg.is_some(), &options);
         }
         // Upstream `_check_formats` for `selected`: each candidate is tested
         // once, in preference order, as selection reaches it.
         let client = self.client.clone();
         let snapshot = info.clone();
-        let mut tested: std::collections::HashMap<String, bool> = Default::default();
+        let results: std::rc::Rc<std::cell::RefCell<std::collections::HashMap<String, bool>>> =
+            Default::default();
+        let tested = results.clone();
         let check = Box::new(move |format: &VideoFormat| {
-            *tested.entry(format.format_id.clone()).or_insert_with(|| {
-                screen::screen(&format!("[info] Testing format {}", format.format_id));
-                let works = test_format(&client, &snapshot, format);
-                if !works {
-                    screen::warning(&format!(
-                        "Unable to download format {}. Skipping...",
-                        format.format_id
-                    ));
-                }
-                works
-            })
+            if default && !needs_testing(format) {
+                return true;
+            }
+            *tested
+                .borrow_mut()
+                .entry(format.format_id.clone())
+                .or_insert_with(|| {
+                    screen::screen(&format!("[info] Testing format {}", format.format_id));
+                    let works = test_format(&client, &snapshot, format);
+                    if !works {
+                        screen::warning(&format!(
+                            "Unable to download format {}. Skipping...",
+                            format.format_id
+                        ));
+                    }
+                    works
+                })
         });
-        info::with_format_check(check, || {
+        let mut selected = info::with_format_check(check, || {
             info.select_formats(format, self.ffmpeg.is_some(), &options)
-        })
+        })?;
+        // `f['__working'] = success` (and a working format's
+        // `__needs_testing` popped) on the shared format dicts.
+        let results = results.borrow();
+        let mark = |format: &mut VideoFormat| {
+            if let Some(works) = results.get(&format.format_id) {
+                if *works {
+                    format.extra.shift_remove("__needs_testing");
+                }
+                format.extra.insert("__working".into(), (*works).into());
+            }
+        };
+        for entry in &mut selected {
+            entry.formats.iter_mut().for_each(mark);
+            entry.requested_formats.iter_mut().for_each(mark);
+        }
+        Ok(selected)
     }
 
     /// Extract all supported alternatives without applying library format selection.

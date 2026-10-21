@@ -65,6 +65,7 @@ mod streamable;
 mod sztvhu;
 mod theintercept;
 mod thisamericanlife;
+mod tiktok;
 mod tweakers;
 mod twentythreevideo;
 mod twitter;
@@ -134,6 +135,9 @@ pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
+pub use tiktok::{
+    TikTok, TikTokVm, suitable as tiktok_suitable, vm_suitable as tiktok_vm_suitable,
+};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub use twitter::{

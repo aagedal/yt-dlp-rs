@@ -53,6 +53,23 @@ pub(crate) fn request_expecting(
     Ok(response)
 }
 
+/// An extractor's `HEADRequest(url)` with headers (redirects followed).
+pub(crate) fn head_with_headers(
+    client: &Client,
+    url: &Url,
+    headers: &[(&str, &str)],
+) -> Result<Response> {
+    crate::screen::before_extraction_request();
+    let mut request = client.head(url.clone());
+    for (name, value) in headers {
+        request = request.header(*name, *value);
+    }
+    crate::screen::load_cookies()?;
+    let response = request.send();
+    crate::screen::flush_traffic();
+    crate::retry::check_response(response?)
+}
+
 /// An extractor's POST request with a body (`data=`) and headers.
 pub(crate) fn post(
     client: &Client,

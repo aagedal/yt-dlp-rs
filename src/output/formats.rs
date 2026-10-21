@@ -101,6 +101,11 @@ pub fn render_formats_table(info: &VideoInfo, as_table: bool) -> Option<String> 
                                 Some(value) if truthy(value) => "DRM".into(),
                                 _ => String::new(),
                             },
+                            if get(f, "__needs_testing").is_some_and(truthy) {
+                                "Untested".into()
+                            } else {
+                                String::new()
+                            },
                             field(f, "format_note", "%s"),
                             match (get(f, "container"), get(f, "ext")) {
                                 (Some(container), ext) if Some(container) != ext => {

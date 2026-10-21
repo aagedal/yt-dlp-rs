@@ -32,11 +32,30 @@ pub(crate) fn set_cookie(domain: &str, name: &str, value: &str) {
     let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) else {
         return;
     };
+    let domain = domain.trim_start_matches('.');
     let Ok(url) = Url::parse(&format!("https://{domain}/")) else {
         return;
     };
     let Ok(header) = HeaderValue::from_str(&format!("{name}={value}; Domain={domain}; Path=/"))
     else {
+        return;
+    };
+    jar.set_cookies(&mut std::iter::once(&header), &url);
+}
+
+/// `cookiejar.clear(domain=DOMAIN, path='/', name=NAME)`: an expired
+/// cookie replaces it.
+pub(crate) fn clear_cookie(domain: &str, name: &str) {
+    let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) else {
+        return;
+    };
+    let host = domain.trim_start_matches('.');
+    let Ok(url) = Url::parse(&format!("https://{host}/")) else {
+        return;
+    };
+    let Ok(header) = HeaderValue::from_str(&format!(
+        "{name}=; Domain={host}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+    )) else {
         return;
     };
     jar.set_cookies(&mut std::iter::once(&header), &url);
