@@ -264,10 +264,45 @@ pub(crate) fn mark_format(format: &mut crate::VideoFormat, shape: &str) {
     format.extra.insert(FORMAT_SHAPE.into(), shape.into());
 }
 
+/// A caller's `format[key] = ...` after the format was built.
+pub(crate) fn mark_format_update(format: &mut crate::VideoFormat, key: &str) {
+    let Some(Value::String(shape)) = format.extra.get(FORMAT_SHAPE).cloned() else {
+        return;
+    };
+    let (shape, int_rates) = match shape.strip_suffix("|int-rates") {
+        Some(shape) => (shape.to_owned(), true),
+        None => (shape, false),
+    };
+    let mut shape = if shape.contains("|update:") {
+        format!("{shape},{key}")
+    } else {
+        format!("{shape}|update:{key}")
+    };
+    if int_rates {
+        shape.push_str("|int-rates");
+    }
+    format.extra.insert(FORMAT_SHAPE.into(), shape.into());
+}
+
+/// The format's `tbr` (and the `abr`/`vbr` derived from it) is an int.
+pub(crate) fn mark_int_rates(format: &mut crate::VideoFormat) {
+    if let Some(Value::String(shape)) = format.extra.get(FORMAT_SHAPE).cloned()
+        && !shape.ends_with("|int-rates")
+    {
+        format
+            .extra
+            .insert(FORMAT_SHAPE.into(), format!("{shape}|int-rates").into());
+    }
+}
+
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some((shape, original)) = shape_of(map.shift_remove(FORMAT_SHAPE)) else {
         return map;
+    };
+    let (shape, int_rates) = match shape.strip_suffix("|int-rates") {
+        Some(shape) => (shape.to_owned(), true),
+        None => (shape, false),
     };
     // Keys a caller's `format.update(...)` adds after the extractor's.
     let (shape, update) = match shape.split_once("|update:") {
@@ -453,6 +488,14 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         // A `{'url': url}` format.
         "url-only" => &[("url", Take)],
         "url-ext" => &[("url", Take), ("ext", Take)],
+        // `TwitterBaseIE._extract_variant_formats`' MP4 variant.
+        "twitter-http" => &[
+            ("url", Take),
+            ("format_id", Take),
+            ("tbr", Take),
+            ("width", Take),
+            ("height", Take),
+        ],
         // `RedditIE`'s fallback MP4.
         "reddit-fallback" => &[
             ("url", Take),
@@ -614,6 +657,16 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     replay.rest_except(&|key| PROCESSED_FORMAT_KEYS.contains(&key));
     replay.format_steps();
     let mut out = replay.finish();
+    if int_rates {
+        for key in ["tbr", "abr", "vbr"] {
+            if let Some(rate) = out.get(key).and_then(Value::as_f64)
+                && rate.fract() == 0.0
+                && out.get(key).is_some_and(|value| !value.is_i64())
+            {
+                out.insert(key.into(), (rate as i64).into());
+            }
+        }
+    }
     // `int_or_none(source.get('bitrate'), scale=1000)` is an int.
     if matches!(shape, "jwplayer-source" | "f4m" | "ism" | "reddit-fallback")
         && let Some(tbr) = out.get("tbr").and_then(Value::as_f64)

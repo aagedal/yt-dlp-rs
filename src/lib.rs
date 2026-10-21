@@ -315,7 +315,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 67] = [
+const EXTRACTOR_NAMES: [&str; 69] = [
     "Angel",
     "AudioBoom",
     "BehindKink",
@@ -373,6 +373,8 @@ const EXTRACTOR_NAMES: [&str; 67] = [
     "TheIntercept",
     "ThisAmericanLife",
     "Tweakers",
+    "twitter",
+    "twitter:card",
     "23video",
     "Vocaroo",
     "yfanefa",
@@ -398,7 +400,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..66]),
+            "default" => Some(&EXTRACTOR_NAMES[..68]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -474,6 +476,7 @@ impl YoutubeDl {
         let proxy = http.transport_config()?;
         let cookies = http.cookies.unwrap_or_default();
         cookies::register(&cookies);
+        extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
         let builder = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
             .default_headers(headers.clone())
@@ -525,6 +528,8 @@ impl YoutubeDl {
                 }),
                 Box::new(extractor::YoutubeSearchUrl),
                 Box::new(extractor::Reddit),
+                Box::new(extractor::Twitter),
+                Box::new(extractor::TwitterCard),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),

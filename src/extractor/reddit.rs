@@ -125,8 +125,8 @@ fn post_json(client: &Client, slug: &str, id: &str) -> Result<Value> {
     use std::io::Read;
     let api = Url::parse(&format!("https://www.reddit.com/{slug}/.json"))?;
     crate::screen::screen(&format!("[{NAME}] {id}: Downloading JSON metadata"));
-    let mut response =
-        super::direct::request_expecting(client, &api, &[403]).map_err(|error| match error {
+    let mut response = super::direct::request_expecting(client, &api, &[], &[403]).map_err(
+        |error| match error {
             Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
                 extractor: NAME,
                 id: id.to_owned(),
@@ -134,7 +134,8 @@ fn post_json(client: &Client, slug: &str, id: &str) -> Result<Value> {
                 source: Box::new(error),
             },
             error => error,
-        })?;
+        },
+    )?;
     let mut body = Vec::new();
     response
         .read_to_end(&mut body)

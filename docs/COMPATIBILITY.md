@@ -517,6 +517,27 @@ Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 with its description, poster, duration and account; an empty item list is
 upstream's bare `IndexError`.
 
+X/Twitter posts (`twitter.com`, `x.com`, `mobile.`/`m.`/`www.` and the onion
+host: `NAME/status/ID`, `i/web/status/ID`, `statuses/ID`, optionally
+`/video/N`) follow upstream `TwitterIE` with its default GraphQL API: a guest
+token (`guest/activate.json`, unless an `auth_token` cookie is present, with
+`ct0` as the CSRF token), then `TweetResultByRestId` and `_graphql_to_legacy`
+(tombstones, unavailable/protected/NSFW reasons, visibility results,
+retweets, quoted posts and card bindings). Each video's HLS variants (an
+audio rendition's `tbr` from its `hls-audio-BITRATE` ID) and MP4 variants
+(`http-KBPS` with dimensions from the URL), size-named thumbnails, duration
+and upstream's `_format_sort_fields` are combined with the post's title
+(`UPLOADER - TEXT`, links removed, 72 characters), description, timestamp,
+counts, age limit and hashtags. Several videos form a playlist with `#N`
+titles; `/video/N` selects one only with `--no-playlist`, as upstream's
+`_yes_playlist`. Unified cards' videos are extracted and player/summary cards
+and a post's only link are followed through the extractor registry;
+broadcast, Spaces, Periscope and VMAP (amplify) cards, the legacy and
+syndication APIs (and the rate-limit fallback to syndication) are not
+supported. `twitter:card` (`i/cards/tfw/v1/ID`, `i/videos[/tweet]/ID`) is
+followed to `statuses/ID`. `tests/fixtures/sites/twitter/` is compared with
+pinned upstream output.
+
 Vocaroo recordings (`vocaroo.com`/`voca.ro` `[embed/]ID`) follow upstream
 `VocarooIE`: the `media`/`media1` MP3 URL checked with a HEAD request
 (`Downloading webpage`, the site as Referer), its `x-bz-upload-timestamp`

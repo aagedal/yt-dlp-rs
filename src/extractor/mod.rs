@@ -67,6 +67,7 @@ mod theintercept;
 mod thisamericanlife;
 mod tweakers;
 mod twentythreevideo;
+mod twitter;
 mod vocaroo;
 mod xspf;
 mod yfanefa;
@@ -135,6 +136,9 @@ pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
+pub use twitter::{
+    Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
+};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
@@ -603,6 +607,15 @@ pub(crate) fn search_json_with(
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url)) || youtube::search::suitable(url)
+}
+
+/// Upstream `noplaylist` (`--no-playlist`), for `_yes_playlist`.
+pub(crate) static NO_PLAYLIST: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// `self.get_param('noplaylist')`.
+pub(crate) fn no_playlist() -> bool {
+    NO_PLAYLIST.load(std::sync::atomic::Ordering::Relaxed)
 }
 
 /// Upstream `writesubtitles or listsubtitles` (`InfoExtractor.extract_subtitles`).

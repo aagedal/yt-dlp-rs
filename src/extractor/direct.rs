@@ -28,9 +28,17 @@ pub(crate) fn request_with_headers(
 
 /// [`request`] that also accepts the `expected` error statuses
 /// (`expected_status=`).
-pub(crate) fn request_expecting(client: &Client, url: &Url, expected: &[u16]) -> Result<Response> {
+pub(crate) fn request_expecting(
+    client: &Client,
+    url: &Url,
+    headers: &[(&str, &str)],
+    expected: &[u16],
+) -> Result<Response> {
     crate::screen::before_extraction_request();
-    let request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
+    let mut request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
+    for (name, value) in headers {
+        request = request.header(*name, *value);
+    }
     crate::screen::load_cookies()?;
     let response = request.send();
     crate::screen::flush_traffic();

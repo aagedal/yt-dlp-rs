@@ -881,6 +881,18 @@
       "scope": "TweakersIE s1playlist JSON progressive sources as formats compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "twitter",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/twitter.py"
+      ],
+      "rust": [
+        "src/extractor/twitter.rs",
+        "tests/fixtures/sites/twitter/"
+      ],
+      "scope": "TwitterIE GraphQL status (guest token or auth cookies), _graphql_to_legacy errors, HLS/MP4 variants, thumbnails, metadata, multi-video playlists, /video/N with --no-playlist, unified/player/summary cards and followed links; TwitterCardIE redirects; no legacy/syndication APIs, broadcasts, Spaces or VMAP cards; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "twentythreevideo",
       "status": "partial",
       "upstream": [
