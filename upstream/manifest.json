@@ -365,6 +365,18 @@
       "scope": "CJSWIE episode page (fatal title/audio regexes, UUID ID, description, series, episode ID, audio format and download) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "coub",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/coub.py"
+      ],
+      "rust": [
+        "src/extractor/coub.rs",
+        "tests/fixtures/sites/coub/"
+      ],
+      "scope": "CoubIE v2 API formats and metadata, including coub: pseudo-URLs; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cozytv",
       "status": "partial",
       "upstream": [

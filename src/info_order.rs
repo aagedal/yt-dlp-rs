@@ -2234,6 +2234,22 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                         .is_none_or(|tbr| tbr.is_i64() || tbr.is_null())
                 })
         });
+    // No rates at all: the sum is the int 0.
+    let no_rates = out
+        .get("requested_formats")
+        .and_then(Value::as_array)
+        .is_some_and(|formats| {
+            !formats.is_empty()
+                && formats
+                    .iter()
+                    .all(|format| format.get("tbr").is_none_or(Value::is_null))
+        });
+    if no_rates
+        && let Some(tbr) = out.get("tbr").and_then(Value::as_f64)
+        && tbr == 0.0
+    {
+        out.insert("tbr".into(), 0.into());
+    }
     // `'abr': 64` (and the `tbr` it gives) of ThisAmericanLifeIE.
     if int_rates || shape == "thisamericanlife" {
         for key in ["tbr", "vbr", "abr"] {

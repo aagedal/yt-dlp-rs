@@ -544,6 +544,12 @@ CJSW episodes (`cjsw.com/program/PROGRAM/episode/ID`) follow upstream
 source, the source's UUID ID (else `PROGRAM/ID`), the first paragraph as the
 description, `data-showname` (else the program) series and the episode ID.
 
+Coub clips (`coub.com/view|embed|coubs/ID`, the Flash player's `coubID`,
+`coub:ID`) follow upstream `CoubIE`: the v2 API (`Coub said: ERROR` for its
+errors), HTML5 video and audio files with upstream's quality and source
+preferences, the iPhone file and mobile audio, and the clip's metadata.
+`tests/fixtures/sites/coub/` is compared with pinned upstream output.
+
 CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 `USER-ID` ID, the cached replay JSON's title (else the generic title), `user`
 (else the URL user) uploader, `unified_strdate` date, raw duration and

@@ -12,6 +12,7 @@ mod bluesky;
 mod breitbart;
 mod cgtn;
 mod cjsw;
+mod coub;
 mod cozytv;
 mod crooksandliars;
 mod crtvg;
@@ -113,6 +114,7 @@ pub use bluesky::{Bluesky, suitable as bluesky_suitable};
 pub use breitbart::{BreitBart, suitable as breitbart_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
+pub use coub::{Coub, suitable as coub_suitable};
 pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
@@ -842,6 +844,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || youtube::search::suitable(url)
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
+        || (url.starts_with("coub:") && coub::suitable(url))
 }
 
 /// Upstream `params['http_headers']['User-Agent']`.
