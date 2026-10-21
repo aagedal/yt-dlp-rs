@@ -109,7 +109,7 @@ Supported today:
   clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
   Bandcamp tracks, Rumble videos, Kick VODs, clips and live channels, Bluesky
   posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,
-  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, Niconico videos, Weibo posts, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, plus
+  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, Niconico videos, Weibo posts, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed and live URL shapes,

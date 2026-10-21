@@ -931,6 +931,17 @@ its first track's `serve/source` JSON (`Downloading metadata`) URL as an untyped
 `time`/`ts`, and upstream's missing-script, `KeyError` and bare `IndexError`
 messages.
 
+Loom videos (`loom.com/share|embed/ID`) follow upstream `LoomIE`: the
+GraphQL `GetVideoSSR` metadata (password-protected and wrong-password
+errors; `--video-password` is sent), `GetVideoSource` and `FetchChapters`
+(description-style chapters), the campaign session `raw-url` and
+`transcoded-url` answers and the CDN URL (when it is not a duplicate) as
+pre-merged HLS (split video marked silent), DASH or progressive formats
+with upstream's qualities and their query as `extra_param_to_segment_url`,
+and the transcript subtitles with `--write-subs`/`--list-subs`. Folders are
+not supported. `tests/fixtures/sites/loom/` is compared with pinned upstream
+output.
+
 Maariv players (`player.maariv.co.il/public/player.html?...media=ID`) follow
 upstream `MaarivIE` (`maariv.co.il`): the Walla media API's URL-valued
 `video.url` as non-fatal `hls` formats (subtitles ignored with upstream's

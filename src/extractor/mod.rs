@@ -55,6 +55,7 @@ mod kvs;
 mod lbry;
 mod linkedin;
 mod livestreamfails;
+mod loom;
 mod maariv;
 mod masters;
 mod megaphone;
@@ -161,6 +162,7 @@ pub use ku6::{Ku6, suitable as ku6_suitable};
 pub use lbry::{Lbry, suitable as lbry_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
+pub use loom::{Loom, suitable as loom_suitable};
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
@@ -856,6 +858,24 @@ pub(crate) fn user_agent() -> String {
         .read()
         .map(|agent| agent.clone())
         .unwrap_or_default()
+}
+
+/// Upstream `params['videopassword']` (`--video-password`).
+static VIDEO_PASSWORD: std::sync::RwLock<Option<String>> = std::sync::RwLock::new(None);
+
+/// Set `--video-password` for extractors that read it.
+pub fn set_video_password(password: Option<String>) {
+    if let Ok(mut slot) = VIDEO_PASSWORD.write() {
+        *slot = password;
+    }
+}
+
+/// `self.get_param('videopassword')`.
+pub(crate) fn video_password() -> Option<String> {
+    VIDEO_PASSWORD
+        .read()
+        .ok()
+        .and_then(|password| password.clone())
 }
 
 /// `self.get_param('check_formats') is False` (`--no-check-formats`).
