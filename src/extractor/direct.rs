@@ -26,6 +26,25 @@ pub(crate) fn request_with_headers(
     probe_with_headers(client, url, referer, headers)
 }
 
+/// [`request`] that also accepts the `expected` error statuses
+/// (`expected_status=`).
+pub(crate) fn request_expecting(client: &Client, url: &Url, expected: &[u16]) -> Result<Response> {
+    crate::screen::before_extraction_request();
+    let request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
+    crate::screen::load_cookies()?;
+    let response = request.send();
+    crate::screen::flush_traffic();
+    let response = response?;
+    if expected.contains(&response.status().as_u16()) {
+        return Ok(response);
+    }
+    let response = crate::retry::check_response(response)?;
+    if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {
+        return Err(Error::PartialResponse);
+    }
+    Ok(response)
+}
+
 /// An extractor's POST request with a body (`data=`) and headers.
 pub(crate) fn post(
     client: &Client,

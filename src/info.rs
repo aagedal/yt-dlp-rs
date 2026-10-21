@@ -1173,6 +1173,14 @@ pub static COMPAT_MANIFEST_FILESIZE_APPROX: std::sync::atomic::AtomicBool =
 /// `filesize_approx` (`filesize_from_tbr(tbr, duration)` for formats without
 /// a size or a `manifest_url`, since "tbr" is often a maximum for those).
 pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat], duration: Option<PyNumber>) {
+    fill_filesize_approx(formats, duration);
+    for format in formats {
+        fill_description(format);
+    }
+}
+
+/// `process_video_result`'s `filesize_approx` (before `sort_formats`).
+pub(crate) fn fill_filesize_approx(formats: &mut [VideoFormat], duration: Option<PyNumber>) {
     let manifests = COMPAT_MANIFEST_FILESIZE_APPROX.load(std::sync::atomic::Ordering::Relaxed);
     for format in formats.iter_mut() {
         // Python truthiness: a zero or null size is no size.
@@ -1195,7 +1203,11 @@ pub(crate) fn fill_format_descriptions(formats: &mut [VideoFormat], duration: Op
             }
         }
     }
-    for format in formats {
+}
+
+/// `resolution`, `aspect_ratio` and the `format` description.
+fn fill_description(format: &mut VideoFormat) {
+    {
         if format.resolution.is_none() {
             format.resolution = format_resolution(format, None);
         }
@@ -1252,6 +1264,13 @@ fn sort_fields(format: &VideoFormat) -> crate::format_sort::Fields {
     number("vbr", format.vbr);
     number("abr", format.abr);
     number("filesize", format.filesize.map(|size| size as f64));
+    number(
+        "filesize_approx",
+        format
+            .extra
+            .get("filesize_approx")
+            .and_then(serde_json::Value::as_f64),
+    );
     number(
         "source_preference",
         format.source_preference.map(|p| p as f64),

@@ -752,6 +752,19 @@
       "scope": "QingTingIE mobile page __initStores JSON (_search_json, traverse_obj fields) as an untyped m4a result compared with pinned upstream output through the fixture proxy; JSON decode error texts differ"
     },
     {
+      "name": "reddit",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/reddit.py"
+      ],
+      "rust": [
+        "src/extractor/reddit.rs",
+        "src/cookies.rs",
+        "tests/fixtures/sites/reddit/"
+      ],
+      "scope": "RedditIE anonymous session and opt-in cookies, .json listing with 403 reasons, hosted video fallback/HLS/DASH formats and subtitles, crossposts, text-post RedditVideo playlists and url_transparent links, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "reverbnation",
       "status": "partial",
       "upstream": [

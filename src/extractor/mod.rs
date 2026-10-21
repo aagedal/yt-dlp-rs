@@ -54,6 +54,7 @@ mod playerfm;
 mod popcorntv;
 mod premiershiprugby;
 mod qingting;
+mod reddit;
 mod reverbnation;
 mod rss;
 mod rtrfm;
@@ -123,6 +124,7 @@ pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
 pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
 pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitable};
 pub use qingting::{QingTing, suitable as qingting_suitable};
+pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
@@ -409,14 +411,28 @@ fn download_json_with(
 /// Upstream `update_url_query(url, query)`: the query decoded, updated and
 /// re-encoded like `urlencode`.
 pub(crate) fn update_url_query(url: &Url, updates: &[(&str, &str)]) -> Url {
-    let mut pairs: Vec<(String, String)> = url
-        .query_pairs()
-        .map(|(key, value)| (key.into_owned(), value.into_owned()))
-        .collect();
-    for (key, value) in updates {
-        pairs.retain(|(existing, _)| existing != key);
-        pairs.push(((*key).to_owned(), (*value).to_owned()));
+    // `parse_qs` (blank values dropped, repeated keys grouped) and
+    // `dict.update` (an updated key keeps its place).
+    let mut groups: Vec<(String, Vec<String>)> = Vec::new();
+    for (key, value) in url.query_pairs() {
+        if value.is_empty() {
+            continue;
+        }
+        match groups.iter_mut().find(|(existing, _)| *existing == key) {
+            Some((_, values)) => values.push(value.into_owned()),
+            None => groups.push((key.into_owned(), vec![value.into_owned()])),
+        }
     }
+    for (key, value) in updates {
+        match groups.iter_mut().find(|(existing, _)| existing == key) {
+            Some((_, values)) => *values = vec![(*value).to_owned()],
+            None => groups.push(((*key).to_owned(), vec![(*value).to_owned()])),
+        }
+    }
+    let pairs: Vec<(String, String)> = groups
+        .into_iter()
+        .flat_map(|(key, values)| values.into_iter().map(move |value| (key.clone(), value)))
+        .collect();
     let mut url = url.clone();
     let query = url::form_urlencoded::Serializer::new(String::new())
         .extend_pairs(&pairs)
@@ -587,6 +603,15 @@ pub(crate) fn search_json_with(
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url)) || youtube::search::suitable(url)
+}
+
+/// Upstream `writesubtitles or listsubtitles` (`InfoExtractor.extract_subtitles`).
+pub(crate) static SUBTITLES_REQUESTED: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// `extract_subtitles`: whether an extractor's `_get_subtitles` runs.
+pub(crate) fn subtitles_requested() -> bool {
+    SUBTITLES_REQUESTED.load(std::sync::atomic::Ordering::Relaxed)
 }
 
 /// A non-fatal `_search_regex` miss: `[EXTRACTOR] unable to extract NAME`.

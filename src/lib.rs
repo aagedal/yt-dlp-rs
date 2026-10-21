@@ -305,13 +305,17 @@ pub(crate) const TRANSPARENT: &str = "__yt_dlp_rs_url_transparent";
 /// A `url` result an extractor returns for the downloader to follow with
 /// every registered extractor (a configured one, like YouTube's).
 pub(crate) const FOLLOW_URL: &str = "__yt_dlp_rs_follow_url";
+/// An extractor's top-level `url_transparent` result: `{url, fields}`, the
+/// target extracted through the registry and updated with the non-`None`
+/// fields (`process_ie_result`).
+pub(crate) const FOLLOW_TRANSPARENT: &str = "__yt_dlp_rs_follow_transparent";
 
 /// Upstream `bug_reports_message()` after a lowercase-ending text.
 pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U";
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 66] = [
+const EXTRACTOR_NAMES: [&str; 67] = [
     "Angel",
     "AudioBoom",
     "BehindKink",
@@ -359,6 +363,7 @@ const EXTRACTOR_NAMES: [&str; 66] = [
     "PopcornTV",
     "PremiershipRugby",
     "QingTing",
+    "Reddit",
     "ReverbNation",
     "RTRFM",
     "ScreenRec",
@@ -393,7 +398,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..65]),
+            "default" => Some(&EXTRACTOR_NAMES[..66]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -468,6 +473,7 @@ impl YoutubeDl {
         let proxy_url = http.proxy.clone();
         let proxy = http.transport_config()?;
         let cookies = http.cookies.unwrap_or_default();
+        cookies::register(&cookies);
         let builder = Client::builder()
             .user_agent(concat!("yt-dlp-rs/", env!("CARGO_PKG_VERSION")))
             .default_headers(headers.clone())
@@ -518,6 +524,7 @@ impl YoutubeDl {
                     no_playlist: youtube.no_playlist,
                 }),
                 Box::new(extractor::YoutubeSearchUrl),
+                Box::new(extractor::Reddit),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
                 Box::new(extractor::Angel),
@@ -1142,6 +1149,13 @@ impl YoutubeDl {
         Ok(self)
     }
 
+    /// Upstream `writesubtitles`/`listsubtitles`: extractors'
+    /// `extract_subtitles` (lazy subtitle requests) run only with them.
+    pub fn with_subtitles_requested(self, requested: bool) -> Self {
+        extractor::SUBTITLES_REQUESTED.store(requested, std::sync::atomic::Ordering::Relaxed);
+        self
+    }
+
     /// `--force-generic-extractor`: only the generic extractor is used.
     pub fn with_force_generic_extractor(mut self, force: bool) -> Self {
         self.force_generic = force;
@@ -1346,6 +1360,17 @@ impl YoutubeDl {
         {
             info::sanitize_thumbnail_values(thumbnails);
         }
+        // `_fill_common_fields(final=False)`: a playlist's `upload_date`.
+        if let ExtractResult::Playlist(playlist) = result
+            && !playlist.extra.contains_key("upload_date")
+            && let Some(date) = playlist
+                .extra
+                .get("timestamp")
+                .and_then(serde_json::Value::as_f64)
+                .and_then(|timestamp| dates::strftime_date(timestamp.floor() as i64))
+        {
+            playlist.extra.insert("upload_date".into(), date.into());
+        }
         let entries = match result {
             ExtractResult::Video(video) => std::slice::from_mut(video),
             ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),
@@ -1547,6 +1572,7 @@ impl YoutubeDl {
                     screen::debug(&line);
                 }
             }
+            info::fill_filesize_approx(&mut entry.formats, entry.metadata.duration);
             info::sort_formats(&mut entry.formats, &sorter);
             info::sanitize_format_ids(&mut entry.formats);
             info::fill_format_descriptions(&mut entry.formats, entry.metadata.duration);
@@ -2120,8 +2146,8 @@ impl YoutubeDl {
         }
         if let Some(date) = raw
             .get("timestamp")
-            .and_then(Value::as_i64)
-            .and_then(dates::strftime_date)
+            .and_then(Value::as_f64)
+            .and_then(|timestamp| dates::strftime_date(timestamp.floor() as i64))
         {
             full.insert("upload_date".into(), date.into());
         }
@@ -2160,6 +2186,49 @@ impl YoutubeDl {
         };
         for extractor in extractors {
             if let Some(mut info) = extractor.extract_result(&self.client, url)? {
+                if let ExtractResult::Video(video) = &info
+                    && let Some(marker) = video.extra.get(FOLLOW_TRANSPARENT).cloned()
+                {
+                    let target = Url::parse(marker["url"].as_str().unwrap_or_default())?;
+                    let fields: Vec<(String, serde_json::Value)> = marker["fields"]
+                        .as_object()
+                        .map(|fields| {
+                            fields
+                                .iter()
+                                .filter(|(_, value)| !value.is_null())
+                                .map(|(key, value)| (key.clone(), value.clone()))
+                                .collect()
+                        })
+                        .unwrap_or_default();
+                    let outer = url.clone();
+                    let merge = |result: &mut ExtractResult| -> Result<()> {
+                        let ExtractResult::Video(inner) = result else {
+                            return Err(Error::UnsupportedHtml5(
+                                "url_transparent playlists are not supported natively".into(),
+                            ));
+                        };
+                        let inner_shape = match inner.extra.get(info_order::INFO_SHAPE) {
+                            Some(serde_json::Value::String(shape)) => shape.clone(),
+                            _ => String::new(),
+                        };
+                        for (key, value) in &fields {
+                            match key.as_str() {
+                                "title" => {
+                                    inner.title = value.as_str().unwrap_or_default().to_owned()
+                                }
+                                _ => metadata_parser::set_field(inner, key, value.clone()),
+                            }
+                        }
+                        inner.webpage_url = outer.clone();
+                        let keys: Vec<&str> = fields.iter().map(|(key, _)| key.as_str()).collect();
+                        inner.extra.insert(
+                            info_order::INFO_SHAPE.into(),
+                            format!("{inner_shape}|transparent:{}", keys.join(",")).into(),
+                        );
+                        before_processing(result)
+                    };
+                    return self.extract_once_with(&target, &merge);
+                }
                 if let ExtractResult::Video(video) = &info
                     && let Some(target) = video
                         .extra

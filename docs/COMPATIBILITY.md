@@ -695,6 +695,26 @@ formats (subtitles ignored with upstream's warning), the `name` heading
 `uploadDate`/`duration` (minutes)/`interactionCount` metas, each with
 upstream's warning, and upstream's `KeyError` messages.
 
+Reddit posts (`SUB.reddit.com/[r/SUB/|user/NAME/]comments/ID`, also
+`redditmedia.com`) follow upstream `RedditIE`. Without a `reddit_session`
+cookie it first sets up an anonymous session from old Reddit (else the
+shreddit fallback when no `loid` cookie was set), sets the `over18` and
+`_options` (`pref_gated_sr_optin`) cookies, then reads the post's `.json`
+listing (a 403 answer's `quarantined`/`private` reasons are upstream's
+login-required errors). The info dict has the preview thumbnails (with
+`Accept: */*` headers), age limit, 72-character title with the full
+`alt_title`, description, float timestamp, uploader, subreddit as
+`channel_id` and vote/comment counts. A Reddit-hosted video (the post's or a
+crosspost's) gets the `fallback` MP4 plus non-fatal HLS (`f=…,subsAll`) and
+`dash-` DASH formats with their subtitles; only with `--write-subs` or
+`--list-subs` and no manifest subtitles is `wh_ben_en.vtt` checked, as
+upstream's lazy `extract_subtitles`. A text post's embedded `RedditVideo`
+media form a playlist; other links are `url_transparent` results followed
+through the extractor registry with the post's fields. Format sorting now
+sees `filesize_approx` (computed before sorting, as upstream), and playlist
+entries get `playlist_uploader`/`playlist_channel` fields.
+`tests/fixtures/sites/reddit/` is compared with pinned upstream output.
+
 Premiership Rugby videos (`SUB.premiershiprugby.com/watch/SLUG`) follow
 upstream `PremiershipRugbyIE`: the article CMS's hero media `videoLink` as fatal
 HLS formats and subtitles without an `ext` (a media playlist keeps its URL's
