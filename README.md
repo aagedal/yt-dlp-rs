@@ -3,7 +3,14 @@
 An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 It downloads direct HTTP media and a limited subset of HTML5 media pages, with
 a foundation for porting extractors and tracking upstream changes. This is an
-early prototype; YouTube has a narrow watch-page subset, described below.
+early prototype. YouTube (videos, playlists, channel tabs, search), Reddit,
+X/Twitter, TikTok, Instagram and Facebook are extracted like pinned upstream on
+saved fixtures, but have not been verified against the live sites.
+
+Pre-release binaries for Linux, macOS and Windows are attached to the
+[GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases): pushing a
+`vX.Y.Z[-PRE]` tag runs `.github/workflows/release.yml`, and a tag with a
+pre-release suffix publishes a pre-release.
 
 Requires current stable Rust (including standard-library file locking). Python 3.10+ and Git are needed
 only for the upstream development tools. The Rust binary does not invoke Python
