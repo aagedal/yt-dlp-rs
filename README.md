@@ -96,7 +96,8 @@ Supported today:
   Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
   posts (hosted videos, text-post videos and followed links), X/Twitter posts
   (GraphQL with a guest token; videos, multi-video playlists, cards), TikTok
-  videos (webpage data, the page's JS challenge, short links), plus
+  videos (webpage data, the page's JS challenge, short links), Instagram
+  posts and reels (logged out; carousels as playlists), plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed and live URL shapes,

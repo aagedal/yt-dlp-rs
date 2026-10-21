@@ -621,6 +621,21 @@ warning, and the derived `.mov` URL as an untyped result. A missing title gets
 `_fill_common_fields`' generic `EXTRACTOR video #ID` title with its warning
 (`fulltitle` stays `null`).
 
+Instagram posts and reels (`instagram.com[/USER]/{p,tv,reel,reels}/ID`, not
+`/share/` links or reel audio) follow upstream `InstagramIE` as it runs
+without browser impersonation (no `curl_cffi`): the session's LSD token from
+the home page (`Setting up session`), the non-fatal `get_ruling_for_content`
+check (with upstream's CSRF/access warnings and its restricted/error answers),
+then, since the GraphQL request requires impersonation, the post page's
+prefetched `xig_polaris_media` (a login redirect, private long shortcodes and
+an empty response are upstream's errors). `_extract_product` gives the
+`video_versions` formats, reversed image candidates, duration, the post's
+user, caption, timestamp, counts and comments, and a carousel's videos as a
+playlist. Inline DASH manifests (`video_dash_manifest`) are not parsed (the
+progressive versions are used), and logged-in extraction through the media
+info API, stories, user and tag pages are not supported.
+`tests/fixtures/sites/instagram/` is compared with pinned upstream output.
+
 JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal
 chapters ID, the chapters XML's root `video` attribute (`Downloading chapters
 XML`; none is upstream's `Failed to get the video URL`) as an untyped result,

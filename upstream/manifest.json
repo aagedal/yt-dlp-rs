@@ -545,6 +545,18 @@
       "scope": "HypemIE _VALID_URL, displayList-data JSON (clean_html before parsing), serve/source JSON URL as an untyped mp3 result, error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "instagram",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/instagram.py"
+      ],
+      "rust": [
+        "src/extractor/instagram.rs",
+        "tests/fixtures/sites/instagram/"
+      ],
+      "scope": "InstagramIE logged-out path without impersonation: LSD session token, accessibility check warnings/errors, post page prefetched media, _extract_product formats/thumbnails/metadata/comments and carousel playlists; no inline DASH, logged-in API, stories, user or tag pages; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "jove",
       "status": "partial",
       "upstream": [

@@ -33,6 +33,7 @@ pub(crate) mod hls;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
+mod instagram;
 pub(crate) mod ism;
 mod jove;
 mod json_ld;
@@ -109,6 +110,7 @@ pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
+pub use instagram::{Instagram, suitable as instagram_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
@@ -469,8 +471,38 @@ pub(crate) fn download_webpage_note(
     id: &str,
     note: &str,
 ) -> Result<String> {
-    use std::io::Read;
     crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    download_webpage_handle_quiet(client, url, extractor, id).map(|(text, _)| text)
+}
+
+/// `_download_webpage(url, None, note)`: the note was printed by the caller.
+pub(crate) fn download_webpage_quiet(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+) -> Result<String> {
+    download_webpage_handle_quiet(client, url, extractor, id).map(|(text, _)| text)
+}
+
+/// `_download_webpage_handle(url, video_id)`: the page and its final URL.
+pub(crate) fn download_webpage_handle(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+) -> Result<(String, Url)> {
+    crate::screen::screen(&format!("[{extractor}] {id}: Downloading webpage"));
+    download_webpage_handle_quiet(client, url, extractor, id)
+}
+
+fn download_webpage_handle_quiet(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+) -> Result<(String, Url)> {
+    use std::io::Read;
     let wrap = |error: crate::Error| match error {
         crate::Error::Http(_) | crate::Error::HttpRetryAfter { .. } => {
             crate::Error::ExtractorRequest {
@@ -490,7 +522,7 @@ pub(crate) fn download_webpage_note(
         .map_err(crate::Error::ExtractionRead)?;
     crate::screen::expect_page(id, None, None);
     crate::screen::page_read(&page_url, &body)?;
-    Ok(String::from_utf8_lossy(&body).into_owned())
+    Ok((String::from_utf8_lossy(&body).into_owned(), page_url))
 }
 
 /// Upstream `_download_xml(url, video_id)`: `[EXTRACTOR] ID: Downloading
