@@ -1324,6 +1324,9 @@ pub(crate) fn fetch_pages(
     limit: Option<usize>,
     out: &mut Vec<VideoInfo>,
 ) -> Result<Option<Value>> {
+    if state["kind"] == "inline" {
+        return fetch_inline_pages(client, state, limit, out);
+    }
     let item_id = state["item_id"].as_str().unwrap_or_default().to_owned();
     let ytcfg = state["ytcfg"].as_object().cloned().unwrap_or_default();
     let mut visitor = state["visitor"].as_str().map(str::to_owned);
@@ -2027,6 +2030,102 @@ fn page_data(client: &Client, url: &Url, item_id: &str) -> Result<(Value, Map<St
     )))
 }
 
+/// `_extract_inline_playlist`'s following pages from the `next` endpoint,
+/// until `limit` entries or a page without new videos.
+fn fetch_inline_pages(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    out: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let playlist_id = state["playlist_id"].as_str().unwrap_or_default().to_owned();
+    let ytcfg = state["ytcfg"].as_object().cloned().unwrap_or_default();
+    loop {
+        if limit.is_some_and(|limit| out.len() >= limit) {
+            return Ok(Some(state));
+        }
+        let playlist = state["playlist"].take();
+        let videos = playlist
+            .get("contents")
+            .and_then(Value::as_array)
+            .map_or(0, Vec::len);
+        // `playlist['contents'][-1]['playlistPanelVideoRenderer']...`.
+        let endpoint = playlist
+            .get("contents")
+            .and_then(Value::as_array)
+            .and_then(|contents| contents.last())
+            .and_then(|last| {
+                at(
+                    last,
+                    &[
+                        "playlistPanelVideoRenderer",
+                        "navigationEndpoint",
+                        "watchEndpoint",
+                    ],
+                )
+            })
+            .cloned()
+            .unwrap_or(Value::Null);
+        let last_id = state["last_id"].clone();
+        let pick = |key: &str| {
+            endpoint
+                .get(key)
+                .filter(|value| truthy(Some(value)))
+                .cloned()
+        };
+        let mut query = Map::new();
+        query.insert("playlistId".into(), playlist_id.clone().into());
+        query.insert("videoId".into(), pick("videoId").unwrap_or(last_id.clone()));
+        query.insert("index".into(), pick("index").unwrap_or(videos.into()));
+        query.insert("params".into(), pick("params").unwrap_or("OAE%3D".into()));
+        let page = state["page"].as_u64().unwrap_or(1);
+        let response = watch::innertube_api(
+            client,
+            "next",
+            NAME,
+            &format!("{playlist_id} page {page}"),
+            &ytcfg,
+            state["visitor"].as_str(),
+            query,
+            "Downloading API JSON",
+        )?;
+        if let Some(visitor) = watch::visitor_from(&response) {
+            state["visitor"] = visitor.into();
+        }
+        let next = at(
+            &response,
+            &[
+                "contents",
+                "twoColumnWatchNextResults",
+                "playlist",
+                "playlist",
+            ],
+        )
+        .filter(|value| value.is_object())
+        .cloned()
+        .unwrap_or(Value::Null);
+        let mut maps = Vec::new();
+        playlist_entries(&next, &mut maps);
+        let start = maps
+            .iter()
+            .position(|entry| entry.get("id") == Some(&last_id))
+            .map_or(0, |index| index + 1);
+        if maps.is_empty() || start >= maps.len() {
+            return Ok(None);
+        }
+        state["last_id"] = maps
+            .last()
+            .and_then(|entry| entry.get("id"))
+            .cloned()
+            .into();
+        for entry in maps.into_iter().skip(start) {
+            out.push(entry_info(entry)?);
+        }
+        state["playlist"] = next;
+        state["page"] = (page + 1).into();
+    }
+}
+
 /// `_report_alerts`: warnings, then the last error as an error.
 fn report_alerts(data: &Value, item_id: Option<&str>, once: bool) -> Result<()> {
     let warn = |text: &str| {
@@ -2423,9 +2522,43 @@ impl YoutubeTab {
             {
                 return super::super::Extractor::extract_result(self, client, &target);
             }
-            return Err(Error::UnsupportedYoutube(
-                "inline mix playlists are not supported natively".into(),
-            ));
+            // `_extract_inline_playlist` (mixes): the page's videos, then
+            // `next` pages as the playlist is processed.
+            let title = playlist
+                .get("title")
+                .and_then(Value::as_str)
+                .or_else(|| at(&data, &["titleText", "simpleText"]).and_then(Value::as_str))
+                .filter(|title| !title.is_empty());
+            let mut maps = Vec::new();
+            playlist_entries(playlist, &mut maps);
+            let visitor = watch::visitor_from(&data)
+                .or_else(|| watch::visitor_from(&Value::Object(ytcfg.clone())));
+            let last_id = maps.last().and_then(|entry| entry.get("id")).cloned();
+            let pending = (!maps.is_empty()).then(|| {
+                json!({
+                    "kind": "inline",
+                    "playlist_id": playlist_id,
+                    "playlist": playlist,
+                    "ytcfg": ytcfg,
+                    "visitor": visitor,
+                    "last_id": last_id,
+                    "page": 1,
+                })
+            });
+            let entries = maps
+                .into_iter()
+                .map(entry_info)
+                .collect::<Result<Vec<_>>>()?;
+            let mut metadata = Map::new();
+            metadata.insert("id".into(), playlist_id.into());
+            if let Some(title) = title {
+                metadata.insert("title".into(), title.into());
+            }
+            let mut result = tab_playlist(metadata, entries, url.as_str(), false)?;
+            if let ExtractResult::Playlist(playlist) = &mut result {
+                playlist.pending = pending.map(|state| crate::PendingEntries { state });
+            }
+            return Ok(Some(result));
         }
         let current = at(&data, &["currentVideoEndpoint", "watchEndpoint", "videoId"])
             .and_then(Value::as_str)

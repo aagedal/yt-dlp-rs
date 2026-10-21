@@ -1,0 +1,35 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&list=RDBaW_jenozKc",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "MIXVIDEO002",
+    "\"index\""
+   ],
+   "request_headers": {
+    "X-Goog-Visitor-Id": "V"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "next1.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "MIXVIDEO004"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "next2.json"
+  }
+ ]
+}

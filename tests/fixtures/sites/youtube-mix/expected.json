@@ -1,0 +1,83 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&list=RDBaW_jenozKc",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_count)s|%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(channel)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "RDBaW_jenozKc|Mix - Mix seed|5|1|BaW_jenozKc|Mix seed|180|Uploader 0",
+    "RDBaW_jenozKc|Mix - Mix seed|5|2|MIXVIDEO001|Mix one|181|Uploader 1",
+    "RDBaW_jenozKc|Mix - Mix seed|5|3|MIXVIDEO002|Mix two|182|Uploader 2",
+    "RDBaW_jenozKc|Mix - Mix seed|5|4|MIXVIDEO003|Mix three|183|Uploader 3",
+    "RDBaW_jenozKc|Mix - Mix seed|5|5|MIXVIDEO004|Mix four|184|Uploader 4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&list=RDBaW_jenozKc",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "2"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"RDBaW_jenozKc\", \"title\": \"Mix - Mix seed\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"MIXVIDEO001\", \"url\": \"https://www.youtube.com/watch?v=MIXVIDEO001\", \"title\": \"Mix one\", \"description\": null, \"duration\": 181, \"channel_id\": null, \"channel\": \"Uploader 1\", \"channel_url\": null, \"uploader\": \"Uploader 1\", \"uploader_id\": \"@Uploader1\", \"uploader_url\": \"https://www.youtube.com/@Uploader1\", \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/MIXVIDEO001/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": null, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.youtube.com/watch?v=BaW_jenozKc&list=RDBaW_jenozKc\", \"original_url\": \"https://www.youtube.com/watch?v=BaW_jenozKc&list=RDBaW_jenozKc\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"youtube.com\", \"extractor\": \"youtube:tab\", \"extractor_key\": \"YoutubeTab\", \"release_year\": null, \"requested_entries\": [2], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&list=RDBaW_jenozKc",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1:3"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc&list=RDBaW_jenozKc",
+    "[youtube:tab] Downloading playlist RDBaW_jenozKc - add --no-playlist to download just the video BaW_jenozKc",
+    "[youtube:tab] RDBaW_jenozKc: Downloading webpage",
+    "[download] Downloading playlist: Mix - Mix seed",
+    "[youtube:tab] Playlist Mix - Mix seed: Downloading 3 items",
+    "[download] Downloading item 1 of 3",
+    "[download] Downloading item 2 of 3",
+    "[download] Downloading item 3 of 3",
+    "[download] Finished downloading playlist: Mix - Mix seed"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&list=RDBaW_jenozKc",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "4"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc&list=RDBaW_jenozKc",
+    "[youtube:tab] Downloading playlist RDBaW_jenozKc - add --no-playlist to download just the video BaW_jenozKc",
+    "[youtube:tab] RDBaW_jenozKc: Downloading webpage",
+    "[download] Downloading playlist: Mix - Mix seed",
+    "[youtube:tab] RDBaW_jenozKc page 1: Downloading API JSON",
+    "[youtube:tab] Playlist Mix - Mix seed: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Mix - Mix seed"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

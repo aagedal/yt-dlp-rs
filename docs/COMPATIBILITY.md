@@ -2081,15 +2081,18 @@ entries are `_extract_video`'s, `_extract_lockup_view_model`'s and the Shorts
 lockups' `url` dicts (`ie_key: Youtube`), which
 `--flat-playlist` and `-J` print as upstream does and normal runs resolve
 through the `youtube` extractor. An inline watch-page playlist is followed to
-its playlist page. Playlist thumbnails are sorted and given IDs and resolutions like
+its playlist page (a mix is extracted inline, see below). Playlist thumbnails are sorted and given IDs and resolutions like
 `_sanitize_thumbnails`. The saved site fixtures `tests/fixtures/sites/youtube-playlist/`
 (page, reload and continuation responses) and `tests/fixtures/sites/youtube-channel/`
 (video, Shorts and lockup entries, `/about`, a missing tab, a channel root) are
 compared with pinned upstream output.
 
 With `--lazy-playlist`, the requested pages are still fetched before the
-first entry is processed. Feeds, hashtags, mixes (`RD…`) and YouTube Music
-remain explicit unsupported errors. Grid, channel and playlist
+first entry is processed. An inline watch-page playlist without a playlist page
+(mixes, `RD…`) is `_extract_inline_playlist`'s: the page's videos, then `next`
+API pages (`ID page N`) as needed until a page adds no new video; the fixture
+`tests/fixtures/sites/youtube-mix/` covers it. Feeds, hashtags and YouTube
+Music remain explicit unsupported errors. Grid, channel and playlist
 renderers are ported without fixture coverage; shelf, music and post
 renderers are skipped with a warning.
 
