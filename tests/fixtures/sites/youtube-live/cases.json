@@ -1,4 +1,5 @@
 [
  {"url": "https://www.youtube.com/watch?v=LiveStream1", "args": ["--no-js-runtimes", "-F"]},
- {"url": "https://www.youtube.com/watch?v=LiveStream1", "args": ["--no-js-runtimes", "--print", "%(id)s|%(is_live)s|%(was_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(release_timestamp)s"]}
+ {"url": "https://www.youtube.com/watch?v=LiveStream1", "args": ["--no-js-runtimes", "--print", "%(id)s|%(is_live)s|%(was_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(release_timestamp)s"]},
+ {"url": "https://www.youtube.com/watch?v=Upcoming001", "args": ["--no-js-runtimes", "-s"]}
 ]

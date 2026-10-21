@@ -423,8 +423,10 @@ fn extract_clients(
     } else {
         None
     };
-    if matches!(live_status, Some("is_upcoming" | "post_live")) {
-        return Err(unsupported("upcoming and post-live videos"));
+    // Upcoming videos have no formats yet; their playability reason is
+    // reported below.
+    if live_status == Some("post_live") {
+        return Err(unsupported("post-live videos"));
     }
     let context = streams::Context {
         client,
