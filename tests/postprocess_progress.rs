@@ -4,7 +4,7 @@ use std::{
     io::{Read, Write},
     net::TcpListener,
     path::Path,
-    process::{Command, Output, Stdio},
+    process::{Command, Output},
     thread,
 };
 
@@ -193,8 +193,8 @@ mod pty {
             .unwrap();
         let mut child = command
             .env("TERM", "xterm")
-            .stdout(Stdio::piped())
-            .stderr(Stdio::from(slave))
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::from(slave))
             .spawn()
             .unwrap();
         let reader = thread::spawn(move || {
