@@ -206,13 +206,28 @@ fn json_with_listing_follows_table_and_retains_all_formats_after_explicit_select
             .as_array()
             .is_none_or(Vec::is_empty)
     );
+    assert!(
+        !stdout.contains("[info] Available formats for "),
+        "{stdout}"
+    );
     assert_eq!(server.count("/high.mp4"), 1);
     for mode in ["-j", "-s"] {
         let output = server.cli("/page.html", &["-F", mode, "-f", "999"]);
         assert!(!output.status.success());
+        // Upstream lists formats before selection fails; no JSON follows.
+        // The caption is a screen message, suppressed by -j's quiet mode.
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        assert_header(&stdout);
+        assert!(row(&stdout, "1").contains("1920x1080"), "{stdout}");
+        assert_eq!(
+            stdout.contains("[info] Available formats for page-1:"),
+            mode == "-s",
+            "{stdout}"
+        );
+        assert!(!stdout.contains('{'), "{stdout}");
         assert!(
-            output.stdout.is_empty(),
-            "selection failure must precede listing output"
+            String::from_utf8_lossy(&output.stderr)
+                .contains(": Requested format is not available. Use --list-formats")
         );
     }
 }
@@ -229,9 +244,13 @@ fn separate_hls_listing_never_inspects_ffmpeg_or_fetches_keys_initialization_or_
         ],
     ));
     assert_header(&stdout);
-    assert!(row(&stdout, "hls-0").contains("1920x1080"));
-    assert!(row(&stdout, "hls-audio-0").contains("en"));
-    assert_eq!(server.requests.lock().unwrap().len(), 3);
+    assert!(row(&stdout, "1000").contains("1920x1080"));
+    assert!(row(&stdout, "audio-English").contains("en"));
+    // Extraction reads the master and both media playlists; upstream's
+    // generic "Checking m3u8 live status" then refetches the first
+    // `m3u8_native` format (audio renditions precede variants).
+    let extraction = ["/master.m3u8", "/video.m3u8", "/audio.m3u8", "/audio.m3u8"];
+    assert_eq!(*server.requests.lock().unwrap(), extraction);
     server.assert_no_resources();
     let combined = success(&server.cli(
         "/master.m3u8",
@@ -246,9 +265,9 @@ fn separate_hls_listing_never_inspects_ffmpeg_or_fetches_keys_initialization_or_
     ));
     let info: Value =
         serde_json::from_str(combined.lines().find(|line| line.starts_with('{')).unwrap()).unwrap();
-    assert_eq!(info["format_id"], "hls-0+hls-audio-0");
+    assert_eq!(info["format_id"], "1000+audio-English");
     assert_eq!(info["requested_formats"].as_array().unwrap().len(), 2);
-    assert_eq!(server.requests.lock().unwrap().len(), 6);
+    assert_eq!(*server.requests.lock().unwrap(), extraction.repeat(2));
     server.assert_no_resources();
 }
 
@@ -270,12 +289,12 @@ fn separate_dash_listing_reads_only_the_saved_mpd_and_combined_json_keeps_fragme
         .unwrap();
     let table = success(&output);
     assert_header(&table);
-    let video = row(&table, "dash-0");
+    let video = row(&table, "0");
     assert!(
         video.contains("mp4") && video.contains("32x32") && video.contains("video only"),
         "{video}"
     );
-    let audio = row(&table, "dash-1");
+    let audio = row(&table, "1");
     assert!(
         audio.contains("m4a") && audio.contains("audio only"),
         "{audio}"
@@ -289,14 +308,14 @@ fn separate_dash_listing_reads_only_the_saved_mpd_and_combined_json_keeps_fragme
             "-F",
             "-j",
             "-f",
-            "dash-0+dash-1",
+            "0+1",
             "--ffmpeg-location",
             "/nonexistent-dash-listing-ffmpeg",
         ],
     ));
     let info: Value =
         serde_json::from_str(combined.lines().find(|line| line.starts_with('{')).unwrap()).unwrap();
-    assert_eq!(info["format_id"], "dash-0+dash-1");
+    assert_eq!(info["format_id"], "0+1");
     assert_eq!(info["requested_formats"].as_array().unwrap().len(), 2);
     assert_eq!(
         info["requested_formats"][0]["fragments"]
@@ -319,7 +338,7 @@ fn separate_dash_listing_reads_only_the_saved_mpd_and_combined_json_keeps_fragme
 }
 
 #[test]
-fn library_unselected_extraction_retains_separate_streams_that_default_selection_rejects() {
+fn library_unselected_extraction_retains_separate_streams_before_default_selection() {
     let server = Server::new();
     let dl = YoutubeDl::new().unwrap();
     let info = dl
@@ -327,12 +346,15 @@ fn library_unselected_extraction_retains_separate_streams_that_default_selection
         .unwrap()
         .into_video()
         .unwrap();
+    // Upstream lists audio renditions before variants.
     assert_eq!(info.formats.len(), 2);
-    assert_eq!(info.formats[0].stream_kind, StreamKind::VideoOnly);
-    assert_eq!(info.formats[1].stream_kind, StreamKind::AudioOnly);
+    assert_eq!(info.formats[0].stream_kind, StreamKind::AudioOnly);
+    assert_eq!(info.formats[1].stream_kind, StreamKind::VideoOnly);
     assert!(info.format_id.is_none());
     assert!(info.requested_formats.is_empty());
-    assert!(dl.extract_info(&server.url("/master.m3u8")).is_err());
+    // Upstream's no-merger default `best/bestvideo+bestaudio` selects the pair.
+    let selected = dl.extract_info(&server.url("/master.m3u8")).unwrap();
+    assert_eq!(selected.requested_formats.len(), 2);
     server.assert_no_resources();
 }
 
@@ -357,16 +379,11 @@ fn playlist_listing_is_ordered_and_failed_later_entries_produce_no_output() {
 }
 
 #[test]
-fn malformed_selector_and_unsupported_no_simulate_fail_before_any_network_or_listing() {
+fn malformed_selector_fails_before_any_network_or_listing() {
     let server = Server::new();
-    for args in [
-        vec!["-F", "-f", "best/best[unknown=1]"],
-        vec!["-F", "--no-simulate"],
-    ] {
-        let output = server.cli("/page.html", &args);
-        assert!(!output.status.success());
-        assert!(output.stdout.is_empty());
-    }
+    let output = server.cli("/page.html", &["-F", "-f", "best/best[height>abc]"]);
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty());
     assert!(server.requests.lock().unwrap().is_empty());
 }
 
@@ -389,20 +406,16 @@ fn listing_continues_to_later_urls_after_an_extraction_failure() {
 }
 
 #[test]
-fn direct_results_list_an_unknown_id_row_without_inventing_format_zero() {
+fn direct_results_list_their_content_type_format_id() {
     let server = Server::new();
     let stdout = success(&server.cli("/low.mp4", &["-F", "-j"]));
     assert_header(&stdout);
-    assert!(row(&stdout, "-").contains("mp4"));
-    assert!(
-        !stdout
-            .lines()
-            .any(|line| line.split_whitespace().next() == Some("0"))
-    );
+    // Upstream names the single direct format by its Content-Type subtype.
+    assert!(row(&stdout, "mp4").contains("mp4"));
     let info: Value =
         serde_json::from_str(stdout.lines().find(|line| line.starts_with('{')).unwrap()).unwrap();
-    assert!(info.get("format_id").is_none_or(Value::is_null));
-    assert!(info["formats"].as_array().is_none_or(Vec::is_empty));
+    assert_eq!(info["format_id"], "mp4");
+    assert_eq!(info["formats"].as_array().map(Vec::len), Some(1));
     assert_eq!(server.count("/low.mp4"), 1);
 }
 
@@ -470,24 +483,32 @@ fn shared_upstream_listing_fixture_runs_through_unselected_orchestration_and_nat
         .iter()
         .map(|format| format.format_id.as_str())
         .collect();
-    let expected_ids: Vec<_> = expected["declaration_ids"]
+    // Processing sorts the declaration-order fixture like pinned upstream
+    // `process_ie_result` does (a128 lacks a filesize, so it ranks below a64).
+    let sorted_ids = ["a128", "a64", "v360", "v720"];
+    assert_eq!(ids, sorted_ids);
+    let mut declaration_ids: Vec<_> = expected["declaration_ids"]
         .as_array()
         .unwrap()
         .iter()
         .map(|id| id.as_str().unwrap())
         .collect();
-    assert_eq!(ids, expected_ids);
+    declaration_ids.sort_unstable();
+    let mut sorted = sorted_ids.to_vec();
+    sorted.sort_unstable();
+    assert_eq!(sorted, declaration_ids);
     let actual = serde_json::to_value(&info).unwrap();
     assert_eq!(
         info.formats.len(),
         expected["formats"].as_array().unwrap().len()
     );
-    for (actual, expected) in actual["formats"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .zip(expected["formats"].as_array().unwrap())
-    {
+    for expected in expected["formats"].as_array().unwrap() {
+        let actual = actual["formats"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|format| format["format_id"] == expected["format_id"])
+            .unwrap();
         for (field, value) in expected.as_object().unwrap() {
             if value.is_number() {
                 assert_eq!(
@@ -501,41 +522,29 @@ fn shared_upstream_listing_fixture_runs_through_unselected_orchestration_and_nat
             }
         }
     }
+    // `table.txt` is the exact pinned upstream `-F` output for `input.json`
+    // (full `process_ie_result` with `listformats`; see the fixture README).
     let table = yt_dlp_rs::output::render_formats(&info);
-    assert_header(&table);
-    let rendered_ids: Vec<_> = table
+    let upstream_table = include_str!("fixtures/listing/table.txt");
+    assert_eq!(
+        table,
+        format!("[info] Available formats for listing-fixture:\n{upstream_table}")
+    );
+    let rendered_ids: Vec<_> = upstream_table
         .lines()
         .skip(2)
         .map(|line| line.split_whitespace().next().unwrap())
         .collect();
-    assert_eq!(rendered_ids, expected_ids);
-    for format in expected["formats"].as_array().unwrap() {
-        let cells = row(&table, format["format_id"].as_str().unwrap());
-        let tokens: Vec<_> = cells.split_whitespace().collect();
-        assert!(tokens.contains(&format["ext"].as_str().unwrap()), "{cells}");
-        if let (Some(width), Some(height)) = (format["width"].as_u64(), format["height"].as_u64()) {
-            assert!(
-                tokens.contains(&format!("{width}x{height}").as_str()),
-                "{cells}"
-            );
-        } else {
-            assert!(cells.contains("audio only"), "{cells}");
-        }
-        if let Some(size) = format["filesize"].as_u64() {
-            assert!(tokens.contains(&format!("{size}B").as_str()), "{cells}");
-        }
-        if let Some(rate) = format["tbr"].as_f64() {
-            assert!(tokens.contains(&format!("{rate}k").as_str()), "{cells}");
-        }
-        if let Some(language) = format["language"].as_str() {
-            assert!(tokens.contains(&language), "{cells}");
-        }
-        assert!(
-            cells.contains(format["format_note"].as_str().unwrap()),
-            "{cells}"
-        );
-    }
-    assert!(dl.extract_info("https://listing.invalid/saved").is_err());
+    assert_eq!(rendered_ids, sorted_ids);
+    // Without a merger the default falls back to the best pair in sorted
+    // order (a64 is the last audio-only format).
+    assert_eq!(
+        dl.extract_info("https://listing.invalid/saved")
+            .unwrap()
+            .format_id
+            .as_deref(),
+        Some("v720+a64")
+    );
     let selected = dl
         .extract_info_with_format("https://listing.invalid/saved", Some("v720+a64"))
         .unwrap();

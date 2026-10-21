@@ -355,10 +355,7 @@ fn environment_default_explicit_direct_and_repeated_last_proxy_options_are_isola
 
 #[test]
 fn proxy_routes_hls_rotating_keys_initialization_and_dash_selected_fragments() {
-    for (page, selector, kind) in [
-        ("hls.html", None, "hls"),
-        ("dash.html", Some("0-dash-0"), "dash"),
-    ] {
+    for (page, selector, kind) in [("hls.html", None, "hls"), ("dash.html", Some("0"), "dash")] {
         let proxy = Proxy::new();
         let directory = tempfile::tempdir().unwrap();
         let mut args = vec!["-o", "out.mp4"];

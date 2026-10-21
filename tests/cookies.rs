@@ -381,7 +381,7 @@ fn no_cookies_overrides_file_loading_and_saving_but_keeps_the_in_memory_jar_and_
 fn page_cookies_reach_hls_encryption_keys_and_dash_manifest_and_selected_fragment_requests() {
     for (page, kind, selector) in [
         ("/hls.html", "hls", None),
-        ("/dash.html", "dash", Some("0-dash-0")),
+        ("/dash.html", "dash", Some("0")),
     ] {
         let server = Server::new();
         let directory = tempfile::tempdir().unwrap();

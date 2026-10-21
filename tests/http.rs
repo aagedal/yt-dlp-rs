@@ -59,6 +59,9 @@ fn html_fixture(path: &str) -> Option<&'static str> {
             "<video><source src='/clip.mp4'><source src='blob:https://example.invalid/id'></video>"
         }
         "/manifest.html" => "<video src='/playlist.m3u8'></video>",
+        "/codecs.html" => {
+            "<video src='/clip.mp4' type='video/mp4; codecs=\"avc1, mp4a\"'><source src='/clip.mp4' type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'><source src='/clip.mp4' type='video/mp4; codecs=\"newcodec\"'></video><audio><source src='/audio'></audio>"
+        }
         "/manifest-hint.html" => "<video src='/clip.mp4' type='application/dash+xml'></video>",
         "/blob.html" => "<video src='blob:https://example.invalid/id'></video>",
         "/source-is-html.html" => "<video src='/page.mp4'></video>",
@@ -211,6 +214,17 @@ impl Server {
                     }
                     "/audio" => ("200 OK", "audio/mpeg; charset=binary", "audio", "", 5),
                     "/opaque.webm" => ("200 OK", "application/octet-stream", "webm", "", 4),
+                    "/latm.m4a" => ("200 OK", "audio/mp4a-latm", "audio", "", 5),
+                    "/clip.weird" => ("200 OK", "video/x-weird", "media", "", 5),
+                    "/unnamed" => ("200 OK", "video/mp2t", "media", "", 5),
+                    "/blob" => ("200 OK", "application/octet-stream", "media", "", 5),
+                    "/named" => (
+                        "200 OK",
+                        "audio/mpeg",
+                        "media",
+                        "Content-Disposition: attachment; filename=\"song.ogg\"\r\n",
+                        5,
+                    ),
                     "/truncated.mp4" => ("200 OK", "video/mp4", "short", "", 100),
                     "/partial.mp4" => (
                         "206 Partial Content",
@@ -271,7 +285,9 @@ fn extracts_redirected_media_and_downloads_exact_bytes() {
     assert_eq!(info.title, "hello world");
     assert_eq!(info.id, "hello world");
     assert_eq!(info.ext, "mp4");
-    assert_eq!(info.filesize, Some(11));
+    // Upstream's direct format carries no extraction-time filesize; the size
+    // is only checked through the downloaded byte count below.
+    assert_eq!(info.filesize, None);
     assert_eq!(info.webpage_url.as_str(), server.url("/redirect"));
     assert!(info.url.as_str().ends_with("?token=secret"));
     let directory = tempfile::tempdir().unwrap();
@@ -332,11 +348,12 @@ fn extracts_saved_html5_fixtures_and_downloads_media() {
         assert_eq!(info.ext, ext);
         assert_eq!(info.url.as_str(), server.url(source));
         assert_eq!(info.webpage_url.as_str(), page_url);
-        assert_eq!(info.filesize, Some(body.len() as u64));
-        assert!(!info.direct);
+        // Upstream HTML5 formats have no extraction-time filesize.
+        assert_eq!(info.filesize, None);
+        assert!(!info.is_direct());
         let directory = tempfile::tempdir().unwrap();
         let destination = directory.path().join(format!("media.{ext}"));
-        dl.download(&info, &destination).unwrap();
+        assert_eq!(dl.download(&info, &destination).unwrap(), body.len() as u64);
         assert_eq!(std::fs::read(destination).unwrap(), body);
     }
 }
@@ -491,8 +508,11 @@ fn cli_html5_json_and_simulation_do_not_download() {
         assert!(!target.exists());
         if flag == "--dump-json" {
             let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-            assert_eq!(info["direct"], false);
+            // Like upstream, only generic direct links have `direct`.
+            assert!(info.get("direct").is_none());
             assert_eq!(info["title"], "A & B (1)");
+            assert_eq!(info["protocol"], "http");
+            assert_eq!(info["formats"][0]["protocol"], "http");
         }
     }
     assert_eq!(server.requests.lock().unwrap().len(), 4);
@@ -510,15 +530,21 @@ fn rejects_pages_manifests_errors_and_non_http_urls() {
     }
     assert!(matches!(
         dl.extract_info(&server.url("/missing")),
-        Err(Error::Http(_))
+        Err(error @ Error::Webpage { .. }) if error.to_string().contains("Unable to download webpage: HTTP Error 404")
     ));
+    // Upstream refuses file URLs unless --enable-file-urls.
     assert!(matches!(
         dl.extract_info("file:///tmp/video.mp4"),
-        Err(Error::UnsupportedScheme(_))
+        Err(Error::Reported(message)) if message.starts_with("file:// URLs are disabled by default")
     ));
     assert!(matches!(
+        dl.extract_info("ftp://example.invalid/video.mp4"),
+        Err(Error::UnsupportedScheme(_))
+    ));
+    // Upstream GenericIE: an input without a scheme is not a valid URL.
+    assert!(matches!(
         dl.extract_info("not a url"),
-        Err(Error::InvalidUrl(_))
+        Err(Error::Reported(message)) if message == "[generic] 'not a url' is not a valid URL"
     ));
 }
 
@@ -565,13 +591,18 @@ fn templates_are_explicit_and_metadata_cannot_inject_paths_or_fields() {
             .unwrap()
             .to_str()
             .unwrap(),
-        "downloads/%-_folder_%(id)s.mp4"
+        "downloads/%-..⧸folder⧸%(id)s.mp4"
     );
     assert_eq!(
         render_template("%(title)03d", &info).unwrap(),
         std::path::PathBuf::from("NA")
     );
-    for invalid in ["%(unknown)s", "%(title)q", "%", "", "-"] {
+    // Unknown fields are missing values, like upstream.
+    assert_eq!(
+        render_template("%(unknown)s", &info).unwrap(),
+        std::path::PathBuf::from("NA")
+    );
+    for invalid in ["%(id)z", "%(title+)s", "%", "", "-"] {
         assert!(render_template(invalid, &info).is_err(), "{invalid}");
     }
 }
@@ -592,7 +623,9 @@ fn cli_json_continues_after_errors_and_returns_failure() {
     assert_eq!(text.lines().count(), 1);
     let info: serde_json::Value = serde_json::from_str(text.trim()).unwrap();
     assert_eq!(info["extractor_key"], "Generic");
-    assert_eq!(info["filesize"], 11);
+    // Upstream's direct format has no extraction-time filesize.
+    assert!(info["filesize"].is_null());
+    assert_eq!(info["url"], server.url("/clip.mp4"));
     assert!(String::from_utf8(output.stderr).unwrap().contains("404"));
 }
 
@@ -617,6 +650,42 @@ fn cli_simulate_and_download() {
     assert_eq!(std::fs::read(target).unwrap(), b"media bytes");
 }
 
+/// Without `-j`/`-J`/`--print`, stdout holds only bracketed screen lines.
+fn only_screen_lines(stdout: &[u8]) {
+    let stdout = String::from_utf8_lossy(stdout);
+    assert!(
+        stdout
+            .lines()
+            .all(|line| line.trim_start_matches('\r').starts_with('[')),
+        "{stdout}"
+    );
+}
+
+#[test]
+fn cli_screen_lines_use_stdout_and_warnings_use_stderr() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    let target = directory.path().join("video.mp4");
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-o", target.to_str().unwrap(), &server.url("/video.html")])
+        .output()
+        .unwrap();
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    assert!(target.exists());
+    // Upstream `to_screen` writes to stdout unless the output template is `-`.
+    let destination = format!("[download] Destination: {}", target.display());
+    assert!(stdout.contains(&destination), "{stdout}");
+    assert!(stdout.contains("[generic] Extracting URL: "), "{stdout}");
+    assert!(!stderr.contains("[download]"), "{stderr}");
+    assert!(!stderr.contains("[generic] Extracting URL: "), "{stderr}");
+    // `report_warning` always writes to stderr.
+    let warning = "WARNING: [generic] Falling back on generic information extractor";
+    assert!(stderr.contains(warning), "{stderr}");
+    assert!(!stdout.contains("WARNING:"), "{stdout}");
+}
+
 #[test]
 fn youtube_runtime_configuration_is_lazy_for_generic_extraction() {
     let server = Server::start();
@@ -624,12 +693,14 @@ fn youtube_runtime_configuration_is_lazy_for_generic_extraction() {
     let runtime = directory.path().join("nonexistent-deno");
     let dl = YoutubeDl::with_youtube_options(YoutubeOptions {
         include_translated_subtitles: false,
+        no_playlist: false,
         js_runtime: Some(runtime.clone()),
     })
     .unwrap();
     for (path, extractor) in [("/clip.mp4", "generic"), ("/video.html", "html5")] {
         let info = dl.extract_info(&server.url(path)).unwrap();
-        assert_eq!(info.filesize, Some(11));
+        // Neither upstream direct nor HTML5 formats carry a filesize.
+        assert_eq!(info.filesize, None);
         assert_eq!(info.extractor, extractor);
     }
     assert!(!runtime.exists());
@@ -658,11 +729,13 @@ fn cli_explicit_youtube_runtime_preserves_generic_json_simulation_and_download()
             match mode {
                 Some("-j") => {
                     let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-                    assert_eq!(json["filesize"], 11);
+                    // Upstream direct and HTML5 formats carry no filesize.
+                    assert!(json["filesize"].is_null());
+                    assert!(json["url"].as_str().unwrap().contains("clip.mp4"));
                     assert!(!target.exists());
                 }
                 Some("-s") => {
-                    assert!(output.stdout.is_empty());
+                    only_screen_lines(&output.stdout);
                     assert!(!target.exists());
                 }
                 None => assert_eq!(std::fs::read(&target).unwrap(), b"media bytes"),
@@ -691,27 +764,30 @@ fn html5_formats_select_automatically_and_download_explicit_sources() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     let page = server.url("/formats-progressive.html");
+    // Pinned upstream sorts the labeled sources as ["1", "0"] (webm below
+    // mp4) and selects "0" by default.
     assert_eq!(
         dl.extract_info(&page).unwrap().format_id.as_deref(),
-        Some("1")
+        Some("0")
     );
-    for (id, ext, size, path, bytes) in [
+    for (id, ext, path, bytes) in [
         (
             "0",
             "mp4",
-            11,
             "/media/clip.mp4?one=1&two=2",
             b"media bytes".as_slice(),
         ),
-        ("1", "webm", 4, "/media/clip.webm", b"webm".as_slice()),
+        ("1", "webm", "/media/clip.webm", b"webm".as_slice()),
     ] {
         let info = dl.extract_info_with_format(&page, Some(id)).unwrap();
         assert_eq!(info.formats.len(), 2);
-        assert_eq!(info.formats[0].format_id, "0");
-        assert_eq!(info.formats[1].format_id, "1");
+        assert_eq!(info.formats[0].format_id, "1");
+        assert_eq!(info.formats[1].format_id, "0");
         assert_eq!(info.format_id.as_deref(), Some(id));
         assert_eq!(info.ext, ext);
-        assert_eq!(info.filesize, Some(size));
+        // Upstream HTML5 formats have no extraction-time filesize; the
+        // downloaded byte count below checks the transfer size instead.
+        assert_eq!(info.filesize, None);
         assert_eq!(info.url.as_str(), server.url(path));
         assert_eq!(info.title, "Format fixture (1)");
         let directory = tempfile::tempdir().unwrap();
@@ -720,7 +796,10 @@ fn html5_formats_select_automatically_and_download_explicit_sources() {
             &info,
         )
         .unwrap();
-        dl.download(&info, &destination).unwrap();
+        assert_eq!(
+            dl.download(&info, &destination).unwrap(),
+            bytes.len() as u64
+        );
         assert_eq!(std::fs::read(destination).unwrap(), bytes);
     }
     // Every probe and transfer uses the page referrer, including the second source.
@@ -747,7 +826,15 @@ fn format_ids_are_literal_and_src_precedes_child_sources() {
     let info = dl.extract_info_with_format(&page, Some("1")).unwrap();
     assert_eq!(info.ext, "mp3");
     assert_eq!(info.url.as_str(), server.url("/audio"));
-    for id in ["", "2", "01", "bestvideo", "0//1", "0+1"] {
+    // Like upstream `_merge`, a second complete source is dropped.
+    assert_eq!(
+        dl.extract_info_with_format(&page, Some("0+1"))
+            .unwrap()
+            .format_id
+            .as_deref(),
+        Some("0")
+    );
+    for id in ["", "2", "01", "bestvideo", "0//1"] {
         assert!(
             matches!(
                 dl.extract_info_with_format(&page, Some(id)),
@@ -819,7 +906,7 @@ fn html5_playlist_metadata_order_and_legacy_boundary() {
         assert_eq!(entry.extractor, "html5");
         assert_eq!(entry.extractor_key, "HTML5MediaEmbed");
         assert_eq!(entry.format_id.as_deref(), Some("0"));
-        assert!(!entry.direct);
+        assert!(!entry.is_direct());
     }
     assert!(matches!(
         dl.extract_info(&page),
@@ -880,12 +967,13 @@ fn html5_result_cardinality_and_title_fallback() {
 }
 
 #[test]
-fn html5_playlist_selection_and_validation_are_atomic() {
+fn html5_playlist_selection_is_atomic_in_the_library_and_per_entry_in_the_cli() {
     let server = Server::start();
     let dl = YoutubeDl::new().unwrap();
     let page = server.url("/playlist-formats.html");
+    // Pinned upstream selects the mp4 source ("0") for each entry by default.
     for entry in dl.extract_result(&page).unwrap().into_entries() {
-        assert_eq!(entry.format_id.as_deref(), Some("1"));
+        assert_eq!(entry.format_id.as_deref(), Some("0"));
     }
     for id in ["0", "1"] {
         let entries = dl
@@ -912,14 +1000,42 @@ fn html5_playlist_selection_and_validation_are_atomic() {
         dl.extract_result_with_format(&server.url("/playlist-manifest.html"), Some("0")),
         Err(Error::UnsupportedManifest(_))
     ));
+    // The library stays atomic, but the CLI selects per entry like upstream
+    // `process_video_result`: entry 1 downloads its audio source, entry 2
+    // (no format "1") fails on its own and the run exits 1.
     let directory = tempfile::tempdir().unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .current_dir(directory.path())
         .args(["-f", "1", &server.url("/playlist-mixed-formats.html")])
         .output()
         .unwrap();
-    assert!(!output.status.success());
-    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    assert_eq!(output.status.code(), Some(1));
+    only_screen_lines(&output.stdout);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(
+        stderr
+            .lines()
+            .filter(|line| line.starts_with("ERROR:"))
+            .collect::<Vec<_>>(),
+        [
+            "ERROR: [html5] playlist-mixed-formats-2: Requested format is not available. Use --list-formats for a list of available formats"
+        ],
+        "{stderr}"
+    );
+    assert!(!stderr.contains("format selection failed"), "{stderr}");
+    let item_two = stdout.find("[download] Downloading item 2 of 2").unwrap();
+    assert!(
+        stdout[..item_two].contains("[info] playlist-mixed-formats-1: Downloading 1 format(s): 1")
+    );
+    assert!(!stdout[item_two..].contains("[info]"), "{stdout}");
+    assert!(stdout.contains("[download] Finished downloading playlist: video"));
+    let downloaded = directory
+        .path()
+        .join("playlist-mixed-formats (1) [playlist-mixed-formats-1].mp3");
+    assert_eq!(std::fs::read(&downloaded).unwrap(), b"audio");
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+    std::fs::remove_file(downloaded).unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .current_dir(directory.path())
         .args(["-f", "1", "-o", "%(id)s.%(ext)s", &page])
@@ -965,7 +1081,7 @@ fn cli_playlist_json_simulation_and_downloads() {
             assert_eq!(entries[0]["id"], "playlist-1");
             assert_eq!(entries[1]["id"], "playlist-2");
         } else {
-            assert!(output.stdout.is_empty());
+            only_screen_lines(&output.stdout);
         }
     }
     // Only page requests and header probes, no transfer requests.
@@ -1033,6 +1149,13 @@ fn cli_playlist_download_failures_continue_to_later_entries_and_urls() {
     assert_eq!(
         std::fs::read(directory.path().join("clip.mp4")).unwrap(),
         b"media bytes"
+    );
+    // Like upstream, a transfer that fails before receiving data leaves no part file.
+    assert!(
+        !directory
+            .path()
+            .join("playlist-changing-1.mp4.part")
+            .exists()
     );
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 2);
 }
@@ -1111,7 +1234,8 @@ fn cli_format_selection_json_download_and_failure() {
         .unwrap();
     assert!(output.status.success());
     let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(info["format_id"], "1");
+    // Pinned upstream `-f missing/best` selects "0" (mp4) here.
+    assert_eq!(info["format_id"], "0");
 }
 
 #[test]
@@ -1144,12 +1268,54 @@ fn cli_continues_after_a_format_selection_error() {
         ])
         .output()
         .unwrap();
-    assert!(!output.status.success());
+    assert_eq!(output.status.code(), Some(1));
     let text = String::from_utf8(output.stdout).unwrap();
     assert_eq!(text.lines().count(), 1);
     let info: serde_json::Value = serde_json::from_str(text.trim()).unwrap();
+    assert_eq!(info["id"], "formats-progressive-1");
     assert_eq!(info["format_id"], "1");
-    assert!(String::from_utf8_lossy(&output.stderr).contains("format selection failed"));
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(
+        stderr
+            .lines()
+            .filter(|line| line.starts_with("ERROR:"))
+            .collect::<Vec<_>>(),
+        [
+            "ERROR: [generic] clip: Requested format is not available. Use --list-formats for a list of available formats"
+        ],
+        "{stderr}"
+    );
+    assert!(!stderr.contains("format selection failed"), "{stderr}");
+    // With -J, a single video whose selection fails prints `null`.
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "-J",
+            "-f",
+            "1",
+            &server.url("/clip.mp4"),
+            &server.url("/formats-progressive.html"),
+        ])
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(1));
+    let text = String::from_utf8(output.stdout).unwrap();
+    let lines: Vec<serde_json::Value> = text
+        .lines()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
+    assert_eq!(lines.len(), 2, "{text}");
+    assert!(lines[0].is_null());
+    assert_eq!(lines[1]["id"], "formats-progressive-1");
+    assert_eq!(lines[1]["format_id"], "1");
+    assert_eq!(
+        String::from_utf8_lossy(&output.stderr)
+            .lines()
+            .filter(|line| line.starts_with("ERROR:"))
+            .collect::<Vec<_>>(),
+        [
+            "ERROR: [generic] clip: Requested format is not available. Use --list-formats for a list of available formats"
+        ]
+    );
 }
 
 #[test]
@@ -1173,7 +1339,8 @@ fn automatic_resolution_selection_reaches_cli_json_and_downloads() {
         assert_eq!(info.format_id.as_deref(), Some(id));
         assert_eq!((info.width, info.height), (width, height));
         assert_eq!(info.url.as_str(), server.url(path));
-        assert_eq!(info.filesize, Some(11));
+        // Upstream HTML5 formats have no extraction-time filesize.
+        assert_eq!(info.filesize, None);
         let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
         command.arg("-j");
         if let Some(selection) = selection {
@@ -1217,7 +1384,7 @@ fn automatic_resolution_selection_reaches_cli_json_and_downloads() {
         let direct = dl
             .extract_info_with_format(&server.url("/clip.mp4"), selector)
             .unwrap();
-        assert!(direct.format_id.is_none());
+        assert_eq!(direct.format_id.as_deref(), Some("mp4"));
         assert!(direct.width.is_none());
         let entries = dl
             .extract_result_with_format(&server.url("/playlist-mixed-formats.html"), selector)
@@ -1232,29 +1399,187 @@ fn automatic_resolution_selection_reaches_cli_json_and_downloads() {
 }
 
 #[test]
-fn source_dimensions_ignore_invalid_values_and_player_size() {
+fn source_dimensions_follow_upstream_parsing_labels_and_player_size() {
     // Keep this parsing boundary covered through real extraction and JSON metadata.
+    // Compared with pinned upstream. Upstream keeps the widths -1 and
+    // 4294967296, which native u32 fields leave unknown; its `res` of -1 then
+    // sorts the 480 source first (ID 0) and the player source second, the
+    // reverse of the native order below. Known divergence for such values.
     let server = Server::start();
     let mut info = YoutubeDl::new()
         .unwrap()
         .extract_info(&server.url("/dimension-boundaries.html"))
         .unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("3"));
-    let dimensions: Vec<_> = info.formats.iter().map(|f| (f.width, f.height)).collect();
+    assert_eq!(info.format_id.as_deref(), Some("1080p"));
+    let dimensions: Vec<_> = info
+        .formats
+        .iter()
+        .map(|f| (f.format_id.as_str(), f.width, f.height))
+        .collect();
     assert_eq!(
         dimensions,
         vec![
-            (None, None),
-            (None, Some(480)),
-            (None, None),
-            (Some(1280), None)
+            // The media element's own player size is not a source dimension.
+            ("0", None, None),
+            // width='-1' height='0' res='480': zero height falls back to res.
+            ("1", None, Some(480)),
+            // ' 1280 ' and '+720' parse like Python int().
+            ("2", Some(1280), Some(720)),
+            // height='720p' is invalid; the label supplies 1080.
+            ("1080p", None, Some(1080)),
         ]
     );
     info.select_format(Some("worst")).unwrap();
     assert_eq!(info.format_id.as_deref(), Some("0"));
-    assert_eq!((info.width, info.height), (None, None));
     info.select_format(Some("1")).unwrap();
     assert_eq!((info.width, info.height), (None, Some(480)));
     info.select_format(None).unwrap();
-    assert_eq!((info.width, info.height), (Some(1280), None));
+    assert_eq!((info.width, info.height), (None, Some(1080)));
+}
+
+#[test]
+fn html5_formats_carry_upstream_content_type_codecs() {
+    let server = Server::start();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-J", &server.url("/codecs.html")])
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    let codecs = |entry: usize| -> Vec<_> {
+        info["entries"][entry]["formats"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|format| {
+                (
+                    format.get("vcodec").cloned(),
+                    format.get("acodec").cloned(),
+                    format["dynamic_range"].clone(),
+                )
+            })
+            .collect()
+    };
+    let text = |value: &str| Some(serde_json::json!(value));
+    // The element's own src ignores type codecs; <source> codecs keep their
+    // acodec, but vcodec is reset to `None` like upstream's
+    // `f.update(formats[0])`.
+    // Sorted like pinned upstream: the source with a known acodec ranks best.
+    assert_eq!(
+        codecs(0),
+        [
+            (
+                Some(serde_json::Value::Null),
+                None,
+                serde_json::json!("SDR")
+            ),
+            (
+                Some(serde_json::Value::Null),
+                None,
+                serde_json::json!("SDR")
+            ),
+            (
+                Some(serde_json::Value::Null),
+                text("mp4a.40.2"),
+                serde_json::json!("SDR")
+            ),
+        ]
+    );
+    // Inside <audio>, vcodec is `none` (no dynamic range), and the mp3
+    // extension fills acodec like process_video_result.
+    assert_eq!(
+        codecs(1),
+        [(text("none"), text("mp3"), serde_json::Value::Null)]
+    );
+    // Unknown codecs are reported like upstream's write_string warning.
+    assert!(String::from_utf8_lossy(&output.stderr).contains("WARNING: Unknown codec newcodec\n"));
+}
+
+#[test]
+fn generic_direct_links_follow_upstream_content_type_and_extension_rules() {
+    let server = Server::start();
+    let dl = YoutubeDl::new().unwrap();
+    // Checked with pinned upstream: any audio/video type is a direct link,
+    // `ext` comes from the URL, then Content-Disposition or mimetype2ext.
+    for (path, ext, format_id) in [
+        ("/latm.m4a", "m4a", "mp4a-latm"),
+        ("/clip.weird", "weird", "x-weird"),
+        ("/unnamed", "ts", "mp2t"),
+        ("/named", "ogg", "mpeg"),
+        // Untyped binary responses: an allowed URL extension or unknown_video.
+        ("/opaque.webm", "webm", "0"),
+        ("/blob", "unknown_video", "0"),
+    ] {
+        let info = dl.extract_info(&server.url(path)).unwrap();
+        assert_eq!(
+            (info.ext.as_str(), info.format_id.as_deref()),
+            (ext, Some(format_id)),
+            "{path}"
+        );
+        assert!(info.is_direct());
+    }
+    // Downloads refuse unusual extensions like upstream's _UnsafeExtensionError.
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-o", "o.%(ext)s", &server.url("/clip.weird")])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    assert!(String::from_utf8_lossy(&output.stderr).contains(
+        "The extracted extension ('weird') is unusual and will be skipped for safety reasons"
+    ));
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-o", "o.%(ext)s", &server.url("/blob")])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("o.unknown_video")).unwrap(),
+        b"media"
+    );
+}
+
+#[test]
+fn output_template_dash_streams_media_to_stdout_like_upstream() {
+    let server = Server::start();
+    let directory = tempfile::tempdir().unwrap();
+    // Checked with pinned upstream: media goes to stdout, screen lines to
+    // stderr, postprocessors are skipped and sidecars derive from `-`.
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--no-progress", "-o", "-", "--write-info-json", "-x"])
+        .arg(server.url("/clip.mp4"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    assert_eq!(output.stdout, b"media bytes");
+    assert!(stderr.contains("[info] Writing video metadata as JSON to: -.info.json\n[download] Destination: -\n[download] Download completed\n"), "{stderr}");
+    assert!(!stderr.contains("ExtractAudio"));
+    let mut names: Vec<_> = std::fs::read_dir(directory.path())
+        .unwrap()
+        .map(|entry| entry.unwrap().file_name().into_string().unwrap())
+        .collect();
+    names.sort();
+    assert_eq!(names, ["-.info.json"]);
+    // JSON output follows the screen to stderr.
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-o", "-", "-j"])
+        .arg(server.url("/clip.mp4"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(output.stdout.is_empty());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("\"id\": \"clip\""));
 }

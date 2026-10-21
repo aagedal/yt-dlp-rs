@@ -8,7 +8,8 @@ use crate::{ExtractResult, Result};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PlaylistCounts {
     pub playlist_count: usize,
-    pub n_entries: usize,
+    /// The selected count; `None` with `--lazy-playlist` (upstream `N/A`).
+    pub n_entries: Option<usize>,
     pub last_playlist_index: usize,
 }
 
@@ -16,6 +17,9 @@ pub struct PlaylistCounts {
 pub struct PlaylistSelection {
     segments: Vec<Segment>,
     reverse: bool,
+    random: bool,
+    lazy: bool,
+    selection_index: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -40,13 +44,17 @@ impl PlaylistSelection {
     /// Parse ASCII item specifications. Bounds are validated even when items override them.
     pub fn new(items: Option<&str>, start: i64, end: Option<i64>, reverse: bool) -> Result<Self> {
         if start <= 0 {
-            return Err(error("playlist start must be positive"));
+            return Err(error(format!(
+                "playlist start \"{start}\" must be positive"
+            )));
         }
         if let Some(end) = end
             && end != -1
             && end < start
         {
-            return Err(error("playlist end must be at least playlist start"));
+            return Err(error(format!(
+                "playlist end \"{end}\" must be must be greater than or equal to playlist start \"{start}\""
+            )));
         }
         let segments = if let Some(items) = items {
             if items.len() > 16 * 1024 {
@@ -70,7 +78,33 @@ impl PlaylistSelection {
                 step: 1,
             }]
         };
-        Ok(Self { segments, reverse })
+        Ok(Self {
+            segments,
+            reverse,
+            random: false,
+            lazy: false,
+            selection_index: false,
+        })
+    }
+
+    /// `--compat-options playlist-index`: an entry's `playlist_index` is the
+    /// index selected at its position before reversing or shuffling.
+    pub fn selection_index(mut self, enabled: bool) -> Self {
+        self.selection_index = enabled;
+        self
+    }
+
+    /// Upstream `--playlist-random`: shuffle the selected entries.
+    pub fn random(mut self, random: bool) -> Self {
+        self.random = random;
+        self
+    }
+
+    /// Upstream `--lazy-playlist`: entries keep their order and the selected
+    /// count is unknown (`N/A`).
+    pub fn lazy(mut self, lazy: bool) -> Self {
+        self.lazy = lazy;
+        self
     }
 
     /// Return zero-based positions, removing duplicates before optional reversal.
@@ -136,8 +170,12 @@ impl PlaylistSelection {
                 break;
             }
         }
-        if self.reverse {
+        if self.lazy {
+            // Upstream ignores reverse/random for lazy playlists.
+        } else if self.reverse {
             indices.reverse();
+        } else if self.random {
+            shuffle(&mut indices);
         }
         indices
     }
@@ -149,7 +187,50 @@ impl PlaylistSelection {
             return None;
         };
         let count = playlist.entries.len();
+        // Upstream's `_playlist_infodict` extras each entry gets by default.
+        let title = Some(playlist.title.clone()).filter(|title| !title.is_empty());
+        let field = |key: &str| {
+            playlist
+                .extra
+                .get(key)
+                .cloned()
+                .unwrap_or(serde_json::Value::Null)
+        };
+        let defaults: [(&str, serde_json::Value); 10] = [
+            (
+                "playlist",
+                title.clone().unwrap_or_else(|| playlist.id.clone()).into(),
+            ),
+            ("playlist_id", playlist.id.clone().into()),
+            ("playlist_title", title.into()),
+            ("playlist_uploader", field("uploader")),
+            ("playlist_uploader_id", field("uploader_id")),
+            ("playlist_channel", field("channel")),
+            ("playlist_channel_id", field("channel_id")),
+            (
+                "playlist_webpage_url",
+                playlist.webpage_url.to_string().into(),
+            ),
+            (
+                "webpage_url_basename",
+                crate::info::url_basename(&playlist.webpage_url).into(),
+            ),
+            (
+                "webpage_url_domain",
+                crate::info::get_domain(&playlist.webpage_url).into(),
+            ),
+        ];
         let indices = self.indices(count);
+        let requested = if self.selection_index && !self.lazy {
+            Self {
+                reverse: false,
+                random: false,
+                ..self.clone()
+            }
+            .indices(count)
+        } else {
+            indices.clone()
+        };
         let selected_count = indices.len();
         let last_index = indices.iter().max().map(|index| index + 1).unwrap_or(0);
         let mut entries: Vec<_> = std::mem::take(&mut playlist.entries)
@@ -163,19 +244,39 @@ impl PlaylistSelection {
                 let mut entry = entries[index]
                     .take()
                     .expect("selection positions are unique");
+                for (key, value) in defaults.clone() {
+                    crate::info::set_default(&mut entry.extra, key, value);
+                }
                 entry.last_playlist_index = Some(last_index);
-                entry.playlist_index = Some(index + 1);
+                entry.playlist_index = Some(requested[order] + 1);
                 entry.playlist_autonumber = Some(order + 1);
                 entry.playlist_count = Some(count);
-                entry.n_entries = Some(selected_count);
+                entry.n_entries = (!self.lazy).then_some(selected_count);
                 entry
             })
             .collect();
         Some(PlaylistCounts {
             playlist_count: count,
-            n_entries: selected_count,
+            n_entries: (!self.lazy).then_some(selected_count),
             last_playlist_index: last_index,
         })
+    }
+}
+
+/// `random.shuffle`: a Fisher-Yates shuffle seeded from the clock.
+fn shuffle(items: &mut [usize]) {
+    let mut state = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0x9e37_79b9_7f4a_7c15, |time| time.as_nanos() as u64)
+        ^ u64::from(std::process::id()).rotate_left(32)
+        | 1;
+    for index in (1..items.len()).rev() {
+        // xorshift64*
+        state ^= state >> 12;
+        state ^= state << 25;
+        state ^= state >> 27;
+        let value = state.wrapping_mul(0x2545_f491_4f6c_dd1d);
+        items.swap(index, (value % (index as u64 + 1)) as usize);
     }
 }
 
@@ -197,9 +298,17 @@ fn integer_prefix(input: &str) -> Result<(Option<i64>, &str)> {
     Ok((Some(number), &input[end..]))
 }
 
+/// Upstream `parse_playlist_items` message for a malformed segment.
+fn invalid_segment(input: &str) -> crate::Error {
+    error(format!(
+        "{} is not a valid specification",
+        crate::batch::py_repr(input)
+    ))
+}
+
 fn parse_segment(input: &str) -> Result<Segment> {
     if input.is_empty() {
-        return Err(error("playlist item segments must not be empty"));
+        return Err(error("There is two or more consecutive commas"));
     }
     let (start, remaining) = integer_prefix(input)?;
     if remaining.is_empty() {
@@ -209,12 +318,10 @@ fn parse_segment(input: &str) -> Result<Segment> {
                 end: Endpoint::Index(index),
                 step: 1,
             })
-            .ok_or_else(|| error("expected playlist index"));
+            .ok_or_else(|| invalid_segment(input));
     }
     let Some(remaining) = remaining.strip_prefix([':', '-']) else {
-        return Err(error(format!(
-            "invalid playlist item specification: {input:?}"
-        )));
+        return Err(invalid_segment(input));
     };
     let (end, remaining) = if let Some(rest) = remaining.strip_prefix("infinite") {
         // Pinned float_or_none('infinite') is None, unlike float_or_none('inf').
@@ -229,18 +336,19 @@ fn parse_segment(input: &str) -> Result<Segment> {
         1
     } else {
         let Some(rest) = remaining.strip_prefix(':') else {
-            return Err(error(format!(
-                "invalid playlist item specification: {input:?}"
-            )));
+            return Err(invalid_segment(input));
         };
         let (step, rest) = integer_prefix(rest)?;
         if !rest.is_empty() || step.is_none() {
-            return Err(error(format!("invalid playlist step: {input:?}")));
+            return Err(invalid_segment(input));
         }
         step.unwrap()
     };
     if step == 0 {
-        return Err(error("playlist step must not be zero"));
+        return Err(error(format!(
+            "Step in {} cannot be zero",
+            crate::batch::py_repr(input)
+        )));
     }
     Ok(Segment { start, end, step })
 }
@@ -436,6 +544,7 @@ mod tests {
             extractor: "test".into(),
             extractor_key: "Test".into(),
             entries: (1..=4).map(|i| video(&i.to_string())).collect(),
+            extra: Default::default(),
         });
         PlaylistSelection::new(Some("4,2,4"), 1, None, true)
             .unwrap()

@@ -133,6 +133,16 @@ fn succeeds(output: &Output) {
         String::from_utf8_lossy(&output.stderr)
     );
 }
+/// Without `-j`/`-J`, stdout holds only bracketed screen lines: no JSON or tables.
+fn only_screen_lines(output: &Output) {
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout
+            .lines()
+            .all(|line| line.trim_start_matches('\r').starts_with('[')),
+        "{stdout}"
+    );
+}
 
 #[test]
 fn successful_download_records_exact_key_and_duplicate_urls_skip_downloads_in_this_and_later_runs()
@@ -175,18 +185,18 @@ fn simulation_json_and_listing_never_create_or_append_archives() {
         std::fs::write(&archive, "generic low\n").unwrap();
         let skipped = server.cli(&archive, &mode, &["/low.mp4"]);
         succeeds(&skipped);
-        assert!(skipped.stdout.is_empty());
+        if mode.contains(&"-j") {
+            assert!(skipped.stdout.is_empty());
+        } else {
+            only_screen_lines(&skipped);
+        }
         assert_eq!(server.count("/low.mp4"), 3);
     }
 }
 
 #[test]
 fn failed_download_existing_destination_and_invalid_template_are_not_recorded() {
-    for (path, existing, template) in [
-        ("/changing.mp4", false, false),
-        ("/low.mp4", true, false),
-        ("/low.mp4", false, true),
-    ] {
+    for (path, existing, template) in [("/changing.mp4", false, false), ("/low.mp4", false, true)] {
         let server = Server::new();
         let directory = tempfile::tempdir().unwrap();
         let archive = directory.path().join("archive.txt");
@@ -202,7 +212,7 @@ fn failed_download_existing_destination_and_invalid_template_are_not_recorded() 
                 "0",
                 "-o",
                 if template {
-                    "%(unsupported)s"
+                    "%(id)z"
                 } else {
                     target.to_str().unwrap()
                 },
@@ -217,6 +227,21 @@ fn failed_download_existing_destination_and_invalid_template_are_not_recorded() 
             assert!(!target.exists());
         }
     }
+    // Like upstream, an existing destination counts as already downloaded:
+    // it is kept and recorded.
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let archive = directory.path().join("archive.txt");
+    let target = directory.path().join("out.mp4");
+    std::fs::write(&target, b"keep").unwrap();
+    let output = server.cli(&archive, &["-o", target.to_str().unwrap()], &["/low.mp4"]);
+    assert!(output.status.success());
+    assert!(String::from_utf8_lossy(&output.stdout).contains("has already been downloaded"));
+    assert_eq!(std::fs::read(&target).unwrap(), b"keep");
+    assert_eq!(
+        std::fs::read_to_string(&archive).unwrap().lines().count(),
+        1
+    );
 }
 
 #[test]
@@ -236,8 +261,13 @@ fn archived_separate_hls_is_skipped_before_selection_or_ffmpeg_validation() {
         &["/master.m3u8"],
     );
     succeeds(&output);
-    assert!(output.stdout.is_empty());
-    assert_eq!(server.requests.lock().unwrap().len(), 3);
+    only_screen_lines(&output);
+    // Extraction (including upstream generic's "Checking m3u8 live status"
+    // refetch of the first `m3u8_native` format) precedes the archive check.
+    assert_eq!(
+        *server.requests.lock().unwrap(),
+        ["/master.m3u8", "/video.m3u8", "/audio.m3u8", "/audio.m3u8"]
+    );
     assert_eq!(server.count("/init.mp4"), 0);
     assert_eq!(server.count("/segment.m4s"), 0);
 }
@@ -268,27 +298,70 @@ fn playlist_skip_precedes_selection_and_only_retained_successes_are_recorded() {
 }
 
 #[test]
-fn all_retained_playlist_entries_are_selected_before_any_download_or_json() {
+fn retained_playlist_entries_are_selected_per_entry_and_failures_continue() {
+    // Like upstream `process_video_result`, each retained entry is selected
+    // when it is processed: three-2 succeeds, three-3 fails on its own and
+    // the run exits 1 without undoing three-2.
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
     let archive = directory.path().join("archive.txt");
     std::fs::write(&archive, "html5mediaembed three-1\n").unwrap();
     let template = directory.path().join("%(id)s.%(ext)s");
     for mode in [vec!["-j"], Vec::new()] {
+        let json = !mode.is_empty();
         let mut args = mode;
         args.extend(["-f", "best[height<=720]", "-o", template.to_str().unwrap()]);
         let output = server.cli(&archive, &args, &["/three.html"]);
-        assert!(!output.status.success());
-        assert!(output.stdout.is_empty());
+        assert_eq!(output.status.code(), Some(1));
+        let stderr = String::from_utf8_lossy(&output.stderr);
         assert_eq!(
-            std::fs::read_to_string(&archive).unwrap(),
-            "html5mediaembed three-1\n"
+            stderr
+                .lines()
+                .filter(|line| line.starts_with("ERROR:"))
+                .collect::<Vec<_>>(),
+            [
+                "ERROR: [html5] three-3: Requested format is not available. Use --list-formats for a list of available formats"
+            ],
+            "{stderr}"
         );
-        assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+        assert!(!stderr.contains("format selection failed"), "{stderr}");
+        if json {
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            let ids: Vec<_> = stdout
+                .lines()
+                .map(|line| {
+                    let value: serde_json::Value = serde_json::from_str(line).unwrap();
+                    (
+                        value["id"].as_str().unwrap().to_owned(),
+                        value["format_id"].clone(),
+                        value["height"].clone(),
+                    )
+                })
+                .collect();
+            assert_eq!(ids, [("three-2".to_owned(), "0".into(), 720.into())]);
+            assert_eq!(
+                std::fs::read_to_string(&archive).unwrap(),
+                "html5mediaembed three-1\n"
+            );
+            assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
+        } else {
+            only_screen_lines(&output);
+            assert_eq!(
+                std::fs::read(directory.path().join("three-2.mp4")).unwrap(),
+                b"medium"
+            );
+            assert!(!directory.path().join("three-3.mp4").exists());
+            assert_eq!(
+                std::fs::read_to_string(&archive).unwrap(),
+                "html5mediaembed three-1\nhtml5mediaembed three-2\n"
+            );
+            assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 2);
+        }
     }
-    for path in ["/low.mp4", "/medium.mp4", "/high.mp4"] {
-        assert_eq!(server.count(path), 2);
-    }
+    // Each run probes every source once; only three-2 is downloaded.
+    assert_eq!(server.count("/low.mp4"), 2);
+    assert_eq!(server.count("/medium.mp4"), 3);
+    assert_eq!(server.count("/high.mp4"), 2);
 }
 
 #[test]
@@ -421,4 +494,79 @@ fn archive_is_written_only_after_successful_merge_and_final_publication() {
             assert!(!archive.exists());
         }
     }
+}
+
+#[test]
+fn break_on_existing_processes_earlier_entries_then_cancels() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let archive = directory.path().join("archive.txt");
+    std::fs::write(&archive, "html5mediaembed three-2\n").unwrap();
+    let template = directory.path().join("%(id)s.%(ext)s");
+    let template = template.to_str().unwrap();
+    let output = server.cli(
+        &archive,
+        &["--break-on-existing", "-o", template],
+        &["/three.html", "/high.mp4"],
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert_eq!(
+        output.status.code(),
+        Some(101),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(
+        stdout.contains("three-2: ") && stdout.contains("has already been recorded in the archive")
+    );
+    assert!(stdout.contains(
+        "[info] Encountered a video that is already in the archive, stopping due to --break-on-existing"
+    ));
+    assert!(directory.path().join("three-1.mp4").exists());
+    assert!(!directory.path().join("three-3.mp4").exists());
+    // The playlist probes its third source; the later input is never extracted.
+    assert_eq!(server.count("/high.mp4"), 1);
+    // --break-per-input only ends the current input.
+    let output = server.cli(
+        &archive,
+        &["--break-on-existing", "--break-per-input", "-o", template],
+        &["/three.html", "/high.mp4"],
+    );
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(!directory.path().join("three-3.mp4").exists());
+    assert!(directory.path().join("high.mp4").exists());
+}
+
+#[test]
+fn force_write_archive_records_simulated_videos_and_no_download_archive_disables() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let archive = directory.path().join("archive.txt");
+    let output = server.cli(&archive, &["-s", "--force-write-archive"], &["/low.mp4"]);
+    assert!(output.status.success());
+    assert_eq!(
+        std::fs::read_to_string(&archive).unwrap().lines().count(),
+        1
+    );
+    // Without forcing, simulation never records.
+    let other = directory.path().join("other.txt");
+    assert!(server.cli(&other, &["-s"], &["/low.mp4"]).status.success());
+    assert!(!other.exists());
+    // A later --no-download-archive disables the archive entirely.
+    let template = directory.path().join("%(id)s.%(ext)s");
+    let output = server.cli(
+        &archive,
+        &["--no-download-archive", "-o", template.to_str().unwrap()],
+        &["/low.mp4"],
+    );
+    assert!(output.status.success());
+    assert!(directory.path().join("low.mp4").exists());
+    assert_eq!(
+        std::fs::read_to_string(&archive).unwrap().lines().count(),
+        1
+    );
 }

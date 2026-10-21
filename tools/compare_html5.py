@@ -8,6 +8,8 @@ Compare id, title, ext, url, webpage_url, extractor, extractor_key
 exactly. The sole normalization removes this server's origin from url and
 webpage_url; query strings, fragments, paths, titles and all other fields remain
 unchanged. Volatile and unsupported fields are excluded by this explicit allowlist.
+Every response carries the fixed LAST_MODIFIED header, so timestamp and
+upload_date compare exactly; a direct media URL is compared the same way.
 For playlists, compare every ordered entry and the exact entry count. The Rust
 CLI emits one NDJSON video per entry, so playlist wrapper fields cannot be
 compared through this harness; library integration tests cover the typed wrapper.
@@ -25,7 +27,13 @@ from urllib.parse import urlsplit
 
 
 FIELDS = ("id", "title", "ext", "url", "webpage_url", "extractor", "extractor_key")
-FIXTURES = ("video", "audio", "source", "formats", "playlist", "playlist-formats", "ranked")
+# Optional poster metadata: missing values compare as null; thumbnail URLs use
+# the same origin normalization.
+OPTIONAL_FIELDS = ("thumbnail", "thumbnails", "description", "age_limit", "timestamp", "upload_date")
+FIXTURES = ("video", "audio", "source", "formats", "playlist", "playlist-formats", "ranked",
+            "poster", "meta")
+DIRECT = ("/media/clip.mp4",)
+LAST_MODIFIED = "Wed, 21 Oct 2015 07:28:00 GMT"
 UPSTREAM_WORKER = """
 import json, sys
 sys.path.insert(0, sys.argv[1])
@@ -40,11 +48,19 @@ with YoutubeDL({'quiet': True, 'no_warnings': True, 'skip_download': True,
 def normalize(info, origin):
     """Select comparison fields, removing only the exact local fixture origin."""
     result = {field: info[field] for field in FIELDS}
-    for field in ("url", "webpage_url"):
-        value = result[field]
+    result.update({field: info.get(field) for field in OPTIONAL_FIELDS})
+
+    def local(value):
         parsed = urlsplit(value)
-        if f"{parsed.scheme}://{parsed.netloc}" == origin:
-            result[field] = value[len(origin):]
+        return value[len(origin):] if f"{parsed.scheme}://{parsed.netloc}" == origin else value
+
+    for field in ("url", "webpage_url"):
+        result[field] = local(result[field])
+    if result["thumbnail"]:
+        result["thumbnail"] = local(result["thumbnail"])
+    if result["thumbnails"]:
+        result["thumbnails"] = [{**thumbnail, "url": local(thumbnail["url"])}
+                                for thumbnail in result["thumbnails"]]
     return result
 
 
@@ -54,7 +70,7 @@ def compare(upstream, rust, origin):
     if expected != actual:
         differences = {
             field: {"upstream": expected[field], "rust": actual[field]}
-            for field in FIELDS if expected[field] != actual[field]
+            for field in (*FIELDS, *OPTIONAL_FIELDS) if expected[field] != actual[field]
         }
         raise ValueError("metadata mismatch: " + json.dumps(differences, sort_keys=True))
     return actual
@@ -107,6 +123,7 @@ def fixture_server(directory):
             self.send_response(200)
             self.send_header("Content-Type", mime)
             self.send_header("Content-Length", str(len(body)))
+            self.send_header("Last-Modified", LAST_MODIFIED)
             self.end_headers()
             try:
                 self.wfile.write(body)
@@ -169,6 +186,17 @@ def main():
                         print(f"{name} ({selection}): {error}", file=sys.stderr)
                     else:
                         print(f"{name} ({selection}): metadata matches")
+            for path in DIRECT:
+                url = f"{origin}{path}"
+                expected = run_json([sys.executable, "-c", UPSTREAM_WORKER, str(upstream), url])
+                actual = run_json([str(binary), "-j", url], ndjson=True)
+                try:
+                    compare_entries(expected, actual, origin)
+                except ValueError as error:
+                    mismatches = True
+                    print(f"{path}: {error}", file=sys.stderr)
+                else:
+                    print(f"{path}: metadata matches")
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         print(f"comparison failed: {error}", file=sys.stderr)
         if isinstance(error, subprocess.CalledProcessError) and error.stderr:

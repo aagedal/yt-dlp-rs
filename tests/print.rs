@@ -150,7 +150,7 @@ fn print_templates_and_get_aliases_print_in_upstream_order_without_writing() {
     assert_eq!(
         stdout,
         format!(
-            "page-1\n1280\n{title}|00720|0|\"Fixture: \\\"A/B\\\" Épisode (1)\"\next = \"mp4\"\n{title}\npage-1\n{}\nout/Fixture_ _A_B_ Épisode (1).mp4\n",
+            "page-1\n1280\n{title}|00720|0|\"Fixture: \\\"A/B\\\" Épisode (1)\"\next = \"mp4\"\n{title}\npage-1\n{}\nout/Fixture： ＂A⧸B＂ Épisode (1).mp4\n",
             server.url("/media.mp4")
         )
     );
@@ -204,12 +204,20 @@ fn listing_with_print_keeps_selection_and_prints_after_the_table() {
 fn filename_errors_only_fail_templates_that_use_filename() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
-    let stdout = success(&server.cli(
+    // Checked with pinned upstream: `-o -` sends prints to stderr
+    // (`logtostderr`), and the media filename is `-`.
+    let output = server.cli(
         &["/page.html"],
-        &["-O", "%(id)s", "-o", "-"],
+        &["-O", "%(id)s %(filename)s", "-o", "-"],
         directory.path(),
-    ));
-    assert_eq!(stdout, "page-1\n");
+    );
+    assert!(output.status.success());
+    assert!(output.stdout.is_empty());
+    assert!(
+        String::from_utf8_lossy(&output.stderr).contains("\npage-1 -\n"),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     let output = server.cli(
         &["/page.html", "/media.mp4"],
         &["-e", "--get-filename", "-o", "%(width|)s"],
@@ -226,10 +234,10 @@ fn filename_errors_only_fail_templates_that_use_filename() {
         &["-e", "--get-filename", "-o", "-"],
         directory.path(),
     );
-    assert!(!output.status.success());
+    assert!(output.status.success());
     assert!(output.stdout.is_empty());
     assert!(
-        String::from_utf8_lossy(&output.stderr).contains("output filename failed"),
+        String::from_utf8_lossy(&output.stderr).ends_with("Fixture: \"A/B\" Épisode (1)\n-\n"),
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
@@ -239,13 +247,7 @@ fn filename_errors_only_fail_templates_that_use_filename() {
 fn unsupported_print_stages_and_templates_fail_before_requests() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
-    for spec in [
-        "playlist:title",
-        "after_move:filepath",
-        "{id,title}",
-        "missing_field",
-        "%(id)q",
-    ] {
+    for spec in ["pre_process:id", "after_filter:id", "%(id)z", "%(id+)s"] {
         let output = server.cli(&["/page.html"], &["-O", spec], directory.path());
         assert!(!output.status.success(), "{spec}");
         assert!(output.stdout.is_empty(), "{spec}");
@@ -268,19 +270,25 @@ fn print_to_file_appends_before_downloading_without_implying_simulation() {
         "%(id)s.%(ext)s",
     ];
     let output = server.cli(&["/page.html"], &args, directory.path());
-    assert_eq!(success(&output), "");
-    let stderr = String::from_utf8_lossy(&output.stderr);
+    // Nothing is printed to stdout besides the (non-quiet) screen lines.
+    let stdout = success(&output);
     assert!(
-        stderr.contains("[info] Writing \"%(id)s\\n%(width)s\" to: lists/html5.txt"),
-        "{stderr}"
+        stdout
+            .lines()
+            .all(|line| line.trim_start_matches('\r').starts_with('[')),
+        "{stdout}"
+    );
+    assert!(
+        stdout.contains("[info] Writing '%(id)s\\n%(width)s' to: lists/html5.txt"),
+        "{stdout}"
     );
     assert_eq!(
         std::fs::read(directory.path().join("page-1.mp4")).unwrap(),
         b"media"
     );
-    // A second run appends; the existing media now fails after the write.
+    // A second run appends; the existing media is then already downloaded.
     let output = server.cli(&["/page.html"], &args, directory.path());
-    assert!(!output.status.success());
+    assert!(success(&output).contains("has already been downloaded"));
     let read = |name: &str| std::fs::read_to_string(directory.path().join(name)).unwrap();
     assert_eq!(read("lists/html5.txt"), "page-1\n1280\npage-1\n1280\n");
     assert_eq!(read("names.txt"), "page-1.mp4\npage-1.mp4\n");
@@ -311,12 +319,354 @@ fn print_to_file_runs_under_print_simulation_and_validates_at_startup() {
         "2\n3\n"
     );
     for args in [
-        ["--print-to-file", "playlist:id", "x.txt"],
-        ["--print-to-file", "id", "%(missing)s.txt"],
-        ["--print-to-file", "{id}", "x.txt"],
+        ["--print-to-file", "id", "%(id)z.txt"],
+        ["--print-to-file", "%(id+)s", "x.txt"],
     ] {
         let output = server.cli(&["/page.html"], &args, directory.path());
         assert!(!output.status.success(), "{args:?}");
     }
     assert_eq!(server.count("/page.html"), 0);
+}
+
+#[test]
+fn no_simulate_downloads_after_printing_json_and_listing() {
+    for (flags, stdout_check) in [
+        (vec!["-O", "id"], "page-1\n"),
+        (vec!["-j"], "\"id\": \"page-1\""),
+        (vec!["-F"], "ID"),
+        (vec!["-s", "--no-simulate"], ""),
+    ] {
+        let server = Server::new();
+        let directory = tempfile::tempdir().unwrap();
+        let mut args = flags.clone();
+        args.extend(["--no-simulate", "-o", "%(id)s.%(ext)s"]);
+        let output = server.cli(&["/page.html"], &args, directory.path());
+        assert!(success(&output).contains(stdout_check), "{flags:?}");
+        assert_eq!(
+            std::fs::read(directory.path().join("page-1.mp4")).unwrap(),
+            b"media",
+            "{flags:?}"
+        );
+    }
+    // A later -s wins over --no-simulate.
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    success(&server.cli(&["/page.html"], &["--no-simulate", "-s"], directory.path()));
+    assert_eq!(entries(directory.path()), 0);
+}
+
+#[test]
+fn later_print_stages_follow_upstream_order_and_disable_implied_simulation() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    // The working directory as the process sees it (macOS resolves the
+    // `/var` symlink; Windows keeps the short temp path, as `abspath` does).
+    let absolute = if cfg!(windows) {
+        directory.path().join("page-1.mp4")
+    } else {
+        std::fs::canonicalize(directory.path())
+            .unwrap()
+            .join("page-1.mp4")
+    };
+    let output = server.cli(
+        &["/page.html"],
+        &[
+            "-O",
+            "after_video:%(id)s %(filepath)s",
+            "-O",
+            "after_move:filepath",
+            "-O",
+            "post_process:filepath,_filename",
+            "-O",
+            "Before_DL:_filename",
+            "-O",
+            "id",
+            "--print-to-file",
+            "after_move:filepath",
+            "moved.txt",
+            "-o",
+            "%(id)s.%(ext)s",
+        ],
+        directory.path(),
+    );
+    // A later stage means the media is downloaded; printing stays quiet.
+    assert_eq!(
+        success(&output),
+        format!(
+            "page-1\npage-1.mp4\npage-1.mp4\npage-1.mp4\n{}\npage-1 NA\n",
+            absolute.display()
+        )
+    );
+    assert_eq!(
+        std::fs::read(directory.path().join("page-1.mp4")).unwrap(),
+        b"media"
+    );
+    assert_eq!(
+        std::fs::read_to_string(directory.path().join("moved.txt")).unwrap(),
+        format!("{}\n", absolute.display())
+    );
+}
+
+#[test]
+fn get_aliases_print_upstream_forced_fields_in_order() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    let info = |extra: serde_json::Value| {
+        let mut base = serde_json::json!({
+            "id": "clip", "title": "Clip", "ext": "mp4", "url": "http://127.0.0.1:1/clip.mp4",
+            "webpage_url": "http://127.0.0.1:1/page", "extractor": "generic", "extractor_key": "Generic",
+            "formats": [{"format_id": "hd", "url": "http://127.0.0.1:1/clip.mp4", "ext": "mp4",
+                         "width": 1280, "height": 720, "format_note": "main"}],
+        });
+        base.as_object_mut()
+            .unwrap()
+            .extend(extra.as_object().unwrap().clone());
+        base
+    };
+    let run = |value: serde_json::Value| {
+        std::fs::write(&path, value.to_string()).unwrap();
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args([
+                "--get-format",
+                "--get-duration",
+                "--get-thumbnail",
+                "--get-description",
+                "--get-title",
+                "--get-id",
+                "--load-info-json",
+            ])
+            .arg(&path)
+            .current_dir(directory.path())
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        String::from_utf8(output.stdout).unwrap()
+    };
+    // Upstream order: title, id, thumbnail, description, duration
+    // (formatSeconds), format ('{id} - {res} (note)').
+    assert_eq!(
+        run(info(serde_json::json!({
+            "duration": 3725, "thumbnail": "http://127.0.0.1:1/t.jpg", "description": "About"
+        }))),
+        "Clip\nclip\nhttp://127.0.0.1:1/t.jpg\nAbout\n1:02:05\nhd - 1280x720 (main)\n"
+    );
+    // Optional fields print nothing when missing.
+    assert_eq!(
+        run(info(serde_json::json!({}))),
+        "Clip\nclip\nhd - 1280x720 (main)\n"
+    );
+}
+
+#[test]
+fn numeric_rate_fields_render_like_python() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    std::fs::write(
+        &path,
+        serde_json::json!({
+            "id": "clip", "title": "Clip", "ext": "mp4", "url": "http://127.0.0.1:1/v.mp4",
+            "webpage_url": "http://127.0.0.1:1/page", "extractor": "generic", "extractor_key": "Generic",
+            "formats": [
+                {"format_id": "v", "url": "http://127.0.0.1:1/v.mp4", "ext": "mp4", "vcodec": "avc1", "acodec": "none",
+                 "width": 1280, "height": 720, "tbr": 1000.0, "fps": 30},
+                {"format_id": "h", "url": "http://127.0.0.1:1/h.mp4", "ext": "mp4", "vcodec": "avc1", "acodec": "none",
+                 "width": 640, "height": 360, "tbr": 500.0, "fps": 29.97},
+                {"format_id": "a", "url": "http://127.0.0.1:1/a.m4a", "ext": "m4a", "vcodec": "none", "acodec": "mp4a",
+                 "tbr": 96.0, "asr": 44100},
+            ],
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let print = |format: &str| {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["-f", format, "-O"])
+            .arg("%(tbr)s|%(fps)s|%(fps)j|%(aspect_ratio)05.2f|%(abr).1f|%(vbr)d|%(asr)s")
+            .arg("--load-info-json")
+            .arg(&path)
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        String::from_utf8(output.stdout).unwrap()
+    };
+    // Checked with pinned upstream: ints stay ints (30), floats use repr, and
+    // a merge sums the rates and takes video fps/vbr and audio abr/asr.
+    assert_eq!(print("v"), "1000.0|30|30|01.78|0.0|1000|NA\n");
+    assert_eq!(print("h"), "500.0|29.97|29.97|01.78|0.0|500|NA\n");
+    assert_eq!(print("v+a"), "1096.0|30|30|01.78|96.0|1000|44100\n");
+}
+
+#[test]
+fn legacy_id_autonumber_and_deprecated_options_follow_upstream() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    std::fs::write(
+        &path,
+        serde_json::json!({
+            "id": "clip", "title": "Clip", "ext": "mp4", "url": "http://127.0.0.1:1/clip.mp4",
+            "webpage_url": "http://127.0.0.1:1/page", "extractor": "generic", "extractor_key": "Generic",
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let run = |args: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(args)
+            .arg("--get-filename")
+            .arg("--load-info-json")
+            .arg(&path)
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    // Checked with pinned upstream.
+    let output = run(&["--id"]);
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "clip.mp4\n");
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .contains("WARNING: --id is deprecated. Use -o \"%(id)s.%(ext)s\" instead")
+    );
+    let output = run(&["--id", "-o", "x.%(ext)s"]);
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "x.mp4\n");
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .contains("WARNING: --id is ignored since --output was given")
+    );
+    let output = run(&["-o", "%(autonumber)s-%(video_autonumber)s.%(ext)s"]);
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "00001-1.mp4\n");
+    let output = run(&[
+        "--autonumber-start",
+        "5",
+        "--autonumber-size",
+        "3",
+        "-o",
+        "%(autonumber)s %(autonumber)d.%(ext)s",
+    ]);
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "005 5.mp4\n");
+    for (args, message) in [
+        (
+            &["--autonumber-start", "-1"][..],
+            "autonumber start \"-1\" must be positive or 0",
+        ),
+        (
+            &["--autonumber-size", "0"][..],
+            "autonumber size \"0\" must be positive",
+        ),
+    ] {
+        let output = run(args);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(String::from_utf8_lossy(&output.stderr).contains(message));
+    }
+    let output = run(&["--call-home", "--sponskrub-args", "x", "-C"]);
+    assert!(output.status.success());
+    assert!(String::from_utf8_lossy(&output.stderr).starts_with(
+        "Deprecated Feature: The following options have been deprecated: --call-home, --sponskrub-args, -C\nPlease remove them from your command/configuration to avoid future errors.\n"
+    ));
+}
+
+#[test]
+fn parse_and_replace_metadata_follow_metadata_parser_pp() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("info.json");
+    std::fs::write(
+        &path,
+        serde_json::json!({
+            "id": "clip1", "title": "Artist - Song (Live)", "ext": "mp4", "url": "http://127.0.0.1:1/clip.mp4",
+            "webpage_url": "http://127.0.0.1:1/page", "extractor": "generic", "extractor_key": "Generic",
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let run = |args: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(args)
+            .arg("--load-info-json")
+            .arg(&path)
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    // Checked with pinned upstream.
+    let output = run(&[
+        "--parse-metadata",
+        "title:%(artist)s - %(track)s",
+        "--replace-in-metadata",
+        "track,id",
+        r"\s*\((\w+)\)|(\d)",
+        r"[\1\2]",
+        "--parse-metadata",
+        "video:id:(?P<initial>.)",
+        "-O",
+        "%(artist)s|%(track)s|%(id)s|%(initial)s",
+    ]);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout),
+        "Artist|Song[Live]|clip[1]|c\n"
+    );
+    let output = run(&["--parse-metadata", "title:%(artist)s - %(track)s", "-s"]);
+    assert!(String::from_utf8_lossy(&output.stdout).contains(
+        "[MetadataParser] Parsed artist from '%(title)s': 'Artist'\n[MetadataParser] Parsed track from '%(title)s': 'Song (Live)'\n"
+    ));
+    let output = run(&["--parse-metadata", "title", "-s"]);
+    assert_eq!(output.status.code(), Some(2));
+    assert!(
+        String::from_utf8_lossy(&output.stderr).contains(
+            "error: --parse-metadata title is invalid; it should be FROM:TO, not 'title'"
+        )
+    );
+    let output = run(&["--replace-in-metadata", "title", "a", r"\q", "-s"]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(
+        String::from_utf8_lossy(&output.stderr).ends_with("ERROR: bad escape \\q at position 0\n")
+    );
+}
+
+#[test]
+fn file_urls_are_refused_unless_enabled_and_then_copy_local_media() {
+    let directory = tempfile::tempdir().unwrap();
+    let media = directory.path().join("clip.mp4");
+    std::fs::write(&media, b"\0\0\0\x18ftypisom local media").unwrap();
+    let url = url::Url::from_file_path(&media).unwrap().to_string();
+    let run = |args: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--ignore-config", "--no-progress", "-o", "out.%(ext)s"])
+            .args(args)
+            .arg(&url)
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    // Checked against pinned upstream.
+    let output = run(&[]);
+    assert_eq!(output.status.code(), Some(1));
+    assert_eq!(
+        String::from_utf8_lossy(&output.stderr),
+        "ERROR: file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk.\n"
+    );
+    let output = run(&["--enable-file-urls"]);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(String::from_utf8_lossy(&output.stdout).ends_with(
+        "[info] clip: Downloading 1 format(s): mp4\n[download] Destination: out.mp4\n[download] Download completed\n"
+    ));
+    assert_eq!(
+        std::fs::read(directory.path().join("out.mp4")).unwrap(),
+        std::fs::read(&media).unwrap()
+    );
 }

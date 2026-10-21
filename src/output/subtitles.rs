@@ -1,91 +1,64 @@
-//! Pure subtitle inventory rendering; never selects or inspects resources.
+//! Upstream `render_subtitles_table` / `list_subtitles` output; never selects
+//! or inspects resources.
+use super::formats::{escape, render_table};
 use crate::{Subtitles, VideoInfo};
 
-fn visible(value: &str, limit: usize) -> String {
-    if limit == 0 {
-        return String::new();
-    }
-    let mut result = String::new();
-    let mut count = 0;
-    let mut last_token_bytes = 0;
-    for character in value.chars() {
-        let token = if character.is_control()
-            || matches!(character, '\u{061c}' | '\u{200e}' | '\u{200f}' | '\u{2028}' | '\u{2029}' | '\u{202a}'..='\u{202e}' | '\u{2066}'..='\u{2069}')
-        {
-            format!("\\u{{{:x}}}", character as u32)
-        } else {
-            character.to_string()
-        };
-        let length = token.chars().count();
-        if count + length > limit {
-            if count == limit {
-                result.truncate(result.len() - last_token_bytes);
-            }
-            result.push('…');
-            return result;
-        }
-        result.push_str(&token);
-        count += length;
-        last_token_bytes = token.len();
-    }
-    result
-}
-
-/// Render declared language/format metadata without resource URLs or selection.
-/// Cells are capped at 128 characters, the caption at 256 and rows at 1024.
+/// `[info] Available subtitles for ID:` and the table, or `ID has no subtitles`.
 pub fn render_subtitles(info: &VideoInfo) -> String {
-    render(info, &info.subtitles, "[info] Available subtitles for ")
+    listing(info, &info.subtitles, "subtitles")
 }
 
-/// Render automatic caption metadata, with the same bounds as normal subtitles.
+/// The same listing for automatic captions.
 pub fn render_automatic_captions(info: &VideoInfo) -> String {
-    render(
-        info,
-        &info.automatic_captions,
-        "[info] Available automatic captions for ",
-    )
+    listing(info, &info.automatic_captions, "automatic captions")
 }
 
-fn render(info: &VideoInfo, subtitles: &Subtitles, prefix: &str) -> String {
-    let names = subtitles.entries.iter().take(1024).any(|(_, formats)| {
-        formats
-            .iter()
-            .take(1024)
-            .any(|format| format.name.is_some())
-    });
-    let mut output = format!(
-        "{prefix}{}:\nLANGUAGE  {}FORMATS\n",
-        visible(&info.id, 256 - prefix.len() - 1),
-        if names { "NAME  " } else { "" }
-    );
-    for (language, formats) in subtitles.entries.iter().take(1024) {
-        let language = visible(language.as_deref().unwrap_or("null"), 128);
-        let mut extensions = String::new();
-        for format in formats.iter().take(1024) {
-            if !extensions.is_empty() {
-                extensions.push_str(", ");
-            }
-            extensions.push_str(&visible(&format.ext, 128));
-            if extensions.chars().count() > 128 {
-                break;
-            }
-        }
-        output.push_str(&language);
-        output.push_str("  ");
-        if names {
-            let name = formats
+fn listing(info: &VideoInfo, subtitles: &Subtitles, name: &str) -> String {
+    match render_subtitles_table(subtitles) {
+        Some(table) => format!(
+            "[info] Available {name} for {}:\n{table}\n",
+            escape(&info.id)
+        ),
+        None => format!("{} has no {name}\n", escape(&info.id)),
+    }
+}
+
+/// Upstream `render_subtitles_table`: formats in reverse order, with one name
+/// when all agree (none when all are unknown); `None` without subtitles.
+pub fn render_subtitles_table(subtitles: &Subtitles) -> Option<String> {
+    if subtitles.entries.is_empty() {
+        return None;
+    }
+    let rows = subtitles
+        .entries
+        .iter()
+        .map(|(language, formats)| {
+            let (exts, mut names): (Vec<String>, Vec<String>) = formats
                 .iter()
-                .take(1024)
-                .find_map(|format| format.name.as_deref())
-                .unwrap_or("");
-            output.push_str(&visible(name, 128));
-            output.push_str("  ");
-        }
-        output.push_str(&visible(&extensions, 128));
-        output.push('\n');
-    }
-    if subtitles.entries.len() > 1024 {
-        output.push_str("…\n");
-    }
-    output
+                .rev()
+                .map(|format| {
+                    (
+                        escape(&format.ext),
+                        format
+                            .name
+                            .as_deref()
+                            .filter(|name| !name.is_empty())
+                            .map_or_else(|| "unknown".to_owned(), escape),
+                    )
+                })
+                .unzip();
+            if names.iter().all(|name| Some(name) == names.first()) {
+                names.truncate(usize::from(
+                    names.first().is_some_and(|name| name != "unknown"),
+                ));
+            }
+            vec![
+                escape(language.as_deref().unwrap_or("None")),
+                names.join(", "),
+                exts.join(", "),
+            ]
+        })
+        .collect();
+    let header = ["Language", "Name", "Formats"].map(String::from);
+    Some(render_table(header.to_vec(), rows, None, 0, true))
 }

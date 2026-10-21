@@ -20,6 +20,10 @@ impl SubtitleConversion {
     pub fn is_enabled(&self) -> bool {
         self.target.is_some()
     }
+    /// The requested extension, if conversion is enabled.
+    pub fn target(&self) -> Option<&'static str> {
+        self.target
+    }
     pub fn new(format: &str) -> Result<Self> {
         let target = match format {
             "srt" => Some("srt"),
@@ -93,27 +97,15 @@ fn unchanged(before: &fs::Metadata, after: &fs::Metadata) -> bool {
         same
     }
 }
-fn absent(path: &Path) -> Result<()> {
-    match fs::symlink_metadata(path) {
-        Ok(_) => Err(Error::OutputExists(path.into())),
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
-        Err(error) => Err(error.into()),
-    }
-}
 fn publish(source: &Path, destination: &Path) -> Result<()> {
     fs::OpenOptions::new()
         .write(true)
         .open(source)?
         .sync_all()?;
+    // Upstream's FFmpeg `-y` replaces an existing output.
     tempfile::TempPath::try_from_path(source)?
-        .persist_noclobber(destination)
-        .map_err(|error| {
-            if error.error.kind() == std::io::ErrorKind::AlreadyExists {
-                Error::OutputExists(destination.into())
-            } else {
-                Error::Io(error.error)
-            }
-        })?;
+        .persist(destination)
+        .map_err(|error| Error::Io(error.error))?;
     Ok(())
 }
 fn progress(
@@ -130,6 +122,7 @@ fn progress(
         stream_count: None,
         fragment_index: None,
         fragment_count: None,
+        fragment: None,
     })
 }
 
@@ -168,7 +161,12 @@ pub(crate) fn convert(
         });
     };
     let metadata = regular(source)?;
-    absent(&path)?;
+    // FFmpeg refuses to write over its input.
+    if path == source {
+        return Err(Error::Subtitle(
+            "subtitle conversion output would replace its input".into(),
+        ));
+    }
     if metadata.len() > MAX_BYTES {
         return Err(Error::Subtitle(
             "subtitle conversion input exceeds 16 MiB".into(),
@@ -208,7 +206,6 @@ pub(crate) fn convert(
         fs::write(&private, srt.as_bytes())?;
         if target != "srt" {
             let srt_path = options.intermediate_path(source, source_ext).unwrap();
-            absent(&srt_path)?;
             intermediate = Some(srt_path);
         }
         (private, "srt")

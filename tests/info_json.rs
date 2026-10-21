@@ -87,6 +87,8 @@ impl Server {
     fn cli(&self, dir: &Path, path: &str, args: &[&str]) -> Output {
         Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
             .current_dir(dir)
+            // A fixed User-Agent keeps `http_headers` comparable across runs.
+            .args(["--user-agent", "fixture"])
             .args(args)
             .arg(self.url(path))
             .output()
@@ -103,13 +105,17 @@ impl Drop for Server {
         self.worker.take().unwrap().join().unwrap();
     }
 }
-fn run(output: &Output) -> String {
+/// Asserts success and returns (stdout with screen lines, stderr with warnings).
+fn run(output: &Output) -> (String, String) {
     assert!(
         output.status.success(),
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
-    String::from_utf8(output.stderr.clone()).unwrap()
+    (
+        String::from_utf8(output.stdout.clone()).unwrap(),
+        String::from_utf8(output.stderr.clone()).unwrap(),
+    )
 }
 fn read(path: &Path) -> (String, Value) {
     let text = fs::read_to_string(path).unwrap();
@@ -131,7 +137,7 @@ fn video_info_json_is_cleaned_dumped_metadata_written_before_media() {
     let dir = tempfile::tempdir().unwrap();
     let dumped: Value =
         serde_json::from_slice(&server.cli(dir.path(), "/single.html", &["-j"]).stdout).unwrap();
-    let stderr = run(&server.cli(dir.path(), "/single.html", &["--write-info-json"]));
+    let (stdout, _) = run(&server.cli(dir.path(), "/single.html", &["--write-info-json"]));
     let id = dumped["id"].as_str().unwrap();
     let base = format!("{} [{id}]", dumped["title"].as_str().unwrap());
     assert_eq!(
@@ -140,24 +146,44 @@ fn video_info_json_is_cleaned_dumped_metadata_written_before_media() {
     );
     let (text, mut value) = read(&dir.path().join(format!("{base}.info.json")));
     assert!(
-        text.starts_with("{\"id\": ") && text.contains("\", \""),
+        // Upstream's HTML5 embed dict starts with its formats.
+        text.starts_with("{\"formats\": ") && text.contains("\", \""),
         "{text}"
     );
     assert!(!text.ends_with('\n'));
     assert!(value["epoch"].as_u64().unwrap() > 1_700_000_000);
     assert_eq!(value["_type"], "video");
     let object = value.as_object_mut().unwrap();
-    object.remove("epoch");
-    object.remove("_type");
+    object.shift_remove("epoch");
+    object.shift_remove("_type");
+    // `clean_infojson` drops `original_url` and the filenames, which `-j`
+    // keeps; `epoch` and `_type` were compared above.
+    let mut dumped = dumped;
+    let object = dumped.as_object_mut().unwrap();
+    for key in ["original_url", "_filename", "filename", "epoch", "_type"] {
+        assert!(object.shift_remove(key).is_some(), "{key}");
+    }
+    // ... and `None` values, which `-j` prints as `null`.
+    fn without_nulls(value: &mut serde_json::Value) {
+        match value {
+            serde_json::Value::Object(map) => {
+                map.retain(|_, value| !value.is_null());
+                map.values_mut().for_each(without_nulls);
+            }
+            serde_json::Value::Array(items) => items.iter_mut().for_each(without_nulls),
+            _ => {}
+        }
+    }
+    without_nulls(&mut dumped);
     assert_eq!(value, dumped);
-    let info = stderr
+    let info = stdout
         .find(&format!(
             "[info] Writing video metadata as JSON to: {base}.info.json"
         ))
         .unwrap();
     assert!(
-        info < stderr.find("[download] Destination").unwrap(),
-        "{stderr}"
+        info < stdout.find("[download] Destination").unwrap(),
+        "{stdout}"
     );
 }
 
@@ -176,15 +202,25 @@ fn skip_download_writes_only_info_json_and_keeps_existing_files() {
     assert_eq!(names(&dir.path().join("out")), ["one.info.json"]);
     assert_eq!(read(&path).1["id"], "one");
     fs::write(&path, "kept").unwrap();
-    let stderr = run(&server.cli(dir.path(), "/one.mp4", &args));
+    let mut keep = args.to_vec();
+    keep.push("-w");
+    let (stdout, _) = run(&server.cli(dir.path(), "/one.mp4", &keep));
     assert!(
-        stderr.contains("[info] Video metadata is already present"),
-        "{stderr}"
+        stdout.contains("[info] Video metadata is already present"),
+        "{stdout}"
     );
     assert_eq!(fs::read_to_string(&path).unwrap(), "kept");
+    // By default upstream overwrites metadata files.
+    let (stdout, _) = run(&server.cli(dir.path(), "/one.mp4", &args));
+    assert!(
+        stdout.contains("[info] Writing video metadata as JSON to:"),
+        "{stdout}"
+    );
+    assert_eq!(read(&path).1["id"], "one");
+    assert_eq!(names(&dir.path().join("out")), ["one.info.json"]);
     assert_eq!(
         server.count("/one.mp4"),
-        2,
+        3,
         "probes only, no media download"
     );
 }
@@ -221,7 +257,7 @@ fn simulation_listing_json_output_and_negation_write_nothing() {
 fn playlist_info_json_precedes_entries_with_upstream_counts_and_name() {
     let server = Server::new();
     let dir = tempfile::tempdir().unwrap();
-    let stderr = run(&server.cli(
+    let (stdout, _) = run(&server.cli(
         dir.path(),
         "/playlist.html",
         &[
@@ -241,7 +277,7 @@ fn playlist_info_json_precedes_entries_with_upstream_counts_and_name() {
     );
     let (_, mut playlist) = read(&dir.path().join("Playlist selection-0-2.info.json"));
     assert!(playlist["epoch"].is_u64());
-    playlist.as_object_mut().unwrap().remove("epoch");
+    playlist.as_object_mut().unwrap().shift_remove("epoch");
     let id = playlist["id"].clone();
     assert_eq!(
         playlist,
@@ -249,6 +285,8 @@ fn playlist_info_json_precedes_entries_with_upstream_counts_and_name() {
             "id": id, "title": "Playlist selection",
             "webpage_url": server.url("/playlist.html"),
             "extractor": "generic", "extractor_key": "Generic",
+            "webpage_url_basename": "playlist.html",
+            "webpage_url_domain": server.url("/").trim_start_matches("http://").trim_end_matches('/'),
             "playlist_count": 4, "_type": "playlist",
         })
     );
@@ -264,10 +302,10 @@ fn playlist_info_json_precedes_entries_with_upstream_counts_and_name() {
         ),
         (Some(3), None)
     );
-    let playlist_line = stderr.find("Writing playlist metadata").unwrap();
+    let playlist_line = stdout.find("Writing playlist metadata").unwrap();
     assert!(
-        playlist_line < stderr.find("Writing video metadata").unwrap(),
-        "{stderr}"
+        playlist_line < stdout.find("Writing video metadata").unwrap(),
+        "{stdout}"
     );
 }
 
@@ -287,7 +325,7 @@ fn fully_archived_playlists_still_write_playlist_info_json() {
             "media/%(id)s.%(ext)s",
         ],
     ));
-    let stderr = run(&server.cli(
+    let (stdout, _) = run(&server.cli(
         dir.path(),
         "/playlist.html",
         &[
@@ -298,7 +336,7 @@ fn fully_archived_playlists_still_write_playlist_info_json() {
             "meta/%(title)s.%(ext)s",
         ],
     ));
-    assert!(stderr.contains("has already been recorded in the archive"));
+    assert!(stdout.contains("has already been recorded in the archive"));
     assert_eq!(
         names(&dir.path().join("meta")),
         ["Playlist selection.info.json"]
@@ -344,4 +382,192 @@ fn reserved_and_colliding_paths_fail_before_writes_and_skip_the_playlist() {
     let cookies = fs::read_to_string(dir.path().join("Playlist selection.info.json")).unwrap();
     assert!(!cookies.contains("_type"), "{cookies}");
     assert_eq!(server.count("/two.mp4"), 1, "entries are not downloaded");
+}
+
+fn load(dir: &Path, file: &Path, args: &[&str]) -> Output {
+    Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .current_dir(dir)
+        .arg("--load-info-json")
+        .arg(file)
+        .args(args)
+        .output()
+        .unwrap()
+}
+
+#[test]
+fn load_info_json_reselects_and_downloads_without_extraction() {
+    let server = Server::new();
+    let source = tempfile::tempdir().unwrap();
+    run(&server.cli(
+        source.path(),
+        "/playlist.html",
+        &[
+            "--write-info-json",
+            "--skip-download",
+            "-o",
+            "%(id)s.%(ext)s",
+        ],
+    ));
+    let pages = server.count("/playlist.html");
+    // A video dictionary is processed directly: no page request, normal
+    // selection over its saved formats, and the media download.
+    let dir = tempfile::tempdir().unwrap();
+    let entry = source.path().join("playlist-1.info.json");
+    let (stdout, stderr) = run(&load(
+        dir.path(),
+        &entry,
+        &["-o", "out.%(ext)s", "extra-url"],
+    ));
+    assert!(stderr.contains("WARNING: URLs are ignored due to --load-info-json"));
+    assert!(stdout.contains("[info] playlist-1: Downloading 1 format(s): 0"));
+    assert_eq!(fs::read(dir.path().join("out.mp4")).unwrap(), b"one");
+    assert_eq!(server.count("/playlist.html"), pages);
+    // A list of dictionaries is processed in order, with -j output.
+    let list = dir.path().join("list.json");
+    let entries: Vec<Value> = ["playlist-1", "playlist-2"]
+        .iter()
+        .map(|id| read(&source.path().join(format!("{id}.info.json"))).1)
+        .collect();
+    fs::write(&list, serde_json::to_vec(&entries).unwrap()).unwrap();
+    let output = load(dir.path(), &list, &["-j"]);
+    let ids: Vec<String> = String::from_utf8(output.stdout)
+        .unwrap()
+        .lines()
+        .map(|line| {
+            serde_json::from_str::<Value>(line).unwrap()["id"]
+                .as_str()
+                .unwrap()
+                .to_owned()
+        })
+        .collect();
+    assert_eq!(ids, ["playlist-1", "playlist-2"]);
+    // Playlists lose their entries when loaded, so the URL is re-extracted.
+    let playlist = source.path().join("playlist.info.json");
+    let (_, stderr) = run(&load(dir.path(), &playlist, &["-s"]));
+    assert!(stderr.contains(&format!(
+        "WARNING: The info failed to download: There are no entries; trying with URL {}",
+        server.url("/playlist.html")
+    )));
+    assert_eq!(server.count("/playlist.html"), pages + 1);
+    // Invalid files fail without a URL error.
+    let invalid = dir.path().join("invalid.json");
+    fs::write(&invalid, "{").unwrap();
+    let output = load(dir.path(), &invalid, &[]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&output.stderr).starts_with("ERROR: info JSON failed: "));
+}
+
+#[test]
+fn internet_shortcuts_follow_upstream_write_link_file() {
+    let server = Server::new();
+    let dir = tempfile::tempdir().unwrap();
+    let url = server.url("/one.mp4");
+    let (stdout, _) = run(&server.cli(
+        dir.path(),
+        "/one.mp4",
+        &[
+            "--write-url-link",
+            "--write-webloc-link",
+            "--write-desktop-link",
+            "--skip-download",
+            "-o",
+            "%(title)s x.%(ext)s",
+        ],
+    ));
+    assert!(stdout.contains("[info] Writing internet shortcut (.url) to: one x.url"));
+    assert_eq!(
+        fs::read_to_string(dir.path().join("one x.url")).unwrap(),
+        format!("[InternetShortcut]\r\nURL={url}\r\n")
+    );
+    assert!(
+        fs::read_to_string(dir.path().join("one x.webloc"))
+            .unwrap()
+            .contains(&format!("\t<string>{url}</string>\n"))
+    );
+    assert_eq!(
+        fs::read_to_string(dir.path().join("one x.desktop")).unwrap(),
+        format!(
+            "[Desktop Entry]\nEncoding=UTF-8\nName=one\\sx\nType=Link\nURL={url}\nIcon=text-html\n"
+        )
+    );
+    // Existing shortcuts are kept unless -w; simulation writes none.
+    fs::write(dir.path().join("one x.url"), "old").unwrap();
+    let (stdout, _) = run(&server.cli(
+        dir.path(),
+        "/one.mp4",
+        &[
+            "--write-url-link",
+            "--skip-download",
+            "-o",
+            "%(title)s x.%(ext)s",
+        ],
+    ));
+    assert!(stdout.contains("[info] Internet shortcut (.url) is already present"));
+    assert_eq!(
+        fs::read_to_string(dir.path().join("one x.url")).unwrap(),
+        "old"
+    );
+    run(&server.cli(
+        dir.path(),
+        "/one.mp4",
+        &[
+            "--write-url-link",
+            "-w",
+            "--skip-download",
+            "-o",
+            "%(title)s x.%(ext)s",
+        ],
+    ));
+    assert!(
+        fs::read_to_string(dir.path().join("one x.url"))
+            .unwrap()
+            .starts_with("[InternetShortcut]")
+    );
+    let simulated = tempfile::tempdir().unwrap();
+    run(&server.cli(simulated.path(), "/one.mp4", &["--write-link", "-s"]));
+    assert!(names(simulated.path()).is_empty());
+}
+
+#[test]
+fn playlist_info_json_is_rewritten_after_its_entries() {
+    let server = Server::new();
+    let dir = tempfile::tempdir().unwrap();
+    // One name for every info JSON: entries overwrite the playlist's file,
+    // and upstream's "updated playlist" write restores it at the end.
+    let (stdout, _) = run(&server.cli(
+        dir.path(),
+        "/playlist.html",
+        &["--skip-download", "--write-info-json", "-o", "o.%(ext)s"],
+    ));
+    let writes: Vec<&str> = stdout
+        .lines()
+        .filter(|line| line.contains("metadata as JSON"))
+        .collect();
+    assert_eq!(
+        writes.first(),
+        Some(&"[info] Writing playlist metadata as JSON to: o.info.json")
+    );
+    assert_eq!(
+        writes.last(),
+        Some(&"[info] Writing updated playlist metadata as JSON to: o.info.json")
+    );
+    let finished = stdout
+        .find("[download] Finished downloading playlist")
+        .unwrap();
+    assert!(stdout.find("updated playlist").unwrap() < finished);
+    let (_, value) = read(&dir.path().join("o.info.json"));
+    assert_eq!(value["_type"], "playlist");
+    // Not rewritten when the first write found the file present.
+    let (stdout, _) = run(&server.cli(
+        dir.path(),
+        "/playlist.html",
+        &[
+            "--skip-download",
+            "--write-info-json",
+            "--no-overwrites",
+            "-o",
+            "o.%(ext)s",
+        ],
+    ));
+    assert!(!stdout.contains("updated playlist"), "{stdout}");
 }

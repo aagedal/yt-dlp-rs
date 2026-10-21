@@ -198,6 +198,15 @@ const SRT: &[u8] = b"1\n00:00:01,250 --> 00:00:03,500\nHello world\n";
 const TTML: &[u8] = b"<tt xmlns='http://www.w3.org/ns/ttml'><body><div><p begin='1.25s' end='3.5s'>Hello world</p></div></body></tt>";
 fn embedding(path: &Path, ext: &str, keep: bool) -> PostprocessOptions {
     PostprocessOptions {
+        existing: None,
+        no_post_overwrites: false,
+        modify_chapters: None,
+        ignore_errors: false,
+        thumbnail: None,
+        metadata: false,
+        chapters: false,
+        infojson: None,
+        fixup: None,
         embed: Some(SubtitleEmbedding {
             subtitles: vec![SubtitleFile {
                 path: path.into(),
@@ -427,7 +436,7 @@ fn cancellation_before_processing_or_publishing_retains_captions_and_publishes_n
     }
 }
 #[test]
-fn publication_race_preserves_competitor_and_captions() {
+fn publication_replaces_a_competing_output_like_upstream() {
     let server = Server::new();
     let tools = Tools::new("aac", false);
     let client = tools.client();
@@ -448,9 +457,11 @@ fn publication_race_preserves_competitor_and_captions() {
             ControlFlow::Continue(())
         },
     );
-    assert!(result.is_err());
-    assert_eq!(std::fs::read(destination).unwrap(), b"competitor");
-    assert_eq!(std::fs::read(caption).unwrap(), SRT);
+    // Upstream replaces existing processor outputs (`os.replace`), then
+    // deletes the embedded captions.
+    assert!(result.is_ok());
+    assert_eq!(std::fs::read(destination).unwrap(), b"embedded media");
+    assert!(!caption.exists());
     clean(directory.path());
 }
 
@@ -463,6 +474,15 @@ fn empty_embedding_skips_tools_and_cli_last_disable_prevents_implicit_caption_do
         .with_ffmpeg(directory.path().join("missing"));
     let info = client.extract_info(&server.url("source.mp4")).unwrap();
     let plan = PostprocessOptions {
+        existing: None,
+        no_post_overwrites: false,
+        modify_chapters: None,
+        ignore_errors: false,
+        thumbnail: None,
+        metadata: false,
+        chapters: false,
+        infojson: None,
+        fixup: None,
         embed: Some(SubtitleEmbedding {
             subtitles: Vec::new(),
             keep_subtitles: false,

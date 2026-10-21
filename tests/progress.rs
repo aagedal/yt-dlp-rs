@@ -164,7 +164,10 @@ fn success_reports_download_headers_bytes_and_publication_order() {
         .download_with_progress(
             &info,
             &destination,
-            DownloadOptions { retries: 0 },
+            DownloadOptions {
+                retries: 0,
+                ..Default::default()
+            },
             |event| {
                 // Even Publishing is cancellable before the final path appears.
                 assert!(!destination.exists());
@@ -217,7 +220,10 @@ fn unknown_download_length_does_not_reuse_extraction_length() {
             .download_with_progress(
                 &info,
                 directory.path().join("clip.mp4"),
-                DownloadOptions { retries: 0 },
+                DownloadOptions {
+                    retries: 0,
+                    ..Default::default()
+                },
                 |event| {
                     events.push(event);
                     ControlFlow::Continue(())
@@ -246,7 +252,10 @@ fn cancellation_before_request_after_bytes_and_before_publication_cleans_output(
             .download_with_progress(
                 &info,
                 directory.path().join("clip.mp4"),
-                DownloadOptions { retries: 2 },
+                DownloadOptions {
+                    retries: 2,
+                    ..Default::default()
+                },
                 |event| {
                     assert!(!cancelled, "callback invoked after cancellation");
                     if event.phase == phase
@@ -296,7 +305,10 @@ fn cancellation_during_retry_after_wait_prevents_the_retry() {
         .download_with_progress(
             &info,
             directory.path().join("clip.mp4"),
-            DownloadOptions { retries: 1 },
+            DownloadOptions {
+                retries: 1,
+                ..Default::default()
+            },
             |event| {
                 if event.phase == DownloadPhase::WaitingToRetry {
                     waits += 1;
@@ -343,7 +355,10 @@ fn resumed_retry_keeps_offsets_and_original_total() {
             .download_with_progress(
                 &info,
                 &destination,
-                DownloadOptions { retries: 1 },
+                DownloadOptions {
+                    retries: 1,
+                    ..Default::default()
+                },
                 |event| {
                     events.push(event);
                     ControlFlow::Continue(())
@@ -397,7 +412,10 @@ fn full_response_to_range_retry_resets_bytes_and_total() {
             .download_with_progress(
                 &info,
                 &destination,
-                DownloadOptions { retries: 1 },
+                DownloadOptions {
+                    retries: 1,
+                    ..Default::default()
+                },
                 |event| {
                     events.push(event);
                     ControlFlow::Continue(())
@@ -424,7 +442,7 @@ fn full_response_to_range_retry_resets_bytes_and_total() {
 }
 
 #[test]
-fn cli_progress_uses_stderr_and_preserves_download_bytes() {
+fn cli_progress_uses_stdout_and_preserves_download_bytes() {
     let server = Server::start_with_delay(|_| Response::media(), Duration::from_millis(1100));
     let directory = tempfile::tempdir().unwrap();
     let output = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
@@ -437,17 +455,39 @@ fn cli_progress_uses_stderr_and_preserves_download_bytes() {
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
-    assert!(output.stdout.is_empty());
-    let stderr = String::from_utf8(output.stderr).unwrap();
+    // Like upstream, progress goes to stdout; this direct download warns nothing.
     assert!(
-        stderr.contains("[download] 14 / 14 bytes (attempt 1)"),
-        "{stderr}"
+        output.stderr.is_empty(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
     );
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    // Upstream `report_progress` lines share one carriage-return status line,
+    // ending with the finished line and a newline.
+    assert!(
+        stdout.contains("\r[download] 100.0% of     14.00B at "),
+        "{stdout}"
+    );
+    let finished = stdout
+        .split('\r')
+        .find(|line| line.starts_with("[download] 100% of     14.00B in 00:00:0"))
+        .unwrap_or_else(|| panic!("{stdout}"));
+    assert!(finished.trim_end().ends_with("B/s"), "{finished:?}");
+    assert!(stdout.ends_with('\n') && !stdout.contains("Downloaded 14 bytes"));
+    let quiet = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--no-progress", "-o", "other.mp4", &server.url])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    let quiet = String::from_utf8(quiet.stdout).unwrap();
+    assert!(quiet.contains("[download] Download completed\n"), "{quiet}");
+    assert!(!quiet.contains('\r'));
+    std::fs::remove_file(directory.path().join("other.mp4")).unwrap();
     assert_eq!(
         std::fs::read(directory.path().join("clip.mp4")).unwrap(),
         b"complete media"
     );
-    assert_eq!(server.requests().len(), 2);
+    assert_eq!(server.requests().len(), 4);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
 }
 
@@ -463,7 +503,10 @@ fn destination_created_during_publication_is_preserved_and_temp_is_removed() {
         .download_with_progress(
             &info,
             &destination,
-            DownloadOptions { retries: 2 },
+            DownloadOptions {
+                retries: 2,
+                ..Default::default()
+            },
             |event| {
                 assert!(!publishing, "callback invoked after publication attempt");
                 if event.phase == DownloadPhase::Publishing {
@@ -479,4 +522,36 @@ fn destination_created_during_publication_is_preserved_and_temp_is_removed() {
     assert_eq!(std::fs::read(destination).unwrap(), b"competing file");
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
     assert_eq!(server.requests().len(), 2);
+}
+
+#[test]
+fn cli_progress_follows_httpfd_block_sizes() {
+    let server = Server::start(|_| Response::media());
+    let percents = |args: &[&str]| -> Vec<String> {
+        let directory = tempfile::tempdir().unwrap();
+        let output = std::process::Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--newline", "-o", "clip.mp4"])
+            .args(args)
+            .arg(&server.url)
+            .current_dir(directory.path())
+            .output()
+            .unwrap();
+        String::from_utf8(output.stdout)
+            .unwrap()
+            .lines()
+            .filter_map(|line| line.strip_prefix("[download] "))
+            .filter(|line| line.contains("% of ") && !line.starts_with("100% "))
+            .map(|line| line.split_whitespace().next().unwrap().to_owned())
+            .collect()
+    };
+    // `data.read(block_size)` with a fixed block of 5 bytes.
+    assert_eq!(
+        percents(&["--buffer-size", "5", "--no-resize-buffer"]),
+        ["35.7%", "71.4%", "100.0%"]
+    );
+    // `best_block_size` doubles the block on a fast link: 2, 4, then 8 bytes.
+    assert_eq!(
+        percents(&["--buffer-size", "2"]),
+        ["14.3%", "42.9%", "100.0%"]
+    );
 }

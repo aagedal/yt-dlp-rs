@@ -95,22 +95,23 @@ fn convert_with_deadline(
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         demuxer,
         "-protocol_whitelist",
         "file",
-        "-i",
     ]
     .into_iter()
     .map(Into::into)
-    .chain(std::iter::once(input.into_os_string()))
+    .chain(crate::pp_args::input("SubtitlesConvertor", 1))
+    .chain(["-i".into(), input.into_os_string()])
     .chain(
         ["-map", "0:s:0", "-movflags", "+faststart", "-f", muxer]
             .into_iter()
             .map(Into::into),
     )
+    .chain(crate::pp_args::output("SubtitlesConvertor"))
     .chain(std::iter::once(output.clone().into_os_string()))
     .collect();
     let mut exceeded_budget = false;
@@ -206,7 +207,7 @@ mod tests {
             ("missing", "nonempty"),
             ("empty", "nonempty"),
             ("stderr", "diagnostic"),
-            ("large-stderr", "budget"),
+            ("large-stderr", "fixture tail"),
             ("large-stdout", "budget"),
             ("invalid-utf8", "UTF-8"),
             ("large-output", "16 MiB"),

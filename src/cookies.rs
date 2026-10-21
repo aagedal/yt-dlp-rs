@@ -15,6 +15,71 @@ use std::{
 };
 use url::Url;
 
+/// The extraction client's jar, for extractors' `_set_cookie` and
+/// `_get_cookies`.
+static ACTIVE: RwLock<Option<std::sync::Arc<CookieJar>>> = RwLock::new(None);
+
+/// Make `jar` the one extractors read and write.
+pub(crate) fn register(jar: &std::sync::Arc<CookieJar>) {
+    if let Ok(mut active) = ACTIVE.write() {
+        *active = Some(jar.clone());
+    }
+}
+
+/// Upstream `_set_cookie(domain, name, value)`: a session cookie for the
+/// domain and its subdomains, path `/`.
+pub(crate) fn set_cookie(domain: &str, name: &str, value: &str) {
+    let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) else {
+        return;
+    };
+    let domain = domain.trim_start_matches('.');
+    let Ok(url) = Url::parse(&format!("https://{domain}/")) else {
+        return;
+    };
+    let Ok(header) = HeaderValue::from_str(&format!("{name}={value}; Domain={domain}; Path=/"))
+    else {
+        return;
+    };
+    jar.set_cookies(&mut std::iter::once(&header), &url);
+}
+
+/// `cookiejar.clear(domain=DOMAIN)`: every cookie stored for exactly that
+/// domain (`.DOMAIN` for domain cookies, `DOMAIN` for host-only ones).
+pub(crate) fn clear_domain(domain: &str) {
+    if let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) {
+        jar.clear_domain(domain);
+    }
+}
+
+/// `cookiejar.clear(domain=DOMAIN, path='/', name=NAME)`: an expired
+/// cookie replaces it.
+pub(crate) fn clear_cookie(domain: &str, name: &str) {
+    let Some(jar) = ACTIVE.read().ok().and_then(|active| active.clone()) else {
+        return;
+    };
+    let host = domain.trim_start_matches('.');
+    let Ok(url) = Url::parse(&format!("https://{host}/")) else {
+        return;
+    };
+    let Ok(header) = HeaderValue::from_str(&format!(
+        "{name}=; Domain={host}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+    )) else {
+        return;
+    };
+    jar.set_cookies(&mut std::iter::once(&header), &url);
+}
+
+/// Upstream `_get_cookies(url).get(name)`: the value sent to `url`.
+pub(crate) fn get_cookie(url: &str, name: &str) -> Option<String> {
+    let jar = ACTIVE.read().ok().and_then(|active| active.clone())?;
+    let url = Url::parse(url).ok()?;
+    let header = jar.cookies(&url)?;
+    header.to_str().ok()?.split("; ").find_map(|pair| {
+        let (key, value) = pair.split_once('=')?;
+        (key == name).then(|| value.to_owned())
+    })
+}
+
 const MAX_FILE: usize = 4 * 1024 * 1024;
 const MAX_COOKIES: usize = 10_000;
 const MAX_LINE: usize = 16 * 1024;
@@ -92,6 +157,30 @@ fn target(path: &Path) -> Result<bool> {
         Err(_) => Err(error("cannot inspect cookie file")),
     }
 }
+/// Python `http.cookies._quote`.
+fn py_cookie_quote(value: &str) -> String {
+    const LEGAL: &str = "!#$%&'*+-.^_`|~:";
+    const UNESCAPED: &str = "!#$%&'*+-.^_`|~: ()/<=>?@[]{}";
+    if value
+        .chars()
+        .all(|c| c.is_ascii_alphanumeric() || LEGAL.contains(c))
+    {
+        return value.to_owned();
+    }
+    let mut quoted = String::from("\"");
+    for c in value.chars() {
+        match c {
+            '"' => quoted.push_str("\\\""),
+            '\\' => quoted.push_str("\\\\"),
+            c if c.is_ascii_alphanumeric() || UNESCAPED.contains(c) || (c as u32) >= 256 => {
+                quoted.push(c)
+            }
+            c => quoted.push_str(&format!("\\{:03o}", c as u32)),
+        }
+    }
+    quoted.push('"');
+    quoted
+}
 fn valid_name(value: &str) -> bool {
     !value.is_empty() && HeaderName::from_bytes(value.as_bytes()).is_ok()
 }
@@ -102,6 +191,125 @@ fn valid_value(value: &str) -> bool {
 }
 
 impl CookieJar {
+    /// Upstream `_merge_cookie_jars`: extracted browser cookies, then the
+    /// cookie file's (which replace same-key browser cookies). Browser
+    /// cookies this jar cannot represent are skipped.
+    pub fn from_browser(
+        extracted: crate::browser_cookies::Extracted,
+        file: Option<&Path>,
+    ) -> Result<Self> {
+        let mut text = String::from("# Netscape HTTP Cookie File\n");
+        for cookie in &extracted.cookies {
+            if cookie.name.is_empty() {
+                continue;
+            }
+            // Chromium's raw timestamps (microseconds since 1601), which
+            // upstream keeps, are capped at the jar's last representable time.
+            let expires = cookie
+                .expires
+                .filter(|expires| expires.is_finite() && *expires > 0.0)
+                .map_or(String::new(), |expires| {
+                    (expires.min(253_402_300_799.0) as i64).to_string()
+                });
+            let flag = |value: bool| if value { "TRUE" } else { "FALSE" };
+            let line = format!(
+                "{}\t{}\t{}\t{}\t{expires}\t{}\t{}",
+                cookie.domain,
+                flag(cookie.domain.starts_with('.')),
+                cookie.path,
+                flag(cookie.secure),
+                cookie.name,
+                cookie.value
+            );
+            if line.len() <= MAX_LINE && parse_record(&line, false).is_ok() {
+                text.push_str(&line);
+                text.push('\n');
+            }
+        }
+        if let Some(path) = file
+            && let Some(file_text) = Self::read(path)?
+        {
+            // The header is validated, then its records follow the browser's.
+            Self::parse(&file_text)?;
+            text.extend(file_text.lines().skip(1).map(|line| format!("{line}\n")));
+        }
+        let jar = Self::parse(&text)?;
+        // Upstream loads its jar lazily: at the first request (or the save).
+        crate::screen::defer_until_request(extracted.messages, extracted.error);
+        Ok(jar)
+    }
+
+    /// Upstream `_calc_headers`' `cookies` field for `url`: each matching
+    /// cookie as `NAME=VALUE; Domain=…; Path=…[; Secure][; Expires=…]`
+    /// (values quoted like `SimpleCookie`), in jar order.
+    pub fn info_field(&self, url: &Url) -> Option<String> {
+        let state = self.state.read().ok()?;
+        if !matches!(url.scheme(), "http" | "https") {
+            return None;
+        }
+        let mut cookies: Vec<_> = state
+            .store
+            .matches(url)
+            .into_iter()
+            .filter(|cookie| !cookie.secure().unwrap_or(false) || url.scheme() == "https")
+            .collect();
+        cookies.sort_by_key(|cookie| {
+            state
+                .creation
+                .get(&key(cookie))
+                .copied()
+                .unwrap_or(u64::MAX)
+        });
+        let mut values = Vec::new();
+        for cookie in cookies {
+            values.push(format!(
+                "{}={}",
+                cookie.name(),
+                py_cookie_quote(cookie.value())
+            ));
+            match &cookie.domain {
+                CookieDomain::HostOnly(domain) => values.push(format!("Domain={domain}")),
+                CookieDomain::Suffix(domain) => values.push(format!("Domain=.{domain}")),
+                _ => {}
+            }
+            if !cookie.path.is_empty() {
+                values.push(format!("Path={}", String::from(&cookie.path)));
+            }
+            if cookie.secure().unwrap_or(false) {
+                values.push("Secure".into());
+            }
+            if let CookieExpiration::AtUtc(time) = cookie.expires {
+                values.push(format!("Expires={}", time.unix_timestamp()));
+            }
+        }
+        (!values.is_empty()).then(|| values.join("; "))
+    }
+
+    /// The text of a bounded UTF-8 cookie file, or `None` when it is missing.
+    fn read(path: &Path) -> Result<Option<String>> {
+        if !target(path)? {
+            return Ok(None);
+        }
+        let file = File::open(path).map_err(|_| error("cannot open cookie file"))?;
+        if !file
+            .metadata()
+            .map_err(|_| error("cannot inspect opened cookie file"))?
+            .is_file()
+        {
+            return Err(error("cookie file is not regular"));
+        }
+        let mut bytes = Vec::new();
+        file.take(MAX_FILE as u64 + 1)
+            .read_to_end(&mut bytes)
+            .map_err(|_| error("cannot read cookie file"))?;
+        if bytes.len() > MAX_FILE {
+            return Err(error("cookie file exceeds 4 MiB"));
+        }
+        String::from_utf8(bytes)
+            .map(Some)
+            .map_err(|_| error("cookie file is not UTF-8"))
+    }
+
     /// Load a bounded UTF-8 Netscape file. A missing file yields an empty jar and
     /// is not created. Malformed records fail with line numbers, never values.
     pub fn load(path: impl AsRef<Path>) -> Result<Self> {
@@ -236,6 +444,7 @@ impl CookieJar {
         Ok(())
     }
     fn snapshot(&self) -> Result<String> {
+        crate::screen::load_cookies()?;
         let state = self
             .state
             .read()
@@ -295,6 +504,38 @@ impl CookieJar {
         }
         Ok(text)
     }
+    /// Upstream `_really_save` lines (no header), as curl reads them from stdin.
+    pub(crate) fn netscape_lines(&self) -> Result<String> {
+        Ok(self.snapshot()?.trim_start_matches(HEADER).to_owned())
+    }
+    /// Upstream `cookiejar.get_cookie_header(url)`.
+    pub(crate) fn cookie_header(&self, url: &Url) -> Option<String> {
+        self.cookies(url)
+            .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
+    }
+    /// Python `CookieJar.clear(domain)`.
+    pub(crate) fn clear_domain(&self, domain: &str) {
+        let Ok(mut state) = self.state.write() else {
+            return;
+        };
+        let matching: Vec<(Key, usize)> = state
+            .store
+            .iter_any()
+            .filter(|cookie| match &cookie.domain {
+                CookieDomain::HostOnly(host) => !domain.starts_with('.') && host == domain,
+                CookieDomain::Suffix(suffix) => domain.strip_prefix('.') == Some(suffix.as_str()),
+                _ => false,
+            })
+            .map(|cookie| (key(cookie), size(cookie)))
+            .collect();
+        for (key, bytes) in matching {
+            state.store.remove(&key.domain, &key.path, &key.name);
+            state.creation.remove(&key);
+            state.nameless.remove(&key);
+            state.bytes = state.bytes.saturating_sub(bytes);
+        }
+    }
+
     /// Drain bounded generic warnings produced by response insertion/header limits.
     pub fn take_warnings(&self) -> Vec<String> {
         match self.state.write() {

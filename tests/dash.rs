@@ -24,6 +24,24 @@ const MPD: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
 </SegmentList></Representation></AdaptationSet>
 </Period></MPD>"#;
 
+/// MPD with a low-resolution muxed fallback beside the separate streams.
+const MUXED_MPD: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT2S">
+<Period duration="PT2S">
+<AdaptationSet mimeType="video/mp4" codecs="avc1.42001e" width="640" height="360">
+<Representation id="video" bandwidth="400000"><SegmentList timescale="1" duration="1">
+<Initialization sourceURL="video/init.mp4"/><SegmentURL media="video/0.m4s"/><SegmentURL media="video/1.m4s"/>
+</SegmentList></Representation></AdaptationSet>
+<AdaptationSet mimeType="audio/mp4" codecs="mp4a.40.2">
+<Representation id="audio" bandwidth="128000"><SegmentList timescale="1" duration="1">
+<Initialization sourceURL="audio/init.mp4"/><SegmentURL media="audio/0.m4s"/><SegmentURL media="audio/1.m4s"/>
+</SegmentList></Representation></AdaptationSet>
+<AdaptationSet mimeType="video/mp4" codecs="avc1.42001e,mp4a.40.2" width="320" height="180">
+<Representation id="muxed" bandwidth="300000"><SegmentList timescale="1" duration="1">
+<Initialization sourceURL="muxed/init.mp4"/><SegmentURL media="muxed/0.m4s"/>
+</SegmentList></Representation></AdaptationSet>
+</Period></MPD>"#;
+
 struct Server {
     origin: String,
     requests: Arc<Mutex<Vec<String>>>,
@@ -65,6 +83,7 @@ impl Server {
                 let path = request.split_whitespace().nth(1).unwrap();
                 let (body, mime, extra) = match path {
                     "/manifest.mpd" | "/nested/manifest.mpd" | "/second.mpd" => (MPD.to_owned(), "application/dash+xml", ""),
+                    "/muxed.mpd" => (MUXED_MPD.to_owned(), "application/dash+xml", ""),
                     "/redirect" => (String::new(), "text/plain", "Location: /nested/manifest.mpd\r\n"),
                     "/renamed.mpd" => (String::new(), "text/plain", "Location: /hinted\r\n"),
                     "/hinted" => (MPD.into(), "video/mp4", ""),
@@ -150,26 +169,28 @@ fn direct_and_redirected_mpd_build_separate_stream_fragment_plans() {
         .unwrap()
         .with_ffmpeg("unused-explicit-ffmpeg");
     let info = dl.extract_info(&server.url("/manifest.mpd")).unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("dash-0+dash-1"));
+    // Upstream names DASH formats by representation ID.
+    assert_eq!(info.format_id.as_deref(), Some("video+audio"));
     assert_eq!(server.requests.lock().unwrap().len(), 1);
     assert_eq!(info.id, "manifest");
     assert_eq!(info.title, "manifest");
-    assert!(!info.direct);
+    assert!(!info.is_direct());
     assert_eq!(info.formats.len(), 2);
     assert_eq!(info.requested_formats[0].stream_kind, StreamKind::VideoOnly);
     assert_eq!(info.requested_formats[1].stream_kind, StreamKind::AudioOnly);
     assert_eq!(info.requested_formats[1].ext, "m4a");
     assert_eq!(info.requested_formats[0].fragments.len(), 3);
-    assert!(matches!(
-        YoutubeDl::new()
-            .unwrap()
-            .extract_info(&server.url("/manifest.mpd")),
-        Err(Error::FormatSelection(_))
-    ));
+    // Without a merger, upstream's `best/bestvideo+bestaudio` still selects
+    // the pair (downloads then keep the format files unmerged).
+    let unmerged = YoutubeDl::new()
+        .unwrap()
+        .extract_info(&server.url("/manifest.mpd"))
+        .unwrap();
+    assert_eq!(unmerged.format_id, info.format_id);
     let video = dl
         .extract_info_with_format(&server.url("/redirect"), Some("bestvideo"))
         .unwrap();
-    assert_eq!(video.format_id.as_deref(), Some("dash-0"));
+    assert_eq!(video.format_id.as_deref(), Some("video"));
     assert_eq!(video.webpage_url.as_str(), server.url("/redirect"));
     assert_eq!(
         video.fragments[0].url.as_str(),
@@ -198,9 +219,20 @@ fn html_dash_formats_preserve_identity_group_namespace_and_referer() {
             .iter()
             .map(|format| format.format_id.as_str())
             .collect::<Vec<_>>(),
-        ["0-dash-0", "0-dash-1", "1-dash-0", "1-dash-1"]
+        // Pinned upstream sorts and selects these IDs for the same page.
+        ["audio-0", "audio-1", "video-0", "video-1"]
     );
-    assert_ne!(info.formats[0].audio_group, info.formats[2].audio_group);
+    assert_eq!(info.format_id.as_deref(), Some("video-1+audio-1"));
+    let group = |id: &str| {
+        info.formats
+            .iter()
+            .find(|format| format.format_id == id)
+            .unwrap()
+            .audio_group
+            .clone()
+    };
+    assert_ne!(group("video-0"), group("video-1"));
+    assert_eq!(group("video-0"), group("audio-0"));
     assert_eq!(
         info.requested_formats[0].audio_group,
         info.requested_formats[1].audio_group
@@ -231,7 +263,7 @@ fn mpd_paths_mime_and_html_hints_override_conflicting_media_headers() {
             .extract_info_with_format(&server.url(path), Some("bestvideo"))
             .unwrap();
         assert_eq!(info.fragments.len(), 3, "{path}");
-        assert!(!info.direct, "{path}");
+        assert!(!info.is_direct(), "{path}");
     }
     for path in ["/bad-hint.html", "/malformed.mpd"] {
         assert!(
@@ -249,12 +281,16 @@ fn mpd_paths_mime_and_html_hints_override_conflicting_media_headers() {
 fn json_simulation_does_not_request_initialization_or_media_or_create_files() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
+    // An existing placeholder enables merging; simulation never runs it.
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = tools.path().join("ffmpeg");
+    std::fs::write(&ffmpeg, "").unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
         .args([
             "--dump-json",
             "--simulate",
             "--ffmpeg-location",
-            "unused-explicit-ffmpeg",
+            ffmpeg.to_str().unwrap(),
             &server.url("/manifest.mpd"),
         ])
         .current_dir(directory.path())
@@ -266,6 +302,28 @@ fn json_simulation_does_not_request_initialization_or_media_or_create_files() {
         String::from_utf8_lossy(&output.stderr)
     );
     let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(info["protocol"], "http_dash_segments+http_dash_segments");
+    // Upstream parse_codecs fields; merges take video and audio codecs.
+    assert_eq!(
+        (&info["vcodec"], &info["acodec"], &info["dynamic_range"]),
+        (
+            &serde_json::json!("avc1.42001e"),
+            &serde_json::json!("mp4a.40.2"),
+            &serde_json::json!("SDR")
+        )
+    );
+    assert_eq!(info["requested_formats"][1]["vcodec"], "none");
+    assert_eq!(info["requested_formats"][0]["format_note"], "DASH video");
+    assert_eq!(info["requested_formats"][1]["format_note"], "DASH audio");
+    assert_eq!(info["requested_formats"][1]["audio_ext"], "m4a");
+    assert_eq!(info["requested_formats"][1]["video_ext"], "none");
+    // `parse_codecs` gives audio a `None` dynamic range, as upstream prints.
+    assert!(info["requested_formats"][1]["dynamic_range"].is_null());
+    assert_eq!(info["requested_formats"][0]["acodec"], "none");
+    assert_eq!(
+        info["requested_formats"][1]["protocol"],
+        "http_dash_segments"
+    );
     assert_eq!(
         info["requested_formats"][0]["fragments"]
             .as_array()
@@ -275,6 +333,19 @@ fn json_simulation_does_not_request_initialization_or_media_or_create_files() {
     );
     assert_eq!(server.requests.lock().unwrap().len(), 1);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+    // `_merge`'s dict has no URL, so templates see none, as upstream.
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "-O",
+            "%(url)s|%(format_id)s",
+            "--ffmpeg-location",
+            ffmpeg.to_str().unwrap(),
+            &server.url("/manifest.mpd"),
+        ])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "NA|video+audio\n");
 }
 
 #[test]
@@ -310,4 +381,55 @@ fn unsupported_dash_and_invalid_response_metadata_fail_before_publication() {
     assert!(!output.status.success());
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     server.assert_no_fragments();
+}
+
+#[cfg(unix)]
+#[test]
+fn cli_ffmpeg_location_follows_upstream_determine_executables() {
+    use std::os::unix::fs::PermissionsExt;
+    let server = Server::new();
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = tools.path().join("ffmpeg");
+    std::fs::write(&ffmpeg, "").unwrap();
+    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    let empty = tempfile::tempdir().unwrap();
+    let run = |path: &std::path::Path, args: &[&str]| {
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .env("PATH", path)
+            .args(args)
+            .args(["-j", &server.url("/muxed.mpd")])
+            .output()
+            .unwrap();
+        let info = serde_json::from_slice::<serde_json::Value>(&output.stdout)
+            .map(|info| info["format_id"].clone())
+            .ok();
+        (info, String::from_utf8_lossy(&output.stderr).into_owned())
+    };
+    // Checked with pinned upstream: with ffmpeg the default merges the
+    // separate streams; without it `best/bestvideo+bestaudio` picks the muxed one.
+    let merged = Some(serde_json::json!("video+audio"));
+    // Without a location, ffmpeg comes from PATH; simulation never runs it.
+    assert_eq!(run(tools.path(), &[]).0, merged);
+    let (selected, _) = run(empty.path(), &[]);
+    assert_ne!(selected, merged);
+    // A directory holds the programs.
+    let directory = tools.path().to_str().unwrap();
+    assert_eq!(
+        run(empty.path(), &["--ffmpeg-location", directory]).0,
+        merged
+    );
+    // A missing location warns and continues without ffmpeg.
+    let missing = tools.path().join("missing");
+    let (selected, stderr) = run(
+        tools.path(),
+        &["--ffmpeg-location", missing.to_str().unwrap()],
+    );
+    assert_ne!(selected, merged);
+    assert!(
+        stderr.contains(&format!(
+            "WARNING: ffmpeg-location {} does not exist! Continuing without ffmpeg",
+            missing.display()
+        )),
+        "{stderr}"
+    );
 }

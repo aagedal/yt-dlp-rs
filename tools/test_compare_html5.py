@@ -12,7 +12,7 @@ class Html5ComparisonTest(unittest.TestCase):
             "url": self.origin + "/media/clip.mp4?one=1&two=2#part",
             "webpage_url": self.origin + "/video.html",
             "extractor": "generic", "extractor_key": "Generic",
-            "timestamp": 123,
+            "timestamp": 123, "duration": 5,
         }
 
     def test_normalization_removes_only_local_origin_and_excluded_fields(self):
@@ -20,7 +20,8 @@ class Html5ComparisonTest(unittest.TestCase):
         self.assertEqual(normalized["url"], "/media/clip.mp4?one=1&two=2#part")
         self.assertEqual(normalized["webpage_url"], "/video.html")
         self.assertEqual(normalized["title"], "A & B")
-        self.assertNotIn("timestamp", normalized)
+        self.assertNotIn("duration", normalized)
+        self.assertEqual(normalized["timestamp"], 123)
         self.assertTrue(self.info["url"].startswith(self.origin))
 
     def test_other_origins_are_preserved(self):
@@ -29,7 +30,7 @@ class Html5ComparisonTest(unittest.TestCase):
             self.assertEqual(normalize(info, self.origin)["url"], info["url"])
 
     def test_mismatched_fields_fail_without_erasing_significant_values(self):
-        for field, value in (("title", "A  & B"), ("id", "clip"),
+        for field, value in (("title", "A  & B"), ("id", "clip"), ("timestamp", 456),
                              ("url", self.origin + "/media/clip.mp4?two=2&one=1")):
             with self.subTest(field=field), self.assertRaisesRegex(ValueError, field):
                 compare(self.info, dict(self.info, **{field: value}), self.origin)
@@ -41,7 +42,7 @@ class Html5ComparisonTest(unittest.TestCase):
             compare(self.info, incomplete, self.origin)
 
     def test_ignored_fields_do_not_cause_mismatches(self):
-        actual = dict(self.info, timestamp=456)
+        actual = dict(self.info, duration=6)
         self.assertEqual(compare(self.info, actual, self.origin), normalize(self.info, self.origin))
 
     def test_single_video_matches_one_ndjson_entry(self):

@@ -124,7 +124,9 @@ fn typed_dimensions_sizes_booleans_and_format_ids_control_downloaded_filename() 
     );
     success(&output);
     assert_eq!(
-        std::fs::read(directory.path().join("1280-720.0-005-0-000.mp4")).unwrap(),
+        // Checked with pinned upstream: HTML5 results have neither filesize
+        // nor direct, so both render NA.
+        std::fs::read(directory.path().join("1280-720.0-NA-NA-000.mp4")).unwrap(),
         b"media"
     );
     assert_eq!(server.count("/media.mp4"), 2);
@@ -224,7 +226,8 @@ fn playlist_padding_uses_selected_original_max_and_selected_count_not_full_count
     for line in String::from_utf8(json.stdout).unwrap().lines() {
         let info: Value = serde_json::from_str(line).unwrap();
         assert!(info.get("last_playlist_index").is_none());
-        assert!(info.get("__last_playlist_index").is_none());
+        // Upstream's dumped dict keeps the private padding key.
+        assert_eq!(info["__last_playlist_index"], 12);
     }
 }
 
@@ -267,7 +270,7 @@ fn sanitize_before_precision_keeps_metadata_and_defaults_inside_literal_director
         directory.path(),
     ));
     assert_eq!(
-        std::fs::read(directory.path().join("literal-dir/al-_fallback.mp4")).unwrap(),
+        std::fs::read(directory.path().join("literal-dir/..-..⧸fallback.mp4")).unwrap(),
         b"media"
     );
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
@@ -277,13 +280,26 @@ fn sanitize_before_precision_keeps_metadata_and_defaults_inside_literal_director
             .count(),
         1
     );
+    // Metadata alone cannot form a `..` path component.
+    success(&server.cli(
+        &["/unsafe.html"],
+        &["-o", "%(title).2s/%(id)s.%(ext)s"],
+        directory.path(),
+    ));
+    assert_eq!(
+        std::fs::read_dir(directory.path().join("_"))
+            .unwrap()
+            .count(),
+        1
+    );
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 2);
 }
 
 #[test]
 fn unsupported_malformed_and_excessive_formats_fail_after_probe_without_download_or_archive() {
     for template in [
-        "%(unknown)s",
-        "%(id)q",
+        "%(id)z",
+        "%(id+)s",
         "%(id",
         "%(height)1000000000d",
         "%(height).9999999f",
@@ -328,7 +344,7 @@ fn readonly_modes_leave_invalid_template_and_placeholder_configuration_inert() {
 }
 
 #[test]
-fn no_clobber_error_continues_to_later_typed_filename_and_records_only_success() {
+fn existing_typed_filename_is_already_downloaded_and_later_inputs_continue() {
     let server = Server::new();
     let directory = tempfile::tempdir().unwrap();
     std::fs::write(directory.path().join("NA.mp4"), b"keep").unwrap();
@@ -343,7 +359,7 @@ fn no_clobber_error_continues_to_later_typed_filename_and_records_only_success()
         ],
         directory.path(),
     );
-    assert!(!output.status.success());
+    success(&output);
     assert_eq!(
         std::fs::read(directory.path().join("NA.mp4")).unwrap(),
         b"keep"
@@ -352,7 +368,133 @@ fn no_clobber_error_continues_to_later_typed_filename_and_records_only_success()
         std::fs::read(directory.path().join("012.mp4")).unwrap(),
         b"numeric"
     );
-    assert_eq!(std::fs::read_to_string(archive).unwrap(), "generic 12.5\n");
+    assert_eq!(
+        std::fs::read_to_string(archive).unwrap(),
+        "generic one\ngeneric 12.5\n"
+    );
     assert_eq!(server.count("/one.mp4"), 1);
     assert_eq!(server.count("/12.5.mp4"), 2);
+}
+
+#[test]
+fn filename_option_flags_select_upstream_sanitization_and_trimming() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let filename = |args: &[&str]| {
+        let mut all = vec!["-O", "filename"];
+        all.extend_from_slice(args);
+        let output = server.cli(&["/unsafe.html"], &all, directory.path());
+        success(&output);
+        String::from_utf8(output.stdout).unwrap()
+    };
+    let id = filename(&["-o", "%(id)s"]);
+    let id = id.trim_end();
+    assert_eq!(
+        filename(&["-o", "%(title)s.%(ext)s"]),
+        "..alpha⧸..⧸..⧸escape (1).mp4\n"
+    );
+    assert_eq!(
+        filename(&["--restrict-filenames"]),
+        format!("..alpha_.._.._escape_1-[{id}].mp4\n")
+    );
+    // Last flag wins, and an explicit template keeps its spaces.
+    assert_eq!(
+        filename(&[
+            "--restrict-filenames",
+            "--no-restrict-filenames",
+            "-o",
+            "a b.%(ext)s"
+        ]),
+        "a b.mp4\n"
+    );
+    assert_eq!(
+        filename(&["--windows-filenames", "-o", "x/./y/../%(title).7s?.%(ext)s"]),
+        "x/..alpha#.mp4\n"
+    );
+    assert_eq!(
+        filename(&["--trim-file-names", "4", "-o", "%(title)s.%(ext)s"]),
+        "..al.⧸escape (1).mp4\n"
+    );
+    if !cfg!(windows) {
+        assert_eq!(
+            filename(&["--no-windows-filenames", "-o", "%(title)s?.%(ext)s"]),
+            "..alpha⧸..⧸..⧸escape (1)?.mp4\n"
+        );
+    }
+    success(&server.cli(
+        &["/unsafe.html"],
+        &["--restrict-filenames", "--trim-filenames", "7"],
+        directory.path(),
+    ));
+    assert_eq!(
+        std::fs::read(
+            directory
+                .path()
+                .join(format!("..alpha._escape_1-[{id}].mp4"))
+        )
+        .unwrap(),
+        b"media"
+    );
+}
+
+#[test]
+fn paths_and_typed_templates_place_media_and_info_json() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    success(&server.cli(
+        &["/typed.html"],
+        &[
+            "-P",
+            " out ",
+            "-P",
+            "infojson:meta",
+            "-o",
+            "%(title)s.%(ext)s",
+            "-o",
+            "INFOJSON:j/%(title)s",
+            "--write-info-json",
+        ],
+        directory.path(),
+    ));
+    let out = directory.path().join("out");
+    assert_eq!(std::fs::read(out.join("Typed (1).mp4")).unwrap(), b"media");
+    let json: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(out.join("meta/j/Typed (1).info.json")).unwrap())
+            .unwrap();
+    assert_eq!(json["title"], "Typed (1)");
+    // An empty typed template skips that file, as upstream does.
+    let skipped = tempfile::tempdir().unwrap();
+    success(&server.cli(
+        &["/typed.html"],
+        &["-o", "infojson:", "--write-info-json"],
+        skipped.path(),
+    ));
+    assert_eq!(std::fs::read_dir(skipped.path()).unwrap().count(), 1);
+}
+
+#[test]
+fn templates_and_paths_expand_home_and_variables_before_rendering() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "-O",
+            "filename",
+            "-P",
+            "~/v",
+            "-o",
+            "$YTDLP_RS_DIR/${YTDLP_RS_DIR}/$YTDLP_RS_UNSET/%(title)s.%(ext)s",
+        ])
+        .arg(server.url("/typed.html"))
+        .current_dir(directory.path())
+        .env("HOME", "/home/fixture")
+        .env("YTDLP_RS_DIR", "vars")
+        .env_remove("YTDLP_RS_UNSET")
+        .output()
+        .unwrap();
+    success(&output);
+    assert_eq!(
+        String::from_utf8(output.stdout).unwrap(),
+        "/home/fixture/v/vars/vars/$YTDLP_RS_UNSET/Typed (1).mp4\n"
+    );
 }

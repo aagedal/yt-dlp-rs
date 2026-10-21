@@ -350,17 +350,19 @@ fn invalid_audio_options_fail_before_http_or_files() {
         assert!(output.stdout.is_empty());
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     }
-    let directory = tempfile::tempdir().unwrap();
-    let output = tools.cli(&["-k", &server.url("source.mp4")], directory.path());
-    assert!(!output.status.success());
-    assert!(
-        output
-            .stderr
-            .windows(b"--extract-audio".len())
-            .any(|part| part == b"--extract-audio")
-    );
-    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
     assert!(server.requests.lock().unwrap().is_empty());
+    // Like upstream, -k alone is accepted and changes nothing for one stream.
+    let directory = tempfile::tempdir().unwrap();
+    let output = tools.cli(
+        &["-k", "-o", "out.%(ext)s", &server.url("source.mp4")],
+        directory.path(),
+    );
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
 }
 
 #[test]
@@ -401,7 +403,7 @@ fn process_failure_preserves_sources_continues_urls_and_does_not_record_archive(
 }
 
 #[test]
-fn existing_final_is_preserved_and_completed_source_is_retained() {
+fn existing_final_extension_is_processed_again_without_downloading() {
     let server = Server::new();
     let tools = Tools::new("aac", false);
     let directory = tempfile::tempdir().unwrap();
@@ -419,17 +421,25 @@ fn existing_final_is_preserved_and_completed_source_is_retained() {
         ],
         directory.path(),
     );
-    assert!(!output.status.success());
+    // Upstream `existing_video_file` finds the `final_ext` file and runs
+    // the processors on it instead of downloading.
+    success(&output);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(stdout.ends_with(
+        "[download] out.mp3 has already been downloaded\n[ExtractAudio] Destination: out.mp3\nDeleting original file out.orig.mp3 (pass -k to keep)\n"
+    ));
+    // The (AAC-probed) existing file is converted in place.
     assert_eq!(
         std::fs::read(directory.path().join("out.mp3")).unwrap(),
-        b"existing"
+        b"converted audio"
     );
-    assert_eq!(
-        std::fs::read(directory.path().join("out.mp4")).unwrap(),
-        b"source audio"
+    assert!(!directory.path().join("out.mp4").exists());
+    assert!(!directory.path().join("out.orig.mp3").exists());
+    assert!(
+        std::fs::read_to_string(directory.path().join("archive"))
+            .unwrap()
+            .contains("source")
     );
-    assert!(tools.log(&tools.ffmpeg).is_empty());
-    assert!(!directory.path().join("archive").exists());
     clean(directory.path());
 }
 
@@ -535,7 +545,7 @@ fn archive_cannot_append_to_published_audio_or_kept_source() {
 }
 
 #[test]
-fn missing_probe_preserves_source_and_publication_race_preserves_competitor() {
+fn missing_probe_preserves_source_and_publication_replaces_outputs_like_upstream() {
     let server = Server::new();
     let tools = Tools::new("aac", false);
     let directory = tempfile::tempdir().unwrap();
@@ -569,12 +579,10 @@ fn missing_probe_preserves_source_and_publication_race_preserves_competitor() {
             ControlFlow::Continue(())
         },
     );
-    assert!(result.is_err());
-    assert_eq!(std::fs::read(final_path).unwrap(), b"competitor");
-    assert_eq!(
-        std::fs::read(directory.path().join("race.mp4")).unwrap(),
-        b"source audio"
-    );
+    // Upstream processors overwrite their outputs (`os.replace`).
+    assert!(result.is_ok());
+    assert_eq!(std::fs::read(final_path).unwrap(), b"converted audio");
+    assert!(!directory.path().join("race.mp4").exists());
     clean(directory.path());
 }
 
@@ -729,4 +737,41 @@ fn cli_audio_default_prefers_audio_but_keep_and_explicit_selector_preserve_selec
             .iter()
             .any(|line| line.contains("segment.ts"))
     );
+}
+
+#[test]
+fn post_overwrites_replace_existing_audio_unless_disabled() {
+    let server = Server::new();
+    let tools = Tools::new("aac", false);
+    for (flag, kept) in [
+        (None, false),
+        (Some("--no-post-overwrites"), true),
+        (Some("--post-overwrites"), false),
+    ] {
+        let directory = tempfile::tempdir().unwrap();
+        std::fs::write(directory.path().join("out.m4a"), b"existing").unwrap();
+        let mut args = vec!["-x", "--no-progress", "-o", "out.mp4"];
+        args.extend(flag);
+        let url = server.url("source.mp4");
+        args.push(&url);
+        let output = tools.cli(&args, directory.path());
+        success(&output);
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let audio = std::fs::read(directory.path().join("out.m4a")).unwrap();
+        if kept {
+            // Upstream keeps both files when the output exists.
+            assert!(
+                stdout.ends_with("[ExtractAudio] Post-process file out.m4a exists, skipping\n")
+            );
+            assert_eq!(audio, b"existing");
+            assert!(directory.path().join("out.mp4").exists());
+        } else {
+            assert!(stdout.ends_with(
+                "[ExtractAudio] Destination: out.m4a\nDeleting original file out.mp4 (pass -k to keep)\n"
+            ));
+            assert_ne!(audio, b"existing");
+            assert!(!directory.path().join("out.mp4").exists());
+        }
+        clean(directory.path());
+    }
 }

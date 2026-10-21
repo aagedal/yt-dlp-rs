@@ -52,7 +52,7 @@ fn main() {
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         demux,
@@ -77,11 +77,12 @@ fn main() {
         "missing" => return,
         "stderr" => {
             eprint!("subtitle diagnostic");
-            return;
+            std::process::exit(1);
         }
         "large-stderr" => {
             std::io::stderr().write_all(&vec![b'x'; 300_000]).unwrap();
-            return;
+            eprint!("\nfixture tail");
+            std::process::exit(1);
         }
         "large-stdout" => {
             std::io::stdout().write_all(&vec![b'x'; 100_000]).unwrap();

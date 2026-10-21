@@ -40,7 +40,7 @@ fn main() {
         "hang" => hang(),
         "stderr" => {
             eprint!("fixture diagnostic");
-            return;
+            std::process::exit(1);
         }
         "stdout-flood" => {
             std::io::stdout().write_all(&vec![b'x'; 100000]).unwrap();
@@ -48,7 +48,8 @@ fn main() {
         }
         "stderr-flood" => {
             std::io::stderr().write_all(&vec![b'x'; 300000]).unwrap();
-            return;
+            eprint!("\nfixture tail");
+            std::process::exit(1);
         }
         "fail" => std::process::exit(9),
         "missing" => return,

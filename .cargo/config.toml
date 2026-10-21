@@ -1,0 +1,4 @@
+# The CLI parser needs more stack than test threads get by default; the binary
+# itself runs on a thread with a large stack (see `main`).
+[env]
+RUST_MIN_STACK = "67108864"

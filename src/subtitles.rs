@@ -71,12 +71,22 @@ impl<'de, T: Deserialize<'de>> Deserialize<'de> for SubtitleMap<T> {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SubtitleFormat {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     pub url: Url,
     pub ext: String,
+    /// `m3u8_native` for an HLS subtitle rendition (downloaded by HlsFD) or
+    /// `http_dash_segments` for a segmented DASH text track.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub protocol: Option<String>,
+    /// A segmented DASH text track's fragments.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub fragments: Vec<crate::Fragment>,
+    /// Keys this port does not model (a DASH track's `manifest_url`).
+    #[serde(flatten, default)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
 }
 pub type Subtitles = SubtitleMap<Vec<SubtitleFormat>>;
 pub type RequestedSubtitles = SubtitleMap<SubtitleFormat>;
@@ -309,6 +319,9 @@ mod tests {
 
     fn format(ext: &str, id: &str) -> SubtitleFormat {
         SubtitleFormat {
+            extra: Default::default(),
+            fragments: Vec::new(),
+            protocol: None,
             name: None,
             url: format!("https://example.test/{id}.{ext}").parse().unwrap(),
             ext: ext.into(),
@@ -388,20 +401,47 @@ mod tests {
     }
 
     #[test]
-    fn automatic_inventory_names_are_bounded_and_escaped() {
+    fn inventory_matches_upstream_table() {
         let mut info = info();
-        let mut caption = format("vtt", "secret-url");
-        caption.name = Some(format!("English\n\u{202e}{}", "é".repeat(200)));
-        info.automatic_captions
-            .insert(Some("en".into()), vec![caption]);
-        let output = crate::render_automatic_captions(&info);
-        assert!(output.contains("Available automatic captions for test"));
-        assert!(output.contains("LANGUAGE  NAME  FORMATS"));
-        assert!(output.contains("English\\u{a}\\u{202e}"));
-        assert!(!output.contains("secret-url"));
-        assert_eq!(output.lines().count(), 3);
-        assert!(output.lines().last().unwrap().chars().count() < 145);
-        assert!(!render_subtitles(&info).contains("NAME"));
+        let named = |ext: &str, name: Option<&str>| SubtitleFormat {
+            extra: Default::default(),
+            fragments: Vec::new(),
+            protocol: None,
+            name: name.map(str::to_owned),
+            ..format(ext, "secret-url")
+        };
+        info.subtitles.insert(
+            Some("en".into()),
+            vec![
+                named("vtt", Some("English")),
+                named("srv1", Some("English")),
+            ],
+        );
+        info.subtitles.insert(
+            Some("nb".into()),
+            vec![named("vtt", None), named("ttml", Some("Norsk"))],
+        );
+        info.subtitles
+            .insert(Some("de".into()), vec![named("vtt", None)]);
+        // Rendered by pinned upstream `render_subtitles_table`.
+        assert_eq!(
+            render_subtitles(&info),
+            "[info] Available subtitles for test:\n\
+             Language Name           Formats\n\
+             en       English        srv1, vtt\n\
+             nb       Norsk, unknown ttml, vtt\n\
+             de                      vtt\n"
+        );
+        info.automatic_captions.insert(
+            Some("de".into()),
+            vec![named("vtt", None), named("srt", None)],
+        );
+        assert_eq!(
+            crate::render_automatic_captions(&info),
+            "[info] Available automatic captions for test:\nLanguage Formats\nde       srt, vtt\n"
+        );
+        info.subtitles = Subtitles::default();
+        assert_eq!(render_subtitles(&info), "test has no subtitles\n");
     }
 
     #[test]
@@ -602,26 +642,20 @@ mod tests {
     }
 
     #[test]
-    fn rendered_inventory_bounds_and_escapes_metadata_without_resource_urls() {
+    fn rendered_inventory_escapes_metadata_without_resource_urls() {
         let mut info = info();
-        info.id = "x\u{1b}[31m\u{202e}\u{2028}".repeat(300);
+        info.id = "x\u{1b}[31m\u{202e}\u{2028}".into();
         info.subtitles
             .insert(None, vec![format("vtt", "private-resource")]);
-        info.subtitles.insert(
-            Some("en\n\u{1b}[31m".repeat(100)),
-            vec![format(&"x".repeat(1000), "secret")],
-        );
+        info.subtitles
+            .insert(Some("en\n\u{1b}[31m".into()), vec![format("x", "secret")]);
         let rendered = render_subtitles(&info);
         assert!(!rendered.contains('\u{1b}'));
         assert!(!rendered.contains('\u{202e}'));
         assert!(!rendered.contains('\u{2028}'));
         assert!(!rendered.contains("https://"));
         assert!(!rendered.contains("private-resource"));
-        assert!(rendered.lines().next().unwrap().chars().count() <= 256);
-        for row in rendered.lines().skip(2) {
-            assert!(row.chars().count() <= 258);
-        }
-        assert!(rendered.contains("null  vtt"));
+        assert!(rendered.contains("\nNone           vtt\n"), "{rendered}");
     }
 
     fn fixture_subtitles(value: &Value) -> Subtitles {
@@ -693,6 +727,9 @@ mod tests {
                 entries: vec![(
                     case["language"].as_str().map(str::to_owned),
                     SubtitleFormat {
+                        extra: Default::default(),
+                        fragments: Vec::new(),
+                        protocol: None,
                         name: None,
                         url: "https://example.test/sub".parse().unwrap(),
                         ext: case["ext"].as_str().unwrap().into(),

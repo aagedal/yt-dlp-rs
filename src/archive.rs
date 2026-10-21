@@ -23,7 +23,7 @@ pub struct DownloadArchive {
 
 /// The supported identity is exactly lowercase extractor key, one space, and ID.
 /// This native subset requires explicit, nonempty metadata and never guesses an
-/// extractor from a URL or accepts legacy alternate identities.
+/// extractor from a URL; an info's `_old_archive_ids` also match.
 pub fn archive_id(info: &VideoInfo) -> Result<String> {
     for (name, value) in [("extractor_key", &info.extractor_key), ("id", &info.id)] {
         if value.is_empty()
@@ -64,8 +64,21 @@ impl DownloadArchive {
             lock_timeout,
         })
     }
+    /// Upstream `in_download_archive`: the identity or any of the info's
+    /// `_old_archive_ids`.
     pub fn contains(&self, info: &VideoInfo) -> Result<bool> {
-        Ok(self.entries.contains(&archive_id(info)?))
+        if self.entries.contains(&archive_id(info)?) {
+            return Ok(true);
+        }
+        Ok(info
+            .extra
+            .get("_old_archive_ids")
+            .and_then(serde_json::Value::as_array)
+            .is_some_and(|ids| {
+                ids.iter()
+                    .filter_map(serde_json::Value::as_str)
+                    .any(|id| self.entries.contains(id))
+            }))
     }
     /// Append at most one LF-terminated identity under an exclusive lock and
     /// synchronize it before updating membership. Existing bytes are preserved;
@@ -75,6 +88,7 @@ impl DownloadArchive {
     /// Successful media publication is not rolled back.
     pub fn record(&mut self, info: &VideoInfo) -> Result<()> {
         let identity = archive_id(info)?;
+        crate::screen::debug(&format!("Adding to archive: {identity}"));
         regular_path(&self.path)?;
         let file = open_record(&self.path)
             .map_err(|error| io_error("open for append", &self.path, error))?;

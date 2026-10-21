@@ -1,4 +1,5 @@
-//! Bounded process supervision. No shell, ambient Deno config, or script grants.
+//! Bounded process supervision. No shell, ambient Deno config, or script grants
+//! (Deno without permissions, Node.js under its permission model).
 use super::{Batch, MAX_STDOUT, Result, Solutions};
 use std::{
     io::{Read, Write},
@@ -26,35 +27,88 @@ const PINNED_DENO: &str = "2.9.7";
 const MAX_STDERR: usize = 64 * 1024;
 const DEADLINE: Duration = Duration::from_secs(15);
 
+/// Upstream `NodeJsRuntime.MIN_SUPPORTED_VERSION`.
+const MIN_NODE: (u64, u64, u64) = (22, 0, 0);
+
 pub(in crate::extractor::youtube) struct DenoRuntime {
     executable: PathBuf,
+    /// The runtime's arguments before the script read from stdin.
+    args: &'static [&'static str],
+}
+
+/// Upstream `NodeJCP._run_js_runtime`: the permission model (stable since
+/// Node.js 23.5.0) and the script from stdin.
+fn node_args(version: (u64, u64, u64)) -> &'static [&'static str] {
+    if version < (23, 5, 0) {
+        &[
+            "--experimental-permission",
+            "--no-warnings=ExperimentalWarning",
+            "-",
+        ]
+    } else {
+        &["--permission", "-"]
+    }
+}
+
+/// `vMAJOR.MINOR.PATCH` (`version_tuple(..., lenient=True)`).
+fn node_version(line: &str) -> Option<(u64, u64, u64)> {
+    let mut parts = line.strip_prefix('v')?.split('.').map(|part| {
+        part.chars()
+            .take_while(char::is_ascii_digit)
+            .collect::<String>()
+            .parse::<u64>()
+    });
+    let major = parts.next()?.ok()?;
+    let minor = parts.next().and_then(|part| part.ok()).unwrap_or(0);
+    let patch = parts.next().and_then(|part| part.ok()).unwrap_or(0);
+    Some((major, minor, patch))
 }
 
 impl DenoRuntime {
-    /// Explicit path only: discovery and installation are the caller's concern.
+    /// Explicit path only: discovery and installation are the caller's
+    /// concern. The pinned Deno or Node.js 22+ (by its `--version` line).
     pub(in crate::extractor::youtube) fn new(executable: &Path) -> Result<Self> {
         let executable = executable
             .canonicalize()
-            .map_err(|e| format!("Deno executable: {e}"))?;
+            .map_err(|e| format!("JavaScript runtime executable: {e}"))?;
         let output = execute(&executable, &["--version"], Vec::new(), DEADLINE, 4096)?;
-        let version = std::str::from_utf8(&output).map_err(|_| "invalid Deno version output")?;
-        if !version.lines().next().is_some_and(|line| {
-            line == format!("deno {PINNED_DENO} (stable, release)")
-                || (line.starts_with(&format!("deno {PINNED_DENO} (stable, release, "))
-                    && line.ends_with(')'))
-        }) {
-            return Err(format!(
-                "YouTube solving requires pinned Deno {PINNED_DENO}"
-            ));
+        let version = std::str::from_utf8(&output).map_err(|_| "invalid runtime version output")?;
+        let line = version.lines().next().unwrap_or_default();
+        if line == format!("deno {PINNED_DENO} (stable, release)")
+            || (line.starts_with(&format!("deno {PINNED_DENO} (stable, release, "))
+                && line.ends_with(')'))
+        {
+            return Ok(Self {
+                executable,
+                args: ARGS,
+            });
         }
-        Ok(Self { executable })
+        match node_version(line) {
+            Some(version) if version >= MIN_NODE => Ok(Self {
+                executable,
+                args: node_args(version),
+            }),
+            Some(_) => Err("YouTube solving requires Node.js 22.0.0 or newer".into()),
+            None => Err(format!(
+                "YouTube solving requires pinned Deno {PINNED_DENO}"
+            )),
+        }
+    }
+
+    /// The JS challenge provider's name (`deno` or `node`).
+    pub(in crate::extractor::youtube) fn name(&self) -> &'static str {
+        if std::ptr::eq(self.args, ARGS) {
+            "deno"
+        } else {
+            "node"
+        }
     }
 
     pub(in crate::extractor::youtube) fn solve(&self, batch: &Batch) -> Result<Solutions> {
         let script = batch.script()?;
         let output = execute(
             &self.executable,
-            ARGS,
+            self.args,
             script.into_bytes(),
             DEADLINE,
             MAX_STDOUT,
@@ -320,8 +374,61 @@ for (const action of actions) {
 }
 console.log('denied');
 "#;
-        let output = execute(&runtime.executable, ARGS, script.to_vec(), DEADLINE, 4096).unwrap();
+        let output = execute(
+            &runtime.executable,
+            runtime.args,
+            script.to_vec(),
+            DEADLINE,
+            4096,
+        )
+        .unwrap();
         assert_eq!(String::from_utf8(output).unwrap().trim(), "denied");
+    }
+
+    #[test]
+    fn node_versions_select_upstream_permission_flags() {
+        assert_eq!(node_version("v26.12.0"), Some((26, 12, 0)));
+        assert_eq!(node_version("v22.1"), Some((22, 1, 0)));
+        assert_eq!(node_version("deno 2.9.7"), None);
+        assert_eq!(node_args((23, 4, 9))[0], "--experimental-permission");
+        assert_eq!(node_args((23, 5, 0)), ["--permission", "-"]);
+    }
+
+    #[test]
+    fn real_node_denies_script_permissions() {
+        let Some(path) = std::env::var_os("YT_DLP_RS_TEST_NODE") else {
+            return;
+        };
+        let runtime = DenoRuntime::new(Path::new(&path)).unwrap();
+        let script = br#"
+const actions = [
+    () => require('fs').readFileSync('private-file'),
+    () => require('fs').writeFileSync('private-file', 'data'),
+    () => require('child_process').execFileSync(process.execPath, ['--version']),
+];
+for (const action of actions) {
+    try { action(); throw new Error('permission unexpectedly granted'); }
+    catch (error) { if (error.code !== 'ERR_ACCESS_DENIED') throw error; }
+}
+console.log('denied');
+"#;
+        let output = execute(
+            &runtime.executable,
+            runtime.args,
+            script.to_vec(),
+            DEADLINE,
+            4096,
+        )
+        .unwrap();
+        assert_eq!(String::from_utf8(output).unwrap().trim(), "denied");
+    }
+
+    #[test]
+    fn real_node_saved_player_vectors() {
+        let Some(path) = std::env::var_os("YT_DLP_RS_TEST_NODE") else {
+            return;
+        };
+        saved_player_vectors(&DenoRuntime::new(Path::new(&path)).unwrap());
     }
 
     #[test]
@@ -330,7 +437,10 @@ console.log('denied');
             return;
         };
         // Dedicated CI always sets this variable; a configured runtime must pass.
-        let runtime = DenoRuntime::new(Path::new(&path)).unwrap();
+        saved_player_vectors(&DenoRuntime::new(Path::new(&path)).unwrap());
+    }
+
+    fn saved_player_vectors(runtime: &DenoRuntime) {
         let fixture: serde_json::Value = serde_json::from_str(include_str!(
             "../../../../tests/fixtures/youtube/challenges/expected.json"
         ))

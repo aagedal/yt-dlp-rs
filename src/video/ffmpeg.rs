@@ -11,7 +11,7 @@ const DEADLINE: Duration = Duration::from_secs(600);
 fn error(message: &str) -> Error {
     Error::Postprocess(message.into())
 }
-fn demuxer(extension: &str) -> Result<&'static str> {
+pub(crate) fn demuxer(extension: &str) -> Result<&'static str> {
     Ok(match extension.to_lowercase().as_str() {
         "mp4" | "m4a" | "mov" => "mov",
         "webm" | "mkv" | "mka" => "matroska",
@@ -101,20 +101,28 @@ fn convert_with_deadline(
         "-nostdin",
         "-hide_banner",
         "-loglevel",
-        "error",
+        "repeat+info",
         "-y",
         "-f",
         demuxer,
         "-protocol_whitelist",
         "file",
-        "-i",
     ]
     .into_iter()
     .map(Into::into)
-    .chain(std::iter::once(input.into_os_string()))
+    .chain(crate::pp_args::input(plan.pp, 1))
+    .chain(["-i".into(), input.into_os_string()])
+    .chain(plan.metadata_input.iter().flat_map(|path| {
+        ["-f", "ffmetadata", "-protocol_whitelist", "file"]
+            .into_iter()
+            .map(OsString::from)
+            .chain(crate::pp_args::input(plan.pp, 2))
+            .chain(["-i".into(), path.clone().into_os_string()])
+    }))
     .chain(plan.args.iter().map(Into::into))
     .chain(["-movflags", "+faststart"].into_iter().map(Into::into))
     .chain(["-f", plan.muxer.as_str()].into_iter().map(Into::into))
+    .chain(crate::pp_args::output(plan.pp))
     .chain(std::iter::once(output.clone().into_os_string()))
     .collect();
     crate::merge::execute(&executable, &args, &directory, started, deadline, callback)?;
@@ -198,7 +206,7 @@ mod tests {
         for (mode, message) in [
             ("bad-version", "banner"),
             ("stderr", "diagnostic"),
-            ("large-stderr", "budget"),
+            ("large-stderr", "fixture tail"),
             ("large-stdout", "budget"),
             ("fail", "exited"),
             ("missing", "nonempty"),

@@ -11,9 +11,20 @@ pub(crate) enum Playlist {
     Master {
         variants: Vec<Variant>,
         audio: Vec<AudioRendition>,
+        /// `SUBTITLES` renditions with a URI, in document order.
+        subtitles: Vec<SubtitleRendition>,
     },
     Media {
         fragments: Vec<Fragment>,
+        /// Each fragment's count of preceding `#EXT-X-DISCONTINUITY*` lines
+        /// (upstream HlsFD's `discontinuity_count`).
+        discontinuity: Vec<u32>,
+        /// All `#EXT-X-DISCONTINUITY*` lines (upstream counts the whole
+        /// document for `--hls-split-discontinuity`).
+        discontinuities: u32,
+        /// Segment container from the URLs; formats are labeled `mp4` like
+        /// upstream and FFmpeg inputs sniff their contents instead.
+        #[cfg_attr(not(test), allow(dead_code))]
         ext: String,
     },
 }
@@ -23,10 +34,27 @@ pub(crate) struct Variant {
     pub url: Url,
     /// Kilobits per second, with valid average bandwidth preferred.
     pub bandwidth: Option<f64>,
+    /// `float_or_none(FRAME-RATE)`.
+    pub fps: Option<f64>,
     pub width: Option<u32>,
     pub height: Option<u32>,
     pub stream_kind: StreamKind,
+    /// Upstream `parse_codecs(CODECS)`, with `acodec` `none` for a variant
+    /// whose audio comes from an external rendition group.
+    pub codecs: Option<crate::codecs::Codecs>,
     pub audio_group: Option<String>,
+    /// Upstream `build_stream_name`: the variant's NAME, else its VIDEO
+    /// group's first rendition NAME or the group ID.
+    pub name: Option<String>,
+    /// `PROGRESSIVE-URI`: the same stream as a progressive HTTP format.
+    pub progressive: Option<Url>,
+}
+
+/// An `EXT-X-MEDIA:TYPE=SUBTITLES` rendition (upstream `extract_media`).
+#[derive(Debug)]
+pub(crate) struct SubtitleRendition {
+    pub url: Url,
+    pub language: Option<String>,
 }
 
 #[derive(Debug)]
@@ -37,6 +65,8 @@ pub(crate) struct AudioRendition {
     pub language: Option<String>,
     pub default: bool,
     pub autoselect: bool,
+    /// Upstream `is_alternate`: `DEFAULT=NO` or `AUTOSELECT=NO`.
+    pub alternate: bool,
 }
 
 fn invalid(message: impl Into<String>) -> Error {
@@ -95,6 +125,17 @@ fn absolute(base: &Url, value: &str) -> Result<Url> {
         || url.fragment().is_some()
     {
         return Err(invalid("HLS URI must be an HTTP(S) URL without a fragment"));
+    }
+    Ok(url)
+}
+
+/// A variant (or `PROGRESSIVE-URI`) URL: upstream keeps a fragment, which
+/// is never sent.
+fn absolute_variant(base: &Url, value: &str) -> Result<Url> {
+    let (without, _) = value.split_once('#').unwrap_or((value, ""));
+    let mut url = absolute(base, without)?;
+    if let Some((_, fragment)) = value.split_once('#') {
+        url.set_fragment(Some(fragment));
     }
     Ok(url)
 }
@@ -231,8 +272,10 @@ fn variant(
     values: &BTreeMap<&str, &str>,
     url: Url,
     groups: &BTreeMap<(&str, &str), bool>,
+    group_names: &BTreeMap<&str, &str>,
 ) -> Result<Variant> {
-    for group_type in ["SUBTITLES", "VIDEO", "CLOSED-CAPTIONS"] {
+    // SUBTITLES groups become the result's subtitles.
+    for group_type in ["VIDEO", "CLOSED-CAPTIONS"] {
         if let Some(group) = values.get(group_type).filter(|group| **group != "NONE")
             && groups.get(&(group_type, *group)) != Some(&false)
         {
@@ -242,13 +285,10 @@ fn variant(
         }
     }
     let audio_group = values.get("AUDIO").filter(|group| **group != "NONE");
-    let external_audio = if let Some(group) = audio_group {
-        *groups
-            .get(&("AUDIO", *group))
-            .ok_or_else(|| invalid("unresolved HLS audio rendition group"))?
-    } else {
-        false
-    };
+    // Upstream ignores an AUDIO reference to an unknown group.
+    let external_audio = audio_group
+        .and_then(|group| groups.get(&("AUDIO", *group)).copied())
+        .unwrap_or(false);
     let bandwidth = |name| {
         values
             .get(name)
@@ -267,41 +307,43 @@ fn variant(
     } else {
         (None, None)
     };
-    let mut stream_kind = if let Some(codecs) = values.get("CODECS") {
-        let mut video = false;
-        let mut audio = false;
-        for codec in codecs.split(',').map(str::trim) {
-            let family = codec.split('.').next().unwrap_or("");
-            match family {
-                "avc1" | "avc3" | "av01" | "hvc1" | "hev1" | "vp8" | "vp9" | "vp09" => video = true,
-                "mp4a" | "aac" | "ac-3" | "ec-3" | "opus" | "vorbis" => audio = true,
-                _ => return Err(invalid("unsupported HLS codec")),
-            }
-        }
-        match (video, audio) {
-            (true, false) => StreamKind::VideoOnly,
-            (false, true) => StreamKind::AudioOnly,
-            (true, true) => StreamKind::Standalone,
-            _ => return Err(invalid("empty HLS codecs")),
-        }
-    } else {
-        StreamKind::Standalone
-    };
-    if external_audio {
-        if !values.contains_key("CODECS") || stream_kind == StreamKind::AudioOnly {
-            return Err(invalid(
-                "external HLS audio requires known video CODECS on its variant",
-            ));
-        }
-        stream_kind = StreamKind::VideoOnly;
+    // Upstream `parse_codecs(CODECS)` (unknown codecs only warn). A variant
+    // referencing an audio group with URIs loses its audio when it declares
+    // video codecs; otherwise upstream treats it as a complete format.
+    let mut codecs = crate::codecs::parse(values.get("CODECS").copied());
+    if external_audio
+        && let Some(codecs) = &mut codecs
+        && codecs.vcodec != "none"
+    {
+        codecs.acodec = "none".into();
     }
+    let stream_kind = match &codecs {
+        Some(codecs) if codecs.vcodec == "none" => StreamKind::AudioOnly,
+        Some(codecs) if codecs.acodec == "none" => StreamKind::VideoOnly,
+        _ => StreamKind::Standalone,
+    };
     Ok(Variant {
+        codecs,
+        fps: values
+            .get("FRAME-RATE")
+            .and_then(|value| value.trim().parse::<f64>().ok()),
         url,
         bandwidth: bandwidth("AVERAGE-BANDWIDTH").or_else(|| bandwidth("BANDWIDTH")),
         width,
         height,
         stream_kind,
         audio_group: audio_group.map(|group| (*group).to_owned()),
+        name: values
+            .get("NAME")
+            .filter(|name| !name.is_empty())
+            .or_else(|| {
+                values
+                    .get("VIDEO")
+                    .filter(|group| !group.is_empty())
+                    .map(|group| group_names.get(group).unwrap_or(group))
+            })
+            .map(|name| (*name).to_owned()),
+        progressive: None,
     })
 }
 
@@ -316,7 +358,10 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         return Err(invalid("missing HLS EXTM3U header"));
     }
     let mut groups = BTreeMap::new();
+    // Upstream `groups`: renditions with TYPE, GROUP-ID and NAME, by GROUP-ID.
+    let mut group_names: BTreeMap<&str, &str> = BTreeMap::new();
     let mut audio = Vec::new();
+    let mut subtitles = Vec::new();
     let mut audio_names = BTreeSet::new();
     let mut default_groups = BTreeSet::new();
     let mut rendition_count = 0usize;
@@ -333,7 +378,20 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
             if !matches!(*kind, "AUDIO" | "VIDEO" | "SUBTITLES" | "CLOSED-CAPTIONS") {
                 return Err(invalid("unsupported HLS rendition type"));
             }
+            if let Some(name) = attrs.get("NAME").filter(|name| !name.is_empty()) {
+                group_names.entry(*group).or_insert(*name);
+            }
             let external = attrs.contains_key("URI");
+            // TYPE, GROUP-ID and NAME are required; a URI-less one is skipped.
+            if *kind == "SUBTITLES"
+                && attrs.get("NAME").is_some_and(|name| !name.is_empty())
+                && let Some(uri) = attrs.get("URI")
+            {
+                subtitles.push(SubtitleRendition {
+                    url: absolute(base, uri)?,
+                    language: attrs.get("LANGUAGE").map(|language| (*language).to_owned()),
+                });
+            }
             rendition_count += 1;
             if rendition_count > MAX_VARIANTS {
                 return Err(invalid("HLS variant/rendition limit exceeded"));
@@ -380,6 +438,8 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                         language,
                         default,
                         autoselect,
+                        alternate: attrs.get("DEFAULT") == Some(&"NO")
+                            || attrs.get("AUTOSELECT") == Some(&"NO"),
                     });
                 }
             }
@@ -401,6 +461,8 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
     let mut current_key: Option<AesKey> = None;
     let mut sequence = Some(0u64);
     let mut sequence_seen = false;
+    let mut discontinuity = Vec::new();
+    let mut discontinuities = 0u32;
     for line in lines.into_iter().skip(1) {
         if endlist && (line.starts_with("#EXT") || !line.starts_with('#')) {
             return Err(invalid("HLS ENDLIST must terminate the media playlist"));
@@ -471,7 +533,10 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 url,
                 byte_range: range,
                 encryption,
+                path: None,
+                duration: None,
             });
+            discontinuity.push(discontinuities);
             has_map = true;
             media_seen = true;
             ext = Some("mp4");
@@ -508,9 +573,28 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
             if !matches!(value, "YES" | "NO") {
                 return Err(invalid("invalid HLS cache policy"));
             }
+        } else if line.starts_with("#EXT-X-DISCONTINUITY") {
+            // Upstream counts `#EXT-X-DISCONTINUITY-SEQUENCE` lines too.
+            if !variants.is_empty() || pending_variant.is_some() {
+                return Err(invalid("HLS discontinuity appears in a master playlist"));
+            }
+            if line != "#EXT-X-DISCONTINUITY"
+                && line
+                    .strip_prefix("#EXT-X-DISCONTINUITY-SEQUENCE:")
+                    .is_none_or(|value| unsigned(value).is_err())
+            {
+                return Err(invalid("invalid HLS discontinuity tag"));
+            }
+            discontinuities = discontinuities
+                .checked_add(1)
+                .ok_or_else(|| invalid("HLS discontinuity count overflow"))?;
+            media_seen = true;
         } else if line == "#EXT-X-INDEPENDENT-SEGMENTS"
             || line.starts_with("#EXT-X-PROGRAM-DATE-TIME:")
             || line.starts_with("#EXT-X-MEDIA:")
+            // Twitch's informational vendor tags (`#EXT-X-TWITCH-INFO`,
+            // `-ELAPSED-SECS`, `-TOTAL-SECS`), which upstream ignores.
+            || line.starts_with("#EXT-X-TWITCH-")
         {
             // Informational metadata; media groups are validated against references above.
         } else if line.starts_with("#EXT-X-") || line.starts_with("#EXT") {
@@ -521,12 +605,22 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         } else if line.starts_with('#') {
             continue;
         } else {
-            let url = absolute(base, line)?;
+            let url = if pending_variant.is_some() {
+                absolute_variant(base, line)?
+            } else {
+                absolute(base, line)?
+            };
             if let Some(attrs) = pending_variant.take() {
                 if variants.len() + rendition_count == MAX_VARIANTS {
                     return Err(invalid("HLS variant limit exceeded"));
                 }
-                variants.push(variant(&attrs, url, &groups)?);
+                let mut found = variant(&attrs, url, &groups, &group_names)?;
+                found.progressive = attrs
+                    .get("PROGRESSIVE-URI")
+                    .filter(|uri| !uri.is_empty())
+                    .map(|uri| absolute_variant(base, uri))
+                    .transpose()?;
+                variants.push(found);
                 continue;
             }
             if endlist || !pending_duration || !variants.is_empty() {
@@ -581,7 +675,10 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 url,
                 byte_range: range,
                 encryption,
+                path: None,
+                duration: None,
             });
+            discontinuity.push(discontinuities);
             sequence = number.checked_add(1);
             pending_duration = false;
         }
@@ -593,7 +690,11 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         if media_seen {
             return Err(invalid("mixed HLS master/media playlist"));
         }
-        return Ok(Playlist::Master { variants, audio });
+        return Ok(Playlist::Master {
+            variants,
+            audio,
+            subtitles,
+        });
     }
     if !endlist {
         return Err(invalid("live HLS without ENDLIST is unsupported"));
@@ -606,8 +707,28 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
     }
     Ok(Playlist::Media {
         fragments,
+        discontinuity,
+        discontinuities,
         ext: ext.unwrap_or("ts").into(),
     })
+}
+
+/// The fragments of discontinuity section `index` (upstream HlsFD with a
+/// `format_index`), or all of them.
+pub(crate) fn section(
+    fragments: Vec<Fragment>,
+    discontinuity: &[u32],
+    index: Option<u32>,
+) -> Vec<Fragment> {
+    match index {
+        None => fragments,
+        Some(index) => fragments
+            .into_iter()
+            .zip(discontinuity)
+            .filter(|(_, count)| **count == index)
+            .map(|(fragment, _)| fragment)
+            .collect(),
+    }
 }
 
 #[cfg(test)]
@@ -618,7 +739,7 @@ mod tests {
     }
     fn media(text: &str) -> (Vec<Fragment>, String) {
         match parse(text, &base()).unwrap() {
-            Playlist::Media { fragments, ext } => (fragments, ext),
+            Playlist::Media { fragments, ext, .. } => (fragments, ext),
             _ => panic!("expected media playlist"),
         }
     }
@@ -645,6 +766,13 @@ mod tests {
         );
     }
     #[test]
+    fn variant_frame_rate_is_upstream_float_or_none() {
+        let Playlist::Master { variants, .. } = parse("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1,FRAME-RATE=29.970\na.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=1,FRAME-RATE=fast\nb.m3u8", &base()).unwrap() else { panic!() };
+        assert_eq!(variants[0].fps, Some(29.97));
+        assert_eq!(variants[1].fps, None);
+    }
+
+    #[test]
     fn master_quoted_codecs_dimensions_bandwidth_and_audio_kind() {
         let Playlist::Master { variants, .. } = parse("#EXTM3U\n#EXT-X-INDEPENDENT-SEGMENTS\n#EXT-X-STREAM-INF:BANDWIDTH=900000,AVERAGE-BANDWIDTH=800000,RESOLUTION=1280x720,CODECS=\"avc1.64001F,mp4a.40.2\"\nvideo/playlist.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=128000,CODECS=\"mp4a.40.2\"\naudio.m3u8", &base()).unwrap() else { panic!() };
         assert_eq!(variants.len(), 2);
@@ -669,7 +797,10 @@ mod tests {
     #[test]
     fn external_audio_metadata_classifies_referencing_video_and_allows_audio_only_master() {
         let text = "#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"English, main\",LANGUAGE=\"en\",DEFAULT=YES,AUTOSELECT=YES,URI=\"en.m3u8\"\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Norsk\",LANGUAGE=\"nb\",DEFAULT=NO,AUTOSELECT=YES,URI=\"nb.m3u8\"\n#EXT-X-STREAM-INF:BANDWIDTH=900000,CODECS=\"avc1.4,mp4a.40.2\",AUDIO=\"a\"\nv.m3u8";
-        let Playlist::Master { variants, audio } = parse(text, &base()).unwrap() else {
+        let Playlist::Master {
+            variants, audio, ..
+        } = parse(text, &base()).unwrap()
+        else {
             panic!()
         };
         assert_eq!(variants[0].stream_kind, StreamKind::VideoOnly);
@@ -682,12 +813,12 @@ mod tests {
         assert!(!audio[1].default);
         let only_audio = text.split("#EXT-X-STREAM-INF").next().unwrap();
         assert!(
-            matches!(parse(only_audio, &base()).unwrap(), Playlist::Master { variants, audio } if variants.is_empty() && audio.len() == 2)
+            matches!(parse(only_audio, &base()).unwrap(), Playlist::Master { variants, audio, .. } if variants.is_empty() && audio.len() == 2)
         );
     }
 
     #[test]
-    fn audio_groups_reject_ambiguous_metadata_and_unclassifiable_video() {
+    fn audio_groups_reject_ambiguous_metadata_and_keep_unpaired_variants() {
         let rendition = "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Main\",URI=\"a.m3u8\"";
         for extra in [
             ",DEFAULT=maybe",
@@ -707,11 +838,19 @@ mod tests {
             let first = format!("{rendition},DEFAULT=YES");
             assert!(parse(&format!("#EXTM3U\n{first}\n{second}"), &base()).is_err());
         }
-        for codec in ["", ",CODECS=\"mp4a.40.2\""] {
+        // Upstream treats a variant without video CODECS as complete (or
+        // audio-only) instead of pairing it with the external group.
+        for (codec, kind) in [
+            ("", StreamKind::Standalone),
+            (",CODECS=\"mp4a.40.2\"", StreamKind::AudioOnly),
+        ] {
             let text = format!(
                 "#EXTM3U\n{rendition}\n#EXT-X-STREAM-INF:BANDWIDTH=1000,AUDIO=\"a\"{codec}\nv.m3u8"
             );
-            assert!(parse(&text, &base()).is_err());
+            let Playlist::Master { variants, .. } = parse(&text, &base()).unwrap() else {
+                panic!()
+            };
+            assert_eq!(variants[0].stream_kind, kind);
         }
         for uri in ["", "file:///audio.m3u8", "audio.m3u8#fragment"] {
             assert!(parse(&format!("#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",NAME=\"Main\",URI=\"{uri}\""), &base()).is_err());
@@ -759,8 +898,7 @@ mod tests {
         for tag in [
             "#EXT-X-KEY:METHOD=SAMPLE-AES",
             "#EXT-X-KEY:METHOD=NONE,URI=\"key\"",
-            "#EXT-X-DISCONTINUITY",
-            "#EXT-X-DISCONTINUITY-SEQUENCE:0",
+            "#EXT-X-DISCONTINUITY-SEQUENCE:x",
             "#EXT-X-GAP",
             "#EXT-X-PART:DURATION=1,URI=\"a.ts\"",
             "#EXT-X-PRELOAD-HINT:TYPE=PART,URI=\"a\"",
@@ -789,6 +927,31 @@ mod tests {
         }
     }
     #[test]
+    fn discontinuities_are_counted_per_fragment_and_select_sections() {
+        let text = "#EXTM3U\n#EXT-X-TARGETDURATION:1\n#EXTINF:1,\na.ts\n#EXT-X-DISCONTINUITY\n#EXTINF:1,\nb.ts\n#EXTINF:1,\nc.ts\n#EXT-X-DISCONTINUITY-SEQUENCE:4\n#EXTINF:1,\nd.ts\n#EXT-X-ENDLIST";
+        let Playlist::Media {
+            fragments,
+            discontinuity,
+            discontinuities,
+            ..
+        } = parse(text, &base()).unwrap()
+        else {
+            panic!("media playlist");
+        };
+        // Like upstream, DISCONTINUITY-SEQUENCE lines count too.
+        assert_eq!(discontinuity, [0, 1, 1, 2]);
+        assert_eq!(discontinuities, 2);
+        let names = |index| {
+            section(fragments.clone(), &discontinuity, index)
+                .iter()
+                .map(|fragment| fragment.url.path().to_owned())
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(names(Some(1)), ["/path/b.ts", "/path/c.ts"]);
+        assert_eq!(names(Some(3)), Vec::<String>::new());
+        assert_eq!(names(None).len(), 4);
+    }
+    #[test]
     fn endlist_is_terminal_and_media_keys_cannot_appear_in_master() {
         let text = "#EXTM3U\n#EXTINF:1,\na.ts\n#EXT-X-ENDLIST";
         assert!(parse(&format!("{text}\n# trailing comment"), &base()).is_ok());
@@ -810,8 +973,8 @@ mod tests {
     }
 
     #[test]
-    fn rejects_external_and_unresolved_rendition_groups() {
-        for group in ["AUDIO", "SUBTITLES", "VIDEO", "CLOSED-CAPTIONS"] {
+    fn rejects_external_non_audio_rendition_groups() {
+        for group in ["VIDEO", "CLOSED-CAPTIONS"] {
             let text = format!(
                 "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,{group}=\"a\"\na.m3u8\n#EXT-X-MEDIA:TYPE={group},GROUP-ID=\"a\",NAME=\"A\",URI=\"extra.m3u8\""
             );
@@ -820,6 +983,9 @@ mod tests {
                 format!("#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,{group}=\"missing\"\na.m3u8");
             assert!(parse(&text, &base()).is_err());
         }
+        // Like upstream, an unknown AUDIO group is ignored.
+        let text = "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000,AUDIO=\"missing\"\na.m3u8";
+        assert!(parse(text, &base()).is_ok());
     }
     #[test]
     fn rejects_invalid_ranges_maps_and_container_changes() {
@@ -840,12 +1006,11 @@ mod tests {
         }
     }
     #[test]
-    fn malformed_attributes_and_unsupported_codecs_fail_closed() {
+    fn malformed_attributes_fail_closed() {
         for attributes in [
             "CODECS=\"avc1,mp4a",
             "BANDWIDTH=1000,BANDWIDTH=2000",
             "BANDWIDTH=1000,",
-            "CODECS=\"unknown\"",
             "RESOLUTION=0x720",
             "RESOLUTION=1280",
             "BANDWIDTH=1000 junk",

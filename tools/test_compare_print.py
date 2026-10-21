@@ -31,9 +31,10 @@ class PrintComparisonTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 compare(changed, self.fixture)
             changed = copy.deepcopy(self.result)
-            changed[key].reverse()
-            with self.assertRaises(ValueError):
-                compare(changed, self.fixture)
+            if len(changed[key]) > 1:
+                changed[key].reverse()
+                with self.assertRaises(ValueError):
+                    compare(changed, self.fixture)
 
     def test_saved_upstream_semantics_remain_explicit(self):
         cases = {c['name']: c['expected'] for c in self.fixture['cases']}

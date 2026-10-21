@@ -1,18 +1,21 @@
 //! Narrow watch-page slice of YoutubeIE at the pinned upstream revision.
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
-mod captions;
 mod challenge;
-mod client;
-mod player;
-use super::{Extractor, direct, hls};
-use crate::{Error, Result, StreamKind, VideoFormat, VideoInfo};
-use reqwest::{
-    blocking::Client,
-    header::{CONTENT_ENCODING, CONTENT_TYPE},
-};
-use scraper::{Html, Selector};
+mod chapters;
+pub(crate) use chapters::from_description as chapters_from_description;
+pub(crate) mod dict;
+mod innertube;
+mod metadata;
+pub(crate) mod search;
+mod streams;
+mod subs;
+pub(crate) mod tab;
+mod watch;
+use super::{Extractor, direct};
+use crate::{Error, Result, StreamKind, VideoInfo};
+use reqwest::blocking::Client;
 use serde_json::Value;
-use std::{io::Read, path::PathBuf};
+use std::path::PathBuf;
 use url::Url;
 
 pub struct Youtube;
@@ -26,72 +29,27 @@ pub struct YoutubeOptions {
     /// Include translated manual captions in automatic-caption metadata.
     /// Original ASR captions/translations are always discovered without fetching.
     pub include_translated_subtitles: bool,
+    /// Upstream `noplaylist`: a watch URL with `list=` downloads just its video.
+    pub no_playlist: bool,
 }
 
 struct ConfiguredYoutube {
     include_translated_subtitles: bool,
+    no_playlist: bool,
     runtime: Option<challenge::Runtime>,
 }
 
 impl Youtube {
     pub fn with_options(options: YoutubeOptions) -> impl Extractor {
-        Self::with_http_options(
-            options,
-            reqwest::header::HeaderMap::new(),
-            Default::default(),
-            Default::default(),
-        )
-    }
-
-    pub(crate) fn with_http_options(
-        options: YoutubeOptions,
-        headers: reqwest::header::HeaderMap,
-        cookies: std::sync::Arc<crate::CookieJar>,
-        proxy: crate::http::ProxyConfig,
-    ) -> impl Extractor {
+        // The player JS and player API requests use the extraction client,
+        // with its headers, cookies and proxy.
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,
-            runtime: options
-                .js_runtime
-                .map(|path| challenge::Runtime::with_http_options(path, headers, cookies, proxy)),
+            no_playlist: options.no_playlist,
+            runtime: options.js_runtime.map(challenge::Runtime::new),
         }
     }
 }
-
-struct Candidate {
-    format_id: String,
-    source: Value,
-    ext: String,
-    stream_kind: StreamKind,
-    abr: Option<f64>,
-    tbr: Option<f64>,
-    width: Option<u32>,
-    height: Option<u32>,
-}
-
-impl Candidate {
-    fn into_format(self, url: Url) -> VideoFormat {
-        VideoFormat {
-            audio_group: None,
-            language: None,
-            format_note: None,
-            audio_default: false,
-            audio_autoselect: false,
-            fragments: Vec::new(),
-            format_id: self.format_id,
-            url,
-            ext: self.ext,
-            stream_kind: self.stream_kind,
-            abr: self.abr,
-            tbr: self.tbr,
-            filesize: None,
-            width: self.width,
-            height: self.height,
-        }
-    }
-}
-
-const MAX_PAGE_BYTES: u64 = 2 * 1024 * 1024;
 
 fn unsupported(reason: &str) -> Error {
     Error::UnsupportedYoutube(reason.into())
@@ -104,9 +62,61 @@ fn valid_id(id: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
 }
 
+/// `YoutubeIE._EMBED_REGEX` through the default `_extract_embed_urls`:
+/// matches unescaped, joined to `url`, kept when suitable, without repeats.
+pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
+    static PATTERNS: std::sync::LazyLock<[regex::Regex; 2]> = std::sync::LazyLock::new(|| {
+        let quoted = |q: &str| {
+            format!(
+                r#"{q}(?P<u{}>(?:https?:)?//(?:www\.)?youtube(?:-nocookie)?\.com/(?:embed|v|p)/[0-9A-Za-z_-]{{11}}[^\n]*?){q}"#,
+                if q == "\"" { 1 } else { 2 }
+            )
+        };
+        [
+            regex::Regex::new(&format!(
+                r#"(?:<(?:[0-9A-Za-z-]+?)?iframe[^>]+?src=|data-video-url=|<embed[^>]+?src=|embedSWF\(?:\s*|<object[^>]+data=|new\s+SWFObject\()(?:{}|{})"#,
+                quoted("\""),
+                quoted("'")
+            ))
+            .expect("static pattern"),
+            regex::Regex::new(
+                r#"(?s)<a\s[^>]*\bhref="(?P<u1>https://www\.youtube\.com/watch\?v=[0-9A-Za-z_-]{11})"\s[^>]*\bclass="[^"]*\blazy-load-youtube"#,
+            )
+            .expect("static pattern"),
+        ]
+    });
+    let mut found: Vec<Url> = Vec::new();
+    for regex in PATTERNS.iter() {
+        for captures in regex.captures_iter(webpage) {
+            let Some(group) = captures.name("u1").or_else(|| captures.name("u2")) else {
+                continue;
+            };
+            let Ok(embed) = url.join(&crate::html::unescape_html(group.as_str())) else {
+                continue;
+            };
+            if suitable(embed.as_str()) && !found.contains(&embed) {
+                found.push(embed);
+            }
+        }
+    }
+    found
+}
+
+/// `_match_id`'s ID of a suitable URL.
+pub(crate) fn temp_id(url: &str) -> Option<String> {
+    Url::parse(url)
+        .ok()
+        .and_then(|url| video_id(&url, false).ok().flatten())
+}
+
+/// Upstream `YoutubeIE.suitable`: a supported single-video URL.
+pub fn suitable(url: &str) -> bool {
+    Url::parse(url).is_ok_and(|url| matches!(video_id(&url, false), Ok(Some(_))))
+}
+
 // Claim all URLs on these exact hosts so unsupported site pages cannot fall
 // through to generic HTML5 extraction and appear to be supported YouTube videos.
-fn video_id(url: &Url) -> Result<Option<String>> {
+fn video_id(url: &Url, no_playlist: bool) -> Result<Option<String>> {
     let host = url.host_str().unwrap_or("");
     if !matches!(
         host,
@@ -122,9 +132,22 @@ fn video_id(url: &Url) -> Result<Option<String>> {
         return Ok(None);
     }
     if url.query_pairs().any(|(key, _)| key == "list") {
-        return Err(unsupported(
-            "playlists and video URLs with list= are not supported",
-        ));
+        // Upstream `YoutubeTabIE._yes_playlist`: only `--no-playlist` resolves
+        // a watch URL with both IDs to its single video.
+        let ids: Vec<_> = url.query_pairs().filter(|(key, _)| key == "v").collect();
+        match (no_playlist && url.path() == "/watch", ids.as_slice()) {
+            (true, [(_, id)]) if valid_id(id) => {
+                crate::screen::screen(&format!(
+                    "[youtube:tab] Downloading just the video {id} because of --no-playlist"
+                ));
+                return Ok(Some(id.clone().into_owned()));
+            }
+            _ => {
+                return Err(unsupported(
+                    "playlists and video URLs with list= are not supported",
+                ));
+            }
+        }
     }
     let id = if matches!(host, "youtu.be" | "www.youtu.be") {
         url.path()
@@ -152,430 +175,393 @@ fn video_id(url: &Url) -> Result<Option<String>> {
         .map(Some)
         .ok_or_else(|| unsupported("expected a single video URL with an 11-character ID"))
 }
-
-fn initial_player_response(html: &str) -> Result<Option<Value>> {
-    let document = Html::parse_document(html);
-    let scripts = Selector::parse("script").expect("static selector");
-    for script in document.select(&scripts) {
-        let text = script.text().collect::<String>();
-        for marker in [
-            "ytInitialPlayerResponse",
-            "window[\"ytInitialPlayerResponse\"]",
-            "window['ytInitialPlayerResponse']",
-        ] {
-            for (offset, _) in text.match_indices(marker) {
-                // Avoid matching a longer identifier or a quoted property name.
-                if offset > 0
-                    && (text.as_bytes()[offset - 1].is_ascii_alphanumeric()
-                        || matches!(text.as_bytes()[offset - 1], b'_' | b'$'))
-                {
-                    continue;
-                }
-                let rest = text[offset + marker.len()..].trim_start();
-                let Some(json) = rest.strip_prefix('=').map(str::trim_start) else {
-                    continue;
-                };
-                if !json.starts_with('{') {
-                    return Err(unsupported("initial player response is not a JSON object"));
-                }
-                let mut values = serde_json::Deserializer::from_str(json).into_iter::<Value>();
-                return values
-                    .next()
-                    .and_then(std::result::Result::ok)
-                    .map(Some)
-                    .ok_or_else(|| unsupported("malformed initial player response"));
-            }
-        }
-    }
-    Ok(None)
-}
-
-#[cfg(test)]
-fn player_response(html: &str) -> Result<Value> {
-    initial_player_response(html)?.ok_or_else(|| unsupported("no initial player response"))
-}
-
-fn parse_candidates(
-    player: &Value,
-    id: &str,
-    allow_challenges: bool,
-    api: bool,
-) -> Result<(String, Vec<Candidate>)> {
-    if player
-        .pointer("/playabilityStatus/status")
-        .and_then(Value::as_str)
-        != Some("OK")
-    {
-        return Err(unsupported(
-            "video is not playable without authentication, consent, or other access handling",
-        ));
-    }
-    let details = &player["videoDetails"];
-    if details["videoId"].as_str() != Some(id) {
-        return Err(unsupported(
-            "player response video ID does not match the requested video",
-        ));
-    }
-    for key in ["isLive", "isLiveContent", "isUpcoming", "isPostLiveDvr"] {
-        if details[key].as_bool() == Some(true) {
-            return Err(unsupported(
-                "live, upcoming, and post-live videos are not supported",
-            ));
-        }
-    }
-    if player
-        .pointer("/microformat/playerMicroformatRenderer/liveBroadcastDetails/isLiveNow")
-        .and_then(Value::as_bool)
-        == Some(true)
-    {
-        return Err(unsupported("live videos are not supported"));
-    }
-    let title = details["title"]
-        .as_str()
-        .filter(|s| !s.trim().is_empty())
-        .ok_or_else(|| unsupported("player response has no title"))?
-        .to_owned();
-    let streaming = &player["streamingData"];
-    if streaming
-        .get("licenseInfos")
-        .is_some_and(|v| !v.is_null() && v.as_array().is_none_or(|a| !a.is_empty()))
-    {
-        return Err(unsupported("DRM-protected player response"));
-    }
-    let mut formats = Vec::new();
-    for source in ["formats", "adaptiveFormats"]
-        .into_iter()
-        .flat_map(|key| streaming[key].as_array().into_iter().flatten())
-    {
-        if ["drmFamilies", "drmTrackType", "targetDurationSec"]
-            .iter()
-            .any(|key| source.get(*key).is_some_and(|v| !v.is_null()))
-            || source.get("type").is_some_and(|value| {
-                !value.is_null() && value.as_str() != Some("FORMAT_STREAM_TYPE_NORMAL")
-            })
-        {
-            continue;
-        }
-        let Some(itag) = source["itag"].as_u64().filter(|i| *i > 0) else {
-            continue;
-        };
-        if api && itag != 18 {
-            continue;
-        }
-        let fields: serde_json::Map<_, _> = ["url", "signatureCipher", "cipher"]
-            .into_iter()
-            .filter_map(|key| {
-                source
-                    .get(key)
-                    .filter(|value| !value.is_null())
-                    .map(|value| (key.to_owned(), value.clone()))
-            })
-            .collect();
-        let url_source = Value::Object(fields);
-        let Ok(challenged) = challenge::has_challenges(&url_source) else {
-            continue;
-        };
-        if challenged && !allow_challenges {
-            continue;
-        }
-        let Some(mime) = source["mimeType"].as_str() else {
-            continue;
-        };
-        let (kind, parameters) = mime.split_once(';').unwrap_or((mime, ""));
-        let ext = match kind.trim() {
-            "video/mp4" => "mp4",
-            "video/webm" | "audio/webm" => "webm",
-            "audio/mp4" => "m4a",
-            _ => continue,
-        };
-        let codecs = parameters
-            .split(';')
-            .find_map(|p| p.trim().strip_prefix("codecs="))
-            .unwrap_or("")
-            .trim_matches('"');
-        let codecs: Vec<_> = codecs.split(',').map(str::trim).collect();
-        let video_codec = |codec: &str| {
-            ["avc1", "av01", "vp8", "vp9", "vp09"].iter().any(|prefix| {
-                codec
-                    .strip_prefix(prefix)
-                    .is_some_and(|suffix| suffix.is_empty() || suffix.starts_with('.'))
-            })
-        };
-        let audio_codec = |codec: &str| {
-            ["mp4a", "opus", "vorbis"].iter().any(|prefix| {
-                codec
-                    .strip_prefix(prefix)
-                    .is_some_and(|suffix| suffix.is_empty() || suffix.starts_with('.'))
-            })
-        };
-        if codecs
-            .iter()
-            .any(|codec| !video_codec(codec) && !audio_codec(codec))
-        {
-            continue;
-        }
-        let video = codecs.iter().any(|codec| video_codec(codec));
-        let audio = codecs.iter().any(|codec| audio_codec(codec));
-        let stream_kind = match (kind.trim().starts_with("audio/"), video, audio) {
-            (false, true, true) => StreamKind::Standalone,
-            (false, true, false) => StreamKind::VideoOnly,
-            (true, false, true) => StreamKind::AudioOnly,
-            _ => continue,
-        };
-        let rate = |key: &str| {
-            source
-                .get(key)
-                .and_then(Value::as_f64)
-                .filter(|number| number.is_finite() && *number > 0.0)
-        };
-        let tbr = rate("averageBitrate")
-            .or_else(|| rate("bitrate"))
-            .map(|number| number / 1000.0);
-        if formats
-            .iter()
-            .any(|f: &Candidate| f.format_id == itag.to_string())
-        {
-            continue;
-        }
-        let dimension = |key: &str| {
-            source[key]
-                .as_u64()
-                .and_then(|n| u32::try_from(n).ok())
-                .filter(|n| *n > 0)
-        };
-        formats.push(Candidate {
-            format_id: itag.to_string(),
-            source: url_source,
-            ext: ext.into(),
-            stream_kind,
-            tbr,
-            abr: if stream_kind == StreamKind::AudioOnly {
-                tbr
-            } else {
-                None
-            },
-            width: dimension("width"),
-            height: dimension("height"),
-        });
-    }
-    Ok((title, formats))
-}
-
 fn no_formats() -> Error {
     unsupported(
         "no eligible media formats; signature/n URL challenges require an explicit runtime; WEB DASH requires a GVS token; SABR, live and DRM are unsupported",
     )
 }
 
-// WEB HLS has an optional GVS token in the pinned upstream policy, unlike DASH.
-// No DASH URL is prepared, solved or requested without token acquisition support.
-fn hls_manifest(player: &Value, allow_challenges: bool) -> Option<String> {
-    let url = player.pointer("/streamingData/hlsManifestUrl")?.as_str()?;
-    let challenged = challenge::has_manifest_challenges(url).ok()?;
-    if challenged && !allow_challenges {
-        return None;
-    }
-    Some(url.to_owned())
+/// `solve_js_challenges` through the configured runtime: the player JS
+/// (`Downloading player ID-VARIANT`) and one EJS batch.
+struct JsSolver<'a> {
+    client: &'a Client,
+    runtime: Option<&'a challenge::Runtime>,
+    player_url: Option<String>,
+    video_id: &'a str,
 }
 
-fn manifest_formats(client: &Client, url: &Url, page: &Url) -> Result<Vec<VideoFormat>> {
-    let response = direct::request(client, url, Some(page))?;
-    let info = hls::from_response(client, response, url, Some(page), true)?
-        .ok_or_else(|| unsupported("HLS manifest could not be parsed"))?;
-    let mut formats = if info.formats.is_empty() {
-        vec![VideoFormat {
-            format_id: "hls-0".into(),
-            url: info.url,
-            ext: info.ext,
-            filesize: info.filesize,
-            width: info.width,
-            height: info.height,
-            stream_kind: info.stream_kind,
-            abr: None,
-            tbr: None,
-            audio_group: None,
-            language: None,
-            format_note: None,
-            audio_default: false,
-            audio_autoselect: false,
-            fragments: info.fragments,
-        }]
-    } else {
-        info.formats
-    };
-    for format in &mut formats {
-        if let Some(group) = &mut format.audio_group {
-            *group = format!("youtube-hls:{group}");
-        }
-    }
-    Ok(formats)
-}
-
-#[cfg(test)]
-fn parse_formats(player: &Value, id: &str) -> Result<(String, Vec<VideoFormat>)> {
-    let (title, candidates) = parse_candidates(player, id, false, false)?;
-    if candidates.is_empty() {
-        return Err(no_formats());
-    }
-    let formats = candidates
-        .into_iter()
-        .map(|candidate| {
-            let url = Url::parse(candidate.source["url"].as_str().unwrap())?;
-            Ok(candidate.into_format(url))
-        })
-        .collect::<Result<_>>()?;
-    Ok((title, formats))
-}
-
-#[cfg(test)]
-fn extract_watch_page(client: &Client, page: &Url, id: &str) -> Result<VideoInfo> {
-    extract_watch_page_with_runtime(client, page, id, None, None)
-}
-
-fn extract_watch_page_with_runtime(
-    client: &Client,
-    page: &Url,
-    id: &str,
-    runtime: Option<&challenge::Runtime>,
-    player_source: Option<&player::PlayerSource>,
-) -> Result<VideoInfo> {
-    extract_watch_page_with_caption_options(client, page, id, runtime, player_source, false)
-}
-
-fn extract_watch_page_with_caption_options(
-    client: &Client,
-    page: &Url,
-    id: &str,
-    runtime: Option<&challenge::Runtime>,
-    player_source: Option<&player::PlayerSource>,
-    translated_manual: bool,
-) -> Result<VideoInfo> {
-    let response = direct::request(client, page, None)?;
-    if direct::response_mime(&response) != "text/html" {
-        return Err(unsupported("watch page is not HTML"));
-    }
-    if let Some(content_type) = response
-        .headers()
-        .get(CONTENT_TYPE)
-        .and_then(|v| v.to_str().ok())
-    {
-        for parameter in content_type.split(';').skip(1) {
-            if let Some((name, value)) = parameter.trim().split_once('=')
-                && name.trim().eq_ignore_ascii_case("charset")
-                && !matches!(
-                    value
-                        .trim()
-                        .trim_matches(['\'', '"'])
-                        .to_ascii_lowercase()
-                        .as_str(),
-                    "utf-8" | "utf8" | "us-ascii"
+impl streams::Solver for JsSolver<'_> {
+    fn solve(
+        &mut self,
+        n: &std::collections::BTreeSet<String>,
+        sig: &std::collections::BTreeSet<usize>,
+    ) -> (
+        std::collections::HashMap<String, String>,
+        std::collections::HashMap<usize, Vec<usize>>,
+    ) {
+        let mut n_results = std::collections::HashMap::new();
+        let mut sig_results = std::collections::HashMap::new();
+        let (Some(runtime), Some(player_url)) = (self.runtime, self.player_url.as_deref()) else {
+            return (n_results, sig_results);
+        };
+        let Ok(runtime) = runtime.checked() else {
+            return (n_results, sig_results);
+        };
+        let Ok(url) = Url::parse(player_url) else {
+            return (n_results, sig_results);
+        };
+        // `_player_js_cache_key`: `PLAYER_ID-VARIANT`.
+        let key = player_url
+            .split("/s/player/")
+            .nth(1)
+            .and_then(|rest| rest.split('/').next())
+            .map(|id| format!("{id}-main"))
+            .unwrap_or_default();
+        crate::screen::screen(&format!(
+            "[youtube] {}: Downloading player {key}",
+            self.video_id
+        ));
+        let Ok(player) = direct::request(self.client, &url, None)
+            .and_then(|response| response.text().map_err(Error::Http))
+        else {
+            crate::screen::warning(&format!(
+                "[youtube] {}: Download of {key} failed",
+                self.video_id
+            ));
+            return (n_results, sig_results);
+        };
+        // Signature specs are solved as `chr(0..LENGTH)` permutations.
+        let identities: Vec<(usize, String)> = sig
+            .iter()
+            .map(|length| {
+                (
+                    *length,
+                    (0..*length)
+                        .filter_map(|i| char::from_u32(i as u32))
+                        .collect(),
                 )
-            {
-                return Err(unsupported("only UTF-8/ASCII watch pages are supported"));
+            })
+            .collect();
+        let mut inputs: Vec<(challenge::Kind, &str)> = n
+            .iter()
+            .map(|challenge| (challenge::Kind::N, challenge.as_str()))
+            .collect();
+        inputs.extend(
+            identities
+                .iter()
+                .map(|(_, identity)| (challenge::Kind::Sig, identity.as_str())),
+        );
+        let Ok(batch) = challenge::Batch::new(&player, &inputs) else {
+            return (n_results, sig_results);
+        };
+        let name = runtime.name();
+        crate::screen::screen(&format!(
+            "[youtube] [jsc:{name}] Solving JS challenges using {name}"
+        ));
+        let Ok(solutions) = runtime.solve(&batch) else {
+            return (n_results, sig_results);
+        };
+        for challenge in n {
+            if let Some(result) = solutions.get(challenge::Kind::N, challenge) {
+                n_results.insert(challenge.clone(), result.to_owned());
             }
         }
-    }
-    if response
-        .headers()
-        .get(CONTENT_ENCODING)
-        .is_some_and(|v| !v.as_bytes().eq_ignore_ascii_case(b"identity"))
-    {
-        return Err(unsupported("compressed watch pages are not supported"));
-    }
-    if response
-        .content_length()
-        .is_some_and(|n| n > MAX_PAGE_BYTES)
-    {
-        return Err(Error::HtmlTooLarge(MAX_PAGE_BYTES));
-    }
-    let mut bytes = Vec::new();
-    response
-        .take(MAX_PAGE_BYTES + 1)
-        .read_to_end(&mut bytes)
-        .map_err(Error::ExtractionRead)?;
-    if bytes.len() as u64 > MAX_PAGE_BYTES {
-        return Err(Error::HtmlTooLarge(MAX_PAGE_BYTES));
-    }
-    let html = std::str::from_utf8(&bytes).map_err(|_| unsupported("watch page is not UTF-8"))?;
-    // Never use API fallback to bypass a malformed, gated, or unsupported
-    // initial response. The missing-response path gets exactly one WEB request.
-    let (player, api) = match initial_player_response(html)? {
-        Some(player) => (player, false),
-        None => (client::fetch_player(client, page, html, id)?, true),
-    };
-    // Eligibility and WEB API token policy precede solving and all media/manifest
-    // requests. The same complete batch resolves direct and HLS path challenges.
-    let (title, candidates) = parse_candidates(&player, id, runtime.is_some(), api)?;
-    let manifests: Vec<_> = hls_manifest(&player, runtime.is_some())
-        .into_iter()
-        .collect();
-    if candidates.is_empty() && manifests.is_empty() {
-        return Err(no_formats());
-    }
-    let captions = captions::parse(&player, translated_manual)?;
-    for warning in &captions.warnings {
-        eprintln!("WARNING: {id}: {warning}");
-    }
-    let sources: Vec<_> = candidates
-        .iter()
-        .map(|candidate| candidate.source.clone())
-        .collect();
-    let (urls, manifests) =
-        challenge::resolve_media_and_manifests(&sources, &manifests, html, runtime, player_source)?;
-    let mut formats: Vec<_> = candidates
-        .into_iter()
-        .zip(urls)
-        .map(|(candidate, url)| candidate.into_format(url))
-        .collect();
-    for format in &mut formats {
-        let response = direct::request(client, &format.url, Some(page))?;
-        let media = direct::from_response(&response, &format.url)
-            .ok_or_else(|| unsupported("format URL does not serve direct HTTP media"))?;
-        if media.ext != format.ext {
-            return Err(unsupported(
-                "format MIME type disagrees with the media response",
-            ));
+        for (length, identity) in &identities {
+            if let Some(result) = solutions.get(challenge::Kind::Sig, identity) {
+                sig_results.insert(*length, result.chars().map(|c| c as usize).collect());
+            }
         }
-        format.url = media.url;
-        format.filesize = media.filesize;
+        (n_results, sig_results)
     }
-    for manifest in manifests {
-        formats.extend(manifest_formats(client, &manifest, page)?);
+}
+
+/// Upstream `_real_extract` over every requested client's player response.
+fn extract_clients(
+    client: &Client,
+    url: &Url,
+    id: &str,
+    runtime: Option<&challenge::Runtime>,
+    translated_manual: bool,
+) -> Result<VideoInfo> {
+    crate::screen::screen(&format!(
+        "[youtube] Extracting URL: {}",
+        crate::screen::extracting_url(&format!("https://www.youtube.com/watch?v={id}"))
+    ));
+    let acquired = watch::acquire(client, id, runtime)?;
+    let first = |key: &str| {
+        acquired
+            .player_responses
+            .iter()
+            .find_map(|response| response.get(key).filter(|value| value.is_object()))
+    };
+    let details = first("videoDetails").cloned().unwrap_or(Value::Null);
+    // `get_first(video_details, 'title') or search_meta([...])`.
+    let title = details
+        .get("title")
+        .and_then(Value::as_str)
+        .filter(|title| !title.is_empty())
+        .map(str::to_owned)
+        .or_else(|| {
+            ["og:title", "twitter:title", "title"]
+                .into_iter()
+                .find_map(|name| crate::html::html_search_meta(&acquired.webpage, name))
+        })
+        .unwrap_or_default();
+    let duration = details
+        .get("lengthSeconds")
+        .and_then(|value| {
+            value
+                .as_str()?
+                .parse::<i64>()
+                .ok()
+                .or_else(|| value.as_i64())
+        })
+        .filter(|duration| *duration != 0);
+    // `_list_formats`' live status from the video details.
+    let flag = |key: &str| details.get(key).and_then(Value::as_bool);
+    let live_status = if flag("isPostLiveDvr") == Some(true) {
+        Some("post_live")
+    } else if flag("isLive") == Some(true) {
+        Some("is_live")
+    } else if flag("isUpcoming") == Some(true) {
+        Some("is_upcoming")
+    } else if flag("isLiveContent") == Some(true) {
+        Some("was_live")
+    } else if flag("isLive") == Some(false) || flag("isLiveContent") == Some(false) {
+        Some("not_live")
+    } else {
+        None
+    };
+    if matches!(live_status, Some("is_live" | "is_upcoming" | "post_live")) {
+        return Err(unsupported("live, upcoming and post-live videos"));
     }
-    if let Some(language) = &captions.audio_language {
+    let context = streams::Context {
+        client,
+        video_id: id,
+        player_url: acquired.player_url.as_deref(),
+        live_status,
+        duration,
+        verbose: crate::screen::verbose(),
+        all_formats: false,
+        skip_bad_formats: true,
+        dashy: false,
+        missing_pot: false,
+        skip_player_js: false,
+        skip_manifests: Default::default(),
+        premium: false,
+    };
+    let mut solver = JsSolver {
+        client,
+        runtime,
+        player_url: acquired.player_url.clone(),
+        video_id: id,
+    };
+    let streams = streams::extract(&context, &acquired.responses, &mut solver)?;
+    let mut formats = Vec::new();
+    let mut manifest_formats = streams
+        .manifest_formats
+        .into_iter()
+        .map(Some)
+        .collect::<Vec<_>>();
+    for (manifest, index) in &streams.order {
+        if *manifest {
+            if let Some(format) = manifest_formats[*index].take() {
+                formats.push(format);
+            }
+        } else {
+            let mut format = streams::to_format(&streams.formats[*index], id)?;
+            format.stream_kind = match (format.vcodec.as_deref(), format.acodec.as_deref()) {
+                (Some("none"), _) => StreamKind::AudioOnly,
+                (_, Some("none")) => StreamKind::VideoOnly,
+                _ => StreamKind::Standalone,
+            };
+            crate::info_order::mark_format(&mut format, "youtube-https");
+            formats.push(format);
+        }
+    }
+    for dict in streams::storyboards(&acquired.player_responses, duration, id) {
+        let mut format = streams::to_format(&dict, id)?;
+        format.extra.insert("rows".into(), dict["rows"].clone());
+        format
+            .extra
+            .insert("columns".into(), dict["columns"].clone());
+        crate::info_order::mark_format(&mut format, "youtube-storyboard");
+        formats.push(format);
+    }
+    // Captions from the client responses, into `_list_formats`' manifest
+    // subtitles (the automatic captions' container).
+    let clients: Vec<(&str, &Value)> = acquired
+        .responses
+        .iter()
+        .map(|response| (response.client, &response.response))
+        .collect();
+    let manifest_subtitles = match serde_json::to_value(&streams.subtitles) {
+        Ok(Value::Object(map)) => map,
+        _ => Default::default(),
+    };
+    let captions = subs::extract(
+        &acquired.player_responses,
+        &clients,
+        manifest_subtitles,
+        translated_manual,
+    );
+    // `set_audio_lang_from_orig_subs_lang`: the first original language.
+    if let Some(language) = captions.audio_languages.first() {
         for format in &mut formats {
-            if format.stream_kind != StreamKind::VideoOnly && format.language.is_none() {
+            if format.acodec.as_deref() != Some("none") && format.language.is_none() {
                 format.language = Some(language.clone());
             }
         }
     }
-    let first = formats.first().ok_or_else(no_formats)?;
-    Ok(VideoInfo {
-        automatic_captions: captions.automatic,
-        subtitles: captions.subtitles,
-        requested_subtitles: None,
-        last_playlist_index: None,
-        playlist_index: None,
-        playlist_autonumber: None,
-        playlist_count: None,
-        n_entries: None,
-        fragments: first.fragments.clone(),
-        id: id.into(),
-        title,
-        ext: first.ext.clone(),
-        url: first.url.clone(),
-        webpage_url: Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?,
-        extractor: "youtube".into(),
-        extractor_key: "Youtube".into(),
-        direct: false,
-        format_id: None,
-        stream_kind: first.stream_kind,
-        requested_formats: Vec::new(),
-        filesize: first.filesize,
-        width: first.width,
-        height: first.height,
-        formats,
-    })
+    let Some(first_format) = formats.first() else {
+        return Err(no_formats());
+    };
+    let microformats: Vec<&Value> = acquired
+        .player_responses
+        .iter()
+        .filter_map(|response| response.pointer("/microformat/playerMicroformatRenderer"))
+        .collect();
+    // `original_description if original_description is not None else
+    // translated_description`, else the initial data's.
+    let description = acquired
+        .player_responses
+        .iter()
+        .find_map(|response| {
+            response
+                .pointer("/videoDetails/shortDescription")
+                .filter(|value| !value.is_null())
+        })
+        .map(|value| value.as_str().unwrap_or_default().to_owned())
+        .or_else(|| {
+            microformats
+                .iter()
+                .find_map(|micro| micro.get("description").and_then(metadata::text))
+        })
+        .or_else(|| {
+            acquired.initial_data.as_ref().and_then(|data| {
+                data.get("engagementPanels")?
+                    .as_array()?
+                    .iter()
+                    .filter_map(|panel| {
+                        panel.pointer(
+                            "/engagementPanelSectionListRenderer/content/structuredDescriptionContentRenderer/items",
+                        )
+                    })
+                    .filter_map(Value::as_array)
+                    .flatten()
+                    .find_map(|item| {
+                        item.pointer(
+                            "/expandableVideoDescriptionBodyRenderer/attributedDescriptionBodyText/content",
+                        )?
+                        .as_str()
+                        .map(str::to_owned)
+                    })
+            })
+        });
+    // `get_first(video_details, 'keywords', list) or [og:video:tag...]`.
+    let mut keywords: Vec<String> = details
+        .get("keywords")
+        .and_then(Value::as_array)
+        .map(|keywords| {
+            keywords
+                .iter()
+                .filter_map(|keyword| keyword.as_str().map(str::to_owned))
+                .collect()
+        })
+        .unwrap_or_default();
+    if keywords.is_empty() {
+        static TAG: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            regex::Regex::new(
+                r#"(?is)<meta[^>]+?(?:itemprop|name|property|id|http-equiv)=(?:"og:video:tag"|'og:video:tag')[^>]+?content=(?:"([^"]*)"|'([^']*)')"#,
+            )
+            .unwrap()
+        });
+        keywords = TAG
+            .captures_iter(&acquired.webpage)
+            .filter_map(|found| found.get(1).or_else(|| found.get(2)))
+            .map(|value| crate::html::unescape_html(value.as_str()))
+            .collect();
+    }
+    let chapters = chapters::extract(
+        acquired.initial_data.as_ref(),
+        description.as_deref(),
+        duration.and_then(|duration| u64::try_from(duration).ok()),
+    );
+    let dict = dict::build(&dict::Input {
+        video_id: id,
+        url,
+        webpage: &acquired.webpage,
+        player_responses: &acquired.player_responses,
+        initial_data: acquired.initial_data.as_ref(),
+        title: &title,
+        description: description.as_deref(),
+        duration,
+        live_status,
+        keywords,
+        chapters: if chapters.is_empty() {
+            Value::Null
+        } else {
+            serde_json::to_value(&chapters).unwrap_or(Value::Null)
+        },
+        automatic_captions: Value::Object(captions.automatic),
+        subtitles: Value::Object(captions.subtitles),
+    });
+    let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
+    let mut info = direct::build_at(first_format.url.clone(), &page, first_format.ext.clone());
+    info.direct = None;
+    info.id = id.into();
+    info.title = title;
+    info.webpage_url = page;
+    info.extractor = "youtube".into();
+    info.extractor_key = "Youtube".into();
+    info.format_sort_fields = [
+        "quality",
+        "res",
+        "fps",
+        "hdr:12",
+        "source",
+        if crate::format_sort::PREFER_VP9_COMPAT.load(std::sync::atomic::Ordering::Relaxed) {
+            "vcodec:vp9.2"
+        } else {
+            "vcodec"
+        },
+        "channels",
+        "acodec",
+        "lang",
+        "proto",
+    ]
+    .map(str::to_owned)
+    .to_vec();
+    info.formats = formats;
+    let mut keys: Vec<String> = Vec::new();
+    for (key, value) in dict {
+        keys.push(key.clone());
+        if key == "title" {
+            keys.push("formats".into());
+        }
+        if key == "release_timestamp" {
+            keys.push("_format_sort_fields".into());
+        }
+        match key.as_str() {
+            "id" | "title" | "webpage_url" => {}
+            "subtitles" | "automatic_captions" => {
+                let parsed: crate::Subtitles = serde_json::from_value(value).unwrap_or_default();
+                if key == "subtitles" {
+                    info.subtitles = parsed;
+                } else {
+                    info.automatic_captions = parsed;
+                }
+            }
+            _ if value.is_null() => {
+                info.extra.insert(key, Value::Null);
+            }
+            _ => crate::metadata_parser::set_field(&mut info, &key, value),
+        }
+    }
+    Ok(crate::info_order::mark_info(
+        info,
+        &format!("youtube;{}", keys.join(",")),
+    ))
 }
 
 impl Extractor for Youtube {
@@ -583,11 +569,14 @@ impl Extractor for Youtube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
-        let Some(id) = video_id(url)? else {
+        let Some(id) = video_id(url, false)? else {
             return Ok(None);
         };
+        crate::screen::set_extractor("youtube");
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        extract_watch_page_with_runtime(client, &page, &id, None, None).map(Some)
+        let _ = page;
+        let info = extract_clients(client, url, &id, None, false)?;
+        Ok(Some(info))
     }
 }
 
@@ -596,34 +585,26 @@ impl Extractor for ConfiguredYoutube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
-        let Some(id) = video_id(url)? else {
+        let Some(id) = video_id(url, self.no_playlist)? else {
             return Ok(None);
         };
+        crate::screen::set_extractor("youtube");
         let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        extract_watch_page_with_caption_options(
+        let _ = page;
+        let info = extract_clients(
             client,
-            &page,
+            url,
             &id,
             self.runtime.as_ref(),
-            None,
             self.include_translated_subtitles,
-        )
-        .map(Some)
+        )?;
+        Ok(Some(info))
     }
 }
 
 #[cfg(test)]
-mod integration;
-
-#[cfg(test)]
 mod tests {
     use super::*;
-    use std::{io::Write, net::TcpListener, thread};
-
-    const FIXTURE: &str = include_str!("../../tests/fixtures/youtube/progressive.html");
-    fn player() -> Value {
-        player_response(&FIXTURE.replace("{{ORIGIN}}", "https://media.example")).unwrap()
-    }
 
     #[test]
     fn exact_hosts_and_supported_video_url_shapes() {
@@ -636,7 +617,9 @@ mod tests {
             "https://youtube.com/live/BaW_jenozKc",
         ] {
             assert_eq!(
-                video_id(&Url::parse(input).unwrap()).unwrap().as_deref(),
+                video_id(&Url::parse(input).unwrap(), false)
+                    .unwrap()
+                    .as_deref(),
                 Some("BaW_jenozKc")
             );
         }
@@ -644,15 +627,17 @@ mod tests {
             "https://youtube.com.evil.invalid/watch?v=BaW_jenozKc",
             "https://example.com/watch?v=BaW_jenozKc",
         ] {
-            assert!(video_id(&Url::parse(input).unwrap()).unwrap().is_none());
+            assert!(
+                video_id(&Url::parse(input).unwrap(), false)
+                    .unwrap()
+                    .is_none()
+            );
         }
+        // Playlist URLs belong to `youtube:tab` (its site fixture).
         for input in [
-            "https://youtube.com/playlist?list=foo",
-            "https://youtube.com/watch?v=BaW_jenozKc&list=foo",
             "https://youtu.be/BaW_jenozKc/extra",
             "https://youtube.com/watch?v=bad",
             "https://youtube.com/watch?v=BaW_jenozKc&v=BaW_jenozKc",
-            "https://youtube.com/@channel",
         ] {
             assert!(
                 matches!(
@@ -665,345 +650,22 @@ mod tests {
     }
 
     #[test]
-    fn json_assignment_handles_braces_in_strings_and_trailing_javascript() {
-        assert_eq!(player()["videoDetails"]["title"], "Fixture } ; & video");
-        for marker in [
-            "ytInitialPlayerResponse",
-            "window[\"ytInitialPlayerResponse\"]",
-            "window['ytInitialPlayerResponse']",
+    fn no_playlist_resolves_watch_urls_with_lists() {
+        let url = Url::parse("https://www.youtube.com/watch?v=BaW_jenozKc&list=PLfoo").unwrap();
+        assert_eq!(
+            video_id(&url, true).unwrap().as_deref(),
+            Some("BaW_jenozKc")
+        );
+        assert!(video_id(&url, false).is_err());
+        for input in [
+            "https://youtube.com/playlist?list=foo",
+            "https://youtube.com/watch?list=foo",
+            "https://youtube.com/watch?v=bad&list=foo",
         ] {
             assert!(
-                player_response(&format!(
-                    "<script>{marker} = {{\"x\": 1}}; other();</script>"
-                ))
-                .is_ok()
+                video_id(&Url::parse(input).unwrap(), true).is_err(),
+                "{input}"
             );
         }
-        for page in [
-            "<p>ytInitialPlayerResponse = {}</p>",
-            "<script>ytInitialPlayerResponse = {broken}</script>",
-            "<script>ytInitialPlayerResponse = null</script>",
-            "<script>_ytInitialPlayerResponse = {}</script>",
-            "<script>$ytInitialPlayerResponse = {}</script>",
-        ] {
-            assert!(matches!(
-                player_response(page),
-                Err(Error::UnsupportedYoutube(_))
-            ));
-        }
-    }
-
-    #[test]
-    fn rejects_access_identity_live_and_drm_responses() {
-        for (pointer, value) in [
-            ("/playabilityStatus/status", Value::from("LOGIN_REQUIRED")),
-            ("/videoDetails/videoId", Value::from("wrong_video")),
-            ("/videoDetails/title", Value::from("")),
-            ("/videoDetails/isLiveContent", Value::from(true)),
-        ] {
-            let mut data = player();
-            *data.pointer_mut(pointer).unwrap() = value;
-            assert!(matches!(
-                parse_formats(&data, "BaW_jenozKc"),
-                Err(Error::UnsupportedYoutube(_))
-            ));
-        }
-        for key in ["isLive", "isUpcoming", "isPostLiveDvr"] {
-            let mut data = player();
-            data["videoDetails"][key] = true.into();
-            assert!(parse_formats(&data, "BaW_jenozKc").is_err());
-        }
-        let mut data = player();
-        data["streamingData"]["licenseInfos"] = serde_json::json!([{"drmFamily": "WIDEVINE"}]);
-        assert!(parse_formats(&data, "BaW_jenozKc").is_err());
-    }
-
-    #[test]
-    fn supports_muxed_webm_and_ignores_malformed_dimensions_and_duplicate_itags() {
-        let mut data = player();
-        data["streamingData"]["formats"][0]["mimeType"] = "video/webm; codecs=\"vp9, opus\"".into();
-        data["streamingData"]["formats"][0]["width"] = 0.into();
-        data["streamingData"]["formats"][0]["height"] = u64::MAX.into();
-        let duplicate = data["streamingData"]["formats"][0].clone();
-        data["streamingData"]["formats"]
-            .as_array_mut()
-            .unwrap()
-            .push(duplicate);
-        let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
-        assert_eq!(formats.len(), 2);
-        assert_eq!(formats[0].ext, "webm");
-        assert_eq!((formats[0].width, formats[0].height), (None, None));
-    }
-
-    #[test]
-    fn unsupported_formats_are_never_exposed_or_probed() {
-        for (key, value) in [
-            ("signatureCipher", Value::from("s=secret")),
-            ("cipher", Value::from("s=secret")),
-            (
-                "url",
-                Value::from("https://media.example/video?n=challenge"),
-            ),
-            (
-                "url",
-                Value::from("https://media.example/n/challenge/video"),
-            ),
-            ("url", Value::from("blob:https://youtube.com/id")),
-            ("type", Value::from("FORMAT_STREAM_TYPE_OTF")),
-            ("targetDurationSec", Value::from(5)),
-            ("drmFamilies", serde_json::json!(["WIDEVINE"])),
-            ("mimeType", Value::from("application/x-mpegURL")),
-            (
-                "mimeType",
-                Value::from("video/mp4; codecs=\"avc1unknown, mp4aunknown\""),
-            ),
-        ] {
-            let mut data = player();
-            data["streamingData"]["formats"][0][key] = value;
-            let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
-            assert_eq!(formats.len(), 1, "{key}");
-            assert_eq!(formats[0].format_id, "22");
-            data["streamingData"]["formats"]
-                .as_array_mut()
-                .unwrap()
-                .pop();
-            assert!(matches!(
-                parse_formats(&data, "BaW_jenozKc"),
-                Err(Error::UnsupportedYoutube(_))
-            ));
-        }
-        let mut data = player();
-        let formats = data["streamingData"]
-            .as_object_mut()
-            .unwrap()
-            .remove("formats")
-            .unwrap();
-        data["streamingData"]["adaptiveFormats"] = formats;
-        for source in data["streamingData"]["adaptiveFormats"]
-            .as_array_mut()
-            .unwrap()
-        {
-            source["type"] = "FORMAT_STREAM_TYPE_OTF".into();
-        }
-        data["streamingData"]["hlsManifestUrl"] = "https://media.example/live.m3u8".into();
-        assert!(parse_formats(&data, "BaW_jenozKc").is_err());
-    }
-
-    #[test]
-    fn adaptive_streams_preserve_declaration_order_kinds_and_kilobit_rates() {
-        let mut data = player();
-        data["streamingData"]["adaptiveFormats"] = serde_json::json!([
-            {"itag":137,"url":"https://media.example/video.mp4","mimeType":"video/mp4; codecs=\"avc1.640028\"","width":1920,"height":1080,"bitrate":2400000},
-            {"itag":140,"url":"https://media.example/audio.m4a","mimeType":"audio/mp4; codecs=\"mp4a.40.2\"","bitrate":128000,"averageBitrate":129500},
-            {"itag":248,"url":"https://media.example/video.webm","mimeType":"video/webm; codecs=\"vp09.00.40.08\"","width":1920,"height":1080},
-            {"itag":251,"url":"https://media.example/audio.webm","mimeType":"audio/webm; codecs=\"opus\"","bitrate":160000},
-            {"itag":18,"url":"https://media.example/duplicate.mp4","mimeType":"video/mp4; codecs=\"avc1.42001E\""}
-        ]);
-        let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
-        assert_eq!(
-            formats
-                .iter()
-                .map(|f| f.format_id.as_str())
-                .collect::<Vec<_>>(),
-            ["18", "22", "137", "140", "248", "251"]
-        );
-        assert_eq!(formats[0].stream_kind, StreamKind::Standalone);
-        assert_eq!(formats[2].stream_kind, StreamKind::VideoOnly);
-        assert_eq!(formats[2].tbr, Some(2400.0));
-        assert_eq!(formats[2].abr, None);
-        assert_eq!(formats[3].stream_kind, StreamKind::AudioOnly);
-        assert_eq!(formats[3].ext, "m4a");
-        assert_eq!(formats[3].abr, Some(129.5));
-        assert_eq!(formats[3].tbr, Some(129.5));
-        assert_eq!(formats[4].ext, "webm");
-        assert_eq!(formats[4].stream_kind, StreamKind::VideoOnly);
-        assert_eq!(formats[5].stream_kind, StreamKind::AudioOnly);
-        assert_eq!(formats[5].abr, Some(160.0));
-    }
-
-    #[test]
-    fn absent_or_invalid_average_bitrate_falls_back_to_valid_total_rate() {
-        for value in [
-            Value::Null,
-            serde_json::json!(0),
-            serde_json::json!(-1),
-            serde_json::json!("invalid"),
-        ] {
-            let mut data = player();
-            data["streamingData"]["formats"][0]["averageBitrate"] = value;
-            data["streamingData"]["formats"][0]["bitrate"] = 500000.into();
-            let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
-            assert_eq!(formats[0].tbr, Some(500.0));
-        }
-    }
-
-    #[test]
-    fn malformed_bitrates_are_unknown_and_unsupported_codec_sources_are_excluded() {
-        for value in [
-            Value::Null,
-            serde_json::json!("128000"),
-            serde_json::json!(-1),
-            serde_json::json!(0),
-            serde_json::json!(true),
-        ] {
-            let mut data = player();
-            let mut source = data["streamingData"]["formats"][0].clone();
-            source["mimeType"] = "audio/mp4; codecs=\"mp4a.40.2\"".into();
-            source["bitrate"] = value;
-            data["streamingData"]["formats"] = serde_json::json!([source]);
-            let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
-            assert_eq!((formats[0].abr, formats[0].tbr), (None, None));
-        }
-        for mime in [
-            "audio/mp4; codecs=\"ac-3\"",
-            "video/mp4; codecs=\"hvc1.1.6.L93\"",
-            "audio/webm; codecs=\"vp9, opus\"",
-            "video/mp4; codecs=\"avc1.640028, unknown\"",
-            "video/mp4",
-            "audio/mp4; codecs=\"mp4aunknown\"",
-        ] {
-            let mut data = player();
-            data["streamingData"]["formats"][0]["mimeType"] = mime.into();
-            let (_, formats) = parse_formats(&data, "BaW_jenozKc").unwrap();
-            assert_eq!(formats.len(), 1, "{mime}");
-            assert_eq!(formats[0].format_id, "22");
-        }
-    }
-
-    #[test]
-    fn rejects_invalid_watch_page_responses_and_media_probes() {
-        let bad_source = FIXTURE.replace("{{ORIGIN}}", "blob:https://youtube.com");
-        for (mime, extra, body, probe_html) in [
-            ("text/plain", "", b"no page".to_vec(), false),
-            (
-                "text/html; charset=iso-8859-1",
-                "",
-                b"ASCII page".to_vec(),
-                false,
-            ),
-            (
-                "text/html",
-                "Content-Encoding: gzip\r\n",
-                b"compressed".to_vec(),
-                false,
-            ),
-            ("text/html", "", vec![0xff], false),
-            (
-                "text/html",
-                "",
-                vec![b' '; MAX_PAGE_BYTES as usize + 1],
-                false,
-            ),
-            ("text/html", "", bad_source.into_bytes(), false),
-            ("text/html", "", FIXTURE.as_bytes().to_vec(), true),
-        ] {
-            let listener = TcpListener::bind("127.0.0.1:0").unwrap();
-            let origin = format!("http://{}", listener.local_addr().unwrap());
-            let page = Url::parse(&format!("{origin}/watch?v=BaW_jenozKc")).unwrap();
-            let body = if probe_html {
-                FIXTURE.replace("{{ORIGIN}}", &origin).into_bytes()
-            } else {
-                body
-            };
-            let worker = thread::spawn(move || {
-                for index in 0..if probe_html { 2 } else { 1 } {
-                    let (mut stream, _) = listener.accept().unwrap();
-                    stream
-                        .set_read_timeout(Some(std::time::Duration::from_secs(5)))
-                        .unwrap();
-                    let mut request = Vec::new();
-                    while !request.ends_with(b"\r\n\r\n") {
-                        let mut byte = [0];
-                        assert_eq!(stream.read(&mut byte).unwrap(), 1);
-                        request.push(byte[0]);
-                    }
-                    let response_body = if index == 0 {
-                        body.as_slice()
-                    } else {
-                        b"<html>not media</html>"
-                    };
-                    write!(stream, "HTTP/1.1 200 OK\r\nContent-Type: {mime}\r\n{extra}Content-Length: {}\r\nConnection: close\r\n\r\n", response_body.len()).unwrap();
-                    let _ = stream.write_all(response_body);
-                }
-            });
-            let client = Client::builder()
-                .no_proxy()
-                .timeout(std::time::Duration::from_secs(5))
-                .build()
-                .unwrap();
-            assert!(matches!(
-                extract_watch_page(&client, &page, "BaW_jenozKc"),
-                Err(Error::UnsupportedYoutube(_) | Error::HtmlTooLarge(_))
-            ));
-            worker.join().unwrap();
-        }
-    }
-
-    #[test]
-    fn local_watch_page_probe_select_and_download() {
-        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
-        let origin = format!("http://{}", listener.local_addr().unwrap());
-        let page = Url::parse(&format!("{origin}/watch?v=BaW_jenozKc")).unwrap();
-        let html = FIXTURE.replace("{{ORIGIN}}", &origin);
-        let worker = thread::spawn(move || {
-            // Page, two format probes, selected media download.
-            for expected in [
-                "/watch?v=BaW_jenozKc",
-                "/media/low.mp4",
-                "/media/high.mp4",
-                "/media/high.mp4",
-            ] {
-                let (mut stream, _) = listener.accept().unwrap();
-                stream
-                    .set_read_timeout(Some(std::time::Duration::from_secs(5)))
-                    .unwrap();
-                let mut request = Vec::new();
-                while !request.ends_with(b"\r\n\r\n") {
-                    let mut byte = [0];
-                    assert_eq!(stream.read(&mut byte).unwrap(), 1);
-                    request.push(byte[0]);
-                }
-                let request = String::from_utf8(request).unwrap();
-                assert!(request.starts_with(&format!("GET {expected} HTTP/1.1\r\n")));
-                let (mime, body) = if expected.starts_with("/watch") {
-                    ("text/html; charset=utf-8", html.as_bytes())
-                } else {
-                    ("video/mp4", b"media".as_slice())
-                };
-                write!(stream, "HTTP/1.1 200 OK\r\nContent-Type: {mime}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n", body.len()).unwrap();
-                let _ = stream.write_all(body);
-            }
-        });
-        let client = Client::builder()
-            .no_proxy()
-            .timeout(std::time::Duration::from_secs(5))
-            .build()
-            .unwrap();
-        let mut info = extract_watch_page(&client, &page, "BaW_jenozKc").unwrap();
-        assert_eq!(info.formats.len(), 2);
-        assert_eq!(info.title, "Fixture } ; & video");
-        info.select_format(Some("18")).unwrap();
-        assert_eq!(info.height, Some(360));
-        info.select_format(Some("worst")).unwrap();
-        assert_eq!(info.format_id.as_deref(), Some("18"));
-        assert!(info.select_format(Some("137+140")).is_err());
-        info.select_format(None).unwrap();
-        assert_eq!(info.format_id.as_deref(), Some("22"));
-        assert_eq!(info.filesize, Some(5));
-        let expected: Value = serde_json::from_str(
-            &include_str!("../../tests/fixtures/youtube/expected.json")
-                .replace("{{ORIGIN}}", &origin),
-        )
-        .unwrap();
-        let actual = serde_json::to_value(&info).unwrap();
-        for (key, value) in expected.as_object().unwrap() {
-            assert_eq!(&actual[key], value, "{key}");
-        }
-        let directory = tempfile::tempdir().unwrap();
-        let destination = directory.path().join("video.mp4");
-        let ydl = crate::YoutubeDl::new().unwrap();
-        assert_eq!(ydl.download(&info, &destination).unwrap(), 5);
-        assert_eq!(std::fs::read(destination).unwrap(), b"media");
-        worker.join().unwrap();
     }
 }

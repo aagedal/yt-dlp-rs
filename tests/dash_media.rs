@@ -139,8 +139,8 @@ fn saved_timeline_number_list_and_range_plans_download_exact_media() {
         let dl = YoutubeDl::new().unwrap();
         let url = format!("{}/media/{manifest}", server.origin);
         for (id, kind, ext) in [
-            ("dash-0", StreamKind::VideoOnly, "mp4"),
-            ("dash-1", StreamKind::AudioOnly, "m4a"),
+            ("0", StreamKind::VideoOnly, "mp4"),
+            ("1", StreamKind::AudioOnly, "m4a"),
         ] {
             let before = server.requests.lock().unwrap().len();
             let info = dl.extract_info_with_format(&url, Some(id)).unwrap();
@@ -189,12 +189,90 @@ fn real_static_dash_downloads_both_representations_and_merges_tracks() {
         let info = dl
             .extract_info(&format!("{}/media/{manifest}", server.origin))
             .unwrap();
-        assert_eq!(info.format_id.as_deref(), Some("dash-0+dash-1"));
+        assert_eq!(info.format_id.as_deref(), Some("0+1"));
         let directory = tempfile::tempdir().unwrap();
         let output = directory.path().join("merged.mp4");
         let bytes = dl.download(&info, &output).unwrap();
         assert_eq!(bytes, std::fs::metadata(&output).unwrap().len());
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 1);
         probe(&output, &["video", "audio"]);
+    }
+}
+
+#[test]
+fn info_json_keeps_upstream_fragment_shape_and_reloads_exact_media() {
+    for manifest in ["manifest.mpd", "number.mpd", "list.mpd", "ranges.mpd"] {
+        let server = Server::new();
+        let directory = tempfile::tempdir().unwrap();
+        let cli = |args: &[&str]| {
+            Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+                .args([
+                    "--no-progress",
+                    "--fixup",
+                    "never",
+                    "-f",
+                    "0",
+                    "-o",
+                    "o.%(ext)s",
+                ])
+                .args(args)
+                .current_dir(directory.path())
+                .output()
+                .unwrap()
+        };
+        let url = format!("{}/media/{manifest}", server.origin);
+        let output = cli(&["--skip-download", "--write-info-json", &url]);
+        assert!(output.status.success(), "{manifest}");
+        let json: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(directory.path().join("o.info.json")).unwrap())
+                .unwrap();
+        // Upstream's DASH format dict: the MPD as manifest_url, relative
+        // fragment paths against fragment_base_url, durations and
+        // `is_dash_periods`.
+        assert_eq!(json["manifest_url"], url, "{manifest}");
+        assert_eq!(json["is_dash_periods"], true, "{manifest}");
+        let base = json["fragment_base_url"].as_str().unwrap();
+        assert!(base.starts_with(&server.origin), "{manifest}");
+        let fragments = json["fragments"].as_array().unwrap();
+        // Byte ranges of the base resource have no relative path.
+        let key = if manifest == "ranges.mpd" {
+            "url"
+        } else {
+            "path"
+        };
+        assert!(
+            fragments
+                .iter()
+                .all(|fragment| fragment[key].is_string()
+                    && fragment.as_object().unwrap().len() <= 3),
+            "{manifest}: {fragments:?}"
+        );
+        // Timeline and template durations; a SegmentList without
+        // `duration` has none, as upstream.
+        assert!(fragments[0].get("duration").is_none(), "{manifest}");
+        assert_eq!(
+            fragments[1]["duration"].is_f64(),
+            matches!(manifest, "manifest.mpd" | "number.mpd"),
+            "{manifest}"
+        );
+        if manifest == "ranges.mpd" {
+            let range = &fragments[1]["byte_range"];
+            assert!(range["end"].as_u64().unwrap() > range["start"].as_u64().unwrap());
+        }
+        let output = cli(&["--load-info-json", "o.info.json"]);
+        assert!(
+            output.status.success(),
+            "{manifest}: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let expected = std::fs::read(format!(
+            "{}/tests/fixtures/dash/media/video-combined.mp4",
+            env!("CARGO_MANIFEST_DIR")
+        ))
+        .unwrap();
+        assert!(
+            std::fs::read(directory.path().join("o.mp4")).unwrap() == expected,
+            "{manifest}"
+        );
     }
 }

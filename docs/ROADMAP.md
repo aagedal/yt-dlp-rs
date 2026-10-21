@@ -38,7 +38,7 @@ tractable for future agents.
   `ttml.rs` ports bounded native text/timing/styles and `ffmpeg.rs` converts local sidecars.
 - `src/embed_subtitles.rs`: local subtitle eligibility and language/stream metadata;
   its bounded FFmpeg runner feeds the final stage of `src/postprocess.rs`.
-- `src/info_json.rs`: cleaned video/playlist info JSON values, `.info.json` naming and keep-existing atomic writes.
+- `src/info_json.rs`: cleaned video/playlist info JSON values, `.info.json` naming and keep-existing or replacing atomic writes.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/audio.rs`, `src/audio/ffmpeg.rs`: pure audio plans and bounded local
@@ -75,7 +75,7 @@ remain outside the current result contract.
    elements, sequential entry downloads, and the option inventory are implemented.
    Bounded automatic resolution ranking and `best`/`worst` selection are implemented;
    Chained numeric/text format filters now constrain existing atoms, pairs and
-   fallbacks before native ranking. Parenthesized groups, best/worst shorthand
+   fallbacks before upstream FormatSorter ordering (`-S` supported). Parenthesized groups, best/worst shorthand
    aliases, bare-filter selectors and positive indexed ranks are implemented.
    Format listing and unselected extraction expose eligible alternatives before
    selection, including separate-only presentations without a merger.
@@ -84,11 +84,14 @@ remain outside the current result contract.
    Selection precedes archive filtering and format selection but does not make
    extraction lazy. Typed filename templates support represented root fields,
    string/integer/fixed-point conversions, width/precision/flags, alternatives and
-   missing-value defaults; full template expressions, conversions and platform
-   filename parity remain open. `--print` video-stage field lists/templates and
+   missing-value defaults with upstream filename sanitization, restricted/Windows/
+   minimal modes, name trimming, typed `-o` templates and `-P` paths; full template expressions, conversions and
+   Windows-host path sanitization remain open. `--print` video-stage field lists/templates and
    the title/ID/URL/filename `--get-*` aliases print unsanitized values with
    quiet simulation; `--print-to-file` appends video-stage lines to output-template
    destinations without implying simulation. Other print stages remain open.
+   `-a/--batch-file` URL lists follow upstream `get_urls` parsing, and the
+   `-w`/`--force-overwrites` modes follow upstream existing-file decisions.
    Full upstream ranking and general selector
    expressions remain open. Site
    playlists and nested/unresolved results require further explicit result types.
@@ -98,7 +101,8 @@ remain outside the current result contract.
    as a successfully downloaded video.
    Bounded download retries are implemented for selected transient
    statuses, connection/timeouts, and body read/truncation failures, with CLI and
-   library configuration. Interrupted transfers resume within a download call using
+   library configuration (upstream `--retries`/`--fragment-retries` defaults,
+   messages, `--retry-sleep` and unavailable-fragment skipping). Interrupted transfers resume within a download call using
    strong ETags, known lengths, and strictly validated ranges, with whole-file
    fallback when validators are unavailable or the server returns a full response.
    Opt-in whole-extraction retries cover transient page/source HTTP failures and
@@ -179,19 +183,21 @@ remain outside the current result contract.
    Matroska, preserving source container/language policies and sidecar retention.
    Other-site/manifest subtitles and regex languages remain open.
    Video/playlist `--write-info-json` sidecars follow upstream clean filtering,
-   naming and ordering for the represented metadata subset; loading info JSON,
-   overwrite options and info JSON embedding remain open.
+   naming and ordering for the represented metadata subset, and
+   `--load-info-json` reprocesses saved dictionaries; info JSON embedding remains open.
    Basic download archives are implemented: cached extractor-key/ID membership,
    filtering before selection and recording only after successful final publication.
    Bounded cooperating-writer locks, append rollback and a pinned offline archive
-   reference fixture are covered; early URL-ID skips, alternate legacy IDs,
-   force-write options and broader archive option parity remain open.
+   reference fixture are covered, as are break-on-existing, per-input breaks,
+   force-write and archive disabling; early URL-ID skips, alternate legacy IDs
+   and broader archive option parity remain open.
    Audio extraction now supports bounded format mappings, quality plans and local
    FFprobe/FFmpeg copy/conversion for eight target formats, source retention,
    cancellation and archive-after-final-publication. Video remux/recode now follows
    audio extraction in the shared pipeline, with source/intermediate retention and
-   latest-completed-stage preservation after failure. General postprocessor chains,
-   metadata/thumbnail embedding and fixups remain open.
+   latest-completed-stage preservation after failure. Metadata and thumbnail
+   embedding (FFmpeg paths only) and thumbnail conversion now follow upstream.
+   General postprocessor chains, mutagen-only embedding and fixups remain open.
 6. **Agent-maintained updates.** Upstream delta reports, bounded implementation
    briefs, differential regression fixtures, reviewable PRs, and staged releases.
    Measure extraction coverage and compatibility before enabling unattended merges.

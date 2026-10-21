@@ -21,7 +21,7 @@ class YoutubeComparisonTest(unittest.TestCase):
 
     def test_exact_fixture_matches_without_mutating_input(self):
         original = copy.deepcopy(self.info)
-        self.info["duration"] = 10  # Outside the explicit comparison subset.
+        self.info["fulltitle"] = "x"  # Outside the explicit comparison subset.
         self.assertEqual(compare(self.info, self.expected), self.expected)
         self.assertEqual(self.info["formats"], original["formats"])
 
@@ -99,10 +99,9 @@ class YoutubeComparisonTest(unittest.TestCase):
         expected = json.loads((fixtures / "adaptive-expected.json").read_text(encoding="utf-8"))
         info = json.loads(json.dumps(expected).replace("{{ORIGIN}}", ORIGIN))
         for fmt in info["formats"]:
-            kind = fmt.pop("stream_kind")
+            # Upstream has no stream_kind: it is derived from the saved codecs.
+            fmt.pop("stream_kind")
             fmt.pop("abr")
-            fmt.update(vcodec="none" if kind == "audio_only" else "avc1.640028",
-                       acodec="none" if kind == "video_only" else "mp4a.40.2")
         self.assertEqual(compare(info, expected, adaptive=True), expected)
         info["formats"][0].pop("acodec")
         with self.assertRaisesRegex(ValueError, "lacks stream codec classification"):
@@ -123,11 +122,12 @@ class YoutubeComparisonTest(unittest.TestCase):
                     contextlib.redirect_stdout(io.StringIO()) as stdout:
                 self.assertEqual(main(), 0)
             self.assertIn("Signature comparison skipped", stdout.getvalue())
-            self.assertEqual(run.call_count, 5)
+            self.assertEqual(run.call_count, 9)
             self.assertEqual(run.call_args_list[0].args[0],
                              ["git", "-C", str(upstream.resolve()), "rev-parse", "HEAD"])
             self.assertEqual([call.args[0][-3] for call in run.call_args_list[1:]],
-                             ["watch-page", "player-api", "n-extraction", "adaptive"])
+                             ["watch-page", "player-api", "n-extraction", "adaptive", "metadata",
+                      "watch-page", "watch-page", "watch-page"])
 
     def test_signature_fixture_contains_real_cipher_and_exact_saved_solution(self):
         fixtures = Path(__file__).resolve().parents[1] / "tests/fixtures/youtube"
@@ -165,7 +165,7 @@ class YoutubeComparisonTest(unittest.TestCase):
                     mock.patch("compare_youtube.subprocess.run", side_effect=results) as run, \
                     contextlib.redirect_stdout(io.StringIO()) as stdout:
                 self.assertEqual(main(), 0)
-            self.assertEqual(run.call_count, 6)
+            self.assertEqual(run.call_count, 10)
             self.assertEqual(run.call_args.args[0][-3], "signature-extraction")
             self.assertEqual(run.call_args.args[0][-1], str(deno.resolve()))
             self.assertEqual(run.call_args.kwargs["encoding"], "utf-8")

@@ -2,13 +2,64 @@ use std::path::PathBuf;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// Retries were exhausted (upstream `RetryManager.report_retry` text,
+    /// without the suffix when no retries were allowed).
+    #[error(
+        "[download] Got error: {text}{}",
+        if *retries == 0 { String::new() } else { format!(". Giving up after {retries} retries") }
+    )]
+    RetriesExhausted {
+        text: String,
+        retries: u32,
+        source: Box<Error>,
+    },
+    /// A fatal fragment gave up (upstream reports the retry failure, then
+    /// `fragment N not found, unable to continue`).
+    #[error("{source}")]
+    FragmentUnavailable { index: usize, source: Box<Error> },
+    /// Upstream `CookieLoadError`: loading the cookie jar failed; it ends the
+    /// run.
+    #[error("{0}")]
+    CookieLoad(String),
+    /// An `--exec` command rejected like upstream `UnsafeExecExpansionError`.
+    #[error("{0}")]
+    Exec(String),
+    /// Upstream `_request_webpage`'s `ExtractorError` for the generic page:
+    /// `[generic] ID: Unable to download webpage: ERR (caused by REPR)`.
+    #[error("{}", crate::extractor::html5::webpage_error_text(id, source))]
+    Webpage {
+        id: String,
+        #[source]
+        source: Box<Error>,
+    },
+    /// An extractor request's `ExtractorError`:
+    /// `[EXTRACTOR] ID: Unable to download WHAT: ERR (caused by REPR)`.
+    #[error(
+        "{}",
+        crate::extractor::request_error_text(extractor, id, what, source)
+    )]
+    ExtractorRequest {
+        extractor: &'static str,
+        id: String,
+        what: &'static str,
+        #[source]
+        source: Box<Error>,
+    },
+    /// Upstream raises `DownloadError(MESSAGE)` without reporting it first:
+    /// `--load-info-json` then retries the webpage URL, otherwise it is
+    /// reported as `ERROR: MESSAGE`.
+    #[error("{0}")]
+    Raised(String),
+    /// An error upstream reports as plain `ERROR: MESSAGE` (`report_error`
+    /// in a downloader), without the URL/ID prefix.
+    #[error("{0}")]
+    Reported(String),
     #[error("invalid URL: {0}")]
     InvalidUrl(#[from] url::ParseError),
     #[error("unsupported URL scheme: {0}; expected http or https")]
     UnsupportedScheme(String),
-    #[error(
-        "no extractor supports {0}; expected direct HTTP media, a HTML5 media page, or supported HLS/DASH VOD"
-    )]
+    /// GenericIE's `UnsupportedError` (no supported media on the page).
+    #[error("Unsupported URL: {0}")]
     UnsupportedUrl(String),
     #[error("unsupported YouTube behavior: {0}")]
     UnsupportedYoutube(String),
@@ -47,8 +98,14 @@ pub enum Error {
     InvalidRangeResponse,
     #[error("download cancelled")]
     DownloadCancelled,
+    /// A `--min-filesize`/`--max-filesize` limit skipped the transfer; upstream
+    /// reports this without an error or archive record.
+    #[error("{0}")]
+    FileSizeLimit(String),
     #[error("postprocessing failed: {0}")]
     Postprocess(String),
+    #[error("match filter failed: {0}")]
+    MatchFilter(String),
     #[error("info JSON failed: {0}")]
     InfoJson(String),
     #[error("download archive failed: {0}")]

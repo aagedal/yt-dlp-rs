@@ -1,0 +1,5 @@
+# `preserve_order` maps swap the last key into a removed key's place;
+# upstream's dicts keep insertion order.
+disallowed-methods = [
+    { path = "serde_json::map::Map::remove", reason = "reorders keys; use shift_remove" },
+]

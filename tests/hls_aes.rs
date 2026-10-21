@@ -226,7 +226,10 @@ fn key_status_and_truncated_key_retries_share_fragment_budget() {
             .download_with_progress(
                 &encrypted_info(&server, &["key"]),
                 &output,
-                DownloadOptions { retries: 1 },
+                DownloadOptions {
+                    retries: 1,
+                    ..Default::default()
+                },
                 |event| {
                     second_attempt |= event.attempt == 2;
                     ControlFlow::Continue(())
@@ -267,7 +270,10 @@ fn ciphertext_retry_keeps_key_and_discards_partial_plaintext() {
         .download_with_progress(
             &encrypted_info(&server, &["key"]),
             &output,
-            DownloadOptions { retries: 1 },
+            DownloadOptions {
+                retries: 1,
+                ..Default::default()
+            },
             |event| {
                 retry_reset |= event.attempt == 2
                     && event.phase == DownloadPhase::Requesting

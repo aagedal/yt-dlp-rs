@@ -54,6 +54,7 @@ pub(crate) fn check_response(response: Response) -> Result<Response> {
 
 pub(crate) fn failure_delay(error: &Error) -> Option<Duration> {
     match error {
+        Error::Webpage { source, .. } => failure_delay(source),
         Error::Http(error) if transient_request(error) => Some(Duration::ZERO),
         Error::HttpRetryAfter {
             source,
@@ -64,7 +65,31 @@ pub(crate) fn failure_delay(error: &Error) -> Option<Duration> {
     }
 }
 
-pub(crate) fn delay(attempt: u8, retry_after: Duration) -> Duration {
+/// Upstream `HttpFD.establish_connection`: 5xx statuses and transport
+/// errors retry; other statuses fail at once.
+pub(crate) fn download_failure_delay(error: &Error) -> Option<Duration> {
+    let server_error = |error: &reqwest::Error| {
+        error
+            .status()
+            .is_some_and(|status| status.is_server_error())
+    };
+    match error {
+        Error::Http(error) if error.status().is_some() => {
+            server_error(error).then_some(Duration::ZERO)
+        }
+        Error::Http(error) => {
+            (!error.is_builder() && !error.is_redirect()).then_some(Duration::ZERO)
+        }
+        Error::HttpRetryAfter {
+            source,
+            retry_after,
+        } => server_error(source).then_some(*retry_after),
+        Error::ExtractionRead(_) => Some(Duration::ZERO),
+        _ => None,
+    }
+}
+
+pub(crate) fn delay(attempt: u32, retry_after: Duration) -> Duration {
     let delay_ms = (100_u64 << attempt.min(4)).min(1000);
     Duration::from_millis(delay_ms).max(retry_after.min(MAX_RETRY_AFTER))
 }
@@ -77,7 +102,175 @@ pub(crate) fn transient_request(error: &reqwest::Error) -> bool {
             .is_some_and(|status| matches!(status.as_u16(), 408 | 429 | 500 | 502 | 503 | 504))
 }
 
-pub(crate) fn backoff(attempt: u8, retry_after: Duration) {
+/// Upstream `--retry-sleep` expression (`parse_sleep_func`): a number,
+/// `linear=START[:END[:STEP]]` or `exp=START[:END[:BASE]]`.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct SleepExpression {
+    exponential: bool,
+    start: f64,
+    limit: f64,
+    step: f64,
+}
+
+impl SleepExpression {
+    /// Parse a stripped expression; `None` when it does not match upstream's
+    /// pattern.
+    pub fn parse(text: &str) -> Option<Self> {
+        static PATTERN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            let number = r"([0-9]+(?:\.[0-9]+)?)";
+            regex::Regex::new(&format!(
+                r"^(?:(linear|exp)=)?{number}(?::{number}?)?(?::{number})?$"
+            ))
+            .unwrap()
+        });
+        let found = PATTERN.captures(crate::batch::py_strip(text))?;
+        let number = |index| {
+            found
+                .get(index)
+                .and_then(|m| m.as_str().parse::<f64>().ok())
+        };
+        let op = found.get(1).map(|m| m.as_str());
+        let start = number(2)?;
+        let limit = number(3);
+        let step = number(4);
+        let exponential = op == Some("exp");
+        let step = match (exponential, step) {
+            (_, Some(step)) => step,
+            (true, None) => 2.0,
+            (false, None) if op.is_some() || limit.is_some() => start,
+            (false, None) => 0.0,
+        };
+        Some(Self {
+            exponential,
+            start,
+            limit: limit.unwrap_or(f64::INFINITY),
+            step,
+        })
+    }
+
+    /// The delay before retry `n` (zero-based).
+    pub fn delay(&self, n: u32) -> f64 {
+        let value = if self.exponential {
+            self.start * self.step.powf(f64::from(n))
+        } else {
+            self.start + self.step * f64::from(n)
+        };
+        value.min(self.limit)
+    }
+}
+
+/// Upstream `--retry-sleep` functions for download retries.
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub struct RetrySleep {
+    pub http: Option<SleepExpression>,
+    pub fragment: Option<SleepExpression>,
+}
+
+/// `RetryManager.report_retry` for a retry: the `Got error` line, then the
+/// configured sleep (announced like upstream) or the native backoff.
+pub(crate) fn announce_retry(
+    error: &Error,
+    attempt: u32,
+    retries: u32,
+    fragment: Option<u32>,
+    sleep: Option<SleepExpression>,
+) -> Option<Duration> {
+    let retries_text = if retries == u32::MAX {
+        "inf".to_owned()
+    } else {
+        retries.to_string()
+    };
+    let suffix = fragment.map_or_else(String::new, |index| format!(" fragment {index}"));
+    crate::screen::screen(&format!(
+        "[download] Got error: {}. Retrying{suffix} ({}/{retries_text})...",
+        upstream_error_text(error),
+        attempt + 1
+    ));
+    let delay = sleep?.delay(attempt);
+    if delay > 0.0 {
+        crate::screen::screen(&format!("Sleeping {delay:.2} seconds ..."));
+    }
+    Some(Duration::from_secs_f64(delay.clamp(0.0, 86_400.0)))
+}
+
+/// The final error of a retryable failure after `retries` retries.
+pub(crate) fn exhausted(error: Error, retries: u32) -> Error {
+    Error::RetriesExhausted {
+        text: upstream_error_text(&error),
+        retries,
+        source: Box::new(error),
+    }
+}
+
+/// Upstream-style error text: `HTTP Error CODE: Reason` for HTTP statuses.
+pub fn upstream_error_text(error: &Error) -> String {
+    let status = match error {
+        Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
+        _ => None,
+    };
+    match status {
+        Some(status) => {
+            let reason = match error {
+                Error::Http(source) | Error::HttpRetryAfter { source, .. } => reason_phrase(source),
+                _ => None,
+            };
+            format!(
+                "HTTP Error {}: {}",
+                status.as_u16(),
+                reason
+                    .as_deref()
+                    .unwrap_or(status.canonical_reason().unwrap_or(""))
+            )
+        }
+        None => match error {
+            Error::Http(source) => urllib_error(source),
+            _ => error.to_string(),
+        },
+    }
+}
+
+/// urllib's text for a transport error: `[Errno N] TEXT` from the OS error.
+pub(crate) fn urllib_error(error: &reqwest::Error) -> String {
+    let mut source: Option<&(dyn std::error::Error + 'static)> = Some(error);
+    // Without an OS error, the innermost cause says the most (e.g. TLS).
+    let mut innermost = error.to_string();
+    while let Some(current) = source {
+        innermost = current.to_string();
+        if let Some(io) = current.downcast_ref::<std::io::Error>()
+            && let Some(code) = io.raw_os_error()
+        {
+            let text = io.to_string();
+            let text = text
+                .strip_suffix(&format!(" (os error {code})"))
+                .unwrap_or(&text);
+            // CPython words Windows socket errors as `[WinError N]`, with
+            // FormatMessage's trailing dots stripped.
+            if cfg!(windows) {
+                return format!("[WinError {code}] {}", text.trim_end_matches('.'));
+            }
+            return format!("[Errno {code}] {text}");
+        }
+        source = current.source();
+    }
+    innermost
+}
+
+/// The server's reason phrase (like urllib's `HTTPError.reason`), which
+/// reqwest keeps only in its status error text: `... (CODE REASON) for url (...)`.
+fn reason_phrase(error: &reqwest::Error) -> Option<String> {
+    let text = error.to_string();
+    let rest = text
+        .strip_prefix("HTTP status client error (")
+        .or_else(|| text.strip_prefix("HTTP status server error ("))?;
+    let inner = match rest.rfind(") for url (") {
+        Some(end) => &rest[..end],
+        None => rest.strip_suffix(')')?,
+    };
+    let (_, reason) = inner.split_once(' ')?;
+    Some(reason.to_owned())
+}
+
+pub(crate) fn backoff(attempt: u32, retry_after: Duration) {
     // Bounded exponential backoff: 100, 200, 400, 800, then 1000 ms.
     std::thread::sleep(delay(attempt, retry_after));
 }

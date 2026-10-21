@@ -198,6 +198,7 @@ fn configured() -> YoutubeDl {
             ],
             user_agent: Some("header-fixture/1".into()),
             referer: Some("https://referrer.invalid/start".into()),
+            ..Default::default()
         },
     )
     .unwrap()
@@ -282,6 +283,7 @@ fn library_defaults_support_http_token_names_and_tabs_for_direct_probe_and_downl
             headers: vec![("X!Token".into(), "one\ttwo".into())],
             user_agent: Some("library-fixture/1".into()),
             referer: Some("https://referrer.invalid/direct".into()),
+            ..Default::default()
         },
     )
     .unwrap();
@@ -352,7 +354,7 @@ fn headers_reach_dash_manifest_and_selected_stream_init_and_fragments() {
     let directory = tempfile::tempdir().unwrap();
     let dl = configured();
     let url = server.url("/dash/media/manifest.mpd");
-    let info = dl.extract_info_with_format(&url, Some("dash-0")).unwrap();
+    let info = dl.extract_info_with_format(&url, Some("0")).unwrap();
     let target = directory.path().join("video.mp4");
     dl.download(&info, &target).unwrap();
     assert_eq!(

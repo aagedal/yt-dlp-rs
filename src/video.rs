@@ -27,6 +27,10 @@ pub(crate) struct VideoPlan {
     pub args: Vec<String>,
     pub muxer: String,
     pub skip: bool,
+    /// A second, FFMETADATA input (upstream's chapter metadata file).
+    pub metadata_input: Option<std::path::PathBuf>,
+    /// The postprocessor key for `--postprocessor-args`.
+    pub pp: &'static str,
 }
 fn error(message: &str) -> Error {
     Error::Postprocess(message.into())
@@ -79,6 +83,30 @@ impl VideoOptions {
         }
         Self::new(format, mode)
     }
+    /// Upstream `_ACTION` (`remuxing`/`converting`) and its PP name.
+    pub(crate) fn action(&self) -> (&'static str, &'static str) {
+        match self.mode {
+            VideoMode::Remux => ("remuxing", "VideoRemuxer"),
+            VideoMode::Recode => ("converting", "VideoConvertor"),
+        }
+    }
+
+    /// Upstream `resolve_mapping` skip reason for `source_ext`, if any.
+    pub(crate) fn skip_reason(&self, source_ext: &str) -> Option<String> {
+        let source = source_ext.to_lowercase();
+        match self
+            .mappings
+            .iter()
+            .find(|m| m.source.as_deref().is_none_or(|c| c == source))
+        {
+            None => Some(format!("could not find a mapping for {source}")),
+            Some(mapping) if mapping.target == source => {
+                Some(format!("already is in target format {source}"))
+            }
+            Some(_) => None,
+        }
+    }
+
     pub(crate) fn plan(&self, source_ext: &str) -> Result<VideoPlan> {
         let source = source_ext.to_lowercase();
         let target = self
@@ -91,12 +119,18 @@ impl VideoOptions {
                     .is_none_or(|condition| condition == source)
             })
             .map(|mapping| mapping.target.as_str());
+        let pp = match self.mode {
+            VideoMode::Remux => "VideoRemuxer",
+            VideoMode::Recode => "VideoConvertor",
+        };
         let Some(target) = target.filter(|target| *target != source) else {
             return Ok(VideoPlan {
                 extension: source_ext.into(),
                 args: Vec::new(),
                 muxer: String::new(),
                 skip: true,
+                metadata_input: None,
+                pp,
             });
         };
         let mut args = vec![
@@ -127,6 +161,8 @@ impl VideoOptions {
             args,
             muxer: muxer.into(),
             skip: false,
+            metadata_input: None,
+            pp,
         })
     }
 }

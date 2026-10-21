@@ -197,9 +197,12 @@ fn direct_media_and_master_extract_plans_without_fetching_segments() {
     let downloader = YoutubeDl::new().unwrap();
     for path in ["/media.m3u8", "/stream"] {
         let info = downloader.extract_info(&server.url(path)).unwrap();
-        assert!(!info.direct);
-        assert_eq!(info.ext, "ts");
-        assert!(info.formats.is_empty());
+        assert!(!info.is_direct());
+        // Upstream labels HLS formats `mp4` regardless of segment containers.
+        assert_eq!(info.ext, "mp4");
+        // Upstream returns a media playlist as one format, numbered `0`.
+        assert_eq!(info.formats.len(), 1);
+        assert_eq!(info.format_id.as_deref(), Some("0"));
         assert_eq!(info.fragments.len(), 2);
         assert_eq!(
             info.fragments[0].url.as_str(),
@@ -210,12 +213,13 @@ fn direct_media_and_master_extract_plans_without_fetching_segments() {
     let best = downloader
         .extract_info(&server.url("/master.m3u8"))
         .unwrap();
-    assert_eq!(best.format_id.as_deref(), Some("hls-1"));
+    // Upstream names unnamed variants by their bitrate in kbps.
+    assert_eq!(best.format_id.as_deref(), Some("1000"));
     assert_eq!((best.width, best.height), (Some(1280), Some(720)));
     assert_eq!(best.formats[1].tbr, Some(1000.0));
     assert_eq!(best.fragments.len(), 2);
     let low = downloader
-        .extract_info_with_format(&server.url("/master.m3u8"), Some("hls-0"))
+        .extract_info_with_format(&server.url("/master.m3u8"), Some("400"))
         .unwrap();
     assert_eq!(low.height, Some(360));
     assert_eq!(low.url.as_str(), server.url("/low.m3u8"));
@@ -233,7 +237,7 @@ fn html_sources_flatten_master_formats_and_preserve_page_identity_and_referer() 
     let server = Server::new();
     let info = YoutubeDl::new()
         .unwrap()
-        .extract_info_with_format(&server.url("/page.html"), Some("0-hls-1"))
+        .extract_info_with_format(&server.url("/page.html"), Some("hls-1000"))
         .unwrap();
     assert_eq!(info.id, "page-1");
     assert_eq!(info.title, "Page title (1)");
@@ -244,7 +248,8 @@ fn html_sources_flatten_master_formats_and_preserve_page_identity_and_referer() 
             .iter()
             .map(|format| format.format_id.as_str())
             .collect::<Vec<_>>(),
-        ["0-hls-0", "0-hls-1", "1"]
+        // Pinned upstream: the unlabeled MP4 source sorts first, numbered `0`.
+        ["0", "hls-400", "hls-1000"]
     );
     assert_eq!(info.fragments.len(), 2);
     for request in server.requests.lock().unwrap().iter().skip(1) {
@@ -258,7 +263,7 @@ fn html_sources_flatten_master_formats_and_preserve_page_identity_and_referer() 
         .unwrap()
         .extract_info(&server.url("/single.html"))
         .unwrap();
-    assert_eq!(single.format_id.as_deref(), Some("0"));
+    assert_eq!(single.format_id.as_deref(), Some("hls"));
     assert_eq!(single.fragments.len(), 2);
 }
 
@@ -277,10 +282,27 @@ fn json_simulation_does_not_fetch_fragments_or_create_output() {
         String::from_utf8_lossy(&result.stderr)
     );
     let json: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
-    assert_eq!(json["format_id"], "hls-1");
-    assert_eq!(json["fragments"].as_array().unwrap().len(), 2);
+    assert_eq!(json["format_id"], "1000");
+    assert_eq!(json["protocol"], "m3u8_native");
+    assert!(
+        json["formats"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|format| format["protocol"] == "m3u8_native")
+    );
+    // Like upstream, HLS formats carry no fragments; HlsFD reads the playlist.
+    assert!(json.get("fragments").is_none());
+    assert_eq!(json["has_drm"], false);
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
-    assert_eq!(server.paths(), ["/master.m3u8", "/low.m3u8", "/high.m3u8"]);
+    // Upstream generic's "Checking m3u8 live status" refetches the first
+    // `m3u8_native` format and sets duration = int(sum of EXTINF) = 4 + 2.
+    assert_eq!(json["duration"], 6);
+    assert_eq!(json["duration_string"], "6");
+    assert_eq!(
+        server.paths(),
+        ["/master.m3u8", "/low.m3u8", "/high.m3u8", "/low.m3u8"]
+    );
 }
 
 #[test]
@@ -331,7 +353,7 @@ fn manifest_path_and_html_type_hints_override_misleading_media_mime() {
             .unwrap()
             .extract_info(&server.url(path))
             .unwrap();
-        assert!(!info.direct, "{path}");
+        assert!(!info.is_direct(), "{path}");
         assert_eq!(info.fragments.len(), 2, "{path}");
     }
     for path in ["/bad-mime.m3u8", "/hinted-bad.html"] {
@@ -402,15 +424,77 @@ fn encrypted_json_and_simulation_do_not_request_keys_or_segments() {
             String::from_utf8_lossy(&output.stderr)
         );
         if flag == "-j" {
+            // The key location stays in the playlist, as upstream.
             let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-            assert_eq!(
-                info["fragments"][0]["encryption"]["key_url"],
-                server.url("/key")
-            );
-            assert_eq!(info["fragments"][0]["encryption"]["iv"][15], 7);
-            assert!(info["fragments"][0]["encryption"].get("key").is_none());
+            assert!(info.get("fragments").is_none());
+            assert!(!String::from_utf8_lossy(&output.stdout).contains("key_url"));
         }
     }
-    assert_eq!(server.paths(), ["/aes.m3u8", "/aes.m3u8"]);
+    // Per run: extraction plus the generic live-status refetch of the media
+    // playlist itself. Keys and segments are never requested.
+    assert_eq!(
+        server.paths(),
+        ["/aes.m3u8", "/aes.m3u8", "/aes.m3u8", "/aes.m3u8"]
+    );
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+}
+
+#[test]
+fn cli_download_reports_upstream_fragment_count_before_destination() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--no-progress",
+            "-o",
+            "out.%(ext)s",
+            &server.url("/master.m3u8"),
+        ])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    // This server's segments are not media; the lines precede the transfer.
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout.contains("[hlsnative] Total fragments: 2\n[download] Destination: out."),
+        "{stdout}"
+    );
+}
+
+#[test]
+fn info_json_formats_have_no_fragments_and_reload_from_the_playlist() {
+    let server = Server::new();
+    let directory = tempfile::tempdir().unwrap();
+    let cli = |args: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .args(["--no-progress", "-o", "out.%(ext)s"])
+            .args(args)
+            .current_dir(directory.path())
+            .output()
+            .unwrap()
+    };
+    let output = cli(&[
+        "--skip-download",
+        "--write-info-json",
+        &server.url("/master.m3u8"),
+    ]);
+    assert!(output.status.success());
+    let json: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(directory.path().join("out.info.json")).unwrap())
+            .unwrap();
+    // Upstream's HLS format dicts: no fragments, the master as manifest_url.
+    for format in json["formats"].as_array().unwrap() {
+        assert!(format.get("fragments").is_none());
+        assert_eq!(format["manifest_url"], server.url("/master.m3u8"));
+        assert_eq!(format["has_drm"], false);
+    }
+    // HlsFD reads the fragments from the playlist when downloading.
+    let output = cli(&["--load-info-json", "out.info.json"]);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout.contains(
+            "[hlsnative] Downloading m3u8 manifest\n[hlsnative] Total fragments: 2\n[download] Destination: out.mp4"
+        ),
+        "{stdout}"
+    );
 }

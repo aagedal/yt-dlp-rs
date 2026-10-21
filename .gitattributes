@@ -1,3 +1,7 @@
+# Check out text with LF everywhere: fixtures and expected outputs are
+# compared byte for byte (Windows would otherwise get CRLF).
+* text=auto eol=lf
+
 # Hash-pinned solver/player artifacts must retain their original LF bytes.
 /vendor/ejs/* text eol=lf
 /tests/fixtures/youtube/challenges/* text eol=lf

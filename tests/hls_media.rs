@@ -123,11 +123,13 @@ fn saved_transport_stream_and_fragmented_mp4_assemble_exact_media() {
         let info = dl
             .extract_info(&format!("{}/{kind}/index.m3u8", server.origin))
             .unwrap();
-        assert_eq!(info.ext, ext);
+        // Upstream labels HLS `mp4`; the assembled bytes keep their container.
+        assert_eq!(info.ext, "mp4");
         assert_eq!(info.fragments.len(), count);
         let directory = tempfile::tempdir().unwrap();
         let output = directory.path().join(format!("media.{ext}"));
         let bytes = dl.download(&info, &output).unwrap();
+        assert_eq!(yt_dlp_rs::container::sniff(&output), Some(ext), "{kind}");
         let actual = std::fs::read(&output).unwrap();
         let mut expected = Vec::new();
         for (index, fragment) in info.fragments.iter().enumerate() {
@@ -212,7 +214,7 @@ fn real_external_audio_rendition_merges_complete_native_fragment_downloads() {
     let info = dl
         .extract_info(&format!("{}/audio-video/master.m3u8", server.origin))
         .unwrap();
-    assert_eq!(info.format_id.as_deref(), Some("hls-0+hls-audio-0"));
+    assert_eq!(info.format_id.as_deref(), Some("140+main-English"));
     assert_eq!(info.ext, "mp4");
     assert_eq!(
         info.requested_formats[0].audio_group.as_deref(),
@@ -278,4 +280,115 @@ fn real_external_audio_rendition_merges_complete_native_fragment_downloads() {
             .iter()
             .any(|track| track["codec_type"] == "audio" && track["codec_name"] == "aac")
     );
+}
+
+/// A compiled fake ffmpeg: `-version` prints a banner; otherwise it logs its
+/// arguments beside itself and writes `fixed` to the last argument.
+fn fake_ffmpeg(directory: &std::path::Path) -> std::path::PathBuf {
+    let source = directory.join("fake.rs");
+    std::fs::write(
+        &source,
+        r#"
+fn main() {
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    if args == ["-version"] { println!("ffmpeg version fixup-fixture"); return; }
+    let log = std::env::current_exe().unwrap().with_extension("log");
+    std::fs::write(log, args.join("\n")).unwrap();
+    std::fs::write(args.last().unwrap(), b"fixed").unwrap();
+}
+"#,
+    )
+    .unwrap();
+    let binary = directory.join(format!("ffmpeg{}", std::env::consts::EXE_SUFFIX));
+    assert!(
+        Command::new(std::env::var_os("RUSTC").unwrap_or_else(|| "rustc".into()))
+            .arg(&source)
+            .args(["--edition=2024", "-o"])
+            .arg(&binary)
+            .status()
+            .unwrap()
+            .success()
+    );
+    binary
+}
+
+#[test]
+fn transport_stream_downloads_get_upstream_fixup_m3u8_or_warnings() {
+    let server = Server::new();
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = fake_ffmpeg(tools.path());
+    let empty = tempfile::tempdir().unwrap();
+    let url = format!("{}/ts/index.m3u8", server.origin);
+    let run = |args: &[&str], with_ffmpeg: bool| {
+        let directory = tempfile::tempdir().unwrap();
+        let mut command = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"));
+        command
+            .env("PATH", empty.path())
+            .args(["--no-progress", "-o", "out.%(ext)s"])
+            .args(args)
+            .arg(&url)
+            .current_dir(directory.path());
+        if with_ffmpeg {
+            command.arg("--ffmpeg-location").arg(&ffmpeg);
+        }
+        let output = command.output().unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let bytes = std::fs::read(directory.path().join("out.mp4")).unwrap();
+        (
+            String::from_utf8_lossy(&output.stdout).into_owned(),
+            String::from_utf8_lossy(&output.stderr).into_owned(),
+            bytes,
+        )
+    };
+    // Checked with pinned upstream on a real TS stream: the MP4-labeled TS is
+    // remuxed with a stream copy (no ffprobe here, so no AAC filter).
+    let (stdout, _, bytes) = run(&[], true);
+    assert!(
+        stdout.contains("[FixupM3u8] Fixing MPEG-TS in MP4 container of \"out.mp4\""),
+        "{stdout}"
+    );
+    assert_eq!(bytes, b"fixed");
+    let log = std::fs::read_to_string(ffmpeg.with_extension("log")).unwrap();
+    let args: Vec<&str> = log.lines().collect();
+    let input = args.iter().position(|arg| *arg == "-i").unwrap();
+    assert_eq!(args[input - 1], "mpegts");
+    assert_eq!(
+        &args[input + 2..args.len() - 1],
+        [
+            "-map",
+            "0",
+            "-dn",
+            "-ignore_unknown",
+            "-c",
+            "copy",
+            "-f",
+            "mp4"
+        ]
+    );
+    assert!(args.last().unwrap().ends_with("out.temp.mp4"));
+    let message = "WARNING: index: Possible MPEG-TS in MP4 container or malformed AAC timestamps";
+    let (_, stderr, bytes) = run(&[], false);
+    assert!(
+        stderr.contains(&format!(
+            "{message}. Install ffmpeg to fix this automatically"
+        )),
+        "{stderr}"
+    );
+    assert_eq!(yt_dlp_rs::container::sniff_bytes(&bytes), Some("ts"));
+    let (stdout, stderr, bytes) = run(&["--fixup", "warn"], true);
+    assert!(stderr.contains(&format!("{message}\n")), "{stderr}");
+    assert!(!stdout.contains("FixupM3u8"));
+    assert_ne!(bytes, b"fixed");
+    for args in [&["--fixup", "never"][..], &["--hls-use-mpegts"]] {
+        let (stdout, stderr, bytes) = run(args, true);
+        assert!(
+            !stdout.contains("FixupM3u8") && !stderr.contains("MPEG-TS"),
+            "{args:?}"
+        );
+        assert_ne!(bytes, b"fixed");
+    }
 }

@@ -4,44 +4,52 @@ use super::{TemplateOptions, render_template_with_options, template};
 use crate::{Error, Result, VideoInfo};
 use std::path::PathBuf;
 
-/// Upstream `POSTPROCESS_WHEN`; only `video` is supported here.
-const WHEN: &[&str] = &[
-    "pre_process",
-    "after_filter",
-    "video",
-    "before_dl",
-    "post_process",
-    "after_move",
-    "after_video",
-    "playlist",
-];
+use super::Stage;
 
-/// A validated `--print` template for the `video` stage.
+/// Which `--get-*` fields to print.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct ForcedFields {
+    pub title: bool,
+    pub id: bool,
+    pub url: bool,
+    pub thumbnail: bool,
+    pub description: bool,
+    pub filename: bool,
+    pub duration: bool,
+    pub format: bool,
+}
+
+/// A validated `--print` template and the stage that prints it.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PrintTemplate {
     template: String,
+    stage: Stage,
+    /// A `--get-*` field printed only when present (upstream `optional`).
+    optional: Option<&'static str>,
+}
+
+/// The stage's file paths: `filepath` (set from `post_process` on) and the
+/// prepared `_filename`.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct StagePaths<'a> {
+    pub filepath: Option<&'a str>,
+    pub prepared: Option<&'a str>,
 }
 
 impl PrintTemplate {
     /// Parse `[WHEN:]TEMPLATE`. WHEN is case-insensitive and defaults to
-    /// `video`; other stages are rejected rather than printed at the wrong time.
+    /// `video`; `pre_process` and `after_filter` are rejected
+    /// rather than printed at the wrong time.
     /// Bare field lists become one `%(field)s` line per field, and a trailing
     /// `=` prints `field = %(field)#j`, as upstream's `_forceprint` does.
     pub fn parse(spec: &str) -> Result<Self> {
-        let template = match spec.split_once(':') {
-            Some((when, rest)) if WHEN.iter().any(|w| w.eq_ignore_ascii_case(when)) => {
-                if !when.eq_ignore_ascii_case("video") {
-                    return Err(Error::InvalidTemplate(format!(
-                        "print stage {:?} is unsupported; only \"video\" is implemented",
-                        when.to_ascii_lowercase()
-                    )));
-                }
-                rest
-            }
-            _ => spec,
-        };
+        let (when, template) = Stage::split(spec, "video");
+        let stage = Stage::parse(&when)
+            .map_err(|_| Error::InvalidTemplate(format!("print stage {when:?} is unsupported")))?;
         let template = Self {
             template: expand_shorthand(template)?,
+            stage,
+            optional: None,
         };
         // Validate syntax and field names before any extraction, with
         // placeholder metadata standing in for the processed video.
@@ -53,20 +61,36 @@ impl PrintTemplate {
         Ok(template)
     }
 
-    /// The `-e`/`--get-id`/`-g`/`--get-filename` equivalents, in upstream order.
-    pub fn forced_fields(title: bool, id: bool, url: bool, filename: bool) -> Vec<Self> {
+    /// Upstream `__forced_printings` for `--get-title`, `--get-id`,
+    /// `--get-url`, `--get-thumbnail`, `--get-description`, `--get-filename`,
+    /// `--get-duration` (`formatSeconds`) and `--get-format`, in that order;
+    /// thumbnail, description and duration print only when present.
+    pub fn forced_fields(fields: ForcedFields) -> Vec<Self> {
         [
-            (title, "title"),
-            (id, "id"),
-            (url, "urls"),
-            (filename, "filename"),
+            (fields.title, "title", "title", false),
+            (fields.id, "id", "id", false),
+            (fields.url, "urls", "urls", false),
+            (fields.thumbnail, "thumbnail", "thumbnail", true),
+            (fields.description, "description", "description", true),
+            (fields.filename, "filename", "filename", false),
+            (fields.duration, "duration_string", "duration", true),
+            (fields.format, "format", "format", false),
         ]
         .into_iter()
-        .filter(|(enabled, _)| *enabled)
-        .map(|(_, field)| Self {
+        .filter(|(enabled, ..)| *enabled)
+        .map(|(_, field, source, optional)| Self {
             template: format!("%({field})s"),
+            stage: Stage::Video,
+            optional: optional.then_some(source),
         })
         .collect()
+    }
+
+    /// Whether this template prints for `info` (optional forced fields need
+    /// a value).
+    pub fn applies(&self, info: &VideoInfo) -> bool {
+        self.optional
+            .is_none_or(|field| template::has_value(info, field))
     }
 
     /// Render one line (without its terminating newline). `filename` is the
@@ -78,6 +102,21 @@ impl PrintTemplate {
         filename: std::result::Result<&str, &Error>,
         options: &TemplateOptions,
     ) -> Result<String> {
+        let paths = StagePaths {
+            filepath: None,
+            prepared: filename.ok(),
+        };
+        self.render_at(info, filename, paths, options)
+    }
+
+    /// Render at a stage with its `filepath`/`_filename` values.
+    pub fn render_at(
+        &self,
+        info: &VideoInfo,
+        filename: std::result::Result<&str, &Error>,
+        paths: StagePaths<'_>,
+        options: &TemplateOptions,
+    ) -> Result<String> {
         let urls = print_urls(info);
         template::expand(
             &self.template,
@@ -85,9 +124,25 @@ impl PrintTemplate {
                 info,
                 filename,
                 urls: &urls,
+                filepath: paths.filepath,
+                prepared: paths.prepared,
             },
             options,
         )
+    }
+
+    /// Render over a playlist's info dict (the `playlist` stage).
+    pub fn render_dict(
+        &self,
+        dict: &serde_json::Value,
+        options: &TemplateOptions,
+    ) -> Result<String> {
+        template::expand(&self.template, template::Source::Json(dict), options)
+    }
+
+    /// The stage that prints this template.
+    pub fn stage(&self) -> Stage {
+        self.stage
     }
 }
 
@@ -123,12 +178,46 @@ impl PrintToFile {
         filename: std::result::Result<&str, &Error>,
         options: &TemplateOptions,
     ) -> Result<(PathBuf, String)> {
+        let paths = StagePaths {
+            filepath: None,
+            prepared: filename.ok(),
+        };
+        self.render_at(info, filename, paths, options)
+    }
+
+    /// Render at a stage with its `filepath`/`_filename` values.
+    pub fn render_at(
+        &self,
+        info: &VideoInfo,
+        filename: std::result::Result<&str, &Error>,
+        paths: StagePaths<'_>,
+        options: &TemplateOptions,
+    ) -> Result<(PathBuf, String)> {
         let path = render_template_with_options(&self.file, info, options)?;
-        Ok((path, self.template.render(info, filename, options)?))
+        Ok((
+            path,
+            self.template.render_at(info, filename, paths, options)?,
+        ))
+    }
+
+    /// Render the line and destination over a playlist's info dict.
+    pub fn render_dict(
+        &self,
+        dict: &serde_json::Value,
+        options: &TemplateOptions,
+    ) -> Result<(PathBuf, String)> {
+        let path =
+            template::render_kind(&self.file, template::Source::JsonFile(dict), options, None)?;
+        Ok((path, self.template.render_dict(dict, options)?))
+    }
+
+    /// The stage that prints this pair.
+    pub fn stage(&self) -> Stage {
+        self.template.stage
     }
 }
 
-fn placeholder_info() -> VideoInfo {
+pub(super) fn placeholder_info() -> VideoInfo {
     serde_json::from_value(serde_json::json!({
         "id": "id", "title": "title", "ext": "mp4", "extractor": "generic",
         "extractor_key": "Generic", "url": "https://example.invalid/media",
@@ -189,26 +278,34 @@ fn shorthand_kind(body: &str) -> Option<bool> {
 }
 
 fn expand_shorthand(template: &str) -> Result<String> {
-    let (body, debug) = template
-        .strip_suffix('=')
-        .map_or((template, false), |body| (body, true));
-    match shorthand_kind(body) {
-        None => Ok(template.into()),
-        Some(true) => Err(Error::InvalidTemplate(
-            "dictionary print shorthand is unsupported".into(),
-        )),
-        Some(false) => Ok(body
-            .split(',')
-            .map(|field| {
-                if debug {
-                    format!("{field} = %({field})#j")
-                } else {
-                    format!("%({field})s")
-                }
-            })
-            .collect::<Vec<_>>()
-            .join("\n")),
+    // Upstream `format_tmpl`.
+    let Some(dict) = shorthand_kind(template.strip_suffix('=').unwrap_or(template)) else {
+        return Ok(template.into());
+    };
+    let mut body = template.to_owned();
+    let mut json = false;
+    if body.starts_with('{') {
+        body.insert(0, '.');
+        json = true;
     }
+    let debug = body.ends_with('=');
+    if debug {
+        body.pop();
+    }
+    let format = |field: &str| {
+        if debug {
+            format!("{field} = %({field})#j")
+        } else if json {
+            format!("%({field})j")
+        } else {
+            format!("%({field})s")
+        }
+    };
+    Ok(if dict {
+        format(&body)
+    } else {
+        body.split(',').map(format).collect::<Vec<_>>().join("\n")
+    })
 }
 
 #[cfg(test)]
@@ -242,22 +339,30 @@ mod tests {
             print("filename,urls"),
             "out/a.mp4\nhttps://example.com/m.mp4"
         );
-        for spec in [
-            "playlist:id",
-            "Before_DL:%(id)s",
-            "{id,title}",
-            "id,missing",
-            "id.0",
-            "-1",
-            "pre-1",
-            "unknown:id",
-            "id,",
-            "%(id)q",
-        ] {
-            assert!(PrintTemplate::parse(spec).is_err(), "{spec}");
-        }
+        assert!(PrintTemplate::parse("pre_process:%(id)s").is_err());
+        assert_eq!(print("unknown:id"), "NA");
+        // Upstream's key grammar: unmatched keys and missing traversals are NA.
+        assert_eq!(print("-1"), "NA");
+        assert_eq!(print("pre-1"), "NA");
+        assert_eq!(print("%(id)q"), "a/b");
         assert!(PrintTemplate::parse("%(id)j").is_ok());
-        assert!(super::super::render_template("%(id)j", &info()).is_err());
+        let staged = PrintTemplate::parse("Before_DL:%(id)s %(_filename)s %(filepath)s").unwrap();
+        assert_eq!(staged.stage(), Stage::BeforeDownload);
+        let paths = StagePaths {
+            filepath: Some("/abs/a.mp4"),
+            prepared: Some("a.mp4"),
+        };
+        assert_eq!(
+            staged
+                .render_at(&info(), Ok("a.mp4"), paths, &TemplateOptions::default())
+                .unwrap(),
+            "a/b a.mp4 /abs/a.mp4"
+        );
+        // Filenames sanitize the JSON text like upstream.
+        assert_eq!(
+            super::super::render_template("%(id)j", &info()).unwrap(),
+            std::path::PathBuf::from("＂a⧸b＂")
+        );
     }
 
     #[test]
@@ -280,7 +385,15 @@ mod tests {
                 .unwrap(),
             "a/b"
         );
+        // Alternates after an available value are not evaluated.
         let template = PrintTemplate::parse("%(id,filename)s").unwrap();
+        assert_eq!(
+            template
+                .render(&info(), Err(&error), &TemplateOptions::default())
+                .unwrap(),
+            "a/b"
+        );
+        let template = PrintTemplate::parse("%(height,filename)s").unwrap();
         assert!(
             template
                 .render(&info(), Err(&error), &TemplateOptions::default())
@@ -328,7 +441,13 @@ mod tests {
                 other => panic!("unexpected fixture argument {other}"),
             }
         }
-        templates.extend(PrintTemplate::forced_fields(get[0], get[1], get[2], get[3]));
+        templates.extend(PrintTemplate::forced_fields(ForcedFields {
+            title: get[0],
+            id: get[1],
+            url: get[2],
+            filename: get[3],
+            ..Default::default()
+        }));
         Ok(templates)
     }
 
@@ -340,6 +459,7 @@ mod tests {
             let info: VideoInfo = serde_json::from_value(case["info"].clone()).unwrap();
             let options = TemplateOptions {
                 na_placeholder: case["na_placeholder"].as_str().unwrap().into(),
+                ..Default::default()
             };
             let lines: Vec<_> = templates(case["args"].as_array().unwrap())
                 .unwrap()
@@ -357,12 +477,23 @@ mod tests {
                 case["name"]
             );
         }
+        // Source-only cases are rejected when parsed or rendered.
         for case in fixture["source_only_cases"].as_array().unwrap() {
-            assert!(
-                templates(case["args"].as_array().unwrap()).is_err(),
-                "{}",
-                case["name"]
-            );
+            let info: VideoInfo = serde_json::from_value(case["info"].clone()).unwrap();
+            let rejected = templates(case["args"].as_array().unwrap()).is_err()
+                || templates(case["args"].as_array().unwrap())
+                    .unwrap()
+                    .iter()
+                    .any(|template| {
+                        template
+                            .render(
+                                &info,
+                                Ok(case["filename"].as_str().unwrap()),
+                                &TemplateOptions::default(),
+                            )
+                            .is_err()
+                    });
+            assert!(rejected, "{}", case["name"]);
         }
     }
 
@@ -373,16 +504,22 @@ mod tests {
         let (path, line) = pair
             .render(&info(), Ok("f.mp4"), &TemplateOptions::default())
             .unwrap();
-        assert_eq!(path, PathBuf::from("lists/Épisode_ _1__.txt"));
+        assert_eq!(path, PathBuf::from("lists/Épisode： ＂1＂.txt"));
         assert_eq!(line, "a/b\nmp4");
-        assert!(PrintToFile::parse("playlist:id", "x.txt").is_err());
-        assert!(PrintToFile::parse("id", "%(missing)s.txt").is_err());
+        assert!(PrintToFile::parse("playlist:id", "x.txt").is_ok());
+        assert!(PrintToFile::parse("id", "%(id.a-b)s.txt").is_ok());
         assert!(PrintToFile::parse("id", "").is_err());
     }
 
     #[test]
     fn forced_fields_use_upstream_order() {
-        let fields = PrintTemplate::forced_fields(true, true, true, true);
+        let fields = PrintTemplate::forced_fields(ForcedFields {
+            title: true,
+            id: true,
+            url: true,
+            filename: true,
+            ..Default::default()
+        });
         let lines: Vec<_> = fields
             .iter()
             .map(|t| {

@@ -74,7 +74,7 @@ fn main() {
             "-nostdin",
             "-hide_banner",
             "-loglevel",
-            "error",
+            "repeat+info",
             "-y",
             "-f",
             demuxer,
@@ -120,10 +120,17 @@ fn main() {
     assert_eq!(args, expected);
     assert_eq!(std::io::stdin().read(&mut [0]).unwrap(), 0);
     match mode.as_str() {
-        "stderr" => eprintln!("fixture diagnostic"),
+        "stderr" => {
+            eprintln!("fixture diagnostic");
+            std::process::exit(1);
+        }
         "exit" => std::process::exit(3),
         "stdout-flood" => flood(std::io::stdout()),
-        "stderr-flood" => flood(std::io::stderr()),
+        "stderr-flood" => {
+            std::io::stderr().write_all(&vec![b'x'; 300_000]).unwrap();
+            eprint!("\nfixture tail");
+            std::process::exit(1);
+        }
         "hang" => hang(),
         "no-audio" => println!(r#"{{"streams":[{{"codec_type":"video","codec_name":"h264"}}]}}"#),
         "invalid-json" => println!("not JSON"),

@@ -11,6 +11,8 @@ or download fallback. Do not claim yt-dlp compatibility beyond tested behavior.
 - Keep extraction, orchestration, output rendering, and transport separate.
 - Add site extractors through `Extractor` and register them before `DirectHttp`.
 - Add deterministic local HTTP/fixture tests for each newly supported behavior.
+- For site extractors, save responses under `tests/fixtures/sites/SITE/` and capture
+  pinned upstream output with `tools/capture_sites.py` (fixture-only proxy).
 - Preserve errors for unsupported behavior rather than guessing success.
 - Do not add live-site requests to the required test suite.
 - Run `cargo fmt --all -- --check`, `cargo clippy --locked --all-targets -- -D warnings`,

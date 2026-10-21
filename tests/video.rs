@@ -188,10 +188,20 @@ fn clean(path: &Path) {
 
 fn options(format: &str, mode: VideoMode, keep: bool) -> PostprocessOptions {
     PostprocessOptions {
+        existing: None,
+        no_post_overwrites: false,
+        modify_chapters: None,
+        ignore_errors: false,
+        thumbnail: None,
+        metadata: false,
+        chapters: false,
+        infojson: None,
+        fixup: None,
         audio: None,
         video: Some(VideoOptions::new(format, mode).unwrap()),
         keep_video: keep,
         embed: None,
+        ..Default::default()
     }
 }
 
@@ -215,6 +225,19 @@ fn remux_and_recode_cli_use_distinct_codecs_and_publish_selected_container() {
             b"converted video"
         );
         assert!(!directory.path().join("out.mp4").exists());
+        // Upstream FFmpegVideoRemuxerPP/ConvertorPP and run_pp messages.
+        let (name, action) = if flag == "--remux-video" {
+            ("VideoRemuxer", "Remuxing")
+        } else {
+            ("VideoConvertor", "Converting")
+        };
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        assert!(
+            stdout.contains(&format!(
+                "[{name}] {action} video from mp4 to {extension}; Destination: out.{extension}\nDeleting original file out.mp4 (pass -k to keep)\n"
+            )),
+            "{stdout}"
+        );
         let log = tools.log(&tools.ffmpeg);
         if flag == "--remux-video" {
             assert!(log.contains("copy"), "{log}");
@@ -252,6 +275,14 @@ fn mappings_and_same_extension_skip_without_any_tools() {
             std::fs::read(directory.path().join("out.mp4")).unwrap(),
             b"source video"
         );
+        let reason = if format == "mp4" {
+            "already is in target format mp4"
+        } else {
+            "could not find a mapping for mp4"
+        };
+        assert!(String::from_utf8_lossy(&output.stdout).contains(&format!(
+            "[VideoRemuxer] Not remuxing media file \"out.mp4\"; {reason}\n"
+        )));
         clean(directory.path());
     }
 }
@@ -358,7 +389,7 @@ fn failed_conversion_preserves_sources_continues_and_never_records() {
 }
 
 #[test]
-fn existing_final_and_publication_race_never_overwrite() {
+fn existing_and_racing_outputs_are_replaced_like_upstream() {
     let server = Server::new();
     let tools = Tools::new("aac", false);
     let client = tools.client();
@@ -381,12 +412,11 @@ fn existing_final_and_publication_race_never_overwrite() {
                 ControlFlow::Continue(())
             },
         );
-        assert!(result.is_err());
-        assert_eq!(std::fs::read(final_path).unwrap(), b"competitor");
-        assert_eq!(
-            std::fs::read(directory.path().join("out.mp4")).unwrap(),
-            b"source video"
-        );
+        // Upstream processors overwrite their outputs (`ffmpeg -y`).
+        let result = result.unwrap();
+        assert_eq!(result.path, final_path);
+        assert_ne!(std::fs::read(&final_path).unwrap(), b"competitor");
+        assert!(!directory.path().join("out.mp4").exists());
         clean(directory.path());
     }
 }
@@ -753,7 +783,7 @@ fn chain_returning_to_original_filename_keeps_source_under_orig_name() {
 }
 
 #[test]
-fn failed_original_retention_still_preserves_completed_audio_after_later_stage_failure() {
+fn kept_original_replaces_a_stale_orig_and_completed_audio_survives_later_failure() {
     let server = Server::new();
     let tools = Tools::new("aac", false);
     let client = tools.client();
@@ -771,7 +801,8 @@ fn failed_original_retention_still_preserves_completed_audio_after_later_stage_f
         &plan,
     );
     assert!(result.is_err());
-    assert_eq!(std::fs::read(competitor).unwrap(), b"competitor");
+    // The kept original replaces the stale `.orig` file (`os.replace`).
+    assert_eq!(std::fs::read(competitor).unwrap(), b"source video");
     assert_eq!(
         std::fs::read(directory.path().join("movie.mp3")).unwrap(),
         b"converted audio"
@@ -779,4 +810,143 @@ fn failed_original_retention_still_preserves_completed_audio_after_later_stage_f
     assert!(!directory.path().join("movie.alac").exists());
     assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 2);
     clean(directory.path());
+}
+
+#[test]
+fn embed_metadata_rewrites_the_final_file_with_upstream_metadata_arguments() {
+    let server = Server::new();
+    let tools = Tools::new("aac", false);
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("source.mp4");
+    let output = tools.cli(
+        &["--embed-metadata", "-o", "out.mp4", &url],
+        directory.path(),
+    );
+    success(&output);
+    assert_eq!(
+        std::fs::read(directory.path().join("out.mp4")).unwrap(),
+        b"converted video"
+    );
+    let log = tools.log(&tools.ffmpeg);
+    assert!(
+        log.contains(&format!(
+            "-map\n0\n-dn\n-ignore_unknown\n-c\ncopy\n-write_id3v1\n1\n-metadata\ntitle=source\n-metadata\npurl={url}\n-metadata\ncomment={url}\n-movflags\n+faststart\n-f\nmp4"
+        )),
+        "{log}"
+    );
+    clean(directory.path());
+    // --no-add-metadata (last flag) skips the stage and needs no tools.
+    let plain = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .current_dir(plain.path())
+        .args(["--add-metadata", "--no-add-metadata", "-o", "out.mp4", &url])
+        .output()
+        .unwrap();
+    success(&output);
+    assert_eq!(
+        std::fs::read(plain.path().join("out.mp4")).unwrap(),
+        b"source video"
+    );
+}
+
+#[test]
+fn ignore_errors_skips_failed_processors_and_abort_on_error_stops_the_queue() {
+    let server = Server::new();
+    let tools = Tools::new("aac", true);
+    let directory = tempfile::tempdir().unwrap();
+    let url = server.url("source.mp4");
+    // -i: the failed remux is reported, the download still counts.
+    let output = tools.cli(
+        &[
+            "-i",
+            "--remux-video",
+            "mkv",
+            "--download-archive",
+            "archive.txt",
+            "-o",
+            "out.%(ext)s",
+            &url,
+        ],
+        directory.path(),
+    );
+    assert_eq!(output.status.code(), Some(1));
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(stderr.contains("ERROR: "), "{stderr}");
+    assert_eq!(
+        std::fs::read(directory.path().join("out.mp4")).unwrap(),
+        b"source video"
+    );
+    assert!(!directory.path().join("out.mkv").exists());
+    assert_eq!(
+        std::fs::read_to_string(directory.path().join("archive.txt")).unwrap(),
+        "generic source\n"
+    );
+    clean(directory.path());
+    // Without -i (or after a later --abort-on-error) nothing is archived.
+    let strict = tempfile::tempdir().unwrap();
+    let output = tools.cli(
+        &[
+            "-i",
+            "--abort-on-error",
+            "--remux-video",
+            "mkv",
+            "--download-archive",
+            "archive.txt",
+            "-o",
+            "out.%(ext)s",
+            &url,
+        ],
+        strict.path(),
+    );
+    assert_eq!(output.status.code(), Some(1));
+    assert!(!strict.path().join("archive.txt").exists());
+    // --abort-on-error stops at the first failing input; the default continues.
+    let unreachable = "http://127.0.0.1:9/missing.mp4";
+    for (args, downloads) in [
+        (vec!["--abort-on-error"], false),
+        (vec!["--no-ignore-errors", "--no-abort-on-error"], true),
+        (vec![], true),
+    ] {
+        let queue = tempfile::tempdir().unwrap();
+        let mut all = args.clone();
+        all.extend(["--proxy", "", "-o", "next.%(ext)s", unreachable, &url]);
+        let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+            .current_dir(queue.path())
+            .args(&all)
+            .output()
+            .unwrap();
+        assert_eq!(output.status.code(), Some(1), "{args:?}");
+        assert_eq!(
+            queue.path().join("next.mp4").exists(),
+            downloads,
+            "{args:?}: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+}
+
+#[test]
+fn ffmpeg_outputs_inherit_the_downloaded_modification_time() {
+    let server = Server::new();
+    let tools = Tools::new("aac", false);
+    let directory = tempfile::tempdir().unwrap();
+    let source = directory.path().join("source.mp4");
+    let info = tools
+        .client()
+        .extract_info(&server.url("source.mp4"))
+        .unwrap();
+    let result = tools
+        .client()
+        .download_processed_with_options(
+            &info,
+            &source,
+            DownloadOptions::default(),
+            &options("mkv", VideoMode::Remux, true),
+        )
+        .unwrap();
+    let kept = result.kept_video.unwrap();
+    let times = |path: &Path| std::fs::metadata(path).unwrap().modified().unwrap();
+    // Like upstream `run_ffmpeg_multiple_files`, the remuxed output takes
+    // the oldest input modification time rather than its creation time.
+    assert_eq!(times(&result.path), times(&kept));
 }

@@ -1,7 +1,6 @@
-//! Private, version-specific offline EJS boundary. Extraction does not use it yet.
+//! Private, version-specific offline EJS boundary for `solve_js_challenges`.
 //! Keep challenge data out of executable syntax and validate the entire batch.
 mod runtime;
-mod urls;
 
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashSet};
@@ -214,131 +213,21 @@ impl Solutions {
     }
 }
 
-/// Resolve a batch of already-eligible progressive format URL fields. This
-/// private entry point deliberately does not decide DRM/client/token eligibility.
-/// All URLs are prepared and all solutions validated before any are returned.
-#[cfg(test)]
-pub(super) fn resolve_urls_with_source(
-    sources: &[serde_json::Value],
-    html: &str,
-    runtime: Option<&Runtime>,
-    player_source: Option<&super::player::PlayerSource>,
-) -> crate::Result<Vec<url::Url>> {
-    resolve_media_and_manifests(sources, &[], html, runtime, player_source).map(|(media, _)| media)
-}
-
-/// Solve eligible media and manifest URLs as one complete batch. No URL is
-/// returned until every input and every solver response has been validated.
-pub(super) fn resolve_media_and_manifests(
-    sources: &[serde_json::Value],
-    manifests: &[String],
-    html: &str,
-    runtime: Option<&Runtime>,
-    player_source: Option<&super::player::PlayerSource>,
-) -> crate::Result<(Vec<url::Url>, Vec<url::Url>)> {
-    let mut prepared: Vec<_> = sources
-        .iter()
-        .map(urls::Prepared::new)
-        .collect::<Result<_>>()
-        .map_err(|error| super::unsupported(&error))?;
-    prepared.extend(
-        manifests
-            .iter()
-            .map(|url| urls::Prepared::manifest(url))
-            .collect::<Result<Vec<_>>>()
-            .map_err(|error| super::unsupported(&error))?,
-    );
-    let challenges: Vec<_> = prepared
-        .iter()
-        .flat_map(urls::Prepared::challenges)
-        .collect();
-    let solutions = if challenges.is_empty() {
-        Solutions(Vec::new())
-    } else {
-        let runtime = runtime.ok_or_else(|| {
-            super::unsupported(
-                "YouTube URL challenges require an explicitly configured Deno 2.9.7 executable",
-            )
-        })?;
-        let owned_source;
-        let player_source = if let Some(source) = player_source {
-            source
-        } else {
-            owned_source = super::player::PlayerSource::new(
-                runtime.headers.clone(),
-                runtime.cookies.clone(),
-                &runtime.proxy,
-            )?;
-            &owned_source
-        };
-        let player_url = player_source.discover(html)?;
-        let runtime = runtime
-            .checked()
-            .map_err(|error| super::unsupported(&error))?;
-        let player = player_source.fetch(&player_url)?;
-        let batch = Batch::new(&player, &challenges).map_err(|error| super::unsupported(&error))?;
-        runtime
-            .solve(&batch)
-            .map_err(|error| super::unsupported(&error))?
-    };
-    let mut resolved: Vec<_> = prepared
-        .iter()
-        .map(|prepared| {
-            let raw = prepared
-                .apply(&solutions)
-                .map_err(|error| super::unsupported(&error))?;
-            Ok(url::Url::parse(&raw)?)
-        })
-        .collect::<crate::Result<_>>()?;
-    let manifests = resolved.split_off(sources.len());
-    Ok((resolved, manifests))
-}
-
-#[cfg(test)]
-pub(super) fn resolve_urls(
-    sources: &[serde_json::Value],
-    html: &str,
-    runtime: Option<&Runtime>,
-) -> crate::Result<Vec<url::Url>> {
-    resolve_urls_with_source(sources, html, runtime, None)
-}
-
 /// Configuration is inert until an eligible URL actually needs a solution.
 /// Canonical executable resolution and version validation happen once, lazily.
 pub(super) struct Runtime {
-    headers: reqwest::header::HeaderMap,
-    cookies: std::sync::Arc<crate::CookieJar>,
-    proxy: crate::http::ProxyConfig,
     path: std::path::PathBuf,
     checked: std::sync::OnceLock<Result<runtime::DenoRuntime>>,
 }
 
 impl Runtime {
-    #[cfg(test)]
     pub(super) fn new(path: std::path::PathBuf) -> Self {
-        Self::with_http_options(
-            path,
-            reqwest::header::HeaderMap::new(),
-            Default::default(),
-            Default::default(),
-        )
-    }
-
-    pub(super) fn with_http_options(
-        path: std::path::PathBuf,
-        headers: reqwest::header::HeaderMap,
-        cookies: std::sync::Arc<crate::CookieJar>,
-        proxy: crate::http::ProxyConfig,
-    ) -> Self {
         Self {
-            headers,
-            cookies,
-            proxy,
             path,
             checked: std::sync::OnceLock::new(),
         }
     }
-    fn checked(&self) -> Result<&runtime::DenoRuntime> {
+    pub(super) fn checked(&self) -> Result<&runtime::DenoRuntime> {
         self.checked
             .get_or_init(|| runtime::DenoRuntime::new(&self.path))
             .as_ref()
@@ -346,234 +235,10 @@ impl Runtime {
     }
 }
 
-pub(super) fn has_challenges(source: &serde_json::Value) -> Result<bool> {
-    Ok(!urls::Prepared::new(source)?.challenges().is_empty())
-}
-
-pub(super) fn has_manifest_challenges(url: &str) -> Result<bool> {
-    Ok(!urls::Prepared::manifest(url)?.challenges().is_empty())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use serde_json::json;
-
-    #[test]
-    fn manifest_challenges_share_media_batch_order_and_validation() {
-        let media = urls::Prepared::new(&json!({"signatureCipher":
-            "url=https%3A%2F%2Fe.test%2Fv%3Fn%3Dshared&s=signature"}))
-        .unwrap();
-        let manifest = urls::Prepared::manifest("https://e.test/n/shared/index.m3u8").unwrap();
-        let second = urls::Prepared::manifest("https://e.test/n/second/index.m3u8").unwrap();
-        let inputs: Vec<_> = [&media, &manifest, &second]
-            .into_iter()
-            .flat_map(urls::Prepared::challenges)
-            .collect();
-        let batch = Batch::new("player", &inputs).unwrap();
-        assert_eq!(
-            serde_json::to_value(&batch.requests).unwrap(),
-            json!([
-                {"type":"sig","challenges":["signature"]},
-                {"type":"n","challenges":["shared","second"]}
-            ])
-        );
-        // Responses are positional by kind; reject swapped response maps.
-        assert!(batch.validate(br#"{"type":"result","responses":[{"type":"result","data":{"shared":"ok","second":"ok2"}},{"type":"result","data":{"signature":"sig"}}]}"#).is_err());
-        assert!(batch.validate(br#"{"type":"result","responses":[{"type":"result","data":{"signature":"sig"}},{"type":"result","data":{"shared":"ok"}}]}"#).is_err());
-        let solved = batch.validate(br#"{"type":"result","responses":[{"type":"result","data":{"signature":"sig"}},{"type":"result","data":{"shared":"ok","second":"ok2"}}]}"#).unwrap();
-        assert_eq!(
-            media.apply(&solved).unwrap(),
-            "https://e.test/v?n=ok&signature=sig"
-        );
-        assert_eq!(
-            manifest.apply(&solved).unwrap(),
-            "https://e.test/n/ok/index.m3u8"
-        );
-        assert_eq!(
-            second.apply(&solved).unwrap(),
-            "https://e.test/n/ok2/index.m3u8"
-        );
-    }
-
-    #[test]
-    fn mixed_manifest_batch_requires_runtime_only_for_valid_challenges() {
-        assert!(has_manifest_challenges("https://e.test/n/challenge/index.m3u8").unwrap());
-        assert!(!has_manifest_challenges("https://e.test/index.m3u8").unwrap());
-        let (media, manifests) = resolve_media_and_manifests(
-            &[json!({"url":"https://e.test/v?x=%2f"})],
-            &["https://e.test/index.m3u8?x=%2f".into()],
-            "malformed page",
-            Some(&Runtime::new("/nonexistent-deno".into())),
-            None,
-        )
-        .unwrap();
-        assert_eq!(media[0].as_str(), "https://e.test/v?x=%2f");
-        assert_eq!(manifests[0].as_str(), "https://e.test/index.m3u8?x=%2f");
-        let error = resolve_media_and_manifests(
-            &[],
-            &["https://e.test/n/challenge/index.m3u8".into()],
-            "",
-            None,
-            None,
-        )
-        .unwrap_err();
-        assert!(error.to_string().contains("explicitly configured Deno"));
-        assert_eq!(crate::retry::failure_delay(&error), None);
-        let error = resolve_media_and_manifests(
-            &[json!({"url":"https://e.test/v?n=challenge"})],
-            &["https://e.test/n//index.m3u8".into()],
-            "",
-            None,
-            None,
-        )
-        .unwrap_err();
-        assert!(error.to_string().contains("manifest n challenge"));
-    }
-
-    #[test]
-    fn challenge_free_urls_never_inspect_page_or_launch_configured_runtime() {
-        let urls = resolve_urls(
-            &[json!({"url":"https://media.example/video.mp4?x=%2f"})],
-            "<script>ytcfg.set(malformed)</script>",
-            Some(&Runtime::new("/nonexistent-deno".into())),
-        )
-        .unwrap();
-        assert_eq!(urls[0].as_str(), "https://media.example/video.mp4?x=%2f");
-        let error = resolve_urls(
-            &[json!({"url":"https://media.example/video.mp4?n=challenge"})],
-            "",
-            None,
-        )
-        .unwrap_err();
-        assert!(error.to_string().contains("explicitly configured Deno"));
-        assert_eq!(crate::retry::failure_delay(&error), None);
-        let error = resolve_urls(
-            &[
-                json!({"url":"https://media.example/video.mp4?n=challenge"}),
-                json!({"url":"file:///media"}),
-            ],
-            "",
-            Some(&Runtime::new("/nonexistent-deno".into())),
-        )
-        .unwrap_err();
-        assert!(error.to_string().contains("media URL"));
-    }
-
-    #[test]
-    fn real_player_acquisition_solving_and_media_url() {
-        use std::{
-            io::{Read, Write},
-            net::TcpListener,
-            thread,
-            time::{Duration, Instant},
-        };
-        let Some(executable) = std::env::var_os("YT_DLP_RS_TEST_DENO") else {
-            return;
-        };
-        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
-        listener.set_nonblocking(true).unwrap();
-        let origin =
-            url::Url::parse(&format!("http://{}/", listener.local_addr().unwrap())).unwrap();
-        let fixture: serde_json::Value = serde_json::from_str(include_str!(
-            "../../../tests/fixtures/youtube/challenges/expected.json"
-        ))
-        .unwrap();
-        let signature = fixture["requests"][1]["challenges"]
-            .as_object()
-            .unwrap()
-            .iter()
-            .find(|(key, _)| !key.contains('\0'))
-            .unwrap();
-        let encrypted = url::form_urlencoded::Serializer::new(String::new())
-            .append_pair(
-                "url",
-                &format!(
-                    "{}media.mp4?x=%2f&n=IlLiA21ny7gqA2m4p37&keep=+#metadata",
-                    origin
-                ),
-            )
-            .append_pair("s", signature.0)
-            .append_pair("sp", "lsig")
-            .finish();
-        let expected_path = format!(
-            "/media.mp4?x=%2f&n=9nRTxrbM1f0yHg&keep=+&lsig={}",
-            url::form_urlencoded::byte_serialize(signature.1.as_str().unwrap().as_bytes())
-                .collect::<String>()
-        );
-        let expected_url = format!(
-            "{}{expected_path}#metadata",
-            origin.as_str().trim_end_matches('/')
-        );
-        let worker = thread::spawn(move || {
-            for (path, mime, body) in [
-                (
-                    "/s/player/74edf1a3/player_ias.vflset/en_US/base.js",
-                    "text/javascript",
-                    include_bytes!("../../../tests/fixtures/youtube/challenges/player-74edf1a3.js")
-                        .as_slice(),
-                ),
-                (
-                    expected_path.as_str(),
-                    "video/mp4",
-                    b"saved-media".as_slice(),
-                ),
-            ] {
-                let deadline = Instant::now() + Duration::from_secs(20);
-                let mut stream = loop {
-                    match listener.accept() {
-                        Ok((stream, _)) => break stream,
-                        Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
-                            assert!(Instant::now() < deadline, "missing request {path}");
-                            thread::sleep(Duration::from_millis(5));
-                        }
-                        Err(error) => panic!("{error}"),
-                    }
-                };
-                stream.set_nonblocking(false).unwrap();
-                stream
-                    .set_read_timeout(Some(Duration::from_secs(5)))
-                    .unwrap();
-                let mut request = Vec::new();
-                while !request.ends_with(b"\r\n\r\n") {
-                    let mut byte = [0];
-                    assert_eq!(stream.read(&mut byte).unwrap(), 1);
-                    request.push(byte[0]);
-                }
-                assert!(
-                    String::from_utf8(request)
-                        .unwrap()
-                        .starts_with(&format!("GET {path} HTTP/1.1\r\n"))
-                );
-                write!(stream,"HTTP/1.1 200 OK\r\nContent-Type: {mime}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",body.len()).unwrap();
-                stream.write_all(body).unwrap();
-            }
-        });
-        let player_source = super::super::player::PlayerSource::local(origin).unwrap();
-        let html = r#"<script>ytcfg.set({"PLAYER_JS_URL":"/s/player/74edf1a3/player_ias.vflset/en_US/base.js"});</script>"#;
-        let (urls, manifests) = resolve_media_and_manifests(
-            &[json!({"signatureCipher":encrypted})],
-            &["https://manifest.example/n/IlLiA21ny7gqA2m4p37/file/index.m3u8?keep=%2f".into()],
-            html,
-            Some(&Runtime::new(executable.into())),
-            Some(&player_source),
-        )
-        .unwrap();
-        assert_eq!(urls[0].as_str(), expected_url);
-        assert_eq!(
-            manifests[0].as_str(),
-            "https://manifest.example/n/9nRTxrbM1f0yHg/file/index.m3u8?keep=%2f"
-        );
-        let client = reqwest::blocking::Client::builder()
-            .no_proxy()
-            .timeout(Duration::from_secs(5))
-            .build()
-            .unwrap();
-        let response = super::super::direct::request(&client, &urls[0], None).unwrap();
-        assert!(super::super::direct::from_response(&response, &urls[0]).is_some());
-        assert_eq!(response.bytes().unwrap().as_ref(), b"saved-media");
-        worker.join().unwrap();
-    }
 
     #[test]
     fn grouping_deduplicates_per_kind_in_first_seen_order() {
