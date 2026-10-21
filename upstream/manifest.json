@@ -281,6 +281,18 @@
       "scope": "BiliBiliIE initial state, anthology playlists and parts, WBI-signed playurl DASH and legacy durl formats, chapters, danmaku subtitles and errors; no interactive videos, multi-part FLV, SRT subtitles, comments or other Bilibili extractors; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bitchute",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bitchute.py"
+      ],
+      "rust": [
+        "src/extractor/bitchute.rs",
+        "tests/fixtures/sites/bitchute/"
+      ],
+      "scope": "BitChuteIE beta API media URL with seed-host checks, video/channel metadata and geo errors; no BitChuteChannelIE; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "bitmovin",
       "status": "partial",
       "upstream": [

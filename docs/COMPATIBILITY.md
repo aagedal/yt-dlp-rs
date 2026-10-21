@@ -497,6 +497,14 @@ tracks, comments and bangumi/cheese/space/audio pages are not supported.
 (the random fingerprint, `wts` and `w_rid` query values are ignored by the
 fixture proxy).
 
+BitChute videos (`[www.|old.]bitchute.com/video|embed|torrent/.../ID`)
+follow upstream `BitChuteIE`: the beta API's `video/media` URL (HLS as live
+formats, or a progressive file HEAD-checked on its own and upstream's
+alternative seed hosts, unchecked with `--no-check-formats`), the `video`
+and `channel` metadata (non-fatal, with upstream's warnings) and the API's
+403 geo-restriction errors. Channel and playlist pages are not supported.
+`tests/fixtures/sites/bitchute/` is compared with pinned upstream output.
+
 Bitmovin streams (`streams.bitmovin.com/ID`) follow upstream `BitmovinIE`:
 the player config's `sources.hls` as fatal HLS formats and subtitles with the
 string title (else the generic title, after `fulltitle`) and poster, with

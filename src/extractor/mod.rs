@@ -5,7 +5,8 @@ mod bandcamp;
 mod behindkink;
 mod bild;
 mod bilibili;
-pub(crate) mod bitmovin;
+pub(crate) mod bitchute;
+mod bitmovin;
 mod blogger;
 mod bluesky;
 mod breitbart;
@@ -105,6 +106,7 @@ pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use bild::{Bild, suitable as bild_suitable};
 pub use bilibili::{BiliBili, suitable as bilibili_suitable};
+pub use bitchute::{BitChute, suitable as bitchute_suitable};
 pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
 pub use bluesky::{Bluesky, suitable as bluesky_suitable};
@@ -851,6 +853,15 @@ pub(crate) fn user_agent() -> String {
         .read()
         .map(|agent| agent.clone())
         .unwrap_or_default()
+}
+
+/// `self.get_param('check_formats') is False` (`--no-check-formats`).
+pub(crate) static CHECK_FORMATS_NEVER: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// `self.get_param('check_formats') is False`.
+pub(crate) fn check_formats_never() -> bool {
+    CHECK_FORMATS_NEVER.load(std::sync::atomic::Ordering::Relaxed)
 }
 
 /// Upstream `noplaylist` (`--no-playlist`), for `_yes_playlist`.

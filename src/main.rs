@@ -2988,7 +2988,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // first extractor that is suitable.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 106] = [
+        let suitable: [(&str, Suitable); 107] = [
             ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
             ("Angel", yt_dlp_rs::extractor::angel_suitable),
             ("archive.org", yt_dlp_rs::extractor::archiveorg_suitable),
@@ -3000,6 +3000,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("Bild", yt_dlp_rs::extractor::bild_suitable),
             ("BiliBili", yt_dlp_rs::extractor::bilibili_suitable),
+            ("BitChute", yt_dlp_rs::extractor::bitchute_suitable),
             ("Bitmovin", yt_dlp_rs::extractor::bitmovin_suitable),
             ("blogger.com", yt_dlp_rs::extractor::blogger_suitable),
             ("Bluesky", yt_dlp_rs::extractor::bluesky_suitable),
@@ -3167,7 +3168,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBild\nBiliBili\nBitmovin\nblogger.com\nBluesky\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nImgur\nimgur:album\nimgur:gallery\nInstagram\nJove\nJWPlatform\nkick:clips\nkick:live\nkick:vod\nKommunetv\nKu6\nlbry: odysee.com\nLinkedIn\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nmixcloud\nMovingImage\nniconico: [niconico] ニコニコ動画\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPinterest\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nScreenRec\nSen\nsoundcloud: [soundcloud]\nStreamable\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTheIntercept\nThisAmericanLife\nTikTok\nTumblr: [tumblr]\nTweakers\ntwitch:clips: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:card\nvimeo: [vimeo]\nvk: [vk] VK\nvm.tiktok\nVocaroo\nWeibo\nWeiboVideo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:tab: [youtube] YouTube Tabs\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "23video\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBreitBart\nCGTN\nCJSW\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nImgur\nimgur:album\nimgur:gallery\nInstagram\nJove\nJWPlatform\nkick:clips\nkick:live\nkick:vod\nKommunetv\nKu6\nlbry: odysee.com\nLinkedIn\nLivestreamfails\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nmixcloud\nMovingImage\nniconico: [niconico] ニコニコ動画\nNobelPrize\nOnePlacePodcast\nParlview\nPhotobucket\nPinterest\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nScreenRec\nSen\nsoundcloud: [soundcloud]\nStreamable\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTheIntercept\nThisAmericanLife\nTikTok\nTumblr: [tumblr]\nTweakers\ntwitch:clips: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:card\nvimeo: [vimeo]\nvk: [vk] VK\nvm.tiktok\nVocaroo\nWeibo\nWeiboVideo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:tab: [youtube] YouTube Tabs\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
