@@ -2125,8 +2125,9 @@ like upstream's: `music.youtube.com` playlists and channels are read on
 URL`, `/browse/VL…` becomes its playlist, `/browse/UC…` its channel and an album
 (`/browse/MP…`) its canonical playlist (through the `web_music` client's
 `navigation/resolve_url`), and a music playlist's URL entries stay
-`music.youtube.com` URLs. Feeds and hashtags remain explicit unsupported
-errors. Grid, channel and playlist
+`music.youtube.com` URLs. Hashtag (`/hashtag/TAG`) and feed (`/feed/NAME`)
+pages are read like other tab pages (`youtube-hashtag` fixture); like upstream,
+a feed redirected to the home page is an error. Grid, channel and playlist
 renderers are ported without fixture coverage; shelf, music and post
 renderers are skipped with a warning.
 

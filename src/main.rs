@@ -3541,8 +3541,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 counts
                     .n_entries
                     .map_or_else(|| "N/A".into(), |count| count.to_string()),
+                // `format_field(ie_result, 'playlist_count', ' of %s')`: a
+                // missing or zero count is left out.
                 counts
                     .playlist_count
+                    .filter(|count| *count != 0)
                     .map_or_else(String::new, |count| format!(" of {count}"))
             );
             // Upstream keeps resolved entries unless `extract_flat` became

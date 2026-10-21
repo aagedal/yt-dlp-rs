@@ -2288,12 +2288,7 @@ impl YoutubeTab {
                 return Ok(Some(follow(&Url::parse(&target)?)));
             }
         }
-        if !is_channel && !parts.not_channel.starts_with(['p', 'w']) {
-            // Feeds and hashtags have no saved-fixture coverage yet.
-            return Err(Error::UnsupportedYoutube(
-                "feed and hashtag pages are not supported yet".into(),
-            ));
-        }
+
         let mut item_id = item_id;
         let original_tab = parts.tab.trim_start_matches('/').to_owned();
         let display_id = format!("{item_id}{}", parts.tab);
