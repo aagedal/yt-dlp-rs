@@ -170,6 +170,14 @@ remain outside the current result contract.
    discovery now feeds native finite VOD plans, with path-n solving shared with
    direct URL challenges. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
+   A live comparison pass (2026-10-22) then ported the behavior real use hit:
+   chunked HTTPS downloads for merged formats, EU consent/PREF cookies,
+   age-gate `web_embedded` fallback, playability reasons, authenticated cookie
+   sessions, pre-roll ad waits, InnerTube retries, master-only HLS, live
+   streams (FFmpeg, interruptible), mixes, nested channel tabs with lazily
+   fetched pages, YouTube Music URLs, and hashtag/feed pages, each with saved
+   fixtures. Comments, clips, `--wait-for-video`, post-live/live-from-start DASH
+   and PO token providers remain open.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
    authentication, cookies, subtitles, archives, and postprocessors explicitly.
