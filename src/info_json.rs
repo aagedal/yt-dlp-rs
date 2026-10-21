@@ -456,7 +456,7 @@ mod tests {
             }))
             .unwrap();
             let counts = PlaylistCounts {
-                playlist_count: case["playlist_count"].as_u64().unwrap() as usize,
+                playlist_count: Some(case["playlist_count"].as_u64().unwrap() as usize),
                 n_entries: Some(case["n_entries"].as_u64().unwrap() as usize),
                 last_playlist_index: case["last_playlist_index"].as_u64().unwrap() as usize,
             };

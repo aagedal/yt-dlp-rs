@@ -184,6 +184,8 @@ fn search_playlist(
         webpage_url,
         extractor: extractor.into(),
         extractor_key: key.into(),
+        nested: Vec::new(),
+        pending: None,
         entries,
         extra,
     }))

@@ -4,5 +4,13 @@
  {"url": "https://www.youtube.com/@Chan/shorts", "args": ["-J", "--flat-playlist"]},
  {"url": "https://www.youtube.com/@Solo", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"]},
  {"url": "https://www.youtube.com/@Chan/about", "args": ["-J", "--flat-playlist"]},
- {"url": "https://www.youtube.com/@Chan/streams", "args": ["--flat-playlist", "--print", "id"]}
+ {"url": "https://www.youtube.com/@Chan/streams", "args": ["--flat-playlist", "--print", "id"]},
+ {"url": "https://www.youtube.com/@Chan", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(playlist_autonumber)s|%(n_entries)s|%(playlist_count)s|%(id)s"]},
+ {"url": "https://www.youtube.com/@Chan", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.youtube.com/@Chan", "args": ["--flat-playlist", "-I", "2", "--print", "%(playlist_id)s|%(id)s"]},
+ {"url": "https://www.youtube.com/@Chan", "args": ["-s", "--flat-playlist"]},
+ {"url": "https://www.youtube.com/@Chan", "args": ["--flat-playlist", "--print", "playlist:%(id)s|%(title)s|%(playlist_count)s"]},
+ {"url": "https://www.youtube.com/@Chan/videos", "args": ["-s", "--flat-playlist", "-I", "1"]},
+ {"url": "https://www.youtube.com/@Chan/videos", "args": ["--flat-playlist", "-I", "1", "--print", "%(playlist_count)s|%(n_entries)s|%(id)s", "--print", "playlist:%(playlist_count)s"]},
+ {"url": "https://www.youtube.com/@Chan/videos", "args": ["--flat-playlist", "-I", "3", "--print", "%(playlist_count)s|%(playlist_index)s|%(id)s"]}
 ]

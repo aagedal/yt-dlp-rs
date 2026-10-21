@@ -11,7 +11,7 @@ pub(super) enum Source<'a> {
     Video(&'a VideoInfo),
     Playlist {
         info: &'a PlaylistInfo,
-        playlist_count: usize,
+        playlist_count: Option<usize>,
         n_entries: Option<usize>,
         last_playlist_index: usize,
     },
@@ -312,7 +312,7 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
                 "extractor_key" => Some(Text(&info.extractor_key)),
                 "webpage_url" => Some(Text(info.webpage_url.as_str())),
                 "playlist_index" => Some(Integer(0)),
-                "playlist_count" => Some(Integer(playlist_count as u64)),
+                "playlist_count" => playlist_count.map(|n| Integer(n as u64)),
                 "n_entries" => n_entries.map(|n| Integer(n as u64)),
                 // Other playlist keys (such as the page's timestamp).
                 _ => info

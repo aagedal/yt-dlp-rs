@@ -932,6 +932,8 @@ impl Extractor for GenericHttp {
             webpage_url: page_url,
             extractor: "generic".into(),
             extractor_key: "Generic".into(),
+            nested: Vec::new(),
+            pending: None,
             entries,
             extra: {
                 // The page's Last-Modified, with `_fill_common_fields`'s date.
@@ -1034,6 +1036,8 @@ impl GenericHttp {
             webpage_url: page_url.clone(),
             extractor: "generic".into(),
             extractor_key: "Generic".into(),
+            nested: Vec::new(),
+            pending: None,
             entries,
             extra,
         })))
@@ -1315,6 +1319,8 @@ impl GenericHttp {
             webpage_url: page_url.clone(),
             extractor: "generic".into(),
             extractor_key: "Generic".into(),
+            nested: Vec::new(),
+            pending: None,
             entries,
             extra,
         })))
@@ -1842,6 +1848,8 @@ fn xspf_playlist(
         webpage_url: page_url.clone(),
         extractor: "generic".into(),
         extractor_key: "Generic".into(),
+        nested: Vec::new(),
+        pending: None,
         entries,
         extra,
     }))
@@ -1975,6 +1983,8 @@ fn rss_playlist(feed: super::rss::Feed, url: &Url, page_url: &Url) -> ExtractRes
         webpage_url: page_url.clone(),
         extractor: "generic".into(),
         extractor_key: "Generic".into(),
+        nested: Vec::new(),
+        pending: None,
         entries,
         extra,
     })

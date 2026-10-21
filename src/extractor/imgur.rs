@@ -606,6 +606,8 @@ fn gallery(
                 webpage_url: page.clone(),
                 extractor: extractor.into(),
                 extractor_key: extractor_key(extractor).into(),
+                nested: Vec::new(),
+                pending: None,
                 entries,
                 extra,
             })));

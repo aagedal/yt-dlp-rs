@@ -2046,9 +2046,17 @@ for `/playlist?list=ID` and `watch?v=ID&list=ID` URLs (the latter only without
 `--no-playlist`; `watch?list=ID` warns and downloads the playlist) and channel
 tabs (`/@HANDLE/TAB`, `/channel/UC…/TAB`, `/c/NAME`, `/user/NAME`). A channel
 URL without a tab reads its `/videos` tab (`Downloading all uploads of the
-channel`); upstream then also downloads the live and shorts tabs as nested
-playlists, which this port does not support, so such channels are an explicit
-error naming the tab URLs to pass instead. Topic channels without tabs are
+channel`) and, like upstream, extracts its live and shorts tabs too; a channel
+with several of them is a playlist of the tabs' playlists (`Downloading as
+multiple playlists, separated by tabs`). Such nested playlists are processed
+like upstream's `__process_playlist` entries: `--playlist-items` and the other
+selection options apply to the tabs and then to each tab's entries, every tab
+prints its own `Downloading playlist`/`Finished downloading playlist` lines
+between the outer playlist's, the `playlist` print/exec stage runs for each
+level, and `-J` nests the processed tab playlists (with `__x_forwarded_for_ip`)
+in the outer playlist's `entries`. Archive and match filters apply to the
+tabs' videos (upstream also matches the tab playlists themselves, which pass as
+incomplete dicts). Topic channels without tabs are
 redirected to their uploads (`UU…`) playlist; `/about` gives the empty
 playlist; a missing tab is `This channel does not have a TAB tab`, a missing
 live tab `The channel is not currently live`, and a home-page redirect or
@@ -2056,8 +2064,17 @@ conditional regional redirect is handled as upstream. It reads the
 page's `ytInitialData` and `ytcfg`, makes upstream's web-client browse request
 for unavailable videos (`Redownloading playlist API JSON with unavailable
 videos`, `params: wgYCCAA=`), reports alerts like `_report_alerts`, and follows
-every continuation (`Downloading API JSON`, item `ID page N`) until none is
-left or a token repeats. The playlist has `_extract_metadata_from_tabs`' fields
+continuations (`Downloading API JSON`, item `ID page N`) until none is left or a
+token repeats. Like upstream's lazy entries generator, continuation pages are
+fetched when the playlist is processed (after `Downloading playlist: TITLE`)
+and only as far as `--playlist-items`/`--playlist-end` need with positive
+bounds; open or negative bounds read every page. Until the entries were read
+past their end, the playlist's count is its page's video count, if any, else
+unknown (`Downloading N items` without `of M`, `playlist_count` `NA`). A page
+without usable initial data is retried three times (`Incomplete yt initial
+data received`) and then resolved through the `navigation/resolve_url` API, and
+page alerts are reported before the incomplete-data check, as upstream's
+`_extract_webpage` does. The playlist has `_extract_metadata_from_tabs`' fields
 (title, availability, follower count, description, tags, thumbnails, modified
 date, view and video counts, channel/uploader) in upstream's key order, and its
 entries are `_extract_video`'s, `_extract_lockup_view_model`'s and the Shorts
@@ -2070,8 +2087,8 @@ its playlist page. Playlist thumbnails are sorted and given IDs and resolutions 
 (video, Shorts and lockup entries, `/about`, a missing tab, a channel root) are
 compared with pinned upstream output.
 
-Unlike upstream's lazy generator, all continuation pages are fetched before
-the first entry is processed. Feeds, hashtags, mixes (`RD…`) and YouTube Music
+With `--lazy-playlist`, the requested pages are still fetched before the
+first entry is processed. Feeds, hashtags, mixes (`RD…`) and YouTube Music
 remain explicit unsupported errors. Grid, channel and playlist
 renderers are ported without fixture coverage; shelf, music and post
 renderers are skipped with a warning.

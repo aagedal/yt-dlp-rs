@@ -7,7 +7,9 @@ use crate::{ExtractResult, Result};
 /// the full count, selected count and largest selected index.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PlaylistCounts {
-    pub playlist_count: usize,
+    /// Upstream `playlist_count`: the playlist's own count, else the entry
+    /// count once every entry was fetched (`None` while some are pending).
+    pub playlist_count: Option<usize>,
     /// The selected count; `None` with `--lazy-playlist` (upstream `N/A`).
     pub n_entries: Option<usize>,
     pub last_playlist_index: usize,
@@ -105,6 +107,30 @@ impl PlaylistSelection {
     pub fn lazy(mut self, lazy: bool) -> Self {
         self.lazy = lazy;
         self
+    }
+
+    /// How many leading entries the selection can use: upstream's
+    /// `PlaylistEntries` slices its lazy entries, which only exhausts them
+    /// for open or negative bounds (`None`).
+    pub fn fetch_limit(&self) -> Option<usize> {
+        let mut limit = 0;
+        for segment in &self.segments {
+            let last = if segment.step > 0 {
+                match (segment.start, segment.end) {
+                    (Some(start), _) if start < 0 => return None,
+                    (_, Endpoint::Index(end)) if end > 0 => end,
+                    _ => return None,
+                }
+            } else {
+                match (segment.start, segment.end) {
+                    (Some(start), Endpoint::Open | Endpoint::Infinite) if start > 0 => start,
+                    (Some(start), Endpoint::Index(end)) if start > 0 && end >= 0 => start,
+                    _ => return None,
+                }
+            };
+            limit = limit.max(last as usize);
+        }
+        Some(limit)
     }
 
     /// Return zero-based positions, removing duplicates before optional reversal.
@@ -220,6 +246,14 @@ impl PlaylistSelection {
                 crate::info::get_domain(&playlist.webpage_url).into(),
             ),
         ];
+        // `if not ie_result.get('playlist_count'): ... get_full_count()`.
+        let playlist_count = playlist
+            .extra
+            .get("playlist_count")
+            .and_then(serde_json::Value::as_u64)
+            .filter(|count| *count != 0)
+            .map(|count| count as usize)
+            .or((playlist.pending.is_none()).then_some(count));
         let indices = self.indices(count);
         let requested = if self.selection_index && !self.lazy {
             Self {
@@ -250,13 +284,13 @@ impl PlaylistSelection {
                 entry.last_playlist_index = Some(last_index);
                 entry.playlist_index = Some(requested[order] + 1);
                 entry.playlist_autonumber = Some(order + 1);
-                entry.playlist_count = Some(count);
+                entry.playlist_count = playlist_count;
                 entry.n_entries = (!self.lazy).then_some(selected_count);
                 entry
             })
             .collect();
         Some(PlaylistCounts {
-            playlist_count: count,
+            playlist_count,
             n_entries: (!self.lazy).then_some(selected_count),
             last_playlist_index: last_index,
         })
@@ -355,6 +389,35 @@ fn parse_segment(input: &str) -> Result<Segment> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn fetch_limits_follow_lazy_slicing() {
+        let limit = |items: &str| {
+            PlaylistSelection::new(Some(items), 1, None, false)
+                .unwrap()
+                .fetch_limit()
+        };
+        assert_eq!(limit("1"), Some(1));
+        assert_eq!(limit("2:5,9"), Some(9));
+        assert_eq!(limit("8:2:-2"), Some(8));
+        for items in ["3:", "-1", "1:-2", ":5:-1", "1:inf", "5::-1:"] {
+            assert_eq!(
+                PlaylistSelection::new(Some(items), 1, None, false)
+                    .map(|s| s.fetch_limit())
+                    .unwrap_or(None),
+                None,
+                "{items}"
+            );
+        }
+        let range = PlaylistSelection::new(None, 3, Some(7), false).unwrap();
+        assert_eq!(range.fetch_limit(), Some(7));
+        assert_eq!(
+            PlaylistSelection::new(None, 1, None, false)
+                .unwrap()
+                .fetch_limit(),
+            None
+        );
+    }
+
     use super::*;
     use crate::{PlaylistInfo, VideoInfo};
     use serde_json::json;
@@ -543,6 +606,8 @@ mod tests {
             webpage_url: "https://example.com/".parse().unwrap(),
             extractor: "test".into(),
             extractor_key: "Test".into(),
+            nested: Vec::new(),
+            pending: None,
             entries: (1..=4).map(|i| video(&i.to_string())).collect(),
             extra: Default::default(),
         });

@@ -1075,6 +1075,8 @@ impl Extractor for Facebook {
                 webpage_url: url.clone(),
                 extractor: NAME.into(),
                 extractor_key: KEY.into(),
+                nested: Vec::new(),
+                pending: None,
                 entries,
                 extra,
             })));

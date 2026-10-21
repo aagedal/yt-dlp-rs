@@ -60,7 +60,9 @@ pretend to model every upstream field. `VideoFormat` models probed progressive
 sources and optional declared dimensions. Default/`best`/`worst` selection ranks
 by the smaller known dimension, with declaration-order ties; it does not reproduce
 upstream's full sorter. `ExtractResult` distinguishes a video from a fully extracted HTML5
-`PlaylistInfo`; unresolved URL results, nested playlists, and site playlists
+`PlaylistInfo`; nested playlists (`PlaylistInfo::nested`, YouTube channel tabs) and
+deferred entry pages (`PlaylistInfo::pending`) are processed by the CLI's input queue;
+unresolved URL results resolving to playlists, and other site playlists
 remain outside the current result contract.
 
 ## Milestones

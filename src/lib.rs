@@ -73,7 +73,7 @@ pub use info::{
     ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
-pub use info::{COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX};
+pub use info::{COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, NESTED_INDEX, PendingEntries};
 pub use info_json::{
     InfoJsonWrite, info_json_path, info_value, load_info_json, playlist_info_json,
     playlist_info_json_with, to_python_json, upstream_shape, video_info_json, video_info_json_with,
@@ -138,6 +138,8 @@ pub struct YoutubeDl {
     ffmpeg_settings: ffmpeg_fd::Settings,
     /// `--http-chunk-size` and `--test`.
     http_chunk_size: Option<u64>,
+    /// Leave extractors' pending playlist entries for [`YoutubeDl::fetch_pending`].
+    defer_entries: bool,
     test: bool,
     /// `--use-extractors` (upstream extractor names in matching order) and
     /// `--force-generic-extractor`.
@@ -558,6 +560,7 @@ impl YoutubeDl {
             proxy: proxy_url,
             ffmpeg_settings: ffmpeg_fd::Settings::default(),
             http_chunk_size: None,
+            defer_entries: false,
             test: false,
             allowed_extractors: None,
             force_generic: false,
@@ -1222,6 +1225,39 @@ impl YoutubeDl {
         self
     }
 
+    /// Return playlists with their extractor's pending entries (upstream's
+    /// lazily extracted entries) for [`YoutubeDl::fetch_pending`]; by default
+    /// extraction fetches every entry.
+    pub fn with_deferred_entries(mut self, defer: bool) -> Self {
+        self.defer_entries = defer;
+        self
+    }
+
+    /// Fetch a playlist's pending entries (and its nested playlists') until
+    /// it has `limit` entries, or all of them; entries still pending remain.
+    pub fn fetch_pending(&self, playlist: &mut PlaylistInfo, limit: Option<usize>) -> Result<()> {
+        if let Some(pending) = playlist.pending.take() {
+            playlist.pending = extractor::fetch_youtube_tab_pages(
+                &self.client,
+                pending.state,
+                limit,
+                &mut playlist.entries,
+            )?
+            .map(|state| PendingEntries { state });
+        }
+        Ok(())
+    }
+
+    fn fetch_all_pending(&self, result: &mut ExtractResult) -> Result<()> {
+        if let ExtractResult::Playlist(playlist) = result {
+            self.fetch_pending(playlist, None)?;
+            for nested in &mut playlist.nested {
+                self.fetch_pending(nested, None)?;
+            }
+        }
+        Ok(())
+    }
+
     /// `--http-chunk-size`: chunked HTTP downloads (overrides a format's
     /// `downloader_options`).
     pub fn with_http_chunk_size(mut self, size: Option<u64>) -> Self {
@@ -1452,6 +1488,20 @@ impl YoutubeDl {
     /// an extracted or loaded result: common fields, thumbnails, per-format
     /// fills, `FormatSorter` order (worst first) and format ID cleanup.
     pub fn process_result(&self, result: &mut ExtractResult) -> Result<()> {
+        // Nested playlists are processed like extracted ones.
+        if let ExtractResult::Playlist(playlist) = result
+            && !playlist.nested.is_empty()
+        {
+            let mut nested = Vec::new();
+            for inner in std::mem::take(&mut playlist.nested) {
+                let mut inner = ExtractResult::Playlist(inner);
+                self.process_result(&mut inner)?;
+                if let ExtractResult::Playlist(inner) = inner {
+                    nested.push(inner);
+                }
+            }
+            playlist.nested = nested;
+        }
         // A playlist's entries report their sort order as each is processed.
         let playlist = matches!(result, ExtractResult::Playlist(_));
         if let ExtractResult::Playlist(playlist) = result
@@ -2038,6 +2088,9 @@ impl YoutubeDl {
             match self.extract_once(&url) {
                 Ok(mut info) => {
                     info.add_default_extra_info(input);
+                    if !self.defer_entries {
+                        self.fetch_all_pending(&mut info)?;
+                    }
                     return Ok(info);
                 }
                 Err(error) => {
