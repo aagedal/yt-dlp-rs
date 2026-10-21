@@ -218,7 +218,16 @@ fn transport_errors_use_urllib_errno_text() {
         retry.starts_with(prefix) && retry.ends_with(refused),
         "{stdout}"
     );
-    assert!(text(&output.stderr).ends_with("] Connection refused. Giving up after 1 retries\n"));
+    let gave_up = if cfg!(windows) {
+        "] No connection could be made because the target machine actively refused it. Giving up after 1 retries\n"
+    } else {
+        "] Connection refused. Giving up after 1 retries\n"
+    };
+    assert!(
+        text(&output.stderr).ends_with(gave_up),
+        "{}",
+        text(&output.stderr)
+    );
 }
 
 #[test]
@@ -326,7 +335,12 @@ fn interrupted_fragment_downloads_resume_from_the_ytdl_state() {
     let fetched = first_requests.load(Ordering::Relaxed);
     available.store(true, Ordering::Relaxed);
     let output = run();
-    assert!(output.status.success(), "{}", text(&output.stderr));
+    assert!(
+        output.status.success(),
+        "{}\n{}",
+        text(&output.stdout),
+        text(&output.stderr)
+    );
     assert_eq!(
         std::fs::read(directory.path().join("o.mp4")).unwrap(),
         b"first-second-third"
