@@ -51,6 +51,44 @@ impl Youtube {
     }
 }
 
+/// Upstream `YoutubeBaseInfoExtractor._real_initialize`: `_initialize_pref`
+/// (English, UTC) and `_initialize_consent` (accept all; otherwise EU
+/// requests are redirected to consent.youtube.com).
+pub(crate) fn initialize() {
+    const HOME: &str = "https://www.youtube.com";
+    let mut pref: Vec<(String, String)> = crate::cookies::get_cookie(HOME, "PREF")
+        .map(|value| {
+            url::form_urlencoded::parse(value.as_bytes())
+                .filter(|(_, value)| !value.is_empty())
+                .map(|(key, value)| (key.into_owned(), value.into_owned()))
+                .collect()
+        })
+        .unwrap_or_default();
+    // `dict.update`: replaced keys keep their position.
+    for (key, value) in [("hl", "en"), ("tz", "UTC")] {
+        match pref.iter_mut().find(|(name, _)| name == key) {
+            Some(entry) => entry.1 = value.into(),
+            None => pref.push((key.into(), value.into())),
+        }
+    }
+    let pref = url::form_urlencoded::Serializer::new(String::new())
+        .extend_pairs(&pref)
+        .finish();
+    crate::cookies::set_cookie(".youtube.com", "PREF", &pref);
+    let has_auth_cookies = crate::cookies::get_cookie(HOME, "LOGIN_INFO").is_some()
+        && ["SAPISID", "__Secure-3PAPISID", "__Secure-1PAPISID"]
+            .iter()
+            .any(|name| crate::cookies::get_cookie(HOME, name).is_some_and(|v| !v.is_empty()));
+    if has_auth_cookies {
+        return;
+    }
+    // A SOCS value not starting with `CAA` records a choice; keep it.
+    if crate::cookies::get_cookie(HOME, "SOCS").is_some_and(|socs| !socs.starts_with("CAA")) {
+        return;
+    }
+    crate::cookies::set_cookie(".youtube.com", "SOCS", "CAI");
+}
+
 fn unsupported(reason: &str) -> Error {
     Error::UnsupportedYoutube(reason.into())
 }
@@ -573,8 +611,7 @@ impl Extractor for Youtube {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
-        let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        let _ = page;
+        initialize();
         let info = extract_clients(client, url, &id, None, false)?;
         Ok(Some(info))
     }
@@ -589,8 +626,7 @@ impl Extractor for ConfiguredYoutube {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
-        let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        let _ = page;
+        initialize();
         let info = extract_clients(
             client,
             url,

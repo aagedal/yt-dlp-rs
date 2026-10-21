@@ -1,0 +1,21 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|First video",
+    "YYYYYYYYYYY|Second video",
+    "ZZZZZZZZZZZ|Third video"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}
