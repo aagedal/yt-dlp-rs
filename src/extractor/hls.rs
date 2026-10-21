@@ -240,9 +240,10 @@ pub(crate) fn from_response(
     )
 }
 
-/// [`from_response`]; a `live` master's variants and renditions are not
-/// fetched (upstream never reads them; a live playlist has no fixed
-/// fragments), so their formats have no fragments and download through FFmpeg.
+/// [`from_response`]; with `master_only`, a master's variants and renditions
+/// are not fetched (upstream never reads them; a live playlist has no fixed
+/// fragments), so their formats have no fragments: HlsFD reads the media
+/// playlist when downloading, and live ones download through FFmpeg.
 pub(crate) fn from_response_with(
     client: &Client,
     response: Response,
@@ -250,7 +251,7 @@ pub(crate) fn from_response_with(
     referer: Option<&Url>,
     force_hls: bool,
     m3u8_id: Option<&str>,
-    live: bool,
+    master_only: bool,
 ) -> Result<Option<VideoInfo>> {
     if !force_hls && !recognized(&response) {
         return Ok(None);
@@ -424,7 +425,7 @@ pub(crate) fn from_response_with(
             // unnamed variants); playlists are still fetched variants first.
             let renditions = audio.len();
             for variant in variants {
-                let (url, fragments, discontinuity, discontinuities) = if live {
+                let (url, fragments, discontinuity, discontinuities) = if master_only {
                     (variant.url.clone(), Vec::new(), Vec::new(), 0)
                 } else {
                     let response = direct::probe(client, &variant.url, referer)?;
@@ -523,7 +524,7 @@ pub(crate) fn from_response_with(
             let mut alternates: Vec<bool> = Vec::new();
             for rendition in audio {
                 let alternate = rendition.alternate;
-                let (url, fragments, discontinuity, discontinuities) = if live {
+                let (url, fragments, discontinuity, discontinuities) = if master_only {
                     (rendition.url.clone(), Vec::new(), Vec::new(), 0)
                 } else {
                     let response = direct::probe(client, &rendition.url, referer)?;

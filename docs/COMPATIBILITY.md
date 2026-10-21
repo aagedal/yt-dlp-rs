@@ -1144,9 +1144,10 @@ adds Node.js, `--no-js-runtimes` clears them). The executable must be Deno
 2.3+ or Node.js 22+ (upstream's minimums; CI exercises Deno 2.9.7).
 
 Metadata still comes from the first player response with video details, as
-described above. A live video's formats come from its HLS master playlist
-parsed like upstream's `live=True` (variant and rendition playlists are not
-fetched), its title gets the local `YYYY-MM-DD HH:MM` suffix, and it downloads
+described above. HLS formats come from the master playlist alone, as upstream
+reads it (the chosen format's media playlist is fetched when downloading:
+`[hlsnative] Downloading m3u8 manifest`); `youtube-hls` covers this. A live
+video's formats are parsed like upstream's `live=True`, its title gets the local `YYYY-MM-DD HH:MM` suffix, and it downloads
 through FFmpeg like upstream's FFmpegFD; on Unix an interrupt (SIGINT) asks
 FFmpeg to quit, prints `[ffmpeg] Interrupted by user` and completes the
 download (publication and post-processing) as upstream does for live

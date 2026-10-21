@@ -412,6 +412,31 @@ pub(crate) fn extract_m3u8_optional_note(
     Some(stream)
 }
 
+/// [`extract_m3u8_optional_note`] reading only the master playlist, like
+/// upstream: the formats' media playlists are fetched when downloading.
+pub(crate) fn extract_m3u8_master_optional(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    live: bool,
+) -> Option<crate::VideoInfo> {
+    let mut stream = extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        true,
+        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        ("m3u8 information", "HLS"),
+        "Downloading m3u8 information",
+    )?;
+    if live {
+        hls::live_format_ids(&mut stream.formats, None);
+    }
+    Some(stream)
+}
+
 /// `_extract_mpd_formats_and_subtitles(url, id, mpd_id, note, fatal=False)`.
 pub(crate) fn extract_mpd_optional_note(
     client: &Client,
