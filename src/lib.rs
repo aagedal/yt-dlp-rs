@@ -2837,6 +2837,8 @@ impl YoutubeDl {
                     part.extra.shift_remove("http_headers");
                 }
             }
+            // `HttpFD` chunking (YouTube's anti-throttling `http_chunk_size`).
+            part.downloader_options = stream.downloader_options.clone();
             part.filesize = stream.filesize;
             part.width = stream.width;
             part.height = stream.height;

@@ -16,6 +16,7 @@ use yt_dlp_rs::{DownloadOptions, DownloadPhase, Error, VideoInfo, YoutubeDl};
 struct Server {
     url: String,
     requests: Arc<Mutex<Vec<String>>>,
+    ranges: Arc<Mutex<Vec<Option<String>>>>,
     stop: Arc<AtomicBool>,
     worker: Option<thread::JoinHandle<()>>,
 }
@@ -33,8 +34,9 @@ impl Server {
         listener.set_nonblocking(true).unwrap();
         let url = format!("http://{}", listener.local_addr().unwrap());
         let requests = Arc::new(Mutex::new(Vec::new()));
+        let ranges = Arc::new(Mutex::new(Vec::new()));
         let stop = Arc::new(AtomicBool::new(false));
-        let (record, done) = (requests.clone(), stop.clone());
+        let (record, record_range, done) = (requests.clone(), ranges.clone(), stop.clone());
         let worker = thread::spawn(move || {
             while !done.load(Ordering::Relaxed) {
                 let (mut stream, _) = match listener.accept() {
@@ -58,12 +60,16 @@ impl Server {
                     }
                     request.extend_from_slice(&buffer[..count]);
                 }
-                let first = String::from_utf8(request)
+                let request = String::from_utf8(request).unwrap();
+                let first = request.lines().next().unwrap().to_owned();
+                record_range
+                    .lock()
                     .unwrap()
-                    .lines()
-                    .next()
-                    .unwrap()
-                    .to_owned();
+                    .push(request.lines().find_map(|line| {
+                        line.to_ascii_lowercase()
+                            .strip_prefix("range: ")
+                            .map(str::to_owned)
+                    }));
                 let (body, mime) = if first.contains("/video ") {
                     (video, video_mime)
                 } else {
@@ -81,6 +87,7 @@ impl Server {
         Self {
             url,
             requests,
+            ranges,
             stop,
             worker: Some(worker),
         }
@@ -97,6 +104,9 @@ impl Server {
     }
     fn requests(&self) -> Vec<String> {
         self.requests.lock().unwrap().clone()
+    }
+    fn ranges(&self) -> Vec<Option<String>> {
+        self.ranges.lock().unwrap().clone()
     }
 }
 impl Drop for Server {
@@ -195,6 +205,37 @@ fn selected_order_and_bytes_are_preserved_with_ffmpeg_inputs_in_selection_order(
         assert_eq!(progress.last().unwrap().phase, DownloadPhase::Publishing);
         clean(directory.path(), &["out.mp4"]);
     }
+}
+
+// Upstream `new_info.update(fmt)`: each stream keeps its `downloader_options`,
+// so YouTube's `http_chunk_size` (which avoids throttled whole-file transfers)
+// also applies to the formats of a merge.
+#[test]
+fn each_stream_keeps_its_http_chunk_size() {
+    let server = Server::new();
+    let mut info = serde_json::to_value(server.info(false)).unwrap();
+    info["requested_formats"][0]["downloader_options"] =
+        serde_json::json!({"http_chunk_size": 10485760});
+    let info: VideoInfo = serde_json::from_value(info).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let output = directory.path().join("out.mp4");
+    YoutubeDl::new()
+        .unwrap()
+        .with_ffmpeg(helper())
+        .download(&info, &output)
+        .unwrap();
+    assert_eq!(std::fs::read(&output).unwrap(), b"merged-video-audio");
+    // A server ignoring Range sends each whole file in one response; chunks
+    // are randomly 95-100% of the size, like upstream.
+    let ranges = server.ranges();
+    let end: u64 = ranges[0]
+        .as_deref()
+        .and_then(|range| range.strip_prefix("bytes=0-"))
+        .unwrap()
+        .parse()
+        .unwrap();
+    assert!((9_961_472..10_485_760).contains(&end), "{ranges:?}");
+    assert_eq!(ranges[1], None);
 }
 
 #[test]
