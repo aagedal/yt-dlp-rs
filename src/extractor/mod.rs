@@ -228,7 +228,7 @@ pub use youtube::search::{
 };
 pub use youtube::tab::suitable as youtube_tab_suitable;
 pub(crate) use youtube::tab::{YoutubeTab, fetch_pages as fetch_youtube_tab_pages};
-pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
+pub use youtube::{WaitForVideo, Youtube, YoutubeOptions, suitable as youtube_suitable};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};

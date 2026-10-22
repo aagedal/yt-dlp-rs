@@ -136,7 +136,7 @@ Supported today:
   tab playlists, as upstream. `ytsearch[N|all]:QUERY` and `/results?search_query=`
   searches work like upstream's `youtube:search`, and `/clip/` URLs download
   their section like upstream's `youtube:clip`. Comments, PO token
-  providers, `--wait-for-video` and upstream's remaining metadata fields are not
+  providers and upstream's remaining metadata fields are not
   supported yet.
 - Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
   `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.

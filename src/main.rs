@@ -874,7 +874,7 @@ struct Args {
     /// Minimum download rate below which throttling is assumed (accepted; not acted on)
     #[arg(long, value_name = "RATE")]
     throttled_rate: Option<String>,
-    /// Wait for scheduled streams (accepted; live and upcoming streams are unsupported)
+    /// Wait for scheduled YouTube streams to become available, retrying after MIN[-MAX] seconds
     #[arg(long, value_name = "MIN[-MAX]")]
     wait_for_video: Option<String>,
     #[arg(long, hide = true)]
@@ -1892,6 +1892,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     QUIET.store(args.simulation().quiet, Ordering::Relaxed);
     yt_dlp_rs::screen::set_sink(|message| match message {
         yt_dlp_rs::screen::Message::Screen(text) => screen!("{text}"),
+        yt_dlp_rs::screen::Message::ScreenRaw(text) => {
+            let quiet = QUIET.load(Ordering::Relaxed);
+            if !quiet || yt_dlp_rs::screen::verbose() {
+                if quiet || LOG_TO_STDERR.load(Ordering::Relaxed) {
+                    eprint!("{text}");
+                    let _ = io::stderr().flush();
+                } else {
+                    print!("{text}");
+                    let _ = io::stdout().flush();
+                }
+            }
+        }
         yt_dlp_rs::screen::Message::Warning(text) => warning!("WARNING: {text}"),
         yt_dlp_rs::screen::Message::Stderr(text) => eprintln!("{text}"),
         yt_dlp_rs::screen::Message::Debug(text) => eprintln!("[debug] {text}"),
@@ -2420,6 +2432,30 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }),
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
+            // `--wait-for-video MIN[-MAX]` (validated with the other options).
+            wait_for_video: args
+                .wait_for_video
+                .as_deref()
+                .filter(|_| !args.no_wait_for_video)
+                .map(|range| {
+                    let seconds =
+                        |text: &str| yt_dlp_rs::parse_duration(text).map_or(0.0, |n| n.as_f64());
+                    let (min, max) = match range.split_once('-') {
+                        Some((min, max)) => (seconds(min), Some(seconds(max))),
+                        None => (seconds(range), None),
+                    };
+                    yt_dlp_rs::extractor::WaitForVideo {
+                        min,
+                        max,
+                        progress: if args.no_progress {
+                            false
+                        } else if args.progress {
+                            true
+                        } else {
+                            !QUIET.load(Ordering::Relaxed)
+                        },
+                    }
+                }),
         },
         http_options,
     )?;

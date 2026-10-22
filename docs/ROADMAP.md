@@ -176,7 +176,7 @@ remain outside the current result contract.
    sessions, pre-roll ad waits, InnerTube retries, master-only HLS, live
    streams (FFmpeg, interruptible), mixes, nested channel tabs with lazily
    fetched pages, YouTube Music URLs, and hashtag/feed pages, each with saved
-   fixtures, plus clips. Comments, `--wait-for-video`, post-live/live-from-start DASH
+   fixtures, plus clips and `--wait-for-video`. Comments, post-live/live-from-start DASH
    and PO token providers remain open.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand

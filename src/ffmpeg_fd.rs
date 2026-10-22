@@ -275,7 +275,7 @@ pub(crate) fn download(
         command.env("HTTP_PROXY", &proxy).env("http_proxy", &proxy);
     }
     // Upstream `real_download`: interrupting a live download completes it.
-    let interrupt = crate::is_live(info).then(interrupt::Guard::install);
+    let interrupt = crate::is_live(info).then(crate::interrupt::Guard::install);
     let mut child = command.spawn()?;
     // Upstream keeps FFmpeg's stdin open (a pipe) so it never reads the terminal.
     let mut stdin = child.stdin.take();
@@ -287,7 +287,7 @@ pub(crate) fn download(
         if !interrupted
             && interrupt
                 .as_ref()
-                .is_some_and(interrupt::Guard::interrupted)
+                .is_some_and(crate::interrupt::Guard::interrupted)
         {
             // `proc.communicate_or_kill(b'q')`: FFmpeg finishes the file.
             interrupted = true;
@@ -484,77 +484,5 @@ mod tests {
             .map(|pair| pair[1].clone())
             .collect();
         assert_eq!(maps, ["0:0", "1:1"]);
-    }
-}
-
-/// A SIGINT handler while a live download runs (upstream's
-/// `KeyboardInterrupt` handling); Windows keeps the default behavior, as
-/// upstream does not ask FFmpeg to quit there.
-mod interrupt {
-    #[cfg(unix)]
-    use std::sync::atomic::{AtomicBool, Ordering};
-
-    #[cfg(unix)]
-    static INTERRUPTED: AtomicBool = AtomicBool::new(false);
-
-    #[cfg(unix)]
-    const SIGINT: i32 = 2;
-
-    #[cfg(unix)]
-    const SIG_IGN: usize = 1;
-
-    #[cfg(unix)]
-    unsafe extern "C" {
-        fn signal(signum: i32, handler: usize) -> usize;
-    }
-
-    #[cfg(unix)]
-    extern "C" fn record(_: i32) {
-        INTERRUPTED.store(true, Ordering::SeqCst);
-    }
-
-    /// The installed handler; dropping it restores the previous one.
-    pub(super) struct Guard {
-        #[cfg(unix)]
-        previous: usize,
-    }
-
-    impl Guard {
-        pub(super) fn install() -> Self {
-            #[cfg(unix)]
-            {
-                INTERRUPTED.store(false, Ordering::SeqCst);
-                // SAFETY: the handler only stores to an atomic flag.
-                let previous = unsafe { signal(SIGINT, record as extern "C" fn(i32) as usize) };
-                if previous == SIG_IGN {
-                    // An ignored SIGINT (a background job) stays ignored, as
-                    // Python then installs no `KeyboardInterrupt` handler.
-                    // SAFETY: restores the previous disposition.
-                    unsafe { signal(SIGINT, SIG_IGN) };
-                }
-                Self { previous }
-            }
-            #[cfg(not(unix))]
-            Self {}
-        }
-
-        pub(super) fn interrupted(&self) -> bool {
-            #[cfg(unix)]
-            {
-                INTERRUPTED.load(Ordering::SeqCst)
-            }
-            #[cfg(not(unix))]
-            false
-        }
-    }
-
-    impl Drop for Guard {
-        fn drop(&mut self) {
-            #[cfg(unix)]
-            // SAFETY: restores the handler `install` replaced.
-            unsafe {
-                signal(SIGINT, self.previous);
-            }
-        }
     }
 }

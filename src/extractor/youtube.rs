@@ -32,11 +32,22 @@ pub struct YoutubeOptions {
     pub include_translated_subtitles: bool,
     /// Upstream `noplaylist`: a watch URL with `list=` downloads just its video.
     pub no_playlist: bool,
+    /// Upstream `wait_for_video`: wait for a video without formats.
+    pub wait_for_video: Option<WaitForVideo>,
+}
+
+/// `--wait-for-video MIN[-MAX]` seconds, and whether progress lines are shown.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct WaitForVideo {
+    pub min: f64,
+    pub max: Option<f64>,
+    pub progress: bool,
 }
 
 struct ConfiguredYoutube {
     include_translated_subtitles: bool,
     no_playlist: bool,
+    wait_for_video: Option<WaitForVideo>,
     runtime: Option<challenge::Runtime>,
 }
 
@@ -47,6 +58,7 @@ impl Youtube {
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,
             no_playlist: options.no_playlist,
+            wait_for_video: options.wait_for_video,
             runtime: options.js_runtime.map(challenge::Runtime::new),
         }
     }
@@ -276,6 +288,92 @@ fn video_id(url: &Url, no_playlist: bool) -> Result<Option<String>> {
         .map(Some)
         .ok_or_else(|| unsupported("expected a single video URL with an 11-character ID"))
 }
+/// `_wait_for_video`: sleep until the release time (within the requested
+/// bounds), showing the remaining time; an interrupt ends it early. Returns
+/// the `ReExtractInfo` message.
+fn wait_for_video(wait: &WaitForVideo, release_timestamp: Option<i64>, upcoming: bool) -> String {
+    let now = || {
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0.0, |elapsed| elapsed.as_secs_f64())
+    };
+    // `'%02d:%02d:%02d' % timetuple_from_msec(dur * 1000)[:-1]`.
+    let format_duration = |seconds: f64| {
+        let seconds = seconds.max(0.0);
+        let hours = (seconds / 3600.0).floor();
+        let minutes = ((seconds - hours * 3600.0) / 60.0).floor();
+        let rest = (seconds - hours * 3600.0 - minutes * 60.0).floor();
+        format!(
+            "{:02}:{:02}:{:02}",
+            hours as i64, minutes as i64, rest as i64
+        )
+    };
+    let (min, max) = (wait.min, wait.max.filter(|max| *max != 0.0));
+    let mut diff = release_timestamp.map(|release| release as f64 - now());
+    if diff.is_none() && upcoming {
+        diff = Some(match max {
+            Some(max) if min != 0.0 => {
+                let unit = f64::from(
+                    std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .map_or(0, |elapsed| elapsed.subsec_nanos()),
+                ) / 1e9;
+                (min + (max - min) * unit).round()
+            }
+            Some(max) => max,
+            None => min,
+        });
+        crate::screen::warning("Release time of video is not known");
+    } else if diff.unwrap_or(0.0) <= 0.0 {
+        crate::screen::warning("Video should already be available according to extracted info");
+    }
+    let diff = diff
+        .unwrap_or(0.0)
+        .max(min)
+        .min(max.unwrap_or(f64::INFINITY));
+    crate::screen::screen(&format!(
+        "[wait] Waiting for {} - Press Ctrl+C to try now",
+        format_duration(diff)
+    ));
+    let mut last = String::new();
+    let mut progress = |message: &str| {
+        let line = if wait.progress {
+            let padding = " ".repeat(last.chars().count().saturating_sub(message.chars().count()));
+            format!("{message}{padding}\r")
+        } else if last.is_empty() {
+            format!("{message}\n")
+        } else {
+            return;
+        };
+        crate::screen::screen_raw(&line);
+        last = message.to_owned();
+    };
+    let interrupt = crate::interrupt::Guard::install();
+    let until = now() + diff;
+    loop {
+        if interrupt.interrupted() {
+            progress("");
+            return "[wait] Interrupted by user".into();
+        }
+        let remaining = until - now();
+        if remaining <= 0.0 {
+            progress("");
+            return "[wait] Wait period ended".into();
+        }
+        progress(&format!(
+            "[wait] Remaining time until next attempt: {}",
+            format_duration(remaining)
+        ));
+        // A second's sleep, polling the interrupt.
+        for _ in 0..20 {
+            if interrupt.interrupted() {
+                break;
+            }
+            std::thread::sleep(std::time::Duration::from_millis(50));
+        }
+    }
+}
+
 /// `_real_extract`'s reasons for a video without formats: DRM, then the
 /// playability status's error screen (`raise_no_formats(reason)`).
 fn unplayable_reason(id: &str, player_responses: &[Value]) -> Option<Error> {
@@ -433,13 +531,24 @@ impl streams::Solver for JsSolver<'_> {
 }
 
 /// Upstream `_real_extract` over every requested client's player response.
+/// An extraction's outcome: the video, or (with `--wait-for-video`) a video
+/// without formats to wait for.
+enum Extraction {
+    Video(Box<VideoInfo>),
+    Wait {
+        release_timestamp: Option<i64>,
+        upcoming: bool,
+    },
+}
+
 fn extract_clients(
     client: &Client,
     url: &Url,
     id: &str,
     runtime: Option<&challenge::Runtime>,
     translated_manual: bool,
-) -> Result<VideoInfo> {
+    wait: bool,
+) -> Result<Extraction> {
     crate::screen::screen(&format!(
         "[youtube] Extracting URL: {}",
         crate::screen::extracting_url(&format!("https://www.youtube.com/watch?v={id}"))
@@ -575,9 +684,32 @@ fn extract_clients(
         }
     }
     let Some(first_format) = formats.first() else {
-        return Err(
-            unplayable_reason(id, &acquired.player_responses).unwrap_or_else(|| no_formats(id))
-        );
+        let reason = unplayable_reason(id, &acquired.player_responses);
+        if wait {
+            // `raise_no_formats(expected=True)` warns while waiting for videos
+            // (only `report_drm` passes the video ID).
+            if let Some(reason) = &reason {
+                let text = reason.to_string();
+                let prefix = format!("[youtube] {id}: ");
+                match text.strip_prefix(&prefix) {
+                    Some(message) if message != "This video is DRM protected" => {
+                        crate::screen::warning(&format!("[youtube] {message}"));
+                    }
+                    _ => crate::screen::warning(&text),
+                }
+            }
+            let release_timestamp = acquired.player_responses.iter().find_map(|response| {
+                response
+                    .pointer("/microformat/playerMicroformatRenderer/liveBroadcastDetails/startTimestamp")
+                    .and_then(Value::as_str)
+                    .and_then(crate::dates::parse_iso8601)
+            });
+            return Ok(Extraction::Wait {
+                release_timestamp,
+                upcoming: live_status == Some("is_upcoming"),
+            });
+        }
+        return Err(reason.unwrap_or_else(|| no_formats(id)));
     };
     let microformats: Vec<&Value> = acquired
         .player_responses
@@ -721,10 +853,10 @@ fn extract_clients(
             _ => crate::metadata_parser::set_field(&mut info, &key, value),
         }
     }
-    Ok(crate::info_order::mark_info(
+    Ok(Extraction::Video(Box::new(crate::info_order::mark_info(
         info,
         &format!("youtube;{}", keys.join(",")),
-    ))
+    ))))
 }
 
 impl Extractor for Youtube {
@@ -737,8 +869,10 @@ impl Extractor for Youtube {
         };
         crate::screen::set_extractor("youtube");
         initialize();
-        let info = extract_clients(client, url, &id, None, false)?;
-        Ok(Some(info))
+        match extract_clients(client, url, &id, None, false, false)? {
+            Extraction::Video(info) => Ok(Some(*info)),
+            Extraction::Wait { .. } => unreachable!("waiting is not configured"),
+        }
     }
 }
 
@@ -752,14 +886,27 @@ impl Extractor for ConfiguredYoutube {
         };
         crate::screen::set_extractor("youtube");
         initialize();
-        let info = extract_clients(
-            client,
-            url,
-            &id,
-            self.runtime.as_ref(),
-            self.include_translated_subtitles,
-        )?;
-        Ok(Some(info))
+        loop {
+            match extract_clients(
+                client,
+                url,
+                &id,
+                self.runtime.as_ref(),
+                self.include_translated_subtitles,
+                self.wait_for_video.is_some(),
+            )? {
+                Extraction::Video(info) => return Ok(Some(*info)),
+                Extraction::Wait {
+                    release_timestamp,
+                    upcoming,
+                } => {
+                    let wait = self.wait_for_video.unwrap_or_default();
+                    let message = wait_for_video(&wait, release_timestamp, upcoming);
+                    // `ReExtractInfo(expected=True)`.
+                    crate::screen::screen(&format!("{message}; Re-extracting data"));
+                }
+            }
+        }
     }
 }
 

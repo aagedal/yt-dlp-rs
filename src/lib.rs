@@ -30,6 +30,7 @@ mod http;
 mod info;
 mod info_json;
 mod info_order;
+mod interrupt;
 mod ism_fd;
 pub mod js_to_json;
 pub mod manifest_args;

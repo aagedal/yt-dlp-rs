@@ -15,6 +15,8 @@ use std::{
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Message<'a> {
     Screen(&'a str),
+    /// A screen message without an end of line (`skip_eol=True`).
+    ScreenRaw(&'a str),
     Warning(&'a str),
     Stderr(&'a str),
     /// A `write_debug` text (without the `[debug] ` prefix); only sent with
@@ -145,6 +147,13 @@ pub(crate) fn postprocess<T>(
     let result = run()?;
     self::postprocessor(postprocessor, "finished");
     Ok(result)
+}
+
+/// `to_screen(text, skip_eol=True)`.
+pub(crate) fn screen_raw(text: &str) {
+    if let Some(sink) = SINK.get() {
+        sink(Message::ScreenRaw(text));
+    }
 }
 
 /// `to_screen(..., only_once=True)`.
