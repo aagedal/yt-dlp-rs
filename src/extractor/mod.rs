@@ -605,10 +605,14 @@ fn download_json_with(
         error => error,
     };
     let mut response = direct::request_with_headers(client, url, None, headers).map_err(wrap)?;
+    let page_url = response.url().clone();
     let mut body = Vec::new();
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
+    // `_webpage_read_content`: `--dump-pages`/`--write-pages`.
+    crate::screen::expect_page(id, None, None);
+    crate::screen::page_read(&page_url, &body)?;
     let text = transform(&String::from_utf8_lossy(&body))?;
     serde_json::from_str(&text).map_err(|error| {
         crate::Error::Reported(format!(

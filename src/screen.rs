@@ -308,6 +308,8 @@ struct ExpectedPage {
     id: String,
     before: Option<String>,
     after: Option<String>,
+    /// The MD5 of the request's `data` (a POST body).
+    data: Option<String>,
 }
 
 thread_local! {
@@ -322,6 +324,20 @@ pub(crate) fn expect_page(id: &str, before: Option<String>, after: Option<String
             id: id.into(),
             before,
             after,
+            data: None,
+        });
+    });
+}
+
+/// Expect the response to a POST of `data` for `id`, whose dump name has
+/// the data's MD5.
+pub(crate) fn expect_post_page(id: &str, data: &[u8]) {
+    PAGE.with(|page| {
+        *page.borrow_mut() = Some(ExpectedPage {
+            id: id.into(),
+            before: None,
+            after: None,
+            data: Some(crate::md5::hex(data)),
         });
     });
 }
@@ -351,6 +367,7 @@ pub(crate) fn page_read(url: &url::Url, bytes: &[u8]) -> std::io::Result<()> {
         let filename = request_dump_filename(
             url.as_str(),
             &page.id,
+            page.data.as_deref(),
             TRIM_FILE_NAME.load(Ordering::Relaxed),
         );
         screen(&format!("[{extractor}] Saving request to {filename}"));
@@ -362,9 +379,9 @@ pub(crate) fn page_read(url: &url::Url, bytes: &[u8]) -> std::io::Result<()> {
     Ok(())
 }
 
-/// Upstream `_request_dump_filename` without request data.
-fn request_dump_filename(url: &str, id: &str, trim_length: usize) -> String {
-    let mut basen = [id, url]
+/// Upstream `_request_dump_filename`: `ID_[DATA-MD5_]URL.dump`.
+fn request_dump_filename(url: &str, id: &str, data: Option<&str>, trim_length: usize) -> String {
+    let mut basen = [id, data.unwrap_or_default(), url]
         .into_iter()
         .filter(|part| !part.is_empty())
         .collect::<Vec<_>>()
