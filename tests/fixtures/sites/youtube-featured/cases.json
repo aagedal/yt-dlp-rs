@@ -3,5 +3,7 @@
  {"url": "https://www.youtube.com/@Feat/featured", "args": ["--flat-playlist", "--print", "%(id)s|%(title)s|%(ie_key)s|%(url)s|%(duration)s|%(view_count)s|%(channel_follower_count)s"]},
  {"url": "https://www.youtube.com/@Feat/featured", "args": ["--flat-playlist", "--print", "%(extractor)s|%(extractor_key)s|%(webpage_url)s|%(playlist_index)s"]},
  {"url": "https://www.youtube.com/@Feat/featured", "args": ["-s", "--flat-playlist"]},
- {"url": "https://www.youtube.com/@Feat/featured", "args": ["-j", "--flat-playlist", "-I", "1:5"]}
+ {"url": "https://www.youtube.com/@Feat/featured", "args": ["-j", "--flat-playlist", "-I", "1:5"]},
+ {"url": "https://www.youtube.com/@Feat", "args": ["--compat-options", "no-youtube-channel-redirect", "--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(playlist_webpage_url)s|%(id)s"]},
+ {"url": "https://www.youtube.com/@Feat", "args": ["--compat-options", "no-youtube-channel-redirect", "-s", "--flat-playlist", "-I", "1"]}
 ]

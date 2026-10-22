@@ -922,6 +922,14 @@ pub fn set_video_password(password: Option<String>) {
     }
 }
 
+/// YoutubeTabIE's `--compat-options`: `no-youtube-channel-redirect` and
+/// `no-youtube-unavailable-videos`.
+pub fn set_youtube_tab_compat(no_channel_redirect: bool, no_unavailable_videos: bool) {
+    use std::sync::atomic::Ordering::Relaxed;
+    youtube::tab::NO_CHANNEL_REDIRECT.store(no_channel_redirect, Relaxed);
+    youtube::tab::NO_UNAVAILABLE_VIDEOS.store(no_unavailable_videos, Relaxed);
+}
+
 /// `self.get_param('videopassword')`.
 pub(crate) fn video_password() -> Option<String> {
     VIDEO_PASSWORD

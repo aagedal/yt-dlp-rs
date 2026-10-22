@@ -1,0 +1,9 @@
+[
+ {"url": "https://www.youtube.com/@Region/videos", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"]},
+ {"url": "https://www.youtube.com/@Region/videos", "args": ["--compat-options", "no-youtube-channel-redirect", "--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"]},
+ {"url": "https://www.youtube.com/@Gone", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"]},
+ {"url": "https://www.youtube.com/@Gone", "args": ["--compat-options", "no-youtube-channel-redirect", "-J", "--flat-playlist"]},
+ {"url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1", "args": ["-s", "--flat-playlist"]},
+ {"url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1", "args": ["--compat-options", "no-youtube-unavailable-videos", "-s", "--flat-playlist"]},
+ {"url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1", "args": ["--compat-options", "no-youtube-unavailable-videos", "--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"]}
+]

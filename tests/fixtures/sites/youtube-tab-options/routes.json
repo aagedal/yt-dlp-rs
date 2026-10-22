@@ -1,0 +1,50 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/@Region/videos",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "region.html"
+  },
+  {
+   "url": "https://www.youtube.com/channel/UCregionregionregionreg1/videos",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "regional.html"
+  },
+  {
+   "url": "https://www.youtube.com/@Gone/videos",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "home.html"
+  },
+  {
+   "url": "https://www.youtube.com/@Gone",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "home.html"
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "unavailable.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "VLPLunavailableunavailableunavailab1",
+    "wgYCCAA="
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "unavailable-reload.json"
+  }
+ ]
+}

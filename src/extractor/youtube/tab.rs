@@ -9,10 +9,19 @@ use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
+use std::sync::atomic::{AtomicBool, Ordering};
 use url::Url;
 
 pub(crate) const NAME: &str = "youtube:tab";
 pub(crate) const KEY: &str = "YoutubeTab";
+
+/// `'no-youtube-channel-redirect' in compat_opts`.
+pub(crate) static NO_CHANNEL_REDIRECT: AtomicBool = AtomicBool::new(false);
+/// `'no-youtube-unavailable-videos' in compat_opts`.
+pub(crate) static NO_UNAVAILABLE_VIDEOS: AtomicBool = AtomicBool::new(false);
+fn compat(option: &AtomicBool) -> bool {
+    option.load(Ordering::Relaxed)
+}
 
 const RESERVED_NAMES: &str = "channel|c|user|playlist|watch|w|v|embed|e|live|watch_popup|clip|shorts|movies|results|search|shared|hashtag|trending|explore|feed|feeds|browse|oembed|get_video_info|iframe_api|s/player|source|storefront|oops|index|account|t/terms|about|upload|signin|logout";
 
@@ -2200,10 +2209,38 @@ const EXTRACTOR_RETRIES: u32 = 3;
 /// `_extract_data(fatal=True, webpage_fatal=False)`: the webpage's
 /// `ytInitialData` and `ytcfg`, else the `navigation/resolve_url` endpoint's
 /// browse response.
-fn page_data(client: &Client, url: &Url, item_id: &str) -> Result<(Value, Map<String, Value>)> {
+fn page_data(
+    client: &Client,
+    url: &Url,
+    item_id: &str,
+    temp_id: &str,
+) -> Result<(Value, Map<String, Value>)> {
     let (data, ytcfg) = extract_webpage(client, url, item_id, NAME, false)?;
-    if let Some(data) = data.filter(|data| data.as_object().is_some_and(|data| !data.is_empty())) {
-        return Ok((data, ytcfg));
+    {
+        // Reject webpage data if redirected to the home page without
+        // explicitly requesting it.
+        let home = data.as_ref().is_some_and(|data| {
+            tab_renderers(data)
+                .iter()
+                .find(|tab| truthy(tab.get("selected")))
+                .and_then(|tab| tab.get("tabIdentifier"))
+                .and_then(Value::as_str)
+                == Some("FEwhat_to_watch")
+        });
+        if url.as_str() != "https://www.youtube.com/feed/recommended"
+            && home
+            && !compat(&NO_CHANNEL_REDIRECT)
+        {
+            return Err(fail(
+                temp_id,
+                "The channel/playlist does not exist and the URL redirected to youtube.com home page",
+            ));
+        }
+        if let Some(data) =
+            data.filter(|data| data.as_object().is_some_and(|data| !data.is_empty()))
+        {
+            return Ok((data, ytcfg));
+        }
     }
     let data = tab_endpoint(client, "web", url.as_str(), item_id, &ytcfg)?;
     Ok((data, ytcfg))
@@ -2568,7 +2605,7 @@ impl YoutubeTab {
         let original_tab = parts.tab.trim_start_matches('/').to_owned();
         let display_id = format!("{item_id}{}", parts.tab);
         let mut page_url = url.to_string();
-        if is_channel && parts.tab.is_empty() {
+        if is_channel && parts.tab.is_empty() && !compat(&NO_CHANNEL_REDIRECT) {
             page_url = format!("{}/videos{}", parts.pre, parts.post);
         }
         if music {
@@ -2614,20 +2651,7 @@ impl YoutubeTab {
             ));
         }
         let fetch_url = Url::parse(&page_url)?;
-        let (mut data, mut ytcfg) = page_data(client, &fetch_url, &display_id)?;
-        // The URL redirected to the home page (`FEwhat_to_watch`).
-        if tab_renderers(&data)
-            .iter()
-            .find(|tab| truthy(tab.get("selected")))
-            .and_then(|tab| tab.get("tabIdentifier"))
-            .and_then(Value::as_str)
-            == Some("FEwhat_to_watch")
-        {
-            return Err(fail(
-                &parts.id,
-                "The channel/playlist does not exist and the URL redirected to youtube.com home page",
-            ));
-        }
+        let (mut data, mut ytcfg) = page_data(client, &fetch_url, &display_id, &parts.id)?;
         // A conditional redirect to the regional channel.
         if let Some(redirect) = data
             .get("onResponseReceivedActions")
@@ -2647,6 +2671,7 @@ impl YoutubeTab {
                 )
                 .and_then(Value::as_str)
             })
+            .filter(|_| !compat(&NO_CHANNEL_REDIRECT))
         {
             let target = Url::parse("https://www.youtube.com")?.join(redirect)?;
             let target = format!("{target}{}{}", parts.tab, parts.post);
@@ -2659,7 +2684,7 @@ impl YoutubeTab {
         // `extra_tabs` and their outer playlist's `metadata`.
         let mut extra_tabs: Vec<String> = Vec::new();
         let mut outer_metadata: Option<Map<String, Value>> = None;
-        if is_channel && !tabs.is_empty() {
+        if is_channel && !tabs.is_empty() && !compat(&NO_CHANNEL_REDIRECT) {
             let selected = tabs
                 .iter()
                 .find(|tab| truthy(tab.get("selected")))
@@ -2694,7 +2719,7 @@ impl YoutubeTab {
                     // Topic channels have no /videos: use their uploads playlist.
                     let uploads = format!("UU{}", &item_id[2..]);
                     let uploads_url = format!("https://www.youtube.com/playlist?list={uploads}");
-                    match page_data(client, &Url::parse(&uploads_url)?, &uploads) {
+                    match page_data(client, &Url::parse(&uploads_url)?, &uploads, &uploads) {
                         Ok((found, found_ytcfg)) => {
                             data = found;
                             if ytcfg.is_empty() {
@@ -2732,6 +2757,7 @@ impl YoutubeTab {
         // `_reload_with_unavailable_videos`.
         let is_playlist = truthy(at(&data, &["metadata", "playlistMetadataRenderer"]))
             || truthy(at(&data, &["header", "playlistHeaderRenderer"]));
+        let is_playlist = is_playlist && !compat(&NO_UNAVAILABLE_VIDEOS);
         if is_playlist {
             let mut query = Map::new();
             query.insert("params".into(), "wgYCCAA=".into());

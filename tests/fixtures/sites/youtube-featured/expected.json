@@ -106,6 +106,53 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Feat",
+   "args": [
+    "--compat-options",
+    "no-youtube-channel-redirect",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_webpage_url)s|%(id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|NA",
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|PPPPPPPPPPP",
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|QQQQQQQQQQQ",
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|NA",
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|UCotherotherotherothero1",
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|NA",
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|GGGGGGGGGGG",
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|PLgridplaylist",
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|NA",
+    "UCfeaturedfeaturedfeatu1|Featured Channel - Home|https://www.youtube.com/@Feat|MMMMMMMMMMM"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Feat",
+   "args": [
+    "--compat-options",
+    "no-youtube-channel-redirect",
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/@Feat",
+    "[youtube:tab] @Feat: Downloading webpage",
+    "[download] Downloading playlist: Featured Channel - Home",
+    "[youtube:tab] Playlist Featured Channel - Home: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Featured Channel - Home"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

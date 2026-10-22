@@ -1,0 +1,120 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/@Region/videos",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "UCregionregionregionreg1|Regional Channel - Videos|RRRRRRRRRR2|Regional video"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Region/videos",
+   "args": [
+    "--compat-options",
+    "no-youtube-channel-redirect",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "UCregionregionregionreg1|Region Channel - Videos|RRRRRRRRRR1|Region page video"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Gone",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube:tab] @Gone: The channel/playlist does not exist and the URL redirected to youtube.com home page"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Gone",
+   "args": [
+    "--compat-options",
+    "no-youtube-channel-redirect",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"@Gone\", \"title\": \"@Gone - Home\", \"availability\": null, \"channel_follower_count\": null, \"description\": null, \"tags\": [], \"thumbnails\": [], \"modified_date\": null, \"view_count\": null, \"playlist_count\": 1, \"channel\": null, \"channel_id\": null, \"uploader_id\": null, \"uploader\": null, \"channel_url\": null, \"uploader_url\": null, \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"HOMEHOMEHO1\", \"url\": \"https://www.youtube.com/watch?v=HOMEHOMEHO1\", \"title\": \"Home page video\", \"description\": null, \"duration\": 245, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/HOMEHOMEHO1/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1000, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/@Gone\", \"original_url\": \"https://www.youtube.com/@Gone\", \"webpage_url_basename\": \"@Gone\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+   "args": [
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+    "[youtube:tab] PLunavailableunavailableunavailab1: Downloading webpage",
+    "[youtube:tab] PLunavailableunavailableunavailab1: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Hidden videos",
+    "[youtube:tab] Playlist Hidden videos: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: Hidden videos"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+   "args": [
+    "--compat-options",
+    "no-youtube-unavailable-videos",
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+    "[youtube:tab] PLunavailableunavailableunavailab1: Downloading webpage",
+    "[download] Downloading playlist: Hidden videos",
+    "[youtube:tab] Playlist Hidden videos: Downloading 1 items of 1",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Hidden videos"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+   "args": [
+    "--compat-options",
+    "no-youtube-unavailable-videos",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "PLunavailableunavailableunavailab1|Hidden videos|UUUUUUUUUU1|Shown video"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

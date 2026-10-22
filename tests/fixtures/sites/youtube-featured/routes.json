@@ -8,6 +8,13 @@
    "body_file": "featured.html"
   },
   {
+   "url": "https://www.youtube.com/@Feat",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "featured.html"
+  },
+  {
    "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
    "request_body": [
     "TOKENFEAT"
