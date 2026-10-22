@@ -1,0 +1,64 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=MultiFeed01&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "MultiFeed01.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"MultiFeed01\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "MultiFeed01.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=FeedCamAaa1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "FeedCamAaa1.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"FeedCamAaa1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "FeedCamAaa1.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=FeedCamBbb2&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "FeedCamBbb2.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"FeedCamBbb2\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "FeedCamBbb2.json"
+  }
+ ]
+}

@@ -2245,7 +2245,8 @@ impl YoutubeDl {
         let shown_url = Url::parse(&shown).unwrap_or_else(|_| url.clone());
         // A playlist extractor's `url` entry (`_type: url`) keeps the
         // extracted video's own `webpage_url`.
-        let plain_url = marker["entry"]["_type"] == "url";
+        // (as does a URL whose extractor names its own: YouTube's feeds).
+        let plain_url = marker["entry"]["_type"] == "url" || marker["keep_webpage_url"] == true;
         let merge = |result: &mut ExtractResult| -> Result<()> {
             let ExtractResult::Video(info) = result else {
                 return Err(Error::UnsupportedHtml5(
@@ -2355,6 +2356,18 @@ impl YoutubeDl {
                 info::url_basename(&url).into(),
             );
             full.insert("webpage_url_domain".into(), info::get_domain(&url).into());
+        }
+        // `add_default_extra_info(info, get_info_extractor(ie_key), url)`
+        // for a playlist extractor's own entry dict.
+        if let Some(ie_key) = ie_key
+            && marker["entry"].is_object()
+            && !raw.contains_key("extractor")
+        {
+            full.insert(
+                "extractor".into(),
+                marker["extractor"].as_str().unwrap_or(ie_key).into(),
+            );
+            full.insert("extractor_key".into(), ie_key.into());
         }
         let number = |value: Option<usize>| value.map_or(Value::Null, Value::from);
         // `add_extra_info` keeps an entry's own keys.

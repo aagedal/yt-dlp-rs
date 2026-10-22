@@ -15,7 +15,7 @@ pub(crate) mod tab;
 mod watch;
 mod watched;
 use super::{Extractor, direct};
-use crate::{Error, Result, StreamKind, VideoInfo};
+use crate::{Error, ExtractResult, Result, StreamKind, VideoInfo};
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::path::PathBuf;
@@ -404,6 +404,105 @@ fn follow_video(video_id: &str) -> Result<VideoInfo> {
     Ok(info)
 }
 
+/// `smuggle_url(URL, {'force_singlefeed': True})`'s fragment.
+const SINGLEFEED_SMUGGLE: &str = "__youtubedl_smuggle=%7B%22force_singlefeed%22%3A+true%7D";
+
+/// `unsmuggle_url(url)`'s `force_singlefeed`.
+fn force_singlefeed(url: &Url) -> bool {
+    url.fragment().is_some_and(|fragment| {
+        url::form_urlencoded::parse(fragment.as_bytes())
+            .find(|(key, _)| key == "__youtubedl_smuggle")
+            .and_then(|(_, data)| serde_json::from_str::<Value>(&data).ok())
+            .is_some_and(|data| tab::truthy(data.get("force_singlefeed")))
+    })
+}
+
+/// The multifeed `playlist_result(entries, video_id, video_title,
+/// video_description)`: a `url_transparent` entry per feed with an ID,
+/// titled `TITLE (FEED TITLE)`, its URL smuggling `force_singlefeed`.
+fn multifeed_playlist(
+    id: &str,
+    metadata: &str,
+    title: &str,
+    description: Option<&str>,
+) -> Result<crate::PlaylistInfo> {
+    let mut entries = Vec::new();
+    let mut feed_ids = Vec::new();
+    for feed in metadata.split(',') {
+        // `parse_qs(unquote_plus(feed))`.
+        let unquoted: String = url::form_urlencoded::parse(format!("x={feed}").as_bytes())
+            .next()
+            .map(|(_, value)| value.into_owned())
+            .unwrap_or_default();
+        let field = |name: &str| {
+            url::form_urlencoded::parse(unquoted.as_bytes())
+                .find(|(key, value)| key == name && !value.is_empty())
+                .map(|(_, value)| value.into_owned())
+        };
+        let Some(feed_id) = field("id") else {
+            continue;
+        };
+        let mut feed_title = title.to_owned();
+        if let Some(name) = field("title") {
+            feed_title.push_str(&format!(" ({name})"));
+        }
+        let target = format!("https://www.youtube.com/watch?v={feed_id}#{SINGLEFEED_SMUGGLE}");
+        let url = Url::parse(&target)?;
+        let mut entry = direct::build_at(url.clone(), &url, String::new());
+        entry.formats.clear();
+        entry.direct = None;
+        entry.id = feed_id.clone();
+        entry.title = feed_title.clone();
+        entry.extra.insert(
+            crate::TRANSPARENT.into(),
+            serde_json::json!({
+                "url": target,
+                "force_videoid": null,
+                "fields": {"title": feed_title},
+                "ie_key": "Youtube",
+                "extractor": "youtube",
+                "keep_webpage_url": true,
+                "entry": {
+                    "_type": "url_transparent",
+                    "ie_key": "Youtube",
+                    "url": target,
+                    "title": feed_title,
+                },
+            }),
+        );
+        entries.push(entry);
+        feed_ids.push(feed_id);
+    }
+    crate::screen::screen(&format!(
+        "[youtube] Downloading multifeed video ({}) - add --no-playlist to just download video {id}",
+        feed_ids.join(", ")
+    ));
+    let mut keys = vec!["id"];
+    let mut extra = serde_json::Map::new();
+    if !title.is_empty() {
+        keys.push("title");
+    }
+    if let Some(description) = description {
+        keys.push("description");
+        extra.insert("description".into(), description.into());
+    }
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!("playlist-dict;{}", keys.join(",")).into(),
+    );
+    Ok(crate::PlaylistInfo {
+        id: id.into(),
+        title: title.into(),
+        webpage_url: Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?,
+        extractor: "youtube".into(),
+        extractor_key: "Youtube".into(),
+        nested: Vec::new(),
+        pending: None,
+        entries,
+        extra,
+    })
+}
+
 /// `datetime_from_str(upload_date) >= datetime_from_str('today-2days')`:
 /// `today` is now rounded to the nearest UTC day.
 fn recently_uploaded(upload_date: &str) -> bool {
@@ -686,6 +785,8 @@ enum Extraction {
     Video(Box<VideoInfo>),
     /// A paid video's trailer (`url_result(TRAILER_ID, 'Youtube')`).
     Trailer(String),
+    /// A multifeed video's feeds.
+    Playlist(Box<crate::PlaylistInfo>),
     Wait {
         release_timestamp: Option<i64>,
         upcoming: bool,
@@ -702,10 +803,18 @@ fn extract_clients(
     wait: bool,
     get_comments: bool,
     mark_watched: bool,
+    no_playlist: bool,
 ) -> Result<Extraction> {
     let shown = EXTRACTING_AS
         .with(|shown| shown.borrow_mut().take())
-        .unwrap_or_else(|| format!("https://www.youtube.com/watch?v={id}"));
+        .unwrap_or_else(|| {
+            // A smuggled feed URL is shown as given.
+            if force_singlefeed(url) {
+                url.to_string()
+            } else {
+                format!("https://www.youtube.com/watch?v={id}")
+            }
+        });
     crate::screen::screen(&format!(
         "[youtube] Extracting URL: {}",
         crate::screen::extracting_url(&shown)
@@ -787,6 +896,70 @@ fn extract_clients(
         title = Some(initial);
     }
     let title = title.unwrap_or_default();
+    let microformats: Vec<&Value> = acquired
+        .player_responses
+        .iter()
+        .filter_map(|response| response.pointer("/microformat/playerMicroformatRenderer"))
+        .collect();
+    // `original_description if original_description is not None else
+    // translated_description`, else the initial data's.
+    let description = acquired
+        .player_responses
+        .iter()
+        .find_map(|response| {
+            response
+                .pointer("/videoDetails/shortDescription")
+                .filter(|value| !value.is_null())
+        })
+        .map(|value| value.as_str().unwrap_or_default().to_owned())
+        .or_else(|| {
+            microformats
+                .iter()
+                .find_map(|micro| micro.get("description").and_then(metadata::text))
+        })
+        .or_else(|| {
+            acquired.initial_data.as_ref().and_then(|data| {
+                data.get("engagementPanels")?
+                    .as_array()?
+                    .iter()
+                    .filter_map(|panel| {
+                        panel.pointer(
+                            "/engagementPanelSectionListRenderer/content/structuredDescriptionContentRenderer/items",
+                        )
+                    })
+                    .filter_map(Value::as_array)
+                    .flatten()
+                    .find_map(|item| {
+                        item.pointer(
+                            "/expandableVideoDescriptionBodyRenderer/attributedDescriptionBodyText/content",
+                        )?
+                        .as_str()
+                        .map(str::to_owned)
+                    })
+            })
+        });
+    // Multifeed (multicamera) videos are playlists of their feeds, unless
+    // `--no-playlist` or the URL smuggles `force_singlefeed`.
+    if let Some(metadata) = acquired.player_responses.iter().find_map(|response| {
+        response
+            .pointer("/multicamera/playerLegacyMulticameraRenderer/metadataList")
+            .and_then(Value::as_str)
+            .filter(|list| !list.is_empty())
+    }) && !force_singlefeed(url)
+    {
+        if no_playlist {
+            crate::screen::screen(&format!(
+                "[youtube] Downloading just video {id} because of --no-playlist"
+            ));
+        } else {
+            return Ok(Extraction::Playlist(Box::new(multifeed_playlist(
+                id,
+                metadata,
+                &title,
+                description.as_deref(),
+            )?)));
+        }
+    }
     // `int_or_none(lengthSeconds)` of the details, then the microformats,
     // then `parse_duration(search_meta('duration'))`.
     let length = |values: &[&Value]| {
@@ -953,48 +1126,6 @@ fn extract_clients(
         }
         return Err(reason.unwrap_or_else(|| no_formats(id)));
     }
-    let microformats: Vec<&Value> = acquired
-        .player_responses
-        .iter()
-        .filter_map(|response| response.pointer("/microformat/playerMicroformatRenderer"))
-        .collect();
-    // `original_description if original_description is not None else
-    // translated_description`, else the initial data's.
-    let description = acquired
-        .player_responses
-        .iter()
-        .find_map(|response| {
-            response
-                .pointer("/videoDetails/shortDescription")
-                .filter(|value| !value.is_null())
-        })
-        .map(|value| value.as_str().unwrap_or_default().to_owned())
-        .or_else(|| {
-            microformats
-                .iter()
-                .find_map(|micro| micro.get("description").and_then(metadata::text))
-        })
-        .or_else(|| {
-            acquired.initial_data.as_ref().and_then(|data| {
-                data.get("engagementPanels")?
-                    .as_array()?
-                    .iter()
-                    .filter_map(|panel| {
-                        panel.pointer(
-                            "/engagementPanelSectionListRenderer/content/structuredDescriptionContentRenderer/items",
-                        )
-                    })
-                    .filter_map(Value::as_array)
-                    .flatten()
-                    .find_map(|item| {
-                        item.pointer(
-                            "/expandableVideoDescriptionBodyRenderer/attributedDescriptionBodyText/content",
-                        )?
-                        .as_str()
-                        .map(str::to_owned)
-                    })
-            })
-        });
     // `get_first(video_details, 'keywords', list) or [og:video:tag...]`.
     let mut keywords: Vec<String> = all_details
         .iter()
@@ -1142,16 +1273,38 @@ impl Extractor for Youtube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        video_only(self.extract_result(client, url)?)
+    }
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         let Some(id) = video_id(url, false)? else {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
         initialize();
-        match extract_clients(client, url, &id, None, false, false, false, false)? {
-            Extraction::Video(info) => Ok(Some(*info)),
-            Extraction::Trailer(trailer) => Ok(Some(follow_video(&trailer)?)),
+        match extract_clients(client, url, &id, None, false, false, false, false, false)? {
             Extraction::Wait { .. } => unreachable!("waiting is not configured"),
+            extraction => extraction.into_result().map(Some),
         }
+    }
+}
+
+/// [`Extractor::extract`] of an extraction that may be a playlist.
+fn video_only(result: Option<ExtractResult>) -> Result<Option<VideoInfo>> {
+    match result {
+        None => Ok(None),
+        Some(ExtractResult::Video(info)) => Ok(Some(info)),
+        Some(ExtractResult::Playlist(_)) => Err(unsupported("multifeed playlists here")),
+    }
+}
+
+impl Extraction {
+    fn into_result(self) -> Result<ExtractResult> {
+        Ok(match self {
+            Extraction::Video(info) => ExtractResult::Video(*info),
+            Extraction::Trailer(trailer) => ExtractResult::Video(follow_video(&trailer)?),
+            Extraction::Playlist(playlist) => ExtractResult::Playlist(*playlist),
+            Extraction::Wait { .. } => unreachable!("handled by the caller"),
+        })
     }
 }
 
@@ -1160,6 +1313,9 @@ impl Extractor for ConfiguredYoutube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        video_only(self.extract_result(client, url)?)
+    }
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         let Some(id) = video_id(url, self.no_playlist)? else {
             return Ok(None);
         };
@@ -1175,9 +1331,8 @@ impl Extractor for ConfiguredYoutube {
                 self.wait_for_video.is_some(),
                 self.get_comments,
                 self.mark_watched,
+                self.no_playlist,
             )? {
-                Extraction::Video(info) => return Ok(Some(*info)),
-                Extraction::Trailer(trailer) => return Ok(Some(follow_video(&trailer)?)),
                 Extraction::Wait {
                     release_timestamp,
                     upcoming,
@@ -1187,6 +1342,7 @@ impl Extractor for ConfiguredYoutube {
                     // `ReExtractInfo(expected=True)`.
                     crate::screen::screen(&format!("{message}; Re-extracting data"));
                 }
+                extraction => return extraction.into_result().map(Some),
             }
         }
     }
