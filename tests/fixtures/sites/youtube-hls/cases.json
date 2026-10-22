@@ -1,0 +1,4 @@
+[
+ {"url": "https://www.youtube.com/watch?v=HlsVodVideo", "args": ["--no-js-runtimes", "-F"]},
+ {"url": "https://www.youtube.com/watch?v=HlsVodVideo", "args": ["--no-js-runtimes", "-v", "-j"]}
+]

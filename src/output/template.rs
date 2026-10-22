@@ -11,7 +11,7 @@ pub(super) enum Source<'a> {
     Video(&'a VideoInfo),
     Playlist {
         info: &'a PlaylistInfo,
-        playlist_count: usize,
+        playlist_count: Option<usize>,
         n_entries: Option<usize>,
         last_playlist_index: usize,
     },
@@ -312,7 +312,7 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
                 "extractor_key" => Some(Text(&info.extractor_key)),
                 "webpage_url" => Some(Text(info.webpage_url.as_str())),
                 "playlist_index" => Some(Integer(0)),
-                "playlist_count" => Some(Integer(playlist_count as u64)),
+                "playlist_count" => playlist_count.map(|n| Integer(n as u64)),
                 "n_entries" => n_entries.map(|n| Integer(n as u64)),
                 // Other playlist keys (such as the page's timestamp).
                 _ => info
@@ -1060,16 +1060,23 @@ fn substitution(
                     last_playlist_index,
                     ..
                 } => Some(last_playlist_index),
-                Source::Json(_) | Source::JsonFile(_) | Source::JsonExec(_) => None,
+                // `len(str(info_dict.get('__last_playlist_index') or 0))`.
+                Source::Json(dict) | Source::JsonFile(dict) | Source::JsonExec(dict) => Some(
+                    dict.get("__last_playlist_index")
+                        .and_then(serde_json::Value::as_u64)
+                        .unwrap_or(0) as usize,
+                ),
             },
             "playlist_autonumber" => match info {
                 Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
                     Some(info.n_entries.unwrap_or(0))
                 }
-                Source::Playlist { .. }
-                | Source::Json(_)
-                | Source::JsonFile(_)
-                | Source::JsonExec(_) => None,
+                Source::Playlist { .. } => None,
+                Source::Json(dict) | Source::JsonFile(dict) | Source::JsonExec(dict) => Some(
+                    dict.get("n_entries")
+                        .and_then(serde_json::Value::as_u64)
+                        .unwrap_or(0) as usize,
+                ),
             },
             "autonumber" => Some(options.autonumber_size),
             _ => None,

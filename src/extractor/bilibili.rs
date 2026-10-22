@@ -853,6 +853,8 @@ impl Extractor for BiliBili {
                     webpage_url: page.clone(),
                     extractor: NAME.into(),
                     extractor_key: NAME.into(),
+                    nested: Vec::new(),
+                    pending: None,
                     entries,
                     extra,
                 })));

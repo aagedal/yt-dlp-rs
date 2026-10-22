@@ -250,6 +250,13 @@ pub fn apply(info: &VideoInfo, section: Option<&Section>) -> VideoInfo {
         && float(end_time) <= float(offset) + float(duration) + 1.0)
         .then_some(end_time);
     if section.is_some() || truthy(Some(offset)) {
+        let mode = if info.section_start.is_some() {
+            "keep"
+        } else {
+            "append"
+        };
+        new.extra
+            .insert(crate::info_order::SECTION_UPDATE.into(), mode.into());
         new.section_start = Some(add(
             offset,
             section.map_or(PyNumber::Int(0), |section| section.start_time),

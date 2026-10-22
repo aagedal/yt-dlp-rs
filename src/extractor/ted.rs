@@ -170,6 +170,8 @@ fn playlist_result(
         webpage_url: page.clone(),
         extractor: extractor.into(),
         extractor_key: extractor.into(),
+        nested: Vec::new(),
+        pending: None,
         entries,
         extra,
     })

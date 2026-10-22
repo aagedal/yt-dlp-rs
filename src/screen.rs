@@ -15,6 +15,8 @@ use std::{
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Message<'a> {
     Screen(&'a str),
+    /// A screen message without an end of line (`skip_eol=True`).
+    ScreenRaw(&'a str),
     Warning(&'a str),
     Stderr(&'a str),
     /// A `write_debug` text (without the `[debug] ` prefix); only sent with
@@ -147,6 +149,25 @@ pub(crate) fn postprocess<T>(
     Ok(result)
 }
 
+/// `to_screen(text, skip_eol=True)`.
+pub(crate) fn screen_raw(text: &str) {
+    if let Some(sink) = SINK.get() {
+        sink(Message::ScreenRaw(text));
+    }
+}
+
+/// `to_screen(..., only_once=True)`.
+pub(crate) fn screen_once(text: &str) {
+    static SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+    let mut seen = SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    screen(text);
+}
+
 /// `report_warning(..., only_once=True)`.
 pub(crate) fn warning_once(text: &str) {
     static SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
@@ -182,6 +203,14 @@ pub(crate) fn debug(text: &str) {
         && let Some(sink) = SINK.get()
     {
         sink(Message::Debug(text));
+    }
+}
+
+/// An extractor's `write_debug`: `[EXTRACTOR] TEXT`.
+pub(crate) fn extractor_debug(text: &str) {
+    if verbose() {
+        let name = EXTRACTOR.with(std::cell::Cell::get);
+        debug(&format!("[{name}] {text}"));
     }
 }
 

@@ -1,0 +1,50 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/hashtag/cooking",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "cooking|cooking - All|1|AAAAAAAAAAA|Channel video one",
+    "cooking|cooking - All|2|BBBBBBBBBBB|Channel video two"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/hashtag/cooking",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"cooking\", \"title\": \"cooking - All\", \"availability\": null, \"channel_follower_count\": null, \"description\": null, \"tags\": [], \"thumbnails\": [], \"modified_date\": null, \"view_count\": null, \"playlist_count\": 2, \"channel\": null, \"channel_id\": null, \"uploader_id\": null, \"uploader\": null, \"channel_url\": null, \"uploader_url\": null, \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"AAAAAAAAAAA\", \"url\": \"https://www.youtube.com/watch?v=AAAAAAAAAAA\", \"title\": \"Channel video one\", \"description\": \"About Channel video one\", \"duration\": 754, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/AAAAAAAAAAA/hqdefault.jpg?sqp=x\", \"height\": 94, \"width\": 168}, {\"url\": \"https://i.ytimg.com/vi/AAAAAAAAAAA/maxresdefault.jpg\", \"height\": 720, \"width\": 1280}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1234, \"live_status\": null, \"channel_is_verified\": true, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"BBBBBBBBBBB\", \"url\": \"https://www.youtube.com/watch?v=BBBBBBBBBBB\", \"title\": \"Channel video two\", \"description\": \"About Channel video two\", \"duration\": 3723, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/BBBBBBBBBBB/hqdefault.jpg?sqp=x\", \"height\": 94, \"width\": 168}, {\"url\": \"https://i.ytimg.com/vi/BBBBBBBBBBB/maxresdefault.jpg\", \"height\": 720, \"width\": 1280}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 0, \"live_status\": \"was_live\", \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/hashtag/cooking\", \"original_url\": \"https://www.youtube.com/hashtag/cooking\", \"webpage_url_basename\": \"cooking\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/feed/history",
+   "args": [
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/feed/history",
+    "[youtube:tab] history: Downloading webpage",
+    "[download] Downloading playlist: history",
+    "[youtube:tab] Playlist history: Downloading 0 items",
+    "[download] Finished downloading playlist: history"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

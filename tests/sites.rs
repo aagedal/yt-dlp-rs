@@ -11,12 +11,13 @@ fn normalize(text: &str) -> Vec<String> {
     let epoch = regex::Regex::new(r#""epoch": \d+, "#).unwrap();
     // YouTube's `available_at` is the extraction time (plus any ad wait).
     let available = regex::Regex::new(r#""available_at": \d+"#).unwrap();
+    // A comment's timestamp is estimated from its relative `_time_text`.
+    let comment_time = regex::Regex::new(r#"("_time_text": "[^"]*", "timestamp": )\d+"#).unwrap();
     text.lines()
         .map(|line| {
             let line = epoch.replace(line, "");
-            available
-                .replace_all(&line, r#""available_at": 0"#)
-                .into_owned()
+            let line = available.replace_all(&line, r#""available_at": 0"#);
+            comment_time.replace_all(&line, "${1}0").into_owned()
         })
         .collect()
 }
@@ -62,6 +63,16 @@ fn site_extractors_match_saved_upstream_output() {
                 .iter()
                 .map(|arg| arg.as_str().unwrap())
                 .collect();
+            // `copy`: input files (such as a cookies file), not compared.
+            let copied: Vec<&str> = case["copy"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter_map(|name| name.as_str())
+                .collect();
+            for name in &copied {
+                std::fs::copy(directory.join(name), work.path().join(name)).unwrap();
+            }
             let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
                 .args([
                     "--ignore-config",
@@ -86,6 +97,7 @@ fn site_extractors_match_saved_upstream_output() {
                 .map(|entry| entry.unwrap())
                 .collect();
             names.sort_by_key(|entry| entry.file_name());
+            names.retain(|entry| !copied.iter().any(|name| entry.file_name() == **name));
             for entry in names {
                 files.insert(
                     entry.file_name().to_string_lossy().into_owned(),

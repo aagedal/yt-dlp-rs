@@ -1,0 +1,63 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=AuthVideo01&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/embed/AuthVideo01?html5=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "56",
+    "X-Origin": "https://www.youtube.com",
+    "X-Youtube-Bootstrap-Logged-In": "true"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "embedded.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "7",
+    "X-Goog-AuthUser": "0",
+    "X-Origin": "https://www.youtube.com"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "tv.json"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&client=tv",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&client=tv",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a.m4a"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=136&client=embedded",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  }
+ ]
+}

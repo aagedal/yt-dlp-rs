@@ -466,7 +466,7 @@ fn report_pot_format_skipped(video_id: &str, client_name: &str, proto: &str) {
         "{video_id}: {client_name} client {proto} formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token={client_name}.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
     );
     if super::watch::is_default_client(client_name) {
-        crate::screen::debug(&message);
+        crate::screen::extractor_debug(&message);
     } else {
         crate::screen::warning_once(&format!("[youtube] {message}"));
     }
@@ -655,7 +655,7 @@ pub(super) fn extract(
                             )
                         };
                         if matches!(client_name, "web" | "web_safari") {
-                            crate::screen::debug(&template(
+                            crate::screen::extractor_debug(&template(
                                 &format!("{}: ", context.video_id),
                                 "YouTube is forcing SABR streaming for this client",
                             ));
@@ -853,13 +853,13 @@ pub(super) fn extract(
             let mut manifest_url = parsed.clone();
             manifest_url.set_path(&format!("{path}{suffix}"));
             let stream = if proto == "hls" {
-                super::super::extract_m3u8_optional(
+                // `_extract_m3u8_formats_and_subtitles(..., live=is_live)`.
+                super::super::extract_m3u8_master_optional(
                     context.client,
                     &manifest_url,
                     "youtube",
                     context.video_id,
-                    None,
-                    true,
+                    context.live_status == Some("is_live"),
                 )
             } else {
                 super::super::extract_mpd_optional(
@@ -893,6 +893,10 @@ pub(super) fn extract(
                     format
                         .extra
                         .insert("available_at".into(), response.available_at.into());
+                    crate::info_order::mark_format_update(&mut format, "available_at");
+                }
+                if format.source_preference.is_none() {
+                    crate::info_order::mark_format_update(&mut format, "source_preference");
                 }
                 let mut source_preference = format.source_preference.unwrap_or(-1);
                 if matches!(client_name, "web_safari" | "web_embedded")
@@ -911,22 +915,34 @@ pub(super) fn extract(
                         format.format_id = itag.clone();
                     }
                 }
+                // A key the format did not have is added in upstream's order.
+                let mut noted = format.format_note.is_some();
+                let mut note = |format: &mut VideoFormat| {
+                    if !std::mem::replace(&mut noted, true) {
+                        crate::info_order::mark_format_update(format, "format_note");
+                    }
+                };
                 if language_code.is_some() && language_code == language.original {
                     format.format_note =
                         join_nonempty(&[format.format_note.take(), Some("(original)".into())], " ");
+                    note(&mut format);
                     format
                         .extra
                         .insert("language_preference".into(), ORIGINAL_LANG_VALUE.into());
+                    crate::info_order::mark_format_update(&mut format, "language_preference");
                 } else if language_code.is_some() && language_code == language.default {
                     format.format_note =
                         join_nonempty(&[format.format_note.take(), Some("(default)".into())], " ");
+                    note(&mut format);
                     format
                         .extra
                         .insert("language_preference".into(), DEFAULT_LANG_VALUE.into());
+                    crate::info_order::mark_format_update(&mut format, "language_preference");
                 }
                 if matches!(itag.as_deref(), Some("616" | "235")) {
                     format.format_note =
                         join_nonempty(&[format.format_note.take(), Some("Premium".into())], " ");
+                    note(&mut format);
                     source_preference += 100;
                 }
                 let base = format
@@ -946,6 +962,8 @@ pub(super) fn extract(
                     quality = q(nearest.as_deref());
                 }
                 format.quality = Some(quality as f64);
+                // `q()` gives an int.
+                crate::info_order::mark_int_quality(&mut format);
                 if context.verbose || context.all_formats {
                     format.format_note = join_nonempty(
                         &[
@@ -954,6 +972,7 @@ pub(super) fn extract(
                         ],
                         ", ",
                     );
+                    note(&mut format);
                 }
                 if format.fps.is_some_and(|fps| fps.as_f64() <= 1.0) {
                     format.fps = None;

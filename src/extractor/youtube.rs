@@ -2,6 +2,8 @@
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
 mod challenge;
 mod chapters;
+pub(crate) mod clip;
+pub(crate) mod comments;
 pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
@@ -23,7 +25,7 @@ pub struct Youtube;
 /// Opt-in YouTube challenge runtime. Defaults to challenge-free extraction.
 #[derive(Debug, Clone, Default)]
 pub struct YoutubeOptions {
-    /// Explicit Deno 2.9.7 executable path; never discovered or installed.
+    /// Explicit Deno 2.3+ or Node.js 22+ executable path; never discovered or installed.
     /// Inspected only when an eligible format has a supported URL challenge.
     pub js_runtime: Option<PathBuf>,
     /// Include translated manual captions in automatic-caption metadata.
@@ -31,11 +33,25 @@ pub struct YoutubeOptions {
     pub include_translated_subtitles: bool,
     /// Upstream `noplaylist`: a watch URL with `list=` downloads just its video.
     pub no_playlist: bool,
+    /// Upstream `wait_for_video`: wait for a video without formats.
+    pub wait_for_video: Option<WaitForVideo>,
+    /// Upstream `getcomments`: extract comments in [`crate::YoutubeDl::post_extract`].
+    pub get_comments: bool,
+}
+
+/// `--wait-for-video MIN[-MAX]` seconds, and whether progress lines are shown.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct WaitForVideo {
+    pub min: f64,
+    pub max: Option<f64>,
+    pub progress: bool,
 }
 
 struct ConfiguredYoutube {
     include_translated_subtitles: bool,
+    get_comments: bool,
     no_playlist: bool,
+    wait_for_video: Option<WaitForVideo>,
     runtime: Option<challenge::Runtime>,
 }
 
@@ -46,9 +62,111 @@ impl Youtube {
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,
             no_playlist: options.no_playlist,
+            wait_for_video: options.wait_for_video,
+            get_comments: options.get_comments,
             runtime: options.js_runtime.map(challenge::Runtime::new),
         }
     }
+}
+
+/// Upstream `YoutubeBaseInfoExtractor._real_initialize`: `_initialize_pref`
+/// (English, UTC) and `_initialize_consent` (accept all; otherwise EU
+/// requests are redirected to consent.youtube.com).
+pub(crate) fn initialize() {
+    const HOME: &str = "https://www.youtube.com";
+    let mut pref: Vec<(String, String)> = crate::cookies::get_cookie(HOME, "PREF")
+        .map(|value| {
+            url::form_urlencoded::parse(value.as_bytes())
+                .filter(|(_, value)| !value.is_empty())
+                .map(|(key, value)| (key.into_owned(), value.into_owned()))
+                .collect()
+        })
+        .unwrap_or_default();
+    // `dict.update`: replaced keys keep their position.
+    for (key, value) in [("hl", "en"), ("tz", "UTC")] {
+        match pref.iter_mut().find(|(name, _)| name == key) {
+            Some(entry) => entry.1 = value.into(),
+            None => pref.push((key.into(), value.into())),
+        }
+    }
+    let pref = url::form_urlencoded::Serializer::new(String::new())
+        .extend_pairs(&pref)
+        .finish();
+    crate::cookies::set_cookie(".youtube.com", "PREF", &pref);
+    if has_auth_cookies() {
+        // `_initialize_cookie_auth`.
+        crate::screen::extractor_debug("Found YouTube account cookies");
+        return;
+    }
+    // A SOCS value not starting with `CAA` records a choice; keep it.
+    if crate::cookies::get_cookie(HOME, "SOCS").is_some_and(|socs| !socs.starts_with("CAA")) {
+        return;
+    }
+    crate::cookies::set_cookie(".youtube.com", "SOCS", "CAI");
+}
+
+const YOUTUBE_HOME: &str = "https://www.youtube.com";
+
+/// `_get_sid_cookies`: SAPISID (else `__Secure-3PAPISID`), `__Secure-1PAPISID`
+/// and `__Secure-3PAPISID`.
+fn sid_cookies() -> [Option<String>; 3] {
+    let cookie = |name: &str| {
+        crate::cookies::get_cookie(YOUTUBE_HOME, name).filter(|value| !value.is_empty())
+    };
+    let third = cookie("__Secure-3PAPISID");
+    [
+        cookie("SAPISID").or_else(|| third.clone()),
+        cookie("__Secure-1PAPISID"),
+        third,
+    ]
+}
+
+/// `_has_auth_cookies` (`is_authenticated`): `LOGIN_INFO` and a SID cookie.
+pub(crate) fn has_auth_cookies() -> bool {
+    crate::cookies::get_cookie(YOUTUBE_HOME, "LOGIN_INFO").is_some()
+        && sid_cookies().iter().any(Option::is_some)
+}
+
+/// `_get_sid_authorization_header`: one `SCHEME TIMESTAMP_HASH[_u]` per SID
+/// cookie, hashing `[USER_SESSION_ID ]TIMESTAMP SID ORIGIN` with SHA-1.
+pub(super) fn sid_authorization(origin: &str, user_session_id: Option<&str>) -> Option<String> {
+    let timestamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |elapsed| elapsed.as_secs_f64().round() as u64)
+        .to_string();
+    sid_authorization_at(origin, user_session_id, &timestamp, sid_cookies())
+}
+
+fn sid_authorization_at(
+    origin: &str,
+    user_session_id: Option<&str>,
+    timestamp: &str,
+    sids: [Option<String>; 3],
+) -> Option<String> {
+    let timestamp = timestamp.to_owned();
+    let authorizations: Vec<String> = ["SAPISIDHASH", "SAPISID1PHASH", "SAPISID3PHASH"]
+        .into_iter()
+        .zip(sids)
+        .filter_map(|(scheme, sid)| {
+            let sid = sid?;
+            let mut hashed = Vec::new();
+            if let Some(user) = user_session_id {
+                hashed.push(user.to_owned());
+            }
+            hashed.extend([timestamp.clone(), sid, origin.to_owned()]);
+            let hash: String = crate::sha1::digest(hashed.join(" ").as_bytes())
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect();
+            let mut parts = vec![timestamp.clone(), hash];
+            if user_session_id.is_some() {
+                // `''.join(additional_parts)` joins the dict's keys.
+                parts.push("u".into());
+            }
+            Some(format!("{scheme} {}", parts.join("_")))
+        })
+        .collect();
+    (!authorizations.is_empty()).then(|| authorizations.join(" "))
 }
 
 fn unsupported(reason: &str) -> Error {
@@ -175,10 +293,172 @@ fn video_id(url: &Url, no_playlist: bool) -> Result<Option<String>> {
         .map(Some)
         .ok_or_else(|| unsupported("expected a single video URL with an 11-character ID"))
 }
-fn no_formats() -> Error {
-    unsupported(
-        "no eligible media formats; signature/n URL challenges require an explicit runtime; WEB DASH requires a GVS token; SABR, live and DRM are unsupported",
-    )
+/// `_wait_for_video`: sleep until the release time (within the requested
+/// bounds), showing the remaining time; an interrupt ends it early. Returns
+/// the `ReExtractInfo` message.
+fn wait_for_video(wait: &WaitForVideo, release_timestamp: Option<i64>, upcoming: bool) -> String {
+    let now = || {
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0.0, |elapsed| elapsed.as_secs_f64())
+    };
+    // `'%02d:%02d:%02d' % timetuple_from_msec(dur * 1000)[:-1]`.
+    let format_duration = |seconds: f64| {
+        let seconds = seconds.max(0.0);
+        let hours = (seconds / 3600.0).floor();
+        let minutes = ((seconds - hours * 3600.0) / 60.0).floor();
+        let rest = (seconds - hours * 3600.0 - minutes * 60.0).floor();
+        format!(
+            "{:02}:{:02}:{:02}",
+            hours as i64, minutes as i64, rest as i64
+        )
+    };
+    let (min, max) = (wait.min, wait.max.filter(|max| *max != 0.0));
+    let mut diff = release_timestamp.map(|release| release as f64 - now());
+    if diff.is_none() && upcoming {
+        diff = Some(match max {
+            Some(max) if min != 0.0 => {
+                let unit = f64::from(
+                    std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .map_or(0, |elapsed| elapsed.subsec_nanos()),
+                ) / 1e9;
+                (min + (max - min) * unit).round()
+            }
+            Some(max) => max,
+            None => min,
+        });
+        crate::screen::warning("Release time of video is not known");
+    } else if diff.unwrap_or(0.0) <= 0.0 {
+        crate::screen::warning("Video should already be available according to extracted info");
+    }
+    let diff = diff
+        .unwrap_or(0.0)
+        .max(min)
+        .min(max.unwrap_or(f64::INFINITY));
+    crate::screen::screen(&format!(
+        "[wait] Waiting for {} - Press Ctrl+C to try now",
+        format_duration(diff)
+    ));
+    let mut last = String::new();
+    let mut progress = |message: &str| {
+        let line = if wait.progress {
+            let padding = " ".repeat(last.chars().count().saturating_sub(message.chars().count()));
+            format!("{message}{padding}\r")
+        } else if last.is_empty() {
+            format!("{message}\n")
+        } else {
+            return;
+        };
+        crate::screen::screen_raw(&line);
+        last = message.to_owned();
+    };
+    let interrupt = crate::interrupt::Guard::install();
+    let until = now() + diff;
+    loop {
+        if interrupt.interrupted() {
+            progress("");
+            return "[wait] Interrupted by user".into();
+        }
+        let remaining = until - now();
+        if remaining <= 0.0 {
+            progress("");
+            return "[wait] Wait period ended".into();
+        }
+        progress(&format!(
+            "[wait] Remaining time until next attempt: {}",
+            format_duration(remaining)
+        ));
+        // A second's sleep, polling the interrupt.
+        for _ in 0..20 {
+            if interrupt.interrupted() {
+                break;
+            }
+            std::thread::sleep(std::time::Duration::from_millis(50));
+        }
+    }
+}
+
+/// `_real_extract`'s reasons for a video without formats: DRM, then the
+/// playability status's error screen (`raise_no_formats(reason)`).
+fn unplayable_reason(id: &str, player_responses: &[Value]) -> Option<Error> {
+    let fail = |message: &str| Error::Reported(format!("[youtube] {id}: {message}"));
+    if player_responses.iter().any(|response| {
+        response
+            .pointer("/streamingData/licenseInfos")
+            .is_some_and(|infos| infos.as_array().is_some_and(|infos| !infos.is_empty()))
+    }) {
+        return Some(fail("This video is DRM protected"));
+    }
+    let statuses: Vec<&Value> = player_responses
+        .iter()
+        .filter_map(|response| response.get("playabilityStatus").filter(|s| s.is_object()))
+        .collect();
+    let pemr = statuses
+        .iter()
+        .find_map(|status| {
+            status
+                .pointer("/errorScreen/playerErrorMessageRenderer")
+                .filter(|renderer| renderer.is_object())
+        })
+        .cloned()
+        .unwrap_or(Value::Null);
+    let mut reason = pemr.get("reason").and_then(metadata::text).or_else(|| {
+        statuses
+            .iter()
+            .find_map(|status| status.get("reason").and_then(Value::as_str))
+            .map(str::to_owned)
+    })?;
+    let subreason = pemr
+        .get("subreason")
+        .and_then(metadata::text)
+        .map(|text| crate::html::clean_html(&text))
+        .unwrap_or_default();
+    if !subreason.is_empty() {
+        if subreason.starts_with("The uploader has not made this video available in your country") {
+            // `raise_geo_restricted` (the available countries are not listed).
+            return Some(Error::Reported(format!(
+                "{subreason}\nYou might want to use a VPN or a proxy server (with --proxy) to workaround."
+            )));
+        }
+        reason.push_str(&format!(". {subreason}"));
+    }
+    if reason.is_empty() {
+        return None;
+    }
+    if reason.to_lowercase().contains("sign in") {
+        let trimmed = reason
+            .strip_suffix("This helps protect our community. Learn more")
+            .unwrap_or(&reason)
+            .trim();
+        reason = format!(
+            "{}. {}",
+            trimmed.strip_suffix('.').unwrap_or(trimmed),
+            watch::LOGIN_HINT
+        );
+    } else if statuses.iter().any(|status| {
+        status
+            .pointer("/errorScreen/playerCaptchaViewModel")
+            .is_some_and(Value::is_object)
+    }) {
+        reason.push_str(". YouTube is requiring a captcha challenge before playback");
+    } else if reason.contains("This content isn't available, try again later") {
+        let trimmed = reason.trim();
+        reason = format!(
+            "{}. The current session has been rate-limited by YouTube for up to an hour. It is recommended to use `-t sleep` to add a delay between video requests to avoid exceeding the rate limit. For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#this-content-isnt-available-try-again-later",
+            trimmed.strip_suffix('.').unwrap_or(trimmed)
+        );
+    }
+    Some(fail(&reason))
+}
+
+/// `process_video_result`'s `raise_no_formats` for a video without formats
+/// or a reason (skipped formats were warned about while extracting).
+fn no_formats(id: &str) -> Error {
+    Error::Reported(format!(
+        "[youtube] {id}: No video formats found!; {}",
+        crate::BUG_REPORTS_MESSAGE
+    ))
 }
 
 /// `solve_js_challenges` through the configured runtime: the player JS
@@ -207,27 +487,7 @@ impl streams::Solver for JsSolver<'_> {
         let Ok(runtime) = runtime.checked() else {
             return (n_results, sig_results);
         };
-        let Ok(url) = Url::parse(player_url) else {
-            return (n_results, sig_results);
-        };
-        // `_player_js_cache_key`: `PLAYER_ID-VARIANT`.
-        let key = player_url
-            .split("/s/player/")
-            .nth(1)
-            .and_then(|rest| rest.split('/').next())
-            .map(|id| format!("{id}-main"))
-            .unwrap_or_default();
-        crate::screen::screen(&format!(
-            "[youtube] {}: Downloading player {key}",
-            self.video_id
-        ));
-        let Ok(player) = direct::request(self.client, &url, None)
-            .and_then(|response| response.text().map_err(Error::Http))
-        else {
-            crate::screen::warning(&format!(
-                "[youtube] {}: Download of {key} failed",
-                self.video_id
-            ));
+        let Some(player) = watch::load_player(self.client, self.video_id, player_url) else {
             return (n_results, sig_results);
         };
         // Signature specs are solved as `chr(0..LENGTH)` permutations.
@@ -276,18 +536,45 @@ impl streams::Solver for JsSolver<'_> {
 }
 
 /// Upstream `_real_extract` over every requested client's player response.
+/// An extraction's outcome: the video, or (with `--wait-for-video`) a video
+/// without formats to wait for.
+enum Extraction {
+    Video(Box<VideoInfo>),
+    Wait {
+        release_timestamp: Option<i64>,
+        upcoming: bool,
+    },
+}
+
 fn extract_clients(
     client: &Client,
     url: &Url,
     id: &str,
     runtime: Option<&challenge::Runtime>,
     translated_manual: bool,
-) -> Result<VideoInfo> {
+    wait: bool,
+    get_comments: bool,
+) -> Result<Extraction> {
     crate::screen::screen(&format!(
         "[youtube] Extracting URL: {}",
         crate::screen::extracting_url(&format!("https://www.youtube.com/watch?v={id}"))
     ));
-    let acquired = watch::acquire(client, id, runtime)?;
+    // `is_music_url`.
+    let music_url = url.host_str() == Some("music.youtube.com");
+    let acquired = watch::acquire(client, id, runtime, music_url)?;
+    // `info['__post_extractor'] = self.extract_comments(...)`.
+    if get_comments {
+        let contents = acquired
+            .initial_data
+            .as_ref()
+            .and_then(|data| {
+                data.pointer("/contents/twoColumnWatchNextResults/results/results/contents")
+            })
+            .filter(|contents| contents.is_array())
+            .cloned()
+            .unwrap_or_else(|| Value::Array(Vec::new()));
+        comments::defer(id, acquired.webpage_ytcfg.clone(), contents);
+    }
     let first = |key: &str| {
         acquired
             .player_responses
@@ -332,8 +619,10 @@ fn extract_clients(
     } else {
         None
     };
-    if matches!(live_status, Some("is_live" | "is_upcoming" | "post_live")) {
-        return Err(unsupported("live, upcoming and post-live videos"));
+    // Upcoming videos have no formats yet; their playability reason is
+    // reported below.
+    if live_status == Some("post_live") {
+        return Err(unsupported("post-live videos"));
     }
     let context = streams::Context {
         client,
@@ -348,7 +637,7 @@ fn extract_clients(
         missing_pot: false,
         skip_player_js: false,
         skip_manifests: Default::default(),
-        premium: false,
+        premium: acquired.premium,
     };
     let mut solver = JsSolver {
         client,
@@ -414,7 +703,32 @@ fn extract_clients(
         }
     }
     let Some(first_format) = formats.first() else {
-        return Err(no_formats());
+        let reason = unplayable_reason(id, &acquired.player_responses);
+        if wait {
+            // `raise_no_formats(expected=True)` warns while waiting for videos
+            // (only `report_drm` passes the video ID).
+            if let Some(reason) = &reason {
+                let text = reason.to_string();
+                let prefix = format!("[youtube] {id}: ");
+                match text.strip_prefix(&prefix) {
+                    Some(message) if message != "This video is DRM protected" => {
+                        crate::screen::warning(&format!("[youtube] {message}"));
+                    }
+                    _ => crate::screen::warning(&text),
+                }
+            }
+            let release_timestamp = acquired.player_responses.iter().find_map(|response| {
+                response
+                    .pointer("/microformat/playerMicroformatRenderer/liveBroadcastDetails/startTimestamp")
+                    .and_then(Value::as_str)
+                    .and_then(crate::dates::parse_iso8601)
+            });
+            return Ok(Extraction::Wait {
+                release_timestamp,
+                upcoming: live_status == Some("is_upcoming"),
+            });
+        }
+        return Err(reason.unwrap_or_else(|| no_formats(id)));
     };
     let microformats: Vec<&Value> = acquired
         .player_responses
@@ -558,10 +872,10 @@ fn extract_clients(
             _ => crate::metadata_parser::set_field(&mut info, &key, value),
         }
     }
-    Ok(crate::info_order::mark_info(
+    Ok(Extraction::Video(Box::new(crate::info_order::mark_info(
         info,
         &format!("youtube;{}", keys.join(",")),
-    ))
+    ))))
 }
 
 impl Extractor for Youtube {
@@ -573,10 +887,11 @@ impl Extractor for Youtube {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
-        let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        let _ = page;
-        let info = extract_clients(client, url, &id, None, false)?;
-        Ok(Some(info))
+        initialize();
+        match extract_clients(client, url, &id, None, false, false, false)? {
+            Extraction::Video(info) => Ok(Some(*info)),
+            Extraction::Wait { .. } => unreachable!("waiting is not configured"),
+        }
     }
 }
 
@@ -589,22 +904,60 @@ impl Extractor for ConfiguredYoutube {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
-        let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
-        let _ = page;
-        let info = extract_clients(
-            client,
-            url,
-            &id,
-            self.runtime.as_ref(),
-            self.include_translated_subtitles,
-        )?;
-        Ok(Some(info))
+        initialize();
+        loop {
+            match extract_clients(
+                client,
+                url,
+                &id,
+                self.runtime.as_ref(),
+                self.include_translated_subtitles,
+                self.wait_for_video.is_some(),
+                self.get_comments,
+            )? {
+                Extraction::Video(info) => return Ok(Some(*info)),
+                Extraction::Wait {
+                    release_timestamp,
+                    upcoming,
+                } => {
+                    let wait = self.wait_for_video.unwrap_or_default();
+                    let message = wait_for_video(&wait, release_timestamp, upcoming);
+                    // `ReExtractInfo(expected=True)`.
+                    crate::screen::screen(&format!("{message}; Re-extracting data"));
+                }
+            }
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn sid_authorization_matches_pinned_upstream() {
+        // Recorded from pinned upstream's request for the youtube-auth fixture.
+        let sid = || Some("sapisid-fixture/AbCdEf".to_owned());
+        let hash = "1792620452_3448a83fcbe06bc33db20790bfab51bca47748db_u";
+        assert_eq!(
+            sid_authorization_at(
+                "https://www.youtube.com",
+                Some("USER123"),
+                "1792620452",
+                [sid(), sid(), sid()]
+            )
+            .unwrap(),
+            format!("SAPISIDHASH {hash} SAPISID1PHASH {hash} SAPISID3PHASH {hash}")
+        );
+        let anonymous =
+            sid_authorization_at("https://www.youtube.com", None, "1", [sid(), None, None])
+                .unwrap();
+        assert!(anonymous.starts_with("SAPISIDHASH 1_") && !anonymous.ends_with("_u"));
+        assert_eq!(
+            sid_authorization_at("o", None, "1", [None, None, None]),
+            None
+        );
+    }
 
     #[test]
     fn exact_hosts_and_supported_video_url_shapes() {

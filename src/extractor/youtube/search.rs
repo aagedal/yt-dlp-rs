@@ -184,6 +184,8 @@ fn search_playlist(
         webpage_url,
         extractor: extractor.into(),
         extractor_key: key.into(),
+        nested: Vec::new(),
+        pending: None,
         entries,
         extra,
     }))
@@ -214,6 +216,7 @@ impl super::super::Extractor for YoutubeSearch {
             return Ok(None);
         };
         announce(NAME, &text);
+        super::initialize();
         let query = found["query"].to_owned();
         // `SearchInfoExtractor._real_extract` (`_MAX_RESULTS` is unbounded).
         let limit = match &found["prefix"] {
@@ -242,6 +245,7 @@ impl super::super::Extractor for YoutubeSearchUrl {
             return Ok(None);
         }
         announce(URL_NAME, url.as_str());
+        super::initialize();
         // `parse_qs`: blank values are dropped.
         let first = |key: &str| {
             url.query_pairs()

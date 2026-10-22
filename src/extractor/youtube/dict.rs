@@ -119,7 +119,7 @@ pub(crate) fn parse_count(text: &str) -> Option<i64> {
 }
 
 /// `_get_count(data, *path)`.
-fn get_count(value: Option<&Value>) -> Option<i64> {
+pub(super) fn get_count(value: Option<&Value>) -> Option<i64> {
     let text = value.and_then(get_text).unwrap_or_default();
     if text.to_lowercase().starts_with("no ") {
         return Some(0);
@@ -374,9 +374,73 @@ fn heatmap(data: &Value) -> Option<Value> {
     (!markers.is_empty()).then_some(Value::Array(markers))
 }
 
-/// `_parse_time_text` for absolute dates (relative texts such as
-/// `3 days ago` are not resolved).
-fn parse_time_text(text: &str) -> Option<i64> {
+/// `extract_relative_time`: `today`, `yesterday`, `now` or `N UNIT ago`
+/// through `datetime_from_str('now-NUNIT')` (UTC, rounded to the unit; weeks,
+/// months and years to the day).
+pub(super) fn relative_time(text: &str, now: f64) -> Option<i64> {
+    static RELATIVE: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(
+            r"(?P<start>today|yesterday|now)|(?P<time>\d+)\s*(?P<unit>second|minute|month|hour|week|year|sec|min|day|wk|mo|hr|yr|s|h|d|w|y)s?\s*ago",
+        )
+        .unwrap()
+    });
+    let found = RELATIVE.captures(text)?;
+    if let Some(start) = found.name("start") {
+        return Some(match start.as_str() {
+            "yesterday" => (now - 86_400.0).floor() as i64,
+            _ => now.floor() as i64,
+        });
+    }
+    let time: i64 = found["time"].parse().ok()?;
+    let unit = match &found["unit"] {
+        "s" | "sec" | "second" => "second",
+        "min" | "minute" => "minute",
+        "h" | "hr" | "hour" => "hour",
+        "d" | "day" => "day",
+        "w" | "wk" | "week" => "week",
+        "mo" | "month" => "month",
+        _ => "year",
+    };
+    // `datetime_round`: `((x + n / 2) // n) * n`.
+    let round = |seconds: f64, unit: f64| ((seconds + unit / 2.0) / unit).floor() * unit;
+    let seconds = match unit {
+        "second" => round(now - time as f64, 1.0),
+        "minute" => round(now - time as f64 * 60.0, 60.0),
+        "hour" => round(now - time as f64 * 3600.0, 3600.0),
+        "day" | "week" => {
+            let days = if unit == "week" { time * 7 } else { time };
+            round(now - days as f64 * 86_400.0, 86_400.0)
+        }
+        _ => {
+            // `datetime_add_months`, keeping the time of day.
+            let months = if unit == "year" { time * 12 } else { time };
+            let day_seconds = now.rem_euclid(86_400.0);
+            let (year, month, day) =
+                super::metadata::civil_from_days(now.div_euclid(86_400.0) as i64);
+            let total = year * 12 + (month - 1) - months;
+            let (year, month) = (total.div_euclid(12), total.rem_euclid(12) + 1);
+            let next = if month == 12 {
+                (year + 1, 1)
+            } else {
+                (year, month + 1)
+            };
+            let length = super::metadata::days_from_civil(next.0, next.1, 1)
+                - super::metadata::days_from_civil(year, month, 1);
+            let days = super::metadata::days_from_civil(year, month, day.min(length));
+            round(days as f64 * 86_400.0 + day_seconds, 86_400.0)
+        }
+    };
+    Some(seconds as i64)
+}
+
+/// `_parse_time_text`: a relative time, else an absolute date.
+pub(super) fn parse_time_text(text: &str) -> Option<i64> {
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0.0, |elapsed| elapsed.as_secs_f64());
+    if let Some(timestamp) = relative_time(text, now) {
+        return Some(timestamp);
+    }
     static MONTH_DAY_YEAR: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"([a-z]+\s*\d{1,2},?\s*20\d{2})").unwrap());
     static PREFIXED: LazyLock<Regex> = LazyLock::new(|| {
@@ -769,7 +833,8 @@ pub(super) fn build(input: &Input<'_>) -> Map<String, Value> {
     .and_then(Value::as_array)
     .map(|items| items.iter().collect())
     .unwrap_or_default();
-    let vpir = get_first(&contents, &["videoPrimaryInfoRenderer"]);
+    let vpir =
+        get_first(&contents, &["videoPrimaryInfoRenderer"]).filter(|vpir| truthy(Some(vpir)));
     if let Some(vpir) = vpir {
         if let Some(link) = vpir.get("superTitleLink").filter(|link| truthy(Some(link)))
             && let Some(link) = get_text(link)
@@ -879,7 +944,8 @@ pub(super) fn build(input: &Input<'_>) -> Map<String, Value> {
         }
     }
 
-    let vsir = get_first(&contents, &["videoSecondaryInfoRenderer"]);
+    let vsir =
+        get_first(&contents, &["videoSecondaryInfoRenderer"]).filter(|vsir| truthy(Some(vsir)));
     if let Some(vsir) = vsir {
         let owner = at(vsir, &["owner", "videoOwnerRenderer"]);
         let collaborator_models: Vec<&Value> = owner
@@ -1081,4 +1147,32 @@ pub(super) fn build(input: &Input<'_>) -> Map<String, Value> {
     };
     info.insert("availability".into(), availability.into());
     info
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn relative_times_match_upstream_extract_relative_time() {
+        // From pinned upstream with `datetime.now()` frozen at this time.
+        let now = 1_792_630_012.75;
+        for (text, expected) in [
+            ("2 days ago", 1792454400),
+            ("1 year ago (edited)", 1761091200),
+            ("3 months ago", 1784678400),
+            ("5 hours ago", 1792612800),
+            ("10 minutes ago", 1792629420),
+            ("30 seconds ago", 1792629983),
+            ("8 yr ago", 1540166400),
+            ("1 week ago", 1792022400),
+            ("today", 1792630012),
+            ("yesterday", 1792543612),
+            ("13 months ago", 1758499200),
+            ("1 mo ago", 1790035200),
+        ] {
+            assert_eq!(relative_time(text, now), Some(expected), "{text}");
+        }
+        assert_eq!(relative_time("Oct 25, 2009", now), None);
+    }
 }

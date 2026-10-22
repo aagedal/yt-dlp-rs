@@ -1,0 +1,97 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/playlist?list=PLmissing0000000000000000000000000",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "missing.html"
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLincomplete0000000000000000000000",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "incomplete.html"
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLnoinitial00000000000000000000000",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "noinitial.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/navigation/resolve_url?prettyPrint=false",
+   "request_body": [
+    "PLincomplete0000000000000000000000"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {}, \"endpoint\": {\"browseEndpoint\": {\"browseId\": \"VLPLincomplete0000000000000000000000\"}}}"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "VLPLincomplete0000000000000000000000",
+    "wgYCCAA="
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "incomplete-reload.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "VLPLincomplete0000000000000000000000"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "incomplete-browse.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/navigation/resolve_url?prettyPrint=false",
+   "request_body": [
+    "PLnoinitial00000000000000000000000"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {}, \"endpoint\": {\"browseEndpoint\": {\"browseId\": \"VLPLnoinitial00000000000000000000000\"}}}"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "VLPLnoinitial00000000000000000000000",
+    "wgYCCAA="
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "noinitial-reload.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "VLPLnoinitial00000000000000000000000"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "noinitial-browse.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "TOKEN1"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "continuation.json"
+  }
+ ]
+}

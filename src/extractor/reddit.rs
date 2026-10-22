@@ -474,6 +474,8 @@ impl Extractor for Reddit {
                 webpage_url: url.clone(),
                 extractor: NAME.into(),
                 extractor_key: NAME.into(),
+                nested: Vec::new(),
+                pending: None,
                 entries,
                 extra,
             })));

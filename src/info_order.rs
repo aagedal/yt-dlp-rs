@@ -12,6 +12,10 @@ use serde_json::{Map, Value};
 pub(crate) const INFO_SHAPE: &str = "__yt_dlp_rs_info_shape";
 /// The upstream code path of a format dict (see [`format`]).
 pub(crate) const FORMAT_SHAPE: &str = "__yt_dlp_rs_format_shape";
+/// A per-section info dict (`process_video_result`'s section update):
+/// `"append"` when its section keys are new, `"keep"` when the extractor
+/// already set `section_start`.
+pub(crate) const SECTION_UPDATE: &str = "__yt_dlp_rs_section_update";
 
 /// How an upstream step sets a key.
 #[derive(Clone, Copy)]
@@ -793,6 +797,8 @@ const PROCESSED_INFO_KEYS: &[&str] = &[
     "requested_subtitles",
     "_has_drm",
     "epoch",
+    // `post_extract`'s comments (`comment_count` is the extractor's).
+    "comments",
     "requested_formats",
     "requested_downloads",
     "_filename",
@@ -836,6 +842,9 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    let section_update = map
+        .shift_remove(SECTION_UPDATE)
+        .and_then(|mode| mode.as_str().map(str::to_owned));
     // The selected format's int `quality`.
     if map.shift_remove(INT_QUALITY).is_some()
         && let Some(quality) = map.get("quality").and_then(Value::as_f64)
@@ -2131,6 +2140,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // The first `prepare_outtmpl` sets `epoch` before format selection.
     replay.take("epoch");
+    // `post_extract` adds the comments before format selection.
+    replay.take("comments");
     // `-J`: `requested_downloads`, each without the keys whose values equal
     // the info dict's ("Remove copied info"); the selected format's keys are
     // merged afterwards (`info_dict.update(best_format)`), so the dict still
@@ -2200,6 +2211,22 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                         .insert(key.clone(), Value::Number(format.clone()));
                 }
             }
+        }
+    }
+    // The section's `new_info.update({...})` after the format's keys.
+    if let Some(mode) = section_update {
+        for key in [
+            "section_start",
+            "section_end",
+            "section_title",
+            "section_number",
+        ] {
+            if mode == "append"
+                && let Some(value) = replay.out.shift_remove(key)
+            {
+                replay.ours.insert(key.to_owned(), value);
+            }
+            replay.assign(key);
         }
     }
     for key in [

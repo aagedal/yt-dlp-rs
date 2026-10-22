@@ -654,6 +654,8 @@ impl Extractor for Weibo {
             webpage_url: page.clone(),
             extractor: KEY.into(),
             extractor_key: KEY.into(),
+            nested: Vec::new(),
+            pending: None,
             entries,
             extra,
         })))

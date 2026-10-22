@@ -1,0 +1,4 @@
+[
+ {"url": "https://www.youtube.com/clip/UgkxClipFixture0001", "args": ["--no-js-runtimes", "-j"]},
+ {"url": "https://www.youtube.com/clip/UgkxClipFixture0001", "args": ["--no-js-runtimes", "--print", "%(id)s|%(extractor)s|%(section_start)s|%(section_end)s|%(duration)s|%(media_type)s|%(format_id)s|%(webpage_url)s"]}
+]

@@ -1,7 +1,10 @@
 import json
+import os
+from pathlib import Path
+import tempfile
 import unittest
 
-from capture_sites import PINNED_UPSTREAM, SITES, normalize
+from capture_sites import PINNED_UPSTREAM, SITES, normalize, prepare
 from site_proxy import load_routes, match_route, strip_query
 
 
@@ -13,12 +16,23 @@ class SiteCaptureTests(unittest.TestCase):
     def test_normalization_zeroes_youtube_available_at(self):
         self.assertEqual(normalize('{"available_at": 1792534964}'), '{"available_at": 0}')
 
+    def test_normalization_zeroes_relative_comment_timestamps(self):
+        line = '{"_time_text": "2 days ago", "timestamp": 1792454400, "x": {"timestamp": 5}}'
+        self.assertEqual(normalize(line), '{"_time_text": "2 days ago", "timestamp": 0, "x": {"timestamp": 5}}')
+
     def test_routes_can_ignore_random_query_parameters(self):
         self.assertEqual(strip_query('https://h/p.m3u8?a=1&p=42&b=2', ['p']), 'https://h/p.m3u8?a=1&b=2')
         self.assertEqual(strip_query('https://h/p?p=1', ['p']), 'https://h/p')
         routes = {'https://h/p?a=1': [({}, [], (200, {}, b'x'), ['p'])]}
         self.assertEqual(match_route(routes, 'https://h/p?a=1&p=99', {}), (200, {}, b'x'))
         self.assertIsNone(match_route(routes, 'https://h/p?a=2&p=99', {}))
+
+    def test_copied_inputs_are_placed_in_the_working_directory(self):
+        with tempfile.TemporaryDirectory() as site, tempfile.TemporaryDirectory() as work:
+            Path(site, 'cookies.txt').write_text('# Netscape HTTP Cookie File\n')
+            self.assertEqual(prepare(Path(site), {'copy': ['cookies.txt']}, work), {'cookies.txt'})
+            self.assertEqual(os.listdir(work), ['cookies.txt'])
+            self.assertEqual(prepare(Path(site), {}, work), set())
 
     def test_every_site_has_routes_and_saved_cases(self):
         for site in SITES.iterdir():

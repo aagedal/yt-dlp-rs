@@ -274,12 +274,27 @@ pub(crate) fn download(
         };
         command.env("HTTP_PROXY", &proxy).env("http_proxy", &proxy);
     }
+    // Upstream `real_download`: interrupting a live download completes it.
+    let interrupt = crate::is_live(info).then(crate::interrupt::Guard::install);
     let mut child = command.spawn()?;
     // Upstream keeps FFmpeg's stdin open (a pipe) so it never reads the terminal.
-    let _stdin = child.stdin.take();
+    let mut stdin = child.stdin.take();
+    let mut interrupted = false;
     let status = loop {
         if let Some(status) = child.try_wait()? {
             break status;
+        }
+        if !interrupted
+            && interrupt
+                .as_ref()
+                .is_some_and(crate::interrupt::Guard::interrupted)
+        {
+            // `proc.communicate_or_kill(b'q')`: FFmpeg finishes the file.
+            interrupted = true;
+            if let Some(mut input) = stdin.take() {
+                use std::io::Write;
+                let _ = input.write_all(b"q");
+            }
         }
         if callback(progress(DownloadPhase::Downloading, 0)).is_break() {
             let _ = child.kill();
@@ -289,7 +304,12 @@ pub(crate) fn download(
         }
         std::thread::sleep(Duration::from_millis(50));
     };
-    if !status.success() {
+    drop(interrupt);
+    if interrupted {
+        // `retval = 0`: postprocessing follows as for a finished download.
+        crate::output::encoding::write_message(true, "\n");
+        crate::screen::screen("[ffmpeg] Interrupted by user");
+    } else if !status.success() {
         if private.is_some() {
             let _ = std::fs::remove_file(&temporary);
         }

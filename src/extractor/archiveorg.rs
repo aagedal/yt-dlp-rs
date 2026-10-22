@@ -536,6 +536,8 @@ impl Extractor for ArchiveOrg {
             webpage_url,
             extractor: NAME.into(),
             extractor_key: KEY.into(),
+            nested: Vec::new(),
+            pending: None,
             entries: videos,
             extra,
         })))

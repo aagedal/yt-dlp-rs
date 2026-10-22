@@ -214,7 +214,7 @@ mod tests {
         }))
         .unwrap();
         let counts = PlaylistCounts {
-            playlist_count: 3,
+            playlist_count: Some(3),
             n_entries: Some(3),
             last_playlist_index: 3,
         };

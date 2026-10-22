@@ -60,7 +60,9 @@ pretend to model every upstream field. `VideoFormat` models probed progressive
 sources and optional declared dimensions. Default/`best`/`worst` selection ranks
 by the smaller known dimension, with declaration-order ties; it does not reproduce
 upstream's full sorter. `ExtractResult` distinguishes a video from a fully extracted HTML5
-`PlaylistInfo`; unresolved URL results, nested playlists, and site playlists
+`PlaylistInfo`; nested playlists (`PlaylistInfo::nested`, YouTube channel tabs) and
+deferred entry pages (`PlaylistInfo::pending`) are processed by the CLI's input queue;
+unresolved URL results resolving to playlists, and other site playlists
 remain outside the current result contract.
 
 ## Milestones
@@ -168,6 +170,14 @@ remain outside the current result contract.
    discovery now feeds native finite VOD plans, with path-n solving shared with
    direct URL challenges. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
+   A live comparison pass (2026-10-22) then ported the behavior real use hit:
+   chunked HTTPS downloads for merged formats, EU consent/PREF cookies,
+   age-gate `web_embedded` fallback, playability reasons, authenticated cookie
+   sessions, pre-roll ad waits, InnerTube retries, master-only HLS, live
+   streams (FFmpeg, interruptible), mixes, nested channel tabs with lazily
+   fetched pages, YouTube Music URLs, and hashtag/feed pages, each with saved
+   fixtures, plus clips, `--wait-for-video` and comments. Post-live/live-from-start DASH
+   and PO token providers remain open.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
    authentication, cookies, subtitles, archives, and postprocessors explicitly.
@@ -197,7 +207,9 @@ remain outside the current result contract.
    audio extraction in the shared pipeline, with source/intermediate retention and
    latest-completed-stage preservation after failure. Metadata and thumbnail
    embedding (FFmpeg paths only) and thumbnail conversion now follow upstream.
-   General postprocessor chains, mutagen-only embedding and fixups remain open.
+   Cover art that upstream embeds through mutagen (MP4 `covr`, FLAC pictures,
+   Ogg `METADATA_BLOCK_PICTURE`) is written natively (`src/cover_art.rs`).
+   General postprocessor chains and fixups remain open.
 6. **Agent-maintained updates.** Upstream delta reports, bounded implementation
    briefs, differential regression fixtures, reviewable PRs, and staged releases.
    Measure extraction coverage and compatibility before enabling unattended merges.

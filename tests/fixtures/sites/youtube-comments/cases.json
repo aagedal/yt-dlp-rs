@@ -1,0 +1,7 @@
+[
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--write-comments", "-j"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--write-comments", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--write-comments", "-s", "--extractor-args", "youtube:max_comments=2", "--print", "%(comment_count)s %(comments)j"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--write-comments", "-s", "--extractor-args", "youtube:comment_sort=top", "--print", "%(comment_count)s"]},
+ {"url": "https://www.youtube.com/watch?v=NoComments1", "args": ["--no-js-runtimes", "--write-comments", "-s", "--print", "%(comment_count)s %(comments)s"]}
+]

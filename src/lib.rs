@@ -7,6 +7,7 @@ pub mod codecs;
 pub mod config;
 pub mod container;
 mod cookies;
+mod cover_art;
 mod crypto;
 mod dash;
 pub mod dates;
@@ -30,6 +31,7 @@ mod http;
 mod info;
 mod info_json;
 mod info_order;
+mod interrupt;
 mod ism_fd;
 pub mod js_to_json;
 pub mod manifest_args;
@@ -73,7 +75,7 @@ pub use info::{
     ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
-pub use info::{COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX};
+pub use info::{COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, NESTED_INDEX, PendingEntries};
 pub use info_json::{
     InfoJsonWrite, info_json_path, info_value, load_info_json, playlist_info_json,
     playlist_info_json_with, to_python_json, upstream_shape, video_info_json, video_info_json_with,
@@ -138,6 +140,8 @@ pub struct YoutubeDl {
     ffmpeg_settings: ffmpeg_fd::Settings,
     /// `--http-chunk-size` and `--test`.
     http_chunk_size: Option<u64>,
+    /// Leave extractors' pending playlist entries for [`YoutubeDl::fetch_pending`].
+    defer_entries: bool,
     test: bool,
     /// `--use-extractors` (upstream extractor names in matching order) and
     /// `--force-generic-extractor`.
@@ -558,6 +562,7 @@ impl YoutubeDl {
             proxy: proxy_url,
             ffmpeg_settings: ffmpeg_fd::Settings::default(),
             http_chunk_size: None,
+            defer_entries: false,
             test: false,
             allowed_extractors: None,
             force_generic: false,
@@ -575,6 +580,7 @@ impl YoutubeDl {
                     no_playlist: youtube.no_playlist,
                 }),
                 Box::new(extractor::YoutubeSearchUrl),
+                Box::new(extractor::YoutubeClip),
                 Box::new(extractor::Reddit),
                 Box::new(extractor::Twitter),
                 Box::new(extractor::TwitterCard),
@@ -1222,6 +1228,45 @@ impl YoutubeDl {
         self
     }
 
+    /// Return playlists with their extractor's pending entries (upstream's
+    /// lazily extracted entries) for [`YoutubeDl::fetch_pending`]; by default
+    /// extraction fetches every entry.
+    pub fn with_deferred_entries(mut self, defer: bool) -> Self {
+        self.defer_entries = defer;
+        self
+    }
+
+    /// Upstream `post_extract`: what the extractor left for after the match
+    /// filters (YouTube's comments with `getcomments`).
+    pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
+        extractor::youtube_comments(&self.client, info)
+    }
+
+    /// Fetch a playlist's pending entries (and its nested playlists') until
+    /// it has `limit` entries, or all of them; entries still pending remain.
+    pub fn fetch_pending(&self, playlist: &mut PlaylistInfo, limit: Option<usize>) -> Result<()> {
+        if let Some(pending) = playlist.pending.take() {
+            playlist.pending = extractor::fetch_youtube_tab_pages(
+                &self.client,
+                pending.state,
+                limit,
+                &mut playlist.entries,
+            )?
+            .map(|state| PendingEntries { state });
+        }
+        Ok(())
+    }
+
+    fn fetch_all_pending(&self, result: &mut ExtractResult) -> Result<()> {
+        if let ExtractResult::Playlist(playlist) = result {
+            self.fetch_pending(playlist, None)?;
+            for nested in &mut playlist.nested {
+                self.fetch_pending(nested, None)?;
+            }
+        }
+        Ok(())
+    }
+
     /// `--http-chunk-size`: chunked HTTP downloads (overrides a format's
     /// `downloader_options`).
     pub fn with_http_chunk_size(mut self, size: Option<u64>) -> Self {
@@ -1452,6 +1497,20 @@ impl YoutubeDl {
     /// an extracted or loaded result: common fields, thumbnails, per-format
     /// fills, `FormatSorter` order (worst first) and format ID cleanup.
     pub fn process_result(&self, result: &mut ExtractResult) -> Result<()> {
+        // Nested playlists are processed like extracted ones.
+        if let ExtractResult::Playlist(playlist) = result
+            && !playlist.nested.is_empty()
+        {
+            let mut nested = Vec::new();
+            for inner in std::mem::take(&mut playlist.nested) {
+                let mut inner = ExtractResult::Playlist(inner);
+                self.process_result(&mut inner)?;
+                if let ExtractResult::Playlist(inner) = inner {
+                    nested.push(inner);
+                }
+            }
+            playlist.nested = nested;
+        }
         // A playlist's entries report their sort order as each is processed.
         let playlist = matches!(result, ExtractResult::Playlist(_));
         if let ExtractResult::Playlist(playlist) = result
@@ -1519,6 +1578,13 @@ impl YoutubeDl {
                 entry.title = format!("{} video #{}", entry.extractor.replace(':', "-"), entry.id);
             } else {
                 entry.fulltitle = Some(entry.title.clone());
+            }
+            // `process_video_result`: a section's own duration.
+            if let (Some(start), Some(end)) = (entry.section_start, entry.section_end)
+                && end.as_f64() != 0.0
+            {
+                let seconds = ((end.as_f64() - start.as_f64()) * 1000.0).round() / 1000.0;
+                entry.metadata.duration = Some(crate::PyNumber::Float(seconds));
             }
             // `process_video_result`: `raise_no_formats` for a result
             // without formats.
@@ -2038,6 +2104,9 @@ impl YoutubeDl {
             match self.extract_once(&url) {
                 Ok(mut info) => {
                     info.add_default_extra_info(input);
+                    if !self.defer_entries {
+                        self.fetch_all_pending(&mut info)?;
+                    }
                     return Ok(info);
                 }
                 Err(error) => {
@@ -2174,6 +2243,9 @@ impl YoutubeDl {
             })
             .unwrap_or_default();
         let shown_url = Url::parse(&shown).unwrap_or_else(|_| url.clone());
+        // A playlist extractor's `url` entry (`_type: url`) keeps the
+        // extracted video's own `webpage_url`.
+        let plain_url = marker["entry"]["_type"] == "url";
         let merge = |result: &mut ExtractResult| -> Result<()> {
             let ExtractResult::Video(info) = result else {
                 return Err(Error::UnsupportedHtml5(
@@ -2191,7 +2263,9 @@ impl YoutubeDl {
                 }
             }
             // Upstream extracts (and names) the smuggled URL.
-            info.webpage_url = shown_url.clone();
+            if !plain_url {
+                info.webpage_url = shown_url.clone();
+            }
             let keys: Vec<&str> = fields.iter().map(|(key, _)| key.as_str()).collect();
             info.extra.insert(
                 info_order::INFO_SHAPE.into(),
@@ -2837,6 +2911,8 @@ impl YoutubeDl {
                     part.extra.shift_remove("http_headers");
                 }
             }
+            // `HttpFD` chunking (YouTube's anti-throttling `http_chunk_size`).
+            part.downloader_options = stream.downloader_options.clone();
             part.filesize = stream.filesize;
             part.width = stream.width;
             part.height = stream.height;

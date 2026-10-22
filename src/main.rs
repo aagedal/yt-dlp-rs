@@ -508,7 +508,7 @@ struct Args {
     /// Default HTTP Referer (extractor request headers can override it)
     #[arg(long, value_name = "URL", overrides_with = "referer")]
     referer: Option<String>,
-    /// Explicit path to Deno 2.9.7 for YouTube player challenges (no runtime discovery or installation)
+    /// Explicit path to Deno 2.3+ or Node.js 22+ for YouTube player challenges (no runtime discovery or installation)
     #[arg(long, value_name = "PATH")]
     youtube_js_runtime: Option<PathBuf>,
     /// Extract audio with local ffmpeg/ffprobe after downloading
@@ -874,7 +874,7 @@ struct Args {
     /// Minimum download rate below which throttling is assumed (accepted; not acted on)
     #[arg(long, value_name = "RATE")]
     throttled_rate: Option<String>,
-    /// Wait for scheduled streams (accepted; live and upcoming streams are unsupported)
+    /// Wait for scheduled YouTube streams to become available, retrying after MIN[-MAX] seconds
     #[arg(long, value_name = "MIN[-MAX]")]
     wait_for_video: Option<String>,
     #[arg(long, hide = true)]
@@ -1201,10 +1201,9 @@ fn single_json(
             // Lazy playlists have no `requested_entries` upstream, and full
             // playlists drop it ("Do not set for full playlist").
             let full = counts.is_some_and(|counts| {
-                indices
-                    .iter()
-                    .copied()
-                    .eq((1..=counts.playlist_count).map(Some))
+                counts
+                    .playlist_count
+                    .is_some_and(|count| indices.iter().copied().eq((1..=count).map(Some)))
             });
             if !full && counts.is_none_or(|counts| counts.n_entries.is_some()) {
                 object.insert("requested_entries".into(), serde_json::to_value(indices)?);
@@ -1474,25 +1473,41 @@ impl SleepPolicy {
         })
     }
 
-    fn pause(seconds: f64) {
+    fn pause(seconds: f64, note: &str) {
         if seconds > 0.0 {
-            screen!("[download] Sleeping {seconds:.2} seconds ...");
+            screen!("[download] Sleeping {seconds:.2} seconds {note}...");
             std::thread::sleep(Duration::from_secs_f64(seconds));
         }
     }
 
-    /// `random.uniform(min, max or min)`.
-    fn media(&self) {
-        let max = if self.max == 0.0 { self.min } else { self.max };
+    /// `random.uniform(min, max or min)`, raised to a stream's `available_at`
+    /// (YouTube's pre-roll ad time) like upstream's forced sleep interval.
+    fn media(&self, available_at: Option<i64>) {
+        let (mut min, mut max) = (self.min, self.max);
+        let mut note = "";
+        if let Some(available_at) = available_at.filter(|at| *at != 0) {
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map_or(0, |elapsed| elapsed.as_secs() as i64);
+            let forced = (available_at - now) as f64;
+            if forced > min {
+                note = "as required by the site";
+                min = forced;
+            }
+            if forced > max {
+                max = forced;
+            }
+        }
+        let max = if max == 0.0 { min } else { max };
         let unit = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map_or(0, |elapsed| elapsed.subsec_nanos()) as f64
             / 1e9;
-        Self::pause(self.min + (max - self.min) * unit);
+        Self::pause(min + (max - min) * unit, note);
     }
 
     fn subtitle(&self) {
-        Self::pause(self.subtitles);
+        Self::pause(self.subtitles, "");
     }
 }
 
@@ -1609,13 +1624,29 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
-    // `--extractor-args`: GenericIE's are used; other extractors' are not.
+    // `--extractor-args`: GenericIE's and YouTube's client selection are
+    // used; other extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
-    for key in extractor_args.keys().filter(|key| *key != "generic") {
-        warning!(
-            "WARNING: extractor arguments for {key} are not supported natively and are ignored"
-        );
+    for (key, values) in &extractor_args {
+        match key.as_str() {
+            "generic" => {}
+            "youtube" => {
+                for name in values.keys().filter(|name| {
+                    !matches!(
+                        name.as_str(),
+                        "player_client" | "player_skip" | "max_comments" | "comment_sort"
+                    )
+                }) {
+                    warning!(
+                        "WARNING: extractor argument youtube:{name} is not supported natively and is ignored"
+                    );
+                }
+            }
+            _ => warning!(
+                "WARNING: extractor arguments for {key} are not supported natively and are ignored"
+            ),
+        }
     }
     yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
     yt_dlp_rs::extractor::set_video_password(args.video_password.clone());
@@ -1863,6 +1894,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     QUIET.store(args.simulation().quiet, Ordering::Relaxed);
     yt_dlp_rs::screen::set_sink(|message| match message {
         yt_dlp_rs::screen::Message::Screen(text) => screen!("{text}"),
+        yt_dlp_rs::screen::Message::ScreenRaw(text) => {
+            let quiet = QUIET.load(Ordering::Relaxed);
+            if !quiet || yt_dlp_rs::screen::verbose() {
+                if quiet || LOG_TO_STDERR.load(Ordering::Relaxed) {
+                    eprint!("{text}");
+                    let _ = io::stderr().flush();
+                } else {
+                    print!("{text}");
+                    let _ = io::stdout().flush();
+                }
+            }
+        }
         yt_dlp_rs::screen::Message::Warning(text) => warning!("WARNING: {text}"),
         yt_dlp_rs::screen::Message::Stderr(text) => eprintln!("{text}"),
         yt_dlp_rs::screen::Message::Debug(text) => eprintln!("[debug] {text}"),
@@ -2391,10 +2434,38 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }),
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
+            get_comments: args.write_comments,
+            // `--wait-for-video MIN[-MAX]` (validated with the other options).
+            wait_for_video: args
+                .wait_for_video
+                .as_deref()
+                .filter(|_| !args.no_wait_for_video)
+                .map(|range| {
+                    let seconds =
+                        |text: &str| yt_dlp_rs::parse_duration(text).map_or(0.0, |n| n.as_f64());
+                    let (min, max) = match range.split_once('-') {
+                        Some((min, max)) => (seconds(min), Some(seconds(max))),
+                        None => (seconds(range), None),
+                    };
+                    yt_dlp_rs::extractor::WaitForVideo {
+                        min,
+                        max,
+                        progress: if args.no_progress {
+                            false
+                        } else if args.progress {
+                            true
+                        } else {
+                            !QUIET.load(Ordering::Relaxed)
+                        },
+                    }
+                }),
         },
         http_options,
     )?;
-    downloader = downloader.with_subtitles_requested(args.write_subs || args.list_subs);
+    downloader = downloader
+        .with_subtitles_requested(args.write_subs || args.list_subs)
+        // Playlist entries are fetched as upstream's lazy entries are.
+        .with_deferred_entries(true);
     let (ffmpeg, ffprobe) = ffmpeg_executables(args.ffmpeg_location.as_deref());
     if let Some(path) = ffmpeg {
         downloader = downloader.with_ffmpeg(path);
@@ -3200,7 +3271,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // `logtostderr` (`-o -`), whose stdout carries the media.
     let mut stdout = out_stream();
     // Upstream `download_with_info_file` replaces the URLs.
-    let inputs: Vec<(String, Option<ExtractResult>)> = match &args.load_info_json {
+    let inputs: Vec<Input> = match &args.load_info_json {
         Some(file) => {
             if !urls.is_empty() {
                 warning!("WARNING: URLs are ignored due to --load-info-json");
@@ -3213,13 +3284,75 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }
             loaded
                 .into_iter()
-                .map(|result| (path.clone(), Some(result)))
+                .map(|result| Input::Url(path.clone(), Some(Box::new(result))))
                 .collect()
         }
-        None => urls.into_iter().map(|url| (url, None)).collect(),
+        None => urls.into_iter().map(|url| Input::Url(url, None)).collect(),
     };
     let mut inputs: std::collections::VecDeque<_> = inputs.into();
-    while let Some((url, loaded)) = inputs.pop_front() {
+    // Outer playlists whose nested playlists are being processed.
+    let mut outer_playlists: Vec<OuterPlaylist> = Vec::new();
+    while let Some(input) = inputs.pop_front() {
+        let (url, loaded, nested) = match input {
+            Input::Url(url, loaded) => (url, loaded.map(|loaded| *loaded), None),
+            Input::Nested { playlist, item } => {
+                screen!("{item}");
+                (playlist.webpage_url.to_string(), None, Some(*playlist))
+            }
+            Input::FinishOuter => {
+                let Some(outer) = outer_playlists.pop() else {
+                    continue;
+                };
+                // The tail of upstream's `__process_playlist` for the outer
+                // playlist, after its nested playlists.
+                if let Some((path, value)) = &outer.info_json {
+                    match write_info_json_with(path, value, true) {
+                        Ok(written) => report_info_json("updated playlist", path, written),
+                        Err(_) => {
+                            report_error!(
+                                "ERROR: Cannot write updated playlist metadata to JSON file {}",
+                                path.display()
+                            );
+                            failed = true;
+                            continue;
+                        }
+                    }
+                }
+                if let Some(dict) = &outer.dict
+                    && !run_playlist_stage(
+                        dict,
+                        &vec![None; outer.entry_count],
+                        &print_templates,
+                        &print_files,
+                        &exec,
+                        &templates,
+                        &template_options,
+                        &downloader,
+                        PlaylistStage {
+                            simulate,
+                            concat: args.concat_playlist == "always",
+                            concat_pp: args.concat_playlist != "never",
+                            keep: args.keep_video,
+                        },
+                        &metadata_actions,
+                    )?
+                {
+                    failed = true;
+                }
+                screen!("[download] Finished downloading playlist: {}", outer.title);
+                if let Some(mut value) = outer.single_json {
+                    if let Some(object) = value.as_object_mut() {
+                        object.insert("entries".into(), outer.json_entries.into());
+                    }
+                    match outer_playlists.last_mut().filter(|_| outer.nested) {
+                        Some(parent) => parent.json_entries.push(value),
+                        None => emit_single_json(value, &mut stdout)?,
+                    }
+                }
+                continue;
+            }
+        };
+        let is_nested = nested.is_some();
         // Upstream `download_with_info_file` retries a raised DownloadError
         // with the webpage URL.
         let from_info_json = matches!(loaded, Some(ExtractResult::Video(_)));
@@ -3228,30 +3361,57 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             retries: args.extractor_retries,
         };
         let mut pending: Option<Cancel> = None;
+        let mut header_printed = false;
         let extracted =
             (|| -> yt_dlp_rs::Result<Option<(ExtractResult, Option<PlaylistCounts>)>> {
-                let mut result = match loaded {
-                    // Loaded playlists have no entries (`sanitize_info`), so
-                    // upstream's `EntryNotInPlaylist` falls back to the URL.
-                    Some(ExtractResult::Playlist(playlist)) => {
-                        let title = [&playlist.title, &playlist.id]
-                            .into_iter()
-                            .find(|text| !text.is_empty())
-                            .map_or("<Untitled>", |text| text.as_str());
-                        screen!("[download] Downloading playlist: {title}");
-                        warning!(
-                            "WARNING: The info failed to download: There are no entries; trying with URL {}",
-                            playlist.webpage_url
-                        );
-                        downloader.extract_result_unselected_with_options(
-                            playlist.webpage_url.as_str(),
-                            options,
-                        )?
+                let mut result = if let Some(playlist) = nested {
+                    ExtractResult::Playlist(playlist)
+                } else {
+                    match loaded {
+                        // Loaded playlists have no entries (`sanitize_info`), so
+                        // upstream's `EntryNotInPlaylist` falls back to the URL.
+                        Some(ExtractResult::Playlist(playlist)) => {
+                            let title = [&playlist.title, &playlist.id]
+                                .into_iter()
+                                .find(|text| !text.is_empty())
+                                .map_or("<Untitled>", |text| text.as_str());
+                            screen!("[download] Downloading playlist: {title}");
+                            warning!(
+                                "WARNING: The info failed to download: There are no entries; trying with URL {}",
+                                playlist.webpage_url
+                            );
+                            downloader.extract_result_unselected_with_options(
+                                playlist.webpage_url.as_str(),
+                                options,
+                            )?
+                        }
+                        Some(result) => result,
+                        None => downloader.extract_result_unselected_with_options(&url, options)?,
                     }
-                    Some(result) => result,
-                    None => downloader.extract_result_unselected_with_options(&url, options)?,
                 };
+                // Upstream `__process_playlist` names the playlist, then its
+                // `PlaylistEntries` fetches the requested entries.
+                if let ExtractResult::Playlist(playlist) = &mut result
+                    && playlist.pending.is_some()
+                {
+                    let title = [&playlist.title, &playlist.id]
+                        .into_iter()
+                        .find(|text| !text.is_empty())
+                        .map_or("<Untitled>", |text| text.as_str());
+                    screen!("[download] Downloading playlist: {title}");
+                    header_printed = true;
+                    downloader.fetch_pending(playlist, playlist_selection.fetch_limit())?;
+                }
+                // Nested playlists are selected like entries; archive and
+                // match filters apply to their videos.
+                let outer = matches!(&result, ExtractResult::Playlist(playlist) if !playlist.nested.is_empty());
+                if let (ExtractResult::Playlist(playlist), true) = (&mut result, outer) {
+                    playlist.nested_placeholders();
+                }
                 let counts = playlist_selection.apply(&mut result);
+                if outer {
+                    return Ok(Some((result, counts)));
+                }
                 let result = if let Some(archive) = &archive {
                     let (result, reached) =
                         filter_archived(result, archive, args.break_on_existing)?;
@@ -3296,7 +3456,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }
                 Ok(Some((result, counts)))
             })();
-        let (extracted, counts) = match extracted {
+        let (mut extracted, counts) = match extracted {
             Ok(Some(result)) => result,
             Ok(None) if pending.is_some() => {
                 match cancel(pending.take().unwrap(), args.break_per_input) {
@@ -3351,7 +3511,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ExtractResult::Video(_) => None,
         };
-        if let Some(title) = &playlist_title {
+        if let Some(title) = playlist_title.as_ref().filter(|_| !header_printed) {
             screen!("[download] Downloading playlist: {title}");
         }
         // The playlist info JSON written before the entries, rewritten after
@@ -3415,12 +3575,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             (&extracted, counts, &playlist_title)
         {
             screen!(
-                "[{}] Playlist {title}: Downloading {} items of {}",
+                "[{}] Playlist {title}: Downloading {} items{}",
                 playlist.extractor,
                 counts
                     .n_entries
                     .map_or_else(|| "N/A".into(), |count| count.to_string()),
-                counts.playlist_count
+                // `format_field(ie_result, 'playlist_count', ' of %s')`: a
+                // missing or zero count is left out.
+                counts
+                    .playlist_count
+                    .filter(|count| *count != 0)
+                    .map_or_else(String::new, |count| format!(" of {count}"))
             );
             // Upstream keeps resolved entries unless `extract_flat` became
             // `discard`/`discard_in_playlist` (nothing needs the playlist's
@@ -3459,6 +3624,53 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     *entry = serde_json::Value::Null;
                 }
             }
+        }
+        // Upstream `__process_playlist` processes each selected nested
+        // playlist as an entry: queue them, then this playlist's tail.
+        if let ExtractResult::Playlist(outer) = &mut extracted
+            && !outer.nested.is_empty()
+        {
+            let nested = std::mem::take(&mut outer.nested);
+            let mut queued = Vec::new();
+            for entry in &outer.entries {
+                let Some(playlist) = entry
+                    .extra
+                    .get(yt_dlp_rs::NESTED_INDEX)
+                    .and_then(serde_json::Value::as_u64)
+                    .and_then(|index| nested.get(index as usize))
+                else {
+                    continue;
+                };
+                let count = entry
+                    .n_entries
+                    .map_or_else(|| "N/A".into(), |count| count.to_string());
+                // `entry['__x_forwarded_for_ip'] = ...` before processing.
+                let mut playlist = playlist.clone();
+                playlist
+                    .extra
+                    .insert("__x_forwarded_for_ip".into(), serde_json::Value::Null);
+                queued.push(Input::Nested {
+                    playlist: Box::new(playlist),
+                    item: format!(
+                        "[download] Downloading item {} of {count}",
+                        entry.playlist_autonumber.unwrap_or_default()
+                    ),
+                });
+            }
+            outer_playlists.push(OuterPlaylist {
+                title: playlist_title.clone().unwrap_or_default(),
+                info_json: playlist_info_json,
+                dict: playlist_dict,
+                single_json,
+                json_entries: Vec::new(),
+                entry_count: queued.len(),
+                nested: is_nested,
+            });
+            inputs.push_front(Input::FinishOuter);
+            for input in queued.into_iter().rev() {
+                inputs.push_front(input);
+            }
+            continue;
         }
         // Each entry's downloaded file (`requested_downloads[0].filepath`).
         let entry_files = std::cell::RefCell::new(vec![None::<PathBuf>; extracted.entry_count()]);
@@ -3543,10 +3755,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 // every format first.
                 downloader.check_all_formats(&mut info);
                 // Upstream `process_video_result`: `pre_process` and
-                // `after_filter` processors precede listing and selection.
-                for when in ["pre_process", "after_filter"] {
-                    run_metadata_parser(&metadata_actions, when, &mut info, &template_options)?;
-                }
+                // `after_filter` processors precede listing and selection,
+                // with `post_extract` (comments) between them.
+                run_metadata_parser(
+                    &metadata_actions,
+                    "pre_process",
+                    &mut info,
+                    &template_options,
+                )?;
+                downloader.post_extract(&mut info)?;
+                run_metadata_parser(
+                    &metadata_actions,
+                    "after_filter",
+                    &mut info,
+                    &template_options,
+                )?;
                 // Upstream `SponsorBlockPP`, the last `after_filter` processor.
                 // Its failure is a deferred preprocessing error, like upstream's
                 // `__pending_error`.
@@ -3706,14 +3929,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 for (selected, section) in runs {
                     let mut info = yt_dlp_rs::sections::apply(selected, section.as_ref());
                     (|| -> Result<(), Box<dyn std::error::Error>> {
-                        // Upstream's YouTube `_get_comments` uses its comment API.
-                        if args.write_comments && info.extractor_key == "Youtube" {
-                            return Err(yt_dlp_rs::Error::Reported(
-                                "YouTube comment extraction (--write-comments) is not supported natively"
-                                    .into(),
-                            )
-                            .into());
-                        }
                         // Upstream `process_info` rechecks complete metadata before counting.
                         if !match_filters.is_empty() {
                             match match_filters.check(&info, false)? {
@@ -4494,8 +4709,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     }
                                 }
                                 // Upstream sleeps before each stream's FileDownloader.download.
-                                for _ in 0..info.requested_formats.len().max(1) {
-                                    sleep.media();
+                                let available_at =
+                                    |extra: &serde_json::Map<String, serde_json::Value>| {
+                                        extra
+                                            .get("available_at")
+                                            .and_then(serde_json::Value::as_i64)
+                                    };
+                                if info.requested_formats.is_empty() {
+                                    sleep.media(available_at(&info.extra));
+                                }
+                                for stream in &info.requested_formats {
+                                    sleep.media(available_at(&stream.extra));
                                 }
                                 refreshed
                             } else {
@@ -5151,7 +5375,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             warning!(
                 "WARNING: The info failed to download: {message}; trying with URL {webpage_url}"
             );
-            inputs.push_front((webpage_url, None));
+            inputs.push_front(Input::Url(webpage_url, None));
             continue;
         }
         if cancelled.is_some() || aborted {
@@ -5215,16 +5439,33 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         ) {
             object.insert("entries".into(), entries);
         }
-        if let Some(mut value) = single_json {
-            // `sanitize_info` defaults on the printed result.
-            if let Some(object) = value.as_object_mut() {
-                object.entry("epoch").or_insert(epoch().into());
-                object.entry("_type").or_insert("video".into());
+        if let Some(value) = single_json {
+            if is_nested {
+                // A nested playlist is its outer playlist's entry, whose
+                // `__x_forwarded_for_ip` preceded the processing fields.
+                let mut value = value;
+                yt_dlp_rs::upstream_shape(&mut value);
+                let value = match value {
+                    serde_json::Value::Object(mut object) => {
+                        let ip = object.shift_remove("__x_forwarded_for_ip");
+                        let mut ordered = serde_json::Map::new();
+                        for (key, field) in object {
+                            let after = key == "webpage_url";
+                            ordered.insert(key, field);
+                            if let (true, Some(ip)) = (after, &ip) {
+                                ordered.insert("__x_forwarded_for_ip".into(), ip.clone());
+                            }
+                        }
+                        serde_json::Value::Object(ordered)
+                    }
+                    value => value,
+                };
+                if let Some(outer) = outer_playlists.last_mut() {
+                    outer.json_entries.push(value);
+                }
+            } else {
+                emit_single_json(value, &mut stdout)?;
             }
-            yt_dlp_rs::upstream_shape(&mut value);
-            writeln!(stdout, "{}", yt_dlp_rs::output::python_json_dumps(&value))?;
-            // One `write_string` call per message.
-            stdout.flush()?;
         }
     }
     for warning in downloader.cookie_jar().take_warnings() {
@@ -5284,6 +5525,44 @@ impl std::fmt::Display for EntryExtractionError {
 }
 
 impl std::error::Error for EntryExtractionError {}
+
+/// A queued input of the URL loop.
+enum Input {
+    /// A URL, or a dictionary loaded with `--load-info-json`.
+    Url(String, Option<Box<ExtractResult>>),
+    /// A selected nested playlist, after its outer playlist's item line.
+    Nested {
+        playlist: Box<yt_dlp_rs::PlaylistInfo>,
+        item: String,
+    },
+    /// The end of the innermost outer playlist.
+    FinishOuter,
+}
+
+/// An outer playlist's tail state while its nested playlists are processed.
+struct OuterPlaylist {
+    title: String,
+    info_json: Option<(PathBuf, serde_json::Value)>,
+    dict: Option<serde_json::Value>,
+    single_json: Option<serde_json::Value>,
+    /// The nested playlists' `-J` dictionaries.
+    json_entries: Vec<serde_json::Value>,
+    entry_count: usize,
+    /// Whether this playlist is itself nested.
+    nested: bool,
+}
+
+/// Print a `-J` result with `sanitize_info`'s defaults.
+fn emit_single_json(mut value: serde_json::Value, stdout: &mut impl Write) -> io::Result<()> {
+    if let Some(object) = value.as_object_mut() {
+        object.entry("epoch").or_insert(epoch().into());
+        object.entry("_type").or_insert("video".into());
+    }
+    yt_dlp_rs::upstream_shape(&mut value);
+    writeln!(stdout, "{}", yt_dlp_rs::output::python_json_dumps(&value))?;
+    // One `write_string` call per message.
+    stdout.flush()
+}
 
 /// An upstream `parser.error`: usage, `PROG: error: MESSAGE`, exit status 2.
 #[derive(Debug)]

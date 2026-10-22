@@ -221,13 +221,15 @@ pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
+pub(crate) use youtube::clip::YoutubeClip;
+pub(crate) use youtube::comments::post_extract as youtube_comments;
 pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
 pub use youtube::search::{
     suitable as youtube_search_suitable, url_suitable as youtube_search_url_suitable,
 };
-pub(crate) use youtube::tab::YoutubeTab;
 pub use youtube::tab::suitable as youtube_tab_suitable;
-pub use youtube::{Youtube, YoutubeOptions, suitable as youtube_suitable};
+pub(crate) use youtube::tab::{YoutubeTab, fetch_pages as fetch_youtube_tab_pages};
+pub use youtube::{WaitForVideo, Youtube, YoutubeOptions, suitable as youtube_suitable};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
@@ -402,12 +404,37 @@ pub(crate) fn extract_m3u8_optional_note(
         extractor,
         id,
         keep_subtitles,
-        &|response| hls::from_response(client, response, manifest, None, true, m3u8_id),
+        &|response| hls::from_response_with(client, response, manifest, None, true, m3u8_id, live),
         ("m3u8 information", "HLS"),
         note,
     )?;
     if live {
         hls::live_format_ids(&mut stream.formats, m3u8_id);
+    }
+    Some(stream)
+}
+
+/// [`extract_m3u8_optional_note`] reading only the master playlist, like
+/// upstream: the formats' media playlists are fetched when downloading.
+pub(crate) fn extract_m3u8_master_optional(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    live: bool,
+) -> Option<crate::VideoInfo> {
+    let mut stream = extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        true,
+        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        ("m3u8 information", "HLS"),
+        "Downloading m3u8 information",
+    )?;
+    if live {
+        hls::live_format_ids(&mut stream.formats, None);
     }
     Some(stream)
 }
@@ -668,11 +695,34 @@ pub(crate) fn download_webpage_handle(
     download_webpage_handle_quiet(client, url, extractor, id)
 }
 
+/// [`download_webpage_note`] with the request's `headers=`.
+pub(crate) fn download_webpage_note_headers(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    note: &str,
+    headers: &[(&str, &str)],
+) -> Result<String> {
+    crate::screen::screen(&format!("[{extractor}] {id}: {note}"));
+    download_webpage_handle_headers(client, url, extractor, id, headers).map(|(text, _)| text)
+}
+
 fn download_webpage_handle_quiet(
     client: &Client,
     url: &Url,
     extractor: &'static str,
     id: &str,
+) -> Result<(String, Url)> {
+    download_webpage_handle_headers(client, url, extractor, id, &[])
+}
+
+fn download_webpage_handle_headers(
+    client: &Client,
+    url: &Url,
+    extractor: &'static str,
+    id: &str,
+    headers: &[(&str, &str)],
 ) -> Result<(String, Url)> {
     use std::io::Read;
     let wrap = |error: crate::Error| match error {
@@ -686,7 +736,7 @@ fn download_webpage_handle_quiet(
         }
         error => error,
     };
-    let mut response = direct::request(client, url, None).map_err(wrap)?;
+    let mut response = direct::request_with_headers(client, url, None, headers).map_err(wrap)?;
     let page_url = response.url().clone();
     let mut body = Vec::new();
     response

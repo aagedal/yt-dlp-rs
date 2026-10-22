@@ -1,0 +1,3 @@
+[
+ {"url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re", "args": ["--flat-playlist", "--print", "%(id)s|%(title)s"]}
+]

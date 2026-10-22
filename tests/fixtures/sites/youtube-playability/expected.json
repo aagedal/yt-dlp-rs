@@ -1,0 +1,127 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=AgeGated001",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s|%(age_limit)s|%(availability)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "AgeGated001|Age-gated trailer|136+140|18|needs_auth"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=AgeGated001",
+   "args": [
+    "--no-js-runtimes",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=AgeGated001",
+    "[youtube] AgeGated001: Downloading webpage",
+    "[youtube] AgeGated001: Downloading visionos player API JSON",
+    "[youtube] AgeGated001: This video is age-restricted; some formats may be missing without authentication. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies",
+    "[youtube] AgeGated001: Downloading web embedded client config",
+    "[youtube] AgeGated001: Downloading player abcd1234-main",
+    "[youtube] AgeGated001: Downloading web embedded player API JSON",
+    "[info] Available formats for AgeGated001:",
+    "ID  EXT RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC       VBR ACODEC      ABR ASR MORE INFO",
+    "-------------------------------------------------------------------------------------------------------",
+    "140 m4a audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k medium, m4a_dash",
+    "136 mp4 1280x720    30    |  792.00B 100k https | avc1.4d401f 100k video only          720p, mp4_dash"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Unavailabl1",
+   "args": [
+    "--no-js-runtimes",
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=Unavailabl1",
+    "[youtube] Unavailabl1: Downloading webpage",
+    "[youtube] Unavailabl1: Downloading visionos player API JSON"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [youtube] Unavailabl1: This video is unavailable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=PrivateVid1",
+   "args": [
+    "--no-js-runtimes",
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=PrivateVid1",
+    "[youtube] PrivateVid1: Downloading webpage",
+    "[youtube] PrivateVid1: Downloading visionos player API JSON"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "ERROR: [youtube] PrivateVid1: Private video. Sign in if you've been granted access to this video. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=PrivateVid2",
+   "args": [
+    "--no-js-runtimes",
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=PrivateVid2",
+    "[youtube] PrivateVid2: Downloading webpage",
+    "[youtube] PrivateVid2: Downloading visionos player API JSON"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "ERROR: [youtube] PrivateVid2: Private video"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=ServerErr01",
+   "args": [
+    "--no-js-runtimes",
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=ServerErr01",
+    "[youtube] ServerErr01: Downloading webpage",
+    "[youtube] ServerErr01: Downloading visionos player API JSON",
+    "[youtube] ServerErr01: Downloading visionos player API JSON",
+    "[youtube] ServerErr01: Downloading visionos player API JSON",
+    "[youtube] ServerErr01: Downloading visionos player API JSON"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] HTTP Error 500: OK. Retrying (1/3)...",
+    "WARNING: [youtube] HTTP Error 500: OK. Retrying (2/3)...",
+    "WARNING: [youtube] HTTP Error 500: OK. Retrying (3/3)...",
+    "WARNING: [youtube] ServerErr01: Unable to download API page: HTTP Error 500: OK (caused by <HTTPError 500: OK>)",
+    "ERROR: [youtube] ServerErr01: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

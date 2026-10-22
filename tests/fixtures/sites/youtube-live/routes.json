@@ -1,0 +1,51 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=LiveStream1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {}, \"playabilityStatus\": {\"status\": \"OK\"}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"hlsManifestUrl\": \"https://manifest.googlevideo.test/api/manifest/hls_variant/id/LiveStream1.1/file/index.m3u8\"}, \"videoDetails\": {\"videoId\": \"LiveStream1\", \"title\": \"Live radio\", \"lengthSeconds\": \"0\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/BaW_jenozKc/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": true, \"isLive\": true}}",
+   "request_body": [
+    "LiveStream1"
+   ]
+  },
+  {
+   "url": "https://manifest.googlevideo.test/api/manifest/hls_variant/id/LiveStream1.1/file/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Upcoming001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "upcoming.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "Upcoming001"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {}, \"playabilityStatus\": {\"status\": \"LIVE_STREAM_OFFLINE\", \"reason\": \"This live event will begin in 3 hours.\", \"playableInEmbed\": true, \"liveStreamability\": {\"liveStreamabilityRenderer\": {\"videoId\": \"Upcoming001\", \"offlineSlate\": {\"liveStreamOfflineSlateRenderer\": {\"scheduledStartTime\": \"4102444800\", \"mainText\": {\"runs\": [{\"text\": \"Live in \"}, {\"text\": \"3 hours\"}]}}}, \"pollDelayMs\": \"15000\"}}}, \"videoDetails\": {\"videoId\": \"Upcoming001\", \"title\": \"Upcoming premiere\", \"lengthSeconds\": \"0\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/LiveStream1/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": true, \"isLive\": false, \"isUpcoming\": true}}"
+  }
+ ]
+}

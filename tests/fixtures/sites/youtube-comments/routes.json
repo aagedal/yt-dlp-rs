@@ -1,0 +1,136 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "NoComments1"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {\"visitorData\": \"VISITOR2\"}, \"playabilityStatus\": {\"status\": \"OK\", \"playableInEmbed\": true}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"formats\": [{\"itag\": 18, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=18&client=visionos\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.42001E, mp4a.40.2\\\"\", \"bitrate\": 100018, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 640, \"height\": 360, \"quality\": \"medium\", \"qualityLabel\": \"360p\", \"fps\": 30, \"audioQuality\": \"AUDIO_QUALITY_LOW\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2}], \"adaptiveFormats\": [{\"itag\": 137, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=137&client=visionos\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.640028\\\"\", \"bitrate\": 100137, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1920, \"height\": 1080, \"quality\": \"hd1080\", \"qualityLabel\": \"1080p\", \"fps\": 30, \"averageBitrate\": 90000}, {\"itag\": 136, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=136&client=visionos\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.4d401f\\\"\", \"bitrate\": 100136, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1280, \"height\": 720, \"quality\": \"hd720\", \"qualityLabel\": \"720p\", \"fps\": 30}, {\"itag\": 140, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=140&client=visionos\", \"mimeType\": \"audio/mp4; codecs=\\\"mp4a.40.2\\\"\", \"bitrate\": 100140, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2, \"averageBitrate\": 129000}, {\"itag\": 251, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos\", \"mimeType\": \"audio/webm; codecs=\\\"opus\\\"\", \"bitrate\": 100251, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"48000\", \"audioChannels\": 2, \"isDrc\": true}]}, \"videoDetails\": {\"videoId\": \"NoComments1\", \"title\": \"youtube-dl test video \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\", \"lengthSeconds\": \"10\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/NoComments1/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": false}}"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visionos.json"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=18&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=136&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&client=visionos",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a.m4a"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a.m4a"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "SECTION_TOKEN"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "header.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "NEW_TOKEN"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "new.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "TOP_TOKEN"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "top.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "REPLIES_TOKEN"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "replies.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "PAGE2_TOKEN"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page2.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoComments1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "disabled.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "Eg0SC05vQ29tbWVudHMx"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {}}"
+  }
+ ]
+}

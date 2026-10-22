@@ -1,0 +1,68 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/playlist?list=PLmissing0000000000000000000000000",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [youtube:tab] YouTube said: INFO - Some playlist notice",
+    "WARNING: [youtube:tab] YouTube said: The playlist does not exist.",
+    "WARNING: [youtube:tab] YouTube said: INFO - Some playlist notice",
+    "ERROR: [youtube:tab] PLmissing0000000000000000000000000: YouTube said: The playlist does not exist."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLincomplete0000000000000000000000",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "PLincomplete0000000000000000000000|BaW_jenozKc",
+    "PLincomplete0000000000000000000000|YYYYYYYYYYY",
+    "PLincomplete0000000000000000000000|ZZZZZZZZZZZ"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] Incomplete yt initial data received. Retrying (1/3)...",
+    "WARNING: [youtube:tab] Incomplete yt initial data received. Retrying (2/3)...",
+    "WARNING: [youtube:tab] Incomplete yt initial data received. Retrying (3/3)...",
+    "WARNING: [youtube:tab] Incomplete yt initial data received; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U. Giving up after 3 retries"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLnoinitial00000000000000000000000",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "PLnoinitial00000000000000000000000|BaW_jenozKc",
+    "PLnoinitial00000000000000000000000|YYYYYYYYYYY",
+    "PLnoinitial00000000000000000000000|ZZZZZZZZZZZ"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] unable to extract yt initial data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [youtube:tab] Incomplete yt initial data received. Retrying (1/3)...",
+    "WARNING: [youtube:tab] unable to extract yt initial data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [youtube:tab] Incomplete yt initial data received. Retrying (2/3)...",
+    "WARNING: [youtube:tab] unable to extract yt initial data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [youtube:tab] Incomplete yt initial data received. Retrying (3/3)...",
+    "WARNING: [youtube:tab] unable to extract yt initial data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [youtube:tab] Incomplete yt initial data received; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U. Giving up after 3 retries"
+   ],
+   "files": {}
+  }
+ ]
+}

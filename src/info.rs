@@ -36,6 +36,14 @@ pub struct PlaylistInfo {
     pub extractor: String,
     pub extractor_key: String,
     pub entries: Vec<VideoInfo>,
+    /// Playlists that are this playlist's entries (upstream `_type: playlist`
+    /// entries, such as a YouTube channel's tabs); `entries` is then empty.
+    #[serde(skip)]
+    pub nested: Vec<PlaylistInfo>,
+    /// Entries the extractor fetches when the playlist is processed (upstream
+    /// lazily extracted entries); see [`crate::YoutubeDl::fetch_pending`].
+    #[serde(skip)]
+    pub pending: Option<PendingEntries>,
     /// Unmodeled info-dict keys (upstream's `add_default_extra_info`).
     #[serde(flatten, default)]
     pub extra: serde_json::Map<String, serde_json::Value>,
@@ -101,6 +109,52 @@ impl ExtractResult {
                     .or_insert(serde_json::Value::Null);
             }
         }
+    }
+}
+
+/// Further pages of a playlist's entries: the extractor's continuation state.
+#[derive(Debug, Clone)]
+pub struct PendingEntries {
+    pub(crate) state: serde_json::Value,
+}
+
+/// A list field's `None` (`chapters: null`) as an empty list; the `null`
+/// itself stays in `extra` (see `metadata_parser::set_field`), so every
+/// later field update still round-trips the typed dict.
+fn null_as_empty<'de, D, T>(deserializer: D) -> std::result::Result<Vec<T>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Ok(Option::<Vec<T>>::deserialize(deserializer)?.unwrap_or_default())
+}
+
+/// A nested playlist's placeholder entry: its index in `nested`.
+pub const NESTED_INDEX: &str = "__yt_dlp_rs_nested_index";
+
+impl PlaylistInfo {
+    /// Placeholder `entries` for the `nested` playlists, so entry selection
+    /// (`--playlist-items`, reverse, random) applies to them; each carries
+    /// [`NESTED_INDEX`].
+    pub fn nested_placeholders(&mut self) {
+        self.entries = self
+            .nested
+            .iter()
+            .enumerate()
+            .map(|(index, playlist)| {
+                let mut entry = crate::extractor::direct::build_at(
+                    playlist.webpage_url.clone(),
+                    &playlist.webpage_url,
+                    String::new(),
+                );
+                entry.formats.clear();
+                entry.direct = None;
+                entry.id = playlist.id.clone();
+                entry.title = playlist.title.clone();
+                entry.extra.insert(NESTED_INDEX.into(), index.into());
+                entry
+            })
+            .collect();
     }
 }
 
@@ -413,7 +467,11 @@ pub struct Metadata {
     pub description: Option<String>,
     /// Upstream `chapters` (`start_time`, `title`; `end_time` and missing
     /// titles are filled by `process_video_result`).
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "null_as_empty",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub chapters: Vec<Chapter>,
     /// Upstream `start_time`/`end_time` (YouTube `t`/`start`/`end` URL
     /// parameters), used by `--download-sections "*from-url"`.
@@ -462,7 +520,11 @@ pub struct Metadata {
     /// The best thumbnail known to exist, as upstream extractors report it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub thumbnail: Option<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "null_as_empty",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub thumbnails: Vec<Thumbnail>,
 }
 
@@ -2000,6 +2062,8 @@ mod tests {
             webpage_url: first.webpage_url.clone(),
             extractor: "test".into(),
             extractor_key: "Test".into(),
+            nested: Vec::new(),
+            pending: None,
             entries: vec![first, second],
             extra: Default::default(),
         });

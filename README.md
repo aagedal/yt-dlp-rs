@@ -3,9 +3,12 @@
 An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 It downloads direct HTTP media and a limited subset of HTML5 media pages, with
 a foundation for porting extractors and tracking upstream changes. This is an
-early prototype. YouTube (videos, playlists, channel tabs, search), Reddit,
-X/Twitter, TikTok, Instagram and Facebook are extracted like pinned upstream on
-saved fixtures, but have not been verified against the live sites.
+early prototype. YouTube (videos, live streams, playlists, mixes, channels,
+search, hashtags and YouTube Music URLs), Reddit, X/Twitter, TikTok, Instagram
+and Facebook are extracted like pinned upstream on saved fixtures. YouTube was
+also spot-checked against the live site and pinned upstream on 2026-10-22
+(downloads, `-F`/`-j` output and playlist/channel listings matched); the other
+sites have not been verified live.
 
 Pre-release binaries for Linux, macOS and Windows are attached to the
 [GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases): pushing a
@@ -120,15 +123,22 @@ Supported today:
   bundled pinned EJS release. Without one, only `visionos` is used, with
   upstream's warning. HTTPS, HLS and DASH formats follow upstream's
   `_extract_formats_and_subtitles`: PO-token policies skip token-requiring
-  formats, since no token providers exist. Playlists (`/playlist?list=` and
-  `watch?v=…&list=`) are extracted like upstream's `youtube:tab`, with every
-  continuation page, and so are channel tabs (`/@NAME/videos`, `/shorts`,
-  ...); a channel URL without a tab reads `/videos` but is an error when the
-  channel also has live or shorts tabs. `ytsearch[N|all]:QUERY` and
-  `/results?search_query=` searches work like upstream's `youtube:search`.
-  Live videos, login and upstream's
-  remaining metadata fields are not supported yet. This is
-  fixture-tested against pinned upstream, not verified against the live site.
+  formats, since no token providers exist; HTTPS formats download in 10 MiB
+  ranges like upstream (avoiding throttling), and pre-roll ads delay downloads
+  as upstream's `available_at` does. Age-restricted videos use the
+  `web_embedded` fallback; account cookies (`--cookies`, `--cookies-from-browser`)
+  switch to upstream's authenticated clients and SAPISIDHASH headers. Live
+  streams download through FFmpeg (Ctrl+C finishes the recording); upcoming
+  ones report their start. Playlists (`/playlist?list=`, `watch?v=…&list=`,
+  mixes), channel tabs (`/@NAME/videos`, `/shorts`, ...), hashtag and feed pages
+  are extracted like upstream's `youtube:tab`, with continuation pages fetched as
+  the selection needs them; a channel URL without a tab is a playlist of its
+  tab playlists, as upstream. `ytsearch[N|all]:QUERY` and `/results?search_query=`
+  searches work like upstream's `youtube:search`, and `/clip/` URLs download
+  their section like upstream's `youtube:clip`. `--write-comments`
+  extracts comments and replies like upstream. PO token
+  providers and upstream's remaining metadata fields are not
+  supported yet.
 - Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
   `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.
   `--ffmpeg-location PATH` configures an explicit FFmpeg executable for local
@@ -292,7 +302,7 @@ Supported today:
   and interrupted HTML reads restart extraction before any output is emitted,
   using the same bounded `Retry-After` policy.
 
-Other HTML pages, general YouTube support, broader DASH/HLS delivery, site playlists, broader
+Other HTML pages, broader DASH/HLS delivery, site playlists, broader
 authentication, persistent resume, broader subtitle acquisition and plugins
 remain unimplemented (`--use-postprocessor` supports only `Exec`). Format selection
 and sorting follow ports of upstream's `build_format_selector` and `FormatSorter`.
