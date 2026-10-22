@@ -67,21 +67,26 @@ fn search_results(
     limit: Option<usize>,
 ) -> Result<Vec<Map<String, Value>>> {
     let display_id = format!("query \"{query}\"");
-    // `_download_ytcfg('web', display_id)`.
+    // `_download_ytcfg('web', display_id) if not self.skip_webpage else {}`.
     let home = Url::parse("https://www.youtube.com")?;
-    let ytcfg = match super::super::download_webpage_note(
-        client,
-        &home,
-        extractor,
-        &display_id,
-        "Downloading web client config",
-    ) {
-        Ok(webpage) => watch::extract_ytcfg(&webpage),
-        Err(error) => {
-            crate::screen::warning(&error.to_string());
-            Map::new()
+    let ytcfg = if super::tab::skip_webpage() {
+        Map::new()
+    } else {
+        match super::super::download_webpage_note(
+            client,
+            &home,
+            extractor,
+            &display_id,
+            "Downloading web client config",
+        ) {
+            Ok(webpage) => watch::extract_ytcfg(&webpage),
+            Err(error) => {
+                crate::screen::warning(&error.to_string());
+                Map::new()
+            }
         }
     };
+    super::tab::report_playlist_authcheck(&ytcfg, false, extractor, &display_id)?;
     let mut data = Map::new();
     data.insert("query".into(), query.into());
     if let Some(params) = params.filter(|params| !params.is_empty()) {

@@ -45,6 +45,54 @@
     "Content-Type": "application/json"
    },
    "body_file": "unavailable-reload.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/navigation/resolve_url?prettyPrint=false",
+   "request_body": [
+    "PLskipwebpageskipwebpageskipwebpa1"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "skip-resolve.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "VLPLskipwebpageskipwebpageskipwebpa1",
+    "wgYCCAA="
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "skip-reload.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "VLPLskipwebpageskipwebpageskipwebpa1"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "skip-browse.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/search?prettyPrint=false",
+   "request_body": [
+    "test query"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search.json"
+  },
+  {
+   "url": "https://www.youtube.com/@Dates/videos",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "dates.html"
   }
  ]
 }

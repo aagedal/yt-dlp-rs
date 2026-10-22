@@ -1624,8 +1624,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
-    // `--extractor-args`: GenericIE's and YouTube's client selection are
-    // used; other extractors' are not.
+    // `--extractor-args`: GenericIE's, YouTube's and YoutubeTabIE's ported
+    // arguments are used; other extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
     for (key, values) in &extractor_args {
@@ -1640,6 +1640,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }) {
                     warning!(
                         "WARNING: extractor argument youtube:{name} is not supported natively and is ignored"
+                    );
+                }
+            }
+            "youtubetab" => {
+                for name in values
+                    .keys()
+                    .filter(|name| !matches!(name.as_str(), "skip" | "approximate_date"))
+                {
+                    warning!(
+                        "WARNING: extractor argument youtubetab:{name} is not supported natively and is ignored"
                     );
                 }
             }

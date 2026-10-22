@@ -19,8 +19,49 @@ pub(crate) const KEY: &str = "YoutubeTab";
 pub(crate) static NO_CHANNEL_REDIRECT: AtomicBool = AtomicBool::new(false);
 /// `'no-youtube-unavailable-videos' in compat_opts`.
 pub(crate) static NO_UNAVAILABLE_VIDEOS: AtomicBool = AtomicBool::new(false);
+
 fn compat(option: &AtomicBool) -> bool {
     option.load(Ordering::Relaxed)
+}
+
+/// `_configuration_arg(key, ie_key=YoutubeTabIE)`.
+fn tab_arg(key: &str) -> Vec<String> {
+    crate::manifest_args::configuration_arg(KEY, key, false).unwrap_or_default()
+}
+
+/// `skip_webpage`: `youtubetab:skip=webpage`.
+pub(super) fn skip_webpage() -> bool {
+    tab_arg("skip").iter().any(|value| value == "webpage")
+}
+
+/// `self._parse_time_text(text, report_failure) if
+/// self._configuration_arg('approximate_date', ie_key=YoutubeTabIE) else None`.
+fn approximate_timestamp(text: Option<&str>, report_failure: bool) -> Option<i64> {
+    if tab_arg("approximate_date").is_empty() {
+        return None;
+    }
+    super::dict::parse_time_text_reporting(text?, report_failure, NAME)
+}
+
+/// `_report_playlist_authcheck(ytcfg, fatal)`: without a webpage's
+/// `ytcfg`, logged-in requests may miss private playlists.
+pub(super) fn report_playlist_authcheck(
+    ytcfg: &Map<String, Value>,
+    fatal: bool,
+    extractor: &str,
+    temp_id: &str,
+) -> Result<()> {
+    if !ytcfg.is_empty() || !super::has_auth_cookies() {
+        return Ok(());
+    }
+    const MESSAGE: &str = "Playlists that require authentication may not extract correctly without a successful webpage download";
+    if fatal && !tab_arg("skip").iter().any(|value| value == "authcheck") {
+        return Err(Error::Reported(format!(
+            "[{extractor}] {temp_id}: {MESSAGE}. If you are not downloading private content, or your cookies are only for the first account and channel, pass \"--extractor-args youtubetab:skip=authcheck\" to skip this check"
+        )));
+    }
+    crate::screen::warning_once(&format!("[{extractor}] {MESSAGE}"));
+    Ok(())
 }
 
 const RESERVED_NAMES: &str = "channel|c|user|playlist|watch|w|v|embed|e|live|watch_popup|clip|shorts|movies|results|search|shared|hashtag|trending|explore|feed|feeds|browse|oembed|get_video_info|iframe_api|s/player|source|storefront|oops|index|account|t/terms|about|upload|signin|logout";
@@ -525,7 +566,10 @@ fn extract_video(renderer: &Value) -> Map<String, Value> {
         "thumbnails".into(),
         Value::Array(thumbnails(renderer.get("thumbnail"), "thumbnails")),
     );
-    entry.insert("timestamp".into(), Value::Null);
+    entry.insert(
+        "timestamp".into(),
+        approximate_timestamp(Some(&time_text), true).into(),
+    );
     entry.insert("release_timestamp".into(), scheduled.into());
     entry.insert(
         "availability".into(),
@@ -838,7 +882,10 @@ fn lockup_view_model(model: &Value) -> Option<Map<String, Value>> {
             Value::Null
         },
     );
-    kwargs.insert("timestamp".into(), Value::Null);
+    kwargs.insert(
+        "timestamp".into(),
+        approximate_timestamp(relative.as_deref(), false).into(),
+    );
     kwargs.insert(
         "live_status".into(),
         if duration_text.as_deref() == Some("upcoming") {
@@ -2209,14 +2256,17 @@ const EXTRACTOR_RETRIES: u32 = 3;
 /// `_extract_data(fatal=True, webpage_fatal=False)`: the webpage's
 /// `ytInitialData` and `ytcfg`, else the `navigation/resolve_url` endpoint's
 /// browse response.
+/// Without the webpage (`youtubetab:skip=webpage`) only the endpoint is used.
 fn page_data(
     client: &Client,
     url: &Url,
     item_id: &str,
     temp_id: &str,
 ) -> Result<(Value, Map<String, Value>)> {
-    let (data, ytcfg) = extract_webpage(client, url, item_id, NAME, false)?;
-    {
+    let mut ytcfg = Map::new();
+    if !skip_webpage() {
+        let (data, found) = extract_webpage(client, url, item_id, NAME, false)?;
+        ytcfg = found;
         // Reject webpage data if redirected to the home page without
         // explicitly requesting it.
         let home = data.as_ref().is_some_and(|data| {
@@ -2242,6 +2292,7 @@ fn page_data(
             return Ok((data, ytcfg));
         }
     }
+    report_playlist_authcheck(&ytcfg, true, NAME, temp_id)?;
     let data = tab_endpoint(client, "web", url.as_str(), item_id, &ytcfg)?;
     Ok((data, ytcfg))
 }
@@ -2272,9 +2323,38 @@ pub(super) fn extract_webpage(
     for attempt in 1..=EXTRACTOR_RETRIES + 1 {
         let webpage = match super::super::download_webpage(client, url, extractor, item_id) {
             Ok(webpage) => webpage,
-            Err(error) if fatal => return Err(error),
             Err(error) => {
-                crate::screen::warning(&crate::upstream_error_text(&error));
+                // Network errors other than HTTP 403 and 429 are retried.
+                let cause = match &error {
+                    Error::ExtractorRequest { source, .. } => match source.as_ref() {
+                        source @ (Error::Http(http)
+                        | Error::HttpRetryAfter { source: http, .. })
+                            if http
+                                .status()
+                                .is_none_or(|status| !matches!(status.as_u16(), 403 | 429)) =>
+                        {
+                            Some(crate::upstream_error_text(source))
+                        }
+                        _ => None,
+                    },
+                    _ => None,
+                };
+                if let Some(cause) = &cause
+                    && attempt <= EXTRACTOR_RETRIES
+                {
+                    crate::screen::warning(&format!(
+                        "[{extractor}] {cause}. Retrying ({attempt}/{EXTRACTOR_RETRIES})..."
+                    ));
+                    continue;
+                }
+                if fatal {
+                    return Err(error);
+                }
+                let mut text = crate::upstream_error_text(&error);
+                if cause.is_some() {
+                    text.push_str(&format!(". Giving up after {EXTRACTOR_RETRIES} retries"));
+                }
+                crate::screen::warning(&text);
                 return Ok((None, ytcfg));
             }
         };
