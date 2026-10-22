@@ -891,6 +891,77 @@ fn is_premium_subscriber(authenticated: bool, initial_data: Option<&Value>) -> b
             .is_some_and(|text| text.to_lowercase().contains("premium"))
 }
 
+/// `_download_initial_data`: the page's `ytInitialData` when it has
+/// `contents`, else (unless `player_skip=initial_data`) the `next` API's,
+/// retried like `_extract_response(check_get_keys='contents')`.
+fn download_initial_data(
+    client: &Client,
+    video_id: &str,
+    embedded: Option<Value>,
+    webpage_ytcfg: &Map<String, Value>,
+) -> Option<Value> {
+    if let Some(data) = embedded.filter(|data| super::tab::truthy(data.get("contents"))) {
+        return Some(data);
+    }
+    crate::screen::warning(
+        "[youtube] Incomplete data received in embedded initial data; re-fetching using API.",
+    );
+    let skipped = crate::manifest_args::configuration_arg("youtube", "player_skip", false)
+        .is_some_and(|skip| skip.iter().any(|value| value == "initial_data"));
+    if skipped {
+        return None;
+    }
+    // `_call_api(headers=None)`: the web client's default headers, with the
+    // page's context.
+    let web = innertube::client(WEBPAGE_CLIENT).expect("web client");
+    let mut ytcfg = default_ytcfg(web);
+    if let Some(context) = webpage_ytcfg
+        .get("INNERTUBE_CONTEXT")
+        .filter(|context| context.is_object())
+    {
+        ytcfg.insert("INNERTUBE_CONTEXT".into(), context.clone());
+    }
+    let mut query = Map::new();
+    query.insert("videoId".into(), video_id.into());
+    query.insert("contentCheckOk".into(), true.into());
+    query.insert("racyCheckOk".into(), true.into());
+    let mut retries = 0;
+    loop {
+        let response = match call_api(
+            client,
+            web,
+            "next",
+            "youtube",
+            video_id,
+            &ytcfg,
+            None,
+            query.clone(),
+            "Downloading initial data API JSON",
+            Session::default(),
+        ) {
+            Ok(response) => response,
+            Err(error) => {
+                crate::screen::warning(&crate::upstream_error_text(&error));
+                return None;
+            }
+        };
+        if super::tab::truthy(response.get("contents")) {
+            return Some(response);
+        }
+        // The incomplete-data `RetryManager(fatal=False)`.
+        if retries == API_RETRIES {
+            crate::screen::warning(&format!(
+                "[youtube] Incomplete data received. Giving up after {API_RETRIES} retries"
+            ));
+            return None;
+        }
+        retries += 1;
+        crate::screen::warning(&format!(
+            "[youtube] Incomplete data received. Retrying ({retries}/{API_RETRIES})..."
+        ));
+    }
+}
+
 /// The acquisition result `_real_extract` continues with.
 pub(super) struct Acquired {
     pub webpage: String,
@@ -927,14 +998,19 @@ pub(super) fn acquire(
     });
     static INITIAL_PLAYER_RESPONSE: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"ytInitialPlayerResponse\s*=").unwrap());
-    let initial_data = search_initial(&webpage, &INITIAL_DATA, "yt initial data").filter(|data| {
-        data.get("contents")
-            .is_some_and(|contents| !contents.is_null())
-    });
+    let initial_data = download_initial_data(
+        client,
+        video_id,
+        search_initial(&webpage, &INITIAL_DATA, "yt initial data"),
+        &webpage_ytcfg,
+    );
     // `_get_requested_clients` runs before `_extract_player_responses`
     // searches the initial player response.
     let authenticated = super::has_auth_cookies();
     let premium = is_premium_subscriber(authenticated, initial_data.as_ref());
+    if premium {
+        crate::screen::extractor_debug("Detected YouTube Premium subscription");
+    }
     let clients = requested_clients(&ClientSelection {
         js_available: runtime.is_some(),
         authenticated,

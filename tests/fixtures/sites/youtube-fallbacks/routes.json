@@ -186,6 +186,66 @@
     "Content-Type": "application/vnd.apple.mpegurl"
    },
    "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NextApi0001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "next-api.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"NextApi0001\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "next-api-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "\"NextApi0001\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "next-api-next.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NextFail001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "next-fail.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"NextFail001\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "next-fail-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "\"NextFail001\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "next-fail-next.json"
   }
  ]
 }
