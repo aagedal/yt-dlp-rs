@@ -1,0 +1,37 @@
+[
+ {
+  "url": "https://www.youtube.com/watch?v=PostLive001",
+  "args": [
+   "--no-js-runtimes",
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=PostLive001",
+  "args": [
+   "--no-js-runtimes",
+   "--print",
+   "%(id)s|%(is_live)s|%(was_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(release_timestamp)s"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=PostLive001",
+  "args": [
+   "--no-js-runtimes",
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=PostLive001",
+  "args": [
+   "--no-js-runtimes",
+   "-f",
+   "140",
+   "--fixup",
+   "never",
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ }
+]

@@ -171,6 +171,10 @@ pub fn upstream_shape(value: &mut Value) {
             }
             None => {}
         }
+        // YouTube's generated live fragments.
+        if let Some(count) = fragment.shift_remove("fragment_count") {
+            shaped.insert("fragment_count".into(), count);
+        }
         fragment.shift_remove("url");
         // Other keys (HLS encryption) are not upstream's; DASH has none.
         *fragment = shaped;

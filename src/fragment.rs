@@ -1083,6 +1083,7 @@ fn fetch_key(
         encryption: None,
         path: None,
         duration: None,
+        fragment_count: None,
     };
     let expected = validate(&response, &key_fragment, true, false)?;
     if expected.is_some_and(|length| length != 16) {

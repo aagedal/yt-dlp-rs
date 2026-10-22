@@ -7,6 +7,7 @@ pub(crate) mod comments;
 pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
+pub(crate) mod live;
 mod metadata;
 pub(crate) mod search;
 mod streams;
@@ -621,9 +622,6 @@ fn extract_clients(
     };
     // Upcoming videos have no formats yet; their playability reason is
     // reported below.
-    if live_status == Some("post_live") {
-        return Err(unsupported("post-live videos"));
-    }
     let context = streams::Context {
         client,
         video_id: id,
@@ -638,6 +636,7 @@ fn extract_clients(
         skip_player_js: false,
         skip_manifests: Default::default(),
         premium: acquired.premium,
+        live_from_start: false,
     };
     let mut solver = JsSolver {
         client,
@@ -667,6 +666,45 @@ fn extract_clients(
             crate::info_order::mark_format(&mut format, "youtube-https");
             formats.push(format);
         }
+    }
+    if live_status == Some("post_live") {
+        crate::screen::extractor_debug(&format!("{id}: Video is in Post-Live Manifestless mode"));
+    }
+    // `_needs_live_processing`, then `adjust_incomplete_format` for the
+    // live and post-live formats.
+    let needs_live_processing = live_status == Some("post_live")
+        || (live_status == Some("is_live") && context.live_from_start);
+    if matches!(live_status, Some("is_live" | "post_live")) {
+        for format in &mut formats {
+            if needs_live_processing {
+                // Post-live DASH and m3u8 manifests only have the last ~2 hours.
+                if format.extra.get("is_from_start") != Some(&Value::Bool(true)) {
+                    live::adjust_incomplete(format, "(Last 2 hours)", -10);
+                }
+            } else {
+                // Incomplete live adaptive formats have no protocol yet.
+                match format.protocol.as_deref() {
+                    None | Some("http" | "https") => {
+                        live::adjust_incomplete(format, "(incomplete)", -20);
+                    }
+                    Some("http_dash_segments") => {
+                        live::adjust_incomplete(format, "(Last 2 hours)", -10);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+    if live_status == Some("post_live") {
+        let live_start_time = acquired.player_responses.iter().find_map(|response| {
+            response
+                .pointer(
+                    "/microformat/playerMicroformatRenderer/liveBroadcastDetails/startTimestamp",
+                )
+                .and_then(Value::as_str)
+                .and_then(crate::dates::parse_iso8601)
+        });
+        live::prepare_post_live(&mut formats, live_start_time);
     }
     for dict in streams::storyboards(&acquired.player_responses, duration, id) {
         let mut format = streams::to_format(&dict, id)?;

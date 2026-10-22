@@ -3810,6 +3810,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         &yt_dlp_rs::output::render_formats_listing(&info, !args.list_formats_old),
                     )?;
                 }
+                // YouTube post-live fragment lists are lazy upstream: JSON
+                // output and downloads evaluate them, listings do not.
+                if !list_only
+                    && (args.dump_json
+                        || args.print_json
+                        || args.dump_single_json
+                        || writes_info_json
+                        || !simulate)
+                {
+                    downloader.prepare_live_fragments(&mut info)?;
+                }
                 // Upstream `process_video_result` format selection; the info
                 // dict is updated with the last selected format.
                 let mut selections = Vec::new();

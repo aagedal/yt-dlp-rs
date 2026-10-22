@@ -393,6 +393,7 @@ pub(crate) fn download(
             byte_range: None,
             path: None,
             duration: None,
+            fragment_count: None,
         });
     }
     // `_prepare_frag_download`.

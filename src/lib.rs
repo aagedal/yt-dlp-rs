@@ -1245,6 +1245,13 @@ impl YoutubeDl {
         extractor::youtube_comments(&self.client, info)
     }
 
+    /// Evaluate YouTube post-live formats' fragment lists (upstream's
+    /// `LazyList`, read by JSON output and the downloaders): one HEAD
+    /// request's `X-Head-Seqnum` bounds them.
+    pub fn prepare_live_fragments(&self, info: &mut VideoInfo) -> Result<()> {
+        extractor::youtube_live_fragments(&self.client, info)
+    }
+
     /// Fetch a playlist's pending entries (and its nested playlists') until
     /// it has `limit` entries, or all of them; entries still pending remain.
     pub fn fetch_pending(&self, playlist: &mut PlaylistInfo, limit: Option<usize>) -> Result<()> {

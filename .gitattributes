@@ -16,3 +16,4 @@
 /tests/fixtures/**/*.key binary
 /tests/fixtures/**/*.mhtml binary
 /tests/fixtures/**/*.jpg binary
+/tests/fixtures/**/*.bin binary

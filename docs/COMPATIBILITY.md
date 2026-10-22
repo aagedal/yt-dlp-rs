@@ -184,7 +184,7 @@ claimed. Accept watch URLs with one `v` parameter, short links, `/shorts/`,
 use the canonical HTTPS watch URL. Reject channels, malformed IDs and other
 paths before making a request; `/playlist` URLs and URLs containing `list=`
 belong to `youtube:tab` (see "YouTube playlists"). `/live/` is a URL shape;
-live, upcoming, and post-live player responses remain unsupported.
+live, upcoming and post-live videos are described with the formats below.
 
 The info dict follows upstream `_real_extract` after `_list_formats`, in its
 key order, over every player response, the page's meta tags and `ytInitialData`:
@@ -1135,7 +1135,8 @@ note, quality rank, source and language preferences, size, codecs, `EXT_dash`
 container, `available_at`, and the 10 MiB `http_chunk_size`. Upstream's filters
 apply:
 - **Duplicates:** stream IDs already seen are skipped.
-- **Live and OTF:** live adaptive formats and OTF streams are skipped.
+- **Live and OTF:** live adaptive formats (`targetDurationSec`) are skipped
+  unless the video is post-live; OTF streams are skipped.
 - **PO tokens:** formats whose client policy requires a GVS PO token are skipped
   with upstream's message; no token providers exist.
 - **SABR:** formats missing a URL get upstream's SABR warning.
@@ -1166,8 +1167,22 @@ warning, and like `_wait_for_video` the extractor waits until the release time
 already be available according to extracted info` otherwise), showing `[wait]
 Remaining time until next attempt: HH:MM:SS` (one line with `--no-progress`),
 then extracts again (`[wait] Wait period ended; Re-extracting data`; on Unix
-Ctrl+C retries at once). `--live-from-start` DASH formats and post-live videos
-remain unsupported.
+Ctrl+C retries at once). A live video's remaining HTTPS formats get upstream's
+`(incomplete)` note and -20 preference.
+
+A post-live video (`isPostLiveDvr`, `live_status` `post_live`, `was_live`)
+follows `_needs_live_processing`: its HLS manifest (and its DASH manifest
+beyond two hours) is skipped, other formats get the `(Last 2 hours)` note and
+-10 preference, and `-v` shows `Video is in Post-Live Manifestless mode`. Each
+live adaptive format keeps `target_duration`, `_itag` and `_client` and
+becomes an `http_dash_segments` format (`dash` in `-F`) whose fragments, like
+upstream's lazy list, are generated only when JSON output or a download reads
+them: one HEAD request's `X-Head-Seqnum` (shared by the formats within five
+seconds) gives `&sq=0` up to that number minus two, each with
+`fragment_count`. A stream that started over 120 hours ago gets upstream's
+`Starting download from the last 120 hours` warning and only the fragments of
+those hours. A failed HEAD request leaves no fragments. The `youtube-post-live`
+fixture compares this with pinned upstream.
 Like upstream's anonymous `_extract_player_responses`, an age-gated response
 adds the `web_embedded` client (and a "made for kids" video the
 android_vr/visionos clients cannot play adds it given a JS runtime), with its

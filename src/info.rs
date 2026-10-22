@@ -258,6 +258,10 @@ pub struct Fragment {
     /// Upstream's fragment `duration` in seconds.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration: Option<f64>,
+    /// YouTube live/post-live fragments' `fragment_count` (the sequence
+    /// number the list was generated up to).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fragment_count: Option<u64>,
 }
 
 /// A direct source or finite manifest plan, with an extractor-assigned format ID.
