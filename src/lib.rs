@@ -39,6 +39,7 @@ mod match_filter;
 mod md5;
 mod merge;
 pub mod metadata_parser;
+mod mhtml;
 mod modify_chapters;
 pub mod output;
 mod playlist;
@@ -1180,6 +1181,8 @@ impl YoutubeDl {
             "f4m"
         } else if info.protocol.as_deref() == Some("ism") {
             "ism"
+        } else if info.protocol.as_deref() == Some("mhtml") {
+            "mhtml"
         } else if info
             .protocol
             .as_deref()
@@ -2637,6 +2640,21 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
+        // Upstream `MhtmlFD` (storyboards; `--test` takes the first fragment).
+        if info.protocol.as_deref() == Some("mhtml") {
+            let mut plan = info.clone();
+            if self.test {
+                plan.fragments.truncate(1);
+            }
+            return fragment::download_mhtml(
+                &self.client,
+                &plan,
+                destination.as_ref(),
+                options,
+                self.keep_fragments,
+                &mut callback,
+            );
+        }
         // A loaded HLS format reads its fragments from the playlist now.
         let refreshed = if info.fragments.is_empty() {
             self.refresh_hls(info)?
@@ -2926,6 +2944,7 @@ impl YoutubeDl {
                     let downloader = match part.protocol.as_deref() {
                         Some("http_dash_segments") => "dashsegments",
                         Some("ism") => "ism",
+                        Some("mhtml") => "mhtml",
                         _ => "hlsnative",
                     };
                     screen::screen(&format!(

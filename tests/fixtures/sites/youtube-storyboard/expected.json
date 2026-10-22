@@ -1,0 +1,56 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=StoryBoard1",
+   "args": [
+    "--no-js-runtimes",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=StoryBoard1",
+    "[youtube] StoryBoard1: Downloading webpage",
+    "[youtube] StoryBoard1: Downloading visionos player API JSON",
+    "[info] Available formats for StoryBoard1:",
+    "ID  EXT   RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC      ACODEC    ASR MORE INFO",
+    "----------------------------------------------------------------------------------------",
+    "sb1 mhtml 48x27        1    |               mhtml | images                    storyboard",
+    "sb0 mhtml 80x45        0    |               mhtml | images                    storyboard",
+    "18  mp4   640x360     30  2 |  792.00B 100k https | avc1.42001E mp4a.40.2 44k 360p"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=StoryBoard1",
+   "args": [
+    "--no-js-runtimes",
+    "-f",
+    "sb1",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=StoryBoard1",
+    "[youtube] StoryBoard1: Downloading webpage",
+    "[youtube] StoryBoard1: Downloading visionos player API JSON",
+    "[info] StoryBoard1: Downloading 1 format(s): sb1",
+    "[mhtml] Total fragments: 1",
+    "[download] Destination: StoryBoard1.mhtml"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "ERROR: unable to download video data: HTTP Error 404: Not Found"
+   ],
+   "files": {
+    "StoryBoard1.mhtml.part": 0,
+    "StoryBoard1.mhtml.ytdl": 50
+   }
+  }
+ ]
+}

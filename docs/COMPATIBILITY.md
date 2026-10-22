@@ -219,8 +219,17 @@ streaming data:
   formats' language.
 - **PO tokens:** tracks requiring a PO token are skipped.
 
-Storyboards become `sbN` `mhtml` formats with their fragments; this port cannot
-download them. Relative `dateText` values are not resolved. HTML5 media `poster` attributes become thumbnails.
+Storyboards become `sbN` `mhtml` formats with their fragments, downloaded like
+upstream's `MhtmlFD` (`[mhtml] Total fragments: N`): the MIME headers with the
+quoted-printable `Subject`, the HTML stub with upstream's stylesheet and slide
+captions, one image part per fragment (type sniffed like `imghdr`, else
+`jpeg`), a random `uuid4` hex boundary kept in the `.ytdl` `extra_state` for
+resuming, and `--test`'s single fragment. Fragment requests use `--retries`
+like upstream's HttpFD, and any other failure (such as a 404) ends the download
+with `unable to download video data`. The generator meta names this port
+(`yt-dlp-rs VERSION`) instead of upstream's version; otherwise the
+`youtube-storyboard` fixture's file is byte-identical to pinned upstream's
+(boundary aligned). This applies to Twitch's storyboards too. Relative `dateText` values are not resolved. HTML5 media `poster` attributes become thumbnails.
 Generic results follow upstream `GenericIE`: the first response's
 `Last-Modified` header becomes `timestamp` through a port of
 `unified_timestamp` (pinned `DATE_FORMATS`, `extract_timezone`,

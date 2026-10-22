@@ -4667,6 +4667,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     let downloader = match info.protocol.as_deref() {
                                         Some("http_dash_segments") => "dashsegments",
                                         Some("ism") => "ism",
+                                        Some("mhtml") => "mhtml",
                                         _ => "hlsnative",
                                     };
                                     screen!(
@@ -4839,6 +4840,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             let downloader = match stream.protocol.as_deref() {
                                                 Some("http_dash_segments") => "dashsegments",
                                                 Some("ism") => "ism",
+                                                Some("mhtml") => "mhtml",
                                                 _ => "hlsnative",
                                             };
                                             screen!(
