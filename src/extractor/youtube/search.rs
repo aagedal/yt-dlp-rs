@@ -169,10 +169,16 @@ fn search_playlist(
     extractor: &'static str,
     key: &'static str,
 ) -> Result<ExtractResult> {
-    let entries = entries
+    let mut entries = entries
         .into_iter()
         .map(entry_info)
         .collect::<Result<Vec<_>>>()?;
+    // An entry without an extractor shows the search's.
+    for entry in &mut entries {
+        if let Some(marker) = entry.extra.get_mut(crate::TRANSPARENT) {
+            marker["playlist_extractor"] = serde_json::json!([extractor, key]);
+        }
+    }
     let mut extra = Map::new();
     extra.insert(
         crate::info_order::INFO_SHAPE.into(),

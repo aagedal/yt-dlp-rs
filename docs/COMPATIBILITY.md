@@ -2136,9 +2136,22 @@ a feed redirected to the home page is an error. `youtube:clip` ports `YoutubeCli
 a `/clip/ID` page's video is extracted with the clip's ID, extractor,
 `media_type: clip`, loop section (`section_start`/`section_end`, so the
 duration is the section's and the download goes through FFmpeg) and an
-https-first format order (`youtube-clip` fixture). Grid, channel and playlist
-renderers are ported without fixture coverage; shelf, music and post
-renderers are skipped with a warning.
+https-first format order (`youtube-clip` fixture).
+
+The other `_extract_entries` renderers are ported too, with continuation pages
+dispatched by `_entries`' renderer table: a home/featured tab's shelves
+(`_shelf_entries`: the shelf's own URL as an extractor-less `url` entry, then
+its grid or expanded contents; horizontal lists are skipped like upstream's),
+grid channels and playlists, community posts (`_post_thread_entries`: the
+attached video and playlist, then the YouTube video links in the post text,
+also on `backstagePostThreadRenderer` continuation pages; an
+`itemSectionContinuation` page ends the entries, as upstream's lookup of its
+missing `contents` does), YouTube Music list items
+(`_music_reponsive_list_entry`), hashtag tiles and report history rows. With
+`--flat-playlist`, an extractor-less entry shows the playlist's extractor, and
+entries without an ID get `get_temp_id`'s. `tests/fixtures/sites/youtube-featured/`,
+`youtube-posts/` and `youtube-tab-renderers/` compare these with pinned
+upstream output.
 
 ## YouTube comments
 

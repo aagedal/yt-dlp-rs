@@ -1,0 +1,21 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/@Feat/featured",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "featured.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "TOKENFEAT"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "continuation.json"
+  }
+ ]
+}
