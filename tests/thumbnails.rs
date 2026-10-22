@@ -347,10 +347,19 @@ fn embed_thumbnail_writes_embeds_and_deletes_unless_written_explicitly() {
     );
     assert!(output.status.success(), "{}", text(&output.stderr));
     assert!(text(&output.stdout).contains("[info] Writing video thumbnail 0 to: video.jpg"));
+    // Upstream with mutagen: the `covr` atom first; this fixture's thumbnail
+    // is no image `imghdr` knows, so it falls back to FFmpeg.
     assert!(text(&output.stdout).ends_with(
-        "[EmbedThumbnail] Neither mutagen nor AtomicParsley was found. Falling back to ffmpeg\n\
+        "[EmbedThumbnail] mutagen: Adding thumbnail to \"video.mp4\"\n\
+         [EmbedThumbnail] Neither mutagen nor AtomicParsley was found. Falling back to ffmpeg\n\
          [EmbedThumbnail] ffmpeg: Adding thumbnail to \"video.mp4\"\n"
     ));
+    assert!(
+        text(&output.stderr)
+            .contains("WARNING: unable to embed using mutagen; could not determine image type\n"),
+        "{}",
+        text(&output.stderr)
+    );
     // The fake ffmpeg writes "source video" for two inputs.
     assert_eq!(
         names(directory.path()),

@@ -172,11 +172,6 @@ fn media_demuxer(ext: &str) -> Result<&'static str> {
         "mp3" => "mp3",
         "mkv" | "mka" => "matroska",
         "m4a" | "mp4" | "m4v" | "mov" => "mov",
-        "ogg" | "opus" | "flac" => {
-            return Err(failure(
-                "thumbnail embedding for ogg/opus/flac needs mutagen and is not implemented",
-            ));
-        }
         _ => {
             return Err(failure(
                 "Supported filetypes for thumbnail embedding are: mp3, mkv/mka, ogg/opus/flac, m4a/mp4/m4v/mov",
@@ -249,7 +244,9 @@ pub fn embed(
     output: &Path,
     callback: &mut dyn FnMut() -> ControlFlow<()>,
 ) -> Result<()> {
-    let demuxer = media_demuxer(ext)?;
+    // Ogg and FLAC pictures are written natively, as upstream's mutagen does.
+    let native = matches!(ext, "ogg" | "opus" | "flac");
+    let demuxer = if native { "" } else { media_demuxer(ext)? };
     let mut thumbnail = thumbnail.to_owned();
     let mut thumbnail_ext = extension(&thumbnail).to_lowercase();
     if !matches!(ext, "mkv" | "mka") && !matches!(thumbnail_ext.as_str(), "jpg" | "jpeg" | "png") {
@@ -261,6 +258,57 @@ pub fn embed(
         convert(ffmpeg, &thumbnail, &converted, "png", callback)?;
         thumbnail = converted;
         thumbnail_ext = "png".into();
+    }
+    if native {
+        crate::screen::screen(&format!(
+            "[EmbedThumbnail] mutagen: Adding thumbnail to \"{}\"",
+            display.display()
+        ));
+        let data = std::fs::read(&thumbnail)?;
+        // `f'image/{imghdr.what(thumbnail_filename)}'`.
+        let mime = format!(
+            "image/{}",
+            crate::cover_art::image_type(&data).unwrap_or("None")
+        );
+        let picture = crate::cover_art::picture(&data, &mime, crate::cover_art::image_size(&data));
+        let file = std::fs::read(media)?;
+        let embedded = if ext == "flac" {
+            crate::cover_art::embed_flac(&file, &picture)?
+        } else {
+            crate::cover_art::embed_ogg(&file, &picture)?
+        };
+        std::fs::write(output, embedded)?;
+        return Ok(());
+    }
+    // Upstream's first method for MP4: mutagen's `covr` atom; a failure is a
+    // warning before the FFmpeg fallback.
+    if matches!(ext, "m4a" | "mp4" | "m4v" | "mov") {
+        crate::screen::screen(&format!(
+            "[EmbedThumbnail] mutagen: Adding thumbnail to \"{}\"",
+            display.display()
+        ));
+        let data = std::fs::read(&thumbnail)?;
+        let embedded = match crate::cover_art::image_type(&data) {
+            Some("jpeg") => crate::cover_art::embed_mp4(&std::fs::read(media)?, &data, 13),
+            Some("png") => crate::cover_art::embed_mp4(&std::fs::read(media)?, &data, 14),
+            _ => Err(Error::Postprocess("could not determine image type".into())),
+        };
+        match embedded {
+            Ok(embedded) => {
+                std::fs::write(output, embedded)?;
+                return Ok(());
+            }
+            Err(error) => {
+                let text = match error {
+                    Error::Postprocess(text) => text,
+                    error => error.to_string(),
+                };
+                let reason = text
+                    .strip_prefix("Unable to embed the thumbnail: ")
+                    .unwrap_or(&text);
+                crate::screen::warning(&format!("unable to embed using mutagen; {reason}"));
+            }
+        }
     }
     let started = Instant::now();
     let (executable, directory) = tool(ffmpeg, b"ffmpeg version ", started, callback)?;
@@ -333,7 +381,7 @@ pub fn embed(
             ]);
         }
         _ => {
-            // Upstream's FFmpeg fallback (mutagen/AtomicParsley are not used).
+            // Upstream's FFmpeg fallback after mutagen (AtomicParsley is not used).
             crate::screen::screen(
                 "[EmbedThumbnail] Neither mutagen nor AtomicParsley was found. Falling back to ffmpeg",
             );

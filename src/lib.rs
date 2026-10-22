@@ -7,6 +7,7 @@ pub mod codecs;
 pub mod config;
 pub mod container;
 mod cookies;
+mod cover_art;
 mod crypto;
 mod dash;
 pub mod dates;
