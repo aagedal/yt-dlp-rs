@@ -13,6 +13,7 @@ mod streams;
 mod subs;
 pub(crate) mod tab;
 mod watch;
+mod watched;
 use super::{Extractor, direct};
 use crate::{Error, Result, StreamKind, VideoInfo};
 use reqwest::blocking::Client;
@@ -37,6 +38,8 @@ pub struct YoutubeOptions {
     pub wait_for_video: Option<WaitForVideo>,
     /// Upstream `getcomments`: extract comments in [`crate::YoutubeDl::post_extract`].
     pub get_comments: bool,
+    /// Upstream `mark_watched` (only when cookies were passed).
+    pub mark_watched: bool,
 }
 
 /// `--wait-for-video MIN[-MAX]` seconds, and whether progress lines are shown.
@@ -50,6 +53,7 @@ pub struct WaitForVideo {
 struct ConfiguredYoutube {
     include_translated_subtitles: bool,
     get_comments: bool,
+    mark_watched: bool,
     no_playlist: bool,
     wait_for_video: Option<WaitForVideo>,
     runtime: Option<challenge::Runtime>,
@@ -64,6 +68,7 @@ impl Youtube {
             no_playlist: options.no_playlist,
             wait_for_video: options.wait_for_video,
             get_comments: options.get_comments,
+            mark_watched: options.mark_watched,
             runtime: options.js_runtime.map(challenge::Runtime::new),
         }
     }
@@ -687,6 +692,7 @@ enum Extraction {
     },
 }
 
+#[allow(clippy::too_many_arguments)]
 fn extract_clients(
     client: &Client,
     url: &Url,
@@ -695,6 +701,7 @@ fn extract_clients(
     translated_manual: bool,
     wait: bool,
     get_comments: bool,
+    mark_watched: bool,
 ) -> Result<Extraction> {
     let shown = EXTRACTING_AS
         .with(|shown| shown.borrow_mut().take())
@@ -1120,6 +1127,10 @@ fn extract_clients(
             _ => crate::metadata_parser::set_field(&mut info, &key, value),
         }
     }
+    // `self.mark_watched(video_id, player_responses)`.
+    if mark_watched {
+        watched::mark(client, id, &acquired.player_responses);
+    }
     Ok(Extraction::Video(Box::new(crate::info_order::mark_info(
         info,
         &format!("youtube;{}", keys.join(",")),
@@ -1136,7 +1147,7 @@ impl Extractor for Youtube {
         };
         crate::screen::set_extractor("youtube");
         initialize();
-        match extract_clients(client, url, &id, None, false, false, false)? {
+        match extract_clients(client, url, &id, None, false, false, false, false)? {
             Extraction::Video(info) => Ok(Some(*info)),
             Extraction::Trailer(trailer) => Ok(Some(follow_video(&trailer)?)),
             Extraction::Wait { .. } => unreachable!("waiting is not configured"),
@@ -1163,6 +1174,7 @@ impl Extractor for ConfiguredYoutube {
                 self.include_translated_subtitles,
                 self.wait_for_video.is_some(),
                 self.get_comments,
+                self.mark_watched,
             )? {
                 Extraction::Video(info) => return Ok(Some(*info)),
                 Extraction::Trailer(trailer) => return Ok(Some(follow_video(&trailer)?)),

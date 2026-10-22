@@ -2435,6 +2435,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
             get_comments: args.write_comments,
+            // `mark_watched` runs only when cookies were passed.
+            mark_watched: args.mark_watched
+                && (args.cookies.is_some() || browser_cookies.is_some()),
             // `--wait-for-video MIN[-MAX]` (validated with the other options).
             wait_for_video: args
                 .wait_for_video
