@@ -99,7 +99,7 @@ mod vocaroo;
 mod weibo;
 mod xspf;
 mod yfanefa;
-mod youtube;
+pub(crate) mod youtube;
 mod zhihu;
 
 pub use angel::{Angel, suitable as angel_suitable};

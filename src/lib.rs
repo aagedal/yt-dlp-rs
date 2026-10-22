@@ -523,6 +523,8 @@ impl YoutubeDl {
         let cookies = http.cookies.unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        extractor::youtube::live_chat::SKIP_DOWNLOAD
+            .store(youtube.skip_download, std::sync::atomic::Ordering::Relaxed);
         if let Ok(mut agent) = extractor::USER_AGENT.write() {
             *agent = headers
                 .get(reqwest::header::USER_AGENT)
@@ -2708,6 +2710,19 @@ impl YoutubeDl {
             return download::download_hls_subtitle(
                 &self.client,
                 info,
+                subtitle,
+                destination.as_ref(),
+                options,
+                &mut callback,
+            );
+        }
+        if let Some(protocol @ ("youtube_live_chat" | "youtube_live_chat_replay")) =
+            subtitle.protocol.as_deref()
+        {
+            report_invoking("youtube_live_chat", &[&subtitle.url]);
+            return extractor::youtube::live_chat::download(
+                &self.client,
+                protocol == "youtube_live_chat",
                 subtitle,
                 destination.as_ref(),
                 options,

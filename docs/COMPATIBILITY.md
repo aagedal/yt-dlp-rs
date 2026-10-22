@@ -199,8 +199,12 @@ key order, over every player response, the page's meta tags and `ytInitialData`:
   subtitles.
 - **URL times:** the URL's `t`/`start`/`end` times.
 - **Music metadata:** from YouTube Music's auto-generated descriptions.
-- **From the initial data:** the comment count, a live chat replay track,
-  chapters and heatmap.
+- **From the initial data:** the comment count, a `live_chat` track,
+  chapters and heatmap. `--sub-langs live_chat` downloads it like upstream's
+  `YoutubeLiveChatFD`: the watch page's chat continuation, the chat page, then
+  `live_chat/get_live_chat_replay` (or `get_live_chat` for a live stream,
+  until it ends) InnerTube pages, written as one JSON line per action
+  (`tests/fixtures/sites/youtube-live-chat/`, compared byte for byte).
 - **From the primary info renderer:** location or series/season/episode,
   like counts and the view count.
 - **From the secondary info renderer:** the channel, followers, collaborators

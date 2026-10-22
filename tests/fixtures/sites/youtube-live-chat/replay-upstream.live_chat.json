@@ -1,0 +1,4 @@
+{"replayChatItemAction": {"actions": [{"addChatItemAction": {"item": {"liveChatTextMessageRenderer": {"id": "MSG1", "message": {"runs": [{"text": "hello 1 ä"}]}, "authorName": {"simpleText": "Someone"}}}, "clientId": "C1"}}], "videoOffsetTimeMsec": "1500"}}
+{"replayChatItemAction": {"actions": [{"addChatItemAction": {"item": {"liveChatTextMessageRenderer": {"id": "MSG2", "message": {"runs": [{"text": "hello 2 ä"}]}, "authorName": {"simpleText": "Someone"}}}, "clientId": "C2"}}], "videoOffsetTimeMsec": "7200"}}
+{"addLiveChatTickerItemAction": {"item": {}}}
+{"replayChatItemAction": {"actions": [{"addChatItemAction": {"item": {"liveChatTextMessageRenderer": {"id": "MSG3", "message": {"runs": [{"text": "hello 3 ä"}]}, "authorName": {"simpleText": "Someone"}}}, "clientId": "C3"}}], "videoOffsetTimeMsec": "9000"}}

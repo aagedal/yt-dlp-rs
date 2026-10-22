@@ -2434,6 +2434,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }),
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
+            skip_download: args.skip_download,
             get_comments: args.write_comments,
             // `--wait-for-video MIN[-MAX]` (validated with the other options).
             wait_for_video: args
@@ -3797,7 +3798,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     emit_listing(&mut stdout, &yt_dlp_rs::output::render_thumbnails(&info))?;
                 }
                 if args.list_subs {
-                    if !info.automatic_captions.is_empty() {
+                    // `'automatic_captions' in info_dict`: YouTube always sets it.
+                    if !info.automatic_captions.is_empty() || info.extractor_key == "Youtube" {
                         emit_listing(&mut stdout, &render_automatic_captions(&info))?;
                     }
                     emit_listing(&mut stdout, &render_subtitles(&info))?;

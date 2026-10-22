@@ -7,6 +7,7 @@ pub(crate) mod comments;
 pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
+pub(crate) mod live_chat;
 mod metadata;
 pub(crate) mod search;
 mod streams;
@@ -33,6 +34,9 @@ pub struct YoutubeOptions {
     pub include_translated_subtitles: bool,
     /// Upstream `noplaylist`: a watch URL with `list=` downloads just its video.
     pub no_playlist: bool,
+    /// Upstream `skip_download`: a live chat download does not warn that it
+    /// runs until the stream ends.
+    pub skip_download: bool,
     /// Upstream `wait_for_video`: wait for a video without formats.
     pub wait_for_video: Option<WaitForVideo>,
     /// Upstream `getcomments`: extract comments in [`crate::YoutubeDl::post_extract`].

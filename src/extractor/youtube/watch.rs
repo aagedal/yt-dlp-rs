@@ -556,28 +556,15 @@ fn auth_headers(
     headers
 }
 
-/// Upstream's default `extractor_retries` for InnerTube requests.
-const API_RETRIES: u32 = 3;
-
-/// `_call_api`: one POST to `/youtubei/v1/ENDPOINT` with the client's
-/// `generate_api_headers`.
-#[allow(clippy::too_many_arguments)]
-fn call_api(
-    client: &Client,
+/// `generate_api_headers`: the client's name, version, origin, visitor ID,
+/// User-Agent and cookie authentication headers.
+fn generate_api_headers(
     config: &innertube::ClientConfig,
-    endpoint: &str,
-    extractor: &'static str,
-    item_id: &str,
     player_ytcfg: &Map<String, Value>,
     visitor: Option<&str>,
-    query: Map<String, Value>,
-    note: &str,
     session: Session,
-) -> Result<Value> {
+) -> Vec<(&'static str, String)> {
     let default = default_ytcfg(config);
-    let mut body = Map::new();
-    body.insert("context".into(), api_context(player_ytcfg, &default));
-    body.extend(query);
     let origin = format!("https://{}", config.host);
     let name_id = ytcfg_value(player_ytcfg, &default, &["INNERTUBE_CONTEXT_CLIENT_NAME"])
         .map(|value| match value {
@@ -615,6 +602,41 @@ fn call_api(
         headers.push(("User-Agent", user_agent));
     }
     headers.extend(auth_headers(player_ytcfg, session, &origin));
+    headers
+}
+
+/// [`generate_api_headers`] for the web client and the page's own `ytcfg`.
+pub(super) fn web_api_headers(
+    ytcfg: &Map<String, Value>,
+    visitor: Option<&str>,
+) -> Vec<(&'static str, String)> {
+    let config = innertube::client(WEBPAGE_CLIENT).expect("the web client is defined");
+    generate_api_headers(config, ytcfg, visitor, Session::default())
+}
+
+/// Upstream's default `extractor_retries` for InnerTube requests.
+const API_RETRIES: u32 = 3;
+
+/// `_call_api`: one POST to `/youtubei/v1/ENDPOINT` with the client's
+/// `generate_api_headers`.
+#[allow(clippy::too_many_arguments)]
+fn call_api(
+    client: &Client,
+    config: &innertube::ClientConfig,
+    endpoint: &str,
+    extractor: &'static str,
+    item_id: &str,
+    player_ytcfg: &Map<String, Value>,
+    visitor: Option<&str>,
+    query: Map<String, Value>,
+    note: &str,
+    session: Session,
+) -> Result<Value> {
+    let default = default_ytcfg(config);
+    let mut body = Map::new();
+    body.insert("context".into(), api_context(player_ytcfg, &default));
+    body.extend(query);
+    let mut headers = generate_api_headers(config, player_ytcfg, visitor, session);
     headers.push(("content-type", "application/json".into()));
     let url = Url::parse(&format!(
         "https://{}/youtubei/v1/{endpoint}?prettyPrint=false",

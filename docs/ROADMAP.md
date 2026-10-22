@@ -20,11 +20,17 @@ tractable for future agents.
 - `src/extractor/`: independent extractors, generic fallback last.
 - `src/extractor/html5.rs`: generic response dispatch and progressive HTML5 source parsing;
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
-- `src/extractor/youtube.rs`: narrow watch-page/player response extraction,
-  direct standalone/separate formats with opt-in offline signature/n solving.
-- `src/extractor/youtube/captions.rs`: bounded manual/ASR caption metadata and translation URL planning with WEB subtitle token policy.
-- `src/extractor/youtube/client.rs`: isolated anonymous WEB player API request
-  fallback and explicit token-exempt itag 18 policy.
+- `src/extractor/youtube.rs`: URL recognition, options, session cookies and
+  dispatch to the YouTube submodules.
+- `src/extractor/youtube/watch.rs`: watch page, `ytcfg` and per-client player API
+  acquisition (`_extract_player_responses`), age-gate fallback and playability.
+- `src/extractor/youtube/innertube.rs`: upstream `INNERTUBE_CLIENTS`, generated from the pinned checkout.
+- `src/extractor/youtube/streams.rs`: HTTPS, HLS and DASH formats with PO token
+  policies and signature/`n` challenges (`challenge.rs`, `challenge/runtime.rs`).
+- `src/extractor/youtube/dict.rs`, `metadata.rs`, `subs.rs`, `chapters.rs`: the
+  info dict in upstream key order, captions and chapters.
+- `src/extractor/youtube/tab.rs`, `search.rs`, `clip.rs`, `comments.rs`: playlists,
+  channel tabs, mixes, feeds, searches, clips and comments.
 - `src/cookies.rs`: scoped response cookies and bounded Netscape import/atomic persistence.
 - `src/http/proxy.rs`: pure explicit proxy validation and shared client routing.
 - `src/http.rs`: validated global request headers and User-Agent/Referer defaults, shared by normal and bounded player clients.
@@ -165,8 +171,8 @@ remain outside the current result contract.
    comparison; see the [signature slice](../upstream/notes/youtube-signature-extraction.md).
    Direct adaptive audio/video types, bounded pair/fallback selection and explicit
    FFmpeg stream-copy merging are implemented with local fixtures; see the
-   [adaptive slice](../upstream/notes/youtube-adaptive-merge.md). Fragmented direct
-   adaptive delivery and DASH discovery remain open. Initial/anonymous WEB HLS
+   [adaptive slice](../upstream/notes/youtube-adaptive-merge.md). DASH manifests
+   and `dashy` fragmented HTTPS formats followed. Initial/anonymous WEB HLS
    discovery now feeds native finite VOD plans, with path-n solving shared with
    direct URL challenges. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
