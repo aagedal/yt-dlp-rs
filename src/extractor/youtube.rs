@@ -3,6 +3,7 @@
 mod challenge;
 mod chapters;
 pub(crate) mod clip;
+pub(crate) mod comments;
 pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
@@ -34,6 +35,8 @@ pub struct YoutubeOptions {
     pub no_playlist: bool,
     /// Upstream `wait_for_video`: wait for a video without formats.
     pub wait_for_video: Option<WaitForVideo>,
+    /// Upstream `getcomments`: extract comments in [`crate::YoutubeDl::post_extract`].
+    pub get_comments: bool,
 }
 
 /// `--wait-for-video MIN[-MAX]` seconds, and whether progress lines are shown.
@@ -46,6 +49,7 @@ pub struct WaitForVideo {
 
 struct ConfiguredYoutube {
     include_translated_subtitles: bool,
+    get_comments: bool,
     no_playlist: bool,
     wait_for_video: Option<WaitForVideo>,
     runtime: Option<challenge::Runtime>,
@@ -59,6 +63,7 @@ impl Youtube {
             include_translated_subtitles: options.include_translated_subtitles,
             no_playlist: options.no_playlist,
             wait_for_video: options.wait_for_video,
+            get_comments: options.get_comments,
             runtime: options.js_runtime.map(challenge::Runtime::new),
         }
     }
@@ -548,6 +553,7 @@ fn extract_clients(
     runtime: Option<&challenge::Runtime>,
     translated_manual: bool,
     wait: bool,
+    get_comments: bool,
 ) -> Result<Extraction> {
     crate::screen::screen(&format!(
         "[youtube] Extracting URL: {}",
@@ -556,6 +562,19 @@ fn extract_clients(
     // `is_music_url`.
     let music_url = url.host_str() == Some("music.youtube.com");
     let acquired = watch::acquire(client, id, runtime, music_url)?;
+    // `info['__post_extractor'] = self.extract_comments(...)`.
+    if get_comments {
+        let contents = acquired
+            .initial_data
+            .as_ref()
+            .and_then(|data| {
+                data.pointer("/contents/twoColumnWatchNextResults/results/results/contents")
+            })
+            .filter(|contents| contents.is_array())
+            .cloned()
+            .unwrap_or_else(|| Value::Array(Vec::new()));
+        comments::defer(id, acquired.webpage_ytcfg.clone(), contents);
+    }
     let first = |key: &str| {
         acquired
             .player_responses
@@ -869,7 +888,7 @@ impl Extractor for Youtube {
         };
         crate::screen::set_extractor("youtube");
         initialize();
-        match extract_clients(client, url, &id, None, false, false)? {
+        match extract_clients(client, url, &id, None, false, false, false)? {
             Extraction::Video(info) => Ok(Some(*info)),
             Extraction::Wait { .. } => unreachable!("waiting is not configured"),
         }
@@ -894,6 +913,7 @@ impl Extractor for ConfiguredYoutube {
                 self.runtime.as_ref(),
                 self.include_translated_subtitles,
                 self.wait_for_video.is_some(),
+                self.get_comments,
             )? {
                 Extraction::Video(info) => return Ok(Some(*info)),
                 Extraction::Wait {

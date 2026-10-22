@@ -135,7 +135,8 @@ Supported today:
   the selection needs them; a channel URL without a tab is a playlist of its
   tab playlists, as upstream. `ytsearch[N|all]:QUERY` and `/results?search_query=`
   searches work like upstream's `youtube:search`, and `/clip/` URLs download
-  their section like upstream's `youtube:clip`. Comments, PO token
+  their section like upstream's `youtube:clip`. `--write-comments`
+  extracts comments and replies like upstream. PO token
   providers and upstream's remaining metadata fields are not
   supported yet.
 - Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
@@ -301,7 +302,7 @@ Supported today:
   and interrupted HTML reads restart extraction before any output is emitted,
   using the same bounded `Retry-After` policy.
 
-Other HTML pages, YouTube comments, broader DASH/HLS delivery, site playlists, broader
+Other HTML pages, broader DASH/HLS delivery, site playlists, broader
 authentication, persistent resume, broader subtitle acquisition and plugins
 remain unimplemented (`--use-postprocessor` supports only `Exec`). Format selection
 and sorting follow ports of upstream's `build_format_selector` and `FormatSorter`.

@@ -11,12 +11,13 @@ fn normalize(text: &str) -> Vec<String> {
     let epoch = regex::Regex::new(r#""epoch": \d+, "#).unwrap();
     // YouTube's `available_at` is the extraction time (plus any ad wait).
     let available = regex::Regex::new(r#""available_at": \d+"#).unwrap();
+    // A comment's timestamp is estimated from its relative `_time_text`.
+    let comment_time = regex::Regex::new(r#"("_time_text": "[^"]*", "timestamp": )\d+"#).unwrap();
     text.lines()
         .map(|line| {
             let line = epoch.replace(line, "");
-            available
-                .replace_all(&line, r#""available_at": 0"#)
-                .into_owned()
+            let line = available.replace_all(&line, r#""available_at": 0"#);
+            comment_time.replace_all(&line, "${1}0").into_owned()
         })
         .collect()
 }

@@ -1236,6 +1236,12 @@ impl YoutubeDl {
         self
     }
 
+    /// Upstream `post_extract`: what the extractor left for after the match
+    /// filters (YouTube's comments with `getcomments`).
+    pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
+        extractor::youtube_comments(&self.client, info)
+    }
+
     /// Fetch a playlist's pending entries (and its nested playlists') until
     /// it has `limit` entries, or all of them; entries still pending remain.
     pub fn fetch_pending(&self, playlist: &mut PlaylistInfo, limit: Option<usize>) -> Result<()> {

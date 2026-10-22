@@ -16,6 +16,10 @@ class SiteCaptureTests(unittest.TestCase):
     def test_normalization_zeroes_youtube_available_at(self):
         self.assertEqual(normalize('{"available_at": 1792534964}'), '{"available_at": 0}')
 
+    def test_normalization_zeroes_relative_comment_timestamps(self):
+        line = '{"_time_text": "2 days ago", "timestamp": 1792454400, "x": {"timestamp": 5}}'
+        self.assertEqual(normalize(line), '{"_time_text": "2 days ago", "timestamp": 0, "x": {"timestamp": 5}}')
+
     def test_routes_can_ignore_random_query_parameters(self):
         self.assertEqual(strip_query('https://h/p.m3u8?a=1&p=42&b=2', ['p']), 'https://h/p.m3u8?a=1&b=2')
         self.assertEqual(strip_query('https://h/p?p=1', ['p']), 'https://h/p')

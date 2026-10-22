@@ -128,7 +128,7 @@ fn count_at(value: Option<&Value>) -> Option<i64> {
 }
 
 /// `^(UC[\w-]{22})$`.
-fn ucid_or_none(value: &str) -> Option<String> {
+pub(super) fn ucid_or_none(value: &str) -> Option<String> {
     let rest = value.strip_prefix("UC")?;
     (rest.chars().count() == 22
         && rest
@@ -1094,7 +1094,7 @@ fn rich_entries(item: &Value, entries: &mut Vec<Map<String, Value>>) {
 }
 
 /// `_build_api_continuation_query`.
-fn continuation_query(token: &str, ctp: Option<&str>) -> Map<String, Value> {
+pub(super) fn continuation_query(token: &str, ctp: Option<&str>) -> Map<String, Value> {
     let mut query = Map::new();
     query.insert("continuation".into(), token.into());
     if let Some(ctp) = ctp.filter(|ctp| !ctp.is_empty()) {
@@ -1104,7 +1104,7 @@ fn continuation_query(token: &str, ctp: Option<&str>) -> Map<String, Value> {
 }
 
 /// `_extract_continuation`.
-fn extract_continuation(renderer: &Value) -> Option<Map<String, Value>> {
+pub(super) fn extract_continuation(renderer: &Value) -> Option<Map<String, Value>> {
     let next = at(renderer, &["continuations", "0", "nextContinuationData"])
         .or_else(|| at(renderer, &["continuation", "reloadContinuationData"]))
         .filter(|value| value.is_object());

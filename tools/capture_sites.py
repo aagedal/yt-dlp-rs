@@ -30,6 +30,8 @@ def normalize(text):
     text = re.sub(r'"epoch": \d+, ', '', text)
     # YouTube's `available_at` is the extraction time (plus any ad wait).
     text = re.sub(r'"available_at": \d+', '"available_at": 0', text)
+    # A comment's timestamp is estimated from its relative `_time_text`.
+    text = re.sub(r'("_time_text": "[^"]*", "timestamp": )\d+', r'\g<1>0', text)
     return re.sub(r', "_version": \{[^{}]*\}', '', text)
 
 

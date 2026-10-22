@@ -222,6 +222,7 @@ pub use weibo::{
 };
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::clip::YoutubeClip;
+pub(crate) use youtube::comments::post_extract as youtube_comments;
 pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
 pub use youtube::search::{
     suitable as youtube_search_suitable, url_suitable as youtube_search_url_suitable,

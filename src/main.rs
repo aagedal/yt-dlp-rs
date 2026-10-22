@@ -1632,10 +1632,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         match key.as_str() {
             "generic" => {}
             "youtube" => {
-                for name in values
-                    .keys()
-                    .filter(|name| !matches!(name.as_str(), "player_client" | "player_skip"))
-                {
+                for name in values.keys().filter(|name| {
+                    !matches!(
+                        name.as_str(),
+                        "player_client" | "player_skip" | "max_comments" | "comment_sort"
+                    )
+                }) {
                     warning!(
                         "WARNING: extractor argument youtube:{name} is not supported natively and is ignored"
                     );
@@ -2432,6 +2434,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             }),
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
+            get_comments: args.write_comments,
             // `--wait-for-video MIN[-MAX]` (validated with the other options).
             wait_for_video: args
                 .wait_for_video
@@ -3752,10 +3755,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 // every format first.
                 downloader.check_all_formats(&mut info);
                 // Upstream `process_video_result`: `pre_process` and
-                // `after_filter` processors precede listing and selection.
-                for when in ["pre_process", "after_filter"] {
-                    run_metadata_parser(&metadata_actions, when, &mut info, &template_options)?;
-                }
+                // `after_filter` processors precede listing and selection,
+                // with `post_extract` (comments) between them.
+                run_metadata_parser(
+                    &metadata_actions,
+                    "pre_process",
+                    &mut info,
+                    &template_options,
+                )?;
+                downloader.post_extract(&mut info)?;
+                run_metadata_parser(
+                    &metadata_actions,
+                    "after_filter",
+                    &mut info,
+                    &template_options,
+                )?;
                 // Upstream `SponsorBlockPP`, the last `after_filter` processor.
                 // Its failure is a deferred preprocessing error, like upstream's
                 // `__pending_error`.
@@ -3915,14 +3929,6 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 for (selected, section) in runs {
                     let mut info = yt_dlp_rs::sections::apply(selected, section.as_ref());
                     (|| -> Result<(), Box<dyn std::error::Error>> {
-                        // Upstream's YouTube `_get_comments` uses its comment API.
-                        if args.write_comments && info.extractor_key == "Youtube" {
-                            return Err(yt_dlp_rs::Error::Reported(
-                                "YouTube comment extraction (--write-comments) is not supported natively"
-                                    .into(),
-                            )
-                            .into());
-                        }
                         // Upstream `process_info` rechecks complete metadata before counting.
                         if !match_filters.is_empty() {
                             match match_filters.check(&info, false)? {

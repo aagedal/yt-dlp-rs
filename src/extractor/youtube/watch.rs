@@ -630,7 +630,12 @@ fn call_api(
     // 429 (intermittent 5xx, sometimes 404) are retried.
     let mut retries = 0;
     let response = loop {
-        crate::screen::screen(&format!("[{extractor}] {item_id}: {note}"));
+        // `_download_json(video_id=None)` names no item.
+        if item_id.is_empty() {
+            crate::screen::screen(&format!("[{extractor}] {note}"));
+        } else {
+            crate::screen::screen(&format!("[{extractor}] {item_id}: {note}"));
+        }
         match super::super::direct::post(client, &url, &headers, body.clone()) {
             Ok(response) => break response,
             Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
@@ -897,6 +902,8 @@ pub(super) struct Acquired {
     pub player_url: Option<String>,
     /// `is_premium_subscriber`.
     pub premium: bool,
+    /// The webpage's `ytcfg` (`master_ytcfg`).
+    pub webpage_ytcfg: Map<String, Value>,
 }
 
 /// `_initial_extract` for an anonymous session.
@@ -1142,6 +1149,7 @@ pub(super) fn acquire(
         player_responses,
         player_url: player_url_found,
         premium,
+        webpage_ytcfg,
     })
 }
 

@@ -100,7 +100,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | Format filter fields | Besides the original fields, `[...]` filters accept upstream's `acodec`, `vcodec`, `container`, `protocol`, `dynamic_range`, `resolution`, `video_ext`, `audio_ext`, `format` (string operators, `!`, `?`) and numeric `fps`, `vbr`, `asr`, `audio_channels`; other keys remain an explicit unsupported-field error (upstream looks up any key) |
 | `--list-extractors`, `--extractor-descriptions` | Upstream `print_extractor_information` for this port's extractors only (`html5`, `youtube`, `generic`, with upstream's descriptions); command-line URLs are listed under the extractor that would take them (`generic` takes the rest). Upstream lists about 1800 extractors |
 | `--color [STREAM:]POLICY`, `--no-colors`, `--no-colours` | Validated like upstream (`"X" is not a valid color policy`); output is never colored, so `always` differs from upstream on capable terminals |
-| `--write-comments`, `--get-comments`, `--no-write-comments`, `--no-get-comments` | Upstream `getcomments`: without `--write-info-json`/`--no-write-info-json` or `--embed-info-json`, and unless `-j` prints the JSON, it implies `--write-info-json`. The generic extractor has no comments, so nothing else changes; YouTube comment extraction (its comment API) is an explicit error |
+| `--write-comments`, `--get-comments`, `--no-write-comments`, `--no-get-comments` | Upstream `getcomments`: without `--write-info-json`/`--no-write-info-json` or `--embed-info-json`, and unless `-j` prints the JSON, it implies `--write-info-json`. The generic extractor has no comments, so nothing else changes; YouTube watch pages extract comments as described under [YouTube comments](#youtube-comments) |
 | `--clean-info-json`, `--clean-infojson`, `--no-clean-info-json`, `--no-clean-infojson` | Upstream `clean_infojson`: the default drops `None` values, `__` keys and the private bookkeeping keys; `--no-clean-info-json` writes every represented field |
 | `-N N`, `--concurrent-fragments N` | Upstream concurrent fragment downloads for HLS and DASH: N workers fetch fragments (each with its own `--fragment-retries` and skip handling) into private files beside the output, appended in order; progress reports completed fragments and in-flight bytes. Upstream's `concurrent fragments "N" must be positive` validation. Screen lines match sequential downloads apart from progress timing |
 | `--downloader [PROTO:]NAME`, `--external-downloader`, `--downloader-args NAME:ARGS`, `--hls-prefer-native`, `--hls-prefer-ffmpeg` | Upstream `get_suitable_downloader` for `native` and `ffmpeg`/`avconv` (names or paths) per simplified protocol (`http`, `ftp`, `m3u8`, `dash`, `rtmp`, `default`): FFmpegFD downloads whole formats (merging all-FFmpeg pairs directly, without HlsFD's manifest line or fixups) when ffmpeg is available, otherwise the native downloaders run like upstream's `can_download` fallback. FFmpeg `--downloader-args` follow `_configuration_args` (`ffmpeg_iN`/`ffmpeg_i` before each input, `ffmpeg_oN`/`ffmpeg_o`/`ffmpeg`/`default` before the output); unnamed arguments print upstream's `External Downloader arguments given without specifying name` warning and move to the default downloader's key. `curl`, `wget`, `aria2c`, `axel` and `httpie` (names or paths, matched like `get_external_downloader`) run upstream's `CurlFD`/`WgetFD`/`Aria2cFD`/`AxelFD`/`HttpieFD` command lines for whole-file `http`/`https`/`ftp`/`ftps` formats without `hls_aes` or extractor query arguments, including merged formats' separate streams. That covers the headers, cookies (curl reads them from stdin; wget and aria2c load the `--cookies` file or an announced temporary file; axel and httpie get a `Cookie` header), `continuedl`, `noprogress`, `--limit-rate`, retries, `--max-filesize`, `--source-address`, `--proxy`, `--no-check-certificates`, aria2c's `--remote-time` from `--mtime`/`--no-mtime`, and `_configuration_args` keys. The tool writes the `.part` file, which is then renamed and reported like `ExternalFD.real_download`; a non-zero exit reports the captured stderr and `ERROR: NAME exited with code N`. An executable that cannot be run, other protocols and stdout output use the native downloaders, like upstream's `can_download`. As in the pinned upstream, no external downloader supports the `m3u8_frag_urls`/`dash_frag_urls` protocols, so HLS and DASH formats keep the native fragment downloaders. Unknown names are upstream's `No such [PROTO ]external downloader "NAME"` usage error. The HLS preference flags only affect the `m3u8` protocol, which no supported extractor produces |
@@ -220,8 +220,7 @@ streaming data:
 - **PO tokens:** tracks requiring a PO token are skipped.
 
 Storyboards become `sbN` `mhtml` formats with their fragments; this port cannot
-download them. Relative `dateText` values are not resolved, and comments are not
-extracted. HTML5 media `poster` attributes become thumbnails.
+download them. Relative `dateText` values are not resolved. HTML5 media `poster` attributes become thumbnails.
 Generic results follow upstream `GenericIE`: the first response's
 `Last-Modified` header becomes `timestamp` through a port of
 `unified_timestamp` (pinned `DATE_FORMATS`, `extract_timezone`,
@@ -2140,6 +2139,30 @@ duration is the section's and the download goes through FFmpeg) and an
 https-first format order (`youtube-clip` fixture). Grid, channel and playlist
 renderers are ported without fixture coverage; shelf, music and post
 renderers are skipped with a warning.
+
+## YouTube comments
+
+With `--write-comments`, a YouTube watch page's comments are fetched after
+extraction, before the `after_filter` metadata parsers, like upstream's
+`_get_comments` (`youtube-comments` fixture):
+- **Section:** the `comment-item-section` continuation, or upstream's
+  generated continuation when the page has none; a `messageRenderer` before any
+  comment warns `ID: Youtube said: MESSAGE` once and leaves `comments` and
+  `comment_count` null.
+- **Header:** `Downloading ~N comments` from the header's count and
+  `Sorting comments by newest first` (or `top`) through the sort menu's
+  continuation.
+- **Pages:** `Downloading comment API JSON page N (COUNT/~TOTAL)` and indented
+  reply thread pages, with upstream's retries for incomplete responses.
+- **Comments:** both the `commentViewModel` entity format (from
+  `frameworkUpdates` mutations) and the older `commentRenderer`, with
+  upstream's fields and key order, `parent`, pinned/hearted/uploader/verified
+  flags and the timestamp resolved from the relative time text.
+- **Limits:** `youtube:max_comments=MAX,PARENTS,REPLIES,PER_THREAD` and
+  `youtube:comment_sort=top|new`, ending with `Extracted N comments`.
+
+Saved upstream output zeroes the `timestamp` that follows a comment's
+`_time_text`, since it is relative to the capture time.
 
 ## YouTube search
 
