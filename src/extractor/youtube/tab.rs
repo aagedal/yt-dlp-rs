@@ -1944,6 +1944,24 @@ const EXTRACTOR_RETRIES: u32 = 3;
 /// `ytInitialData` and `ytcfg`, else the `navigation/resolve_url` endpoint's
 /// browse response.
 fn page_data(client: &Client, url: &Url, item_id: &str) -> Result<(Value, Map<String, Value>)> {
+    let (data, ytcfg) = extract_webpage(client, url, item_id, NAME, false)?;
+    if let Some(data) = data.filter(|data| data.as_object().is_some_and(|data| !data.is_empty())) {
+        return Ok((data, ytcfg));
+    }
+    let data = tab_endpoint(client, "web", url.as_str(), item_id, &ytcfg)?;
+    Ok((data, ytcfg))
+}
+
+/// `_extract_webpage(url, item_id, fatal)`: the page's `ytInitialData` (after
+/// its alerts, retrying incomplete data) and `ytcfg`. Without `fatal`, errors
+/// are warnings and leave no data.
+pub(super) fn extract_webpage(
+    client: &Client,
+    url: &Url,
+    item_id: &str,
+    extractor: &'static str,
+    fatal: bool,
+) -> Result<(Option<Value>, Map<String, Value>)> {
     static INITIAL_DATA: LazyLock<Regex> = LazyLock::new(|| {
         Regex::new(r#"(?:window\s*\[\s*["']ytInitialData["']\s*\]|ytInitialData)\s*="#).unwrap()
     });
@@ -1956,57 +1974,57 @@ fn page_data(client: &Client, url: &Url, item_id: &str) -> Result<(Value, Map<St
         .iter()
         .any(|key| truthy(data.get(*key)))
     };
-    // `_extract_webpage(fatal=False)`: incomplete data is retried; errors
-    // become warnings.
     let mut ytcfg = Map::new();
-    let mut data: Option<Value> = None;
     for attempt in 1..=EXTRACTOR_RETRIES + 1 {
-        let webpage = match super::super::download_webpage(client, url, NAME, item_id) {
+        let webpage = match super::super::download_webpage(client, url, extractor, item_id) {
             Ok(webpage) => webpage,
+            Err(error) if fatal => return Err(error),
             Err(error) => {
                 crate::screen::warning(&crate::upstream_error_text(&error));
-                break;
+                return Ok((None, ytcfg));
             }
         };
         ytcfg = watch::extract_ytcfg(&webpage);
         let found = match super::super::search_json(&INITIAL_DATA, &webpage, false) {
             Some(Some(found)) => found,
             Some(None) => {
-                crate::screen::warning(&format!("[{NAME}] {item_id}: Failed to parse JSON"));
+                crate::screen::warning(&format!("[{extractor}] {item_id}: Failed to parse JSON"));
                 json!({})
             }
             None => {
-                super::super::search_warning(NAME, "yt initial data");
+                super::super::search_warning(extractor, "yt initial data");
                 json!({})
             }
         };
         if let Err(error) = report_alerts(&found, None, false) {
-            crate::screen::warning(&format!("[{NAME}] {error}"));
-            data = Some(found);
-            break;
+            if fatal {
+                return Err(Error::Reported(format!("[{extractor}] {item_id}: {error}")));
+            }
+            crate::screen::warning(&format!("[{extractor}] {error}"));
+            return Ok((Some(found), ytcfg));
         }
         if complete(&found) {
-            data = Some(found);
-            break;
+            return Ok((Some(found), ytcfg));
         }
         const INCOMPLETE: &str = "Incomplete yt initial data received";
         if attempt <= EXTRACTOR_RETRIES {
             crate::screen::warning(&format!(
-                "[{NAME}] {INCOMPLETE}. Retrying ({attempt}/{EXTRACTOR_RETRIES})..."
+                "[{extractor}] {INCOMPLETE}. Retrying ({attempt}/{EXTRACTOR_RETRIES})..."
             ));
+        } else if fatal {
+            return Err(Error::Reported(format!(
+                "[{extractor}] {item_id}: {INCOMPLETE}; {}",
+                crate::BUG_REPORTS_MESSAGE
+            )));
         } else {
             // The unexpected error's message carries the bug report hint.
             crate::screen::warning(&format!(
-                "[{NAME}] {INCOMPLETE}; {}. Giving up after {EXTRACTOR_RETRIES} retries",
+                "[{extractor}] {INCOMPLETE}; {}. Giving up after {EXTRACTOR_RETRIES} retries",
                 crate::BUG_REPORTS_MESSAGE
             ));
         }
     }
-    if let Some(data) = data.filter(|data| data.as_object().is_some_and(|data| !data.is_empty())) {
-        return Ok((data, ytcfg));
-    }
-    let data = tab_endpoint(client, "web", url.as_str(), item_id, &ytcfg)?;
-    Ok((data, ytcfg))
+    Ok((None, ytcfg))
 }
 
 /// `_extract_tab_endpoint(url, item_id, ytcfg, default_client=CLIENT)`: the

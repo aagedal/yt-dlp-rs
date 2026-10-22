@@ -118,6 +118,17 @@ pub struct PendingEntries {
     pub(crate) state: serde_json::Value,
 }
 
+/// A list field's `None` (`chapters: null`) as an empty list; the `null`
+/// itself stays in `extra` (see `metadata_parser::set_field`), so every
+/// later field update still round-trips the typed dict.
+fn null_as_empty<'de, D, T>(deserializer: D) -> std::result::Result<Vec<T>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Ok(Option::<Vec<T>>::deserialize(deserializer)?.unwrap_or_default())
+}
+
 /// A nested playlist's placeholder entry: its index in `nested`.
 pub const NESTED_INDEX: &str = "__yt_dlp_rs_nested_index";
 
@@ -456,7 +467,11 @@ pub struct Metadata {
     pub description: Option<String>,
     /// Upstream `chapters` (`start_time`, `title`; `end_time` and missing
     /// titles are filled by `process_video_result`).
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "null_as_empty",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub chapters: Vec<Chapter>,
     /// Upstream `start_time`/`end_time` (YouTube `t`/`start`/`end` URL
     /// parameters), used by `--download-sections "*from-url"`.
@@ -505,7 +520,11 @@ pub struct Metadata {
     /// The best thumbnail known to exist, as upstream extractors report it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub thumbnail: Option<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "null_as_empty",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub thumbnails: Vec<Thumbnail>,
 }
 

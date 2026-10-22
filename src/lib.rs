@@ -578,6 +578,7 @@ impl YoutubeDl {
                     no_playlist: youtube.no_playlist,
                 }),
                 Box::new(extractor::YoutubeSearchUrl),
+                Box::new(extractor::YoutubeClip),
                 Box::new(extractor::Reddit),
                 Box::new(extractor::Twitter),
                 Box::new(extractor::TwitterCard),
@@ -1569,6 +1570,13 @@ impl YoutubeDl {
                 entry.title = format!("{} video #{}", entry.extractor.replace(':', "-"), entry.id);
             } else {
                 entry.fulltitle = Some(entry.title.clone());
+            }
+            // `process_video_result`: a section's own duration.
+            if let (Some(start), Some(end)) = (entry.section_start, entry.section_end)
+                && end.as_f64() != 0.0
+            {
+                let seconds = ((end.as_f64() - start.as_f64()) * 1000.0).round() / 1000.0;
+                entry.metadata.duration = Some(crate::PyNumber::Float(seconds));
             }
             // `process_video_result`: `raise_no_formats` for a result
             // without formats.

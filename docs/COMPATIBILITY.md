@@ -2127,7 +2127,11 @@ URL`, `/browse/VL…` becomes its playlist, `/browse/UC…` its channel and an a
 `navigation/resolve_url`), and a music playlist's URL entries stay
 `music.youtube.com` URLs. Hashtag (`/hashtag/TAG`) and feed (`/feed/NAME`)
 pages are read like other tab pages (`youtube-hashtag` fixture); like upstream,
-a feed redirected to the home page is an error. Grid, channel and playlist
+a feed redirected to the home page is an error. `youtube:clip` ports `YoutubeClipIE`:
+a `/clip/ID` page's video is extracted with the clip's ID, extractor,
+`media_type: clip`, loop section (`section_start`/`section_end`, so the
+duration is the section's and the download goes through FFmpeg) and an
+https-first format order (`youtube-clip` fixture). Grid, channel and playlist
 renderers are ported without fixture coverage; shelf, music and post
 renderers are skipped with a warning.
 

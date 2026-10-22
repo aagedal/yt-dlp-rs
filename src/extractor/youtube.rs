@@ -2,6 +2,7 @@
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
 mod challenge;
 mod chapters;
+pub(crate) mod clip;
 pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
