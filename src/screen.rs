@@ -180,6 +180,27 @@ pub(crate) fn warning_once(text: &str) {
     warning(text);
 }
 
+/// The messages `InfoExtractor.report_warning(..., only_once=True)` has
+/// printed since the extractor's last `initialize()`.
+static IE_SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+
+/// `InfoExtractor.initialize()`: forget the extractor's `only_once` warnings.
+pub(crate) fn reset_extractor_warnings() {
+    IE_SEEN.lock().unwrap().clear();
+}
+
+/// `InfoExtractor.report_warning(..., only_once=True)`: once per
+/// extraction (unlike the downloader's [`warning_once`]).
+pub(crate) fn extractor_warning_once(text: &str) {
+    let mut seen = IE_SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    warning(text);
+}
+
 pub(crate) fn warning(text: &str) {
     if let Some(sink) = SINK.get() {
         sink(Message::Warning(text));

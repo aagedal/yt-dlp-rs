@@ -1,0 +1,191 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=MicroTitle1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "micro-title.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"MicroTitle1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "micro-title-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=InitTitle01&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "init-title.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"InitTitle01\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "init-title-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=WasLive0001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "was-live.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"WasLive0001\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "was-live-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=GeoBlock001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "geo1.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"GeoBlock001\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "geo1-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=GeoBlock002&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "geo2.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"GeoBlock002\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "geo2-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=GeoBlock003&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "geo3.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"GeoBlock003\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "geo3-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=TrailerVid1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "trailer.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"TrailerVid1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "trailer-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=TrailerTgt1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "trailer-target.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"TrailerTgt1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "trailer-target-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NewHlsVid01&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "new-hls.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"NewHlsVid01\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "new-hls-visionos.json"
+  },
+  {
+   "url": "https://manifest.googlevideo.test/api/manifest/hls_variant/id/NewHlsVid01/file/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

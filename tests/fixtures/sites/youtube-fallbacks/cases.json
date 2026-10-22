@@ -1,0 +1,12 @@
+[
+ {"url": "https://www.youtube.com/watch?v=MicroTitle1", "args": ["--no-js-runtimes", "-j"]},
+ {"url": "https://www.youtube.com/watch?v=InitTitle01", "args": ["--no-js-runtimes", "-j"]},
+ {"url": "https://www.youtube.com/watch?v=WasLive0001", "args": ["--no-js-runtimes", "-j"]},
+ {"url": "https://www.youtube.com/watch?v=GeoBlock001", "args": ["--no-js-runtimes", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=GeoBlock002", "args": ["--no-js-runtimes", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=GeoBlock003", "args": ["--no-js-runtimes", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=TrailerVid1", "args": ["--no-js-runtimes", "-j"]},
+ {"url": "https://www.youtube.com/watch?v=TrailerVid1", "args": ["--no-js-runtimes", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=TrailerVid1", "args": ["--no-js-runtimes", "--print", "%(id)s|%(title)s|%(webpage_url)s|%(original_url)s|%(extractor)s"]},
+ {"url": "https://www.youtube.com/watch?v=NewHlsVid01", "args": ["--no-js-runtimes", "-F"]}
+]

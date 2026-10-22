@@ -741,7 +741,7 @@ fn requested_clients(session: &ClientSelection) -> Vec<&'static str> {
         }
     }
     if requested.is_empty() && excluded.is_empty() && defaults == DEFAULT_JSLESS_CLIENTS {
-        crate::screen::warning_once(&format!(
+        crate::screen::extractor_warning_once(&format!(
             "[youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  {EJS_WIKI_URL}  for details on installing one"
         ));
     }
@@ -756,7 +756,7 @@ fn requested_clients(session: &ClientSelection) -> Vec<&'static str> {
         requested.retain(|name| {
             let supported = innertube::client(name).is_some_and(|config| config.supports_cookies);
             if !supported {
-                crate::screen::warning_once(&format!(
+                crate::screen::extractor_warning_once(&format!(
                     "[youtube] Skipping client \"{name}\" since it does not support cookies"
                 ));
             }
