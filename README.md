@@ -107,7 +107,9 @@ Supported today:
   posts (hosted videos, text-post videos and followed links), X/Twitter posts
   (GraphQL with a guest token; videos, multi-video playlists, cards), TikTok
   videos (webpage data, the page's JS challenge, short links), Instagram
-  posts and reels (logged out; carousels as playlists), Facebook videos
+  posts and reels (logged out, or logged in with cookies; carousels as
+  playlists, inline DASH), stories, highlights, tag and user pages and
+  `instagram://` links, Facebook videos
   (relay data with DASH, progressive URLs and captions), Vimeo player and
   clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
   Bandcamp tracks, Rumble videos, Kick VODs, clips and live channels, Bluesky

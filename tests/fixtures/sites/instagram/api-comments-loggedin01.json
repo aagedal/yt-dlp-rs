@@ -1,0 +1,1 @@
+{"comments": [{"pk": "18000000000000001", "text": "First!", "created_at": 1700000500, "comment_like_count": 2, "user": {"username": "fan1", "pk": "991", "profile_pic_url": "https://scontent.cdninstagram.com/v/fan1.jpg"}}, {"pk": "18000000000000002", "text": "Nice", "created_at": 1700000600, "user": {"username": "fan2", "pk": 992}}], "comment_count": 2, "status": "ok"}

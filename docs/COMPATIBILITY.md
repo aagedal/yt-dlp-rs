@@ -860,9 +860,30 @@ prefetched `xig_polaris_media` (a login redirect, private long shortcodes and
 an empty response are upstream's errors). `_extract_product` gives the
 `video_versions` formats, reversed image candidates, duration, the post's
 user, caption, timestamp, counts and comments, and a carousel's videos as a
-playlist. Inline DASH manifests (`video_dash_manifest`) are not parsed (the
-progressive versions are used), and logged-in extraction through the media
-info API, stories, user and tag pages are not supported.
+playlist (an entry without video formats is reported and the others
+continue, like upstream). An inline `video_dash_manifest` adds upstream's
+`dash-ID` formats when every representation has an absolute direct
+`BaseURL` (its `SegmentBase` index is not read, as upstream; they are plain
+HTTPS formats without a manifest URL); other inline manifests are an error
+rather than a guess. With a `sessionid` cookie (`--cookies`), the media info
+API (`Downloading video info`, with the `instagram:app_id` extractor
+argument's API host) gives the product instead; a response redirected to the
+login page is upstream's `cookies are no longer valid` warning, the cookie is
+cleared and the logged-out path follows. Logged in, `--write-comments` reads
+the comments API after the match filters (`Downloading comments info`,
+non-fatal), replacing `comment_count`; comments of logged-in carousels
+(upstream shares one generator between the entries) are an error.
+`instagram://media?id=PK` (`InstagramIOS`) follows its `/tv/` post.
+Stories and highlights (`instagram.com/stories/USER[/ID]`,
+`instagram:story`) read the page's `"user":` JSON, then the
+`feed/reels_media` API (a missing user or reel is upstream's login error);
+each item with formats is an entry with the reel's uploader, and a user's
+story ID is a playlist unless `--no-playlist` picks that item. Tag pages
+(`explore/tags/TAG`, `instagram:tag`) and user pages (`instagram:user`,
+marked broken upstream) read the page's `sharedData` and its GIS-signed
+GraphQL timeline pages (trying upstream's signature templates on `403`) as
+`url` entries of the video nodes; all pages are fetched before processing,
+so a page error ends the extraction instead of upstream's partial playlist.
 `tests/fixtures/sites/instagram/` is compared with pinned upstream output.
 
 JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal

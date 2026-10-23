@@ -1268,7 +1268,16 @@ pub(crate) fn fill_filesize_approx(formats: &mut [VideoFormat], duration: Option
                 .and_then(serde_json::Value::as_f64)
                 .is_some_and(|size| size != 0.0)
         };
-        if (manifests || !format.extra.contains_key("manifest_url"))
+        // `not format.get('manifest_url')`: an inline manifest's is `None`.
+        let manifest = format
+            .extra
+            .get("manifest_url")
+            .is_some_and(|url| match url {
+                serde_json::Value::Null => false,
+                serde_json::Value::String(url) => !url.is_empty(),
+                _ => true,
+            });
+        if (manifests || !manifest)
             && format.filesize.is_none_or(|size| size == 0)
             && !sized(format.extra.get("filesize_approx"))
             && let (Some(tbr), Some(duration)) = (format.tbr, duration)

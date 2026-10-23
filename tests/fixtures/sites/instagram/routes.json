@@ -63,6 +63,171 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom-insta"
+  },
+  {
+   "url": "https://www.instagram.com/api/v1/web/get_ruling_for_content/?content_type=MEDIA&target_id=61557343501081909",
+   "body": "{\"status\": \"ok\"}",
+   "headers": {
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/p/DashPost01",
+   "body_file": "dash.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/api/v1/media/209560351885393205/info/",
+   "body_file": "api-info-loggedin01.json",
+   "headers": {
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/api/v1/media/209560351885393205/comments/?can_support_threading=true&permalink_enabled=false",
+   "body_file": "api-comments-loggedin01.json",
+   "headers": {
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/api/v1/media/43539060779781429/info/",
+   "body_file": "api-info-caroulog01.json",
+   "headers": {
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/api/v1/media/482584233761418119/info/",
+   "status": 302,
+   "headers": {
+    "Location": "https://www.instagram.com/accounts/login/?next=%2Fapi%2Fv1%2Fmedia%2F482584233761418119%2Finfo%2F"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/accounts/login/?next=%2Fapi%2Fv1%2Fmedia%2F482584233761418119%2Finfo%2F",
+   "status": 403,
+   "body": "<html>login</html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/stories/highlights/18090946048123978/",
+   "body_file": "story-highlight.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/api/v1/feed/reels_media/?reel_ids=highlight:18090946048123978",
+   "body_file": "api-reels-highlight.json",
+   "headers": {
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/stories/naomipq/3570766765028588805/",
+   "body_file": "story-user.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/stories/naomipq",
+   "body_file": "story-user.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/api/v1/feed/reels_media/?reel_ids=2815873",
+   "body_file": "api-reels-user.json",
+   "headers": {
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/stories/lockeduser/",
+   "body_file": "story-locked.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/stories/nouser/",
+   "body_file": "story-none.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://instagram.com/porsche",
+   "body_file": "user.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://instagram.com/explore/tags/lolcats",
+   "body_file": "tag.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/graphql/query/?query_hash=f92f56d47dc7a55b606908374b43a314&variables=%7B%22first%22%3A+12%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22lolcats%22%7D",
+   "request_headers": {
+    "X-Instagram-GIS": "bd61bbdb0e5f4859ff7cd2a23f6161de"
+   },
+   "body_file": "graphql-tag-1.json",
+   "headers": {
+    "Content-Type": "application/json"
+   }
+  },
+  {
+   "url": "https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables=%7B%22first%22%3A+12%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%222815873%22%7D",
+   "request_headers": {
+    "X-Instagram-GIS": "f7743cb2364e798badb1975a4a8ee5b9"
+   },
+   "status": 403,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": \"forbidden\"}"
+  },
+  {
+   "url": "https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables=%7B%22first%22%3A+12%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%222815873%22%7D",
+   "request_headers": {
+    "X-Instagram-GIS": "9ea2c52e35b621a5daa890b928acde1f"
+   },
+   "status": 403,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": \"forbidden\"}"
+  },
+  {
+   "url": "https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables=%7B%22first%22%3A+12%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%222815873%22%7D",
+   "request_headers": {
+    "X-Instagram-GIS": "2b0495dea205ea5683747c867ab61d93"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "graphql-user-1.json"
+  },
+  {
+   "url": "https://www.instagram.com/graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables=%7B%22first%22%3A+12%2C+%22after%22%3A+%22CURSOR1%22%2C+%22id%22%3A+%222815873%22%7D",
+   "request_headers": {
+    "X-Instagram-GIS": "40a07c325c4eeeffdb8948101596215d"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "graphql-user-2.json"
   }
  ]
 }

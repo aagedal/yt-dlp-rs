@@ -94,6 +94,360 @@
    "files": {
     "aye83DjauH.mp4": 18
    }
+  },
+  {
+   "url": "https://www.instagram.com/reel/DashPost01/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"DashPost01\", \"title\": \"Video by naomipq\", \"description\": \"Reel with a DASH manifest\", \"channel\": \"naomipq\", \"uploader_id\": \"2815873\", \"uploader\": \"Naomi Q\", \"timestamp\": 1661529231, \"view_count\": 1000, \"like_count\": 42, \"comment_count\": 0, \"http_headers\": {\"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"format_id\": \"dash-1003a\", \"manifest_url\": null, \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 70.0, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.5\", \"dynamic_range\": null, \"url\": \"https://scontent.cdninstagram.com/v/dash-audio.mp4?efg=a1&oe=1\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 70.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 76536, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format\": \"dash-1003a - audio only (DASH audio)\"}, {\"format_id\": \"dash-1002v\", \"manifest_url\": null, \"ext\": \"mp4\", \"width\": 480, \"height\": 854, \"tbr\": 603.0, \"asr\": null, \"fps\": 30, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4D401E\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://scontent.cdninstagram.com/v/dash-480.mp4?efg=v2&oe=1\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 603.0, \"resolution\": \"480x854\", \"aspect_ratio\": 0.56, \"filesize_approx\": 659305, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format\": \"dash-1002v - 480x854 (DASH video)\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v2-720.mp4?efg=z\", \"width\": 720, \"height\": 1280, \"vcodec\": \"avc1.4D401F\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"2\", \"format\": \"2 - 720x1280\"}, {\"format_id\": \"dash-1001v\", \"manifest_url\": null, \"ext\": \"mp4\", \"width\": 720, \"height\": 1280, \"tbr\": 1203.0, \"asr\": null, \"fps\": 30, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4D401F\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://scontent.cdninstagram.com/v/dash-720.mp4?efg=v1&oe=1\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1203.0, \"resolution\": \"720x1280\", \"aspect_ratio\": 0.56, \"filesize_approx\": 1315330, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format\": \"dash-1001v - 720x1280 (DASH video)\"}], \"duration\": 8.747, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/d1-720.jpg\", \"width\": 720, \"height\": 1280, \"id\": \"0\", \"resolution\": \"720x1280\"}], \"comments\": [], \"webpage_url\": \"https://www.instagram.com/reel/DashPost01/\", \"original_url\": \"https://www.instagram.com/reel/DashPost01/\", \"webpage_url_basename\": \"DashPost01\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"Instagram\", \"extractor_key\": \"Instagram\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://scontent.cdninstagram.com/v/d1-720.jpg\", \"display_id\": \"DashPost01\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"8\", \"upload_date\": \"20220826\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"requested_formats\": [{\"format_id\": \"dash-1001v\", \"manifest_url\": null, \"ext\": \"mp4\", \"width\": 720, \"height\": 1280, \"tbr\": 1203.0, \"asr\": null, \"fps\": 30, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4D401F\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://scontent.cdninstagram.com/v/dash-720.mp4?efg=v1&oe=1\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1203.0, \"resolution\": \"720x1280\", \"aspect_ratio\": 0.56, \"filesize_approx\": 1315330, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format\": \"dash-1001v - 720x1280 (DASH video)\"}, {\"format_id\": \"dash-1003a\", \"manifest_url\": null, \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 70.0, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.5\", \"dynamic_range\": null, \"url\": \"https://scontent.cdninstagram.com/v/dash-audio.mp4?efg=a1&oe=1\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 70.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 76536, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format\": \"dash-1003a - audio only (DASH audio)\"}], \"format\": \"dash-1001v - 720x1280 (DASH video)+dash-1003a - audio only (DASH audio)\", \"format_id\": \"dash-1001v+dash-1003a\", \"ext\": \"mp4\", \"protocol\": \"https+https\", \"format_note\": \"DASH video+DASH audio\", \"filesize_approx\": 1391866, \"tbr\": 1273.0, \"width\": 720, \"height\": 1280, \"resolution\": \"720x1280\", \"fps\": 30, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.4D401F\", \"vbr\": 1203.0, \"aspect_ratio\": 0.56, \"acodec\": \"mp4a.40.5\", \"abr\": 70.0, \"asr\": 44100, \"_filename\": \"Video by naomipq [DashPost01].mp4\", \"filename\": \"Video by naomipq [DashPost01].mp4\", \"__write_download_archive\": false}], \"requested_formats\": [{\"format_id\": \"dash-1001v\", \"manifest_url\": null, \"ext\": \"mp4\", \"width\": 720, \"height\": 1280, \"tbr\": 1203.0, \"asr\": null, \"fps\": 30, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4D401F\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://scontent.cdninstagram.com/v/dash-720.mp4?efg=v1&oe=1\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1203.0, \"resolution\": \"720x1280\", \"aspect_ratio\": 0.56, \"filesize_approx\": 1315330, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format\": \"dash-1001v - 720x1280 (DASH video)\"}, {\"format_id\": \"dash-1003a\", \"manifest_url\": null, \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 70.0, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.5\", \"dynamic_range\": null, \"url\": \"https://scontent.cdninstagram.com/v/dash-audio.mp4?efg=a1&oe=1\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 70.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 76536, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format\": \"dash-1003a - audio only (DASH audio)\"}], \"format\": \"dash-1001v - 720x1280 (DASH video)+dash-1003a - audio only (DASH audio)\", \"format_id\": \"dash-1001v+dash-1003a\", \"ext\": \"mp4\", \"protocol\": \"https+https\", \"language\": null, \"format_note\": \"DASH video+DASH audio\", \"filesize_approx\": 1391866, \"tbr\": 1273.0, \"width\": 720, \"height\": 1280, \"resolution\": \"720x1280\", \"fps\": 30, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.4D401F\", \"vbr\": 1203.0, \"stretched_ratio\": null, \"aspect_ratio\": 0.56, \"acodec\": \"mp4a.40.5\", \"abr\": 70.0, \"asr\": 44100, \"audio_channels\": null, \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/reel/DashPost01/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Instagram] Setting up session",
+    "[Instagram] Extracting URL: https://www.instagram.com/reel/DashPost01/",
+    "[Instagram] DashPost01: Checking post accessibility",
+    "[Instagram] DashPost01: Downloading webpage",
+    "[info] Available formats for DashPost01:",
+    "ID         EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC     ABR ASR MORE INFO",
+    "------------------------------------------------------------------------------------------------------------------",
+    "dash-1003a m4a audio only     | ≈ 74.74KiB   70k https | audio only        mp4a.40.5  70k 44k DASH audio, m4a_dash",
+    "dash-1002v mp4 480x854     30 | ≈643.85KiB  603k https | avc1.4D401E  603k video only         DASH video, mp4_dash",
+    "2          mp4 720x1280       |                  https | avc1.4D401F       unknown",
+    "dash-1001v mp4 720x1280    30 | ≈  1.25MiB 1203k https | avc1.4D401F 1203k video only         DASH video, mp4_dash"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/LoggedIn01/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"LoggedIn01\", \"title\": \"Video by naomipq\", \"description\": \"Logged-in API post\", \"channel\": \"naomipq\", \"uploader_id\": \"2815873\", \"uploader\": \"Naomi Q\", \"timestamp\": 1700000000, \"view_count\": 55, \"like_count\": 7, \"comment_count\": 3, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-480.mp4?efg=2\", \"width\": 480, \"height\": 854, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480x854\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 480x854\"}, {\"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.mp4?efg=1\", \"format_id\": \"840\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format\": \"840 - 720x1280\"}], \"duration\": 4.5, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.jpg\", \"width\": 720, \"height\": 1280, \"id\": \"0\", \"resolution\": \"720x1280\"}], \"webpage_url\": \"https://www.instagram.com/p/LoggedIn01/\", \"original_url\": \"https://www.instagram.com/p/LoggedIn01/\", \"webpage_url_basename\": \"LoggedIn01\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"Instagram\", \"extractor_key\": \"Instagram\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.jpg\", \"display_id\": \"LoggedIn01\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"4\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.mp4?efg=1\", \"format_id\": \"840\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"format\": \"840 - 720x1280\", \"_filename\": \"Video by naomipq [LoggedIn01].mp4\", \"filename\": \"Video by naomipq [LoggedIn01].mp4\", \"__write_download_archive\": false}], \"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.mp4?efg=1\", \"format_id\": \"840\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"format\": \"840 - 720x1280\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/LoggedIn01/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--write-comments",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"LoggedIn01\", \"title\": \"Video by naomipq\", \"description\": \"Logged-in API post\", \"channel\": \"naomipq\", \"uploader_id\": \"2815873\", \"uploader\": \"Naomi Q\", \"timestamp\": 1700000000, \"view_count\": 55, \"like_count\": 7, \"comment_count\": 2, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-480.mp4?efg=2\", \"width\": 480, \"height\": 854, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480x854\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 480x854\"}, {\"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.mp4?efg=1\", \"format_id\": \"840\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format\": \"840 - 720x1280\"}], \"duration\": 4.5, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.jpg\", \"width\": 720, \"height\": 1280, \"id\": \"0\", \"resolution\": \"720x1280\"}], \"webpage_url\": \"https://www.instagram.com/p/LoggedIn01/\", \"original_url\": \"https://www.instagram.com/p/LoggedIn01/\", \"webpage_url_basename\": \"LoggedIn01\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"Instagram\", \"extractor_key\": \"Instagram\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.jpg\", \"display_id\": \"LoggedIn01\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"4\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"comments\": [{\"author\": \"fan1\", \"author_id\": \"991\", \"author_thumbnail\": \"https://scontent.cdninstagram.com/v/fan1.jpg\", \"id\": \"18000000000000001\", \"text\": \"First!\", \"like_count\": 2, \"timestamp\": 1700000500}, {\"author\": \"fan2\", \"author_id\": \"992\", \"author_thumbnail\": null, \"id\": \"18000000000000002\", \"text\": \"Nice\", \"like_count\": null, \"timestamp\": 1700000600}], \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.mp4?efg=1\", \"format_id\": \"840\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"format\": \"840 - 720x1280\", \"_filename\": \"Video by naomipq [LoggedIn01].mp4\", \"filename\": \"Video by naomipq [LoggedIn01].mp4\", \"__write_download_archive\": false}], \"url\": \"https://scontent.cdninstagram.com/v/LoggedIn01-720.mp4?efg=1\", \"format_id\": \"840\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"format\": \"840 - 720x1280\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/CarouLog01/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"_type\": \"playlist\", \"id\": \"CarouLog01\", \"title\": \"Post by naomipq\", \"channel\": \"naomipq\", \"uploader_id\": \"2815873\", \"uploader\": \"Naomi Q\", \"timestamp\": 1700000100, \"like_count\": 1, \"http_headers\": {\"Referer\": \"https://www.instagram.com/\"}, \"entries\": [{\"id\": \"Cxa3\", \"title\": \"Video by naomipq\", \"channel\": \"naomipq\", \"uploader_id\": \"2815873\", \"uploader\": \"Naomi Q\", \"timestamp\": 1700000100, \"like_count\": 1, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/cl1-640.mp4?efg=1\", \"width\": 640, \"height\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.0, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 640x640\"}], \"duration\": 3.0, \"thumbnails\": [], \"comments\": null, \"playlist_count\": 2, \"playlist\": \"Post by naomipq\", \"playlist_id\": \"CarouLog01\", \"playlist_title\": \"Post by naomipq\", \"playlist_uploader\": \"Naomi Q\", \"playlist_uploader_id\": \"2815873\", \"playlist_channel\": \"naomipq\", \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.instagram.com/p/CarouLog01/\", \"n_entries\": 2, \"webpage_url\": \"https://www.instagram.com/p/CarouLog01/\", \"webpage_url_basename\": \"CarouLog01\", \"webpage_url_domain\": \"instagram.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"Instagram\", \"extractor_key\": \"Instagram\", \"playlist_autonumber\": 1, \"display_id\": \"Cxa3\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"3\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"url\": \"https://scontent.cdninstagram.com/v/cl1-640.mp4?efg=1\", \"width\": 640, \"height\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.0, \"format_id\": \"0\", \"format\": \"0 - 640x640\", \"_filename\": \"Video by naomipq [Cxa3].mp4\", \"filename\": \"Video by naomipq [Cxa3].mp4\", \"__write_download_archive\": false}], \"url\": \"https://scontent.cdninstagram.com/v/cl1-640.mp4?efg=1\", \"width\": 640, \"height\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.0, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - 640x640\"}, null], \"webpage_url\": \"https://www.instagram.com/p/CarouLog01/\", \"original_url\": \"https://www.instagram.com/p/CarouLog01/\", \"webpage_url_basename\": \"CarouLog01\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"Instagram\", \"extractor_key\": \"Instagram\", \"upload_date\": \"20231114\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: [Instagram] Cxa4: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/CarouLog01/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--skip-download",
+    "--no-progress"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[Instagram] Extracting URL: https://www.instagram.com/p/CarouLog01/",
+    "[Instagram] CarouLog01: Downloading video info",
+    "[download] Downloading playlist: Post by naomipq",
+    "[Instagram] Playlist Post by naomipq: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[info] Cxa3: Downloading 1 format(s): 0",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: Post by naomipq"
+   ],
+   "stderr": [
+    "ERROR: [Instagram] Cxa4: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/aye83DjauH/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"aye83DjauH\", \"title\": \"Video by naomipq\", \"description\": \"Sunset at the beach #summer\", \"channel\": \"naomipq\", \"uploader_id\": \"2815873\", \"uploader\": \"Naomi Q\", \"timestamp\": 1371748545, \"like_count\": 120, \"comment_count\": 2, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/v1-480.mp4?efg=y\", \"width\": 480, \"height\": 600, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480x600\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 480x600\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v1-480.mp4?efg=y\", \"width\": 480, \"height\": 600, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480x600\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"1\", \"format\": \"1 - 480x600\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v1-640.mp4?efg=x\", \"width\": 640, \"height\": 800, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x800\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"2\", \"format\": \"2 - 640x800\"}], \"duration\": 8.747, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/v1-320.jpg\", \"width\": 320, \"height\": 400, \"id\": \"0\", \"resolution\": \"320x400\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v1-640.jpg\", \"width\": 640, \"height\": 800, \"id\": \"1\", \"resolution\": \"640x800\"}], \"comments\": [{\"author\": \"fan1\", \"author_id\": \"991\", \"id\": \"17900000000000001\", \"text\": \"Lovely!\", \"timestamp\": 1371748600, \"like_count\": 3}], \"webpage_url\": \"https://www.instagram.com/p/aye83DjauH/\", \"original_url\": \"https://www.instagram.com/p/aye83DjauH/\", \"webpage_url_basename\": \"aye83DjauH\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"Instagram\", \"extractor_key\": \"Instagram\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://scontent.cdninstagram.com/v/v1-640.jpg\", \"display_id\": \"aye83DjauH\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"8\", \"upload_date\": \"20130620\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://scontent.cdninstagram.com/v/v1-640.mp4?efg=x\", \"width\": 640, \"height\": 800, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x800\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"format_id\": \"2\", \"format\": \"2 - 640x800\", \"_filename\": \"Video by naomipq [aye83DjauH].mp4\", \"filename\": \"Video by naomipq [aye83DjauH].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Instagram] The provided Instagram account cookies are no longer valid"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/LoggedIn02/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Instagram] LoggedIn02: Video info extraction failed: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "instagram://media?id=482584233761418119",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"aye83DjauH\", \"title\": \"Video by naomipq\", \"description\": \"Sunset at the beach #summer\", \"channel\": \"naomipq\", \"uploader_id\": \"2815873\", \"uploader\": \"Naomi Q\", \"timestamp\": 1371748545, \"like_count\": 120, \"comment_count\": 2, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/v1-480.mp4?efg=y\", \"width\": 480, \"height\": 600, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480x600\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 480x600\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v1-480.mp4?efg=y\", \"width\": 480, \"height\": 600, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480x600\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"1\", \"format\": \"1 - 480x600\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v1-640.mp4?efg=x\", \"width\": 640, \"height\": 800, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x800\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"2\", \"format\": \"2 - 640x800\"}], \"duration\": 8.747, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/v1-320.jpg\", \"width\": 320, \"height\": 400, \"id\": \"0\", \"resolution\": \"320x400\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v1-640.jpg\", \"width\": 640, \"height\": 800, \"id\": \"1\", \"resolution\": \"640x800\"}], \"comments\": [{\"author\": \"fan1\", \"author_id\": \"991\", \"id\": \"17900000000000001\", \"text\": \"Lovely!\", \"timestamp\": 1371748600, \"like_count\": 3}], \"original_url\": \"instagram://media?id=482584233761418119\", \"webpage_url\": \"http://instagram.com/tv/aye83DjauH\", \"webpage_url_basename\": \"aye83DjauH\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"Instagram\", \"extractor_key\": \"Instagram\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://scontent.cdninstagram.com/v/v1-640.jpg\", \"display_id\": \"aye83DjauH\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"8\", \"upload_date\": \"20130620\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://scontent.cdninstagram.com/v/v1-640.mp4?efg=x\", \"width\": 640, \"height\": 800, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x800\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"format_id\": \"2\", \"format\": \"2 - 640x800\", \"_filename\": \"Video by naomipq [aye83DjauH].mp4\", \"filename\": \"Video by naomipq [aye83DjauH].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "instagram://media?id=482584233761418119_2815873",
+   "args": [
+    "--print",
+    "%(id)s %(webpage_url)s %(original_url)s %(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "aye83DjauH http://instagram.com/tv/aye83DjauH instagram://media?id=482584233761418119_2815873 Instagram"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/stories/highlights/18090946048123978/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"18090946048123978\", \"title\": \"Rare\", \"_type\": \"playlist\", \"entries\": [{\"uploader\": \"Naomi Q\", \"uploader_id\": \"2815873\", \"id\": \"DGN6XQ9TL0B\", \"title\": \"Video by naomipq\", \"channel\": \"naomipq\", \"timestamp\": 1700001001, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/s01-360.mp4?efg=1\", \"width\": 360, \"height\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 360x640\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s01-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}], \"duration\": 15.0, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/s01-540.jpg\", \"width\": 540, \"height\": 960, \"id\": \"0\", \"resolution\": \"540x960\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s01-1080.jpg\", \"width\": 1080, \"height\": 1920, \"id\": \"1\", \"resolution\": \"1080x1920\"}], \"playlist_count\": 1, \"playlist\": \"Rare\", \"playlist_id\": \"18090946048123978\", \"playlist_title\": \"Rare\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.instagram.com/stories/highlights/18090946048123978/\", \"n_entries\": 1, \"webpage_url\": \"https://www.instagram.com/stories/highlights/18090946048123978/\", \"webpage_url_basename\": \"18090946048123978\", \"webpage_url_domain\": \"instagram.com\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"instagram:story\", \"extractor_key\": \"InstagramStory\", \"playlist_autonumber\": 1, \"thumbnail\": \"https://scontent.cdninstagram.com/v/s01-1080.jpg\", \"display_id\": \"DGN6XQ9TL0B\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"15\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"url\": \"https://scontent.cdninstagram.com/v/s01-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"format_id\": \"1\", \"format\": \"1 - 720x1280\", \"_filename\": \"Video by naomipq [DGN6XQ9TL0B].mp4\", \"filename\": \"Video by naomipq [DGN6XQ9TL0B].mp4\", \"__write_download_archive\": false}], \"url\": \"https://scontent.cdninstagram.com/v/s01-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}], \"webpage_url\": \"https://www.instagram.com/stories/highlights/18090946048123978/\", \"original_url\": \"https://www.instagram.com/stories/highlights/18090946048123978/\", \"webpage_url_basename\": \"18090946048123978\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"instagram:story\", \"extractor_key\": \"InstagramStory\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/stories/naomipq/3570766765028588805/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3570766765028588805\", \"title\": \"Story by naomipq\", \"_type\": \"playlist\", \"entries\": [{\"uploader\": \"Naomi Q (reel)\", \"uploader_id\": \"2815873\", \"id\": \"DGN6XQ9TL0F\", \"title\": \"Video by naomipq\", \"channel\": \"naomipq\", \"timestamp\": 1700001005, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/s05-360.mp4?efg=1\", \"width\": 360, \"height\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 360x640\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s05-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}], \"duration\": 15.0, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/s05-540.jpg\", \"width\": 540, \"height\": 960, \"id\": \"0\", \"resolution\": \"540x960\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s05-1080.jpg\", \"width\": 1080, \"height\": 1920, \"id\": \"1\", \"resolution\": \"1080x1920\"}], \"playlist_count\": 2, \"playlist\": \"Story by naomipq\", \"playlist_id\": \"3570766765028588805\", \"playlist_title\": \"Story by naomipq\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.instagram.com/stories/naomipq/3570766765028588805/\", \"n_entries\": 2, \"webpage_url\": \"https://www.instagram.com/stories/naomipq/3570766765028588805/\", \"webpage_url_basename\": \"3570766765028588805\", \"webpage_url_domain\": \"instagram.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"instagram:story\", \"extractor_key\": \"InstagramStory\", \"playlist_autonumber\": 1, \"thumbnail\": \"https://scontent.cdninstagram.com/v/s05-1080.jpg\", \"display_id\": \"DGN6XQ9TL0F\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"15\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"url\": \"https://scontent.cdninstagram.com/v/s05-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"format_id\": \"1\", \"format\": \"1 - 720x1280\", \"_filename\": \"Video by naomipq [DGN6XQ9TL0F].mp4\", \"filename\": \"Video by naomipq [DGN6XQ9TL0F].mp4\", \"__write_download_archive\": false}], \"url\": \"https://scontent.cdninstagram.com/v/s05-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}, {\"uploader\": \"Naomi Q (reel)\", \"uploader_id\": \"2815873\", \"id\": \"DGN6XQ9TL0G\", \"title\": \"Video by naomipq\", \"channel\": \"naomipq\", \"timestamp\": 1700001006, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/s06-360.mp4?efg=1\", \"width\": 360, \"height\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 360x640\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s06-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}], \"duration\": 15.0, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/s06-540.jpg\", \"width\": 540, \"height\": 960, \"id\": \"0\", \"resolution\": \"540x960\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s06-1080.jpg\", \"width\": 1080, \"height\": 1920, \"id\": \"1\", \"resolution\": \"1080x1920\"}], \"playlist_count\": 2, \"playlist\": \"Story by naomipq\", \"playlist_id\": \"3570766765028588805\", \"playlist_title\": \"Story by naomipq\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.instagram.com/stories/naomipq/3570766765028588805/\", \"n_entries\": 2, \"webpage_url\": \"https://www.instagram.com/stories/naomipq/3570766765028588805/\", \"webpage_url_basename\": \"3570766765028588805\", \"webpage_url_domain\": \"instagram.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"instagram:story\", \"extractor_key\": \"InstagramStory\", \"playlist_autonumber\": 2, \"thumbnail\": \"https://scontent.cdninstagram.com/v/s06-1080.jpg\", \"display_id\": \"DGN6XQ9TL0G\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"15\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"url\": \"https://scontent.cdninstagram.com/v/s06-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"format_id\": \"1\", \"format\": \"1 - 720x1280\", \"_filename\": \"Video by naomipq [DGN6XQ9TL0G].mp4\", \"filename\": \"Video by naomipq [DGN6XQ9TL0G].mp4\", \"__write_download_archive\": false}], \"url\": \"https://scontent.cdninstagram.com/v/s06-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}], \"webpage_url\": \"https://www.instagram.com/stories/naomipq/3570766765028588805/\", \"original_url\": \"https://www.instagram.com/stories/naomipq/3570766765028588805/\", \"webpage_url_basename\": \"3570766765028588805\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"instagram:story\", \"extractor_key\": \"InstagramStory\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/stories/naomipq/3570766765028588805/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--skip-download",
+    "--no-progress"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[instagram:story] Extracting URL: https://www.instagram.com/stories/naomipq/3570766765028588805/",
+    "[instagram:story] 3570766765028588805: Downloading webpage",
+    "[instagram:story] 3570766765028588805: Downloading JSON metadata",
+    "[instagram:story] Downloading playlist naomipq - add --no-playlist to download just the video 3570766765028588805",
+    "[download] Downloading playlist: Story by naomipq",
+    "[instagram:story] Playlist Story by naomipq: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[info] DGN6XQ9TL0F: Downloading 1 format(s): 1",
+    "[download] Downloading item 2 of 2",
+    "[info] DGN6XQ9TL0G: Downloading 1 format(s): 1",
+    "[download] Finished downloading playlist: Story by naomipq"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/stories/naomipq/3570766765028588805/",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--no-playlist",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"uploader\": \"Naomi Q (reel)\", \"uploader_id\": \"2815873\", \"id\": \"DGN6XQ9TL0F\", \"title\": \"Video by naomipq\", \"channel\": \"naomipq\", \"timestamp\": 1700001005, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/s05-360.mp4?efg=1\", \"width\": 360, \"height\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 360x640\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s05-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}], \"duration\": 15.0, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/s05-540.jpg\", \"width\": 540, \"height\": 960, \"id\": \"0\", \"resolution\": \"540x960\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s05-1080.jpg\", \"width\": 1080, \"height\": 1920, \"id\": \"1\", \"resolution\": \"1080x1920\"}], \"webpage_url\": \"https://www.instagram.com/stories/naomipq/3570766765028588805/\", \"original_url\": \"https://www.instagram.com/stories/naomipq/3570766765028588805/\", \"webpage_url_basename\": \"3570766765028588805\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"instagram:story\", \"extractor_key\": \"InstagramStory\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://scontent.cdninstagram.com/v/s05-1080.jpg\", \"display_id\": \"DGN6XQ9TL0F\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"15\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://scontent.cdninstagram.com/v/s05-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"format_id\": \"1\", \"format\": \"1 - 720x1280\", \"_filename\": \"Video by naomipq [DGN6XQ9TL0F].mp4\", \"filename\": \"Video by naomipq [DGN6XQ9TL0F].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/stories/naomipq",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Story by naomipq\", \"_type\": \"playlist\", \"entries\": [{\"uploader\": \"Naomi Q (reel)\", \"uploader_id\": \"2815873\", \"id\": \"DGN6XQ9TL0F\", \"title\": \"Video by naomipq\", \"channel\": \"naomipq\", \"timestamp\": 1700001005, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/s05-360.mp4?efg=1\", \"width\": 360, \"height\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 360x640\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s05-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}], \"duration\": 15.0, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/s05-540.jpg\", \"width\": 540, \"height\": 960, \"id\": \"0\", \"resolution\": \"540x960\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s05-1080.jpg\", \"width\": 1080, \"height\": 1920, \"id\": \"1\", \"resolution\": \"1080x1920\"}], \"playlist_count\": 2, \"playlist\": \"Story by naomipq\", \"playlist_id\": null, \"playlist_title\": \"Story by naomipq\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.instagram.com/stories/naomipq\", \"n_entries\": 2, \"webpage_url\": \"https://www.instagram.com/stories/naomipq\", \"webpage_url_basename\": \"naomipq\", \"webpage_url_domain\": \"instagram.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"instagram:story\", \"extractor_key\": \"InstagramStory\", \"playlist_autonumber\": 1, \"thumbnail\": \"https://scontent.cdninstagram.com/v/s05-1080.jpg\", \"display_id\": \"DGN6XQ9TL0F\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"15\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"url\": \"https://scontent.cdninstagram.com/v/s05-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"format_id\": \"1\", \"format\": \"1 - 720x1280\", \"_filename\": \"Video by naomipq [DGN6XQ9TL0F].mp4\", \"filename\": \"Video by naomipq [DGN6XQ9TL0F].mp4\", \"__write_download_archive\": false}], \"url\": \"https://scontent.cdninstagram.com/v/s05-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}, {\"uploader\": \"Naomi Q (reel)\", \"uploader_id\": \"2815873\", \"id\": \"DGN6XQ9TL0G\", \"title\": \"Video by naomipq\", \"channel\": \"naomipq\", \"timestamp\": 1700001006, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/s06-360.mp4?efg=1\", \"width\": 360, \"height\": 640, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360x640\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 360x640\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s06-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}], \"duration\": 15.0, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/s06-540.jpg\", \"width\": 540, \"height\": 960, \"id\": \"0\", \"resolution\": \"540x960\"}, {\"url\": \"https://scontent.cdninstagram.com/v/s06-1080.jpg\", \"width\": 1080, \"height\": 1920, \"id\": \"1\", \"resolution\": \"1080x1920\"}], \"playlist_count\": 2, \"playlist\": \"Story by naomipq\", \"playlist_id\": null, \"playlist_title\": \"Story by naomipq\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.instagram.com/stories/naomipq\", \"n_entries\": 2, \"webpage_url\": \"https://www.instagram.com/stories/naomipq\", \"webpage_url_basename\": \"naomipq\", \"webpage_url_domain\": \"instagram.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"instagram:story\", \"extractor_key\": \"InstagramStory\", \"playlist_autonumber\": 2, \"thumbnail\": \"https://scontent.cdninstagram.com/v/s06-1080.jpg\", \"display_id\": \"DGN6XQ9TL0G\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"15\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"url\": \"https://scontent.cdninstagram.com/v/s06-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"format_id\": \"1\", \"format\": \"1 - 720x1280\", \"_filename\": \"Video by naomipq [DGN6XQ9TL0G].mp4\", \"filename\": \"Video by naomipq [DGN6XQ9TL0G].mp4\", \"__write_download_archive\": false}], \"url\": \"https://scontent.cdninstagram.com/v/s06-720.mp4?efg=1\", \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"format_id\": \"1\", \"format\": \"1 - 720x1280\"}], \"webpage_url\": \"https://www.instagram.com/stories/naomipq\", \"original_url\": \"https://www.instagram.com/stories/naomipq\", \"webpage_url_basename\": \"naomipq\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"instagram:story\", \"extractor_key\": \"InstagramStory\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/stories/lockeduser/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [instagram:story] You need to log in to access this content. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/stories/nouser/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [instagram:story] unable to extract user info; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [instagram:story] This content is unreachable. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/stories/highlights/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [instagram:story] Input URL is missing a highlight ID"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://instagram.com/porsche",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"porsche\", \"title\": \"porsche\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Instagram\", \"id\": \"aye83DjauH\", \"url\": \"https://instagram.com/p/aye83DjauH\", \"title\": null, \"description\": \"Caption of aye83DjauH\", \"thumbnail\": \"https://scontent.cdninstagram.com/v/aye83DjauH.jpg\", \"duration\": 8.747, \"timestamp\": 1371748545, \"view_count\": 321, \"comment_count\": 4, \"like_count\": 9, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"Instagram\", \"id\": \"SideCar001\", \"url\": \"https://instagram.com/p/SideCar001\", \"title\": \"Sidecar title\", \"description\": \"Caption of SideCar001\", \"thumbnail\": \"https://scontent.cdninstagram.com/v/t.jpg\", \"duration\": null, \"timestamp\": 1371748545, \"view_count\": 321, \"comment_count\": 2, \"like_count\": 9, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"Instagram\", \"id\": \"Chunk8-jurw\", \"url\": \"https://instagram.com/p/Chunk8-jurw\", \"title\": null, \"description\": \"Caption of Chunk8-jurw\", \"thumbnail\": \"https://scontent.cdninstagram.com/v/Chunk8-jurw.jpg\", \"duration\": 5.016, \"timestamp\": 1371748545, \"view_count\": 321, \"comment_count\": 4, \"like_count\": 77, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://instagram.com/porsche\", \"original_url\": \"https://instagram.com/porsche\", \"webpage_url_basename\": \"porsche\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"instagram:user\", \"extractor_key\": \"InstagramUser\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://instagram.com/porsche",
+   "args": [
+    "--playlist-items",
+    "1",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"aye83DjauH\", \"title\": \"Video by naomipq\", \"description\": \"Sunset at the beach #summer\", \"channel\": \"naomipq\", \"uploader_id\": \"2815873\", \"uploader\": \"Naomi Q\", \"timestamp\": 1371748545, \"like_count\": 120, \"comment_count\": 2, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"formats\": [{\"url\": \"https://scontent.cdninstagram.com/v/v1-480.mp4?efg=y\", \"width\": 480, \"height\": 600, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480x600\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"0\", \"format\": \"0 - 480x600\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v1-480.mp4?efg=y\", \"width\": 480, \"height\": 600, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480x600\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"1\", \"format\": \"1 - 480x600\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v1-640.mp4?efg=x\", \"width\": 640, \"height\": 800, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x800\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.instagram.com/\"}, \"format_id\": \"2\", \"format\": \"2 - 640x800\"}], \"duration\": 8.747, \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/v1-320.jpg\", \"width\": 320, \"height\": 400, \"id\": \"0\", \"resolution\": \"320x400\"}, {\"url\": \"https://scontent.cdninstagram.com/v/v1-640.jpg\", \"width\": 640, \"height\": 800, \"id\": \"1\", \"resolution\": \"640x800\"}], \"comments\": [{\"author\": \"fan1\", \"author_id\": \"991\", \"id\": \"17900000000000001\", \"text\": \"Lovely!\", \"timestamp\": 1371748600, \"like_count\": 3}], \"webpage_url\": \"https://instagram.com/p/aye83DjauH\", \"original_url\": \"https://instagram.com/p/aye83DjauH\", \"webpage_url_basename\": \"aye83DjauH\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"Instagram\", \"extractor_key\": \"Instagram\", \"playlist_count\": null, \"playlist\": \"porsche\", \"playlist_id\": \"porsche\", \"playlist_title\": \"porsche\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://instagram.com/porsche\", \"n_entries\": 1, \"playlist_index\": 1, \"__last_playlist_index\": 1, \"playlist_autonumber\": 1, \"thumbnail\": \"https://scontent.cdninstagram.com/v/v1-640.jpg\", \"display_id\": \"aye83DjauH\", \"fulltitle\": \"Video by naomipq\", \"duration_string\": \"8\", \"upload_date\": \"20130620\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://scontent.cdninstagram.com/v/v1-640.mp4?efg=x\", \"width\": 640, \"height\": 800, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x800\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.8, \"filesize_approx\": null, \"format_id\": \"2\", \"format\": \"2 - 640x800\", \"_filename\": \"Video by naomipq [aye83DjauH].mp4\", \"filename\": \"Video by naomipq [aye83DjauH].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://instagram.com/explore/tags/lolcats",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"lolcats\", \"title\": \"lolcats\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Instagram\", \"id\": \"TagVideo01\", \"url\": \"https://instagram.com/p/TagVideo01\", \"title\": null, \"description\": \"Caption of TagVideo01\", \"thumbnail\": \"https://scontent.cdninstagram.com/v/TagVideo01.jpg\", \"duration\": null, \"timestamp\": 1371748545, \"view_count\": 321, \"comment_count\": 4, \"like_count\": 9, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://instagram.com/explore/tags/lolcats\", \"original_url\": \"https://instagram.com/explore/tags/lolcats\", \"webpage_url_basename\": \"lolcats\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"instagram:tag\", \"extractor_key\": \"InstagramTag\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }
