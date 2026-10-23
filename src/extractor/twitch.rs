@@ -446,15 +446,9 @@ fn usher_formats(
         }
         // A live master's variants are not read (upstream never reads them;
         // their fragments change): live formats download through FFmpeg.
-        Ok(response) => super::hls::from_response_with(
-            client,
-            response,
-            &usher,
-            None,
-            true,
-            None,
-            live,
-        ),
+        Ok(response) => {
+            super::hls::from_response_with(client, response, &usher, None, true, None, live)
+        }
         Err(error) => Err(failed(error)),
     };
     crate::screen::clear_page();
