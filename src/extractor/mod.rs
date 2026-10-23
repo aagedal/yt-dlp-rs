@@ -429,6 +429,8 @@ pub(crate) fn extract_m3u8_master_optional(
     manifest: &Url,
     extractor: &'static str,
     id: &str,
+    m3u8_id: Option<&str>,
+    keep_subtitles: bool,
     live: bool,
 ) -> Option<crate::VideoInfo> {
     let mut stream = extract_manifest_optional_note(
@@ -436,13 +438,13 @@ pub(crate) fn extract_m3u8_master_optional(
         manifest,
         extractor,
         id,
-        true,
-        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        keep_subtitles,
+        &|response| hls::from_response_with(client, response, manifest, None, true, m3u8_id, true),
         ("m3u8 information", "HLS"),
         "Downloading m3u8 information",
     )?;
     if live {
-        hls::live_format_ids(&mut stream.formats, None);
+        hls::live_format_ids(&mut stream.formats, m3u8_id);
     }
     Some(stream)
 }

@@ -904,6 +904,8 @@ pub(super) fn extract(
                     &manifest_url,
                     "youtube",
                     context.video_id,
+                    None,
+                    true,
                     context.live_status == Some("is_live"),
                 )
             } else {
