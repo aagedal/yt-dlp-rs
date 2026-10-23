@@ -88,8 +88,12 @@ fn notification_entry(notification: Option<&Value>) -> Option<Map<String, Value>
         "thumbnails".into(),
         thumbnails(notification.get("videoThumbnail"), "thumbnails").into(),
     );
-    // Only with the `approximate_date` extractor argument.
-    entry.insert("timestamp".into(), Value::Null);
+    // Only with the `youtubetab:approximate_date` extractor argument.
+    let sent = text_at(notification, &["sentTimeText"]);
+    entry.insert(
+        "timestamp".into(),
+        super::tab::approximate_timestamp(sent.as_deref(), true).into(),
+    );
     Some(entry)
 }
 
@@ -216,23 +220,34 @@ impl super::super::Extractor for YoutubeNotifications {
         super::redirect::check_login_required(NAME)?;
         super::search::announce(NAME, &text);
         let display_id = "notifications";
-        // `_download_ytcfg('web', display_id)`.
+        // `_download_ytcfg('web', display_id) if not self.skip_webpage else {}`.
         let home = Url::parse("https://www.youtube.com")?;
-        let ytcfg = match super::super::download_webpage_note(
-            client,
-            &home,
-            NAME,
-            display_id,
-            "Downloading web client config",
-        ) {
-            Ok(webpage) => watch::extract_ytcfg(&webpage),
-            Err(error) => {
-                crate::screen::warning(&error.to_string());
-                Map::new()
+        let ytcfg = if super::tab::skip_webpage() {
+            Map::new()
+        } else {
+            match super::super::download_webpage_note(
+                client,
+                &home,
+                NAME,
+                display_id,
+                "Downloading web client config",
+            ) {
+                Ok(webpage) => watch::extract_ytcfg(&webpage),
+                Err(error) => {
+                    crate::screen::warning(&error.to_string());
+                    Map::new()
+                }
             }
         };
-        // `_report_playlist_authcheck(ytcfg)`.
-        if ytcfg.is_empty() {
+        // `_report_playlist_authcheck(ytcfg)` (`:ytnotif` has no temp ID).
+        let skip_authcheck = super::tab::tab_arg("skip")
+            .iter()
+            .any(|value| value == "authcheck");
+        if ytcfg.is_empty() && skip_authcheck {
+            crate::screen::warning_once(&format!(
+                "[{NAME}] Playlists that require authentication may not extract correctly without a successful webpage download"
+            ));
+        } else if ytcfg.is_empty() {
             return Err(crate::Error::Reported(format!(
                 "[{NAME}] Playlists that require authentication may not extract correctly without a successful webpage download. If you are not downloading private content, or your cookies are only for the first account and channel, pass \"--extractor-args youtubetab:skip=authcheck\" to skip this check"
             )));

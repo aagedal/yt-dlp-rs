@@ -1,0 +1,9 @@
+[
+ {"url": "https://www.youtube.com/watch?v=MultiFeed01", "args": ["--no-js-runtimes", "--flat-playlist", "-J"]},
+ {"url": "https://www.youtube.com/watch?v=MultiFeed01", "args": ["--no-js-runtimes", "--flat-playlist", "-j"]},
+ {"url": "https://www.youtube.com/watch?v=MultiFeed01", "args": ["--no-js-runtimes", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=MultiFeed01", "args": ["--no-js-runtimes", "-J"]},
+ {"url": "https://www.youtube.com/watch?v=MultiFeed01", "args": ["--no-js-runtimes", "--print", "%(id)s|%(title)s|%(webpage_url)s|%(original_url)s|%(playlist_id)s|%(playlist_index)s"]},
+ {"url": "https://www.youtube.com/watch?v=MultiFeed01", "args": ["--no-js-runtimes", "--no-playlist", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=MultiFeed01", "args": ["--no-js-runtimes", "--no-playlist", "--print", "%(id)s|%(title)s"]}
+]

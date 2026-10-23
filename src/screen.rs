@@ -180,6 +180,27 @@ pub(crate) fn warning_once(text: &str) {
     warning(text);
 }
 
+/// The messages `InfoExtractor.report_warning(..., only_once=True)` has
+/// printed since the extractor's last `initialize()`.
+static IE_SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+
+/// `InfoExtractor.initialize()`: forget the extractor's `only_once` warnings.
+pub(crate) fn reset_extractor_warnings() {
+    IE_SEEN.lock().unwrap().clear();
+}
+
+/// `InfoExtractor.report_warning(..., only_once=True)`: once per
+/// extraction (unlike the downloader's [`warning_once`]).
+pub(crate) fn extractor_warning_once(text: &str) {
+    let mut seen = IE_SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    warning(text);
+}
+
 pub(crate) fn warning(text: &str) {
     if let Some(sink) = SINK.get() {
         sink(Message::Warning(text));
@@ -212,6 +233,34 @@ pub(crate) fn extractor_debug(text: &str) {
         let name = EXTRACTOR.with(std::cell::Cell::get);
         debug(&format!("[{name}] {text}"));
     }
+}
+
+/// An extractor's `write_debug(..., only_once=True)`.
+pub(crate) fn extractor_debug_once(text: &str) {
+    static SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+    if !verbose() {
+        return;
+    }
+    let mut seen = SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    extractor_debug(text);
+}
+
+/// `YoutubeDL.deprecated_feature`: `Deprecated Feature: MESSAGE` on stderr,
+/// once per message.
+pub(crate) fn deprecated_feature(text: &str) {
+    static SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+    let mut seen = SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    stderr(&format!("Deprecated Feature: {text}"));
 }
 
 pub(crate) fn stderr(text: &str) {
@@ -287,6 +336,8 @@ struct ExpectedPage {
     id: String,
     before: Option<String>,
     after: Option<String>,
+    /// The MD5 of the request's `data` (a POST body).
+    data: Option<String>,
 }
 
 thread_local! {
@@ -301,6 +352,20 @@ pub(crate) fn expect_page(id: &str, before: Option<String>, after: Option<String
             id: id.into(),
             before,
             after,
+            data: None,
+        });
+    });
+}
+
+/// Expect the response to a POST of `data` for `id`, whose dump name has
+/// the data's MD5.
+pub(crate) fn expect_post_page(id: &str, data: &[u8]) {
+    PAGE.with(|page| {
+        *page.borrow_mut() = Some(ExpectedPage {
+            id: id.into(),
+            before: None,
+            after: None,
+            data: Some(crate::md5::hex(data)),
         });
     });
 }
@@ -330,6 +395,7 @@ pub(crate) fn page_read(url: &url::Url, bytes: &[u8]) -> std::io::Result<()> {
         let filename = request_dump_filename(
             url.as_str(),
             &page.id,
+            page.data.as_deref(),
             TRIM_FILE_NAME.load(Ordering::Relaxed),
         );
         screen(&format!("[{extractor}] Saving request to {filename}"));
@@ -341,9 +407,9 @@ pub(crate) fn page_read(url: &url::Url, bytes: &[u8]) -> std::io::Result<()> {
     Ok(())
 }
 
-/// Upstream `_request_dump_filename` without request data.
-fn request_dump_filename(url: &str, id: &str, trim_length: usize) -> String {
-    let mut basen = [id, url]
+/// Upstream `_request_dump_filename`: `ID_[DATA-MD5_]URL.dump`.
+fn request_dump_filename(url: &str, id: &str, data: Option<&str>, trim_length: usize) -> String {
+    let mut basen = [id, data.unwrap_or_default(), url]
         .into_iter()
         .filter(|part| !part.is_empty())
         .collect::<Vec<_>>()

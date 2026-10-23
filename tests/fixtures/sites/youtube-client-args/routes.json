@@ -1,0 +1,156 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "request_headers": {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.5 Safari/605.1.15,gzip(gfe)"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch-safari.html"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1&pp=CgIQBg%3D%3D",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://youtubei.googleapis.test/youtubei/v1/player?key=AbC&prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101",
+    "Origin": "https://youtubei.googleapis.test"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {\"visitorData\": \"VISITOR2\"}, \"playabilityStatus\": {\"status\": \"OK\", \"playableInEmbed\": true}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"formats\": [{\"itag\": 18, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=18&client=visionos&host=alt\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.42001E, mp4a.40.2\\\"\", \"bitrate\": 100018, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 640, \"height\": 360, \"quality\": \"medium\", \"qualityLabel\": \"360p\", \"fps\": 30, \"audioQuality\": \"AUDIO_QUALITY_LOW\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2}], \"adaptiveFormats\": [{\"itag\": 137, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=137&client=visionos&host=alt\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.640028\\\"\", \"bitrate\": 100137, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1920, \"height\": 1080, \"quality\": \"hd1080\", \"qualityLabel\": \"1080p\", \"fps\": 30, \"averageBitrate\": 90000}, {\"itag\": 136, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=136&client=visionos&host=alt\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.4d401f\\\"\", \"bitrate\": 100136, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1280, \"height\": 720, \"quality\": \"hd720\", \"qualityLabel\": \"720p\", \"fps\": 30}, {\"itag\": 140, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=140&client=visionos&host=alt\", \"mimeType\": \"audio/mp4; codecs=\\\"mp4a.40.2\\\"\", \"bitrate\": 100140, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2, \"averageBitrate\": 129000}, {\"itag\": 251, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos&host=alt\", \"mimeType\": \"audio/webm; codecs=\\\"opus\\\"\", \"bitrate\": 100251, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"48000\", \"audioChannels\": 2, \"isDrc\": true}]}, \"videoDetails\": {\"videoId\": \"BaW_jenozKc\", \"title\": \"youtube-dl test video \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\", \"lengthSeconds\": \"10\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/BaW_jenozKc/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": false}}"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"params\": \"CgIQBg==\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {\"visitorData\": \"VISITOR2\"}, \"playabilityStatus\": {\"status\": \"OK\", \"playableInEmbed\": true}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"formats\": [{\"itag\": 18, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=18&client=visionos&params=1\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.42001E, mp4a.40.2\\\"\", \"bitrate\": 100018, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 640, \"height\": 360, \"quality\": \"medium\", \"qualityLabel\": \"360p\", \"fps\": 30, \"audioQuality\": \"AUDIO_QUALITY_LOW\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2}], \"adaptiveFormats\": [{\"itag\": 137, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=137&client=visionos&params=1\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.640028\\\"\", \"bitrate\": 100137, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1920, \"height\": 1080, \"quality\": \"hd1080\", \"qualityLabel\": \"1080p\", \"fps\": 30, \"averageBitrate\": 90000}, {\"itag\": 136, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=136&client=visionos&params=1\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.4d401f\\\"\", \"bitrate\": 100136, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1280, \"height\": 720, \"quality\": \"hd720\", \"qualityLabel\": \"720p\", \"fps\": 30}, {\"itag\": 140, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=140&client=visionos&params=1\", \"mimeType\": \"audio/mp4; codecs=\\\"mp4a.40.2\\\"\", \"bitrate\": 100140, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2, \"averageBitrate\": 129000}, {\"itag\": 251, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos&params=1\", \"mimeType\": \"audio/webm; codecs=\\\"opus\\\"\", \"bitrate\": 100251, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"48000\", \"audioChannels\": 2, \"isDrc\": true}]}, \"videoDetails\": {\"videoId\": \"BaW_jenozKc\", \"title\": \"youtube-dl test video \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\", \"lengthSeconds\": \"10\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/BaW_jenozKc/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": false}}"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "2"
+   },
+   "request_body": [
+    "\"adPlaybackContext\": {\"pyv\": true}"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {\"visitorData\": \"VISITOR2\"}, \"playabilityStatus\": {\"status\": \"OK\", \"playableInEmbed\": true}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"formats\": [{\"itag\": 18, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb&ad=1\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.42001E, mp4a.40.2\\\"\", \"bitrate\": 100018, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 640, \"height\": 360, \"quality\": \"medium\", \"qualityLabel\": \"360p\", \"fps\": 30, \"audioQuality\": \"AUDIO_QUALITY_LOW\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2}], \"adaptiveFormats\": [{\"itag\": 137, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=137&client=mweb&ad=1\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.640028\\\"\", \"bitrate\": 100137, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1920, \"height\": 1080, \"quality\": \"hd1080\", \"qualityLabel\": \"1080p\", \"fps\": 30, \"averageBitrate\": 90000}, {\"itag\": 136, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=136&client=mweb&ad=1\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.4d401f\\\"\", \"bitrate\": 100136, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1280, \"height\": 720, \"quality\": \"hd720\", \"qualityLabel\": \"720p\", \"fps\": 30}, {\"itag\": 140, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=140&client=mweb&ad=1\", \"mimeType\": \"audio/mp4; codecs=\\\"mp4a.40.2\\\"\", \"bitrate\": 100140, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2, \"averageBitrate\": 129000}, {\"itag\": 251, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=251&client=mweb&ad=1\", \"mimeType\": \"audio/webm; codecs=\\\"opus\\\"\", \"bitrate\": 100251, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"48000\", \"audioChannels\": 2, \"isDrc\": true}]}, \"videoDetails\": {\"videoId\": \"BaW_jenozKc\", \"title\": \"youtube-dl test video \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\", \"lengthSeconds\": \"10\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/BaW_jenozKc/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": false}}"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "2"
+   },
+   "request_body": [
+    "\"signatureTimestamp\": 20348"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {\"visitorData\": \"VISITOR2\"}, \"playabilityStatus\": {\"status\": \"OK\", \"playableInEmbed\": true}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"formats\": [{\"itag\": 18, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb&sts=forced\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.42001E, mp4a.40.2\\\"\", \"bitrate\": 100018, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 640, \"height\": 360, \"quality\": \"medium\", \"qualityLabel\": \"360p\", \"fps\": 30, \"audioQuality\": \"AUDIO_QUALITY_LOW\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2}], \"adaptiveFormats\": [{\"itag\": 137, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=137&client=mweb&sts=forced\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.640028\\\"\", \"bitrate\": 100137, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1920, \"height\": 1080, \"quality\": \"hd1080\", \"qualityLabel\": \"1080p\", \"fps\": 30, \"averageBitrate\": 90000}, {\"itag\": 136, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=136&client=mweb&sts=forced\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.4d401f\\\"\", \"bitrate\": 100136, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1280, \"height\": 720, \"quality\": \"hd720\", \"qualityLabel\": \"720p\", \"fps\": 30}, {\"itag\": 140, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=140&client=mweb&sts=forced\", \"mimeType\": \"audio/mp4; codecs=\\\"mp4a.40.2\\\"\", \"bitrate\": 100140, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2, \"averageBitrate\": 129000}, {\"itag\": 251, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=251&client=mweb&sts=forced\", \"mimeType\": \"audio/webm; codecs=\\\"opus\\\"\", \"bitrate\": 100251, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"48000\", \"audioChannels\": 2, \"isDrc\": true}]}, \"videoDetails\": {\"videoId\": \"BaW_jenozKc\", \"title\": \"youtube-dl test video \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\", \"lengthSeconds\": \"10\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/BaW_jenozKc/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": false}}"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "2"
+   },
+   "request_body": [
+    "\"signatureTimestamp\": 19999",
+    "\"videoId\": \"NoStsVideo1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {\"visitorData\": \"VISITOR2\"}, \"playabilityStatus\": {\"status\": \"OK\", \"playableInEmbed\": true}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"formats\": [{\"itag\": 18, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb&sts=player\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.42001E, mp4a.40.2\\\"\", \"bitrate\": 100018, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 640, \"height\": 360, \"quality\": \"medium\", \"qualityLabel\": \"360p\", \"fps\": 30, \"audioQuality\": \"AUDIO_QUALITY_LOW\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2}], \"adaptiveFormats\": [{\"itag\": 137, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=137&client=mweb&sts=player\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.640028\\\"\", \"bitrate\": 100137, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1920, \"height\": 1080, \"quality\": \"hd1080\", \"qualityLabel\": \"1080p\", \"fps\": 30, \"averageBitrate\": 90000}, {\"itag\": 136, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=136&client=mweb&sts=player\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.4d401f\\\"\", \"bitrate\": 100136, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1280, \"height\": 720, \"quality\": \"hd720\", \"qualityLabel\": \"720p\", \"fps\": 30}, {\"itag\": 140, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=140&client=mweb&sts=player\", \"mimeType\": \"audio/mp4; codecs=\\\"mp4a.40.2\\\"\", \"bitrate\": 100140, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2, \"averageBitrate\": 129000}, {\"itag\": 251, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=251&client=mweb&sts=player\", \"mimeType\": \"audio/webm; codecs=\\\"opus\\\"\", \"bitrate\": 100251, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"48000\", \"audioChannels\": 2, \"isDrc\": true}]}, \"videoDetails\": {\"videoId\": \"NoStsVideo1\", \"title\": \"youtube-dl test video \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\", \"lengthSeconds\": \"10\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/NoStsVideo1/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": false}}"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "2"
+   },
+   "request_body": [
+    "\"videoId\": \"NoStsVideo1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {\"visitorData\": \"VISITOR2\"}, \"playabilityStatus\": {\"status\": \"OK\", \"playableInEmbed\": true}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"formats\": [{\"itag\": 18, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb&sts=none\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.42001E, mp4a.40.2\\\"\", \"bitrate\": 100018, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 640, \"height\": 360, \"quality\": \"medium\", \"qualityLabel\": \"360p\", \"fps\": 30, \"audioQuality\": \"AUDIO_QUALITY_LOW\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2}], \"adaptiveFormats\": [{\"itag\": 137, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=137&client=mweb&sts=none\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.640028\\\"\", \"bitrate\": 100137, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1920, \"height\": 1080, \"quality\": \"hd1080\", \"qualityLabel\": \"1080p\", \"fps\": 30, \"averageBitrate\": 90000}, {\"itag\": 136, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=136&client=mweb&sts=none\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.4d401f\\\"\", \"bitrate\": 100136, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1280, \"height\": 720, \"quality\": \"hd720\", \"qualityLabel\": \"720p\", \"fps\": 30}, {\"itag\": 140, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=140&client=mweb&sts=none\", \"mimeType\": \"audio/mp4; codecs=\\\"mp4a.40.2\\\"\", \"bitrate\": 100140, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2, \"averageBitrate\": 129000}, {\"itag\": 251, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=251&client=mweb&sts=none\", \"mimeType\": \"audio/webm; codecs=\\\"opus\\\"\", \"bitrate\": 100251, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"48000\", \"audioChannels\": 2, \"isDrc\": true}]}, \"videoDetails\": {\"videoId\": \"NoStsVideo1\", \"title\": \"youtube-dl test video \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\", \"lengthSeconds\": \"10\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/NoStsVideo1/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": false}}"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "2"
+   },
+   "request_body": [
+    "\"videoId\": \"BaW_jenozKc\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {\"visitorData\": \"VISITOR2\"}, \"playabilityStatus\": {\"status\": \"OK\", \"playableInEmbed\": true}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"formats\": [{\"itag\": 18, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.42001E, mp4a.40.2\\\"\", \"bitrate\": 100018, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 640, \"height\": 360, \"quality\": \"medium\", \"qualityLabel\": \"360p\", \"fps\": 30, \"audioQuality\": \"AUDIO_QUALITY_LOW\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2}], \"adaptiveFormats\": [{\"itag\": 137, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=137&client=mweb\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.640028\\\"\", \"bitrate\": 100137, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1920, \"height\": 1080, \"quality\": \"hd1080\", \"qualityLabel\": \"1080p\", \"fps\": 30, \"averageBitrate\": 90000}, {\"itag\": 136, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=136&client=mweb\", \"mimeType\": \"video/mp4; codecs=\\\"avc1.4d401f\\\"\", \"bitrate\": 100136, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"792\", \"width\": 1280, \"height\": 720, \"quality\": \"hd720\", \"qualityLabel\": \"720p\", \"fps\": 30}, {\"itag\": 140, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=140&client=mweb\", \"mimeType\": \"audio/mp4; codecs=\\\"mp4a.40.2\\\"\", \"bitrate\": 100140, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"44100\", \"audioChannels\": 2, \"averageBitrate\": 129000}, {\"itag\": 251, \"url\": \"https://rr1.googlevideo.test/videoplayback?itag=251&client=mweb\", \"mimeType\": \"audio/webm; codecs=\\\"opus\\\"\", \"bitrate\": 100251, \"lastModified\": \"1\", \"approxDurationMs\": \"10000\", \"contentLength\": \"778\", \"quality\": \"tiny\", \"audioQuality\": \"AUDIO_QUALITY_MEDIUM\", \"audioSampleRate\": \"48000\", \"audioChannels\": 2, \"isDrc\": true}]}, \"videoDetails\": {\"videoId\": \"BaW_jenozKc\", \"title\": \"youtube-dl test video \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\", \"lengthSeconds\": \"10\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/BaW_jenozKc/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": false}}"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoStsVideo1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch-NoStsVideo1.html"
+  },
+  {
+   "url": "https://www.youtube.com/s/player/abcd1234/player_ias.vflset/en_US/base.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body": "var a={signatureTimestamp:19999};"
+  },
+  {
+   "url": "https://www.youtube.com/s/player/abcd1234/tv-player-ias.vflset/tv-player-ias.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body": "var a={signatureTimestamp:19999};"
+  },
+  {
+   "url": "https://www.youtube.com/s/player/0004de42/player_ias.vflset/en_US/base.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body": "var a={signatureTimestamp:19999};"
+  }
+ ]
+}

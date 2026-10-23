@@ -539,6 +539,8 @@ impl YoutubeDl {
         let cookies = http.cookies.unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        extractor::youtube::live_chat::SKIP_DOWNLOAD
+            .store(youtube.skip_download, std::sync::atomic::Ordering::Relaxed);
         if let Ok(mut agent) = extractor::USER_AGENT.write() {
             *agent = headers
                 .get(reqwest::header::USER_AGENT)
@@ -2323,7 +2325,8 @@ impl YoutubeDl {
         let shown_url = Url::parse(&shown).unwrap_or_else(|_| url.clone());
         // A playlist extractor's `url` entry (`_type: url`) keeps the
         // extracted video's own `webpage_url`.
-        let plain_url = marker["entry"]["_type"] == "url";
+        // (as does a URL whose extractor names its own: YouTube's feeds).
+        let plain_url = marker["entry"]["_type"] == "url" || marker["keep_webpage_url"] == true;
         let merge = |result: &mut ExtractResult| -> Result<()> {
             let ExtractResult::Video(info) = result else {
                 return Err(Error::UnsupportedHtml5(
@@ -2434,6 +2437,18 @@ impl YoutubeDl {
             );
             full.insert("webpage_url_domain".into(), info::get_domain(&url).into());
         }
+        // `add_default_extra_info(info, ie, url)` for an entry dict's `ie_key`.
+        let entry_dict = marker["entry"].is_object();
+        if entry_dict && let Some(ie_key) = ie_key {
+            for (key, value) in [
+                ("extractor", marker["extractor"].as_str().unwrap_or(ie_key)),
+                ("extractor_key", ie_key),
+            ] {
+                if !full.contains_key(key) {
+                    full.insert(key.into(), value.into());
+                }
+            }
+        }
         let number = |value: Option<usize>| value.map_or(Value::Null, Value::from);
         // `add_extra_info` keeps an entry's own keys.
         let own: Vec<String> = raw.keys().cloned().collect();
@@ -2460,8 +2475,15 @@ impl YoutubeDl {
             number(entry.last_playlist_index),
         );
         if ie_key.is_none() {
-            full.insert("extractor".into(), "generic".into());
-            full.insert("extractor_key".into(), "Generic".into());
+            // The playlist's extractor (`_playlist_infodict`).
+            let playlist = |index: usize, default: &'static str| {
+                marker["playlist_extractor"][index]
+                    .as_str()
+                    .unwrap_or(default)
+                    .to_owned()
+            };
+            full.insert("extractor".into(), playlist(0, "generic").into());
+            full.insert("extractor_key".into(), playlist(1, "Generic").into());
         }
         full.insert(
             "playlist_autonumber".into(),
@@ -2787,6 +2809,19 @@ impl YoutubeDl {
             return download::download_hls_subtitle(
                 &self.client,
                 info,
+                subtitle,
+                destination.as_ref(),
+                options,
+                &mut callback,
+            );
+        }
+        if let Some(protocol @ ("youtube_live_chat" | "youtube_live_chat_replay")) =
+            subtitle.protocol.as_deref()
+        {
+            report_invoking("youtube_live_chat", &[&subtitle.url]);
+            return extractor::youtube::live_chat::download(
+                &self.client,
+                protocol == "youtube_live_chat",
                 subtitle,
                 destination.as_ref(),
                 options,

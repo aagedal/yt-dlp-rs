@@ -99,7 +99,7 @@ mod vocaroo;
 mod weibo;
 mod xspf;
 mod yfanefa;
-mod youtube;
+pub(crate) mod youtube;
 mod zhihu;
 
 pub use angel::{Angel, suitable as angel_suitable};
@@ -611,10 +611,14 @@ fn download_json_with(
         error => error,
     };
     let mut response = direct::request_with_headers(client, url, None, headers).map_err(wrap)?;
+    let page_url = response.url().clone();
     let mut body = Vec::new();
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
+    // `_webpage_read_content`: `--dump-pages`/`--write-pages`.
+    crate::screen::expect_page(id, None, None);
+    crate::screen::page_read(&page_url, &body)?;
     let text = transform(&String::from_utf8_lossy(&body))?;
     serde_json::from_str(&text).map_err(|error| {
         crate::Error::Reported(format!(
@@ -977,6 +981,21 @@ pub fn set_video_password(password: Option<String>) {
     if let Ok(mut slot) = VIDEO_PASSWORD.write() {
         *slot = password;
     }
+}
+
+/// YoutubeTabIE's `--compat-options`: `no-youtube-channel-redirect` and
+/// `no-youtube-unavailable-videos`.
+pub fn set_youtube_tab_compat(no_channel_redirect: bool, no_unavailable_videos: bool) {
+    use std::sync::atomic::Ordering::Relaxed;
+    youtube::tab::NO_CHANNEL_REDIRECT.store(no_channel_redirect, Relaxed);
+    youtube::tab::NO_UNAVAILABLE_VIDEOS.store(no_unavailable_videos, Relaxed);
+}
+
+/// `self.get_param('playlist_items') == '0'`: YoutubeTabIE's extra channel
+/// tabs stay unextracted `url` entries.
+pub fn set_youtube_tab_playlist_items(items: Option<&str>) {
+    youtube::tab::PLAYLIST_ITEMS_ZERO
+        .store(items == Some("0"), std::sync::atomic::Ordering::Relaxed);
 }
 
 /// `self.get_param('videopassword')`.

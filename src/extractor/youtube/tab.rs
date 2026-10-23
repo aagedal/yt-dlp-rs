@@ -9,10 +9,62 @@ use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
+use std::sync::atomic::{AtomicBool, Ordering};
 use url::Url;
 
 pub(crate) const NAME: &str = "youtube:tab";
 pub(crate) const KEY: &str = "YoutubeTab";
+
+/// `'no-youtube-channel-redirect' in compat_opts`.
+pub(crate) static NO_CHANNEL_REDIRECT: AtomicBool = AtomicBool::new(false);
+/// `'no-youtube-unavailable-videos' in compat_opts`.
+pub(crate) static NO_UNAVAILABLE_VIDEOS: AtomicBool = AtomicBool::new(false);
+/// `self.get_param('playlist_items') == '0'`.
+pub(crate) static PLAYLIST_ITEMS_ZERO: AtomicBool = AtomicBool::new(false);
+
+fn compat(option: &AtomicBool) -> bool {
+    option.load(Ordering::Relaxed)
+}
+
+/// `_configuration_arg(key, ie_key=YoutubeTabIE)`.
+pub(super) fn tab_arg(key: &str) -> Vec<String> {
+    crate::manifest_args::configuration_arg(KEY, key, false).unwrap_or_default()
+}
+
+/// `skip_webpage`: `youtubetab:skip=webpage`.
+pub(super) fn skip_webpage() -> bool {
+    tab_arg("skip").iter().any(|value| value == "webpage")
+}
+
+/// `self._parse_time_text(text, report_failure) if
+/// self._configuration_arg('approximate_date', ie_key=YoutubeTabIE) else None`.
+pub(super) fn approximate_timestamp(text: Option<&str>, report_failure: bool) -> Option<i64> {
+    if tab_arg("approximate_date").is_empty() {
+        return None;
+    }
+    super::dict::parse_time_text_reporting(text?, report_failure, NAME)
+}
+
+/// `_report_playlist_authcheck(ytcfg, fatal)`: without a webpage's
+/// `ytcfg`, logged-in requests may miss private playlists.
+pub(super) fn report_playlist_authcheck(
+    ytcfg: &Map<String, Value>,
+    fatal: bool,
+    extractor: &str,
+    temp_id: &str,
+) -> Result<()> {
+    if !ytcfg.is_empty() || !super::has_auth_cookies() {
+        return Ok(());
+    }
+    const MESSAGE: &str = "Playlists that require authentication may not extract correctly without a successful webpage download";
+    if fatal && !tab_arg("skip").iter().any(|value| value == "authcheck") {
+        return Err(Error::Reported(format!(
+            "[{extractor}] {temp_id}: {MESSAGE}. If you are not downloading private content, or your cookies are only for the first account and channel, pass \"--extractor-args youtubetab:skip=authcheck\" to skip this check"
+        )));
+    }
+    crate::screen::warning_once(&format!("[{extractor}] {MESSAGE}"));
+    Ok(())
+}
 
 const RESERVED_NAMES: &str = "channel|c|user|playlist|watch|w|v|embed|e|live|watch_popup|clip|shorts|movies|results|search|shared|hashtag|trending|explore|feed|feeds|browse|oembed|get_video_info|iframe_api|s/player|source|storefront|oops|index|account|t/terms|about|upload|signin|logout";
 
@@ -520,7 +572,10 @@ fn extract_video(renderer: &Value) -> Map<String, Value> {
         "thumbnails".into(),
         Value::Array(thumbnails(renderer.get("thumbnail"), "thumbnails")),
     );
-    entry.insert("timestamp".into(), Value::Null);
+    entry.insert(
+        "timestamp".into(),
+        approximate_timestamp(Some(&time_text), true).into(),
+    );
     entry.insert("release_timestamp".into(), scheduled.into());
     entry.insert(
         "availability".into(),
@@ -833,7 +888,10 @@ fn lockup_view_model(model: &Value) -> Option<Map<String, Value>> {
             Value::Null
         },
     );
-    kwargs.insert("timestamp".into(), Value::Null);
+    kwargs.insert(
+        "timestamp".into(),
+        approximate_timestamp(relative.as_deref(), false).into(),
+    );
     kwargs.insert(
         "live_status".into(),
         if duration_text.as_deref() == Some("upcoming") {
@@ -1097,6 +1155,233 @@ fn rich_entries(item: &Value, entries: &mut Vec<Map<String, Value>>) {
     }
 }
 
+/// `urljoin(base, path)` for a string path (`None` otherwise).
+fn join_url(base: &str, path: Option<&Value>) -> Option<String> {
+    let path = path?.as_str().filter(|path| !path.is_empty())?;
+    Some(Url::parse(base).ok()?.join(path).ok()?.to_string())
+}
+
+/// `_shelf_entries_from_content`: a shelf's grid or expanded contents
+/// (upstream ignores `horizontalListRenderer`).
+fn shelf_entries_from_content(shelf: &Value, entries: &mut Vec<Map<String, Value>>) {
+    let Some(content) = shelf.get("content").filter(|value| value.is_object()) else {
+        return;
+    };
+    if let Some(renderer) = ["gridRenderer", "expandedShelfContentsRenderer"]
+        .iter()
+        .find_map(|key| content.get(*key).filter(|value| truthy(Some(value))))
+    {
+        grid_entries(renderer, entries);
+    }
+}
+
+/// `_shelf_entries(shelf_renderer)`: the shelf's own URL (without an
+/// extractor), then its content's entries.
+fn shelf_entries(shelf: &Value, entries: &mut Vec<Map<String, Value>>) {
+    let endpoint = at(
+        shelf,
+        &["endpoint", "commandMetadata", "webCommandMetadata", "url"],
+    );
+    if let Some(shelf_url) = join_url("https://www.youtube.com", endpoint) {
+        entries.push(url_result(
+            &shelf_url,
+            None,
+            None,
+            text_at(shelf, &["title"]),
+            Map::new(),
+        ));
+    }
+    shelf_entries_from_content(shelf, entries);
+}
+
+/// `_music_reponsive_list_entry`.
+fn music_responsive_list_entry(renderer: &Value) -> Option<Map<String, Value>> {
+    let string = |path: &[&str]| at(renderer, path).and_then(Value::as_str);
+    if let Some(video_id) = string(&["playlistItemData", "videoId"]) {
+        let title = at(
+            renderer,
+            &[
+                "flexColumns",
+                "0",
+                "musicResponsiveListItemFlexColumnRenderer",
+                "text",
+                "runs",
+                "0",
+                "text",
+            ],
+        )
+        .cloned()
+        .unwrap_or(Value::Null);
+        let mut kwargs = Map::new();
+        kwargs.insert("title".into(), title);
+        return Some(url_result(
+            &format!("https://music.youtube.com/watch?v={video_id}"),
+            Some("Youtube"),
+            Some(video_id),
+            None,
+            kwargs,
+        ));
+    }
+    if let Some(playlist_id) = string(&["navigationEndpoint", "watchEndpoint", "playlistId"]) {
+        let url = match string(&["navigationEndpoint", "watchEndpoint", "videoId"]) {
+            Some(video_id) => {
+                format!("https://music.youtube.com/watch?v={video_id}&list={playlist_id}")
+            }
+            None => format!("https://music.youtube.com/playlist?list={playlist_id}"),
+        };
+        return Some(url_result(
+            &url,
+            Some(KEY),
+            Some(playlist_id),
+            None,
+            Map::new(),
+        ));
+    }
+    let browse_id = string(&["navigationEndpoint", "browseEndpoint", "browseId"])?;
+    Some(url_result(
+        &format!("https://music.youtube.com/browse/{browse_id}"),
+        Some(KEY),
+        Some(browse_id),
+        None,
+        Map::new(),
+    ))
+}
+
+/// `_hashtag_tile_entry`.
+fn hashtag_tile_entry(renderer: &Value) -> Option<Map<String, Value>> {
+    let url = join_url(
+        "https://youtube.com",
+        at(
+            renderer,
+            &[
+                "onTapCommand",
+                "commandMetadata",
+                "webCommandMetadata",
+                "url",
+            ],
+        ),
+    )?;
+    let mut kwargs = Map::new();
+    kwargs.insert("title".into(), text_at(renderer, &["hashtag"]).into());
+    Some(url_result(&url, Some(KEY), None, None, kwargs))
+}
+
+/// `_post_thread_entries`: a community post's attached video and playlist,
+/// then the videos its text links to.
+fn post_thread_entries(thread: &Value, entries: &mut Vec<Map<String, Value>>) {
+    let Some(post) =
+        at(thread, &["post", "backstagePostRenderer"]).filter(|value| value.is_object())
+    else {
+        return;
+    };
+    let video_id = at(post, &["backstageAttachment", "videoRenderer"])
+        .filter(|value| value.is_object())
+        .and_then(|video| {
+            let id = video.get("videoId").filter(|id| truthy(Some(id)))?;
+            entries.push(extract_video(video));
+            Some(id.clone())
+        });
+    if let Some(playlist_id) = at(
+        post,
+        &["backstageAttachment", "playlistRenderer", "playlistId"],
+    )
+    .and_then(Value::as_str)
+    .filter(|id| !id.is_empty())
+    {
+        entries.push(url_result(
+            &format!("https://www.youtube.com/playlist?list={playlist_id}"),
+            Some(KEY),
+            Some(playlist_id),
+            None,
+            Map::new(),
+        ));
+    }
+    for run in at(post, &["contentText", "runs"])
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
+        let Some(url) = at(run, &["navigationEndpoint", "urlEndpoint", "url"])
+            .and_then(Value::as_str)
+            .filter(|url| !url.is_empty())
+        else {
+            continue;
+        };
+        if !super::suitable(url) {
+            continue;
+        }
+        let linked = super::temp_id(url);
+        if linked.is_some() && linked.as_deref() == video_id.as_ref().and_then(Value::as_str) {
+            continue;
+        }
+        entries.push(url_result(
+            url,
+            Some("Youtube"),
+            linked.as_deref(),
+            None,
+            Map::new(),
+        ));
+    }
+}
+
+/// `_post_thread_continuation_entries`.
+fn post_thread_continuation_entries(parent: &Value, entries: &mut Vec<Map<String, Value>>) {
+    for content in parent
+        .get("contents")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+    {
+        if let Some(thread) = content
+            .get("backstagePostThreadRenderer")
+            .filter(|value| value.is_object())
+        {
+            post_thread_entries(thread, entries);
+        } else if let Some(video) = content
+            .get("videoRenderer")
+            .filter(|value| value.is_object())
+            && truthy(video.get("videoId"))
+        {
+            entries.push(extract_video(video));
+        }
+    }
+}
+
+/// `_report_history_entries`: the videos linked from report history rows.
+fn report_history_entries(table: &Value, entries: &mut Vec<Map<String, Value>>) {
+    let each = |value: Option<&Value>| -> Vec<Value> {
+        value.and_then(Value::as_array).cloned().unwrap_or_default()
+    };
+    for row in each(table.get("rows")) {
+        for cell in each(at(&row, &["reportHistoryTableRowRenderer", "cells"])) {
+            let runs = at(
+                &cell,
+                &[
+                    "reportHistoryTableCellRenderer",
+                    "cell",
+                    "reportHistoryTableTextCellRenderer",
+                    "text",
+                    "runs",
+                ],
+            );
+            for run in each(runs) {
+                let path = at(
+                    &run,
+                    &[
+                        "navigationEndpoint",
+                        "commandMetadata",
+                        "webCommandMetadata",
+                        "url",
+                    ],
+                );
+                if let Some(url) = join_url("https://www.youtube.com", path) {
+                    entries.push(url_result(&url, Some("Youtube"), None, None, Map::new()));
+                }
+            }
+        }
+    }
+}
+
 /// `_build_api_continuation_query`.
 pub(super) fn continuation_query(token: &str, ctp: Option<&str>) -> Map<String, Value> {
     let mut query = Map::new();
@@ -1201,6 +1486,15 @@ pub(super) fn extract_entries(
             {
                 rich_entries(item, entries);
                 continuation = extract_continuation(parent);
+            } else if truthy(content.get("reportHistorySectionRenderer")) {
+                // https://www.youtube.com/reporthistory
+                let table = at(
+                    content,
+                    &["reportHistorySectionRenderer", "table", "tableRenderer"],
+                )
+                .unwrap_or(&Value::Null);
+                report_history_entries(table, entries);
+                continuation = extract_continuation(table);
             }
             continue;
         };
@@ -1245,12 +1539,20 @@ pub(super) fn extract_entries(
                         entries.extend(lockup_view_model(renderer));
                         true
                     }
+                    "shelfRenderer" => {
+                        shelf_entries(renderer, entries);
+                        true
+                    }
                     "musicResponsiveListItemRenderer" => {
                         entries.extend(music_responsive_list_entry(renderer));
                         true
                     }
-                    "shelfRenderer" | "backstagePostThreadRenderer" | "hashtagTileRenderer" => {
-                        unsupported_renderer(key);
+                    "backstagePostThreadRenderer" => {
+                        post_thread_entries(renderer, entries);
+                        true
+                    }
+                    "hashtagTileRenderer" => {
+                        entries.extend(hashtag_tile_entry(renderer));
                         true
                     }
                     _ => false,
@@ -1271,72 +1573,6 @@ pub(super) fn extract_entries(
         continuation = extract_continuation(parent);
     }
     continuation
-}
-
-/// `_music_reponsive_list_entry`: a YouTube Music song, playlist or
-/// browse page result.
-fn music_responsive_list_entry(renderer: &Value) -> Option<Map<String, Value>> {
-    let string = |path: &[&str]| {
-        at(renderer, path)
-            .and_then(Value::as_str)
-            .filter(|text| !text.is_empty())
-            .map(str::to_owned)
-    };
-    if let Some(video_id) = string(&["playlistItemData", "videoId"]) {
-        let title = at(
-            renderer,
-            &[
-                "flexColumns",
-                "0",
-                "musicResponsiveListItemFlexColumnRenderer",
-                "text",
-                "runs",
-                "0",
-                "text",
-            ],
-        )
-        .cloned()
-        .unwrap_or(Value::Null);
-        let mut kwargs = Map::new();
-        kwargs.insert("title".into(), title);
-        return Some(url_result(
-            &format!("https://music.youtube.com/watch?v={video_id}"),
-            Some("Youtube"),
-            Some(&video_id),
-            None,
-            kwargs,
-        ));
-    }
-    if let Some(playlist_id) = string(&["navigationEndpoint", "watchEndpoint", "playlistId"]) {
-        let url = match string(&["navigationEndpoint", "watchEndpoint", "videoId"]) {
-            Some(video_id) => {
-                format!("https://music.youtube.com/watch?v={video_id}&list={playlist_id}")
-            }
-            None => format!("https://music.youtube.com/playlist?list={playlist_id}"),
-        };
-        return Some(url_result(
-            &url,
-            Some(KEY),
-            Some(&playlist_id),
-            None,
-            Map::new(),
-        ));
-    }
-    let browse_id = string(&["navigationEndpoint", "browseEndpoint", "browseId"])?;
-    Some(url_result(
-        &format!("https://music.youtube.com/browse/{browse_id}"),
-        Some(KEY),
-        Some(&browse_id),
-        None,
-        Map::new(),
-    ))
-}
-
-/// Renderers whose entries this port does not extract yet.
-fn unsupported_renderer(key: &str) {
-    crate::screen::warning_once(&format!(
-        "[youtube:tab] {key} entries are not supported natively and are skipped"
-    ));
 }
 
 /// A browse API request (`_extract_response(ep='browse')`).
@@ -1489,11 +1725,14 @@ pub(crate) fn fetch_pages(
                 | "gridVideoRenderer"
                 | "gridChannelRenderer"
                 | "lockupViewModel" => Some("items"),
-                "playlistVideoRenderer" | "itemSectionRenderer" | "richItemRenderer" => {
-                    Some("contents")
-                }
+                "playlistVideoRenderer"
+                | "itemSectionRenderer"
+                | "richItemRenderer"
+                | "backstagePostThreadRenderer" => Some("contents"),
+                "reportHistoryTableRowRenderer" => Some("rows"),
                 "playlistVideoListContinuation"
                 | "gridContinuation"
+                | "itemSectionContinuation"
                 | "sectionListContinuation" => None,
                 _ => continue,
             };
@@ -1509,6 +1748,14 @@ pub(crate) fn fetch_pages(
                 }
                 "itemSectionRenderer" | "richItemRenderer" | "sectionListContinuation" => {
                     extract_entries(&wrapped, &mut entries)
+                }
+                "backstagePostThreadRenderer" | "itemSectionContinuation" => {
+                    post_thread_continuation_entries(&wrapped, &mut entries);
+                    None
+                }
+                "reportHistoryTableRowRenderer" => {
+                    report_history_entries(&wrapped, &mut entries);
+                    None
                 }
                 _ => {
                     grid_entries(&wrapped, &mut entries);
@@ -1973,23 +2220,27 @@ pub(super) fn entry_info(entry: Map<String, Value>) -> Result<VideoInfo> {
         .unwrap_or_default()
         .to_owned();
     let url = Url::parse(&url_text).map_err(|error| Error::Reported(error.to_string()))?;
+    // A shelf's URL has no extractor (any suitable one resolves it).
     let ie_key = entry
         .get("ie_key")
         .and_then(Value::as_str)
-        .unwrap_or("Youtube")
-        .to_owned();
-    let extractor = if ie_key == KEY { NAME } else { "youtube" };
+        .map(str::to_owned);
+    let extractor = match ie_key.as_deref() {
+        Some(KEY) => Some(NAME),
+        Some(_) => Some("youtube"),
+        None => None,
+    };
     let mut info = super::super::direct::build_at(url.clone(), &url, String::new());
     info.formats.clear();
     info.direct = None;
-    // Without an `id`, the downloader's `ie.get_temp_id(url)`.
-    info.id = match entry.get("id").and_then(Value::as_str) {
-        Some(id) => id.to_owned(),
-        None if ie_key == KEY => url_parts(&url_text)
-            .map(|parts| parts.id)
-            .unwrap_or_default(),
-        None => super::temp_id(&url_text).unwrap_or_default(),
-    };
+    // Else `ie.get_temp_id(url)`.
+    info.id = match (entry.get("id").and_then(Value::as_str), ie_key.as_deref()) {
+        (Some(id), _) => Some(id.to_owned()),
+        (None, Some(KEY)) => url_parts(&url_text).map(|parts| parts.id),
+        (None, Some(_)) => super::temp_id(&url_text),
+        (None, None) => None,
+    }
+    .unwrap_or_default();
     info.title = entry
         .get("title")
         .and_then(Value::as_str)
@@ -2003,6 +2254,7 @@ pub(super) fn entry_info(entry: Map<String, Value>) -> Result<VideoInfo> {
             "fields": {},
             "ie_key": ie_key,
             "extractor": extractor,
+            "playlist_extractor": [NAME, KEY],
             "entry": Value::Object(entry),
         }),
     );
@@ -2016,11 +2268,43 @@ const EXTRACTOR_RETRIES: u32 = 3;
 /// `_extract_data(fatal=True, webpage_fatal=False)`: the webpage's
 /// `ytInitialData` and `ytcfg`, else the `navigation/resolve_url` endpoint's
 /// browse response.
-fn page_data(client: &Client, url: &Url, item_id: &str) -> Result<(Value, Map<String, Value>)> {
-    let (data, ytcfg) = extract_webpage(client, url, item_id, NAME, false)?;
-    if let Some(data) = data.filter(|data| data.as_object().is_some_and(|data| !data.is_empty())) {
-        return Ok((data, ytcfg));
+/// Without the webpage (`youtubetab:skip=webpage`) only the endpoint is used.
+fn page_data(
+    client: &Client,
+    url: &Url,
+    item_id: &str,
+    temp_id: &str,
+) -> Result<(Value, Map<String, Value>)> {
+    let mut ytcfg = Map::new();
+    if !skip_webpage() {
+        let (data, found) = extract_webpage(client, url, item_id, NAME, false)?;
+        ytcfg = found;
+        // Reject webpage data if redirected to the home page without
+        // explicitly requesting it.
+        let home = data.as_ref().is_some_and(|data| {
+            tab_renderers(data)
+                .iter()
+                .find(|tab| truthy(tab.get("selected")))
+                .and_then(|tab| tab.get("tabIdentifier"))
+                .and_then(Value::as_str)
+                == Some("FEwhat_to_watch")
+        });
+        if url.as_str() != "https://www.youtube.com/feed/recommended"
+            && home
+            && !compat(&NO_CHANNEL_REDIRECT)
+        {
+            return Err(fail(
+                temp_id,
+                "The channel/playlist does not exist and the URL redirected to youtube.com home page",
+            ));
+        }
+        if let Some(data) =
+            data.filter(|data| data.as_object().is_some_and(|data| !data.is_empty()))
+        {
+            return Ok((data, ytcfg));
+        }
     }
+    report_playlist_authcheck(&ytcfg, true, NAME, temp_id)?;
     let data = tab_endpoint(client, "web", url.as_str(), item_id, &ytcfg)?;
     Ok((data, ytcfg))
 }
@@ -2051,9 +2335,38 @@ pub(super) fn extract_webpage(
     for attempt in 1..=EXTRACTOR_RETRIES + 1 {
         let webpage = match super::super::download_webpage(client, url, extractor, item_id) {
             Ok(webpage) => webpage,
-            Err(error) if fatal => return Err(error),
             Err(error) => {
-                crate::screen::warning(&crate::upstream_error_text(&error));
+                // Network errors other than HTTP 403 and 429 are retried.
+                let cause = match &error {
+                    Error::ExtractorRequest { source, .. } => match source.as_ref() {
+                        source @ (Error::Http(http)
+                        | Error::HttpRetryAfter { source: http, .. })
+                            if http
+                                .status()
+                                .is_none_or(|status| !matches!(status.as_u16(), 403 | 429)) =>
+                        {
+                            Some(crate::upstream_error_text(source))
+                        }
+                        _ => None,
+                    },
+                    _ => None,
+                };
+                if let Some(cause) = &cause
+                    && attempt <= EXTRACTOR_RETRIES
+                {
+                    crate::screen::warning(&format!(
+                        "[{extractor}] {cause}. Retrying ({attempt}/{EXTRACTOR_RETRIES})..."
+                    ));
+                    continue;
+                }
+                if fatal {
+                    return Err(error);
+                }
+                let mut text = crate::upstream_error_text(&error);
+                if cause.is_some() {
+                    text.push_str(&format!(". Giving up after {EXTRACTOR_RETRIES} retries"));
+                }
+                crate::screen::warning(&text);
                 return Ok((None, ytcfg));
             }
         };
@@ -2384,7 +2697,7 @@ impl YoutubeTab {
         let original_tab = parts.tab.trim_start_matches('/').to_owned();
         let display_id = format!("{item_id}{}", parts.tab);
         let mut page_url = url.to_string();
-        if is_channel && parts.tab.is_empty() {
+        if is_channel && parts.tab.is_empty() && !compat(&NO_CHANNEL_REDIRECT) {
             page_url = format!("{}/videos{}", parts.pre, parts.post);
         }
         if music {
@@ -2434,20 +2747,7 @@ impl YoutubeTab {
             ));
         }
         let fetch_url = Url::parse(&page_url)?;
-        let (mut data, mut ytcfg) = page_data(client, &fetch_url, &display_id)?;
-        // The URL redirected to the home page (`FEwhat_to_watch`).
-        if tab_renderers(&data)
-            .iter()
-            .find(|tab| truthy(tab.get("selected")))
-            .and_then(|tab| tab.get("tabIdentifier"))
-            .and_then(Value::as_str)
-            == Some("FEwhat_to_watch")
-        {
-            return Err(fail(
-                &parts.id,
-                "The channel/playlist does not exist and the URL redirected to youtube.com home page",
-            ));
-        }
+        let (mut data, mut ytcfg) = page_data(client, &fetch_url, &display_id, &parts.id)?;
         // A conditional redirect to the regional channel.
         if let Some(redirect) = data
             .get("onResponseReceivedActions")
@@ -2467,6 +2767,7 @@ impl YoutubeTab {
                 )
                 .and_then(Value::as_str)
             })
+            .filter(|_| !compat(&NO_CHANNEL_REDIRECT))
         {
             let target = Url::parse("https://www.youtube.com")?.join(redirect)?;
             let target = format!("{target}{}{}", parts.tab, parts.post);
@@ -2479,7 +2780,7 @@ impl YoutubeTab {
         // `extra_tabs` and their outer playlist's `metadata`.
         let mut extra_tabs: Vec<String> = Vec::new();
         let mut outer_metadata: Option<Map<String, Value>> = None;
-        if is_channel && !tabs.is_empty() {
+        if is_channel && !tabs.is_empty() && !compat(&NO_CHANNEL_REDIRECT) {
             let selected = tabs
                 .iter()
                 .find(|tab| truthy(tab.get("selected")))
@@ -2514,7 +2815,7 @@ impl YoutubeTab {
                     // Topic channels have no /videos: use their uploads playlist.
                     let uploads = format!("UU{}", &item_id[2..]);
                     let uploads_url = format!("https://www.youtube.com/playlist?list={uploads}");
-                    match page_data(client, &Url::parse(&uploads_url)?, &uploads) {
+                    match page_data(client, &Url::parse(&uploads_url)?, &uploads, &uploads) {
                         Ok((found, found_ytcfg)) => {
                             data = found;
                             if ytcfg.is_empty() {
@@ -2552,6 +2853,7 @@ impl YoutubeTab {
         // `_reload_with_unavailable_videos`.
         let is_playlist = truthy(at(&data, &["metadata", "playlistMetadataRenderer"]))
             || truthy(at(&data, &["header", "playlistHeaderRenderer"]));
+        let is_playlist = is_playlist && !compat(&NO_UNAVAILABLE_VIDEOS);
         if is_playlist {
             let mut query = Map::new();
             query.insert("params".into(), "wgYCCAA=".into());
@@ -2612,8 +2914,16 @@ impl YoutubeTab {
             }
             results.push(result);
         }
+        // With `--playlist-items 0`, the extra tabs stay `url` entries (after
+        // the selected tab's playlist); otherwise they are extracted, as
+        // users expect all video IDs even with `--flat-playlist`.
+        let mut tab_entries = Vec::new();
         for tab_url in &extra_tabs {
             let tab_url = Url::parse(tab_url)?;
+            if compat(&PLAYLIST_ITEMS_ZERO) {
+                tab_entries.push(tab_url);
+                continue;
+            }
             let Some(tab_parts) = url_parts(tab_url.as_str()) else {
                 continue;
             };
@@ -2621,10 +2931,13 @@ impl YoutubeTab {
                 results.push(result);
             }
         }
-        if results.len() == 1 {
-            return Ok(results.pop());
+        if results.len() + tab_entries.len() == 1 {
+            return Ok(match tab_entries.pop() {
+                Some(tab_url) => Some(follow(&tab_url)),
+                None => results.pop(),
+            });
         }
-        if !results.is_empty() {
+        if !results.is_empty() || !tab_entries.is_empty() {
             let mut metadata = outer_metadata.unwrap_or_else(|| tab_metadata(&item_id, &data));
             // `playlist_result(entries, item_id, **metadata)`: the item ID.
             metadata.insert("id".into(), item_id.clone().into());
@@ -2646,8 +2959,20 @@ impl YoutubeTab {
                     )),
                 })
                 .collect::<Result<Vec<_>>>()?;
+            let tab_entries = tab_entries
+                .iter()
+                .map(|tab_url| {
+                    entry_info(url_result(
+                        tab_url.as_str(),
+                        Some(KEY),
+                        None,
+                        None,
+                        Map::new(),
+                    ))
+                })
+                .collect::<Result<Vec<_>>>()?;
             let ExtractResult::Playlist(mut outer) =
-                tab_playlist(metadata, Vec::new(), url.as_str(), false)?
+                tab_playlist(metadata, tab_entries, url.as_str(), false)?
             else {
                 unreachable!("tab_playlist builds a playlist");
             };

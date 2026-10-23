@@ -1,0 +1,6 @@
+[
+ {"url": "https://www.youtube.com/watch?v=ChatReplay1", "args": ["--no-js-runtimes", "--list-subs"]},
+ {"url": "https://www.youtube.com/watch?v=ChatReplay1", "args": ["--no-js-runtimes", "--no-progress", "--skip-download", "--write-subs", "--sub-langs", "live_chat", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.youtube.com/watch?v=ChatReplay1", "args": ["--no-js-runtimes", "--no-progress", "-f", "18", "--write-subs", "--sub-langs", "all", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.youtube.com/watch?v=LiveChat001", "args": ["--no-js-runtimes", "--no-progress", "--skip-download", "--write-subs", "--sub-langs", "live_chat", "-o", "%(id)s.%(ext)s"]}
+]

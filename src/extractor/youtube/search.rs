@@ -112,7 +112,8 @@ pub(crate) fn fetch_pages(
             return Ok(None);
         }
         if state["ytcfg"].is_null() {
-            // `_download_ytcfg(default_client, display_id)`.
+            // `_download_ytcfg(default_client, display_id) if not
+            // self.skip_webpage else {}`.
             let (home, note) = match client_name.as_str() {
                 "web_music" => (
                     "https://music.youtube.com",
@@ -121,19 +122,24 @@ pub(crate) fn fetch_pages(
                 _ => ("https://www.youtube.com", "Downloading web client config"),
             };
             let home = Url::parse(home)?;
-            let ytcfg = match super::super::download_webpage_note(
-                client,
-                &home,
-                extractor,
-                &display_id,
-                note,
-            ) {
-                Ok(webpage) => watch::extract_ytcfg(&webpage),
-                Err(error) => {
-                    crate::screen::warning(&error.to_string());
-                    Map::new()
+            let ytcfg = if super::tab::skip_webpage() {
+                Map::new()
+            } else {
+                match super::super::download_webpage_note(
+                    client,
+                    &home,
+                    extractor,
+                    &display_id,
+                    note,
+                ) {
+                    Ok(webpage) => watch::extract_ytcfg(&webpage),
+                    Err(error) => {
+                        crate::screen::warning(&error.to_string());
+                        Map::new()
+                    }
                 }
             };
+            super::tab::report_playlist_authcheck(&ytcfg, false, extractor, &display_id)?;
             state["ytcfg"] = Value::Object(ytcfg);
         }
         let ytcfg = state["ytcfg"].as_object().cloned().unwrap_or_default();
@@ -235,10 +241,16 @@ pub(super) fn search_playlist(
     extractor: &'static str,
     key: &'static str,
 ) -> Result<ExtractResult> {
-    let entries = entries
+    let mut entries = entries
         .into_iter()
         .map(entry_info)
         .collect::<Result<Vec<_>>>()?;
+    // An entry without an extractor shows the search's.
+    for entry in &mut entries {
+        if let Some(marker) = entry.extra.get_mut(crate::TRANSPARENT) {
+            marker["playlist_extractor"] = serde_json::json!([extractor, key]);
+        }
+    }
     let mut extra = Map::new();
     extra.insert(
         crate::info_order::INFO_SHAPE.into(),

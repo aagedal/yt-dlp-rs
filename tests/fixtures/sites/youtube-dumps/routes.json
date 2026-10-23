@@ -1,0 +1,138 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=AgeGated001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "agegated.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "AgeGated001"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "agegated-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "56"
+   },
+   "request_body": [
+    "AgeGated001",
+    "HOSTFLAGS123",
+    "https://www.reddit.com/",
+    "20001"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "agegated-embedded.json"
+  },
+  {
+   "url": "https://www.youtube.com/embed/AgeGated001?html5=1",
+   "request_headers": {
+    "Referer": "https://www.reddit.com/"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed.html"
+  },
+  {
+   "url": "https://www.youtube.com/s/player/abcd1234/player_ias.vflset/en_US/base.js",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body_file": "player.js"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NextApi0001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "next-api.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"NextApi0001\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "next-api-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+   "request_body": [
+    "\"NextApi0001\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "next-api-next.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=AgeGated002&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "agegated2.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "AgeGated002"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "agegated2-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "56"
+   },
+   "request_body": [
+    "AgeGated002",
+    "20001"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "agegated2-embedded.json"
+  },
+  {
+   "url": "https://www.youtube.com/embed/AgeGated002?html5=1",
+   "request_headers": {
+    "Referer": "https://www.reddit.com/"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed2.html"
+  },
+  {
+   "url": "https://www.youtube.com/iframe_api",
+   "headers": {
+    "Content-Type": "text/javascript"
+   },
+   "body_file": "iframe_api.js"
+  }
+ ]
+}

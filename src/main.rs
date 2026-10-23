@@ -1624,8 +1624,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
-    // `--extractor-args`: GenericIE's and YouTube's client selection are
-    // used; other extractors' are not.
+    // `--extractor-args`: GenericIE's, YouTube's and YoutubeTabIE's ported
+    // arguments are used; other extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
     for (key, values) in &extractor_args {
@@ -1635,11 +1635,42 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 for name in values.keys().filter(|name| {
                     !matches!(
                         name.as_str(),
-                        "player_client" | "player_skip" | "max_comments" | "comment_sort"
+                        "player_client"
+                            | "player_skip"
+                            | "max_comments"
+                            | "comment_sort"
+                            | "formats"
+                            | "include_duplicate_formats"
+                            | "skip"
+                            | "po_token"
+                            | "fetch_pot"
+                            | "pot_trace"
+                            | "visitor_data"
+                            | "data_sync_id"
+                            | "innertube_host"
+                            | "innertube_key"
+                            | "player_params"
+                            | "use_ad_playback_context"
+                            | "webpage_client"
+                            | "webpage_skip"
+                            | "player_js_version"
+                            | "player_js_variant"
+                            | "raise_incomplete_data"
+                            | "lang"
                     )
                 }) {
                     warning!(
                         "WARNING: extractor argument youtube:{name} is not supported natively and is ignored"
+                    );
+                }
+            }
+            "youtubetab" => {
+                for name in values
+                    .keys()
+                    .filter(|name| !matches!(name.as_str(), "skip" | "approximate_date"))
+                {
+                    warning!(
+                        "WARNING: extractor argument youtubetab:{name} is not supported natively and is ignored"
                     );
                 }
             }
@@ -1650,6 +1681,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
     yt_dlp_rs::extractor::set_video_password(args.video_password.clone());
+    yt_dlp_rs::extractor::set_youtube_tab_playlist_items(args.playlist_items.as_deref());
     // HttpFD's initial block size and resizing.
     if let Some(size) = args.buffer_size.as_deref().and_then(parse_bytes) {
         yt_dlp_rs::BUFFER_SIZE.store(size as usize, Ordering::Relaxed);
@@ -1676,6 +1708,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // of options not given (an option overriding one shows `*NAME` in the
     // debug header).
     let compat = compat_options(&args.compat_options)?;
+    yt_dlp_rs::extractor::set_youtube_tab_compat(
+        compat
+            .iter()
+            .any(|name| name == "no-youtube-channel-redirect"),
+        compat
+            .iter()
+            .any(|name| name == "no-youtube-unavailable-videos"),
+    );
     let given = |ids: &[&str]| {
         ids.iter()
             .any(|id| matches.value_source(id) == Some(clap::parser::ValueSource::CommandLine))
@@ -1772,17 +1812,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 );
                 true
             }
-            // Features this port does not have (YouTube tabs, live chat,
-            // certifi, ...) or that pinned upstream never reads, so nothing
-            // changes. This port's playlist entries are always complete
-            // videos, which `playlist-match-filter` does not affect.
+            // Read by YoutubeTabIE (`set_youtube_tab_compat`).
+            "no-youtube-channel-redirect" | "no-youtube-unavailable-videos" => true,
+            // Features this port does not have (live chat, certifi, ...) or
+            // that pinned upstream never reads, so nothing changes. This
+            // port's playlist entries are always complete videos, which
+            // `playlist-match-filter` does not affect.
             "no-certifi"
             | "prefer-legacy-http-handler"
             | "no-live-chat"
             | "no-external-downloader-progress"
             | "embed-thumbnail-atomicparsley"
-            | "no-youtube-channel-redirect"
-            | "no-youtube-unavailable-videos"
             | "no-youtube-prefer-utc-upload-date"
             | "seperate-video-versions"
             | "playlist-match-filter" => true,
@@ -2433,8 +2473,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 })
             }),
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
+            subtitles_wanted: args.write_subs || args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
+            skip_download: args.skip_download,
             get_comments: args.write_comments,
+            // `mark_watched` runs only when cookies were passed.
+            mark_watched: args.mark_watched
+                && (args.cookies.is_some() || browser_cookies.is_some()),
             // `--wait-for-video MIN[-MAX]` (validated with the other options).
             wait_for_video: args
                 .wait_for_video
@@ -3849,7 +3894,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     emit_listing(&mut stdout, &yt_dlp_rs::output::render_thumbnails(&info))?;
                 }
                 if args.list_subs {
-                    if !info.automatic_captions.is_empty() {
+                    if info.has_automatic_captions_key() {
                         emit_listing(&mut stdout, &render_automatic_captions(&info))?;
                     }
                     emit_listing(&mut stdout, &render_subtitles(&info))?;

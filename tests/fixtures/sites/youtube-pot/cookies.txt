@@ -1,0 +1,7 @@
+# Netscape HTTP Cookie File
+
+.youtube.com	TRUE	/	TRUE	2000000000	LOGIN_INFO	AFmmF2swRQIhAfixture
+.youtube.com	TRUE	/	TRUE	2000000000	SAPISID	sapisid-fixture/AbCdEf
+.youtube.com	TRUE	/	TRUE	2000000000	__Secure-1PAPISID	sapisid-fixture/AbCdEf
+.youtube.com	TRUE	/	TRUE	2000000000	__Secure-3PAPISID	sapisid-fixture/AbCdEf
+.youtube.com	TRUE	/	FALSE	2000000000	SID	sid-fixture

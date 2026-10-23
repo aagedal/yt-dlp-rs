@@ -435,6 +435,19 @@ pub(super) fn relative_time(text: &str, now: f64) -> Option<i64> {
 
 /// `_parse_time_text`: a relative time, else an absolute date.
 pub(super) fn parse_time_text(text: &str) -> Option<i64> {
+    parse_time_text_reporting(text, true, "youtube")
+}
+
+/// `_parse_time_text(text, report_failure)` for `extractor`: nothing for an
+/// empty text.
+pub(super) fn parse_time_text_reporting(
+    text: &str,
+    report_failure: bool,
+    extractor: &str,
+) -> Option<i64> {
+    if text.is_empty() {
+        return None;
+    }
     let now = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .map_or(0.0, |elapsed| elapsed.as_secs_f64());
@@ -453,9 +466,16 @@ pub(super) fn parse_time_text(text: &str) -> Option<i64> {
             .or_else(|| PREFIXED.captures(&lower))?;
         crate::dates::unified_timestamp(&found[1], true)
     });
-    if timestamp.is_none() {
+    // Only reported for English (`self._preferred_lang in (None, 'en')`).
+    if timestamp.is_none()
+        && report_failure
+        && super::preferred_lang()
+            .ok()
+            .flatten()
+            .is_none_or(|lang| lang == "en")
+    {
         crate::screen::warning_once(&format!(
-            "[youtube] Cannot parse localized time text \"{text}\""
+            "[{extractor}] Cannot parse localized time text \"{text}\""
         ));
     }
     timestamp
@@ -606,18 +626,23 @@ pub(super) fn build(input: &Input<'_>) -> Map<String, Value> {
         "video"
     };
 
+    // Without saved thumbnails, `process_video_result` takes the best
+    // generated one (`thumbnails[-1]` after `_sort_thumbnails`).
+    let best_thumbnail = original
+        .last()
+        .or_else(|| {
+            thumbnail_list
+                .iter()
+                .max_by(|a, b| thumbnail_key(a).cmp(&thumbnail_key(b)))
+        })
+        .and_then(|thumbnail| thumbnail.get("url"))
+        .cloned()
+        .unwrap_or(Value::Null);
     let mut info = Map::new();
     info.insert("id".into(), id.into());
     info.insert("title".into(), input.title.into());
     info.insert("thumbnails".into(), Value::Array(thumbnail_list));
-    info.insert(
-        "thumbnail".into(),
-        original
-            .last()
-            .and_then(|thumbnail| thumbnail.get("url"))
-            .cloned()
-            .unwrap_or(Value::Null),
-    );
+    info.insert("thumbnail".into(), best_thumbnail);
     info.insert("description".into(), input.description.into());
     info.insert("channel_id".into(), channel_id.clone().into());
     info.insert(

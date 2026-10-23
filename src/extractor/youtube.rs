@@ -1,5 +1,6 @@
 //! Narrow watch-page slice of YoutubeIE at the pinned upstream revision.
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
+mod args;
 mod challenge;
 mod chapters;
 pub(crate) mod clip;
@@ -7,8 +8,10 @@ pub(crate) mod comments;
 pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
+pub(crate) mod live_chat;
 mod metadata;
 pub(crate) mod notifications;
+mod pot;
 pub(crate) mod redirect;
 pub(crate) mod search;
 mod streams;
@@ -16,8 +19,9 @@ mod subs;
 pub(crate) mod tab;
 pub(crate) mod urls;
 mod watch;
+mod watched;
 use super::{Extractor, direct};
-use crate::{Error, Result, StreamKind, VideoInfo};
+use crate::{Error, ExtractResult, Result, StreamKind, VideoInfo};
 use reqwest::blocking::Client;
 use serde_json::Value;
 use std::path::PathBuf;
@@ -34,12 +38,20 @@ pub struct YoutubeOptions {
     /// Include translated manual captions in automatic-caption metadata.
     /// Original ASR captions/translations are always discovered without fetching.
     pub include_translated_subtitles: bool,
+    /// `writesubtitles or writeautomaticsub or listsubtitles`: PO token
+    /// subtitle skips of non-default clients are warnings.
+    pub subtitles_wanted: bool,
     /// Upstream `noplaylist`: a watch URL with `list=` downloads just its video.
     pub no_playlist: bool,
+    /// Upstream `skip_download`: a live chat download does not warn that it
+    /// runs until the stream ends.
+    pub skip_download: bool,
     /// Upstream `wait_for_video`: wait for a video without formats.
     pub wait_for_video: Option<WaitForVideo>,
     /// Upstream `getcomments`: extract comments in [`crate::YoutubeDl::post_extract`].
     pub get_comments: bool,
+    /// Upstream `mark_watched` (only when cookies were passed).
+    pub mark_watched: bool,
 }
 
 /// `--wait-for-video MIN[-MAX]` seconds, and whether progress lines are shown.
@@ -52,7 +64,10 @@ pub struct WaitForVideo {
 
 struct ConfiguredYoutube {
     include_translated_subtitles: bool,
+    subtitles_wanted: bool,
     get_comments: bool,
+    mark_watched: bool,
+    no_playlist: bool,
     wait_for_video: Option<WaitForVideo>,
     runtime: Option<challenge::Runtime>,
 }
@@ -63,17 +78,68 @@ impl Youtube {
         // with its headers, cookies and proxy.
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,
+            subtitles_wanted: options.subtitles_wanted,
+            no_playlist: options.no_playlist,
             wait_for_video: options.wait_for_video,
             get_comments: options.get_comments,
+            mark_watched: options.mark_watched,
             runtime: options.js_runtime.map(challenge::Runtime::new),
         }
     }
 }
 
+/// `_SUPPORTED_LANG_CODES`: YouTube's UI and API languages.
+const SUPPORTED_LANG_CODES: [&str; 83] = [
+    "af", "az", "id", "ms", "bs", "ca", "cs", "da", "de", "et", "en-IN", "en-GB", "en", "es",
+    "es-419", "es-US", "eu", "fil", "fr", "fr-CA", "gl", "hr", "zu", "is", "it", "sw", "lv", "lt",
+    "hu", "nl", "no", "uz", "pl", "pt-PT", "pt", "ro", "sq", "sk", "sl", "sr-Latn", "fi", "sv",
+    "vi", "tr", "be", "bg", "ky", "kk", "mk", "mn", "ru", "sr", "uk", "el", "hy", "iw", "ur", "ar",
+    "fa", "ne", "mr", "hi", "as", "bn", "pa", "gu", "or", "ta", "te", "kn", "ml", "si", "th", "lo",
+    "my", "ka", "am", "km", "zh-CN", "zh-TW", "zh-HK", "ja", "ko",
+];
+
+/// Upstream `_preferred_lang`: `youtube:lang`, validated against
+/// [`SUPPORTED_LANG_CODES`] (the warning is shown once).
+pub(crate) fn preferred_lang() -> Result<Option<String>> {
+    let Some(lang) = args::non_empty_case("lang") else {
+        return Ok(None);
+    };
+    if !SUPPORTED_LANG_CODES.contains(&lang.as_str()) {
+        return Err(Error::Reported(format!(
+            "Unsupported language code: {lang}. Supported language codes (case-sensitive): {}.",
+            SUPPORTED_LANG_CODES.join(", ")
+        )));
+    }
+    if lang != "en" {
+        crate::screen::warning_once(&format!(
+            "[youtube] Preferring \"{lang}\" translated fields. Note that some metadata extraction may fail or be incorrect."
+        ));
+    }
+    Ok(Some(lang))
+}
+
+/// The `hl` of requests: [`preferred_lang`], else English.
+pub(crate) fn request_lang() -> String {
+    preferred_lang()
+        .ok()
+        .flatten()
+        .unwrap_or_else(|| "en".to_owned())
+}
+
 /// Upstream `YoutubeBaseInfoExtractor._real_initialize`: `_initialize_pref`
-/// (English, UTC) and `_initialize_consent` (accept all; otherwise EU
-/// requests are redirected to consent.youtube.com).
+/// (the preferred language, else English; UTC) and `_initialize_consent`
+/// (accept all; otherwise EU requests are redirected to consent.youtube.com).
+/// An unsupported `youtube:lang` fails like upstream's `ExtractorError`
+/// (`[EXTRACTOR] ID: ...`).
+pub(crate) fn initialize_for(extractor: &str, id: &str) -> Result<()> {
+    preferred_lang().map_err(|error| Error::Reported(format!("[{extractor}] {id}: {error}")))?;
+    initialize();
+    Ok(())
+}
+
+/// [`initialize_for`] after the language was checked.
 pub(crate) fn initialize() {
+    crate::screen::reset_extractor_warnings();
     const HOME: &str = "https://www.youtube.com";
     let mut pref: Vec<(String, String)> = crate::cookies::get_cookie(HOME, "PREF")
         .map(|value| {
@@ -84,7 +150,8 @@ pub(crate) fn initialize() {
         })
         .unwrap_or_default();
     // `dict.update`: replaced keys keep their position.
-    for (key, value) in [("hl", "en"), ("tz", "UTC")] {
+    let lang = request_lang();
+    for (key, value) in [("hl", lang.as_str()), ("tz", "UTC")] {
         match pref.iter_mut().find(|(name, _)| name == key) {
             Some(entry) => entry.1 = value.into(),
             None => pref.push((key.into(), value.into())),
@@ -395,9 +462,242 @@ fn wait_for_video(wait: &WaitForVideo, release_timestamp: Option<i64>, upcoming:
     }
 }
 
+thread_local! {
+    /// The URL a followed `url_result(ID)` names in `Extracting URL:` (its
+    /// bare video ID).
+    static EXTRACTING_AS: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+}
+
+/// `url_result(VIDEO_ID, YoutubeIE)`: the downloader extracts the bare ID
+/// (shown as such) through the watch URL.
+fn follow_video(video_id: &str) -> Result<VideoInfo> {
+    let target = Url::parse(&format!("https://www.youtube.com/watch?v={video_id}"))?;
+    let mut info = direct::build_at(target.clone(), &target, String::new());
+    info.formats.clear();
+    info.direct = None;
+    info.extra
+        .insert(crate::FOLLOW_URL.into(), target.as_str().into());
+    EXTRACTING_AS.with(|shown| *shown.borrow_mut() = Some(video_id.to_owned()));
+    Ok(info)
+}
+
+/// `smuggle_url(URL, {'force_singlefeed': True})`'s fragment.
+const SINGLEFEED_SMUGGLE: &str = "__youtubedl_smuggle=%7B%22force_singlefeed%22%3A+true%7D";
+
+/// `unsmuggle_url(url)`'s `force_singlefeed`.
+fn force_singlefeed(url: &Url) -> bool {
+    url.fragment().is_some_and(|fragment| {
+        url::form_urlencoded::parse(fragment.as_bytes())
+            .find(|(key, _)| key == "__youtubedl_smuggle")
+            .and_then(|(_, data)| serde_json::from_str::<Value>(&data).ok())
+            .is_some_and(|data| tab::truthy(data.get("force_singlefeed")))
+    })
+}
+
+/// The multifeed `playlist_result(entries, video_id, video_title,
+/// video_description)`: a `url_transparent` entry per feed with an ID,
+/// titled `TITLE (FEED TITLE)`, its URL smuggling `force_singlefeed`.
+fn multifeed_playlist(
+    id: &str,
+    metadata: &str,
+    title: &str,
+    description: Option<&str>,
+) -> Result<crate::PlaylistInfo> {
+    let mut entries = Vec::new();
+    let mut feed_ids = Vec::new();
+    for feed in metadata.split(',') {
+        // `parse_qs(unquote_plus(feed))`.
+        let unquoted: String = url::form_urlencoded::parse(format!("x={feed}").as_bytes())
+            .next()
+            .map(|(_, value)| value.into_owned())
+            .unwrap_or_default();
+        let field = |name: &str| {
+            url::form_urlencoded::parse(unquoted.as_bytes())
+                .find(|(key, value)| key == name && !value.is_empty())
+                .map(|(_, value)| value.into_owned())
+        };
+        let Some(feed_id) = field("id") else {
+            continue;
+        };
+        let mut feed_title = title.to_owned();
+        if let Some(name) = field("title") {
+            feed_title.push_str(&format!(" ({name})"));
+        }
+        let target = format!("https://www.youtube.com/watch?v={feed_id}#{SINGLEFEED_SMUGGLE}");
+        let url = Url::parse(&target)?;
+        let mut entry = direct::build_at(url.clone(), &url, String::new());
+        entry.formats.clear();
+        entry.direct = None;
+        entry.id = feed_id.clone();
+        entry.title = feed_title.clone();
+        entry.extra.insert(
+            crate::TRANSPARENT.into(),
+            serde_json::json!({
+                "url": target,
+                "force_videoid": null,
+                "fields": {"title": feed_title},
+                "ie_key": "Youtube",
+                "extractor": "youtube",
+                "keep_webpage_url": true,
+                "entry": {
+                    "_type": "url_transparent",
+                    "ie_key": "Youtube",
+                    "url": target,
+                    "title": feed_title,
+                },
+            }),
+        );
+        entries.push(entry);
+        feed_ids.push(feed_id);
+    }
+    crate::screen::screen(&format!(
+        "[youtube] Downloading multifeed video ({}) - add --no-playlist to just download video {id}",
+        feed_ids.join(", ")
+    ));
+    let mut keys = vec!["id"];
+    let mut extra = serde_json::Map::new();
+    if !title.is_empty() {
+        keys.push("title");
+    }
+    if let Some(description) = description {
+        keys.push("description");
+        extra.insert("description".into(), description.into());
+    }
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        format!("playlist-dict;{}", keys.join(",")).into(),
+    );
+    Ok(crate::PlaylistInfo {
+        id: id.into(),
+        title: title.into(),
+        webpage_url: Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?,
+        extractor: "youtube".into(),
+        extractor_key: "Youtube".into(),
+        nested: Vec::new(),
+        pending: None,
+        entries,
+        extra,
+    })
+}
+
+/// `datetime_from_str(upload_date) >= datetime_from_str('today-2days')`:
+/// `today` is now rounded to the nearest UTC day.
+fn recently_uploaded(upload_date: &str) -> bool {
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |elapsed| elapsed.as_secs() as i64);
+    recently_uploaded_at(upload_date, now)
+}
+
+fn recently_uploaded_at(upload_date: &str, now: i64) -> bool {
+    let part = |range: std::ops::Range<usize>| upload_date.get(range)?.parse::<i64>().ok();
+    let (Some(year), Some(month), Some(day)) = (part(0..4), part(4..6), part(6..8)) else {
+        return false;
+    };
+    let today = (now + 43_200).div_euclid(86_400);
+    metadata::days_from_civil(year, month, day) >= today - 2
+}
+
+/// `get_first(values, key)`: the first value that is not `None`.
+fn get_first<'a>(values: &[&'a Value], key: &str) -> Option<&'a Value> {
+    values
+        .iter()
+        .find_map(|value| value.get(key).filter(|value| !value.is_null()))
+}
+
+/// `initial_title`: the description header's title, else the player
+/// overlay's.
+fn initial_title(initial_data: Option<&Value>) -> Option<String> {
+    let data = initial_data?;
+    let header = data
+        .get("engagementPanels")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .find_map(|panel| {
+            panel
+                .pointer(
+                    "/engagementPanelSectionListRenderer/content/structuredDescriptionContentRenderer",
+                )
+                .filter(|value| value.is_object())
+        })
+        .and_then(|sdcr| sdcr.get("items"))
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .find_map(|item| {
+            item.get("videoDescriptionHeaderRenderer")
+                .filter(|value| value.is_object())
+        });
+    header
+        .and_then(|header| header.get("title"))
+        .and_then(metadata::text)
+        .or_else(|| {
+            data.pointer(
+                "/playerOverlays/playerOverlayRenderer/videoDetails/playerOverlayVideoDetailsRenderer/title",
+            )
+            .and_then(metadata::text)
+        })
+}
+
+/// `ISO3166Utils.short2full`.
+fn country_name(code: &str) -> Option<&'static str> {
+    let code = code.to_uppercase();
+    include_str!("../data/iso3166.txt")
+        .lines()
+        .find_map(|line| line.split_once('\t').filter(|(short, _)| *short == code))
+        .map(|(_, name)| name)
+}
+
+/// `raise_geo_restricted(subreason, countries)` as `YoutubeDL` reports its
+/// `GeoRestrictedError`: the microformat's `availableCountries`, else the
+/// page's `regionsAllowed` meta, as full names.
+fn geo_restricted(id: &str, message: &str, player_responses: &[Value], webpage: &str) -> Error {
+    let mut countries: Vec<String> = player_responses
+        .iter()
+        .find_map(|response| {
+            response
+                .pointer("/microformat/playerMicroformatRenderer/availableCountries")
+                .filter(|countries| !countries.is_null())
+        })
+        .and_then(Value::as_array)
+        .map(|countries| {
+            countries
+                .iter()
+                .filter_map(|code| code.as_str().map(str::to_owned))
+                .collect()
+        })
+        .unwrap_or_default();
+    if countries.is_empty()
+        && let Some(regions) =
+            crate::html::html_search_meta(webpage, "regionsAllowed").filter(|r| !r.is_empty())
+    {
+        countries = regions.split(',').map(str::to_owned).collect();
+    }
+    let mut text = format!("[youtube] {id}: {message}");
+    if !countries.is_empty() {
+        // Unknown codes (a `TypeError` upstream) are shown as given.
+        let names: Vec<&str> = countries
+            .iter()
+            .map(|code| country_name(code).unwrap_or(code))
+            .collect();
+        text.push_str(&format!(
+            "\nThis video is available in {}.",
+            names.join(", ")
+        ));
+    }
+    text.push_str("\nYou might want to use a VPN or a proxy server (with --proxy) to workaround.");
+    Error::Reported(text)
+}
+
 /// `_real_extract`'s reasons for a video without formats: DRM, then the
 /// playability status's error screen (`raise_no_formats(reason)`).
-fn unplayable_reason(id: &str, player_responses: &[Value]) -> Option<Error> {
+fn unplayable_reason(
+    id: &str,
+    player_responses: &[Value],
+    webpage: &str,
+    wait: bool,
+) -> Option<Error> {
     let fail = |message: &str| Error::Reported(format!("[youtube] {id}: {message}"));
     if player_responses.iter().any(|response| {
         response
@@ -419,24 +719,28 @@ fn unplayable_reason(id: &str, player_responses: &[Value]) -> Option<Error> {
         })
         .cloned()
         .unwrap_or(Value::Null);
-    let mut reason = pemr.get("reason").and_then(metadata::text).or_else(|| {
+    let reason = pemr.get("reason").and_then(metadata::text).or_else(|| {
         statuses
             .iter()
             .find_map(|status| status.get("reason").and_then(Value::as_str))
             .map(str::to_owned)
-    })?;
+    });
     let subreason = pemr
         .get("subreason")
         .and_then(metadata::text)
         .map(|text| crate::html::clean_html(&text))
         .unwrap_or_default();
-    if !subreason.is_empty() {
-        if subreason.starts_with("The uploader has not made this video available in your country") {
-            // `raise_geo_restricted` (the available countries are not listed).
-            return Some(Error::Reported(format!(
-                "{subreason}\nYou might want to use a VPN or a proxy server (with --proxy) to workaround."
-            )));
+    if subreason.starts_with("The uploader has not made this video available in your country") {
+        // `raise_geo_restricted(subreason, countries, metadata_available=True)`:
+        // a warning while waiting for videos, else `GeoRestrictedError`.
+        if wait {
+            crate::screen::warning(&format!("[youtube] {subreason}"));
+        } else {
+            return Some(geo_restricted(id, &subreason, player_responses, webpage));
         }
+    }
+    let mut reason = reason?;
+    if !subreason.is_empty() {
         reason.push_str(&format!(". {subreason}"));
     }
     if reason.is_empty() {
@@ -556,25 +860,38 @@ impl streams::Solver for JsSolver<'_> {
 /// without formats to wait for.
 enum Extraction {
     Video(Box<VideoInfo>),
+    /// A paid video's trailer (`url_result(TRAILER_ID, 'Youtube')`).
+    Trailer(String),
+    /// A multifeed video's feeds.
+    Playlist(Box<crate::PlaylistInfo>),
     Wait {
         release_timestamp: Option<i64>,
         upcoming: bool,
     },
 }
 
+#[allow(clippy::too_many_arguments)]
 fn extract_clients(
     client: &Client,
     url: &Url,
     id: &str,
     runtime: Option<&challenge::Runtime>,
-    translated_manual: bool,
+    // Translated manual captions and whether subtitles are wanted.
+    (translated_manual, subtitles_wanted): (bool, bool),
     wait: bool,
     get_comments: bool,
+    mark_watched: bool,
+    no_playlist: bool,
 ) -> Result<Extraction> {
     let input = super::input_text(url);
+    // A trailer or multifeed entry names its own URL; otherwise the input
+    // (a smuggled feed URL too) is shown as given.
+    let shown = EXTRACTING_AS
+        .with(|shown| shown.borrow_mut().take())
+        .unwrap_or_else(|| input.clone());
     crate::screen::screen(&format!(
         "[youtube] Extracting URL: {}",
-        crate::screen::extracting_url(&input)
+        crate::screen::extracting_url(&shown)
     ));
     let music_url = urls::is_music_url(&input);
     // A naked ID's own fragment (`ID#t=…`) holds URL times too.
@@ -599,27 +916,156 @@ fn extract_clients(
             .iter()
             .find_map(|response| response.get(key).filter(|value| value.is_object()))
     };
+    // `playabilityStatus.errorScreen...trailerVideoId`: `url_result(ID)`.
+    if let Some(trailer) = acquired.player_responses.iter().find_map(|response| {
+        response
+            .pointer("/playabilityStatus/errorScreen/playerLegacyDesktopYpcTrailerRenderer/trailerVideoId")
+            .and_then(Value::as_str)
+            .filter(|trailer| !trailer.is_empty())
+    }) {
+        return Ok(Extraction::Trailer(trailer.to_owned()));
+    }
     let details = first("videoDetails").cloned().unwrap_or(Value::Null);
-    // `get_first(video_details, 'title') or search_meta([...])`.
-    let title = details
-        .get("title")
-        .and_then(Value::as_str)
-        .filter(|title| !title.is_empty())
-        .map(str::to_owned)
+    let all_details: Vec<&Value> = acquired
+        .player_responses
+        .iter()
+        .filter_map(|response| {
+            response
+                .get("videoDetails")
+                .filter(|value| value.is_object())
+        })
+        .collect();
+    let all_microformats: Vec<&Value> = acquired
+        .player_responses
+        .iter()
+        .filter_map(|response| {
+            response
+                .pointer("/microformat/playerMicroformatRenderer")
+                .filter(|value| value.is_object())
+        })
+        .collect();
+    let search_meta = |name: &str| crate::html::html_search_meta(&acquired.webpage, name);
+    // `(self._preferred_lang and translated_title) or get_first(video_details,
+    // 'title') or translated_title or search_meta([...])`, else the initial
+    // data's title (with a warning).
+    let preferred_lang = preferred_lang().ok().flatten();
+    let translated_title = all_microformats
+        .iter()
+        .find_map(|micro| micro.get("title").and_then(metadata::text));
+    let mut title = translated_title
+        .clone()
+        .filter(|_| preferred_lang.is_some())
+        .or_else(|| {
+            get_first(&all_details, "title")
+                .and_then(Value::as_str)
+                .filter(|title| !title.is_empty())
+                .map(str::to_owned)
+        })
+        .or_else(|| translated_title.clone())
         .or_else(|| {
             ["og:title", "twitter:title", "title"]
                 .into_iter()
-                .find_map(|name| crate::html::html_search_meta(&acquired.webpage, name))
+                .find_map(search_meta)
+                .filter(|title| !title.is_empty())
+        });
+    if title.is_none()
+        && let Some(initial) = initial_title(acquired.initial_data.as_ref())
+    {
+        crate::screen::warning(
+            "[youtube] No title found in player responses; falling back to title from initial data. Other metadata may also be missing",
+        );
+        title = Some(initial);
+    }
+    let title = title.unwrap_or_default();
+    let microformats: Vec<&Value> = acquired
+        .player_responses
+        .iter()
+        .filter_map(|response| response.pointer("/microformat/playerMicroformatRenderer"))
+        .collect();
+    // `((lang and translated_description) or original_description) if
+    // original_description is not None else translated_description`, else
+    // the initial data's.
+    let translated_description = microformats
+        .iter()
+        .find_map(|micro| micro.get("description").and_then(metadata::text));
+    let description = acquired
+        .player_responses
+        .iter()
+        .find_map(|response| {
+            response
+                .pointer("/videoDetails/shortDescription")
+                .filter(|value| !value.is_null())
         })
-        .unwrap_or_default();
-    let duration = details
-        .get("lengthSeconds")
-        .and_then(|value| {
-            value
-                .as_str()?
-                .parse::<i64>()
-                .ok()
-                .or_else(|| value.as_i64())
+        .map(|value| {
+            translated_description
+                .clone()
+                .filter(|_| preferred_lang.is_some())
+                .unwrap_or_else(|| value.as_str().unwrap_or_default().to_owned())
+        })
+        .or_else(|| translated_description.clone())
+        .or_else(|| {
+            acquired.initial_data.as_ref().and_then(|data| {
+                data.get("engagementPanels")?
+                    .as_array()?
+                    .iter()
+                    .filter_map(|panel| {
+                        panel.pointer(
+                            "/engagementPanelSectionListRenderer/content/structuredDescriptionContentRenderer/items",
+                        )
+                    })
+                    .filter_map(Value::as_array)
+                    .flatten()
+                    .find_map(|item| {
+                        item.pointer(
+                            "/expandableVideoDescriptionBodyRenderer/attributedDescriptionBodyText/content",
+                        )?
+                        .as_str()
+                        .map(str::to_owned)
+                    })
+            })
+        });
+    // Multifeed (multicamera) videos are playlists of their feeds, unless
+    // `--no-playlist` or the URL smuggles `force_singlefeed`.
+    if let Some(metadata) = acquired.player_responses.iter().find_map(|response| {
+        response
+            .pointer("/multicamera/playerLegacyMulticameraRenderer/metadataList")
+            .and_then(Value::as_str)
+            .filter(|list| !list.is_empty())
+    }) && !force_singlefeed(url)
+    {
+        if no_playlist {
+            crate::screen::screen(&format!(
+                "[youtube] Downloading just video {id} because of --no-playlist"
+            ));
+        } else {
+            return Ok(Extraction::Playlist(Box::new(multifeed_playlist(
+                id,
+                metadata,
+                &title,
+                description.as_deref(),
+            )?)));
+        }
+    }
+    // `int_or_none(lengthSeconds)` of the details, then the microformats,
+    // then `parse_duration(search_meta('duration'))`.
+    let length = |values: &[&Value]| {
+        get_first(values, "lengthSeconds")
+            .and_then(|value| match value {
+                Value::String(text) => text.trim().parse::<i64>().ok(),
+                other => other.as_i64(),
+            })
+            .filter(|duration| *duration != 0)
+    };
+    let duration = length(&all_details)
+        .or_else(|| length(&all_microformats))
+        .or_else(|| {
+            match search_meta("duration").and_then(|meta| crate::parse_duration(&meta))? {
+                crate::info::PyNumber::Int(value) => Some(value),
+                // A fractional duration is not represented.
+                crate::info::PyNumber::Float(value) => {
+                    (value.fract() == 0.0).then_some(value as i64)
+                }
+            }
         })
         .filter(|duration| *duration != 0);
     // `_list_formats`' live status from the video details.
@@ -642,6 +1088,16 @@ fn extract_clients(
     if live_status == Some("post_live") {
         return Err(unsupported("post-live videos"));
     }
+    // `formats=duplicate,dashy,incomplete,missing_pot`, `skip=hls,dash` and
+    // `player_skip=js`.
+    let format_types = args::list("formats");
+    let mut all_formats = format_types.iter().any(|kind| kind == "duplicate");
+    if !args::list("include_duplicate_formats").is_empty() {
+        all_formats = true;
+        crate::screen::deprecated_feature(
+            "[youtube] include_duplicate_formats extractor argument is deprecated. Use formats=duplicate extractor argument instead",
+        );
+    }
     let context = streams::Context {
         client,
         video_id: id,
@@ -649,12 +1105,12 @@ fn extract_clients(
         live_status,
         duration,
         verbose: crate::screen::verbose(),
-        all_formats: false,
-        skip_bad_formats: true,
-        dashy: false,
-        missing_pot: false,
-        skip_player_js: false,
-        skip_manifests: Default::default(),
+        all_formats,
+        skip_bad_formats: !format_types.iter().any(|kind| kind == "incomplete"),
+        dashy: format_types.iter().any(|kind| kind == "dashy"),
+        missing_pot: format_types.iter().any(|kind| kind == "missing_pot"),
+        skip_player_js: args::contains("player_skip", "js"),
+        skip_manifests: args::list("skip").into_iter().collect(),
         premium: acquired.premium,
     };
     let mut solver = JsSolver {
@@ -686,6 +1142,24 @@ fn extract_clients(
             formats.push(format);
         }
     }
+    // `if not duration and live_end_time and live_start_time`.
+    let broadcast = |key: &str| {
+        all_microformats.iter().find_map(|micro| {
+            micro
+                .get("liveBroadcastDetails")
+                .and_then(|details| details.get(key))
+                .filter(|value| !value.is_null())
+        })
+    };
+    let duration = duration.or_else(|| {
+        let time = |key: &str| {
+            broadcast(key)
+                .and_then(Value::as_str)
+                .and_then(crate::dates::parse_iso8601)
+                .filter(|time| *time != 0)
+        };
+        Some(time("endTimestamp")? - time("startTimestamp")?)
+    });
     for dict in streams::storyboards(&acquired.player_responses, duration, id) {
         let mut format = streams::to_format(&dict, id)?;
         format.extra.insert("rows".into(), dict["rows"].clone());
@@ -697,10 +1171,15 @@ fn extract_clients(
     }
     // Captions from the client responses, into `_list_formats`' manifest
     // subtitles (the automatic captions' container).
-    let clients: Vec<(&str, &Value)> = acquired
+    let clients: Vec<subs::ClientCaptions<'_>> = acquired
         .responses
         .iter()
-        .map(|response| (response.client, &response.response))
+        .map(|response| subs::ClientCaptions {
+            client: response.client,
+            response: &response.response,
+            pot: &response.pot,
+            innertube_client_name: &response.innertube_client_name,
+        })
         .collect();
     let manifest_subtitles = match serde_json::to_value(&streams.subtitles) {
         Ok(Value::Object(map)) => map,
@@ -710,7 +1189,12 @@ fn extract_clients(
         &acquired.player_responses,
         &clients,
         manifest_subtitles,
-        translated_manual,
+        &subs::Options {
+            video_id: id,
+            subs_wanted: subtitles_wanted,
+            // `'translated_subs' not in skip and (writeautomaticsub or listsubtitles)`.
+            translated: translated_manual && !args::contains("skip", "translated_subs"),
+        },
     );
     // `set_audio_lang_from_orig_subs_lang`: the first original language.
     if let Some(language) = captions.audio_languages.first() {
@@ -720,8 +1204,8 @@ fn extract_clients(
             }
         }
     }
-    let Some(first_format) = formats.first() else {
-        let reason = unplayable_reason(id, &acquired.player_responses);
+    if formats.is_empty() {
+        let reason = unplayable_reason(id, &acquired.player_responses, &acquired.webpage, wait);
         if wait {
             // `raise_no_formats(expected=True)` warns while waiting for videos
             // (only `report_drm` passes the video ID).
@@ -747,53 +1231,11 @@ fn extract_clients(
             });
         }
         return Err(reason.unwrap_or_else(|| no_formats(id)));
-    };
-    let microformats: Vec<&Value> = acquired
-        .player_responses
-        .iter()
-        .filter_map(|response| response.pointer("/microformat/playerMicroformatRenderer"))
-        .collect();
-    // `original_description if original_description is not None else
-    // translated_description`, else the initial data's.
-    let description = acquired
-        .player_responses
-        .iter()
-        .find_map(|response| {
-            response
-                .pointer("/videoDetails/shortDescription")
-                .filter(|value| !value.is_null())
-        })
-        .map(|value| value.as_str().unwrap_or_default().to_owned())
-        .or_else(|| {
-            microformats
-                .iter()
-                .find_map(|micro| micro.get("description").and_then(metadata::text))
-        })
-        .or_else(|| {
-            acquired.initial_data.as_ref().and_then(|data| {
-                data.get("engagementPanels")?
-                    .as_array()?
-                    .iter()
-                    .filter_map(|panel| {
-                        panel.pointer(
-                            "/engagementPanelSectionListRenderer/content/structuredDescriptionContentRenderer/items",
-                        )
-                    })
-                    .filter_map(Value::as_array)
-                    .flatten()
-                    .find_map(|item| {
-                        item.pointer(
-                            "/expandableVideoDescriptionBodyRenderer/attributedDescriptionBodyText/content",
-                        )?
-                        .as_str()
-                        .map(str::to_owned)
-                    })
-            })
-        });
+    }
     // `get_first(video_details, 'keywords', list) or [og:video:tag...]`.
-    let mut keywords: Vec<String> = details
-        .get("keywords")
-        .and_then(Value::as_array)
+    let mut keywords: Vec<String> = all_details
+        .iter()
+        .find_map(|details| details.get("keywords").and_then(Value::as_array))
         .map(|keywords| {
             keywords
                 .iter()
@@ -813,6 +1255,26 @@ fn extract_clients(
             .filter_map(|found| found.get(1).or_else(|| found.get(2)))
             .map(|value| crate::html::unescape_html(value.as_str()))
             .collect();
+    }
+    // `yt:stretch=W:H`: the first valid ratio, on every video format.
+    static STRETCH: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"(\d+)\s*:\s*(\d+)").unwrap());
+    if let Some(ratio) = keywords
+        .iter()
+        .filter(|keyword| keyword.starts_with("yt:stretch="))
+        .filter_map(|keyword| STRETCH.captures(keyword))
+        .find_map(|found| {
+            let (width, height): (f64, f64) = (found[1].parse().ok()?, found[2].parse().ok()?);
+            (width > 0.0 && height > 0.0).then(|| width / height)
+        })
+    {
+        for format in formats
+            .iter_mut()
+            .filter(|format| format.vcodec.as_deref() != Some("none"))
+        {
+            format.extra.insert("stretched_ratio".into(), ratio.into());
+            crate::info_order::mark_format_update(format, "stretched_ratio");
+        }
     }
     let chapters = chapters::extract(
         acquired.initial_data.as_ref(),
@@ -838,7 +1300,19 @@ fn extract_clients(
         automatic_captions: Value::Object(captions.automatic),
         subtitles: Value::Object(captions.subtitles),
     });
+    // Newly uploaded (within two days) videos' HLS formats need testing.
+    if !matches!(live_status, Some("is_live" | "post_live" | "is_upcoming"))
+        && let Some(upload_date) = dict.get("upload_date").and_then(Value::as_str)
+        && recently_uploaded(upload_date)
+    {
+        for format in &mut formats {
+            if format.protocol.as_deref() == Some("m3u8_native") {
+                format.extra.insert("__needs_testing".into(), true.into());
+            }
+        }
+    }
     let page = Url::parse(&format!("https://www.youtube.com/watch?v={id}"))?;
+    let first_format = &formats[0];
     let mut info = direct::build_at(first_format.url.clone(), &page, first_format.ext.clone());
     info.direct = None;
     info.id = id.into();
@@ -890,6 +1364,10 @@ fn extract_clients(
             _ => crate::metadata_parser::set_field(&mut info, &key, value),
         }
     }
+    // `self.mark_watched(video_id, player_responses)`.
+    if mark_watched {
+        watched::mark(client, id, &acquired.player_responses);
+    }
     Ok(Extraction::Video(Box::new(crate::info_order::mark_info(
         info,
         &format!("youtube;{}", keys.join(",")),
@@ -901,15 +1379,48 @@ impl Extractor for Youtube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        video_only(self.extract_result(client, url)?)
+    }
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         let Some(id) = video_id(url) else {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
-        initialize();
-        match extract_clients(client, url, &id, None, false, false, false)? {
-            Extraction::Video(info) => Ok(Some(*info)),
+        initialize_for("youtube", &id)?;
+        match extract_clients(
+            client,
+            url,
+            &id,
+            None,
+            (false, false),
+            false,
+            false,
+            false,
+            false,
+        )? {
             Extraction::Wait { .. } => unreachable!("waiting is not configured"),
+            extraction => extraction.into_result().map(Some),
         }
+    }
+}
+
+/// [`Extractor::extract`] of an extraction that may be a playlist.
+fn video_only(result: Option<ExtractResult>) -> Result<Option<VideoInfo>> {
+    match result {
+        None => Ok(None),
+        Some(ExtractResult::Video(info)) => Ok(Some(info)),
+        Some(ExtractResult::Playlist(_)) => Err(unsupported("multifeed playlists here")),
+    }
+}
+
+impl Extraction {
+    fn into_result(self) -> Result<ExtractResult> {
+        Ok(match self {
+            Extraction::Video(info) => ExtractResult::Video(*info),
+            Extraction::Trailer(trailer) => ExtractResult::Video(follow_video(&trailer)?),
+            Extraction::Playlist(playlist) => ExtractResult::Playlist(*playlist),
+            Extraction::Wait { .. } => unreachable!("handled by the caller"),
+        })
     }
 }
 
@@ -918,22 +1429,26 @@ impl Extractor for ConfiguredYoutube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        video_only(self.extract_result(client, url)?)
+    }
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         let Some(id) = video_id(url) else {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
-        initialize();
+        initialize_for("youtube", &id)?;
         loop {
             match extract_clients(
                 client,
                 url,
                 &id,
                 self.runtime.as_ref(),
-                self.include_translated_subtitles,
+                (self.include_translated_subtitles, self.subtitles_wanted),
                 self.wait_for_video.is_some(),
                 self.get_comments,
+                self.mark_watched,
+                self.no_playlist,
             )? {
-                Extraction::Video(info) => return Ok(Some(*info)),
                 Extraction::Wait {
                     release_timestamp,
                     upcoming,
@@ -943,6 +1458,7 @@ impl Extractor for ConfiguredYoutube {
                     // `ReExtractInfo(expected=True)`.
                     crate::screen::screen(&format!("{message}; Re-extracting data"));
                 }
+                extraction => return extraction.into_result().map(Some),
             }
         }
     }
@@ -975,6 +1491,25 @@ mod tests {
             sid_authorization_at("o", None, "1", [None, None, None]),
             None
         );
+    }
+
+    #[test]
+    fn recent_uploads_follow_datetime_from_str_today_minus_two_days() {
+        // 2026-10-22 11:00 UTC rounds to the 22nd; 13:00 UTC to the 23rd.
+        let morning = 1_792_666_800;
+        assert!(recently_uploaded_at("20261020", morning));
+        assert!(!recently_uploaded_at("20261019", morning));
+        let afternoon = morning + 2 * 3600;
+        assert!(!recently_uploaded_at("20261020", afternoon));
+        assert!(recently_uploaded_at("20261021", afternoon));
+        assert!(!recently_uploaded_at("bad", morning));
+    }
+
+    #[test]
+    fn country_names_follow_iso3166_utils() {
+        assert_eq!(country_name("no"), Some("Norway"));
+        assert_eq!(country_name("AX"), Some("Åland Islands"));
+        assert_eq!(country_name("XX"), None);
     }
 
     #[test]
