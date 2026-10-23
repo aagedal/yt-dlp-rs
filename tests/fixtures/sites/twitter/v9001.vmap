@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vmap:VMAP xmlns:vmap="http://www.iab.net/videosuite/vmap" version="1.0">
+<vmap:AdBreak breakId="0" breakType="linear" timeOffset="start"><vmap:AdSource><vmap:AdTagURI templateType="vast3"><![CDATA[https://ads.example.invalid/ad]]></vmap:AdTagURI></vmap:AdSource></vmap:AdBreak>
+<vmap:Extensions><vmap:Extension type="Twitter"><tw:videoVariants xmlns:tw="http://twitter.com/schema/videoVMapV2.xsd">
+<tw:videoVariant url="https%3A%2F%2Fvideo.twimg.com%2Fext_tw_video%2F9001%2Fpu%2Fvid%2F640x360%2Fv.mp4" content_type="video/mp4" bit_rate="832000"/>
+<tw:videoVariant url="https%3A%2F%2Fvideo.twimg.com%2Fext_tw_video%2F9001%2Fpu%2Fpl%2Fv.m3u8" content_type="application/x-mpegURL"/>
+</tw:videoVariants></vmap:Extension></vmap:Extensions>
+<VAST version="3.0"><Ad><InLine><Creatives><Creative><Linear><MediaFiles>
+<MediaFile type="video/mp4" width="320" height="180"><![CDATA[ https://video.twimg.com/ext_tw_video/9001/pu/vid/320x180/m.mp4 ]]></MediaFile>
+</MediaFiles></Linear></Creative></Creatives></InLine></Ad></VAST>
+</vmap:VMAP>

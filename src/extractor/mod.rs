@@ -66,6 +66,7 @@ mod nobelprize;
 mod odnoklassniki;
 mod oneplace;
 mod parlview;
+mod periscope;
 mod photobucket;
 mod pinterest;
 mod playerfm;
@@ -187,6 +188,7 @@ pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
+pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
 pub use pinterest::{Pinterest, suitable as pinterest_suitable};
 pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
@@ -234,7 +236,10 @@ pub use twitch::{
     videos_suitable as twitch_videos_suitable, vod_suitable as twitch_vod_suitable,
 };
 pub use twitter::{
-    Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
+    Twitter, TwitterAmplify, TwitterBroadcast, TwitterCard, TwitterShortener, TwitterSpaces,
+    amplify_suitable as twitter_amplify_suitable, broadcast_suitable as twitter_broadcast_suitable,
+    card_suitable as twitter_card_suitable, shortener_suitable as twitter_shortener_suitable,
+    spaces_suitable as twitter_spaces_suitable, suitable as twitter_suitable,
 };
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
@@ -1059,6 +1064,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
         || instagram::ios_suitable(url)
+        || (url.starts_with("tco:") && twitter::shortener_suitable(url))
         || youtube::redirect::user_suitable(url)
 }
 

@@ -401,6 +401,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Odnoklassniki",
     "OnePlacePodcast",
     "Parlview",
+    "periscope",
     "Photobucket",
     "Pinterest",
     "PlayerFm",
@@ -438,7 +439,11 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "twitch:videos",
     "twitch:vod",
     "twitter",
+    "twitter:amplify",
+    "twitter:broadcast",
     "twitter:card",
+    "twitter:shortener",
+    "twitter:spaces",
     "23video",
     "vimeo",
     "vk",
@@ -637,6 +642,11 @@ impl YoutubeDl {
                 Box::new(extractor::Reddit),
                 Box::new(extractor::Twitter),
                 Box::new(extractor::TwitterCard),
+                Box::new(extractor::TwitterAmplify),
+                Box::new(extractor::TwitterBroadcast),
+                Box::new(extractor::TwitterSpaces),
+                Box::new(extractor::TwitterShortener),
+                Box::new(extractor::Periscope),
                 Box::new(extractor::TikTok),
                 Box::new(extractor::TikTokVm),
                 Box::new(extractor::Instagram),
@@ -1558,6 +1568,24 @@ impl YoutubeDl {
         self
     }
 
+    /// Whether a selected format has the `m3u8` protocol, which upstream
+    /// downloads with FFmpegFD unless `--downloader native` is given.
+    fn forced_ffmpeg_hls(&self, info: &VideoInfo) -> bool {
+        let forced = |protocol: &str| {
+            protocol == "m3u8"
+                && !self
+                    .downloader_name(protocol)
+                    .is_some_and(|name| name.eq_ignore_ascii_case("native"))
+        };
+        if info.requested_formats.is_empty() {
+            info.protocol.as_deref().is_some_and(forced)
+        } else {
+            info.requested_formats
+                .iter()
+                .any(|format| forced(&format.determine_protocol()))
+        }
+    }
+
     /// Upstream `get_suitable_downloader(...) == FFmpegFD`: partial downloads,
     /// or every selected protocol assigned to `ffmpeg` by `--downloader`.
     pub fn uses_ffmpeg_fd(&self, info: &VideoInfo) -> bool {
@@ -1568,6 +1596,10 @@ impl YoutubeDl {
             return false;
         }
         if sections::is_partial(info) {
+            return true;
+        }
+        // `PROTOCOL_MAP['m3u8']`: the non-native HLS protocol is FFmpeg's.
+        if self.forced_ffmpeg_hls(info) {
             return true;
         }
         // `_get_suitable_downloader`: live HLS uses FFmpegFD, as does live
@@ -2860,6 +2892,12 @@ impl YoutubeDl {
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
+        // FFmpegFD's `m3u8` protocol without ffmpeg (`_call_downloader`).
+        if self.ffmpeg.is_none() && self.forced_ffmpeg_hls(info) {
+            return Err(Error::Reported(
+                "m3u8 download detected but ffmpeg could not be found. Please install".into(),
+            ));
+        }
         // Merged F4M formats are not supported (upstream merges F4mFD files).
         if info
             .requested_formats

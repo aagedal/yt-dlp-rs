@@ -584,7 +584,7 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         "twitter-http" => &[
             ("url", Take),
             ("format_id", Take),
-            ("tbr", Take),
+            ("tbr", Assign),
             ("width", Take),
             ("height", Take),
         ],
@@ -735,9 +735,26 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         ],
         _ => &[],
     };
+    // `+KEY`: a key the caller's update adds (absent from the extractor's
+    // dict), so it follows the extractor's keys.
+    let late: Vec<(String, Option<Value>)> = update
+        .iter()
+        .filter_map(|key| key.strip_prefix('+'))
+        .map(|key| (key.to_owned(), replay.ours.shift_remove(key)))
+        .collect();
     replay.steps(extractor);
     for key in &update {
-        replay.assign(key);
+        match key.strip_prefix('+') {
+            Some(name) => {
+                let value = late
+                    .iter()
+                    .find(|(late, _)| late == name)
+                    .and_then(|(_, value)| value.clone())
+                    .unwrap_or(Value::Null);
+                replay.out.insert(name.to_owned(), value);
+            }
+            None => replay.assign(key),
+        }
     }
     if let Some(original) = &original {
         replay.loaded(original);

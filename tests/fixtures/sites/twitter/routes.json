@@ -5,6 +5,16 @@
    "headers": {
     "Content-Type": "application/json"
    },
+   "request_headers": {
+    "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAIK1zgAAAAAA2tUWuhGZ2JceoId5GwYWU5GspY4%3DUq7gzFoCZs1QfwGoVdvSac3IniczZEYXIcDyumCauIXpcAPorE"
+   },
+   "body": "{\"guest_token\": \"555\"}"
+  },
+  {
+   "url": "https://api.x.com/1.1/guest/activate.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
    "body": "{\"guest_token\": \"1234567890\"}"
   },
   {
@@ -97,6 +107,281 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom"
+  },
+  {
+   "url": "https://cdn.syndication.twimg.com/tweet-result?id=1006&token=8wz2sdwriwr",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "User-Agent": "Googlebot"
+   },
+   "body_file": "synd1006.json"
+  },
+  {
+   "url": "https://video.twimg.com/ext_tw_video/6001/pu/pl/s.m3u8?tag=12",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=%7B%22tweetId%22%3A%221007%22%2C%22withCommunity%22%3Afalse%2C%22includePromotedContent%22%3Afalse%2C%22withVoice%22%3Afalse%7D&features=%7B%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Afalse%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22responsive_web_media_download_video_enabled%22%3Afalse%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Afalse%7D",
+   "status": 429,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"errors\": [{\"message\": \"Rate limit exceeded\", \"code\": 88}]}"
+  },
+  {
+   "url": "https://cdn.syndication.twimg.com/tweet-result?id=1007&token=8xakag7pmbv",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "User-Agent": "Googlebot"
+   },
+   "body_file": "synd1007.json"
+  },
+  {
+   "url": "https://api.x.com/1.1/statuses/show/1008.json?cards_platform=Web-12&include_cards=1&include_reply_count=1&include_user_entities=0&tweet_mode=extended",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "request_headers": {
+    "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAAIK1zgAAAAAA2tUWuhGZ2JceoId5GwYWU5GspY4%3DUq7gzFoCZs1QfwGoVdvSac3IniczZEYXIcDyumCauIXpcAPorE",
+    "x-guest-token": "555"
+   },
+   "body_file": "legacy1008.json"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=%7B%22tweetId%22%3A%221009%22%2C%22withCommunity%22%3Afalse%2C%22includePromotedContent%22%3Afalse%2C%22withVoice%22%3Afalse%7D&features=%7B%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Afalse%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22responsive_web_media_download_video_enabled%22%3Afalse%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Afalse%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "tweet1009.json"
+  },
+  {
+   "url": "https://amp.twimg.com/prod/multibr_v_2/vmap/2016/06/21/9001/v.vmap",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body_file": "v9001.vmap"
+  },
+  {
+   "url": "https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=%7B%22tweetId%22%3A%221010%22%2C%22withCommunity%22%3Afalse%2C%22includePromotedContent%22%3Afalse%2C%22withVoice%22%3Afalse%7D&features=%7B%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Afalse%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22responsive_web_media_download_video_enabled%22%3Afalse%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Afalse%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "tweet1010.json"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=%7B%22tweetId%22%3A%221011%22%2C%22withCommunity%22%3Afalse%2C%22includePromotedContent%22%3Afalse%2C%22withVoice%22%3Afalse%7D&features=%7B%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Afalse%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22responsive_web_media_download_video_enabled%22%3Afalse%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Afalse%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "tweet1011.json"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=%7B%22tweetId%22%3A%221012%22%2C%22withCommunity%22%3Afalse%2C%22includePromotedContent%22%3Afalse%2C%22withVoice%22%3Afalse%7D&features=%7B%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Afalse%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22responsive_web_media_download_video_enabled%22%3Afalse%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Afalse%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "tweet1012.json"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=%7B%22tweetId%22%3A%221013%22%2C%22withCommunity%22%3Afalse%2C%22includePromotedContent%22%3Afalse%2C%22withVoice%22%3Afalse%7D&features=%7B%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Afalse%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22responsive_web_media_download_video_enabled%22%3Afalse%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticleRichContentState%22%3Afalse%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "tweet1013.json"
+  },
+  {
+   "url": "https://api.x.com/1.1/broadcasts/show.json?ids=1yNGaQLWpejGj",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "broadcast1.json"
+  },
+  {
+   "url": "https://api.x.com/1.1/live_video_stream/status/28_1267219166281990144",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "stream1.json"
+  },
+  {
+   "url": "https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/transcode/master_dynamic_highlatency.m3u8?type=replay",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "request_headers": {
+    "Referer": "https://www.periscope.tv/"
+   },
+   "body_file": "pscp_master.m3u8"
+  },
+  {
+   "url": "https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/transcode/chunklist.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://api.x.com/1.1/broadcasts/show.json?ids=1upcoming0000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "broadcast2.json"
+  },
+  {
+   "url": "https://api.x.com/1.1/broadcasts/show.json?ids=1gone00000000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "broadcast3.json"
+  },
+  {
+   "url": "https://api.x.com/1.1/live_event/1/1910629646300762112/timeline.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "event1.json"
+  },
+  {
+   "url": "https://api.x.com/1.1/live_event/1/2018869372748472320/timeline.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "event2.json"
+  },
+  {
+   "url": "https://api.periscope.tv/api/v2/accessVideoPublic?broadcast_id=1ZkKzPbMVggJv",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "periscope1.json"
+  },
+  {
+   "url": "https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/p1/master.m3u8?type=live",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "request_headers": {
+    "Referer": "https://www.periscope.tv/"
+   },
+   "body_file": "pscp_master.m3u8"
+  },
+  {
+   "url": "https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/p1/chunklist.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/HPEisOmj1epUNLCWTYhUWw/AudioSpaceById?variables=%7B%22id%22%3A%221OwxWwQOPlNxQ%22%2C%22isMetatagsQuery%22%3Atrue%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withReplays%22%3Atrue%2C%22withSuperFollowsUserFields%22%3Atrue%2C%22withSuperFollowsTweetFields%22%3Atrue%7D&features=%7B%22dont_mention_me_view_api_enabled%22%3Atrue%2C%22interactive_text_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Atrue%2C%22responsive_web_uc_gql_enabled%22%3Atrue%2C%22spaces_2022_h2_clipping%22%3Atrue%2C%22spaces_2022_h2_spaces_communities%22%3Afalse%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Afalse%2C%22vibe_api_enabled%22%3Atrue%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "space1.json"
+  },
+  {
+   "url": "https://api.x.com/1.1/live_video_stream/status/28_1666",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "space1_stream.json"
+  },
+  {
+   "url": "https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/s1/non_transcode/audio-space/playlist_1.m3u8?type=replay",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "request_headers": {
+    "Referer": "https://twitter.com/"
+   },
+   "body_file": "space_media.m3u8"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/HPEisOmj1epUNLCWTYhUWw/AudioSpaceById?variables=%7B%22id%22%3A%221vAxRAVQWONJl%22%2C%22isMetatagsQuery%22%3Atrue%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withReplays%22%3Atrue%2C%22withSuperFollowsUserFields%22%3Atrue%2C%22withSuperFollowsTweetFields%22%3Atrue%7D&features=%7B%22dont_mention_me_view_api_enabled%22%3Atrue%2C%22interactive_text_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Atrue%2C%22responsive_web_uc_gql_enabled%22%3Atrue%2C%22spaces_2022_h2_clipping%22%3Atrue%2C%22spaces_2022_h2_spaces_communities%22%3Afalse%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Afalse%2C%22vibe_api_enabled%22%3Atrue%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "space2.json"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/HPEisOmj1epUNLCWTYhUWw/AudioSpaceById?variables=%7B%22id%22%3A%221DXGydznBYWKM%22%2C%22isMetatagsQuery%22%3Atrue%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withReplays%22%3Atrue%2C%22withSuperFollowsUserFields%22%3Atrue%2C%22withSuperFollowsTweetFields%22%3Atrue%7D&features=%7B%22dont_mention_me_view_api_enabled%22%3Atrue%2C%22interactive_text_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Atrue%2C%22responsive_web_uc_gql_enabled%22%3Atrue%2C%22spaces_2022_h2_clipping%22%3Atrue%2C%22spaces_2022_h2_spaces_communities%22%3Afalse%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Afalse%2C%22vibe_api_enabled%22%3Atrue%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "space3.json"
+  },
+  {
+   "url": "https://api.x.com/1.1/live_video_stream/status/28_1824",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "space3_stream.json"
+  },
+  {
+   "url": "https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/s3/transcode/playlist_v.m3u8?type=replay",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "request_headers": {
+    "Referer": "https://twitter.com/"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://x.com/i/api/graphql/HPEisOmj1epUNLCWTYhUWw/AudioSpaceById?variables=%7B%22id%22%3A%221NotFound0000%22%2C%22isMetatagsQuery%22%3Atrue%2C%22withDownvotePerspective%22%3Afalse%2C%22withReactionsMetadata%22%3Afalse%2C%22withReactionsPerspective%22%3Afalse%2C%22withReplays%22%3Atrue%2C%22withSuperFollowsUserFields%22%3Atrue%2C%22withSuperFollowsTweetFields%22%3Atrue%7D&features=%7B%22dont_mention_me_view_api_enabled%22%3Atrue%2C%22interactive_text_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Atrue%2C%22responsive_web_uc_gql_enabled%22%3Atrue%2C%22spaces_2022_h2_clipping%22%3Atrue%2C%22spaces_2022_h2_spaces_communities%22%3Afalse%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Afalse%2C%22vibe_api_enabled%22%3Atrue%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "space4.json"
+  },
+  {
+   "url": "https://t.co/AbC123",
+   "status": 301,
+   "headers": {
+    "Location": "https://twitter.com/safety/unsafe_link_warning?unsafe_link=https://x.com/poster/status/1001"
+   },
+   "request_headers": {
+    "User-Agent": "curl"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://twitter.com/safety/unsafe_link_warning?unsafe_link=https://x.com/poster/status/1001",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "request_headers": {
+    "User-Agent": "curl"
+   },
+   "body": "<html><title>Warning</title></html>"
+  },
+  {
+   "url": "https://amp.twimg.com/v/0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "amplify.html"
+  },
+  {
+   "url": "https://amp.twimg.com/prod/multibr_v_2/vmap/2015/12/01/amp/a.vmap",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body_file": "v9001.vmap"
   }
  ]
 }
