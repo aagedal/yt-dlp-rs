@@ -1,6 +1,6 @@
 # Saved output-template reference cases
 
-Pinned official yt-dlp: `897341241f2bfb2439fe0367f4c7c9ccd29a3828`.
+Pinned official yt-dlp: `6ccd977303412151ee23352c6257dd658ffc1987`.
 
 `cases.json` contains 213 shared cases and three explicitly source-only cases.
 Each case has a complete native `VideoInfo`-shaped `info`, a `template`, the

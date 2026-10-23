@@ -1,5 +1,5 @@
 {
-  "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+  "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
   "normalization": "No ID or order normalization. Reference formats supplied in this explicit best-last order; no upstream sorting invoked. Compare selected ID or requested_formats IDs only. Native ranking/group compatibility and merge metadata differ outside these deliberately aligned cases. Context flags reflect full initial formats and are preserved by group filters as upstream does.",
   "info": {
     "id": "selector-fixture",

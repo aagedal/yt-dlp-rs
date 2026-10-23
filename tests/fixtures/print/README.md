@@ -1,6 +1,6 @@
 # Saved print reference cases
 
-Pinned official yt-dlp: `897341241f2bfb2439fe0367f4c7c9ccd29a3828`.
+Pinned official yt-dlp: `6ccd977303412151ee23352c6257dd658ffc1987`.
 
 `cases.json` contains 23 shared cases and one source-only case (a replacement
 format spec). Each case has

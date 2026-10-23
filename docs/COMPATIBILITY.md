@@ -1692,7 +1692,7 @@ The per-request timeouts still apply to each attempt; there is no overall
 download deadline. Cooperative download cancellation is described below.
 
 This slice is based on the same pinned revision
-**897341241f2bfb2439fe0367f4c7c9ccd29a3828**, specifically
+**6ccd977303412151ee23352c6257dd658ffc1987**, specifically
 `yt_dlp/downloader/http.py`'s `RetryDownload`/`RetryManager` control flow,
 transport-read failures, and Content-Length validation. Its broader 5xx retry
 handling remains outside this slice.
@@ -1825,13 +1825,13 @@ expose cancellation flags.
 
 The library observer is a native extension of the transport milestone, not a
 port of upstream's progress-hook contract or CLI cancellation behavior. The pinned baseline remains
-**897341241f2bfb2439fe0367f4c7c9ccd29a3828**. Deterministic local HTTP tests in
+**6ccd977303412151ee23352c6257dd658ffc1987**. Deterministic local HTTP tests in
 `tests/progress.rs` cover observer events, response-derived/unknown totals,
 resumed and restarted counters, cancellation cleanup, and retry-wait polling.
 
 ## Source and differential fixtures
 
-This slice uses the existing baseline, **897341241f2bfb2439fe0367f4c7c9ccd29a3828**:
+This slice uses the existing baseline, **6ccd977303412151ee23352c6257dd658ffc1987**:
 
 - `yt_dlp/extractor/generic.py`: response dispatch, HTML embed orchestration, and single-vs-playlist dispatch.
 - `yt_dlp/extractor/genericembeds.py`, `HTML5MediaEmbedIE`: numbered entry metadata for single videos and playlists.
@@ -1882,7 +1882,7 @@ recursive result processing remain unimplemented.
 ## Progressive automatic selection source slice
 
 This slice uses the existing pinned source commit
-**897341241f2bfb2439fe0367f4c7c9ccd29a3828** and leaves the global baseline unchanged.
+**6ccd977303412151ee23352c6257dd658ffc1987** and leaves the global baseline unchanged.
 `InfoExtractor._parse_html5_media_entries` in `yt_dlp/extractor/common.py` supplies
 source width/height/res handling; its corresponding dimension examples in
 `test/test_InfoExtractor.py` were reviewed. `FormatSorter` in

@@ -1,5 +1,5 @@
 {
-  "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+  "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
   "normalization": "Actual CLI option validation, materialized PlaylistEntries and orderedSet, then reverse. Only one-based source indices subtract one to expose native zero-based selection. Request order/first-seen dedup and warning presence remain significant. Native ASCII/i64/16KiB/1024-segment policy and eager-only scope are explicit exclusions.",
   "cases": [
     {

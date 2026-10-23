@@ -4,8 +4,8 @@
   "player_file": "player-74edf1a3.js",
   "player_url": "https://www.youtube.com/s/player/74edf1a3/player_ias.vflset/en_US/base.js",
   "player_sha3_512": "1fd297295bdaca4b870512d9c2d8246dce31450c6fbb059a5ce081deafbe7c10673c9ab73df6e002bb5a6070b0face3872f4463c4fb57f362cfe6cb62527c2f8",
-  "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
-  "vectors_source": "https://github.com/yt-dlp/yt-dlp/blob/897341241f2bfb2439fe0367f4c7c9ccd29a3828/test/test_jsc/test_ejs_integration.py",
+  "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+  "vectors_source": "https://github.com/yt-dlp/yt-dlp/blob/6ccd977303412151ee23352c6257dd658ffc1987/test/test_jsc/test_ejs_integration.py",
   "normalization": "Exact challenge and solution strings; no URL or timestamp normalization.",
   "requests": [
     {

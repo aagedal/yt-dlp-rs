@@ -21,7 +21,7 @@ import tempfile
 
 from site_proxy import SiteProxy
 
-PINNED_UPSTREAM = '897341241f2bfb2439fe0367f4c7c9ccd29a3828'
+PINNED_UPSTREAM = '6ccd977303412151ee23352c6257dd658ffc1987'
 SITES = Path(__file__).resolve().parents[1] / 'tests/fixtures/sites'
 EJS = Path(__file__).resolve().parents[1] / 'vendor/ejs'
 

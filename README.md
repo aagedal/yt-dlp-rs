@@ -2,13 +2,41 @@
 
 An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 It downloads direct HTTP media and a limited subset of HTML5 media pages, with
-a foundation for porting extractors and tracking upstream changes. This is an
-early prototype. YouTube (videos, live streams, playlists, mixes, channels,
+a foundation for porting extractors and tracking upstream changes. This is a
+beta. YouTube (videos, live streams, playlists, mixes, channels,
 search, hashtags and YouTube Music URLs), Reddit, X/Twitter, TikTok, Douyin,
 Instagram and Facebook are extracted like pinned upstream on saved fixtures. YouTube was
 also spot-checked against the live site and pinned upstream on 2026-10-22
-(downloads, `-F`/`-j` output and playlist/channel listings matched); the other
-sites have not been verified live.
+(downloads, `-F`/`-j` output and playlist/channel listings matched).
+
+### Social networks (0.3.0 beta)
+
+The largest social networks that upstream yt-dlp supports are ported against
+release 2026.10.21 and were compared live with it on 2026-10-23 (same
+formats, metadata or the same error). WhatsApp, WeChat, Messenger and
+Kuaishou have no upstream extractor.
+
+| Network | Covered | Notes |
+| --- | --- | --- |
+| YouTube | videos, live, Shorts, playlists, channels, search, Music | PO tokens and a JS runtime as upstream |
+| Facebook | videos, reels, watch parties, ad library, redirects | comments not supported |
+| Instagram | posts, reels, carousels, stories, highlights, tags, users | stories and most listings need `--cookies` |
+| TikTok | videos, subtitles, users, collections, live | sound/effect/tag lists (broken upstream) not ported |
+| Douyin | videos | needs fresh browser cookies, as upstream |
+| X/Twitter | posts, cards, broadcasts, Spaces, `t.co`, Periscope | Periscope RTMP unsupported |
+| Telegram | public post embeds | posts without their own video are an error |
+| Snapchat | Spotlight | |
+| Weibo | posts and `weibo.com/tv` videos | user pages not ported |
+| Pinterest | pins | boards and collections not ported |
+| Reddit | posts | some posts need cookies, as upstream |
+| LinkedIn | posts | learning courses not ported |
+| XiaoHongShu (RedNote) | video notes | |
+| Bilibili | videos | bangumi, spaces and audio not ported |
+| VK | videos, clips, wall posts, user videos, VK Play | VK's JS challenge is unsupported |
+
+Tumblr, Twitch (VODs, clips, live, channel lists), Bluesky and Kick are
+supported too. Sites that need browser impersonation upstream (for example
+Dailymotion) are limited: impersonation is not available.
 
 Pre-release binaries for Linux, macOS and Windows are attached to the
 [GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases): pushing a

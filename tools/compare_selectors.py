@@ -28,7 +28,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-PINNED_UPSTREAM = "897341241f2bfb2439fe0367f4c7c9ccd29a3828"
+PINNED_UPSTREAM = "6ccd977303412151ee23352c6257dd658ffc1987"
 FIXTURE = Path(__file__).resolve().parents[1] / "tests/fixtures/selectors/expressions.json"
 UPSTREAM_WORKER = r'''
 import copy, json, socket, sys

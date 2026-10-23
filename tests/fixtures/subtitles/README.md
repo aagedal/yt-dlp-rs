@@ -1,6 +1,6 @@
 # Saved HTML5 subtitle references
 
-Official pinned source: `897341241f2bfb2439fe0367f4c7c9ccd29a3828`.
+Official pinned source: `6ccd977303412151ee23352c6257dd658ffc1987`.
 Run `python3 tools/compare_subtitles.py --upstream /path/to/pinned/yt-dlp`.
 The worker invokes actual upstream methods and blocks sockets, child processes,
 downloads, webpage acquisition and manifest extraction. Direct MP4/MP3 sources

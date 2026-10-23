@@ -29,7 +29,7 @@ import sys
 import threading
 from urllib.parse import urlsplit
 
-PINNED_UPSTREAM = "897341241f2bfb2439fe0367f4c7c9ccd29a3828"
+PINNED_UPSTREAM = "6ccd977303412151ee23352c6257dd658ffc1987"
 RANGE_MANIFEST = """#EXTM3U
 #EXT-X-VERSION:7
 #EXT-X-TARGETDURATION:1

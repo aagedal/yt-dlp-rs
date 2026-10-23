@@ -1,6 +1,6 @@
 # Saved proxy configuration references
 
-Official pinned yt-dlp: `897341241f2bfb2439fe0367f4c7c9ccd29a3828`.
+Official pinned yt-dlp: `6ccd977303412151ee23352c6257dd658ffc1987`.
 Run `python3 tools/compare_proxies.py --upstream /path/to/pinned/yt-dlp`.
 
 `cases.json` contains 50 source configurations and eight additional explicitly

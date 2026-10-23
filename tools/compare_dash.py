@@ -36,7 +36,7 @@ import sys
 import threading
 from urllib.parse import urljoin, urlsplit
 
-PINNED_UPSTREAM = "897341241f2bfb2439fe0367f4c7c9ccd29a3828"
+PINNED_UPSTREAM = "6ccd977303412151ee23352c6257dd658ffc1987"
 # plan-list.mpd in FormatSorter order: audio, then video.
 NATIVE_LIST_RANGES = [
     [{"offset": 0, "length": 8}, {"offset": 8, "length": 16}, {"offset": 24, "length": 24}],
