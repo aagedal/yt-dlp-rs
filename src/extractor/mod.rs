@@ -81,10 +81,12 @@ mod rutube;
 mod screenrec;
 mod sen;
 mod smil;
+mod snapchat;
 mod soundcloud;
 mod streamable;
 mod sztvhu;
 mod ted;
+mod telegram;
 mod theintercept;
 mod thisamericanlife;
 mod tiktok;
@@ -191,6 +193,7 @@ pub use rutube::{
 };
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
+pub use snapchat::{SnapchatSpotlight, suitable as snapchat_suitable};
 pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
@@ -199,6 +202,7 @@ pub use ted::{
     playlist_suitable as ted_playlist_suitable, series_suitable as ted_series_suitable,
     talk_suitable as ted_talk_suitable,
 };
+pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use tiktok::{

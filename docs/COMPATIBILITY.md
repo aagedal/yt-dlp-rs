@@ -421,6 +421,17 @@ formats (its subtitles ignored with upstream's warning), and the first
 `details` node's title (else the generic title, after `fulltitle`), first
 description and string badge tags.
 
+Snapchat Spotlight snaps (`[www.]snapchat.com/spotlight/ID`) follow upstream
+`SnapchatSpotlightIE` (2026.10.21): the page's Next.js data (`Unable to
+extract next.js data` without it), the spotlight story whose `storyId` is the
+ID, and its `videoMetadata` as an untyped `mp4` result (`contentUrl`, width,
+height, millisecond upload date and duration as floats, name, description,
+share and view counts with `-1` as `None`, thumbnail and creator), then the
+story's description, string hashtags as `tags` and engagement counts. Without
+a matching story the result has no formats (upstream's generic-title warning
+and `No video formats found!`). `tests/fixtures/sites/snapchat/` is compared
+with pinned upstream output.
+
 SoundCloud tracks (`soundcloud.com/USER/TRACK[/SECRET]`,
 `api[-v2].soundcloud.com/tracks/ID`) follow upstream `SoundcloudIE`: the web
 client ID from the home page's JS assets (last first; refreshed after a
@@ -451,6 +462,22 @@ formats), so none are made. Playlists (`TedPlaylistIE`) and series, or one
 `#season_N` (`TedSeriesIE`), are playlists of talk `url` results;
 `embed[-ssl].ted.com` URLs (`TedEmbedIE`) are rewritten to `www`.
 `tests/fixtures/sites/ted/` is compared with pinned upstream output.
+
+Telegram public posts (`t.me/CHANNEL/ID`) follow upstream
+`TelegramEmbedIE` (2026.10.21): the post's embed frame (`?embed=1`, any
+`single` parameter dropped; `Downloading embed frame`), each video player's
+`<video>` source as an `mp4` format, its link's basename as the ID and
+`?single=True` link as `webpage_url`, the `M:SS` duration and thumbnail
+(upstream's non-fatal warnings when missing), and the message's cleaned text
+on one line as title and description (processing's generic title without
+text), author as `channel`, channel name and `<time datetime>` timestamp.
+Posts with several videos are playlists (`CHANNEL-ID`, titled `AUTHOR ID`,
+with the text as description) unless the URL has `single` or
+`--no-playlist` is given, which pick the post's own video. A post without a
+video of its own (text-only posts, or `--no-playlist` on a group whose ID is
+not a video) is an unsupported error here; upstream warns that the extractor
+returned nothing. `tests/fixtures/sites/telegram/` is compared with pinned
+upstream output.
 
 The Intercept Field of Vision posts (`theintercept.com/fieldofvision/SLUG`)
 follow upstream `TheInterceptIE`: the page's `initialStoreTree` post with the

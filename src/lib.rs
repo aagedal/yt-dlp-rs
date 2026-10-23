@@ -323,7 +323,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 127] = [
+const EXTRACTOR_NAMES: [&str; 129] = [
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -404,6 +404,7 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "rutube:embed",
     "ScreenRec",
     "Sen",
+    "SnapchatSpotlight",
     "soundcloud",
     "Streamable",
     "SztvHu",
@@ -411,6 +412,7 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "TedPlaylist",
     "TedSeries",
     "TedTalk",
+    "telegram:embed",
     "TheIntercept",
     "ThisAmericanLife",
     "TikTok",
@@ -745,8 +747,10 @@ impl YoutubeDl {
                 Box::new(extractor::Rtrfm),
                 Box::new(extractor::ScreenRec),
                 Box::new(extractor::Sen),
+                Box::new(extractor::SnapchatSpotlight),
                 Box::new(extractor::Streamable),
                 Box::new(extractor::SztvHu),
+                Box::new(extractor::TelegramEmbed),
                 Box::new(extractor::TheIntercept),
                 Box::new(extractor::ThisAmericanLife),
                 Box::new(extractor::Tweakers),

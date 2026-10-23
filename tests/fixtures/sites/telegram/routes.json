@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://t.me/europa_press/613?embed=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "europa_press-613.html"
+  },
+  {
+   "url": "https://t.me/vorposte/29342?embed=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "vorposte-29342.html"
+  },
+  {
+   "url": "https://t.me/vorposte/29343?embed=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "vorposte-29342.html"
+  },
+  {
+   "url": "https://t.me/clips_channel/77?embed=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "notext-77.html"
+  },
+  {
+   "url": "https://cdn4.telesco.pe/file/europa_press_613.mp4?token=fixture613",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-telegram-613"
+  },
+  {
+   "url": "https://cdn4.telesco.pe/file/vorposte_29342.mp4?token=fixture29342",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-telegram-29342"
+  },
+  {
+   "url": "https://cdn4.telesco.pe/file/vorposte_29343.mp4?token=fixture29343",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-telegram-29343-longer"
+  }
+ ]
+}

@@ -970,6 +970,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "fuyintv"
             | "harpodeon"
     ) || shape.starts_with("nobelprize;")
+        || shape.starts_with("untyped-dict;")
         || original
             .as_ref()
             .is_some_and(|original| !original.contains_key("formats"));
@@ -1911,6 +1912,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             );
         }
     }
+    // An extractor's own dict that is its own (only) format, built without
+    // `None` values (`traverse_obj` dict templates): `untyped-dict;KEYS`.
+    if let Some(keys) = shape.strip_prefix("untyped-dict;") {
+        for key in keys.split(',').filter(|key| !key.is_empty()) {
+            replay.take(key);
+        }
+    }
     // `AngelIE`: `merge_dicts(info_dict, json_ld)`.
     if let Some(keys) = shape.strip_prefix("angel;") {
         for (key, how) in [
@@ -2388,7 +2396,7 @@ fn youtube_tab_playlist(
         map.shift_remove("title");
     }
     let mut replay = Replay::new(map);
-    for key in keys.split(',') {
+    for key in keys.split(',').filter(|key| !key.is_empty()) {
         replay.set(key, Assign);
     }
     replay.take("_type");
