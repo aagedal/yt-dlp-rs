@@ -768,11 +768,32 @@ upstream does), the source rendition preferred, storyboard `mhtml` formats,
 thumbnails, chapters and the URL's `t` start time. Twitch clips
 (`clips.twitch.tv/SLUG`, `twitch.tv/[CHANNEL/]clip/SLUG`) follow
 `TwitchClipsIE`: the clip GraphQL, signed default and portrait quality URLs,
-thumbnails and metadata. Live streams, collections and channel video lists
-are not supported. The usher URL's random `p` parameter makes VOD `-J`
-output non-deterministic upstream too, so `tests/fixtures/sites/twitch/`
-compares VODs through `--print` and `-F` (fixture routes may now ignore named
-query parameters).
+thumbnails and metadata. A `403` usher response with a JSON body reports
+upstream's subscriber-only message (with the login hint unless an
+`auth-token` cookie is set) or its `error_code: error`. Twitch live channels
+(`twitch.tv/CHANNEL`, `player.twitch.tv/?channel=CHANNEL`) follow
+`TwitchStreamIE`: the stream GraphQL (missing channels and offline channels
+are upstream's errors), the stream access token and the live usher master
+(its variants are not read, as upstream; live HLS downloads go through
+FFmpeg), `(live)`/`(rerun)` titles and `is_live`. With `--live-from-start` the
+channel's latest VOD is extracted instead when it started with the stream
+(else upstream's warning), and VOD formats carry `is_from_start` and the
+`-live_start_index 0` FFmpeg option. Channel lists (`CHANNEL/videos` with
+`filter`/`sort`, `CHANNEL/clips` with `range`, `videos?filter=collections`)
+follow `TwitchVideosIE`, `TwitchVideosClipsIE` and `TwitchVideosCollectionsIE`:
+cursor-paged GraphQL fetched lazily as entries are read (a missing channel is
+upstream's unprefixed `Channel "NAME" not found`), with upstream's
+`url_transparent` entries (float durations included). Collections
+(`twitch.tv/collections/ID`) follow `TwitchCollectionIE`. A page whose edges
+yield no entries ends a list here; upstream would request it again
+endlessly. Login (`--username`/`--netrc`) and the `client_id` extractor
+argument are not supported; an `auth-token` cookie is sent like upstream. VOD
+rechat subtitles no longer exist upstream. The usher URL's random `p`
+parameter makes VOD and stream `-J` output non-deterministic upstream too, so
+`tests/fixtures/sites/twitch/` compares them through `--print` and `-F`
+(fixture routes may now ignore named query parameters). Info dicts without
+`live_status` now get it from `is_live`/`was_live` like upstream's
+`_fill_common_fields`.
 
 X/Twitter posts (`twitter.com`, `x.com`, `mobile.`/`m.`/`www.` and the onion
 host: `NAME/status/ID`, `i/web/status/ID`, `statuses/ID`, optionally

@@ -113,7 +113,8 @@ Supported today:
   (relay data with DASH, progressive URLs and captions; server JS, pagelet
   and tahoe player pages; watch parties; JSON-LD metadata), Facebook ad
   library ads and `flx/warn` redirects, Vimeo player and
-  clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
+  clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs, clips, live streams,
+  channel video/clip/collection lists and collections,
   Bandcamp tracks, Rumble videos, Kick VODs, clips, live channels and channel video/clip lists, Bluesky
   posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,
   Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, wall posts, user video lists and VK Play Live streams, Niconico videos, Weibo posts, XiaoHongShu (RedNote) video notes, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, OK.ru videos,

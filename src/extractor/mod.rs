@@ -222,9 +222,16 @@ pub use tiktok::{
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
+pub(crate) use twitch::{
+    LIVE_FROM_START as TWITCH_LIVE_FROM_START, fetch_pages as fetch_twitch_pages,
+};
 pub use twitch::{
-    TwitchClips, TwitchVod, clips_suitable as twitch_clips_suitable,
-    vod_suitable as twitch_vod_suitable,
+    TwitchClips, TwitchCollection, TwitchStream, TwitchVideos, TwitchVideosClips,
+    TwitchVideosCollections, TwitchVod, clips_suitable as twitch_clips_suitable,
+    collection_suitable as twitch_collection_suitable, stream_suitable as twitch_stream_suitable,
+    videos_clips_suitable as twitch_videos_clips_suitable,
+    videos_collections_suitable as twitch_videos_collections_suitable,
+    videos_suitable as twitch_videos_suitable, vod_suitable as twitch_vod_suitable,
 };
 pub use twitter::{
     Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,

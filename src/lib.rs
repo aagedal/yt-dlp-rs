@@ -431,6 +431,11 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Tumblr",
     "Tweakers",
     "twitch:clips",
+    "twitch:collection",
+    "twitch:stream",
+    "twitch:videos:clips",
+    "twitch:videos:collections",
+    "twitch:videos",
     "twitch:vod",
     "twitter",
     "twitter:card",
@@ -649,6 +654,11 @@ impl YoutubeDl {
                 Box::new(extractor::Soundcloud),
                 Box::new(extractor::TwitchVod),
                 Box::new(extractor::TwitchClips),
+                Box::new(extractor::TwitchCollection),
+                Box::new(extractor::TwitchVideosClips),
+                Box::new(extractor::TwitchVideosCollections),
+                Box::new(extractor::TwitchVideos),
+                Box::new(extractor::TwitchStream),
                 Box::new(extractor::Bandcamp),
                 Box::new(extractor::RumbleEmbed),
                 Box::new(extractor::Rumble),
@@ -1409,13 +1419,13 @@ impl YoutubeDl {
     /// it has `limit` entries, or all of them; entries still pending remain.
     pub fn fetch_pending(&self, playlist: &mut PlaylistInfo, limit: Option<usize>) -> Result<()> {
         if let Some(pending) = playlist.pending.take() {
-            playlist.pending = extractor::fetch_youtube_tab_pages(
-                &self.client,
-                pending.state,
-                limit,
-                &mut playlist.entries,
-            )?
-            .map(|state| PendingEntries { state });
+            let fetch = if pending.state["kind"] == "twitch" {
+                extractor::fetch_twitch_pages
+            } else {
+                extractor::fetch_youtube_tab_pages
+            };
+            playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
+                .map(|state| PendingEntries { state });
         }
         Ok(())
     }
@@ -2060,6 +2070,7 @@ impl YoutubeDl {
     /// `--live-from-start`: live streams keep their title and default format.
     pub fn with_live_from_start(mut self, from_start: bool) -> Self {
         self.live_from_start = from_start;
+        extractor::TWITCH_LIVE_FROM_START.store(from_start, std::sync::atomic::Ordering::Relaxed);
         self
     }
 
