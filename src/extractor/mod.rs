@@ -129,8 +129,10 @@ pub use ebay::{Ebay, suitable as ebay_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use facebook::{
-    Facebook, FacebookPluginsVideo, FacebookReel, plugins_suitable as facebook_plugins_suitable,
-    reel_suitable as facebook_reel_suitable, suitable as facebook_suitable,
+    Facebook, FacebookAds, FacebookPluginsVideo, FacebookRedirectUrl, FacebookReel,
+    ads_suitable as facebook_ads_suitable, plugins_suitable as facebook_plugins_suitable,
+    redirect_suitable as facebook_redirect_suitable, reel_suitable as facebook_reel_suitable,
+    suitable as facebook_suitable,
 };
 pub use fathom::{Fathom, suitable as fathom_suitable};
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};

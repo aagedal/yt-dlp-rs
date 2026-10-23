@@ -108,7 +108,9 @@ Supported today:
   (GraphQL with a guest token; videos, multi-video playlists, cards), TikTok
   videos (webpage data, the page's JS challenge, short links), Instagram
   posts and reels (logged out; carousels as playlists), Facebook videos
-  (relay data with DASH, progressive URLs and captions), Vimeo player and
+  (relay data with DASH, progressive URLs and captions; server JS, pagelet
+  and tahoe player pages; watch parties; JSON-LD metadata), Facebook ad
+  library ads and `flx/warn` redirects, Vimeo player and
   clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
   Bandcamp tracks, Rumble videos, Kick VODs, clips and live channels, Bluesky
   posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,

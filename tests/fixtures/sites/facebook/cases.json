@@ -4,5 +4,21 @@
  {"url": "https://www.facebook.com/reel/1234567890", "args": ["--print", "%(id)s|%(title)s|%(webpage_url)s"]},
  {"url": "https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fsomeone%2Fvideos%2F1234567890%2F&show_text=0", "args": ["--print", "%(id)s|%(uploader)s|%(duration)s"]},
  {"url": "https://www.facebook.com/someone/videos/999/", "args": ["-j"]},
- {"url": "https://www.facebook.com/watch/?v=1234567890", "args": ["--list-subs"]}
+ {"url": "https://www.facebook.com/watch/?v=1234567890", "args": ["--list-subs"]},
+ {"url": "https://www.facebook.com/video.php?v=1111111111", "args": ["-J"]},
+ {"url": "https://www.facebook.com/video.php?v=1111111111", "args": ["-F"]},
+ {"url": "https://www.facebook.com/someone/videos/2222222222/", "args": ["-J"]},
+ {"url": "https://www.facebook.com/someone/posts/3333333333", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://www.facebook.com/someone/posts/3333333333", "args": ["--print", "%(id)s|%(title)s|%(playlist_index)s|%(webpage_url)s"]},
+ {"url": "https://www.facebook.com/video.php?v=4444444444", "args": ["-J"]},
+ {"url": "https://www.facebook.com/video.php?v=5555555555", "args": ["-j"]},
+ {"url": "https://www.facebook.com/video.php?v=5555555556", "args": ["-j"]},
+ {"url": "https://www.facebook.com/watchparty/6666666666", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://www.facebook.com/watchparty/6666666666", "args": ["-I", "1", "--print", "%(id)s|%(title)s|%(playlist_id)s|%(webpage_url)s"]},
+ {"url": "https://www.facebook.com/flx/warn/?h=AT0&u=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D1234567890&s=1", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"]},
+ {"url": "https://www.facebook.com/flx/warn/?h=AT0&u=javascript%3Aalert(1)", "args": ["-j"]},
+ {"url": "https://www.facebook.com/ads/library/?id=8888888888", "args": ["-J"]},
+ {"url": "https://www.facebook.com/ads/library/?id=9999999999", "args": ["-J"]},
+ {"url": "https://www.facebook.com/ads/library/?id=7777777777", "args": ["-j"]},
+ {"url": "https://www.facebook.com/reel/1212121212", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(uploader)s|%(uploader_id)s|%(duration)s"]}
 ]

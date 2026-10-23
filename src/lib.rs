@@ -323,7 +323,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 127] = [
+const EXTRACTOR_NAMES: [&str; 129] = [
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -347,9 +347,11 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "EbaumsWorld",
     "Ebay",
     "Epoch",
+    "facebook:ads",
     "facebook",
     "facebook:reel",
     "FacebookPluginsVideo",
+    "FacebookRedirectURL",
     "Fathom",
     "Fczenit",
     "Filmweb",
@@ -614,6 +616,8 @@ impl YoutubeDl {
                 Box::new(extractor::Facebook),
                 Box::new(extractor::FacebookReel),
                 Box::new(extractor::FacebookPluginsVideo),
+                Box::new(extractor::FacebookRedirectUrl),
+                Box::new(extractor::FacebookAds),
                 Box::new(extractor::Vimeo),
                 Box::new(extractor::Dailymotion),
                 Box::new(extractor::Soundcloud),

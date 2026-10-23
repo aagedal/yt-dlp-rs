@@ -102,10 +102,16 @@ pub fn clean_html(text: &str) -> String {
 }
 
 pub fn og_search_property(html: &str, prop: &str) -> Option<String> {
+    og_search_raw(html, prop).map(|value| unescape_html(&value))
+}
+
+/// `_search_regex(_og_regexes(prop), html)`: the `content` as written (no
+/// unescaping, unlike `_og_search_property`).
+pub fn og_search_raw(html: &str, prop: &str) -> Option<String> {
     og_regexes(prop).iter().find_map(|regex| {
         let found = regex.captures(html)?;
         let value = found.iter().skip(1).flatten().next()?;
-        Some(unescape_html(value.as_str()))
+        Some(value.as_str().to_owned())
     })
 }
 
