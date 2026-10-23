@@ -7,71 +7,70 @@ import tempfile
 import unittest
 from unittest import mock
 
-from compare_hls_audio import PINNED_UPSTREAM, compare, main, normalize, verify_upstream
+from compare_hls_audio import NATIVE_REQUESTS, PINNED_UPSTREAM, compare, main, verify_upstream
 
 ORIGIN = "http://127.0.0.1:43210"
+HEADERS = {"User-Agent": "fixture"}
 
 
 class HlsAudioComparisonTests(unittest.TestCase):
     def setUp(self):
-        self.native = [
-            {"url": ORIGIN + "/video.m3u8?token=x", "stream_kind": "video_only",
-             "width": 1280, "height": 720, "tbr": 140.0, "audio_group": "main"},
-            {"url": ORIGIN + "/audio.m3u8", "stream_kind": "audio_only",
-             "language": "en", "format_note": "English", "audio_default": True,
-             "audio_autoselect": True, "ext": "aac"},
-        ]
         self.upstream = [
-            {"url": ORIGIN + "/audio.m3u8", "vcodec": "none", "language": "en",
-             "format_note": "English", "ext": None},
-            {"url": ORIGIN + "/video.m3u8?token=x", "acodec": "none",
-             "width": 1280, "height": 720, "tbr": 140.0, "_audio_group_id": "main"},
+            {"format_id": "main-English", "format_note": "English", "format_index": None,
+             "url": ORIGIN + "/audio.m3u8", "manifest_url": ORIGIN + "/master.m3u8",
+             "language": "en", "ext": "mp4", "protocol": "m3u8_native", "vcodec": "none",
+             "audio_ext": "mp4", "video_ext": "none", "vbr": 0, "abr": None, "tbr": None},
+            {"format_id": "140", "url": ORIGIN + "/video.m3u8?token=x",
+             "manifest_url": ORIGIN + "/master.m3u8", "tbr": 140.0, "ext": "mp4", "fps": None,
+             "protocol": "m3u8_native", "width": 1280, "height": 720, "vcodec": "avc1.64000a",
+             "acodec": "none", "dynamic_range": None, "video_ext": "mp4", "audio_ext": "none",
+             "abr": 0, "vbr": 140.0},
         ]
+        self.native = copy.deepcopy(self.upstream)
+        self.native[0].update({"resolution": "audio only", "aspect_ratio": None,
+                               "http_headers": HEADERS, "format": "main-English - audio only (English)"})
+        self.native[1].update({"dynamic_range": "SDR", "resolution": "1280x720", "aspect_ratio": 1.78,
+                               "http_headers": HEADERS, "format": "140 - 1280x720"})
 
-    def test_url_order_normalization_is_explicit_and_inputs_remain_unchanged(self):
+    def test_format_dicts_match_in_order_without_mutation(self):
         before = copy.deepcopy((self.native, self.upstream))
         actual = compare(self.native, self.upstream, ORIGIN)
         self.assertEqual([source["url"] for source in actual],
                          ["{{ORIGIN}}/audio.m3u8", "{{ORIGIN}}/video.m3u8?token=x"])
-        self.assertEqual(actual[0]["stream_kind"], "audio_only")
-        self.assertEqual(actual[1]["stream_kind"], "video_only")
-        self.assertEqual(compare(self.native[::-1], self.upstream[::-1], ORIGIN), actual)
+        self.assertEqual(actual[1]["dynamic_range"], "SDR")
         self.assertEqual((self.native, self.upstream), before)
-        actual[0]["language"] = "changed"
-        self.assertEqual((self.native, self.upstream), before)
+        with self.assertRaisesRegex(ValueError, "external-audio format mismatch"):
+            compare(self.native[::-1], self.upstream, ORIGIN)
 
-    def test_every_allowlisted_field_difference_and_missing_format_are_errors(self):
+    def test_every_value_key_set_and_missing_format_are_significant(self):
         for index, field, value in (
-                (0, "url", ORIGIN + "/changed.m3u8"), (0, "stream_kind", "standalone"),
-                (0, "width", 1920), (0, "height", 1080), (0, "tbr", 141.0),
-                (1, "language", "fr"), (1, "format_note", "French")):
+                (0, "url", ORIGIN + "/changed.m3u8"), (0, "ext", "aac"), (0, "vcodec", None),
+                (0, "language", "fr"), (0, "format_note", "French"), (0, "format_id", "audio"),
+                (1, "width", 1920), (1, "height", 1080), (1, "tbr", 141.0), (1, "acodec", None),
+                (1, "manifest_url", ORIGIN + "/other.m3u8"), (1, "protocol", "m3u8"),
+                (0, "stream_kind", "audio_only")):
             changed = copy.deepcopy(self.native)
             changed[index][field] = value
-            with self.subTest(field=field), self.assertRaisesRegex(ValueError, "metadata mismatch"):
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, "format mismatch"):
                 compare(changed, self.upstream, ORIGIN)
-        with self.assertRaisesRegex(ValueError, "metadata mismatch"):
+        changed = copy.deepcopy(self.native)
+        del changed[0]["language"]
+        with self.assertRaisesRegex(ValueError, "format mismatch"):
+            compare(changed, self.upstream, ORIGIN)
+        with self.assertRaisesRegex(ValueError, "format mismatch"):
             compare(self.native[:-1], self.upstream, ORIGIN)
 
-    def test_duplicates_fail_in_either_list_instead_of_collapsing(self):
-        for native, upstream in ((self.native + self.native, self.upstream),
-                                 (self.native, self.upstream + self.upstream)):
-            with self.assertRaisesRegex(ValueError, "duplicate format URL"):
-                compare(native, upstream, ORIGIN)
+    def test_only_exact_origin_is_normalized(self):
+        for url in ("https://127.0.0.1:43210/audio", "http://127.0.0.1:432100/audio"):
+            native = copy.deepcopy(self.native)
+            native[0]["url"] = url
+            upstream = copy.deepcopy(self.upstream)
+            upstream[0]["url"] = url
+            self.assertEqual(compare(native, upstream, ORIGIN)[0]["url"], url)
 
-    def test_optional_fields_ignored_fields_and_exact_origin_normalization(self):
-        native = [{"url": ORIGIN + "/muxed", "format_id": "native", "audio_default": True}]
-        upstream = [{"url": ORIGIN + "/muxed", "format_id": "upstream", "language": None}]
-        self.assertEqual(compare(native, upstream, ORIGIN)[0]["stream_kind"], "standalone")
-        for url in ("https://127.0.0.1:43210/audio", "http://127.0.0.1:432100/audio",
-                    "https://example.invalid/audio"):
-            self.assertEqual(normalize([{"url": url}], ORIGIN)[0]["url"], url)
-        with self.assertRaises(KeyError):
-            normalize([{}], ORIGIN)
-        with self.assertRaisesRegex(ValueError, "unknown native stream kind"):
-            normalize([{"url": ORIGIN + "/audio", "stream_kind": "unknown"}], ORIGIN)
-        with self.assertRaisesRegex(ValueError, "neither audio nor video"):
-            normalize([{"url": ORIGIN + "/audio", "vcodec": "none", "acodec": "none"}],
-                      ORIGIN, upstream=True)
+    def test_native_requests_are_pinned_manifest_paths_only(self):
+        self.assertTrue(all(path.endswith(".m3u8") for path in NATIVE_REQUESTS))
+        self.assertEqual(NATIVE_REQUESTS[0], "/audio-video/master.m3u8")
 
     def test_requires_exact_pinned_checkout(self):
         with tempfile.TemporaryDirectory() as directory:
