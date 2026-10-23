@@ -65,7 +65,8 @@ def prepare(site, case, directory):
 def run(upstream, proxy, case, site=None):
     directory = tempfile.mkdtemp()
     copied = prepare(site, case, directory) if site else set()
-    env = dict(os.environ, PYTHONPATH=str(upstream))
+    # Absolute: upstream runs from a temporary working directory.
+    env = dict(os.environ, PYTHONPATH=str(Path(upstream).resolve()))
     result = subprocess.run(
         [sys.executable, '-m', 'yt_dlp', '--ignore-config', '--proxy', proxy.url,
          '--no-check-certificate', '--user-agent', 'fixture', '--cache-dir', str(seeded_cache()),
