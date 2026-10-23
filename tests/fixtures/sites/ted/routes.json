@@ -62,6 +62,55 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom-ext"
+  },
+  {
+   "url": "https://www.ted.com/talks/brene_brown_the_power_of_vulnerability",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"videoData\": {\"id\": \"1042\", \"title\": \"The power of vulnerability\", \"presenterDisplayName\": \"Brené Brown\", \"description\": \"Talk description\", \"duration\": 1202, \"videoPlayerData\": {\"thumb\": \"https://pi.tedcdn.test/r/1042.jpg?w=600\", \"resources\": {\"hls\": {\"stream\": \"https://hls.ted.test/project_masters/4478/manifest.m3u8?intro_master_id=9294\"}, \"h264\": [{\"bitrate\": 1200, \"file\": \"https://download.ted.test/1042-1200k.mp4\"}]}}}}}, \"page\": \"/x\"}</script></body></html>"
+  },
+  {
+   "url": "https://hls.ted.test/project_masters/4478/manifest.m3u8?intro_master_id=9294",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-VERSION:4\n#EXT-X-INDEPENDENT-SEGMENTS\n#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=161924,RESOLUTION=320x180,FRAME-RATE=29.97,CODECS=\"avc1.42c00d,mp4a.40.2\",AVERAGE-BANDWIDTH=138401,AUDIO=\"audio0\",SUBTITLES=\"subs\"\nindex-f1-v1.m3u8?intro_master_id=9294\n#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=2707110,RESOLUTION=1280x720,FRAME-RATE=29.97,CODECS=\"avc1.64001f,mp4a.40.2\",AVERAGE-BANDWIDTH=2156360,AUDIO=\"audio0\",SUBTITLES=\"subs\"\nindex-f11-v1.m3u8?intro_master_id=9294\n\n#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=4311,RESOLUTION=320x180,CODECS=\"avc1.42c00d\",URI=\"iframes-f1-v1.m3u8?intro_master_id=9294\"\n#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=121951,RESOLUTION=1280x720,CODECS=\"avc1.64001f\",URI=\"iframes-f11-v1.m3u8?intro_master_id=9294\"\n\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio0\",NAME=\"low\",AUTOSELECT=NO,DEFAULT=NO,CHANNELS=\"1\",URI=\"index-f5-a1.m3u8?intro_master_id=9294\",LANGUAGE=\"en\"\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio0\",NAME=\"medium\",AUTOSELECT=YES,DEFAULT=YES,CHANNELS=\"2\",URI=\"index-f8-a1.m3u8?intro_master_id=9294\",LANGUAGE=\"en\"\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"audio0\",NAME=\"high\",AUTOSELECT=NO,DEFAULT=NO,CHANNELS=\"2\",URI=\"index-f12-a1.m3u8?intro_master_id=9294\",LANGUAGE=\"en\"\n#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID=\"subs\",LANGUAGE=\"en\",NAME=\"English\",AUTOSELECT=YES,DEFAULT=NO,FORCED=NO,URI=\"/project_masters/4478/subtitles/en.m3u8?intro_master_id=9294\"\n"
+  },
+  {
+   "url": "https://hls.ted.test/project_masters/4478/index-f1-v1.m3u8?intro_master_id=9294",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nindex-f1-v1-0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://hls.ted.test/project_masters/4478/index-f11-v1.m3u8?intro_master_id=9294",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nindex-f11-v1-0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://hls.ted.test/project_masters/4478/index-f5-a1.m3u8?intro_master_id=9294",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nindex-f5-a1-0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://hls.ted.test/project_masters/4478/index-f8-a1.m3u8?intro_master_id=9294",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nindex-f8-a1-0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://hls.ted.test/project_masters/4478/index-f12-a1.m3u8?intro_master_id=9294",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nindex-f12-a1-0.ts\n#EXT-X-ENDLIST\n"
   }
  ]
 }

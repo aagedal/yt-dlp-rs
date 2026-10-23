@@ -127,6 +127,11 @@ fn post(
         .map_err(Error::ExtractionRead)?;
     match serde_json::from_slice(&bytes) {
         Ok(value) => Ok(Some(value)),
+        // Non-fatal `_parse_json` warns `errmsg: str(ve)`; for the empty body
+        // of transcoded-url's 204 that is `LenientJSONDecoder`'s message.
+        Err(_) if !fatal && bytes.is_empty() => {
+            failure("Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)".into())
+        }
         Err(error) => failure(format!("Failed to parse JSON  (caused by {error})")),
     }
 }
@@ -245,12 +250,16 @@ fn get_formats(
         Some("m3u8") => {
             let merged = format_url.replace("-split.m3u8", ".m3u8");
             let Some(stream) = Url::parse(&merged).ok().and_then(|manifest| {
-                super::extract_m3u8_optional(
+                // Upstream reads only the master playlist: its variant
+                // playlists need the signed query (`extra_param_to_segment_url`)
+                // that is only added to the format URLs below.
+                super::extract_m3u8_master_optional(
                     client,
                     &manifest,
                     NAME,
                     id,
                     Some(&format!("hls-{format_id}")),
+                    false,
                     false,
                 )
             }) else {

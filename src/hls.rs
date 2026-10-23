@@ -595,6 +595,9 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         } else if line == "#EXT-X-INDEPENDENT-SEGMENTS"
             || line.starts_with("#EXT-X-PROGRAM-DATE-TIME:")
             || line.starts_with("#EXT-X-MEDIA:")
+            // Trick-play renditions (TED); upstream only reads `#EXT-X-STREAM-INF`
+            // variants, so these never become formats.
+            || line.starts_with("#EXT-X-I-FRAME-STREAM-INF:")
             // Twitch's informational vendor tags (`#EXT-X-TWITCH-INFO`,
             // `-ELAPSED-SECS`, `-TOTAL-SECS`), which upstream ignores.
             || line.starts_with("#EXT-X-TWITCH-")

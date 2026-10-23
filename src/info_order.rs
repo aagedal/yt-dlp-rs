@@ -714,6 +714,28 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ]);
             return replay.finish();
         }
+        // `_parse_mpd_formats` for an unfragmented representation: its own
+        // `url`; `protocol` is only added by processing.
+        "dash-direct" => &[
+            ("format_id", Take),
+            ("manifest_url", Take),
+            ("ext", Take),
+            ("width", Assign),
+            ("height", Assign),
+            ("tbr", Assign),
+            ("asr", Assign),
+            ("fps", Assign),
+            ("language", Assign),
+            ("format_note", Take),
+            ("filesize", Assign),
+            ("container", Take),
+            ("vcodec", Take),
+            ("acodec", Take),
+            ("dynamic_range", Codecs),
+            ("url", Take),
+            ("manifest_stream_number", Take),
+            ("is_dash_periods", Take),
+        ],
         // `_parse_mpd_formats` for a segmented representation.
         "dash" => &[
             ("format_id", Take),
