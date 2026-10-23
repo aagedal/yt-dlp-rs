@@ -46,6 +46,12 @@ fn site_extractors_match_saved_upstream_output() {
             .unwrap()
             .to_string_lossy()
             .into_owned();
+        // `SITES=a,b`: only these fixture directories (for local iteration).
+        if let Ok(only) = std::env::var("SITES")
+            && !only.split(',').any(|site| site == name)
+        {
+            continue;
+        }
         let proxy = site_proxy::SiteProxy::start(&name);
         let expected: serde_json::Value = serde_json::from_str(&text).unwrap();
         for case in expected["cases"].as_array().unwrap() {
