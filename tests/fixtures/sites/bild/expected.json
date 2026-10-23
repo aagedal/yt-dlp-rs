@@ -88,6 +88,34 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "http://www.bild.de/video/clip/apple-ipad-air/das-koennen-die-neuen-ipads-38184146.bild.html",
+   "args": [
+    "--dump-pages",
+    "--write-pages",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Bild] Extracting URL: http://www.bild.de/video/clip/apple-ipad-air/das-koennen-die-neuen-ipads-38184146.bild.html",
+    "[Bild] 38184146: Downloading JSON metadata",
+    "[Bild] Dumping request to http://www.bild.de/video/clip/apple-ipad-air/das-koennen-die-neuen-ipads-38184146,view=json.bild.html",
+    "eyJ0aXRsZSI6ICIgRGFzIGsmb3VtbDtubmVuIGRpZSAgbmV1ZW4gaVBhZHMgIiwgImRlc2NyaXB0aW9uIjogIkFwcGxlIGhhdCAmcXVvdDtuZXVlJnF1b3Q7IGlQYWRzIiwgInBvc3RlciI6ICJodHRwczovL2JpbGQudGVzdC9wb3N0ZXIuanBnIiwgImR1cmF0aW9uU2VjIjogIjE5NiIsICJjbGlwTGlzdCI6IFt7InNyY2VzIjogW3sic3JjIjogImh0dHBzOi8vYmlsZC50ZXN0L2hscy9tYXN0ZXIubTN1OCIsICJ0eXBlIjogImFwcGxpY2F0aW9uL3gtbXBlZ1VSTCJ9LCB7InNyYyI6ICJodHRwczovL2JpbGQudGVzdC92Lm1wNCIsICJ0eXBlIjogInZpZGVvL21wNCJ9LCB7InNyYyI6ICJodHRwczovL2JpbGQudGVzdC92LndlYm0iLCAidHlwZSI6ICJ2aWRlby93ZWJtIn0sIHsidHlwZSI6ICJ2aWRlby9tcDQifV19XX0=",
+    "[Bild] Saving request to 38184146_http_-_www.bild.de_video_clip_apple-ipad-air_das-koennen-die-neuen-ipads-38184146_view=json.bild.html.dump",
+    "[Bild] 38184146: Downloading m3u8 information",
+    "[Bild] Dumping request to https://bild.test/hls/master.m3u8",
+    "I0VYVE0zVQojRVhULVgtU1RSRUFNLUlORjpCQU5EV0lEVEg9ODAwMDAwLFJFU09MVVRJT049NjQweDM2MCxDT0RFQ1M9ImF2YzEuNGQ0MDFlLG1wNGEuNDAuMiIKbG93Lm0zdTgKI0VYVC1YLVNUUkVBTS1JTkY6QkFORFdJRFRIPTI1MDAwMDAsUkVTT0xVVElPTj0xMjgweDcyMCxDT0RFQ1M9ImF2YzEuNGQ0MDFmLG1wNGEuNDAuMiIKaGlnaC5tM3U4Cg==",
+    "[Bild] Saving request to 38184146_https_-_bild.test_hls_master.m3u8.dump",
+    "[info] 38184146: Downloading 1 format(s): hls-2500"
+   ],
+   "stderr": [
+    "WARNING: [Bild] Skipping unsupported format type: \"video/webm\""
+   ],
+   "files": {
+    "38184146_http_-_www.bild.de_video_clip_apple-ipad-air_das-koennen-die-neuen-ipads-38184146_view=json.bild.html.dump": 407,
+    "38184146_https_-_bild.test_hls_master.m3u8.dump": 199
+   }
   }
  ]
 }

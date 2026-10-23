@@ -20,11 +20,26 @@ tractable for future agents.
 - `src/extractor/`: independent extractors, generic fallback last.
 - `src/extractor/html5.rs`: generic response dispatch and progressive HTML5 source parsing;
   direct-media response inspection is shared with `DirectHttp` to avoid duplicate probes.
-- `src/extractor/youtube.rs`: narrow watch-page/player response extraction,
-  direct standalone/separate formats with opt-in offline signature/n solving.
-- `src/extractor/youtube/captions.rs`: bounded manual/ASR caption metadata and translation URL planning with WEB subtitle token policy.
-- `src/extractor/youtube/client.rs`: isolated anonymous WEB player API request
-  fallback and explicit token-exempt itag 18 policy.
+- `src/extractor/youtube.rs`: options, session cookies and dispatch to the
+  YouTube submodules; `urls.rs` ports `YoutubeIE._VALID_URL` (Invidious hosts,
+  naked IDs) and `redirect.rs`/`notifications.rs` the small YouTube extractors
+  (`youtube:playlist`, `YoutubeYtBe`, feed keywords, truncated URLs, consent,
+  `youtube:notif`).
+- `src/extractor/youtube/args.rs`, `pot.rs`: `--extractor-args youtube:...` and
+  configured PO tokens (`po_token`, `visitor_data`, `data_sync_id`).
+- `src/extractor/youtube/watch.rs`: watch page, `ytcfg` and per-client player API
+  acquisition (`_extract_player_responses`), age-gate fallback and playability.
+- `src/extractor/youtube/innertube.rs`: upstream `INNERTUBE_CLIENTS`, generated from the pinned checkout.
+- `src/extractor/youtube/streams.rs`: HTTPS, HLS and DASH formats with PO token
+  policies and signature/`n` challenges (`challenge.rs`, `challenge/runtime.rs`).
+- `src/extractor/youtube/dict.rs`, `metadata.rs`, `subs.rs`, `chapters.rs`: the
+  info dict in upstream key order, captions and chapters.
+- `src/extractor/youtube/tab.rs`, `search.rs`, `clip.rs`, `comments.rs`: playlists,
+  channel tabs, mixes, feeds, searches, clips and comments.
+- `src/extractor/youtube/live.rs`, `live_chat.rs`, `watched.rs`: post-live and
+  live-from-start formats, live chat (`YoutubeLiveChatFD`) and `--mark-watched`;
+  `src/live_dash.rs` and `src/mhtml.rs` port `DashSegmentsFD`'s live generator
+  and `MhtmlFD` storyboards.
 - `src/cookies.rs`: scoped response cookies and bounded Netscape import/atomic persistence.
 - `src/http/proxy.rs`: pure explicit proxy validation and shared client routing.
 - `src/http.rs`: validated global request headers and User-Agent/Referer defaults, shared by normal and bounded player clients.
@@ -165,8 +180,8 @@ remain outside the current result contract.
    comparison; see the [signature slice](../upstream/notes/youtube-signature-extraction.md).
    Direct adaptive audio/video types, bounded pair/fallback selection and explicit
    FFmpeg stream-copy merging are implemented with local fixtures; see the
-   [adaptive slice](../upstream/notes/youtube-adaptive-merge.md). Fragmented direct
-   adaptive delivery and DASH discovery remain open. Initial/anonymous WEB HLS
+   [adaptive slice](../upstream/notes/youtube-adaptive-merge.md). DASH manifests
+   and `dashy` fragmented HTTPS formats followed. Initial/anonymous WEB HLS
    discovery now feeds native finite VOD plans, with path-n solving shared with
    direct URL challenges. Upstream's challenge
    providers use EJS and a supported JS runtime; Python remains development-only.
@@ -176,8 +191,19 @@ remain outside the current result contract.
    sessions, pre-roll ad waits, InnerTube retries, master-only HLS, live
    streams (FFmpeg, interruptible), mixes, nested channel tabs with lazily
    fetched pages, YouTube Music URLs, and hashtag/feed pages, each with saved
-   fixtures, plus clips, `--wait-for-video` and comments. Post-live/live-from-start DASH
-   and PO token providers remain open.
+   fixtures, plus clips, `--wait-for-video` and comments. A parity pass
+   (2026-10-23) then ported the remaining `YoutubeIE`/`YoutubeTabIE` behavior:
+   live chat, MHTML storyboards, post-live and `--live-from-start` downloads,
+   every documented `youtube`/`youtubetab` extractor argument including
+   configured PO tokens, title/duration/geo/trailer/stretch fallbacks, `next`
+   API refetches, multifeed, `--mark-watched`, `--write-pages` for API requests,
+   the full `_VALID_URL` with the redirect, feed and notification extractors,
+   and shelf/post/music/hashtag/report-history tab entries, each compared with
+   pinned upstream on saved fixtures. PO token *provider* plugins are Python
+   plugins upstream (none ship by default) and stay out of scope; a configured
+   `po_token` is the native equivalent. The remaining documented differences
+   are listed under YouTube in `docs/COMPATIBILITY.md` (live progress display,
+   eager first tab page, `lang` validation outside `youtube`).
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
    authentication, cookies, subtitles, archives, and postprocessors explicitly.

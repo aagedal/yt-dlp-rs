@@ -34,11 +34,13 @@ mod info_order;
 mod interrupt;
 mod ism_fd;
 pub mod js_to_json;
+mod live_dash;
 pub mod manifest_args;
 mod match_filter;
 mod md5;
 mod merge;
 pub mod metadata_parser;
+mod mhtml;
 mod modify_chapters;
 pub mod output;
 mod playlist;
@@ -129,6 +131,8 @@ pub struct YoutubeDl {
     multistreams: (bool, bool),
     /// `--live-from-start`.
     live_from_start: bool,
+    /// The YouTube JavaScript runtime, for live-from-start refetches.
+    youtube_runtime: Option<PathBuf>,
     format_sort: FormatSortOptions,
     prefer_best: bool,
     /// Global request headers and proxy for FFmpeg network inputs.
@@ -319,7 +323,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 111] = [
+const EXTRACTOR_NAMES: [&str; 127] = [
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -424,10 +428,26 @@ const EXTRACTOR_NAMES: [&str; 111] = [
     "Weibo",
     "WeiboVideo",
     "yfanefa",
+    "youtube:clip",
+    "youtube:consent",
+    "youtube:favorites",
+    "youtube:history",
     "youtube",
+    "YoutubeLivestreamEmbed",
+    "youtube:music:search_url",
+    "youtube:notif",
+    "youtube:playlist",
+    "youtube:recommended",
     "youtube:search",
     "youtube:search_url",
+    "youtube:shorts:pivot:audio",
+    "youtube:subscriptions",
     "youtube:tab",
+    "youtube:truncated_id",
+    "youtube:truncated_url",
+    "youtube:watchlater",
+    "YoutubeYtBe",
+    "youtube:user",
     "Zhihu",
     "generic",
     "end",
@@ -446,7 +466,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..110]),
+            "default" => Some(&EXTRACTOR_NAMES[..EXTRACTOR_NAMES.len() - 1]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -485,7 +505,7 @@ fn ordered_extractors(
 }
 
 /// Python `urlparse(url).scheme` is nonempty.
-fn has_scheme(input: &str) -> bool {
+pub(crate) fn has_scheme(input: &str) -> bool {
     input.split_once(':').is_some_and(|(scheme, _)| {
         scheme.starts_with(|c: char| c.is_ascii_alphabetic())
             && scheme
@@ -523,6 +543,8 @@ impl YoutubeDl {
         let cookies = http.cookies.unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        extractor::youtube::live_chat::SKIP_DOWNLOAD
+            .store(youtube.skip_download, std::sync::atomic::Ordering::Relaxed);
         if let Ok(mut agent) = extractor::USER_AGENT.write() {
             *agent = headers
                 .get(reqwest::header::USER_AGENT)
@@ -541,12 +563,14 @@ impl YoutubeDl {
             traffic::enable();
         }
         let client = proxy.apply(builder)?.build()?;
+        let youtube_runtime = youtube.js_runtime.clone();
         Ok(Self {
             client,
             ffmpeg: None,
             merge_output_format: None,
             multistreams: (false, false),
             live_from_start: false,
+            youtube_runtime,
             format_sort: FormatSortOptions::default(),
             prefer_best: false,
             headers: headers.clone(),
@@ -628,6 +652,49 @@ impl YoutubeDl {
                 Box::new(extractor::Odnoklassniki),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Consent,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Favourites,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::History,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::LivestreamEmbed,
+                )),
+                Box::new(extractor::YoutubeMusicSearchUrl),
+                Box::new(extractor::YoutubeNotifications),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Playlist,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Recommended,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::ShortsAudioPivot,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Subscriptions,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::TruncatedId,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::TruncatedUrl,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::WatchLater,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::YtBe,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::YtUser,
+                )),
+                // After every YouTube extractor.
+                Box::new(extractor::YoutubeUnsupported),
                 Box::new(extractor::Angel),
                 Box::new(extractor::AudioBoom),
                 Box::new(extractor::BehindKink),
@@ -913,7 +980,11 @@ impl YoutubeDl {
                 && !options.hls_use_mpegts.unwrap_or(false));
         let m4a = info.ext == "m4a" && info.container.as_deref() == Some("m4a_dash");
         // Every MPD format is `is_dash_periods` upstream.
-        let dash = protocol == "http_dash_segments" && !info.fragments.is_empty();
+        // (YouTube's post-live formats are not `is_dash_periods`.)
+        let dash = (protocol == "http_dash_segments"
+            && !info.fragments.is_empty()
+            && !info.extra.contains_key("target_duration"))
+            || (protocol == "http_dash_segments_generator" && is_live(info));
         for (needed, message, fixup) in [
             (
                 m4a,
@@ -1168,18 +1239,31 @@ impl YoutubeDl {
 
     fn report_invoking(&self, info: &VideoInfo) {
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
-        if !(ffmpeg_fd || info.requested_formats.is_empty()) {
+        // DashSegmentsFD downloads generated formats together.
+        let generated = |protocol: Option<&str>| protocol == Some("http_dash_segments_generator");
+        let live = if info.requested_formats.is_empty() {
+            generated(info.protocol.as_deref())
+        } else {
+            info.requested_formats
+                .iter()
+                .all(|format| generated(Some(&format.determine_protocol())))
+        };
+        if !(ffmpeg_fd || live || info.requested_formats.is_empty()) {
             return;
         }
         let external = self.external_downloader(info, Path::new(""));
         let name = if ffmpeg_fd {
             "ffmpeg"
+        } else if live {
+            "dashsegments"
         } else if let Some(external) = &external {
             external.basename()
         } else if info.protocol.as_deref() == Some("f4m") {
             "f4m"
         } else if info.protocol.as_deref() == Some("ism") {
             "ism"
+        } else if info.protocol.as_deref() == Some("mhtml") {
+            "mhtml"
         } else if info
             .protocol
             .as_deref()
@@ -1240,6 +1324,45 @@ impl YoutubeDl {
     /// filters (YouTube's comments with `getcomments`).
     pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
         extractor::youtube_comments(&self.client, info)
+    }
+
+    /// Upstream `DashSegmentsFD` over `http_dash_segments_generator`
+    /// formats (`[dashsegments] Total fragments: unknown (live)` for each),
+    /// downloaded in parallel; each pair is a format's result and file.
+    fn download_live_streams(
+        &self,
+        info: &VideoInfo,
+        streams: &[(VideoInfo, PathBuf)],
+        options: DownloadOptions,
+        merged: bool,
+        callback: &mut dyn FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<Vec<u64>> {
+        let feed = extractor::LiveFeed::new(&self.client, info, self.youtube_runtime.as_deref())
+            .ok_or_else(|| {
+                Error::Reported(
+                    "the stream needs to be re-extracted to download it from the start".into(),
+                )
+            })?;
+        let mut jobs = Vec::new();
+        for (stream, path) in streams {
+            screen::screen("[dashsegments] Total fragments: unknown (live)");
+            if merged {
+                screen::screen(&format!("[download] Destination: {}", path.display()));
+            }
+            jobs.push(live_dash::Job {
+                fragments: extractor::LiveFragments::new(feed.clone(), &stream.extra, &stream.url),
+                info: stream.clone(),
+                destination: path.clone(),
+            });
+        }
+        live_dash::download(&self.client, jobs, options, merged, callback)
+    }
+
+    /// Evaluate YouTube post-live formats' fragment lists (upstream's
+    /// `LazyList`, read by JSON output and the downloaders): one HEAD
+    /// request's `X-Head-Seqnum` bounds them.
+    pub fn prepare_live_fragments(&self, info: &mut VideoInfo) -> Result<()> {
+        extractor::youtube_live_fragments(&self.client, info)
     }
 
     /// Fetch a playlist's pending entries (and its nested playlists') until
@@ -1715,6 +1838,28 @@ impl YoutubeDl {
             if self.live_from_now(entry) {
                 entry.title = format!("{} {}", entry.title, dates::local_now_minutes());
             }
+            // Only formats downloadable from the start with
+            // `--live-from-start`, only the others without it.
+            // (`_get_formats`: a result without formats is its own format.)
+            if is_live(entry) {
+                let from_start = self.live_from_start;
+                let starts = |extra: &serde_json::Map<String, serde_json::Value>| {
+                    (extra.get("is_from_start") == Some(&serde_json::Value::Bool(true)))
+                        == from_start
+                };
+                let none_left = if entry.formats.is_empty() {
+                    !starts(&entry.extra)
+                } else {
+                    entry.formats.retain(|format| starts(&format.extra));
+                    entry.formats.is_empty()
+                };
+                if from_start && none_left {
+                    return Err(Error::Reported(format!(
+                        "[{}] {}: --live-from-start is passed, but there are no formats that can be downloaded from the start. If you want to download from the current time, use --no-live-from-start",
+                        entry.extractor, entry.id
+                    )));
+                }
+            }
             entry.metadata.fill_chapters();
             entry.metadata.sanitize_thumbnails();
             // Thumbnails this port keeps as upstream's dicts (`None` values).
@@ -2089,15 +2234,24 @@ impl YoutubeDl {
         input: &str,
         options: ExtractionOptions,
     ) -> Result<ExtractResult> {
-        if !has_scheme(input) {
-            return self.extract_unqualified(input, options);
-        }
-        let url = Url::parse(input)?;
+        let url = if has_scheme(input) {
+            Url::parse(input)?
+        } else {
+            // Extractors whose `_VALID_URL` takes text without a scheme (a
+            // naked YouTube ID, `:ytfav`) come before GenericIE.
+            match extractor::bare_input(input) {
+                Some((url, name)) if self.extractor_allowed(name) => url,
+                _ => return self.extract_unqualified(input, options),
+            }
+        };
         if url.scheme() == "file" {
             return self.extract_file(&url);
         }
         // Extractor pseudo-URLs (`jwplatform:ID`) reach their extractor.
-        if !matches!(url.scheme(), "http" | "https") && !extractor::pseudo_url(input) {
+        if has_scheme(input)
+            && !matches!(url.scheme(), "http" | "https")
+            && !extractor::pseudo_url(input)
+        {
             return Err(Error::UnsupportedScheme(url.scheme().into()));
         }
         for attempt in 0..=options.retries {
@@ -2129,6 +2283,16 @@ impl YoutubeDl {
             return Some(vec!["generic"]);
         }
         self.allowed_extractors.clone()
+    }
+
+    /// Whether the named extractor is among those matched.
+    fn extractor_allowed(&self, name: &str) -> bool {
+        self.extractor_order().is_none_or(|order| {
+            order
+                .iter()
+                .take_while(|item| **item != "end")
+                .any(|item| item.eq_ignore_ascii_case(name))
+        })
     }
 
     fn generic_allowed(&self) -> bool {
@@ -2245,7 +2409,8 @@ impl YoutubeDl {
         let shown_url = Url::parse(&shown).unwrap_or_else(|_| url.clone());
         // A playlist extractor's `url` entry (`_type: url`) keeps the
         // extracted video's own `webpage_url`.
-        let plain_url = marker["entry"]["_type"] == "url";
+        // (as does a URL whose extractor names its own: YouTube's feeds).
+        let plain_url = marker["entry"]["_type"] == "url" || marker["keep_webpage_url"] == true;
         let merge = |result: &mut ExtractResult| -> Result<()> {
             let ExtractResult::Video(info) = result else {
                 return Err(Error::UnsupportedHtml5(
@@ -2356,6 +2521,18 @@ impl YoutubeDl {
             );
             full.insert("webpage_url_domain".into(), info::get_domain(&url).into());
         }
+        // `add_default_extra_info(info, ie, url)` for an entry dict's `ie_key`.
+        let entry_dict = marker["entry"].is_object();
+        if entry_dict && let Some(ie_key) = ie_key {
+            for (key, value) in [
+                ("extractor", marker["extractor"].as_str().unwrap_or(ie_key)),
+                ("extractor_key", ie_key),
+            ] {
+                if !full.contains_key(key) {
+                    full.insert(key.into(), value.into());
+                }
+            }
+        }
         let number = |value: Option<usize>| value.map_or(Value::Null, Value::from);
         // `add_extra_info` keeps an entry's own keys.
         let own: Vec<String> = raw.keys().cloned().collect();
@@ -2382,8 +2559,15 @@ impl YoutubeDl {
             number(entry.last_playlist_index),
         );
         if ie_key.is_none() {
-            full.insert("extractor".into(), "generic".into());
-            full.insert("extractor_key".into(), "Generic".into());
+            // The playlist's extractor (`_playlist_infodict`).
+            let playlist = |index: usize, default: &'static str| {
+                marker["playlist_extractor"][index]
+                    .as_str()
+                    .unwrap_or(default)
+                    .to_owned()
+            };
+            full.insert("extractor".into(), playlist(0, "generic").into());
+            full.insert("extractor_key".into(), playlist(1, "Generic").into());
         }
         full.insert(
             "playlist_autonumber".into(),
@@ -2491,7 +2675,7 @@ impl YoutubeDl {
                         .get(FOLLOW_URL)
                         .and_then(serde_json::Value::as_str)
                 {
-                    let target = Url::parse(target)?;
+                    let target = extractor::target_url(target)?;
                     return self.extract_once_with(&target, before_processing);
                 }
                 before_processing(&mut info)?;
@@ -2500,18 +2684,19 @@ impl YoutubeDl {
             }
         }
         // Upstream `UnsupportedURLIE` (`end`) or no matching extractor.
+        let input = extractor::input_text(url);
         match &order {
-            None => return Err(Error::UnsupportedUrl(url.to_string())),
+            None => return Err(Error::UnsupportedUrl(input)),
             Some(order) if order.contains(&"end") => {
                 screen::screen(&format!(
                     "[UnsupportedURL] Extracting URL: {}",
-                    screen::extracting_url(url.as_str())
+                    screen::extracting_url(&input)
                 ));
-                return Err(Error::Reported(format!("Unsupported URL: {url}")));
+                return Err(Error::Reported(format!("Unsupported URL: {input}")));
             }
             Some(_) => {}
         }
-        Err(self.no_suitable(url.as_str()))
+        Err(self.no_suitable(&input))
     }
 
     pub fn download(&self, info: &VideoInfo, destination: impl AsRef<Path>) -> Result<u64> {
@@ -2601,6 +2786,19 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
+        // Upstream `DashSegmentsFD` with a fragment generator.
+        if info.requested_formats.is_empty()
+            && info.protocol.as_deref() == Some("http_dash_segments_generator")
+        {
+            let bytes = self.download_live_streams(
+                info,
+                &[(info.clone(), destination.as_ref().to_path_buf())],
+                options,
+                false,
+                &mut callback,
+            )?;
+            return Ok(bytes.iter().sum());
+        }
         if !info.requested_formats.is_empty() {
             return self.download_merged(info, destination.as_ref(), options, &mut callback);
         }
@@ -2634,6 +2832,21 @@ impl YoutubeDl {
                 options,
                 self.keep_fragments,
                 self.test,
+                &mut callback,
+            );
+        }
+        // Upstream `MhtmlFD` (storyboards; `--test` takes the first fragment).
+        if info.protocol.as_deref() == Some("mhtml") {
+            let mut plan = info.clone();
+            if self.test {
+                plan.fragments.truncate(1);
+            }
+            return fragment::download_mhtml(
+                &self.client,
+                &plan,
+                destination.as_ref(),
+                options,
+                self.keep_fragments,
                 &mut callback,
             );
         }
@@ -2708,6 +2921,19 @@ impl YoutubeDl {
             return download::download_hls_subtitle(
                 &self.client,
                 info,
+                subtitle,
+                destination.as_ref(),
+                options,
+                &mut callback,
+            );
+        }
+        if let Some(protocol @ ("youtube_live_chat" | "youtube_live_chat_replay")) =
+            subtitle.protocol.as_deref()
+        {
+            report_invoking("youtube_live_chat", &[&subtitle.url]);
+            return extractor::youtube::live_chat::download(
+                &self.client,
+                protocol == "youtube_live_chat",
                 subtitle,
                 destination.as_ref(),
                 options,
@@ -2840,7 +3066,48 @@ impl YoutubeDl {
         };
         let mut paths = Vec::new();
         let mut stored = 0u64;
-        for (index, stream) in streams.iter().enumerate() {
+        // `get_suitable_downloader`: generated (`--live-from-start`) formats
+        // download together through DashSegmentsFD, into files named with
+        // the merged extension.
+        let live = streams
+            .iter()
+            .all(|stream| stream.determine_protocol() == "http_dash_segments_generator");
+        if live {
+            let jobs: Vec<(VideoInfo, PathBuf)> = streams
+                .iter()
+                .enumerate()
+                .map(|(index, stream)| {
+                    let path = match upstream {
+                        None => workspace
+                            .path()
+                            .join(format!("input-{index}.{}", stream.ext)),
+                        Some(_) => {
+                            let mut named = stream.clone();
+                            named.ext = info.ext.clone();
+                            stream_path(destination, &info.ext, &named)
+                        }
+                    };
+                    (info.with_selected_format(stream), path)
+                })
+                .collect();
+            let sizes = self.download_live_streams(
+                info,
+                &jobs,
+                DownloadOptions {
+                    part_files: if upstream.is_some() {
+                        options.part_files
+                    } else {
+                        PartFiles::Private
+                    },
+                    ..options
+                },
+                true,
+                callback,
+            )?;
+            stored = sizes.iter().sum();
+            paths = jobs.into_iter().map(|(_, path)| path).collect();
+        }
+        for (index, stream) in streams.iter().enumerate().filter(|_| !live) {
             let path = match upstream {
                 None => workspace
                     .path()
@@ -2926,6 +3193,7 @@ impl YoutubeDl {
                     let downloader = match part.protocol.as_deref() {
                         Some("http_dash_segments") => "dashsegments",
                         Some("ism") => "ism",
+                        Some("mhtml") => "mhtml",
                         _ => "hlsnative",
                     };
                     screen::screen(&format!(

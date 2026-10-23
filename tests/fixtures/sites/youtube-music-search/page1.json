@@ -1,0 +1,10 @@
+{"responseContext": {"visitorData": "MV1"}, "contents": {"tabbedSearchResultsRenderer": {"tabs": [{"tabRenderer": {"title": "YT Music", "selected": true, "content": {"sectionListRenderer": {"contents": [
+ {"musicCardShelfRenderer": {"title": {"runs": [{"text": "Top result"}]}}},
+ {"musicShelfRenderer": {"title": {"runs": [{"text": "Songs"}]}, "contents": [
+  {"musicResponsiveListItemRenderer": {"playlistItemData": {"videoId": "MUSICSONG01"}, "flexColumns": [{"musicResponsiveListItemFlexColumnRenderer": {"text": {"runs": [{"text": "First Song"}]}}}, {"musicResponsiveListItemFlexColumnRenderer": {"text": {"runs": [{"text": "Song"}, {"text": " • "}, {"text": "Artist"}]}}}]}},
+  {"musicResponsiveListItemRenderer": {"flexColumns": [{"musicResponsiveListItemFlexColumnRenderer": {"text": {"runs": [{"text": "Radio"}]}}}], "navigationEndpoint": {"watchEndpoint": {"videoId": "MUSICSONG02", "playlistId": "RDAMVMMUSICSONG02"}}}},
+  {"musicResponsiveListItemRenderer": {"flexColumns": [{"musicResponsiveListItemFlexColumnRenderer": {"text": {"runs": [{"text": "A playlist"}]}}}], "navigationEndpoint": {"watchEndpoint": {"playlistId": "PLmusic0000000000001"}}}},
+  {"musicResponsiveListItemRenderer": {"flexColumns": [{"musicResponsiveListItemFlexColumnRenderer": {"text": {"runs": [{"text": "An album"}]}}}], "navigationEndpoint": {"browseEndpoint": {"browseId": "MPREb_album00001"}}}},
+  {"musicResponsiveListItemRenderer": {"flexColumns": []}}
+ ], "continuations": [{"nextContinuationData": {"continuation": "MUSICTOKEN1", "clickTrackingParams": "CTP1"}}]}}
+]}}}}]}}}

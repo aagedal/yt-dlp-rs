@@ -1,0 +1,170 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=MultiAudio1",
+   "args": [
+    "--no-js-runtimes",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=MultiAudio1",
+    "[youtube] MultiAudio1: Downloading webpage",
+    "[youtube] MultiAudio1: Downloading visionos player API JSON",
+    "[info] Available formats for MultiAudio1:",
+    "ID      EXT  RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC       VBR ACODEC      ABR ASR MORE INFO",
+    "-----------------------------------------------------------------------------------------------------------------------------------------------------------",
+    "140-drc m4a  audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k [en] English original (default), medium, DRC, m4a_dash",
+    "140-0   m4a  audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k [es-desc] Spanish (descriptive), medium, m4a_dash",
+    "140-1   m4a  audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k [de] German, medium, m4a_dash",
+    "140-2   m4a  audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k [en] English original (default), medium, m4a_dash",
+    "251-0   webm audio only      2 |  778.00B 100k https | audio only       opus       100k 44k [de] German, medium, webm_dash",
+    "251-1   webm audio only      6 |  778.00B 100k https | audio only       opus       100k 44k [fr-FR] French (dubbed-auto), medium, ambisonics_5_1, webm_dash",
+    "18      mp4  640x360     30  2 |  792.00B 100k https | avc1.42001E      mp4a.40.2       44k 360p",
+    "137     mp4  1920x1080   30    |  792.00B 100k https | avc1.640028 100k video only          1080p, mp4_dash"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=MultiAudio1",
+   "args": [
+    "--no-js-runtimes",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MultiAudio1\", \"title\": \"The trailer\", \"formats\": [{\"asr\": 44100, \"filesize\": 778, \"format_id\": \"140-drc\", \"format_note\": \"English original (default), medium, DRC\", \"source_preference\": -1, \"fps\": null, \"audio_channels\": 2, \"height\": null, \"quality\": 2.5, \"has_drm\": false, \"tbr\": 100.21, \"filesize_approx\": 125262, \"width\": null, \"language\": \"en\", \"language_preference\": 10, \"preference\": null, \"ext\": \"m4a\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"container\": \"m4a_dash\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=140&track=en.4&xtags=acont%3Doriginal%3Adrc%3D1%3Alang%3Den&drc=1\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 100.21, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"140-drc - audio only (English original (default), medium, DRC)\"}, {\"asr\": 44100, \"filesize\": 778, \"format_id\": \"140-0\", \"format_note\": \"Spanish (descriptive), medium\", \"source_preference\": -1, \"fps\": null, \"audio_channels\": 2, \"height\": null, \"quality\": 3.0, \"has_drm\": false, \"tbr\": 100.14, \"filesize_approx\": 125175, \"width\": null, \"language\": \"es-desc\", \"language_preference\": -10, \"preference\": null, \"ext\": \"m4a\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"container\": \"m4a_dash\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=140&track=es.2&xtags=acont%3Ddescriptive%3Alang%3Des\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 100.14, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"140-0 - audio only (Spanish (descriptive), medium)\"}, {\"asr\": 44100, \"filesize\": 778, \"format_id\": \"140-1\", \"format_note\": \"German, medium\", \"source_preference\": -1, \"fps\": null, \"audio_channels\": 2, \"height\": null, \"quality\": 3.0, \"has_drm\": false, \"tbr\": 100.14, \"filesize_approx\": 125175, \"width\": null, \"language\": \"de\", \"language_preference\": -1, \"preference\": null, \"ext\": \"m4a\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"container\": \"m4a_dash\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=140&track=de.3&xtags=acont%3Ddubbed%3Alang%3Dde\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 100.14, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"140-1 - audio only (German, medium)\"}, {\"asr\": 44100, \"filesize\": 778, \"format_id\": \"140-2\", \"format_note\": \"English original (default), medium\", \"source_preference\": -1, \"fps\": null, \"audio_channels\": 2, \"height\": null, \"quality\": 3.0, \"has_drm\": false, \"tbr\": 100.16, \"filesize_approx\": 125199, \"width\": null, \"language\": \"en\", \"language_preference\": 10, \"preference\": null, \"ext\": \"m4a\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"container\": \"m4a_dash\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=140&track=en.4&xtags=acont%3Doriginal%3Alang%3Den\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 100.16, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"140-2 - audio only (English original (default), medium)\"}, {\"asr\": 44100, \"filesize\": 778, \"format_id\": \"251-0\", \"format_note\": \"German, medium\", \"source_preference\": -1, \"fps\": null, \"audio_channels\": 2, \"height\": null, \"quality\": 3.0, \"has_drm\": false, \"tbr\": 100.14, \"filesize_approx\": 125175, \"width\": null, \"language\": \"de\", \"language_preference\": -1, \"preference\": null, \"ext\": \"webm\", \"vcodec\": \"none\", \"acodec\": \"opus\", \"dynamic_range\": null, \"container\": \"webm_dash\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=251&track=de.3&xtags=acont%3Ddubbed%3Alang%3Dde\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"webm\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 100.14, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"251-0 - audio only (German, medium)\"}, {\"asr\": 44100, \"filesize\": 778, \"format_id\": \"251-1\", \"format_note\": \"French (dubbed-auto), medium, ambisonics_5_1\", \"source_preference\": -1, \"fps\": null, \"audio_channels\": 6, \"height\": null, \"quality\": 3.0, \"has_drm\": false, \"tbr\": 100.14, \"filesize_approx\": 125175, \"width\": null, \"language\": \"fr-FR\", \"language_preference\": -1, \"preference\": null, \"ext\": \"webm\", \"vcodec\": \"none\", \"acodec\": \"opus\", \"dynamic_range\": null, \"container\": \"webm_dash\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=251&track=fr-FR.10&xtags=acont%3Ddubbed-auto%3Alang%3Dfr-FR\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"webm\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 100.14, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"251-1 - audio only (French (dubbed-auto), medium, ambisonics_5_1)\"}, {\"asr\": 44100, \"filesize\": 792, \"format_id\": \"18\", \"format_note\": \"360p\", \"source_preference\": -1, \"fps\": 30, \"audio_channels\": 2, \"height\": 360, \"quality\": 6.0, \"has_drm\": false, \"tbr\": 100.018, \"filesize_approx\": 125022, \"width\": 640, \"language\": null, \"language_preference\": -1, \"preference\": null, \"ext\": \"mp4\", \"vcodec\": \"avc1.42001E\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=18\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"18 - 640x360 (360p)\"}, {\"asr\": null, \"filesize\": 792, \"format_id\": \"137\", \"format_note\": \"1080p\", \"source_preference\": -1, \"fps\": 30, \"audio_channels\": null, \"height\": 1080, \"quality\": 9.0, \"has_drm\": false, \"tbr\": 100.137, \"filesize_approx\": 125171, \"width\": 1920, \"language\": null, \"language_preference\": -1, \"preference\": null, \"ext\": \"mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"container\": \"mp4_dash\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=137\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 100.137, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"137 - 1920x1080 (1080p)\"}], \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/MultiAudio1/3.jpg\", \"preference\": -37, \"id\": \"0\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/3.webp\", \"preference\": -36, \"id\": \"1\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/2.jpg\", \"preference\": -35, \"id\": \"2\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/2.webp\", \"preference\": -34, \"id\": \"3\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/1.jpg\", \"preference\": -33, \"id\": \"4\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/1.webp\", \"preference\": -32, \"id\": \"5\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/mq3.jpg\", \"preference\": -31, \"id\": \"6\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/mq3.webp\", \"preference\": -30, \"id\": \"7\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/mq2.jpg\", \"preference\": -29, \"id\": \"8\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/mq2.webp\", \"preference\": -28, \"id\": \"9\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/mq1.jpg\", \"preference\": -27, \"id\": \"10\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/mq1.webp\", \"preference\": -26, \"id\": \"11\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/hq3.jpg\", \"preference\": -25, \"id\": \"12\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/hq3.webp\", \"preference\": -24, \"id\": \"13\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/hq2.jpg\", \"preference\": -23, \"id\": \"14\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/hq2.webp\", \"preference\": -22, \"id\": \"15\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/hq1.jpg\", \"preference\": -21, \"id\": \"16\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/hq1.webp\", \"preference\": -20, \"id\": \"17\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/sd3.jpg\", \"preference\": -19, \"id\": \"18\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/sd3.webp\", \"preference\": -18, \"id\": \"19\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/sd2.jpg\", \"preference\": -17, \"id\": \"20\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/sd2.webp\", \"preference\": -16, \"id\": \"21\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/sd1.jpg\", \"preference\": -15, \"id\": \"22\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/sd1.webp\", \"preference\": -14, \"id\": \"23\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/default.jpg\", \"preference\": -13, \"id\": \"24\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/default.webp\", \"preference\": -12, \"id\": \"25\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/mqdefault.jpg\", \"preference\": -11, \"id\": \"26\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/mqdefault.webp\", \"preference\": -10, \"id\": \"27\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/0.jpg\", \"preference\": -9, \"id\": \"28\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/0.webp\", \"preference\": -8, \"id\": \"29\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/hqdefault.jpg\", \"preference\": -7, \"id\": \"30\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/hqdefault.webp\", \"preference\": -6, \"id\": \"31\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/sddefault.jpg\", \"preference\": -5, \"id\": \"32\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/sddefault.webp\", \"preference\": -4, \"id\": \"33\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/hq720.jpg\", \"preference\": -3, \"id\": \"34\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/hq720.webp\", \"preference\": -2, \"id\": \"35\"}, {\"url\": \"https://i.ytimg.com/vi/MultiAudio1/maxresdefault.jpg\", \"preference\": -1, \"id\": \"36\"}, {\"url\": \"https://i.ytimg.com/vi_webp/MultiAudio1/maxresdefault.webp\", \"preference\": 0, \"id\": \"37\"}], \"thumbnail\": \"https://i.ytimg.com/vi_webp/MultiAudio1/maxresdefault.webp\", \"description\": \"A description.\", \"channel_id\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"channel_url\": \"https://www.youtube.com/channel/UCLqxVugv74EIW3VWh2NOa3Q\", \"duration\": 10, \"view_count\": 1000, \"average_rating\": null, \"age_limit\": 0, \"webpage_url\": \"https://www.youtube.com/watch?v=MultiAudio1\", \"categories\": [\"Education\"], \"tags\": [\"fixture\"], \"playable_in_embed\": true, \"live_status\": \"not_live\", \"media_type\": \"video\", \"release_timestamp\": null, \"_format_sort_fields\": [\"quality\", \"res\", \"fps\", \"hdr:12\", \"source\", \"vcodec\", \"channels\", \"acodec\", \"lang\", \"proto\"], \"automatic_captions\": {}, \"subtitles\": {}, \"comment_count\": null, \"chapters\": null, \"heatmap\": null, \"uploader\": null, \"uploader_id\": \"@FixtureAuthor\", \"uploader_url\": \"https://www.youtube.com/@FixtureAuthor\", \"upload_date\": \"20200102\", \"timestamp\": 1577963045, \"availability\": \"public\", \"original_url\": \"https://www.youtube.com/watch?v=MultiAudio1\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"youtube.com\", \"extractor\": \"youtube\", \"extractor_key\": \"Youtube\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"MultiAudio1\", \"fulltitle\": \"The trailer\", \"duration_string\": \"10\", \"release_year\": null, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_formats\": [{\"asr\": null, \"filesize\": 792, \"format_id\": \"137\", \"format_note\": \"1080p\", \"source_preference\": -1, \"fps\": 30, \"audio_channels\": null, \"height\": 1080, \"quality\": 9.0, \"has_drm\": false, \"tbr\": 100.137, \"filesize_approx\": 125171, \"width\": 1920, \"language\": null, \"language_preference\": -1, \"preference\": null, \"ext\": \"mp4\", \"vcodec\": \"avc1.640028\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"container\": \"mp4_dash\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=137\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 100.137, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"137 - 1920x1080 (1080p)\"}, {\"asr\": 44100, \"filesize\": 778, \"format_id\": \"251-1\", \"format_note\": \"French (dubbed-auto), medium, ambisonics_5_1\", \"source_preference\": -1, \"fps\": null, \"audio_channels\": 6, \"height\": null, \"quality\": 3.0, \"has_drm\": false, \"tbr\": 100.14, \"filesize_approx\": 125175, \"width\": null, \"language\": \"fr-FR\", \"language_preference\": -1, \"preference\": null, \"ext\": \"webm\", \"vcodec\": \"none\", \"acodec\": \"opus\", \"dynamic_range\": null, \"container\": \"webm_dash\", \"url\": \"https://rr1.googlevideo.test/videoplayback?id=MultiAudio1&client=visionos&itag=251&track=fr-FR.10&xtags=acont%3Ddubbed-auto%3Alang%3Dfr-FR\", \"available_at\": 0, \"downloader_options\": {\"http_chunk_size\": 10485760}, \"protocol\": \"https\", \"audio_ext\": \"webm\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 100.14, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"251-1 - audio only (French (dubbed-auto), medium, ambisonics_5_1)\"}], \"format\": \"137 - 1920x1080 (1080p)+251-1 - audio only (French (dubbed-auto), medium, ambisonics_5_1)\", \"format_id\": \"137+251-1\", \"ext\": \"mkv\", \"protocol\": \"https+https\", \"language\": \"fr-FR\", \"format_note\": \"1080p+French (dubbed-auto), medium, ambisonics_5_1\", \"filesize_approx\": 1570, \"tbr\": 200.277, \"width\": 1920, \"height\": 1080, \"resolution\": \"1920x1080\", \"fps\": 30, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.640028\", \"vbr\": 100.137, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": \"opus\", \"abr\": 100.14, \"asr\": 44100, \"audio_channels\": 6, \"_filename\": \"The trailer [MultiAudio1].mkv\", \"filename\": \"The trailer [MultiAudio1].mkv\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=MultiAudio1",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(format_id)s|%(language)s|%(format_note)s",
+    "-f",
+    "ba"
+   ],
+   "exit": 0,
+   "stdout": [
+    "251-1|fr-FR|French (dubbed-auto), medium, ambisonics_5_1"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=MultiAudio1",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(format_id)s|%(language)s",
+    "-f",
+    "ba[language=de]"
+   ],
+   "exit": 0,
+   "stdout": [
+    "251-0|de"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=MultiAudio1",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(format_id)s",
+    "-f",
+    "bv+ba",
+    "--audio-multistreams",
+    "-f",
+    "bv+ba[language=en]+ba[language=fr-FR]"
+   ],
+   "exit": 0,
+   "stdout": [
+    "137+140-2+251-1"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=MultiAudio1",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(format_id)s|%(language)s",
+    "-S",
+    "lang:de",
+    "-f",
+    "ba"
+   ],
+   "exit": 0,
+   "stdout": [
+    "140-2|en"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=MultiAudio1",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:formats=duplicate",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=MultiAudio1",
+    "[youtube] MultiAudio1: Downloading webpage",
+    "[youtube] MultiAudio1: Downloading visionos player API JSON",
+    "[info] Available formats for MultiAudio1:",
+    "ID            EXT  RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC       VBR ACODEC      ABR ASR MORE INFO",
+    "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+    "140-drc-dashy m4a  audio only      2 |  778.00B 100k dash  | audio only       mp4a.40.2  100k 44k [en] English original (default), medium, DRC, VISI, m4a_dash",
+    "140-drc       m4a  audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k [en] English original (default), medium, DRC, VISI, m4a_dash",
+    "140-dashy-0   m4a  audio only      2 |  778.00B 100k dash  | audio only       mp4a.40.2  100k 44k [es-desc] Spanish (descriptive), medium, VISI, m4a_dash",
+    "140-0         m4a  audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k [es-desc] Spanish (descriptive), medium, VISI, m4a_dash",
+    "140-dashy-1   m4a  audio only      2 |  778.00B 100k dash  | audio only       mp4a.40.2  100k 44k [de] German, medium, VISI, m4a_dash",
+    "140-1         m4a  audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k [de] German, medium, VISI, m4a_dash",
+    "140-dashy-2   m4a  audio only      2 |  778.00B 100k dash  | audio only       mp4a.40.2  100k 44k [en] English original (default), medium, VISI, m4a_dash",
+    "140-2         m4a  audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k [en] English original (default), medium, VISI, m4a_dash",
+    "251-dashy-0   webm audio only      2 |  778.00B 100k dash  | audio only       opus       100k 44k [de] German, medium, VISI, webm_dash",
+    "251-0         webm audio only      2 |  778.00B 100k https | audio only       opus       100k 44k [de] German, medium, VISI, webm_dash",
+    "251-dashy-1   webm audio only      6 |  778.00B 100k dash  | audio only       opus       100k 44k [fr-FR] French (dubbed-auto), medium, ambisonics_5_1, VISI, webm_dash",
+    "251-1         webm audio only      6 |  778.00B 100k https | audio only       opus       100k 44k [fr-FR] French (dubbed-auto), medium, ambisonics_5_1, VISI, webm_dash",
+    "18-dashy      mp4  640x360     30  2 |  792.00B 100k dash  | avc1.42001E      mp4a.40.2       44k 360p, VISI",
+    "18            mp4  640x360     30  2 |  792.00B 100k https | avc1.42001E      mp4a.40.2       44k 360p, VISI",
+    "137-dashy     mp4  1920x1080   30    |  792.00B 100k dash  | avc1.640028 100k video only          1080p, VISI, mp4_dash",
+    "137           mp4  1920x1080   30    |  792.00B 100k https | avc1.640028 100k video only          1080p, VISI, mp4_dash"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

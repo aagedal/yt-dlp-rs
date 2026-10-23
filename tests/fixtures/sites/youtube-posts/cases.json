@@ -1,0 +1,5 @@
+[
+ {"url": "https://www.youtube.com/@Post/posts", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.youtube.com/@Post/posts", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(title)s|%(ie_key)s|%(url)s"]},
+ {"url": "https://www.youtube.com/@Post/posts", "args": ["-s", "--flat-playlist", "-I", "2:7"]}
+]

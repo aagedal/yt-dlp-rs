@@ -1,0 +1,149 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=ChatReplay1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "replay.html"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=LiveChat001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "live.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "ChatReplay1"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "LiveChat001"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"responseContext\": {}, \"playabilityStatus\": {\"status\": \"OK\"}, \"streamingData\": {\"expiresInSeconds\": \"21540\", \"hlsManifestUrl\": \"https://manifest.googlevideo.test/api/manifest/hls_variant/id/LiveChat001.1/file/index.m3u8\"}, \"videoDetails\": {\"videoId\": \"LiveChat001\", \"title\": \"youtube-dl test video \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\", \"lengthSeconds\": \"0\", \"keywords\": [\"youtube-dl\"], \"channelId\": \"UCLqxVugv74EIW3VWh2NOa3Q\", \"isOwnerViewing\": false, \"shortDescription\": \"test chars:  \\\"'/\\\\\\u00e4\\u21ad\\ud835\\udd50\\ntest URL: https://github.com/rg3/youtube-dl/issues/1892\\n\\nThis is a test video for youtube-dl.\\n\\nFor more information, contact phihag@phihag.de .\", \"isCrawlable\": true, \"thumbnail\": {\"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/ChatReplay1/hqdefault.jpg\", \"width\": 480, \"height\": 360}]}, \"allowRatings\": true, \"viewCount\": \"123456\", \"author\": \"Philipp Hagemeister\", \"isPrivate\": false, \"isUnpluggedCorpus\": false, \"isLiveContent\": true, \"isLive\": true}}"
+  },
+  {
+   "url": "https://manifest.googlevideo.test/api/manifest/hls_variant/id/LiveChat001.1/file/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.youtube.com/live_chat_replay?continuation=CHAT_RELOAD",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "chat_replay.html"
+  },
+  {
+   "url": "https://www.youtube.com/live_chat?continuation=CHAT_RELOAD",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "chat_live.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/live_chat/get_live_chat_replay?key=KEY",
+   "request_headers": {
+    "X-YouTube-Client-Name": "1",
+    "X-Goog-Visitor-Id": "VISITOR"
+   },
+   "request_body": [
+    "\"ALL_CHAT\"",
+    "\"playerOffsetMs\": \"0\"",
+    "\"clickTrackingParams\": \"TP_ALL\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "replay1.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/live_chat/get_live_chat_replay?key=KEY",
+   "request_body": [
+    "\"REPLAY_PAGE2\"",
+    "\"playerOffsetMs\": \"2200\"",
+    "CTP_PAGE2"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "replay2.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/live_chat/get_live_chat?key=KEY",
+   "request_body": [
+    "\"LIVE_PAGE2\"",
+    "CTP_LIVE"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live2.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/live_chat/get_live_chat?key=KEY",
+   "request_body": [
+    "\"LIVE_PAGE3\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live3.json"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=18&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=136&client=visionos",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&client=visionos",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a.m4a"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body_file": "a.m4a"
+  }
+ ]
+}

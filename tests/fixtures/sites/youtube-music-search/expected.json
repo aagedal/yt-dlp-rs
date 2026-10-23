@@ -1,0 +1,125 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://music.youtube.com/search?q=royalty+free+music",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"royalty free music\", \"title\": \"royalty free music\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"First Song\", \"ie_key\": \"Youtube\", \"id\": \"MUSICSONG01\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/watch?v=MUSICSONG01\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"YoutubeTab\", \"id\": \"RDAMVMMUSICSONG02\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/watch?v=MUSICSONG02&list=RDAMVMMUSICSONG02\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"YoutubeTab\", \"id\": \"PLmusic0000000000001\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/playlist?list=PLmusic0000000000001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"YoutubeTab\", \"id\": \"MPREb_album00001\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/browse/MPREb_album00001\", \"__x_forwarded_for_ip\": null}, {\"title\": \"Third Song\", \"ie_key\": \"Youtube\", \"id\": \"MUSICSONG03\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/watch?v=MUSICSONG03\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://music.youtube.com/search?q=royalty+free+music\", \"original_url\": \"https://music.youtube.com/search?q=royalty+free+music\", \"webpage_url_basename\": \"search\", \"webpage_url_domain\": \"music.youtube.com\", \"extractor\": \"youtube:music:search_url\", \"extractor_key\": \"YoutubeMusicSearchURL\", \"release_year\": null, \"playlist_count\": 5, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://music.youtube.com/search?q=royalty+free+music",
+   "args": [
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:music:search_url] Extracting URL: https://music.youtube.com/search?q=royalty+free+music",
+    "[download] Downloading playlist: royalty free music",
+    "[youtube:music:search_url] query \"royalty free music\": Downloading web music client config",
+    "[youtube:music:search_url] query \"royalty free music\" page 1: Downloading API JSON",
+    "[youtube:music:search_url] query \"royalty free music\" page 2: Downloading API JSON",
+    "[youtube:music:search_url] Playlist royalty free music: Downloading 5 items of 5",
+    "[download] Downloading item 1 of 5",
+    "[download] Downloading item 2 of 5",
+    "[download] Downloading item 3 of 5",
+    "[download] Downloading item 4 of 5",
+    "[download] Downloading item 5 of 5",
+    "[download] Finished downloading playlist: royalty free music"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://music.youtube.com/search?q=royalty+free+music",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_count)s|%(id)s|%(title)s|%(ie_key)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "royalty free music|royalty free music|5|MUSICSONG01|First Song|Youtube|https://music.youtube.com/watch?v=MUSICSONG01",
+    "royalty free music|royalty free music|5|RDAMVMMUSICSONG02|NA|YoutubeTab|https://music.youtube.com/watch?v=MUSICSONG02&list=RDAMVMMUSICSONG02",
+    "royalty free music|royalty free music|5|PLmusic0000000000001|NA|YoutubeTab|https://music.youtube.com/playlist?list=PLmusic0000000000001",
+    "royalty free music|royalty free music|5|MPREb_album00001|NA|YoutubeTab|https://music.youtube.com/browse/MPREb_album00001",
+    "royalty free music|royalty free music|5|MUSICSONG03|Third Song|Youtube|https://music.youtube.com/watch?v=MUSICSONG03"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://music.youtube.com/search?q=royalty+free+music#songs",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s|%(ie_key)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "royalty free music - songs|royalty free music - songs|MUSICSONG04|Section Song|Youtube|https://music.youtube.com/watch?v=MUSICSONG04",
+    "royalty free music - songs|royalty free music - songs|UCartist000000000000001|NA|YoutubeTab|https://music.youtube.com/browse/UCartist000000000000001"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://music.youtube.com/search?q=royalty+free+music#Community+Playlists",
+   "args": [
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:music:search_url] Extracting URL: https://music.youtube.com/search?q=royalty+free+music#Community+Playlists",
+    "[download] Downloading playlist: royalty free music - community playlists",
+    "[youtube:music:search_url] query \"royalty free music\": Downloading web music client config",
+    "[youtube:music:search_url] query \"royalty free music\" page 1: Downloading API JSON",
+    "[youtube:music:search_url] Playlist royalty free music - community playlists: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: royalty free music - community playlists"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://music.youtube.com/search?q=royalty+free+music&sp=EgWKAQIgAWoKEAoQAxAEEAkQBQ%3D%3D",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "royalty free music - artists|royalty free music - artists|MUSICSONG04",
+    "royalty free music - artists|royalty free music - artists|UCartist000000000000001"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://music.youtube.com/search?search_query=royalty+free+music&sp=CUSTOM",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "royalty free music - CUSTOM|royalty free music - CUSTOM|MUSICSONG04",
+    "royalty free music - CUSTOM|royalty free music - CUSTOM|UCartist000000000000001"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

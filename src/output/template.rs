@@ -310,7 +310,7 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
                 "title" => Some(Text(&info.title)),
                 "extractor" => Some(Text(&info.extractor)),
                 "extractor_key" => Some(Text(&info.extractor_key)),
-                "webpage_url" => Some(Text(info.webpage_url.as_str())),
+                "webpage_url" => Some(Owned(crate::extractor::input_text(&info.webpage_url))),
                 "playlist_index" => Some(Integer(0)),
                 "playlist_count" => playlist_count.map(|n| Integer(n as u64)),
                 "n_entries" => n_entries.map(|n| Integer(n as u64)),

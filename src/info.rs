@@ -32,6 +32,8 @@ pub enum ExtractResult {
 pub struct PlaylistInfo {
     pub id: String,
     pub title: String,
+    /// An input without a scheme (`:ytnotif`) serializes as its text.
+    #[serde(serialize_with = "serialize_input_url")]
     pub webpage_url: Url,
     pub extractor: String,
     pub extractor_key: String,
@@ -49,9 +51,17 @@ pub struct PlaylistInfo {
     pub extra: serde_json::Map<String, serde_json::Value>,
 }
 
+fn serialize_input_url<S: serde::Serializer>(
+    url: &Url,
+    serializer: S,
+) -> std::result::Result<S::Ok, S::Error> {
+    serializer.serialize_str(&crate::extractor::input_text(url))
+}
+
 /// Upstream `url_basename`: the URL path's last segment.
 pub fn url_basename(url: &Url) -> String {
-    url.path()
+    crate::extractor::input_view(url)
+        .path()
         .trim_matches('/')
         .rsplit('/')
         .next()
@@ -135,8 +145,10 @@ pub const NESTED_INDEX: &str = "__yt_dlp_rs_nested_index";
 impl PlaylistInfo {
     /// Placeholder `entries` for the `nested` playlists, so entry selection
     /// (`--playlist-items`, reverse, random) applies to them; each carries
-    /// [`NESTED_INDEX`].
+    /// [`NESTED_INDEX`]. Entries already present (`url` entries following
+    /// the nested playlists) stay after them.
     pub fn nested_placeholders(&mut self) {
+        let following = std::mem::take(&mut self.entries);
         self.entries = self
             .nested
             .iter()
@@ -154,6 +166,7 @@ impl PlaylistInfo {
                 entry.extra.insert(NESTED_INDEX.into(), index.into());
                 entry
             })
+            .chain(following)
             .collect();
     }
 }
@@ -258,6 +271,10 @@ pub struct Fragment {
     /// Upstream's fragment `duration` in seconds.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration: Option<f64>,
+    /// YouTube live/post-live fragments' `fragment_count` (the sequence
+    /// number the list was generated up to).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fragment_count: Option<u64>,
 }
 
 /// A direct source or finite manifest plan, with an extractor-assigned format ID.
@@ -1342,6 +1359,13 @@ fn sort_fields(format: &VideoFormat) -> crate::format_sort::Fields {
         format
             .extra
             .get("preference")
+            .and_then(serde_json::Value::as_f64),
+    );
+    number(
+        "language_preference",
+        format
+            .extra
+            .get("language_preference")
             .and_then(serde_json::Value::as_f64),
     );
     number("quality", format.quality);

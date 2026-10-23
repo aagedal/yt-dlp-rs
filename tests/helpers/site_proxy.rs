@@ -33,6 +33,11 @@ struct Route {
     body: Vec<u8>,
 }
 
+/// A test's own answer for `(method, url)`, before the routes: status,
+/// headers and body.
+pub type Dynamic =
+    Arc<dyn Fn(&str, &str) -> Option<(u16, Vec<(String, String)>, Vec<u8>)> + Send + Sync>;
+
 pub struct SiteProxy {
     pub url: String,
     pub requests: Arc<Mutex<Vec<String>>>,
@@ -176,9 +181,27 @@ fn respond<S: Read + Write>(
     routes: &HashMap<String, Vec<Route>>,
     url: &str,
     head: &str,
+    dynamic: Option<&Dynamic>,
 ) {
     let headers = header_map(head);
     let body = read_body(stream, &headers);
+    let method = head.split_whitespace().next().unwrap_or("GET");
+    if let Some((status, headers, body)) = dynamic.and_then(|dynamic| dynamic(method, url)) {
+        let mut head = format!("HTTP/1.1 {status} OK\r\n");
+        for (name, value) in &headers {
+            head.push_str(&format!("{name}: {value}\r\n"));
+        }
+        head.push_str(&format!(
+            "Content-Length: {}\r\nConnection: close\r\n\r\n",
+            body.len()
+        ));
+        let _ = stream.write_all(head.as_bytes());
+        if method != "HEAD" {
+            let _ = stream.write_all(&body);
+        }
+        let _ = stream.flush();
+        return;
+    }
     let body = String::from_utf8_lossy(&body);
     let not_found = Route {
         request_headers: Vec::new(),
@@ -238,6 +261,7 @@ fn handle(
     routes: &HashMap<String, Vec<Route>>,
     config: &Arc<ServerConfig>,
     requests: &Mutex<Vec<String>>,
+    dynamic: Option<&Dynamic>,
 ) {
     let _ = stream.set_read_timeout(Some(Duration::from_secs(5)));
     let Some(head) = read_head(&mut stream) else {
@@ -263,18 +287,23 @@ fn handle(
         let path = inner.split_whitespace().nth(1).unwrap_or("/").to_owned();
         let url = format!("https://{host}{path}");
         requests.lock().unwrap().push(url.clone());
-        respond(&mut tls, routes, &url, &inner);
+        respond(&mut tls, routes, &url, &inner, dynamic);
         tls.conn.send_close_notify();
         let _ = tls.flush();
     } else {
         requests.lock().unwrap().push(target.to_owned());
         let target = target.to_owned();
-        respond(&mut stream, routes, &target, &head);
+        respond(&mut stream, routes, &target, &head, dynamic);
     }
 }
 
 impl SiteProxy {
     pub fn start(site_name: &str) -> Self {
+        Self::start_with(site_name, None)
+    }
+
+    /// Serve `site_name`'s routes, `dynamic` answering first.
+    pub fn start_with(site_name: &str, dynamic: Option<Dynamic>) -> Self {
         let routes = Arc::new(load(&site(site_name)));
         let provider = Arc::new(rustls::crypto::ring::default_provider());
         let mut config = ServerConfig::builder_with_provider(provider)
@@ -296,7 +325,10 @@ impl SiteProxy {
             for stream in listener.incoming() {
                 let Ok(stream) = stream else { continue };
                 let (routes, config, recorded) = (routes.clone(), config.clone(), recorded.clone());
-                thread::spawn(move || handle(stream, &routes, &config, &recorded));
+                let dynamic = dynamic.clone();
+                thread::spawn(move || {
+                    handle(stream, &routes, &config, &recorded, dynamic.as_ref())
+                });
             }
         });
         Self { url, requests }

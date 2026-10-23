@@ -1,0 +1,463 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading m3u8 information",
+    "[info] Available formats for BaW_jenozKc:",
+    "ID EXT RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC      ACODEC    ASR MORE INFO",
+    "------------------------------------------------------------------------------------",
+    "93 mp4 640x360     30    | ~1.15MiB 962k m3u8  | avc1.4D401E mp4a.40.2",
+    "18 mp4 640x360     30  2 |  792.00B 100k https | avc1.42001E mp4a.40.2 44k 360p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web;po_token=web.gvs+V0VCR1ZT",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading m3u8 information",
+    "[youtube] BaW_jenozKc: Downloading MPD manifest",
+    "[info] Available formats for BaW_jenozKc:",
+    "ID  EXT RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC       VBR ACODEC      ABR ASR MORE INFO",
+    "-----------------------------------------------------------------------------------------------------------",
+    "140 m4a audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k medium, m4a_dash",
+    "134 mp4 640x360     30    |  4.22KiB 300k dash  | avc1.4d401e 300k video only          DASH video, mp4_dash",
+    "93  mp4 640x360     30    | ~1.15MiB 962k m3u8  | avc1.4D401E      mp4a.40.2",
+    "18  mp4 640x360     30  2 |  792.00B 100k https | avc1.42001E      mp4a.40.2       44k 360p",
+    "137 mp4 1920x1080   30    |  792.00B 100k https | avc1.640028 100k video only          1080p, mp4_dash"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web;po_token=web.gvs+V0VCR1ZT",
+    "--print",
+    "%(formats.:.url)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[\"https://rr1.googlevideo.test/videoplayback?client=web&itag=140&pot=V0VCR1ZT\", \"https://manifest.googlevideo.test/api/manifest/dash/id/BaW_jenozKc/c/web/pot/V0VCR1ZT\", \"https://manifest.googlevideo.test/api/manifest/hls_playlist/itag/93/playlist/index.m3u8\", \"https://rr1.googlevideo.test/videoplayback?client=web&itag=18&pot=V0VCR1ZT\", \"https://rr1.googlevideo.test/videoplayback?client=web&itag=137&pot=V0VCR1ZT\"]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web;formats=missing_pot",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading m3u8 information",
+    "[youtube] BaW_jenozKc: Downloading MPD manifest",
+    "[info] Available formats for BaW_jenozKc:",
+    "ID  EXT RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC       VBR ACODEC      ABR ASR MORE INFO",
+    "-----------------------------------------------------------------------------------------------------------------------",
+    "140 m4a audio only      2 |  778.00B 100k https | audio only       mp4a.40.2  100k 44k medium, MISSING POT, m4a_dash",
+    "134 mp4 640x360     30    |  4.22KiB 300k dash  | avc1.4d401e 300k video only          DASH video MISSING POT, mp4_dash",
+    "93  mp4 640x360     30    | ~1.15MiB 962k m3u8  | avc1.4D401E      mp4a.40.2",
+    "18  mp4 640x360     30  2 |  792.00B 100k https | avc1.42001E      mp4a.40.2       44k 360p",
+    "137 mp4 1920x1080   30    |  792.00B 100k https | avc1.640028 100k video only          1080p, MISSING POT, mp4_dash"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web;formats=missing_pot",
+    "--print",
+    "%(formats.:.source_preference)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[-1, -21, -1, -1, -1]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading mweb player API JSON",
+    "[youtube] BaW_jenozKc: Downloading m3u8 information",
+    "[info] Available formats for BaW_jenozKc:",
+    "ID EXT RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC      ACODEC    ASR MORE INFO",
+    "------------------------------------------------------------------------------------",
+    "93 mp4 640x360     30    | ~1.15MiB 962k m3u8  | avc1.4D401E mp4a.40.2",
+    "18 mp4 640x360     30  2 |  792.00B 100k https | avc1.42001E mp4a.40.2 44k 360p"
+   ],
+   "stderr": [
+    "WARNING: [youtube] BaW_jenozKc: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide",
+    "WARNING: [youtube] BaW_jenozKc: mweb client dash formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;po_token=MWEB+TVdFQg%3D%3D",
+    "--print",
+    "%(formats.:.url)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[\"https://rr1.googlevideo.test/videoplayback?client=mweb&itag=140&pot=TVdFQg%3D%3D\", \"https://manifest.googlevideo.test/api/manifest/dash/id/BaW_jenozKc/c/mweb/pot/TVdFQg==\", \"https://manifest.googlevideo.test/api/manifest/hls_playlist/itag/93/playlist/index.m3u8\", \"https://rr1.googlevideo.test/videoplayback?client=mweb&itag=18&pot=TVdFQg%3D%3D\", \"https://rr1.googlevideo.test/videoplayback?client=mweb&itag=137&pot=TVdFQg%3D%3D\"]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;visitor_data=OVERRIDE;po_token=mweb.gvs+TVdFQg",
+    "--print",
+    "%(formats.:.url)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[\"https://rr1.googlevideo.test/videoplayback?client=mweb&itag=140&pot=TVdFQg%3D%3D\", \"https://manifest.googlevideo.test/api/manifest/dash/id/BaW_jenozKc/c/mweb/pot/TVdFQg==\", \"https://manifest.googlevideo.test/api/manifest/hls_playlist/itag/93/playlist/index.m3u8\", \"https://rr1.googlevideo.test/videoplayback?client=mweb&itag=18&visitor=override&pot=TVdFQg%3D%3D\", \"https://rr1.googlevideo.test/videoplayback?client=mweb&itag=137&pot=TVdFQg%3D%3D\"]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=android",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading android player API JSON",
+    "[youtube] BaW_jenozKc: Downloading m3u8 information",
+    "[info] Available formats for BaW_jenozKc:",
+    "ID EXT RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC      ACODEC    ASR MORE INFO",
+    "------------------------------------------------------------------------------------",
+    "93 mp4 640x360     30    | ~1.15MiB 962k m3u8  | avc1.4D401E mp4a.40.2",
+    "18 mp4 640x360     30  2 |  792.00B 100k https | avc1.42001E mp4a.40.2 44k 360p"
+   ],
+   "stderr": [
+    "WARNING: [youtube] BaW_jenozKc: android client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=android.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide",
+    "WARNING: [youtube] BaW_jenozKc: android client dash formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=android.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=android;po_token=android.player+UExBWUVS",
+    "--print",
+    "%(formats.:.url)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[\"https://rr1.googlevideo.test/videoplayback?client=android&itag=140\", \"https://manifest.googlevideo.test/api/manifest/dash/id/BaW_jenozKc/c/android/\", \"https://manifest.googlevideo.test/api/manifest/hls_playlist/itag/93/playlist/index.m3u8\", \"https://rr1.googlevideo.test/videoplayback?client=android&itag=18&with=player-token\", \"https://rr1.googlevideo.test/videoplayback?client=android&itag=137\"]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=android;po_token=android.player+UExBWUVS,android.gvs+QU5EUk9JRA",
+    "--print",
+    "%(formats.:.url)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[\"https://rr1.googlevideo.test/videoplayback?client=android&itag=140&pot=QU5EUk9JRA%3D%3D\", \"https://manifest.googlevideo.test/api/manifest/dash/id/BaW_jenozKc/c/android/pot/QU5EUk9JRA==\", \"https://manifest.googlevideo.test/api/manifest/hls_playlist/itag/93/playlist/index.m3u8\", \"https://rr1.googlevideo.test/videoplayback?client=android&itag=18&with=player-token&pot=QU5EUk9JRA%3D%3D\", \"https://rr1.googlevideo.test/videoplayback?client=android&itag=137&pot=QU5EUk9JRA%3D%3D\"]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web;po_token=bogus,web.gvs+abcde,web.gvs+V0VCR1ZT",
+    "--print",
+    "format_id"
+   ],
+   "exit": 0,
+   "stdout": [
+    "137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Invalid po_token configuration format. Expected \"CLIENT.CONTEXT+PO_TOKEN\", got \"bogus\"",
+    "WARNING: [youtube] Invalid po_token configuration for web client: gvs PO Token should be a base64url-encoded string."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web;fetch_pot=always;pot_trace=true",
+    "--print",
+    "format_id"
+   ],
+   "exit": 0,
+   "stdout": [
+    "18"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading m3u8 information",
+    "[info] Available automatic captions for BaW_jenozKc:",
+    "Language Name   Formats",
+    "de       German vtt, srt, ttml, srv3, srv2, srv1, json3",
+    "[info] Available subtitles for BaW_jenozKc:",
+    "Language Name   Formats",
+    "de       German vtt, srt, ttml, srv3, srv2, srv1, json3"
+   ],
+   "stderr": [
+    "WARNING: [youtube] BaW_jenozKc: There are missing subtitles languages because a PO token was not provided. Subtitles for these languages are missing: en. Automatic captions for 1 languages are missing."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading mweb player API JSON",
+    "[youtube] BaW_jenozKc: Downloading m3u8 information",
+    "[info] Available automatic captions for BaW_jenozKc:",
+    "Language Name   Formats",
+    "de       German vtt, srt, ttml, srv3, srv2, srv1, json3",
+    "[info] Available subtitles for BaW_jenozKc:",
+    "Language Name   Formats",
+    "de       German vtt, srt, ttml, srv3, srv2, srv1, json3"
+   ],
+   "stderr": [
+    "WARNING: [youtube] BaW_jenozKc: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide",
+    "WARNING: [youtube] BaW_jenozKc: mweb client dash formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide",
+    "WARNING: [youtube] BaW_jenozKc: Some mweb client subtitles require a PO Token which was not provided. They will be discarded since they are not downloadable as-is. You can manually pass a Subtitles PO Token for this client with --extractor-args \"youtube:po_token=mweb.subs+XXX\" . For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide",
+    "WARNING: [youtube] BaW_jenozKc: There are missing subtitles languages because a PO token was not provided. Subtitles for these languages are missing: en. Automatic captions for 1 languages are missing."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs",
+    "--print",
+    "%(subtitles.de.0.url)s",
+    "--print",
+    "%(subtitles.en.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://www.youtube.com/api/timedtext?v=BaW_jenozKc&c=mweb&lang=de&fmt=json3",
+    "NA"
+   ],
+   "stderr": [
+    "WARNING: [youtube] BaW_jenozKc: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide",
+    "WARNING: [youtube] BaW_jenozKc: mweb client dash formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;po_token=mweb.subs+U1VCUw",
+    "--print",
+    "%(subtitles.en.0.url)s",
+    "--print",
+    "%(automatic_captions.en.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://www.youtube.com/api/timedtext?v=BaW_jenozKc&c=MWEB&exp=xpe&lang=en&pot=U1VCUw%3D%3D&potc=1&fmt=json3",
+    "https://www.youtube.com/api/timedtext?v=BaW_jenozKc&c=MWEB&exp=xpe&lang=en&kind=asr&pot=U1VCUw%3D%3D&potc=1&fmt=json3"
+   ],
+   "stderr": [
+    "WARNING: [youtube] BaW_jenozKc: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide",
+    "WARNING: [youtube] BaW_jenozKc: mweb client dash formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoVisitor01",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web",
+    "--print",
+    "format_id"
+   ],
+   "exit": 0,
+   "stdout": [
+    "18"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Unable to fetch GVS PO Token for web client: Missing required Visitor Data. You may need to pass Visitor Data with --extractor-args \"youtube:visitor_data=XXX\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoVisitor01",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web;player_skip=js",
+    "--print",
+    "format_id"
+   ],
+   "exit": 0,
+   "stdout": [
+    "18"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--no-js-runtimes",
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "youtube:player_client=web",
+    "--print",
+    "format_id"
+   ],
+   "exit": 0,
+   "stdout": [
+    "18"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Unable to fetch GVS PO Token for web client: Missing required Data Sync ID for account. You may need to pass a Data Sync ID with --extractor-args \"youtube:data_sync_id=XXX\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--no-js-runtimes",
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "youtube:player_client=web;po_token=web+V0VCR1ZT",
+    "--print",
+    "%(formats.:.url)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[\"https://rr1.googlevideo.test/videoplayback?client=web&itag=140&pot=V0VCR1ZT\", \"https://manifest.googlevideo.test/api/manifest/dash/id/BaW_jenozKc/c/web/pot/V0VCR1ZT\", \"https://manifest.googlevideo.test/api/manifest/hls_playlist/itag/93/playlist/index.m3u8\", \"https://rr1.googlevideo.test/videoplayback?client=web&itag=18&pot=V0VCR1ZT\", \"https://rr1.googlevideo.test/videoplayback?client=web&itag=137&pot=V0VCR1ZT\"]"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Got a GVS PO Token for web client, but missing Data Sync ID for account. Formats may not work.You may need to pass a Data Sync ID with --extractor-args \"youtube:data_sync_id=XXX\"",
+    "WARNING: [youtube] Got a GVS PO Token for web client, but missing Data Sync ID for account. Formats may not work.You may need to pass a Data Sync ID with --extractor-args \"youtube:data_sync_id=XXX\"",
+    "WARNING: [youtube] Got a GVS PO Token for web client, but missing Data Sync ID for account. Formats may not work.You may need to pass a Data Sync ID with --extractor-args \"youtube:data_sync_id=XXX\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--no-js-runtimes",
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "youtube:player_client=web;po_token=web+V0VCR1ZT;data_sync_id=USER||",
+    "--print",
+    "%(formats.:.url)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[\"https://rr1.googlevideo.test/videoplayback?client=web&itag=140&pot=V0VCR1ZT\", \"https://manifest.googlevideo.test/api/manifest/dash/id/BaW_jenozKc/c/web/pot/V0VCR1ZT\", \"https://manifest.googlevideo.test/api/manifest/hls_playlist/itag/93/playlist/index.m3u8\", \"https://rr1.googlevideo.test/videoplayback?client=web&itag=18&pot=V0VCR1ZT\", \"https://rr1.googlevideo.test/videoplayback?client=web&itag=137&pot=V0VCR1ZT\"]"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

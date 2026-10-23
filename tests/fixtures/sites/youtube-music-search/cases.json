@@ -1,0 +1,9 @@
+[
+ {"url": "https://music.youtube.com/search?q=royalty+free+music", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://music.youtube.com/search?q=royalty+free+music", "args": ["-s", "--flat-playlist"]},
+ {"url": "https://music.youtube.com/search?q=royalty+free+music", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(playlist_count)s|%(id)s|%(title)s|%(ie_key)s|%(url)s"]},
+ {"url": "https://music.youtube.com/search?q=royalty+free+music#songs", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s|%(ie_key)s|%(url)s"]},
+ {"url": "https://music.youtube.com/search?q=royalty+free+music#Community+Playlists", "args": ["-s", "--flat-playlist"]},
+ {"url": "https://music.youtube.com/search?q=royalty+free+music&sp=EgWKAQIgAWoKEAoQAxAEEAkQBQ%3D%3D", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(id)s"]},
+ {"url": "https://music.youtube.com/search?search_query=royalty+free+music&sp=CUSTOM", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(id)s"]}
+]

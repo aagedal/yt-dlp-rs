@@ -1,0 +1,92 @@
+{
+ "routes": [
+  {
+   "url": "https://music.youtube.com/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "home.html"
+  },
+  {
+   "url": "https://music.youtube.com/youtubei/v1/search?prettyPrint=false",
+   "request_body": [
+    "MUSICTOKEN1"
+   ],
+   "request_headers": {
+    "X-YouTube-Client-Name": "67",
+    "X-Goog-Visitor-Id": "MV1"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page2.json"
+  },
+  {
+   "url": "https://music.youtube.com/youtubei/v1/search?prettyPrint=false",
+   "request_body": [
+    "EgWKAQIIAWoKEAoQAxAEEAkQBQ=="
+   ],
+   "request_headers": {
+    "X-YouTube-Client-Name": "67"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "section.json"
+  },
+  {
+   "url": "https://music.youtube.com/youtubei/v1/search?prettyPrint=false",
+   "request_body": [
+    "EgWKAQIgAWoKEAoQAxAEEAkQBQ=="
+   ],
+   "request_headers": {
+    "X-YouTube-Client-Name": "67"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "section.json"
+  },
+  {
+   "url": "https://music.youtube.com/youtubei/v1/search?prettyPrint=false",
+   "request_body": [
+    "EgeKAQQoAEABagoQChADEAQQCRAF"
+   ],
+   "request_headers": {
+    "X-YouTube-Client-Name": "67"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "section.json"
+  },
+  {
+   "url": "https://music.youtube.com/youtubei/v1/search?prettyPrint=false",
+   "request_body": [
+    "CUSTOM"
+   ],
+   "request_headers": {
+    "X-YouTube-Client-Name": "67"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "section.json"
+  },
+  {
+   "url": "https://music.youtube.com/youtubei/v1/search?prettyPrint=false",
+   "request_body": [
+    "royalty free music",
+    "WEB_REMIX"
+   ],
+   "request_headers": {
+    "X-YouTube-Client-Name": "67",
+    "X-Goog-Visitor-Id": "MV0"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "page1.json"
+  }
+ ]
+}

@@ -1,0 +1,35 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/feed/musicfixture",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "music.html"
+  },
+  {
+   "url": "https://www.youtube.com/feed/hashtagtiles",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "tiles.html"
+  },
+  {
+   "url": "https://www.youtube.com/feed/reports",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "reports.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "TOKENREPORTS"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "reports-continuation.json"
+  }
+ ]
+}

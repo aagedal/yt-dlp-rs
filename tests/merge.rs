@@ -415,6 +415,7 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
                     encryption: None,
                     path: None,
                     duration: None,
+                    fragment_count: None,
                 }];
             }
         }

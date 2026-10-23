@@ -1624,8 +1624,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
-    // `--extractor-args`: GenericIE's and YouTube's client selection are
-    // used; other extractors' are not.
+    // `--extractor-args`: GenericIE's, YouTube's and YoutubeTabIE's ported
+    // arguments are used; other extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
     for (key, values) in &extractor_args {
@@ -1635,11 +1635,42 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 for name in values.keys().filter(|name| {
                     !matches!(
                         name.as_str(),
-                        "player_client" | "player_skip" | "max_comments" | "comment_sort"
+                        "player_client"
+                            | "player_skip"
+                            | "max_comments"
+                            | "comment_sort"
+                            | "formats"
+                            | "include_duplicate_formats"
+                            | "skip"
+                            | "po_token"
+                            | "fetch_pot"
+                            | "pot_trace"
+                            | "visitor_data"
+                            | "data_sync_id"
+                            | "innertube_host"
+                            | "innertube_key"
+                            | "player_params"
+                            | "use_ad_playback_context"
+                            | "webpage_client"
+                            | "webpage_skip"
+                            | "player_js_version"
+                            | "player_js_variant"
+                            | "raise_incomplete_data"
+                            | "lang"
                     )
                 }) {
                     warning!(
                         "WARNING: extractor argument youtube:{name} is not supported natively and is ignored"
+                    );
+                }
+            }
+            "youtubetab" => {
+                for name in values
+                    .keys()
+                    .filter(|name| !matches!(name.as_str(), "skip" | "approximate_date"))
+                {
+                    warning!(
+                        "WARNING: extractor argument youtubetab:{name} is not supported natively and is ignored"
                     );
                 }
             }
@@ -1650,6 +1681,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
     yt_dlp_rs::extractor::set_video_password(args.video_password.clone());
+    yt_dlp_rs::extractor::set_youtube_tab_playlist_items(args.playlist_items.as_deref());
     // HttpFD's initial block size and resizing.
     if let Some(size) = args.buffer_size.as_deref().and_then(parse_bytes) {
         yt_dlp_rs::BUFFER_SIZE.store(size as usize, Ordering::Relaxed);
@@ -1676,6 +1708,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // of options not given (an option overriding one shows `*NAME` in the
     // debug header).
     let compat = compat_options(&args.compat_options)?;
+    yt_dlp_rs::extractor::set_youtube_tab_compat(
+        compat
+            .iter()
+            .any(|name| name == "no-youtube-channel-redirect"),
+        compat
+            .iter()
+            .any(|name| name == "no-youtube-unavailable-videos"),
+    );
     let given = |ids: &[&str]| {
         ids.iter()
             .any(|id| matches.value_source(id) == Some(clap::parser::ValueSource::CommandLine))
@@ -1772,17 +1812,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 );
                 true
             }
-            // Features this port does not have (YouTube tabs, live chat,
-            // certifi, ...) or that pinned upstream never reads, so nothing
-            // changes. This port's playlist entries are always complete
-            // videos, which `playlist-match-filter` does not affect.
+            // Read by YoutubeTabIE (`set_youtube_tab_compat`).
+            "no-youtube-channel-redirect" | "no-youtube-unavailable-videos" => true,
+            // Features this port does not have (live chat, certifi, ...) or
+            // that pinned upstream never reads, so nothing changes. This
+            // port's playlist entries are always complete videos, which
+            // `playlist-match-filter` does not affect.
             "no-certifi"
             | "prefer-legacy-http-handler"
             | "no-live-chat"
             | "no-external-downloader-progress"
             | "embed-thumbnail-atomicparsley"
-            | "no-youtube-channel-redirect"
-            | "no-youtube-unavailable-videos"
             | "no-youtube-prefer-utc-upload-date"
             | "seperate-video-versions"
             | "playlist-match-filter" => true,
@@ -2433,8 +2473,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 })
             }),
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
+            subtitles_wanted: args.write_subs || args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
+            skip_download: args.skip_download,
             get_comments: args.write_comments,
+            live_from_start: args.live_from_start,
+            // `mark_watched` runs only when cookies were passed.
+            mark_watched: args.mark_watched
+                && (args.cookies.is_some() || browser_cookies.is_some()),
             // `--wait-for-video MIN[-MAX]` (validated with the other options).
             wait_for_video: args
                 .wait_for_video
@@ -3056,11 +3102,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // (sorted, `generic` last); the generic extractor lists unmatched URLs.
     if args.list_extractors {
         let mut out = io::stdout().lock();
-        // Sorted by `IE_NAME.lower()`, generic last; each URL under the
-        // first extractor that is suitable.
+        // Sorted by `IE_NAME.lower()`, generic last; each URL under every
+        // suitable extractor, and under generic when none is.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 110] = [
+        let suitable: [(&str, Suitable); 126] = [
             ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
             ("Angel", yt_dlp_rs::extractor::angel_suitable),
             ("archive.org", yt_dlp_rs::extractor::archiveorg_suitable),
@@ -3203,6 +3249,30 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("WeiboVideo", yt_dlp_rs::extractor::weibo_video_suitable),
             ("yfanefa", yt_dlp_rs::extractor::yfanefa_suitable),
             ("youtube", yt_dlp_rs::extractor::youtube_suitable),
+            ("youtube:clip", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:clip", url)
+            }),
+            ("youtube:consent", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:consent", url)
+            }),
+            ("youtube:favorites", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:favorites", url)
+            }),
+            ("youtube:history", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:history", url)
+            }),
+            ("youtube:music:search_url", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:music:search_url", url)
+            }),
+            ("youtube:notif", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:notif", url)
+            }),
+            ("youtube:playlist", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:playlist", url)
+            }),
+            ("youtube:recommended", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:recommended", url)
+            }),
             (
                 "youtube:search",
                 yt_dlp_rs::extractor::youtube_search_suitable,
@@ -3211,18 +3281,46 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 "youtube:search_url",
                 yt_dlp_rs::extractor::youtube_search_url_suitable,
             ),
+            ("youtube:shorts:pivot:audio", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:shorts:pivot:audio", url)
+            }),
+            ("youtube:subscriptions", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:subscriptions", url)
+            }),
             ("youtube:tab", yt_dlp_rs::extractor::youtube_tab_suitable),
+            ("youtube:truncated_id", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:truncated_id", url)
+            }),
+            ("youtube:truncated_url", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:truncated_url", url)
+            }),
+            ("youtube:user", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:user", url)
+            }),
+            ("youtube:watchlater", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("youtube:watchlater", url)
+            }),
+            ("YoutubeLivestreamEmbed", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("YoutubeLivestreamEmbed", url)
+            }),
+            ("YoutubeYtBe", |url| {
+                yt_dlp_rs::extractor::youtube_extractor_suitable("YoutubeYtBe", url)
+            }),
             ("Zhihu", yt_dlp_rs::extractor::zhihu_suitable),
             ("generic", |_| true),
         ];
         for (name, matches) in suitable {
             writeln!(out, "{name}")?;
-            let (matched, rest): (Vec<&String>, Vec<&String>) =
-                remaining.into_iter().partition(|url| matches(url));
-            for url in matched {
+            if name == "generic" {
+                for url in &remaining {
+                    writeln!(out, "  {url}")?;
+                }
+                continue;
+            }
+            for url in urls.iter().filter(|url| matches(url)) {
                 writeln!(out, "  {url}")?;
             }
-            remaining = rest;
+            remaining.retain(|url| !matches(url));
         }
         return Ok(true);
     }
@@ -3246,7 +3344,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBreitBart\nCGTN\nCJSW\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nImgur\nimgur:album\nimgur:gallery\nInstagram\nJove\nJWPlatform\nkick:clips\nkick:live\nkick:vod\nKommunetv\nKu6\nlbry: odysee.com\nLinkedIn\nLivestreamfails\nloom\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nmixcloud\nMovingImage\nniconico: [niconico] ニコニコ動画\nNobelPrize\nOdnoklassniki\nOnePlacePodcast\nParlview\nPhotobucket\nPinterest\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nScreenRec\nSen\nsoundcloud: [soundcloud]\nStreamable\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTheIntercept\nThisAmericanLife\nTikTok\nTumblr: [tumblr]\nTweakers\ntwitch:clips: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:card\nvimeo: [vimeo]\nvk: [vk] VK\nvm.tiktok\nVocaroo\nWeibo\nWeiboVideo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:tab: [youtube] YouTube Tabs\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "23video\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBreitBart\nCGTN\nCJSW\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nImgur\nimgur:album\nimgur:gallery\nInstagram\nJove\nJWPlatform\nkick:clips\nkick:live\nkick:vod\nKommunetv\nKu6\nlbry: odysee.com\nLinkedIn\nLivestreamfails\nloom\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nmixcloud\nMovingImage\nniconico: [niconico] ニコニコ動画\nNobelPrize\nOdnoklassniki\nOnePlacePodcast\nParlview\nPhotobucket\nPinterest\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nScreenRec\nSen\nsoundcloud: [soundcloud]\nStreamable\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTheIntercept\nThisAmericanLife\nTikTok\nTumblr: [tumblr]\nTweakers\ntwitch:clips: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:card\nvimeo: [vimeo]\nvk: [vk] VK\nvm.tiktok\nVocaroo\nWeibo\nWeiboVideo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
@@ -3797,7 +3895,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     emit_listing(&mut stdout, &yt_dlp_rs::output::render_thumbnails(&info))?;
                 }
                 if args.list_subs {
-                    if !info.automatic_captions.is_empty() {
+                    if info.has_automatic_captions_key() {
                         emit_listing(&mut stdout, &render_automatic_captions(&info))?;
                     }
                     emit_listing(&mut stdout, &render_subtitles(&info))?;
@@ -3809,6 +3907,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         &mut stdout,
                         &yt_dlp_rs::output::render_formats_listing(&info, !args.list_formats_old),
                     )?;
+                }
+                // YouTube post-live fragment lists are lazy upstream: JSON
+                // output and downloads evaluate them, listings do not.
+                if !list_only
+                    && (args.dump_json
+                        || args.print_json
+                        || args.dump_single_json
+                        || writes_info_json
+                        || !simulate)
+                {
+                    downloader.prepare_live_fragments(&mut info)?;
                 }
                 // Upstream `process_video_result` format selection; the info
                 // dict is updated with the last selected format.
@@ -4667,6 +4776,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     let downloader = match info.protocol.as_deref() {
                                         Some("http_dash_segments") => "dashsegments",
                                         Some("ism") => "ism",
+                                        Some("mhtml") => "mhtml",
                                         _ => "hlsnative",
                                     };
                                     screen!(
@@ -4839,6 +4949,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             let downloader = match stream.protocol.as_deref() {
                                                 Some("http_dash_segments") => "dashsegments",
                                                 Some("ism") => "ism",
+                                                Some("mhtml") => "mhtml",
                                                 _ => "hlsnative",
                                             };
                                             screen!(

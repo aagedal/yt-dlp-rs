@@ -118,7 +118,8 @@ impl PlaylistSelection {
             let last = if segment.step > 0 {
                 match (segment.start, segment.end) {
                     (Some(start), _) if start < 0 => return None,
-                    (_, Endpoint::Index(end)) if end > 0 => end,
+                    // `0` (`slice(0, 0)`) reads no entries.
+                    (_, Endpoint::Index(end)) if end >= 0 => end,
                     _ => return None,
                 }
             } else {
@@ -235,7 +236,7 @@ impl PlaylistSelection {
             ("playlist_channel_id", field("channel_id")),
             (
                 "playlist_webpage_url",
-                playlist.webpage_url.to_string().into(),
+                crate::extractor::input_text(&playlist.webpage_url).into(),
             ),
             (
                 "webpage_url_basename",
@@ -399,6 +400,9 @@ mod tests {
         assert_eq!(limit("1"), Some(1));
         assert_eq!(limit("2:5,9"), Some(9));
         assert_eq!(limit("8:2:-2"), Some(8));
+        // Index 0 (`slice(0, 0)`) reads nothing.
+        assert_eq!(limit("0"), Some(0));
+        assert_eq!(limit("0,2"), Some(2));
         for items in ["3:", "-1", "1:-2", ":5:-1", "1:inf", "5::-1:"] {
             assert_eq!(
                 PlaylistSelection::new(Some(items), 1, None, false)

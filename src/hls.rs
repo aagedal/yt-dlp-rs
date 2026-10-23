@@ -535,6 +535,7 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 encryption,
                 path: None,
                 duration: None,
+                fragment_count: None,
             });
             discontinuity.push(discontinuities);
             has_map = true;
@@ -677,6 +678,7 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
                 encryption,
                 path: None,
                 duration: None,
+                fragment_count: None,
             });
             discontinuity.push(discontinuities);
             sequence = number.checked_add(1);

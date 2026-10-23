@@ -1,0 +1,84 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=Watched0001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "Watched0001.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"Watched0001\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "Watched0001.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Watched0002&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "Watched0002.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"Watched0002\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "Watched0002.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Watched0003&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "Watched0003.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"Watched0003\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "Watched0003.json"
+  },
+  {
+   "url": "https://s.youtube.com/api/stats/playback?cl=1&docid=Watched0001&ei=E&len=11&ns=yt&el=detailpage&ver=2&cmt=10.0",
+   "ignore_query": [
+    "cpn"
+   ],
+   "headers": {
+    "Content-Type": "image/gif"
+   },
+   "body": "GIF89a"
+  },
+  {
+   "url": "https://s.youtube.com/api/stats/watchtime?cl=1&docid=Watched0001&ei=E&len=11.5&ns=yt&ver=2&cmt=10.5&el=detailpage&st=0&et=10.5",
+   "ignore_query": [
+    "cpn"
+   ],
+   "headers": {
+    "Content-Type": "image/gif"
+   },
+   "body": "GIF89a"
+  }
+ ]
+}

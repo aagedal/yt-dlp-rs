@@ -1,0 +1,93 @@
+{
+ "routes": [
+  {
+   "url": "https://manifest.googlevideo.test/api/manifest/hls_variant/id/LiveStart01.1/file/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=LiveStart01&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visionos.json"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=18&v=ls",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&v=ls",
+   "headers": {
+    "Content-Type": "video/mp4",
+    "X-Head-Seqnum": "4"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&v=ls&sq=0",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "137-0.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&v=ls&sq=1",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "137-1.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&v=ls&sq=2",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "137-2.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&v=ls",
+   "headers": {
+    "Content-Type": "video/mp4",
+    "X-Head-Seqnum": "4"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&v=ls&sq=0",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "140-0.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&v=ls&sq=1",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "140-1.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&v=ls&sq=2",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "140-2.bin"
+  }
+ ]
+}

@@ -55,6 +55,47 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "ytsearch2:test query",
+   "args": [
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:search] Extracting URL: ytsearch2:test query",
+    "[download] Downloading playlist: test query",
+    "[youtube:search] query \"test query\": Downloading web client config",
+    "[youtube:search] query \"test query\" page 1: Downloading API JSON",
+    "[youtube:search] Playlist test query: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: test query"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "ytsearchall:test query",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:search] Extracting URL: ytsearchall:test query",
+    "[download] Downloading playlist: test query",
+    "[youtube:search] query \"test query\": Downloading web client config",
+    "[youtube:search] query \"test query\" page 1: Downloading API JSON",
+    "[youtube:search] Playlist test query: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: test query"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

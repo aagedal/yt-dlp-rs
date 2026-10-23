@@ -1,0 +1,24 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=MultiAudio1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "MultiAudio1.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "\"MultiAudio1\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "MultiAudio1.json"
+  }
+ ]
+}

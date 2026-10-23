@@ -1,0 +1,9 @@
+[
+ {"url": "https://www.youtube.com/watch?v=MultiAudio1", "args": ["--no-js-runtimes", "-F"]},
+ {"url": "https://www.youtube.com/watch?v=MultiAudio1", "args": ["--no-js-runtimes", "-j"]},
+ {"url": "https://www.youtube.com/watch?v=MultiAudio1", "args": ["--no-js-runtimes", "--print", "%(format_id)s|%(language)s|%(format_note)s", "-f", "ba"]},
+ {"url": "https://www.youtube.com/watch?v=MultiAudio1", "args": ["--no-js-runtimes", "--print", "%(format_id)s|%(language)s", "-f", "ba[language=de]"]},
+ {"url": "https://www.youtube.com/watch?v=MultiAudio1", "args": ["--no-js-runtimes", "--print", "%(format_id)s", "-f", "bv+ba", "--audio-multistreams", "-f", "bv+ba[language=en]+ba[language=fr-FR]"]},
+ {"url": "https://www.youtube.com/watch?v=MultiAudio1", "args": ["--no-js-runtimes", "--print", "%(format_id)s|%(language)s", "-S", "lang:de", "-f", "ba"]},
+ {"url": "https://www.youtube.com/watch?v=MultiAudio1", "args": ["--no-js-runtimes", "--extractor-args", "youtube:formats=duplicate", "-F"]}
+]

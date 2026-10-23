@@ -1,0 +1,127 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=ChatReplay1",
+   "args": [
+    "--no-js-runtimes",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=ChatReplay1",
+    "[youtube] ChatReplay1: Downloading webpage",
+    "[youtube] ChatReplay1: Downloading visionos player API JSON",
+    "ChatReplay1 has no automatic captions",
+    "[info] Available subtitles for ChatReplay1:",
+    "Language  Formats",
+    "live_chat json"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=ChatReplay1",
+   "args": [
+    "--no-js-runtimes",
+    "--no-progress",
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    "live_chat",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=ChatReplay1",
+    "[youtube] ChatReplay1: Downloading webpage",
+    "[youtube] ChatReplay1: Downloading visionos player API JSON",
+    "[info] ChatReplay1: Downloading subtitles: live_chat",
+    "[info] ChatReplay1: Downloading 1 format(s): 137+140",
+    "[info] Writing video subtitles to: ChatReplay1.live_chat.json",
+    "[youtube_live_chat] Downloading live chat",
+    "[youtube_live_chat] Total fragments: unknown (live)",
+    "[download] Destination: ChatReplay1.live_chat.json",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {
+    "ChatReplay1.live_chat.json": 823
+   }
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=ChatReplay1",
+   "args": [
+    "--no-js-runtimes",
+    "--no-progress",
+    "-f",
+    "18",
+    "--write-subs",
+    "--sub-langs",
+    "all",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=ChatReplay1",
+    "[youtube] ChatReplay1: Downloading webpage",
+    "[youtube] ChatReplay1: Downloading visionos player API JSON",
+    "[info] ChatReplay1: Downloading subtitles: live_chat",
+    "[info] ChatReplay1: Downloading 1 format(s): 18",
+    "[info] Writing video subtitles to: ChatReplay1.live_chat.json",
+    "[youtube_live_chat] Downloading live chat",
+    "[youtube_live_chat] Total fragments: unknown (live)",
+    "[download] Destination: ChatReplay1.live_chat.json",
+    "[download] Download completed",
+    "[download] Destination: ChatReplay1.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {
+    "ChatReplay1.live_chat.json": 823,
+    "ChatReplay1.mp4": 792
+   }
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=LiveChat001",
+   "args": [
+    "--no-js-runtimes",
+    "--no-progress",
+    "--skip-download",
+    "--write-subs",
+    "--sub-langs",
+    "live_chat",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=LiveChat001",
+    "[youtube] LiveChat001: Downloading webpage",
+    "[youtube] LiveChat001: Downloading visionos player API JSON",
+    "[youtube] LiveChat001: Downloading m3u8 information",
+    "[info] LiveChat001: Downloading subtitles: live_chat",
+    "[info] LiveChat001: Downloading 1 format(s): 232+234",
+    "[info] Writing video subtitles to: LiveChat001.live_chat.json",
+    "[youtube_live_chat] Downloading live chat",
+    "[youtube_live_chat] Total fragments: unknown (live)",
+    "[download] Destination: LiveChat001.live_chat.json",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {
+    "LiveChat001.live_chat.json": 774
+   }
+  }
+ ]
+}

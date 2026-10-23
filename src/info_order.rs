@@ -5,7 +5,7 @@
 //! `info_dict.update(format)`. Extractors mark which upstream path built an
 //! info or format dict; [`video`] and [`format`] replay that path, keeping
 //! this port's values and adding `null` where upstream assigns `None`.
-//! Unmarked dicts (YouTube, loaded info JSON) keep this port's order.
+//! Unmarked dicts (loaded info JSON) keep this port's order.
 use serde_json::{Map, Value};
 
 /// The upstream code path of an info dict (see [`video`]).
@@ -210,6 +210,22 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
 pub(crate) fn mark_info(mut info: crate::VideoInfo, shape: &str) -> crate::VideoInfo {
     info.extra.insert(INFO_SHAPE.into(), shape.into());
     info
+}
+
+impl crate::VideoInfo {
+    /// Whether upstream's dict has an `automatic_captions` key, as
+    /// `--list-subs` checks (`'automatic_captions' in info_dict`): any
+    /// captions, or an extractor's recorded key list naming it (YouTube
+    /// always sets the key, possibly to `{}`).
+    pub fn has_automatic_captions_key(&self) -> bool {
+        !self.automatic_captions.is_empty()
+            || self
+                .extra
+                .get(INFO_SHAPE)
+                .and_then(Value::as_str)
+                .and_then(|shape| shape.split_once(';'))
+                .is_some_and(|(_, keys)| keys.split(',').any(|key| key == "automatic_captions"))
+    }
 }
 
 /// Order each loaded subtitle track's keys like the file's track.
@@ -423,6 +439,40 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ("url", Take),
             ("available_at", Take),
             ("downloader_options", Take),
+        ],
+        // A live adaptive `process_format_stream` dict after
+        // `_prepare_live_from_start_formats`.
+        "youtube-post-live" => &[
+            ("asr", Assign),
+            ("filesize", Assign),
+            ("format_id", Take),
+            ("format_note", Assign),
+            ("source_preference", Take),
+            ("fps", Assign),
+            ("audio_channels", Assign),
+            ("height", Assign),
+            ("quality", Take),
+            ("has_drm", Take),
+            ("tbr", Assign),
+            ("filesize_approx", Assign),
+            ("width", Assign),
+            ("language", Assign),
+            ("language_preference", Take),
+            ("preference", Assign),
+            ("ext", Take),
+            ("vcodec", Take),
+            ("acodec", Take),
+            ("dynamic_range", Assign),
+            ("container", Take),
+            ("url", Take),
+            ("is_from_start", Take),
+            ("target_duration", Take),
+            ("_itag", Take),
+            ("_client", Take),
+            ("downloader_options", Take),
+            ("is_live", Take),
+            ("fragments", Take),
+            ("protocol", Take),
         ],
         // `BildIE`'s MP4 source.
         "bild" => &[("url", Take), ("format_id", Take)],

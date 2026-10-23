@@ -1,0 +1,6 @@
+[
+ {"url": "https://www.youtube.com/watch?v=Watched0001", "copy": ["cookies.txt"], "args": ["--no-js-runtimes", "--cookies", "cookies.txt", "--mark-watched", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=Watched0001", "args": ["--no-js-runtimes", "--mark-watched", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=Watched0002", "copy": ["cookies.txt"], "args": ["--no-js-runtimes", "--cookies", "cookies.txt", "--mark-watched", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=Watched0003", "copy": ["cookies.txt"], "args": ["--no-js-runtimes", "--cookies", "cookies.txt", "--mark-watched", "-s"]}
+]

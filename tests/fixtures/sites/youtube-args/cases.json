@@ -1,0 +1,18 @@
+[
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "-F"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:formats=duplicate,dashy", "-F"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:formats=dashy", "--print", "%(formats.:.format_id)j", "--print", "%(formats.:.protocol)j"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:formats=incomplete;skip=hls", "-F"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:skip=dash,hls", "--print", "%(formats.:.format_id)j"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:include_duplicate_formats", "--print", "%(formats.:.format_id)j"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_skip=webpage", "-j"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_skip=webpage,initial_data", "--print", "%(title)s|%(description)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:webpage_skip=initial_data", "--print", "title"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=-visionos", "--print", "title"]},
+ {"url": "https://www.youtube.com/watch?v=NoInitData1", "args": ["--no-js-runtimes", "--print", "%(title)s|%(description)s"]},
+ {"url": "https://www.youtube.com/watch?v=NoInitData1", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_skip=initial_data", "--print", "title"]},
+ {"url": "https://www.youtube.com/watch?v=EmptyPlayer", "args": ["--no-js-runtimes", "--print", "title"]},
+ {"url": "https://www.youtube.com/watch?v=EmptyPlayer", "args": ["--no-js-runtimes", "--extractor-args", "youtube:raise_incomplete_data", "--print", "title"]},
+ {"url": "https://www.youtube.com/watch?v=PlayerError", "args": ["--no-js-runtimes", "--print", "title"]},
+ {"url": "https://www.youtube.com/watch?v=AlertPlayer", "args": ["--no-js-runtimes", "--print", "title"]}
+]

@@ -1,0 +1,3 @@
+{"responseContext": {"visitorData": "N2"}, "actions": [{"appendContinuationItemsAction": {"continuationItems": [
+ {"notificationRenderer": {"navigationEndpoint": {"watchEndpoint": {"videoId": "NOTIFVIDEO2"}}, "shortMessage": {"simpleText": "Other is live: A stream"}}}
+]}}]}

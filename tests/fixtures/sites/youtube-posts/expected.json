@@ -1,0 +1,63 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/@Post/posts",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"UCpostspostspostspostsp1\", \"channel\": \"Posting Channel\", \"channel_id\": \"UCpostspostspostspostsp1\", \"title\": \"Posting Channel - Posts\", \"availability\": \"public\", \"channel_follower_count\": null, \"description\": \"The Posting Channel channel\", \"tags\": [], \"thumbnails\": [{\"url\": \"https://yt3.googleusercontent.com/av=s900-c-k\", \"height\": 900, \"width\": 900, \"id\": \"0\", \"resolution\": \"900x900\"}, {\"url\": \"https://yt3.googleusercontent.com/av=s0\", \"id\": \"avatar_uncropped\", \"preference\": 1}], \"uploader_id\": \"@Post\", \"uploader_url\": \"https://www.youtube.com/@Post\", \"modified_date\": null, \"view_count\": null, \"playlist_count\": 6, \"uploader\": \"Posting Channel\", \"channel_url\": \"https://www.youtube.com/channel/UCpostspostspostspostsp1\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"AAAAAAAAAAA\", \"url\": \"https://www.youtube.com/watch?v=AAAAAAAAAAA\", \"title\": \"Attached video\", \"description\": null, \"duration\": 180, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/AAAAAAAAAAA/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 12, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"id\": \"BBBBBBBBBBB\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=BBBBBBBBBBB&t=10s\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"YoutubeTab\", \"id\": \"PLpostplaylist\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/playlist?list=PLpostplaylist\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"id\": \"CCCCCCCCCCC\", \"_type\": \"url\", \"url\": \"https://youtu.be/CCCCCCCCCCC\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"DDDDDDDDDDD\", \"url\": \"https://www.youtube.com/watch?v=DDDDDDDDDDD\", \"title\": \"Later attached\", \"description\": null, \"duration\": 45, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/DDDDDDDDDDD/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"EEEEEEEEEEE\", \"url\": \"https://www.youtube.com/watch?v=EEEEEEEEEEE\", \"title\": \"Loose video\", \"description\": null, \"duration\": 75, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/EEEEEEEEEEE/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 9, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/@Post/posts\", \"original_url\": \"https://www.youtube.com/@Post/posts\", \"webpage_url_basename\": \"posts\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Post/posts",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(ie_key)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|AAAAAAAAAAA|Attached video|Youtube|https://www.youtube.com/watch?v=AAAAAAAAAAA",
+    "2|BBBBBBBBBBB|NA|Youtube|https://www.youtube.com/watch?v=BBBBBBBBBBB&t=10s",
+    "3|PLpostplaylist|NA|YoutubeTab|https://www.youtube.com/playlist?list=PLpostplaylist",
+    "4|CCCCCCCCCCC|NA|Youtube|https://youtu.be/CCCCCCCCCCC",
+    "5|DDDDDDDDDDD|Later attached|Youtube|https://www.youtube.com/watch?v=DDDDDDDDDDD",
+    "6|EEEEEEEEEEE|Loose video|Youtube|https://www.youtube.com/watch?v=EEEEEEEEEEE"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Post/posts",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "2:7"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/@Post/posts",
+    "[youtube:tab] @Post/posts: Downloading webpage",
+    "[download] Downloading playlist: Posting Channel - Posts",
+    "[youtube:tab] UCpostspostspostspostsp1 page 1: Downloading API JSON",
+    "[youtube:tab] UCpostspostspostspostsp1 page 2: Downloading API JSON",
+    "[youtube:tab] Playlist Posting Channel - Posts: Downloading 5 items of 6",
+    "[download] Downloading item 1 of 5",
+    "[download] Downloading item 2 of 5",
+    "[download] Downloading item 3 of 5",
+    "[download] Downloading item 4 of 5",
+    "[download] Downloading item 5 of 5",
+    "[download] Finished downloading playlist: Posting Channel - Posts"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

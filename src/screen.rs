@@ -40,6 +40,77 @@ static SINK: OnceLock<Sink> = OnceLock::new();
 /// The thread that installed the sink, which may hold the output streams.
 static SINK_THREAD: OnceLock<std::thread::ThreadId> = OnceLock::new();
 
+/// A [`Message`] owned, to hand to another thread.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum OwnedMessage {
+    Screen(String),
+    ScreenRaw(String),
+    Warning(String),
+    Stderr(String),
+    Debug(String),
+    Stdout(String),
+    Postprocess(String, String),
+}
+
+impl OwnedMessage {
+    fn of(message: Message<'_>) -> Self {
+        match message {
+            Message::Screen(text) => Self::Screen(text.into()),
+            Message::ScreenRaw(text) => Self::ScreenRaw(text.into()),
+            Message::Warning(text) => Self::Warning(text.into()),
+            Message::Stderr(text) => Self::Stderr(text.into()),
+            Message::Debug(text) => Self::Debug(text.into()),
+            Message::Stdout(text) => Self::Stdout(text.into()),
+            Message::Postprocess {
+                postprocessor,
+                status,
+            } => Self::Postprocess(postprocessor.into(), status.into()),
+        }
+    }
+
+    /// Deliver the message on this thread.
+    pub(crate) fn emit(&self) {
+        deliver(match self {
+            Self::Screen(text) => Message::Screen(text),
+            Self::ScreenRaw(text) => Message::ScreenRaw(text),
+            Self::Warning(text) => Message::Warning(text),
+            Self::Stderr(text) => Message::Stderr(text),
+            Self::Debug(text) => Message::Debug(text),
+            Self::Stdout(text) => Message::Stdout(text),
+            Self::Postprocess(postprocessor, status) => Message::Postprocess {
+                postprocessor,
+                status,
+            },
+        });
+    }
+}
+
+type Forward = Box<dyn Fn(OwnedMessage)>;
+
+thread_local! {
+    /// A worker thread's messages, handed to the thread that may hold the
+    /// output streams instead of written directly.
+    static FORWARD: std::cell::RefCell<Option<Forward>> = const { std::cell::RefCell::new(None) };
+}
+
+/// Hand this thread's messages to `forward` (`None` restores the sink).
+pub(crate) fn forward(forward: Option<Forward>) {
+    FORWARD.with(|slot| *slot.borrow_mut() = forward);
+}
+
+fn deliver(message: Message<'_>) {
+    let forwarded = FORWARD.with(|slot| match &*slot.borrow() {
+        Some(forward) => {
+            forward(OwnedMessage::of(message));
+            true
+        }
+        None => false,
+    });
+    if !forwarded && let Some(sink) = SINK.get() {
+        sink(message);
+    }
+}
+
 /// Install the sink once; later calls are ignored.
 pub fn set_sink(sink: impl Fn(Message<'_>) + Send + Sync + 'static) {
     if SINK.set(Box::new(sink)).is_ok() {
@@ -106,9 +177,9 @@ pub(crate) fn flush_traffic() {
     if SINK_THREAD.get() != Some(&std::thread::current().id()) {
         return;
     }
-    if let Some(sink) = SINK.get() {
+    if SINK.get().is_some() {
         for line in crate::traffic::take_lines() {
-            sink(Message::Stdout(&line));
+            deliver(Message::Stdout(&line));
         }
     }
 }
@@ -122,19 +193,15 @@ pub(crate) fn after_request() {
 }
 
 pub(crate) fn screen(text: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::Screen(text));
-    }
+    deliver(Message::Screen(text));
 }
 
 /// `PostProcessor._hook_progress({'status': status}, info)`.
 pub(crate) fn postprocessor(postprocessor: &str, status: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::Postprocess {
-            postprocessor,
-            status,
-        });
-    }
+    deliver(Message::Postprocess {
+        postprocessor,
+        status,
+    });
 }
 
 /// Upstream `run_wrapper`: `started`, the run, then `finished` unless it
@@ -151,9 +218,7 @@ pub(crate) fn postprocess<T>(
 
 /// `to_screen(text, skip_eol=True)`.
 pub(crate) fn screen_raw(text: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::ScreenRaw(text));
-    }
+    deliver(Message::ScreenRaw(text));
 }
 
 /// `to_screen(..., only_once=True)`.
@@ -180,10 +245,29 @@ pub(crate) fn warning_once(text: &str) {
     warning(text);
 }
 
-pub(crate) fn warning(text: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::Warning(text));
+/// The messages `InfoExtractor.report_warning(..., only_once=True)` has
+/// printed since the extractor's last `initialize()`.
+static IE_SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+
+/// `InfoExtractor.initialize()`: forget the extractor's `only_once` warnings.
+pub(crate) fn reset_extractor_warnings() {
+    IE_SEEN.lock().unwrap().clear();
+}
+
+/// `InfoExtractor.report_warning(..., only_once=True)`: once per
+/// extraction (unlike the downloader's [`warning_once`]).
+pub(crate) fn extractor_warning_once(text: &str) {
+    let mut seen = IE_SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
     }
+    seen.push(text.to_owned());
+    drop(seen);
+    warning(text);
+}
+
+pub(crate) fn warning(text: &str) {
+    deliver(Message::Warning(text));
 }
 
 static VERBOSE: AtomicBool = AtomicBool::new(false);
@@ -199,10 +283,8 @@ pub fn verbose() -> bool {
 
 /// Upstream `write_debug`.
 pub(crate) fn debug(text: &str) {
-    if verbose()
-        && let Some(sink) = SINK.get()
-    {
-        sink(Message::Debug(text));
+    if verbose() {
+        deliver(Message::Debug(text));
     }
 }
 
@@ -214,10 +296,36 @@ pub(crate) fn extractor_debug(text: &str) {
     }
 }
 
-pub(crate) fn stderr(text: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::Stderr(text));
+/// An extractor's `write_debug(..., only_once=True)`.
+pub(crate) fn extractor_debug_once(text: &str) {
+    static SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+    if !verbose() {
+        return;
     }
+    let mut seen = SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    extractor_debug(text);
+}
+
+/// `YoutubeDL.deprecated_feature`: `Deprecated Feature: MESSAGE` on stderr,
+/// once per message.
+pub(crate) fn deprecated_feature(text: &str) {
+    static SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+    let mut seen = SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    stderr(&format!("Deprecated Feature: {text}"));
+}
+
+pub(crate) fn stderr(text: &str) {
+    deliver(Message::Stderr(text));
 }
 
 /// Python `str(float)` for finite values in the ranges used by options.
@@ -287,6 +395,8 @@ struct ExpectedPage {
     id: String,
     before: Option<String>,
     after: Option<String>,
+    /// The MD5 of the request's `data` (a POST body).
+    data: Option<String>,
 }
 
 thread_local! {
@@ -301,6 +411,20 @@ pub(crate) fn expect_page(id: &str, before: Option<String>, after: Option<String
             id: id.into(),
             before,
             after,
+            data: None,
+        });
+    });
+}
+
+/// Expect the response to a POST of `data` for `id`, whose dump name has
+/// the data's MD5.
+pub(crate) fn expect_post_page(id: &str, data: &[u8]) {
+    PAGE.with(|page| {
+        *page.borrow_mut() = Some(ExpectedPage {
+            id: id.into(),
+            before: None,
+            after: None,
+            data: Some(crate::md5::hex(data)),
         });
     });
 }
@@ -330,6 +454,7 @@ pub(crate) fn page_read(url: &url::Url, bytes: &[u8]) -> std::io::Result<()> {
         let filename = request_dump_filename(
             url.as_str(),
             &page.id,
+            page.data.as_deref(),
             TRIM_FILE_NAME.load(Ordering::Relaxed),
         );
         screen(&format!("[{extractor}] Saving request to {filename}"));
@@ -341,9 +466,9 @@ pub(crate) fn page_read(url: &url::Url, bytes: &[u8]) -> std::io::Result<()> {
     Ok(())
 }
 
-/// Upstream `_request_dump_filename` without request data.
-fn request_dump_filename(url: &str, id: &str, trim_length: usize) -> String {
-    let mut basen = [id, url]
+/// Upstream `_request_dump_filename`: `ID_[DATA-MD5_]URL.dump`.
+fn request_dump_filename(url: &str, id: &str, data: Option<&str>, trim_length: usize) -> String {
+    let mut basen = [id, data.unwrap_or_default(), url]
         .into_iter()
         .filter(|part| !part.is_empty())
         .collect::<Vec<_>>()

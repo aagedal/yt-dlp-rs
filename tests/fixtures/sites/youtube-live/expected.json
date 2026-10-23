@@ -58,6 +58,25 @@
     "ERROR: [youtube] Upcoming001: This live event will begin in 3 hours."
    ],
    "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=LiveStream1",
+   "args": [
+    "--no-js-runtimes",
+    "--live-from-start",
+    "-F"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=LiveStream1",
+    "[youtube] LiveStream1: Downloading webpage",
+    "[youtube] LiveStream1: Downloading visionos player API JSON"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "ERROR: [youtube] LiveStream1: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
   }
  ]
 }
