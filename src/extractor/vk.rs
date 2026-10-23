@@ -3,8 +3,13 @@
 //! error pages), the player params' progressive, HLS, DASH and RTMP
 //! formats, subtitles, chapters and metadata. A YouTube embed is followed;
 //! other embedded players and VK's JS challenge are reported as unsupported.
+//!
+//! `VKWallPostIE`: `wkview.php`'s wall post HTML as a playlist of its
+//! `data-audio` tracks and linked videos. `VKUserVideosIE`: user/club video
+//! sections and playlists through `al_video.php`'s `load_videos_silent`
+//! pages. `VKPlayIE`/`VKPlayLiveIE` are in [`super::vkplay`].
 use super::Extractor;
-use crate::{Error, ExtractResult, Result, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
@@ -12,9 +17,13 @@ use std::sync::LazyLock;
 use url::Url;
 
 pub struct Vk;
+pub struct VkWallPost;
+pub struct VkUserVideos;
 
 const NAME: &str = "vk";
 const KEY: &str = "VK";
+const WALL_POST: &str = "vk:wallpost";
+const USER_VIDEOS: &str = "vk:uservideos";
 const LOGIN_HINT: &str = "Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vk) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
@@ -130,18 +139,86 @@ static DATE: LazyLock<Regex> =
 static VIEWS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"class=["']mv_views_count[^>]+>\s*([\d,.]+)"#).unwrap());
 static HEIGHT: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(?:url|cache)(\d+)").unwrap());
+static WALL_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:(?:(?:(?:m|new)\.)?vk\.com/(?:[^?]+\?.*\bw=)?wall(?P<id>-?\d+_\d+)))")
+        .unwrap()
+});
+/// `VKUserVideosIE._VALID_URL`; the second pattern's `(?!\?.*\bz=video)`
+/// is checked on `rest` (see [`user_videos_id`]).
+static USER_VIDEOS_URLS: LazyLock<[Regex; 2]> = LazyLock::new(|| {
+    const BASE: &str = r"^https?://(?:(?:m|new)\.)?vk(?:video\.ru|\.com/video)";
+    [
+        Regex::new(&format!(r"{BASE}/playlist/(?P<id>-?\d+_-?\d+)")).unwrap(),
+        Regex::new(&format!(
+            r"{BASE}/(?P<id>@[^/?#]+)(?:/all)?/?(?P<rest>(?:[?#].*)?)$"
+        ))
+        .unwrap(),
+    ]
+});
+static Z_VIDEO: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^\?.*\bz=video").unwrap());
+static NEW_CUR: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\bvar newCur\s*=").unwrap());
+static DATA_AUDIO: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"data-audio="([^"]+)"#).unwrap());
+static POST_VIDEO: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<a[^>]+href=(?:["'])(/video(?:-?[\d_]+)[^"']*)"#).unwrap());
 
 /// `VKIE.suitable`.
 pub fn suitable(url: &str) -> bool {
     VALID_URL.is_match(url)
 }
 
+/// `VKWallPostIE.suitable`.
+pub fn wall_post_suitable(url: &str) -> bool {
+    WALL_URL.is_match(url)
+}
+
+/// `VKUserVideosIE.suitable`.
+pub fn user_videos_suitable(url: &str) -> bool {
+    user_videos_id(url).is_some()
+}
+
+/// The `id` group of the first matching `VKUserVideosIE._VALID_URL`.
+fn user_videos_id(url: &str) -> Option<String> {
+    let [playlist, handle] = &*USER_VIDEOS_URLS;
+    if let Some(found) = playlist.captures(url) {
+        return Some(found["id"].to_owned());
+    }
+    let found = handle.captures(url)?;
+    (!Z_VIDEO.is_match(&found["rest"])).then(|| found["id"].to_owned())
+}
+
 /// An error with upstream's temp ID (`None` for video/clip page URLs).
 fn fail(id: Option<&str>, message: &str) -> Error {
+    fail_as(NAME, id, message)
+}
+
+/// An `ExtractorError` of the extractor `name` with its temp ID.
+fn fail_as(name: &str, id: Option<&str>, message: &str) -> Error {
     Error::Reported(match id {
-        Some(id) => format!("[{NAME}] {id}: {message}"),
-        None => format!("[{NAME}] {message}"),
+        Some(id) => format!("[{name}] {id}: {message}"),
+        None => format!("[{name}] {message}"),
     })
+}
+
+/// An unexpected exception (`KeyError` and the like) wrapped by `extract`.
+fn bug_as(name: &str, id: Option<&str>, cause: &str) -> Error {
+    fail_as(
+        name,
+        id,
+        &format!(
+            "An extractor error has occurred. (caused by {cause}); {}",
+            crate::BUG_REPORTS_MESSAGE
+        ),
+    )
+}
+
+/// `extractor` as the `'static` name [`Error::ExtractorRequest`] needs.
+fn static_name(name: &str) -> &'static str {
+    match name {
+        WALL_POST => WALL_POST,
+        USER_VIDEOS => USER_VIDEOS,
+        _ => NAME,
+    }
 }
 
 fn int(value: Option<&Value>) -> Option<i64> {
@@ -166,31 +243,39 @@ fn cleaned(value: Option<&Value>) -> Option<String> {
 }
 
 /// `VKBaseIE._download_webpage_handle`'s JS challenge, which needs upstream's
-/// `JSInterpreter`.
-fn check_challenge(final_url: &Url, video_id: &str) -> Result<()> {
+/// `JSInterpreter` to run the page's salt function.
+fn check_challenge(name: &str, final_url: &Url, video_id: &str) -> Result<()> {
     if final_url.path() != "/challenge.html" {
         return Ok(());
     }
     crate::screen::screen(&format!(
-        "[{NAME}] [{video_id}] Received a JS challenge response"
+        "[{name}] [{video_id}] Received a JS challenge response"
     ));
     Err(Error::UnsupportedHtml5(
         "VK JS challenges are not supported natively".into(),
     ))
 }
 
-/// `_download_payload('al_video', video_id, data)`.
-fn download_payload(client: &Client, video_id: &str, list_id: Option<&str>) -> Result<Value> {
+/// `VKBaseIE._download_payload(path, video_id, data)`: a POST of `data` and
+/// `al=1` to `https://vk.com/PATH.php`, then its `payload` pair's payload.
+/// `temp` is the extractor's temp ID for its errors.
+fn download_payload(
+    client: &Client,
+    name: &str,
+    temp: Option<&str>,
+    path: &str,
+    video_id: &str,
+    data: &[(&str, &str)],
+) -> Result<Value> {
     use std::io::Read;
-    let endpoint = Url::parse("https://vk.com/al_video.php")?;
+    let endpoint = Url::parse(&format!("https://vk.com/{path}.php"))?;
     let mut body = url::form_urlencoded::Serializer::new(String::new());
-    body.append_pair("act", "show")
-        .append_pair("video", video_id);
-    if let Some(list_id) = list_id {
-        body.append_pair("list", list_id);
+    for (key, value) in data {
+        body.append_pair(key, value);
     }
     body.append_pair("al", "1");
-    crate::screen::screen(&format!("[{NAME}] {video_id}: Downloading JSON metadata"));
+    crate::screen::screen(&format!("[{name}] {video_id}: Downloading JSON metadata"));
+    let extractor = static_name(name);
     let mut response = super::direct::post(
         client,
         &endpoint,
@@ -203,44 +288,41 @@ fn download_payload(client: &Client, video_id: &str, list_id: Option<&str>) -> R
     )
     .map_err(|error| match error {
         Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor: NAME,
+            extractor,
             id: video_id.to_owned(),
             what: "JSON metadata",
             source: Box::new(error),
         },
         error => error,
     })?;
-    check_challenge(&response.url().clone(), video_id)?;
+    check_challenge(name, &response.url().clone(), video_id)?;
     let mut bytes = Vec::new();
     response
         .read_to_end(&mut bytes)
         .map_err(Error::ExtractionRead)?;
     let json: Value = crate::json::from_str(&super::decode_webpage(&bytes, response.headers()))
         .map_err(|error| {
-            fail(
+            fail_as(
+                name,
                 Some(video_id),
                 &format!("Failed to parse JSON  (caused by {error})"),
             )
         })?;
-    let bug = |key: &str| {
-        fail(
-            None,
-            &format!(
-                "An extractor error has occurred. (caused by {key}); {}",
-                crate::BUG_REPORTS_MESSAGE
-            ),
-        )
-    };
     let Some(pair) = json.get("payload") else {
-        return Err(bug("KeyError('payload')"));
+        return Err(bug_as(name, temp, "KeyError('payload')"));
     };
     let Some([code, payload]) = pair.as_array().map(Vec::as_slice) else {
-        return Err(bug("ValueError('not enough values to unpack')"));
+        return Err(bug_as(
+            name,
+            temp,
+            "ValueError('not enough values to unpack')",
+        ));
     };
     match code.as_str() {
         Some("3") => {
-            return Err(fail(
-                None,
+            return Err(fail_as(
+                name,
+                temp,
                 &format!("This video is only available for registered users. {LOGIN_HINT}"),
             ));
         }
@@ -249,11 +331,468 @@ fn download_payload(client: &Client, video_id: &str, list_id: Option<&str>) -> R
             let mut chars = text.chars();
             chars.next();
             chars.next_back();
-            return Err(fail(None, &crate::html::clean_html(chars.as_str())));
+            return Err(fail_as(
+                name,
+                temp,
+                &crate::html::clean_html(chars.as_str()),
+            ));
         }
         _ => {}
     }
     Ok(payload.clone())
+}
+
+/// `url_result(url, VKIE, video_id)`: a playlist entry resolved when
+/// processed.
+fn vk_entry(target: &str, id: Option<&str>) -> Result<VideoInfo> {
+    let url = Url::parse(target)?;
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    let mut entry = Map::new();
+    entry.insert("ie_key".into(), KEY.into());
+    if let Some(id) = id {
+        info.id = id.to_owned();
+        entry.insert("id".into(), id.into());
+    }
+    entry.insert("_type".into(), "url".into());
+    entry.insert("url".into(), target.into());
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": {},
+            "ie_key": KEY,
+            "extractor": NAME,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+/// Upstream `get_element_by_class(class_name, html)`: the first element's
+/// unescaped content.
+fn element_by_class(class: &str, html: &str) -> Option<String> {
+    crate::html_elements::elements_text_and_html_by_class(class, html)
+        .ok()?
+        .into_iter()
+        .next()
+        .map(|(text, _)| text)
+}
+
+fn start(name: &'static str, page: &Url) {
+    crate::screen::set_extractor(name);
+    crate::screen::screen(&format!(
+        "[{name}] Extracting URL: {}",
+        crate::screen::extracting_url(page.as_str())
+    ));
+}
+
+/// An extractor's info dict (`dict`, in upstream's key order) as an info.
+#[allow(clippy::too_many_arguments)]
+fn video_info(
+    page: &Url,
+    (extractor, extractor_key): (&str, &str),
+    dict: Map<String, Value>,
+    formats: Vec<crate::VideoFormat>,
+    subtitles: crate::Subtitles,
+    format_sort_fields: &[&str],
+    parts: &str,
+) -> VideoInfo {
+    let first = formats
+        .first()
+        .map_or_else(|| page.clone(), |format| format.url.clone());
+    let mut info = super::direct::build_at(first.clone(), &first, String::new());
+    info.direct = None;
+    if formats.is_empty() {
+        info.extra
+            .insert(crate::info::NO_FORMATS.into(), Value::Bool(true));
+    }
+    info.formats = formats;
+    info.subtitles = subtitles;
+    info.webpage_url = page.clone();
+    info.extractor = extractor.into();
+    info.extractor_key = extractor_key.into();
+    info.format_sort_fields = format_sort_fields.iter().map(|&f| f.into()).collect();
+    let titled = dict.get("title").is_some_and(|title| !title.is_null());
+    if !titled {
+        info.extra
+            .insert(crate::info::TITLE_MISSING.into(), Value::Bool(true));
+    }
+    let mut keys = Vec::new();
+    for (key, value) in dict {
+        keys.push(key.clone());
+        match key.as_str() {
+            "id" => info.id = value.as_str().unwrap_or_default().to_owned(),
+            "title" => info.title = value.as_str().unwrap_or_default().to_owned(),
+            "formats" | "subtitles" => {}
+            _ if value.is_null() => {
+                info.extra.insert(key, Value::Null);
+            }
+            _ => crate::metadata_parser::set_field(&mut info, &key, value),
+        }
+    }
+    if !format_sort_fields.is_empty() {
+        keys.push("_format_sort_fields".into());
+    }
+    crate::info_order::mark_info(
+        info,
+        &format!(
+            "dict{};{}{parts}",
+            if titled { "" } else { "-untitled" },
+            keys.join(",")
+        ),
+    )
+}
+
+/// Python's `str()` of a JSON scalar (`f'{value}'`).
+fn py_scalar(value: &Value) -> Option<String> {
+    match value {
+        Value::String(text) => Some(text.clone()),
+        Value::Number(number) if number.is_i64() || number.is_u64() => Some(number.to_string()),
+        _ => None,
+    }
+}
+
+impl Extractor for VkWallPost {
+    fn key(&self) -> &'static str {
+        WALL_POST
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    /// `VKWallPostIE._real_extract`.
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = WALL_URL.captures(page.as_str()) else {
+            return Ok(None);
+        };
+        let post_id = found["id"].to_owned();
+        let temp = Some(post_id.as_str());
+        start(WALL_POST, page);
+        let wall = format!("wall{post_id}");
+        let payload = download_payload(
+            client,
+            WALL_POST,
+            temp,
+            "wkview",
+            &post_id,
+            &[("act", "show"), ("w", &wall)],
+        )?;
+        let webpage = match payload.get(1) {
+            Some(Value::String(webpage)) => webpage.clone(),
+            Some(_) => {
+                return Err(Error::UnsupportedHtml5(
+                    "VK wall posts whose payload is not HTML are not supported natively".into(),
+                ));
+            }
+            None => {
+                return Err(bug_as(
+                    WALL_POST,
+                    temp,
+                    "IndexError('list index out of range')",
+                ));
+            }
+        };
+        let uploader = element_by_class("PostHeaderTitle__authorName", &webpage)
+            .map(|text| crate::html::clean_html(&text));
+
+        let mut entries = Vec::new();
+        for found in DATA_AUDIO.captures_iter(&webpage) {
+            let audio: Value = serde_json::from_str(&crate::html::unescape_html(&found[1]))
+                .map_err(|error| {
+                    fail_as(
+                        WALL_POST,
+                        Some(&post_id),
+                        &format!("Failed to parse JSON  (caused by {error})"),
+                    )
+                })?;
+            let Some(audio) = audio.as_object() else {
+                return Err(Error::UnsupportedHtml5(
+                    "VK wall post audio data that is not an object is not supported natively"
+                        .into(),
+                ));
+            };
+            let Some(url) = audio.get("url") else {
+                return Err(bug_as(WALL_POST, temp, "KeyError('url')"));
+            };
+            if !truthy(url) {
+                continue;
+            }
+            let Some(url) = url.as_str() else {
+                return Err(Error::UnsupportedHtml5(
+                    "VK wall post audio URLs that are not strings are not supported natively"
+                        .into(),
+                ));
+            };
+            let title = unescaped(audio.get("title"));
+            let artist = unescaped(audio.get("artist"));
+            let mut id = Vec::new();
+            for key in ["owner_id", "id"] {
+                let Some(value) = audio.get(key) else {
+                    return Err(bug_as(WALL_POST, temp, &format!("KeyError('{key}')")));
+                };
+                id.push(py_scalar(value).ok_or_else(|| {
+                    Error::UnsupportedHtml5(format!(
+                        "VK wall post audio {key}s that are not strings or integers are not supported natively"
+                    ))
+                })?);
+            }
+            let joined: Vec<&str> = [artist.as_deref(), title.as_deref()]
+                .into_iter()
+                .flatten()
+                .filter(|part| !part.is_empty())
+                .collect();
+            let thumbnails = audio
+                .get("coverUrl")
+                .and_then(Value::as_str)
+                .map(|urls| Value::Array(urls.split(',').map(|url| json!({"url": url})).collect()))
+                .unwrap_or(Value::Null);
+            let mut dict = Map::new();
+            dict.insert("id".into(), id.join("_").into());
+            dict.insert("title".into(), joined.join(" - ").into());
+            dict.insert("thumbnails".into(), thumbnails);
+            dict.insert("duration".into(), int(audio.get("duration")).into());
+            dict.insert("uploader".into(), uploader.clone().into());
+            dict.insert("artist".into(), artist.into());
+            dict.insert("track".into(), title.into());
+            dict.insert("formats".into(), json!([]));
+            let mut format = Map::new();
+            format.insert("url".into(), url.into());
+            format.insert("ext".into(), "m4a".into());
+            format.insert("vcodec".into(), "none".into());
+            format.insert("acodec".into(), "mp3".into());
+            format.insert("container".into(), "m4a_dash".into());
+            let format = format_from(format, &post_id)?;
+            entries.push(video_info(
+                page,
+                (WALL_POST, "VKWallPost"),
+                dict,
+                vec![format],
+                crate::Subtitles::default(),
+                &[],
+                ";thumbnail=url",
+            ));
+        }
+
+        let body = crate::html_elements::element_html_by_id("wl_post_body", &webpage)
+            .map_err(Error::Reported)?
+            .ok_or_else(|| {
+                // `re.findall` over `None`, which `extract` does not wrap.
+                Error::Reported("expected string or bytes-like object, got 'NoneType'".into())
+            })?;
+        // Upstream deduplicates with a `set` (in hash order); the links stay
+        // in page order here.
+        let mut links: Vec<String> = Vec::new();
+        for found in POST_VIDEO.captures_iter(&body) {
+            let link = found[1].to_owned();
+            if !links.contains(&link) {
+                links.push(link);
+            }
+        }
+        for link in links {
+            entries.push(vk_entry(page.join(&link)?.as_str(), None)?);
+        }
+
+        let title = match uploader.as_deref().filter(|name| !name.is_empty()) {
+            Some(uploader) => format!("{uploader} - Wall post {post_id}"),
+            None => format!("Wall post {post_id}"),
+        };
+        let description =
+            element_by_class("wall_post_text", &webpage).map(|text| crate::html::clean_html(&text));
+        let mut keys = vec!["id", "title"];
+        let mut extra = Map::new();
+        if let Some(description) = description {
+            keys.push("description");
+            extra.insert("description".into(), description.into());
+        }
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            format!("playlist-dict;{}", keys.join(",")).into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: post_id,
+            title,
+            webpage_url: page.clone(),
+            extractor: WALL_POST.into(),
+            extractor_key: "VKWallPost".into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
+}
+
+impl Extractor for VkUserVideos {
+    fn key(&self) -> &'static str {
+        USER_VIDEOS
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    /// `VKUserVideosIE._real_extract`. Upstream's lazy `_entries` pages are
+    /// all fetched here.
+    fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
+        let Some(u_id) = user_videos_id(page.as_str()) else {
+            return Ok(None);
+        };
+        let temp = Some(u_id.as_str());
+        start(USER_VIDEOS, page);
+        let (webpage, final_url) =
+            super::download_webpage_handle(client, page, USER_VIDEOS, &u_id)?;
+        check_challenge(USER_VIDEOS, &final_url, &u_id)?;
+        let (page_id, section) = if u_id.starts_with('@') {
+            let cursor = match super::search_json(&NEW_CUR, &webpage, false) {
+                Some(Some(cursor)) => cursor,
+                Some(None) => {
+                    return Err(Error::UnsupportedHtml5(
+                        "VK cursor data that does not parse is not supported natively".into(),
+                    ));
+                }
+                None => {
+                    return Err(fail_as(
+                        USER_VIDEOS,
+                        temp,
+                        &format!(
+                            "Unable to extract cursor data; {}",
+                            crate::BUG_REPORTS_MESSAGE
+                        ),
+                    ));
+                }
+            };
+            let page_id = match cursor.get("oid") {
+                Some(Value::Number(oid)) if oid.is_i64() || oid.is_u64() => oid.to_string(),
+                _ => {
+                    return Err(fail_as(
+                        USER_VIDEOS,
+                        temp,
+                        &format!("Unable to extract page id; {}", crate::BUG_REPORTS_MESSAGE),
+                    ));
+                }
+            };
+            let section = page
+                .query_pairs()
+                .find(|(key, value)| key == "section" && !value.is_empty())
+                .map_or_else(|| "all".to_owned(), |(_, value)| value.into_owned());
+            (page_id, section)
+        } else {
+            let (page_id, section) = u_id.split_once('_').unwrap_or((&u_id, ""));
+            (page_id.to_owned(), format!("playlist_{section}"))
+        };
+        let title = element_by_class("VideoInfoPanel__title", &webpage)
+            .map(|text| crate::html::clean_html(&text))
+            .filter(|title| !title.is_empty());
+
+        let load = |offset: i64| -> Result<(i64, i64, Vec<Value>)> {
+            let offset = offset.to_string();
+            let payload = download_payload(
+                client,
+                USER_VIDEOS,
+                temp,
+                "al_video",
+                &page_id,
+                &[
+                    ("act", "load_videos_silent"),
+                    ("offset", &offset),
+                    ("oid", &page_id),
+                    ("section", &section),
+                ],
+            )?;
+            let Some(first) = payload.get(0) else {
+                return Err(bug_as(
+                    USER_VIDEOS,
+                    temp,
+                    "IndexError('list index out of range')",
+                ));
+            };
+            let Some(list_json) = first.get(&section) else {
+                return Err(bug_as(USER_VIDEOS, temp, &format!("KeyError('{section}')")));
+            };
+            let field = |key: &str| {
+                list_json
+                    .get(key)
+                    .ok_or_else(|| bug_as(USER_VIDEOS, temp, &format!("KeyError('{key}')")))
+            };
+            let count = field("count")?;
+            let total = field("total")?;
+            let list = field("list")?;
+            let number = |value: &Value| {
+                value.as_i64().ok_or_else(|| {
+                    Error::UnsupportedHtml5(
+                        "VK video list counts that are not integers are not supported natively"
+                            .into(),
+                    )
+                })
+            };
+            let count = number(count)?;
+            let list = list.as_array().cloned().ok_or_else(|| {
+                Error::UnsupportedHtml5(
+                    "VK video lists that are not arrays are not supported natively".into(),
+                )
+            })?;
+            Ok((count, number(total)?, list))
+        };
+        let (mut count, total, mut list) = load(0)?;
+        let mut entries = Vec::new();
+        loop {
+            for video in &list {
+                let pair = video
+                    .as_array()
+                    .filter(|video| video.len() >= 2)
+                    .and_then(|video| Some((video[0].as_i64()?, video[1].as_i64()?)));
+                let Some((owner_id, id)) = pair else {
+                    return Err(Error::UnsupportedHtml5(
+                        "VK video list items without integer owner and video IDs are not supported natively"
+                            .into(),
+                    ));
+                };
+                let video_id = format!("{owner_id}_{id}");
+                entries.push(vk_entry(
+                    &format!("https://vk.com/video{video_id}"),
+                    Some(&video_id),
+                )?);
+            }
+            if count >= total {
+                break;
+            }
+            let (new_count, _, next) = load(count)?;
+            if new_count == 0 {
+                crate::screen::screen(&format!(
+                    "[{USER_VIDEOS}] {page_id}: Skipping {} unavailable videos",
+                    total - count
+                ));
+                break;
+            }
+            count += new_count;
+            list = next;
+        }
+
+        let mut keys = vec!["id"];
+        if title.is_some() {
+            keys.push("title");
+        }
+        let mut extra = Map::new();
+        extra.insert(
+            crate::info_order::INFO_SHAPE.into(),
+            format!("playlist-dict;{}", keys.join(",")).into(),
+        );
+        Ok(Some(ExtractResult::Playlist(PlaylistInfo {
+            id: format!("{page_id}_{section}"),
+            title: title.unwrap_or_default(),
+            webpage_url: page.clone(),
+            extractor: USER_VIDEOS.into(),
+            extractor_key: "VKUserVideos".into(),
+            nested: Vec::new(),
+            pending: None,
+            entries,
+            extra,
+        })))
+    }
 }
 
 fn url_follow(page: &Url, target: &Url) -> ExtractResult {
@@ -269,6 +808,9 @@ fn url_follow(page: &Url, target: &Url) -> ExtractResult {
 fn format_from(mut format: Map<String, Value>, id: &str) -> Result<crate::VideoFormat> {
     let keys: Vec<String> = format.keys().cloned().collect();
     format.retain(|_, value| !value.is_null());
+    if !format.contains_key("format_id") {
+        format.insert("format_id".into(), "".into());
+    }
     let mut format: crate::VideoFormat = serde_json::from_value(Value::Object(format))
         .map_err(|error| fail(Some(id), &error.to_string()))?;
     crate::info_order::mark_format(&mut format, &format!("dict:{}", keys.join(",")));
@@ -288,22 +830,18 @@ impl Extractor for Vk {
         let Some(found) = VALID_URL.captures(page.as_str()) else {
             return Ok(None);
         };
-        crate::screen::set_extractor(NAME);
-        crate::screen::screen(&format!(
-            "[{NAME}] Extracting URL: {}",
-            crate::screen::extracting_url(page.as_str())
-        ));
+        start(NAME, page);
         // `get_temp_id`: the embed's `id` group, `None` for pages.
         let temp_id = found.name("id").map(|id| id.as_str().to_owned());
         let temp = temp_id.as_deref();
         let mut mv_data = json!({});
         let (video_id, info_page, player) = if let Some(video_id) = found.name("videoid") {
             let video_id = video_id.as_str().to_owned();
-            let payload = download_payload(
-                client,
-                &video_id,
-                found.name("list_id").map(|list| list.as_str()),
-            )?;
+            let mut data = vec![("act", "show"), ("video", video_id.as_str())];
+            if let Some(list_id) = found.name("list_id") {
+                data.push(("list", list_id.as_str()));
+            }
+            let payload = download_payload(client, NAME, temp, "al_video", &video_id, &data)?;
             let items = payload.as_array().cloned().unwrap_or_default();
             let info_page = items
                 .get(1)
@@ -328,7 +866,7 @@ impl Extractor for Vk {
             ))?;
             let (info_page, final_url) =
                 super::download_webpage_handle(client, &embed, NAME, &video_id)?;
-            check_challenge(&final_url, &video_id)?;
+            check_challenge(NAME, &final_url, &video_id)?;
             if let Some(message) = ERROR_MESSAGES
                 .iter()
                 .find_map(|pattern| pattern.captures(&info_page))
@@ -597,47 +1135,14 @@ impl Extractor for Vk {
         dict.insert("view_count".into(), view_count.into());
         dict.insert("is_live".into(), is_live.into());
 
-        let first = formats
-            .first()
-            .map_or_else(|| page.clone(), |format| format.url.clone());
-        let mut info = super::direct::build_at(first.clone(), &first, String::new());
-        info.direct = None;
-        if formats.is_empty() {
-            info.extra
-                .insert(crate::info::NO_FORMATS.into(), Value::Bool(true));
-        }
-        info.formats = formats;
-        info.subtitles = subtitles;
-        info.webpage_url = page.clone();
-        info.extractor = NAME.into();
-        info.extractor_key = KEY.into();
-        info.format_sort_fields = vec!["res".into(), "source".into()];
-        let titled = dict.contains_key("title");
-        if !titled {
-            info.extra
-                .insert(crate::info::TITLE_MISSING.into(), Value::Bool(true));
-        }
-        let mut keys = Vec::new();
-        for (key, value) in dict {
-            keys.push(key.clone());
-            match key.as_str() {
-                "id" => info.id = value.as_str().unwrap_or_default().to_owned(),
-                "title" => info.title = value.as_str().unwrap_or_default().to_owned(),
-                "formats" | "subtitles" => {}
-                _ if value.is_null() => {
-                    info.extra.insert(key, Value::Null);
-                }
-                _ => crate::metadata_parser::set_field(&mut info, &key, value),
-            }
-        }
-        keys.push("_format_sort_fields".into());
-        Ok(Some(ExtractResult::Video(crate::info_order::mark_info(
-            info,
-            &format!(
-                "dict{};{};subtitle=ext,url;chapter=title,start_time",
-                if titled { "" } else { "-untitled" },
-                keys.join(",")
-            ),
+        Ok(Some(ExtractResult::Video(video_info(
+            page,
+            (NAME, KEY),
+            dict,
+            formats,
+            subtitles,
+            &["res", "source"],
+            ";subtitle=ext,url;chapter=title,start_time",
         ))))
     }
 }
@@ -673,5 +1178,32 @@ mod tests {
         assert_eq!(&listed["list_id"], "ln-cBjJ7S4jYYx3ADnmDT");
         assert!(suitable("https://vkvideo.ru/clip-220265624_456239031"));
         assert!(!suitable("https://vk.com/videos-77521"));
+    }
+
+    #[test]
+    fn wall_post_and_user_video_urls_follow_upstream() {
+        assert!(wall_post_suitable(
+            "https://vk.com/bs.official?w=wall-23538238_35"
+        ));
+        assert!(wall_post_suitable("https://m.vk.com/wall-23538238_35"));
+        assert!(!wall_post_suitable("https://vkvideo.ru/wall-1_2"));
+        for (url, id) in [
+            ("https://vk.com/video/@mobidevices", "@mobidevices"),
+            (
+                "https://vk.com/video/@mobidevices?section=uploaded",
+                "@mobidevices",
+            ),
+            (
+                "https://vk.com/video/@gorkyfilmstudio/all",
+                "@gorkyfilmstudio",
+            ),
+            ("https://vkvideo.ru/@mobidevices", "@mobidevices"),
+            ("https://vk.com/video/playlist/-174476437_2", "-174476437_2"),
+            ("https://vkvideo.ru/playlist/-51890028_-2", "-51890028_-2"),
+        ] {
+            assert_eq!(user_videos_id(url).as_deref(), Some(id), "{url}");
+        }
+        assert!(!user_videos_suitable("https://vk.com/video/@x?z=video-1_2"));
+        assert!(!user_videos_suitable("https://vk.com/video/@x/other"));
     }
 }

@@ -97,6 +97,7 @@ mod twitch;
 mod twitter;
 mod vimeo;
 mod vk;
+mod vkplay;
 mod vocaroo;
 mod weibo;
 mod xiaohongshu;
@@ -221,7 +222,13 @@ pub use twitter::{
     Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
 };
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
-pub use vk::{Vk, suitable as vk_suitable};
+pub use vk::{
+    Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,
+    user_videos_suitable as vk_user_videos_suitable, wall_post_suitable as vk_wall_post_suitable,
+};
+pub use vkplay::{
+    VkPlay, VkPlayLive, live_suitable as vkplay_live_suitable, suitable as vkplay_suitable,
+};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
@@ -285,7 +292,7 @@ pub(crate) fn request_error_text(
 
 /// Upstream `_report_ignoring_subs(NAME)` for `_extract_m3u8_formats` and
 /// `_extract_mpd_formats`, which drop a manifest's subtitles.
-fn ignore_subtitles(info: &mut crate::VideoInfo, extractor: &str, name: &str) {
+pub(crate) fn ignore_subtitles(info: &mut crate::VideoInfo, extractor: &str, name: &str) {
     if !info.subtitles.is_empty() {
         crate::screen::warning_once(&format!(
             "[{extractor}] Ignoring subtitle tracks found in the {name} manifest; if any subtitle tracks are missing, {}",
@@ -452,6 +459,29 @@ pub(crate) fn extract_m3u8_master_optional(
         hls::live_format_ids(&mut stream.formats, None);
     }
     Some(stream)
+}
+
+/// `_extract_m3u8_formats(url, id, m3u8_id=M3U8_ID, fatal=False)` of a live
+/// stream that upstream does not mark `live`: only the master playlist is
+/// read (see [`hls::from_response_with`]), and the format IDs keep their
+/// bitrates.
+pub(crate) fn extract_m3u8_live_master_optional(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+) -> Option<crate::VideoInfo> {
+    extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        false,
+        &|response| hls::from_response_with(client, response, manifest, None, true, m3u8_id, true),
+        ("m3u8 information", "HLS"),
+        "Downloading m3u8 information",
+    )
 }
 
 /// `_extract_mpd_formats_and_subtitles(url, id, mpd_id, note, fatal=False)`.
