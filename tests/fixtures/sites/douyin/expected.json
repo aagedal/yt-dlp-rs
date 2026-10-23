@@ -1,0 +1,186 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.douyin.com/video/7400000000000000001",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7400000000000000001\", \"title\": \"#\\u6768\\u8d85\\u8d8a  \\u5c0f\\u5c0f\\u6c34\\u624b\\u5e26\\u4f60\\u53bb\\u8fdc\\u822a\\u2764\\ufe0f \\u8fd9\\u662f\\u4e00\\u4e2a\\u5f88\\u957f\\u7684\\u63cf\\u8ff0\\u7528\\u6765\\u6d4b\\u8bd5\\u6807\\u9898\\u622a\\u65ad\\u7684\\u884c\\u4e3a\\u662f\\u5426\\u548c\\u4e0a\\u6e38\\u5b8c\\u5168\\u4e00\\u81f4\\u7684\\u60c5\\u51b5\\u4e0b\\u9762\\u8fd8\\u6709\\u66f4\\u591a\\u7684\\u6587\\u5b57\\u7ee7\\u7eed\\u5199\\u4e0b\\u53bb\\u76f4\\u5230\\u8d85\\u8fc7\\u4e03...\", \"description\": \"#\\u6768\\u8d85\\u8d8a  \\u5c0f\\u5c0f\\u6c34\\u624b\\u5e26\\u4f60\\u53bb\\u8fdc\\u822a\\u2764\\ufe0f \\u8fd9\\u662f\\u4e00\\u4e2a\\u5f88\\u957f\\u7684\\u63cf\\u8ff0\\u7528\\u6765\\u6d4b\\u8bd5\\u6807\\u9898\\u622a\\u65ad\\u7684\\u884c\\u4e3a\\u662f\\u5426\\u548c\\u4e0a\\u6e38\\u5b8c\\u5168\\u4e00\\u81f4\\u7684\\u60c5\\u51b5\\u4e0b\\u9762\\u8fd8\\u6709\\u66f4\\u591a\\u7684\\u6587\\u5b57\\u7ee7\\u7eed\\u5199\\u4e0b\\u53bb\\u76f4\\u5230\\u8d85\\u8fc7\\u4e03\\u5341\\u4e8c\\u4e2a\\u5b57\\u7b26\\u4e3a\\u6b62\\u5427\", \"timestamp\": 1620905839, \"view_count\": 0, \"like_count\": 1200, \"repost_count\": 30, \"comment_count\": 40, \"save_count\": 50, \"uploader\": \"\", \"uploader_id\": \"110403406559\", \"channel\": \"\\u6768\\u8d85\\u8d8a\", \"channel_id\": \"MS4wLjABAAAAEKnfa654JAJ_N5lgZDQluwsxmY0lhfmEYNQBBkwGG98\", \"channel_url\": \"https://www.douyin.com/user/MS4wLjABAAAAEKnfa654JAJ_N5lgZDQluwsxmY0lhfmEYNQBBkwGG98\", \"uploader_url\": null, \"track\": \"@\\u6768\\u8d85\\u8d8a\\u521b\\u4f5c\\u7684\\u539f\\u58f0\", \"album\": null, \"artists\": [\"\\u6768\\u8d85\\u8d8a\"], \"formats\": [{\"url\": \"https://v26-web.douyinvod.com/obj/ies-music/track.mp3\", \"filesize\": null, \"ext\": \"mp3\", \"acodec\": \"mp3\", \"source_preference\": -1, \"format_id\": \"audio\", \"format_note\": \"Music track\", \"tbr\": 128.0, \"vcodec\": \"none\", \"fps\": null, \"preference\": -1, \"width\": null, \"height\": null, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 304000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"audio - audio only (Music track)\"}, {\"url\": \"https://v26-web.douyinvod.com/video/lowest.mp4\", \"filesize\": null, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -1, \"format_id\": \"bytevc2_540p_250000\", \"format_note\": \"Playback video (UNPLAYABLE)\", \"tbr\": 250, \"vcodec\": \"bytevc2\", \"fps\": 25, \"height\": 1024, \"quality\": 1, \"width\": 576, \"preference\": -100, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"576x1024\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": 593750, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"bytevc2_540p_250000 - 576x1024 (Playback video (UNPLAYABLE))\"}, {\"url\": \"https://v26-web.douyinvod.com/video/540.mp4\", \"filesize\": 1500000, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -1, \"format_id\": \"low_540_0\", \"format_note\": \"Playback video\", \"tbr\": 600.0, \"vcodec\": \"h264\", \"fps\": 30, \"preference\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"low_540_0 - unknown (Playback video)\"}, {\"url\": \"https://v3-web.douyinvod.com/video/download.mp4\", \"filesize\": 4000000, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -1, \"format_id\": \"download_addr\", \"format_note\": \"Download video, watermarked\", \"vcodec\": \"h264\", \"width\": 720, \"height\": 1280, \"preference\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"download_addr - 720x1280 (Download video, watermarked)\"}, {\"url\": \"https://v26-web.douyinvod.com/video/720-hevc.mp4\", \"filesize\": 3000000, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -1, \"format_id\": \"bytevc1_720p_1234567\", \"format_note\": \"Playback video\", \"tbr\": 1234, \"vcodec\": \"h265\", \"fps\": 30, \"height\": 1280, \"quality\": 2, \"width\": 720, \"preference\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"bytevc1_720p_1234567 - 720x1280 (Playback video)\"}, {\"url\": \"https://www.douyin.com/aweme/v1/play/?video_id=v0200fg10000&ratio=1080p\", \"filesize\": 5000000, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -2, \"format_id\": \"h264_1080p_1500000-0\", \"format_note\": \"Direct video (API)\", \"vcodec\": \"h264\", \"width\": 1080, \"height\": 1920, \"tbr\": 1500, \"quality\": 3, \"preference\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"h264_1080p_1500000-0 - 1080x1920 (Direct video (API))\"}, {\"url\": \"https://v3-web.douyinvod.com/video/play.mp4\", \"filesize\": 5000000, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -1, \"format_id\": \"h264_1080p_1500000-1\", \"format_note\": \"Direct video\", \"vcodec\": \"h264\", \"width\": 1080, \"height\": 1920, \"tbr\": 1500, \"quality\": 3, \"preference\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"h264_1080p_1500000-1 - 1080x1920 (Direct video)\"}], \"subtitles\": {}, \"thumbnails\": [{\"id\": \"dynamic_cover\", \"url\": \"https://p3-sign.douyinpic.com/dynamic.webp\", \"preference\": -2}, {\"id\": \"cover\", \"url\": \"https://p3-sign.douyinpic.com/cover.jpeg\", \"preference\": -1}, {\"id\": \"cover\", \"url\": \"https://p9-sign.douyinpic.com/cover.jpeg\", \"preference\": -1}, {\"id\": \"origin_cover\", \"url\": \"https://p3-sign.douyinpic.com/origin.jpeg\", \"preference\": -1}], \"duration\": 19, \"availability\": null, \"_format_sort_fields\": [\"quality\", \"codec\", \"size\", \"br\"], \"webpage_url\": \"https://www.douyin.com/video/7400000000000000001\", \"original_url\": \"https://www.douyin.com/video/7400000000000000001\", \"webpage_url_basename\": \"7400000000000000001\", \"webpage_url_domain\": \"douyin.com\", \"extractor\": \"Douyin\", \"extractor_key\": \"Douyin\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://p3-sign.douyinpic.com/origin.jpeg\", \"display_id\": \"7400000000000000001\", \"fulltitle\": \"#\\u6768\\u8d85\\u8d8a  \\u5c0f\\u5c0f\\u6c34\\u624b\\u5e26\\u4f60\\u53bb\\u8fdc\\u822a\\u2764\\ufe0f \\u8fd9\\u662f\\u4e00\\u4e2a\\u5f88\\u957f\\u7684\\u63cf\\u8ff0\\u7528\\u6765\\u6d4b\\u8bd5\\u6807\\u9898\\u622a\\u65ad\\u7684\\u884c\\u4e3a\\u662f\\u5426\\u548c\\u4e0a\\u6e38\\u5b8c\\u5168\\u4e00\\u81f4\\u7684\\u60c5\\u51b5\\u4e0b\\u9762\\u8fd8\\u6709\\u66f4\\u591a\\u7684\\u6587\\u5b57\\u7ee7\\u7eed\\u5199\\u4e0b\\u53bb\\u76f4\\u5230\\u8d85\\u8fc7\\u4e03...\", \"duration_string\": \"19\", \"upload_date\": \"20210513\", \"release_year\": null, \"artist\": \"\\u6768\\u8d85\\u8d8a\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://v3-web.douyinvod.com/video/play.mp4\", \"filesize\": 5000000, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -1, \"format_id\": \"h264_1080p_1500000-1\", \"format_note\": \"Direct video\", \"vcodec\": \"h264\", \"width\": 1080, \"height\": 1920, \"tbr\": 1500, \"quality\": 3, \"preference\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"h264_1080p_1500000-1 - 1080x1920 (Direct video)\", \"_filename\": \"#\\u6768\\u8d85\\u8d8a  \\u5c0f\\u5c0f\\u6c34\\u624b\\u5e26\\u4f60\\u53bb\\u8fdc\\u822a\\u2764\\ufe0f \\u8fd9\\u662f\\u4e00\\u4e2a\\u5f88\\u957f\\u7684\\u63cf\\u8ff0\\u7528\\u6765\\u6d4b\\u8bd5\\u6807\\u9898\\u622a\\u65ad\\u7684\\u884c\\u4e3a\\u662f\\u5426\\u548c\\u4e0a\\u6e38\\u5b8c\\u5168\\u4e00\\u81f4\\u7684\\u60c5\\u51b5\\u4e0b\\u9762\\u8fd8\\u6709\\u66f4\\u591a\\u7684\\u6587\\u5b57\\u7ee7\\u7eed\\u5199\\u4e0b\\u53bb\\u76f4\\u5230\\u8d85\\u8fc7\\u4e03... [7400000000000000001].mp4\", \"filename\": \"#\\u6768\\u8d85\\u8d8a  \\u5c0f\\u5c0f\\u6c34\\u624b\\u5e26\\u4f60\\u53bb\\u8fdc\\u822a\\u2764\\ufe0f \\u8fd9\\u662f\\u4e00\\u4e2a\\u5f88\\u957f\\u7684\\u63cf\\u8ff0\\u7528\\u6765\\u6d4b\\u8bd5\\u6807\\u9898\\u622a\\u65ad\\u7684\\u884c\\u4e3a\\u662f\\u5426\\u548c\\u4e0a\\u6e38\\u5b8c\\u5168\\u4e00\\u81f4\\u7684\\u60c5\\u51b5\\u4e0b\\u9762\\u8fd8\\u6709\\u66f4\\u591a\\u7684\\u6587\\u5b57\\u7ee7\\u7eed\\u5199\\u4e0b\\u53bb\\u76f4\\u5230\\u8d85\\u8fc7\\u4e03... [7400000000000000001].mp4\", \"__write_download_archive\": false}], \"url\": \"https://v3-web.douyinvod.com/video/play.mp4\", \"filesize\": 5000000, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -1, \"format_id\": \"h264_1080p_1500000-1\", \"format_note\": \"Direct video\", \"vcodec\": \"h264\", \"width\": 1080, \"height\": 1920, \"tbr\": 1500, \"quality\": 3, \"preference\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"h264_1080p_1500000-1 - 1080x1920 (Direct video)\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.douyin.com/video/7400000000000000001",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Douyin] Extracting URL: https://www.douyin.com/video/7400000000000000001",
+    "[Douyin] 7400000000000000001: Downloading web detail JSON",
+    "[info] Available formats for 7400000000000000001:",
+    "ID                   EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC     ACODEC  ABR MORE INFO",
+    "---------------------------------------------------------------------------------------------------------------------",
+    "audio                mp3 audio only     | ≈296.88KiB  128k https | audio only mp3    128k Music track",
+    "bytevc2_540p_250000  mp4 576x1024    25 | ≈579.83KiB  250k https | bytevc2    aac         Playback video (UNPLAYABLE)",
+    "low_540_0            mp4 unknown     30 |    1.43MiB  600k https | h264       aac         Playback video",
+    "download_addr        mp4 720x1280       |    3.81MiB       https | h264       aac         Download video, watermarked",
+    "bytevc1_720p_1234567 mp4 720x1280    30 |    2.86MiB 1234k https | h265       aac         Playback video",
+    "h264_1080p_1500000-0 mp4 1080x1920      |    4.77MiB 1500k https | h264       aac         Direct video (API)",
+    "h264_1080p_1500000-1 mp4 1080x1920      |    4.77MiB 1500k https | h264       aac         Direct video"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.douyin.com/video/7400000000000000001",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Douyin] Extracting URL: https://www.douyin.com/video/7400000000000000001",
+    "[Douyin] 7400000000000000001: Downloading web detail JSON",
+    "[info] Available subtitles for 7400000000000000001:",
+    "Language    Formats",
+    "cmn-Hans-CN vtt, json",
+    "en          srt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.douyin.com/video/7400000000000000004",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7400000000000000004\", \"title\": \"\\u8fd9\\u4e2a\\u590f\\u65e5\\u548c\\u5c0f\\u7f8a@\\u6768\\u8d85\\u8d8a \\u4e00\\u8d77\\u9047\\u89c1\\u767d\\u8272\\u5e7b\\u60f3\", \"description\": \"\\u8fd9\\u4e2a\\u590f\\u65e5\\u548c\\u5c0f\\u7f8a@\\u6768\\u8d85\\u8d8a \\u4e00\\u8d77\\u9047\\u89c1\\u767d\\u8272\\u5e7b\\u60f3\", \"timestamp\": 1625739481, \"view_count\": 9, \"like_count\": 8, \"uploader\": \"chaoyue\", \"uploader_id\": \"408654318141572\", \"channel\": \"\\u6768\\u8d85\\u8d8a\\u5de5\\u4f5c\\u5ba4\", \"channel_id\": \"MS4wLjABAAAAZJpnglcjW2f_CMVcnqA_6oVBXKWMpH0F8LIHuUu8-lA\", \"channel_url\": \"https://www.douyin.com/user/MS4wLjABAAAAZJpnglcjW2f_CMVcnqA_6oVBXKWMpH0F8LIHuUu8-lA\", \"uploader_url\": \"https://www.douyin.com/user/chaoyue\", \"track\": \"\\u590f\\u65e5 Remix\", \"album\": \"Summer\", \"artists\": [\"Artist A\", \"Artist B\", \"Artist C\"], \"formats\": [{\"url\": \"https://v3-web.douyinvod.com/video/4-play.mp4\", \"filesize\": 2000000, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -1, \"format_id\": \"play_addr\", \"format_note\": \"Direct video\", \"vcodec\": \"h265\", \"width\": 720, \"height\": 1280, \"preference\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"play_addr - 720x1280 (Direct video)\"}], \"subtitles\": {}, \"thumbnails\": [{\"id\": \"cover\", \"url\": \"https://p3-sign.douyinpic.com/4-cover.jpeg\", \"preference\": -1}], \"duration\": 42, \"availability\": \"private\", \"_format_sort_fields\": [\"quality\", \"codec\", \"size\", \"br\"], \"webpage_url\": \"https://www.douyin.com/video/7400000000000000004\", \"original_url\": \"https://www.douyin.com/video/7400000000000000004\", \"webpage_url_basename\": \"7400000000000000004\", \"webpage_url_domain\": \"douyin.com\", \"extractor\": \"Douyin\", \"extractor_key\": \"Douyin\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://p3-sign.douyinpic.com/4-cover.jpeg\", \"display_id\": \"7400000000000000004\", \"fulltitle\": \"\\u8fd9\\u4e2a\\u590f\\u65e5\\u548c\\u5c0f\\u7f8a@\\u6768\\u8d85\\u8d8a \\u4e00\\u8d77\\u9047\\u89c1\\u767d\\u8272\\u5e7b\\u60f3\", \"duration_string\": \"42\", \"upload_date\": \"20210708\", \"release_year\": null, \"artist\": \"Artist A, Artist B, Artist C\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://v3-web.douyinvod.com/video/4-play.mp4\", \"filesize\": 2000000, \"ext\": \"mp4\", \"acodec\": \"aac\", \"source_preference\": -1, \"format_id\": \"play_addr\", \"format_note\": \"Direct video\", \"vcodec\": \"h265\", \"width\": 720, \"height\": 1280, \"preference\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"play_addr - 720x1280 (Direct video)\", \"_filename\": \"\\u8fd9\\u4e2a\\u590f\\u65e5\\u548c\\u5c0f\\u7f8a@\\u6768\\u8d85\\u8d8a \\u4e00\\u8d77\\u9047\\u89c1\\u767d\\u8272\\u5e7b\\u60f3 [7400000000000000004].mp4\", \"filename\": \"\\u8fd9\\u4e2a\\u590f\\u65e5\\u548c\\u5c0f\\u7f8a@\\u6768\\u8d85\\u8d8a \\u4e00\\u8d77\\u9047\\u89c1\\u767d\\u8272\\u5e7b\\u60f3 [7400000000000000004].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.douyin.com/video/7400000000000000004",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Douyin] Extracting URL: https://www.douyin.com/video/7400000000000000004",
+    "[Douyin] 7400000000000000004: Downloading web detail JSON",
+    "[Douyin] 7400000000000000004: Downloading webpage",
+    "7400000000000000004 has no subtitles"
+   ],
+   "stderr": [
+    "WARNING: [Douyin] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [Douyin] 7400000000000000004: Unable to download webpage: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://douyin.com/video/7400000000000000002",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [Douyin] 7400000000000000002: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)",
+    "ERROR: [Douyin] 7400000000000000002: Fresh cookies (not necessarily logged in) are needed"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.douyin.com/video/7400000000000000003",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Douyin] 7400000000000000003: Fresh cookies (not necessarily logged in) are needed"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.douyin.com/video/7400000000000000003",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Douyin] 7400000000000000003: Fresh cookies (not necessarily logged in) are needed; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.douyin.com/video/7400000000000000001",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-f",
+    "h264_1080p_1500000-1",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Douyin] Extracting URL: https://www.douyin.com/video/7400000000000000001",
+    "[Douyin] 7400000000000000001: Downloading web detail JSON",
+    "[info] 7400000000000000001: Downloading 1 format(s): h264_1080p_1500000-1",
+    "[download] Destination: 7400000000000000001.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "7400000000000000001.mp4": 24
+   }
+  },
+  {
+   "url": "https://www.douyin.com/video/7400000000000000001",
+   "args": [
+    "--write-subs",
+    "--sub-langs",
+    "en",
+    "--skip-download",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Douyin] Extracting URL: https://www.douyin.com/video/7400000000000000001",
+    "[Douyin] 7400000000000000001: Downloading web detail JSON",
+    "[info] 7400000000000000001: Downloading subtitles: en",
+    "[info] 7400000000000000001: Downloading 1 format(s): h264_1080p_1500000-1",
+    "[info] Writing video subtitles to: 7400000000000000001.en.srt",
+    "[download] Destination: 7400000000000000001.en.srt",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "7400000000000000001.en.srt": 38
+   }
+  }
+ ]
+}

@@ -749,8 +749,58 @@ author, music, stats and cover thumbnails, with the page as every format's
 Referer. Formats upstream marks `__needs_testing` (the watermarked download,
 HEVC `media-video-hvc1` renditions) are tested when selected, as
 `_check_formats` does by default, and `-F` lists them as `Untested`.
-Subtitles, slideshows, user/sound/tag/collection pages and Douyin are not
-supported. `vm.tiktok` short links (`vm.`/`vt.tiktok.com/ID`,
+With `--write-subs`/`--list-subs`, `_get_subtitles` gives the item's
+`subtitleInfos` (`webvtt`/`srt`/`creator_caption` as `vtt`/`srt`/`json`,
+other formats by URL extension, creator captions after the others but
+unknown formats), and the feed's `cla_info` captions; the aweme/detail
+endpoint's automatic captions (downloaded and converted into SRT `data`)
+are an error here. Photo slideshows are their music track like upstream's
+web path (an audio-only result; the music's duration when the video's is 0);
+the images are not extracted, as upstream.
+
+TikTok users (`tiktok.com/@USER`, `tiktokuser:SEC_UID`) follow upstream
+`TikTokUserIE`: the user page's `webapp.user-detail` (private-account and
+no-video errors), else the embed page's videos' webpages for the `secUid`,
+then the web `api/creator/item_list/` pages (unsigned; random `device_id` or
+the `tiktok:device_id` extractor argument, random `verifyFp`, time cursor,
+the repeated-page retry) as flat `url` entries with
+`_parse_aweme_video_web(extract_flat=True)`'s fields. Collections
+(`tiktok.com/@USER/collection/TITLE-ID`) follow `TikTokCollectionIE`'s
+`api/collection/item_list/` pages. Both lists are lazy like upstream's
+generators (pages are fetched while processing the playlist, so
+`playlist_count` is `NA` unless the list was exhausted). Upstream's
+`TikTokSoundIE`, `TikTokEffectIE` and `TikTokTagIE` (all `_WORKING = False`)
+need the mobile app API (`aweme/v1` with `app_info`), and `TikTokIE`'s app API
+path, are not ported; such URLs are not TikTok extractor matches here.
+
+TikTok livestreams (`tiktok.com/@USER/live`, `m.tiktok.com/share/live/ID`)
+follow upstream `TikTokLiveIE`: the room ID from the user page (or the share
+page's `SIGI_STATE`), the unsigned `webcast/room/info` API (status 2 is live,
+else "The channel is not currently live" or, for a share URL, "This
+livestream has ended"), the SDK stream data's FLV/HLS URLs (codec, bitrate and
+resolution from its parameters), the HLS/RTMP/FLV pull URLs and, without an
+HLS format, `api/live/detail`'s fallback URL, sorted by `quality` and `ext`.
+HLS formats are `m3u8_native` URLs (the playlist is not fetched while
+extracting, like upstream). A result's `is_live`/`was_live` now give its
+`live_status` (`_fill_common_fields`), and an HEVC format over FLV without a
+preference gets `-100` (`FormatSorter`), for every extractor.
+
+Douyin videos (`douyin.com/video/ID`) follow upstream `DouyinIE`: the
+`aweme/v1/web/aweme/detail/` JSON (`fatal=False`, so an empty body is a
+`Failed to parse JSON` warning) through `_parse_aweme_video_app`: direct,
+download, H.264/HEVC and bitrate addresses (URL-key IDs and resolutions,
+`(API)`/`(UNPLAYABLE)` notes, float bitrates, music tracks), `sid_tt` copied
+to the format hosts, generic original-sound track names, `hybrid_label`
+availability, `cover`/`dynamic_cover` thumbnails and
+`_format_sort_fields`. Without `aweme_detail` the error is upstream's "Fresh
+cookies (not necessarily logged in) are needed" (unexpected when an
+`s_v_web_id` cookie was sent): like upstream, this port does not run Douyin's
+verification challenge or sign requests, so browser cookies are needed on the
+live site. Subtitles fall back to the TikTok webpage of the uploader's video
+like upstream. `tests/fixtures/sites/douyin/` is compared with pinned upstream
+output.
+
+`vm.tiktok` short links (`vm.`/`vt.tiktok.com/ID`,
 `tiktok.com/t/ID`) are resolved with a HEAD request and followed.
 `tests/fixtures/sites/tiktok/` is compared with pinned upstream output.
 

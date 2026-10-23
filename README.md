@@ -4,8 +4,8 @@ An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-
 It downloads direct HTTP media and a limited subset of HTML5 media pages, with
 a foundation for porting extractors and tracking upstream changes. This is an
 early prototype. YouTube (videos, live streams, playlists, mixes, channels,
-search, hashtags and YouTube Music URLs), Reddit, X/Twitter, TikTok, Instagram
-and Facebook are extracted like pinned upstream on saved fixtures. YouTube was
+search, hashtags and YouTube Music URLs), Reddit, X/Twitter, TikTok, Douyin,
+Instagram and Facebook are extracted like pinned upstream on saved fixtures. YouTube was
 also spot-checked against the live site and pinned upstream on 2026-10-22
 (downloads, `-F`/`-j` output and playlist/channel listings matched); the other
 sites have not been verified live.
@@ -108,7 +108,9 @@ Supported today:
   (GraphQL, legacy or syndication APIs; videos, multi-video playlists, cards
   including VMAP), X broadcasts and live events, Spaces, `t.co` links,
   Amplify videos and Periscope broadcasts, TikTok
-  videos (webpage data, the page's JS challenge, short links), Instagram
+  videos (webpage data, the page's JS challenge, subtitles, slideshow audio,
+  short links), user and collection lists, livestreams, Douyin videos (web
+  detail API with browser cookies), Instagram
   posts and reels (logged out, or logged in with cookies; carousels as
   playlists, inline DASH), stories, highlights, tag and user pages and
   `instagram://` links, Facebook videos

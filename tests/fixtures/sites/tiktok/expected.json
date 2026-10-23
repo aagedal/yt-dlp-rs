@@ -120,6 +120,439 @@
    "files": {
     "7300000000000000001.mp4": 16
    }
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer/video/7300000000000000001",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TikTok] Extracting URL: https://www.tiktok.com/@dancer/video/7300000000000000001",
+    "[TikTok] 7300000000000000001: Downloading webpage",
+    "[info] Available subtitles for 7300000000000000001:",
+    "Language Formats",
+    "eng-US   vtt, json",
+    "fra-FR   ttml",
+    "en       srt"
+   ],
+   "stderr": [
+    "WARNING: [TikTok] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer/video/7300000000000000001",
+   "args": [
+    "--write-subs",
+    "--sub-langs",
+    "eng-US",
+    "--skip-download",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TikTok] Extracting URL: https://www.tiktok.com/@dancer/video/7300000000000000001",
+    "[TikTok] 7300000000000000001: Downloading webpage",
+    "[info] 7300000000000000001: Downloading subtitles: eng-US",
+    "[info] Testing format bytevc1_1080p_2000000",
+    "[info] 7300000000000000001: Downloading 1 format(s): bytevc1_1080p_2000000+audio",
+    "[info] Writing video subtitles to: 7300000000000000001.eng-US.vtt",
+    "[download] Destination: 7300000000000000001.eng-US.vtt",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [TikTok] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {
+    "7300000000000000001.eng-US.vtt": 38
+   }
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer/video/7300000000000000001",
+   "args": [
+    "--write-subs",
+    "--sub-langs",
+    "all",
+    "--print",
+    "%(requested_subtitles)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"eng-US\": {\"url\": \"https://v16-webapp.tiktok.com/caption/eng.webvtt\", \"ext\": \"vtt\"}, \"fra-FR\": {\"url\": \"https://v16-webapp.tiktok.com/caption/fra.ttml?x=1\", \"ext\": \"ttml\"}, \"en\": {\"url\": \"https://v16-webapp.tiktok.com/caption/und.srt\", \"ext\": \"srt\"}}"
+   ],
+   "stderr": [
+    "WARNING: [TikTok] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer/video/7300000000000000003",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7300000000000000003\", \"formats\": [{\"format_id\": \"audio\", \"url\": \"https://sf16-ies-music.tiktokcdn.com/obj/slide?mime_type=audio_mp4\", \"ext\": \"m4a\", \"acodec\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.tiktok.com/@dancer/video/7300000000000000003\"}, \"format\": \"audio - audio only\"}], \"subtitles\": {}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.tiktok.com/@dancer/video/7300000000000000003\"}, \"channel\": \"Dancer Name\", \"channel_id\": \"MS4wLjABAAAA_secuid\", \"uploader\": \"dancer\", \"uploader_id\": \"6800000000000000001\", \"channel_url\": \"https://www.tiktok.com/@MS4wLjABAAAA_secuid\", \"uploader_url\": \"https://www.tiktok.com/@dancer\", \"track\": \"slideshow sound\", \"artists\": [\"Composer\"], \"duration\": 25, \"title\": \"Photo dump\", \"description\": \"Photo dump\", \"timestamp\": 1700000100, \"view_count\": 50, \"like_count\": 5, \"repost_count\": 0, \"comment_count\": 1, \"save_count\": 2, \"thumbnails\": [{\"id\": \"cover\", \"url\": \"https://p16-sign.tiktokcdn.com/slide-cover.jpeg\", \"preference\": -1}], \"webpage_url\": \"https://www.tiktok.com/@dancer/video/7300000000000000003\", \"original_url\": \"https://www.tiktok.com/@dancer/video/7300000000000000003\", \"webpage_url_basename\": \"7300000000000000003\", \"webpage_url_domain\": \"tiktok.com\", \"extractor\": \"TikTok\", \"extractor_key\": \"TikTok\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://p16-sign.tiktokcdn.com/slide-cover.jpeg\", \"display_id\": \"7300000000000000003\", \"fulltitle\": \"Photo dump\", \"duration_string\": \"25\", \"upload_date\": \"20231114\", \"release_year\": null, \"artist\": \"Composer\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.tiktok.com/@dancer/video/7300000000000000003\"}, \"format_id\": \"audio\", \"url\": \"https://sf16-ies-music.tiktokcdn.com/obj/slide?mime_type=audio_mp4\", \"ext\": \"m4a\", \"acodec\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"resolution\": \"audio only\", \"format\": \"audio - audio only\", \"_filename\": \"Photo dump [7300000000000000003].m4a\", \"filename\": \"Photo dump [7300000000000000003].m4a\", \"__write_download_archive\": false}], \"format_id\": \"audio\", \"url\": \"https://sf16-ies-music.tiktokcdn.com/obj/slide?mime_type=audio_mp4\", \"ext\": \"m4a\", \"acodec\": \"aac\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"audio - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TikTok] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer/video/7300000000000000003",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TikTok] Extracting URL: https://www.tiktok.com/@dancer/video/7300000000000000003",
+    "[TikTok] 7300000000000000003: Downloading webpage",
+    "[info] 7300000000000000003: Downloading 1 format(s): audio",
+    "[download] Destination: 7300000000000000003.m4a",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [TikTok] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {
+    "7300000000000000003.m4a": 17
+   }
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MS4wLjABAAAA_secuid\", \"title\": \"dancer\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"7300000000000000001\", \"formats\": null, \"subtitles\": null, \"http_headers\": {\"Referer\": \"https://www.tiktok.com/@dancer/video/7300000000000000001\"}, \"channel\": \"Dancer Name\", \"channel_id\": \"MS4wLjABAAAA_secuid\", \"uploader\": \"dancer\", \"uploader_id\": \"6800000000000000001\", \"channel_url\": \"https://www.tiktok.com/@MS4wLjABAAAA_secuid\", \"uploader_url\": \"https://www.tiktok.com/@dancer\", \"track\": \"original sound\", \"artists\": [\"Artist One\", \"Artist Two\"], \"duration\": 15, \"title\": \"Dancing in the rain with my best friends on a sunny afternoon #fun #d...\", \"description\": \"Dancing in the rain with my best friends on a sunny afternoon #fun #dance\", \"timestamp\": 1700000000, \"view_count\": 99000, \"like_count\": 1500, \"repost_count\": 20, \"comment_count\": 33, \"save_count\": 45, \"thumbnails\": [{\"id\": \"cover\", \"url\": \"https://p16-sign.tiktokcdn.com/cover.jpeg\", \"preference\": -1}], \"ie_key\": \"TikTok\", \"_type\": \"url\", \"url\": \"https://www.tiktok.com/@dancer/video/7300000000000000001\", \"__x_forwarded_for_ip\": null}, {\"id\": \"7300000000000000005\", \"formats\": null, \"subtitles\": null, \"http_headers\": {\"Referer\": \"https://www.tiktok.com/@dancer/video/7300000000000000005\"}, \"channel\": \"Dancer Name\", \"channel_id\": \"MS4wLjABAAAA_secuid\", \"uploader\": \"dancer\", \"uploader_id\": \"6800000000000000001\", \"channel_url\": \"https://www.tiktok.com/@MS4wLjABAAAA_secuid\", \"uploader_url\": \"https://www.tiktok.com/@dancer\", \"title\": \"Second clip\", \"description\": \"Second clip\", \"timestamp\": 1699000000, \"view_count\": 10, \"thumbnails\": [{\"id\": \"originCover\", \"url\": \"https://p16-sign.tiktokcdn.com/second.jpeg\", \"preference\": -1}], \"ie_key\": \"TikTok\", \"_type\": \"url\", \"url\": \"https://www.tiktok.com/@dancer/video/7300000000000000005\", \"__x_forwarded_for_ip\": null}, {\"id\": \"7300000000000000006\", \"formats\": null, \"subtitles\": null, \"http_headers\": {\"Referer\": \"https://www.tiktok.com/@dancer/video/7300000000000000006\"}, \"channel\": \"Dancer Name\", \"channel_id\": \"MS4wLjABAAAA_secuid\", \"uploader\": \"dancer\", \"uploader_id\": \"6800000000000000001\", \"channel_url\": \"https://www.tiktok.com/@MS4wLjABAAAA_secuid\", \"uploader_url\": \"https://www.tiktok.com/@dancer\", \"title\": \"Third clip\", \"description\": \"Third clip\", \"timestamp\": 1698000000, \"thumbnails\": [], \"ie_key\": \"TikTok\", \"_type\": \"url\", \"url\": \"https://www.tiktok.com/@dancer/video/7300000000000000006\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.tiktok.com/@dancer\", \"original_url\": \"https://www.tiktok.com/@dancer\", \"webpage_url_basename\": \"@dancer\", \"webpage_url_domain\": \"tiktok.com\", \"extractor\": \"tiktok:user\", \"extractor_key\": \"TikTokUser\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer?lang=en",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_title)s|%(channel_url)s|%(duration)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "7300000000000000001|Dancing in the rain with my best friends on a sunny afternoon #fun #d...|https://www.tiktok.com/@dancer/video/7300000000000000001|TikTok|MS4wLjABAAAA_secuid|dancer|https://www.tiktok.com/@MS4wLjABAAAA_secuid|15",
+    "7300000000000000005|Second clip|https://www.tiktok.com/@dancer/video/7300000000000000005|TikTok|MS4wLjABAAAA_secuid|dancer|https://www.tiktok.com/@MS4wLjABAAAA_secuid|NA",
+    "7300000000000000006|Third clip|https://www.tiktok.com/@dancer/video/7300000000000000006|TikTok|MS4wLjABAAAA_secuid|dancer|https://www.tiktok.com/@MS4wLjABAAAA_secuid|NA"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer",
+   "args": [
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_id)s|%(playlist_index)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "7300000000000000001|Dancing in the rain with my best friends on a sunny afternoon #fun #d...|MS4wLjABAAAA_secuid|1|TikTok"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [TikTok] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "1:2"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[tiktok:user] Extracting URL: https://www.tiktok.com/@dancer",
+    "[tiktok:user] dancer: Downloading user webpage",
+    "[download] Downloading playlist: dancer",
+    "[tiktok:user] dancer: Downloading page 1",
+    "[tiktok:user] Playlist dancer: Downloading 2 items",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: dancer"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer/collection/count-test-7371330159376370462",
+   "args": [
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[tiktok:collection] Extracting URL: https://www.tiktok.com/@dancer/collection/count-test-7371330159376370462",
+    "[download] Downloading playlist: dancer-count-test",
+    "[tiktok:collection] 7371330159376370462: Downloading page 1",
+    "[tiktok:collection] 7371330159376370462: Downloading page 2",
+    "[tiktok:collection] Playlist dancer-count-test: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] Downloading item 2 of 3",
+    "[download] Downloading item 3 of 3",
+    "[download] Finished downloading playlist: dancer-count-test"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@embedder",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(url)s|%(playlist_id)s|%(playlist_title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "7300000000000000001|https://www.tiktok.com/@embedder/video/7300000000000000001|MS4wLjABAAAA_secuid|embedder",
+    "7300000000000000005|https://www.tiktok.com/@embedder/video/7300000000000000005|MS4wLjABAAAA_secuid|embedder",
+    "7300000000000000006|https://www.tiktok.com/@embedder/video/7300000000000000006|MS4wLjABAAAA_secuid|embedder"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@hidden",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [tiktok:user] hidden: This user's account is private. Log into an account that has access. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@newbie/",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:user] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [tiktok:user] newbie: This account does not have any videos posted"
+   ],
+   "files": {}
+  },
+  {
+   "url": "tiktokuser:MS4wLjABAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-_Zz",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MS4wLjABAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-_Zz\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"tiktokuser:MS4wLjABAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-_Zz\", \"original_url\": \"tiktokuser:MS4wLjABAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-_Zz\", \"webpage_url_basename\": \"MS4wLjABAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-_Zz\", \"webpage_url_domain\": null, \"extractor\": \"tiktok:user\", \"extractor_key\": \"TikTokUser\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer/collection/count-test-7371330159376370462",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7371330159376370462\", \"title\": \"dancer-count-test\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"7300000000000000001\", \"formats\": null, \"subtitles\": null, \"http_headers\": {\"Referer\": \"https://www.tiktok.com/@dancer/video/7300000000000000001\"}, \"channel\": \"Dancer Name\", \"channel_id\": \"MS4wLjABAAAA_secuid\", \"uploader\": \"dancer\", \"uploader_id\": \"6800000000000000001\", \"channel_url\": \"https://www.tiktok.com/@MS4wLjABAAAA_secuid\", \"uploader_url\": \"https://www.tiktok.com/@dancer\", \"track\": \"original sound\", \"artists\": [\"Artist One\", \"Artist Two\"], \"duration\": 15, \"title\": \"Dancing in the rain with my best friends on a sunny afternoon #fun #d...\", \"description\": \"Dancing in the rain with my best friends on a sunny afternoon #fun #dance\", \"timestamp\": 1700000000, \"view_count\": 99000, \"like_count\": 1500, \"thumbnails\": [{\"id\": \"cover\", \"url\": \"https://p16-sign.tiktokcdn.com/cover.jpeg\", \"preference\": -1}, {\"id\": \"dynamicCover\", \"url\": \"https://p16-sign.tiktokcdn.com/dynamic.webp\", \"preference\": -2}], \"ie_key\": \"TikTok\", \"_type\": \"url\", \"url\": \"https://www.tiktok.com/@dancer/video/7300000000000000001\", \"__x_forwarded_for_ip\": null}, {\"id\": \"7300000000000000007\", \"formats\": null, \"subtitles\": null, \"http_headers\": {\"Referer\": \"https://www.tiktok.com/@MS4wLjABAAAA_other/video/7300000000000000007\"}, \"channel\": \"Other\", \"channel_id\": \"MS4wLjABAAAA_other\", \"channel_url\": \"https://www.tiktok.com/@MS4wLjABAAAA_other\", \"uploader_url\": null, \"title\": \"Collected from someone else\", \"description\": \"Collected from someone else\", \"duration\": 9, \"timestamp\": 1690000000, \"thumbnails\": [], \"ie_key\": \"TikTok\", \"_type\": \"url\", \"url\": \"https://www.tiktok.com/@MS4wLjABAAAA_other/video/7300000000000000007\", \"__x_forwarded_for_ip\": null}, {\"id\": \"7300000000000000008\", \"formats\": null, \"subtitles\": null, \"http_headers\": {\"Referer\": \"https://www.tiktok.com/@_/video/7300000000000000008\"}, \"uploader_id\": \"7300000000000000008\", \"channel_url\": null, \"uploader_url\": \"https://www.tiktok.com/@7300000000000000008\", \"title\": \"\", \"description\": \"\", \"timestamp\": 1680000000, \"view_count\": 7, \"thumbnails\": [], \"ie_key\": \"TikTok\", \"_type\": \"url\", \"url\": \"https://www.tiktok.com/@_/video/7300000000000000008\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.tiktok.com/@dancer/collection/count-test-7371330159376370462\", \"original_url\": \"https://www.tiktok.com/@dancer/collection/count-test-7371330159376370462\", \"webpage_url_basename\": \"count-test-7371330159376370462\", \"webpage_url_domain\": \"tiktok.com\", \"extractor\": \"tiktok:collection\", \"extractor_key\": \"TikTokCollection\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer/collection/count-test-7371330159376370462/",
+   "args": [
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(playlist_id)s|%(playlist_title)s|%(playlist_count)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "7300000000000000001|7371330159376370462|dancer-count-test|NA|https://www.tiktok.com/@dancer/video/7300000000000000001"
+   ],
+   "stderr": [
+    "WARNING: [TikTok] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@liver/live",
+   "args": [
+    "--print",
+    "%(formats)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[{\"url\": \"https://pull-f5-va01.tiktokcdn.com/stage/stream-123_or4.flv\", \"ext\": \"flv\", \"protocol\": \"https\", \"format_id\": \"rtmp-pull\", \"vcodec\": \"h265\", \"quality\": 8, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"preference\": -100, \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"rtmp-pull - unknown\"}, {\"url\": \"https://pull-f5-va01.tiktokcdn.com/stage/stream-123_sd.flv\", \"ext\": \"flv\", \"format_id\": \"flv-sd\", \"quality\": 3, \"vcodec\": \"h264\", \"resolution\": \"480p\", \"protocol\": \"https\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flv-sd - 480p\"}, {\"url\": \"https://pull-f5-va01.tiktokcdn.com/stage/stream-123_hd.flv\", \"ext\": \"flv\", \"format_id\": \"flv-hd1\", \"vcodec\": \"h264\", \"quality\": 4, \"protocol\": \"https\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flv-hd1 - unknown\"}, {\"url\": \"https://pull-f5-va01.tiktokcdn.com/stage/stream-123_or4.flv\", \"ext\": \"flv\", \"format_id\": \"flv-full_hd1\", \"vcodec\": \"h264\", \"quality\": 6, \"protocol\": \"https\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flv-full_hd1 - unknown\"}, {\"url\": \"https://pull-hls-f16-va01.tiktokcdn.com/stage/stream-123_or4/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"format_id\": \"hls-pull\", \"vcodec\": \"h264\", \"quality\": 8, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-pull - unknown\"}, {\"url\": \"https://pull-f5-va01.tiktokcdn.com/stage/stream-123_or4.flv?only_audio=0\", \"ext\": \"flv\", \"format_id\": \"flv-origin\", \"quality\": 9, \"vcodec\": \"h264\", \"tbr\": 3999, \"resolution\": \"1080x1920\", \"protocol\": \"https\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flv-origin - 1080x1920\"}, {\"url\": \"https://pull-hls-f16-va01.tiktokcdn.com/stage/stream-123_or4/index.m3u8?x=1\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"format_id\": \"hls-origin\", \"quality\": 9, \"vcodec\": \"h264\", \"tbr\": 3999, \"resolution\": \"1080x1920\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-origin - 1080x1920\"}]"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:live] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@liver/live",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(uploader)s|%(uploader_id)s|%(creator)s|%(concurrent_view_count)s|%(is_live)s|%(live_status)s|%(format_id)s|%(display_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "7210809319192726273|Morning stream 天気|liver|6621496731283095554|Live Person|1234|True|is_live|hls-origin|7210809319192726273"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:live] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@liver/live",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[tiktok:live] Extracting URL: https://www.tiktok.com/@liver/live",
+    "[tiktok:live] liver: Downloading webpage",
+    "[tiktok:live] 7210809319192726273: Downloading JSON metadata",
+    "[info] Available formats for 7210809319192726273:",
+    "ID           EXT RESOLUTION |   TBR PROTO | VCODEC ACODEC",
+    "----------------------------------------------------------",
+    "rtmp-pull    flv unknown    |       https | h265   unknown",
+    "flv-sd       flv 480p       |       https | h264   unknown",
+    "flv-hd1      flv unknown    |       https | h264   unknown",
+    "flv-full_hd1 flv unknown    |       https | h264   unknown",
+    "hls-pull     mp4 unknown    |       m3u8  | h264   unknown",
+    "flv-origin   flv 1080x1920  | 3999k https | h264   unknown",
+    "hls-origin   mp4 1080x1920  | 3999k m3u8  | h264   unknown"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:live] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://m.tiktok.com/share/live/7210809319192726273/?language=en",
+   "args": [
+    "--print",
+    "%(id)s|%(uploader)s|%(uploader_url)s|%(creators)s|%(live_status)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "7210809319192726273|liver|https://www.tiktok.com/@liver|['Live Person']|is_live|hls-origin"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@offline/live",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:live] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [tiktok:live] offline: The channel is not currently live"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@ended/live",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:live] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [tiktok:live] ended: The channel is not currently live"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://m.tiktok.com/share/live/7000000000000000001",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [tiktok:live] 7000000000000000001: This livestream has ended"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@guest/live",
+   "args": [
+    "--print",
+    "%(formats)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[{\"url\": \"https://pull-f5-va01.tiktokcdn.com/stage/guest_sd.flv\", \"ext\": \"flv\", \"format_id\": \"flv-sd1\", \"vcodec\": null, \"quality\": 0, \"protocol\": \"https\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flv-sd1 - unknown\"}, {\"url\": \"https://pull-hls-f16-va01.tiktokcdn.com/stage/guest/index.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"format_id\": \"hls-fallback\", \"vcodec\": \"h264\", \"quality\": 9, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-fallback - unknown\"}]"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:live] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tiktok.com/@guest/live",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(uploader)s|%(uploader_url)s|%(uploader_id)s|%(creators)s|%(concurrent_view_count)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "7000000000000000002|Guest stream|guest|https://www.tiktok.com/@guest|6600000000000000002|['Host']|77|hls-fallback"
+   ],
+   "stderr": [
+    "WARNING: [tiktok:live] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
   }
  ]
 }

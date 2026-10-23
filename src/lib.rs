@@ -348,6 +348,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Crtvg",
     "CultureUnplugged",
     "dailymotion",
+    "Douyin",
     "EbaumsWorld",
     "Ebay",
     "Epoch",
@@ -429,6 +430,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "TheIntercept",
     "ThisAmericanLife",
     "TikTok",
+    "tiktok:collection",
+    "tiktok:live",
+    "tiktok:user",
     "Tumblr",
     "Tweakers",
     "twitch:clips",
@@ -649,6 +653,10 @@ impl YoutubeDl {
                 Box::new(extractor::Periscope),
                 Box::new(extractor::TikTok),
                 Box::new(extractor::TikTokVm),
+                Box::new(extractor::TikTokUser),
+                Box::new(extractor::TikTokCollection),
+                Box::new(extractor::TikTokLive),
+                Box::new(extractor::Douyin),
                 Box::new(extractor::Instagram),
                 Box::new(extractor::InstagramIos),
                 Box::new(extractor::InstagramStory),
@@ -1431,6 +1439,8 @@ impl YoutubeDl {
         if let Some(pending) = playlist.pending.take() {
             let fetch = if pending.state["kind"] == "twitch" {
                 extractor::fetch_twitch_pages
+            } else if extractor::tiktok_pending_state(&pending.state) {
+                extractor::fetch_tiktok_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };
