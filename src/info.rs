@@ -1357,6 +1357,13 @@ fn sort_fields(format: &VideoFormat) -> crate::format_sort::Fields {
             .get("preference")
             .and_then(serde_json::Value::as_f64),
     );
+    number(
+        "language_preference",
+        format
+            .extra
+            .get("language_preference")
+            .and_then(serde_json::Value::as_f64),
+    );
     number("quality", format.quality);
     number("fps", format.fps.map(PyNumber::as_f64));
     number("asr", format.asr.map(f64::from));
