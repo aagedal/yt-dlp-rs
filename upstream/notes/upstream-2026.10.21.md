@@ -25,39 +25,16 @@ above, upstream output did not change. The global baseline, the tools'
 commit (only the YouTube challenge vector file's recorded hash changed with
 it).
 
-Not re-verified here:
+Caveats:
 
 - `compare_ejs.py` and `compare_youtube.py`'s signature step require the pinned
   Deno 2.9.7; only 2.9.8 was installed. The EJS release (0.8.0) and
   `_info.py` are byte-identical between the two baselines.
-- `compare_dash.py`, `compare_hls.py` and `compare_hls_audio.py` fail
-  identically at the previous baseline and pre-update code: they read native
-  `-j` fields (`fragments`, `stream_kind`, period grouping) that the
-  upstream-shaped info dict no longer emits. The tools need updating; the
-  behaviors stay covered by the Rust HLS/DASH tests and site fixtures.
-
-## Live checks
-
-Alongside the update, the binary was compared live with upstream 2026.10.21
-on roughly fifty public URLs from upstream's `_TESTS` (manual, outside the
-required suite). Differences found there were fixed with saved regression
-fixtures: response charset decoding (`_guess_encoding_from_content`; VK sends
-windows-1251), `Content-Encoding` decoding of extraction responses (Imgur's
-API compresses regardless of `Accept-Encoding: identity`), dropping zero
-durations in `process_video_result`, HLS/DASH extraction bounds that
-rejected long Twitch VODs, title-case HTTP/1.1 header names (Cloudflare
-answers kick.com's lowercase ones with 403), generic pages decoded like
-`_download_webpage` instead of rejecting non-UTF-8 HTML, Twitch VODs that are
-still recording (only the master playlist is read), HLS
-`#EXT-X-I-FRAME-STREAM-INF` lines (TED), unsegmented DASH representations
-and upper-case MPD namespaces (OK.ru) and signed Loom masters whose variants
-are read only at download time.
-
-The same release also brought new or extended extractors for the largest
-social networks, each compared with 2026.10.21 output on saved fixtures:
-Facebook (legacy pages, watch parties, ads, redirects), Instagram (inline
-DASH, logged-in API, stories, tags, users), TikTok (subtitles, users,
-collections, live) and Douyin, X/Twitter (API selection, cards, broadcasts,
-Spaces, Periscope), Twitch (live streams, channel lists, collections), VK
-(wall posts, user videos, VK Play), Telegram embeds, Snapchat Spotlight and
-XiaoHongShu.
+- `compare_dash.py`, `compare_hls.py` and `compare_hls_audio.py` were stale
+  (they read native `-j` fields the upstream-shaped info dict no longer has)
+  and were rewritten during this update: DASH and HLS external-audio compare
+  whole format dicts, and HLS compares actual downloads (fragment and key
+  requests, output bytes) with upstream's HlsFD. They pass against the
+  target. Two request-order differences remain documented there: native
+  fetches an AES key just before its first fragment (upstream just after),
+  and a direct HLS master's variant playlists are read during extraction.
