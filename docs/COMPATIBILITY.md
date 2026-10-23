@@ -2213,15 +2213,19 @@ request timeouts. These new public fields require updating Rust struct literals.
 
 The saved TS, fMP4 and byte-range media tests verify exact bytes and optionally
 FFprobe audio/video tracks using `YT_DLP_RS_TEST_FFPROBE`. The offline differential
-harness compares actual pinned upstream HlsFD fragment order, URLs and ranges:
+harness downloads the saved TS, fMP4, byte-range and AES-128 playlists (plus a
+mixed key-query/`METHOD=NONE` playlist) with both the native CLI and actual pinned
+upstream HlsFD from one localhost server, and compares ordered fragment and key
+requests (path, query, Range) and the exact assembled bytes:
 
 ```sh
 python3 tools/compare_hls.py --upstream /path/to/yt-dlp --binary target/debug/yt-dlp-rs
 ```
 
-Only the exact ephemeral localhost origin and upstream exclusive range end are
-normalized. Container naming/remux behavior, live/encrypted delivery and general
-HLS parity are not inferred. YouTube HLS discovery uses this same bounded VOD
+Playlist refetches are excluded, and key requests are compared as their own
+sequence: upstream fetches a key after the first fragment using it, native
+before. Container naming/remux behavior, implicit IVs after a map, live delivery
+and general HLS parity are not inferred. YouTube HLS discovery uses this same bounded VOD
 pipeline. See [the source slice](../upstream/notes/hls-vod.md).
 
 
@@ -2313,10 +2317,12 @@ verify both tracks and AAC codec metadata. The optional pinned-parser comparison
 python3 tools/compare_hls_audio.py --upstream /path/to/yt-dlp --binary target/debug/yt-dlp-rs
 ```
 
-It compares URL-keyed stream kind, language/name, dimensions and total bitrate.
-Format IDs/order, native group/flag fields, selection, ext/remuxing and download
-behavior are explicitly excluded from that comparison. Only the exact local
-origin is normalized. See [the source slice](../upstream/notes/hls-audio.md).
+It compares whole format dicts in FormatSorter order, excluding only the fields
+`process_video_result` adds (format, resolution, aspect_ratio, http_headers) and
+applying its `dynamic_range` SDR default. Selection, remuxing and download
+behavior are excluded. Only the exact local origin is normalized. Native manifest
+requests are pinned: it reads every child playlist during extraction, which
+upstream's parser does not. See [the source slice](../upstream/notes/hls-audio.md).
 
 
 ## Static DASH MPDs
@@ -2387,10 +2393,11 @@ python3 tools/compare_dash.py --upstream /path/to/yt-dlp --binary target/debug/y
 ```
 
 The actual upstream parser receives saved XML with network access blocked; native
-JSON reads only localhost MPDs. A documented allowlist compares declaration-order
-metadata and fragment URLs, resolving upstream relative paths and normalizing
-only the exact local origin. Source ID and audio bitrate representations have
-explicit mappings. Pinned upstream ignores SegmentList ranges and does not expand
+JSON reads only localhost MPDs. Whole format dicts are compared in FormatSorter
+order, including fragment_base_url and each fragment's path/url/duration,
+excluding only the fields `process_video_result` adds and applying its
+`dynamic_range` SDR default; only the exact local origin is normalized. Pinned
+upstream ignores SegmentList ranges and does not expand
 negative repeats or apply presentationTimeOffset: native range expectations are
 checked independently, and those timing behaviors are excluded from upstream
 parity claims. See [the source slice](../upstream/notes/dash-static.md).
