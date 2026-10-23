@@ -116,6 +116,42 @@
    "files": {
     "86532.mp4": 16
    }
+  },
+  {
+   "url": "https://www.ted.com/talks/brene_brown_the_power_of_vulnerability",
+   "args": [
+    "--print",
+    "%(id)s|%(duration)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1042|1202|hls-2156+hls-audio0-medium|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ted.com/talks/brene_brown_the_power_of_vulnerability",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[TedTalk] Extracting URL: https://www.ted.com/talks/brene_brown_the_power_of_vulnerability",
+    "[TedTalk] brene_brown_the_power_of_vulnerability: Downloading webpage",
+    "[TedTalk] 1042: Downloading m3u8 information",
+    "[info] Available formats for 1042:",
+    "ID                EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC     MORE INFO",
+    "--------------------------------------------------------------------------------------------------------",
+    "hls-audio0-high   mp4 audio only     |                  m3u8  | audio only        unknown    [en] high",
+    "hls-audio0-low    mp4 audio only     |                  m3u8  | audio only        unknown    [en] low",
+    "hls-audio0-medium mp4 audio only     |                  m3u8  | audio only        unknown    [en] medium",
+    "h264-1200k        mp4 unknown        | ≈171.95MiB 1200k https | unknown           unknown",
+    "hls-138           mp4 320x180     30 | ~ 19.83MiB  138k m3u8  | avc1.42c00d  138k video only",
+    "hls-2156          mp4 1280x720    30 | ~308.98MiB 2156k m3u8  | avc1.64001f 2156k video only"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

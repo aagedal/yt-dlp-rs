@@ -6,5 +6,7 @@
  {"url": "https://www.ted.com/playlists/171/popular", "args": ["--flat-playlist", "-J"]},
  {"url": "https://www.ted.com/series/small_thing_big_idea#season_2", "args": ["--flat-playlist", "-J"]},
  {"url": "https://www.ted.com/series/small_thing_big_idea", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(playlist_title)s|%(url)s"]},
- {"url": "https://www.ted.com/talks/candace_parker_barriers", "args": ["--no-progress", "-f", "h264-1500k", "-o", "%(id)s.%(ext)s"]}
+ {"url": "https://www.ted.com/talks/candace_parker_barriers", "args": ["--no-progress", "-f", "h264-1500k", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.ted.com/talks/brene_brown_the_power_of_vulnerability", "args": ["--print", "%(id)s|%(duration)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://www.ted.com/talks/brene_brown_the_power_of_vulnerability", "args": ["-F"]}
 ]
