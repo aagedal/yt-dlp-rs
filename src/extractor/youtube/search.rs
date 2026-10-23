@@ -67,21 +67,26 @@ fn search_results(
     limit: Option<usize>,
 ) -> Result<Vec<Map<String, Value>>> {
     let display_id = format!("query \"{query}\"");
-    // `_download_ytcfg('web', display_id)`.
+    // `_download_ytcfg('web', display_id) if not self.skip_webpage else {}`.
     let home = Url::parse("https://www.youtube.com")?;
-    let ytcfg = match super::super::download_webpage_note(
-        client,
-        &home,
-        extractor,
-        &display_id,
-        "Downloading web client config",
-    ) {
-        Ok(webpage) => watch::extract_ytcfg(&webpage),
-        Err(error) => {
-            crate::screen::warning(&error.to_string());
-            Map::new()
+    let ytcfg = if super::tab::skip_webpage() {
+        Map::new()
+    } else {
+        match super::super::download_webpage_note(
+            client,
+            &home,
+            extractor,
+            &display_id,
+            "Downloading web client config",
+        ) {
+            Ok(webpage) => watch::extract_ytcfg(&webpage),
+            Err(error) => {
+                crate::screen::warning(&error.to_string());
+                Map::new()
+            }
         }
     };
+    super::tab::report_playlist_authcheck(&ytcfg, false, extractor, &display_id)?;
     let mut data = Map::new();
     data.insert("query".into(), query.into());
     if let Some(params) = params.filter(|params| !params.is_empty()) {
@@ -169,10 +174,16 @@ fn search_playlist(
     extractor: &'static str,
     key: &'static str,
 ) -> Result<ExtractResult> {
-    let entries = entries
+    let mut entries = entries
         .into_iter()
         .map(entry_info)
         .collect::<Result<Vec<_>>>()?;
+    // An entry without an extractor shows the search's.
+    for entry in &mut entries {
+        if let Some(marker) = entry.extra.get_mut(crate::TRANSPARENT) {
+            marker["playlist_extractor"] = serde_json::json!([extractor, key]);
+        }
+    }
     let mut extra = Map::new();
     extra.insert(
         crate::info_order::INFO_SHAPE.into(),

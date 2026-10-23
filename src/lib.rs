@@ -2358,6 +2358,18 @@ impl YoutubeDl {
             );
             full.insert("webpage_url_domain".into(), info::get_domain(&url).into());
         }
+        // `add_default_extra_info(info, ie, url)` for an entry dict's `ie_key`.
+        let entry_dict = marker["entry"].is_object();
+        if entry_dict && let Some(ie_key) = ie_key {
+            for (key, value) in [
+                ("extractor", marker["extractor"].as_str().unwrap_or(ie_key)),
+                ("extractor_key", ie_key),
+            ] {
+                if !full.contains_key(key) {
+                    full.insert(key.into(), value.into());
+                }
+            }
+        }
         let number = |value: Option<usize>| value.map_or(Value::Null, Value::from);
         // `add_extra_info` keeps an entry's own keys.
         let own: Vec<String> = raw.keys().cloned().collect();
@@ -2384,8 +2396,15 @@ impl YoutubeDl {
             number(entry.last_playlist_index),
         );
         if ie_key.is_none() {
-            full.insert("extractor".into(), "generic".into());
-            full.insert("extractor_key".into(), "Generic".into());
+            // The playlist's extractor (`_playlist_infodict`).
+            let playlist = |index: usize, default: &'static str| {
+                marker["playlist_extractor"][index]
+                    .as_str()
+                    .unwrap_or(default)
+                    .to_owned()
+            };
+            full.insert("extractor".into(), playlist(0, "generic").into());
+            full.insert("extractor_key".into(), playlist(1, "Generic").into());
         }
         full.insert(
             "playlist_autonumber".into(),

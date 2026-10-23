@@ -1624,8 +1624,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
-    // `--extractor-args`: GenericIE's and YouTube's client selection are
-    // used; other extractors' are not.
+    // `--extractor-args`: GenericIE's, YouTube's and YoutubeTabIE's ported
+    // arguments are used; other extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
     for (key, values) in &extractor_args {
@@ -1643,6 +1643,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     );
                 }
             }
+            "youtubetab" => {
+                for name in values
+                    .keys()
+                    .filter(|name| !matches!(name.as_str(), "skip" | "approximate_date"))
+                {
+                    warning!(
+                        "WARNING: extractor argument youtubetab:{name} is not supported natively and is ignored"
+                    );
+                }
+            }
             _ => warning!(
                 "WARNING: extractor arguments for {key} are not supported natively and are ignored"
             ),
@@ -1650,6 +1660,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
     yt_dlp_rs::extractor::set_video_password(args.video_password.clone());
+    yt_dlp_rs::extractor::set_youtube_tab_playlist_items(args.playlist_items.as_deref());
     // HttpFD's initial block size and resizing.
     if let Some(size) = args.buffer_size.as_deref().and_then(parse_bytes) {
         yt_dlp_rs::BUFFER_SIZE.store(size as usize, Ordering::Relaxed);
@@ -1676,6 +1687,14 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     // of options not given (an option overriding one shows `*NAME` in the
     // debug header).
     let compat = compat_options(&args.compat_options)?;
+    yt_dlp_rs::extractor::set_youtube_tab_compat(
+        compat
+            .iter()
+            .any(|name| name == "no-youtube-channel-redirect"),
+        compat
+            .iter()
+            .any(|name| name == "no-youtube-unavailable-videos"),
+    );
     let given = |ids: &[&str]| {
         ids.iter()
             .any(|id| matches.value_source(id) == Some(clap::parser::ValueSource::CommandLine))
@@ -1772,17 +1791,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 );
                 true
             }
-            // Features this port does not have (YouTube tabs, live chat,
-            // certifi, ...) or that pinned upstream never reads, so nothing
-            // changes. This port's playlist entries are always complete
-            // videos, which `playlist-match-filter` does not affect.
+            // Read by YoutubeTabIE (`set_youtube_tab_compat`).
+            "no-youtube-channel-redirect" | "no-youtube-unavailable-videos" => true,
+            // Features this port does not have (live chat, certifi, ...) or
+            // that pinned upstream never reads, so nothing changes. This
+            // port's playlist entries are always complete videos, which
+            // `playlist-match-filter` does not affect.
             "no-certifi"
             | "prefer-legacy-http-handler"
             | "no-live-chat"
             | "no-external-downloader-progress"
             | "embed-thumbnail-atomicparsley"
-            | "no-youtube-channel-redirect"
-            | "no-youtube-unavailable-videos"
             | "no-youtube-prefer-utc-upload-date"
             | "seperate-video-versions"
             | "playlist-match-filter" => true,

@@ -435,6 +435,19 @@ pub(super) fn relative_time(text: &str, now: f64) -> Option<i64> {
 
 /// `_parse_time_text`: a relative time, else an absolute date.
 pub(super) fn parse_time_text(text: &str) -> Option<i64> {
+    parse_time_text_reporting(text, true, "youtube")
+}
+
+/// `_parse_time_text(text, report_failure)` for `extractor`: nothing for an
+/// empty text.
+pub(super) fn parse_time_text_reporting(
+    text: &str,
+    report_failure: bool,
+    extractor: &str,
+) -> Option<i64> {
+    if text.is_empty() {
+        return None;
+    }
     let now = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .map_or(0.0, |elapsed| elapsed.as_secs_f64());
@@ -453,9 +466,9 @@ pub(super) fn parse_time_text(text: &str) -> Option<i64> {
             .or_else(|| PREFIXED.captures(&lower))?;
         crate::dates::unified_timestamp(&found[1], true)
     });
-    if timestamp.is_none() {
+    if timestamp.is_none() && report_failure {
         crate::screen::warning_once(&format!(
-            "[youtube] Cannot parse localized time text \"{text}\""
+            "[{extractor}] Cannot parse localized time text \"{text}\""
         ));
     }
     timestamp

@@ -1,0 +1,96 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/feed/musicfixture",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"musicfixture\", \"title\": \"musicfixture\", \"availability\": null, \"channel_follower_count\": null, \"description\": null, \"tags\": [], \"thumbnails\": [], \"modified_date\": null, \"view_count\": null, \"playlist_count\": 5, \"channel\": null, \"channel_id\": null, \"uploader_id\": null, \"uploader\": null, \"channel_url\": null, \"uploader_url\": null, \"_type\": \"playlist\", \"entries\": [{\"title\": \"Song one\", \"ie_key\": \"Youtube\", \"id\": \"SONG0000001\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/watch?v=SONG0000001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"YoutubeTab\", \"id\": \"RDAMVMSONG0000002\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/watch?v=SONG0000002&list=RDAMVMSONG0000002\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"YoutubeTab\", \"id\": \"PLmusicplaylist\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/playlist?list=PLmusicplaylist\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"YoutubeTab\", \"id\": \"MPREb_album0001\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/browse/MPREb_album0001\", \"__x_forwarded_for_ip\": null}, {\"title\": null, \"ie_key\": \"Youtube\", \"id\": \"SONG0000003\", \"_type\": \"url\", \"url\": \"https://music.youtube.com/watch?v=SONG0000003\", \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/feed/musicfixture\", \"original_url\": \"https://www.youtube.com/feed/musicfixture\", \"webpage_url_basename\": \"musicfixture\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/feed/musicfixture",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(ie_key)s|%(url)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|SONG0000001|Song one|Youtube|https://music.youtube.com/watch?v=SONG0000001|youtube",
+    "2|RDAMVMSONG0000002|NA|YoutubeTab|https://music.youtube.com/watch?v=SONG0000002&list=RDAMVMSONG0000002|youtube:tab",
+    "3|PLmusicplaylist|NA|YoutubeTab|https://music.youtube.com/playlist?list=PLmusicplaylist|youtube:tab",
+    "4|MPREb_album0001|NA|YoutubeTab|https://music.youtube.com/browse/MPREb_album0001|youtube:tab",
+    "5|SONG0000003|NA|Youtube|https://music.youtube.com/watch?v=SONG0000003|youtube"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/feed/hashtagtiles",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"hashtagtiles\", \"title\": \"hashtagtiles - Hashtags\", \"availability\": null, \"channel_follower_count\": null, \"description\": null, \"tags\": [], \"thumbnails\": [], \"modified_date\": null, \"view_count\": null, \"playlist_count\": 3, \"channel\": null, \"channel_id\": null, \"uploader_id\": null, \"uploader\": null, \"channel_url\": null, \"uploader_url\": null, \"_type\": \"playlist\", \"entries\": [{\"title\": \"#cooking\", \"ie_key\": \"YoutubeTab\", \"_type\": \"url\", \"url\": \"https://youtube.com/hashtag/cooking\", \"__x_forwarded_for_ip\": null}, {\"title\": \"#baking\", \"ie_key\": \"YoutubeTab\", \"_type\": \"url\", \"url\": \"https://youtube.com/hashtag/baking\", \"__x_forwarded_for_ip\": null}, {\"title\": null, \"ie_key\": \"YoutubeTab\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/hashtag/absolute\", \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/feed/hashtagtiles\", \"original_url\": \"https://www.youtube.com/feed/hashtagtiles\", \"webpage_url_basename\": \"hashtagtiles\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/feed/hashtagtiles",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(ie_key)s|%(url)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|cooking|#cooking|YoutubeTab|https://youtube.com/hashtag/cooking|youtube:tab",
+    "2|baking|#baking|YoutubeTab|https://youtube.com/hashtag/baking|youtube:tab",
+    "3|absolute|NA|YoutubeTab|https://www.youtube.com/hashtag/absolute|youtube:tab"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/feed/reports",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"reports\", \"title\": \"reports\", \"availability\": null, \"channel_follower_count\": null, \"description\": null, \"tags\": [], \"thumbnails\": [], \"modified_date\": null, \"view_count\": null, \"playlist_count\": 5, \"channel\": null, \"channel_id\": null, \"uploader_id\": null, \"uploader\": null, \"channel_url\": null, \"uploader_url\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=REPORT00001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=REPORT00002\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/shorts/REPORT00003\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=REPORT00004\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=REPORT00005\", \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/feed/reports\", \"original_url\": \"https://www.youtube.com/feed/reports\", \"webpage_url_basename\": \"reports\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/feed/reports",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(ie_key)s|%(url)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|REPORT00001|NA|Youtube|https://www.youtube.com/watch?v=REPORT00001|youtube",
+    "2|REPORT00002|NA|Youtube|https://www.youtube.com/watch?v=REPORT00002|youtube",
+    "3|REPORT00003|NA|Youtube|https://www.youtube.com/shorts/REPORT00003|youtube",
+    "4|REPORT00004|NA|Youtube|https://www.youtube.com/watch?v=REPORT00004|youtube",
+    "5|REPORT00005|NA|Youtube|https://www.youtube.com/watch?v=REPORT00005|youtube"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}
