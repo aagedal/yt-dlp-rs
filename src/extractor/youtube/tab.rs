@@ -2371,7 +2371,10 @@ pub(super) fn extract_webpage(
             }
         };
         ytcfg = watch::extract_ytcfg(&webpage);
-        let found = match super::super::search_json(&INITIAL_DATA, &webpage, false) {
+        let found = match super::initial_data_script(&webpage)
+            .map(|data| Some(Some(data)))
+            .unwrap_or_else(|| super::super::search_json(&INITIAL_DATA, &webpage, false))
+        {
             Some(Some(found)) => found,
             Some(None) => {
                 crate::screen::warning(&format!("[{extractor}] {item_id}: Failed to parse JSON"));

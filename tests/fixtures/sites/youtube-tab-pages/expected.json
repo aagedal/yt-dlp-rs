@@ -63,6 +63,22 @@
     "WARNING: [youtube:tab] Incomplete yt initial data received; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U. Giving up after 3 retries"
    ],
    "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLscripttag00000000000000000000000",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "PLscripttag00000000000000000000000|BaW_jenozKc",
+    "PLscripttag00000000000000000000000|YYYYYYYYYYY",
+    "PLscripttag00000000000000000000000|ZZZZZZZZZZZ"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

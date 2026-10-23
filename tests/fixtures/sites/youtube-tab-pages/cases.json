@@ -1,5 +1,6 @@
 [
  {"url": "https://www.youtube.com/playlist?list=PLmissing0000000000000000000000000", "args": ["--flat-playlist", "--print", "id"]},
  {"url": "https://www.youtube.com/playlist?list=PLincomplete0000000000000000000000", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(id)s"]},
- {"url": "https://www.youtube.com/playlist?list=PLnoinitial00000000000000000000000", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(id)s"]}
+ {"url": "https://www.youtube.com/playlist?list=PLnoinitial00000000000000000000000", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(id)s"]},
+ {"url": "https://www.youtube.com/playlist?list=PLscripttag00000000000000000000000", "args": ["--flat-playlist", "--print", "%(playlist_id)s|%(id)s"]}
 ]

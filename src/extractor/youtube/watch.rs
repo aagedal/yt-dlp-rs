@@ -1466,7 +1466,8 @@ fn download_initial_data(
     if let Some(webpage) = webpage
         && !skipped.iter().any(|skip| skip == "initial_data")
     {
-        initial_data = search_initial(webpage, &INITIAL_DATA, "yt initial data");
+        initial_data = super::initial_data_script(webpage)
+            .or_else(|| search_initial(webpage, &INITIAL_DATA, "yt initial data"));
         if !super::tab::truthy(initial_data.as_ref().and_then(|data| data.get("contents"))) {
             crate::screen::warning(
                 "[youtube] Incomplete data received in embedded initial data; re-fetching using API.",
