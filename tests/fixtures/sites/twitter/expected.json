@@ -162,6 +162,350 @@
    "files": {
     "5001.mp4": 20
    }
+  },
+  {
+   "url": "https://x.com/synd/status/1006",
+   "args": [
+    "--extractor-args",
+    "twitter:api=syndication",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6001\", \"title\": \"Synd Poster - Syndicated clip #news second line\", \"description\": \"Syndicated clip #news second line https://t.co/xyz\", \"uploader\": \"Synd Poster\", \"timestamp\": 1686256230, \"channel_id\": \"4243\", \"uploader_id\": \"synd\", \"uploader_url\": \"https://twitter.com/synd\", \"view_count\": null, \"like_count\": 42, \"repost_count\": null, \"comment_count\": null, \"age_limit\": 18, \"tags\": [\"news\"], \"formats\": [{\"format_id\": \"hls-audio-128000-Audio\", \"format_note\": \"Audio\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/mp4a/128000/a.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/6001/pu/pl/s.m3u8?tag=12\", \"language\": null, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"tbr\": 128, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-audio-128000-Audio - audio only (Audio)\"}, {\"format_id\": \"hls-432\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/480x270/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/6001/pu/pl/s.m3u8?tag=12\", \"tbr\": 432.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"vcodec\": \"avc1.4D401E\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 432.0, \"resolution\": \"480x270\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-432 - 480x270\"}, {\"url\": \"https://video.twimg.com/ext_tw_video/6001/pu/vid/avc1/640x360/s.mp4?tag=12\", \"format_id\": \"http-832\", \"tbr\": 832, \"width\": 640, \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 1283880, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-832 - 640x360\"}, {\"format_id\": \"hls-2176\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/1280x720/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/6001/pu/pl/s.m3u8?tag=12\", \"tbr\": 2176.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2176.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2176 - 1280x720\"}], \"subtitles\": {}, \"thumbnails\": [{\"id\": \"large\", \"url\": \"https://pbs.twimg.com/ext_tw_video_thumb/6001/pu/img/t.jpg?name=large\", \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\"}, {\"id\": \"orig\", \"url\": \"https://pbs.twimg.com/ext_tw_video_thumb/6001/pu/img/t.jpg?name=orig\", \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\"}], \"duration\": 12.345, \"_format_sort_fields\": [\"res\", \"proto:m3u8\", \"br\", \"size\"], \"display_id\": \"1006\", \"_old_archive_ids\": [\"twitter 1006\"], \"webpage_url\": \"https://x.com/synd/status/1006\", \"original_url\": \"https://x.com/synd/status/1006\", \"webpage_url_basename\": \"1006\", \"webpage_url_domain\": \"x.com\", \"extractor\": \"twitter\", \"extractor_key\": \"Twitter\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://pbs.twimg.com/ext_tw_video_thumb/6001/pu/img/t.jpg?name=orig\", \"fulltitle\": \"Synd Poster - Syndicated clip #news second line\", \"duration_string\": \"12\", \"upload_date\": \"20230608\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"requested_formats\": [{\"format_id\": \"hls-2176\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/1280x720/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/6001/pu/pl/s.m3u8?tag=12\", \"tbr\": 2176.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2176.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2176 - 1280x720\"}, {\"format_id\": \"hls-audio-128000-Audio\", \"format_note\": \"Audio\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/mp4a/128000/a.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/6001/pu/pl/s.m3u8?tag=12\", \"language\": null, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"tbr\": 128, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-audio-128000-Audio - audio only (Audio)\"}], \"format\": \"hls-2176 - 1280x720+hls-audio-128000-Audio - audio only (Audio)\", \"format_id\": \"hls-2176+hls-audio-128000-Audio\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"format_note\": \"Audio\", \"tbr\": 2304.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.640020\", \"vbr\": 2176.0, \"aspect_ratio\": 1.78, \"abr\": 128, \"_filename\": \"Synd Poster - Syndicated clip #news second line [6001].mp4\", \"filename\": \"Synd Poster - Syndicated clip #news second line [6001].mp4\", \"__write_download_archive\": false}], \"requested_formats\": [{\"format_id\": \"hls-2176\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/1280x720/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/6001/pu/pl/s.m3u8?tag=12\", \"tbr\": 2176.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2176.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2176 - 1280x720\"}, {\"format_id\": \"hls-audio-128000-Audio\", \"format_note\": \"Audio\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/mp4a/128000/a.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/6001/pu/pl/s.m3u8?tag=12\", \"language\": null, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"tbr\": 128, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-audio-128000-Audio - audio only (Audio)\"}], \"format\": \"hls-2176 - 1280x720+hls-audio-128000-Audio - audio only (Audio)\", \"format_id\": \"hls-2176+hls-audio-128000-Audio\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": null, \"format_note\": \"Audio\", \"filesize_approx\": null, \"tbr\": 2304.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.640020\", \"vbr\": 2176.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": 128, \"asr\": null, \"audio_channels\": null, \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [twitter] 1006: Not all metadata or media is available via syndication endpoint"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/gifs/status/1007",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1007\", \"title\": \"Gif Poster - A gif and a quote\", \"description\": \"A gif and a quote\", \"uploader\": \"Gif Poster\", \"timestamp\": 1686256230, \"channel_id\": \"4244\", \"uploader_id\": \"gifs\", \"uploader_url\": \"https://twitter.com/gifs\", \"view_count\": null, \"like_count\": 7, \"repost_count\": null, \"comment_count\": null, \"age_limit\": 0, \"tags\": [], \"_type\": \"playlist\", \"entries\": [{\"id\": \"1007\", \"title\": \"Gif Poster - A gif and a quote #1\", \"description\": \"A gif and a quote\", \"uploader\": \"Gif Poster\", \"timestamp\": 1686256230, \"channel_id\": \"4244\", \"uploader_id\": \"gifs\", \"uploader_url\": \"https://twitter.com/gifs\", \"view_count\": null, \"like_count\": 7, \"repost_count\": null, \"comment_count\": null, \"age_limit\": 0, \"tags\": [], \"formats\": [{\"url\": \"https://video.twimg.com/tweet_video/g.mp4\", \"format_id\": \"http\", \"tbr\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}], \"subtitles\": {}, \"thumbnails\": [{\"id\": \"orig\", \"url\": \"https://pbs.twimg.com/tweet_video_thumb/g.jpg?name=orig\", \"width\": null, \"height\": null}], \"_format_sort_fields\": [\"res\", \"proto:m3u8\", \"br\", \"size\"], \"display_id\": \"1007\", \"_old_archive_ids\": [\"twitter 1007\"], \"playlist_count\": 2, \"playlist\": \"Gif Poster - A gif and a quote\", \"playlist_id\": \"1007\", \"playlist_title\": \"Gif Poster - A gif and a quote\", \"playlist_uploader\": \"Gif Poster\", \"playlist_uploader_id\": \"gifs\", \"playlist_channel\": null, \"playlist_channel_id\": \"4244\", \"playlist_webpage_url\": \"https://x.com/gifs/status/1007\", \"n_entries\": 2, \"webpage_url\": \"https://x.com/gifs/status/1007\", \"webpage_url_basename\": \"1007\", \"webpage_url_domain\": \"x.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"twitter\", \"extractor_key\": \"Twitter\", \"playlist_autonumber\": 1, \"thumbnail\": \"https://pbs.twimg.com/tweet_video_thumb/g.jpg?name=orig\", \"fulltitle\": \"Gif Poster - A gif and a quote #1\", \"upload_date\": \"20230608\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://video.twimg.com/tweet_video/g.mp4\", \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_filename\": \"Gif Poster - A gif and a quote #1 [1007].mp4\", \"filename\": \"Gif Poster - A gif and a quote #1 [1007].mp4\", \"__write_download_archive\": false}], \"url\": \"https://video.twimg.com/tweet_video/g.mp4\", \"format_id\": \"http\", \"tbr\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}, {\"id\": \"7001\", \"title\": \"Gif Poster - A gif and a quote #2\", \"description\": \"A gif and a quote\", \"uploader\": \"Gif Poster\", \"timestamp\": 1686256230, \"channel_id\": \"4244\", \"uploader_id\": \"gifs\", \"uploader_url\": \"https://twitter.com/gifs\", \"view_count\": null, \"like_count\": 7, \"repost_count\": null, \"comment_count\": null, \"age_limit\": 0, \"tags\": [], \"formats\": [{\"url\": \"https://video.twimg.com/amplify_video/7001/vid/avc1/720x1280/q.mp4\", \"format_id\": \"http-950\", \"tbr\": 950, \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": 593750, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-950 - 720x1280\"}], \"subtitles\": {}, \"thumbnails\": [{\"id\": \"orig\", \"url\": \"https://pbs.twimg.com/amplify_video_thumb/7001/img/q.jpg?name=orig\", \"width\": null, \"height\": null}], \"duration\": 5.0, \"_format_sort_fields\": [\"res\", \"proto:m3u8\", \"br\", \"size\"], \"display_id\": \"1007\", \"playlist_count\": 2, \"playlist\": \"Gif Poster - A gif and a quote\", \"playlist_id\": \"1007\", \"playlist_title\": \"Gif Poster - A gif and a quote\", \"playlist_uploader\": \"Gif Poster\", \"playlist_uploader_id\": \"gifs\", \"playlist_channel\": null, \"playlist_channel_id\": \"4244\", \"playlist_webpage_url\": \"https://x.com/gifs/status/1007\", \"n_entries\": 2, \"webpage_url\": \"https://x.com/gifs/status/1007\", \"webpage_url_basename\": \"1007\", \"webpage_url_domain\": \"x.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"twitter\", \"extractor_key\": \"Twitter\", \"playlist_autonumber\": 2, \"thumbnail\": \"https://pbs.twimg.com/amplify_video_thumb/7001/img/q.jpg?name=orig\", \"fulltitle\": \"Gif Poster - A gif and a quote #2\", \"duration_string\": \"5\", \"upload_date\": \"20230608\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://video.twimg.com/amplify_video/7001/vid/avc1/720x1280/q.mp4\", \"format_id\": \"http-950\", \"tbr\": 950, \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": 593750, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-950 - 720x1280\", \"_filename\": \"Gif Poster - A gif and a quote #2 [7001].mp4\", \"filename\": \"Gif Poster - A gif and a quote #2 [7001].mp4\", \"__write_download_archive\": false}], \"url\": \"https://video.twimg.com/amplify_video/7001/vid/avc1/720x1280/q.mp4\", \"format_id\": \"http-950\", \"tbr\": 950, \"width\": 720, \"height\": 1280, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": 593750, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-950 - 720x1280\"}], \"webpage_url\": \"https://x.com/gifs/status/1007\", \"original_url\": \"https://x.com/gifs/status/1007\", \"webpage_url_basename\": \"1007\", \"webpage_url_domain\": \"x.com\", \"extractor\": \"twitter\", \"extractor_key\": \"Twitter\", \"upload_date\": \"20230608\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [twitter] Rate-limit exceeded; falling back to syndication endpoint",
+    "WARNING: [twitter] 1007: Not all metadata or media is available via syndication endpoint"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/gifs/status/1007",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(playlist_index)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1007|Gif Poster - A gif and a quote #1|1",
+    "7001|Gif Poster - A gif and a quote #2|2"
+   ],
+   "stderr": [
+    "WARNING: [twitter] Rate-limit exceeded; falling back to syndication endpoint",
+    "WARNING: [twitter] 1007: Not all metadata or media is available via syndication endpoint"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/rt/status/1008",
+   "args": [
+    "--extractor-args",
+    "twitter:api=legacy",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"8001\", \"title\": \"Original - Original video #orig\", \"description\": \"Original video #orig https://t.co/v\", \"uploader\": \"Original\", \"timestamp\": 1539079200, \"channel_id\": \"77\", \"uploader_id\": \"orig\", \"uploader_url\": \"https://twitter.com/orig\", \"view_count\": null, \"like_count\": 100, \"repost_count\": 20, \"comment_count\": 4, \"age_limit\": 0, \"tags\": [\"orig\"], \"formats\": [{\"url\": \"https://video.twimg.com/ext_tw_video/8001/pu/vid/320x180/o.mp4\", \"format_id\": \"http-320\", \"tbr\": 320, \"width\": 320, \"height\": 180, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 40000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-320 - 320x180\"}], \"subtitles\": {}, \"thumbnails\": [{\"id\": \"orig\", \"url\": \"https://pbs.twimg.com/ext_tw_video_thumb/8001/pu/img/o.jpg?name=orig\", \"width\": null, \"height\": null}, {\"id\": \"small\", \"url\": \"https://pbs.twimg.com/ext_tw_video_thumb/8001/pu/img/o.jpg?name=small\", \"width\": 340, \"height\": 191, \"resolution\": \"340x191\"}], \"duration\": 1.0, \"_format_sort_fields\": [\"res\", \"proto:m3u8\", \"br\", \"size\"], \"display_id\": \"1008\", \"_old_archive_ids\": [\"twitter 1008\"], \"webpage_url\": \"https://x.com/rt/status/1008\", \"original_url\": \"https://x.com/rt/status/1008\", \"webpage_url_basename\": \"1008\", \"webpage_url_domain\": \"x.com\", \"extractor\": \"twitter\", \"extractor_key\": \"Twitter\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://pbs.twimg.com/ext_tw_video_thumb/8001/pu/img/o.jpg?name=small\", \"fulltitle\": \"Original - Original video #orig\", \"duration_string\": \"1\", \"upload_date\": \"20181009\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://video.twimg.com/ext_tw_video/8001/pu/vid/320x180/o.mp4\", \"format_id\": \"http-320\", \"tbr\": 320, \"width\": 320, \"height\": 180, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 40000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-320 - 320x180\", \"_filename\": \"Original - Original video #orig [8001].mp4\", \"filename\": \"Original - Original video #orig [8001].mp4\", \"__write_download_archive\": false}], \"url\": \"https://video.twimg.com/ext_tw_video/8001/pu/vid/320x180/o.mp4\", \"format_id\": \"http-320\", \"tbr\": 320, \"width\": 320, \"height\": 180, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 40000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-320 - 320x180\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/poster/status/1001",
+   "args": [
+    "--extractor-args",
+    "twitter:api=bogus",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitter] 1001: 'bogus' is not a valid API selection"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/poster/status/1009",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1009\", \"title\": \"Video Poster - Promoted video\", \"description\": \"Promoted video\", \"uploader\": \"Video Poster\", \"timestamp\": 1539202764, \"channel_id\": \"4242\", \"uploader_id\": \"poster\", \"uploader_url\": \"https://twitter.com/poster\", \"view_count\": 10, \"like_count\": 1, \"repost_count\": 2, \"comment_count\": 3, \"age_limit\": 0, \"tags\": [], \"formats\": [{\"format_id\": \"hls-audio-128000-Audio\", \"format_note\": \"Audio\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/mp4a/128000/a.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"language\": null, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"tbr\": 128, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-audio-128000-Audio - audio only (Audio)\"}, {\"url\": \"https://video.twimg.com/ext_tw_video/9001/pu/vid/320x180/m.mp4\", \"format_id\": \"http\", \"tbr\": null, \"width\": 320, \"height\": 180, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - 320x180\"}, {\"format_id\": \"hls-432\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/480x270/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"tbr\": 432.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"vcodec\": \"avc1.4D401E\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 432.0, \"resolution\": \"480x270\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-432 - 480x270\"}, {\"url\": \"https://video.twimg.com/ext_tw_video/9001/pu/vid/640x360/v.mp4\", \"format_id\": \"http-832\", \"tbr\": 832, \"width\": 640, \"height\": 360, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 3224000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-832 - 640x360\"}, {\"format_id\": \"hls-2176\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/1280x720/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"tbr\": 2176.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2176.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2176 - 1280x720\"}], \"subtitles\": {}, \"thumbnails\": [{\"id\": \"small\", \"url\": \"https://pbs.twimg.com/card_img/9001/s.jpg\", \"width\": 144, \"height\": 81, \"resolution\": \"144x81\"}, {\"id\": \"large\", \"url\": \"https://pbs.twimg.com/card_img/9001/l.jpg\", \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\"}], \"duration\": 31, \"display_id\": \"1009\", \"_old_archive_ids\": [\"twitter 1009\"], \"webpage_url\": \"https://x.com/poster/status/1009\", \"original_url\": \"https://x.com/poster/status/1009\", \"webpage_url_basename\": \"1009\", \"webpage_url_domain\": \"x.com\", \"extractor\": \"twitter\", \"extractor_key\": \"Twitter\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://pbs.twimg.com/card_img/9001/l.jpg\", \"fulltitle\": \"Video Poster - Promoted video\", \"duration_string\": \"31\", \"upload_date\": \"20181010\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"requested_formats\": [{\"format_id\": \"hls-2176\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/1280x720/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"tbr\": 2176.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2176.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2176 - 1280x720\"}, {\"format_id\": \"hls-audio-128000-Audio\", \"format_note\": \"Audio\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/mp4a/128000/a.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"language\": null, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"tbr\": 128, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-audio-128000-Audio - audio only (Audio)\"}], \"format\": \"hls-2176 - 1280x720+hls-audio-128000-Audio - audio only (Audio)\", \"format_id\": \"hls-2176+hls-audio-128000-Audio\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"format_note\": \"Audio\", \"tbr\": 2304.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.640020\", \"vbr\": 2176.0, \"aspect_ratio\": 1.78, \"abr\": 128, \"_filename\": \"Video Poster - Promoted video [1009].mp4\", \"filename\": \"Video Poster - Promoted video [1009].mp4\", \"__write_download_archive\": false}], \"requested_formats\": [{\"format_id\": \"hls-2176\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/1280x720/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"tbr\": 2176.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2176.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2176 - 1280x720\"}, {\"format_id\": \"hls-audio-128000-Audio\", \"format_note\": \"Audio\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/mp4a/128000/a.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"language\": null, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"tbr\": 128, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-audio-128000-Audio - audio only (Audio)\"}], \"format\": \"hls-2176 - 1280x720+hls-audio-128000-Audio - audio only (Audio)\", \"format_id\": \"hls-2176+hls-audio-128000-Audio\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": null, \"format_note\": \"Audio\", \"filesize_approx\": null, \"tbr\": 2304.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.640020\", \"vbr\": 2176.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": 128, \"asr\": null, \"audio_channels\": null, \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/poster/status/1009",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[twitter] Extracting URL: https://x.com/poster/status/1009",
+    "[twitter] 1009: Downloading guest token",
+    "[twitter] 1009: Downloading GraphQL JSON",
+    "[twitter] 9001: Downloading XML",
+    "[twitter] 9001: Downloading m3u8 information",
+    "[info] Available formats for 1009:",
+    "ID                     EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC      ABR MORE INFO",
+    "------------------------------------------------------------------------------------------------------------",
+    "hls-audio-128000-Audio mp4 audio only | ~484.38KiB  128k m3u8  | audio only        unknown    128k Audio",
+    "http                   mp4 320x180    |                  https | unknown           unknown",
+    "hls-432                mp4 480x270    | ~  1.60MiB  432k m3u8  | avc1.4D401E  432k video only",
+    "http-832               mp4 640x360    | ≈  3.07MiB  832k https | unknown           unknown",
+    "hls-2176               mp4 1280x720   | ~  8.04MiB 2176k m3u8  | avc1.640020 2176k video only"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/poster/status/1010",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1yNGaQLWpejGj|Andrea May Sahouri - Twitter Broadcast|twitter:broadcast|https://twitter.com/i/broadcasts/1yNGaQLWpejGj"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/poster/status/1011",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1OwxWwQOPlNxQ|Everybody in: EV charging|twitter:spaces|https://twitter.com/i/spaces/1OwxWwQOPlNxQ"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/poster/status/1012",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitter] 1012: Error(s) while querying API: Internal failure; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/poster/status/1013",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1ZkKzPbMVggJv|Periscope stream|periscope|https://www.periscope.tv/w/1ZkKzPbMVggJv"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://twitter.com/i/broadcasts/1yNGaQLWpejGj",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"1yNGaQLWpejGj\", \"live_status\": \"was_live\", \"id\": \"1yNGaQLWpejGj\", \"concurrent_view_count\": 0, \"release_timestamp\": 1590973647, \"tags\": [\"#news\"], \"thumbnails\": [{\"url\": \"https://prod-profile.pscp.tv/b/i.jpg?token=abc\", \"id\": \"0\"}, {\"url\": \"https://prod-profile.pscp.tv/b/s.jpg?token=abc\", \"id\": \"1\"}], \"timestamp\": 1590973638, \"uploader\": \"Andrea May Sahouri\", \"uploader_id\": \"andreamsahouri\", \"view_count\": 1234, \"title\": \"Andrea May Sahouri - Twitter Broadcast\", \"uploader_url\": \"https://twitter.com/andreamsahouri\", \"formats\": [{\"format_id\": \"replay-1000\", \"format_index\": null, \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/transcode/chunklist.m3u8\", \"manifest_url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/transcode/master_dynamic_highlatency.m3u8?type=replay\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"avc1.4d001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"width\": 1280, \"height\": 720, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.periscope.tv/\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"replay-1000 - 1280x720\"}], \"webpage_url\": \"https://twitter.com/i/broadcasts/1yNGaQLWpejGj\", \"original_url\": \"https://twitter.com/i/broadcasts/1yNGaQLWpejGj\", \"webpage_url_basename\": \"1yNGaQLWpejGj\", \"webpage_url_domain\": \"twitter.com\", \"extractor\": \"twitter:broadcast\", \"extractor_key\": \"TwitterBroadcast\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://prod-profile.pscp.tv/b/s.jpg?token=abc\", \"fulltitle\": \"Andrea May Sahouri - Twitter Broadcast\", \"upload_date\": \"20200601\", \"release_date\": \"20200601\", \"release_year\": 2020, \"is_live\": false, \"was_live\": true, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"replay-1000\", \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/transcode/chunklist.m3u8\", \"manifest_url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/transcode/master_dynamic_highlatency.m3u8?type=replay\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"vcodec\": \"avc1.4d001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"width\": 1280, \"height\": 720, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.periscope.tv/\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"replay-1000 - 1280x720\", \"_filename\": \"Andrea May Sahouri - Twitter Broadcast [1yNGaQLWpejGj].mp4\", \"filename\": \"Andrea May Sahouri - Twitter Broadcast [1yNGaQLWpejGj].mp4\", \"__write_download_archive\": false}], \"format_id\": \"replay-1000\", \"format_index\": null, \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/transcode/chunklist.m3u8\", \"manifest_url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/transcode/master_dynamic_highlatency.m3u8?type=replay\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"avc1.4d001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"width\": 1280, \"height\": 720, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.periscope.tv/\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"replay-1000 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://twitter.com/i/broadcasts/1yNGaQLWpejGj",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[twitter:broadcast] Extracting URL: https://twitter.com/i/broadcasts/1yNGaQLWpejGj",
+    "[twitter:broadcast] 1yNGaQLWpejGj: Downloading guest token",
+    "[twitter:broadcast] 1yNGaQLWpejGj: Downloading legacy API JSON",
+    "[twitter:broadcast] 28_1267219166281990144: Downloading guest token",
+    "[twitter:broadcast] 28_1267219166281990144: Downloading legacy API JSON",
+    "[twitter:broadcast] 1yNGaQLWpejGj: Downloading m3u8 information",
+    "[info] Available formats for 1yNGaQLWpejGj:",
+    "ID          EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "----------------------------------------------------------------",
+    "replay-1000 mp4 1280x720   | 1000k m3u8  | avc1.4d001f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://twitter.com/i/broadcasts/1upcoming0000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitter:broadcast] 1upcoming0000: This live broadcast has not yet started"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://twitter.com/i/broadcasts/1gone00000000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitter:broadcast] 1gone00000000: Broadcast no longer exists"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/i/events/1910629646300762112",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(live_status)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1yNGaQLWpejGj|1910629646300762112|Andrea May Sahouri - Twitter Broadcast|was_live"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/i/events/2018869372748472320",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2018869372748472320\", \"title\": \"Party & prizes\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Twitter\", \"_type\": \"url\", \"url\": \"https://twitter.com/i/web/status/1001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Twitter\", \"_type\": \"url\", \"url\": \"https://twitter.com/i/web/status/1002\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://x.com/i/events/2018869372748472320\", \"original_url\": \"https://x.com/i/events/2018869372748472320\", \"webpage_url_basename\": \"2018869372748472320\", \"webpage_url_domain\": \"x.com\", \"extractor\": \"twitter:broadcast\", \"extractor_key\": \"TwitterBroadcast\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.periscope.tv/w/1ZkKzPbMVggJv",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"1ZkKzPbMVggJv\", \"live_status\": \"was_live\", \"id\": \"1ZkKzPbMVggJv\", \"title\": \"Periscope stream\", \"thumbnails\": [{\"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/p/i.jpg\", \"id\": \"0\"}], \"timestamp\": 1498621952, \"uploader\": \"Scoper\", \"uploader_id\": \"scoper\", \"formats\": [{\"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/p1/chunklist.m3u8\", \"manifest_url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/p1/master.m3u8?type=live\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"avc1.4d001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"width\": 320, \"height\": 568, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.periscope.tv/\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x568\", \"aspect_ratio\": 0.56, \"format\": \"hls-1000 - 320x568\"}], \"webpage_url\": \"https://www.periscope.tv/w/1ZkKzPbMVggJv\", \"original_url\": \"https://www.periscope.tv/w/1ZkKzPbMVggJv\", \"webpage_url_basename\": \"1ZkKzPbMVggJv\", \"webpage_url_domain\": \"periscope.tv\", \"extractor\": \"periscope\", \"extractor_key\": \"Periscope\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://prod-fastly-us-east-1.video.pscp.tv/p/i.jpg\", \"fulltitle\": \"Periscope stream\", \"upload_date\": \"20170628\", \"release_year\": null, \"is_live\": false, \"was_live\": true, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-1000\", \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/p1/chunklist.m3u8\", \"manifest_url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/p1/master.m3u8?type=live\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"vcodec\": \"avc1.4d001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"width\": 320, \"height\": 568, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.periscope.tv/\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"320x568\", \"aspect_ratio\": 0.56, \"format\": \"hls-1000 - 320x568\", \"_filename\": \"Periscope stream [1ZkKzPbMVggJv].mp4\", \"filename\": \"Periscope stream [1ZkKzPbMVggJv].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-1000\", \"format_index\": null, \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/p1/chunklist.m3u8\", \"manifest_url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/p1/master.m3u8?type=live\", \"tbr\": 1000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"avc1.4d001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"width\": 320, \"height\": 568, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.periscope.tv/\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x568\", \"aspect_ratio\": 0.56, \"format\": \"hls-1000 - 320x568\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://twitter.com/i/spaces/1OwxWwQOPlNxQ",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1OwxWwQOPlNxQ\", \"description\": \"Twitter Space participated by Elon Musk, Mary Barra\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/s1/non_transcode/audio-space/playlist_1.m3u8?type=replay\", \"ext\": \"m4a\", \"protocol\": \"m3u8\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"aac\", \"container\": \"m4a_dash\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://twitter.com/\"}, \"format\": \"0 - audio only\"}], \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://twitter.com/\"}, \"live_status\": \"was_live\", \"title\": \"Everybody in: EV charging\", \"release_timestamp\": 1686256230, \"timestamp\": 1686254250, \"uploader\": \"Mary Barra\", \"uploader_id\": \"mtbarra\", \"thumbnail\": \"https://pbs.twimg.com/profile_images/1/mb_400x400.jpg\", \"webpage_url\": \"https://twitter.com/i/spaces/1OwxWwQOPlNxQ\", \"original_url\": \"https://twitter.com/i/spaces/1OwxWwQOPlNxQ\", \"webpage_url_basename\": \"1OwxWwQOPlNxQ\", \"webpage_url_domain\": \"twitter.com\", \"extractor\": \"twitter:spaces\", \"extractor_key\": \"TwitterSpaces\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://pbs.twimg.com/profile_images/1/mb_400x400.jpg\", \"id\": \"0\"}], \"display_id\": \"1OwxWwQOPlNxQ\", \"fulltitle\": \"Everybody in: EV charging\", \"upload_date\": \"20230608\", \"release_date\": \"20230608\", \"release_year\": 2023, \"is_live\": false, \"was_live\": true, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://twitter.com/\"}, \"format_id\": \"0\", \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/s1/non_transcode/audio-space/playlist_1.m3u8?type=replay\", \"ext\": \"m4a\", \"protocol\": \"m3u8\", \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"aac\", \"container\": \"m4a_dash\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"resolution\": \"audio only\", \"format\": \"0 - audio only\", \"_filename\": \"Everybody in\\uff1a EV charging [1OwxWwQOPlNxQ].m4a\", \"filename\": \"Everybody in\\uff1a EV charging [1OwxWwQOPlNxQ].m4a\", \"__write_download_archive\": false}], \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/s1/non_transcode/audio-space/playlist_1.m3u8?type=replay\", \"ext\": \"m4a\", \"protocol\": \"m3u8\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"aac\", \"container\": \"m4a_dash\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"0 - audio only\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://twitter.com/i/spaces/1vAxRAVQWONJl",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitter:spaces] 1vAxRAVQWONJl: Twitter Space ended and replay is disabled"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/i/spaces/1DXGydznBYWKM",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1DXGydznBYWKM\", \"description\": \"Twitter Space participated by nobody yet\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/s3/transcode/playlist_v.m3u8?type=replay\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://twitter.com/\"}, \"format\": \"0 - unknown\"}], \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://twitter.com/\"}, \"live_status\": \"was_live\", \"title\": \"Video space\", \"release_timestamp\": 1723932056, \"timestamp\": 1723931351, \"uploader\": \"Host\", \"uploader_id\": \"host\", \"thumbnail\": \"https://pbs.twimg.com/profile_images/2/h_400x400.png\", \"webpage_url\": \"https://x.com/i/spaces/1DXGydznBYWKM\", \"original_url\": \"https://x.com/i/spaces/1DXGydznBYWKM\", \"webpage_url_basename\": \"1DXGydznBYWKM\", \"webpage_url_domain\": \"x.com\", \"extractor\": \"twitter:spaces\", \"extractor_key\": \"TwitterSpaces\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://pbs.twimg.com/profile_images/2/h_400x400.png\", \"id\": \"0\"}], \"display_id\": \"1DXGydznBYWKM\", \"fulltitle\": \"Video space\", \"upload_date\": \"20240817\", \"release_date\": \"20240817\", \"release_year\": 2024, \"is_live\": false, \"was_live\": true, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://twitter.com/\"}, \"format_id\": \"0\", \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/s3/transcode/playlist_v.m3u8?type=replay\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"format\": \"0 - unknown\", \"_filename\": \"Video space [1DXGydznBYWKM].mp4\", \"filename\": \"Video space [1DXGydznBYWKM].mp4\", \"__write_download_archive\": false}], \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/s3/transcode/playlist_v.m3u8?type=replay\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"0 - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://x.com/i/spaces/1NotFound0000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitter:spaces] 1NotFound0000: Twitter Space not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://t.co/AbC123",
+   "args": [
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "5001|twitter|https://x.com/poster/status/1001"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "tco:AbC123",
+   "args": [
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "5001|twitter|https://x.com/poster/status/1001"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://amp.twimg.com/v/0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951\", \"title\": \"Twitter Video\", \"formats\": [{\"format_id\": \"hls-audio-128000-Audio\", \"format_note\": \"Audio\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/mp4a/128000/a.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"language\": null, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"tbr\": 128, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-audio-128000-Audio - audio only (Audio)\"}, {\"url\": \"https://video.twimg.com/ext_tw_video/9001/pu/vid/320x180/m.mp4\", \"format_id\": \"http\", \"tbr\": null, \"width\": 320, \"height\": 180, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - 320x180\"}, {\"format_id\": \"hls-432\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/480x270/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"tbr\": 432.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"vcodec\": \"avc1.4D401E\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 432.0, \"resolution\": \"480x270\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-432 - 480x270\"}, {\"url\": \"https://video.twimg.com/ext_tw_video/9001/pu/vid/640x360/v.mp4\", \"format_id\": \"http-832\", \"tbr\": 832, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-832 - 1280x720\"}, {\"format_id\": \"hls-2176\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/1280x720/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"tbr\": 2176.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2176.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2176 - 1280x720\"}], \"thumbnails\": [{\"url\": \"https://pbs.twimg.com/amplify_img/a.jpg\", \"width\": 640, \"height\": 360, \"id\": \"0\", \"resolution\": \"640x360\"}], \"webpage_url\": \"https://amp.twimg.com/v/0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951\", \"original_url\": \"https://amp.twimg.com/v/0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951\", \"webpage_url_basename\": \"0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951\", \"webpage_url_domain\": \"amp.twimg.com\", \"extractor\": \"twitter:amplify\", \"extractor_key\": \"TwitterAmplify\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://pbs.twimg.com/amplify_img/a.jpg\", \"display_id\": \"0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951\", \"fulltitle\": \"Twitter Video\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"requested_formats\": [{\"format_id\": \"hls-2176\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/1280x720/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"tbr\": 2176.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2176.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2176 - 1280x720\"}, {\"format_id\": \"hls-audio-128000-Audio\", \"format_note\": \"Audio\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/mp4a/128000/a.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"language\": null, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"tbr\": 128, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-audio-128000-Audio - audio only (Audio)\"}], \"format\": \"hls-2176 - 1280x720+hls-audio-128000-Audio - audio only (Audio)\", \"format_id\": \"hls-2176+hls-audio-128000-Audio\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"format_note\": \"Audio\", \"tbr\": 2304.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.640020\", \"vbr\": 2176.0, \"aspect_ratio\": 1.78, \"abr\": 128, \"_filename\": \"Twitter Video [0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951].mp4\", \"filename\": \"Twitter Video [0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951].mp4\", \"__write_download_archive\": false}], \"requested_formats\": [{\"format_id\": \"hls-2176\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/avc1/1280x720/v.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"tbr\": 2176.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640020\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2176.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2176 - 1280x720\"}, {\"format_id\": \"hls-audio-128000-Audio\", \"format_note\": \"Audio\", \"format_index\": null, \"url\": \"https://video.twimg.com/ext_tw_video/a/pl/mp4a/128000/a.m3u8\", \"manifest_url\": \"https://video.twimg.com/ext_tw_video/9001/pu/pl/v.m3u8\", \"language\": null, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"tbr\": 128, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-audio-128000-Audio - audio only (Audio)\"}], \"format\": \"hls-2176 - 1280x720+hls-audio-128000-Audio - audio only (Audio)\", \"format_id\": \"hls-2176+hls-audio-128000-Audio\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": null, \"format_note\": \"Audio\", \"filesize_approx\": null, \"tbr\": 2304.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.640020\", \"vbr\": 2176.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": 128, \"asr\": null, \"audio_channels\": null, \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

@@ -728,24 +728,56 @@ query parameters).
 
 X/Twitter posts (`twitter.com`, `x.com`, `mobile.`/`m.`/`www.` and the onion
 host: `NAME/status/ID`, `i/web/status/ID`, `statuses/ID`, optionally
-`/video/N`) follow upstream `TwitterIE` with its default GraphQL API: a guest
+`/video/N`) follow upstream `TwitterIE`. The API is selected like upstream's
+`--extractor-args twitter:api=graphql|legacy|syndication` (other values are
+upstream's `'VALUE' is not a valid API selection` error; other `twitter:`
+arguments are ignored with a warning): the default GraphQL API uses a guest
 token (`guest/activate.json`, unless an `auth_token` cookie is present, with
 `ct0` as the CSRF token), then `TweetResultByRestId` and `_graphql_to_legacy`
 (tombstones, unavailable/protected/NSFW reasons, visibility results,
-retweets, quoted posts and card bindings). Each video's HLS variants (an
-audio rendition's `tbr` from its `hls-audio-BITRATE` ID) and MP4 variants
-(`http-KBPS` with dimensions from the URL), size-named thumbnails, duration
-and upstream's `_format_sort_fields` are combined with the post's title
-(`UPLOADER - TEXT`, links removed, 72 characters), description, timestamp,
-counts, age limit and hashtags. Several videos form a playlist with `#N`
-titles; `/video/N` selects one only with `--no-playlist`, as upstream's
-`_yes_playlist`. Unified cards' videos are extracted and player/summary cards
-and a post's only link are followed through the extractor registry;
-broadcast, Spaces, Periscope and VMAP (amplify) cards, the legacy and
-syndication APIs (and the rate-limit fallback to syndication) are not
-supported. `twitter:card` (`i/cards/tfw/v1/ID`, `i/videos[/tweet]/ID`) is
-followed to `statuses/ID`. `tests/fixtures/sites/twitter/` is compared with
-pinned upstream output.
+retweets, quoted posts and card bindings); `legacy` calls
+`statuses/show/ID.json` with the legacy bearer token; `syndication` (and the
+fallback after an HTTP 429 from the selected API, with upstream's warnings)
+reads `cdn.syndication.twimg.com/tweet-result` with upstream's
+`_generate_syndication_token` (a port of `js_number_to_string`) and its media
+IDs from `_video/ID/` variant URLs. API `errors` are reported like upstream
+(`Error(s) while querying API` with the bug report request). Each video's HLS
+variants (an audio rendition's `tbr` from its `hls-audio-BITRATE` ID) and MP4
+variants (`http-KBPS` with dimensions from the URL), size-named thumbnails,
+duration and upstream's `_format_sort_fields` are combined with the post's
+title (`UPLOADER - TEXT`, links removed, 72 characters), description,
+timestamp, counts, age limit and hashtags. Several videos form a playlist with
+`#N` titles; `/video/N` selects one only with `--no-playlist`, as upstream's
+`_yes_playlist`. Unified cards' videos are extracted; VMAP cards (amplify,
+`promo_video_*` and other player-stream cards) read the VMAP's
+`videoVariant`s and `MediaFile`, duration and non-placeholder thumbnails;
+player/summary cards, broadcast, audiospace and Periscope cards and a post's
+only link are followed through the extractor registry. A post mixing videos
+and linked cards is an unsupported-behavior error.
+
+`twitter:card` (`i/cards/tfw/v1/ID`, `i/videos[/tweet]/ID`) is followed to
+`statuses/ID`; `twitter:shortener` (`t.co/CODE` and `tco:CODE`) requests the
+link as `curl` and follows its final URL (an unsafe-link warning page's target
+unwrapped). `twitter:amplify` (`amp.twimg.com/v/UUID`) reads the page's
+`twitter:amplify:vmap` meta, the VMAP formats (the first one taking the
+`twitter:player` dimensions) and the `twitter:image` thumbnail.
+`twitter:broadcast` (`i/broadcasts/ID`, `i/events/ID`) reads
+`broadcasts/show.json` (or a live event's `timeline.json`: its tweets as a
+playlist of `twitter` URLs, otherwise its broadcast), upstream's
+`_parse_broadcast_data` metadata, upcoming/removed/geo-blocked errors and
+`live_video_stream/status/KEY`'s HLS formats with the Periscope `Referer`
+(`m3u8_native` for ended broadcasts, FFmpeg's `m3u8` otherwise).
+`twitter:spaces` (`i/spaces/ID`) reads the `AudioSpaceById` GraphQL query:
+upstream's states, not-started/replay-disabled/not-found errors, the stream's
+HLS formats (audio Spaces as `m4a` with the `m3u8` protocol, `aac` and
+`m4a_dash`), participants, timestamps and the host's 400x400 avatar, with the
+`twitter.com` `Referer`. `periscope` (`periscope.tv`/`pscp.tv` broadcasts)
+reads `accessVideoPublic` and its HLS URLs; its RTMP URLs, `periscope:user`
+and Periscope embeds are not supported. Live Spaces and broadcasts are only
+covered as far as their metadata; downloading the `m3u8` (FFmpeg) protocol
+follows this port's HLS downloader selection rather than upstream's forced
+FFmpeg. `tests/fixtures/sites/twitter/` is compared with pinned upstream
+output.
 
 Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel and
 `user` clip URLs) follow upstream `VimeoIE` as it runs without login or

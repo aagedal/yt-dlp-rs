@@ -66,6 +66,7 @@ mod nobelprize;
 mod odnoklassniki;
 mod oneplace;
 mod parlview;
+mod periscope;
 mod photobucket;
 mod pinterest;
 mod playerfm;
@@ -174,6 +175,7 @@ pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
+pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
 pub use pinterest::{Pinterest, suitable as pinterest_suitable};
 pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
@@ -212,7 +214,10 @@ pub use twitch::{
     vod_suitable as twitch_vod_suitable,
 };
 pub use twitter::{
-    Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
+    Twitter, TwitterAmplify, TwitterBroadcast, TwitterCard, TwitterShortener, TwitterSpaces,
+    amplify_suitable as twitter_amplify_suitable, broadcast_suitable as twitter_broadcast_suitable,
+    card_suitable as twitter_card_suitable, shortener_suitable as twitter_shortener_suitable,
+    spaces_suitable as twitter_spaces_suitable, suitable as twitter_suitable,
 };
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{Vk, suitable as vk_suitable};
@@ -278,7 +283,7 @@ pub(crate) fn request_error_text(
 
 /// Upstream `_report_ignoring_subs(NAME)` for `_extract_m3u8_formats` and
 /// `_extract_mpd_formats`, which drop a manifest's subtitles.
-fn ignore_subtitles(info: &mut crate::VideoInfo, extractor: &str, name: &str) {
+pub(crate) fn ignore_subtitles(info: &mut crate::VideoInfo, extractor: &str, name: &str) {
     if !info.subtitles.is_empty() {
         crate::screen::warning_once(&format!(
             "[{extractor}] Ignoring subtitle tracks found in the {name} manifest; if any subtitle tracks are missing, {}",
@@ -911,6 +916,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("tco:") && twitter::shortener_suitable(url))
         || youtube::redirect::user_suitable(url)
 }
 

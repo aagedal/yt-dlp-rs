@@ -105,7 +105,9 @@ Supported today:
   Fathom shares, Maariv players (and their embeds), Harpodeon films,
   Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
   posts (hosted videos, text-post videos and followed links), X/Twitter posts
-  (GraphQL with a guest token; videos, multi-video playlists, cards), TikTok
+  (GraphQL, legacy or syndication APIs; videos, multi-video playlists, cards
+  including VMAP), X broadcasts and live events, Spaces, `t.co` links,
+  Amplify videos and Periscope broadcasts, TikTok
   videos (webpage data, the page's JS challenge, short links), Instagram
   posts and reels (logged out; carousels as playlists), Facebook videos
   (relay data with DASH, progressive URLs and captions), Vimeo player and
