@@ -625,6 +625,19 @@ CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
 
+peer.tv videos (`peer.tv/de|it|en/ID`) follow upstream `PeerTVIE`: the page's
+`player.peer.tv/js/KEY` script (fetched with the `www.peer.tv` Referer) gives
+the session ID, the player page's `playlist_url` the fatal `hls` formats
+without a forced extension, with the cleaned `<h1>` title (no-break spaces
+replaced) and `og:description`/`description` and `og:image`/`image` meta
+values, each warning when absent.
+
+webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
+`WebcameraplIE`: the ROT13-decoded `data-src` manifest (else the expected
+`No video/audio found` error) as live HLS formats and subtitles with live
+variant IDs, the cleaned `<h1>` title and `is_live`. A live media-only
+playlist without `#EXT-X-ENDLIST` remains an explicit native error.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,

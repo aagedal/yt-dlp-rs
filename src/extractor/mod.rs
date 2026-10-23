@@ -66,6 +66,7 @@ mod nobelprize;
 mod odnoklassniki;
 mod oneplace;
 mod parlview;
+mod peertv;
 mod periscope;
 mod photobucket;
 mod pinterest;
@@ -100,6 +101,7 @@ mod vimeo;
 mod vk;
 mod vkplay;
 mod vocaroo;
+mod webcamerapl;
 mod weibo;
 mod xiaohongshu;
 mod xspf;
@@ -188,6 +190,7 @@ pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
+pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
 pub use pinterest::{Pinterest, suitable as pinterest_suitable};
@@ -256,6 +259,7 @@ pub use vkplay::{
     VkPlay, VkPlayLive, live_suitable as vkplay_live_suitable, suitable as vkplay_suitable,
 };
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
+pub use webcamerapl::{Webcamerapl, suitable as webcamerapl_suitable};
 pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
@@ -341,6 +345,49 @@ pub(crate) fn extract_m3u8_fatal(
     m3u8_id: Option<&str>,
     keep_subtitles: bool,
 ) -> crate::Result<crate::VideoInfo> {
+    extract_m3u8_fatal_with(
+        client,
+        manifest,
+        extractor,
+        id,
+        m3u8_id,
+        keep_subtitles,
+        false,
+    )
+}
+
+/// [`extract_m3u8_fatal`] with `live=True`: a master's variants are not
+/// fetched and keep only the `m3u8_id` (numbered when processed).
+pub(crate) fn extract_m3u8_fatal_live(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+    keep_subtitles: bool,
+) -> crate::Result<crate::VideoInfo> {
+    let mut info = extract_m3u8_fatal_with(
+        client,
+        manifest,
+        extractor,
+        id,
+        m3u8_id,
+        keep_subtitles,
+        true,
+    )?;
+    hls::live_format_ids(&mut info.formats, m3u8_id);
+    Ok(info)
+}
+
+fn extract_m3u8_fatal_with(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+    keep_subtitles: bool,
+    master_only: bool,
+) -> crate::Result<crate::VideoInfo> {
     let note = format!("[{extractor}] {id}: Downloading m3u8 information");
     crate::screen::expect_page(id, Some(note.clone()), None);
     let response = direct::request(client, manifest, None);
@@ -358,7 +405,9 @@ pub(crate) fn extract_m3u8_fatal(
             ),
             error => error,
         })
-        .and_then(|response| hls::from_response(client, response, manifest, None, true, m3u8_id));
+        .and_then(|response| {
+            hls::from_response_with(client, response, manifest, None, true, m3u8_id, master_only)
+        });
     crate::screen::clear_page();
     let mut info = parsed?.ok_or_else(|| {
         crate::Error::UnsupportedHtml5(format!("the {extractor} stream is not an HLS playlist"))

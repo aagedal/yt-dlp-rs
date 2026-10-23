@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://www.peer.tv/de/841",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.peer.tv/it/404",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.peer.tv/en/7",
+  "args": [
+   "-j"
+  ]
+ }
+]

@@ -1,0 +1,33 @@
+[
+ {
+  "url": "https://warszawa-plac-zamkowy.webcamera.pl",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://warszawa-plac-zamkowy.webcamera.pl/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://empty.webcamera.pl/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://notitle.webcamera.pl/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://gone.webcamera.pl/",
+  "args": [
+   "-j"
+  ]
+ }
+]

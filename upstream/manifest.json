@@ -897,6 +897,18 @@
       "scope": "ParlviewIE API file as fatal HLS formats and subtitles, metadata traversal (title fallback, duration, ISO 8601 timestamp, thumbnail) and KeyError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "peertv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/peertv.py"
+      ],
+      "rust": [
+        "src/extractor/peertv.rs",
+        "tests/fixtures/sites/peertv/"
+      ],
+      "scope": "PeerTVIE player key, session ID and player-page HLS playlist (formats without a forced ext), heading title and meta description/thumbnail compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "photobucket",
       "status": "partial",
       "upstream": [
@@ -1270,6 +1282,18 @@
         "tests/fixtures/sites/vocaroo/"
       ],
       "scope": "VocarooIE media URL HEAD request, upload timestamp header, Referer headers and empty title compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "webcamerapl",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/webcamerapl.py"
+      ],
+      "rust": [
+        "src/extractor/webcamerapl.rs",
+        "tests/fixtures/sites/webcamerapl/"
+      ],
+      "scope": "WebcameraplIE ROT13 data-src live HLS master (live variant IDs), heading title and expected no-formats error compared with pinned upstream output through the fixture proxy; live media-only playlists without ENDLIST remain unsupported natively"
     },
     {
       "name": "weibo",

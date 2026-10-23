@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "https://warszawa-plac-zamkowy.webcamera.pl/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://hoktastream1.webcamera.pl/warszawa_cam_11b8c3/warszawa_cam_11b8c3.stream/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://empty.webcamera.pl/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nosrc.html"
+  },
+  {
+   "url": "https://notitle.webcamera.pl/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "notitle.html"
+  },
+  {
+   "url": "https://cam.example.com/x/chunks.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://gone.webcamera.pl/",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "gone"
+  }
+ ]
+}

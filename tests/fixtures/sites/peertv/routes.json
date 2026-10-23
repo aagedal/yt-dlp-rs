@@ -1,0 +1,87 @@
+{
+ "routes": [
+  {
+   "url": "https://www.peer.tv/de/841",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://player.peer.tv/js/AbC123xyz/",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body_file": "session.js",
+   "request_headers": {
+    "Referer": "https://www.peer.tv/"
+   }
+  },
+  {
+   "url": "https://player.peer.tv/jsc/AbC123xyz/Sess42?jsr=aHR0cHM6Ly93d3cucGVlci50di9kZS84NDE=&cs=UTF-8&mq=2&ua=0&webm=p&mp4=p&hls=1",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body_file": "player.html"
+  },
+  {
+   "url": "https://cdn.peer.tv/vod/841/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.peer.tv/it/404",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  },
+  {
+   "url": "https://player.peer.tv/js/Key2/",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body_file": "session.js",
+   "request_headers": {
+    "Referer": "https://www.peer.tv/"
+   }
+  },
+  {
+   "url": "https://player.peer.tv/jsc/Key2/Sess42?jsr=aHR0cHM6Ly93d3cucGVlci50di9kZS84NDE=&cs=UTF-8&mq=2&ua=0&webm=p&mp4=p&hls=1",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body_file": "player2.html"
+  },
+  {
+   "url": "https://cdn.peer.tv/vod/404/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://www.peer.tv/en/7",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page3.html"
+  },
+  {
+   "url": "https://cdn.peer.tv/vod/841/low.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://cdn.peer.tv/vod/841/high.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  }
+ ]
+}
