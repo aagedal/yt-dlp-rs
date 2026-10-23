@@ -371,8 +371,10 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Instagram",
     "Jove",
     "JWPlatform",
+    "kick:clip",
     "kick:clips",
     "kick:live",
+    "kick:videos",
     "kick:vod",
     "Kommunetv",
     "Ku6",
@@ -628,6 +630,8 @@ impl YoutubeDl {
                 Box::new(extractor::Rumble),
                 Box::new(extractor::KickVod),
                 Box::new(extractor::KickClip),
+                Box::new(extractor::KickVideos),
+                Box::new(extractor::KickClips),
                 Box::new(extractor::KickLive),
                 Box::new(extractor::Bluesky),
                 Box::new(extractor::Mixcloud),
@@ -2436,15 +2440,30 @@ impl YoutubeDl {
                     "url_transparent playlists are not supported natively".into(),
                 ));
             };
-            let inner_shape = match info.extra.get(info_order::INFO_SHAPE) {
+            let mut inner_shape = match info.extra.get(info_order::INFO_SHAPE) {
                 Some(serde_json::Value::String(shape)) => shape.clone(),
                 _ => String::new(),
             };
+            // An overlaid `title` precedes `_fill_common_fields`: no generic
+            // title for an untitled inner extraction.
+            if fields.iter().any(|(key, _)| key == "title")
+                && info.extra.shift_remove(info::TITLE_MISSING).is_some()
+            {
+                inner_shape = inner_shape.replacen("-untitled;", ";", 1);
+            }
             for (key, value) in &fields {
                 match key.as_str() {
                     "title" => info.title = value.as_str().unwrap_or_default().to_owned(),
                     _ => metadata_parser::set_field(info, key, value.clone()),
                 }
+            }
+            // `process_video_result`: `live_status` from an overlaid `is_live`.
+            if info.metadata.live_status.is_none()
+                && fields
+                    .iter()
+                    .any(|(key, value)| key == "is_live" && *value == serde_json::Value::Bool(true))
+            {
+                info.metadata.live_status = Some("is_live".into());
             }
             // Upstream extracts (and names) the smuggled URL.
             if !plain_url {

@@ -1032,6 +1032,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "generic-found-dash-entry"
             | "xspf-entry"
     ) || (shape.starts_with("dict;")
+        && !transparent_entry
         && map.get("n_entries").is_some_and(|n| !n.is_null()));
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape.as_str() {
@@ -2048,9 +2049,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             }
         }
         // The extractor's thumbnail keys, then `_sanitize_thumbnails`' `id`
-        // and `resolution`.
+        // and `resolution` (also for thumbnails a `url_transparent` entry
+        // overlays later).
         if let Some(thumbnail_keys) = thumbnail_keys
-            && let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails")
+            && let Some(Value::Array(thumbnails)) = match replay.out.get_mut("thumbnails") {
+                Some(thumbnails) => Some(thumbnails),
+                None => replay.ours.get_mut("thumbnails"),
+            }
         {
             for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
                 let mut ordered = Map::new();

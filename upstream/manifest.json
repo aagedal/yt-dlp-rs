@@ -700,7 +700,7 @@
         "src/extractor/kick.rs",
         "tests/fixtures/sites/kick/"
       ],
-      "scope": "KickVODIE, KickClipIE and KickIE API metadata with HLS (live IDs as upstream's live=True) or direct formats; compared with pinned upstream output through the fixture proxy"
+      "scope": "Reworked kick.py (fe84bef3969de96ceb39ca988425fdd3895bbfb1, release 2026.10.21): KickIE (v2 channel API, plain HLS IDs), KickVODIE (web.kick.com playback POST, channel video list metadata, smuggled availability, subscription check), KickClipIE (v2 clip API with 404 messages, HLS or direct sources), KickVideosIE (url_transparent VOD entries, date/views sort) and KickClipsIE (cursor-paginated clip entries, sort/range); compared with upstream output through the fixture proxy. Impersonation is unavailable (upstream's warning only)"
     },
     {
       "name": "kommunetv",
