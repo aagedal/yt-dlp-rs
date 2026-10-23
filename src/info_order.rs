@@ -10,6 +10,10 @@ use serde_json::{Map, Value};
 
 /// The upstream code path of an info dict (see [`video`]).
 pub(crate) const INFO_SHAPE: &str = "__yt_dlp_rs_info_shape";
+
+/// A playlist shape suffix: its entries came from a generator, whose
+/// `playlist_count` is only known once a selection exhausts it.
+pub(crate) const GENERATOR: &str = "|generator";
 /// The upstream code path of a format dict (see [`format`]).
 pub(crate) const FORMAT_SHAPE: &str = "__yt_dlp_rs_format_shape";
 /// A per-section info dict (`process_video_result`'s section update):
@@ -2149,7 +2153,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         if transparent_entry {
             // The playlist entry's extra info.
             for (key, how) in [
-                ("playlist_count", Take),
+                ("playlist_count", Assign),
                 ("playlist", Assign),
                 ("playlist_id", Assign),
                 ("playlist_title", Assign),
@@ -2402,6 +2406,15 @@ fn youtube_tab_playlist(
     {
         map.shift_remove("title");
     }
+    // Nor one without an ID an `id` key (an `id: None` extra marks it).
+    if !keys
+        .split(',')
+        .chain(after.split(','))
+        .any(|key| key == "id")
+        && map.get("id").is_some_and(Value::is_null)
+    {
+        map.shift_remove("id");
+    }
     let mut replay = Replay::new(map);
     for key in keys.split(',').filter(|key| !key.is_empty()) {
         replay.set(key, Assign);
@@ -2452,6 +2465,8 @@ pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some(Value::String(shape)) = map.shift_remove(INFO_SHAPE) else {
         return map;
     };
+    // A generator's entries (see [`GENERATOR`]) do not change the order.
+    let shape = shape.strip_suffix(GENERATOR).unwrap_or(&shape).to_owned();
     if let Some(keys) = shape.strip_prefix("youtube-tab;") {
         return youtube_tab_playlist(map, keys, true);
     }

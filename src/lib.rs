@@ -314,6 +314,9 @@ pub(crate) const TRANSPARENT: &str = "__yt_dlp_rs_url_transparent";
 /// A `url` result an extractor returns for the downloader to follow with
 /// every registered extractor (a configured one, like YouTube's).
 pub(crate) const FOLLOW_URL: &str = "__yt_dlp_rs_follow_url";
+
+/// A playlist entry's processing error, reported with that entry.
+pub(crate) const ENTRY_ERROR: &str = "__yt_dlp_rs_entry_error";
 /// An extractor's top-level `url_transparent` result: `{url, fields}`, the
 /// target extracted through the registry and updated with the non-`None`
 /// fields (`process_ie_result`).
@@ -369,6 +372,10 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "imgur:album",
     "imgur:gallery",
     "Instagram",
+    "InstagramIOS",
+    "instagram:story",
+    "instagram:tag",
+    "instagram:user",
     "Jove",
     "JWPlatform",
     "kick:clip",
@@ -553,6 +560,7 @@ impl YoutubeDl {
         let cookies = http.cookies.unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        extractor::GET_COMMENTS.store(youtube.get_comments, std::sync::atomic::Ordering::Relaxed);
         extractor::youtube::live_chat::SKIP_DOWNLOAD
             .store(youtube.skip_download, std::sync::atomic::Ordering::Relaxed);
         if let Ok(mut agent) = extractor::USER_AGENT.write() {
@@ -625,6 +633,10 @@ impl YoutubeDl {
                 Box::new(extractor::TikTok),
                 Box::new(extractor::TikTokVm),
                 Box::new(extractor::Instagram),
+                Box::new(extractor::InstagramIos),
+                Box::new(extractor::InstagramStory),
+                Box::new(extractor::InstagramTag),
+                Box::new(extractor::InstagramUser),
                 Box::new(extractor::Facebook),
                 Box::new(extractor::FacebookReel),
                 Box::new(extractor::FacebookPluginsVideo),
@@ -1346,7 +1358,8 @@ impl YoutubeDl {
     /// Upstream `post_extract`: what the extractor left for after the match
     /// filters (YouTube's comments with `getcomments`).
     pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
-        extractor::youtube_comments(&self.client, info)
+        extractor::youtube_comments(&self.client, info)?;
+        extractor::instagram_comments(&self.client, info)
     }
 
     /// Upstream `DashSegmentsFD` over `http_dash_segments_generator`
@@ -1747,10 +1760,17 @@ impl YoutubeDl {
             // `process_video_result`: `raise_no_formats` for a result
             // without formats.
             if entry.extra.shift_remove(info::NO_FORMATS).is_some() {
-                return Err(Error::Reported(format!(
+                let message = format!(
                     "[{}] {}: No video formats found!; {}",
                     entry.extractor, entry.id, BUG_REPORTS_MESSAGE
-                )));
+                );
+                // A playlist entry's error is reported when the entry is
+                // processed; the other entries continue.
+                if playlist {
+                    entry.extra.insert(ENTRY_ERROR.into(), message.into());
+                    continue;
+                }
+                return Err(Error::Reported(message));
             }
             // `process_video_result`: `display_id` defaults to the ID.
             // (a `None` value too, in its place).
@@ -2427,6 +2447,15 @@ impl YoutubeDl {
         Err(Error::Reported(format!(
             "[generic] {quoted}: search extractors ({search}) are not supported natively"
         )))
+    }
+
+    /// The extraction error of a playlist entry whose processing failed
+    /// (upstream reports it for that entry and continues with the others).
+    pub fn entry_error(entry: &VideoInfo) -> Option<&str> {
+        entry
+            .extra
+            .get(ENTRY_ERROR)
+            .and_then(serde_json::Value::as_str)
     }
 
     /// Whether `entry` is an unresolved `url_transparent` entry.

@@ -155,7 +155,13 @@ pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
     gallery_suitable as imgur_gallery_suitable, suitable as imgur_suitable,
 };
-pub use instagram::{Instagram, suitable as instagram_suitable};
+pub(crate) use instagram::post_extract as instagram_comments;
+pub use instagram::{
+    Instagram, InstagramIos, InstagramStory, InstagramTag, InstagramUser,
+    ios_suitable as instagram_ios_suitable, story_suitable as instagram_story_suitable,
+    suitable as instagram_suitable, tag_suitable as instagram_tag_suitable,
+    user_suitable as instagram_user_suitable,
+};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kick::{
@@ -1043,6 +1049,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || instagram::ios_suitable(url)
         || youtube::redirect::user_suitable(url)
 }
 
@@ -1156,6 +1163,15 @@ pub(crate) static NO_PLAYLIST: std::sync::atomic::AtomicBool =
 /// `self.get_param('noplaylist')`.
 pub(crate) fn no_playlist() -> bool {
     NO_PLAYLIST.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// Upstream `getcomments` (`--write-comments`), for `extract_comments`.
+pub(crate) static GET_COMMENTS: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// `self.get_param('getcomments')`.
+pub(crate) fn get_comments() -> bool {
+    GET_COMMENTS.load(std::sync::atomic::Ordering::Relaxed)
 }
 
 /// Upstream `writesubtitles or listsubtitles` (`InfoExtractor.extract_subtitles`).
