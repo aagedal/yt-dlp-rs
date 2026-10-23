@@ -2066,7 +2066,7 @@ See [source and fixture provenance](../upstream/notes/youtube-adaptive-merge.md)
 Direct HLS playlist URLs and HTML5 HLS sources support a finite VOD
 subset, including identity AES-128 encryption. Recognize MPEGURL MIME types, final `.m3u8` URL paths, and explicit HTML5
 HLS type hints. A conflicting media MIME must not cause a manifest to be saved as
-one media file. Read at most 2 MiB of uncompressed UTF-8/ASCII manifest text;
+one media file. Read at most 32 MiB of uncompressed UTF-8/ASCII manifest text;
 ambiguous encoding/content-type headers fail. URLs resolve against each final
 redirected manifest URL. HTML5 page referrers propagate to manifests and segments.
 
@@ -2081,7 +2081,8 @@ that name another common extension get an `f` prefix. Variants keep positive
 declared bandwidth in kbps, optional resolution and codec-derived stream kinds. Existing standalone selection retains resolution/declaration-order
 ranking, not upstream's full bandwidth/codec sorter. Every variant manifest is
 read before selection; segment bodies are not probed. One master level, at most
-256 variants and 10000 retained fragments across a master are supported.
+256 variants and 1000000 retained fragments across a master (500000 per
+media playlist, enough for multi-day Twitch VODs) are supported.
 
 Media playlists require `EXT-X-ENDLIST`, nonempty positive-duration segments and
 HTTP(S) URLs. A nonzero media sequence is permitted for a completed VOD. Without
@@ -2229,7 +2230,7 @@ like upstream, a variant without CODECS (or with audio-only CODECS) is kept as a
 complete (or audio-only) format, and an unknown AUDIO group is ignored. Inband
 groups retain the existing standalone behavior. Both variant and rendition
 declarations count toward the combined limit of 256; every child playlist is
-read with the existing aggregate 10000-fragment cap. JSON/simulation fetch neither
+read with the existing aggregate 1000000-fragment cap. JSON/simulation fetch neither
 segments nor encryption keys. Like upstream (`ext='mp4'`), every HLS format is
 labeled `mp4`, including audio renditions and raw-AAC or TS segments.
 
@@ -3203,6 +3204,19 @@ General HTTP redirects use reqwest's existing ten-redirect policy: ordinary cust
 headers persist; Authorization is removed on a change of host/port. This is a
 native tested policy, not a claim of full upstream redirect/header parity.
 Credentials placed in arbitrary custom header names follow that ordinary policy.
+
+HTTP/1.1 requests send title-cased header names (`User-Agent`, `Accept`), as
+upstream's `http.client` does; some Cloudflare-fronted sites (kick.com) reject
+lowercase names with 403. Site extractor responses (pages, JSON APIs) are read
+like upstream's urllib handler and `_webpage_read_content`: `gzip`/`deflate`
+`Content-Encoding` is decoded even though `Accept-Encoding: identity` is sent
+(Imgur's API compresses regardless), and the text encoding comes from the
+Content-Type charset, then a `<meta charset>` in the first 1024 bytes, then a
+UTF-16LE BOM, defaulting to UTF-8 (`_guess_encoding_from_content`; VK
+serves windows-1251). Unknown charset labels decode as lossy UTF-8, and
+`latin-1` uses WHATWG windows-1252 (differing only in C1 controls). JSON with
+unpaired `\uD800`–`\uDFFF` escapes, which Python's `json` accepts, parses
+with U+FFFD in their place.
 
 Construct `YoutubeDl::with_options(youtube_options, HttpOptions { headers,
 user_agent, referer })` for library use. Existing constructors retain defaults.
