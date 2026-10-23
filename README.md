@@ -123,12 +123,13 @@ Supported today:
   bundled pinned EJS release. Without one, only `visionos` is used, with
   upstream's warning. HTTPS, HLS and DASH formats follow upstream's
   `_extract_formats_and_subtitles`: PO-token policies skip token-requiring
-  formats, since no token providers exist; HTTPS formats download in 10 MiB
+  formats unless a `po_token` is configured; HTTPS formats download in 10 MiB
   ranges like upstream (avoiding throttling), and pre-roll ads delay downloads
   as upstream's `available_at` does. Age-restricted videos use the
   `web_embedded` fallback; account cookies (`--cookies`, `--cookies-from-browser`)
   switch to upstream's authenticated clients and SAPISIDHASH headers. Live
-  streams download through FFmpeg (Ctrl+C finishes the recording); upcoming
+  streams download through FFmpeg (Ctrl+C finishes the recording), or from the
+  start with `--live-from-start` through the native DASH generator; upcoming
   ones report their start. Playlists (`/playlist?list=`, `watch?v=…&list=`,
   mixes), channel tabs (`/@NAME/videos`, `/shorts`, ...), hashtag and feed pages
   are extracted like upstream's `youtube:tab`, with continuation pages fetched as
@@ -136,9 +137,13 @@ Supported today:
   tab playlists, as upstream. `ytsearch[N|all]:QUERY` and `/results?search_query=`
   searches work like upstream's `youtube:search`, and `/clip/` URLs download
   their section like upstream's `youtube:clip`. `--write-comments`
-  extracts comments and replies like upstream. PO token
-  providers and upstream's remaining metadata fields are not
-  supported yet.
+  extracts comments and replies like upstream. Live chat, MHTML storyboards,
+  post-live videos, `--live-from-start`, multifeed videos, `--mark-watched`,
+  the `youtube`/`youtubetab` `--extractor-args` (including a configured
+  `po_token`), YouTube Music search, notifications and upstream's other
+  YouTube URL forms and redirect extractors are ported too. PO token provider
+  plugins are Python-only upstream and are not supported; pass `po_token`
+  instead.
 - Separate streams support `-f bestvideo+bestaudio` or literal pairs such as
   `-f 137+140`, with `/` fallbacks such as `bestvideo+bestaudio/best`.
   `--ffmpeg-location PATH` configures an explicit FFmpeg executable for local
