@@ -13,11 +13,16 @@ const NAME: &str = "youtube:clip";
 static VALID_URL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"^https?://(?:www\.)?youtube\.com/clip/(?P<id>[^/?#]+)").unwrap());
 
+/// `YoutubeClipIE.suitable`.
+pub(crate) fn suitable(url: &str) -> bool {
+    VALID_URL.is_match(url)
+}
+
 pub struct YoutubeClip;
 
 impl super::super::Extractor for YoutubeClip {
     fn key(&self) -> &'static str {
-        "YoutubeClip"
+        "youtube:clip"
     }
 
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<crate::VideoInfo>> {

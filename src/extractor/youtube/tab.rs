@@ -16,13 +16,14 @@ pub(crate) const KEY: &str = "YoutubeTab";
 
 const RESERVED_NAMES: &str = "channel|c|user|playlist|watch|w|v|embed|e|live|watch_popup|clip|shorts|movies|results|search|shared|hashtag|trending|explore|feed|feeds|browse|oembed|get_video_info|iframe_api|s/player|source|storefront|oops|index|account|t/terms|about|upload|signin|logout";
 
-/// `_VALID_URL` (without the Invidious hosts) and `_URL_RE`'s tail.
+/// `_VALID_URL` and `_URL_RE`'s tail.
 static URL_RE: LazyLock<Regex> = LazyLock::new(|| {
-    // The direct-URL alternative's `(?!reserved\b)` look-ahead is checked
-    // separately: the `regex` crate has no look-around.
-    Regex::new(
-        r"^(?P<pre>https?://(?:\w+\.)?youtube(?:kids)?\.com/(?:(?P<channel_type>channel|c|user|browse)/|(?P<not_channel>feed/|hashtag/|(?:playlist|watch)\?.*?\blist=)|)(?P<id>[^/?#&]+))(?P<rest>.*)$",
-    )
+    // The `(?!consent\.)` and direct-URL `(?!reserved\b)` look-aheads are
+    // checked separately: the `regex` crate has no look-around.
+    Regex::new(&format!(
+        r"^(?P<pre>(?P<scheme>https?://)(?:\w+\.)?(?:youtube(?:kids)?\.com|{})/(?:(?P<channel_type>channel|c|user|browse)/|(?P<not_channel>feed/|hashtag/|(?:playlist|watch)\?.*?\blist=)|)(?P<id>[^/?#&]+))(?P<rest>.*)$",
+        super::urls::invidious()
+    ))
     .unwrap()
 });
 static RESERVED: LazyLock<Regex> =
@@ -40,15 +41,18 @@ struct UrlParts {
 /// `_get_url_mobj`: `pre`, the channel `tab` and the `post` remainder.
 fn url_parts(url: &str) -> Option<UrlParts> {
     let found = URL_RE.captures(url)?;
+    if url[found["scheme"].len()..].starts_with("consent.") {
+        return None;
+    }
     let not_channel = found.name("not_channel").map_or("", |value| value.as_str());
     let channel_type = found.name("channel_type").map(|value| value.as_str());
     let id = &found["id"];
-    if channel_type.is_none() && not_channel.is_empty() {
-        // The direct URL form (`/@handle`, `/NAME`) must not be reserved.
-        let path = url.split_once(".com/").map_or("", |(_, path)| path);
-        if RESERVED.is_match(path) {
-            return None;
-        }
+    // The direct URL form (`/@handle`, `/NAME`) must not be reserved.
+    if channel_type.is_none()
+        && not_channel.is_empty()
+        && RESERVED.is_match(&url[found.name("id")?.start()..])
+    {
+        return None;
     }
     let rest = found.name("rest").map_or("", |value| value.as_str());
     let (tab, post) = if not_channel.is_empty() {
@@ -106,7 +110,7 @@ pub(super) fn at<'a>(value: &'a Value, path: &[&str]) -> Option<&'a Value> {
     Some(current)
 }
 
-fn text_at(value: &Value, path: &[&str]) -> Option<String> {
+pub(super) fn text_at(value: &Value, path: &[&str]) -> Option<String> {
     at(value, path).and_then(get_text)
 }
 
@@ -162,7 +166,7 @@ fn handle_or_none(value: &str) -> Option<String> {
 }
 
 /// `_extract_thumbnails(data, path, final_key)`.
-fn thumbnails(data: Option<&Value>, final_key: &str) -> Vec<Value> {
+pub(super) fn thumbnails(data: Option<&Value>, final_key: &str) -> Vec<Value> {
     let mut found = Vec::new();
     for thumbnail in data
         .and_then(|data| data.get(final_key))
@@ -1241,10 +1245,11 @@ pub(super) fn extract_entries(
                         entries.extend(lockup_view_model(renderer));
                         true
                     }
-                    "shelfRenderer"
-                    | "musicResponsiveListItemRenderer"
-                    | "backstagePostThreadRenderer"
-                    | "hashtagTileRenderer" => {
+                    "musicResponsiveListItemRenderer" => {
+                        entries.extend(music_responsive_list_entry(renderer));
+                        true
+                    }
+                    "shelfRenderer" | "backstagePostThreadRenderer" | "hashtagTileRenderer" => {
                         unsupported_renderer(key);
                         true
                     }
@@ -1266,6 +1271,65 @@ pub(super) fn extract_entries(
         continuation = extract_continuation(parent);
     }
     continuation
+}
+
+/// `_music_reponsive_list_entry`: a YouTube Music song, playlist or
+/// browse page result.
+fn music_responsive_list_entry(renderer: &Value) -> Option<Map<String, Value>> {
+    let string = |path: &[&str]| {
+        at(renderer, path)
+            .and_then(Value::as_str)
+            .filter(|text| !text.is_empty())
+            .map(str::to_owned)
+    };
+    if let Some(video_id) = string(&["playlistItemData", "videoId"]) {
+        let title = at(
+            renderer,
+            &[
+                "flexColumns",
+                "0",
+                "musicResponsiveListItemFlexColumnRenderer",
+                "text",
+                "runs",
+                "0",
+                "text",
+            ],
+        )
+        .cloned()
+        .unwrap_or(Value::Null);
+        let mut kwargs = Map::new();
+        kwargs.insert("title".into(), title);
+        return Some(url_result(
+            &format!("https://music.youtube.com/watch?v={video_id}"),
+            Some("Youtube"),
+            Some(&video_id),
+            None,
+            kwargs,
+        ));
+    }
+    if let Some(playlist_id) = string(&["navigationEndpoint", "watchEndpoint", "playlistId"]) {
+        let url = match string(&["navigationEndpoint", "watchEndpoint", "videoId"]) {
+            Some(video_id) => {
+                format!("https://music.youtube.com/watch?v={video_id}&list={playlist_id}")
+            }
+            None => format!("https://music.youtube.com/playlist?list={playlist_id}"),
+        };
+        return Some(url_result(
+            &url,
+            Some(KEY),
+            Some(&playlist_id),
+            None,
+            Map::new(),
+        ));
+    }
+    let browse_id = string(&["navigationEndpoint", "browseEndpoint", "browseId"])?;
+    Some(url_result(
+        &format!("https://music.youtube.com/browse/{browse_id}"),
+        Some(KEY),
+        Some(&browse_id),
+        None,
+        Map::new(),
+    ))
 }
 
 /// Renderers whose entries this port does not extract yet.
@@ -1326,6 +1390,12 @@ pub(crate) fn fetch_pages(
     limit: Option<usize>,
     out: &mut Vec<VideoInfo>,
 ) -> Result<Option<Value>> {
+    if state["kind"] == "notifications" {
+        return super::notifications::fetch_pages(client, state, limit, out);
+    }
+    if state["kind"] == "search" {
+        return super::search::fetch_pages(client, state, limit, out);
+    }
     if state["kind"] == "inline" {
         return fetch_inline_pages(client, state, limit, out);
     }
@@ -1912,11 +1982,14 @@ pub(super) fn entry_info(entry: Map<String, Value>) -> Result<VideoInfo> {
     let mut info = super::super::direct::build_at(url.clone(), &url, String::new());
     info.formats.clear();
     info.direct = None;
-    info.id = entry
-        .get("id")
-        .and_then(Value::as_str)
-        .unwrap_or_default()
-        .to_owned();
+    // Without an `id`, the downloader's `ie.get_temp_id(url)`.
+    info.id = match entry.get("id").and_then(Value::as_str) {
+        Some(id) => id.to_owned(),
+        None if ie_key == KEY => url_parts(&url_text)
+            .map(|parts| parts.id)
+            .unwrap_or_default(),
+        None => super::temp_id(&url_text).unwrap_or_default(),
+    };
     info.title = entry
         .get("title")
         .and_then(Value::as_str)
@@ -2343,7 +2416,11 @@ impl YoutubeTab {
             ))?;
             return super::super::Extractor::extract_result(self, client, &target);
         }
-        // `_yes_playlist`.
+        // `_yes_playlist`: a video ID without a playlist ID is the video.
+        if let (None, Some(video_id)) = (&playlist_id, &video_id) {
+            let target = Url::parse(&format!("https://www.youtube.com/watch?v={video_id}"))?;
+            return Ok(Some(follow(&target)));
+        }
         if let (Some(playlist_id), Some(video_id)) = (&playlist_id, &video_id) {
             if self.no_playlist {
                 crate::screen::screen(&format!(
@@ -2793,7 +2870,7 @@ fn music_entry(entry: &mut VideoInfo) {
 }
 
 /// `url_result(url, YoutubeIE)`: followed by the downloader.
-fn follow(target: &Url) -> ExtractResult {
+pub(super) fn follow(target: &Url) -> ExtractResult {
     let mut info = super::super::direct::build_at(target.clone(), target, String::new());
     info.formats.clear();
     info.direct = None;

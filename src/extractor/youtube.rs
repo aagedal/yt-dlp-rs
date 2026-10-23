@@ -8,10 +8,13 @@ pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
 mod metadata;
+pub(crate) mod notifications;
+pub(crate) mod redirect;
 pub(crate) mod search;
 mod streams;
 mod subs;
 pub(crate) mod tab;
+pub(crate) mod urls;
 mod watch;
 use super::{Extractor, direct};
 use crate::{Error, Result, StreamKind, VideoInfo};
@@ -50,7 +53,6 @@ pub struct WaitForVideo {
 struct ConfiguredYoutube {
     include_translated_subtitles: bool,
     get_comments: bool,
-    no_playlist: bool,
     wait_for_video: Option<WaitForVideo>,
     runtime: Option<challenge::Runtime>,
 }
@@ -61,7 +63,6 @@ impl Youtube {
         // with its headers, cookies and proxy.
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,
-            no_playlist: options.no_playlist,
             wait_for_video: options.wait_for_video,
             get_comments: options.get_comments,
             runtime: options.js_runtime.map(challenge::Runtime::new),
@@ -173,13 +174,6 @@ fn unsupported(reason: &str) -> Error {
     Error::UnsupportedYoutube(reason.into())
 }
 
-fn valid_id(id: &str) -> bool {
-    id.len() == 11
-        && id
-            .bytes()
-            .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
-}
-
 /// `YoutubeIE._EMBED_REGEX` through the default `_extract_embed_urls`:
 /// matches unescaped, joined to `url`, kept when suitable, without repeats.
 pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
@@ -222,76 +216,98 @@ pub(crate) fn embed_urls(url: &Url, webpage: &str) -> Vec<Url> {
 
 /// `_match_id`'s ID of a suitable URL.
 pub(crate) fn temp_id(url: &str) -> Option<String> {
-    Url::parse(url)
-        .ok()
-        .and_then(|url| video_id(&url, false).ok().flatten())
+    suitable(url).then(|| urls::video_id(url)).flatten()
 }
 
-/// Upstream `YoutubeIE.suitable`: a supported single-video URL.
+/// Upstream `YoutubeIE.suitable`: `_VALID_URL` without a `list` parameter.
 pub fn suitable(url: &str) -> bool {
-    Url::parse(url).is_ok_and(|url| matches!(video_id(&url, false), Ok(Some(_))))
+    urls::video_suitable(url)
 }
 
-// Claim all URLs on these exact hosts so unsupported site pages cannot fall
-// through to generic HTML5 extraction and appear to be supported YouTube videos.
-fn video_id(url: &Url, no_playlist: bool) -> Result<Option<String>> {
-    let host = url.host_str().unwrap_or("");
-    if !matches!(
-        host,
-        "youtube.com"
-            | "www.youtube.com"
-            | "m.youtube.com"
-            | "music.youtube.com"
-            | "youtu.be"
-            | "www.youtu.be"
-            | "www.youtube-nocookie.com"
-            | "youtube-nocookie.com"
-    ) {
-        return Ok(None);
-    }
-    if url.query_pairs().any(|(key, _)| key == "list") {
-        // Upstream `YoutubeTabIE._yes_playlist`: only `--no-playlist` resolves
-        // a watch URL with both IDs to its single video.
-        let ids: Vec<_> = url.query_pairs().filter(|(key, _)| key == "v").collect();
-        match (no_playlist && url.path() == "/watch", ids.as_slice()) {
-            (true, [(_, id)]) if valid_id(id) => {
-                crate::screen::screen(&format!(
-                    "[youtube:tab] Downloading just the video {id} because of --no-playlist"
-                ));
-                return Ok(Some(id.clone().into_owned()));
-            }
-            _ => {
-                return Err(unsupported(
-                    "playlists and video URLs with list= are not supported",
-                ));
-            }
-        }
-    }
-    let id = if matches!(host, "youtu.be" | "www.youtu.be") {
-        url.path()
-            .strip_prefix('/')
-            .filter(|s| !s.contains('/'))
-            .map(str::to_owned)
-    } else if url.path() == "/watch" {
-        let ids: Vec<_> = url
-            .query_pairs()
-            .filter(|(key, _)| key == "v")
-            .map(|(_, value)| value.into_owned())
-            .collect();
-        if ids.len() != 1 {
-            None
-        } else {
-            ids.into_iter().next()
-        }
-    } else {
-        ["/shorts/", "/embed/", "/live/"]
-            .iter()
-            .find_map(|prefix| url.path().strip_prefix(prefix))
-            .map(str::to_owned)
+/// A YouTube extractor's `suitable`, by `IE_NAME` (`--list-extractors`).
+pub fn extractor_suitable(name: &str, url: &str) -> bool {
+    use redirect::Kind;
+    let kind = match name {
+        "youtube" => return suitable(url),
+        "youtube:clip" => return clip::suitable(url),
+        "youtube:music:search_url" => return search::music_url_suitable(url),
+        "youtube:notif" => return notifications::suitable(url),
+        "youtube:search" => return search::suitable(url),
+        "youtube:search_url" => return search::url_suitable(url),
+        "youtube:tab" => return tab::suitable(url),
+        "youtube:consent" => Kind::Consent,
+        "youtube:favorites" => Kind::Favourites,
+        "youtube:history" => Kind::History,
+        "YoutubeLivestreamEmbed" => Kind::LivestreamEmbed,
+        "youtube:playlist" => Kind::Playlist,
+        "youtube:recommended" => Kind::Recommended,
+        "youtube:shorts:pivot:audio" => Kind::ShortsAudioPivot,
+        "youtube:subscriptions" => Kind::Subscriptions,
+        "youtube:truncated_id" => Kind::TruncatedId,
+        "youtube:truncated_url" => Kind::TruncatedUrl,
+        "youtube:watchlater" => Kind::WatchLater,
+        "YoutubeYtBe" => Kind::YtBe,
+        "youtube:user" => Kind::YtUser,
+        _ => return false,
     };
-    id.filter(|id| valid_id(id))
-        .map(Some)
-        .ok_or_else(|| unsupported("expected a single video URL with an 11-character ID"))
+    kind.suitable(url)
+}
+
+/// The first YouTube extractor (in upstream order) whose `suitable` takes
+/// an input without a scheme: keywords, naked IDs, `//` and bare-host URLs.
+pub(crate) fn bare_extractor(input: &str) -> Option<&'static str> {
+    use redirect::Kind;
+    let kind = |kind: Kind| kind.suitable(input).then(|| kind.name());
+    kind(Kind::Favourites)
+        .or_else(|| kind(Kind::History))
+        .or_else(|| suitable(input).then_some("youtube"))
+        .or_else(|| notifications::suitable(input).then_some(notifications::NAME))
+        .or_else(|| kind(Kind::Playlist))
+        .or_else(|| kind(Kind::Recommended))
+        .or_else(|| kind(Kind::Subscriptions))
+        .or_else(|| kind(Kind::TruncatedUrl))
+        .or_else(|| kind(Kind::WatchLater))
+}
+
+/// The video ID of a URL (or naked ID) `YoutubeIE` takes.
+fn video_id(url: &Url) -> Option<String> {
+    temp_id(&super::input_text(url))
+}
+
+/// Whether a URL is on one of YouTube's own hosts (see [`YoutubeUnsupported`]).
+fn claimed_host(url: &Url) -> bool {
+    matches!(url.scheme(), "http" | "https")
+        && matches!(
+            url.host_str().unwrap_or(""),
+            "youtube.com"
+                | "www.youtube.com"
+                | "m.youtube.com"
+                | "music.youtube.com"
+                | "youtu.be"
+                | "www.youtu.be"
+                | "www.youtube-nocookie.com"
+                | "youtube-nocookie.com"
+        )
+}
+
+/// Claims the remaining URLs on YouTube's own hosts after every YouTube
+/// extractor, so unsupported site pages cannot fall through to generic
+/// HTML5 extraction and appear to be supported YouTube videos.
+pub struct YoutubeUnsupported;
+
+impl Extractor for YoutubeUnsupported {
+    fn key(&self) -> &'static str {
+        "youtube"
+    }
+
+    fn extract(&self, _client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        if !claimed_host(url) {
+            return Ok(None);
+        }
+        Err(unsupported(
+            "not a video, playlist, channel, search or other URL a YouTube extractor takes",
+        ))
+    }
 }
 /// `_wait_for_video`: sleep until the release time (within the requested
 /// bounds), showing the remaining time; an interrupt ends it early. Returns
@@ -555,12 +571,14 @@ fn extract_clients(
     wait: bool,
     get_comments: bool,
 ) -> Result<Extraction> {
+    let input = super::input_text(url);
     crate::screen::screen(&format!(
         "[youtube] Extracting URL: {}",
-        crate::screen::extracting_url(&format!("https://www.youtube.com/watch?v={id}"))
+        crate::screen::extracting_url(&input)
     ));
-    // `is_music_url`.
-    let music_url = url.host_str() == Some("music.youtube.com");
+    let music_url = urls::is_music_url(&input);
+    // A naked ID's own fragment (`ID#t=…`) holds URL times too.
+    let url = &super::input_view(url);
     let acquired = watch::acquire(client, id, runtime, music_url)?;
     // `info['__post_extractor'] = self.extract_comments(...)`.
     if get_comments {
@@ -883,7 +901,7 @@ impl Extractor for Youtube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
-        let Some(id) = video_id(url, false)? else {
+        let Some(id) = video_id(url) else {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
@@ -900,7 +918,7 @@ impl Extractor for ConfiguredYoutube {
         "Youtube"
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
-        let Some(id) = video_id(url, self.no_playlist)? else {
+        let Some(id) = video_id(url) else {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
@@ -960,7 +978,7 @@ mod tests {
     }
 
     #[test]
-    fn exact_hosts_and_supported_video_url_shapes() {
+    fn video_urls_and_claimed_hosts() {
         for input in [
             "https://www.youtube.com/watch?v=BaW_jenozKc&t=3",
             "https://youtu.be/BaW_jenozKc",
@@ -970,53 +988,32 @@ mod tests {
             "https://youtube.com/live/BaW_jenozKc",
         ] {
             assert_eq!(
-                video_id(&Url::parse(input).unwrap(), false)
-                    .unwrap()
-                    .as_deref(),
+                video_id(&Url::parse(input).unwrap()).as_deref(),
                 Some("BaW_jenozKc")
             );
         }
+        assert_eq!(
+            video_id(&super::super::bare_url("BaW_jenozKc")).as_deref(),
+            Some("BaW_jenozKc")
+        );
         for input in [
             "https://youtube.com.evil.invalid/watch?v=BaW_jenozKc",
             "https://example.com/watch?v=BaW_jenozKc",
+            "https://www.youtube.com/watch?v=BaW_jenozKc&list=PLfoo",
         ] {
-            assert!(
-                video_id(&Url::parse(input).unwrap(), false)
-                    .unwrap()
-                    .is_none()
-            );
+            assert!(video_id(&Url::parse(input).unwrap()).is_none());
         }
-        // Playlist URLs belong to `youtube:tab` (its site fixture).
+        // Other paths on YouTube's own hosts stay unsupported.
         for input in [
-            "https://youtu.be/BaW_jenozKc/extra",
-            "https://youtube.com/watch?v=bad",
-            "https://youtube.com/watch?v=BaW_jenozKc&v=BaW_jenozKc",
+            "https://www.youtube.com/watch?v=bad&x=1",
+            "https://youtu.be/",
+            "https://www.youtube.com/s/player/x",
         ] {
             assert!(
                 matches!(
                     crate::YoutubeDl::new().unwrap().extract_info(input),
                     Err(Error::UnsupportedYoutube(_))
                 ),
-                "{input}"
-            );
-        }
-    }
-
-    #[test]
-    fn no_playlist_resolves_watch_urls_with_lists() {
-        let url = Url::parse("https://www.youtube.com/watch?v=BaW_jenozKc&list=PLfoo").unwrap();
-        assert_eq!(
-            video_id(&url, true).unwrap().as_deref(),
-            Some("BaW_jenozKc")
-        );
-        assert!(video_id(&url, false).is_err());
-        for input in [
-            "https://youtube.com/playlist?list=foo",
-            "https://youtube.com/watch?list=foo",
-            "https://youtube.com/watch?v=bad&list=foo",
-        ] {
-            assert!(
-                video_id(&Url::parse(input).unwrap(), true).is_err(),
                 "{input}"
             );
         }

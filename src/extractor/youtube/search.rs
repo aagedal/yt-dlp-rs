@@ -3,10 +3,10 @@
 //! `yt_dlp/extractor/youtube/_search.py` and `_tab.py`'s `_search_results`.
 use super::tab::{at, entry_info, extract_entries};
 use super::watch;
-use crate::{ExtractResult, Result};
+use crate::{ExtractResult, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
-use serde_json::{Map, Value};
+use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
 use url::Url;
 
@@ -25,7 +25,7 @@ static URL_RE: LazyLock<Regex> = LazyLock::new(|| {
 
 /// The input text of a `ytsearch` pseudo-URL (the URL parser
 /// percent-encodes non-ASCII characters, which are decoded again).
-fn input_text(url: &Url) -> String {
+pub(super) fn input_text(url: &Url) -> String {
     let text = url.as_str();
     let mut bytes = Vec::with_capacity(text.len());
     let raw = text.as_bytes();
@@ -57,45 +57,95 @@ pub fn url_suitable(url: &str) -> bool {
     URL_RE.is_match(url)
 }
 
-/// `_search_results(query, params)`: the search API pages until `limit`
-/// entries (upstream's `islice` of its generator) or the last page.
-fn search_results(
-    client: &Client,
+/// `_search_results(query, params, default_client)`, optionally limited to
+/// `max` results (`islice`), as the state of upstream's generator: nothing
+/// is requested until the playlist's entries are read.
+fn search_state(
     extractor: &'static str,
+    client_name: &str,
     query: &str,
     params: Option<&str>,
-    limit: Option<usize>,
-) -> Result<Vec<Map<String, Value>>> {
-    let display_id = format!("query \"{query}\"");
-    // `_download_ytcfg('web', display_id)`.
-    let home = Url::parse("https://www.youtube.com")?;
-    let ytcfg = match super::super::download_webpage_note(
-        client,
-        &home,
-        extractor,
-        &display_id,
-        "Downloading web client config",
-    ) {
-        Ok(webpage) => watch::extract_ytcfg(&webpage),
-        Err(error) => {
-            crate::screen::warning(&error.to_string());
-            Map::new()
-        }
-    };
+    max: Option<usize>,
+) -> Value {
     let mut data = Map::new();
     data.insert("query".into(), query.into());
     if let Some(params) = params.filter(|params| !params.is_empty()) {
         data.insert("params".into(), params.into());
     }
-    let mut entries = Vec::new();
-    let mut previous: Option<Value> = None;
-    for page in 1.. {
-        let visitor = previous
-            .as_ref()
-            .and_then(watch::visitor_from)
-            .or_else(|| watch::visitor_from(&Value::Object(ytcfg.clone())));
-        let search = watch::innertube_api(
+    json!({
+        "kind": "search",
+        "extractor": extractor,
+        "client": client_name,
+        "display_id": format!("query \"{query}\""),
+        "data": data,
+        "max": max,
+        "count": 0,
+        "page": 1,
+        "ytcfg": null,
+        "previous_visitor": null,
+        "done": false,
+    })
+}
+
+/// The search API pages of a [`search_state`] until `limit` entries are
+/// read (or its end): the remaining state unless read past its end.
+pub(crate) fn fetch_pages(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    out: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let extractor = match state["extractor"].as_str() {
+        Some(URL_NAME) => URL_NAME,
+        Some(MUSIC_URL_NAME) => MUSIC_URL_NAME,
+        _ => NAME,
+    };
+    let client_name = state["client"].as_str().unwrap_or("web").to_owned();
+    let display_id = state["display_id"].as_str().unwrap_or_default().to_owned();
+    let max = state["max"].as_u64().map(|max| max as usize);
+    loop {
+        let mut count = state["count"].as_u64().unwrap_or(0) as usize;
+        if limit.is_some_and(|limit| out.len() >= limit) {
+            return Ok(Some(state));
+        }
+        if state["done"] == true || max.is_some_and(|max| count >= max) {
+            return Ok(None);
+        }
+        if state["ytcfg"].is_null() {
+            // `_download_ytcfg(default_client, display_id)`.
+            let (home, note) = match client_name.as_str() {
+                "web_music" => (
+                    "https://music.youtube.com",
+                    "Downloading web music client config",
+                ),
+                _ => ("https://www.youtube.com", "Downloading web client config"),
+            };
+            let home = Url::parse(home)?;
+            let ytcfg = match super::super::download_webpage_note(
+                client,
+                &home,
+                extractor,
+                &display_id,
+                note,
+            ) {
+                Ok(webpage) => watch::extract_ytcfg(&webpage),
+                Err(error) => {
+                    crate::screen::warning(&error.to_string());
+                    Map::new()
+                }
+            };
+            state["ytcfg"] = Value::Object(ytcfg);
+        }
+        let ytcfg = state["ytcfg"].as_object().cloned().unwrap_or_default();
+        let visitor = state["previous_visitor"]
+            .as_str()
+            .map(str::to_owned)
+            .or_else(|| watch::visitor_from(&state["ytcfg"]));
+        let page = state["page"].as_u64().unwrap_or(1);
+        let mut data = state["data"].as_object().cloned().unwrap_or_default();
+        let search = watch::innertube_api_with(
             client,
+            &client_name,
             "search",
             extractor,
             &format!("{display_id} page {page}"),
@@ -141,28 +191,44 @@ fn search_results(
             other => vec![other],
         };
         let mut found = Vec::new();
-        let continuation =
-            extract_entries(&serde_json::json!({ "contents": contents }), &mut found);
+        let continuation = extract_entries(&json!({ "contents": contents }), &mut found);
         for entry in found {
-            if limit.is_some_and(|limit| entries.len() >= limit) {
+            if max.is_some_and(|max| count >= max) {
                 break;
             }
-            entries.push(entry);
+            out.push(entry_info(entry)?);
+            count += 1;
         }
-        if limit.is_some_and(|limit| entries.len() >= limit) {
-            break;
+        state["count"] = count.into();
+        state["page"] = (page + 1).into();
+        match continuation {
+            Some(continuation) => {
+                data.extend(continuation);
+                state["data"] = Value::Object(data);
+                state["previous_visitor"] = watch::visitor_from(&search).into();
+            }
+            None => state["done"] = true.into(),
         }
-        let Some(continuation) = continuation else {
-            break;
-        };
-        data.extend(continuation);
-        previous = Some(search);
     }
-    Ok(entries)
+}
+
+/// A search playlist whose entries are fetched as they are read.
+fn lazy_search_playlist(
+    state: Value,
+    title: &str,
+    webpage_url: Url,
+    extractor: &'static str,
+    key: &'static str,
+) -> Result<ExtractResult> {
+    let mut result = search_playlist(Vec::new(), title, webpage_url, extractor, key)?;
+    if let ExtractResult::Playlist(playlist) = &mut result {
+        playlist.pending = Some(crate::PendingEntries { state });
+    }
+    Ok(result)
 }
 
 /// `playlist_result(entries, query, query)`.
-fn search_playlist(
+pub(super) fn search_playlist(
     entries: Vec<Map<String, Value>>,
     query: &str,
     webpage_url: Url,
@@ -191,7 +257,7 @@ fn search_playlist(
     }))
 }
 
-fn announce(extractor: &'static str, url: &str) {
+pub(super) fn announce(extractor: &'static str, url: &str) {
     crate::screen::set_extractor(extractor);
     crate::screen::screen(&format!(
         "[{extractor}] Extracting URL: {}",
@@ -210,7 +276,7 @@ impl super::super::Extractor for YoutubeSearch {
         Ok(None)
     }
 
-    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         let text = input_text(url);
         let Some(found) = SEARCH_RE.captures(&text) else {
             return Ok(None);
@@ -224,8 +290,8 @@ impl super::super::Extractor for YoutubeSearch {
             "all" => None,
             count => count.parse().ok().or(Some(usize::MAX)),
         };
-        let entries = search_results(client, NAME, &query, Some(SEARCH_PARAMS), limit)?;
-        search_playlist(entries, &query, url.clone(), NAME, "YoutubeSearch").map(Some)
+        let state = search_state(NAME, "web", &query, Some(SEARCH_PARAMS), limit);
+        lazy_search_playlist(state, &query, url.clone(), NAME, "YoutubeSearch").map(Some)
     }
 }
 
@@ -240,7 +306,7 @@ impl super::super::Extractor for YoutubeSearchUrl {
         Ok(None)
     }
 
-    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         if !url_suitable(url.as_str()) {
             return Ok(None);
         }
@@ -256,8 +322,97 @@ impl super::super::Extractor for YoutubeSearchUrl {
             .or_else(|| first("q"))
             .unwrap_or_default();
         let params = first("sp");
-        let entries = search_results(client, URL_NAME, &query, params.as_deref(), None)?;
-        search_playlist(entries, &query, url.clone(), URL_NAME, "YoutubeSearchURL").map(Some)
+        let state = search_state(URL_NAME, "web", &query, params.as_deref(), None);
+        lazy_search_playlist(state, &query, url.clone(), URL_NAME, "YoutubeSearchURL").map(Some)
+    }
+}
+
+pub(crate) const MUSIC_URL_NAME: &str = "youtube:music:search_url";
+
+static MUSIC_URL_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r"^https?://music\.youtube\.com/search\?([^#]+&)?(?:search_query|q)=(?:[^&]+)(?:[&#]|$)",
+    )
+    .unwrap()
+});
+
+/// `YoutubeMusicSearchURLIE._SECTIONS`.
+const MUSIC_SECTIONS: [(&str, &str); 6] = [
+    ("albums", "EgWKAQIYAWoKEAoQAxAEEAkQBQ=="),
+    ("artists", "EgWKAQIgAWoKEAoQAxAEEAkQBQ=="),
+    ("community playlists", "EgeKAQQoAEABagoQChADEAQQCRAF"),
+    ("featured playlists", "EgeKAQQoADgBagwQAxAJEAQQDhAKEAU=="),
+    ("songs", "EgWKAQIIAWoKEAoQAxAEEAkQBQ=="),
+    ("videos", "EgWKAQIQAWoKEAoQAxAEEAkQBQ=="),
+];
+
+/// `YoutubeMusicSearchURLIE.suitable`.
+pub fn music_url_suitable(url: &str) -> bool {
+    MUSIC_URL_RE.is_match(url)
+}
+
+/// `YoutubeMusicSearchURLIE`: a YouTube Music search, optionally of one
+/// section (`sp`, or a `#section` fragment), with the `web_music` client.
+pub struct YoutubeMusicSearchUrl;
+
+impl super::super::Extractor for YoutubeMusicSearchUrl {
+    fn key(&self) -> &'static str {
+        MUSIC_URL_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<crate::VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let text = url.as_str();
+        if !music_url_suitable(text) {
+            return Ok(None);
+        }
+        announce(MUSIC_URL_NAME, text);
+        super::initialize();
+        let first = |key: &str| super::urls::first_qs(text, key);
+        let query = first("search_query")
+            .or_else(|| first("q"))
+            .unwrap_or_default();
+        let mut params = first("sp");
+        let section = match &params {
+            Some(params) => Some(
+                MUSIC_SECTIONS
+                    .iter()
+                    .find(|(_, value)| value == params)
+                    .map_or(params.as_str(), |(name, _)| name)
+                    .to_owned(),
+            ),
+            None => {
+                // `unquote_plus(([*url.split('#'), ''])[1]).lower()`.
+                let fragment = text.split('#').nth(1).unwrap_or("").replace('+', " ");
+                let section = percent_encoding::percent_decode_str(&fragment)
+                    .decode_utf8_lossy()
+                    .to_lowercase();
+                params = MUSIC_SECTIONS
+                    .iter()
+                    .find(|(name, _)| *name == section)
+                    .map(|(_, value)| (*value).to_owned());
+                params.is_some().then_some(section)
+            }
+        };
+        // `join_nonempty(query, section, delim=' - ')`.
+        let title = [Some(query.clone()), section]
+            .into_iter()
+            .flatten()
+            .filter(|part| !part.is_empty())
+            .collect::<Vec<_>>()
+            .join(" - ");
+        let state = search_state(MUSIC_URL_NAME, "web_music", &query, params.as_deref(), None);
+        lazy_search_playlist(
+            state,
+            &title,
+            url.clone(),
+            MUSIC_URL_NAME,
+            "YoutubeMusicSearchURL",
+        )
+        .map(Some)
     }
 }
 

@@ -1,0 +1,749 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] BaW_jenozKc: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "BaW_jenozKc#t=5",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s|%(start_time)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|BaW_jenozKc#t=5|5"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "//www.youtube.com/v/BaW_jenozKc?fs=1",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|//www.youtube.com/v/BaW_jenozKc?fs=1"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/e/BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.youtube.com/e/BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.youtube.com/watch_popup?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|http://www.youtube.com/watch_popup?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch.php?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.youtube.com/watch.php?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/movie?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.youtube.com/movie?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/#/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.youtube.com/#/watch?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/#!v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.youtube.com/#!v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.youtube.com/?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/user/x?feature=a&v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.youtube.com/user/x?feature=a&v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://gaming.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://gaming.youtube.com/watch?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtubekids.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.youtubekids.com/watch?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://youtube.googleapis.com/v/BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://youtube.googleapis.com/v/BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://hooktube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://hooktube.com/watch?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.yourepeat.com/watch/?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.yourepeat.com/watch/?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vid.plus/BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://vid.plus/BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://zwearz.com/watch/BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://zwearz.com/watch/BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://yewtu.be/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://yewtu.be/watch?v=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cleanvideosearch.com/media/action/yt/watch?videoId=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://www.cleanvideosearch.com/media/action/yt/watch?videoId=BaW_jenozKc"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://youtu.be/BaW_jenozKc/extra",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://youtu.be/BaW_jenozKc/extra"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://consent.youtube.com/m?continue=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBaW_jenozKc%26cbrd%3D1&gl=NL&m=0&pc=yt&hl=en&src=1",
+   "args": [
+    "--no-js-runtimes",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:consent] Extracting URL: https://consent.youtube.com/m?continue=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBaW_jenozKc%26...=0&pc=yt&hl=en&src=1",
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc&cbrd=1",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] BaW_jenozKc: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://consent.youtube.com/m?continue=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBaW_jenozKc%26cbrd%3D1&gl=NL&m=0&pc=yt&hl=en&src=1",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://consent.youtube.com/m?continue=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBaW_jenozKc%26cbrd%3D1&gl=NL&m=0&pc=yt&hl=en&src=1"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://consent.youtube.com/m?gl=NL&m=0",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube:consent] Extracting URL: https://consent.youtube.com/m?gl=NL&m=0"
+   ],
+   "stderr": [
+    "ERROR: [youtube:consent] Invalid cookie consent redirect URL"
+   ],
+   "files": {}
+  },
+  {
+   "url": "PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:playlist] Extracting URL: PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_webpage_url)s|%(original_url)s|%(id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re|https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re|https://www.youtube.com/watch?v=BaW_jenozKc|BaW_jenozKc",
+    "PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re|https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re|https://www.youtube.com/watch?v=YYYYYYYYYYY|YYYYYYYYYYY",
+    "PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re|https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re|https://www.youtube.com/watch?v=ZZZZZZZZZZZ|ZZZZZZZZZZZ"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/embed/videoseries?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:playlist] Extracting URL: https://www.youtube.com/embed/videoseries?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://yewtu.be/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://yewtu.be/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://youtu.be/BaW_jenozKc?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[YoutubeYtBe] Extracting URL: https://youtu.be/BaW_jenozKc?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc&list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re&feature=youtu.be",
+    "[youtube:tab] Downloading playlist PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re - add --no-playlist to download just the video BaW_jenozKc",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Downloading webpage",
+    "[youtube:tab] PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://youtu.be/BaW_jenozKc?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--no-js-runtimes",
+    "--no-playlist",
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc|youtube|https://www.youtube.com/watch?v=BaW_jenozKc|https://youtu.be/BaW_jenozKc?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=N_708QY7Ob",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube:truncated_id] Extracting URL: https://www.youtube.com/watch?v=N_708QY7Ob"
+   ],
+   "stderr": [
+    "ERROR: [youtube:truncated_id] N_708QY7Ob: Incomplete YouTube ID N_708QY7Ob. URL https://www.youtube.com/watch?v=N_708QY7Ob looks truncated."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?feature=foo",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube:truncated_url] Extracting URL: https://www.youtube.com/watch?feature=foo"
+   ],
+   "stderr": [
+    "ERROR: [youtube:truncated_url] Did you forget to quote the URL? Remember that & is a meta character in most shells, so you want to put the URL in quotes, like  yt-dlp \"https://www.youtube.com/watch?feature=foo&v=YE7VzlLtp-4\"  or simply  yt-dlp YE7VzlLtp-4  ."
+   ],
+   "files": {}
+  },
+  {
+   "url": "youtube.com/watch?t=2",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube:truncated_url] Extracting URL: youtube.com/watch?t=2"
+   ],
+   "stderr": [
+    "ERROR: [youtube:truncated_url] Did you forget to quote the URL? Remember that & is a meta character in most shells, so you want to put the URL in quotes, like  yt-dlp \"https://www.youtube.com/watch?feature=foo&v=YE7VzlLtp-4\"  or simply  yt-dlp YE7VzlLtp-4  ."
+   ],
+   "files": {}
+  },
+  {
+   "url": ":ytfav",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube:favorites] Login details are needed to download this content. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": ":ytsubscriptions",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube:subscriptions] Login details are needed to download this content. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": ":ythistory",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube:history] Login details are needed to download this content. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": ":ytsubs",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:subscriptions] Extracting URL: :ytsubs",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/feed/subscriptions",
+    "[youtube:tab] subscriptions: Downloading webpage",
+    "[youtube:tab] subscriptions: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": ":ytwatchlater",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:watchlater] Extracting URL: :ytwatchlater",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=WL",
+    "[youtube:tab] WL: Downloading webpage",
+    "[youtube:tab] WL: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": ":ytrec",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:recommended] Extracting URL: :ytrec",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/feed/recommended",
+    "[youtube:tab] recommended: Downloading webpage",
+    "[youtube:tab] recommended: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:recommended] Extracting URL: https://www.youtube.com/",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/feed/recommended",
+    "[youtube:tab] recommended: Downloading webpage",
+    "[youtube:tab] recommended: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "ytuser:Chan",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:user] Extracting URL: ytuser:Chan",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/user/Chan",
+    "[youtube:tab] Chan: Downloading webpage",
+    "[youtube:tab] Chan: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/embed/live_stream?channel=UC0123456789abcdefghijkl",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[YoutubeLivestreamEmbed] Extracting URL: https://www.youtube.com/embed/live_stream?channel=UC0123456789abcdefghijkl",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/channel/UC0123456789abcdefghijkl/live",
+    "[youtube:tab] UC0123456789abcdefghijkl/live: Downloading webpage"
+   ],
+   "stderr": [
+    "ERROR: [youtube:tab] UC0123456789abcdefghijkl: The channel is not currently live"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/source/BaW_jenozKc/shorts",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:shorts:pivot:audio] Extracting URL: https://www.youtube.com/source/BaW_jenozKc/shorts",
+    "[youtube:tab] Extracting URL: https://www.youtube.com/feed/sfv_audio_pivot?bp=8gUrCikSJwoLQmFXX2plbm96S2MSC0JhV19qZW5vektjGgtCYVdfamVub3pLYw%3D%3D",
+    "[youtube:tab] sfv_audio_pivot: Downloading webpage",
+    "[youtube:tab] sfv_audio_pivot: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Test Playlist",
+    "[youtube:tab] Playlist Test Playlist: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Test Playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

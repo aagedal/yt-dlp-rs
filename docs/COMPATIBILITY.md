@@ -98,7 +98,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--alias ALIASES OPTIONS` | Upstream option aliases: each name (prefixed with `--` unless it starts with `-`) takes as many arguments as the `str.format` fields in OPTIONS, which are shell-quoted into the template, shlex-split and parsed in place (aliases may chain, at most 100 triggers each); templates without fields are used as-is. Aliases are expanded before parsing, so they are not listed in `--help` |
 | `-t NAME`, `--preset-alias NAME` | Upstream `_PRESET_ALIASES` (`mp3`, `aac`, `mp4`, `mkv`, `sleep`), expanded in place before parsing; `Unknown preset alias: NAME` usage error. Like optparse, every option that takes a value now accepts one starting with `-` |
 | Format filter fields | Besides the original fields, `[...]` filters accept upstream's `acodec`, `vcodec`, `container`, `protocol`, `dynamic_range`, `resolution`, `video_ext`, `audio_ext`, `format` (string operators, `!`, `?`) and numeric `fps`, `vbr`, `asr`, `audio_channels`; other keys remain an explicit unsupported-field error (upstream looks up any key) |
-| `--list-extractors`, `--extractor-descriptions` | Upstream `print_extractor_information` for this port's extractors only (`html5`, `youtube`, `generic`, with upstream's descriptions); command-line URLs are listed under the extractor that would take them (`generic` takes the rest). Upstream lists about 1800 extractors |
+| `--list-extractors`, `--extractor-descriptions` | Upstream `print_extractor_information` for this port's extractors only (`html5`, `youtube`, `generic`, with upstream's descriptions); command-line URLs are listed under every suitable extractor (`generic` takes the rest). Upstream lists about 1800 extractors |
 | `--color [STREAM:]POLICY`, `--no-colors`, `--no-colours` | Validated like upstream (`"X" is not a valid color policy`); output is never colored, so `always` differs from upstream on capable terminals |
 | `--write-comments`, `--get-comments`, `--no-write-comments`, `--no-get-comments` | Upstream `getcomments`: without `--write-info-json`/`--no-write-info-json` or `--embed-info-json`, and unless `-j` prints the JSON, it implies `--write-info-json`. The generic extractor has no comments, so nothing else changes; YouTube watch pages extract comments as described under [YouTube comments](#youtube-comments) |
 | `--clean-info-json`, `--clean-infojson`, `--no-clean-info-json`, `--no-clean-infojson` | Upstream `clean_infojson`: the default drops `None` values, `__` keys and the private bookkeeping keys; `--no-clean-info-json` writes every represented field |
@@ -176,15 +176,43 @@ upstream equivalence for every option interaction or filename rule.
 
 ## YouTube watch-page subset
 
-The built-in `Youtube` extractor runs before the generic HTTP fallback. Exact
-`youtube.com`, `www.youtube.com`, `m.youtube.com`, `music.youtube.com`, `youtu.be`,
-`www.youtu.be`, `youtube-nocookie.com`, and `www.youtube-nocookie.com` hosts are
-claimed. Accept watch URLs with one `v` parameter, short links, `/shorts/`,
-`/embed/`, and `/live/` paths with exactly an 11-character video ID. Watch-page requests
-use the canonical HTTPS watch URL. Reject channels, malformed IDs and other
-paths before making a request; `/playlist` URLs and URLs containing `list=`
-belong to `youtube:tab` (see "YouTube playlists"). `/live/` is a URL shape;
-live, upcoming, and post-live player responses remain unsupported.
+The built-in `Youtube` extractor runs before the generic HTTP fallback and
+takes the URLs of pinned upstream's `YoutubeIE._VALID_URL` (ported with its
+`_INVIDIOUS_SITES` list, `src/extractor/youtube/urls.rs`): watch URLs (also
+`watch_popup`, `.php`, `movie`, `?v=`/`#v=`/`#!v=` on other paths and `#/`
+redirects), `/v/`, `/e/`, `/embed/`, `/shorts/` and `/live/` paths, short links
+(`youtu.be`, `vid.plus`, `zwearz.com/watch`, Invidious hosts), `gaming.`/other
+subdomains, `youtubekids.com`, `youtube-nocookie.com`, `youtube.googleapis.com`,
+`hooktube`/`yourepeat`/`pwnyoutube`/`deturl`/`cleanvideosearch` forms,
+protocol-relative `//` URLs and naked 11-character IDs (`yt-dlp-rs BaW_jenozKc`),
+except URLs with a `list` parameter, like upstream's `suitable`. Its `Extracting
+URL` line shows the input; watch-page requests use the canonical HTTPS watch URL.
+
+The other YouTube extractors follow upstream's patterns and order and return
+upstream's `url` results: `youtube:playlist` (naked playlist IDs such as `PL…`,
+`UU…`, `RD…`, `WL`, `LL`, `LM`, and other `?list=` URLs like
+`/embed/videoseries?list=`, to `/playlist?…` with the URL's query),
+`YoutubeYtBe` (`youtu.be/ID?list=…` to `watch?v=ID&list=…&feature=youtu.be`),
+`YoutubeLivestreamEmbed` (`/embed/live_stream?channel=ID` to
+`/channel/ID/live`), `youtube:user` (`ytuser:NAME`), the `:ytfav`,
+`:ytwatchlater`, `:ytrec` (and the `youtube.com` home page), `:ytsubs` and
+`:ythis` keywords (favorites, subscriptions and history first require account
+cookies, with upstream's login message), `youtube:shorts:pivot:audio`
+(`/source/ID/shorts`, with upstream's `sfv_audio_pivot` browse params) and
+`youtube:consent` (`consent.youtube.com/m?continue=…` follows its `continue`
+URL, else `Invalid cookie consent redirect URL`). `youtube:truncated_id` and
+`youtube:truncated_url` raise upstream's `Incomplete YouTube ID` and `Did you
+forget to quote the URL?` errors. A `youtube:playlist` result for a
+`music.youtube.com` input targets the music playlist URL instead of upstream's
+smuggled `is_music_url` (the tab's `Extracting URL` line differs).
+Remaining URLs on the exact `youtube.com`, `www.youtube.com`, `m.youtube.com`,
+`music.youtube.com`, `youtu.be`, `www.youtu.be`, `youtube-nocookie.com` and
+`www.youtube-nocookie.com` hosts are still claimed with an unsupported-YouTube
+error before any request (upstream's generic extractor would download them),
+so unsupported site pages cannot appear to be supported videos.
+`tests/fixtures/sites/youtube-urls/` compares these shapes with pinned
+upstream. `/live/` is a URL shape; live, upcoming, and post-live player
+responses remain unsupported.
 
 The info dict follows upstream `_real_extract` after `_list_formats`, in its
 key order, over every player response, the page's meta tags and `ytInitialData`:
@@ -2077,7 +2105,9 @@ parity claims. See [the source slice](../upstream/notes/dash-static.md).
 `youtube:tab` ports upstream `YoutubeTabIE` (`yt_dlp/extractor/youtube/_tab.py`)
 for `/playlist?list=ID` and `watch?v=ID&list=ID` URLs (the latter only without
 `--no-playlist`; `watch?list=ID` warns and downloads the playlist) and channel
-tabs (`/@HANDLE/TAB`, `/channel/UC…/TAB`, `/c/NAME`, `/user/NAME`). A channel
+tabs (`/@HANDLE/TAB`, `/channel/UC…/TAB`, `/c/NAME`, `/user/NAME`), also on
+upstream's Invidious hosts and never on `consent.youtube.com`; a tab URL with
+a `v` but no `list` parameter is that video (`_yes_playlist`). A channel
 URL without a tab reads its `/videos` tab (`Downloading all uploads of the
 channel`) and, like upstream, extracts its live and shorts tabs too; a channel
 with several of them is a playlist of the tabs' playlists (`Downloading as
@@ -2170,17 +2200,34 @@ Saved upstream output zeroes the `timestamp` that follows a comment's
 `ytsearchN:QUERY` and `ytsearchall:QUERY`, with upstream's videos-only
 `params`; `youtube:search_url` ports `YoutubeSearchURLIE` for
 `youtube.com/results?search_query=…` (or `q=`) URLs and their `sp` filter.
-Both download the web client config (`Downloading web client config`), then
-search API pages (`query "QUERY" page N: Downloading API JSON`) with the
-previous page's visitor data and continuation, stopping once the requested
-number of results is reached, as upstream's `islice` does. Results are
+`youtube:music:search_url` ports `YoutubeMusicSearchURLIE` for
+`music.youtube.com/search?q=…` URLs: the `web_music` client (`Downloading web
+music client config` from `music.youtube.com`), a section from `sp` (named
+when it is one of upstream's `_SECTIONS`) or from a `#section` fragment, and
+the playlist titled `QUERY - SECTION`; its `musicShelfRenderer` results are
+`musicResponsiveListItemRenderer` song, playlist and browse `url` entries.
+Like upstream's generators, all three fetch lazily: `Downloading playlist`
+comes first, then the client config and search API pages (`query "QUERY"
+page N: Downloading API JSON`) with the previous page's visitor data and
+continuation, stopping once the requested number of results (or
+`--playlist-items`) is reached, as upstream's `islice` does. Results are
 `_extract_entries`' video and channel `url` entries in a playlist titled by
-the query. `tests/fixtures/sites/youtube-search/` is compared with pinned
-upstream output. The URL parser percent-encodes non-ASCII query text, which is
-decoded again; a non-ASCII query's `webpage_url` stays percent-encoded.
+the query. `tests/fixtures/sites/youtube-search/` and
+`youtube-music-search/` are compared with pinned upstream output. The URL
+parser percent-encodes non-ASCII query text, which is decoded again; a
+non-ASCII query's `webpage_url` stays percent-encoded.
 `--list-extractor-descriptions` draws the search example at random, as
-upstream does. Other search prefixes (`ytsearchdate`, `ytmusic`, …) and
-`--default-search` are not supported.
+upstream does. Pinned upstream has no other YouTube search prefix (no
+`ytsearchdate`); other sites' search prefixes and `--default-search` are not
+supported.
+
+`youtube:notif` ports `YoutubeNotificationsIE` (`:ytnotif`, account cookies
+required): the web client config, then lazily the
+`notification/get_notification_menu` pages, as a `notifications` playlist of
+video and community-post `url` entries (title, channel, thumbnails; the
+`approximate_date` timestamp is not supported). Without a client config it
+fails with upstream's authcheck error. `tests/fixtures/sites/youtube-notifications/`
+is compared with pinned upstream output.
 
 ## YouTube HLS discovery
 

@@ -221,15 +221,21 @@ pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
+pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
 pub(crate) use youtube::comments::post_extract as youtube_comments;
-pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
+pub(crate) use youtube::notifications::YoutubeNotifications;
+pub(crate) use youtube::redirect::{Kind as YoutubeRedirectKind, YoutubeRedirect};
+pub(crate) use youtube::search::{YoutubeMusicSearchUrl, YoutubeSearch, YoutubeSearchUrl};
 pub use youtube::search::{
     suitable as youtube_search_suitable, url_suitable as youtube_search_url_suitable,
 };
 pub use youtube::tab::suitable as youtube_tab_suitable;
 pub(crate) use youtube::tab::{YoutubeTab, fetch_pages as fetch_youtube_tab_pages};
-pub use youtube::{WaitForVideo, Youtube, YoutubeOptions, suitable as youtube_suitable};
+pub use youtube::{
+    WaitForVideo, Youtube, YoutubeOptions, extractor_suitable as youtube_extractor_suitable,
+    suitable as youtube_suitable,
+};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
@@ -899,6 +905,57 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || youtube::redirect::user_suitable(url)
+}
+
+/// Scheme of the internal URL carrying an input without a scheme that an
+/// extractor's `_VALID_URL` takes (a naked YouTube ID, `:ytfav`).
+const BARE_SCHEME: &str = "yt-dlp-rs-input";
+
+/// An input without a scheme as an internal URL ([`input_text`] recovers it).
+pub(crate) fn bare_url(input: &str) -> Url {
+    let encoded = percent_encoding::utf8_percent_encode(input, percent_encoding::NON_ALPHANUMERIC);
+    Url::parse(&format!("{BARE_SCHEME}:{encoded}")).expect("an opaque URL")
+}
+
+/// An input without a scheme that an extractor takes, as an internal URL,
+/// with the name of the first extractor (in upstream order) taking it.
+pub fn bare_input(input: &str) -> Option<(Url, &'static str)> {
+    youtube::bare_extractor(input).map(|name| (bare_url(input), name))
+}
+
+/// The input text an extractor matches: the original text of an internal
+/// URL for an input without a scheme, otherwise the URL.
+pub(crate) fn input_text(url: &Url) -> String {
+    match url
+        .as_str()
+        .strip_prefix(BARE_SCHEME)
+        .and_then(|rest| rest.strip_prefix(':'))
+    {
+        Some(encoded) => percent_encoding::percent_decode_str(encoded)
+            .decode_utf8_lossy()
+            .into_owned(),
+        None => url.to_string(),
+    }
+}
+
+/// The input URL with its own query and fragment: an internal URL's text
+/// parsed under the internal scheme (`ID#t=1` has the fragment `t=1`).
+pub(crate) fn input_view(url: &Url) -> Url {
+    if url.scheme() != BARE_SCHEME {
+        return url.clone();
+    }
+    Url::parse(&format!("{BARE_SCHEME}:{}", input_text(url))).unwrap_or_else(|_| url.clone())
+}
+
+/// A result URL to follow: text without a scheme (`//host/…`, a naked ID)
+/// becomes an internal URL, as upstream matches it as text.
+pub(crate) fn target_url(text: &str) -> crate::Result<Url> {
+    if crate::has_scheme(text) {
+        Ok(Url::parse(text)?)
+    } else {
+        Ok(bare_url(text))
+    }
 }
 
 /// Upstream `params['http_headers']['User-Agent']`.

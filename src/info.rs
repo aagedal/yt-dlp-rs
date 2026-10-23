@@ -32,6 +32,8 @@ pub enum ExtractResult {
 pub struct PlaylistInfo {
     pub id: String,
     pub title: String,
+    /// An input without a scheme (`:ytnotif`) serializes as its text.
+    #[serde(serialize_with = "serialize_input_url")]
     pub webpage_url: Url,
     pub extractor: String,
     pub extractor_key: String,
@@ -49,9 +51,17 @@ pub struct PlaylistInfo {
     pub extra: serde_json::Map<String, serde_json::Value>,
 }
 
+fn serialize_input_url<S: serde::Serializer>(
+    url: &Url,
+    serializer: S,
+) -> std::result::Result<S::Ok, S::Error> {
+    serializer.serialize_str(&crate::extractor::input_text(url))
+}
+
 /// Upstream `url_basename`: the URL path's last segment.
 pub fn url_basename(url: &Url) -> String {
-    url.path()
+    crate::extractor::input_view(url)
+        .path()
         .trim_matches('/')
         .rsplit('/')
         .next()

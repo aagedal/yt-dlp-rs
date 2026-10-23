@@ -1,0 +1,6 @@
+{"responseContext": {"visitorData": "MV3"}, "contents": {"tabbedSearchResultsRenderer": {"tabs": [{"tabRenderer": {"content": {"sectionListRenderer": {"contents": [
+ {"musicShelfRenderer": {"contents": [
+  {"musicResponsiveListItemRenderer": {"playlistItemData": {"videoId": "MUSICSONG04"}, "flexColumns": [{"musicResponsiveListItemFlexColumnRenderer": {"text": {"runs": [{"text": "Section Song"}]}}}]}},
+  {"musicResponsiveListItemRenderer": {"navigationEndpoint": {"browseEndpoint": {"browseId": "UCartist000000000000001"}}}}
+ ]}}
+]}}}}]}}}

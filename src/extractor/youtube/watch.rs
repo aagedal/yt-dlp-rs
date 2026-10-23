@@ -311,7 +311,33 @@ pub(super) fn innertube_api(
     query: Map<String, Value>,
     note: &str,
 ) -> Result<Value> {
-    let config = innertube::client(WEBPAGE_CLIENT).expect("the web client is defined");
+    innertube_api_with(
+        client,
+        WEBPAGE_CLIENT,
+        endpoint,
+        extractor,
+        item_id,
+        ytcfg,
+        visitor,
+        query,
+        note,
+    )
+}
+
+/// [`innertube_api`] with another `default_client`.
+#[allow(clippy::too_many_arguments)]
+pub(super) fn innertube_api_with(
+    client: &Client,
+    client_name: &str,
+    endpoint: &str,
+    extractor: &'static str,
+    item_id: &str,
+    ytcfg: &Map<String, Value>,
+    visitor: Option<&str>,
+    query: Map<String, Value>,
+    note: &str,
+) -> Result<Value> {
+    let config = innertube::client(client_name).expect("a defined client");
     call_api(
         client,
         config,

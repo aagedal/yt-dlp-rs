@@ -1,0 +1,97 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "wgYCCAA="
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "reload.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "TOKEN1"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "continuation.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc&list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re&feature=youtu.be",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist-watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=WL",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist.html"
+  },
+  {
+   "url": "https://www.youtube.com/feed/recommended",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist.html"
+  },
+  {
+   "url": "https://www.youtube.com/feed/subscriptions",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist.html"
+  },
+  {
+   "url": "https://www.youtube.com/user/Chan/videos",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist.html"
+  },
+  {
+   "url": "https://www.youtube.com/channel/UC0123456789abcdefghijkl/live",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist.html"
+  },
+  {
+   "url": "https://www.youtube.com/feed/sfv_audio_pivot?bp=8gUrCikSJwoLQmFXX2plbm96S2MSC0JhV19qZW5vektjGgtCYVdfamVub3pLYw%3D%3D",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "playlist.html"
+  }
+ ]
+}

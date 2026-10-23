@@ -235,7 +235,7 @@ impl PlaylistSelection {
             ("playlist_channel_id", field("channel_id")),
             (
                 "playlist_webpage_url",
-                playlist.webpage_url.to_string().into(),
+                crate::extractor::input_text(&playlist.webpage_url).into(),
             ),
             (
                 "webpage_url_basename",
