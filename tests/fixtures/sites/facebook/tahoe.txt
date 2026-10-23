@@ -1,0 +1,1 @@
+for (;;);{"__ar": 1, "jsmods": {"instances": [["p", ["VideoConfig"], [{"video_id": "4444444444", "videoData": [{"stream_type": "progressive", "sd_src": "https://video.xx.fbcdn.net/v/river-sd.mp4", "hd_src": "https://video.xx.fbcdn.net/v/river-hd.mp4"}]}], 1]]}}

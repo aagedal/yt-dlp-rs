@@ -677,19 +677,40 @@ the cleaned `<title>` text (with upstream's warning when missing).
 
 Facebook videos (`facebook.com` watch, video, post, story, permalink,
 event, group and watch-party URL shapes and `facebook:ID`) follow upstream
-`FacebookIE` through the page's relay prefetched data, the path current pages
-use: `parse_graphql_video` over node attachments, media sets, event cover
-videos and the page's `video` (legacy `playable_url` fields, inline or linked
-DASH manifests from `videoDeliveryResponseFragment`, progressive and HLS URLs,
-captions by locale), each format with upstream's `facebookexternalhit`
-User-Agent and 250 MiB HTTP chunks, merged with `extract_metadata`'s
-webpage title, description, uploader, timestamp, thumbnail and counts. Several
-videos form a playlist. Login and interstitial pages are upstream's errors;
-older server JS/pagelet pages, watch parties, the tahoe player fallback,
-JSON-LD metadata, ads and comments are not supported. `facebook:reel`
-(`/reel/ID`) and `FacebookPluginsVideo` (`plugins/video.php?href=`) are
-followed like upstream. `tests/fixtures/sites/facebook/` is compared with
-pinned upstream output.
+`FacebookIE`'s paths in its order. First the server JS (`handleServerJS`,
+`s.handle`) and `bigPipe.onPageletArrive` pagelet (`js_to_json`)
+`VideoConfig` instances: each `videoData` entry's `sd`/`hd` `src` and
+`src_no_ratelimit` URLs (upstream's qualities and 720p height), inline DASH
+manifest and `subtitles_src` English subtitles; several instances form a
+playlist of their `video_url` pages. Then the page's relay prefetched data,
+the path current pages use: `parse_graphql_video` over node attachments,
+media sets, event cover videos and the page's `video` (legacy `playable_url`
+fields, inline or linked DASH manifests from `videoDeliveryResponseFragment`,
+progressive and HLS URLs, captions by locale); several videos form a
+playlist. Login and interstitial pages are upstream's errors. Watch parties
+(`/watchparty/ID`) POST upstream's `livingRoom` GraphQL query (with the
+page's `lsd` token and `RelayAPIConfigDefaults` endpoint) and list the
+recap's videos; other pages fall back to the tahoe player POST and its
+`for (;;);` payload, else upstream's `Cannot parse data` error. Formats get
+upstream's `facebookexternalhit` User-Agent and 250 MiB HTTP chunks, merged
+with `extract_metadata`'s JSON-LD and webpage title, description, uploader,
+timestamp, thumbnail and counts (an empty media title or message, as on
+reels, falls back to the page's `og:title`/meta description, and the
+uploader fallback is the raw `og:title`, like upstream). DASH
+representations with `SegmentBase`
+indexes (as Facebook's often are) are refused by the shared DASH parser
+with a warning, and `BaseURL`-only ones become one-fragment DASH formats,
+rather than upstream's unfragmented `https` formats; comments are not
+supported. `facebook:reel` (`/reel/ID`),
+`FacebookPluginsVideo` (`plugins/video.php?href=`) and `FacebookRedirectURL`
+(`flx/warn/?u=`, upstream's error without a valid `u` URL) are followed like
+upstream. `facebook:ads` (`ads/library/?id=ID`) follows upstream
+`FacebookAdsIE`: the ad snapshot (current `ad_library_main` and older
+`deeplinkAdCard` paths), its title (else `FORMAT by PAGE`), markup or body
+description, page uploader fields and like count, and each video or card's
+SD/HD (watermarked) URLs as one video or a playlist; upstream's 403 `Client
+challenge` verification retry is not ported (the HTTP error is reported).
+`tests/fixtures/sites/facebook/` is compared with pinned upstream output.
 
 Fathom shares (`fathom.video/share/ID`) follow upstream `FathomIE`: the `app`
 element's `data-page` JSON props (upstream's `TypeError` text without them),

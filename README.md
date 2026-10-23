@@ -110,7 +110,9 @@ Supported today:
   posts and reels (logged out, or logged in with cookies; carousels as
   playlists, inline DASH), stories, highlights, tag and user pages and
   `instagram://` links, Facebook videos
-  (relay data with DASH, progressive URLs and captions), Vimeo player and
+  (relay data with DASH, progressive URLs and captions; server JS, pagelet
+  and tahoe player pages; watch parties; JSON-LD metadata), Facebook ad
+  library ads and `flx/warn` redirects, Vimeo player and
   clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
   Bandcamp tracks, Rumble videos, Kick VODs, clips, live channels and channel video/clip lists, Bluesky
   posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,

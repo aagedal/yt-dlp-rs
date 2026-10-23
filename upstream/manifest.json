@@ -483,7 +483,7 @@
         "src/extractor/facebook.rs",
         "tests/fixtures/sites/facebook/"
       ],
-      "scope": "FacebookIE relay prefetched data (parse_graphql_video legacy/delivery formats, inline DASH, progressive/HLS URLs, captions) merged with extract_metadata, login/interstitial errors; FacebookReelIE and FacebookPluginsVideoIE redirects; no server JS/pagelet pages, watch parties, tahoe fallback, JSON-LD or ads; compared with pinned upstream output through the fixture proxy"
+      "scope": "FacebookIE server JS (handleServerJS/s.handle) and bigPipe pagelet VideoConfig instances (src formats, inline DASH, subtitles_src, multi-video url playlists), relay prefetched data (parse_graphql_video legacy/delivery formats, inline DASH, progressive/HLS URLs, captions), watch party livingRoom recaps (GraphQL POST with lsd/RelayAPIConfigDefaults) and the tahoe POST fallback, merged with extract_metadata including JSON-LD, login/interstitial/Cannot parse data errors; FacebookReelIE, FacebookPluginsVideoIE and FacebookRedirectURLIE redirects; FacebookAdsIE snapshots (current and old paths, markup descriptions, videos/cards as formats or playlists) without the 403 client-challenge retry; SegmentBase DASH representations are refused and BaseURL-only ones shaped as one-fragment DASH by the shared parser (upstream: unfragmented https); compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "fathom",
