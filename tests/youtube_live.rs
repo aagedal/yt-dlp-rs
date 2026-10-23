@@ -11,7 +11,7 @@ use std::{
         Arc,
         atomic::{AtomicI64, Ordering},
     },
-    time::{Duration, Instant},
+    time::Duration,
 };
 
 const BASE: &str = "https://rr1.googlevideo.test/videoplayback?itag=";
@@ -181,9 +181,9 @@ fn an_interrupted_live_from_start_download_is_completed() {
         .spawn()
         .unwrap();
     let part = work.path().join("LiveStart01.m4a.part");
-    let deadline = Instant::now() + Duration::from_secs(30);
+    let deadline = std::time::Instant::now() + Duration::from_secs(30);
     while std::fs::metadata(&part).map_or(0, |metadata| metadata.len()) < 12 {
-        assert!(Instant::now() < deadline, "no fragment arrived");
+        assert!(std::time::Instant::now() < deadline, "no fragment arrived");
         std::thread::sleep(Duration::from_millis(20));
     }
     let status = Command::new("kill")
