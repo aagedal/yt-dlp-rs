@@ -3,7 +3,9 @@ use crate::{ByteRange, Error, Fragment, HlsAes128, Result, StreamKind};
 use std::collections::{BTreeMap, BTreeSet};
 use url::Url;
 
-const MAX_FRAGMENTS: usize = 10_000;
+/// Fragments per media playlist (upstream has no bound; long Twitch VODs and
+/// day-long streams have tens of thousands).
+const MAX_FRAGMENTS: usize = 500_000;
 const MAX_VARIANTS: usize = 256;
 
 #[derive(Debug)]

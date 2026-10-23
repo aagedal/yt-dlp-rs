@@ -12,6 +12,8 @@ cbc = "0.2"
 clap = { version = "4.6", features = ["derive"] }
 cookie = "0.18"
 cookie_store = { version = "0.22", default-features = false }
+encoding_rs = "0.8"
+flate2 = "1"
 httpdate = "1"
 log = { version = "0.4", features = ["std"] }
 icu_normalizer = "2.3"

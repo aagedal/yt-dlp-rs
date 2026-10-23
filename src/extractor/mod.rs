@@ -618,11 +618,12 @@ fn download_json_with(
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
     // `_webpage_read_content`: `--dump-pages`/`--write-pages`.
     crate::screen::expect_page(id, None, None);
     crate::screen::page_read(&page_url, &body)?;
-    let text = transform(&String::from_utf8_lossy(&body))?;
-    serde_json::from_str(&text).map_err(|error| {
+    let text = transform(&decode_webpage(&body, response.headers()))?;
+    crate::json::from_str(&text).map_err(|error| {
         crate::Error::Reported(format!(
             "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
         ))
@@ -754,9 +755,102 @@ fn download_webpage_handle_headers(
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
     crate::screen::expect_page(id, None, None);
     crate::screen::page_read(&page_url, &body)?;
-    Ok((String::from_utf8_lossy(&body).into_owned(), page_url))
+    Ok((decode_webpage(&body, response.headers()), page_url))
+}
+
+/// The urllib handler's `http_response`: a body decoded from each
+/// `Content-Encoding` in reverse (`gzip` as a single member, `deflate` raw or
+/// zlib-wrapped); other encodings are left as sent. Extraction requests ask
+/// for `identity`, but some servers compress regardless.
+pub(crate) fn decode_content(
+    headers: &reqwest::header::HeaderMap,
+    body: Vec<u8>,
+) -> std::io::Result<Vec<u8>> {
+    use std::io::Read;
+    let encodings: Vec<String> = headers
+        .get_all(reqwest::header::CONTENT_ENCODING)
+        .iter()
+        .flat_map(|value| {
+            String::from_utf8_lossy(value.as_bytes())
+                .split(',')
+                .map(|encoding| encoding.trim().to_owned())
+                .collect::<Vec<_>>()
+        })
+        .collect();
+    let mut body = body;
+    for encoding in encodings.iter().rev() {
+        if body.is_empty() {
+            break;
+        }
+        let mut decoded = Vec::new();
+        match encoding.as_str() {
+            "gzip" => {
+                flate2::read::GzDecoder::new(body.as_slice()).read_to_end(&mut decoded)?;
+            }
+            "deflate" => {
+                if flate2::read::DeflateDecoder::new(body.as_slice())
+                    .read_to_end(&mut decoded)
+                    .is_err()
+                {
+                    decoded.clear();
+                    flate2::read::ZlibDecoder::new(body.as_slice()).read_to_end(&mut decoded)?;
+                }
+            }
+            _ => continue,
+        }
+        body = decoded;
+    }
+    Ok(body)
+}
+
+/// `_guess_encoding_from_content(content_type, webpage_bytes)`: the
+/// Content-Type charset, else a `<meta charset>` in the first 1024 bytes,
+/// else UTF-16 after its little-endian BOM, else UTF-8.
+fn guess_encoding(content_type: &str, body: &[u8]) -> String {
+    static CONTENT_TYPE: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"^[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+\s*;\s*charset=(.+)").unwrap()
+    });
+    static META: std::sync::LazyLock<regex::bytes::Regex> = std::sync::LazyLock::new(|| {
+        regex::bytes::Regex::new(r#"(?-u)<meta[^>]+charset=['"]?([^'")]+)[ /'">]"#).unwrap()
+    });
+    if let Some(found) = CONTENT_TYPE.captures(content_type) {
+        return found[1].to_owned();
+    }
+    if let Some(found) = META.captures(&body[..body.len().min(1024)]) {
+        return String::from_utf8_lossy(&found[1]).into_owned();
+    }
+    if body.starts_with(b"\xff\xfe") {
+        return "utf-16".into();
+    }
+    "utf-8".into()
+}
+
+/// `__decode_webpage`: the body decoded with its guessed encoding, invalid
+/// sequences replaced; unknown encodings (`LookupError`) fall back to UTF-8.
+/// Encodings are WHATWG labels, so `latin-1`/`iso-8859-1` decode as
+/// windows-1252 (which differs from Python only in C1 control characters).
+pub(crate) fn decode_webpage(body: &[u8], headers: &reqwest::header::HeaderMap) -> String {
+    let content_type = headers
+        .get(reqwest::header::CONTENT_TYPE)
+        .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
+        .unwrap_or_default();
+    let label = guess_encoding(&content_type, body).to_ascii_lowercase();
+    match label.as_str() {
+        // Python's `utf-16` reads either BOM (little-endian without one).
+        "utf-16" | "utf16" => return encoding_rs::UTF_16LE.decode(body).0.into_owned(),
+        "utf-8" | "utf8" => {}
+        _ => {
+            if let Some(encoding) = encoding_rs::Encoding::for_label(label.as_bytes())
+                && encoding != encoding_rs::UTF_8
+            {
+                return encoding.decode_without_bom_handling(body).0.into_owned();
+            }
+        }
+    }
+    String::from_utf8_lossy(body).into_owned()
 }
 
 /// Upstream `_download_xml(url, video_id)`: `[EXTRACTOR] ID: Downloading
@@ -797,6 +891,7 @@ pub(crate) fn download_xml_note(
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
     let text = String::from_utf8(body).map_err(|_| {
         crate::Error::Reported(format!(
             "[{extractor}] {id}: Failed to parse XML (not UTF-8)"
@@ -867,7 +962,7 @@ pub(crate) fn search_json_with(
     let candidate = &trimmed[..=end];
     let text = transform(candidate);
     Some(
-        serde_json::Deserializer::from_str(&text)
+        serde_json::Deserializer::from_str(&crate::json::replace_lone_surrogates(&text))
             .into_iter::<serde_json::Value>()
             .next()
             .and_then(std::result::Result::ok),
@@ -1056,5 +1151,49 @@ pub(crate) fn proto_relative(url: &str) -> String {
     match url.strip_prefix("//") {
         Some(rest) => format!("https://{rest}"),
         None => url.to_owned(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use reqwest::header::{CONTENT_ENCODING, CONTENT_TYPE, HeaderMap, HeaderValue};
+
+    fn headers(pairs: &[(reqwest::header::HeaderName, &'static str)]) -> HeaderMap {
+        let mut map = HeaderMap::new();
+        for (name, value) in pairs {
+            map.append(name, HeaderValue::from_static(value));
+        }
+        map
+    }
+
+    #[test]
+    fn pages_decode_with_upstreams_guessed_encoding() {
+        // "Привет" in windows-1251, as VK serves its al_video responses.
+        let cp1251 = b"{\"t\": \"\xcf\xf0\xe8\xe2\xe5\xf2\"}";
+        let typed = headers(&[(CONTENT_TYPE, "application/json; charset=windows-1251")]);
+        assert_eq!(decode_webpage(cp1251, &typed), "{\"t\": \"Привет\"}");
+        let meta = b"<meta charset=\"windows-1251\"><p>\xcf\xf0\xe8\xe2\xe5\xf2</p>";
+        assert!(decode_webpage(meta, &HeaderMap::new()).ends_with("<p>Привет</p>"));
+        // UTF-16 after its BOM; unknown encodings and invalid bytes as UTF-8.
+        let utf16 = [0xff, 0xfe, b'h', 0, b'i', 0];
+        assert_eq!(decode_webpage(&utf16, &HeaderMap::new()), "hi");
+        let unknown = headers(&[(CONTENT_TYPE, "text/html; charset=x-unknown")]);
+        assert_eq!(decode_webpage(b"ok \xff", &unknown), "ok \u{FFFD}");
+    }
+
+    #[test]
+    fn compressed_bodies_decode_in_reverse_encoding_order() {
+        use std::io::Write;
+        let mut gzip = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::fast());
+        gzip.write_all(b"payload").unwrap();
+        let gzip = gzip.finish().unwrap();
+        let mut both = flate2::write::ZlibEncoder::new(Vec::new(), flate2::Compression::fast());
+        both.write_all(&gzip).unwrap();
+        let both = both.finish().unwrap();
+        let map = headers(&[(CONTENT_ENCODING, "gzip, deflate")]);
+        assert_eq!(decode_content(&map, both).unwrap(), b"payload");
+        let map = headers(&[(CONTENT_ENCODING, "br")]);
+        assert_eq!(decode_content(&map, b"raw".to_vec()).unwrap(), b"raw");
     }
 }

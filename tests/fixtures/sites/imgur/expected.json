@@ -116,6 +116,19 @@
    "files": {
     "A61SaA1.mp4": 18
    }
+  },
+  {
+   "url": "https://imgur.com/gzipped1",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(duration)s|%(duration_string)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "gzipped1|Compressed post|NA|NA|0"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

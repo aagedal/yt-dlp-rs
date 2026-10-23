@@ -4,7 +4,8 @@ use roxmltree::{Document, Node, ParsingOptions};
 use std::collections::BTreeMap;
 use url::Url;
 
-const LIMIT: usize = 10_000;
+/// Segments per representation (a 2 s-segment timeline covers 11 days).
+const LIMIT: usize = 500_000;
 const NS: u128 = 1_000_000_000;
 fn bad(message: impl Into<String>) -> Error {
     Error::UnsupportedManifest(message.into())
@@ -1499,9 +1500,9 @@ mod tests {
             )
             .is_err()
         );
-        let text = template("").replace("PT2.5S", "PT10000S");
+        let text = template("").replace("PT2.5S", "PT1000000S");
         assert!(parse(&text, &manifest()).is_err());
-        let text = text.replace("PT10000S", "PT5000S").replace(
+        let text = text.replace("PT1000000S", "PT500000S").replace(
             "</AdaptationSet>",
             "<Representation id=\"other\" bandwidth=\"2000000\"/></AdaptationSet>",
         );

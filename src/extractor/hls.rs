@@ -9,9 +9,10 @@ use reqwest::{
 use std::io::Read;
 use url::Url;
 
-const MAX_MANIFEST_BYTES: u64 = 2 * 1024 * 1024;
+const MAX_MANIFEST_BYTES: u64 = 32 * 1024 * 1024;
 const MAX_VARIANTS: usize = 256;
-const MAX_TOTAL_FRAGMENTS: usize = 10_000;
+/// Fragments retained across a master playlist's variants and renditions.
+const MAX_TOTAL_FRAGMENTS: usize = 1_000_000;
 
 fn unsupported(message: &str) -> Error {
     Error::UnsupportedManifest(message.into())
@@ -446,7 +447,7 @@ pub(crate) fn from_response_with(
                     .ok_or_else(|| unsupported("HLS master fragment count overflow"))?;
                 if total_fragments > MAX_TOTAL_FRAGMENTS {
                     return Err(unsupported(
-                        "HLS master exceeds the 10000-fragment extraction limit",
+                        "HLS master exceeds the 1000000-fragment extraction limit",
                     ));
                 }
                 // Upstream `'%d' % (tbr or len(formats))` without a stream name.
@@ -545,7 +546,7 @@ pub(crate) fn from_response_with(
                     .ok_or_else(|| unsupported("HLS master fragment count overflow"))?;
                 if total_fragments > MAX_TOTAL_FRAGMENTS {
                     return Err(unsupported(
-                        "HLS master exceeds the 10000-fragment extraction limit",
+                        "HLS master exceeds the 1000000-fragment extraction limit",
                     ));
                 }
                 let format = VideoFormat {

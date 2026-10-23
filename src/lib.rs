@@ -34,6 +34,7 @@ mod info_order;
 mod interrupt;
 mod ism_fd;
 pub mod js_to_json;
+mod json;
 mod live_dash;
 pub mod manifest_args;
 mod match_filter;
@@ -1708,6 +1709,18 @@ impl YoutubeDl {
             {
                 let seconds = ((end.as_f64() - start.as_f64()) * 1000.0).round() / 1000.0;
                 entry.metadata.duration = Some(crate::PyNumber::Float(seconds));
+            }
+            // `process_video_result`: a zero or negative duration is dropped,
+            // with a warning when it was negative.
+            if let Some(duration) = entry.metadata.duration
+                && duration.as_f64() <= 0.0
+            {
+                entry.metadata.duration = None;
+                if duration.as_f64() != 0.0 {
+                    screen::warning(
+                        "\"duration\" field is negative, there is an error in extractor",
+                    );
+                }
             }
             // `process_video_result`: `raise_no_formats` for a result
             // without formats.

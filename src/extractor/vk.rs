@@ -215,12 +215,13 @@ fn download_payload(client: &Client, video_id: &str, list_id: Option<&str>) -> R
     response
         .read_to_end(&mut bytes)
         .map_err(Error::ExtractionRead)?;
-    let json: Value = serde_json::from_slice(&bytes).map_err(|error| {
-        fail(
-            Some(video_id),
-            &format!("Failed to parse JSON  (caused by {error})"),
-        )
-    })?;
+    let json: Value = crate::json::from_str(&super::decode_webpage(&bytes, response.headers()))
+        .map_err(|error| {
+            fail(
+                Some(video_id),
+                &format!("Failed to parse JSON  (caused by {error})"),
+            )
+        })?;
     let bug = |key: &str| {
         fail(
             None,
@@ -357,7 +358,7 @@ impl Extractor for Vk {
                     ),
                 ));
             };
-            let player: Value = serde_json::from_str(&params[1]).map_err(|error| {
+            let player: Value = crate::json::from_str(&params[1]).map_err(|error| {
                 fail(
                     Some(&video_id),
                     &format!("Failed to parse JSON  (caused by {error})"),

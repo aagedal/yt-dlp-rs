@@ -1,6 +1,14 @@
 {
  "routes": [
   {
+   "url": "https://api.imgur.com/post/v1/media/gzipped1?client_id=546c25a59c58ad7&include=media,account",
+   "headers": {
+    "Content-Type": "application/vnd.imgur.v1+json",
+    "Content-Encoding": "gzip"
+   },
+   "body_file": "gzipped1.json.gz"
+  },
+  {
    "url": "https://api.imgur.com/post/v1/media/A61SaA1?client_id=546c25a59c58ad7&include=media,account",
    "headers": {
     "Content-Type": "application/json"
@@ -71,6 +79,13 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom-anim"
+  },
+  {
+   "url": "https://i.imgur.com/gzipped1.gifv",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><head><title>Compressed post - Imgur</title></head></html>"
   }
  ]
 }

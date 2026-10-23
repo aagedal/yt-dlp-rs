@@ -62,7 +62,7 @@ impl Server {
                 let large = if path == "/many-child.m3u8" {
                     format!(
                         "#EXTM3U\n#EXT-X-TARGETDURATION:1\n{}#EXT-X-ENDLIST\n",
-                        "#EXTINF:1,\nsegment.ts\n".repeat(5001)
+                        "#EXTINF:1,\nsegment.ts\n".repeat(400_000)
                     )
                 } else {
                     String::new()
@@ -140,7 +140,7 @@ impl Server {
                     ),
                     "/invalid-type.m3u8" => (MEDIA, "application/x-mpegurl; x=\u{0080}", ""),
                     "/many-master.m3u8" => (
-                        "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=400000\nmany-child.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=800000\nmany-child.m3u8\n",
+                        "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=400000\nmany-child.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=800000\nmany-child.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=1600000\nmany-child.m3u8\n",
                         "application/x-mpegurl",
                         "",
                     ),
@@ -400,11 +400,16 @@ fn master_retained_fragment_count_is_bounded_across_variants() {
         .extract_info(&server.url("/many-master.m3u8"))
         .unwrap_err();
     assert!(
-        matches!(error, Error::UnsupportedManifest(message) if message.contains("10000-fragment"))
+        matches!(error, Error::UnsupportedManifest(message) if message.contains("1000000-fragment"))
     );
     assert_eq!(
         server.paths(),
-        ["/many-master.m3u8", "/many-child.m3u8", "/many-child.m3u8"]
+        [
+            "/many-master.m3u8",
+            "/many-child.m3u8",
+            "/many-child.m3u8",
+            "/many-child.m3u8"
+        ]
     );
 }
 
