@@ -43,6 +43,10 @@ pub(super) struct ClientResponse {
     pub player_token_provided: bool,
     /// `_get_available_at_timestamp`.
     pub available_at: i64,
+    /// `STREAMING_DATA_FETCH_GVS_PO_TOKEN`/`..._SUBS_PO_TOKEN`'s arguments.
+    pub pot: super::pot::Request,
+    /// `STREAMING_DATA_INNERTUBE_CONTEXT`'s `client.clientName`.
+    pub innertube_client_name: String,
 }
 
 /// The `n`/signature solver upstream calls through `solve_js_challenges`.
@@ -567,6 +571,8 @@ pub(super) fn extract(
     let mut manifest_formats: Vec<VideoFormat> = Vec::new();
     let mut order: Vec<(bool, usize)> = Vec::new();
     let needs_live = matches!(context.live_status, Some("post_live"));
+    // `gvs_pots`: the GVS PO token of each client, fetched once.
+    let mut gvs_pots: HashMap<&str, String> = HashMap::new();
     for response in responses {
         let Some(data) = response
             .response
@@ -626,8 +632,16 @@ pub(super) fn extract(
                         context.premium,
                         response.player_token_provided,
                     );
-                // No PO token provider is available.
-                let po_token: Option<String> = None;
+                let https_policy = policy("https");
+                let po_token = gvs_pots.get(client_name).cloned().or_else(|| {
+                    response.pot.fetch(
+                        super::pot::Context::Gvs,
+                        require_po_token || https_policy.recommended,
+                    )
+                });
+                if let Some(token) = &po_token {
+                    gvs_pots.entry(client_name).or_insert_with(|| token.clone());
+                }
                 let mut url = stream.get("url").and_then(Value::as_str).map(str::to_owned);
                 let mut encrypted = None;
                 let mut cipher = HashMap::new();
@@ -728,6 +742,9 @@ pub(super) fn extract(
                         continue;
                     };
                     url = set_query(&url, "n", result);
+                }
+                if let Some(token) = &po_token {
+                    url = set_query(&url, "pot", token);
                 }
                 format.insert("url".into(), url.into());
                 if let Some(itag) = &stream_id.0 {
@@ -838,12 +855,25 @@ pub(super) fn extract(
                     solved_n = path.contains(result.as_str());
                 }
             }
+            let manifest_policy = policy(proto);
             let require_po_token = gvs_pot_required(
-                &policy(proto),
+                &manifest_policy,
                 context.premium,
                 response.player_token_provided,
             );
-            if require_po_token && !context.missing_pot {
+            // `gvs_pots.get(client_name, fetch_po_token_func(...))` fetches
+            // eagerly.
+            let fetched = response.pot.fetch(
+                super::pot::Context::Gvs,
+                require_po_token || manifest_policy.recommended,
+            );
+            let po_token = gvs_pots.get(client_name).cloned().or(fetched);
+            if let Some(token) = &po_token {
+                path = format!("{}/pot/{token}", path.trim_end_matches('/'));
+                gvs_pots.entry(client_name).or_insert_with(|| token.clone());
+            }
+            let missing_pot = require_po_token && po_token.is_none();
+            if missing_pot && !context.missing_pot {
                 report_pot_format_skipped(context.video_id, client_name, proto);
                 continue;
             }
@@ -905,6 +935,21 @@ pub(super) fn extract(
                 {
                     source_preference -= 1;
                 }
+                // A key the format did not have is added in upstream's order.
+                let mut noted = format.format_note.is_some();
+                let mut note = |format: &mut VideoFormat| {
+                    if !std::mem::replace(&mut noted, true) {
+                        crate::info_order::mark_format_update(format, "format_note");
+                    }
+                };
+                if missing_pot {
+                    format.format_note = join_nonempty(
+                        &[format.format_note.take(), Some("MISSING POT".into())],
+                        " ",
+                    );
+                    note(&mut format);
+                    source_preference -= 20;
+                }
                 entry.push(key);
                 let itag_proto: Vec<String> =
                     entry.iter().map(|(proto, _)| proto.clone()).collect();
@@ -915,13 +960,6 @@ pub(super) fn extract(
                         format.format_id = itag.clone();
                     }
                 }
-                // A key the format did not have is added in upstream's order.
-                let mut noted = format.format_note.is_some();
-                let mut note = |format: &mut VideoFormat| {
-                    if !std::mem::replace(&mut noted, true) {
-                        crate::info_order::mark_format_update(format, "format_note");
-                    }
-                };
                 if language_code.is_some() && language_code == language.original {
                     format.format_note =
                         join_nonempty(&[format.format_note.take(), Some("(original)".into())], " ");

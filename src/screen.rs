@@ -214,6 +214,34 @@ pub(crate) fn extractor_debug(text: &str) {
     }
 }
 
+/// An extractor's `write_debug(..., only_once=True)`.
+pub(crate) fn extractor_debug_once(text: &str) {
+    static SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+    if !verbose() {
+        return;
+    }
+    let mut seen = SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    extractor_debug(text);
+}
+
+/// `YoutubeDL.deprecated_feature`: `Deprecated Feature: MESSAGE` on stderr,
+/// once per message.
+pub(crate) fn deprecated_feature(text: &str) {
+    static SEEN: std::sync::Mutex<Vec<String>> = std::sync::Mutex::new(Vec::new());
+    let mut seen = SEEN.lock().unwrap();
+    if seen.iter().any(|message| message == text) {
+        return;
+    }
+    seen.push(text.to_owned());
+    drop(seen);
+    stderr(&format!("Deprecated Feature: {text}"));
+}
+
 pub(crate) fn stderr(text: &str) {
     if let Some(sink) = SINK.get() {
         sink(Message::Stderr(text));

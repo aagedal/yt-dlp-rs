@@ -144,12 +144,7 @@ fn download_ytcfg(
 pub(super) fn load_player(client: &Client, video_id: &str, player_url: &str) -> Option<String> {
     static CODE: LazyLock<std::sync::Mutex<std::collections::HashMap<String, String>>> =
         LazyLock::new(Default::default);
-    let key = player_url
-        .split("/s/player/")
-        .nth(1)
-        .and_then(|rest| rest.split('/').next())
-        .map(|id| format!("{id}-main"))
-        .unwrap_or_default();
+    let key = player_js_cache_key(player_url)?;
     if let Some(code) = CODE.lock().ok()?.get(&key) {
         return Some(code.clone());
     }
@@ -172,14 +167,17 @@ pub(super) fn load_player(client: &Client, video_id: &str, player_url: &str) -> 
     }
 }
 
-/// `_extract_signature_timestamp(fatal=False)`: the `ytcfg`'s `STS`, else
-/// the player JS's.
+/// `_extract_signature_timestamp(fatal=False)`: `player_js_version`'s STS,
+/// else the `ytcfg`'s `STS`, else the player JS's.
 fn signature_timestamp(
     client: &Client,
     video_id: &str,
     player_url: &str,
     ytcfg: &Map<String, Value>,
 ) -> Option<i64> {
+    if let (Some(sts), _) = player_js_version() {
+        return Some(sts);
+    }
     if let Some(sts) = ytcfg
         .get("STS")
         .and_then(|sts| sts.as_i64().or_else(|| sts.as_str()?.parse().ok()))
@@ -284,17 +282,156 @@ fn player_url(ytcfgs: &[&Map<String, Value>]) -> Option<String> {
                     .find_map(|config| config.get("jsUrl")?.as_str())
             })
         })?;
+    construct_player_url(None, Some(found))
+}
+
+/// `_PLAYER_JS_VARIANT_MAP`.
+const PLAYER_JS_VARIANTS: [(&str, &str); 11] = [
+    ("main", MAIN_PLAYER_VARIANT),
+    ("tcc", "player_ias_tcc.vflset/en_US/base.js"),
+    ("tce", "player_ias_tce.vflset/en_US/base.js"),
+    ("es5", "player_es5.vflset/en_US/base.js"),
+    ("es6", "player_es6.vflset/en_US/base.js"),
+    ("es6_tcc", "player_es6_tcc.vflset/en_US/base.js"),
+    ("es6_tce", "player_es6_tce.vflset/en_US/base.js"),
+    ("tv", "tv-player-ias.vflset/tv-player-ias.js"),
+    ("tv_es6", "tv-player-es6.vflset/tv-player-es6.js"),
+    ("phone", "player-plasma-ias-phone-en_US.vflset/base.js"),
+    ("house", "house_brand_player.vflset/en_US/base.js"),
+];
+
+fn variant_path(variant: &str) -> &'static str {
+    PLAYER_JS_VARIANTS
+        .iter()
+        .find(|(name, _)| *name == variant)
+        .map_or(MAIN_PLAYER_VARIANT, |(_, path)| path)
+}
+
+/// `_player_js_version` (`player_js_version`, else `actual`).
+pub(super) fn player_js_version_arg() -> String {
+    super::args::non_empty("player_js_version").unwrap_or_else(|| "actual".into())
+}
+
+/// `_get_player_js_version`: the STS and player ID `STS@HASH` forces.
+fn player_js_version() -> (Option<i64>, Option<String>) {
+    let version = player_js_version_arg();
+    if version == "actual" {
+        return (None, None);
+    }
+    static VERSION: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"^([0-9]{5,})@([0-9a-f]{8,})$").unwrap());
+    match VERSION.captures(&version) {
+        Some(found) => (found[1].parse().ok(), Some(found[2].to_owned())),
+        None => {
+            crate::screen::warning_once(&format!(
+                "[youtube] Invalid player JS version \"{version}\" specified. It should be \"actual\" or in the format of STS@HASH"
+            ));
+            (None, None)
+        }
+    }
+}
+
+/// `_extract_player_info`.
+fn player_id_of(player_url: &str) -> Option<String> {
     static PLAYER_ID: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"/s/player/(?P<id>[a-fA-F0-9]{8,})/").unwrap());
-    let id = PLAYER_ID.captures(found)?["id"].to_owned();
-    let base = Url::parse("https://www.youtube.com").ok()?;
-    let path = found
-        .split_once(&format!("/s/player/{id}/"))
-        .map_or("", |(_, path)| path);
-    if path == MAIN_PLAYER_VARIANT {
-        return base.join(found).ok().map(String::from);
+    Some(PLAYER_ID.captures(player_url)?["id"].to_owned())
+}
+
+/// `_get_player_id_variant_and_path`.
+fn player_variant_and_path(player_url: &str) -> Option<(String, Option<&'static str>, String)> {
+    let id = player_id_of(player_url)?;
+    let path = Url::parse("https://www.youtube.com")
+        .ok()?
+        .join(player_url)
+        .ok()?
+        .path()
+        .to_owned();
+    let path = path
+        .strip_prefix(&format!("/s/player/{id}/"))
+        .map_or(path.clone(), str::to_owned);
+    let variant = PLAYER_JS_VARIANTS
+        .iter()
+        .find(|(_, known)| *known == path)
+        .or_else(|| {
+            PLAYER_JS_VARIANTS.iter().find(|(_, known)| {
+                let pattern = regex::escape(known).replace("en_US", "[a-zA-Z0-9_]+");
+                Regex::new(&format!("^(?:{pattern})$")).is_ok_and(|regex| regex.is_match(&path))
+            })
+        })
+        .map(|(name, _)| *name);
+    if variant.is_none() {
+        crate::screen::extractor_debug_once(&format!(
+            "Unable to determine player JS variant\n        player = {player_url}"
+        ));
     }
-    base.join(&format!("/s/player/{id}/{MAIN_PLAYER_VARIANT}"))
+    Some((id, variant, path))
+}
+
+/// `_player_js_cache_key`: `PLAYER_ID-VARIANT`.
+fn player_js_cache_key(player_url: &str) -> Option<String> {
+    let (id, variant, path) = player_variant_and_path(player_url)?;
+    let variant = match variant {
+        Some(variant) => variant.to_owned(),
+        None => path
+            .strip_suffix(".js")
+            .unwrap_or(&path)
+            .chars()
+            .map(|c| if c.is_ascii_alphanumeric() { c } else { '_' })
+            .collect(),
+    };
+    Some(format!("{id}-{variant}"))
+}
+
+/// `_construct_player_url`: the player of `player_js_variant` (`main` by
+/// default, `actual` keeps the page's), with `player_js_version`'s ID.
+fn construct_player_url(player_id: Option<&str>, player_url: Option<&str>) -> Option<String> {
+    let mut id = match player_id {
+        Some(id) => id.to_owned(),
+        None => player_id_of(player_url?)?,
+    };
+    let mut force = None;
+    if let (_, Some(forced)) = player_js_version()
+        && forced != id
+    {
+        force = Some(format!("Forcing player {forced} in place of player {id}"));
+        id = forced;
+    }
+    let mut variant = super::args::non_empty("player_js_variant").unwrap_or_else(|| "main".into());
+    if variant != "actual" && !PLAYER_JS_VARIANTS.iter().any(|(name, _)| *name == variant) {
+        let names: Vec<&str> = PLAYER_JS_VARIANTS.iter().map(|(name, _)| *name).collect();
+        crate::screen::warning_once(&format!(
+            "[youtube] Invalid player JS variant name \"{variant}\" requested. Valid choices are: {}",
+            names.join(", ")
+        ));
+        variant = "main".into();
+    }
+    let base = Url::parse("https://www.youtube.com").ok()?;
+    let Some(player_url) = player_url else {
+        if let Some(force) = &force {
+            crate::screen::extractor_debug_once(force);
+        }
+        return base
+            .join(&format!("/s/player/{id}/{}", variant_path(&variant)))
+            .ok()
+            .map(String::from);
+    };
+    let actual = player_variant_and_path(player_url).and_then(|(_, variant, _)| variant);
+    if force.is_none() && (variant == "actual" || Some(variant.as_str()) == actual) {
+        return base.join(player_url).ok().map(String::from);
+    }
+    if variant == "actual" {
+        variant = actual.unwrap_or("main").to_owned();
+    }
+    let mut lines: Vec<String> = force.into_iter().collect();
+    if Some(variant.as_str()) != actual {
+        lines.push(format!(
+            "Forcing \"{variant}\" player JS variant for player {id}"
+        ));
+    }
+    lines.push(format!("original url = {player_url}"));
+    crate::screen::extractor_debug_once(&lines.join("\n        "));
+    base.join(&format!("/s/player/{id}/{}", variant_path(&variant)))
         .ok()
         .map(String::from)
 }
@@ -359,8 +496,11 @@ pub(super) fn visitor_from(source: &Value) -> Option<String> {
     visitor_data(&[source])
 }
 
-/// `_extract_visitor_data`.
+/// `_extract_visitor_data`: `youtube:visitor_data`, else the sources'.
 fn visitor_data(sources: &[&Value]) -> Option<String> {
+    if let Some(visitor) = super::args::non_empty_case("visitor_data") {
+        return Some(visitor);
+    }
     for source in sources {
         for path in [
             &["VISITOR_DATA"][..],
@@ -389,15 +529,15 @@ fn api_context(ytcfg: &Map<String, Value>, default: &Map<String, Value>) -> Valu
         .cloned()
         .unwrap_or_else(|| json!({}));
     if let Some(client) = context.get_mut("client").and_then(Value::as_object_mut) {
-        client.insert("hl".into(), "en".into());
+        client.insert("hl".into(), super::request_lang().into());
         client.insert("timeZone".into(), "UTC".into());
         client.insert("utcOffsetMinutes".into(), 0.into());
     }
     context
 }
 
-/// `_extract_player_response` through `_call_api`: one POST to
-/// `/youtubei/v1/player`.
+/// `_extract_player_response` through `_extract_response`: one POST to
+/// `/youtubei/v1/player` (`None` when an incomplete response was given up on).
 #[allow(clippy::too_many_arguments)]
 fn player_response(
     client: &Client,
@@ -409,11 +549,22 @@ fn player_response(
     visitor: Option<&str>,
     initial_pr: &Value,
     data_sync: Option<&str>,
-) -> Result<Value> {
+    po_token: Option<&str>,
+) -> Result<Option<Value>> {
     let mut query = Map::new();
     query.insert("videoId".into(), video_id.into());
-    if let Some(params) = config.player_params {
+    // `player_params`, else the client's `PLAYER_PARAMS`.
+    let params = super::args::first_case("player_params")
+        .or_else(|| config.player_params.map(str::to_owned))
+        .filter(|params| !params.is_empty());
+    if let Some(params) = params {
         query.insert("params".into(), params.into());
+    }
+    if let Some(token) = po_token {
+        query.insert(
+            "serviceIntegrityDimensions".into(),
+            json!({"poToken": token}),
+        );
     }
     let sts = player_url.and_then(|url| signature_timestamp(client, video_id, url, webpage_ytcfg));
     let mut playback = Map::new();
@@ -431,10 +582,15 @@ fn player_response(
     {
         playback.insert("encryptedHostFlags".into(), flags.clone());
     }
-    query.insert(
-        "playbackContext".into(),
-        json!({"contentPlaybackContext": Value::Object(playback)}),
-    );
+    let mut playback_context = Map::new();
+    playback_context.insert("contentPlaybackContext".into(), Value::Object(playback));
+    // `use_ad_playback_context` for the clients supporting it.
+    if super::args::first("use_ad_playback_context").is_some_and(|value| value != "false")
+        && config.supports_ad_playback_context
+    {
+        playback_context.insert("adPlaybackContext".into(), json!({"pyv": true}));
+    }
+    query.insert("playbackContext".into(), Value::Object(playback_context));
     query.insert("contentCheckOk".into(), true.into());
     query.insert("racyCheckOk".into(), true.into());
     let note = format!(
@@ -452,18 +608,18 @@ fn player_response(
         delegated: delegated.or_else(|| delegated_session_id(&[&webpage, initial_pr, &player])),
         user: user.or_else(|| user_session_id(&[&webpage, initial_pr, &player])),
     };
-    call_api(
-        client,
+    let default = default_ytcfg(config);
+    let request = ApiRequest::new(
         config,
         "player",
         "youtube",
         video_id,
-        player_ytcfg,
-        visitor,
+        api_context(player_ytcfg, &default),
         query,
+        api_headers(config, player_ytcfg, visitor, session),
         &note,
-        session,
-    )
+    )?;
+    extract_response(client, &request, None, true)
 }
 
 /// An account session's request values (`generate_api_headers` arguments);
@@ -492,8 +648,11 @@ fn session_index(sources: &[&Value]) -> Option<i64> {
         })
 }
 
-/// `_extract_data_sync_id`.
+/// `_extract_data_sync_id`: `youtube:data_sync_id`, else the sources'.
 fn data_sync_id(sources: &[&Value]) -> Option<String> {
+    if let Some(id) = super::args::non_empty_case("data_sync_id") {
+        return Some(id);
+    }
     sources.iter().find_map(|source| {
         source
             .get("DATASYNC_ID")
@@ -556,26 +715,33 @@ fn auth_headers(
     headers
 }
 
-/// `generate_api_headers`: the client's name, version, origin, visitor ID,
-/// User-Agent and cookie authentication headers.
-fn generate_api_headers(
+/// Upstream's default `extractor_retries` for InnerTube requests.
+const API_RETRIES: u32 = 3;
+
+/// `_select_api_hostname`: `innertube_host`, else the client's host.
+fn api_host(config: &innertube::ClientConfig) -> String {
+    super::args::non_empty("innertube_host").unwrap_or_else(|| config.host.to_owned())
+}
+
+/// `generate_api_headers(ytcfg=YTCFG, default_client=CLIENT, ...)`.
+fn api_headers(
     config: &innertube::ClientConfig,
-    player_ytcfg: &Map<String, Value>,
+    ytcfg: &Map<String, Value>,
     visitor: Option<&str>,
     session: Session,
 ) -> Vec<(&'static str, String)> {
     let default = default_ytcfg(config);
-    let origin = format!("https://{}", config.host);
-    let name_id = ytcfg_value(player_ytcfg, &default, &["INNERTUBE_CONTEXT_CLIENT_NAME"])
+    let origin = format!("https://{}", api_host(config));
+    let name_id = ytcfg_value(ytcfg, &default, &["INNERTUBE_CONTEXT_CLIENT_NAME"])
         .map(|value| match value {
             Value::String(text) => text.clone(),
             other => other.to_string(),
         })
         .unwrap_or_default();
-    let version = ytcfg_value(player_ytcfg, &default, &["INNERTUBE_CLIENT_VERSION"])
+    let version = ytcfg_value(ytcfg, &default, &["INNERTUBE_CLIENT_VERSION"])
         .or_else(|| {
             ytcfg_value(
-                player_ytcfg,
+                ytcfg,
                 &default,
                 &["INNERTUBE_CONTEXT", "client", "clientVersion"],
             )
@@ -584,7 +750,7 @@ fn generate_api_headers(
         .unwrap_or_default()
         .to_owned();
     let user_agent = ytcfg_value(
-        player_ytcfg,
+        ytcfg,
         &default,
         &["INNERTUBE_CONTEXT", "client", "userAgent"],
     )
@@ -595,30 +761,188 @@ fn generate_api_headers(
         ("X-YouTube-Client-Version", version),
         ("Origin", origin.clone()),
     ];
-    if let Some(visitor) = visitor {
-        headers.push(("X-Goog-Visitor-Id", visitor.to_owned()));
+    // `visitor_data or self._extract_visitor_data(ytcfg)`.
+    let visitor = visitor
+        .map(str::to_owned)
+        .or_else(|| visitor_data(&[&Value::Object(ytcfg.clone())]));
+    if let Some(visitor) = visitor.filter(|visitor| !visitor.is_empty()) {
+        headers.push(("X-Goog-Visitor-Id", visitor));
     }
     if let Some(user_agent) = user_agent {
         headers.push(("User-Agent", user_agent));
     }
-    headers.extend(auth_headers(player_ytcfg, session, &origin));
+    headers.extend(auth_headers(ytcfg, session, &origin));
     headers
 }
 
-/// [`generate_api_headers`] for the web client and the page's own `ytcfg`.
+/// [`api_headers`] for the web client and the page's own `ytcfg`.
 pub(super) fn web_api_headers(
     ytcfg: &Map<String, Value>,
     visitor: Option<&str>,
 ) -> Vec<(&'static str, String)> {
     let config = innertube::client(WEBPAGE_CLIENT).expect("the web client is defined");
-    generate_api_headers(config, ytcfg, visitor, Session::default())
+    api_headers(config, ytcfg, visitor, Session::default())
 }
 
-/// Upstream's default `extractor_retries` for InnerTube requests.
-const API_RETRIES: u32 = 3;
+/// One `_call_api` request's parts.
+struct ApiRequest<'a> {
+    extractor: &'static str,
+    item_id: &'a str,
+    note: &'a str,
+    url: Url,
+    headers: Vec<(&'static str, String)>,
+    body: String,
+}
+
+/// An attempt's failure: the error and whether `_extract_response` retries
+/// it (network errors and HTTP errors other than 403 and 429).
+struct Failure {
+    error: Error,
+    retry: bool,
+}
+
+impl<'a> ApiRequest<'a> {
+    /// `_call_api`'s body (`{'context': CONTEXT, **query}`, `json.dumps`ed),
+    /// URL (`innertube_host`, `key=innertube_key`) and headers.
+    #[allow(clippy::too_many_arguments)]
+    fn new(
+        config: &innertube::ClientConfig,
+        endpoint: &str,
+        extractor: &'static str,
+        item_id: &'a str,
+        context: Value,
+        query: Map<String, Value>,
+        mut headers: Vec<(&'static str, String)>,
+        note: &'a str,
+    ) -> Result<Self> {
+        let mut body = Map::new();
+        body.insert("context".into(), context);
+        body.extend(query);
+        headers.push(("content-type", "application/json".into()));
+        let mut url = Url::parse(&format!(
+            "https://{}/youtubei/v1/{endpoint}",
+            api_host(config)
+        ))?;
+        {
+            let mut pairs = url.query_pairs_mut();
+            if let Some(key) = super::args::non_empty_case("innertube_key") {
+                pairs.append_pair("key", &key);
+            }
+            pairs.append_pair("prettyPrint", "false");
+        }
+        Ok(ApiRequest {
+            extractor,
+            item_id,
+            note,
+            url,
+            headers,
+            body: crate::output::python_json_dumps(&Value::Object(body)),
+        })
+    }
+
+    /// One `_download_json`: an HTTP error's JSON `error.message` is
+    /// reported (`YouTube said: ERROR - ...`) before the error.
+    fn attempt(&self, client: &Client) -> std::result::Result<Value, Failure> {
+        let (extractor, item_id) = (self.extractor, self.item_id);
+        // `_download_json(video_id=None)` names no item.
+        if item_id.is_empty() {
+            crate::screen::screen(&format!("[{extractor}] {}", self.note));
+        } else {
+            crate::screen::screen(&format!("[{extractor}] {item_id}: {}", self.note));
+        }
+        let headers: Vec<(&str, &str)> = self
+            .headers
+            .iter()
+            .map(|(name, value)| (*name, value.as_str()))
+            .collect();
+        static ERROR_STATUSES: LazyLock<Vec<u16>> = LazyLock::new(|| (400..600).collect());
+        let failure = |error: Error| {
+            let status = match &error {
+                Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
+                _ => None,
+            };
+            Failure {
+                retry: status.is_none_or(|status| !matches!(status.as_u16(), 403 | 429)),
+                error: Error::ExtractorRequest {
+                    extractor,
+                    id: item_id.to_owned(),
+                    what: "API page",
+                    source: Box::new(error),
+                },
+            }
+        };
+        let response = match super::super::direct::post_expecting(
+            client,
+            &self.url,
+            &headers,
+            self.body.clone(),
+            &ERROR_STATUSES,
+        ) {
+            Ok(response) => response,
+            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+                return Err(failure(error));
+            }
+            Err(error) => {
+                return Err(Failure {
+                    error,
+                    retry: false,
+                });
+            }
+        };
+        if let Err(source) = response.error_for_status_ref() {
+            let body = response.bytes().unwrap_or_default();
+            if !is_html(&body)
+                && let Some(message) = serde_json::from_slice::<Value>(&body)
+                    .ok()
+                    .and_then(|value| value.pointer("/error/message")?.as_str().map(str::to_owned))
+            {
+                crate::screen::warning(&format!("[{extractor}] YouTube said: ERROR - {message}"));
+            }
+            return Err(failure(Error::Http(source)));
+        }
+        let text = response.text().map_err(|error| Failure {
+            error: Error::Http(error),
+            retry: false,
+        })?;
+        serde_json::from_str(&text).map_err(|error| Failure {
+            error: Error::Reported(format!(
+                "[{extractor}] {item_id}: Failed to parse JSON  (caused by {error})"
+            )),
+            retry: false,
+        })
+    }
+
+    /// Report a retried failure like `RetryManager.report_retry`.
+    fn report_retry(&self, text: &str, retry: u32) {
+        crate::screen::warning(&format!(
+            "[{}] {}. Retrying ({retry}/{API_RETRIES})...",
+            self.extractor,
+            text.strip_suffix('.').unwrap_or(text)
+        ));
+    }
+}
+
+/// `is_html`: the first bytes (after any BOM) start with `<`.
+fn is_html(bytes: &[u8]) -> bool {
+    let mut bytes = bytes;
+    for bom in [
+        &b"\xef\xbb\xbf"[..],
+        b"\x00\x00\xfe\xff",
+        b"\xff\xfe\x00\x00",
+        b"\xff\xfe",
+        b"\xfe\xff",
+    ] {
+        while let Some(rest) = bytes.strip_prefix(bom) {
+            bytes = rest;
+        }
+    }
+    String::from_utf8_lossy(&bytes[..bytes.len().min(512)])
+        .trim_start()
+        .starts_with('<')
+}
 
 /// `_call_api`: one POST to `/youtubei/v1/ENDPOINT` with the client's
-/// `generate_api_headers`.
+/// `generate_api_headers`, retrying network and HTTP errors.
 #[allow(clippy::too_many_arguments)]
 fn call_api(
     client: &Client,
@@ -633,70 +957,160 @@ fn call_api(
     session: Session,
 ) -> Result<Value> {
     let default = default_ytcfg(config);
-    let mut body = Map::new();
-    body.insert("context".into(), api_context(player_ytcfg, &default));
-    body.extend(query);
-    let mut headers = generate_api_headers(config, player_ytcfg, visitor, session);
-    headers.push(("content-type", "application/json".into()));
-    let url = Url::parse(&format!(
-        "https://{}/youtubei/v1/{endpoint}?prettyPrint=false",
-        config.host
-    ))?;
-    let headers: Vec<(&str, &str)> = headers
-        .iter()
-        .map(|(name, value)| (*name, value.as_str()))
-        .collect();
-    let body = serde_json::to_string(&Value::Object(body))
-        .map_err(|error| Error::Reported(error.to_string()))?;
-    // `_extract_response`: network errors and HTTP errors other than 403 and
-    // 429 (intermittent 5xx, sometimes 404) are retried.
+    let request = ApiRequest::new(
+        config,
+        endpoint,
+        extractor,
+        item_id,
+        api_context(player_ytcfg, &default),
+        query,
+        api_headers(config, player_ytcfg, visitor, session),
+        note,
+    )?;
     let mut retries = 0;
-    let response = loop {
-        // `_download_json(video_id=None)` names no item.
-        if item_id.is_empty() {
-            crate::screen::screen(&format!("[{extractor}] {note}"));
-        } else {
-            crate::screen::screen(&format!("[{extractor}] {item_id}: {note}"));
-        }
-        match super::super::direct::post(client, &url, &headers, body.clone()) {
-            Ok(response) => break response,
-            Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
-                let status = match &error {
-                    Error::Http(source) | Error::HttpRetryAfter { source, .. } => source.status(),
-                    _ => None,
-                };
-                if retries < API_RETRIES
-                    && status.is_none_or(|status| !matches!(status.as_u16(), 403 | 429))
-                {
+    loop {
+        match request.attempt(client) {
+            Ok(value) => return Ok(value),
+            Err(Failure { error, retry }) => {
+                if retry && retries < API_RETRIES {
                     retries += 1;
-                    crate::screen::warning(&format!(
-                        "[{extractor}] {}. Retrying ({retries}/{API_RETRIES})...",
-                        crate::upstream_error_text(&error)
-                    ));
+                    request.report_retry(&retry_text(&error), retries);
                     continue;
                 }
-                return Err(Error::ExtractorRequest {
-                    extractor,
-                    id: item_id.to_owned(),
-                    what: "API page",
-                    source: Box::new(error),
-                });
+                return Err(error);
             }
-            Err(error) => return Err(error),
         }
-    };
-    let text = response.text().map_err(Error::Http)?;
-    serde_json::from_str(&text).map_err(|error| {
-        Error::Reported(format!(
-            "[{extractor}] {item_id}: Failed to parse JSON  (caused by {error})"
-        ))
-    })
+    }
+}
+
+/// The text `report_retry` shows for an error (`str(e.cause)`).
+fn retry_text(error: &Error) -> String {
+    match error {
+        Error::ExtractorRequest { source, .. } => crate::upstream_error_text(source),
+        other => crate::upstream_error_text(other),
+    }
+}
+
+/// `_extract_response(..., check_get_keys=KEY, fatal=FATAL)`: [`call_api`]
+/// whose alerts are reported (`unknown error`s retried) and whose
+/// incomplete responses (without `KEY`, or empty) are retried, then given
+/// up on with a warning, or with `raise_incomplete_data` raised.
+fn extract_response(
+    client: &Client,
+    request: &ApiRequest<'_>,
+    check_key: Option<&str>,
+    fatal: bool,
+) -> Result<Option<Value>> {
+    let extractor = request.extractor;
+    let raise_incomplete = !super::args::list("raise_incomplete_data").is_empty();
+    let (mut main_retries, mut incomplete_retries) = (0, 0);
+    loop {
+        let response = match request.attempt(client) {
+            Ok(response) => response,
+            Err(Failure { error, retry }) => {
+                if retry {
+                    if main_retries < API_RETRIES {
+                        main_retries += 1;
+                        request.report_retry(&retry_text(&error), main_retries);
+                        continue;
+                    }
+                    return Err(error);
+                }
+                return error_or_warning(error, fatal);
+            }
+        };
+        if let Err(message) = report_alerts(&response, extractor) {
+            if message.to_lowercase().contains("unknown error") {
+                if main_retries < API_RETRIES {
+                    main_retries += 1;
+                    request.report_retry(&message, main_retries);
+                    continue;
+                }
+                return Err(Error::Reported(format!("[{extractor}] {message}")));
+            }
+            return error_or_warning(Error::Reported(format!("[{extractor}] {message}")), fatal);
+        }
+        let complete = match check_key {
+            Some(key) => super::tab::truthy(response.get(key)),
+            None => super::tab::truthy(Some(&response)),
+        };
+        if complete {
+            return Ok(Some(response));
+        }
+        if incomplete_retries < API_RETRIES {
+            incomplete_retries += 1;
+            request.report_retry("Incomplete data received", incomplete_retries);
+            continue;
+        }
+        if raise_incomplete {
+            return Err(Error::Reported(format!(
+                "[{extractor}] Incomplete data received"
+            )));
+        }
+        crate::screen::warning(&format!(
+            "[{extractor}] Incomplete data received. Giving up after {API_RETRIES} retries"
+        ));
+        return Ok(None);
+    }
+}
+
+/// `_error_or_warning(e, fatal=FATAL)`.
+fn error_or_warning(error: Error, fatal: bool) -> Result<Option<Value>> {
+    if fatal {
+        return Err(error);
+    }
+    crate::screen::warning(&crate::upstream_error_text(&error));
+    Ok(None)
+}
+
+/// `_extract_and_report_alerts(data, only_once=True)`: warnings, then the
+/// last error's `YouTube said: MESSAGE`.
+fn report_alerts(data: &Value, extractor: &str) -> std::result::Result<(), String> {
+    let mut errors = Vec::new();
+    for alert in data
+        .get("alerts")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .filter_map(Value::as_object)
+        .flat_map(|alert| alert.values())
+    {
+        let Some(kind) = alert
+            .get("type")
+            .and_then(Value::as_str)
+            .filter(|kind| !kind.is_empty())
+        else {
+            continue;
+        };
+        let Some(message) = alert.get("text").and_then(super::metadata::text) else {
+            continue;
+        };
+        if kind.eq_ignore_ascii_case("error") {
+            errors.push((kind.to_owned(), message));
+        } else if !matches!(
+            message.as_str(),
+            "Unavailable videos will be hidden during playback" | "Unavailable videos are hidden"
+        ) {
+            crate::screen::warning_once(&format!("[{extractor}] YouTube said: {kind} - {message}"));
+        }
+    }
+    if let Some((_, last)) = errors.pop() {
+        for (kind, message) in errors {
+            crate::screen::warning_once(&format!("[{extractor}] YouTube said: {kind} - {message}"));
+        }
+        return Err(format!("YouTube said: {last}"));
+    }
+    Ok(())
 }
 
 /// `_download_player_url`: the player version in the iframe API JS.
 fn iframe_player_url(client: &Client, video_id: &str) -> Option<String> {
     static VERSION: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"player\\?/([0-9a-fA-F]{8})\\?/").unwrap());
+    if let (_, Some(forced)) = player_js_version() {
+        crate::screen::extractor_debug_once(&format!("Forcing player {forced}"));
+        return construct_player_url(Some(&forced), None);
+    }
     crate::screen::screen(&format!("[youtube] {video_id}: Downloading iframe API JS"));
     let url = Url::parse("https://www.youtube.com/iframe_api").ok()?;
     let page = match super::super::direct::request(client, &url, None)
@@ -715,22 +1129,20 @@ fn iframe_player_url(client: &Client, video_id: &str) -> Option<String> {
         super::super::search_warning("youtube", "player version");
         return None;
     };
-    Some(format!(
-        "https://www.youtube.com/s/player/{}/{MAIN_PLAYER_VARIANT}",
-        &found[1]
-    ))
+    construct_player_url(Some(&found[1]), None)
 }
 
 /// The session `_get_requested_clients` chooses clients for.
-struct ClientSelection {
+struct ClientSelection<'a> {
     js_available: bool,
     authenticated: bool,
     premium: bool,
     music_url: bool,
+    video_id: &'a str,
 }
 
 /// `_get_requested_clients`.
-fn requested_clients(session: &ClientSelection) -> Vec<&'static str> {
+fn requested_clients(session: &ClientSelection<'_>) -> Result<Vec<&'static str>> {
     let defaults: &[&'static str] = if session.premium {
         &DEFAULT_PREMIUM_CLIENTS
     } else if session.authenticated {
@@ -771,6 +1183,12 @@ fn requested_clients(session: &ClientSelection) -> Vec<&'static str> {
         requested.extend(defaults);
     }
     requested.retain(|client| !excluded.iter().any(|excluded| excluded == client));
+    if requested.is_empty() {
+        return Err(Error::Reported(format!(
+            "[youtube] {}: No player clients have been requested",
+            session.video_id
+        )));
+    }
     if session.authenticated {
         if session.music_url && !requested.contains(&"web_music") {
             requested.push("web_music");
@@ -791,7 +1209,7 @@ fn requested_clients(session: &ClientSelection) -> Vec<&'static str> {
             ordered.push(client);
         }
     }
-    ordered
+    Ok(ordered)
 }
 
 /// `_get_available_at_timestamp`: now, plus the pre-roll ads' durations
@@ -913,6 +1331,136 @@ fn is_premium_subscriber(authenticated: bool, initial_data: Option<&Value>) -> b
             .is_some_and(|text| text.to_lowercase().contains("premium"))
 }
 
+/// `_WEBPAGE_CLIENTS` and `_DEFAULT_WEBPAGE_CLIENT`.
+const WEBPAGE_CLIENTS: [&str; 2] = ["web", "web_safari"];
+
+/// `_webpage_client`: `webpage_client` (`web` or `web_safari`), else `web`.
+fn webpage_client() -> &'static str {
+    let requested = super::args::first("webpage_client").unwrap_or_else(|| WEBPAGE_CLIENT.into());
+    match WEBPAGE_CLIENTS.iter().find(|client| **client == requested) {
+        Some(client) => client,
+        None => {
+            crate::screen::warning_once(&format!(
+                "[youtube] Invalid webpage_client \"{requested}\" requested; falling back to {WEBPAGE_CLIENT}"
+            ));
+            WEBPAGE_CLIENT
+        }
+    }
+}
+
+/// `_skipped_webpage_data`: `webpage_skip`, and the webpage's player
+/// response when `player_js_version` forces a player.
+fn skipped_webpage_data() -> Vec<String> {
+    let mut skipped = super::args::list("webpage_skip");
+    if player_js_version_arg() != "actual" {
+        skipped.push("player_response".into());
+    }
+    skipped
+}
+
+/// `_download_initial_webpage`: the watch page (`bpctr`, `has_verified` and
+/// `pp`), unless `player_skip=webpage`.
+fn download_initial_webpage(
+    client: &Client,
+    video_id: &str,
+    webpage_client: &innertube::ClientConfig,
+) -> Result<Option<String>> {
+    if super::args::contains("player_skip", "webpage") {
+        return Ok(None);
+    }
+    let mut url = Url::parse(&format!("https://www.youtube.com/watch?v={video_id}"))?;
+    {
+        let mut query = url.query_pairs_mut();
+        query.append_pair("bpctr", "9999999999");
+        query.append_pair("has_verified", "1");
+        let pp = super::args::first_case("player_params")
+            .filter(|pp| !pp.is_empty())
+            .or_else(|| webpage_client.player_params.map(str::to_owned));
+        if let Some(pp) = pp {
+            query.append_pair("pp", &pp);
+        }
+    }
+    let default = default_ytcfg(webpage_client);
+    let user_agent = default
+        .get("INNERTUBE_CONTEXT")
+        .and_then(|context| context.pointer("/client/userAgent"))
+        .and_then(Value::as_str);
+    let headers: Vec<(&str, &str)> = user_agent
+        .map(|user_agent| ("User-Agent", user_agent))
+        .into_iter()
+        .collect();
+    super::super::download_webpage_note_headers(
+        client,
+        &url,
+        "youtube",
+        video_id,
+        "Downloading webpage",
+        &headers,
+    )
+    .map(Some)
+}
+
+/// `_download_initial_data`: the webpage's initial data (unless
+/// `webpage_skip=initial_data`), else the `next` API's (unless
+/// `player_skip=initial_data`).
+fn download_initial_data(
+    client: &Client,
+    video_id: &str,
+    webpage: Option<&str>,
+    webpage_client: &innertube::ClientConfig,
+    webpage_ytcfg: &Map<String, Value>,
+    skipped: &[String],
+) -> Result<Option<Value>> {
+    static INITIAL_DATA: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r#"(?:window\s*\[\s*["']ytInitialData["']\s*\]|ytInitialData)\s*="#).unwrap()
+    });
+    let mut initial_data = None;
+    if let Some(webpage) = webpage
+        && !skipped.iter().any(|skip| skip == "initial_data")
+    {
+        initial_data = search_initial(webpage, &INITIAL_DATA, "yt initial data");
+        if !super::tab::truthy(initial_data.as_ref().and_then(|data| data.get("contents"))) {
+            crate::screen::warning(
+                "[youtube] Incomplete data received in embedded initial data; re-fetching using API.",
+            );
+            initial_data = None;
+        }
+    }
+    if initial_data.is_none() && !super::args::contains("player_skip", "initial_data") {
+        let mut query = Map::new();
+        query.insert("videoId".into(), video_id.into());
+        query.insert("contentCheckOk".into(), true.into());
+        query.insert("racyCheckOk".into(), true.into());
+        let default = default_ytcfg(webpage_client);
+        // `_call_api` generates its headers without the ytcfg.
+        let request = ApiRequest::new(
+            webpage_client,
+            "next",
+            "youtube",
+            video_id,
+            api_context(webpage_ytcfg, &default),
+            query,
+            api_headers(webpage_client, &Map::new(), None, Session::default()),
+            "Downloading initial data API JSON",
+        )?;
+        initial_data =
+            extract_response(client, &request, Some("contents"), false).map_err(|error| {
+                match error {
+                    // An `ExtractorError` raised to `extract` gets the video ID.
+                    Error::Reported(message) => Error::Reported(
+                        message
+                            .strip_prefix("[youtube] ")
+                            .map_or(message.clone(), |rest| {
+                                format!("[youtube] {video_id}: {rest}")
+                            }),
+                    ),
+                    other => other,
+                }
+            })?;
+    }
+    Ok(initial_data)
+}
+
 /// The acquisition result `_real_extract` continues with.
 pub(super) struct Acquired {
     pub webpage: String,
@@ -928,46 +1476,53 @@ pub(super) struct Acquired {
     pub webpage_ytcfg: Map<String, Value>,
 }
 
-/// `_initial_extract` for an anonymous session.
+/// `_initial_extract`.
 pub(super) fn acquire(
     client: &Client,
     video_id: &str,
     runtime: Option<&challenge::Runtime>,
     music_url: bool,
 ) -> Result<Acquired> {
-    let webpage_url = Url::parse(&format!(
-        "https://www.youtube.com/watch?v={video_id}&bpctr=9999999999&has_verified=1"
-    ))?;
-    let webpage = super::super::download_webpage(client, &webpage_url, "youtube", video_id)?;
-    let web = innertube::client(WEBPAGE_CLIENT).expect("web client");
-    let mut webpage_ytcfg = extract_ytcfg(&webpage);
+    let webpage_client_name = webpage_client();
+    let web = innertube::client(webpage_client_name).expect("webpage client");
+    let webpage = download_initial_webpage(client, video_id, web)?;
+    let mut webpage_ytcfg = webpage.as_deref().map(extract_ytcfg).unwrap_or_default();
     if webpage_ytcfg.is_empty() {
         webpage_ytcfg = default_ytcfg(web);
     }
-    static INITIAL_DATA: LazyLock<Regex> = LazyLock::new(|| {
-        Regex::new(r#"(?:window\s*\[\s*["']ytInitialData["']\s*\]|ytInitialData)\s*="#).unwrap()
-    });
+    let skipped_webpage = skipped_webpage_data();
     static INITIAL_PLAYER_RESPONSE: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"ytInitialPlayerResponse\s*=").unwrap());
-    let initial_data = search_initial(&webpage, &INITIAL_DATA, "yt initial data").filter(|data| {
-        data.get("contents")
-            .is_some_and(|contents| !contents.is_null())
-    });
+    let initial_data = download_initial_data(
+        client,
+        video_id,
+        webpage.as_deref(),
+        web,
+        &webpage_ytcfg,
+        &skipped_webpage,
+    )?;
     // `_get_requested_clients` runs before `_extract_player_responses`
     // searches the initial player response.
     let authenticated = super::has_auth_cookies();
     let premium = is_premium_subscriber(authenticated, initial_data.as_ref());
+    if premium {
+        crate::screen::extractor_debug("Detected YouTube Premium subscription");
+    }
     let clients = requested_clients(&ClientSelection {
         js_available: runtime.is_some(),
         authenticated,
         premium,
         music_url,
+        video_id,
+    })?;
+    let initial_pr = webpage.as_deref().and_then(|webpage| {
+        search_initial(
+            webpage,
+            &INITIAL_PLAYER_RESPONSE,
+            &format!("{webpage_client_name} client initial player response"),
+        )
     });
-    let initial_pr = search_initial(
-        &webpage,
-        &INITIAL_PLAYER_RESPONSE,
-        &format!("{WEBPAGE_CLIENT} client initial player response"),
-    );
+    let webpage = webpage.unwrap_or_default();
 
     let mut player_responses: Vec<Value> = Vec::new();
     let mut responses: Vec<streams::ClientResponse> = Vec::new();
@@ -996,8 +1551,8 @@ pub(super) fn acquire(
     let mut data_sync: Option<String> = None;
     let mut skipped: Vec<(&'static str, String)> = Vec::new();
     let webpage_ytcfg_value = Value::Object(webpage_ytcfg.clone());
-    let skip_configs = crate::manifest_args::configuration_arg("youtube", "player_skip", false)
-        .is_some_and(|skip| skip.iter().any(|value| value == "configs"));
+    let skip_configs = super::args::contains("player_skip", "configs");
+    let skip_js = super::args::contains("player_skip", "js");
     // `append_client` adds the first named client not yet requested.
     let mut all_clients: Vec<&str> = clients.clone();
     let mut pending: Vec<String> = clients
@@ -1022,12 +1577,12 @@ pub(super) fn acquire(
         let Some(config) = innertube::client(name) else {
             continue;
         };
-        let mut player_ytcfg = if config.name == WEBPAGE_CLIENT {
+        let mut player_ytcfg = if config.name == webpage_client_name {
             webpage_ytcfg.clone()
         } else {
             Map::new()
         };
-        if !skip_configs && config.name != WEBPAGE_CLIENT {
+        if !skip_configs && config.name != webpage_client_name {
             let downloaded = download_ytcfg(client, config, video_id);
             if !downloaded.is_empty() {
                 player_ytcfg = downloaded;
@@ -1036,28 +1591,50 @@ pub(super) fn acquire(
         if player_url_found.is_none() {
             player_url_found = player_url(&[&webpage_ytcfg, &player_ytcfg]);
         }
-        if player_url_found.is_none() && !tried_iframe_fallback && config.require_js_player {
+        let mut require_js_player = config.require_js_player;
+        if skip_js {
+            require_js_player = false;
+            player_url_found = None;
+        }
+        if player_url_found.is_none() && !tried_iframe_fallback && require_js_player {
             player_url_found = iframe_player_url(client, video_id);
             tried_iframe_fallback = true;
         }
+        let reused = (config.name == webpage_client_name
+            && !skipped_webpage.iter().any(|skip| skip == "player_response"))
+        .then(|| initial_pr.clone())
+        .flatten();
         let initial_value = initial_pr.clone().unwrap_or(Value::Null);
-        if data_sync.is_none() {
-            data_sync = data_sync_id(&[
-                &webpage_ytcfg_value,
-                &initial_value,
-                &Value::Object(player_ytcfg.clone()),
-            ]);
-        }
+        let player_ytcfg_value = Value::Object(player_ytcfg.clone());
         if visitor.is_none() {
-            visitor = visitor_data(&[
-                &webpage_ytcfg_value,
-                &initial_value,
-                &Value::Object(player_ytcfg.clone()),
-            ]);
+            visitor = visitor_data(&[&webpage_ytcfg_value, &initial_value, &player_ytcfg_value]);
         }
-        let reused = (config.name == WEBPAGE_CLIENT)
-            .then(|| initial_pr.clone())
-            .flatten();
+        if data_sync.is_none() {
+            data_sync = data_sync_id(&[&webpage_ytcfg_value, &initial_value, &player_ytcfg_value]);
+        }
+        // `fetch_po_token_args`, with `player_ytcfg or _get_default_ytcfg(client)`.
+        let client_ytcfg = if player_ytcfg.is_empty() {
+            default_ytcfg(config)
+        } else {
+            player_ytcfg.clone()
+        };
+        let pot_request = super::pot::Request {
+            client: config.name,
+            video_id: video_id.to_owned(),
+            visitor_data: visitor.clone(),
+            data_sync_id: data_sync.clone().filter(|_| authenticated),
+            player_url: player_url_found.clone().filter(|_| require_js_player),
+            authenticated,
+            bind_to_video_id: super::pot::binds_to_video_id(&client_ytcfg),
+        };
+        // A webpage player response needs no player PO token.
+        let player_po_token = match reused {
+            Some(_) => None,
+            None => pot_request.fetch(
+                super::pot::Context::Player,
+                config.player.required || config.player.recommended,
+            ),
+        };
         let response = match reused {
             Some(response) => response,
             None => match player_response(
@@ -1074,8 +1651,9 @@ pub(super) fn acquire(
                 visitor.as_deref(),
                 &initial_value,
                 data_sync.as_deref(),
+                player_po_token.as_deref(),
             ) {
-                Ok(response) => response,
+                Ok(response) => response.unwrap_or(Value::Null),
                 Err(error) => {
                     crate::screen::warning(&crate::upstream_error_text(&error));
                     continue;
@@ -1098,12 +1676,20 @@ pub(super) fn acquire(
             .as_object()
             .is_some_and(|object| !object.is_empty())
         {
+            let innertube_client_name = client_ytcfg
+                .get("INNERTUBE_CONTEXT")
+                .and_then(|context| context.pointer("/client/clientName"))
+                .and_then(Value::as_str)
+                .unwrap_or_default()
+                .to_owned();
             player_responses.push(response.clone());
             responses.push(streams::ClientResponse {
                 client: config.name,
                 response: response.clone(),
-                player_token_provided: false,
+                player_token_provided: player_po_token.is_some(),
                 available_at: available_at(&response, video_id, config.name),
+                pot: pot_request,
+                innertube_client_name,
             });
         }
         // A "made for kids" video android_vr/visionos cannot play may play

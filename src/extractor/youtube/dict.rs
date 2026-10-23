@@ -466,7 +466,14 @@ pub(super) fn parse_time_text_reporting(
             .or_else(|| PREFIXED.captures(&lower))?;
         crate::dates::unified_timestamp(&found[1], true)
     });
-    if timestamp.is_none() && report_failure {
+    // Only reported for English (`self._preferred_lang in (None, 'en')`).
+    if timestamp.is_none()
+        && report_failure
+        && super::preferred_lang()
+            .ok()
+            .flatten()
+            .is_none_or(|lang| lang == "en")
+    {
         crate::screen::warning_once(&format!(
             "[{extractor}] Cannot parse localized time text \"{text}\""
         ));

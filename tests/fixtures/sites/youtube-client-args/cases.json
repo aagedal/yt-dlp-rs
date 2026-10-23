@@ -1,0 +1,17 @@
+[
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:innertube_host=YouTubei.GoogleAPIs.test;innertube_key=AbC", "--print", "%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_params=CgIQBg==", "--print", "%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:webpage_client=web_safari", "--print", "title"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:webpage_client=tv", "--print", "title"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=web_safari;webpage_client=web_safari", "-F"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=mweb;player_skip=configs;use_ad_playback_context=true", "--print", "format_id", "--print", "%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=mweb;player_skip=configs;use_ad_playback_context=false", "--print", "format_id", "--print", "%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:use_ad_playback_context=true", "--print", "%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=mweb;player_skip=configs;player_js_version=20348@0004de42", "--print", "format_id", "--print", "%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=mweb;player_skip=configs;player_js_version=20348", "--print", "%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=NoStsVideo1", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=mweb;player_skip=configs", "-F"]},
+ {"url": "https://www.youtube.com/watch?v=NoStsVideo1", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=mweb;player_skip=configs;player_js_variant=tv", "-F"]},
+ {"url": "https://www.youtube.com/watch?v=NoStsVideo1", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=mweb;player_skip=configs;player_js_variant=bogus", "--print", "%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=NoStsVideo1", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=mweb;player_skip=configs;player_js_variant=actual", "--print", "%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=NoStsVideo1", "args": ["--no-js-runtimes", "--extractor-args", "youtube:player_client=mweb;player_skip=configs,js", "--print", "%(formats.0.url)s"]}
+]

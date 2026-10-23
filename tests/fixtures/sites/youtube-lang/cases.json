@@ -1,0 +1,10 @@
+[
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--print", "%(title)s|%(description).40s|%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:lang=de", "--print", "%(title)s|%(description).40s|%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:lang=en", "--print", "%(title)s|%(description).40s|%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:lang=DE", "--print", "%(title)s|%(description).40s|%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:lang=xx", "--print", "%(title)s|%(description).40s|%(formats.0.url)s"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--list-subs"]},
+ {"url": "https://www.youtube.com/watch?v=BaW_jenozKc", "args": ["--no-js-runtimes", "--extractor-args", "youtube:skip=translated_subs", "--list-subs"]},
+ {"url": "https://www.youtube.com/watch?v=NoTitleVid1", "args": ["--no-js-runtimes", "--print", "title"]}
+]
