@@ -787,6 +787,19 @@ post's title (72-character truncation), alt title, uploader, counts, tags and
 supported. `tests/fixtures/sites/weibo/` is compared with pinned upstream
 output.
 
+XiaoHongShu (RedNote) notes (`www.xiaohongshu.com/explore/ID`,
+`discovery/item/ID`) follow upstream `XiaoHongShuIE` (release 2026.10.21):
+the page's fatal `window.__INITIAL_STATE__` (through `js_to_json`), every
+codec's streams' `masterUrl` and `backupUrls` as formats with their FPS,
+dimensions, codecs, scaled bitrates, channels, quality type (`format`), size
+and duration, plus a `direct` format (`quality` 1) for the original upload
+when `sns-video-bd.xhscdn.com/KEY` answers (otherwise upstream's
+`Original video is not available` warning), the note's images as thumbnails,
+the OpenGraph title overridden by the note's, description, tags and uploader
+ID. Image-only notes have no formats and fail like upstream. Non-HTTP stream
+URLs are refused; a malformed state fails without Python's `JSONDecodeError`
+text. `tests/fixtures/sites/xiaohongshu/` is compared with upstream output.
+
 Vocaroo recordings (`vocaroo.com`/`voca.ro` `[embed/]ID`) follow upstream
 `VocarooIE`: the `media`/`media1` MP3 URL checked with a HEAD request
 (`Downloading webpage`, the site as Referer), its `x-bz-upload-timestamp`

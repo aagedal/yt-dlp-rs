@@ -323,7 +323,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 127] = [
+const EXTRACTOR_NAMES: [&str; 128] = [
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -427,6 +427,7 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "Vocaroo",
     "Weibo",
     "WeiboVideo",
+    "XiaoHongShu",
     "yfanefa",
     "youtube:clip",
     "youtube:consent",
@@ -752,6 +753,7 @@ impl YoutubeDl {
                 Box::new(extractor::Tweakers),
                 Box::new(extractor::TwentyThreeVideo),
                 Box::new(extractor::Vocaroo),
+                Box::new(extractor::XiaoHongShu),
                 Box::new(extractor::Yfanefa),
                 Box::new(extractor::Zhihu),
                 Box::new(GenericHttp),
