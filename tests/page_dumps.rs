@@ -150,7 +150,7 @@ fn print_traffic_shows_requests_and_response_headers() {
         .find(|line| line.starts_with("send: b'GET /v.mp4 HTTP/1.1\\r\\n"))
         .unwrap_or_else(|| panic!("{stdout}"));
     assert!(
-        send.contains("user-agent: UA/1\\r\\n") && send.ends_with("\\r\\n\\r\\n'"),
+        send.contains("User-Agent: UA/1\\r\\n") && send.ends_with("\\r\\n\\r\\n'"),
         "{send}"
     );
     assert!(stdout.contains(

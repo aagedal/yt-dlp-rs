@@ -564,6 +564,10 @@ impl YoutubeDl {
             .redirect(reqwest::redirect::Policy::limited(10))
             // Preserve an HTML5 page's explicit referrer across media redirects.
             .referer(false)
+            // Python's http.client sends `User-Agent`, not `user-agent`;
+            // Cloudflare rejects lowercase HTTP/1.1 header names on some
+            // sites (kick.com answers 403).
+            .http1_title_case_headers()
             .connection_verbose(http.print_traffic);
         if http.print_traffic {
             traffic::enable();
