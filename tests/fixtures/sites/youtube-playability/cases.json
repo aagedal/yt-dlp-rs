@@ -4,5 +4,7 @@
  {"url": "https://www.youtube.com/watch?v=Unavailabl1", "args": ["--no-js-runtimes", "-s"]},
  {"url": "https://www.youtube.com/watch?v=PrivateVid1", "args": ["--no-js-runtimes", "-s"]},
  {"url": "https://www.youtube.com/watch?v=PrivateVid2", "args": ["--no-js-runtimes", "-s"]},
- {"url": "https://www.youtube.com/watch?v=ServerErr01", "args": ["--no-js-runtimes", "-s"]}
+ {"url": "https://www.youtube.com/watch?v=ServerErr01", "args": ["--no-js-runtimes", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=Interstit01", "args": ["--no-js-runtimes", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=Interstit02", "args": ["--no-js-runtimes", "-s"]}
 ]

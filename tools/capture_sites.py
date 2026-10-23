@@ -21,7 +21,7 @@ import tempfile
 
 from site_proxy import SiteProxy
 
-PINNED_UPSTREAM = '897341241f2bfb2439fe0367f4c7c9ccd29a3828'
+PINNED_UPSTREAM = '6ccd977303412151ee23352c6257dd658ffc1987'
 SITES = Path(__file__).resolve().parents[1] / 'tests/fixtures/sites'
 EJS = Path(__file__).resolve().parents[1] / 'vendor/ejs'
 
@@ -65,7 +65,8 @@ def prepare(site, case, directory):
 def run(upstream, proxy, case, site=None):
     directory = tempfile.mkdtemp()
     copied = prepare(site, case, directory) if site else set()
-    env = dict(os.environ, PYTHONPATH=str(upstream))
+    # Absolute: upstream runs from a temporary working directory.
+    env = dict(os.environ, PYTHONPATH=str(Path(upstream).resolve()))
     result = subprocess.run(
         [sys.executable, '-m', 'yt_dlp', '--ignore-config', '--proxy', proxy.url,
          '--no-check-certificate', '--user-agent', 'fixture', '--cache-dir', str(seeded_cache()),

@@ -139,6 +139,82 @@
     "Content-Type": "application/json"
    },
    "body": "{\"url\": null}"
+  },
+  {
+   "url": "https://www.loom.com/graphql",
+   "request_body": [
+    "\"operationName\":\"GetVideoSSR\"",
+    "\"videoId\":\"fedcba9876543210fedcba9876543210\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"getVideo\": {\"__typename\": \"RegularUserVideo\", \"id\": \"fedcba9876543210fedcba9876543210\", \"name\": \"Signed HLS\", \"description\": \"Desc\", \"createdAt\": \"2024-04-04T12:00:00.000Z\", \"owner\": {\"display_name\": \"Owner Name\"}, \"video_properties\": {\"duration\": 26, \"width\": 1280, \"height\": 720}}}}"
+  },
+  {
+   "url": "https://www.loom.com/graphql",
+   "request_body": [
+    "\"operationName\":\"GetVideoSource\"",
+    "\"videoId\":\"fedcba9876543210fedcba9876543210\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"getVideo\": {\"nullableRawCdnUrl\": {\"url\": \"https://cdn.loom.test/sessions/raw/fedcba9876543210fedcba9876543210.m3u8?Policy=cdn&Signature=cdn\"}}}}"
+  },
+  {
+   "url": "https://www.loom.com/graphql",
+   "request_body": [
+    "\"operationName\":\"FetchChapters\"",
+    "\"videoId\":\"fedcba9876543210fedcba9876543210\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"fetchVideoChapters\": {\"__typename\": \"EmptyChaptersPayload\", \"content\": null}}}"
+  },
+  {
+   "url": "https://www.loom.com/api/campaigns/sessions/fedcba9876543210fedcba9876543210/raw-url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"url\": \"https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/playlist.m3u8?Policy=pol&Signature=sig&Key-Pair-Id=kp\"}"
+  },
+  {
+   "url": "https://www.loom.com/api/campaigns/sessions/fedcba9876543210fedcba9876543210/transcoded-url",
+   "status": 204,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/playlist.m3u8?Policy=pol&Signature=sig&Key-Pair-Id=kp",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720\nmediaplaylist-bitrate1500.m3u8\n"
+  },
+  {
+   "url": "https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/mediaplaylist-bitrate1500.m3u8?Policy=pol&Signature=sig&Key-Pair-Id=kp",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nseg-0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/seg-0.ts?Policy=pol&Signature=sig&Key-Pair-Id=kp",
+   "headers": {
+    "Content-Type": "video/mp2t"
+   },
+   "body": "loom-signed-segment"
+  },
+  {
+   "url": "https://cdn.loom.test/sessions/raw/fedcba9876543210fedcba9876543210.m3u8?Policy=cdn&Signature=cdn",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXTINF:10.0,\nseg-0.ts\n#EXT-X-ENDLIST\n"
   }
  ]
 }

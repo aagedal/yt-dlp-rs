@@ -725,16 +725,44 @@ fn unplayable_reason(
         })
         .cloned()
         .unwrap_or(Value::Null);
-    let reason = pemr.get("reason").and_then(metadata::text).or_else(|| {
-        statuses
-            .iter()
-            .find_map(|status| status.get("reason").and_then(Value::as_str))
-            .map(str::to_owned)
-    });
+    // Upstream a51ef56c0: an interstitial view model's title and description
+    // stand in for a missing reason and subreason.
+    let ivm = statuses
+        .iter()
+        .find_map(|status| {
+            status
+                .pointer("/errorScreen/playerInterstitialRenderer/content/interstitialViewModel")
+                .filter(|model| model.is_object())
+        })
+        .cloned()
+        .unwrap_or(Value::Null);
+    let mut reason = pemr
+        .get("reason")
+        .and_then(metadata::text)
+        .filter(|text| !text.is_empty())
+        .or_else(|| {
+            statuses
+                .iter()
+                .find_map(|status| status.get("reason").and_then(Value::as_str))
+                .filter(|text| !text.is_empty())
+                .map(str::to_owned)
+        })
+        .or_else(|| {
+            ivm.pointer("/title/content")
+                .and_then(Value::as_str)
+                .map(str::to_owned)
+        })
+        .unwrap_or_default();
     let subreason = pemr
         .get("subreason")
         .and_then(metadata::text)
         .map(|text| crate::html::clean_html(&text))
+        .filter(|text| !text.is_empty())
+        .or_else(|| {
+            ivm.pointer("/description/content")
+                .and_then(Value::as_str)
+                .map(crate::html::clean_html)
+        })
         .unwrap_or_default();
     if subreason.starts_with("The uploader has not made this video available in your country") {
         // `raise_geo_restricted(subreason, countries, metadata_available=True)`:
@@ -745,8 +773,7 @@ fn unplayable_reason(
             return Some(geo_restricted(id, &subreason, player_responses, webpage));
         }
     }
-    let mut reason = reason?;
-    if !subreason.is_empty() {
+    if !subreason.is_empty() && subreason != reason {
         reason.push_str(&format!(". {subreason}"));
     }
     if reason.is_empty() {
@@ -1586,6 +1613,21 @@ impl Extractor for ConfiguredYoutube {
             }
         }
     }
+}
+
+/// `extract_yt_initial_data`'s first source (upstream 12ac9aca7): the JSON of
+/// a dedicated `<script id="yt-initial-data">` element (`_YT_INITIAL_DATA_ALT_RE`,
+/// silently absent when missing or invalid), before `ytInitialData =`.
+pub(crate) fn initial_data_script(webpage: &str) -> Option<Value> {
+    // `<script\b(?!-)[^>]+(?<!-)\bid=["']yt-initial-data["'][^>]*>` without
+    // look-around: the separators before `id` are neither word characters nor `-`.
+    static ALT: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r#"<script[^\w>-](?:[^>]*[^\w>-])?id=["']yt-initial-data["'][^>]*>"#)
+            .unwrap()
+    });
+    let data = super::search_json(&ALT, webpage, false).flatten()?;
+    crate::screen::extractor_debug("Parsed initial data from dedicated script element");
+    Some(data)
 }
 
 #[cfg(test)]

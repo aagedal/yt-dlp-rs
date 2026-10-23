@@ -17,7 +17,7 @@ import tempfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PINNED_UPSTREAM = "897341241f2bfb2439fe0367f4c7c9ccd29a3828"
+PINNED_UPSTREAM = "6ccd977303412151ee23352c6257dd658ffc1987"
 PINNED_DENO = "2.9.7"
 DENO_ARGS = [
     "run", "--ext=js", "--no-code-cache", "--no-prompt", "--no-remote",

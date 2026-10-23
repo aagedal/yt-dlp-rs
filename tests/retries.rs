@@ -81,7 +81,7 @@ impl Server {
                 if !bytes.windows(4).any(|part| part == b"\r\n\r\n") {
                     continue;
                 }
-                let request = String::from_utf8(bytes).unwrap();
+                let request = lower_header_names(&String::from_utf8(bytes).unwrap());
                 let path = request.split_whitespace().nth(1).unwrap().to_owned();
                 let count = {
                     let mut requests = recorded.lock().unwrap();
@@ -1624,4 +1624,17 @@ fn cli_part_files_resume_across_runs_or_restart_with_no_continue() {
         .unwrap();
     assert!(output.status.success());
     assert_eq!(directory_names(directory.path()), ["clip.mp4"]);
+}
+
+/// The request with lowercase header names (the client sends `Title-Case`).
+fn lower_header_names(request: &str) -> String {
+    request
+        .split("\r\n")
+        .enumerate()
+        .map(|(index, line)| match line.split_once(": ") {
+            Some((name, value)) if index > 0 => format!("{}: {value}", name.to_ascii_lowercase()),
+            _ => line.to_owned(),
+        })
+        .collect::<Vec<_>>()
+        .join("\r\n")
 }

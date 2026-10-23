@@ -459,6 +459,10 @@ pub struct DownloaderOptions {
     /// Chunked HTTP downloading (YouTube HTTPS formats use 10 MiB).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub http_chunk_size: Option<u64>,
+    /// Other options (FFmpeg's `ffmpeg_args`/`ffmpeg_args_out`), kept for
+    /// the info dict.
+    #[serde(flatten, default)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
 }
 
 /// One upstream chapter dictionary.
@@ -1134,6 +1138,21 @@ pub(crate) fn fill_format_fields(formats: &mut [VideoFormat]) {
             format.video_ext = Some(ext.clone());
             format.audio_ext = Some("none".into());
         }
+        // HEVC-over-FLV is out of FLV's original spec.
+        static HEVC: std::sync::LazyLock<regex::Regex> =
+            std::sync::LazyLock::new(|| regex::Regex::new(r"^(?:[hx]265|he?vc?)").unwrap());
+        if format
+            .extra
+            .get("preference")
+            .is_none_or(serde_json::Value::is_null)
+            && ext == "flv"
+            && HEVC.is_match(format.vcodec.as_deref().unwrap_or_default())
+        {
+            format.extra.insert("preference".into(), (-100).into());
+            format
+                .extra
+                .insert(crate::info_order::SORTER_PREFERENCE.into(), true.into());
+        }
         if matches!(ext.as_str(), "aac" | "opus" | "mp3" | "flac" | "vorbis")
             && format.acodec.is_none()
         {
@@ -1268,7 +1287,16 @@ pub(crate) fn fill_filesize_approx(formats: &mut [VideoFormat], duration: Option
                 .and_then(serde_json::Value::as_f64)
                 .is_some_and(|size| size != 0.0)
         };
-        if (manifests || !format.extra.contains_key("manifest_url"))
+        // `not format.get('manifest_url')`: an inline manifest's is `None`.
+        let manifest = format
+            .extra
+            .get("manifest_url")
+            .is_some_and(|url| match url {
+                serde_json::Value::Null => false,
+                serde_json::Value::String(url) => !url.is_empty(),
+                _ => true,
+            });
+        if (manifests || !manifest)
             && format.filesize.is_none_or(|size| size == 0)
             && !sized(format.extra.get("filesize_approx"))
             && let (Some(tbr), Some(duration)) = (format.tbr, duration)

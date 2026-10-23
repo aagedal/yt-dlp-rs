@@ -8,7 +8,7 @@ filesize, total bitrate, language and note. Renderer tests consume the same
 input and metadata. Missing optional values remain null.
 
 Reference: official yt-dlp commit
-`897341241f2bfb2439fe0367f4c7c9ccd29a3828`:
+`6ccd977303412151ee23352c6257dd658ffc1987`:
 
 - `yt_dlp/options.py:945`: `-F`/`--list-formats` option.
 - `yt_dlp/YoutubeDL.py:786`: unset simulation becomes `list_only` for listing.

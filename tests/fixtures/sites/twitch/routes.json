@@ -3,6 +3,218 @@
   {
    "url": "https://gql.twitch.tv/gql",
    "request_body": [
+    "StreamMetadata",
+    "\"channelLogin\": \"monstercat\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "stream.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "StreamMetadata",
+    "\"channelLogin\": \"rerunchan\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "stream_rerun.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "StreamMetadata",
+    "\"channelLogin\": \"geochan\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "stream_geo.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "StreamMetadata",
+    "\"channelLogin\": \"offlinechan\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "stream_offline.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "StreamMetadata"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"data\": {\"user\": null}}, {\"data\": {\"user\": null}}, {\"data\": {\"user\": null}}]"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "streamPlaybackAccessToken"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "stream_token.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "FilterableVideoTower_Videos",
+    "\"channelOwnerLogin\": \"monstercat\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "videos_latest.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "FilterableVideoTower_Videos",
+    "\"channelOwnerLogin\": \"rerunchan\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "videos_old.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "FilterableVideoTower_Videos",
+    "\"channelOwnerLogin\": \"nobody\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "[{\"data\": {\"user\": {\"id\": \"\", \"videos\": null}}}]"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "FilterableVideoTower_Videos",
+    "\"cursor\": \"MjAw\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "videos_page2.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "FilterableVideoTower_Videos"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "videos_page1.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "ClipsCards__User"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clips_list.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "ChannelCollectionsContent"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "collections_list.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "CollectionSideBar"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "collection.json"
+  },
+  {
+   "url": "https://usher.ttvnw.net/api/channel/hls/monstercat.m3u8?allow_source=true&allow_audio_only=true&allow_spectre=true&platform=web&player=twitchweb&supported_codecs=av1%2Ch265%2Ch264&playlist_include_framerate=true&sig=STREAMSIG&token=%7B%22channel%22%3A%22monstercat%22%7D",
+   "ignore_query": [
+    "p"
+   ],
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "live_master.m3u8"
+  },
+  {
+   "url": "https://usher.ttvnw.net/api/channel/hls/rerunchan.m3u8?allow_source=true&allow_audio_only=true&allow_spectre=true&platform=web&player=twitchweb&supported_codecs=av1%2Ch265%2Ch264&playlist_include_framerate=true&sig=STREAMSIG&token=%7B%22channel%22%3A%22monstercat%22%7D",
+   "ignore_query": [
+    "p"
+   ],
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "live_master.m3u8"
+  },
+  {
+   "url": "https://usher.ttvnw.net/api/channel/hls/geochan.m3u8?allow_source=true&allow_audio_only=true&allow_spectre=true&platform=web&player=twitchweb&supported_codecs=av1%2Ch265%2Ch264&playlist_include_framerate=true&sig=STREAMSIG&token=%7B%22channel%22%3A%22monstercat%22%7D",
+   "ignore_query": [
+    "p"
+   ],
+   "status": 403,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "usher_geo.json"
+  },
+  {
+   "url": "https://usher.ttvnw.net/vod/2222222222.m3u8?allow_source=true&allow_audio_only=true&allow_spectre=true&platform=web&player=twitchweb&supported_codecs=av1%2Ch265%2Ch264&playlist_include_framerate=true&sig=SIG123&token=TOKENVALUE",
+   "ignore_query": [
+    "p"
+   ],
+   "status": 403,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "usher_restricted.json"
+  },
+  {
+   "url": "https://usher.ttvnw.net/vod/3333333333.m3u8?allow_source=true&allow_audio_only=true&allow_spectre=true&platform=web&player=twitchweb&supported_codecs=av1%2Ch265%2Ch264&playlist_include_framerate=true&sig=SIG123&token=TOKENVALUE",
+   "ignore_query": [
+    "p"
+   ],
+   "status": 403,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "denied"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "VideoMetadata",
+    "\"videoID\": \"4444444444\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "meta_recording.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
     "VideoMetadata"
    ],
    "headers": {
@@ -85,6 +297,37 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom-clip"
+  },
+  {
+   "url": "https://usher.ttvnw.net/vod/4444444444.m3u8?allow_source=true&allow_audio_only=true&allow_spectre=true&platform=web&player=twitchweb&supported_codecs=av1%2Ch265%2Ch264&playlist_include_framerate=true&sig=SIG123&token=TOKENVALUE",
+   "ignore_query": [
+    "p"
+   ],
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master_recording.m3u8"
+  },
+  {
+   "url": "https://d2nvs31859zcd8.cloudfront.net/rec_456/chunked/index-dvr.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "recording.m3u8"
+  },
+  {
+   "url": "https://d2nvs31859zcd8.cloudfront.net/rec_456/720p60/index-dvr.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "recording.m3u8"
+  },
+  {
+   "url": "https://d2nvs31859zcd8.cloudfront.net/rec_456/audio_only/index-dvr.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "recording.m3u8"
   }
  ]
 }

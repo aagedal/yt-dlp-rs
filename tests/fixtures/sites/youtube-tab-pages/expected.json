@@ -1,5 +1,5 @@
 {
- "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
  "cases": [
   {
    "url": "https://www.youtube.com/playlist?list=PLmissing0000000000000000000000000",
@@ -62,6 +62,22 @@
     "WARNING: [youtube:tab] unable to extract yt initial data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
     "WARNING: [youtube:tab] Incomplete yt initial data received; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U. Giving up after 3 retries"
    ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLscripttag00000000000000000000000",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "PLscripttag00000000000000000000000|BaW_jenozKc",
+    "PLscripttag00000000000000000000000|YYYYYYYYYYY",
+    "PLscripttag00000000000000000000000|ZZZZZZZZZZZ"
+   ],
+   "stderr": [],
    "files": {}
   }
  ]

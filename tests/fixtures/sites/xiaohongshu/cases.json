@@ -1,0 +1,18 @@
+[
+ {"url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9", "args": ["-j"]},
+ {"url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9", "args": ["-F"]},
+ {"url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(tags)s|%(uploader_id)s|%(duration)s|%(format_id)s|%(format)s|%(ext)s|%(filesize)s|%(thumbnail)s"]},
+ {"url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9", "args": ["--no-progress", "-f", "2", "-o", "%(id)s-%(format_id)s.%(ext)s"]},
+ {"url": "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=", "args": ["-j"]},
+ {"url": "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=", "args": ["-F"]},
+ {"url": "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(tags)s|%(uploader_id)s|%(duration)s|%(format_id)s|%(format)s|%(ext)s|%(filesize)s|%(thumbnail)s"]},
+ {"url": "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=", "args": ["--list-thumbnails"]},
+ {"url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa01", "args": ["-j"]},
+ {"url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa01", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa02", "args": ["-j"]},
+ {"url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa03", "args": ["-j"]},
+ {"url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa04", "args": ["-j"]},
+ {"url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa05", "args": ["-j"]},
+ {"url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa06", "args": ["-j"]}
+]

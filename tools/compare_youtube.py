@@ -30,7 +30,7 @@ from urllib.parse import urlsplit
 
 
 ORIGIN = "http://127.0.0.1:43210"
-PINNED_UPSTREAM = "897341241f2bfb2439fe0367f4c7c9ccd29a3828"
+PINNED_UPSTREAM = "6ccd977303412151ee23352c6257dd658ffc1987"
 FIELDS = ("id", "title", "extractor", "extractor_key", "webpage_url")
 # Descriptive fields derived from the player response alone (no ytInitialData,
 # meta tags or thumbnails); missing values compare as null.

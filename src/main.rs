@@ -1624,7 +1624,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
-    // `--extractor-args`: GenericIE's, YouTube's and YoutubeTabIE's ported
+    // `--extractor-args`: GenericIE's, YouTube's, YoutubeTabIE's and TwitterIE's ported
     // arguments are used; other extractors' are not.
     let extractor_args =
         yt_dlp_rs::manifest_args::parse_extractor_args(&args.extractor_args).map_err(UsageError)?;
@@ -1661,6 +1661,13 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 }) {
                     warning!(
                         "WARNING: extractor argument youtube:{name} is not supported natively and is ignored"
+                    );
+                }
+            }
+            "twitter" => {
+                for name in values.keys().filter(|name| name.as_str() != "api") {
+                    warning!(
+                        "WARNING: extractor argument twitter:{name} is not supported natively and is ignored"
                     );
                 }
             }
@@ -3106,7 +3113,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // suitable extractor, and under generic when none is.
         let mut remaining: Vec<&String> = urls.iter().collect();
         type Suitable = fn(&str) -> bool;
-        let suitable: [(&str, Suitable); 126] = [
+        let suitable: &[(&str, Suitable)] = &[
             ("23video", yt_dlp_rs::extractor::twentythreevideo_suitable),
             ("Angel", yt_dlp_rs::extractor::angel_suitable),
             ("archive.org", yt_dlp_rs::extractor::archiveorg_suitable),
@@ -3137,10 +3144,12 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 yt_dlp_rs::extractor::cultureunplugged_suitable,
             ),
             ("dailymotion", yt_dlp_rs::extractor::dailymotion_suitable),
+            ("Douyin", yt_dlp_rs::extractor::douyin_suitable),
             ("EbaumsWorld", yt_dlp_rs::extractor::ebaumsworld_suitable),
             ("Ebay", yt_dlp_rs::extractor::ebay_suitable),
             ("Epoch", yt_dlp_rs::extractor::epoch_suitable),
             ("facebook", yt_dlp_rs::extractor::facebook_suitable),
+            ("facebook:ads", yt_dlp_rs::extractor::facebook_ads_suitable),
             (
                 "facebook:reel",
                 yt_dlp_rs::extractor::facebook_reel_suitable,
@@ -3148,6 +3157,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             (
                 "FacebookPluginsVideo",
                 yt_dlp_rs::extractor::facebook_plugins_suitable,
+            ),
+            (
+                "FacebookRedirectURL",
+                yt_dlp_rs::extractor::facebook_redirect_suitable,
             ),
             ("Fathom", yt_dlp_rs::extractor::fathom_suitable),
             ("Fczenit", yt_dlp_rs::extractor::fczenit_suitable),
@@ -3177,10 +3190,26 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 yt_dlp_rs::extractor::imgur_gallery_suitable,
             ),
             ("Instagram", yt_dlp_rs::extractor::instagram_suitable),
+            (
+                "instagram:story",
+                yt_dlp_rs::extractor::instagram_story_suitable,
+            ),
+            (
+                "instagram:tag",
+                yt_dlp_rs::extractor::instagram_tag_suitable,
+            ),
+            // `_WORKING = False` extractors are marked.
+            (
+                "instagram:user (CURRENTLY BROKEN)",
+                yt_dlp_rs::extractor::instagram_user_suitable,
+            ),
+            ("InstagramIOS", yt_dlp_rs::extractor::instagram_ios_suitable),
             ("Jove", yt_dlp_rs::extractor::jove_suitable),
             ("JWPlatform", yt_dlp_rs::extractor::jwplatform_suitable),
-            ("kick:clips", yt_dlp_rs::extractor::kick_clip_suitable),
+            ("kick:clip", yt_dlp_rs::extractor::kick_clip_suitable),
+            ("kick:clips", yt_dlp_rs::extractor::kick_clips_suitable),
             ("kick:live", yt_dlp_rs::extractor::kick_live_suitable),
+            ("kick:videos", yt_dlp_rs::extractor::kick_videos_suitable),
             ("kick:vod", yt_dlp_rs::extractor::kick_vod_suitable),
             ("Kommunetv", yt_dlp_rs::extractor::kommunetv_suitable),
             ("Ku6", yt_dlp_rs::extractor::ku6_suitable),
@@ -3204,6 +3233,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("OnePlacePodcast", yt_dlp_rs::extractor::oneplace_suitable),
             ("Parlview", yt_dlp_rs::extractor::parlview_suitable),
+            ("periscope", yt_dlp_rs::extractor::periscope_suitable),
             ("Photobucket", yt_dlp_rs::extractor::photobucket_suitable),
             ("Pinterest", yt_dlp_rs::extractor::pinterest_suitable),
             ("PlayerFm", yt_dlp_rs::extractor::playerfm_suitable),
@@ -3222,6 +3252,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("rutube:embed", yt_dlp_rs::extractor::rutube_embed_suitable),
             ("ScreenRec", yt_dlp_rs::extractor::screenrec_suitable),
             ("Sen", yt_dlp_rs::extractor::sen_suitable),
+            ("SnapchatSpotlight", yt_dlp_rs::extractor::snapchat_suitable),
             ("soundcloud", yt_dlp_rs::extractor::soundcloud_suitable),
             ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
             ("SztvHu", yt_dlp_rs::extractor::sztvhu_suitable),
@@ -3229,24 +3260,75 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("TedPlaylist", yt_dlp_rs::extractor::ted_playlist_suitable),
             ("TedSeries", yt_dlp_rs::extractor::ted_series_suitable),
             ("TedTalk", yt_dlp_rs::extractor::ted_talk_suitable),
+            ("telegram:embed", yt_dlp_rs::extractor::telegram_suitable),
             ("TheIntercept", yt_dlp_rs::extractor::theintercept_suitable),
             (
                 "ThisAmericanLife",
                 yt_dlp_rs::extractor::thisamericanlife_suitable,
             ),
             ("TikTok", yt_dlp_rs::extractor::tiktok_suitable),
+            (
+                "tiktok:collection",
+                yt_dlp_rs::extractor::tiktok_collection_suitable,
+            ),
+            ("tiktok:live", yt_dlp_rs::extractor::tiktok_live_suitable),
+            ("tiktok:user", yt_dlp_rs::extractor::tiktok_user_suitable),
             ("Tumblr", yt_dlp_rs::extractor::tumblr_suitable),
             ("Tweakers", yt_dlp_rs::extractor::tweakers_suitable),
             ("twitch:clips", yt_dlp_rs::extractor::twitch_clips_suitable),
+            (
+                "twitch:collection",
+                yt_dlp_rs::extractor::twitch_collection_suitable,
+            ),
+            (
+                "twitch:stream",
+                yt_dlp_rs::extractor::twitch_stream_suitable,
+            ),
+            (
+                "twitch:videos",
+                yt_dlp_rs::extractor::twitch_videos_suitable,
+            ),
+            (
+                "twitch:videos:clips",
+                yt_dlp_rs::extractor::twitch_videos_clips_suitable,
+            ),
+            (
+                "twitch:videos:collections",
+                yt_dlp_rs::extractor::twitch_videos_collections_suitable,
+            ),
             ("twitch:vod", yt_dlp_rs::extractor::twitch_vod_suitable),
             ("twitter", yt_dlp_rs::extractor::twitter_suitable),
+            (
+                "twitter:amplify",
+                yt_dlp_rs::extractor::twitter_amplify_suitable,
+            ),
+            (
+                "twitter:broadcast",
+                yt_dlp_rs::extractor::twitter_broadcast_suitable,
+            ),
             ("twitter:card", yt_dlp_rs::extractor::twitter_card_suitable),
+            (
+                "twitter:shortener",
+                yt_dlp_rs::extractor::twitter_shortener_suitable,
+            ),
+            (
+                "twitter:spaces",
+                yt_dlp_rs::extractor::twitter_spaces_suitable,
+            ),
             ("vimeo", yt_dlp_rs::extractor::vimeo_suitable),
             ("vk", yt_dlp_rs::extractor::vk_suitable),
+            (
+                "vk:uservideos",
+                yt_dlp_rs::extractor::vk_user_videos_suitable,
+            ),
+            ("vk:wallpost", yt_dlp_rs::extractor::vk_wall_post_suitable),
+            ("VKPlay", yt_dlp_rs::extractor::vkplay_suitable),
+            ("VKPlayLive", yt_dlp_rs::extractor::vkplay_live_suitable),
             ("vm.tiktok", yt_dlp_rs::extractor::tiktok_vm_suitable),
             ("Vocaroo", yt_dlp_rs::extractor::vocaroo_suitable),
             ("Weibo", yt_dlp_rs::extractor::weibo_suitable),
             ("WeiboVideo", yt_dlp_rs::extractor::weibo_video_suitable),
+            ("XiaoHongShu", yt_dlp_rs::extractor::xiaohongshu_suitable),
             ("yfanefa", yt_dlp_rs::extractor::yfanefa_suitable),
             ("youtube", yt_dlp_rs::extractor::youtube_suitable),
             ("youtube:clip", |url| {
@@ -3309,7 +3391,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("Zhihu", yt_dlp_rs::extractor::zhihu_suitable),
             ("generic", |_| true),
         ];
-        for (name, matches) in suitable {
+        for &(name, matches) in suitable {
             writeln!(out, "{name}")?;
             if name == "generic" {
                 for url in &remaining {
@@ -3344,7 +3426,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBreitBart\nCGTN\nCJSW\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nImgur\nimgur:album\nimgur:gallery\nInstagram\nJove\nJWPlatform\nkick:clips\nkick:live\nkick:vod\nKommunetv\nKu6\nlbry: odysee.com\nLinkedIn\nLivestreamfails\nloom\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nmixcloud\nMovingImage\nniconico: [niconico] ニコニコ動画\nNobelPrize\nOdnoklassniki\nOnePlacePodcast\nParlview\nPhotobucket\nPinterest\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nScreenRec\nSen\nsoundcloud: [soundcloud]\nStreamable\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTheIntercept\nThisAmericanLife\nTikTok\nTumblr: [tumblr]\nTweakers\ntwitch:clips: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:card\nvimeo: [vimeo]\nvk: [vk] VK\nvm.tiktok\nVocaroo\nWeibo\nWeiboVideo\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "23video\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBreitBart\nCGTN\nCJSW\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\nDouyin\nEbaumsWorld\nEbay\nEpoch\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmweb\nFuyinTV\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGraspop\nHarpodeon\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nImgur\nimgur:album\nimgur:gallery\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nJove\nJWPlatform\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKommunetv\nKu6\nlbry: odysee.com\nLinkedIn\nLivestreamfails\nloom\nmaariv.co.il\nMasters\nmegaphone.fm: megaphone.fm embedded players\nmixcloud\nMovingImage\nniconico: [niconico] ニコニコ動画\nNobelPrize\nOdnoklassniki\nOnePlacePodcast\nParlview\nperiscope: Periscope\nPhotobucket\nPinterest\nPlayerFm\nPopcornTV\nPremiershipRugby\nQingTing\nReddit\nReverbNation\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nScreenRec\nSen\nSnapchatSpotlight\nsoundcloud: [soundcloud]\nStreamable\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\ntelegram:embed\nTheIntercept\nThisAmericanLife\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nTumblr: [tumblr]\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\nvimeo: [vimeo]\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nWeibo\nWeiboVideo\nXiaoHongShu: 小红书\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
@@ -3833,6 +3915,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 // A `url_transparent` entry (RSS items) is extracted now.
                 if YoutubeDl::is_transparent(&info) {
                     info = downloader.resolve_entry(info.clone())?;
+                }
+                if let Some(error) = YoutubeDl::entry_error(&info) {
+                    return Err(EntryExtractionError(error.to_owned()).into());
                 }
                 // Upstream `process_subtitles` names the selected languages.
                 if let Some(requested) = &info.requested_subtitles

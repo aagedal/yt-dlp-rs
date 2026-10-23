@@ -247,7 +247,8 @@ fn parse_actions_live(
 
 /// `extract_yt_initial_data`, else the body as JSON.
 fn page_data(body: &str) -> Result<Value> {
-    if let Some(Some(data)) = super::super::search_json(&INITIAL_DATA, body, false)
+    if let Some(data) = super::initial_data_script(body)
+        .or_else(|| super::super::search_json(&INITIAL_DATA, body, false).flatten())
         && truthy(&data)
     {
         return Ok(data);
@@ -359,9 +360,10 @@ pub(crate) fn download(
 
     // Fragment 0: the watch page, naming the chat and the InnerTube config.
     let webpage = fetch(client, &subtitle.url, None, 0, &options)?;
-    let data = match super::super::search_json(&INITIAL_DATA, &webpage, false) {
-        Some(Some(data)) => data,
-        _ => return Err(failed()),
+    let Some(data) = super::initial_data_script(&webpage)
+        .or_else(|| super::super::search_json(&INITIAL_DATA, &webpage, false).flatten())
+    else {
+        return Err(failed());
     };
     let mut continuation = text_at(
         &data,

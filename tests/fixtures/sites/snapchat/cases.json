@@ -1,0 +1,11 @@
+[
+ {"url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA", "args": ["-j"]},
+ {"url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ", "args": ["-j"]},
+ {"url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ", "args": ["-F"]},
+ {"url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(duration_string)s|%(view_count)s|%(repost_count)s|%(uploader)s|%(uploader_url)s|%(tags)s|%(width)sx%(height)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA", "args": ["--print", "%(title)s|%(description)s|%(view_count)s|%(repost_count)s|%(timestamp)s|%(duration)s|%(thumbnail)s"]},
+ {"url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYMissingStoryAAAAAA", "args": ["-j"]},
+ {"url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYNoNextDataAAAAAA", "args": ["-j"]},
+ {"url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYGoneAAAAAA", "args": ["-j"]}
+]

@@ -1,0 +1,1 @@
+{"source": {"location": "https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/non_transcode/master_dynamic_highlatency.m3u8?type=replay", "noRedirectPlaybackUrl": "https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/b1/transcode/master_dynamic_highlatency.m3u8?type=replay", "status": "LIVE_PUBLIC", "streamType": "HLS"}, "sessionId": "s"}

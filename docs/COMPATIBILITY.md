@@ -421,6 +421,17 @@ formats (its subtitles ignored with upstream's warning), and the first
 `details` node's title (else the generic title, after `fulltitle`), first
 description and string badge tags.
 
+Snapchat Spotlight snaps (`[www.]snapchat.com/spotlight/ID`) follow upstream
+`SnapchatSpotlightIE` (2026.10.21): the page's Next.js data (`Unable to
+extract next.js data` without it), the spotlight story whose `storyId` is the
+ID, and its `videoMetadata` as an untyped `mp4` result (`contentUrl`, width,
+height, millisecond upload date and duration as floats, name, description,
+share and view counts with `-1` as `None`, thumbnail and creator), then the
+story's description, string hashtags as `tags` and engagement counts. Without
+a matching story the result has no formats (upstream's generic-title warning
+and `No video formats found!`). `tests/fixtures/sites/snapchat/` is compared
+with pinned upstream output.
+
 SoundCloud tracks (`soundcloud.com/USER/TRACK[/SECRET]`,
 `api[-v2].soundcloud.com/tracks/ID`) follow upstream `SoundcloudIE`: the web
 client ID from the home page's JS assets (last first; refreshed after a
@@ -451,6 +462,22 @@ formats), so none are made. Playlists (`TedPlaylistIE`) and series, or one
 `#season_N` (`TedSeriesIE`), are playlists of talk `url` results;
 `embed[-ssl].ted.com` URLs (`TedEmbedIE`) are rewritten to `www`.
 `tests/fixtures/sites/ted/` is compared with pinned upstream output.
+
+Telegram public posts (`t.me/CHANNEL/ID`) follow upstream
+`TelegramEmbedIE` (2026.10.21): the post's embed frame (`?embed=1`, any
+`single` parameter dropped; `Downloading embed frame`), each video player's
+`<video>` source as an `mp4` format, its link's basename as the ID and
+`?single=True` link as `webpage_url`, the `M:SS` duration and thumbnail
+(upstream's non-fatal warnings when missing), and the message's cleaned text
+on one line as title and description (processing's generic title without
+text), author as `channel`, channel name and `<time datetime>` timestamp.
+Posts with several videos are playlists (`CHANNEL-ID`, titled `AUTHOR ID`,
+with the text as description) unless the URL has `single` or
+`--no-playlist` is given, which pick the post's own video. A post without a
+video of its own (text-only posts, or `--no-playlist` on a group whose ID is
+not a video) is an unsupported error here; upstream warns that the extractor
+returned nothing. `tests/fixtures/sites/telegram/` is compared with pinned
+upstream output.
 
 The Intercept Field of Vision posts (`theintercept.com/fieldofvision/SLUG`)
 follow upstream `TheInterceptIE`: the page's `initialStoreTree` post with the
@@ -650,19 +677,40 @@ the cleaned `<title>` text (with upstream's warning when missing).
 
 Facebook videos (`facebook.com` watch, video, post, story, permalink,
 event, group and watch-party URL shapes and `facebook:ID`) follow upstream
-`FacebookIE` through the page's relay prefetched data, the path current pages
-use: `parse_graphql_video` over node attachments, media sets, event cover
-videos and the page's `video` (legacy `playable_url` fields, inline or linked
-DASH manifests from `videoDeliveryResponseFragment`, progressive and HLS URLs,
-captions by locale), each format with upstream's `facebookexternalhit`
-User-Agent and 250 MiB HTTP chunks, merged with `extract_metadata`'s
-webpage title, description, uploader, timestamp, thumbnail and counts. Several
-videos form a playlist. Login and interstitial pages are upstream's errors;
-older server JS/pagelet pages, watch parties, the tahoe player fallback,
-JSON-LD metadata, ads and comments are not supported. `facebook:reel`
-(`/reel/ID`) and `FacebookPluginsVideo` (`plugins/video.php?href=`) are
-followed like upstream. `tests/fixtures/sites/facebook/` is compared with
-pinned upstream output.
+`FacebookIE`'s paths in its order. First the server JS (`handleServerJS`,
+`s.handle`) and `bigPipe.onPageletArrive` pagelet (`js_to_json`)
+`VideoConfig` instances: each `videoData` entry's `sd`/`hd` `src` and
+`src_no_ratelimit` URLs (upstream's qualities and 720p height), inline DASH
+manifest and `subtitles_src` English subtitles; several instances form a
+playlist of their `video_url` pages. Then the page's relay prefetched data,
+the path current pages use: `parse_graphql_video` over node attachments,
+media sets, event cover videos and the page's `video` (legacy `playable_url`
+fields, inline or linked DASH manifests from `videoDeliveryResponseFragment`,
+progressive and HLS URLs, captions by locale); several videos form a
+playlist. Login and interstitial pages are upstream's errors. Watch parties
+(`/watchparty/ID`) POST upstream's `livingRoom` GraphQL query (with the
+page's `lsd` token and `RelayAPIConfigDefaults` endpoint) and list the
+recap's videos; other pages fall back to the tahoe player POST and its
+`for (;;);` payload, else upstream's `Cannot parse data` error. Formats get
+upstream's `facebookexternalhit` User-Agent and 250 MiB HTTP chunks, merged
+with `extract_metadata`'s JSON-LD and webpage title, description, uploader,
+timestamp, thumbnail and counts (an empty media title or message, as on
+reels, falls back to the page's `og:title`/meta description, and the
+uploader fallback is the raw `og:title`, like upstream). DASH
+representations with `SegmentBase`
+indexes (as Facebook's often are) are refused by the shared DASH parser
+with a warning, and `BaseURL`-only ones become one-fragment DASH formats,
+rather than upstream's unfragmented `https` formats; comments are not
+supported. `facebook:reel` (`/reel/ID`),
+`FacebookPluginsVideo` (`plugins/video.php?href=`) and `FacebookRedirectURL`
+(`flx/warn/?u=`, upstream's error without a valid `u` URL) are followed like
+upstream. `facebook:ads` (`ads/library/?id=ID`) follows upstream
+`FacebookAdsIE`: the ad snapshot (current `ad_library_main` and older
+`deeplinkAdCard` paths), its title (else `FORMAT by PAGE`), markup or body
+description, page uploader fields and like count, and each video or card's
+SD/HD (watermarked) URLs as one video or a playlist; upstream's 403 `Client
+challenge` verification retry is not ported (the HTTP error is reported).
+`tests/fixtures/sites/facebook/` is compared with pinned upstream output.
 
 Fathom shares (`fathom.video/share/ID`) follow upstream `FathomIE`: the `app`
 element's `data-page` JSON props (upstream's `TypeError` text without them),
@@ -701,8 +749,58 @@ author, music, stats and cover thumbnails, with the page as every format's
 Referer. Formats upstream marks `__needs_testing` (the watermarked download,
 HEVC `media-video-hvc1` renditions) are tested when selected, as
 `_check_formats` does by default, and `-F` lists them as `Untested`.
-Subtitles, slideshows, user/sound/tag/collection pages and Douyin are not
-supported. `vm.tiktok` short links (`vm.`/`vt.tiktok.com/ID`,
+With `--write-subs`/`--list-subs`, `_get_subtitles` gives the item's
+`subtitleInfos` (`webvtt`/`srt`/`creator_caption` as `vtt`/`srt`/`json`,
+other formats by URL extension, creator captions after the others but
+unknown formats), and the feed's `cla_info` captions; the aweme/detail
+endpoint's automatic captions (downloaded and converted into SRT `data`)
+are an error here. Photo slideshows are their music track like upstream's
+web path (an audio-only result; the music's duration when the video's is 0);
+the images are not extracted, as upstream.
+
+TikTok users (`tiktok.com/@USER`, `tiktokuser:SEC_UID`) follow upstream
+`TikTokUserIE`: the user page's `webapp.user-detail` (private-account and
+no-video errors), else the embed page's videos' webpages for the `secUid`,
+then the web `api/creator/item_list/` pages (unsigned; random `device_id` or
+the `tiktok:device_id` extractor argument, random `verifyFp`, time cursor,
+the repeated-page retry) as flat `url` entries with
+`_parse_aweme_video_web(extract_flat=True)`'s fields. Collections
+(`tiktok.com/@USER/collection/TITLE-ID`) follow `TikTokCollectionIE`'s
+`api/collection/item_list/` pages. Both lists are lazy like upstream's
+generators (pages are fetched while processing the playlist, so
+`playlist_count` is `NA` unless the list was exhausted). Upstream's
+`TikTokSoundIE`, `TikTokEffectIE` and `TikTokTagIE` (all `_WORKING = False`)
+need the mobile app API (`aweme/v1` with `app_info`), and `TikTokIE`'s app API
+path, are not ported; such URLs are not TikTok extractor matches here.
+
+TikTok livestreams (`tiktok.com/@USER/live`, `m.tiktok.com/share/live/ID`)
+follow upstream `TikTokLiveIE`: the room ID from the user page (or the share
+page's `SIGI_STATE`), the unsigned `webcast/room/info` API (status 2 is live,
+else "The channel is not currently live" or, for a share URL, "This
+livestream has ended"), the SDK stream data's FLV/HLS URLs (codec, bitrate and
+resolution from its parameters), the HLS/RTMP/FLV pull URLs and, without an
+HLS format, `api/live/detail`'s fallback URL, sorted by `quality` and `ext`.
+HLS formats are `m3u8_native` URLs (the playlist is not fetched while
+extracting, like upstream). A result's `is_live`/`was_live` now give its
+`live_status` (`_fill_common_fields`), and an HEVC format over FLV without a
+preference gets `-100` (`FormatSorter`), for every extractor.
+
+Douyin videos (`douyin.com/video/ID`) follow upstream `DouyinIE`: the
+`aweme/v1/web/aweme/detail/` JSON (`fatal=False`, so an empty body is a
+`Failed to parse JSON` warning) through `_parse_aweme_video_app`: direct,
+download, H.264/HEVC and bitrate addresses (URL-key IDs and resolutions,
+`(API)`/`(UNPLAYABLE)` notes, float bitrates, music tracks), `sid_tt` copied
+to the format hosts, generic original-sound track names, `hybrid_label`
+availability, `cover`/`dynamic_cover` thumbnails and
+`_format_sort_fields`. Without `aweme_detail` the error is upstream's "Fresh
+cookies (not necessarily logged in) are needed" (unexpected when an
+`s_v_web_id` cookie was sent): like upstream, this port does not run Douyin's
+verification challenge or sign requests, so browser cookies are needed on the
+live site. Subtitles fall back to the TikTok webpage of the uploader's video
+like upstream. `tests/fixtures/sites/douyin/` is compared with pinned upstream
+output.
+
+`vm.tiktok` short links (`vm.`/`vt.tiktok.com/ID`,
 `tiktok.com/t/ID`) are resolved with a HEAD request and followed.
 `tests/fixtures/sites/tiktok/` is compared with pinned upstream output.
 
@@ -720,32 +818,85 @@ upstream does), the source rendition preferred, storyboard `mhtml` formats,
 thumbnails, chapters and the URL's `t` start time. Twitch clips
 (`clips.twitch.tv/SLUG`, `twitch.tv/[CHANNEL/]clip/SLUG`) follow
 `TwitchClipsIE`: the clip GraphQL, signed default and portrait quality URLs,
-thumbnails and metadata. Live streams, collections and channel video lists
-are not supported. The usher URL's random `p` parameter makes VOD `-J`
-output non-deterministic upstream too, so `tests/fixtures/sites/twitch/`
-compares VODs through `--print` and `-F` (fixture routes may now ignore named
-query parameters).
+thumbnails and metadata. A `403` usher response with a JSON body reports
+upstream's subscriber-only message (with the login hint unless an
+`auth-token` cookie is set) or its `error_code: error`. Twitch live channels
+(`twitch.tv/CHANNEL`, `player.twitch.tv/?channel=CHANNEL`) follow
+`TwitchStreamIE`: the stream GraphQL (missing channels and offline channels
+are upstream's errors), the stream access token and the live usher master
+(its variants are not read, as upstream; live HLS downloads go through
+FFmpeg), `(live)`/`(rerun)` titles and `is_live`. With `--live-from-start` the
+channel's latest VOD is extracted instead when it started with the stream
+(else upstream's warning), and VOD formats carry `is_from_start` and the
+`-live_start_index 0` FFmpeg option. Channel lists (`CHANNEL/videos` with
+`filter`/`sort`, `CHANNEL/clips` with `range`, `videos?filter=collections`)
+follow `TwitchVideosIE`, `TwitchVideosClipsIE` and `TwitchVideosCollectionsIE`:
+cursor-paged GraphQL fetched lazily as entries are read (a missing channel is
+upstream's unprefixed `Channel "NAME" not found`), with upstream's
+`url_transparent` entries (float durations included). Collections
+(`twitch.tv/collections/ID`) follow `TwitchCollectionIE`. A page whose edges
+yield no entries ends a list here; upstream would request it again
+endlessly. Login (`--username`/`--netrc`) and the `client_id` extractor
+argument are not supported; an `auth-token` cookie is sent like upstream. VOD
+rechat subtitles no longer exist upstream. The usher URL's random `p`
+parameter makes VOD and stream `-J` output non-deterministic upstream too, so
+`tests/fixtures/sites/twitch/` compares them through `--print` and `-F`
+(fixture routes may now ignore named query parameters). Info dicts without
+`live_status` now get it from `is_live`/`was_live` like upstream's
+`_fill_common_fields`.
 
 X/Twitter posts (`twitter.com`, `x.com`, `mobile.`/`m.`/`www.` and the onion
 host: `NAME/status/ID`, `i/web/status/ID`, `statuses/ID`, optionally
-`/video/N`) follow upstream `TwitterIE` with its default GraphQL API: a guest
+`/video/N`) follow upstream `TwitterIE`. The API is selected like upstream's
+`--extractor-args twitter:api=graphql|legacy|syndication` (other values are
+upstream's `'VALUE' is not a valid API selection` error; other `twitter:`
+arguments are ignored with a warning): the default GraphQL API uses a guest
 token (`guest/activate.json`, unless an `auth_token` cookie is present, with
 `ct0` as the CSRF token), then `TweetResultByRestId` and `_graphql_to_legacy`
 (tombstones, unavailable/protected/NSFW reasons, visibility results,
-retweets, quoted posts and card bindings). Each video's HLS variants (an
-audio rendition's `tbr` from its `hls-audio-BITRATE` ID) and MP4 variants
-(`http-KBPS` with dimensions from the URL), size-named thumbnails, duration
-and upstream's `_format_sort_fields` are combined with the post's title
-(`UPLOADER - TEXT`, links removed, 72 characters), description, timestamp,
-counts, age limit and hashtags. Several videos form a playlist with `#N`
-titles; `/video/N` selects one only with `--no-playlist`, as upstream's
-`_yes_playlist`. Unified cards' videos are extracted and player/summary cards
-and a post's only link are followed through the extractor registry;
-broadcast, Spaces, Periscope and VMAP (amplify) cards, the legacy and
-syndication APIs (and the rate-limit fallback to syndication) are not
-supported. `twitter:card` (`i/cards/tfw/v1/ID`, `i/videos[/tweet]/ID`) is
-followed to `statuses/ID`. `tests/fixtures/sites/twitter/` is compared with
-pinned upstream output.
+retweets, quoted posts and card bindings); `legacy` calls
+`statuses/show/ID.json` with the legacy bearer token; `syndication` (and the
+fallback after an HTTP 429 from the selected API, with upstream's warnings)
+reads `cdn.syndication.twimg.com/tweet-result` with upstream's
+`_generate_syndication_token` (a port of `js_number_to_string`) and its media
+IDs from `_video/ID/` variant URLs. API `errors` are reported like upstream
+(`Error(s) while querying API` with the bug report request). Each video's HLS
+variants (an audio rendition's `tbr` from its `hls-audio-BITRATE` ID) and MP4
+variants (`http-KBPS` with dimensions from the URL), size-named thumbnails,
+duration and upstream's `_format_sort_fields` are combined with the post's
+title (`UPLOADER - TEXT`, links removed, 72 characters), description,
+timestamp, counts, age limit and hashtags. Several videos form a playlist with
+`#N` titles; `/video/N` selects one only with `--no-playlist`, as upstream's
+`_yes_playlist`. Unified cards' videos are extracted; VMAP cards (amplify,
+`promo_video_*` and other player-stream cards) read the VMAP's
+`videoVariant`s and `MediaFile`, duration and non-placeholder thumbnails;
+player/summary cards, broadcast, audiospace and Periscope cards and a post's
+only link are followed through the extractor registry. A post mixing videos
+and linked cards is an unsupported-behavior error.
+
+`twitter:card` (`i/cards/tfw/v1/ID`, `i/videos[/tweet]/ID`) is followed to
+`statuses/ID`; `twitter:shortener` (`t.co/CODE` and `tco:CODE`) requests the
+link as `curl` and follows its final URL (an unsafe-link warning page's target
+unwrapped). `twitter:amplify` (`amp.twimg.com/v/UUID`) reads the page's
+`twitter:amplify:vmap` meta, the VMAP formats (the first one taking the
+`twitter:player` dimensions) and the `twitter:image` thumbnail.
+`twitter:broadcast` (`i/broadcasts/ID`, `i/events/ID`) reads
+`broadcasts/show.json` (or a live event's `timeline.json`: its tweets as a
+playlist of `twitter` URLs, otherwise its broadcast), upstream's
+`_parse_broadcast_data` metadata, upcoming/removed/geo-blocked errors and
+`live_video_stream/status/KEY`'s HLS formats with the Periscope `Referer`
+(`m3u8_native` for ended broadcasts, FFmpeg's `m3u8` otherwise).
+`twitter:spaces` (`i/spaces/ID`) reads the `AudioSpaceById` GraphQL query:
+upstream's states, not-started/replay-disabled/not-found errors, the stream's
+HLS formats (audio Spaces as `m4a` with the `m3u8` protocol, `aac` and
+`m4a_dash`), participants, timestamps and the host's 400x400 avatar, with the
+`twitter.com` `Referer`. `periscope` (`periscope.tv`/`pscp.tv` broadcasts)
+reads `accessVideoPublic` and its HLS URLs; its RTMP URLs, `periscope:user`
+and Periscope embeds are not supported. Live Spaces and broadcasts are only
+covered as far as their metadata; downloading the `m3u8` (FFmpeg) protocol
+follows this port's HLS downloader selection rather than upstream's forced
+FFmpeg. `tests/fixtures/sites/twitter/` is compared with pinned upstream
+output.
 
 Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel and
 `user` clip URLs) follow upstream `VimeoIE` as it runs without login or
@@ -771,9 +922,30 @@ the embed page's error messages, security check and known error pages,
 times), the info page's date and view count and `_format_sort_fields`.
 A YouTube embed is followed; Vimeo, Rutube, Dailymotion, Odnoklassniki and
 Sibnet embeds and VK's JS challenge (which needs upstream's
-`JSInterpreter`) are unsupported errors, and logins, user video lists and
-wall posts are not supported. `tests/fixtures/sites/vk/` is compared with
-pinned upstream output.
+`JSInterpreter`) are unsupported errors, and logins are not supported.
+
+VK wall posts (`vk.com/wall-1_2`, `?w=wall-1_2`, `m.`/`new.`) follow
+upstream `VKWallPostIE`: the `wkview.php` `show` payload's HTML as a
+playlist (`UPLOADER - Wall post ID`, the `wall_post_text` description) of
+its `data-audio` tracks (`m4a` formats, artist, track, cover thumbnails)
+and the `wl_post_body` links to VK videos (`url` entries for `VKIE`; a post
+without that element is upstream's `TypeError`). Upstream deduplicates the
+links with a `set`, in hash order; this port keeps page order, so posts
+linking several distinct videos may list them in another order.
+VK user/club video sections (`vk.com/video/@NAME[/all][?section=S]`,
+`vkvideo.ru/@NAME`) and playlists (`.../playlist/OWNER_ID`) follow upstream
+`VKUserVideosIE`: the page's `newCur` cursor `oid` (or the playlist ID), the
+`VideoInfoPanel__title` playlist title and `al_video.php`'s
+`load_videos_silent` pages as `VKIE` `url` entries. Upstream fetches the
+pages lazily while processing entries; this port fetches them all first.
+VK Play Live records (`vkplay.live`/`live.vkplay.ru`/`live.vkvideo.ru`
+`USER/record/ID`) and channels follow upstream `VKPlayIE` and
+`VKPlayLiveIE`: `api.vkplay.live`'s `public_video_stream` JSON (a failure is
+a warning) or the page's `initial-state` script, `playerUrls` HLS, DASH and
+progressive formats (with the named resolutions), the common metadata and
+`The channel is not currently live` for an offline channel. A live
+stream's HLS master playlist is read without its media playlists.
+`tests/fixtures/sites/vk/` is compared with pinned upstream output.
 
 Weibo posts (`weibo.com/UID/ID`, `m.weibo.cn/status|detail/ID`) follow
 upstream `WeiboIE`: the `ajax/statuses/show` JSON (a redirect to
@@ -786,6 +958,19 @@ post's title (72-character truncation), alt title, uploader, counts, tags and
 `WeiboVideoIE` through the TV component API to the post. User pages are not
 supported. `tests/fixtures/sites/weibo/` is compared with pinned upstream
 output.
+
+XiaoHongShu (RedNote) notes (`www.xiaohongshu.com/explore/ID`,
+`discovery/item/ID`) follow upstream `XiaoHongShuIE` (release 2026.10.21):
+the page's fatal `window.__INITIAL_STATE__` (through `js_to_json`), every
+codec's streams' `masterUrl` and `backupUrls` as formats with their FPS,
+dimensions, codecs, scaled bitrates, channels, quality type (`format`), size
+and duration, plus a `direct` format (`quality` 1) for the original upload
+when `sns-video-bd.xhscdn.com/KEY` answers (otherwise upstream's
+`Original video is not available` warning), the note's images as thumbnails,
+the OpenGraph title overridden by the note's, description, tags and uploader
+ID. Image-only notes have no formats and fail like upstream. Non-HTTP stream
+URLs are refused; a malformed state fails without Python's `JSONDecodeError`
+text. `tests/fixtures/sites/xiaohongshu/` is compared with upstream output.
 
 Vocaroo recordings (`vocaroo.com`/`voca.ro` `[embed/]ID`) follow upstream
 `VocarooIE`: the `media`/`media1` MP3 URL checked with a HEAD request
@@ -860,9 +1045,30 @@ prefetched `xig_polaris_media` (a login redirect, private long shortcodes and
 an empty response are upstream's errors). `_extract_product` gives the
 `video_versions` formats, reversed image candidates, duration, the post's
 user, caption, timestamp, counts and comments, and a carousel's videos as a
-playlist. Inline DASH manifests (`video_dash_manifest`) are not parsed (the
-progressive versions are used), and logged-in extraction through the media
-info API, stories, user and tag pages are not supported.
+playlist (an entry without video formats is reported and the others
+continue, like upstream). An inline `video_dash_manifest` adds upstream's
+`dash-ID` formats when every representation has an absolute direct
+`BaseURL` (its `SegmentBase` index is not read, as upstream; they are plain
+HTTPS formats without a manifest URL); other inline manifests are an error
+rather than a guess. With a `sessionid` cookie (`--cookies`), the media info
+API (`Downloading video info`, with the `instagram:app_id` extractor
+argument's API host) gives the product instead; a response redirected to the
+login page is upstream's `cookies are no longer valid` warning, the cookie is
+cleared and the logged-out path follows. Logged in, `--write-comments` reads
+the comments API after the match filters (`Downloading comments info`,
+non-fatal), replacing `comment_count`; comments of logged-in carousels
+(upstream shares one generator between the entries) are an error.
+`instagram://media?id=PK` (`InstagramIOS`) follows its `/tv/` post.
+Stories and highlights (`instagram.com/stories/USER[/ID]`,
+`instagram:story`) read the page's `"user":` JSON, then the
+`feed/reels_media` API (a missing user or reel is upstream's login error);
+each item with formats is an entry with the reel's uploader, and a user's
+story ID is a playlist unless `--no-playlist` picks that item. Tag pages
+(`explore/tags/TAG`, `instagram:tag`) and user pages (`instagram:user`,
+marked broken upstream) read the page's `sharedData` and its GIS-signed
+GraphQL timeline pages (trying upstream's signature templates on `403`) as
+`url` entries of the video nodes; all pages are fetched before processing,
+so a page error ends the extraction instead of upstream's partial playlist.
 `tests/fixtures/sites/instagram/` is compared with pinned upstream output.
 
 JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal
@@ -884,16 +1090,22 @@ Player playlists are unsupported errors. On generic pages its
 embed detection, first in extractor order. A pseudo-URL result's
 `webpage_url_domain` is `null`, like upstream's `get_domain`.
 
-Kick (`kick.com`) follows upstream's three extractors, each requesting the
-site API with upstream's impersonation warning: `kick:vod`
-(`CHANNEL/videos/UUID`, the VOD's HLS source and livestream metadata),
-`kick:clips` (`CHANNEL/clips/clip_ID`, `CHANNEL?clip=clip_ID`; HLS or direct
-clip URLs) and `kick:live` (a channel's live HLS stream, with upstream's
-`live=True` format IDs, or `The channel is not currently live`). Live
-downloads have this port's live HLS limits. `--use-extractors` now matches
-every extractor by its upstream name (`twitch:vod`, `kick:clips`,
-`vm.tiktok`, ...). `tests/fixtures/sites/kick/` is compared with pinned
-upstream output.
+Kick (`kick.com`) follows upstream's five reworked extractors (yt-dlp
+`fe84bef`, release 2026.10.21), each requesting the site APIs (`kick.com/api/v2`,
+`web.kick.com/api/v1`, a `session_token` cookie as bearer token) with
+upstream's per-extraction impersonation warning: `kick:vod`
+(`CHANNEL/videos/UUID`: the playback endpoint's HLS URL, its `type: details`
+error responses, metadata from the creator's video list; a subscriber-only VOD
+without a playback URL checks the subscription and needs cookies),
+`kick:clip` (`CHANNEL/clips/clip_ID`, `CHANNEL?clip=clip_ID`; HLS or direct
+clip URLs, the API's 404 message as the error), `kick:live` (a channel's live
+HLS stream, or `The channel is not currently live`), `kick:videos`
+(`CHANNEL/videos`, `?sort=views`: `url_transparent` VOD entries smuggling
+their availability) and `kick:clips` (`CHANNEL/clips`, `?sort=view|date`,
+`&range=day|week|month|all`: every cursor page fetched up front, unlike
+upstream's lazy generator). Live downloads have this port's live HLS limits.
+`--use-extractors` matches every extractor by its upstream name.
+`tests/fixtures/sites/kick/` is compared with upstream output.
 
 Kommunetv archives (`SUBDOMAIN.kommunetv.no/archive/ID`) follow upstream
 `KommunetvIE`: the Oslo streams API (requested with `Accept:
@@ -1377,9 +1589,10 @@ The selected source is downloaded with the page referrer. If the download
 response changes to HTML or a manifest, fail without publishing it as media.
 
 HTML bodies are limited to 2 MiB, including responses without Content-Length.
-Only uncompressed UTF-8/ASCII HTML is supported. Other encodings are rejected
-when declared in HTTP Content-Type; invalid UTF-8 is rejected. HTML meta charset
-sniffing, compressed responses, XHTML, JavaScript, nonstandard lazy-loading
+Pages are decoded like upstream's `_download_webpage` (see HTTP request
+defaults): `gzip`/`deflate` Content-Encoding, then the Content-Type charset,
+a `<meta charset>` or BOM, with invalid bytes replaced; the 2 MiB limit applies
+to the compressed and the decoded body. XHTML, JavaScript, nonstandard lazy-loading
 attributes, durations, codecs, inferred dimensions, authentication,
 and general embedded-player extraction are not implemented. Unsupported HLS/DASH
 features and non-HTTP sources fail explicitly, even
@@ -1479,7 +1692,7 @@ The per-request timeouts still apply to each attempt; there is no overall
 download deadline. Cooperative download cancellation is described below.
 
 This slice is based on the same pinned revision
-**897341241f2bfb2439fe0367f4c7c9ccd29a3828**, specifically
+**6ccd977303412151ee23352c6257dd658ffc1987**, specifically
 `yt_dlp/downloader/http.py`'s `RetryDownload`/`RetryManager` control flow,
 transport-read failures, and Content-Length validation. Its broader 5xx retry
 handling remains outside this slice.
@@ -1612,13 +1825,13 @@ expose cancellation flags.
 
 The library observer is a native extension of the transport milestone, not a
 port of upstream's progress-hook contract or CLI cancellation behavior. The pinned baseline remains
-**897341241f2bfb2439fe0367f4c7c9ccd29a3828**. Deterministic local HTTP tests in
+**6ccd977303412151ee23352c6257dd658ffc1987**. Deterministic local HTTP tests in
 `tests/progress.rs` cover observer events, response-derived/unknown totals,
 resumed and restarted counters, cancellation cleanup, and retry-wait polling.
 
 ## Source and differential fixtures
 
-This slice uses the existing baseline, **897341241f2bfb2439fe0367f4c7c9ccd29a3828**:
+This slice uses the existing baseline, **6ccd977303412151ee23352c6257dd658ffc1987**:
 
 - `yt_dlp/extractor/generic.py`: response dispatch, HTML embed orchestration, and single-vs-playlist dispatch.
 - `yt_dlp/extractor/genericembeds.py`, `HTML5MediaEmbedIE`: numbered entry metadata for single videos and playlists.
@@ -1669,7 +1882,7 @@ recursive result processing remain unimplemented.
 ## Progressive automatic selection source slice
 
 This slice uses the existing pinned source commit
-**897341241f2bfb2439fe0367f4c7c9ccd29a3828** and leaves the global baseline unchanged.
+**6ccd977303412151ee23352c6257dd658ffc1987** and leaves the global baseline unchanged.
 `InfoExtractor._parse_html5_media_entries` in `yt_dlp/extractor/common.py` supplies
 source width/height/res handling; its corresponding dimension examples in
 `test/test_InfoExtractor.py` were reviewed. `FormatSorter` in
@@ -1904,7 +2117,7 @@ See [source and fixture provenance](../upstream/notes/youtube-adaptive-merge.md)
 Direct HLS playlist URLs and HTML5 HLS sources support a finite VOD
 subset, including identity AES-128 encryption. Recognize MPEGURL MIME types, final `.m3u8` URL paths, and explicit HTML5
 HLS type hints. A conflicting media MIME must not cause a manifest to be saved as
-one media file. Read at most 2 MiB of uncompressed UTF-8/ASCII manifest text;
+one media file. Read at most 32 MiB of uncompressed UTF-8/ASCII manifest text;
 ambiguous encoding/content-type headers fail. URLs resolve against each final
 redirected manifest URL. HTML5 page referrers propagate to manifests and segments.
 
@@ -1919,7 +2132,8 @@ that name another common extension get an `f` prefix. Variants keep positive
 declared bandwidth in kbps, optional resolution and codec-derived stream kinds. Existing standalone selection retains resolution/declaration-order
 ranking, not upstream's full bandwidth/codec sorter. Every variant manifest is
 read before selection; segment bodies are not probed. One master level, at most
-256 variants and 10000 retained fragments across a master are supported.
+256 variants and 1000000 retained fragments across a master (500000 per
+media playlist, enough for multi-day Twitch VODs) are supported.
 
 Media playlists require `EXT-X-ENDLIST`, nonempty positive-duration segments and
 HTTP(S) URLs. A nonzero media sequence is permitted for a completed VOD. Without
@@ -1999,15 +2213,19 @@ request timeouts. These new public fields require updating Rust struct literals.
 
 The saved TS, fMP4 and byte-range media tests verify exact bytes and optionally
 FFprobe audio/video tracks using `YT_DLP_RS_TEST_FFPROBE`. The offline differential
-harness compares actual pinned upstream HlsFD fragment order, URLs and ranges:
+harness downloads the saved TS, fMP4, byte-range and AES-128 playlists (plus a
+mixed key-query/`METHOD=NONE` playlist) with both the native CLI and actual pinned
+upstream HlsFD from one localhost server, and compares ordered fragment and key
+requests (path, query, Range) and the exact assembled bytes:
 
 ```sh
 python3 tools/compare_hls.py --upstream /path/to/yt-dlp --binary target/debug/yt-dlp-rs
 ```
 
-Only the exact ephemeral localhost origin and upstream exclusive range end are
-normalized. Container naming/remux behavior, live/encrypted delivery and general
-HLS parity are not inferred. YouTube HLS discovery uses this same bounded VOD
+Playlist refetches are excluded, and key requests are compared as their own
+sequence: upstream fetches a key after the first fragment using it, native
+before. Container naming/remux behavior, implicit IVs after a map, live delivery
+and general HLS parity are not inferred. YouTube HLS discovery uses this same bounded VOD
 pipeline. See [the source slice](../upstream/notes/hls-vod.md).
 
 
@@ -2067,7 +2285,7 @@ like upstream, a variant without CODECS (or with audio-only CODECS) is kept as a
 complete (or audio-only) format, and an unknown AUDIO group is ignored. Inband
 groups retain the existing standalone behavior. Both variant and rendition
 declarations count toward the combined limit of 256; every child playlist is
-read with the existing aggregate 10000-fragment cap. JSON/simulation fetch neither
+read with the existing aggregate 1000000-fragment cap. JSON/simulation fetch neither
 segments nor encryption keys. Like upstream (`ext='mp4'`), every HLS format is
 labeled `mp4`, including audio renditions and raw-AAC or TS segments.
 
@@ -2099,10 +2317,12 @@ verify both tracks and AAC codec metadata. The optional pinned-parser comparison
 python3 tools/compare_hls_audio.py --upstream /path/to/yt-dlp --binary target/debug/yt-dlp-rs
 ```
 
-It compares URL-keyed stream kind, language/name, dimensions and total bitrate.
-Format IDs/order, native group/flag fields, selection, ext/remuxing and download
-behavior are explicitly excluded from that comparison. Only the exact local
-origin is normalized. See [the source slice](../upstream/notes/hls-audio.md).
+It compares whole format dicts in FormatSorter order, excluding only the fields
+`process_video_result` adds (format, resolution, aspect_ratio, http_headers) and
+applying its `dynamic_range` SDR default. Selection, remuxing and download
+behavior are excluded. Only the exact local origin is normalized. Native manifest
+requests are pinned: it reads every child playlist during extraction, which
+upstream's parser does not. See [the source slice](../upstream/notes/hls-audio.md).
 
 
 ## Static DASH MPDs
@@ -2173,10 +2393,11 @@ python3 tools/compare_dash.py --upstream /path/to/yt-dlp --binary target/debug/y
 ```
 
 The actual upstream parser receives saved XML with network access blocked; native
-JSON reads only localhost MPDs. A documented allowlist compares declaration-order
-metadata and fragment URLs, resolving upstream relative paths and normalizing
-only the exact local origin. Source ID and audio bitrate representations have
-explicit mappings. Pinned upstream ignores SegmentList ranges and does not expand
+JSON reads only localhost MPDs. Whole format dicts are compared in FormatSorter
+order, including fragment_base_url and each fragment's path/url/duration,
+excluding only the fields `process_video_result` adds and applying its
+`dynamic_range` SDR default; only the exact local origin is normalized. Pinned
+upstream ignores SegmentList ranges and does not expand
 negative repeats or apply presentationTimeOffset: native range expectations are
 checked independently, and those timing behaviors are excluded from upstream
 parity claims. See [the source slice](../upstream/notes/dash-static.md).
@@ -3041,6 +3262,19 @@ General HTTP redirects use reqwest's existing ten-redirect policy: ordinary cust
 headers persist; Authorization is removed on a change of host/port. This is a
 native tested policy, not a claim of full upstream redirect/header parity.
 Credentials placed in arbitrary custom header names follow that ordinary policy.
+
+HTTP/1.1 requests send title-cased header names (`User-Agent`, `Accept`), as
+upstream's `http.client` does; some Cloudflare-fronted sites (kick.com) reject
+lowercase names with 403. Site extractor responses (pages, JSON APIs) are read
+like upstream's urllib handler and `_webpage_read_content`: `gzip`/`deflate`
+`Content-Encoding` is decoded even though `Accept-Encoding: identity` is sent
+(Imgur's API compresses regardless), and the text encoding comes from the
+Content-Type charset, then a `<meta charset>` in the first 1024 bytes, then a
+UTF-16LE BOM, defaulting to UTF-8 (`_guess_encoding_from_content`; VK
+serves windows-1251). Unknown charset labels decode as lossy UTF-8, and
+`latin-1` uses WHATWG windows-1252 (differing only in C1 controls). JSON with
+unpaired `\uD800`–`\uDFFF` escapes, which Python's `json` accepts, parses
+with U+FFFD in their place.
 
 Construct `YoutubeDl::with_options(youtube_options, HttpOptions { headers,
 user_agent, referer })` for library use. Existing constructors retain defaults.

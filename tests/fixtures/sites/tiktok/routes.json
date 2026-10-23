@@ -66,6 +66,202 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom-540"
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer/video/7300000000000000003",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "slideshow.html"
+  },
+  {
+   "url": "https://sf16-ies-music.tiktokcdn.com/obj/slide?mime_type=audio_mp4",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body": "0000ftypM4A-slide"
+  },
+  {
+   "url": "https://v16-webapp.tiktok.com/caption/eng.webvtt",
+   "headers": {
+    "Content-Type": "text/vtt"
+   },
+   "body": "WEBVTT\n\n00:00.000 --> 00:01.000\nHello\n"
+  },
+  {
+   "url": "https://www.tiktok.com/@dancer",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "user.html"
+  },
+  {
+   "url": "https://www.tiktok.com/@hidden",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "user-private.html"
+  },
+  {
+   "url": "https://www.tiktok.com/@newbie",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "user-empty.html"
+  },
+  {
+   "url": "https://www.tiktok.com/api/creator/item_list/?aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0+%28Windows%29&channel=tiktok_web&cookie_enabled=true&count=15&cursor=1699000000000&device_platform=web_pc&focus_state=true&from_page=user&history_len=2&is_fullscreen=false&is_page_visible=true&language=en&os=windows&priority_region=&referer=&region=US&screen_height=1080&screen_width=1920&secUid=MS4wLjABAAAA_secuid&type=1&tz_name=UTC&webcast_language=en",
+   "ignore_query": [
+    "device_id",
+    "verifyFp"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "user-page2.json"
+  },
+  {
+   "url": "https://www.tiktok.com/api/creator/item_list/?aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0+%28Windows%29&channel=tiktok_web&cookie_enabled=true&count=15&device_platform=web_pc&focus_state=true&from_page=user&history_len=2&is_fullscreen=false&is_page_visible=true&language=en&os=windows&priority_region=&referer=&region=US&screen_height=1080&screen_width=1920&secUid=MS4wLjABAAAA_secuid&type=1&tz_name=UTC&webcast_language=en",
+   "ignore_query": [
+    "cursor",
+    "device_id",
+    "verifyFp"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "user-page1.json"
+  },
+  {
+   "url": "https://www.tiktok.com/api/creator/item_list/?aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0+%28Windows%29&channel=tiktok_web&cookie_enabled=true&count=15&device_platform=web_pc&focus_state=true&from_page=user&history_len=2&is_fullscreen=false&is_page_visible=true&language=en&os=windows&priority_region=&referer=&region=US&screen_height=1080&screen_width=1920&secUid=MS4wLjABAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-_Zz&type=1&tz_name=UTC&webcast_language=en",
+   "ignore_query": [
+    "cursor",
+    "device_id",
+    "verifyFp"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"statusCode\": 0, \"itemList\": [], \"hasMorePrevious\": false}"
+  },
+  {
+   "url": "https://www.tiktok.com/api/collection/item_list/?aid=1988&collectionId=7371330159376370462&count=30&cursor=0&sourceType=113",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "collection-page1.json"
+  },
+  {
+   "url": "https://www.tiktok.com/api/collection/item_list/?aid=1988&collectionId=7371330159376370462&count=30&cursor=30&sourceType=113",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "collection-page2.json"
+  },
+  {
+   "url": "https://www.tiktok.com/@embedder",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "user-embedder.html"
+  },
+  {
+   "url": "https://www.tiktok.com/embed/@embedder",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed-user.html"
+  },
+  {
+   "url": "https://www.tiktok.com/@embedder/video/7300000000000000004",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "private.html"
+  },
+  {
+   "url": "https://www.tiktok.com/@embedder/video/7300000000000000001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "video.html"
+  },
+  {
+   "url": "https://www.tiktok.com/@liver",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "live-user.html"
+  },
+  {
+   "url": "https://webcast.tiktok.com/webcast/room/info?aid=1988&room_id=7210809319192726273",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live-room.json"
+  },
+  {
+   "url": "https://m.tiktok.com/share/live/7210809319192726273/?language=en",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "live-share.html"
+  },
+  {
+   "url": "https://www.tiktok.com/@offline",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "user-empty.html"
+  },
+  {
+   "url": "https://www.tiktok.com/@offline/live",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>offline</body></html>"
+  },
+  {
+   "url": "https://www.tiktok.com/@ended",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script id=\"__UNIVERSAL_DATA_FOR_REHYDRATION__\" type=\"application/json\">{\"__DEFAULT_SCOPE__\": {\"webapp.user-detail\": {\"userInfo\": {\"user\": {\"roomId\": \"7000000000000000001\"}}}}}</script>"
+  },
+  {
+   "url": "https://webcast.tiktok.com/webcast/room/info?aid=1988&room_id=7000000000000000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"status\": 4}}"
+  },
+  {
+   "url": "https://m.tiktok.com/share/live/7000000000000000001",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html></html>"
+  },
+  {
+   "url": "https://www.tiktok.com/@guest",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script id=\"__UNIVERSAL_DATA_FOR_REHYDRATION__\" type=\"application/json\">{\"__DEFAULT_SCOPE__\": {\"webapp.user-detail\": {\"userInfo\": {\"user\": {\"roomId\": \"7000000000000000002\"}}}}}</script>"
+  },
+  {
+   "url": "https://webcast.tiktok.com/webcast/room/info?aid=1988&room_id=7000000000000000002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live-guest.json"
+  },
+  {
+   "url": "https://www.tiktok.com/api/live/detail/?aid=1988&roomID=7000000000000000002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live-guest-detail.json"
   }
  ]
 }

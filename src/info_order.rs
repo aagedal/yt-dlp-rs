@@ -10,6 +10,10 @@ use serde_json::{Map, Value};
 
 /// The upstream code path of an info dict (see [`video`]).
 pub(crate) const INFO_SHAPE: &str = "__yt_dlp_rs_info_shape";
+
+/// A playlist shape suffix: its entries came from a generator, whose
+/// `playlist_count` is only known once a selection exhausts it.
+pub(crate) const GENERATOR: &str = "|generator";
 /// The upstream code path of a format dict (see [`format`]).
 pub(crate) const FORMAT_SHAPE: &str = "__yt_dlp_rs_format_shape";
 /// A per-section info dict (`process_video_result`'s section update):
@@ -324,8 +328,13 @@ pub(crate) fn mark_int_quality(format: &mut crate::VideoFormat) {
     format.extra.insert(INT_QUALITY.into(), Value::Bool(true));
 }
 
+/// A format whose `preference` `FormatSorter._fill_sorting_fields` set
+/// (HEVC over FLV), after `video_ext`/`audio_ext`.
+pub(crate) const SORTER_PREFERENCE: &str = "__yt_dlp_rs_sorter_preference";
+
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
+    let sorter_preference = map.shift_remove(SORTER_PREFERENCE).is_some();
     if map.shift_remove(INT_QUALITY).is_some()
         && let Some(quality) = map.get("quality").and_then(Value::as_f64)
         && quality.fract() == 0.0
@@ -580,7 +589,7 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         "twitter-http" => &[
             ("url", Take),
             ("format_id", Take),
-            ("tbr", Take),
+            ("tbr", Assign),
             ("width", Take),
             ("height", Take),
         ],
@@ -705,6 +714,28 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
             ]);
             return replay.finish();
         }
+        // `_parse_mpd_formats` for an unfragmented representation: its own
+        // `url`; `protocol` is only added by processing.
+        "dash-direct" => &[
+            ("format_id", Take),
+            ("manifest_url", Take),
+            ("ext", Take),
+            ("width", Assign),
+            ("height", Assign),
+            ("tbr", Assign),
+            ("asr", Assign),
+            ("fps", Assign),
+            ("language", Assign),
+            ("format_note", Take),
+            ("filesize", Assign),
+            ("container", Take),
+            ("vcodec", Take),
+            ("acodec", Take),
+            ("dynamic_range", Codecs),
+            ("url", Take),
+            ("manifest_stream_number", Take),
+            ("is_dash_periods", Take),
+        ],
         // `_parse_mpd_formats` for a segmented representation.
         "dash" => &[
             ("format_id", Take),
@@ -731,9 +762,26 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         ],
         _ => &[],
     };
+    // `+KEY`: a key the caller's update adds (absent from the extractor's
+    // dict), so it follows the extractor's keys.
+    let late: Vec<(String, Option<Value>)> = update
+        .iter()
+        .filter_map(|key| key.strip_prefix('+'))
+        .map(|key| (key.to_owned(), replay.ours.shift_remove(key)))
+        .collect();
     replay.steps(extractor);
     for key in &update {
-        replay.assign(key);
+        match key.strip_prefix('+') {
+            Some(name) => {
+                let value = late
+                    .iter()
+                    .find(|(late, _)| late == name)
+                    .and_then(|(_, value)| value.clone())
+                    .unwrap_or(Value::Null);
+                replay.out.insert(name.to_owned(), value);
+            }
+            None => replay.assign(key),
+        }
     }
     if let Some(original) = &original {
         replay.loaded(original);
@@ -742,7 +790,9 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         replay.take("http_headers");
     }
     // Keys this port has beyond the extractor's, before processing.
-    replay.rest_except(&|key| PROCESSED_FORMAT_KEYS.contains(&key));
+    replay.rest_except(&|key| {
+        PROCESSED_FORMAT_KEYS.contains(&key) || (sorter_preference && key == "preference")
+    });
     replay.format_steps();
     let mut out = replay.finish();
     // `_check_formats`' `f['__working']` is set after processing.
@@ -970,6 +1020,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "fuyintv"
             | "harpodeon"
     ) || shape.starts_with("nobelprize;")
+        || shape.starts_with("untyped-dict;")
         || original
             .as_ref()
             .is_some_and(|original| !original.contains_key("formats"));
@@ -1031,6 +1082,9 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "generic-found-dash-entry"
             | "xspf-entry"
     ) || (shape.starts_with("dict;")
+        // A resolved `url` entry gets the playlist's keys after its
+        // extraction's URL fields instead.
+        && !transparent_entry
         && map.get("n_entries").is_some_and(|n| !n.is_null()));
     let mut replay = Replay::new(map);
     let extractor: &[(&str, Set)] = match shape.as_str() {
@@ -1911,6 +1965,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             );
         }
     }
+    // An extractor's own dict that is its own (only) format, built without
+    // `None` values (`traverse_obj` dict templates): `untyped-dict;KEYS`.
+    if let Some(keys) = shape.strip_prefix("untyped-dict;") {
+        for key in keys.split(',').filter(|key| !key.is_empty()) {
+            replay.take(key);
+        }
+    }
     // `AngelIE`: `merge_dicts(info_dict, json_ld)`.
     if let Some(keys) = shape.strip_prefix("angel;") {
         for (key, how) in [
@@ -2040,9 +2101,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             }
         }
         // The extractor's thumbnail keys, then `_sanitize_thumbnails`' `id`
-        // and `resolution`.
+        // and `resolution` (also for thumbnails a `url_transparent` entry
+        // overlays later).
         if let Some(thumbnail_keys) = thumbnail_keys
-            && let Some(Value::Array(thumbnails)) = replay.out.get_mut("thumbnails")
+            && let Some(Value::Array(thumbnails)) = match replay.out.get_mut("thumbnails") {
+                Some(thumbnails) => Some(thumbnails),
+                None => replay.ours.get_mut("thumbnails"),
+            }
         {
             for thumbnail in thumbnails.iter_mut().filter_map(Value::as_object_mut) {
                 let mut ordered = Map::new();
@@ -2134,7 +2199,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         if transparent_entry {
             // The playlist entry's extra info.
             for (key, how) in [
-                ("playlist_count", Take),
+                ("playlist_count", Assign),
                 ("playlist", Assign),
                 ("playlist_id", Assign),
                 ("playlist_title", Assign),
@@ -2387,8 +2452,17 @@ fn youtube_tab_playlist(
     {
         map.shift_remove("title");
     }
+    // Nor one without an ID an `id` key (an `id: None` extra marks it).
+    if !keys
+        .split(',')
+        .chain(after.split(','))
+        .any(|key| key == "id")
+        && map.get("id").is_some_and(Value::is_null)
+    {
+        map.shift_remove("id");
+    }
     let mut replay = Replay::new(map);
-    for key in keys.split(',') {
+    for key in keys.split(',').filter(|key| !key.is_empty()) {
         replay.set(key, Assign);
     }
     replay.take("_type");
@@ -2437,6 +2511,8 @@ pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some(Value::String(shape)) = map.shift_remove(INFO_SHAPE) else {
         return map;
     };
+    // A generator's entries (see [`GENERATOR`]) do not change the order.
+    let shape = shape.strip_suffix(GENERATOR).unwrap_or(&shape).to_owned();
     if let Some(keys) = shape.strip_prefix("youtube-tab;") {
         return youtube_tab_playlist(map, keys, true);
     }

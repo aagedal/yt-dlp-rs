@@ -1,5 +1,5 @@
 {
- "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
  "cases": [
   {
    "url": "https://www.loom.com/share/43d05f362f734614a2e81b4694a3a523",
@@ -69,6 +69,78 @@
    ],
    "files": {
     "43d05f362f734614a2e81b4694a3a523.webm": 9
+   }
+  },
+  {
+   "url": "https://www.loom.com/share/fedcba9876543210fedcba9876543210",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"fedcba9876543210fedcba9876543210\", \"duration\": 26, \"chapters\": null, \"formats\": [{\"format_id\": \"hls-cdn\", \"format_index\": null, \"url\": \"https://cdn.loom.test/sessions/raw/fedcba9876543210fedcba9876543210.m3u8?Policy=cdn&Signature=cdn\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": 0, \"has_drm\": false, \"extra_param_to_segment_url\": \"Policy=cdn&Signature=cdn\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-cdn - unknown\"}, {\"format_id\": \"hls-raw-1500\", \"format_index\": null, \"url\": \"https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/mediaplaylist-bitrate1500.m3u8?Policy=pol&Signature=sig&Key-Pair-Id=kp\", \"manifest_url\": \"https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/playlist.m3u8?Policy=pol&Signature=sig&Key-Pair-Id=kp\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"extra_param_to_segment_url\": \"Policy=pol&Signature=sig&Key-Pair-Id=kp\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-raw-1500 - 1280x720\"}], \"subtitles\": {}, \"title\": \"Signed HLS\", \"description\": \"Desc\", \"uploader\": \"Owner Name\", \"timestamp\": 1712232000, \"webpage_url\": \"https://www.loom.com/share/fedcba9876543210fedcba9876543210\", \"original_url\": \"https://www.loom.com/share/fedcba9876543210fedcba9876543210\", \"webpage_url_basename\": \"fedcba9876543210fedcba9876543210\", \"webpage_url_domain\": \"loom.com\", \"extractor\": \"loom\", \"extractor_key\": \"Loom\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"fedcba9876543210fedcba9876543210\", \"fulltitle\": \"Signed HLS\", \"duration_string\": \"26\", \"upload_date\": \"20240404\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-raw-1500\", \"url\": \"https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/mediaplaylist-bitrate1500.m3u8?Policy=pol&Signature=sig&Key-Pair-Id=kp\", \"manifest_url\": \"https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/playlist.m3u8?Policy=pol&Signature=sig&Key-Pair-Id=kp\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"quality\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"extra_param_to_segment_url\": \"Policy=pol&Signature=sig&Key-Pair-Id=kp\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-raw-1500 - 1280x720\", \"_filename\": \"Signed HLS [fedcba9876543210fedcba9876543210].mp4\", \"filename\": \"Signed HLS [fedcba9876543210fedcba9876543210].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-raw-1500\", \"format_index\": null, \"url\": \"https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/mediaplaylist-bitrate1500.m3u8?Policy=pol&Signature=sig&Key-Pair-Id=kp\", \"manifest_url\": \"https://luna.loom.test/id/fedcba9876543210fedcba9876543210/resource/hls/playlist.m3u8?Policy=pol&Signature=sig&Key-Pair-Id=kp\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": 1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"extra_param_to_segment_url\": \"Policy=pol&Signature=sig&Key-Pair-Id=kp\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-raw-1500 - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [loom] fedcba9876543210fedcba9876543210: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.loom.com/share/fedcba9876543210fedcba9876543210",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[loom] Extracting URL: https://www.loom.com/share/fedcba9876543210fedcba9876543210",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading GraphQL metadata JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading GraphQL video JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading GraphQL chapters JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading raw-url JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading m3u8 information",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading transcoded-url JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading m3u8 information",
+    "[info] Available formats for fedcba9876543210fedcba9876543210:",
+    "ID           EXT RESOLUTION | FILESIZE   TBR PROTO | VCODEC  ACODEC",
+    "--------------------------------------------------------------------",
+    "hls-cdn      mp4 unknown    |                m3u8  | unknown unknown",
+    "hls-raw-1500 mp4 1280x720   | ~4.65MiB 1500k m3u8  | unknown unknown"
+   ],
+   "stderr": [
+    "WARNING: [loom] fedcba9876543210fedcba9876543210: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.loom.com/share/fedcba9876543210fedcba9876543210",
+   "args": [
+    "--no-progress",
+    "--fixup",
+    "never",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[loom] Extracting URL: https://www.loom.com/share/fedcba9876543210fedcba9876543210",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading GraphQL metadata JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading GraphQL video JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading GraphQL chapters JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading raw-url JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading m3u8 information",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading transcoded-url JSON",
+    "[loom] fedcba9876543210fedcba9876543210: Downloading m3u8 information",
+    "[info] fedcba9876543210fedcba9876543210: Downloading 1 format(s): hls-raw-1500",
+    "[hlsnative] Downloading m3u8 manifest",
+    "[hlsnative] Total fragments: 1",
+    "[download] Destination: fedcba9876543210fedcba9876543210.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [loom] fedcba9876543210fedcba9876543210: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)"
+   ],
+   "files": {
+    "fedcba9876543210fedcba9876543210.mp4": 19
    }
   }
  ]

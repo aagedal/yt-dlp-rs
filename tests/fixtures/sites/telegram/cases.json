@@ -1,0 +1,15 @@
+[
+ {"url": "https://t.me/europa_press/613", "args": ["-j"]},
+ {"url": "https://t.me/europa_press/613", "args": ["-F"]},
+ {"url": "https://t.me/europa_press/613", "args": ["--print", "%(id)s|%(title)s|%(channel)s|%(channel_id)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(duration_string)s|%(webpage_url)s|%(original_url)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://t.me/europa_press/613", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://t.me/vorposte/29342", "args": ["-J"]},
+ {"url": "https://t.me/vorposte/29342", "args": ["--print", "%(playlist_index)s|%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s|%(duration)s|%(webpage_url)s|%(thumbnail)s"]},
+ {"url": "https://t.me/vorposte/29342", "args": ["--flat-playlist", "-j"]},
+ {"url": "https://t.me/vorposte/29342", "args": ["--no-progress", "-o", "%(playlist_index)s-%(id)s.%(ext)s"]},
+ {"url": "https://t.me/vorposte/29343", "args": ["--no-playlist", "-j"]},
+ {"url": "https://t.me/vorposte/29342?single", "args": ["-j"]},
+ {"url": "https://t.me/vorposte/29342?single=1&embed=0", "args": ["--print", "%(id)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://t.me/clips_channel/77", "args": ["-j"]},
+ {"url": "https://t.me/europa_press/404", "args": ["-j"]}
+]

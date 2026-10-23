@@ -31,6 +31,8 @@ struct Route {
     status: u16,
     headers: Vec<(String, String)>,
     body: Vec<u8>,
+    /// The route's position in `routes.json`.
+    order: usize,
 }
 
 /// A test's own answer for `(method, url)`, before the routes: status,
@@ -57,7 +59,8 @@ fn load(directory: &Path) -> HashMap<String, Vec<Route>> {
         .as_array()
         .unwrap()
         .iter()
-        .map(|route| {
+        .enumerate()
+        .map(|(order, route)| {
             let body = match route.get("body_file").and_then(serde_json::Value::as_str) {
                 Some(file) => std::fs::read(directory.join(file)).unwrap(),
                 None => route["body"]
@@ -104,6 +107,7 @@ fn load(directory: &Path) -> HashMap<String, Vec<Route>> {
                     status: route["status"].as_u64().unwrap_or(200) as u16,
                     headers,
                     body,
+                    order,
                 },
             )
         })
@@ -210,6 +214,7 @@ fn respond<S: Read + Write>(
         status: 404,
         headers: vec![("Content-Type".into(), "text/plain".into())],
         body: b"not found".to_vec(),
+        order: usize::MAX,
     };
     let matches = |route: &&Route| {
         route
@@ -225,14 +230,21 @@ fn respond<S: Read + Write>(
         .get(url)
         .and_then(|routes| routes.iter().find(matches))
         .or_else(|| {
-            // Routes ignoring some query parameters.
-            routes.iter().find_map(|(key, routes)| {
-                routes
-                    .iter()
-                    .filter(|route| !route.ignore_query.is_empty())
-                    .filter(|route| strip_query(url, &route.ignore_query) == *key)
-                    .find(matches)
-            })
+            // Routes ignoring some query parameters, in `routes.json` order
+            // (like the Python proxy's insertion-ordered dict).
+            routes
+                .iter()
+                .filter_map(|(key, routes)| {
+                    let first = routes.first()?.order;
+                    routes
+                        .iter()
+                        .filter(|route| !route.ignore_query.is_empty())
+                        .filter(|route| strip_query(url, &route.ignore_query) == *key)
+                        .find(matches)
+                        .map(|route| (first, route))
+                })
+                .min_by_key(|(first, route)| (*first, route.order))
+                .map(|(_, route)| route)
         })
         .unwrap_or(&not_found);
     let reason = match route.status {

@@ -1,22 +1,47 @@
-//! Upstream `TwitchVodIE` and `TwitchClipsIE` (`yt_dlp/extractor/twitch.py`):
-//! GraphQL metadata and playback access tokens, the usher HLS master (with
-//! its storyboard) for VODs, and a clip's signed quality URLs.
+//! Upstream `yt_dlp/extractor/twitch.py`: `TwitchVodIE` and `TwitchStreamIE`
+//! (GraphQL metadata and playback access tokens, the usher HLS master, a
+//! VOD's storyboard), `TwitchClipsIE` (a clip's signed quality URLs) and the
+//! channel/collection lists (`TwitchVideosIE`, `TwitchVideosClipsIE`,
+//! `TwitchVideosCollectionsIE`, `TwitchCollectionIE`), whose paged GraphQL
+//! entries are `url_transparent` results.
 use super::Extractor;
-use crate::{Error, ExtractResult, Result, VideoInfo};
+use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
+use std::sync::atomic::{AtomicBool, Ordering};
 use url::Url;
 
 pub struct TwitchVod;
 pub struct TwitchClips;
+pub struct TwitchStream;
+pub struct TwitchVideos;
+pub struct TwitchVideosClips;
+pub struct TwitchVideosCollections;
+pub struct TwitchCollection;
 
 const VOD_NAME: &str = "twitch:vod";
 const VOD_KEY: &str = "TwitchVod";
 const CLIPS_NAME: &str = "twitch:clips";
 const CLIPS_KEY: &str = "TwitchClips";
+const STREAM_NAME: &str = "twitch:stream";
+const STREAM_KEY: &str = "TwitchStream";
+const VIDEOS_NAME: &str = "twitch:videos";
+const VIDEOS_KEY: &str = "TwitchVideos";
+const VIDEOS_CLIPS_NAME: &str = "twitch:videos:clips";
+const VIDEOS_CLIPS_KEY: &str = "TwitchVideosClips";
+const VIDEOS_COLLECTIONS_NAME: &str = "twitch:videos:collections";
+const VIDEOS_COLLECTIONS_KEY: &str = "TwitchVideosCollections";
+const COLLECTION_NAME: &str = "twitch:collection";
+const COLLECTION_KEY: &str = "TwitchCollection";
 const CLIENT_ID: &str = "ue6666qo983tsx6so1t0vnawi233wa";
+/// `_login_hint()` of an extractor supporting login (`_NETRC_MACHINE = 'twitch'`).
+const LOGIN_HINT: &str = "Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (twitch) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
+
+/// Upstream `live_from_start`: VOD formats are marked `is_from_start`, and a
+/// live stream resolves to the VOD being recorded.
+pub(crate) static LIVE_FROM_START: AtomicBool = AtomicBool::new(false);
 
 static VOD_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^https?://(?:(?:(?:www|go|m)\.)?twitch\.tv/(?:[^/]+/v(?:ideo)?|videos)/|player\.twitch\.tv/\?.*?\bvideo=v?|www\.twitch\.tv/[^/]+/schedule\?vodID=)(?P<id>\d+)")
@@ -40,8 +65,73 @@ pub fn clips_suitable(url: &str) -> bool {
     CLIPS_URL.is_match(url)
 }
 
+static COLLECTION_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/collections/(?P<id>[^/]+)").unwrap()
+});
+static VIDEOS_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/(?P<id>[^/]+)/(?:videos|profile)").unwrap()
+});
+static VIDEOS_CLIPS_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/(?P<id>[^/]+)/(?:clips|videos/*?\?.*?\bfilter=clips)")
+        .unwrap()
+});
+static VIDEOS_COLLECTIONS_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r"^https?://(?:(?:www|go|m)\.)?twitch\.tv/(?P<id>[^/]+)/videos/*?\?.*?\bfilter=collections",
+    )
+    .unwrap()
+});
+static STREAM_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^https?://(?:(?:(?:www|go|m)\.)?twitch\.tv/|player\.twitch\.tv/\?.*?\bchannel=)(?P<id>[^/#?]+)")
+        .unwrap()
+});
+
+/// `TwitchCollectionIE.suitable`.
+pub fn collection_suitable(url: &str) -> bool {
+    COLLECTION_URL.is_match(url)
+}
+
+/// `TwitchVideosClipsIE.suitable`.
+pub fn videos_clips_suitable(url: &str) -> bool {
+    VIDEOS_CLIPS_URL.is_match(url)
+}
+
+/// `TwitchVideosCollectionsIE.suitable`.
+pub fn videos_collections_suitable(url: &str) -> bool {
+    VIDEOS_COLLECTIONS_URL.is_match(url)
+}
+
+/// `TwitchVideosIE.suitable`: not a clips or collections list.
+pub fn videos_suitable(url: &str) -> bool {
+    !videos_clips_suitable(url) && !videos_collections_suitable(url) && VIDEOS_URL.is_match(url)
+}
+
+/// `TwitchStreamIE.suitable`: no other Twitch extractor's URL.
+pub fn stream_suitable(url: &str) -> bool {
+    !(vod_suitable(url)
+        || collection_suitable(url)
+        || videos_suitable(url)
+        || videos_clips_suitable(url)
+        || videos_collections_suitable(url)
+        || clips_suitable(url))
+        && STREAM_URL.is_match(url)
+}
+
 fn operation_hash(name: &str) -> &'static str {
     match name {
+        "CollectionSideBar" => "016e1e4ccee0eb4698eb3bf1a04dc1c077fb746c78c82bac9a8f0289658fbd1a",
+        "FilterableVideoTower_Videos" => {
+            "67004f7881e65c297936f32c75246470629557a393788fb5a69d6d9a25a8fd5f"
+        }
+        "ClipsCards__User" => "1cd671bfa12cec480499c087319f26d21925e9695d1f80225aae6a4354f23088",
+        "ChannelCollectionsContent" => {
+            "5247910a19b1cd2b760939bf4cba4dcbd3d13bdf8c266decd16956f6ef814077"
+        }
+        "StreamMetadata" => "ad022ca32220d5523d03a23cbcb5beaa1e0999889c1f8f78f9f2520dafb5cae6",
+        "ComscoreStreamingQuery" => {
+            "e1edae8122517d013405f237ffcc124515dc6ded82480a88daef69c83b53ac01"
+        }
+        "VideoPreviewOverlay" => "9515480dee68a77e667cb19de634739d33f243572b007e98e67184b1a5d8369f",
         "ShareClipRenderStatus" => {
             "2db6a3b20eabf510bd3cf465ae2408834b59eb6b8af89ca73ab1486cacecfb63"
         }
@@ -214,6 +304,219 @@ fn thumbnails(thumbnail: Option<&str>) -> Value {
     }
 }
 
+/// `_download_access_token(video_id, token_kind, param_name)`.
+fn access_token(
+    client: &Client,
+    name: &'static str,
+    id: &str,
+    kind: &str,
+    param: &str,
+) -> Result<Value> {
+    let method = format!("{kind}PlaybackAccessToken");
+    let query = format!(
+        "{{\n              {method}(\n                {param}: \"{id}\",\n                params: {{\n                  platform: \"web\",\n                  playerBackend: \"mediaplayer\",\n                  playerType: \"site\"\n                }}\n              )\n              {{\n                value\n                signature\n              }}\n            }}"
+    );
+    let token = base_gql(
+        client,
+        name,
+        id,
+        &json!({ "query": query }),
+        &format!("Downloading {kind} access token GraphQL"),
+    )?;
+    Ok(token
+        .pointer(&format!("/data/{method}"))
+        .cloned()
+        .unwrap_or(Value::Null))
+}
+
+/// `_extract_twitch_m3u8_formats(path, video_id, token, signature,
+/// live_from_start)`: the usher master's formats; a `403` JSON error names
+/// subscriber-only content or the usher's error.
+#[allow(clippy::too_many_arguments)]
+fn usher_formats(
+    client: &Client,
+    name: &'static str,
+    temp_id: &str,
+    path: &str,
+    id: &str,
+    access: &Value,
+    live_from_start: bool,
+    live: bool,
+) -> Result<Vec<crate::VideoFormat>> {
+    use std::io::Read;
+    let random = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(1_000_000, |time| {
+            1_000_000 + (time.subsec_nanos() as u64 % 9_000_000)
+        });
+    let text = |key: &str| {
+        access
+            .get(key)
+            .and_then(Value::as_str)
+            .unwrap_or_default()
+            .to_owned()
+    };
+    let mut usher = Url::parse(&format!("https://usher.ttvnw.net/{path}/{id}.m3u8"))?;
+    usher
+        .query_pairs_mut()
+        .append_pair("allow_source", "true")
+        .append_pair("allow_audio_only", "true")
+        .append_pair("allow_spectre", "true")
+        .append_pair("p", &random.to_string())
+        .append_pair("platform", "web")
+        .append_pair("player", "twitchweb")
+        .append_pair("supported_codecs", "av1,h265,h264")
+        .append_pair("playlist_include_framerate", "true")
+        .append_pair("sig", &text("signature"))
+        .append_pair("token", &text("value"));
+    // `_extract_m3u8_formats(..., fatal=True)`, keeping a `403` response.
+    let note = format!("[{name}] {id}: Downloading m3u8 information");
+    crate::screen::expect_page(id, Some(note.clone()), None);
+    let response = super::direct::request_expecting(client, &usher, &[], &[403]);
+    if response.is_err() {
+        crate::screen::screen(&note);
+    }
+    let failed = |error: Error| match error {
+        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::Reported(
+            super::request_error_text(name, id, "m3u8 information", &error).replacen(
+                ": Unable to download ",
+                ": Failed to download ",
+                1,
+            ),
+        ),
+        error => error,
+    };
+    let parsed = match response {
+        Ok(mut response) if response.status().as_u16() == 403 => {
+            let json = response
+                .headers()
+                .get(reqwest::header::CONTENT_TYPE)
+                .is_some_and(|value| value.as_bytes() == b"application/json");
+            if !json {
+                Err(crate::retry::check_response(response).map_or_else(failed, |_| {
+                    Error::Reported(format!(
+                        "[{name}] {id}: Failed to download m3u8 information: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)"
+                    ))
+                }))
+            } else {
+                let mut body = Vec::new();
+                response
+                    .read_to_end(&mut body)
+                    .map_err(Error::ExtractionRead)?;
+                let info = serde_json::from_slice::<Value>(&body)
+                    .ok()
+                    .and_then(|data| data.get(0).filter(|info| info.is_object()).cloned())
+                    .unwrap_or_else(|| json!({}));
+                let code = info.get("error_code");
+                let restricted = code.and_then(Value::as_str).is_some_and(|code| {
+                    matches!(
+                        code,
+                        "vod_manifest_restricted" | "unauthorized_entitlements"
+                    )
+                });
+                let common = "access to this subscriber-only content";
+                let message = if restricted {
+                    if crate::cookies::get_cookie("https://gql.twitch.tv", "auth-token").is_some() {
+                        format!("Your account does not have {common}")
+                    } else {
+                        format!(
+                            "You must be logged into an account that has {common}. {LOGIN_HINT}"
+                        )
+                    }
+                } else {
+                    // `join_nonempty('error_code', 'error', from_dict=..., delim=': ')`.
+                    ["error_code", "error"]
+                        .iter()
+                        .filter_map(|key| info.get(*key).filter(|value| truthy(value)))
+                        .map(|value| match value {
+                            Value::String(text) => text.clone(),
+                            other => other.to_string(),
+                        })
+                        .collect::<Vec<_>>()
+                        .join(": ")
+                };
+                Err(if message.is_empty() {
+                    Error::Reported(format!(
+                        "[{name}] {id}: Failed to download m3u8 information: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)"
+                    ))
+                } else {
+                    fail(name, temp_id, &message)
+                })
+            }
+        }
+        // A live master's variants are not read (upstream never reads them;
+        // their fragments change): live formats download through FFmpeg.
+        Ok(response) => {
+            super::hls::from_response_with(client, response, &usher, None, true, None, live)
+        }
+        Err(error) => Err(failed(error)),
+    };
+    crate::screen::clear_page();
+    let stream = parsed?.ok_or_else(|| {
+        Error::UnsupportedHtml5(format!("the {name} stream is not an HLS playlist"))
+    })?;
+    let mut formats = stream.formats;
+    for format in &mut formats {
+        if format
+            .vcodec
+            .as_deref()
+            .is_some_and(|codec| codec.starts_with("av01"))
+        {
+            // mpegts does not yet have proper support for av1.
+            downloader_option(format, "ffmpeg_args_out", json!(["-f", "mp4"]));
+        }
+        if live_from_start {
+            downloader_option(format, "ffmpeg_args", json!(["-live_start_index", "0"]));
+            format.extra.insert("is_from_start".into(), true.into());
+        }
+    }
+    Ok(formats)
+}
+
+/// `fmt.setdefault('downloader_options', {}).update({key: value})`.
+fn downloader_option(format: &mut crate::VideoFormat, key: &str, value: Value) {
+    format
+        .downloader_options
+        .get_or_insert_with(Default::default)
+        .extra
+        .insert(key.into(), value);
+}
+
+/// Python truthiness of a JSON value.
+fn truthy(value: &Value) -> bool {
+    match value {
+        Value::Null => false,
+        Value::Bool(value) => *value,
+        Value::Number(number) => number.as_f64() != Some(0.0),
+        Value::String(text) => !text.is_empty(),
+        Value::Array(items) => !items.is_empty(),
+        Value::Object(map) => !map.is_empty(),
+    }
+}
+
+/// `_prefer_source(formats)`.
+fn prefer_source(formats: &mut [crate::VideoFormat]) {
+    if let Some(source) = formats
+        .iter_mut()
+        .find(|format| format.format_id == "Source")
+    {
+        source.quality = Some(10.0);
+        crate::info_order::mark_format_update(source, "quality");
+        crate::info_order::mark_int_rates(source);
+    } else {
+        for format in formats
+            .iter_mut()
+            .filter(|format| format.url.as_str().contains("/chunked/"))
+        {
+            format.quality = Some(10.0);
+            format.format_note = Some("Source".into());
+            crate::info_order::mark_format_update(format, "quality");
+            crate::info_order::mark_format_update(format, "format_note");
+            crate::info_order::mark_int_rates(format);
+        }
+    }
+}
+
 impl Extractor for TwitchVod {
     fn key(&self) -> &'static str {
         VOD_NAME
@@ -356,71 +659,21 @@ impl Extractor for TwitchVod {
         );
         info.insert("view_count".into(), int(video.get("viewCount"), 1).into());
         info.insert("chapters".into(), Value::Array(chapters));
+        // A VOD still recording (`is_live`) has a growing playlist.
+        let recording = is_live == Value::Bool(true);
         info.insert("is_live".into(), is_live);
         info.insert("was_live".into(), true.into());
-        // `_download_access_token(vod_id, 'video', 'id')`.
-        let query = format!(
-            "{{\n              videoPlaybackAccessToken(\n                id: \"{vod_id}\",\n                params: {{\n                  platform: \"web\",\n                  playerBackend: \"mediaplayer\",\n                  playerType: \"site\"\n                }}\n              )\n              {{\n                value\n                signature\n              }}\n            }}"
-        );
-        let token = base_gql(
+        let access = access_token(client, VOD_NAME, &vod_id, "video", "id")?;
+        let mut formats = usher_formats(
             client,
             VOD_NAME,
             &vod_id,
-            &json!({ "query": query }),
-            "Downloading video access token GraphQL",
+            "vod",
+            &vod_id,
+            &access,
+            LIVE_FROM_START.load(Ordering::Relaxed),
+            recording,
         )?;
-        let access = token
-            .pointer("/data/videoPlaybackAccessToken")
-            .cloned()
-            .unwrap_or(Value::Null);
-        // `_extract_twitch_m3u8_formats('vod', ...)`.
-        let random = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .map_or(1_000_000, |time| {
-                1_000_000 + (time.subsec_nanos() as u64 % 9_000_000)
-            });
-        let mut usher = Url::parse(&format!("https://usher.ttvnw.net/vod/{vod_id}.m3u8"))?;
-        usher
-            .query_pairs_mut()
-            .append_pair("allow_source", "true")
-            .append_pair("allow_audio_only", "true")
-            .append_pair("allow_spectre", "true")
-            .append_pair("p", &random.to_string())
-            .append_pair("platform", "web")
-            .append_pair("player", "twitchweb")
-            .append_pair("supported_codecs", "av1,h265,h264")
-            .append_pair("playlist_include_framerate", "true")
-            .append_pair(
-                "sig",
-                access
-                    .get("signature")
-                    .and_then(Value::as_str)
-                    .unwrap_or_default(),
-            )
-            .append_pair(
-                "token",
-                access
-                    .get("value")
-                    .and_then(Value::as_str)
-                    .unwrap_or_default(),
-            );
-        let stream = super::extract_m3u8_fatal(client, &usher, VOD_NAME, &vod_id, None, false)?;
-        let mut formats = stream.formats;
-        for format in &mut formats {
-            if format
-                .vcodec
-                .as_deref()
-                .is_some_and(|codec| codec.starts_with("av01"))
-            {
-                let options = format
-                    .extra
-                    .entry("downloader_options")
-                    .or_insert_with(|| json!({}));
-                if let Some(options) = options.as_object_mut() {
-                    options.insert("ffmpeg_args_out".into(), json!(["-f", "mp4"]));
-                }
-            }
-        }
         // `_extract_storyboard`.
         if let (Some(duration), Some(storyboard)) = (duration.filter(|d| *d != 0), &storyboard) {
             let spec = Url::parse(storyboard)
@@ -473,26 +726,7 @@ impl Extractor for TwitchVod {
                 formats.push(format_from(format, &vod_id, VOD_NAME)?);
             }
         }
-        // `_prefer_source`.
-        if let Some(source) = formats
-            .iter_mut()
-            .find(|format| format.format_id == "Source")
-        {
-            source.quality = Some(10.0);
-            crate::info_order::mark_format_update(source, "quality");
-            crate::info_order::mark_int_rates(source);
-        } else {
-            for format in formats
-                .iter_mut()
-                .filter(|format| format.url.as_str().contains("/chunked/"))
-            {
-                format.quality = Some(10.0);
-                format.format_note = Some("Source".into());
-                crate::info_order::mark_format_update(format, "quality");
-                crate::info_order::mark_format_update(format, "format_note");
-                crate::info_order::mark_int_rates(format);
-            }
-        }
+        prefer_source(&mut formats);
         info.insert("formats".into(), json!([]));
         if let Some(t) = url
             .query_pairs()
@@ -755,6 +989,754 @@ impl Extractor for TwitchClips {
     }
 }
 
+fn announce(name: &'static str, url: &Url) {
+    crate::screen::set_extractor(name);
+    crate::screen::screen(&format!(
+        "[{name}] Extracting URL: {}",
+        crate::screen::extracting_url(url.as_str())
+    ));
+}
+
+/// An unexpected response shape: upstream's uncaught Python error.
+fn bug(name: &str, id: &str, cause: &str) -> Error {
+    Error::Reported(format!(
+        "[{name}] {id}: An extractor error has occurred. (caused by {cause}); {}",
+        crate::BUG_REPORTS_MESSAGE
+    ))
+}
+
+/// `_download_gql(..., fatal=False)`: `None` after a warning.
+fn gql_optional(
+    client: &Client,
+    name: &'static str,
+    id: &str,
+    ops: Vec<Value>,
+    note: &str,
+) -> Result<Option<Value>> {
+    match gql(client, name, id, ops, note) {
+        Ok(data) => Ok(Some(data)),
+        Err(Error::ExtractorRequest { source, .. }) => {
+            crate::screen::warning(&format!(
+                "[{name}] {id}: Unable to download JSON metadata: {}",
+                crate::upstream_error_text(&source)
+            ));
+            Ok(None)
+        }
+        Err(Error::Reported(message)) if message.contains("Failed to parse JSON") => {
+            crate::screen::warning(&message);
+            Ok(None)
+        }
+        Err(error) => Err(error),
+    }
+}
+
+/// `float_or_none(value)`.
+fn float(value: Option<&Value>) -> Value {
+    value
+        .and_then(|value| {
+            value
+                .as_f64()
+                .or_else(|| value.as_str()?.trim().parse::<f64>().ok())
+        })
+        .map_or(Value::Null, |number| json!(number))
+}
+
+fn timestamp_of(value: Option<&Value>) -> Option<i64> {
+    value
+        .and_then(Value::as_str)
+        .and_then(|date| crate::dates::unified_timestamp(date, false))
+}
+
+fn raw(node: &Value, key: &str) -> Value {
+    node.get(key).cloned().unwrap_or(Value::Null)
+}
+
+/// A listing's entry dict (`_extract_entry(node)`) for its `kind`.
+fn listing_entry(kind: &str, node: &Value) -> Option<Map<String, Value>> {
+    let text_id = node
+        .get("id")
+        .and_then(Value::as_str)
+        .filter(|id| !id.is_empty());
+    let mut entry = Map::new();
+    match kind {
+        // `_make_video_result(node)`.
+        "video" => {
+            let id = text_id?;
+            entry.insert("_type".into(), "url_transparent".into());
+            entry.insert("ie_key".into(), VOD_KEY.into());
+            entry.insert("id".into(), format!("v{id}").into());
+            entry.insert(
+                "url".into(),
+                format!("https://www.twitch.tv/videos/{id}").into(),
+            );
+            entry.insert("title".into(), raw(node, "title"));
+            entry.insert("thumbnail".into(), raw(node, "previewThumbnailURL"));
+            entry.insert("duration".into(), float(node.get("lengthSeconds")));
+            entry.insert("view_count".into(), int(node.get("viewCount"), 1).into());
+        }
+        // `TwitchVideosClipsIE._extract_entry`.
+        "clip" => {
+            let url = node
+                .get("url")
+                .and_then(Value::as_str)
+                .and_then(super::json_ld::url_or_none)?;
+            entry.insert("_type".into(), "url_transparent".into());
+            entry.insert("ie_key".into(), CLIPS_KEY.into());
+            entry.insert("id".into(), raw(node, "id"));
+            entry.insert("url".into(), url.into());
+            entry.insert("title".into(), raw(node, "title"));
+            entry.insert("thumbnail".into(), raw(node, "thumbnailURL"));
+            entry.insert("duration".into(), float(node.get("durationSeconds")));
+            entry.insert(
+                "timestamp".into(),
+                timestamp_of(node.get("createdAt")).into(),
+            );
+            entry.insert("view_count".into(), int(node.get("viewCount"), 1).into());
+            entry.insert("language".into(), raw(node, "language"));
+        }
+        // `TwitchVideosCollectionsIE._extract_entry`.
+        "collection" => {
+            let id = text_id?;
+            entry.insert("_type".into(), "url_transparent".into());
+            entry.insert("ie_key".into(), COLLECTION_KEY.into());
+            entry.insert("id".into(), id.into());
+            entry.insert(
+                "url".into(),
+                format!("https://www.twitch.tv/collections/{id}").into(),
+            );
+            entry.insert("title".into(), raw(node, "title"));
+            entry.insert("thumbnail".into(), raw(node, "thumbnailURL"));
+            entry.insert("duration".into(), float(node.get("lengthSeconds")));
+            entry.insert(
+                "timestamp".into(),
+                timestamp_of(node.get("updatedAt")).into(),
+            );
+            entry.insert("view_count".into(), int(node.get("viewCount"), 1).into());
+        }
+        // `TwitchStreamIE._extract_entry`.
+        _ => {
+            let id = text_id?;
+            entry.insert("_type".into(), "url".into());
+            entry.insert("ie_key".into(), VOD_KEY.into());
+            entry.insert("id".into(), format!("v{id}").into());
+            entry.insert(
+                "url".into(),
+                format!("https://www.twitch.tv/videos/{id}").into(),
+            );
+            entry.insert("title".into(), raw(node, "title"));
+            entry.insert(
+                "timestamp".into(),
+                timestamp_of(node.get("publishedAt")).unwrap_or(0).into(),
+            );
+        }
+    }
+    Some(entry)
+}
+
+/// A `url_transparent` entry dict as a playlist entry, extracted (and
+/// updated with its non-`None` fields) when processed.
+fn transparent_entry(entry: Map<String, Value>) -> Result<VideoInfo> {
+    let target = entry
+        .get("url")
+        .and_then(Value::as_str)
+        .unwrap_or_default()
+        .to_owned();
+    let url = Url::parse(&target)?;
+    let ie_key = entry
+        .get("ie_key")
+        .and_then(Value::as_str)
+        .unwrap_or_default()
+        .to_owned();
+    let extractor = match ie_key.as_str() {
+        CLIPS_KEY => CLIPS_NAME,
+        COLLECTION_KEY => COLLECTION_NAME,
+        _ => VOD_NAME,
+    };
+    let mut info = super::direct::build_at(url.clone(), &url, String::new());
+    info.formats.clear();
+    info.direct = None;
+    info.id = match entry.get("id") {
+        Some(Value::String(id)) => id.clone(),
+        _ => String::new(),
+    };
+    info.title = entry
+        .get("title")
+        .and_then(Value::as_str)
+        .unwrap_or_default()
+        .to_owned();
+    // `process_ie_result`: every non-`None` field but these is forced.
+    let fields: Map<String, Value> = entry
+        .iter()
+        .filter(|(key, value)| {
+            !matches!(key.as_str(), "_type" | "url" | "id" | "ie_key") && !value.is_null()
+        })
+        .map(|(key, value)| (key.clone(), value.clone()))
+        .collect();
+    info.extra.insert(
+        crate::TRANSPARENT.into(),
+        json!({
+            "url": target,
+            "force_videoid": null,
+            "fields": fields,
+            "ie_key": ie_key,
+            "extractor": extractor,
+            "entry": Value::Object(entry),
+        }),
+    );
+    Ok(info)
+}
+
+/// `TwitchPlaylistBaseIE._entries`' state: the listing and its next page.
+#[allow(clippy::too_many_arguments)]
+fn listing_state(
+    name: &'static str,
+    channel: &str,
+    operation: &str,
+    variables: Value,
+    entries_key: &str,
+    edge_kind: &str,
+    node_kind: &str,
+    page_limit: u64,
+    kind: &str,
+    error_id: Option<&str>,
+) -> Value {
+    json!({
+        "kind": "twitch",
+        "extractor": name,
+        "channel": channel,
+        "operation": operation,
+        "variables": variables,
+        "entries_key": entries_key,
+        "edge_kind": edge_kind,
+        "node_kind": node_kind,
+        "page_limit": page_limit,
+        "entry": kind,
+        "error_id": error_id,
+        "cursor": null,
+        "page": 1,
+        "done": false,
+    })
+}
+
+fn static_name(name: &str) -> &'static str {
+    match name {
+        STREAM_NAME => STREAM_NAME,
+        VIDEOS_CLIPS_NAME => VIDEOS_CLIPS_NAME,
+        VIDEOS_COLLECTIONS_NAME => VIDEOS_COLLECTIONS_NAME,
+        _ => VIDEOS_NAME,
+    }
+}
+
+/// `_entries(channel_name, *args)`: GraphQL pages until `want` entries are
+/// read, or the listing ends.
+fn page_entries(
+    client: &Client,
+    state: &mut Value,
+    want: Option<usize>,
+    out: &mut Vec<Map<String, Value>>,
+) -> Result<()> {
+    let name = static_name(state["extractor"].as_str().unwrap_or_default());
+    let channel = state["channel"].as_str().unwrap_or_default().to_owned();
+    let text = |key: &str| state[key].as_str().unwrap_or_default().to_owned();
+    let (operation, entries_key, edge_kind, node_kind, kind) = (
+        text("operation"),
+        text("entries_key"),
+        text("edge_kind"),
+        text("node_kind"),
+        text("entry"),
+    );
+    loop {
+        if state["done"] == true || want.is_some_and(|want| out.len() >= want) {
+            return Ok(());
+        }
+        let page_num = state["page"].as_u64().unwrap_or(1);
+        let mut variables = state["variables"].as_object().cloned().unwrap_or_default();
+        variables.insert("limit".into(), state["page_limit"].clone());
+        if let Some(cursor) = state["cursor"].as_str().filter(|cursor| !cursor.is_empty()) {
+            variables.insert("cursor".into(), cursor.into());
+        }
+        let page = gql_optional(
+            client,
+            name,
+            &channel,
+            vec![json!({"operationName": operation, "variables": variables})],
+            &format!("Downloading {node_kind}s GraphQL page {page_num}"),
+        )?;
+        // Avoid extracting random/unrelated entries when the channel doesn't exist.
+        if page
+            .as_ref()
+            .and_then(|page| page.pointer("/0/data/user/id"))
+            .and_then(Value::as_str)
+            == Some("")
+        {
+            let message = format!("Channel \"{channel}\" not found");
+            return Err(match state["error_id"].as_str() {
+                Some(id) => fail(name, id, &message),
+                None => Error::Reported(message),
+            });
+        }
+        state["page"] = (page_num + 1).into();
+        let edges = page
+            .filter(truthy)
+            .and_then(|page| {
+                page.pointer(&format!("/0/data/user/{entries_key}/edges"))
+                    .and_then(Value::as_array)
+                    .cloned()
+            })
+            .unwrap_or_default();
+        if edges.is_empty() {
+            state["done"] = true.into();
+            return Ok(());
+        }
+        let mut yielded = false;
+        for edge in &edges {
+            if edge.get("__typename").and_then(Value::as_str) != Some(edge_kind.as_str()) {
+                continue;
+            }
+            let Some(node) = edge.get("node").filter(|node| node.is_object()) else {
+                continue;
+            };
+            if node.get("__typename").and_then(Value::as_str) != Some(node_kind.as_str()) {
+                continue;
+            }
+            if let Some(entry) = listing_entry(&kind, node) {
+                state["cursor"] = raw(edge, "cursor");
+                out.push(entry);
+                yielded = true;
+            }
+        }
+        // Upstream requests a page without entries' cursor again, endlessly.
+        if !yielded
+            || !state["cursor"]
+                .as_str()
+                .is_some_and(|cursor| !cursor.is_empty())
+        {
+            state["done"] = true.into();
+        }
+    }
+}
+
+/// A listing's pending pages (see [`crate::YoutubeDl::fetch_pending`]) until
+/// `limit` entries: the remaining state unless read to its end.
+pub(crate) fn fetch_pages(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    out: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let mut found = Vec::new();
+    let want = limit.map(|limit| limit.saturating_sub(out.len()));
+    let result = page_entries(client, &mut state, want, &mut found);
+    for entry in found {
+        out.push(transparent_entry(entry)?);
+    }
+    result?;
+    Ok((state["done"] != true).then_some(state))
+}
+
+/// `playlist_result(entries, playlist_id, playlist_title)`.
+fn playlist(
+    page: &Url,
+    name: &'static str,
+    key: &'static str,
+    id: &str,
+    title: Option<String>,
+    entries: Vec<VideoInfo>,
+    pending: Option<Value>,
+) -> ExtractResult {
+    let mut extra = Map::new();
+    extra.insert(
+        crate::info_order::INFO_SHAPE.into(),
+        "playlist-dict;id,title".into(),
+    );
+    if title.is_none() {
+        extra.insert("title".into(), Value::Null);
+    }
+    ExtractResult::Playlist(PlaylistInfo {
+        id: id.to_owned(),
+        title: title.unwrap_or_default(),
+        webpage_url: page.clone(),
+        extractor: name.into(),
+        extractor_key: key.into(),
+        nested: Vec::new(),
+        pending: pending.map(|state| crate::PendingEntries { state }),
+        entries,
+        extra,
+    })
+}
+
+/// `parse_qs(url)`'s first value of `key` (blank values are dropped).
+fn query_value(url: &Url, key: &str) -> Option<String> {
+    url.query_pairs()
+        .find(|(name, value)| name == key && !value.is_empty())
+        .map(|(_, value)| value.into_owned())
+}
+
+/// A channel listing whose pages are fetched as its entries are read.
+#[allow(clippy::too_many_arguments)]
+fn lazy_listing(
+    page: &Url,
+    name: &'static str,
+    key: &'static str,
+    channel: &str,
+    title: String,
+    operation: &str,
+    variables: Value,
+    entries_key: &str,
+    edge_kind: &str,
+    node_kind: &str,
+    page_limit: u64,
+    kind: &str,
+) -> ExtractResult {
+    let state = listing_state(
+        name,
+        channel,
+        operation,
+        variables,
+        entries_key,
+        edge_kind,
+        node_kind,
+        page_limit,
+        kind,
+        None,
+    );
+    playlist(
+        page,
+        name,
+        key,
+        channel,
+        Some(title),
+        Vec::new(),
+        Some(state),
+    )
+}
+
+impl Extractor for TwitchVideos {
+    fn key(&self) -> &'static str {
+        VIDEOS_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        if !videos_suitable(url.as_str()) {
+            return Ok(None);
+        }
+        let Some(found) = VIDEOS_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let channel = found["id"].to_owned();
+        announce(VIDEOS_NAME, url);
+        let filter = query_value(url, "filter").unwrap_or_else(|| "all".into());
+        let sort = query_value(url, "sort").unwrap_or_else(|| "time".into());
+        let (broadcast_type, label) = match filter.as_str() {
+            "archives" => (Some("ARCHIVE"), "Past Broadcasts"),
+            "highlights" => (Some("HIGHLIGHT"), "Highlights"),
+            "uploads" => (Some("UPLOAD"), "Uploads"),
+            "past_premieres" => (Some("PAST_PREMIERE"), "Past Premieres"),
+            _ => (None, "All Videos"),
+        };
+        let sorted_by = if sort == "views" { "Popular" } else { "Date" };
+        Ok(Some(lazy_listing(
+            url,
+            VIDEOS_NAME,
+            VIDEOS_KEY,
+            &channel,
+            format!("{channel} - {label} sorted by {sorted_by}"),
+            "FilterableVideoTower_Videos",
+            json!({
+                "channelOwnerLogin": channel,
+                "broadcastType": broadcast_type,
+                "videoSort": sort.to_uppercase(),
+            }),
+            "videos",
+            "VideoEdge",
+            "Video",
+            100,
+            "video",
+        )))
+    }
+}
+
+impl Extractor for TwitchVideosClips {
+    fn key(&self) -> &'static str {
+        VIDEOS_CLIPS_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = VIDEOS_CLIPS_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let channel = found["id"].to_owned();
+        announce(VIDEOS_CLIPS_NAME, url);
+        let range = query_value(url, "range").unwrap_or_else(|| "7d".into());
+        let (filter, label) = match range.as_str() {
+            "24hr" => ("LAST_DAY", "Top 24H"),
+            "30d" => ("LAST_MONTH", "Top 30D"),
+            "all" => ("ALL_TIME", "Top All"),
+            _ => ("LAST_WEEK", "Top 7D"),
+        };
+        // NB: values other than 20 result in skipped videos.
+        Ok(Some(lazy_listing(
+            url,
+            VIDEOS_CLIPS_NAME,
+            VIDEOS_CLIPS_KEY,
+            &channel,
+            format!("{channel} - Clips {label}"),
+            "ClipsCards__User",
+            json!({"login": channel, "criteria": {"filter": filter}}),
+            "clips",
+            "ClipEdge",
+            "Clip",
+            20,
+            "clip",
+        )))
+    }
+}
+
+impl Extractor for TwitchVideosCollections {
+    fn key(&self) -> &'static str {
+        VIDEOS_COLLECTIONS_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = VIDEOS_COLLECTIONS_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let channel = found["id"].to_owned();
+        announce(VIDEOS_COLLECTIONS_NAME, url);
+        Ok(Some(lazy_listing(
+            url,
+            VIDEOS_COLLECTIONS_NAME,
+            VIDEOS_COLLECTIONS_KEY,
+            &channel,
+            format!("{channel} - Collections"),
+            "ChannelCollectionsContent",
+            json!({ "ownerLogin": channel }),
+            "collections",
+            "CollectionsItemEdge",
+            "Collection",
+            100,
+            "collection",
+        )))
+    }
+}
+
+impl Extractor for TwitchCollection {
+    fn key(&self) -> &'static str {
+        COLLECTION_NAME
+    }
+
+    fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
+        Ok(None)
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        let Some(found) = COLLECTION_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let collection_id = found["id"].to_owned();
+        announce(COLLECTION_NAME, url);
+        let data = gql(
+            client,
+            COLLECTION_NAME,
+            &collection_id,
+            vec![
+                json!({"operationName": "CollectionSideBar", "variables": {"collectionID": collection_id}}),
+            ],
+            "Downloading collection GraphQL",
+        )?;
+        let collection = data
+            .pointer("/0/data/collection")
+            .ok_or_else(|| bug(COLLECTION_NAME, &collection_id, "KeyError('collection')"))?;
+        if !collection.is_object() {
+            return Err(bug(
+                COLLECTION_NAME,
+                &collection_id,
+                "AttributeError(\"'NoneType' object has no attribute 'get'\")",
+            ));
+        }
+        let title = collection
+            .get("title")
+            .and_then(Value::as_str)
+            .map(str::to_owned);
+        let edges = collection
+            .pointer("/items/edges")
+            .and_then(Value::as_array)
+            .ok_or_else(|| bug(COLLECTION_NAME, &collection_id, "KeyError('items')"))?;
+        let entries = edges
+            .iter()
+            .filter_map(|edge| edge.get("node").filter(|node| node.is_object()))
+            .filter_map(|node| listing_entry("video", node))
+            .map(transparent_entry)
+            .collect::<Result<Vec<_>>>()?;
+        Ok(Some(playlist(
+            url,
+            COLLECTION_NAME,
+            COLLECTION_KEY,
+            &collection_id,
+            title,
+            entries,
+            None,
+        )))
+    }
+}
+
+impl Extractor for TwitchStream {
+    fn key(&self) -> &'static str {
+        STREAM_NAME
+    }
+
+    fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
+        match self.extract_result(client, url)? {
+            Some(ExtractResult::Video(info)) => Ok(Some(info)),
+            _ => Ok(None),
+        }
+    }
+
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+        if !stream_suitable(url.as_str()) {
+            return Ok(None);
+        }
+        let Some(found) = STREAM_URL.captures(url.as_str()) else {
+            return Ok(None);
+        };
+        let temp_id = found["id"].to_owned();
+        let channel = temp_id.to_lowercase();
+        announce(STREAM_NAME, url);
+        let data = gql(
+            client,
+            STREAM_NAME,
+            &channel,
+            vec![
+                json!({"operationName": "StreamMetadata", "variables": {"channelLogin": channel, "includeIsDJ": true}}),
+                json!({"operationName": "ComscoreStreamingQuery", "variables": {"channel": channel, "clipSlug": "", "isClip": false, "isLive": true, "isVodOrCollection": false, "vodID": ""}}),
+                json!({"operationName": "VideoPreviewOverlay", "variables": {"login": channel}}),
+            ],
+            "Downloading stream GraphQL",
+        )?;
+        let user = data
+            .pointer("/0/data/user")
+            .filter(|user| truthy(user))
+            .ok_or_else(|| fail(STREAM_NAME, &temp_id, &format!("{channel} does not exist")))?;
+        let stream = user
+            .get("stream")
+            .filter(|stream| truthy(stream))
+            .ok_or_else(|| fail(STREAM_NAME, &channel, "The channel is not currently live"))?;
+        let timestamp = timestamp_of(stream.get("createdAt"));
+        if LIVE_FROM_START.load(Ordering::Relaxed) {
+            crate::screen::screen(&format!(
+                "[{STREAM_NAME}] {channel}: Extracting VOD to download live from start"
+            ));
+            let mut state = listing_state(
+                STREAM_NAME,
+                &channel,
+                "FilterableVideoTower_Videos",
+                json!({"channelOwnerLogin": channel, "broadcastType": null, "videoSort": "TIME"}),
+                "videos",
+                "VideoEdge",
+                "Video",
+                1,
+                "stream",
+                Some(&temp_id),
+            );
+            let mut found = Vec::new();
+            page_entries(client, &mut state, Some(1), &mut found)?;
+            if let Some(mut entry) = found.into_iter().next() {
+                let published = entry
+                    .shift_remove("timestamp")
+                    .and_then(|value| value.as_i64())
+                    .unwrap_or(0);
+                if timestamp.is_some_and(|timestamp| published >= timestamp) {
+                    // A `url` result, extracted by `TwitchVodIE`.
+                    let target = entry["url"].as_str().unwrap_or_default().to_owned();
+                    let mut follow = super::direct::build_at(url.clone(), url, String::new());
+                    follow.formats.clear();
+                    follow.direct = None;
+                    follow.extra.insert(crate::FOLLOW_URL.into(), target.into());
+                    return Ok(Some(ExtractResult::Video(follow)));
+                }
+            }
+            crate::screen::warning(&format!(
+                "[{STREAM_NAME}] {channel}: Unable to extract the VOD associated with this livestream"
+            ));
+        }
+        let access = access_token(client, STREAM_NAME, &channel, "stream", "channelName")?;
+        let stream_id = stream.get("id").filter(|id| truthy(id)).map_or_else(
+            || channel.clone(),
+            |id| match id {
+                Value::String(id) => id.clone(),
+                other => other.to_string(),
+            },
+        );
+        let mut formats = usher_formats(
+            client,
+            STREAM_NAME,
+            &temp_id,
+            "api/channel/hls",
+            &channel,
+            &access,
+            false,
+            true,
+        )?;
+        prefer_source(&mut formats);
+        let sq_user = data
+            .pointer("/1/data/user")
+            .filter(|user| user.is_object())
+            .cloned()
+            .unwrap_or_else(|| json!({}));
+        let uploader = raw(&sq_user, "displayName");
+        let description = sq_user
+            .pointer("/broadcastSettings/title")
+            .filter(|title| title.is_string())
+            .cloned()
+            .unwrap_or(Value::Null);
+        let thumbnail = data
+            .pointer("/2/data/user/stream/previewImageURL")
+            .and_then(Value::as_str)
+            .and_then(super::json_ld::url_or_none);
+        let mut title = uploader
+            .as_str()
+            .filter(|uploader| !uploader.is_empty())
+            .unwrap_or(&channel)
+            .to_owned();
+        let stream_type = stream.get("type").and_then(Value::as_str);
+        if let Some(kind @ ("rerun" | "live")) = stream_type {
+            title.push_str(&format!(" ({kind})"));
+        }
+        let mut info = Map::new();
+        info.insert("id".into(), stream_id.into());
+        info.insert("display_id".into(), channel.clone().into());
+        info.insert("title".into(), title.into());
+        info.insert("description".into(), description);
+        info.insert("thumbnails".into(), thumbnails(thumbnail.as_deref()));
+        info.insert("uploader".into(), uploader);
+        info.insert("uploader_id".into(), channel.into());
+        info.insert("timestamp".into(), timestamp.into());
+        info.insert("view_count".into(), raw(stream, "viewers"));
+        info.insert("formats".into(), json!([]));
+        info.insert("is_live".into(), (stream_type == Some("live")).into());
+        Ok(Some(ExtractResult::Video(video(
+            url,
+            info,
+            formats,
+            STREAM_NAME,
+            STREAM_KEY,
+            "",
+        ))))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -776,6 +1758,70 @@ mod tests {
         assert!(clips_suitable(
             "https://clips.twitch.tv/embed?clip=InquisitiveBreakableYogurtJebaited"
         ));
+    }
+
+    #[test]
+    fn channel_and_stream_urls_follow_upstream_suitable() {
+        for url in [
+            "https://www.twitch.tv/spamfish/videos?filter=all",
+            "https://www.twitch.tv/spamfish/videos/all",
+            "https://m.twitch.tv/spamfish/videos/all",
+            "https://www.twitch.tv/spamfish/videos",
+            "https://www.twitch.tv/spamfish/profile",
+        ] {
+            assert!(videos_suitable(url), "{url}");
+            assert!(!stream_suitable(url), "{url}");
+        }
+        for url in [
+            "https://www.twitch.tv/vanillatv/clips?filter=clips&range=all",
+            "https://www.twitch.tv/dota2ruhub/videos?filter=clips&range=7d",
+        ] {
+            assert!(videos_clips_suitable(url), "{url}");
+            assert!(!videos_suitable(url), "{url}");
+            assert!(!stream_suitable(url), "{url}");
+        }
+        let url = "https://www.twitch.tv/spamfish/videos?filter=collections";
+        assert!(videos_collections_suitable(url));
+        assert!(!videos_suitable(url));
+        assert!(collection_suitable(
+            "https://www.twitch.tv/collections/o9zZer3IQBhTJw"
+        ));
+        assert!(!stream_suitable(
+            "https://www.twitch.tv/collections/o9zZer3IQBhTJw"
+        ));
+        for url in [
+            "http://www.twitch.tv/shroomztv",
+            "http://www.twitch.tv/miracle_doto#profile-0",
+            "https://player.twitch.tv/?channel=lotsofs",
+            "https://go.twitch.tv/food",
+            "https://m.twitch.tv/food",
+            "https://www.twitch.tv/monstercat",
+        ] {
+            assert!(stream_suitable(url), "{url}");
+        }
+        for url in [
+            "https://www.twitch.tv/videos/6528877",
+            "https://clips.twitch.tv/FaintLightGullWholeWheat",
+            "https://www.twitch.tv/sergeynixon/clip/StormyThankfulSproutFutureMan",
+        ] {
+            assert!(!stream_suitable(url), "{url}");
+        }
+    }
+
+    #[test]
+    fn listing_entries_follow_upstream_entry_dicts() {
+        let node = json!({"id": "123", "title": "T", "lengthSeconds": 60, "viewCount": "5"});
+        assert_eq!(
+            Value::Object(listing_entry("video", &node).unwrap()),
+            json!({"_type": "url_transparent", "ie_key": "TwitchVod", "id": "v123",
+                   "url": "https://www.twitch.tv/videos/123", "title": "T", "thumbnail": null,
+                   "duration": 60.0, "view_count": 5})
+        );
+        assert!(listing_entry("video", &json!({"id": ""})).is_none());
+        assert!(listing_entry("clip", &json!({"id": "1", "url": "not a url"})).is_none());
+        let stream = listing_entry("stream", &json!({"id": "9"})).unwrap();
+        assert_eq!(stream["_type"], "url");
+        assert_eq!(stream["timestamp"], 0);
     }
 
     #[test]

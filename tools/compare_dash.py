@@ -1,30 +1,33 @@
 #!/usr/bin/env python3
-"""Compare finite native DASH plans to the actual pinned upstream MPD parser.
+"""Compare native DASH format dicts to the actual pinned upstream MPD parser.
 
 Development/reference tooling only; Python is never a runtime fallback. Upstream
 InfoExtractor._parse_mpd_formats_and_subtitles receives saved XML directly, with
-sockets and urlopen blocked. The native CLI may GET only the saved localhost MPD;
-segment, initialization, key and external requests fail the comparison.
+sockets and urlopen blocked, and its formats are sorted by the actual FormatSorter
+(as process_video_result does, which also fills audio_ext/video_ext/abr/vbr).
+Generic passes no mpd_id for direct MPDs, and neither does the reference. The
+native CLI may GET only the saved localhost MPD; segment, initialization, key and
+external requests fail the comparison.
 
-Normalization is an explicit allowlist: both sides are compared in upstream
-FormatSorter order (the reference is sorted by actual FormatSorter, as
-process_video_result does), and format IDs (Representation@id; generic passes
-no mpd_id for direct MPDs) must match at each position;
-fragment relative paths resolve against upstream fragment_base_url; only the exact
-ephemeral origin is replaced. Audio-only upstream tbr supplies normalized abr,
-since upstream does not expose a separate abr. Compared fields are stream kind,
-extension, dimensions, tbr/abr, language and ordered fragment URLs/ranges. Upstream
-notes, codecs, fps/asr and stream counters have no native field
-and are excluded. Native dash-period-0 grouping is asserted independently.
+Native -j formats mirror upstream's info dict, so whole format dicts are compared
+in sorted order: the native key set must equal the upstream parser's key set plus
+only the fields YoutubeDL.process_video_result adds afterwards (format, resolution,
+aspect_ratio, http_headers), which are excluded. Every other value must match,
+including format_id, url, manifest_url, ext, codecs, dimensions, fps/asr,
+tbr/abr/vbr, language, format_note, container, protocol, manifest_stream_number,
+is_dash_periods, fragment_base_url and each fragment's path/url/duration. The one
+value rule applied to upstream is process_video_result's own: dynamic_range None
+becomes 'SDR' for formats with video. Only the exact ephemeral origin is replaced.
 
 IMPORTANT: pinned upstream ignores SegmentList mediaRange and Initialization
-range. For plan-list.mpd only URLs/metadata are compared with upstream; native
-ranges are independently checked against explicit saved-fixture expectations.
-This is NOT upstream byte-range parity. Nonnegative repeats/PTO=0 are compared;
-pinned upstream does not expand negative repeats or apply presentationTimeOffset.
-Native negative-repeat/PTO policy is outside this comparison, not normalized away.
-This does not establish media download, decoding, merging, live, DRM or full DASH
-compatibility. No source URL, timestamp, query or filename difference is ignored.
+range, while native emits fragment byte_range for them. For plan-list.mpd native
+ranges are checked against explicit saved-fixture expectations and then removed
+before the upstream comparison. This is NOT upstream byte-range parity. Nonnegative
+repeats/PTO=0 are compared; pinned upstream does not expand negative repeats or
+apply presentationTimeOffset. Native negative-repeat/PTO policy is outside this
+comparison, not normalized away. This does not establish media download, decoding,
+merging, live, DRM or full DASH compatibility. No source URL, timestamp, query or
+filename difference is ignored.
 """
 import argparse
 import contextlib
@@ -34,14 +37,17 @@ from pathlib import Path
 import subprocess
 import sys
 import threading
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urlsplit
 
-PINNED_UPSTREAM = "897341241f2bfb2439fe0367f4c7c9ccd29a3828"
-# plan-list.mpd in FormatSorter order: audio, then video.
+PINNED_UPSTREAM = "6ccd977303412151ee23352c6257dd658ffc1987"
+# plan-list.mpd in FormatSorter order: audio, then video. Exclusive end offsets.
 NATIVE_LIST_RANGES = [
-    [{"offset": 0, "length": 8}, {"offset": 8, "length": 16}, {"offset": 24, "length": 24}],
-    [{"offset": 0, "length": 16}, {"offset": 16, "length": 16}, {"offset": 32, "length": 32}],
+    [{"start": 0, "end": 8}, {"start": 8, "end": 24}, {"start": 24, "end": 48}],
+    [{"start": 0, "end": 16}, {"start": 16, "end": 32}, {"start": 32, "end": 64}],
 ]
+# Added by YoutubeDL.process_video_result after extraction; not parser output.
+PROCESSED_FIELDS = ("format", "resolution", "aspect_ratio", "http_headers")
+URL_FIELDS = ("url", "manifest_url", "fragment_base_url")
 UPSTREAM_WORKER = r'''
 import json, socket, sys, xml.etree.ElementTree as ET
 sys.path.insert(0, sys.argv[1])
@@ -84,38 +90,31 @@ def normalize_url(url, origin):
     return url
 
 
-def normalize(formats, origin, *, upstream=False):
-    result = []
-    for source in formats:
-        if upstream:
-            video, audio = source.get("vcodec") != "none", source.get("acodec") != "none"
-            if video == audio:
-                raise ValueError("reference must expose separate, codec-classified audio/video")
-            kind = "video_only" if video else "audio_only"
-            format_id = source["format_id"]
-        else:
-            format_id = source["format_id"]
-            if source.get("audio_group") != "dash-period-0":
-                raise ValueError("native DASH period grouping changed")
-            kind = source["stream_kind"]
-        fragments = []
-        for fragment in source["fragments"]:
-            location = fragment.get("url") if upstream else fragment["url"]
-            if upstream:
-                location = location or fragment["path"]
-                location = urljoin(source["fragment_base_url"], location)
-            fragments.append({"url": normalize_url(location, origin),
-                              "byte_range": fragment.get("byte_range") or None})
-        result.append({"format_id": format_id, "stream_kind": kind,
-                       "url": normalize_url(source["url"], origin),
-                       "ext": source["ext"], "width": source.get("width"),
-                       "height": source.get("height"), "tbr": source.get("tbr"),
-                       "abr": source.get("tbr") if upstream and kind == "audio_only" else source.get("abr"),
-                       "language": source.get("language"),
-                       "container": source.get("container"),
-                       "manifest_stream_number": source.get("manifest_stream_number"),
-                       "fragments": fragments})
+def normalize_format(source, origin, *, upstream=False):
+    """Normalize one native or upstream format dict without mutating it."""
+    result = {key: value for key, value in source.items()
+              if upstream or key not in PROCESSED_FIELDS}
+    if upstream and result.get("dynamic_range") is None and result.get("vcodec") != "none":
+        result["dynamic_range"] = "SDR"  # YoutubeDL.process_video_result
+    for key in URL_FIELDS:
+        if isinstance(result.get(key), str):
+            result[key] = normalize_url(result[key], origin)
+    if "fragments" in result:
+        result["fragments"] = [
+            {**fragment, "url": normalize_url(fragment["url"], origin)} if "url" in fragment
+            else dict(fragment) for fragment in result["fragments"]]
     return result
+
+
+def normalize(formats, origin, *, upstream=False):
+    return [normalize_format(source, origin, upstream=upstream) for source in formats]
+
+
+def compare_formats(actual, expected, label):
+    if actual != expected:
+        raise ValueError(f"{label} mismatch: " + json.dumps(
+            {"native": actual, "upstream": expected}, sort_keys=True))
+    return actual
 
 
 def compare(native, upstream, origin, *, native_only_ranges=None):
@@ -124,15 +123,14 @@ def compare(native, upstream, origin, *, native_only_ranges=None):
         if len(actual) != len(native_only_ranges):
             raise ValueError("native-only range fixture format count changed")
         for source, ranges in zip(actual, native_only_ranges):
-            if [fragment["byte_range"] for fragment in source["fragments"]] != ranges:
+            if [fragment.get("byte_range") for fragment in source.get("fragments", [])] != ranges:
                 raise ValueError("native-only saved SegmentList ranges differ")
         # Upstream's range omission is a documented difference, not evidence of
-        # range parity. Compare the remaining actual reference URL/metadata plan.
-        actual = [{**source, "fragments": [{**fragment, "byte_range": None}
-                   for fragment in source["fragments"]]} for source in actual]
-    if actual != expected:
-        raise ValueError("DASH plan mismatch: " + json.dumps({"native": actual, "upstream": expected}, sort_keys=True))
-    return actual
+        # range parity. Compare the remaining format dicts and fragment plan.
+        actual = [{**source, "fragments": [
+            {key: value for key, value in fragment.items() if key != "byte_range"}
+            for fragment in source["fragments"]]} for source in actual]
+    return compare_formats(actual, expected, "DASH format")
 
 
 @contextlib.contextmanager
@@ -191,8 +189,9 @@ def main():
         if isinstance(error, subprocess.CalledProcessError) and error.stderr:
             print(error.stderr, file=sys.stderr)
         return 1
-    print("Four saved DASH format/fragment plans match pinned upstream metadata and ordered URLs; "
-          "SegmentList ranges checked independently (upstream ignores ranges; no range/download/remux parity claim)")
+    print("Four saved DASH manifests' format dicts and fragment plans match the pinned upstream "
+          "parser; SegmentList ranges checked independently (upstream ignores ranges; "
+          "no range/download/remux parity claim)")
     return 0
 
 

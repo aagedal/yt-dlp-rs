@@ -1,5 +1,5 @@
 {
- "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
  "cases": [
   {
    "url": "https://www.youtube.com/watch?v=AgeGated001",
@@ -120,6 +120,44 @@
     "WARNING: [youtube] HTTP Error 500: OK. Retrying (3/3)...",
     "WARNING: [youtube] ServerErr01: Unable to download API page: HTTP Error 500: OK (caused by <HTTPError 500: OK>)",
     "ERROR: [youtube] ServerErr01: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Interstit01",
+   "args": [
+    "--no-js-runtimes",
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=Interstit01",
+    "[youtube] Interstit01: Downloading webpage",
+    "[youtube] Interstit01: Downloading visionos player API JSON"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [youtube] Interstit01: Video unavailable. This video has been removed by the uploader & is no longer available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Interstit02",
+   "args": [
+    "--no-js-runtimes",
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=Interstit02",
+    "[youtube] Interstit02: Downloading webpage",
+    "[youtube] Interstit02: Downloading visionos player API JSON"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [youtube] Interstit02: Video unavailable"
    ],
    "files": {}
   }

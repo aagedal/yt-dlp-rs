@@ -34,6 +34,7 @@ mod info_order;
 mod interrupt;
 mod ism_fd;
 pub mod js_to_json;
+mod json;
 mod live_dash;
 pub mod manifest_args;
 mod match_filter;
@@ -313,6 +314,9 @@ pub(crate) const TRANSPARENT: &str = "__yt_dlp_rs_url_transparent";
 /// A `url` result an extractor returns for the downloader to follow with
 /// every registered extractor (a configured one, like YouTube's).
 pub(crate) const FOLLOW_URL: &str = "__yt_dlp_rs_follow_url";
+
+/// A playlist entry's processing error, reported with that entry.
+pub(crate) const ENTRY_ERROR: &str = "__yt_dlp_rs_entry_error";
 /// An extractor's top-level `url_transparent` result: `{url, fields}`, the
 /// target extracted through the registry and updated with the non-`None`
 /// fields (`process_ie_result`).
@@ -323,7 +327,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 127] = [
+const EXTRACTOR_NAMES: &[&str] = &[
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -344,12 +348,15 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "Crtvg",
     "CultureUnplugged",
     "dailymotion",
+    "Douyin",
     "EbaumsWorld",
     "Ebay",
     "Epoch",
+    "facebook:ads",
     "facebook",
     "facebook:reel",
     "FacebookPluginsVideo",
+    "FacebookRedirectURL",
     "Fathom",
     "Fczenit",
     "Filmweb",
@@ -368,10 +375,16 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "imgur:album",
     "imgur:gallery",
     "Instagram",
+    "InstagramIOS",
+    "instagram:story",
+    "instagram:tag",
+    "instagram:user",
     "Jove",
     "JWPlatform",
+    "kick:clip",
     "kick:clips",
     "kick:live",
+    "kick:videos",
     "kick:vod",
     "Kommunetv",
     "Ku6",
@@ -389,6 +402,7 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "Odnoklassniki",
     "OnePlacePodcast",
     "Parlview",
+    "periscope",
     "Photobucket",
     "Pinterest",
     "PlayerFm",
@@ -404,6 +418,7 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "rutube:embed",
     "ScreenRec",
     "Sen",
+    "SnapchatSpotlight",
     "soundcloud",
     "Streamable",
     "SztvHu",
@@ -411,22 +426,40 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "TedPlaylist",
     "TedSeries",
     "TedTalk",
+    "telegram:embed",
     "TheIntercept",
     "ThisAmericanLife",
     "TikTok",
+    "tiktok:collection",
+    "tiktok:live",
+    "tiktok:user",
     "Tumblr",
     "Tweakers",
     "twitch:clips",
+    "twitch:collection",
+    "twitch:stream",
+    "twitch:videos:clips",
+    "twitch:videos:collections",
+    "twitch:videos",
     "twitch:vod",
     "twitter",
+    "twitter:amplify",
+    "twitter:broadcast",
     "twitter:card",
+    "twitter:shortener",
+    "twitter:spaces",
     "23video",
     "vimeo",
     "vk",
+    "vk:uservideos",
+    "vk:wallpost",
+    "VKPlay",
+    "VKPlayLive",
     "vm.tiktok",
     "Vocaroo",
     "Weibo",
     "WeiboVideo",
+    "XiaoHongShu",
     "yfanefa",
     "youtube:clip",
     "youtube:consent",
@@ -465,7 +498,7 @@ fn ordered_extractors(
             None => (false, option.as_str()),
         };
         let alias: Option<&[&str]> = match value {
-            "all" => Some(&EXTRACTOR_NAMES),
+            "all" => Some(EXTRACTOR_NAMES),
             "default" => Some(&EXTRACTOR_NAMES[..EXTRACTOR_NAMES.len() - 1]),
             _ => None,
         };
@@ -543,6 +576,7 @@ impl YoutubeDl {
         let cookies = http.cookies.unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        extractor::GET_COMMENTS.store(youtube.get_comments, std::sync::atomic::Ordering::Relaxed);
         extractor::youtube::live_chat::SKIP_DOWNLOAD
             .store(youtube.skip_download, std::sync::atomic::Ordering::Relaxed);
         if let Ok(mut agent) = extractor::USER_AGENT.write() {
@@ -558,6 +592,10 @@ impl YoutubeDl {
             .redirect(reqwest::redirect::Policy::limited(10))
             // Preserve an HTML5 page's explicit referrer across media redirects.
             .referer(false)
+            // Python's http.client sends `User-Agent`, not `user-agent`;
+            // Cloudflare rejects lowercase HTTP/1.1 header names on some
+            // sites (kick.com answers 403).
+            .http1_title_case_headers()
             .connection_verbose(http.print_traffic);
         if http.print_traffic {
             traffic::enable();
@@ -608,22 +646,44 @@ impl YoutubeDl {
                 Box::new(extractor::Reddit),
                 Box::new(extractor::Twitter),
                 Box::new(extractor::TwitterCard),
+                Box::new(extractor::TwitterAmplify),
+                Box::new(extractor::TwitterBroadcast),
+                Box::new(extractor::TwitterSpaces),
+                Box::new(extractor::TwitterShortener),
+                Box::new(extractor::Periscope),
                 Box::new(extractor::TikTok),
                 Box::new(extractor::TikTokVm),
+                Box::new(extractor::TikTokUser),
+                Box::new(extractor::TikTokCollection),
+                Box::new(extractor::TikTokLive),
+                Box::new(extractor::Douyin),
                 Box::new(extractor::Instagram),
+                Box::new(extractor::InstagramIos),
+                Box::new(extractor::InstagramStory),
+                Box::new(extractor::InstagramTag),
+                Box::new(extractor::InstagramUser),
                 Box::new(extractor::Facebook),
                 Box::new(extractor::FacebookReel),
                 Box::new(extractor::FacebookPluginsVideo),
+                Box::new(extractor::FacebookRedirectUrl),
+                Box::new(extractor::FacebookAds),
                 Box::new(extractor::Vimeo),
                 Box::new(extractor::Dailymotion),
                 Box::new(extractor::Soundcloud),
                 Box::new(extractor::TwitchVod),
                 Box::new(extractor::TwitchClips),
+                Box::new(extractor::TwitchCollection),
+                Box::new(extractor::TwitchVideosClips),
+                Box::new(extractor::TwitchVideosCollections),
+                Box::new(extractor::TwitchVideos),
+                Box::new(extractor::TwitchStream),
                 Box::new(extractor::Bandcamp),
                 Box::new(extractor::RumbleEmbed),
                 Box::new(extractor::Rumble),
                 Box::new(extractor::KickVod),
                 Box::new(extractor::KickClip),
+                Box::new(extractor::KickVideos),
+                Box::new(extractor::KickClips),
                 Box::new(extractor::KickLive),
                 Box::new(extractor::Bluesky),
                 Box::new(extractor::Mixcloud),
@@ -635,6 +695,10 @@ impl YoutubeDl {
                 Box::new(extractor::Imgur),
                 Box::new(extractor::BiliBili),
                 Box::new(extractor::Vk),
+                Box::new(extractor::VkPlay),
+                Box::new(extractor::VkPlayLive),
+                Box::new(extractor::VkUserVideos),
+                Box::new(extractor::VkWallPost),
                 Box::new(extractor::Niconico),
                 Box::new(extractor::Weibo),
                 Box::new(extractor::WeiboVideo),
@@ -745,13 +809,16 @@ impl YoutubeDl {
                 Box::new(extractor::Rtrfm),
                 Box::new(extractor::ScreenRec),
                 Box::new(extractor::Sen),
+                Box::new(extractor::SnapchatSpotlight),
                 Box::new(extractor::Streamable),
                 Box::new(extractor::SztvHu),
+                Box::new(extractor::TelegramEmbed),
                 Box::new(extractor::TheIntercept),
                 Box::new(extractor::ThisAmericanLife),
                 Box::new(extractor::Tweakers),
                 Box::new(extractor::TwentyThreeVideo),
                 Box::new(extractor::Vocaroo),
+                Box::new(extractor::XiaoHongShu),
                 Box::new(extractor::Yfanefa),
                 Box::new(extractor::Zhihu),
                 Box::new(GenericHttp),
@@ -1323,7 +1390,8 @@ impl YoutubeDl {
     /// Upstream `post_extract`: what the extractor left for after the match
     /// filters (YouTube's comments with `getcomments`).
     pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
-        extractor::youtube_comments(&self.client, info)
+        extractor::youtube_comments(&self.client, info)?;
+        extractor::instagram_comments(&self.client, info)
     }
 
     /// Upstream `DashSegmentsFD` over `http_dash_segments_generator`
@@ -1369,13 +1437,15 @@ impl YoutubeDl {
     /// it has `limit` entries, or all of them; entries still pending remain.
     pub fn fetch_pending(&self, playlist: &mut PlaylistInfo, limit: Option<usize>) -> Result<()> {
         if let Some(pending) = playlist.pending.take() {
-            playlist.pending = extractor::fetch_youtube_tab_pages(
-                &self.client,
-                pending.state,
-                limit,
-                &mut playlist.entries,
-            )?
-            .map(|state| PendingEntries { state });
+            let fetch = if pending.state["kind"] == "twitch" {
+                extractor::fetch_twitch_pages
+            } else if extractor::tiktok_pending_state(&pending.state) {
+                extractor::fetch_tiktok_pages
+            } else {
+                extractor::fetch_youtube_tab_pages
+            };
+            playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
+                .map(|state| PendingEntries { state });
         }
         Ok(())
     }
@@ -1508,6 +1578,24 @@ impl YoutubeDl {
         self
     }
 
+    /// Whether a selected format has the `m3u8` protocol, which upstream
+    /// downloads with FFmpegFD unless `--downloader native` is given.
+    fn forced_ffmpeg_hls(&self, info: &VideoInfo) -> bool {
+        let forced = |protocol: &str| {
+            protocol == "m3u8"
+                && !self
+                    .downloader_name(protocol)
+                    .is_some_and(|name| name.eq_ignore_ascii_case("native"))
+        };
+        if info.requested_formats.is_empty() {
+            info.protocol.as_deref().is_some_and(forced)
+        } else {
+            info.requested_formats
+                .iter()
+                .any(|format| forced(&format.determine_protocol()))
+        }
+    }
+
     /// Upstream `get_suitable_downloader(...) == FFmpegFD`: partial downloads,
     /// or every selected protocol assigned to `ffmpeg` by `--downloader`.
     pub fn uses_ffmpeg_fd(&self, info: &VideoInfo) -> bool {
@@ -1518,6 +1606,10 @@ impl YoutubeDl {
             return false;
         }
         if sections::is_partial(info) {
+            return true;
+        }
+        // `PROTOCOL_MAP['m3u8']`: the non-native HLS protocol is FFmpeg's.
+        if self.forced_ffmpeg_hls(info) {
             return true;
         }
         // `_get_suitable_downloader`: live HLS uses FFmpegFD, as does live
@@ -1709,13 +1801,32 @@ impl YoutubeDl {
                 let seconds = ((end.as_f64() - start.as_f64()) * 1000.0).round() / 1000.0;
                 entry.metadata.duration = Some(crate::PyNumber::Float(seconds));
             }
+            // `process_video_result`: a zero or negative duration is dropped,
+            // with a warning when it was negative.
+            if let Some(duration) = entry.metadata.duration
+                && duration.as_f64() <= 0.0
+            {
+                entry.metadata.duration = None;
+                if duration.as_f64() != 0.0 {
+                    screen::warning(
+                        "\"duration\" field is negative, there is an error in extractor",
+                    );
+                }
+            }
             // `process_video_result`: `raise_no_formats` for a result
             // without formats.
             if entry.extra.shift_remove(info::NO_FORMATS).is_some() {
-                return Err(Error::Reported(format!(
+                let message = format!(
                     "[{}] {}: No video formats found!; {}",
                     entry.extractor, entry.id, BUG_REPORTS_MESSAGE
-                )));
+                );
+                // A playlist entry's error is reported when the entry is
+                // processed; the other entries continue.
+                if playlist {
+                    entry.extra.insert(ENTRY_ERROR.into(), message.into());
+                    continue;
+                }
+                return Err(Error::Reported(message));
             }
             // `process_video_result`: `display_id` defaults to the ID.
             // (a `None` value too, in its place).
@@ -1762,6 +1873,37 @@ impl YoutubeDl {
                     .and_then(|date| dates::py_int(&date.chars().take(4).collect::<String>()))
             {
                 entry.extra.insert("release_year".into(), year.into());
+            }
+            // `_fill_common_fields`: without a `live_status`, the first of
+            // `is_live`/`was_live` that is not `False` decides it if truthy
+            // (both `False`: `not_live`).
+            if entry.metadata.live_status.is_none() {
+                let flag = |key: &str| entry.extra.get(key).cloned();
+                let mut status = None;
+                for key in ["is_live", "was_live"] {
+                    let value = flag(key);
+                    if value == Some(serde_json::Value::Bool(false)) {
+                        continue;
+                    }
+                    if value.as_ref().is_some_and(|value| match value {
+                        serde_json::Value::Null => false,
+                        serde_json::Value::Bool(flag) => *flag,
+                        serde_json::Value::Number(number) => number.as_f64() != Some(0.0),
+                        serde_json::Value::String(text) => !text.is_empty(),
+                        serde_json::Value::Array(items) => !items.is_empty(),
+                        serde_json::Value::Object(items) => !items.is_empty(),
+                    }) {
+                        status = Some(key.to_owned());
+                    }
+                    break;
+                }
+                if ["is_live", "was_live"]
+                    .iter()
+                    .all(|key| flag(key) == Some(serde_json::Value::Bool(false)))
+                {
+                    status = Some("not_live".into());
+                }
+                entry.metadata.live_status = status;
             }
             // `_fill_common_fields`: `is_live`/`was_live` from `live_status`.
             if let Some(status) = entry.metadata.live_status.clone() {
@@ -1970,6 +2112,7 @@ impl YoutubeDl {
     /// `--live-from-start`: live streams keep their title and default format.
     pub fn with_live_from_start(mut self, from_start: bool) -> Self {
         self.live_from_start = from_start;
+        extractor::TWITCH_LIVE_FROM_START.store(from_start, std::sync::atomic::Ordering::Relaxed);
         self
     }
 
@@ -2363,6 +2506,15 @@ impl YoutubeDl {
         )))
     }
 
+    /// The extraction error of a playlist entry whose processing failed
+    /// (upstream reports it for that entry and continues with the others).
+    pub fn entry_error(entry: &VideoInfo) -> Option<&str> {
+        entry
+            .extra
+            .get(ENTRY_ERROR)
+            .and_then(serde_json::Value::as_str)
+    }
+
     /// Whether `entry` is an unresolved `url_transparent` entry.
     pub fn is_transparent(entry: &VideoInfo) -> bool {
         entry.extra.contains_key(TRANSPARENT)
@@ -2417,15 +2569,30 @@ impl YoutubeDl {
                     "url_transparent playlists are not supported natively".into(),
                 ));
             };
-            let inner_shape = match info.extra.get(info_order::INFO_SHAPE) {
+            let mut inner_shape = match info.extra.get(info_order::INFO_SHAPE) {
                 Some(serde_json::Value::String(shape)) => shape.clone(),
                 _ => String::new(),
             };
+            // An overlaid `title` precedes `_fill_common_fields`: no generic
+            // title for an untitled inner extraction.
+            if fields.iter().any(|(key, _)| key == "title")
+                && info.extra.shift_remove(info::TITLE_MISSING).is_some()
+            {
+                inner_shape = inner_shape.replacen("-untitled;", ";", 1);
+            }
             for (key, value) in &fields {
                 match key.as_str() {
                     "title" => info.title = value.as_str().unwrap_or_default().to_owned(),
                     _ => metadata_parser::set_field(info, key, value.clone()),
                 }
+            }
+            // `process_video_result`: `live_status` from an overlaid `is_live`.
+            if info.metadata.live_status.is_none()
+                && fields
+                    .iter()
+                    .any(|(key, value)| key == "is_live" && *value == serde_json::Value::Bool(true))
+            {
+                info.metadata.live_status = Some("is_live".into());
             }
             // Upstream extracts (and names) the smuggled URL.
             if !plain_url {
@@ -2735,6 +2902,12 @@ impl YoutubeDl {
         // `--downloader ffmpeg` use FFmpegFD, which also merges selected
         // formats directly.
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
+        // FFmpegFD's `m3u8` protocol without ffmpeg (`_call_downloader`).
+        if self.ffmpeg.is_none() && self.forced_ffmpeg_hls(info) {
+            return Err(Error::Reported(
+                "m3u8 download detected but ffmpeg could not be found. Please install".into(),
+            ));
+        }
         // Merged F4M formats are not supported (upstream merges F4mFD files).
         if info
             .requested_formats

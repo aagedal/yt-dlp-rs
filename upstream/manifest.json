@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "repository": "https://github.com/yt-dlp/yt-dlp.git",
-  "baseline": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
-  "upstream_version": "2026.08.19",
+  "baseline": "6ccd977303412151ee23352c6257dd658ffc1987",
+  "upstream_version": "2026.10.21",
   "components": [
     {
       "name": "generic-extraction",
@@ -483,7 +483,7 @@
         "src/extractor/facebook.rs",
         "tests/fixtures/sites/facebook/"
       ],
-      "scope": "FacebookIE relay prefetched data (parse_graphql_video legacy/delivery formats, inline DASH, progressive/HLS URLs, captions) merged with extract_metadata, login/interstitial errors; FacebookReelIE and FacebookPluginsVideoIE redirects; no server JS/pagelet pages, watch parties, tahoe fallback, JSON-LD or ads; compared with pinned upstream output through the fixture proxy"
+      "scope": "FacebookIE server JS (handleServerJS/s.handle) and bigPipe pagelet VideoConfig instances (src formats, inline DASH, subtitles_src, multi-video url playlists), relay prefetched data (parse_graphql_video legacy/delivery formats, inline DASH, progressive/HLS URLs, captions), watch party livingRoom recaps (GraphQL POST with lsd/RelayAPIConfigDefaults) and the tahoe POST fallback, merged with extract_metadata including JSON-LD, login/interstitial/Cannot parse data errors; FacebookReelIE, FacebookPluginsVideoIE and FacebookRedirectURLIE redirects; FacebookAdsIE snapshots (current and old paths, markup descriptions, videos/cards as formats or playlists) without the 403 client-challenge retry; SegmentBase DASH representations are refused and BaseURL-only ones shaped as one-fragment DASH by the shared parser (upstream: unfragmented https); compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "fathom",
@@ -663,7 +663,7 @@
         "src/extractor/instagram.rs",
         "tests/fixtures/sites/instagram/"
       ],
-      "scope": "InstagramIE logged-out path without impersonation: LSD session token, accessibility check warnings/errors, post page prefetched media, _extract_product formats/thumbnails/metadata/comments and carousel playlists; no inline DASH, logged-in API, stories, user or tag pages; compared with pinned upstream output through the fixture proxy"
+      "scope": "InstagramIE without impersonation: logged-out LSD session token, accessibility check warnings/errors and post page prefetched media; logged-in (sessionid cookie) media info API with the stale-cookie fallback, app_id extractor argument and --write-comments comments API; _extract_product formats, inline DASH manifests (direct BaseURL representations), thumbnails, metadata, comments and carousel playlists; InstagramIOSIE; InstagramStoryIE (stories/highlights page user and reels_media API, --no-playlist); InstagramTagIE and InstagramUserIE (broken upstream) sharedData and GIS-signed GraphQL timeline pages; no GraphQL post query (needs impersonation), embeds or comments of logged-in carousels; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "jove",
@@ -700,7 +700,7 @@
         "src/extractor/kick.rs",
         "tests/fixtures/sites/kick/"
       ],
-      "scope": "KickVODIE, KickClipIE and KickIE API metadata with HLS (live IDs as upstream's live=True) or direct formats; compared with pinned upstream output through the fixture proxy"
+      "scope": "Reworked kick.py (fe84bef3969de96ceb39ca988425fdd3895bbfb1, release 2026.10.21): KickIE (v2 channel API, plain HLS IDs), KickVODIE (web.kick.com playback POST, channel video list metadata, smuggled availability, subscription check), KickClipIE (v2 clip API with 404 messages, HLS or direct sources), KickVideosIE (url_transparent VOD entries, date/views sort) and KickClipsIE (cursor-paginated clip entries, sort/range); compared with upstream output through the fixture proxy. Impersonation is unavailable (upstream's warning only)"
     },
     {
       "name": "kommunetv",
@@ -1054,6 +1054,19 @@
       "scope": "SenIE content API player/details nodes (fatal HLS formats, VOD manifest fallback, title/description/tags traversal, generic title) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "snapchat",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/snapchat.py"
+      ],
+      "rust": [
+        "src/extractor/snapchat.rs",
+        "src/info_order.rs",
+        "tests/fixtures/sites/snapchat/"
+      ],
+      "scope": "SnapchatSpotlightIE (as of 2026.10.21) Next.js spotlight story matched by storyId; videoMetadata traversal as an untyped mp4 result (contentUrl, width/height, millisecond uploadDateMs/durationMs, -1 view counts as None, creator) then story description, string hashtags and engagement counts; no matching story is upstream's no-formats error; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "soundcloud",
       "status": "partial",
       "upstream": [
@@ -1110,6 +1123,19 @@
       "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "telegram",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/telegram.py"
+      ],
+      "rust": [
+        "src/extractor/telegram.rs",
+        "src/info_order.rs",
+        "tests/fixtures/sites/telegram/"
+      ],
+      "scope": "TelegramEmbedIE (as of 2026.10.21) embed frame (embed=1, single dropped), video players as mp4 formats with ?single=True webpage URLs, duration/thumbnail/timestamp with non-fatal warnings, cleaned message text, author and channel; multi-video posts as playlists unless ?single or --no-playlist; posts without their own video (upstream's 'returned nothing' warning) are an unsupported error; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "theintercept",
       "status": "partial",
       "upstream": [
@@ -1141,9 +1167,10 @@
       ],
       "rust": [
         "src/extractor/tiktok.rs",
-        "tests/fixtures/sites/tiktok/"
+        "tests/fixtures/sites/tiktok/",
+        "tests/fixtures/sites/douyin/"
       ],
-      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; no app API, subtitles, slideshows, user/sound/tag/collection lists or Douyin; compared with pinned upstream output through the fixture proxy"
+      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, webpage/feed subtitles, slideshows as their audio track, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; TikTokUserIE (user page, embed-page secUid fallback, creator item_list pages) and TikTokCollectionIE as lazy flat url playlists; DouyinIE web detail API through _parse_aweme_video_app (no signature/verification challenge); no app API, aweme/detail SRT-data captions, TikTokSoundIE/TikTokEffectIE/TikTokTagIE (app API, _WORKING=False); TikTokLiveIE webcast room info with FLV/HLS pull formats and the live detail fallback; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "tumblr",
@@ -1191,19 +1218,21 @@
         "src/extractor/twitch.rs",
         "tests/fixtures/sites/twitch/"
       ],
-      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference; TwitchClipsIE signed qualities, thumbnails and metadata; no live streams, collections or channel lists; compared with pinned upstream output through the fixture proxy"
+      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference, usher 403 JSON errors (subscriber-only login hint) and live_from_start format marking; TwitchStreamIE stream GraphQL, stream access token, live usher HLS master, rerun/live titles, offline/missing-channel errors and --live-from-start VOD resolution; TwitchClipsIE signed qualities, thumbnails and metadata; TwitchVideosIE, TwitchVideosClipsIE and TwitchVideosCollectionsIE lazily paged GraphQL channel lists and TwitchCollectionIE, all as url_transparent entries; no login (_perform_login) or client_id extractor-arg; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "twitter",
       "status": "partial",
       "upstream": [
-        "yt_dlp/extractor/twitter.py"
+        "yt_dlp/extractor/twitter.py",
+        "yt_dlp/extractor/periscope.py"
       ],
       "rust": [
         "src/extractor/twitter.rs",
+        "src/extractor/periscope.rs",
         "tests/fixtures/sites/twitter/"
       ],
-      "scope": "TwitterIE GraphQL status (guest token or auth cookies), _graphql_to_legacy errors, HLS/MP4 variants, thumbnails, metadata, multi-video playlists, /video/N with --no-playlist, unified/player/summary cards and followed links; TwitterCardIE redirects; no legacy/syndication APIs, broadcasts, Spaces or VMAP cards; compared with pinned upstream output through the fixture proxy"
+      "scope": "TwitterIE GraphQL (guest token or auth cookies), legacy and syndication APIs selected with the api extractor argument, the HTTP 429 syndication fallback, _graphql_to_legacy errors, HLS/MP4 variants, thumbnails, metadata, multi-video playlists, /video/N with --no-playlist, unified/VMAP cards and followed player/summary/broadcast/audiospace/periscope cards and links; TwitterCardIE redirects; TwitterShortenerIE (t.co, tco:); TwitterAmplifyIE; TwitterBroadcastIE broadcasts and live events; TwitterSpacesIE; PeriscopeBaseIE/PeriscopeIE HLS broadcasts (no RTMP, PeriscopeUserIE or embeds); compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "vimeo",
@@ -1225,9 +1254,10 @@
       ],
       "rust": [
         "src/extractor/vk.rs",
+        "src/extractor/vkplay.rs",
         "tests/fixtures/sites/vk/"
       ],
-      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; no JS challenge, other embeds, logins, VKUserVideosIE, VKWallPostIE or VK Play; compared with pinned upstream output through the fixture proxy"
+      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched eagerly); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; no JS challenge, other embeds or logins; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "vocaroo",
@@ -1252,6 +1282,18 @@
         "tests/fixtures/sites/weibo/"
       ],
       "scope": "WeiboIE statuses JSON with the visitor cookie handshake, playback-list and fallback formats, mixed-media playlists and metadata; WeiboVideoIE TV component lookups; no WeiboUserIE; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "xiaohongshu",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/xiaohongshu.py"
+      ],
+      "rust": [
+        "src/extractor/xiaohongshu.rs",
+        "tests/fixtures/sites/xiaohongshu/"
+      ],
+      "scope": "XiaoHongShuIE (release 2026.10.21) __INITIAL_STATE__ stream formats (master and backup URLs), original-video direct format with its unavailable warning, image thumbnails, title/description/tags/uploader ID and missing-state/no-formats errors compared with upstream output through the fixture proxy; non-HTTP stream URLs refused"
     },
     {
       "name": "yfanefa",

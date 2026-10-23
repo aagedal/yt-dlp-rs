@@ -228,7 +228,17 @@ impl PlaylistSelection {
                 "playlist",
                 title.clone().unwrap_or_else(|| playlist.id.clone()).into(),
             ),
-            ("playlist_id", playlist.id.clone().into()),
+            // `playlist_result(entries)` without an ID (an `id: None` extra).
+            (
+                "playlist_id",
+                if playlist.id.is_empty()
+                    && playlist.extra.get("id") == Some(&serde_json::Value::Null)
+                {
+                    serde_json::Value::Null
+                } else {
+                    playlist.id.clone().into()
+                },
+            ),
             ("playlist_title", title.into()),
             ("playlist_uploader", field("uploader")),
             ("playlist_uploader_id", field("uploader_id")),
@@ -247,6 +257,14 @@ impl PlaylistSelection {
                 crate::info::get_domain(&playlist.webpage_url).into(),
             ),
         ];
+        // A generator's (`LazyList`) full count is unknown unless the
+        // selection read past its end.
+        let unexhausted = playlist
+            .extra
+            .get(crate::info_order::INFO_SHAPE)
+            .and_then(serde_json::Value::as_str)
+            .is_some_and(|shape| shape.ends_with(crate::info_order::GENERATOR))
+            && self.fetch_limit().is_some_and(|limit| limit <= count);
         // `if not ie_result.get('playlist_count'): ... get_full_count()`.
         let playlist_count = playlist
             .extra
@@ -254,7 +272,7 @@ impl PlaylistSelection {
             .and_then(serde_json::Value::as_u64)
             .filter(|count| *count != 0)
             .map(|count| count as usize)
-            .or((playlist.pending.is_none()).then_some(count));
+            .or((playlist.pending.is_none() && !unexhausted).then_some(count));
         let indices = self.indices(count);
         let requested = if self.selection_index && !self.lazy {
             Self {

@@ -1,5 +1,5 @@
 {
- "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
  "cases": [
   {
    "url": "https://www.facebook.com/watch/?v=1234567890",
@@ -98,6 +98,222 @@
    "stderr": [
     "WARNING: [facebook] Ignoring subtitle tracks found in the DASH manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/video.php?v=1111111111",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1111111111\", \"formats\": [{\"format_id\": \"lake-a\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 64.0, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.5\", \"dynamic_range\": null, \"url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"fragment_base_url\": \"\", \"fragments\": [{\"url\": \"https://video.xx.fbcdn.net/v/lake-a-init.m4s\"}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-a-1.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-a-2.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-a-3.m4s\", \"duration\": 30.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 64.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format\": \"lake-a - audio only (DASH audio)\"}, {\"format_id\": \"progressive_sd_src\", \"url\": \"https://video.xx.fbcdn.net/v/lake-sd.mp4?efg=1\", \"quality\": -10, \"height\": null, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"progressive_sd_src - unknown\"}, {\"format_id\": \"progressive_sd_src_no_ratelimit\", \"url\": \"https://video.xx.fbcdn.net/v/lake-sd-nrl.mp4\", \"quality\": -10, \"height\": null, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"progressive_sd_src_no_ratelimit - unknown\"}, {\"format_id\": \"progressive_hd_src\", \"url\": \"https://video.xx.fbcdn.net/v/lake-hd.mp4?efg=1\", \"quality\": -9, \"height\": 720, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"progressive_hd_src - 720p\"}, {\"format_id\": \"lake-v720\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1500.0, \"asr\": null, \"fps\": 30, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.64001F\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"fragment_base_url\": \"\", \"fragments\": [{\"url\": \"https://video.xx.fbcdn.net/v/lake-720-init.m4s\"}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-720-1.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-720-2.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-720-3.m4s\", \"duration\": 30.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"lake-v720 - 1280x720 (DASH video)\"}], \"subtitles\": {\"en\": [{\"url\": \"https://scontent.xx.fbcdn.net/v/lake-en.srt\", \"ext\": \"srt\"}]}, \"title\": \"Lake swim (JSON-LD)\", \"description\": \"A swim in the lake, from JSON-LD\", \"thumbnails\": [{\"url\": \"https://scontent.xx.fbcdn.net/v/lake-ld.jpg\", \"id\": \"0\"}], \"duration\": 65, \"timestamp\": 1600000000, \"view_count\": 4321, \"uploader\": \"Lake Owner\", \"thumbnail\": \"https://scontent.xx.fbcdn.net/v/lake.jpg?x=1\", \"webpage_url\": \"https://www.facebook.com/video.php?v=1111111111\", \"original_url\": \"https://www.facebook.com/video.php?v=1111111111\", \"webpage_url_basename\": \"video.php\", \"webpage_url_domain\": \"facebook.com\", \"extractor\": \"facebook\", \"extractor_key\": \"Facebook\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1111111111\", \"fulltitle\": \"Lake swim (JSON-LD)\", \"duration_string\": \"1:05\", \"upload_date\": \"20200913\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"requested_formats\": [{\"format_id\": \"lake-v720\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1500.0, \"asr\": null, \"fps\": 30, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.64001F\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"fragment_base_url\": \"\", \"fragments\": [{\"url\": \"https://video.xx.fbcdn.net/v/lake-720-init.m4s\"}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-720-1.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-720-2.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-720-3.m4s\", \"duration\": 30.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"lake-v720 - 1280x720 (DASH video)\"}, {\"format_id\": \"lake-a\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 64.0, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.5\", \"dynamic_range\": null, \"url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"fragment_base_url\": \"\", \"fragments\": [{\"url\": \"https://video.xx.fbcdn.net/v/lake-a-init.m4s\"}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-a-1.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-a-2.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-a-3.m4s\", \"duration\": 30.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 64.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format\": \"lake-a - audio only (DASH audio)\"}], \"format\": \"lake-v720 - 1280x720 (DASH video)+lake-a - audio only (DASH audio)\", \"format_id\": \"lake-v720+lake-a\", \"ext\": \"mp4\", \"protocol\": \"http_dash_segments+http_dash_segments\", \"format_note\": \"DASH video+DASH audio\", \"tbr\": 1564.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": 30, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.64001F\", \"vbr\": 1500.0, \"aspect_ratio\": 1.78, \"acodec\": \"mp4a.40.5\", \"abr\": 64.0, \"asr\": 44100, \"_filename\": \"Lake swim (JSON-LD) [1111111111].mp4\", \"filename\": \"Lake swim (JSON-LD) [1111111111].mp4\", \"__write_download_archive\": false}], \"requested_formats\": [{\"format_id\": \"lake-v720\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1500.0, \"asr\": null, \"fps\": 30, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.64001F\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"fragment_base_url\": \"\", \"fragments\": [{\"url\": \"https://video.xx.fbcdn.net/v/lake-720-init.m4s\"}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-720-1.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-720-2.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-720-3.m4s\", \"duration\": 30.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1500.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"format\": \"lake-v720 - 1280x720 (DASH video)\"}, {\"format_id\": \"lake-a\", \"manifest_url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 64.0, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.5\", \"dynamic_range\": null, \"url\": \"https://video.xx.fbcdn.net/v/lake.mpd\", \"fragment_base_url\": \"\", \"fragments\": [{\"url\": \"https://video.xx.fbcdn.net/v/lake-a-init.m4s\"}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-a-1.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-a-2.m4s\", \"duration\": 30.0}, {\"url\": \"https://video.xx.fbcdn.net/v/lake-a-3.m4s\", \"duration\": 30.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 64.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format\": \"lake-a - audio only (DASH audio)\"}], \"format\": \"lake-v720 - 1280x720 (DASH video)+lake-a - audio only (DASH audio)\", \"format_id\": \"lake-v720+lake-a\", \"ext\": \"mp4\", \"protocol\": \"http_dash_segments+http_dash_segments\", \"language\": null, \"format_note\": \"DASH video+DASH audio\", \"filesize_approx\": null, \"tbr\": 1564.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": 30, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.64001F\", \"vbr\": 1500.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": \"mp4a.40.5\", \"abr\": 64.0, \"asr\": 44100, \"audio_channels\": null, \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/video.php?v=1111111111",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[facebook] Extracting URL: https://www.facebook.com/video.php?v=1111111111",
+    "[facebook] 1111111111: Downloading webpage",
+    "[info] Available formats for 1111111111:",
+    "ID                              EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC     ABR ASR MORE INFO",
+    "---------------------------------------------------------------------------------------------------------------------------------------",
+    "lake-a                          m4a audio only     | ~507.81KiB   64k dash  | audio only        mp4a.40.5  64k 44k DASH audio, m4a_dash",
+    "progressive_sd_src              mp4 unknown        |                  https | unknown           unknown",
+    "progressive_sd_src_no_ratelimit mp4 unknown        |                  https | unknown           unknown",
+    "progressive_hd_src              mp4 720p           |                  https | unknown           unknown",
+    "lake-v720                       mp4 1280x720    30 | ~ 11.62MiB 1500k dash  | avc1.64001F 1500k video only         DASH video, mp4_dash"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/someone/videos/2222222222/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2222222222\", \"formats\": [{\"format_id\": \"other_sd_src\", \"url\": \"https://video.xx.fbcdn.net/v/forest-sd.mp4\", \"quality\": -3, \"height\": null, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"other_sd_src - unknown\"}, {\"format_id\": \"other_hd_src\", \"url\": \"https://video.xx.fbcdn.net/v/forest-hd.mp4\", \"quality\": -2, \"height\": 720, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"other_hd_src - 720p\"}], \"subtitles\": {}, \"title\": \"Forest run\", \"uploader\": \"Forest Runner\", \"view_count\": 99, \"webpage_url\": \"https://www.facebook.com/someone/videos/2222222222/\", \"original_url\": \"https://www.facebook.com/someone/videos/2222222222/\", \"webpage_url_basename\": \"2222222222\", \"webpage_url_domain\": \"facebook.com\", \"extractor\": \"facebook\", \"extractor_key\": \"Facebook\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2222222222\", \"fulltitle\": \"Forest run\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"other_hd_src\", \"url\": \"https://video.xx.fbcdn.net/v/forest-hd.mp4\", \"quality\": -2, \"height\": 720, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"format\": \"other_hd_src - 720p\", \"_filename\": \"Forest run [2222222222].mp4\", \"filename\": \"Forest run [2222222222].mp4\", \"__write_download_archive\": false}], \"format_id\": \"other_hd_src\", \"url\": \"https://video.xx.fbcdn.net/v/forest-hd.mp4\", \"quality\": -2, \"height\": 720, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"other_hd_src - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/someone/posts/3333333333",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3333333333\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Facebook\", \"id\": \"1111111111\", \"_type\": \"url\", \"url\": \"https://www.facebook.com/video.php?v=1111111111\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Facebook\", \"id\": \"2222222222\", \"_type\": \"url\", \"url\": \"https://www.facebook.com/someone/videos/2222222222/\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.facebook.com/someone/posts/3333333333\", \"original_url\": \"https://www.facebook.com/someone/posts/3333333333\", \"webpage_url_basename\": \"3333333333\", \"webpage_url_domain\": \"facebook.com\", \"extractor\": \"facebook\", \"extractor_key\": \"Facebook\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/someone/posts/3333333333",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(playlist_index)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1111111111|Lake swim (JSON-LD)|1|https://www.facebook.com/video.php?v=1111111111",
+    "2222222222|Forest run|2|https://www.facebook.com/someone/videos/2222222222/"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/video.php?v=4444444444",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4444444444\", \"formats\": [{\"format_id\": \"progressive_sd_src\", \"url\": \"https://video.xx.fbcdn.net/v/river-sd.mp4\", \"quality\": -10, \"height\": null, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"progressive_sd_src - unknown\"}, {\"format_id\": \"progressive_hd_src\", \"url\": \"https://video.xx.fbcdn.net/v/river-hd.mp4\", \"quality\": -9, \"height\": 720, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"progressive_hd_src - 720p\"}], \"subtitles\": {}, \"title\": \"River\", \"webpage_url\": \"https://www.facebook.com/video.php?v=4444444444\", \"original_url\": \"https://www.facebook.com/video.php?v=4444444444\", \"webpage_url_basename\": \"video.php\", \"webpage_url_domain\": \"facebook.com\", \"extractor\": \"facebook\", \"extractor_key\": \"Facebook\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"4444444444\", \"fulltitle\": \"River\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"progressive_hd_src\", \"url\": \"https://video.xx.fbcdn.net/v/river-hd.mp4\", \"quality\": -9, \"height\": 720, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"format\": \"progressive_hd_src - 720p\", \"_filename\": \"River [4444444444].mp4\", \"filename\": \"River [4444444444].mp4\", \"__write_download_archive\": false}], \"format_id\": \"progressive_hd_src\", \"url\": \"https://video.xx.fbcdn.net/v/river-hd.mp4\", \"quality\": -9, \"height\": 720, \"http_headers\": {\"User-Agent\": \"facebookexternalhit/1.1\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"downloader_options\": {\"http_chunk_size\": 262144000}, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"progressive_hd_src - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [facebook] unable to extract uploader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/video.php?v=5555555555",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [facebook] 5555555555: Cannot parse data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/video.php?v=5555555556",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [facebook] 5555555556: The video is not available, Facebook said: \"This video is unavailable in your country\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/watchparty/6666666666",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6666666666\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Facebook\", \"id\": \"1234567890\", \"title\": \"Old town walk\", \"_type\": \"url\", \"url\": \"https://www.facebook.com/video/video.php?v=1234567890\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Facebook\", \"id\": \"7777777777\", \"_type\": \"url\", \"url\": \"https://www.facebook.com/video/video.php?v=7777777777\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.facebook.com/watchparty/6666666666\", \"original_url\": \"https://www.facebook.com/watchparty/6666666666\", \"webpage_url_basename\": \"6666666666\", \"webpage_url_domain\": \"facebook.com\", \"extractor\": \"facebook\", \"extractor_key\": \"Facebook\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/watchparty/6666666666",
+   "args": [
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_id)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1234567890|Old town walk|6666666666|https://www.facebook.com/video/video.php?v=1234567890"
+   ],
+   "stderr": [
+    "WARNING: [facebook] Ignoring subtitle tracks found in the DASH manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/flx/warn/?h=AT0&u=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D1234567890&s=1",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1234567890|Old town walk|facebook|https://www.facebook.com/watch/?v=1234567890"
+   ],
+   "stderr": [
+    "WARNING: [facebook] Ignoring subtitle tracks found in the DASH manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/flx/warn/?h=AT0&u=javascript%3Aalert(1)",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [FacebookRedirectURL] Invalid facebook redirect URL"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/ads/library/?id=8888888888",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Summer sale\", \"description\": \"Everything must go\", \"uploader\": \"Shop\", \"uploader_id\": \"12345\", \"uploader_url\": \"https://www.facebook.com/shop/\", \"like_count\": 321, \"id\": \"8888888888\", \"thumbnail\": \"https://scontent.xx.fbcdn.net/v/ad.jpg\", \"formats\": [{\"format_id\": \"sd-wmk\", \"format_note\": \"SD, watermarked\", \"url\": \"https://video.xx.fbcdn.net/v/ad-sd-wmk.mp4\", \"ext\": \"mp4\", \"quality\": 0, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd-wmk - unknown (SD, watermarked)\"}, {\"format_id\": \"sd\", \"format_note\": null, \"url\": \"https://video.xx.fbcdn.net/v/ad-sd.mp4\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\"}, {\"format_id\": \"hd\", \"format_note\": null, \"url\": \"https://video.xx.fbcdn.net/v/ad-hd.mp4\", \"ext\": \"mp4\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\"}], \"webpage_url\": \"https://www.facebook.com/ads/library/?id=8888888888\", \"original_url\": \"https://www.facebook.com/ads/library/?id=8888888888\", \"webpage_url_basename\": \"library\", \"webpage_url_domain\": \"facebook.com\", \"extractor\": \"facebook:ads\", \"extractor_key\": \"FacebookAds\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://scontent.xx.fbcdn.net/v/ad.jpg\", \"id\": \"0\"}], \"display_id\": \"8888888888\", \"fulltitle\": \"Summer sale\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hd\", \"url\": \"https://video.xx.fbcdn.net/v/ad-hd.mp4\", \"ext\": \"mp4\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\", \"_filename\": \"Summer sale [8888888888].mp4\", \"filename\": \"Summer sale [8888888888].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hd\", \"format_note\": null, \"url\": \"https://video.xx.fbcdn.net/v/ad-hd.mp4\", \"ext\": \"mp4\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/ads/library/?id=9999999999",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Card one\", \"description\": \"Fresh & new styles\", \"uploader\": \"Shop\", \"uploader_id\": \"12345\", \"uploader_url\": \"https://www.facebook.com/shop/\", \"like_count\": 321, \"entries\": [{\"id\": \"9999999999_1\", \"title\": \"Card one\", \"description\": \"First card\", \"thumbnail\": \"https://scontent.xx.fbcdn.net/v/card1.jpg\", \"formats\": [{\"format_id\": \"sd\", \"format_note\": null, \"url\": \"https://video.xx.fbcdn.net/v/card1-sd.mp4\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\"}], \"playlist_count\": 2, \"playlist\": \"Card one\", \"playlist_id\": \"9999999999\", \"playlist_title\": \"Card one\", \"playlist_uploader\": \"Shop\", \"playlist_uploader_id\": \"12345\", \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.facebook.com/ads/library/?id=9999999999\", \"n_entries\": 2, \"webpage_url\": \"https://www.facebook.com/ads/library/?id=9999999999\", \"webpage_url_basename\": \"library\", \"webpage_url_domain\": \"facebook.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"facebook:ads\", \"extractor_key\": \"FacebookAds\", \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://scontent.xx.fbcdn.net/v/card1.jpg\", \"id\": \"0\"}], \"display_id\": \"9999999999_1\", \"fulltitle\": \"Card one\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"sd\", \"url\": \"https://video.xx.fbcdn.net/v/card1-sd.mp4\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\", \"_filename\": \"Card one [9999999999_1].mp4\", \"filename\": \"Card one [9999999999_1].mp4\", \"__write_download_archive\": false}], \"format_id\": \"sd\", \"format_note\": null, \"url\": \"https://video.xx.fbcdn.net/v/card1-sd.mp4\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\"}, {\"id\": \"9999999999_2\", \"title\": \"DCO by Shop\", \"description\": \"Second link\", \"thumbnail\": null, \"formats\": [{\"format_id\": \"hd-wmk\", \"format_note\": \"HD, watermarked\", \"url\": \"https://video.xx.fbcdn.net/v/card2-hd-wmk.mp4\", \"ext\": \"mp4\", \"quality\": 2, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd-wmk - unknown (HD, watermarked)\"}, {\"format_id\": \"hd\", \"format_note\": null, \"url\": \"https://video.xx.fbcdn.net/v/card2-hd.mp4\", \"ext\": \"mp4\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\"}], \"playlist_count\": 2, \"playlist\": \"Card one\", \"playlist_id\": \"9999999999\", \"playlist_title\": \"Card one\", \"playlist_uploader\": \"Shop\", \"playlist_uploader_id\": \"12345\", \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.facebook.com/ads/library/?id=9999999999\", \"n_entries\": 2, \"webpage_url\": \"https://www.facebook.com/ads/library/?id=9999999999\", \"webpage_url_basename\": \"library\", \"webpage_url_domain\": \"facebook.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"facebook:ads\", \"extractor_key\": \"FacebookAds\", \"playlist_autonumber\": 2, \"display_id\": \"9999999999_2\", \"fulltitle\": \"DCO by Shop\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hd\", \"url\": \"https://video.xx.fbcdn.net/v/card2-hd.mp4\", \"ext\": \"mp4\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\", \"_filename\": \"DCO by Shop [9999999999_2].mp4\", \"filename\": \"DCO by Shop [9999999999_2].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hd\", \"format_note\": null, \"url\": \"https://video.xx.fbcdn.net/v/card2-hd.mp4\", \"ext\": \"mp4\", \"quality\": 3, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\"}], \"_type\": \"playlist\", \"id\": \"9999999999\", \"webpage_url\": \"https://www.facebook.com/ads/library/?id=9999999999\", \"original_url\": \"https://www.facebook.com/ads/library/?id=9999999999\", \"webpage_url_basename\": \"library\", \"webpage_url_domain\": \"facebook.com\", \"extractor\": \"facebook:ads\", \"extractor_key\": \"FacebookAds\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/ads/library/?id=7777777777",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [facebook:ads] 7777777777: Unable to extract ad data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.facebook.com/reel/1212121212",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(uploader)s|%(uploader_id)s|%(duration)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1212121212|1K views · 2 reactions | Reel caption “quoted” | Reel Owner|Reel caption from meta|1K views &#xb7; 2 reactions | Reel caption &#x201c;quoted&#x201d; | Reel Owner|NA|9.579"
+   ],
+   "stderr": [],
    "files": {}
   }
  ]

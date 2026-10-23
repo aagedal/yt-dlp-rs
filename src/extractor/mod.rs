@@ -66,6 +66,7 @@ mod nobelprize;
 mod odnoklassniki;
 mod oneplace;
 mod parlview;
+mod periscope;
 mod photobucket;
 mod pinterest;
 mod playerfm;
@@ -81,10 +82,12 @@ mod rutube;
 mod screenrec;
 mod sen;
 mod smil;
+mod snapchat;
 mod soundcloud;
 mod streamable;
 mod sztvhu;
 mod ted;
+mod telegram;
 mod theintercept;
 mod thisamericanlife;
 mod tiktok;
@@ -95,8 +98,10 @@ mod twitch;
 mod twitter;
 mod vimeo;
 mod vk;
+mod vkplay;
 mod vocaroo;
 mod weibo;
+mod xiaohongshu;
 mod xspf;
 mod yfanefa;
 pub(crate) mod youtube;
@@ -129,8 +134,10 @@ pub use ebay::{Ebay, suitable as ebay_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use facebook::{
-    Facebook, FacebookPluginsVideo, FacebookReel, plugins_suitable as facebook_plugins_suitable,
-    reel_suitable as facebook_reel_suitable, suitable as facebook_suitable,
+    Facebook, FacebookAds, FacebookPluginsVideo, FacebookRedirectUrl, FacebookReel,
+    ads_suitable as facebook_ads_suitable, plugins_suitable as facebook_plugins_suitable,
+    redirect_suitable as facebook_redirect_suitable, reel_suitable as facebook_reel_suitable,
+    suitable as facebook_suitable,
 };
 pub use fathom::{Fathom, suitable as fathom_suitable};
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
@@ -151,12 +158,19 @@ pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
     gallery_suitable as imgur_gallery_suitable, suitable as imgur_suitable,
 };
-pub use instagram::{Instagram, suitable as instagram_suitable};
+pub(crate) use instagram::post_extract as instagram_comments;
+pub use instagram::{
+    Instagram, InstagramIos, InstagramStory, InstagramTag, InstagramUser,
+    ios_suitable as instagram_ios_suitable, story_suitable as instagram_story_suitable,
+    suitable as instagram_suitable, tag_suitable as instagram_tag_suitable,
+    user_suitable as instagram_user_suitable,
+};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kick::{
-    KickClip, KickLive, KickVod, clip_suitable as kick_clip_suitable,
-    live_suitable as kick_live_suitable, vod_suitable as kick_vod_suitable,
+    KickClip, KickClips, KickLive, KickVideos, KickVod, clip_suitable as kick_clip_suitable,
+    clips_suitable as kick_clips_suitable, live_suitable as kick_live_suitable,
+    videos_suitable as kick_videos_suitable, vod_suitable as kick_vod_suitable,
 };
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
@@ -174,6 +188,7 @@ pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
+pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
 pub use pinterest::{Pinterest, suitable as pinterest_suitable};
 pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
@@ -191,6 +206,7 @@ pub use rutube::{
 };
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
+pub use snapchat::{SnapchatSpotlight, suitable as snapchat_suitable};
 pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
@@ -199,27 +215,51 @@ pub use ted::{
     playlist_suitable as ted_playlist_suitable, series_suitable as ted_series_suitable,
     talk_suitable as ted_talk_suitable,
 };
+pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use tiktok::{
-    TikTok, TikTokVm, suitable as tiktok_suitable, vm_suitable as tiktok_vm_suitable,
+    Douyin, TikTok, TikTokCollection, TikTokLive, TikTokUser, TikTokVm,
+    collection_suitable as tiktok_collection_suitable, douyin_suitable,
+    live_suitable as tiktok_live_suitable, suitable as tiktok_suitable,
+    user_suitable as tiktok_user_suitable, vm_suitable as tiktok_vm_suitable,
+};
+pub(crate) use tiktok::{
+    fetch_pages as fetch_tiktok_pages, is_pending_state as tiktok_pending_state,
 };
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
+pub(crate) use twitch::{
+    LIVE_FROM_START as TWITCH_LIVE_FROM_START, fetch_pages as fetch_twitch_pages,
+};
 pub use twitch::{
-    TwitchClips, TwitchVod, clips_suitable as twitch_clips_suitable,
-    vod_suitable as twitch_vod_suitable,
+    TwitchClips, TwitchCollection, TwitchStream, TwitchVideos, TwitchVideosClips,
+    TwitchVideosCollections, TwitchVod, clips_suitable as twitch_clips_suitable,
+    collection_suitable as twitch_collection_suitable, stream_suitable as twitch_stream_suitable,
+    videos_clips_suitable as twitch_videos_clips_suitable,
+    videos_collections_suitable as twitch_videos_collections_suitable,
+    videos_suitable as twitch_videos_suitable, vod_suitable as twitch_vod_suitable,
 };
 pub use twitter::{
-    Twitter, TwitterCard, card_suitable as twitter_card_suitable, suitable as twitter_suitable,
+    Twitter, TwitterAmplify, TwitterBroadcast, TwitterCard, TwitterShortener, TwitterSpaces,
+    amplify_suitable as twitter_amplify_suitable, broadcast_suitable as twitter_broadcast_suitable,
+    card_suitable as twitter_card_suitable, shortener_suitable as twitter_shortener_suitable,
+    spaces_suitable as twitter_spaces_suitable, suitable as twitter_suitable,
 };
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
-pub use vk::{Vk, suitable as vk_suitable};
+pub use vk::{
+    Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,
+    user_videos_suitable as vk_user_videos_suitable, wall_post_suitable as vk_wall_post_suitable,
+};
+pub use vkplay::{
+    VkPlay, VkPlayLive, live_suitable as vkplay_live_suitable, suitable as vkplay_suitable,
+};
 pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
+pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
@@ -278,7 +318,7 @@ pub(crate) fn request_error_text(
 
 /// Upstream `_report_ignoring_subs(NAME)` for `_extract_m3u8_formats` and
 /// `_extract_mpd_formats`, which drop a manifest's subtitles.
-fn ignore_subtitles(info: &mut crate::VideoInfo, extractor: &str, name: &str) {
+pub(crate) fn ignore_subtitles(info: &mut crate::VideoInfo, extractor: &str, name: &str) {
     if !info.subtitles.is_empty() {
         crate::screen::warning_once(&format!(
             "[{extractor}] Ignoring subtitle tracks found in the {name} manifest; if any subtitle tracks are missing, {}",
@@ -429,6 +469,8 @@ pub(crate) fn extract_m3u8_master_optional(
     manifest: &Url,
     extractor: &'static str,
     id: &str,
+    m3u8_id: Option<&str>,
+    keep_subtitles: bool,
     live: bool,
 ) -> Option<crate::VideoInfo> {
     let mut stream = extract_manifest_optional_note(
@@ -436,15 +478,38 @@ pub(crate) fn extract_m3u8_master_optional(
         manifest,
         extractor,
         id,
-        true,
-        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        keep_subtitles,
+        &|response| hls::from_response_with(client, response, manifest, None, true, m3u8_id, true),
         ("m3u8 information", "HLS"),
         "Downloading m3u8 information",
     )?;
     if live {
-        hls::live_format_ids(&mut stream.formats, None);
+        hls::live_format_ids(&mut stream.formats, m3u8_id);
     }
     Some(stream)
+}
+
+/// `_extract_m3u8_formats(url, id, m3u8_id=M3U8_ID, fatal=False)` of a live
+/// stream that upstream does not mark `live`: only the master playlist is
+/// read (see [`hls::from_response_with`]), and the format IDs keep their
+/// bitrates.
+pub(crate) fn extract_m3u8_live_master_optional(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+) -> Option<crate::VideoInfo> {
+    extract_manifest_optional_note(
+        client,
+        manifest,
+        extractor,
+        id,
+        false,
+        &|response| hls::from_response_with(client, response, manifest, None, true, m3u8_id, true),
+        ("m3u8 information", "HLS"),
+        "Downloading m3u8 information",
+    )
 }
 
 /// `_extract_mpd_formats_and_subtitles(url, id, mpd_id, note, fatal=False)`.
@@ -618,11 +683,12 @@ fn download_json_with(
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
     // `_webpage_read_content`: `--dump-pages`/`--write-pages`.
     crate::screen::expect_page(id, None, None);
     crate::screen::page_read(&page_url, &body)?;
-    let text = transform(&String::from_utf8_lossy(&body))?;
-    serde_json::from_str(&text).map_err(|error| {
+    let text = transform(&decode_webpage(&body, response.headers()))?;
+    crate::json::from_str(&text).map_err(|error| {
         crate::Error::Reported(format!(
             "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
         ))
@@ -754,9 +820,102 @@ fn download_webpage_handle_headers(
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
     crate::screen::expect_page(id, None, None);
     crate::screen::page_read(&page_url, &body)?;
-    Ok((String::from_utf8_lossy(&body).into_owned(), page_url))
+    Ok((decode_webpage(&body, response.headers()), page_url))
+}
+
+/// The urllib handler's `http_response`: a body decoded from each
+/// `Content-Encoding` in reverse (`gzip` as a single member, `deflate` raw or
+/// zlib-wrapped); other encodings are left as sent. Extraction requests ask
+/// for `identity`, but some servers compress regardless.
+pub(crate) fn decode_content(
+    headers: &reqwest::header::HeaderMap,
+    body: Vec<u8>,
+) -> std::io::Result<Vec<u8>> {
+    use std::io::Read;
+    let encodings: Vec<String> = headers
+        .get_all(reqwest::header::CONTENT_ENCODING)
+        .iter()
+        .flat_map(|value| {
+            String::from_utf8_lossy(value.as_bytes())
+                .split(',')
+                .map(|encoding| encoding.trim().to_owned())
+                .collect::<Vec<_>>()
+        })
+        .collect();
+    let mut body = body;
+    for encoding in encodings.iter().rev() {
+        if body.is_empty() {
+            break;
+        }
+        let mut decoded = Vec::new();
+        match encoding.as_str() {
+            "gzip" => {
+                flate2::read::GzDecoder::new(body.as_slice()).read_to_end(&mut decoded)?;
+            }
+            "deflate" => {
+                if flate2::read::DeflateDecoder::new(body.as_slice())
+                    .read_to_end(&mut decoded)
+                    .is_err()
+                {
+                    decoded.clear();
+                    flate2::read::ZlibDecoder::new(body.as_slice()).read_to_end(&mut decoded)?;
+                }
+            }
+            _ => continue,
+        }
+        body = decoded;
+    }
+    Ok(body)
+}
+
+/// `_guess_encoding_from_content(content_type, webpage_bytes)`: the
+/// Content-Type charset, else a `<meta charset>` in the first 1024 bytes,
+/// else UTF-16 after its little-endian BOM, else UTF-8.
+fn guess_encoding(content_type: &str, body: &[u8]) -> String {
+    static CONTENT_TYPE: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"^[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+\s*;\s*charset=(.+)").unwrap()
+    });
+    static META: std::sync::LazyLock<regex::bytes::Regex> = std::sync::LazyLock::new(|| {
+        regex::bytes::Regex::new(r#"(?-u)<meta[^>]+charset=['"]?([^'")]+)[ /'">]"#).unwrap()
+    });
+    if let Some(found) = CONTENT_TYPE.captures(content_type) {
+        return found[1].to_owned();
+    }
+    if let Some(found) = META.captures(&body[..body.len().min(1024)]) {
+        return String::from_utf8_lossy(&found[1]).into_owned();
+    }
+    if body.starts_with(b"\xff\xfe") {
+        return "utf-16".into();
+    }
+    "utf-8".into()
+}
+
+/// `__decode_webpage`: the body decoded with its guessed encoding, invalid
+/// sequences replaced; unknown encodings (`LookupError`) fall back to UTF-8.
+/// Encodings are WHATWG labels, so `latin-1`/`iso-8859-1` decode as
+/// windows-1252 (which differs from Python only in C1 control characters).
+pub(crate) fn decode_webpage(body: &[u8], headers: &reqwest::header::HeaderMap) -> String {
+    let content_type = headers
+        .get(reqwest::header::CONTENT_TYPE)
+        .map(|value| String::from_utf8_lossy(value.as_bytes()).into_owned())
+        .unwrap_or_default();
+    let label = guess_encoding(&content_type, body).to_ascii_lowercase();
+    match label.as_str() {
+        // Python's `utf-16` reads either BOM (little-endian without one).
+        "utf-16" | "utf16" => return encoding_rs::UTF_16LE.decode(body).0.into_owned(),
+        "utf-8" | "utf8" => {}
+        _ => {
+            if let Some(encoding) = encoding_rs::Encoding::for_label(label.as_bytes())
+                && encoding != encoding_rs::UTF_8
+            {
+                return encoding.decode_without_bom_handling(body).0.into_owned();
+            }
+        }
+    }
+    String::from_utf8_lossy(body).into_owned()
 }
 
 /// Upstream `_download_xml(url, video_id)`: `[EXTRACTOR] ID: Downloading
@@ -797,6 +956,7 @@ pub(crate) fn download_xml_note(
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
+    let body = decode_content(response.headers(), body).map_err(crate::Error::ExtractionRead)?;
     let text = String::from_utf8(body).map_err(|_| {
         crate::Error::Reported(format!(
             "[{extractor}] {id}: Failed to parse XML (not UTF-8)"
@@ -867,7 +1027,7 @@ pub(crate) fn search_json_with(
     let candidate = &trimmed[..=end];
     let text = transform(candidate);
     Some(
-        serde_json::Deserializer::from_str(&text)
+        serde_json::Deserializer::from_str(&crate::json::replace_lone_surrogates(&text))
             .into_iter::<serde_json::Value>()
             .next()
             .and_then(std::result::Result::ok),
@@ -911,6 +1071,9 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || instagram::ios_suitable(url)
+        || (url.starts_with("tco:") && twitter::shortener_suitable(url))
+        || (url.starts_with("tiktokuser:") && tiktok::user_suitable(url))
         || youtube::redirect::user_suitable(url)
 }
 
@@ -1026,6 +1189,15 @@ pub(crate) fn no_playlist() -> bool {
     NO_PLAYLIST.load(std::sync::atomic::Ordering::Relaxed)
 }
 
+/// Upstream `getcomments` (`--write-comments`), for `extract_comments`.
+pub(crate) static GET_COMMENTS: std::sync::atomic::AtomicBool =
+    std::sync::atomic::AtomicBool::new(false);
+
+/// `self.get_param('getcomments')`.
+pub(crate) fn get_comments() -> bool {
+    GET_COMMENTS.load(std::sync::atomic::Ordering::Relaxed)
+}
+
 /// Upstream `writesubtitles or listsubtitles` (`InfoExtractor.extract_subtitles`).
 pub(crate) static SUBTITLES_REQUESTED: std::sync::atomic::AtomicBool =
     std::sync::atomic::AtomicBool::new(false);
@@ -1056,5 +1228,49 @@ pub(crate) fn proto_relative(url: &str) -> String {
     match url.strip_prefix("//") {
         Some(rest) => format!("https://{rest}"),
         None => url.to_owned(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use reqwest::header::{CONTENT_ENCODING, CONTENT_TYPE, HeaderMap, HeaderValue};
+
+    fn headers(pairs: &[(reqwest::header::HeaderName, &'static str)]) -> HeaderMap {
+        let mut map = HeaderMap::new();
+        for (name, value) in pairs {
+            map.append(name, HeaderValue::from_static(value));
+        }
+        map
+    }
+
+    #[test]
+    fn pages_decode_with_upstreams_guessed_encoding() {
+        // "Привет" in windows-1251, as VK serves its al_video responses.
+        let cp1251 = b"{\"t\": \"\xcf\xf0\xe8\xe2\xe5\xf2\"}";
+        let typed = headers(&[(CONTENT_TYPE, "application/json; charset=windows-1251")]);
+        assert_eq!(decode_webpage(cp1251, &typed), "{\"t\": \"Привет\"}");
+        let meta = b"<meta charset=\"windows-1251\"><p>\xcf\xf0\xe8\xe2\xe5\xf2</p>";
+        assert!(decode_webpage(meta, &HeaderMap::new()).ends_with("<p>Привет</p>"));
+        // UTF-16 after its BOM; unknown encodings and invalid bytes as UTF-8.
+        let utf16 = [0xff, 0xfe, b'h', 0, b'i', 0];
+        assert_eq!(decode_webpage(&utf16, &HeaderMap::new()), "hi");
+        let unknown = headers(&[(CONTENT_TYPE, "text/html; charset=x-unknown")]);
+        assert_eq!(decode_webpage(b"ok \xff", &unknown), "ok \u{FFFD}");
+    }
+
+    #[test]
+    fn compressed_bodies_decode_in_reverse_encoding_order() {
+        use std::io::Write;
+        let mut gzip = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::fast());
+        gzip.write_all(b"payload").unwrap();
+        let gzip = gzip.finish().unwrap();
+        let mut both = flate2::write::ZlibEncoder::new(Vec::new(), flate2::Compression::fast());
+        both.write_all(&gzip).unwrap();
+        let both = both.finish().unwrap();
+        let map = headers(&[(CONTENT_ENCODING, "gzip, deflate")]);
+        assert_eq!(decode_content(&map, both).unwrap(), b"payload");
+        let map = headers(&[(CONTENT_ENCODING, "br")]);
+        assert_eq!(decode_content(&map, b"raw".to_vec()).unwrap(), b"raw");
     }
 }

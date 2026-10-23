@@ -144,6 +144,46 @@
     "Content-Type": "application/json"
    },
    "body": "{}"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Interstit01&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "interstitial.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "Interstit01"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "interstitial-visionos.json"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Interstit02&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "interstitial2.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "request_body": [
+    "Interstit02"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "interstitial2-visionos.json"
   }
  ]
 }

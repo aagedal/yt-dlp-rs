@@ -4,5 +4,9 @@
  {"url": "https://ok.ru/video/777", "args": ["--print", "%(id)s|%(extractor)s"]},
  {"url": "https://ok.ru/video/888", "args": ["--print", "id"]},
  {"url": "https://ok.ru/video/999", "args": ["--print", "id"]},
- {"url": "https://ok.ru/video/20079905452", "args": ["--no-progress", "-f", "hd", "-o", "%(id)s.%(ext)s"]}
+ {"url": "https://ok.ru/video/20079905452", "args": ["--no-progress", "-f", "hd", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://ok.ru/video/20079905453", "args": ["-J"]},
+ {"url": "https://ok.ru/video/20079905453", "args": ["-F"]},
+ {"url": "https://ok.ru/video/20079905453", "args": ["--print", "%(id)s|%(duration)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://ok.ru/video/20079905453", "args": ["--no-progress", "-f", "webm-6", "-o", "%(id)s.%(ext)s"]}
 ]

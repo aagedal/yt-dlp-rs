@@ -1,6 +1,6 @@
 name: Release
 # A `v*` tag builds release binaries and publishes a GitHub release; tags
-# with a pre-release suffix (`v0.2.0-alpha.1`) publish a pre-release.
+# with a pre-release suffix (`v0.3.0-beta.1`) publish a pre-release.
 on:
   push:
     tags: ['v*']

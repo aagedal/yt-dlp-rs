@@ -1,6 +1,6 @@
 # Saved cookie interoperability references
 
-Official pinned yt-dlp: `897341241f2bfb2439fe0367f4c7c9ccd29a3828`.
+Official pinned yt-dlp: `6ccd977303412151ee23352c6257dd658ffc1987`.
 Run `python3 tools/compare_cookies.py --upstream /path/to/pinned/yt-dlp`.
 The worker uses actual `YoutubeDLCookieJar.load`, `save`, `get_cookie_header`
 and inherited `extract_cookies` with an email Message and urllib Request.

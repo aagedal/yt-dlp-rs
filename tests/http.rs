@@ -122,7 +122,7 @@ impl Server {
                 if !request.windows(4).any(|w| w == b"\r\n\r\n") {
                     continue;
                 }
-                let request = String::from_utf8_lossy(&request);
+                let request = lower_header_names(&String::from_utf8_lossy(&request));
                 recorded.lock().unwrap().push(request.to_string());
                 let path = request.split_whitespace().nth(1).unwrap_or("/");
                 let changing_count = recorded
@@ -432,9 +432,6 @@ fn html5_rejects_unsupported_sources() {
         "/manifest.html",
         "/manifest-hint.html",
         "/source-is-html.html",
-        "/latin.html",
-        "/compressed.html",
-        "/invalid-utf8.html",
         "/manifest-source.html",
     ] {
         assert!(
@@ -445,7 +442,14 @@ fn html5_rejects_unsupported_sources() {
             "{path}"
         );
     }
-    for path in ["/empty.html", "/fake.html"] {
+    // Pages decode like upstream's `_download_webpage` (Content-Encoding,
+    // charset, invalid bytes replaced), so these are pages without media.
+    for path in [
+        "/empty.html",
+        "/fake.html",
+        "/compressed.html",
+        "/invalid-utf8.html",
+    ] {
         assert!(
             matches!(
                 dl.extract_info(&server.url(path)),
@@ -454,6 +458,8 @@ fn html5_rejects_unsupported_sources() {
             "{path}"
         );
     }
+    let latin = dl.extract_info(&server.url("/latin.html")).unwrap();
+    assert_eq!(latin.url.as_str(), server.url("/clip.mp4"));
     assert!(matches!(
         dl.extract_info(&server.url("/blob.html")),
         Err(Error::UnsupportedScheme(_))
@@ -1583,4 +1589,17 @@ fn output_template_dash_streams_media_to_stdout_like_upstream() {
         .unwrap();
     assert!(output.stdout.is_empty());
     assert!(String::from_utf8_lossy(&output.stderr).contains("\"id\": \"clip\""));
+}
+
+/// The request with lowercase header names (the client sends `Title-Case`).
+fn lower_header_names(request: &str) -> String {
+    request
+        .split("\r\n")
+        .enumerate()
+        .map(|(index, line)| match line.split_once(": ") {
+            Some((name, value)) if index > 0 => format!("{}: {value}", name.to_ascii_lowercase()),
+            _ => line.to_owned(),
+        })
+        .collect::<Vec<_>>()
+        .join("\r\n")
 }

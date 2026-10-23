@@ -1,5 +1,5 @@
 {
- "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
  "cases": [
   {
    "url": "https://www.twitch.tv/videos/1234567890?t=5m10s",
@@ -102,6 +102,337 @@
    "files": {
     "396245304.mp4": 17
    }
+  },
+  {
+   "url": "https://www.twitch.tv/videos/2222222222",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitch:vod] 2222222222: You must be logged into an account that has access to this subscriber-only content. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (twitch) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/videos/3333333333",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitch:vod] 3333333333: Failed to download m3u8 information: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/monstercat",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(description)s|%(uploader)s|%(uploader_id)s|%(timestamp)s|%(upload_date)s|%(view_count)s|%(is_live)s|%(was_live)s|%(live_status)s|%(thumbnail)s|%(thumbnails)s|%(format_id)s|%(ext)s|%(protocol)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "40500071752|monstercat|Non Stop Music - Monstercat Radio|Monstercat|monstercat|1677107190|20230222|1234|True|False|is_live|https://static-cdn.jtvnw.net/previews-ttv/live_user_monstercat-0x0.jpg|[{'url': 'https://static-cdn.jtvnw.net/previews-ttv/live_user_monstercat-440x248.jpg', 'id': '0'}, {'url': 'https://static-cdn.jtvnw.net/previews-ttv/live_user_monstercat-0x0.jpg', 'preference': 1, 'id': '1'}]|1080p60__source_|mp4|m3u8_native|twitch:stream|TwitchStream|https://www.twitch.tv/monstercat"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.twitch.tv/?channel=MonsterCat",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[twitch:stream] Extracting URL: https://player.twitch.tv/?channel=MonsterCat",
+    "[twitch:stream] monstercat: Downloading stream GraphQL",
+    "[twitch:stream] monstercat: Downloading stream access token GraphQL",
+    "[twitch:stream] monstercat: Downloading m3u8 information",
+    "[info] Available formats for 40500071752:",
+    "ID               EXT RESOLUTION FPS |   TBR PROTO | VCODEC      ACODEC     ABR",
+    "------------------------------------------------------------------------------",
+    "audio_only       mp4 audio only     |  160k m3u8  | audio only  mp4a.40.2 160k",
+    "720p             mp4 1280x720    30 | 2373k m3u8  | avc1.4D401F mp4a.40.2",
+    "1080p60__source_ mp4 1920x1080   60 | 8000k m3u8  | avc1.64002A mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.twitch.tv/?channel=MonsterCat&parent=example.com",
+   "args": [
+    "-F"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[twitch:stream] Extracting URL: https://player.twitch.tv/?channel=MonsterCat&parent=example.com",
+    "[twitch:stream] monstercat&parent=example.com: Downloading stream GraphQL"
+   ],
+   "stderr": [
+    "ERROR: [twitch:stream] MonsterCat&parent=example.com: monstercat&parent=example.com does not exist"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://m.twitch.tv/rerunchan",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(fulltitle)s|%(description)s|%(uploader)s|%(thumbnails)s|%(is_live)s|%(live_status)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "40500000001|rerunchan|RerunChan (rerun)|NA|RerunChan|NA|False|NA|1080p60__source_"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/offlinechan",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitch:stream] offlinechan: The channel is not currently live"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/nosuchuser",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitch:stream] nosuchuser: nosuchuser does not exist"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/geochan",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [twitch:stream] geochan: content_geoblocked: Content is geoblocked"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/monstercat",
+   "args": [
+    "--live-from-start",
+    "--print",
+    "%(id)s|%(title)s|%(duration)s|%(is_live)s|%(was_live)s|%(format_id)s|%(webpage_url)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "v1234567890|Big stream|3600|False|True|1080p60|https://www.twitch.tv/videos/1234567890|twitch:vod"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/monstercat",
+   "args": [
+    "--live-from-start",
+    "--print",
+    "%(live_status)s|%(formats.0.format_id)s|%(formats.0.is_from_start)s|%(formats.3.format_id)s|%(formats.3.is_from_start)s|%(formats.3.downloader_options)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "was_live|sb1|NA|720p60|True|{'ffmpeg_args': ['-live_start_index', '0']}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/rerunchan",
+   "args": [
+    "--live-from-start",
+    "--print",
+    "%(id)s|%(display_id)s|%(is_live)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "40500000001|rerunchan|False|1080p60__source_"
+   ],
+   "stderr": [
+    "WARNING: [twitch:stream] rerunchan: Unable to extract the VOD associated with this livestream"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/spamfish/videos?filter=all",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"spamfish\", \"title\": \"spamfish - All Videos sorted by Date\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url_transparent\", \"ie_key\": \"TwitchVod\", \"id\": \"v1234567890\", \"url\": \"https://www.twitch.tv/videos/1234567890\", \"title\": \"Big stream\", \"thumbnail\": \"https://static-cdn.jtvnw.net/cf_vods/abc/thumb/thumb0-320x180.jpg\", \"duration\": 3600.0, \"view_count\": 4242, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"ie_key\": \"TwitchVod\", \"id\": \"v1234567891\", \"url\": \"https://www.twitch.tv/videos/1234567891\", \"title\": \"Second stream\", \"thumbnail\": \"https://static-cdn.jtvnw.net/cf_vods/def/thumb/thumb0-320x180.jpg\", \"duration\": 120.0, \"view_count\": 17, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"ie_key\": \"TwitchVod\", \"id\": \"v1234567892\", \"url\": \"https://www.twitch.tv/videos/1234567892\", \"title\": null, \"thumbnail\": null, \"duration\": null, \"view_count\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.twitch.tv/spamfish/videos?filter=all\", \"original_url\": \"https://www.twitch.tv/spamfish/videos?filter=all\", \"webpage_url_basename\": \"videos\", \"webpage_url_domain\": \"twitch.tv\", \"extractor\": \"twitch:videos\", \"extractor_key\": \"TwitchVideos\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/spamfish/videos?filter=archives&sort=views",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(view_count)s|%(url)s|%(ie_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "spamfish|spamfish - Past Broadcasts sorted by Popular|1|v1234567890|Big stream|3600.0|4242|https://www.twitch.tv/videos/1234567890|TwitchVod",
+    "spamfish|spamfish - Past Broadcasts sorted by Popular|2|v1234567891|Second stream|120.0|17|https://www.twitch.tv/videos/1234567891|TwitchVod",
+    "spamfish|spamfish - Past Broadcasts sorted by Popular|3|v1234567892|NA|NA|NA|https://www.twitch.tv/videos/1234567892|TwitchVod"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://m.twitch.tv/spamfish/profile",
+   "args": [
+    "--playlist-items",
+    "1",
+    "--print",
+    "%(id)s|%(title)s|%(duration)s|%(thumbnail)s|%(view_count)s|%(playlist_id)s|%(playlist_title)s|%(extractor)s|%(webpage_url)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "v1234567890|Big stream|3600.0|https://static-cdn.jtvnw.net/cf_vods/abc/thumb/thumb0-320x180.jpg|4242|spamfish|spamfish - All Videos sorted by Date|twitch:vod|https://www.twitch.tv/videos/1234567890|1080p60"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/spamfish/videos/all",
+   "args": [
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[twitch:videos] Extracting URL: https://www.twitch.tv/spamfish/videos/all",
+    "[download] Downloading playlist: spamfish - All Videos sorted by Date",
+    "[twitch:videos] spamfish: Downloading Videos GraphQL page 1",
+    "[twitch:videos] spamfish: Downloading Videos GraphQL page 2",
+    "[twitch:videos] Playlist spamfish - All Videos sorted by Date: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] Downloading item 2 of 3",
+    "[download] Downloading item 3 of 3",
+    "[download] Finished downloading playlist: spamfish - All Videos sorted by Date"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/nobody/videos",
+   "args": [
+    "--flat-playlist",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: Channel \"nobody\" not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/vanillatv/clips?filter=clips&range=all",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"vanillatv\", \"title\": \"vanillatv - Clips Top All\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url_transparent\", \"ie_key\": \"TwitchClips\", \"id\": \"396245304\", \"url\": \"https://clips.twitch.tv/FaintLightGullWholeWheat\", \"title\": \"Clip title\", \"thumbnail\": \"https://clips-media-assets2.twitch.tv/small.jpg\", \"duration\": 30.0, \"timestamp\": 1551911799, \"view_count\": 77, \"language\": \"en\", \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"ie_key\": \"TwitchClips\", \"id\": \"396245305\", \"url\": \"https://clips.twitch.tv/SecondClipSlug\", \"title\": \"Second clip\", \"thumbnail\": \"https://clips-media-assets2.twitch.tv/small2.jpg\", \"duration\": 12.5, \"timestamp\": 1551952800, \"view_count\": 5, \"language\": \"de\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.twitch.tv/vanillatv/clips?filter=clips&range=all\", \"original_url\": \"https://www.twitch.tv/vanillatv/clips?filter=clips&range=all\", \"webpage_url_basename\": \"clips\", \"webpage_url_domain\": \"twitch.tv\", \"extractor\": \"twitch:videos:clips\", \"extractor_key\": \"TwitchVideosClips\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/dota2ruhub/videos?filter=clips&range=bogus",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_title)s|%(id)s|%(duration)s|%(timestamp)s|%(language)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "dota2ruhub - Clips Top 7D|396245304|30.0|1551911799|en",
+    "dota2ruhub - Clips Top 7D|396245305|12.5|1551952800|de"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/spamfish/videos?filter=collections",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"spamfish\", \"title\": \"spamfish - Collections\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url_transparent\", \"ie_key\": \"TwitchCollection\", \"id\": \"o9zZer3IQBhTJw\", \"url\": \"https://www.twitch.tv/collections/o9zZer3IQBhTJw\", \"title\": \"Playthrough Archives\", \"thumbnail\": \"https://static-cdn.jtvnw.net/cf_vods/col/thumb-320x180.jpg\", \"duration\": 7200.0, \"timestamp\": 1577934245, \"view_count\": 900, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"ie_key\": \"TwitchCollection\", \"id\": \"AbCdEf\", \"url\": \"https://www.twitch.tv/collections/AbCdEf\", \"title\": \"Speedruns\", \"thumbnail\": null, \"duration\": 60.0, \"timestamp\": null, \"view_count\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.twitch.tv/spamfish/videos?filter=collections\", \"original_url\": \"https://www.twitch.tv/spamfish/videos?filter=collections\", \"webpage_url_basename\": \"videos\", \"webpage_url_domain\": \"twitch.tv\", \"extractor\": \"twitch:videos:collections\", \"extractor_key\": \"TwitchVideosCollections\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/collections/o9zZer3IQBhTJw",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"o9zZer3IQBhTJw\", \"title\": \"Playthrough Archives\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url_transparent\", \"ie_key\": \"TwitchVod\", \"id\": \"v1234567890\", \"url\": \"https://www.twitch.tv/videos/1234567890\", \"title\": \"Big stream\", \"thumbnail\": \"https://static-cdn.jtvnw.net/cf_vods/abc/thumb/thumb0-320x180.jpg\", \"duration\": 3600.0, \"view_count\": 4242, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url_transparent\", \"ie_key\": \"TwitchVod\", \"id\": \"v1234567891\", \"url\": \"https://www.twitch.tv/videos/1234567891\", \"title\": \"Second stream\", \"thumbnail\": null, \"duration\": 120.0, \"view_count\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.twitch.tv/collections/o9zZer3IQBhTJw\", \"original_url\": \"https://www.twitch.tv/collections/o9zZer3IQBhTJw\", \"webpage_url_basename\": \"o9zZer3IQBhTJw\", \"webpage_url_domain\": \"twitch.tv\", \"extractor\": \"twitch:collection\", \"extractor_key\": \"TwitchCollection\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/videos/4444444444",
+   "args": [
+    "--print",
+    "%(id)s|%(duration)s|%(is_live)s|%(was_live)s|%(live_status)s|%(thumbnails)s|%(format_id)s|%(protocol)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "v4444444444|5400|True|True|is_live|NA|1080p60|m3u8_native"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/videos/4444444444",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[twitch:vod] Extracting URL: https://www.twitch.tv/videos/4444444444",
+    "[twitch:vod] 4444444444: Downloading stream metadata GraphQL",
+    "[twitch:vod] 4444444444: Downloading video access token GraphQL",
+    "[twitch:vod] 4444444444: Downloading m3u8 information",
+    "[info] Available formats for v4444444444:",
+    "ID         EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC      ACODEC     ABR MORE INFO",
+    "---------------------------------------------------------------------------------------------",
+    "Audio_Only mp4 audio only     | ~103.00MiB  160k m3u8  | audio only  mp4a.40.2 160k",
+    "720p60     mp4 1280x720    60 | ~  1.89GiB 3000k m3u8  | avc1.4D401F mp4a.40.2",
+    "1080p60    mp4 1920x1080   60 | ~  3.77GiB 6000k m3u8  | avc1.64002A mp4a.40.2      Source"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

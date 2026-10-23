@@ -2,13 +2,41 @@
 
 An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 It downloads direct HTTP media and a limited subset of HTML5 media pages, with
-a foundation for porting extractors and tracking upstream changes. This is an
-early prototype. YouTube (videos, live streams, playlists, mixes, channels,
-search, hashtags and YouTube Music URLs), Reddit, X/Twitter, TikTok, Instagram
-and Facebook are extracted like pinned upstream on saved fixtures. YouTube was
+a foundation for porting extractors and tracking upstream changes. This is a
+beta. YouTube (videos, live streams, playlists, mixes, channels,
+search, hashtags and YouTube Music URLs), Reddit, X/Twitter, TikTok, Douyin,
+Instagram and Facebook are extracted like pinned upstream on saved fixtures. YouTube was
 also spot-checked against the live site and pinned upstream on 2026-10-22
-(downloads, `-F`/`-j` output and playlist/channel listings matched); the other
-sites have not been verified live.
+(downloads, `-F`/`-j` output and playlist/channel listings matched).
+
+### Social networks (0.3.0 beta)
+
+The largest social networks that upstream yt-dlp supports are ported against
+release 2026.10.21 and were compared live with it on 2026-10-23 (same
+formats, metadata or the same error). WhatsApp, WeChat, Messenger and
+Kuaishou have no upstream extractor.
+
+| Network | Covered | Notes |
+| --- | --- | --- |
+| YouTube | videos, live, Shorts, playlists, channels, search, Music | PO tokens and a JS runtime as upstream |
+| Facebook | videos, reels, watch parties, ad library, redirects | comments not supported |
+| Instagram | posts, reels, carousels, stories, highlights, tags, users | stories and most listings need `--cookies` |
+| TikTok | videos, subtitles, users, collections, live | sound/effect/tag lists (broken upstream) not ported |
+| Douyin | videos | needs fresh browser cookies, as upstream |
+| X/Twitter | posts, cards, broadcasts, Spaces, `t.co`, Periscope | Periscope RTMP unsupported |
+| Telegram | public post embeds | posts without their own video are an error |
+| Snapchat | Spotlight | |
+| Weibo | posts and `weibo.com/tv` videos | user pages not ported |
+| Pinterest | pins | boards and collections not ported |
+| Reddit | posts | some posts need cookies, as upstream |
+| LinkedIn | posts | learning courses not ported |
+| XiaoHongShu (RedNote) | video notes | |
+| Bilibili | videos | bangumi, spaces and audio not ported |
+| VK | videos, clips, wall posts, user videos, VK Play | VK's JS challenge is unsupported |
+
+Tumblr, Twitch (VODs, clips, live, channel lists), Bluesky and Kick are
+supported too. Sites that need browser impersonation upstream (for example
+Dailymotion) are limited: impersonation is not available.
 
 Pre-release binaries for Linux, macOS and Windows are attached to the
 [GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases): pushing a
@@ -105,14 +133,25 @@ Supported today:
   Fathom shares, Maariv players (and their embeds), Harpodeon films,
   Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
   posts (hosted videos, text-post videos and followed links), X/Twitter posts
-  (GraphQL with a guest token; videos, multi-video playlists, cards), TikTok
-  videos (webpage data, the page's JS challenge, short links), Instagram
-  posts and reels (logged out; carousels as playlists), Facebook videos
-  (relay data with DASH, progressive URLs and captions), Vimeo player and
-  clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
-  Bandcamp tracks, Rumble videos, Kick VODs, clips and live channels, Bluesky
+  (GraphQL, legacy or syndication APIs; videos, multi-video playlists, cards
+  including VMAP), X broadcasts and live events, Spaces, `t.co` links,
+  Amplify videos and Periscope broadcasts, TikTok
+  videos (webpage data, the page's JS challenge, subtitles, slideshow audio,
+  short links), user and collection lists, livestreams, Douyin videos (web
+  detail API with browser cookies), Instagram
+  posts and reels (logged out, or logged in with cookies; carousels as
+  playlists, inline DASH), stories, highlights, tag and user pages and
+  `instagram://` links, Facebook videos
+  (relay data with DASH, progressive URLs and captions; server JS, pagelet
+  and tahoe player pages; watch parties; JSON-LD metadata), Facebook ad
+  library ads and `flx/warn` redirects, Vimeo player and
+  clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs, clips, live streams,
+  channel video/clip/collection lists and collections,
+  Bandcamp tracks, Rumble videos, Kick VODs, clips, live channels and channel video/clip lists, Bluesky
   posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,
-  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, Niconico videos, Weibo posts, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, OK.ru videos, plus
+  Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, wall posts, user video lists and VK Play Live streams, Niconico videos, Weibo posts, XiaoHongShu (RedNote) video notes, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, OK.ru videos,
+  Telegram public posts (multi-video posts as playlists), Snapchat Spotlight
+  snaps, plus
   either site's iframe embeds on other pages (one is followed; several form a
   playlist), compared with pinned upstream output on saved responses.
 - YouTube single-video watch, short-link, Shorts, embed and live URL shapes,
@@ -315,7 +354,7 @@ Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
 
 Direct extraction makes a streaming GET and inspects headers without consuming
-the body. HTML5 extraction reads at most 2 MiB of uncompressed UTF-8/ASCII HTML,
+the body. HTML5 extraction reads at most 2 MiB of HTML (decoded like upstream),
 then probes every declared media source. Extraction must succeed for every entry.
 All entries remaining after archive filtering must select successfully before any
 media is downloaded or JSON emitted. JavaScript

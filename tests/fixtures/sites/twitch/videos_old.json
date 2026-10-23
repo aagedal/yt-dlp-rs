@@ -1,0 +1,1 @@
+[{"data": {"user": {"id": "555", "videos": {"edges": [{"__typename": "VideoEdge", "cursor": "MQ", "node": {"__typename": "Video", "id": "1234567890", "title": "Old stream", "publishedAt": "2023-05-01T12:00:00Z"}}]}}}}]

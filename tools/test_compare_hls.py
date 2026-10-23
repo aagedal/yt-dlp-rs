@@ -1,106 +1,87 @@
 import contextlib
-import copy
 import io
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
 from unittest import mock
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
 
-from compare_hls import PINNED_UPSTREAM, compare, main, normalize, verify_upstream
+from compare_hls import (PINNED_UPSTREAM, compare, main, manifest_server, normalize_requests,
+                         parse_range, verify_upstream)
 
-ORIGIN = "http://127.0.0.1:43210"
+MANIFEST = "/hls/aes-ts/index.m3u8"
 
 
 class HlsComparisonTests(unittest.TestCase):
     def setUp(self):
-        self.native = [
-            {"url": ORIGIN + "/init.mp4", "byte_range": {"offset": 0, "length": 10}},
-            {"url": ORIGIN + "/combined.mp4?x=1#part", "byte_range": {"offset": 10, "length": 20}},
-            {"url": ORIGIN + "/whole.ts"},
-        ]
-        self.upstream = [
-            {"url": ORIGIN + "/init.mp4", "byte_range": {"start": 0, "end": 10}, "frag_index": 1},
-            {"url": ORIGIN + "/combined.mp4?x=1#part", "byte_range": {"start": 10, "end": 30}},
-            {"url": ORIGIN + "/whole.ts", "byte_range": {}},
+        self.requests = [
+            (MANIFEST, None),
+            ("/hls/aes-ts/segment-0.ts?part=0", None),
+            ("/hls/aes-keys/0.key?fixture=1", None),
+            ("/hls/range/combined.mp4", "bytes=10-29"),
+            ("/hls/aes-keys/1.key", None),
         ]
 
-    def test_actual_exclusive_ranges_map_without_mutating_input(self):
-        before = copy.deepcopy((self.native, self.upstream))
-        normalized = compare(self.native, self.upstream, ORIGIN)
-        self.assertEqual(normalized[0], {"url": "{{ORIGIN}}/init.mp4",
-                                         "byte_range": {"offset": 0, "length": 10}, "encryption": None})
-        self.assertEqual(normalized[1]["url"], "{{ORIGIN}}/combined.mp4?x=1#part")
-        self.assertIsNone(normalized[2]["byte_range"])
-        self.assertEqual((self.native, self.upstream), before)
+    def test_playlist_excluded_and_keys_split_from_fragments_in_order(self):
+        result = normalize_requests(self.requests + [(MANIFEST, None)], MANIFEST)
+        self.assertEqual(result, {
+            "fragments": [["/hls/aes-ts/segment-0.ts?part=0", None],
+                          ["/hls/range/combined.mp4", "bytes=10-29"]],
+            "keys": [["/hls/aes-keys/0.key?fixture=1", None], ["/hls/aes-keys/1.key", None]]})
+        with self.assertRaisesRegex(ValueError, "no fragment requests"):
+            normalize_requests([(MANIFEST, None)], MANIFEST)
 
-    def test_order_count_range_and_url_are_significant(self):
-        variants = [self.native[::-1], self.native[:-1]]
-        for field, value in (("url", ORIGIN + "/changed.mp4"),
-                             ("byte_range", {"offset": 10, "length": 21}),
-                             ("byte_range", {"offset": 11, "length": 20})):
-            changed = copy.deepcopy(self.native)
-            changed[1][field] = value
-            variants.append(changed)
+    def test_key_fetch_timing_is_not_compared_but_key_order_is(self):
+        native = [self.requests[2], self.requests[1], self.requests[3], self.requests[4]]
+        self.assertEqual(compare(native, self.requests, b"x", b"x", MANIFEST),
+                         normalize_requests(self.requests, MANIFEST))
+        swapped = [self.requests[4], self.requests[1], self.requests[3], self.requests[2]]
+        with self.assertRaisesRegex(ValueError, "fragment request mismatch"):
+            compare(swapped, self.requests, b"x", b"x", MANIFEST)
+
+    def test_order_count_query_and_range_are_significant(self):
+        variants = [
+            [self.requests[0], self.requests[3], self.requests[2], self.requests[1], self.requests[4]],
+            self.requests[:-2] + self.requests[-1:],
+            [self.requests[0], ("/hls/aes-ts/segment-0.ts", None)] + self.requests[2:],
+            self.requests[:3] + [("/hls/range/combined.mp4", "bytes=10-30")] + self.requests[4:],
+            self.requests[:3] + [("/hls/range/combined.mp4", None)] + self.requests[4:],
+            self.requests + [("/hls/aes-keys/1.key", None)],
+        ]
         for changed in variants:
-            with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, "fragment plan mismatch"):
-                compare(changed, self.upstream, ORIGIN)
+            with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, "fragment request mismatch"):
+                compare(changed, self.requests, b"x", b"x", MANIFEST)
 
-    def test_only_exact_origin_is_normalized(self):
-        for url in ("http://127.0.0.1:432100/init.mp4", "https://127.0.0.1:43210/init.mp4",
-                    "http://example.invalid/init.mp4"):
-            self.assertEqual(normalize([{"url": url}], ORIGIN)[0]["url"], url)
+    def test_assembled_bytes_must_be_identical_and_nonempty(self):
+        for native, upstream in ((b"abc", b"abd"), (b"abc", b"abcd"), (b"", b"")):
+            with self.subTest(native=native), self.assertRaisesRegex(ValueError, "assembled output mismatch"):
+                compare(self.requests, self.requests, native, upstream, MANIFEST)
 
-    def test_missing_fragment_url_is_error(self):
-        with self.assertRaises(KeyError):
-            compare([{}], [], ORIGIN)
+    def test_range_parsing_is_inclusive_and_bounded(self):
+        self.assertEqual(parse_range("bytes=10-29", 100), (10, 30))
+        self.assertEqual(parse_range("bytes=10-", 100), (10, 100))
+        for header in ("bytes=10-100", "bytes=30-10", "items=0-1"):
+            with self.subTest(header=header), self.assertRaises(ValueError):
+                parse_range(header, 100)
 
-    def test_aes_explicit_and_sequence_ivs_and_method_none(self):
-        explicit = [0] * 15 + [171]
-        implicit = list((258).to_bytes(16, "big"))
-        native = [
-            {"url": ORIGIN + "/first.ts", "encryption": {
-                "key_url": ORIGIN + "/keys/first.key?fixture=1", "iv": implicit}},
-            {"url": ORIGIN + "/second.ts", "encryption": {
-                "key_url": ORIGIN + "/keys/rotated.key", "iv": explicit}},
-            {"url": ORIGIN + "/plain.ts"},
-            {"url": ORIGIN + "/zero.ts", "encryption": {
-                "key_url": ORIGIN + "/keys/rotated.key", "iv": [0] * 16}},
-        ]
-        upstream = [
-            {"url": ORIGIN + "/first.ts", "media_sequence": 258,
-             "decrypt_info": {"METHOD": "AES-128", "URI": ORIGIN + "/keys/first.key?fixture=1"}},
-            {"url": ORIGIN + "/second.ts", "media_sequence": 259,
-             "decrypt_info": {"METHOD": "AES-128", "URI": ORIGIN + "/keys/rotated.key", "IV": explicit}},
-            {"url": ORIGIN + "/plain.ts", "decrypt_info": {"METHOD": "NONE"}},
-            {"url": ORIGIN + "/zero.ts", "media_sequence": 261,
-             "decrypt_info": {"METHOD": "AES-128", "URI": ORIGIN + "/keys/rotated.key", "IV": [0] * 16}},
-        ]
-        original = copy.deepcopy((native, upstream))
-        result = compare(native, upstream, ORIGIN)
-        self.assertEqual(result[0]["encryption"], {
-            "key_url": "{{ORIGIN}}/keys/first.key?fixture=1", "iv": implicit})
-        self.assertEqual(result[1]["encryption"]["iv"], explicit)
-        self.assertIsNone(result[2]["encryption"])
-        self.assertEqual(result[3]["encryption"]["iv"], [0] * 16)
-        self.assertEqual((native, upstream), original)
-        for field, value in (("key_url", ORIGIN + "/wrong.key"), ("iv", [0] * 16)):
-            changed = copy.deepcopy(native)
-            changed[0]["encryption"][field] = value
-            with self.subTest(field=field), self.assertRaisesRegex(ValueError, "fragment plan mismatch"):
-                compare(changed, upstream, ORIGIN)
-
-    def test_encryption_key_origin_is_exact_and_invalid_iv_is_rejected(self):
-        url = "https://127.0.0.1:43210/key"
-        encrypted = {"url": ORIGIN + "/first.ts", "encryption": {"key_url": url, "iv": [0] * 16}}
-        self.assertEqual(normalize([encrypted], ORIGIN)[0]["encryption"]["key_url"], url)
-        for iv in ([0] * 15, [256] * 16, [True] * 16, "00" * 16):
-            encrypted["encryption"]["iv"] = iv
-            with self.subTest(iv=iv), self.assertRaisesRegex(ValueError, "invalid AES-128 IV"):
-                normalize([encrypted], ORIGIN)
-        with self.assertRaisesRegex(ValueError, "unexpected upstream encryption"):
-            normalize([{"url": ORIGIN + "/first.ts", "decrypt_info": {"METHOD": "SAMPLE-AES"}}],
-                      ORIGIN, upstream=True)
+    def test_server_serves_files_ignoring_query_honours_ranges_and_logs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            blob = Path(directory) / "blob.bin"
+            blob.write_bytes(bytes(range(32)))
+            with manifest_server({"/a.m3u8": "#EXTM3U\n"}, {"/hls/blob.bin": blob}) as (origin, requests):
+                with urlopen(Request(origin + "/hls/blob.bin?q=1", headers={"Range": "bytes=4-7"})) as response:
+                    self.assertEqual(response.status, 206)
+                    self.assertEqual(response.read(), bytes(range(4, 8)))
+                with urlopen(origin + "/a.m3u8") as response:
+                    self.assertEqual(response.read(), b"#EXTM3U\n")
+                with self.assertRaises(HTTPError) as missing:
+                    urlopen(origin + "/hls/missing.bin")
+                missing.exception.close()
+                self.assertEqual(missing.exception.code, 404)
+            self.assertEqual(requests, [("/hls/blob.bin?q=1", "bytes=4-7"), ("/a.m3u8", None),
+                                        ("/hls/missing.bin", None)])
 
     def test_requires_pinned_checkout(self):
         with tempfile.TemporaryDirectory() as directory:

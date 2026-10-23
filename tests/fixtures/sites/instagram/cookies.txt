@@ -1,0 +1,4 @@
+# Netscape HTTP Cookie File
+
+.instagram.com	TRUE	/	TRUE	2000000000	sessionid	2815873%3Afixture%3A1
+.instagram.com	TRUE	/	TRUE	2000000000	csrftoken	CSRFLOGGEDIN

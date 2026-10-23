@@ -3,7 +3,9 @@ use crate::{ByteRange, Error, Fragment, HlsAes128, Result, StreamKind};
 use std::collections::{BTreeMap, BTreeSet};
 use url::Url;
 
-const MAX_FRAGMENTS: usize = 10_000;
+/// Fragments per media playlist (upstream has no bound; long Twitch VODs and
+/// day-long streams have tens of thousands).
+const MAX_FRAGMENTS: usize = 500_000;
 const MAX_VARIANTS: usize = 256;
 
 #[derive(Debug)]
@@ -593,6 +595,9 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         } else if line == "#EXT-X-INDEPENDENT-SEGMENTS"
             || line.starts_with("#EXT-X-PROGRAM-DATE-TIME:")
             || line.starts_with("#EXT-X-MEDIA:")
+            // Trick-play renditions (TED); upstream only reads `#EXT-X-STREAM-INF`
+            // variants, so these never become formats.
+            || line.starts_with("#EXT-X-I-FRAME-STREAM-INF:")
             // Twitch's informational vendor tags (`#EXT-X-TWITCH-INFO`,
             // `-ELAPSED-SECS`, `-TOTAL-SECS`), which upstream ignores.
             || line.starts_with("#EXT-X-TWITCH-")

@@ -1,6 +1,6 @@
 # Saved batch-file reference cases
 
-Pinned official yt-dlp: `897341241f2bfb2439fe0367f4c7c9ccd29a3828`.
+Pinned official yt-dlp: `6ccd977303412151ee23352c6257dd658ffc1987`.
 
 Each case in `cases.json` has hex-encoded batch-file bytes (`batch_hex`),
 positional `urls` and the exact URL list returned by upstream `get_urls` for a

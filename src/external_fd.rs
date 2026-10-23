@@ -333,7 +333,8 @@ fn make_cmd(
                 }
                 cmd.push(file);
             }
-            if version > [7, 59].as_slice() || device {
+            // `>=` since upstream 36b92b4f1 (a `>` that skipped exactly 7.59).
+            if version >= [7, 59].as_slice() || device {
                 input = CookieInput::Stdin(params.cookies.netscape_lines()?);
             }
             for (key, value) in &headers {

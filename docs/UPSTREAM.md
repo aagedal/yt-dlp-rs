@@ -2,9 +2,11 @@
 
 Reference repository: https://github.com/yt-dlp/yt-dlp
 
-The initial source baseline is `897341241f2bfb2439fe0367f4c7c9ccd29a3828`
-(2026-10-10). Its embedded release version is `2026.08.19`; that is not the
-date of the pinned development commit. Upstream is reference material, not a
+The source baseline is release `2026.10.21`,
+`6ccd977303412151ee23352c6257dd658ffc1987`. The initial baseline was the
+development commit `897341241f2bfb2439fe0367f4c7c9ccd29a3828` (2026-10-10,
+embedded version `2026.08.19`); the commits between them are classified in
+[upstream/notes/upstream-2026.10.21.md](../upstream/notes/upstream-2026.10.21.md). Upstream is reference material, not a
 runtime dependency. The source clone is not vendored into this repository.
 
 The first slice was informed by upstream's `GenericIE` direct-response detection,

@@ -5,10 +5,7 @@ use crate::{
     Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo,
 };
 use percent_encoding::percent_decode_str;
-use reqwest::{
-    blocking::Client,
-    header::{CONTENT_ENCODING, CONTENT_TYPE},
-};
+use reqwest::{blocking::Client, header::CONTENT_TYPE};
 use scraper::{Html, Selector};
 use std::{collections::HashMap, io::Read};
 use url::Url;
@@ -620,40 +617,18 @@ impl Extractor for GenericHttp {
         {
             return Err(Error::HtmlTooLarge(MAX_HTML_BYTES));
         }
-        if response
-            .headers()
-            .get(CONTENT_ENCODING)
-            .is_some_and(|value| !value.as_bytes().eq_ignore_ascii_case(b"identity"))
-        {
-            return Err(unsupported("compressed HTML is not supported"));
-        }
-        if let Some(content_type) = response
-            .headers()
-            .get(CONTENT_TYPE)
-            .and_then(|v| v.to_str().ok())
-        {
-            for parameter in content_type.split(';').skip(1) {
-                if let Some((name, value)) = parameter.trim().split_once('=')
-                    && name.trim().eq_ignore_ascii_case("charset")
-                    && !matches!(
-                        value
-                            .trim()
-                            .trim_matches(['\'', '"'])
-                            .to_ascii_lowercase()
-                            .as_str(),
-                        "utf-8" | "utf8" | "us-ascii"
-                    )
-                {
-                    return Err(unsupported("only UTF-8/ASCII HTML is supported"));
-                }
-            }
-        }
         let page_url = response.url().clone();
+        let headers = response.headers().clone();
         let mut bytes = Vec::new();
         response
             .take(MAX_HTML_BYTES + 1)
             .read_to_end(&mut bytes)
             .map_err(Error::ExtractionRead)?;
+        if bytes.len() as u64 > MAX_HTML_BYTES {
+            return Err(Error::HtmlTooLarge(MAX_HTML_BYTES));
+        }
+        // `_download_webpage`: Content-Encoding and charset decoding.
+        let bytes = super::decode_content(&headers, bytes).map_err(Error::ExtractionRead)?;
         if bytes.len() as u64 > MAX_HTML_BYTES {
             return Err(Error::HtmlTooLarge(MAX_HTML_BYTES));
         }
@@ -663,8 +638,8 @@ impl Extractor for GenericHttp {
             Some(format!("[generic] {id}: Extracting information")),
         );
         crate::screen::page_read(&page_url, &bytes)?;
-        let html = std::str::from_utf8(&bytes)
-            .map_err(|_| unsupported("only UTF-8/ASCII HTML is supported"))?;
+        let html = super::decode_webpage(&bytes, &headers);
+        let html = html.as_str();
         // `compat_etree_fromstring(webpage)`: an RSS feed.
         if let Some(feed) = super::rss::parse(html) {
             detected("RSS feed");
