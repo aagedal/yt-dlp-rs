@@ -1,0 +1,7 @@
+[
+ {"url": "https://www.youtube.com/watch?v=AgeGated001", "args": ["--no-js-runtimes", "--write-pages", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=AgeGated001", "args": ["--no-js-runtimes", "--dump-pages", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=AgeGated002", "args": ["--no-js-runtimes", "--write-pages", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=NextApi0001", "args": ["--no-js-runtimes", "--write-pages", "--dump-pages", "-s"]},
+ {"url": "https://www.youtube.com/watch?v=NextApi0001", "args": ["--no-js-runtimes", "--write-pages", "--trim-filenames", "60", "-s"]}
+]

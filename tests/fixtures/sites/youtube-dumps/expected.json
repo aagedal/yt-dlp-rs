@@ -1,0 +1,176 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=AgeGated001",
+   "args": [
+    "--no-js-runtimes",
+    "--write-pages",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=AgeGated001",
+    "[youtube] AgeGated001: Downloading webpage",
+    "[youtube] Saving request to AgeGated001_https_-_www.youtube.com_watchv=AgeGated001_bpctr=9999999999_has_verified=1.dump",
+    "[youtube] AgeGated001: Downloading visionos player API JSON",
+    "[youtube] Saving request to AgeGated001_a1acb93773bf141ba09ed9f002eaf72b_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump",
+    "[youtube] AgeGated001: This video is age-restricted; some formats may be missing without authentication. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies",
+    "[youtube] AgeGated001: Downloading web embedded client config",
+    "[youtube] Saving request to AgeGated001_https_-_www.youtube.com_embed_AgeGated001html5=1.dump",
+    "[youtube] AgeGated001: Downloading player abcd1234-main",
+    "[youtube] Saving request to AgeGated001_https_-_www.youtube.com_s_player_abcd1234_player_ias.vflset_en_US_base.js.dump",
+    "[youtube] AgeGated001: Downloading web embedded player API JSON",
+    "[youtube] Saving request to AgeGated001_96036d2a956d3d1e4313a996a8210e6c_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump",
+    "[info] AgeGated001: Downloading 1 format(s): 136+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {
+    "AgeGated001_96036d2a956d3d1e4313a996a8210e6c_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump": 1072,
+    "AgeGated001_a1acb93773bf141ba09ed9f002eaf72b_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump": 588,
+    "AgeGated001_https_-_www.youtube.com_embed_AgeGated001html5=1.dump": 507,
+    "AgeGated001_https_-_www.youtube.com_s_player_abcd1234_player_ias.vflset_en_US_base.js.dump": 82,
+    "AgeGated001_https_-_www.youtube.com_watchv=AgeGated001_bpctr=9999999999_has_verified=1.dump": 1479
+   }
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=AgeGated001",
+   "args": [
+    "--no-js-runtimes",
+    "--dump-pages",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=AgeGated001",
+    "[youtube] AgeGated001: Downloading webpage",
+    "[youtube] Dumping request to https://www.youtube.com/watch?v=AgeGated001&bpctr=9999999999&has_verified=1",
+    "PCFET0NUWVBFIGh0bWw+PGh0bWw+PGhlYWQ+PHRpdGxlPllvdVR1YmU8L3RpdGxlPjwvaGVhZD48Ym9keT48c2NyaXB0Pnl0Y2ZnLnNldCh7IklOTkVSVFVCRV9BUElfS0VZIjogIktFWSIsICJJTk5FUlRVQkVfQ09OVEVYVCI6IHsiY2xpZW50IjogeyJobCI6ICJlbiIsICJnbCI6ICJVUyIsICJ2aXNpdG9yRGF0YSI6ICJWSVNJVE9SIiwgImNsaWVudE5hbWUiOiAiV0VCIiwgImNsaWVudFZlcnNpb24iOiAiMi4yMDI2MDcwOC4wMC4wMCJ9fSwgIklOTkVSVFVCRV9DT05URVhUX0NMSUVOVF9OQU1FIjogMSwgIklOTkVSVFVCRV9DT05URVhUX0NMSUVOVF9WRVJTSU9OIjogIjIuMjAyNjA3MDguMDAuMDAiLCAiVklTSVRPUl9EQVRBIjogIlZJU0lUT1IiLCAiU1RTIjogMjAwMDAsICJQTEFZRVJfSlNfVVJMIjogIi9zL3BsYXllci9hYmNkMTIzNC9wbGF5ZXJfaWFzLnZmbHNldC9lbl9VUy9iYXNlLmpzIn0pOzwvc2NyaXB0PjxzY3JpcHQ+dmFyIHl0SW5pdGlhbFBsYXllclJlc3BvbnNlID0geyJyZXNwb25zZUNvbnRleHQiOiB7InZpc2l0b3JEYXRhIjogIlZJU0lUT1IifSwgInBsYXlhYmlsaXR5U3RhdHVzIjogeyJzdGF0dXMiOiAiTE9HSU5fUkVRVUlSRUQiLCAicmVhc29uIjogIlNpZ24gaW4gdG8gY29uZmlybSB5b3VyIGFnZSIsICJlcnJvclNjcmVlbiI6IHsicGxheWVyRXJyb3JNZXNzYWdlUmVuZGVyZXIiOiB7InJlYXNvbiI6IHsic2ltcGxlVGV4dCI6ICJTaWduIGluIHRvIGNvbmZpcm0geW91ciBhZ2UifSwgInN1YnJlYXNvbiI6IHsicnVucyI6IFt7InRleHQiOiAiVGhpcyB2aWRlbyBtYXkgYmUgaW5hcHByb3ByaWF0ZSBmb3Igc29tZSB1c2Vycy4ifV19fX0sICJkZXNrdG9wTGVnYWN5QWdlR2F0ZVJlYXNvbiI6IDF9LCAidmlkZW9EZXRhaWxzIjogeyJ2aWRlb0lkIjogIkFnZUdhdGVkMDAxIiwgInRpdGxlIjogIkFnZS1nYXRlZCB0cmFpbGVyIiwgImxlbmd0aFNlY29uZHMiOiAiMTAiLCAiY2hhbm5lbElkIjogIlVDTHF4VnVndjc0RUlXM1ZXaDJOT2EzUSIsICJhdXRob3IiOiAiVXBsb2FkZXIiLCAidmlld0NvdW50IjogIjQyIiwgImlzTGl2ZUNvbnRlbnQiOiBmYWxzZSwgImlzUHJpdmF0ZSI6IGZhbHNlfSwgIm1pY3JvZm9ybWF0IjogeyJwbGF5ZXJNaWNyb2Zvcm1hdFJlbmRlcmVyIjogeyJpc0ZhbWlseVNhZmUiOiBmYWxzZSwgImNhdGVnb3J5IjogIkdhbWluZyIsICJwdWJsaXNoRGF0ZSI6ICIyMDE0LTA0LTAxVDAwOjAwOjAwLTA3OjAwIiwgInVwbG9hZERhdGUiOiAiMjAxNC0wNC0wMVQwMDowMDowMC0wNzowMCIsICJsZW5ndGhTZWNvbmRzIjogIjEwIn19fTt2YXIgbWV0YSA9IDE7PC9zY3JpcHQ+PHNjcmlwdD52YXIgeXRJbml0aWFsRGF0YSA9IHsicmVzcG9uc2VDb250ZXh0Ijoge30sICJjb250ZW50cyI6IHsidHdvQ29sdW1uV2F0Y2hOZXh0UmVzdWx0cyI6IHsicmVzdWx0cyI6IHsicmVzdWx0cyI6IHsiY29udGVudHMiOiBbXX19fX19Ozwvc2NyaXB0PjwvYm9keT48L2h0bWw+",
+    "[youtube] AgeGated001: Downloading visionos player API JSON",
+    "[youtube] Dumping request to https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+    "eyJyZXNwb25zZUNvbnRleHQiOiB7InZpc2l0b3JEYXRhIjogIlZJU0lUT1IyIn0sICJwbGF5YWJpbGl0eVN0YXR1cyI6IHsic3RhdHVzIjogIkxPR0lOX1JFUVVJUkVEIiwgInJlYXNvbiI6ICJTaWduIGluIHRvIGNvbmZpcm0geW91ciBhZ2UiLCAiZXJyb3JTY3JlZW4iOiB7InBsYXllckVycm9yTWVzc2FnZVJlbmRlcmVyIjogeyJyZWFzb24iOiB7InNpbXBsZVRleHQiOiAiU2lnbiBpbiB0byBjb25maXJtIHlvdXIgYWdlIn0sICJzdWJyZWFzb24iOiB7InJ1bnMiOiBbeyJ0ZXh0IjogIlRoaXMgdmlkZW8gbWF5IGJlIGluYXBwcm9wcmlhdGUgZm9yIHNvbWUgdXNlcnMuIn1dfX19LCAiZGVza3RvcExlZ2FjeUFnZUdhdGVSZWFzb24iOiAxfSwgInZpZGVvRGV0YWlscyI6IHsidmlkZW9JZCI6ICJBZ2VHYXRlZDAwMSIsICJ0aXRsZSI6ICJBZ2UtZ2F0ZWQgdHJhaWxlciIsICJsZW5ndGhTZWNvbmRzIjogIjEwIiwgImNoYW5uZWxJZCI6ICJVQ0xxeFZ1Z3Y3NEVJVzNWV2gyTk9hM1EiLCAiYXV0aG9yIjogIlVwbG9hZGVyIiwgInZpZXdDb3VudCI6ICI0MiIsICJpc0xpdmVDb250ZW50IjogZmFsc2UsICJpc1ByaXZhdGUiOiBmYWxzZX19",
+    "[youtube] AgeGated001: This video is age-restricted; some formats may be missing without authentication. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies",
+    "[youtube] AgeGated001: Downloading web embedded client config",
+    "[youtube] Dumping request to https://www.youtube.com/embed/AgeGated001?html5=1",
+    "PCFET0NUWVBFIGh0bWw+PGh0bWw+PGJvZHk+PHNjcmlwdD55dGNmZy5zZXQoeyJJTk5FUlRVQkVfQVBJX0tFWSI6ICJLRVkiLCAiSU5ORVJUVUJFX0NPTlRFWFQiOiB7ImNsaWVudCI6IHsiaGwiOiAiZW4iLCAiZ2wiOiAiVVMiLCAiY2xpZW50TmFtZSI6ICJXRUJfRU1CRURERURfUExBWUVSIiwgImNsaWVudFZlcnNpb24iOiAiMS4yMDI2MDcwOC4wMC4wMCJ9fSwgIklOTkVSVFVCRV9DT05URVhUX0NMSUVOVF9OQU1FIjogNTYsICJJTk5FUlRVQkVfQ09OVEVYVF9DTElFTlRfVkVSU0lPTiI6ICIxLjIwMjYwNzA4LjAwLjAwIiwgIldFQl9QTEFZRVJfQ09OVEVYVF9DT05GSUdTIjogeyJXRUJfUExBWUVSX0NPTlRFWFRfQ09ORklHX0lEX0VNQkVEREVEX1BMQVlFUiI6IHsianNVcmwiOiAiL3MvcGxheWVyL2FiY2QxMjM0L3BsYXllcl9pYXMudmZsc2V0L2VuX1VTL2Jhc2UuanMiLCAiZW5jcnlwdGVkSG9zdEZsYWdzIjogIkhPU1RGTEFHUzEyMyJ9fX0pOzwvc2NyaXB0PjwvYm9keT48L2h0bWw+",
+    "[youtube] AgeGated001: Downloading player abcd1234-main",
+    "[youtube] Dumping request to https://www.youtube.com/s/player/abcd1234/player_ias.vflset/en_US/base.js",
+    "dmFyIF95dF9wbGF5ZXI9e307KGZ1bmN0aW9uKGcpe3ZhciBjZmc9e3NpZ25hdHVyZVRpbWVzdGFtcDoyMDAwMX07fSkoX3l0X3BsYXllcik7Cg==",
+    "[youtube] AgeGated001: Downloading web embedded player API JSON",
+    "[youtube] Dumping request to https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+    "eyJyZXNwb25zZUNvbnRleHQiOiB7InZpc2l0b3JEYXRhIjogIlZJU0lUT1IzIn0sICJwbGF5YWJpbGl0eVN0YXR1cyI6IHsic3RhdHVzIjogIk9LIiwgInBsYXlhYmxlSW5FbWJlZCI6IHRydWV9LCAic3RyZWFtaW5nRGF0YSI6IHsiZXhwaXJlc0luU2Vjb25kcyI6ICIyMTU0MCIsICJhZGFwdGl2ZUZvcm1hdHMiOiBbeyJpdGFnIjogMTM2LCAidXJsIjogImh0dHBzOi8vcnIxLmdvb2dsZXZpZGVvLnRlc3QvdmlkZW9wbGF5YmFjaz9pdGFnPTEzNiZjbGllbnQ9d2ViX2VtYmVkZGVkIiwgIm1pbWVUeXBlIjogInZpZGVvL21wNDsgY29kZWNzPVwiYXZjMS40ZDQwMWZcIiIsICJiaXRyYXRlIjogMTAwMTM2LCAibGFzdE1vZGlmaWVkIjogIjEiLCAiYXBwcm94RHVyYXRpb25NcyI6ICIxMDAwMCIsICJjb250ZW50TGVuZ3RoIjogIjc5MiIsICJ3aWR0aCI6IDEyODAsICJoZWlnaHQiOiA3MjAsICJxdWFsaXR5IjogImhkNzIwIiwgInF1YWxpdHlMYWJlbCI6ICI3MjBwIiwgImZwcyI6IDMwfSwgeyJpdGFnIjogMTQwLCAidXJsIjogImh0dHBzOi8vcnIxLmdvb2dsZXZpZGVvLnRlc3QvdmlkZW9wbGF5YmFjaz9pdGFnPTE0MCZjbGllbnQ9d2ViX2VtYmVkZGVkIiwgIm1pbWVUeXBlIjogImF1ZGlvL21wNDsgY29kZWNzPVwibXA0YS40MC4yXCIiLCAiYml0cmF0ZSI6IDEwMDE0MCwgImxhc3RNb2RpZmllZCI6ICIxIiwgImFwcHJveER1cmF0aW9uTXMiOiAiMTAwMDAiLCAiY29udGVudExlbmd0aCI6ICI3NzgiLCAicXVhbGl0eSI6ICJ0aW55IiwgImF1ZGlvUXVhbGl0eSI6ICJBVURJT19RVUFMSVRZX01FRElVTSIsICJhdWRpb1NhbXBsZVJhdGUiOiAiNDQxMDAiLCAiYXVkaW9DaGFubmVscyI6IDJ9XX0sICJ2aWRlb0RldGFpbHMiOiB7InZpZGVvSWQiOiAiQWdlR2F0ZWQwMDEiLCAidGl0bGUiOiAiQWdlLWdhdGVkIHRyYWlsZXIiLCAibGVuZ3RoU2Vjb25kcyI6ICIxMCIsICJjaGFubmVsSWQiOiAiVUNMcXhWdWd2NzRFSVczVldoMk5PYTNRIiwgImF1dGhvciI6ICJVcGxvYWRlciIsICJ2aWV3Q291bnQiOiAiNDIiLCAiaXNMaXZlQ29udGVudCI6IGZhbHNlLCAiaXNQcml2YXRlIjogZmFsc2V9fQ==",
+    "[info] AgeGated001: Downloading 1 format(s): 136+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=AgeGated002",
+   "args": [
+    "--no-js-runtimes",
+    "--write-pages",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=AgeGated002",
+    "[youtube] AgeGated002: Downloading webpage",
+    "[youtube] Saving request to AgeGated002_https_-_www.youtube.com_watchv=AgeGated002_bpctr=9999999999_has_verified=1.dump",
+    "[youtube] AgeGated002: Downloading visionos player API JSON",
+    "[youtube] Saving request to AgeGated002_830288e24371c14ce9396c9d6cc96aa7_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump",
+    "[youtube] AgeGated002: This video is age-restricted; some formats may be missing without authentication. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies",
+    "[youtube] AgeGated002: Downloading web embedded client config",
+    "[youtube] Saving request to AgeGated002_https_-_www.youtube.com_embed_AgeGated002html5=1.dump",
+    "[youtube] AgeGated002: Downloading iframe API JS",
+    "[youtube] Saving request to AgeGated002_https_-_www.youtube.com_iframe_api.dump",
+    "[youtube] AgeGated002: Downloading player abcd1234-main",
+    "[youtube] Saving request to AgeGated002_https_-_www.youtube.com_s_player_abcd1234_player_ias.vflset_en_US_base.js.dump",
+    "[youtube] AgeGated002: Downloading web embedded player API JSON",
+    "[youtube] Saving request to AgeGated002_49131cdf97095e0952d57c81d3505c76_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump",
+    "[info] AgeGated002: Downloading 1 format(s): 136+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {
+    "AgeGated002_49131cdf97095e0952d57c81d3505c76_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump": 1072,
+    "AgeGated002_830288e24371c14ce9396c9d6cc96aa7_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump": 588,
+    "AgeGated002_https_-_www.youtube.com_embed_AgeGated002html5=1.dump": 444,
+    "AgeGated002_https_-_www.youtube.com_iframe_api.dump": 106,
+    "AgeGated002_https_-_www.youtube.com_s_player_abcd1234_player_ias.vflset_en_US_base.js.dump": 82,
+    "AgeGated002_https_-_www.youtube.com_watchv=AgeGated002_bpctr=9999999999_has_verified=1.dump": 1408
+   }
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NextApi0001",
+   "args": [
+    "--no-js-runtimes",
+    "--write-pages",
+    "--dump-pages",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=NextApi0001",
+    "[youtube] NextApi0001: Downloading webpage",
+    "[youtube] Dumping request to https://www.youtube.com/watch?v=NextApi0001&bpctr=9999999999&has_verified=1",
+    "PCFET0NUWVBFIGh0bWw+PGh0bWw+PGhlYWQ+PHRpdGxlPllvdVR1YmU8L3RpdGxlPjwvaGVhZD48Ym9keT48c2NyaXB0Pnl0Y2ZnLnNldCh7IklOTkVSVFVCRV9BUElfS0VZIjogIktFWSIsICJJTk5FUlRVQkVfQ09OVEVYVCI6IHsiY2xpZW50IjogeyJobCI6ICJlbiIsICJnbCI6ICJVUyIsICJ2aXNpdG9yRGF0YSI6ICJWSVNJVE9SIiwgImNsaWVudE5hbWUiOiAiV0VCIiwgImNsaWVudFZlcnNpb24iOiAiMi4yMDI2MDcwOC4wMC4wMCJ9fSwgIklOTkVSVFVCRV9DT05URVhUX0NMSUVOVF9OQU1FIjogMSwgIklOTkVSVFVCRV9DT05URVhUX0NMSUVOVF9WRVJTSU9OIjogIjIuMjAyNjA3MDguMDAuMDAiLCAiVklTSVRPUl9EQVRBIjogIlZJU0lUT1IiLCAiU1RTIjogMjAwMDAsICJQTEFZRVJfSlNfVVJMIjogIi9zL3BsYXllci9hYmNkMTIzNC9wbGF5ZXJfaWFzLnZmbHNldC9lbl9VUy9iYXNlLmpzIn0pOzwvc2NyaXB0PjxzY3JpcHQ+dmFyIHl0SW5pdGlhbERhdGEgPSB7InJlc3BvbnNlQ29udGV4dCI6IHt9fTs8L3NjcmlwdD48L2JvZHk+PC9odG1sPg==",
+    "[youtube] Saving request to NextApi0001_https_-_www.youtube.com_watchv=NextApi0001_bpctr=9999999999_has_verified=1.dump",
+    "[youtube] NextApi0001: Downloading initial data API JSON",
+    "[youtube] Dumping request to https://www.youtube.com/youtubei/v1/next?prettyPrint=false",
+    "eyJyZXNwb25zZUNvbnRleHQiOiB7fSwgImNvbnRlbnRzIjogeyJ0d29Db2x1bW5XYXRjaE5leHRSZXN1bHRzIjogeyJyZXN1bHRzIjogeyJyZXN1bHRzIjogeyJjb250ZW50cyI6IFt7InZpZGVvUHJpbWFyeUluZm9SZW5kZXJlciI6IHsidGl0bGUiOiB7InJ1bnMiOiBbeyJ0ZXh0IjogIk5leHQgQVBJIHZpZGVvIn1dfSwgImRhdGVUZXh0IjogeyJzaW1wbGVUZXh0IjogIkphbiAyLCAyMDIwIn19fSwgeyJ2aWRlb1NlY29uZGFyeUluZm9SZW5kZXJlciI6IHsib3duZXIiOiB7InZpZGVvT3duZXJSZW5kZXJlciI6IHsidGl0bGUiOiB7InJ1bnMiOiBbeyJ0ZXh0IjogIk5leHQgQ2hhbm5lbCJ9XX0sICJzdWJzY3JpYmVyQ291bnRUZXh0IjogeyJzaW1wbGVUZXh0IjogIjEuNUsgc3Vic2NyaWJlcnMifX19fX1dfX19fX0=",
+    "[youtube] Saving request to NextApi0001_9b7a059a4435fca875b8642c99488dbf_https_-_www.youtube.com_youtubei_v1_nextprettyPrint=false.dump",
+    "[youtube] NextApi0001: Downloading visionos player API JSON",
+    "[youtube] Dumping request to https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+    "eyJyZXNwb25zZUNvbnRleHQiOiB7fSwgInBsYXlhYmlsaXR5U3RhdHVzIjogeyJzdGF0dXMiOiAiT0siLCAicGxheWFibGVJbkVtYmVkIjogdHJ1ZX0sICJ2aWRlb0RldGFpbHMiOiB7InZpZGVvSWQiOiAiTmV4dEFwaTAwMDEiLCAiY2hhbm5lbElkIjogIlVDTHF4VnVndjc0RUlXM1ZXaDJOT2EzUSIsICJpc093bmVyVmlld2luZyI6IGZhbHNlLCAic2hvcnREZXNjcmlwdGlvbiI6ICJBIGRlc2NyaXB0aW9uLiIsICJpc0NyYXdsYWJsZSI6IHRydWUsICJhbGxvd1JhdGluZ3MiOiB0cnVlLCAidmlld0NvdW50IjogIjEwMDAiLCAiYXV0aG9yIjogIkZpeHR1cmUgQXV0aG9yIiwgImlzUHJpdmF0ZSI6IGZhbHNlLCAiaXNVbnBsdWdnZWRDb3JwdXMiOiBmYWxzZSwgImlzTGl2ZUNvbnRlbnQiOiBmYWxzZSwgImtleXdvcmRzIjogWyJmaXh0dXJlIl0sICJ0aXRsZSI6ICJOZXh0IEFQSSB2aWRlbyIsICJsZW5ndGhTZWNvbmRzIjogIjEwIn0sICJtaWNyb2Zvcm1hdCI6IHsicGxheWVyTWljcm9mb3JtYXRSZW5kZXJlciI6IHsib3duZXJQcm9maWxlVXJsIjogImh0dHA6Ly93d3cueW91dHViZS5jb20vQEZpeHR1cmVBdXRob3IiLCAiZXh0ZXJuYWxDaGFubmVsSWQiOiAiVUNMcXhWdWd2NzRFSVczVldoMk5PYTNRIiwgImlzRmFtaWx5U2FmZSI6IHRydWUsICJpc1VubGlzdGVkIjogZmFsc2UsICJjYXRlZ29yeSI6ICJFZHVjYXRpb24iLCAidXBsb2FkRGF0ZSI6ICIyMDIwLTAxLTAyVDAzOjA0OjA1LTA4OjAwIiwgInB1Ymxpc2hEYXRlIjogIjIwMjAtMDEtMDJUMDM6MDQ6MDUtMDg6MDAifX0sICJzdHJlYW1pbmdEYXRhIjogeyJleHBpcmVzSW5TZWNvbmRzIjogIjIxNTQwIiwgImZvcm1hdHMiOiBbeyJpdGFnIjogMTgsICJ1cmwiOiAiaHR0cHM6Ly9ycjEuZ29vZ2xldmlkZW8udGVzdC92aWRlb3BsYXliYWNrP2lkPU5leHRBcGkwMDAxJmNsaWVudD12aXNpb25vcyZpdGFnPTE4IiwgIm1pbWVUeXBlIjogInZpZGVvL21wNDsgY29kZWNzPVwiYXZjMS40MjAwMUUsIG1wNGEuNDAuMlwiIiwgImJpdHJhdGUiOiAxMDAwMTgsICJsYXN0TW9kaWZpZWQiOiAiMSIsICJhcHByb3hEdXJhdGlvbk1zIjogIjEwMDAwIiwgImNvbnRlbnRMZW5ndGgiOiAiNzkyIiwgIndpZHRoIjogNjQwLCAiaGVpZ2h0IjogMzYwLCAicXVhbGl0eSI6ICJtZWRpdW0iLCAicXVhbGl0eUxhYmVsIjogIjM2MHAiLCAiZnBzIjogMzAsICJhdWRpb1F1YWxpdHkiOiAiQVVESU9fUVVBTElUWV9MT1ciLCAiYXVkaW9TYW1wbGVSYXRlIjogIjQ0MTAwIiwgImF1ZGlvQ2hhbm5lbHMiOiAyfV0sICJhZGFwdGl2ZUZvcm1hdHMiOiBbeyJpdGFnIjogMTM3LCAidXJsIjogImh0dHBzOi8vcnIxLmdvb2dsZXZpZGVvLnRlc3QvdmlkZW9wbGF5YmFjaz9pZD1OZXh0QXBpMDAwMSZjbGllbnQ9dmlzaW9ub3MmaXRhZz0xMzciLCAibWltZVR5cGUiOiAidmlkZW8vbXA0OyBjb2RlY3M9XCJhdmMxLjY0MDAyOFwiIiwgImJpdHJhdGUiOiAxMDAxMzcsICJsYXN0TW9kaWZpZWQiOiAiMSIsICJhcHByb3hEdXJhdGlvbk1zIjogIjEwMDAwIiwgImNvbnRlbnRMZW5ndGgiOiAiNzkyIiwgIndpZHRoIjogMTkyMCwgImhlaWdodCI6IDEwODAsICJxdWFsaXR5IjogImhkMTA4MCIsICJxdWFsaXR5TGFiZWwiOiAiMTA4MHAiLCAiZnBzIjogMzB9LCB7Iml0YWciOiAxNDAsICJ1cmwiOiAiaHR0cHM6Ly9ycjEuZ29vZ2xldmlkZW8udGVzdC92aWRlb3BsYXliYWNrP2lkPU5leHRBcGkwMDAxJmNsaWVudD12aXNpb25vcyZpdGFnPTE0MCIsICJtaW1lVHlwZSI6ICJhdWRpby9tcDQ7IGNvZGVjcz1cIm1wNGEuNDAuMlwiIiwgImJpdHJhdGUiOiAxMDAxNDAsICJsYXN0TW9kaWZpZWQiOiAiMSIsICJhcHByb3hEdXJhdGlvbk1zIjogIjEwMDAwIiwgImNvbnRlbnRMZW5ndGgiOiAiNzc4IiwgInF1YWxpdHkiOiAidGlueSIsICJhdWRpb1F1YWxpdHkiOiAiQVVESU9fUVVBTElUWV9NRURJVU0iLCAiYXVkaW9TYW1wbGVSYXRlIjogIjQ0MTAwIiwgImF1ZGlvQ2hhbm5lbHMiOiAyfV19fQ==",
+    "[youtube] Saving request to NextApi0001_7241295dd005ee2b61a78ea411ec9756_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump",
+    "[info] NextApi0001: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Incomplete data received in embedded initial data; re-fetching using API.",
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {
+    "NextApi0001_7241295dd005ee2b61a78ea411ec9756_https_-_www.youtube.com_youtubei_v1_playerprettyPrint=false.dump": 1990,
+    "NextApi0001_9b7a059a4435fca875b8642c99488dbf_https_-_www.youtube.com_youtubei_v1_nextprettyPrint=false.dump": 407,
+    "NextApi0001_https_-_www.youtube.com_watchv=NextApi0001_bpctr=9999999999_has_verified=1.dump": 541
+   }
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NextApi0001",
+   "args": [
+    "--no-js-runtimes",
+    "--write-pages",
+    "--trim-filenames",
+    "60",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=NextApi0001",
+    "[youtube] NextApi0001: Downloading webpage",
+    "[youtube] Saving request to NextApi0001_https_-_www.y___e16cf174c89948750342376f414132fe.dump",
+    "[youtube] NextApi0001: Downloading initial data API JSON",
+    "[youtube] Saving request to NextApi0001_9b7a059a4435f___229dca1162084636b142d2e4559f07e5.dump",
+    "[youtube] NextApi0001: Downloading visionos player API JSON",
+    "[youtube] Saving request to NextApi0001_7241295dd005e___8b8fe6afe32fb8f46fa3c5bc6be8cce6.dump",
+    "[info] NextApi0001: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Incomplete data received in embedded initial data; re-fetching using API.",
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {
+    "NextApi0001_7241295dd005e___8b8fe6afe32fb8f46fa3c5bc6be8cce6.dump": 1990,
+    "NextApi0001_9b7a059a4435f___229dca1162084636b142d2e4559f07e5.dump": 407,
+    "NextApi0001_https_-_www.y___e16cf174c89948750342376f414132fe.dump": 541
+   }
+  }
+ ]
+}

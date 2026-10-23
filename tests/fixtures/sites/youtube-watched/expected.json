@@ -1,0 +1,106 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=Watched0001",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--no-js-runtimes",
+    "--cookies",
+    "cookies.txt",
+    "--mark-watched",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=Watched0001",
+    "[youtube] Watched0001: Downloading webpage",
+    "[youtube] Watched0001: Downloading visionos player API JSON",
+    "[youtube] Watched0001: Marking watched",
+    "[youtube] Watched0001: Marking fully watched",
+    "[info] Watched0001: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Watched0001",
+   "args": [
+    "--no-js-runtimes",
+    "--mark-watched",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=Watched0001",
+    "[youtube] Watched0001: Downloading webpage",
+    "[youtube] Watched0001: Downloading visionos player API JSON",
+    "[info] Watched0001: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Watched0002",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--no-js-runtimes",
+    "--cookies",
+    "cookies.txt",
+    "--mark-watched",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=Watched0002",
+    "[youtube] Watched0002: Downloading webpage",
+    "[youtube] Watched0002: Downloading visionos player API JSON",
+    "[info] Watched0002: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [youtube] Unable to mark watched"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Watched0003",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--no-js-runtimes",
+    "--cookies",
+    "cookies.txt",
+    "--mark-watched",
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=Watched0003",
+    "[youtube] Watched0003: Downloading webpage",
+    "[youtube] Watched0003: Downloading visionos player API JSON",
+    "[youtube] Watched0003: Marking watched",
+    "[info] Watched0003: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] unable to extract web client initial player response; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [youtube] Watched0003: Unable to mark watched: HTTP Error 404: Not Found",
+    "WARNING: [youtube] Unable to mark fully watched"
+   ],
+   "files": {}
+  }
+ ]
+}

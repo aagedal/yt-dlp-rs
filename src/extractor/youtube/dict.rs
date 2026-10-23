@@ -626,18 +626,23 @@ pub(super) fn build(input: &Input<'_>) -> Map<String, Value> {
         "video"
     };
 
+    // Without saved thumbnails, `process_video_result` takes the best
+    // generated one (`thumbnails[-1]` after `_sort_thumbnails`).
+    let best_thumbnail = original
+        .last()
+        .or_else(|| {
+            thumbnail_list
+                .iter()
+                .max_by(|a, b| thumbnail_key(a).cmp(&thumbnail_key(b)))
+        })
+        .and_then(|thumbnail| thumbnail.get("url"))
+        .cloned()
+        .unwrap_or(Value::Null);
     let mut info = Map::new();
     info.insert("id".into(), id.into());
     info.insert("title".into(), input.title.into());
     info.insert("thumbnails".into(), Value::Array(thumbnail_list));
-    info.insert(
-        "thumbnail".into(),
-        original
-            .last()
-            .and_then(|thumbnail| thumbnail.get("url"))
-            .cloned()
-            .unwrap_or(Value::Null),
-    );
+    info.insert("thumbnail".into(), best_thumbnail);
     info.insert("description".into(), input.description.into());
     info.insert("channel_id".into(), channel_id.clone().into());
     info.insert(

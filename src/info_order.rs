@@ -5,7 +5,7 @@
 //! `info_dict.update(format)`. Extractors mark which upstream path built an
 //! info or format dict; [`video`] and [`format`] replay that path, keeping
 //! this port's values and adding `null` where upstream assigns `None`.
-//! Unmarked dicts (YouTube, loaded info JSON) keep this port's order.
+//! Unmarked dicts (loaded info JSON) keep this port's order.
 use serde_json::{Map, Value};
 
 /// The upstream code path of an info dict (see [`video`]).

@@ -2247,7 +2247,8 @@ impl YoutubeDl {
         let shown_url = Url::parse(&shown).unwrap_or_else(|_| url.clone());
         // A playlist extractor's `url` entry (`_type: url`) keeps the
         // extracted video's own `webpage_url`.
-        let plain_url = marker["entry"]["_type"] == "url";
+        // (as does a URL whose extractor names its own: YouTube's feeds).
+        let plain_url = marker["entry"]["_type"] == "url" || marker["keep_webpage_url"] == true;
         let merge = |result: &mut ExtractResult| -> Result<()> {
             let ExtractResult::Video(info) = result else {
                 return Err(Error::UnsupportedHtml5(

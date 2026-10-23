@@ -152,7 +152,7 @@ pub(super) fn load_player(client: &Client, video_id: &str, player_url: &str) -> 
     let code = Url::parse(player_url)
         .map_err(Error::from)
         .and_then(|url| super::super::direct::request(client, &url, None))
-        .and_then(|response| response.text().map_err(Error::Http));
+        .and_then(|response| read_page(response, video_id, None));
     match code {
         Ok(code) => {
             if let Ok(mut cache) = CODE.lock() {
@@ -715,6 +715,27 @@ fn auth_headers(
     headers
 }
 
+/// `_webpage_read_content`: the body, dumped by `--dump-pages` and
+/// `--write-pages` (named with the POST `data`'s MD5, if any).
+fn read_page(
+    mut response: reqwest::blocking::Response,
+    item_id: &str,
+    data: Option<&[u8]>,
+) -> Result<String> {
+    use std::io::Read;
+    let url = response.url().clone();
+    let mut bytes = Vec::new();
+    response
+        .read_to_end(&mut bytes)
+        .map_err(Error::ExtractionRead)?;
+    match data {
+        Some(data) => crate::screen::expect_post_page(item_id, data),
+        None => crate::screen::expect_page(item_id, None, None),
+    }
+    crate::screen::page_read(&url, &bytes)?;
+    Ok(String::from_utf8_lossy(&bytes).into_owned())
+}
+
 /// Upstream's default `extractor_retries` for InnerTube requests.
 const API_RETRIES: u32 = 3;
 
@@ -900,10 +921,11 @@ impl<'a> ApiRequest<'a> {
             }
             return Err(failure(Error::Http(source)));
         }
-        let text = response.text().map_err(|error| Failure {
-            error: Error::Http(error),
-            retry: false,
-        })?;
+        let text =
+            read_page(response, item_id, Some(self.body.as_bytes())).map_err(|error| Failure {
+                error,
+                retry: false,
+            })?;
         serde_json::from_str(&text).map_err(|error| Failure {
             error: Error::Reported(format!(
                 "[{extractor}] {item_id}: Failed to parse JSON  (caused by {error})"
@@ -1114,7 +1136,7 @@ fn iframe_player_url(client: &Client, video_id: &str) -> Option<String> {
     crate::screen::screen(&format!("[youtube] {video_id}: Downloading iframe API JS"));
     let url = Url::parse("https://www.youtube.com/iframe_api").ok()?;
     let page = match super::super::direct::request(client, &url, None)
-        .and_then(|response| response.text().map_err(Error::Http))
+        .and_then(|response| read_page(response, video_id, None))
     {
         Ok(page) => page,
         Err(error) => {
@@ -1175,7 +1197,7 @@ fn requested_clients(session: &ClientSelection<'_>) -> Result<Vec<&'static str>>
         }
     }
     if requested.is_empty() && excluded.is_empty() && defaults == DEFAULT_JSLESS_CLIENTS {
-        crate::screen::warning_once(&format!(
+        crate::screen::extractor_warning_once(&format!(
             "[youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  {EJS_WIKI_URL}  for details on installing one"
         ));
     }
@@ -1196,7 +1218,7 @@ fn requested_clients(session: &ClientSelection<'_>) -> Result<Vec<&'static str>>
         requested.retain(|name| {
             let supported = innertube::client(name).is_some_and(|config| config.supports_cookies);
             if !supported {
-                crate::screen::warning_once(&format!(
+                crate::screen::extractor_warning_once(&format!(
                     "[youtube] Skipping client \"{name}\" since it does not support cookies"
                 ));
             }
