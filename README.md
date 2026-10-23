@@ -326,7 +326,7 @@ Unsupported CLI flags are errors. Filename handling is basic and does not yet
 implement yt-dlp's platform-specific filename compatibility rules.
 
 Direct extraction makes a streaming GET and inspects headers without consuming
-the body. HTML5 extraction reads at most 2 MiB of uncompressed UTF-8/ASCII HTML,
+the body. HTML5 extraction reads at most 2 MiB of HTML (decoded like upstream),
 then probes every declared media source. Extraction must succeed for every entry.
 All entries remaining after archive filtering must select successfully before any
 media is downloaded or JSON emitted. JavaScript

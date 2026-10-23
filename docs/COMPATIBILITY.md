@@ -1589,9 +1589,10 @@ The selected source is downloaded with the page referrer. If the download
 response changes to HTML or a manifest, fail without publishing it as media.
 
 HTML bodies are limited to 2 MiB, including responses without Content-Length.
-Only uncompressed UTF-8/ASCII HTML is supported. Other encodings are rejected
-when declared in HTTP Content-Type; invalid UTF-8 is rejected. HTML meta charset
-sniffing, compressed responses, XHTML, JavaScript, nonstandard lazy-loading
+Pages are decoded like upstream's `_download_webpage` (see HTTP request
+defaults): `gzip`/`deflate` Content-Encoding, then the Content-Type charset,
+a `<meta charset>` or BOM, with invalid bytes replaced; the 2 MiB limit applies
+to the compressed and the decoded body. XHTML, JavaScript, nonstandard lazy-loading
 attributes, durations, codecs, inferred dimensions, authentication,
 and general embedded-player extraction are not implemented. Unsupported HLS/DASH
 features and non-HTTP sources fail explicitly, even

@@ -432,9 +432,6 @@ fn html5_rejects_unsupported_sources() {
         "/manifest.html",
         "/manifest-hint.html",
         "/source-is-html.html",
-        "/latin.html",
-        "/compressed.html",
-        "/invalid-utf8.html",
         "/manifest-source.html",
     ] {
         assert!(
@@ -445,7 +442,14 @@ fn html5_rejects_unsupported_sources() {
             "{path}"
         );
     }
-    for path in ["/empty.html", "/fake.html"] {
+    // Pages decode like upstream's `_download_webpage` (Content-Encoding,
+    // charset, invalid bytes replaced), so these are pages without media.
+    for path in [
+        "/empty.html",
+        "/fake.html",
+        "/compressed.html",
+        "/invalid-utf8.html",
+    ] {
         assert!(
             matches!(
                 dl.extract_info(&server.url(path)),
@@ -454,6 +458,8 @@ fn html5_rejects_unsupported_sources() {
             "{path}"
         );
     }
+    let latin = dl.extract_info(&server.url("/latin.html")).unwrap();
+    assert_eq!(latin.url.as_str(), server.url("/clip.mp4"));
     assert!(matches!(
         dl.extract_info(&server.url("/blob.html")),
         Err(Error::UnsupportedScheme(_))
