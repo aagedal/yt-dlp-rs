@@ -155,14 +155,43 @@ pub(super) struct Captions {
     pub audio_languages: Vec<String>,
 }
 
+/// One client's player response and its subtitle PO token request.
+pub(super) struct ClientCaptions<'a> {
+    pub client: &'a str,
+    pub response: &'a Value,
+    pub pot: &'a super::pot::Request,
+    /// The InnerTube context's `clientName` (the `c` parameter with a token).
+    pub innertube_client_name: &'a str,
+}
+
+/// What the caption loop needs of the session.
+pub(super) struct Options<'a> {
+    pub video_id: &'a str,
+    /// `writesubtitles or writeautomaticsub or listsubtitles`.
+    pub subs_wanted: bool,
+    /// Translated manual captions (`get_translated_subs`).
+    pub translated: bool,
+}
+
+/// `_report_pot_subtitles_skipped`: a warning only for non-default clients
+/// when subtitles are wanted.
+fn report_pot_subtitles_skipped(options: &Options<'_>, client: Option<&str>, message: &str) {
+    if !options.subs_wanted || client.is_some_and(super::watch::is_default_client) {
+        crate::screen::extractor_debug_once(message);
+    } else {
+        crate::screen::warning_once(&format!("[youtube] {message}"));
+    }
+}
+
 /// Upstream's caption loop over the client responses (`player_responses`
 /// with streaming data and a track list renderer).
 pub(super) fn extract(
     player_responses: &[Value],
-    clients: &[(&str, &Value)],
+    clients: &[ClientCaptions<'_>],
     automatic: Map<String, Value>,
-    translated: bool,
+    options: &Options<'_>,
 ) -> Captions {
+    let translated = options.translated;
     let mut result = Captions {
         subtitles: Map::new(),
         automatic,
@@ -190,13 +219,16 @@ pub(super) fn extract(
             }
         }
     }
-    let responses: Vec<(&str, &Value)> = clients
+    let responses: Vec<&ClientCaptions<'_>> = clients
         .iter()
-        .filter(|(_, response)| {
-            truthy(response.get("streamingData"))
-                && truthy(response.pointer("/captions/playerCaptionsTracklistRenderer"))
+        .filter(|captions| {
+            truthy(captions.response.get("streamingData"))
+                && truthy(
+                    captions
+                        .response
+                        .pointer("/captions/playerCaptionsTracklistRenderer"),
+                )
         })
-        .copied()
         .collect();
     let tracks_of = |response: &Value| -> Vec<Value> {
         response
@@ -207,7 +239,7 @@ pub(super) fn extract(
     };
     let all: Vec<Value> = responses
         .iter()
-        .flat_map(|(_, response)| tracks_of(response))
+        .flat_map(|captions| tracks_of(captions.response))
         .filter(Value::is_object)
         .collect();
     let is_asr = |track: &Value| track.get("kind").and_then(Value::as_str) == Some("asr");
@@ -227,8 +259,14 @@ pub(super) fn extract(
             languages.push(code.to_owned());
         }
     };
-    for (client, response) in responses {
-        for track in tracks_of(response) {
+    let mut skipped_clients = false;
+    for captions in responses {
+        let client = captions.client;
+        // `SUBS_PO_TOKEN_POLICY` is neither required nor recommended for
+        // any client at the pinned revision.
+        let mut pot_params: Vec<(&str, String)> = Vec::new();
+        let mut already_fetched_pot = false;
+        for track in tracks_of(captions.response) {
             let Some(base_url) = track
                 .get("baseUrl")
                 .and_then(Value::as_str)
@@ -239,20 +277,38 @@ pub(super) fn extract(
             let query = base_url.split_once('?').map_or("", |(_, query)| query);
             let qs = parse_qs(query.split('#').next().unwrap_or_default());
             let code = lang_code(&track);
-            // A PO token is required by the `xpe`/`xpv` experiments; none
-            // can be provided.
+            // The `xpe`/`xpv` experiments require a PO token.
             let requires_pot =
                 qs.iter()
                     .find(|(key, _)| key == "exp")
                     .is_some_and(|(_, values)| {
                         values.iter().any(|value| value == "xpe" || value == "xpv")
                     });
-            if requires_pot {
-                crate::screen::extractor_debug(&format!(
-                    "Some {client} client subtitles require a PO Token which was not provided. They will be discarded since they are not downloadable as-is. You can manually pass a Subtitles PO Token for this client with --extractor-args \"youtube:po_token={client}.subs+XXX\" . For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
-                ));
+            if !std::mem::replace(&mut already_fetched_pot, true)
+                && let Some(token) = captions.pot.fetch(super::pot::Context::Subs, requires_pot)
+            {
+                pot_params = vec![
+                    ("pot", token),
+                    ("potc", "1".into()),
+                    ("c", captions.innertube_client_name.to_owned()),
+                ];
+            }
+            if pot_params.is_empty() && requires_pot {
+                skipped_clients = true;
+                report_pot_subtitles_skipped(
+                    options,
+                    Some(client),
+                    &format!(
+                        "{}: Some {client} client subtitles require a PO Token which was not provided. They will be discarded since they are not downloadable as-is. You can manually pass a Subtitles PO Token for this client with --extractor-args \"youtube:po_token={client}.subs+XXX\" . For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide",
+                        options.video_id
+                    ),
+                );
                 break;
             }
+            let pot_query: Vec<(&str, &str)> = pot_params
+                .iter()
+                .map(|(key, value)| (*key, value.as_str()))
+                .collect();
             let orig_lang = qs
                 .iter()
                 .find(|(key, _)| key == "lang")
@@ -270,7 +326,7 @@ pub(super) fn extract(
                     code,
                     lang_name.as_deref(),
                     client,
-                    &[],
+                    &pot_query,
                 );
                 if !translatable {
                     continue;
@@ -301,11 +357,12 @@ pub(super) fn extract(
                         &format!("{trans_code}-orig"),
                         Some(&format!("{trans_name} (Original)")),
                         client,
-                        &[],
+                        &pot_query,
                     );
                 }
                 // Setting `tlang=lang` returns damaged subtitles.
-                let tlang = [("tlang", trans_code.as_str())];
+                let mut tlang = vec![("tlang", trans_code.as_str())];
+                tlang.extend(pot_query.iter().copied());
                 process_language(
                     &mut result.automatic,
                     base_url,
@@ -313,7 +370,7 @@ pub(super) fn extract(
                     Some(&trans_name),
                     client,
                     if orig_lang.as_deref() == Some(original.as_str()) {
-                        &[]
+                        &pot_query
                     } else {
                         &tlang
                     },
@@ -340,7 +397,7 @@ pub(super) fn extract(
                     &format!("{code}-orig"),
                     Some(&format!("{} (Original)", name.as_deref().unwrap_or("None"))),
                     client,
-                    &[],
+                    &pot_query,
                 );
             }
             process_language(
@@ -349,7 +406,7 @@ pub(super) fn extract(
                 &code,
                 name.as_deref(),
                 client,
-                &[],
+                &pot_query,
             );
         }
         need_subs.retain(|code| !result.subtitles.contains_key(code));
@@ -357,6 +414,26 @@ pub(super) fn extract(
         if need_subs.is_empty() && need_caps.is_empty() {
             break;
         }
+    }
+    if skipped_clients && !(need_subs.is_empty() && need_caps.is_empty()) {
+        let mut message = format!(
+            "{}: There are missing subtitles languages because a PO token was not provided.",
+            options.video_id
+        );
+        if !need_subs.is_empty() {
+            let languages: Vec<&str> = need_subs.iter().map(String::as_str).collect();
+            message.push_str(&format!(
+                " Subtitles for these languages are missing: {}.",
+                languages.join(", ")
+            ));
+        }
+        if !need_caps.is_empty() {
+            message.push_str(&format!(
+                " Automatic captions for {} languages are missing.",
+                need_caps.len()
+            ));
+        }
+        report_pot_subtitles_skipped(options, None, &message);
     }
     result
 }

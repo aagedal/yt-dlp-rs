@@ -1,0 +1,31 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/@Post/posts",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "posts.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "TOKENPOSTS1"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "continuation1.json"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/browse?prettyPrint=false",
+   "request_body": [
+    "TOKENPOSTS2"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "continuation2.json"
+  }
+ ]
+}

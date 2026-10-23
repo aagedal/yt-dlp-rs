@@ -99,7 +99,7 @@ mod vocaroo;
 mod weibo;
 mod xspf;
 mod yfanefa;
-mod youtube;
+pub(crate) mod youtube;
 mod zhihu;
 
 pub use angel::{Angel, suitable as angel_suitable};
@@ -221,17 +221,23 @@ pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
+pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
 pub(crate) use youtube::comments::post_extract as youtube_comments;
 pub(crate) use youtube::live::prepare_fragments as youtube_live_fragments;
 pub(crate) use youtube::live::{LiveFeed, LiveFragments};
-pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
+pub(crate) use youtube::notifications::YoutubeNotifications;
+pub(crate) use youtube::redirect::{Kind as YoutubeRedirectKind, YoutubeRedirect};
+pub(crate) use youtube::search::{YoutubeMusicSearchUrl, YoutubeSearch, YoutubeSearchUrl};
 pub use youtube::search::{
     suitable as youtube_search_suitable, url_suitable as youtube_search_url_suitable,
 };
 pub use youtube::tab::suitable as youtube_tab_suitable;
 pub(crate) use youtube::tab::{YoutubeTab, fetch_pages as fetch_youtube_tab_pages};
-pub use youtube::{WaitForVideo, Youtube, YoutubeOptions, suitable as youtube_suitable};
+pub use youtube::{
+    WaitForVideo, Youtube, YoutubeOptions, extractor_suitable as youtube_extractor_suitable,
+    suitable as youtube_suitable,
+};
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 
 use crate::{ExtractResult, Result, VideoInfo};
@@ -607,10 +613,14 @@ fn download_json_with(
         error => error,
     };
     let mut response = direct::request_with_headers(client, url, None, headers).map_err(wrap)?;
+    let page_url = response.url().clone();
     let mut body = Vec::new();
     response
         .read_to_end(&mut body)
         .map_err(crate::Error::ExtractionRead)?;
+    // `_webpage_read_content`: `--dump-pages`/`--write-pages`.
+    crate::screen::expect_page(id, None, None);
+    crate::screen::page_read(&page_url, &body)?;
     let text = transform(&String::from_utf8_lossy(&body))?;
     serde_json::from_str(&text).map_err(|error| {
         crate::Error::Reported(format!(
@@ -901,6 +911,57 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || youtube::redirect::user_suitable(url)
+}
+
+/// Scheme of the internal URL carrying an input without a scheme that an
+/// extractor's `_VALID_URL` takes (a naked YouTube ID, `:ytfav`).
+const BARE_SCHEME: &str = "yt-dlp-rs-input";
+
+/// An input without a scheme as an internal URL ([`input_text`] recovers it).
+pub(crate) fn bare_url(input: &str) -> Url {
+    let encoded = percent_encoding::utf8_percent_encode(input, percent_encoding::NON_ALPHANUMERIC);
+    Url::parse(&format!("{BARE_SCHEME}:{encoded}")).expect("an opaque URL")
+}
+
+/// An input without a scheme that an extractor takes, as an internal URL,
+/// with the name of the first extractor (in upstream order) taking it.
+pub fn bare_input(input: &str) -> Option<(Url, &'static str)> {
+    youtube::bare_extractor(input).map(|name| (bare_url(input), name))
+}
+
+/// The input text an extractor matches: the original text of an internal
+/// URL for an input without a scheme, otherwise the URL.
+pub(crate) fn input_text(url: &Url) -> String {
+    match url
+        .as_str()
+        .strip_prefix(BARE_SCHEME)
+        .and_then(|rest| rest.strip_prefix(':'))
+    {
+        Some(encoded) => percent_encoding::percent_decode_str(encoded)
+            .decode_utf8_lossy()
+            .into_owned(),
+        None => url.to_string(),
+    }
+}
+
+/// The input URL with its own query and fragment: an internal URL's text
+/// parsed under the internal scheme (`ID#t=1` has the fragment `t=1`).
+pub(crate) fn input_view(url: &Url) -> Url {
+    if url.scheme() != BARE_SCHEME {
+        return url.clone();
+    }
+    Url::parse(&format!("{BARE_SCHEME}:{}", input_text(url))).unwrap_or_else(|_| url.clone())
+}
+
+/// A result URL to follow: text without a scheme (`//host/…`, a naked ID)
+/// becomes an internal URL, as upstream matches it as text.
+pub(crate) fn target_url(text: &str) -> crate::Result<Url> {
+    if crate::has_scheme(text) {
+        Ok(Url::parse(text)?)
+    } else {
+        Ok(bare_url(text))
+    }
 }
 
 /// Upstream `params['http_headers']['User-Agent']`.
@@ -922,6 +983,21 @@ pub fn set_video_password(password: Option<String>) {
     if let Ok(mut slot) = VIDEO_PASSWORD.write() {
         *slot = password;
     }
+}
+
+/// YoutubeTabIE's `--compat-options`: `no-youtube-channel-redirect` and
+/// `no-youtube-unavailable-videos`.
+pub fn set_youtube_tab_compat(no_channel_redirect: bool, no_unavailable_videos: bool) {
+    use std::sync::atomic::Ordering::Relaxed;
+    youtube::tab::NO_CHANNEL_REDIRECT.store(no_channel_redirect, Relaxed);
+    youtube::tab::NO_UNAVAILABLE_VIDEOS.store(no_unavailable_videos, Relaxed);
+}
+
+/// `self.get_param('playlist_items') == '0'`: YoutubeTabIE's extra channel
+/// tabs stay unextracted `url` entries.
+pub fn set_youtube_tab_playlist_items(items: Option<&str>) {
+    youtube::tab::PLAYLIST_ITEMS_ZERO
+        .store(items == Some("0"), std::sync::atomic::Ordering::Relaxed);
 }
 
 /// `self.get_param('videopassword')`.

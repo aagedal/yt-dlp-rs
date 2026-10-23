@@ -1,0 +1,83 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": ":ytnotif",
+   "args": [
+    "-s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube:notif] Login details are needed to download this content. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": ":ytnotifications",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"notifications\", \"title\": \"notifications\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=NOTIFVIDEO1\", \"ie_key\": \"Youtube\", \"video_id\": \"NOTIFVIDEO1\", \"title\": \"First video\", \"channel_id\": null, \"channel\": \"Owner Chan\", \"uploader\": \"Owner Chan\", \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/NOTIFVIDEO1/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.youtube.com/channel/UCownerownerownerowner12/community?lb=UgkxPOST1\", \"ie_key\": \"YoutubeTab\", \"video_id\": null, \"title\": \"Hello\", \"channel_id\": \"UCownerownerownerowner12\", \"channel\": \"Owner Chan\", \"uploader\": \"Owner Chan\", \"thumbnails\": [], \"timestamp\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=NOTIFVIDEO2\", \"ie_key\": \"Youtube\", \"video_id\": \"NOTIFVIDEO2\", \"title\": \"A stream\", \"channel_id\": null, \"channel\": null, \"uploader\": null, \"thumbnails\": [], \"timestamp\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \":ytnotifications\", \"original_url\": \":ytnotifications\", \"webpage_url_basename\": \":ytnotifications\", \"webpage_url_domain\": null, \"extractor\": \"youtube:notif\", \"extractor_key\": \"YoutubeNotifications\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": ":ytnotif",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:notif] Extracting URL: :ytnotif",
+    "[youtube:notif] notifications: Downloading web client config",
+    "[download] Downloading playlist: notifications",
+    "[youtube:notif] page 1: Downloading API JSON",
+    "[youtube:notif] page 2: Downloading API JSON",
+    "[youtube:notif] Playlist notifications: Downloading 3 items of 3",
+    "[download] Downloading item 1 of 3",
+    "[download] Downloading item 2 of 3",
+    "[download] Downloading item 3 of 3",
+    "[download] Finished downloading playlist: notifications"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": ":ytnotif",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_webpage_url)s|%(id)s|%(title)s|%(channel)s|%(channel_id)s|%(ie_key)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "notifications|:ytnotif|NOTIFVIDEO1|First video|Owner Chan|NA|Youtube|https://www.youtube.com/watch?v=NOTIFVIDEO1",
+    "notifications|:ytnotif|UCownerownerownerowner12|Hello|Owner Chan|UCownerownerownerowner12|YoutubeTab|https://www.youtube.com/channel/UCownerownerownerowner12/community?lb=UgkxPOST1",
+    "notifications|:ytnotif|NOTIFVIDEO2|A stream|NA|NA|Youtube|https://www.youtube.com/watch?v=NOTIFVIDEO2"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

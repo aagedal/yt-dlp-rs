@@ -1,0 +1,6 @@
+[
+ {"url": ":ytnotif", "args": ["-s"]},
+ {"url": ":ytnotifications", "copy": ["cookies.txt"], "args": ["--cookies", "cookies.txt", "-J", "--flat-playlist"]},
+ {"url": ":ytnotif", "copy": ["cookies.txt"], "args": ["--cookies", "cookies.txt", "-s", "--flat-playlist"]},
+ {"url": ":ytnotif", "copy": ["cookies.txt"], "args": ["--cookies", "cookies.txt", "--flat-playlist", "--print", "%(playlist_id)s|%(playlist_webpage_url)s|%(id)s|%(title)s|%(channel)s|%(channel_id)s|%(ie_key)s|%(url)s"]}
+]

@@ -323,7 +323,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 111] = [
+const EXTRACTOR_NAMES: [&str; 127] = [
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -428,10 +428,26 @@ const EXTRACTOR_NAMES: [&str; 111] = [
     "Weibo",
     "WeiboVideo",
     "yfanefa",
+    "youtube:clip",
+    "youtube:consent",
+    "youtube:favorites",
+    "youtube:history",
     "youtube",
+    "YoutubeLivestreamEmbed",
+    "youtube:music:search_url",
+    "youtube:notif",
+    "youtube:playlist",
+    "youtube:recommended",
     "youtube:search",
     "youtube:search_url",
+    "youtube:shorts:pivot:audio",
+    "youtube:subscriptions",
     "youtube:tab",
+    "youtube:truncated_id",
+    "youtube:truncated_url",
+    "youtube:watchlater",
+    "YoutubeYtBe",
+    "youtube:user",
     "Zhihu",
     "generic",
     "end",
@@ -450,7 +466,7 @@ fn ordered_extractors(
         };
         let alias: Option<&[&str]> = match value {
             "all" => Some(&EXTRACTOR_NAMES),
-            "default" => Some(&EXTRACTOR_NAMES[..110]),
+            "default" => Some(&EXTRACTOR_NAMES[..EXTRACTOR_NAMES.len() - 1]),
             _ => None,
         };
         if let Some(names) = alias {
@@ -489,7 +505,7 @@ fn ordered_extractors(
 }
 
 /// Python `urlparse(url).scheme` is nonempty.
-fn has_scheme(input: &str) -> bool {
+pub(crate) fn has_scheme(input: &str) -> bool {
     input.split_once(':').is_some_and(|(scheme, _)| {
         scheme.starts_with(|c: char| c.is_ascii_alphabetic())
             && scheme
@@ -527,6 +543,8 @@ impl YoutubeDl {
         let cookies = http.cookies.unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        extractor::youtube::live_chat::SKIP_DOWNLOAD
+            .store(youtube.skip_download, std::sync::atomic::Ordering::Relaxed);
         if let Ok(mut agent) = extractor::USER_AGENT.write() {
             *agent = headers
                 .get(reqwest::header::USER_AGENT)
@@ -634,6 +652,49 @@ impl YoutubeDl {
                 Box::new(extractor::Odnoklassniki),
                 Box::new(extractor::YoutubeSearch),
                 Box::new(Youtube::with_options(youtube)),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Consent,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Favourites,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::History,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::LivestreamEmbed,
+                )),
+                Box::new(extractor::YoutubeMusicSearchUrl),
+                Box::new(extractor::YoutubeNotifications),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Playlist,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Recommended,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::ShortsAudioPivot,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::Subscriptions,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::TruncatedId,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::TruncatedUrl,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::WatchLater,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::YtBe,
+                )),
+                Box::new(extractor::YoutubeRedirect(
+                    extractor::YoutubeRedirectKind::YtUser,
+                )),
+                // After every YouTube extractor.
+                Box::new(extractor::YoutubeUnsupported),
                 Box::new(extractor::Angel),
                 Box::new(extractor::AudioBoom),
                 Box::new(extractor::BehindKink),
@@ -2173,15 +2234,24 @@ impl YoutubeDl {
         input: &str,
         options: ExtractionOptions,
     ) -> Result<ExtractResult> {
-        if !has_scheme(input) {
-            return self.extract_unqualified(input, options);
-        }
-        let url = Url::parse(input)?;
+        let url = if has_scheme(input) {
+            Url::parse(input)?
+        } else {
+            // Extractors whose `_VALID_URL` takes text without a scheme (a
+            // naked YouTube ID, `:ytfav`) come before GenericIE.
+            match extractor::bare_input(input) {
+                Some((url, name)) if self.extractor_allowed(name) => url,
+                _ => return self.extract_unqualified(input, options),
+            }
+        };
         if url.scheme() == "file" {
             return self.extract_file(&url);
         }
         // Extractor pseudo-URLs (`jwplatform:ID`) reach their extractor.
-        if !matches!(url.scheme(), "http" | "https") && !extractor::pseudo_url(input) {
+        if has_scheme(input)
+            && !matches!(url.scheme(), "http" | "https")
+            && !extractor::pseudo_url(input)
+        {
             return Err(Error::UnsupportedScheme(url.scheme().into()));
         }
         for attempt in 0..=options.retries {
@@ -2213,6 +2283,16 @@ impl YoutubeDl {
             return Some(vec!["generic"]);
         }
         self.allowed_extractors.clone()
+    }
+
+    /// Whether the named extractor is among those matched.
+    fn extractor_allowed(&self, name: &str) -> bool {
+        self.extractor_order().is_none_or(|order| {
+            order
+                .iter()
+                .take_while(|item| **item != "end")
+                .any(|item| item.eq_ignore_ascii_case(name))
+        })
     }
 
     fn generic_allowed(&self) -> bool {
@@ -2329,7 +2409,8 @@ impl YoutubeDl {
         let shown_url = Url::parse(&shown).unwrap_or_else(|_| url.clone());
         // A playlist extractor's `url` entry (`_type: url`) keeps the
         // extracted video's own `webpage_url`.
-        let plain_url = marker["entry"]["_type"] == "url";
+        // (as does a URL whose extractor names its own: YouTube's feeds).
+        let plain_url = marker["entry"]["_type"] == "url" || marker["keep_webpage_url"] == true;
         let merge = |result: &mut ExtractResult| -> Result<()> {
             let ExtractResult::Video(info) = result else {
                 return Err(Error::UnsupportedHtml5(
@@ -2440,6 +2521,18 @@ impl YoutubeDl {
             );
             full.insert("webpage_url_domain".into(), info::get_domain(&url).into());
         }
+        // `add_default_extra_info(info, ie, url)` for an entry dict's `ie_key`.
+        let entry_dict = marker["entry"].is_object();
+        if entry_dict && let Some(ie_key) = ie_key {
+            for (key, value) in [
+                ("extractor", marker["extractor"].as_str().unwrap_or(ie_key)),
+                ("extractor_key", ie_key),
+            ] {
+                if !full.contains_key(key) {
+                    full.insert(key.into(), value.into());
+                }
+            }
+        }
         let number = |value: Option<usize>| value.map_or(Value::Null, Value::from);
         // `add_extra_info` keeps an entry's own keys.
         let own: Vec<String> = raw.keys().cloned().collect();
@@ -2466,8 +2559,15 @@ impl YoutubeDl {
             number(entry.last_playlist_index),
         );
         if ie_key.is_none() {
-            full.insert("extractor".into(), "generic".into());
-            full.insert("extractor_key".into(), "Generic".into());
+            // The playlist's extractor (`_playlist_infodict`).
+            let playlist = |index: usize, default: &'static str| {
+                marker["playlist_extractor"][index]
+                    .as_str()
+                    .unwrap_or(default)
+                    .to_owned()
+            };
+            full.insert("extractor".into(), playlist(0, "generic").into());
+            full.insert("extractor_key".into(), playlist(1, "Generic").into());
         }
         full.insert(
             "playlist_autonumber".into(),
@@ -2575,7 +2675,7 @@ impl YoutubeDl {
                         .get(FOLLOW_URL)
                         .and_then(serde_json::Value::as_str)
                 {
-                    let target = Url::parse(target)?;
+                    let target = extractor::target_url(target)?;
                     return self.extract_once_with(&target, before_processing);
                 }
                 before_processing(&mut info)?;
@@ -2584,18 +2684,19 @@ impl YoutubeDl {
             }
         }
         // Upstream `UnsupportedURLIE` (`end`) or no matching extractor.
+        let input = extractor::input_text(url);
         match &order {
-            None => return Err(Error::UnsupportedUrl(url.to_string())),
+            None => return Err(Error::UnsupportedUrl(input)),
             Some(order) if order.contains(&"end") => {
                 screen::screen(&format!(
                     "[UnsupportedURL] Extracting URL: {}",
-                    screen::extracting_url(url.as_str())
+                    screen::extracting_url(&input)
                 ));
-                return Err(Error::Reported(format!("Unsupported URL: {url}")));
+                return Err(Error::Reported(format!("Unsupported URL: {input}")));
             }
             Some(_) => {}
         }
-        Err(self.no_suitable(url.as_str()))
+        Err(self.no_suitable(&input))
     }
 
     pub fn download(&self, info: &VideoInfo, destination: impl AsRef<Path>) -> Result<u64> {
@@ -2820,6 +2921,19 @@ impl YoutubeDl {
             return download::download_hls_subtitle(
                 &self.client,
                 info,
+                subtitle,
+                destination.as_ref(),
+                options,
+                &mut callback,
+            );
+        }
+        if let Some(protocol @ ("youtube_live_chat" | "youtube_live_chat_replay")) =
+            subtitle.protocol.as_deref()
+        {
+            report_invoking("youtube_live_chat", &[&subtitle.url]);
+            return extractor::youtube::live_chat::download(
+                &self.client,
+                protocol == "youtube_live_chat",
                 subtitle,
                 destination.as_ref(),
                 options,

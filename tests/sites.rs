@@ -267,3 +267,34 @@ fn a_single_youtube_embed_is_followed_by_the_youtube_extractor() {
         "{requests:?}"
     );
 }
+
+#[test]
+fn youtube_live_chat_replays_are_written_like_upstream() {
+    // Upstream `YoutubeLiveChatFD`'s JSON lines for the saved chat replay.
+    let proxy = site_proxy::SiteProxy::start("youtube-live-chat");
+    let work = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "--proxy",
+            &proxy.url,
+            "--no-check-certificate",
+        ])
+        .args(["--no-js-runtimes", "--no-progress", "--skip-download"])
+        .args(["--write-subs", "--sub-langs", "live_chat", "-o", "chat"])
+        .arg("https://www.youtube.com/watch?v=ChatReplay1")
+        .current_dir(work.path())
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let expected = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("tests/fixtures/sites/youtube-live-chat/replay-upstream.live_chat.json");
+    assert_eq!(
+        std::fs::read(work.path().join("chat.live_chat.json")).unwrap(),
+        std::fs::read(expected).unwrap()
+    );
+}

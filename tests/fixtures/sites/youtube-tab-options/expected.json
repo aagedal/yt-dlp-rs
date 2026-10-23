@@ -1,0 +1,484 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/@Region/videos",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "UCregionregionregionreg1|Regional Channel - Videos|RRRRRRRRRR2|Regional video"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Region/videos",
+   "args": [
+    "--compat-options",
+    "no-youtube-channel-redirect",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "UCregionregionregionreg1|Region Channel - Videos|RRRRRRRRRR1|Region page video"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Gone",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube:tab] @Gone: The channel/playlist does not exist and the URL redirected to youtube.com home page"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Gone",
+   "args": [
+    "--compat-options",
+    "no-youtube-channel-redirect",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"@Gone\", \"title\": \"@Gone - Home\", \"availability\": null, \"channel_follower_count\": null, \"description\": null, \"tags\": [], \"thumbnails\": [], \"modified_date\": null, \"view_count\": null, \"playlist_count\": 1, \"channel\": null, \"channel_id\": null, \"uploader_id\": null, \"uploader\": null, \"channel_url\": null, \"uploader_url\": null, \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"HOMEHOMEHO1\", \"url\": \"https://www.youtube.com/watch?v=HOMEHOMEHO1\", \"title\": \"Home page video\", \"description\": null, \"duration\": 245, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/HOMEHOMEHO1/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1000, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/@Gone\", \"original_url\": \"https://www.youtube.com/@Gone\", \"webpage_url_basename\": \"@Gone\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+   "args": [
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+    "[youtube:tab] PLunavailableunavailableunavailab1: Downloading webpage",
+    "[youtube:tab] PLunavailableunavailableunavailab1: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: Hidden videos",
+    "[youtube:tab] Playlist Hidden videos: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: Hidden videos"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+   "args": [
+    "--compat-options",
+    "no-youtube-unavailable-videos",
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+    "[youtube:tab] PLunavailableunavailableunavailab1: Downloading webpage",
+    "[download] Downloading playlist: Hidden videos",
+    "[youtube:tab] Playlist Hidden videos: Downloading 1 items of 1",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Hidden videos"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLunavailableunavailableunavailab1",
+   "args": [
+    "--compat-options",
+    "no-youtube-unavailable-videos",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "PLunavailableunavailableunavailab1|Hidden videos|UUUUUUUUUU1|Shown video"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1",
+   "args": [
+    "--extractor-args",
+    "youtubetab:skip=webpage",
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading API parameters API JSON",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading API JSON",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: API playlist",
+    "[youtube:tab] Playlist API playlist: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: API playlist"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1",
+   "args": [
+    "--extractor-args",
+    "youtubetab:skip=webpage",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"PLskipwebpageskipwebpageskipwebpa1\", \"title\": \"API playlist\", \"availability\": null, \"channel_follower_count\": null, \"description\": \"\", \"tags\": [], \"thumbnails\": [], \"modified_date\": null, \"view_count\": null, \"playlist_count\": 2, \"channel\": null, \"channel_id\": null, \"uploader_id\": null, \"uploader\": null, \"channel_url\": null, \"uploader_url\": null, \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"SKIPSKIPSK1\", \"url\": \"https://www.youtube.com/watch?v=SKIPSKIPSK1\", \"title\": \"API video\", \"description\": null, \"duration\": 245, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/SKIPSKIPSK1/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1000, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"SKIPSKIPSK2\", \"url\": \"https://www.youtube.com/watch?v=SKIPSKIPSK2\", \"title\": \"Reloaded video\", \"description\": null, \"duration\": 245, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/SKIPSKIPSK2/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1000, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1\", \"original_url\": \"https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1\", \"webpage_url_basename\": \"playlist\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "youtubetab:skip=webpage",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Playlists that require authentication may not extract correctly without a successful webpage download. If you are not downloading private content, or your cookies are only for the first account and channel, pass \"--extractor-args youtubetab:skip=authcheck\" to skip this check"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "youtubetab:skip=webpage,authcheck",
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading API parameters API JSON",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading API JSON",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: API playlist",
+    "[youtube:tab] Playlist API playlist: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: API playlist"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] Playlists that require authentication may not extract correctly without a successful webpage download"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1",
+   "args": [
+    "--extractor-args",
+    "youtubetab:skip=webpage;approximate_date",
+    "--extractor-args",
+    "youtubetab:skip=authcheck",
+    "-s",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/playlist?list=PLskipwebpageskipwebpageskipwebpa1",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading webpage",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading webpage",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading webpage",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading webpage",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading API parameters API JSON",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Downloading API JSON",
+    "[youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Redownloading playlist API JSON with unavailable videos",
+    "[download] Downloading playlist: API playlist",
+    "[youtube:tab] Playlist API playlist: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[download] Downloading item 2 of 2",
+    "[download] Finished downloading playlist: API playlist"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] HTTP Error 404: Not Found. Retrying (1/3)...",
+    "WARNING: [youtube:tab] HTTP Error 404: Not Found. Retrying (2/3)...",
+    "WARNING: [youtube:tab] HTTP Error 404: Not Found. Retrying (3/3)...",
+    "WARNING: [youtube:tab] PLskipwebpageskipwebpageskipwebpa1: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>). Giving up after 3 retries"
+   ],
+   "files": {}
+  },
+  {
+   "url": "ytsearch1:test query",
+   "args": [
+    "--extractor-args",
+    "youtubetab:skip=webpage",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"test query\", \"title\": \"test query\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"SEARCHVID01\", \"url\": \"https://www.youtube.com/watch?v=SEARCHVID01\", \"title\": \"First result\", \"description\": \"Snippet of First result\", \"duration\": 245, \"channel_id\": \"UCownerownerownerowner12\", \"channel\": \"Owner Channel\", \"channel_url\": \"https://www.youtube.com/channel/UCownerownerownerowner12\", \"uploader\": \"Owner Channel\", \"uploader_id\": \"@Owner\", \"uploader_url\": \"https://www.youtube.com/@Owner\", \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/SEARCHVID01/hq720.jpg\", \"height\": 404, \"width\": 720}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 12345, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"ytsearch1:test query\", \"original_url\": \"ytsearch1:test query\", \"webpage_url_basename\": \"test query\", \"webpage_url_domain\": null, \"extractor\": \"youtube:search\", \"extractor_key\": \"YoutubeSearch\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "ytsearch1:test query",
+   "copy": [
+    "cookies.txt"
+   ],
+   "args": [
+    "--cookies",
+    "cookies.txt",
+    "--extractor-args",
+    "youtubetab:skip=webpage",
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "SEARCHVID01|First result"
+   ],
+   "stderr": [
+    "WARNING: [youtube:search] Playlists that require authentication may not extract correctly without a successful webpage download"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Dates/videos",
+   "args": [
+    "--extractor-args",
+    "youtubetab:approximate_date",
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(timestamp&set|unset)s|%(upload_date&set|unset)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "DATEDATEDA1|set|set",
+    "DATEDATEDA2|set|set",
+    "DATEDATEDA3|set|set",
+    "DATEDATEDA4|unset|unset",
+    "DATEDATEDA5|unset|unset",
+    "DATEDATEDA6|set|set",
+    "DATEDATEDA7|set|set",
+    "DATEDATEDA8|unset|unset"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] Cannot parse localized time text \"sometime soon\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Dates/videos",
+   "args": [
+    "--extractor-args",
+    "youtubetab:approximate_date",
+    "--flat-playlist",
+    "-I",
+    "1,2,4,6",
+    "--print",
+    "%(id)s|%(timestamp)s|%(upload_date)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "DATEDATEDA1|1704412800|20240105",
+    "DATEDATEDA2|1677801600|20230303",
+    "DATEDATEDA4|NA|NA",
+    "DATEDATEDA6|1580601600|20200202"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] Cannot parse localized time text \"sometime soon\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Dates/videos",
+   "args": [
+    "--extractor-args",
+    "youtubetab:approximate_date",
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "1,2,4,6"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"UCdatesdatesdatesdatesd1\", \"channel\": \"Dates Channel\", \"channel_id\": \"UCdatesdatesdatesdatesd1\", \"title\": \"Dates Channel - Videos\", \"availability\": \"public\", \"channel_follower_count\": null, \"description\": \"The Dates Channel channel\", \"tags\": [], \"thumbnails\": [{\"url\": \"https://yt3.googleusercontent.com/av=s900-c-k\", \"height\": 900, \"width\": 900, \"id\": \"0\", \"resolution\": \"900x900\"}, {\"url\": \"https://yt3.googleusercontent.com/av=s0\", \"id\": \"avatar_uncropped\", \"preference\": 1}], \"uploader_id\": \"@Dates\", \"uploader_url\": \"https://www.youtube.com/@Dates\", \"modified_date\": null, \"view_count\": null, \"playlist_count\": null, \"uploader\": \"Dates Channel\", \"channel_url\": \"https://www.youtube.com/channel/UCdatesdatesdatesdatesd1\", \"_type\": \"playlist\", \"entries\": [{\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"DATEDATEDA1\", \"url\": \"https://www.youtube.com/watch?v=DATEDATEDA1\", \"title\": \"Absolute date\", \"description\": null, \"duration\": 245, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/DATEDATEDA1/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": 1704412800, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1000, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"DATEDATEDA2\", \"url\": \"https://www.youtube.com/watch?v=DATEDATEDA2\", \"title\": \"Streamed date\", \"description\": null, \"duration\": 245, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/DATEDATEDA2/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": 1677801600, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1000, \"live_status\": \"was_live\", \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}, {\"_type\": \"url\", \"ie_key\": \"Youtube\", \"id\": \"DATEDATEDA4\", \"url\": \"https://www.youtube.com/watch?v=DATEDATEDA4\", \"title\": \"No date\", \"description\": null, \"duration\": 245, \"channel_id\": null, \"channel\": null, \"channel_url\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/DATEDATEDA4/hqdefault.jpg\", \"height\": 360, \"width\": 480}], \"timestamp\": null, \"release_timestamp\": null, \"availability\": null, \"view_count\": 1000, \"live_status\": null, \"channel_is_verified\": null, \"__x_forwarded_for_ip\": null}, {\"title\": \"Lockup absolute\", \"thumbnails\": [{\"url\": \"https://i.ytimg.com/vi/DATEDATEDA6/hqdefault.jpg\", \"height\": 270, \"width\": 480}], \"duration\": null, \"view_count\": 5, \"timestamp\": 1580601600, \"live_status\": null, \"availability\": null, \"channel_url\": null, \"uploader_url\": null, \"creators\": null, \"ie_key\": \"Youtube\", \"id\": \"DATEDATEDA6\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/watch?v=DATEDATEDA6\", \"__x_forwarded_for_ip\": null}], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/@Dates/videos\", \"original_url\": \"https://www.youtube.com/@Dates/videos\", \"webpage_url_basename\": \"videos\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"requested_entries\": [1, 2, 4, 6], \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] Cannot parse localized time text \"sometime soon\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Dates/videos",
+   "args": [
+    "--extractor-args",
+    "youtubetab:approximate_date=false",
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(timestamp&set|unset)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "DATEDATEDA1|set",
+    "DATEDATEDA2|set",
+    "DATEDATEDA3|set",
+    "DATEDATEDA4|unset",
+    "DATEDATEDA5|unset",
+    "DATEDATEDA6|set",
+    "DATEDATEDA7|set",
+    "DATEDATEDA8|unset"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] Cannot parse localized time text \"sometime soon\""
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Dates/videos",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "1",
+    "--print",
+    "%(id)s|%(timestamp)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "DATEDATEDA1|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "0"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"@Zero\", \"channel\": \"Zero Channel\", \"channel_id\": \"UCzerozerozerozerozeroz1\", \"title\": \"Zero Channel\", \"availability\": \"public\", \"channel_follower_count\": null, \"description\": \"The Zero Channel channel\", \"tags\": [], \"thumbnails\": [{\"url\": \"https://yt3.googleusercontent.com/av=s900-c-k\", \"height\": 900, \"width\": 900, \"id\": \"0\", \"resolution\": \"900x900\"}, {\"url\": \"https://yt3.googleusercontent.com/av=s0\", \"id\": \"avatar_uncropped\", \"preference\": 1}], \"uploader_id\": \"@Zero\", \"uploader_url\": \"https://www.youtube.com/@Zero\", \"modified_date\": null, \"view_count\": null, \"playlist_count\": 3, \"uploader\": \"Zero Channel\", \"channel_url\": \"https://www.youtube.com/channel/UCzerozerozerozerozeroz1\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.youtube.com/@Zero\", \"original_url\": \"https://www.youtube.com/@Zero\", \"webpage_url_basename\": \"@Zero\", \"webpage_url_domain\": \"youtube.com\", \"extractor\": \"youtube:tab\", \"extractor_key\": \"YoutubeTab\", \"release_year\": null, \"requested_entries\": [], \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "0"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/@Zero",
+    "[youtube:tab] @Zero: Downloading webpage",
+    "[youtube:tab] Downloading all uploads of the channel. To download only the videos in a specific tab, pass the tab's URL",
+    "[youtube:tab] Downloading as multiple playlists, separated by tabs. To download as a single playlist instead, pass https://www.youtube.com/playlist?list=UUzerozerozerozerozeroz1",
+    "[download] Downloading playlist: Zero Channel",
+    "[youtube:tab] Playlist Zero Channel: Downloading 0 items of 3",
+    "[download] Finished downloading playlist: Zero Channel"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "0,1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/@Zero",
+    "[youtube:tab] @Zero: Downloading webpage",
+    "[youtube:tab] Downloading all uploads of the channel. To download only the videos in a specific tab, pass the tab's URL",
+    "[youtube:tab] @Zero/streams: Downloading webpage",
+    "[youtube:tab] @Zero/shorts: Downloading webpage",
+    "[youtube:tab] Downloading as multiple playlists, separated by tabs. To download as a single playlist instead, pass https://www.youtube.com/playlist?list=UUzerozerozerozerozeroz1",
+    "[download] Downloading playlist: Zero Channel",
+    "[youtube:tab] Playlist Zero Channel: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Downloading playlist: Zero Channel - Videos",
+    "[youtube:tab] Playlist Zero Channel - Videos: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Zero Channel - Videos",
+    "[download] Finished downloading playlist: Zero Channel"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "0",
+    "--print",
+    "playlist:%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "@Zero|3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero/videos",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "0"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"UCzerozerozerozerozeroz1\", \"channel\": \"Zero Channel\", \"channel_id\": \"UCzerozerozerozerozeroz1\", \"title\": \"Zero Channel - Videos\", \"availability\": \"public\", \"channel_follower_count\": null, \"description\": \"The Zero Channel channel\", \"tags\": [], \"thumbnails\": [{\"url\": \"https://yt3.googleusercontent.com/av=s900-c-k\", \"height\": 900, \"width\": 900, \"id\": \"0\", \"resolution\": \"900x900\"}, {\"url\": \"https://yt3.googleusercontent.com/av=s0\", \"id\": \"avatar_uncropped\", \"preference\": 1}], \"uploader_id\": \"@Zero\", \"uploader_url\": \"https://www.youtube.com/@Zero\", \"modified_date\": null, \"view_count\": null, \"playlist_count\": null, \"uploader\": \"Zero Channel\", \"channel_url\": \"https://www.youtube.com/channel/UCzerozerozerozerozeroz1\", \"_type\": \"playlist\", \"entries\": [], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/@Zero/videos\", \"original_url\": \"https://www.youtube.com/@Zero/videos\", \"webpage_url_basename\": \"videos\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"requested_entries\": [], \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

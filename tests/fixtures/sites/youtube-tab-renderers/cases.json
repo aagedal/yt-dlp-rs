@@ -1,0 +1,8 @@
+[
+ {"url": "https://www.youtube.com/feed/musicfixture", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.youtube.com/feed/musicfixture", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(title)s|%(ie_key)s|%(url)s|%(extractor)s"]},
+ {"url": "https://www.youtube.com/feed/hashtagtiles", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.youtube.com/feed/hashtagtiles", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(title)s|%(ie_key)s|%(url)s|%(extractor)s"]},
+ {"url": "https://www.youtube.com/feed/reports", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.youtube.com/feed/reports", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(title)s|%(ie_key)s|%(url)s|%(extractor)s"]}
+]
