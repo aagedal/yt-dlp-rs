@@ -384,6 +384,101 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "0"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"@Zero\", \"channel\": \"Zero Channel\", \"channel_id\": \"UCzerozerozerozerozeroz1\", \"title\": \"Zero Channel\", \"availability\": \"public\", \"channel_follower_count\": null, \"description\": \"The Zero Channel channel\", \"tags\": [], \"thumbnails\": [{\"url\": \"https://yt3.googleusercontent.com/av=s900-c-k\", \"height\": 900, \"width\": 900, \"id\": \"0\", \"resolution\": \"900x900\"}, {\"url\": \"https://yt3.googleusercontent.com/av=s0\", \"id\": \"avatar_uncropped\", \"preference\": 1}], \"uploader_id\": \"@Zero\", \"uploader_url\": \"https://www.youtube.com/@Zero\", \"modified_date\": null, \"view_count\": null, \"playlist_count\": 3, \"uploader\": \"Zero Channel\", \"channel_url\": \"https://www.youtube.com/channel/UCzerozerozerozerozeroz1\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.youtube.com/@Zero\", \"original_url\": \"https://www.youtube.com/@Zero\", \"webpage_url_basename\": \"@Zero\", \"webpage_url_domain\": \"youtube.com\", \"extractor\": \"youtube:tab\", \"extractor_key\": \"YoutubeTab\", \"release_year\": null, \"requested_entries\": [], \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "0"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/@Zero",
+    "[youtube:tab] @Zero: Downloading webpage",
+    "[youtube:tab] Downloading all uploads of the channel. To download only the videos in a specific tab, pass the tab's URL",
+    "[youtube:tab] Downloading as multiple playlists, separated by tabs. To download as a single playlist instead, pass https://www.youtube.com/playlist?list=UUzerozerozerozerozeroz1",
+    "[download] Downloading playlist: Zero Channel",
+    "[youtube:tab] Playlist Zero Channel: Downloading 0 items of 3",
+    "[download] Finished downloading playlist: Zero Channel"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero",
+   "args": [
+    "-s",
+    "--flat-playlist",
+    "-I",
+    "0,1"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube:tab] Extracting URL: https://www.youtube.com/@Zero",
+    "[youtube:tab] @Zero: Downloading webpage",
+    "[youtube:tab] Downloading all uploads of the channel. To download only the videos in a specific tab, pass the tab's URL",
+    "[youtube:tab] @Zero/streams: Downloading webpage",
+    "[youtube:tab] @Zero/shorts: Downloading webpage",
+    "[youtube:tab] Downloading as multiple playlists, separated by tabs. To download as a single playlist instead, pass https://www.youtube.com/playlist?list=UUzerozerozerozerozeroz1",
+    "[download] Downloading playlist: Zero Channel",
+    "[youtube:tab] Playlist Zero Channel: Downloading 1 items of 3",
+    "[download] Downloading item 1 of 1",
+    "[download] Downloading playlist: Zero Channel - Videos",
+    "[youtube:tab] Playlist Zero Channel - Videos: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: Zero Channel - Videos",
+    "[download] Finished downloading playlist: Zero Channel"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero",
+   "args": [
+    "--flat-playlist",
+    "-I",
+    "0",
+    "--print",
+    "playlist:%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "@Zero|3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/@Zero/videos",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "0"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"UCzerozerozerozerozeroz1\", \"channel\": \"Zero Channel\", \"channel_id\": \"UCzerozerozerozerozeroz1\", \"title\": \"Zero Channel - Videos\", \"availability\": \"public\", \"channel_follower_count\": null, \"description\": \"The Zero Channel channel\", \"tags\": [], \"thumbnails\": [{\"url\": \"https://yt3.googleusercontent.com/av=s900-c-k\", \"height\": 900, \"width\": 900, \"id\": \"0\", \"resolution\": \"900x900\"}, {\"url\": \"https://yt3.googleusercontent.com/av=s0\", \"id\": \"avatar_uncropped\", \"preference\": 1}], \"uploader_id\": \"@Zero\", \"uploader_url\": \"https://www.youtube.com/@Zero\", \"modified_date\": null, \"view_count\": null, \"playlist_count\": null, \"uploader\": \"Zero Channel\", \"channel_url\": \"https://www.youtube.com/channel/UCzerozerozerozerozeroz1\", \"_type\": \"playlist\", \"entries\": [], \"extractor_key\": \"YoutubeTab\", \"extractor\": \"youtube:tab\", \"webpage_url\": \"https://www.youtube.com/@Zero/videos\", \"original_url\": \"https://www.youtube.com/@Zero/videos\", \"webpage_url_basename\": \"videos\", \"webpage_url_domain\": \"youtube.com\", \"release_year\": null, \"requested_entries\": [], \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

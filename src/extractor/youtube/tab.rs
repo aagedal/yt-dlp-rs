@@ -19,6 +19,8 @@ pub(crate) const KEY: &str = "YoutubeTab";
 pub(crate) static NO_CHANNEL_REDIRECT: AtomicBool = AtomicBool::new(false);
 /// `'no-youtube-unavailable-videos' in compat_opts`.
 pub(crate) static NO_UNAVAILABLE_VIDEOS: AtomicBool = AtomicBool::new(false);
+/// `self.get_param('playlist_items') == '0'`.
+pub(crate) static PLAYLIST_ITEMS_ZERO: AtomicBool = AtomicBool::new(false);
 
 fn compat(option: &AtomicBool) -> bool {
     option.load(Ordering::Relaxed)
@@ -2898,8 +2900,16 @@ impl YoutubeTab {
             }
             results.push(result);
         }
+        // With `--playlist-items 0`, the extra tabs stay `url` entries (after
+        // the selected tab's playlist); otherwise they are extracted, as
+        // users expect all video IDs even with `--flat-playlist`.
+        let mut tab_entries = Vec::new();
         for tab_url in &extra_tabs {
             let tab_url = Url::parse(tab_url)?;
+            if compat(&PLAYLIST_ITEMS_ZERO) {
+                tab_entries.push(tab_url);
+                continue;
+            }
             let Some(tab_parts) = url_parts(tab_url.as_str()) else {
                 continue;
             };
@@ -2907,10 +2917,13 @@ impl YoutubeTab {
                 results.push(result);
             }
         }
-        if results.len() == 1 {
-            return Ok(results.pop());
+        if results.len() + tab_entries.len() == 1 {
+            return Ok(match tab_entries.pop() {
+                Some(tab_url) => Some(follow(&tab_url)),
+                None => results.pop(),
+            });
         }
-        if !results.is_empty() {
+        if !results.is_empty() || !tab_entries.is_empty() {
             let mut metadata = outer_metadata.unwrap_or_else(|| tab_metadata(&item_id, &data));
             // `playlist_result(entries, item_id, **metadata)`: the item ID.
             metadata.insert("id".into(), item_id.clone().into());
@@ -2932,8 +2945,20 @@ impl YoutubeTab {
                     )),
                 })
                 .collect::<Result<Vec<_>>>()?;
+            let tab_entries = tab_entries
+                .iter()
+                .map(|tab_url| {
+                    entry_info(url_result(
+                        tab_url.as_str(),
+                        Some(KEY),
+                        None,
+                        None,
+                        Map::new(),
+                    ))
+                })
+                .collect::<Result<Vec<_>>>()?;
             let ExtractResult::Playlist(mut outer) =
-                tab_playlist(metadata, Vec::new(), url.as_str(), false)?
+                tab_playlist(metadata, tab_entries, url.as_str(), false)?
             else {
                 unreachable!("tab_playlist builds a playlist");
             };

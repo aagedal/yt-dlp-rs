@@ -2087,7 +2087,11 @@ selection options apply to the tabs and then to each tab's entries, every tab
 prints its own `Downloading playlist`/`Finished downloading playlist` lines
 between the outer playlist's, the `playlist` print/exec stage runs for each
 level, and `-J` nests the processed tab playlists (with `__x_forwarded_for_ip`)
-in the outer playlist's `entries`. Archive and match filters apply to the
+in the outer playlist's `entries`. With `--playlist-items 0` (exactly),
+like upstream, the live and shorts tabs are not extracted but stay `url`
+entries after the videos tab's playlist (one such tab alone is followed);
+index `0` selects nothing and, as upstream's `slice(0, 0)`, reads no
+continuation page. Archive and match filters apply to the
 tabs' videos (upstream also matches the tab playlists themselves, which pass as
 incomplete dicts). Topic channels without tabs are
 redirected to their uploads (`UU…`) playlist; `/about` gives the empty

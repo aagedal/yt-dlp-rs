@@ -93,6 +93,27 @@
     "Content-Type": "text/html; charset=utf-8"
    },
    "body_file": "dates.html"
+  },
+  {
+   "url": "https://www.youtube.com/@Zero/videos",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "zero-videos.html"
+  },
+  {
+   "url": "https://www.youtube.com/@Zero/streams",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "zero-streams.html"
+  },
+  {
+   "url": "https://www.youtube.com/@Zero/shorts",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "zero-shorts.html"
   }
  ]
 }

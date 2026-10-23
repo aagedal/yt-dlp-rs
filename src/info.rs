@@ -135,8 +135,10 @@ pub const NESTED_INDEX: &str = "__yt_dlp_rs_nested_index";
 impl PlaylistInfo {
     /// Placeholder `entries` for the `nested` playlists, so entry selection
     /// (`--playlist-items`, reverse, random) applies to them; each carries
-    /// [`NESTED_INDEX`].
+    /// [`NESTED_INDEX`]. Entries already present (`url` entries following
+    /// the nested playlists) stay after them.
     pub fn nested_placeholders(&mut self) {
+        let following = std::mem::take(&mut self.entries);
         self.entries = self
             .nested
             .iter()
@@ -154,6 +156,7 @@ impl PlaylistInfo {
                 entry.extra.insert(NESTED_INDEX.into(), index.into());
                 entry
             })
+            .chain(following)
             .collect();
     }
 }

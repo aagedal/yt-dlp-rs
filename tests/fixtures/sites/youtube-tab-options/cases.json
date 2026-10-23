@@ -17,5 +17,10 @@
  {"url": "https://www.youtube.com/@Dates/videos", "args": ["--extractor-args", "youtubetab:approximate_date", "--flat-playlist", "-I", "1,2,4,6", "--print", "%(id)s|%(timestamp)s|%(upload_date)s"]},
  {"url": "https://www.youtube.com/@Dates/videos", "args": ["--extractor-args", "youtubetab:approximate_date", "-J", "--flat-playlist", "-I", "1,2,4,6"]},
  {"url": "https://www.youtube.com/@Dates/videos", "args": ["--extractor-args", "youtubetab:approximate_date=false", "--flat-playlist", "--print", "%(id)s|%(timestamp&set|unset)s"]},
- {"url": "https://www.youtube.com/@Dates/videos", "args": ["--flat-playlist", "-I", "1", "--print", "%(id)s|%(timestamp)s"]}
+ {"url": "https://www.youtube.com/@Dates/videos", "args": ["--flat-playlist", "-I", "1", "--print", "%(id)s|%(timestamp)s"]},
+ {"url": "https://www.youtube.com/@Zero", "args": ["-J", "--flat-playlist", "-I", "0"]},
+ {"url": "https://www.youtube.com/@Zero", "args": ["-s", "--flat-playlist", "-I", "0"]},
+ {"url": "https://www.youtube.com/@Zero", "args": ["-s", "--flat-playlist", "-I", "0,1"]},
+ {"url": "https://www.youtube.com/@Zero", "args": ["--flat-playlist", "-I", "0", "--print", "playlist:%(id)s|%(playlist_count)s"]},
+ {"url": "https://www.youtube.com/@Zero/videos", "args": ["-J", "--flat-playlist", "-I", "0"]}
 ]
