@@ -34,11 +34,13 @@ mod info_order;
 mod interrupt;
 mod ism_fd;
 pub mod js_to_json;
+mod live_dash;
 pub mod manifest_args;
 mod match_filter;
 mod md5;
 mod merge;
 pub mod metadata_parser;
+mod mhtml;
 mod modify_chapters;
 pub mod output;
 mod playlist;
@@ -129,6 +131,8 @@ pub struct YoutubeDl {
     multistreams: (bool, bool),
     /// `--live-from-start`.
     live_from_start: bool,
+    /// The YouTube JavaScript runtime, for live-from-start refetches.
+    youtube_runtime: Option<PathBuf>,
     format_sort: FormatSortOptions,
     prefer_best: bool,
     /// Global request headers and proxy for FFmpeg network inputs.
@@ -559,12 +563,14 @@ impl YoutubeDl {
             traffic::enable();
         }
         let client = proxy.apply(builder)?.build()?;
+        let youtube_runtime = youtube.js_runtime.clone();
         Ok(Self {
             client,
             ffmpeg: None,
             merge_output_format: None,
             multistreams: (false, false),
             live_from_start: false,
+            youtube_runtime,
             format_sort: FormatSortOptions::default(),
             prefer_best: false,
             headers: headers.clone(),
@@ -974,7 +980,11 @@ impl YoutubeDl {
                 && !options.hls_use_mpegts.unwrap_or(false));
         let m4a = info.ext == "m4a" && info.container.as_deref() == Some("m4a_dash");
         // Every MPD format is `is_dash_periods` upstream.
-        let dash = protocol == "http_dash_segments" && !info.fragments.is_empty();
+        // (YouTube's post-live formats are not `is_dash_periods`.)
+        let dash = (protocol == "http_dash_segments"
+            && !info.fragments.is_empty()
+            && !info.extra.contains_key("target_duration"))
+            || (protocol == "http_dash_segments_generator" && is_live(info));
         for (needed, message, fixup) in [
             (
                 m4a,
@@ -1229,18 +1239,31 @@ impl YoutubeDl {
 
     fn report_invoking(&self, info: &VideoInfo) {
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
-        if !(ffmpeg_fd || info.requested_formats.is_empty()) {
+        // DashSegmentsFD downloads generated formats together.
+        let generated = |protocol: Option<&str>| protocol == Some("http_dash_segments_generator");
+        let live = if info.requested_formats.is_empty() {
+            generated(info.protocol.as_deref())
+        } else {
+            info.requested_formats
+                .iter()
+                .all(|format| generated(Some(&format.determine_protocol())))
+        };
+        if !(ffmpeg_fd || live || info.requested_formats.is_empty()) {
             return;
         }
         let external = self.external_downloader(info, Path::new(""));
         let name = if ffmpeg_fd {
             "ffmpeg"
+        } else if live {
+            "dashsegments"
         } else if let Some(external) = &external {
             external.basename()
         } else if info.protocol.as_deref() == Some("f4m") {
             "f4m"
         } else if info.protocol.as_deref() == Some("ism") {
             "ism"
+        } else if info.protocol.as_deref() == Some("mhtml") {
+            "mhtml"
         } else if info
             .protocol
             .as_deref()
@@ -1301,6 +1324,45 @@ impl YoutubeDl {
     /// filters (YouTube's comments with `getcomments`).
     pub fn post_extract(&self, info: &mut VideoInfo) -> Result<()> {
         extractor::youtube_comments(&self.client, info)
+    }
+
+    /// Upstream `DashSegmentsFD` over `http_dash_segments_generator`
+    /// formats (`[dashsegments] Total fragments: unknown (live)` for each),
+    /// downloaded in parallel; each pair is a format's result and file.
+    fn download_live_streams(
+        &self,
+        info: &VideoInfo,
+        streams: &[(VideoInfo, PathBuf)],
+        options: DownloadOptions,
+        merged: bool,
+        callback: &mut dyn FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
+    ) -> Result<Vec<u64>> {
+        let feed = extractor::LiveFeed::new(&self.client, info, self.youtube_runtime.as_deref())
+            .ok_or_else(|| {
+                Error::Reported(
+                    "the stream needs to be re-extracted to download it from the start".into(),
+                )
+            })?;
+        let mut jobs = Vec::new();
+        for (stream, path) in streams {
+            screen::screen("[dashsegments] Total fragments: unknown (live)");
+            if merged {
+                screen::screen(&format!("[download] Destination: {}", path.display()));
+            }
+            jobs.push(live_dash::Job {
+                fragments: extractor::LiveFragments::new(feed.clone(), &stream.extra, &stream.url),
+                info: stream.clone(),
+                destination: path.clone(),
+            });
+        }
+        live_dash::download(&self.client, jobs, options, merged, callback)
+    }
+
+    /// Evaluate YouTube post-live formats' fragment lists (upstream's
+    /// `LazyList`, read by JSON output and the downloaders): one HEAD
+    /// request's `X-Head-Seqnum` bounds them.
+    pub fn prepare_live_fragments(&self, info: &mut VideoInfo) -> Result<()> {
+        extractor::youtube_live_fragments(&self.client, info)
     }
 
     /// Fetch a playlist's pending entries (and its nested playlists') until
@@ -1775,6 +1837,28 @@ impl YoutubeDl {
             // start is titled with the local time.
             if self.live_from_now(entry) {
                 entry.title = format!("{} {}", entry.title, dates::local_now_minutes());
+            }
+            // Only formats downloadable from the start with
+            // `--live-from-start`, only the others without it.
+            // (`_get_formats`: a result without formats is its own format.)
+            if is_live(entry) {
+                let from_start = self.live_from_start;
+                let starts = |extra: &serde_json::Map<String, serde_json::Value>| {
+                    (extra.get("is_from_start") == Some(&serde_json::Value::Bool(true)))
+                        == from_start
+                };
+                let none_left = if entry.formats.is_empty() {
+                    !starts(&entry.extra)
+                } else {
+                    entry.formats.retain(|format| starts(&format.extra));
+                    entry.formats.is_empty()
+                };
+                if from_start && none_left {
+                    return Err(Error::Reported(format!(
+                        "[{}] {}: --live-from-start is passed, but there are no formats that can be downloaded from the start. If you want to download from the current time, use --no-live-from-start",
+                        entry.extractor, entry.id
+                    )));
+                }
             }
             entry.metadata.fill_chapters();
             entry.metadata.sanitize_thumbnails();
@@ -2702,6 +2786,19 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
+        // Upstream `DashSegmentsFD` with a fragment generator.
+        if info.requested_formats.is_empty()
+            && info.protocol.as_deref() == Some("http_dash_segments_generator")
+        {
+            let bytes = self.download_live_streams(
+                info,
+                &[(info.clone(), destination.as_ref().to_path_buf())],
+                options,
+                false,
+                &mut callback,
+            )?;
+            return Ok(bytes.iter().sum());
+        }
         if !info.requested_formats.is_empty() {
             return self.download_merged(info, destination.as_ref(), options, &mut callback);
         }
@@ -2735,6 +2832,21 @@ impl YoutubeDl {
                 options,
                 self.keep_fragments,
                 self.test,
+                &mut callback,
+            );
+        }
+        // Upstream `MhtmlFD` (storyboards; `--test` takes the first fragment).
+        if info.protocol.as_deref() == Some("mhtml") {
+            let mut plan = info.clone();
+            if self.test {
+                plan.fragments.truncate(1);
+            }
+            return fragment::download_mhtml(
+                &self.client,
+                &plan,
+                destination.as_ref(),
+                options,
+                self.keep_fragments,
                 &mut callback,
             );
         }
@@ -2954,7 +3066,48 @@ impl YoutubeDl {
         };
         let mut paths = Vec::new();
         let mut stored = 0u64;
-        for (index, stream) in streams.iter().enumerate() {
+        // `get_suitable_downloader`: generated (`--live-from-start`) formats
+        // download together through DashSegmentsFD, into files named with
+        // the merged extension.
+        let live = streams
+            .iter()
+            .all(|stream| stream.determine_protocol() == "http_dash_segments_generator");
+        if live {
+            let jobs: Vec<(VideoInfo, PathBuf)> = streams
+                .iter()
+                .enumerate()
+                .map(|(index, stream)| {
+                    let path = match upstream {
+                        None => workspace
+                            .path()
+                            .join(format!("input-{index}.{}", stream.ext)),
+                        Some(_) => {
+                            let mut named = stream.clone();
+                            named.ext = info.ext.clone();
+                            stream_path(destination, &info.ext, &named)
+                        }
+                    };
+                    (info.with_selected_format(stream), path)
+                })
+                .collect();
+            let sizes = self.download_live_streams(
+                info,
+                &jobs,
+                DownloadOptions {
+                    part_files: if upstream.is_some() {
+                        options.part_files
+                    } else {
+                        PartFiles::Private
+                    },
+                    ..options
+                },
+                true,
+                callback,
+            )?;
+            stored = sizes.iter().sum();
+            paths = jobs.into_iter().map(|(_, path)| path).collect();
+        }
+        for (index, stream) in streams.iter().enumerate().filter(|_| !live) {
             let path = match upstream {
                 None => workspace
                     .path()
@@ -3040,6 +3193,7 @@ impl YoutubeDl {
                     let downloader = match part.protocol.as_deref() {
                         Some("http_dash_segments") => "dashsegments",
                         Some("ism") => "ism",
+                        Some("mhtml") => "mhtml",
                         _ => "hlsnative",
                     };
                     screen::screen(&format!(

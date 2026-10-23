@@ -157,6 +157,92 @@ fn hds_downloads_assemble_flv_like_upstream_f4mfd() {
     assert_eq!(std::fs::read(work.path().join("o.flv")).unwrap(), expected);
 }
 
+/// The MIME boundary of an MHTML document.
+fn mhtml_boundary(document: &[u8]) -> String {
+    let text = String::from_utf8_lossy(document);
+    let start = text.find("boundary=\"").unwrap() + "boundary=\"".len();
+    text[start..start + text[start..].find('"').unwrap()].to_owned()
+}
+
+/// Replace every `from` in `bytes` with `to`.
+fn replace_bytes(bytes: &[u8], from: &[u8], to: &[u8]) -> Vec<u8> {
+    let mut out = Vec::with_capacity(bytes.len());
+    let mut at = 0;
+    while at < bytes.len() {
+        if bytes[at..].starts_with(from) {
+            out.extend_from_slice(to);
+            at += from.len();
+        } else {
+            out.push(bytes[at]);
+            at += 1;
+        }
+    }
+    out
+}
+
+#[test]
+fn storyboards_download_as_mhtml_like_upstream_mhtmlfd() {
+    // Pinned upstream's `-f sb0` file (upstream-sb0.mhtml): the same bytes
+    // once the random boundary and the generator meta (this port names
+    // itself) are aligned.
+    let site = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("tests/fixtures/sites/youtube-storyboard");
+    let proxy = site_proxy::SiteProxy::start("youtube-storyboard");
+    let work = tempfile::tempdir().unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args([
+            "--ignore-config",
+            "--proxy",
+            &proxy.url,
+            "--no-check-certificate",
+        ])
+        .args(["--user-agent", "fixture", "--no-js-runtimes", "-f", "sb0"])
+        .args(["--no-progress", "-o", "%(id)s.%(ext)s"])
+        .arg("https://www.youtube.com/watch?v=StoryBoard1")
+        .current_dir(work.path())
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        stdout.contains(
+            "[mhtml] Total fragments: 8\n[download] Destination: StoryBoard1.mhtml\n[download] Download completed\n"
+        ),
+        "{stdout}"
+    );
+    let upstream = std::fs::read(site.join("upstream-sb0.mhtml")).unwrap();
+    let native = std::fs::read(work.path().join("StoryBoard1.mhtml")).unwrap();
+    let generator = concat!("yt-dlp-rs ", env!("CARGO_PKG_VERSION"));
+    let shift = generator.len() - "yt-dlp 2026.08.19".len();
+    let html = |document: &[u8]| {
+        let text = String::from_utf8_lossy(document);
+        let start = text.find("Content-Length: ").unwrap() + "Content-Length: ".len();
+        let end = start + text[start..].find('\r').unwrap();
+        text[start..end].parse::<usize>().unwrap()
+    };
+    let mut aligned = replace_bytes(
+        &native,
+        mhtml_boundary(&native).as_bytes(),
+        mhtml_boundary(&upstream).as_bytes(),
+    );
+    aligned = replace_bytes(&aligned, generator.as_bytes(), b"yt-dlp 2026.08.19");
+    aligned = replace_bytes(
+        &aligned,
+        format!("Content-Length: {}\r", html(&native)).as_bytes(),
+        format!("Content-Length: {}\r", html(&native) - shift).as_bytes(),
+    );
+    assert_eq!(
+        String::from_utf8_lossy(&aligned),
+        String::from_utf8_lossy(&upstream)
+    );
+    assert_eq!(aligned, upstream);
+    assert!(!work.path().join("StoryBoard1.mhtml.ytdl").exists());
+}
+
 #[test]
 fn a_single_youtube_embed_is_followed_by_the_youtube_extractor() {
     // Upstream's `url_result(embed)`: the configured YouTube extractor

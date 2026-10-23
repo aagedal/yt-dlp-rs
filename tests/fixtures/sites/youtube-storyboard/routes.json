@@ -1,0 +1,77 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=StoryBoard1&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visionos.json"
+  },
+  {
+   "url": "https://i.ytimg.com/sb/StoryBoard1/storyboard3_L1/M0.jpg?sqp=-oay&sigh=rs$AOn5",
+   "headers": {
+    "Content-Type": "image/jpeg"
+   },
+   "body_file": "M0.jpg"
+  },
+  {
+   "url": "https://i.ytimg.com/sb/StoryBoard1/storyboard3_L1/M1.jpg?sqp=-oay&sigh=rs$AOn5",
+   "headers": {
+    "Content-Type": "image/jpeg"
+   },
+   "body_file": "M1.jpg"
+  },
+  {
+   "url": "https://i.ytimg.com/sb/StoryBoard1/storyboard3_L1/M2.jpg?sqp=-oay&sigh=rs$AOn5",
+   "headers": {
+    "Content-Type": "image/jpeg"
+   },
+   "body_file": "M2.jpg"
+  },
+  {
+   "url": "https://i.ytimg.com/sb/StoryBoard1/storyboard3_L1/M3.jpg?sqp=-oay&sigh=rs$AOn5",
+   "headers": {
+    "Content-Type": "image/jpeg"
+   },
+   "body_file": "M3.jpg"
+  },
+  {
+   "url": "https://i.ytimg.com/sb/StoryBoard1/storyboard3_L1/M4.jpg?sqp=-oay&sigh=rs$AOn5",
+   "headers": {
+    "Content-Type": "image/jpeg"
+   },
+   "body_file": "M4.jpg"
+  },
+  {
+   "url": "https://i.ytimg.com/sb/StoryBoard1/storyboard3_L1/M5.jpg?sqp=-oay&sigh=rs$AOn5",
+   "headers": {
+    "Content-Type": "image/jpeg"
+   },
+   "body_file": "M5.jpg"
+  },
+  {
+   "url": "https://i.ytimg.com/sb/StoryBoard1/storyboard3_L1/M6.jpg?sqp=-oay&sigh=rs$AOn5",
+   "headers": {
+    "Content-Type": "image/jpeg"
+   },
+   "body_file": "M6.jpg"
+  },
+  {
+   "url": "https://i.ytimg.com/sb/StoryBoard1/storyboard3_L1/M7.jpg?sqp=-oay&sigh=rs$AOn5",
+   "headers": {
+    "Content-Type": "image/jpeg"
+   },
+   "body_file": "M7.jpg"
+  }
+ ]
+}

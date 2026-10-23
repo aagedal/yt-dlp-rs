@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://www.youtube.com/watch?v=StoryBoard1",
+  "args": [
+   "--no-js-runtimes",
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=StoryBoard1",
+  "args": [
+   "--no-js-runtimes",
+   "-f",
+   "sb1",
+   "--no-progress",
+   "-o",
+   "%(id)s.%(ext)s"
+  ]
+ }
+]

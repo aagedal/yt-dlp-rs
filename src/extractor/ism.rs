@@ -168,6 +168,7 @@ fn parse_document(
                         byte_range: None,
                         path: None,
                         duration: Some(length / stream_timescale as f64),
+                        fragment_count: None,
                     });
                     time += length;
                     float |= computed;

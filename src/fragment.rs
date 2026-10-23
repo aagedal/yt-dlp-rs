@@ -38,7 +38,8 @@ impl Reporter<'_> {
             stream_index: None,
             stream_count: None,
             fragment_index: Some(self.index),
-            fragment_count: Some(self.count),
+            // Live fragment lists have no count (`0`).
+            fragment_count: (self.count > 0).then_some(self.count),
             fragment,
         })
         .is_break()
@@ -115,6 +116,35 @@ enum Assembly<'a> {
     /// `IsmFD`: the PIFF header (from these `_download_params` and the first
     /// fragment's track ID) before the raw fragments.
     Ism(&'a serde_json::Value),
+    /// `MhtmlFD`: the MIME headers and HTML stub, each fragment as an image
+    /// part, then the closing boundary (`str` is a fresh download's boundary).
+    Mhtml(&'a str),
+}
+
+/// Upstream `MhtmlFD`, sequentially: fragment requests use HttpFD's
+/// `--retries` (only transient failures) and any other failure ends the
+/// download, as upstream's `_download_fragment` raises it.
+pub(crate) fn download_mhtml(
+    client: &Client,
+    info: &VideoInfo,
+    destination: &Path,
+    mut options: DownloadOptions,
+    keep_fragments: bool,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    options.fragment_retries = options.retries;
+    options.skip_unavailable_fragments = None;
+    let boundary = crate::mhtml::boundary();
+    download_with(
+        client,
+        info,
+        destination,
+        options,
+        1,
+        keep_fragments,
+        Assembly::Mhtml(&boundary),
+        callback,
+    )
 }
 
 /// Upstream `IsmFD`'s assembly, sequentially.
@@ -242,8 +272,19 @@ fn download_with(
         .as_deref()
         .is_some_and(|protocol| protocol.starts_with("m3u8"));
     let ism = matches!(assembly, Assembly::Ism(_));
-    let write_state = |index: usize| -> Result<()> {
-        let extra = if ism {
+    // MhtmlFD's boundary, and whether its header is written (its
+    // `extra_state`, saved once the header is).
+    let mut mhtml = match assembly {
+        Assembly::Mhtml(boundary) => Some((boundary.to_owned(), false)),
+        _ => None,
+    };
+    let write_state = |index: usize, mhtml: &Option<(String, bool)>| -> Result<()> {
+        let extra = if let Some((boundary, true)) = mhtml {
+            format!(
+                ", \"extra_state\": {{\"header_written\": true, \"mime_boundary\": {}}}",
+                serde_json::Value::from(boundary.as_str())
+            )
+        } else if ism {
             format!(
                 ", \"extra_state\": {{\"ism_track_written\": {}}}",
                 if index > 0 { "true" } else { "false" }
@@ -265,9 +306,11 @@ fn download_with(
     if upstream {
         let mut resume_len = fs::metadata(&part_path).map_or(0, |metadata| metadata.len());
         if resume && ytdl_path.is_file() {
-            let state: Option<usize> = fs::read_to_string(&ytdl_path)
+            let saved: Option<serde_json::Value> = fs::read_to_string(&ytdl_path)
                 .ok()
-                .and_then(|text| serde_json::from_str::<serde_json::Value>(&text).ok())
+                .and_then(|text| serde_json::from_str::<serde_json::Value>(&text).ok());
+            let state: Option<usize> = saved
+                .as_ref()
                 .and_then(|value| value["downloader"]["current_fragment"]["index"].as_u64())
                 .map(|index| index as usize);
             let message = match state {
@@ -284,13 +327,24 @@ fn download_with(
                 crate::screen::warning(&format!("{message}. Restarting from the beginning ..."));
                 start = 0;
                 resume_len = 0;
-                write_state(0)?;
+                write_state(0, &None)?;
+            } else if let Some(state) = &mut mhtml {
+                // The saved boundary keeps the parts consistent.
+                let extra = saved
+                    .as_ref()
+                    .map(|value| &value["downloader"]["extra_state"]);
+                if let Some(boundary) = extra.and_then(|extra| extra["mime_boundary"].as_str()) {
+                    *state = (
+                        boundary.to_owned(),
+                        extra.is_some_and(|extra| extra["header_written"] == true),
+                    );
+                }
             }
         } else {
             if !resume {
                 resume_len = 0;
             }
-            write_state(0)?;
+            write_state(0, &None)?;
         }
         // Not `append`: an append-only Windows handle cannot `sync_all`
         // ("Access is denied"); resumed writes start at the end instead.
@@ -337,10 +391,15 @@ fn download_with(
     // Completed fragments for `FILE.ytdl` (upstream counts downloads, not
     // positions).
     let mut completed = start;
+    // MhtmlFD writes its header first unless the saved state says it did.
+    let mhtml_header = mhtml.as_ref().is_some_and(|(_, written)| !written);
+    if let Some((_, written)) = &mut mhtml {
+        *written = true;
+    }
     let mut appended = |_: usize| -> Result<()> {
         completed += 1;
         if upstream {
-            write_state(completed)
+            write_state(completed, &mhtml)
         } else {
             Ok(())
         }
@@ -362,6 +421,20 @@ fn download_with(
             output.write_all(header)?;
             stored = header.len() as u64;
         }
+        // MhtmlFD's unflushed header reaches the file with the first
+        // appended fragment (a failure before that leaves it empty).
+        let mut mhtml_pending = mhtml
+            .as_ref()
+            .filter(|_| mhtml_header)
+            .map(|(boundary, _)| {
+                let durations: Vec<Option<f64>> = info
+                    .fragments
+                    .iter()
+                    .map(|fragment| fragment.duration)
+                    .collect();
+                let stub = crate::mhtml::stub(&durations, boundary, &info.title);
+                crate::mhtml::header(&stub, boundary, &info.title, info.webpage_url.as_str())
+            });
         // IsmFD's header follows the first fragment's download.
         let mut track_written = start > 0;
         if concurrency > 1 && info.fragments.len() - start > 1 {
@@ -439,8 +512,36 @@ fn download_with(
                         output.write_all(payload)?;
                         stored = prefix + payload.len() as u64;
                     }
+                    // MhtmlFD wraps each fragment in an image part.
+                    if let Some((boundary, _)) = &mhtml {
+                        let mut raw = Vec::new();
+                        let mut file = fs::File::open(&output_path)?;
+                        file.seek(SeekFrom::Start(prefix))?;
+                        file.take(stored - prefix).read_to_end(&mut raw)?;
+                        let duration = fragment
+                            .duration
+                            .ok_or_else(|| Error::Reported("KeyError: 'duration'".into()))?;
+                        let mut part = mhtml_pending.take().unwrap_or_default();
+                        part.extend(crate::mhtml::part(
+                            index,
+                            boundary,
+                            fragment.url.as_str(),
+                            duration,
+                            &raw,
+                        ));
+                        output.set_len(prefix)?;
+                        output.seek(SeekFrom::Start(prefix))?;
+                        output.write_all(&part)?;
+                        stored = prefix + part.len() as u64;
+                    }
                     appended(index)?;
                 }
+            }
+            if let Some((boundary, _)) = &mhtml {
+                let mut trailer = mhtml_pending.take().unwrap_or_default();
+                trailer.extend(crate::mhtml::trailer(boundary));
+                output.write_all(&trailer)?;
+                stored += trailer.len() as u64;
             }
         }
         output.flush()?;
@@ -464,6 +565,44 @@ fn download_with(
     }
     Ok(stored)
 }
+/// One generated live fragment (fragment `index`, zero-based) appended to
+/// `file` after `*stored` with `--fragment-retries`; `Ok(false)` when it was
+/// skipped as unavailable (never the first).
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn append_live(
+    client: &Client,
+    info: &VideoInfo,
+    index: usize,
+    fragment: &Fragment,
+    options: &DownloadOptions,
+    file: &mut fs::File,
+    stored: &mut u64,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<bool> {
+    let mut reporter = Reporter {
+        callback,
+        attempt: 1,
+        index: index as u32 + 1,
+        count: 0,
+        rate_limit: options.rate_limit,
+        fragment: None,
+    };
+    let prefix = *stored;
+    let appended = fetch_with_retries(
+        client,
+        info,
+        index,
+        fragment,
+        options,
+        &mut HashMap::new(),
+        file,
+        prefix,
+        stored,
+        &mut reporter,
+    )?;
+    Ok(appended.is_some())
+}
+
 /// One fragment with `--fragment-retries` (`Ok(None)` when skipped as
 /// unavailable): written to `file` after `prefix`, which a failed attempt
 /// truncates back to.
@@ -750,7 +889,9 @@ fn fetch(
             retry: crate::retry::failure_delay(&error),
             error,
         })?;
-    let expected = validate(&response, fragment, false)?;
+    // MhtmlFD's storyboard fragments are images.
+    let images = info.protocol.as_deref() == Some("mhtml");
+    let expected = validate(&response, fragment, false, images)?;
     let modified = crate::filetime::header(&response);
     reporter.report(DownloadPhase::Downloading, *stored)?;
     if let Some(decryptor) = decryption {
@@ -836,7 +977,12 @@ fn append(
     reporter.report(DownloadPhase::Downloading, *stored)?;
     Ok(())
 }
-fn validate(response: &Response, fragment: &Fragment, key: bool) -> Result<Option<u64>> {
+fn validate(
+    response: &Response,
+    fragment: &Fragment,
+    key: bool,
+    images: bool,
+) -> Result<Option<u64>> {
     let encoding: Vec<_> = response
         .headers()
         .get_all(CONTENT_ENCODING)
@@ -880,6 +1026,7 @@ fn validate(response: &Response, fragment: &Fragment, key: bool) -> Result<Optio
         if !key
             && !(mime.starts_with("video/")
                 || mime.starts_with("audio/")
+                || (images && mime.starts_with("image/"))
                 || matches!(
                     mime.as_str(),
                     "application/octet-stream" | "application/mp4" | "application/ogg"
@@ -975,8 +1122,9 @@ fn fetch_key(
         encryption: None,
         path: None,
         duration: None,
+        fragment_count: None,
     };
-    let expected = validate(&response, &key_fragment, true)?;
+    let expected = validate(&response, &key_fragment, true, false)?;
     if expected.is_some_and(|length| length != 16) {
         return Err(unsupported("HLS AES-128 key must contain exactly 16 bytes").into());
     }

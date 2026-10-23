@@ -1,0 +1,34 @@
+[
+ {
+  "url": "https://www.youtube.com/watch?v=LiveStart01",
+  "args": [
+   "--no-js-runtimes",
+   "--live-from-start",
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=LiveStart01",
+  "args": [
+   "--no-js-runtimes",
+   "--live-from-start",
+   "--print",
+   "%(id)s|%(is_live)s|%(was_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(release_timestamp)s"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=LiveStart01",
+  "args": [
+   "--no-js-runtimes",
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=LiveStart01",
+  "args": [
+   "--no-js-runtimes",
+   "--print",
+   "%(id)s|%(is_live)s|%(was_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(release_timestamp)s"
+  ]
+ }
+]

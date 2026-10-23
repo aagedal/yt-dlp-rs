@@ -40,6 +40,77 @@ static SINK: OnceLock<Sink> = OnceLock::new();
 /// The thread that installed the sink, which may hold the output streams.
 static SINK_THREAD: OnceLock<std::thread::ThreadId> = OnceLock::new();
 
+/// A [`Message`] owned, to hand to another thread.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum OwnedMessage {
+    Screen(String),
+    ScreenRaw(String),
+    Warning(String),
+    Stderr(String),
+    Debug(String),
+    Stdout(String),
+    Postprocess(String, String),
+}
+
+impl OwnedMessage {
+    fn of(message: Message<'_>) -> Self {
+        match message {
+            Message::Screen(text) => Self::Screen(text.into()),
+            Message::ScreenRaw(text) => Self::ScreenRaw(text.into()),
+            Message::Warning(text) => Self::Warning(text.into()),
+            Message::Stderr(text) => Self::Stderr(text.into()),
+            Message::Debug(text) => Self::Debug(text.into()),
+            Message::Stdout(text) => Self::Stdout(text.into()),
+            Message::Postprocess {
+                postprocessor,
+                status,
+            } => Self::Postprocess(postprocessor.into(), status.into()),
+        }
+    }
+
+    /// Deliver the message on this thread.
+    pub(crate) fn emit(&self) {
+        deliver(match self {
+            Self::Screen(text) => Message::Screen(text),
+            Self::ScreenRaw(text) => Message::ScreenRaw(text),
+            Self::Warning(text) => Message::Warning(text),
+            Self::Stderr(text) => Message::Stderr(text),
+            Self::Debug(text) => Message::Debug(text),
+            Self::Stdout(text) => Message::Stdout(text),
+            Self::Postprocess(postprocessor, status) => Message::Postprocess {
+                postprocessor,
+                status,
+            },
+        });
+    }
+}
+
+type Forward = Box<dyn Fn(OwnedMessage)>;
+
+thread_local! {
+    /// A worker thread's messages, handed to the thread that may hold the
+    /// output streams instead of written directly.
+    static FORWARD: std::cell::RefCell<Option<Forward>> = const { std::cell::RefCell::new(None) };
+}
+
+/// Hand this thread's messages to `forward` (`None` restores the sink).
+pub(crate) fn forward(forward: Option<Forward>) {
+    FORWARD.with(|slot| *slot.borrow_mut() = forward);
+}
+
+fn deliver(message: Message<'_>) {
+    let forwarded = FORWARD.with(|slot| match &*slot.borrow() {
+        Some(forward) => {
+            forward(OwnedMessage::of(message));
+            true
+        }
+        None => false,
+    });
+    if !forwarded && let Some(sink) = SINK.get() {
+        sink(message);
+    }
+}
+
 /// Install the sink once; later calls are ignored.
 pub fn set_sink(sink: impl Fn(Message<'_>) + Send + Sync + 'static) {
     if SINK.set(Box::new(sink)).is_ok() {
@@ -106,9 +177,9 @@ pub(crate) fn flush_traffic() {
     if SINK_THREAD.get() != Some(&std::thread::current().id()) {
         return;
     }
-    if let Some(sink) = SINK.get() {
+    if SINK.get().is_some() {
         for line in crate::traffic::take_lines() {
-            sink(Message::Stdout(&line));
+            deliver(Message::Stdout(&line));
         }
     }
 }
@@ -122,19 +193,15 @@ pub(crate) fn after_request() {
 }
 
 pub(crate) fn screen(text: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::Screen(text));
-    }
+    deliver(Message::Screen(text));
 }
 
 /// `PostProcessor._hook_progress({'status': status}, info)`.
 pub(crate) fn postprocessor(postprocessor: &str, status: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::Postprocess {
-            postprocessor,
-            status,
-        });
-    }
+    deliver(Message::Postprocess {
+        postprocessor,
+        status,
+    });
 }
 
 /// Upstream `run_wrapper`: `started`, the run, then `finished` unless it
@@ -151,9 +218,7 @@ pub(crate) fn postprocess<T>(
 
 /// `to_screen(text, skip_eol=True)`.
 pub(crate) fn screen_raw(text: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::ScreenRaw(text));
-    }
+    deliver(Message::ScreenRaw(text));
 }
 
 /// `to_screen(..., only_once=True)`.
@@ -202,9 +267,7 @@ pub(crate) fn extractor_warning_once(text: &str) {
 }
 
 pub(crate) fn warning(text: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::Warning(text));
-    }
+    deliver(Message::Warning(text));
 }
 
 static VERBOSE: AtomicBool = AtomicBool::new(false);
@@ -220,10 +283,8 @@ pub fn verbose() -> bool {
 
 /// Upstream `write_debug`.
 pub(crate) fn debug(text: &str) {
-    if verbose()
-        && let Some(sink) = SINK.get()
-    {
-        sink(Message::Debug(text));
+    if verbose() {
+        deliver(Message::Debug(text));
     }
 }
 
@@ -264,9 +325,7 @@ pub(crate) fn deprecated_feature(text: &str) {
 }
 
 pub(crate) fn stderr(text: &str) {
-    if let Some(sink) = SINK.get() {
-        sink(Message::Stderr(text));
-    }
+    deliver(Message::Stderr(text));
 }
 
 /// Python `str(float)` for finite values in the ranges used by options.

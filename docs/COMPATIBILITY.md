@@ -104,7 +104,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--clean-info-json`, `--clean-infojson`, `--no-clean-info-json`, `--no-clean-infojson` | Upstream `clean_infojson`: the default drops `None` values, `__` keys and the private bookkeeping keys; `--no-clean-info-json` writes every represented field |
 | `-N N`, `--concurrent-fragments N` | Upstream concurrent fragment downloads for HLS and DASH: N workers fetch fragments (each with its own `--fragment-retries` and skip handling) into private files beside the output, appended in order; progress reports completed fragments and in-flight bytes. Upstream's `concurrent fragments "N" must be positive` validation. Screen lines match sequential downloads apart from progress timing |
 | `--downloader [PROTO:]NAME`, `--external-downloader`, `--downloader-args NAME:ARGS`, `--hls-prefer-native`, `--hls-prefer-ffmpeg` | Upstream `get_suitable_downloader` for `native` and `ffmpeg`/`avconv` (names or paths) per simplified protocol (`http`, `ftp`, `m3u8`, `dash`, `rtmp`, `default`): FFmpegFD downloads whole formats (merging all-FFmpeg pairs directly, without HlsFD's manifest line or fixups) when ffmpeg is available, otherwise the native downloaders run like upstream's `can_download` fallback. FFmpeg `--downloader-args` follow `_configuration_args` (`ffmpeg_iN`/`ffmpeg_i` before each input, `ffmpeg_oN`/`ffmpeg_o`/`ffmpeg`/`default` before the output); unnamed arguments print upstream's `External Downloader arguments given without specifying name` warning and move to the default downloader's key. `curl`, `wget`, `aria2c`, `axel` and `httpie` (names or paths, matched like `get_external_downloader`) run upstream's `CurlFD`/`WgetFD`/`Aria2cFD`/`AxelFD`/`HttpieFD` command lines for whole-file `http`/`https`/`ftp`/`ftps` formats without `hls_aes` or extractor query arguments, including merged formats' separate streams. That covers the headers, cookies (curl reads them from stdin; wget and aria2c load the `--cookies` file or an announced temporary file; axel and httpie get a `Cookie` header), `continuedl`, `noprogress`, `--limit-rate`, retries, `--max-filesize`, `--source-address`, `--proxy`, `--no-check-certificates`, aria2c's `--remote-time` from `--mtime`/`--no-mtime`, and `_configuration_args` keys. The tool writes the `.part` file, which is then renamed and reported like `ExternalFD.real_download`; a non-zero exit reports the captured stderr and `ERROR: NAME exited with code N`. An executable that cannot be run, other protocols and stdout output use the native downloaders, like upstream's `can_download`. As in the pinned upstream, no external downloader supports the `m3u8_frag_urls`/`dash_frag_urls` protocols, so HLS and DASH formats keep the native fragment downloaders. Unknown names are upstream's `No such [PROTO ]external downloader "NAME"` usage error. The HLS preference flags only affect the `m3u8` protocol, which no supported extractor produces |
-| `--extractor-args generic:ARGS`, `--live-from-start` | Parsed like upstream (`IE_KEY:ARGS`, `;`-separated `KEY=VAL[,VAL]` with `\,` escapes, keys lowercased with `-` as `_`; a later value for the same extractor replaces it; malformed values are upstream's usage error). GenericIE's HLS/DASH arguments follow `_extra_manifest_info`: `fragment_query`/`key_query` (a URL's query, a query, or empty for the manifest's) become `extra_param_to_segment_url`/`extra_param_to_key_url`, `variant_query` updates every format URL, `hls_key=URI_OR_HEX_KEY[,HEX_IV]` becomes `hls_aes`, and `is_live` replaces the live check. The native HLS/DASH downloaders add the queries to fragment and key URLs and use the external key/IV. A live result gets `is_live`/`was_live`, upstream's default `best/bestvideo+bestaudio`, FFmpegFD and `--hls-use-mpegts` by default, and the title suffix ` YYYY-MM-DD HH:MM` (local time) unless `--live-from-start`. Live manifests are otherwise downloaded as finite VOD playlists. YouTube's `player_client`, `player_skip`, `formats`, `skip`, `po_token`, `fetch_pot`, `pot_trace`, `visitor_data`, `data_sync_id`, `innertube_host`, `innertube_key`, `player_params`, `use_ad_playback_context`, `webpage_client`, `webpage_skip`, `player_js_version`, `player_js_variant`, `raise_incomplete_data`, `lang`, `max_comments` and `comment_sort` are used (see [YouTube extractor arguments](#youtube-extractor-arguments)); and so are `youtubetab:skip=webpage,authcheck` and `youtubetab:approximate_date` (see "YouTube playlists"); other YouTube and `youtubetab` arguments warn individually; arguments for other extractors warn and are ignored |
+| `--extractor-args generic:ARGS`, `--live-from-start` | Parsed like upstream (`IE_KEY:ARGS`, `;`-separated `KEY=VAL[,VAL]` with `\,` escapes, keys lowercased with `-` as `_`; a later value for the same extractor replaces it; malformed values are upstream's usage error). GenericIE's HLS/DASH arguments follow `_extra_manifest_info`: `fragment_query`/`key_query` (a URL's query, a query, or empty for the manifest's) become `extra_param_to_segment_url`/`extra_param_to_key_url`, `variant_query` updates every format URL, `hls_key=URI_OR_HEX_KEY[,HEX_IV]` becomes `hls_aes`, and `is_live` replaces the live check. The native HLS/DASH downloaders add the queries to fragment and key URLs and use the external key/IV. A live result gets `is_live`/`was_live`, upstream's default `best/bestvideo+bestaudio`, FFmpegFD and `--hls-use-mpegts` by default, and the title suffix ` YYYY-MM-DD HH:MM` (local time) unless `--live-from-start`. With `--live-from-start`, a live result keeps only its `is_from_start` formats (else upstream's `--live-from-start is passed, but there are no formats that can be downloaded from the start` error), and without it those formats are dropped; YouTube's are described under "YouTube formats". Live manifests are otherwise downloaded as finite VOD playlists. YouTube's `player_client`, `player_skip`, `formats`, `skip`, `po_token`, `fetch_pot`, `pot_trace`, `visitor_data`, `data_sync_id`, `innertube_host`, `innertube_key`, `player_params`, `use_ad_playback_context`, `webpage_client`, `webpage_skip`, `player_js_version`, `player_js_variant`, `raise_incomplete_data`, `lang`, `max_comments` and `comment_sort` are used (see [YouTube extractor arguments](#youtube-extractor-arguments)); and so are `youtubetab:skip=webpage,authcheck` and `youtubetab:approximate_date` (see "YouTube playlists"); other YouTube and `youtubetab` arguments warn individually; arguments for other extractors warn and are ignored |
 | FFmpeg postprocessor failures | Like upstream's `real_run_ffmpeg`, postprocessor FFmpeg runs use `-loglevel repeat+info`, succeed on exit status 0 whatever stderr says, and fail with `ERROR: Postprocessing: LINE` from the last line of stderr (for example `Conversion failed!`) |
 | `--postprocessor-args NAME:ARGS`, `--ppa` | Upstream `_configuration_args` for this port's FFmpeg postprocessors (`Merger`, `ExtractAudio`, `VideoRemuxer`, `VideoConvertor`, `Metadata`, `EmbedSubtitle`, `EmbedThumbnail`, `SubtitlesConvertor`, `ThumbnailsConvertor`, `SplitChapters`, `FixupM3u8`, `FixupM4a`): shlex-split values by case-insensitive `PP[+EXE][_i[N]\|_o[N]]` key (a later value replaces an earlier one); `PP+ffmpeg_iN`/`PP+ffmpeg_i` go before each input's `-i`, and `PP+ffmpeg_o1`/`PP+ffmpeg_o`/`PP+ffmpeg`, then `PP` and `ffmpeg` together, then `default` before the output file (a key given without arguments still ends the search). Unnamed values print `Post-Processor arguments given without specifying name. The arguments will be given to all post-processors` and become `default`; `wrong --ppa formatting; …` usage errors. The arguments join this port's own FFmpeg command lines, which differ from upstream's; ffprobe, AtomicParsley and unimplemented postprocessors (`ModifyChapters`, `FixupStretched`, `FixupTimestamp`, `FixupDuration`) take none |
 | `--keep-fragments`, `--no-keep-fragments` | Upstream fragment files `TMPFILENAME-FragN` (`NAME.part-FragN`, or `NAME-FragN` with `--no-part`) are kept beside the output, byte-identical to the assembled fragments, for unprocessed fragmented downloads; processed downloads keep them in their private workspace (removed) |
@@ -211,9 +211,8 @@ Remaining URLs on the exact `youtube.com`, `www.youtube.com`, `m.youtube.com`,
 error before any request (upstream's generic extractor would download them),
 so unsupported site pages cannot appear to be supported videos.
 `tests/fixtures/sites/youtube-urls/` compares these shapes with pinned
-upstream. `/live/` is a URL shape; live and upcoming videos are supported as
-described below; post-live (`isPostLiveDvr`) player responses remain
-unsupported.
+upstream. `/live/` is a URL shape; live, upcoming and post-live videos are
+supported as described below.
 
 The info dict follows upstream `_real_extract` after `_list_formats`, in its
 key order, over every player response, the page's meta tags and `ytInitialData`:
@@ -255,8 +254,17 @@ streaming data:
   added to every track URL), with upstream's skip and missing-languages
   messages (warnings for non-default clients when subtitles are wanted).
 
-Storyboards become `sbN` `mhtml` formats with their fragments; this port cannot
-download them. Relative `dateText` values are not resolved. HTML5 media `poster` attributes become thumbnails.
+Storyboards become `sbN` `mhtml` formats with their fragments, downloaded like
+upstream's `MhtmlFD` (`[mhtml] Total fragments: N`): the MIME headers with the
+quoted-printable `Subject`, the HTML stub with upstream's stylesheet and slide
+captions, one image part per fragment (type sniffed like `imghdr`, else
+`jpeg`), a random `uuid4` hex boundary kept in the `.ytdl` `extra_state` for
+resuming, and `--test`'s single fragment. Fragment requests use `--retries`
+like upstream's HttpFD, and any other failure (such as a 404) ends the download
+with `unable to download video data`. The generator meta names this port
+(`yt-dlp-rs VERSION`) instead of upstream's version; otherwise the
+`youtube-storyboard` fixture's file is byte-identical to pinned upstream's
+(boundary aligned). This applies to Twitch's storyboards too. Relative `dateText` values are not resolved. HTML5 media `poster` attributes become thumbnails.
 Generic results follow upstream `GenericIE`: the first response's
 `Last-Modified` header becomes `timestamp` through a port of
 `unified_timestamp` (pinned `DATE_FORMATS`, `extract_timezone`,
@@ -1164,7 +1172,9 @@ note, quality rank, source and language preferences, size, codecs, `EXT_dash`
 container, `available_at`, and the 10 MiB `http_chunk_size`. Upstream's filters
 apply:
 - **Duplicates:** stream IDs already seen are skipped.
-- **Live and OTF:** live adaptive formats and OTF streams are skipped.
+- **Live and OTF:** live adaptive formats (`targetDurationSec`) are skipped
+  unless the video is post-live or `--live-from-start` is given (or
+  `formats=incomplete`); OTF streams are skipped.
 - **PO tokens:** formats whose client policy requires a GVS PO token are skipped
   with upstream's message unless `po_token` gives one (see
   [YouTube extractor arguments](#youtube-extractor-arguments)).
@@ -1196,8 +1206,44 @@ warning, and like `_wait_for_video` the extractor waits until the release time
 already be available according to extracted info` otherwise), showing `[wait]
 Remaining time until next attempt: HH:MM:SS` (one line with `--no-progress`),
 then extracts again (`[wait] Wait period ended; Re-extracting data`; on Unix
-Ctrl+C retries at once). `--live-from-start` DASH formats and post-live videos
-remain unsupported.
+Ctrl+C retries at once). A live video's remaining HTTPS formats get upstream's
+`(incomplete)` note and -20 preference.
+
+A post-live video (`isPostLiveDvr`, `live_status` `post_live`, `was_live`)
+follows `_needs_live_processing`: its HLS manifest (and its DASH manifest
+beyond two hours) is skipped, other formats get the `(Last 2 hours)` note and
+-10 preference, and `-v` shows `Video is in Post-Live Manifestless mode`. Each
+live adaptive format keeps `target_duration`, `_itag` and `_client` and
+becomes an `http_dash_segments` format (`dash` in `-F`) whose fragments, like
+upstream's lazy list, are generated only when JSON output or a download reads
+them: one HEAD request's `X-Head-Seqnum` (shared by the formats within five
+seconds) gives `&sq=0` up to that number minus two, each with
+`fragment_count`. A stream that started over 120 hours ago gets upstream's
+`Starting download from the last 120 hours` warning and only the fragments of
+those hours. A failed HEAD request leaves no fragments. The `youtube-post-live`
+fixture compares this with pinned upstream.
+
+With `--live-from-start`, a live video's adaptive formats follow the same
+path as `is_from_start` formats with `is_live` and the
+`http_dash_segments_generator` protocol (`dashG` in `-F`); the HLS manifest is
+skipped and other formats get `(Last 2 hours)`. They download through a port
+of `DashSegmentsFD`: `[dashsegments] Total fragments: unknown (live)`, no
+`.ytdl` file, and fragments from `_live_adaptive_fragments`' generator, which
+polls `X-Head-Seqnum` (one HEAD per five-second window, shared by the
+formats), yields `&sq=` fragments up to it, refetches the webpage and player
+responses (`_initial_extract`) for refreshed URLs once its no-fragment score
+passes 15 (or after five hours), reports `Video is no longer live` /
+`Cannot find refreshed url` through three retries, honors the 120-hour limit
+and stops when the stream ends or the score passes 30. A merge's formats
+(`FILE.fFORMAT.EXT`, named with the merged extension like upstream) download
+in parallel and are then merged. On Unix an interrupt ends the fragment lists,
+drops the fragment in flight and completes the download (publication, merge
+and post-processing). Progress is one combined line rather than upstream's
+per-format multiline status, and `-j` omits the generator (upstream prints its
+`repr`). `youtube-live-from-start` compares extraction with pinned upstream;
+`tests/youtube_live.rs` covers downloads, merging and interrupts against a
+local server with a changing `X-Head-Seqnum`. The refetch does not reuse
+upstream's `--extractor-retries` value (always 3).
 Like upstream's anonymous `_extract_player_responses`, an age-gated response
 adds the `web_embedded` client (and a "made for kids" video the
 android_vr/visionos clients cannot play adds it given a JS runtime), with its
@@ -1252,8 +1298,8 @@ retried), and retry an incomplete (empty, or initial data without `contents`)
 response three times before giving up with a warning (`raise_incomplete_data`
 raises instead).
 A video left without formats or a playability reason fails with upstream's `No
-video formats found!`. Cookie rotation warnings, PO token provider plugins and
-upstream's remaining `_real_extract` paths (live-from-start, post-live) are not implemented.
+video formats found!`. Cookie rotation warnings and PO token provider plugins are
+not implemented.
 
 `tests/fixtures/sites/youtube` (jsless `visionos`), `youtube-playability`
 (age gate, unavailable and private videos), `youtube-consent` and `youtube-js` compare

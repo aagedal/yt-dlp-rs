@@ -1,0 +1,86 @@
+{
+ "routes": [
+  {
+   "url": "https://www.youtube.com/watch?v=PostLive001&bpctr=9999999999&has_verified=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+   "request_headers": {
+    "X-YouTube-Client-Name": "101"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "visionos.json"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=18&v=pl",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&v=pl",
+   "headers": {
+    "Content-Type": "video/mp4",
+    "X-Head-Seqnum": "4"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&v=pl&sq=0",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "137-0.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&v=pl&sq=1",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "137-1.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=137&v=pl&sq=2",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "137-2.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&v=pl",
+   "headers": {
+    "Content-Type": "video/mp4",
+    "X-Head-Seqnum": "4"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&v=pl&sq=0",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "140-0.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&v=pl&sq=1",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "140-1.bin"
+  },
+  {
+   "url": "https://rr1.googlevideo.test/videoplayback?itag=140&v=pl&sq=2",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "140-2.bin"
+  }
+ ]
+}

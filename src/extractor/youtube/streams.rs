@@ -230,6 +230,8 @@ pub(super) struct Context<'a> {
     pub skip_player_js: bool,
     pub skip_manifests: BTreeSet<String>,
     pub premium: bool,
+    /// `--live-from-start`.
+    pub live_from_start: bool,
 }
 
 /// `process_format_stream`.
@@ -570,7 +572,9 @@ pub(super) fn extract(
     let mut formats: Vec<Map<String, Value>> = Vec::new();
     let mut manifest_formats: Vec<VideoFormat> = Vec::new();
     let mut order: Vec<(bool, usize)> = Vec::new();
-    let needs_live = matches!(context.live_status, Some("post_live"));
+    // `_needs_live_processing`.
+    let needs_live = context.live_status == Some("post_live")
+        || (context.live_status == Some("is_live") && context.live_from_start);
     // `gvs_pots`: the GVS PO token of each client, fetched once.
     let mut gvs_pots: HashMap<&str, String> = HashMap::new();
     for response in responses {
@@ -756,9 +760,20 @@ pub(super) fn extract(
                             .map(str::to_owned),
                     ));
                 }
+                let itag = stream_id.0.clone();
                 stream_ids.push(stream_id);
                 if !matches!(context.live_status, Some("is_live" | "post_live")) {
                     format.insert("available_at".into(), response.available_at.into());
+                }
+                // Live adaptive formats `_prepare_live_from_start_formats`
+                // turns into fragment lists.
+                if let Some(target) = stream.get("targetDurationSec").filter(|_| needs_live)
+                    && truthy(Some(target))
+                {
+                    format.insert("is_from_start".into(), true.into());
+                    format.insert("target_duration".into(), target.clone());
+                    format.insert("_itag".into(), itag.into());
+                    format.insert("_client".into(), client_name.into());
                 }
                 https.push(format);
             }

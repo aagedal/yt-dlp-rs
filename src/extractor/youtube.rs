@@ -8,6 +8,7 @@ pub(crate) mod comments;
 pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
+pub(crate) mod live;
 pub(crate) mod live_chat;
 mod metadata;
 pub(crate) mod notifications;
@@ -50,6 +51,9 @@ pub struct YoutubeOptions {
     pub wait_for_video: Option<WaitForVideo>,
     /// Upstream `getcomments`: extract comments in [`crate::YoutubeDl::post_extract`].
     pub get_comments: bool,
+    /// Upstream `live_from_start`: live adaptive formats are downloaded from
+    /// the stream's start.
+    pub live_from_start: bool,
     /// Upstream `mark_watched` (only when cookies were passed).
     pub mark_watched: bool,
 }
@@ -70,6 +74,7 @@ struct ConfiguredYoutube {
     no_playlist: bool,
     wait_for_video: Option<WaitForVideo>,
     runtime: Option<challenge::Runtime>,
+    live_from_start: bool,
 }
 
 impl Youtube {
@@ -84,6 +89,7 @@ impl Youtube {
             get_comments: options.get_comments,
             mark_watched: options.mark_watched,
             runtime: options.js_runtime.map(challenge::Runtime::new),
+            live_from_start: options.live_from_start,
         }
     }
 }
@@ -870,6 +876,94 @@ enum Extraction {
     },
 }
 
+/// `_list_formats`' live status from the video details.
+fn live_status_of(details: &Value) -> Option<&'static str> {
+    let flag = |key: &str| details.get(key).and_then(Value::as_bool);
+    if flag("isPostLiveDvr") == Some(true) {
+        Some("post_live")
+    } else if flag("isLive") == Some(true) {
+        Some("is_live")
+    } else if flag("isUpcoming") == Some(true) {
+        Some("is_upcoming")
+    } else if flag("isLiveContent") == Some(true) {
+        Some("was_live")
+    } else if flag("isLive") == Some(false) || flag("isLiveContent") == Some(false) {
+        Some("not_live")
+    } else {
+        None
+    }
+}
+
+/// `_prepare_live_from_start_formats`' `refetch_manifest`: `_initial_extract`
+/// and `_list_formats` again, for the live status and the refreshed URLs of
+/// the formats downloaded from the start (by itag and client).
+pub(crate) fn refetch_live_formats(
+    client: &Client,
+    id: &str,
+    runtime: Option<&std::path::Path>,
+) -> Result<live::Refetched> {
+    let runtime = runtime.map(|path| challenge::Runtime::new(path.to_path_buf()));
+    let acquired = watch::acquire(client, id, runtime.as_ref(), false)?;
+    let details = acquired
+        .player_responses
+        .iter()
+        .find_map(|response| {
+            response
+                .get("videoDetails")
+                .filter(|value| value.is_object())
+        })
+        .cloned()
+        .unwrap_or(Value::Null);
+    let live_status = live_status_of(&details);
+    // The same extractor arguments as the extraction's.
+    let format_types = args::list("formats");
+    let context = streams::Context {
+        client,
+        video_id: id,
+        player_url: acquired.player_url.as_deref(),
+        live_status,
+        duration: None,
+        verbose: crate::screen::verbose(),
+        all_formats: !args::list("include_duplicate_formats").is_empty()
+            || format_types.iter().any(|kind| kind == "duplicate"),
+        skip_bad_formats: !format_types.iter().any(|kind| kind == "incomplete"),
+        dashy: format_types.iter().any(|kind| kind == "dashy"),
+        missing_pot: format_types.iter().any(|kind| kind == "missing_pot"),
+        skip_player_js: args::contains("player_skip", "js"),
+        skip_manifests: args::list("skip").into_iter().collect(),
+        premium: acquired.premium,
+        live_from_start: true,
+    };
+    let mut solver = JsSolver {
+        client,
+        runtime: runtime.as_ref(),
+        player_url: acquired.player_url.clone(),
+        video_id: id,
+    };
+    let streams = streams::extract(&context, &acquired.responses, &mut solver)?;
+    let formats = streams
+        .formats
+        .iter()
+        .filter(|format| format.get("is_from_start") == Some(&Value::Bool(true)))
+        .map(|format| live::RefetchedFormat {
+            itag: format
+                .get("_itag")
+                .and_then(Value::as_str)
+                .map(str::to_owned),
+            client: format
+                .get("_client")
+                .and_then(Value::as_str)
+                .unwrap_or_default()
+                .to_owned(),
+            url: format.get("url").and_then(Value::as_str).map(str::to_owned),
+        })
+        .collect();
+    Ok(live::Refetched {
+        is_live: live_status == Some("is_live"),
+        formats,
+    })
+}
+
 #[allow(clippy::too_many_arguments)]
 fn extract_clients(
     client: &Client,
@@ -880,6 +974,7 @@ fn extract_clients(
     (translated_manual, subtitles_wanted): (bool, bool),
     wait: bool,
     get_comments: bool,
+    live_from_start: bool,
     mark_watched: bool,
     no_playlist: bool,
 ) -> Result<Extraction> {
@@ -1068,26 +1163,9 @@ fn extract_clients(
             }
         })
         .filter(|duration| *duration != 0);
-    // `_list_formats`' live status from the video details.
-    let flag = |key: &str| details.get(key).and_then(Value::as_bool);
-    let live_status = if flag("isPostLiveDvr") == Some(true) {
-        Some("post_live")
-    } else if flag("isLive") == Some(true) {
-        Some("is_live")
-    } else if flag("isUpcoming") == Some(true) {
-        Some("is_upcoming")
-    } else if flag("isLiveContent") == Some(true) {
-        Some("was_live")
-    } else if flag("isLive") == Some(false) || flag("isLiveContent") == Some(false) {
-        Some("not_live")
-    } else {
-        None
-    };
+    let live_status = live_status_of(&details);
     // Upcoming videos have no formats yet; their playability reason is
     // reported below.
-    if live_status == Some("post_live") {
-        return Err(unsupported("post-live videos"));
-    }
     // `formats=duplicate,dashy,incomplete,missing_pot`, `skip=hls,dash` and
     // `player_skip=js`.
     let format_types = args::list("formats");
@@ -1112,6 +1190,7 @@ fn extract_clients(
         skip_player_js: args::contains("player_skip", "js"),
         skip_manifests: args::list("skip").into_iter().collect(),
         premium: acquired.premium,
+        live_from_start,
     };
     let mut solver = JsSolver {
         client,
@@ -1140,6 +1219,49 @@ fn extract_clients(
             };
             crate::info_order::mark_format(&mut format, "youtube-https");
             formats.push(format);
+        }
+    }
+    if live_status == Some("post_live") {
+        crate::screen::extractor_debug(&format!("{id}: Video is in Post-Live Manifestless mode"));
+    }
+    // `_needs_live_processing`, then `adjust_incomplete_format` for the
+    // live and post-live formats.
+    let needs_live_processing = live_status == Some("post_live")
+        || (live_status == Some("is_live") && context.live_from_start);
+    if matches!(live_status, Some("is_live" | "post_live")) {
+        for format in &mut formats {
+            if needs_live_processing {
+                // Post-live DASH and m3u8 manifests only have the last ~2 hours.
+                if format.extra.get("is_from_start") != Some(&Value::Bool(true)) {
+                    live::adjust_incomplete(format, "(Last 2 hours)", -10);
+                }
+            } else {
+                // Incomplete live adaptive formats have no protocol yet.
+                match format.protocol.as_deref() {
+                    None | Some("http" | "https") => {
+                        live::adjust_incomplete(format, "(incomplete)", -20);
+                    }
+                    Some("http_dash_segments") => {
+                        live::adjust_incomplete(format, "(Last 2 hours)", -10);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+    if needs_live_processing {
+        let live_start_time = acquired.player_responses.iter().find_map(|response| {
+            response
+                .pointer(
+                    "/microformat/playerMicroformatRenderer/liveBroadcastDetails/startTimestamp",
+                )
+                .and_then(Value::as_str)
+                .and_then(crate::dates::parse_iso8601)
+        });
+        if live_status == Some("post_live") {
+            live::prepare_post_live(&mut formats, live_start_time);
+        } else {
+            live::prepare_live(&mut formats, live_start_time);
         }
     }
     // `if not duration and live_end_time and live_start_time`.
@@ -1397,6 +1519,7 @@ impl Extractor for Youtube {
             false,
             false,
             false,
+            false,
         )? {
             Extraction::Wait { .. } => unreachable!("waiting is not configured"),
             extraction => extraction.into_result().map(Some),
@@ -1446,6 +1569,7 @@ impl Extractor for ConfiguredYoutube {
                 (self.include_translated_subtitles, self.subtitles_wanted),
                 self.wait_for_video.is_some(),
                 self.get_comments,
+                self.live_from_start,
                 self.mark_watched,
                 self.no_playlist,
             )? {

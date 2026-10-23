@@ -166,6 +166,7 @@ fn fragment(
         encryption: None,
         path: source.filter(|source| !absolute(source)).map(str::to_owned),
         duration,
+        fragment_count: None,
     })
 }
 /// Upstream's text representation keys: the MPD as `manifest_url` and, when
@@ -536,6 +537,7 @@ fn plans(
             encryption: None,
             path: None,
             duration: None,
+            fragment_count: None,
         }]);
     }
     let mut fragments = Vec::new();

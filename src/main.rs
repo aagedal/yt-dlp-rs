@@ -2477,6 +2477,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             no_playlist: args.no_playlist,
             skip_download: args.skip_download,
             get_comments: args.write_comments,
+            live_from_start: args.live_from_start,
             // `mark_watched` runs only when cookies were passed.
             mark_watched: args.mark_watched
                 && (args.cookies.is_some() || browser_cookies.is_some()),
@@ -3907,6 +3908,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         &yt_dlp_rs::output::render_formats_listing(&info, !args.list_formats_old),
                     )?;
                 }
+                // YouTube post-live fragment lists are lazy upstream: JSON
+                // output and downloads evaluate them, listings do not.
+                if !list_only
+                    && (args.dump_json
+                        || args.print_json
+                        || args.dump_single_json
+                        || writes_info_json
+                        || !simulate)
+                {
+                    downloader.prepare_live_fragments(&mut info)?;
+                }
                 // Upstream `process_video_result` format selection; the info
                 // dict is updated with the last selected format.
                 let mut selections = Vec::new();
@@ -4764,6 +4776,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                     let downloader = match info.protocol.as_deref() {
                                         Some("http_dash_segments") => "dashsegments",
                                         Some("ism") => "ism",
+                                        Some("mhtml") => "mhtml",
                                         _ => "hlsnative",
                                     };
                                     screen!(
@@ -4936,6 +4949,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                             let downloader = match stream.protocol.as_deref() {
                                                 Some("http_dash_segments") => "dashsegments",
                                                 Some("ism") => "ism",
+                                                Some("mhtml") => "mhtml",
                                                 _ => "hlsnative",
                                             };
                                             screen!(
