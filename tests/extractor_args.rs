@@ -159,7 +159,7 @@ fn is_live_argument_sets_live_status_and_titles_with_the_time() {
             .is_match(suffix),
         "{title}"
     );
-    // `--live-from-start` keeps the title.
+    // `--live-from-start` needs formats downloadable from the start.
     let output = run(
         directory.path(),
         &[
@@ -170,8 +170,13 @@ fn is_live_argument_sets_live_status_and_titles_with_the_time() {
         ],
         &url,
     );
-    let info: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(info["title"], "v");
+    assert!(
+        String::from_utf8_lossy(&output.stderr).contains(
+            ": --live-from-start is passed, but there are no formats that can be downloaded from the start. If you want to download from the current time, use --no-live-from-start"
+        ),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     let output = run(
         directory.path(),
         &["-j", "--extractor-args", "generic:is_live=false"],

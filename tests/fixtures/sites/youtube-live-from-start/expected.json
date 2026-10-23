@@ -1,0 +1,86 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=LiveStart01",
+   "args": [
+    "--no-js-runtimes",
+    "--live-from-start",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=LiveStart01",
+    "[youtube] LiveStart01: Downloading webpage",
+    "[youtube] LiveStart01: Downloading visionos player API JSON",
+    "[info] Available formats for LiveStart01:",
+    "ID  EXT RESOLUTION FPS CH |  TBR PROTO | VCODEC       VBR ACODEC      ABR ASR MORE INFO",
+    "----------------------------------------------------------------------------------------------",
+    "140 m4a audio only      2 | 100k dashG | audio only       mp4a.40.2  100k 44k medium, m4a_dash",
+    "137 mp4 1920x1080   30    | 100k dashG | avc1.640028 100k video only          1080p, mp4_dash"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=LiveStart01",
+   "args": [
+    "--no-js-runtimes",
+    "--live-from-start",
+    "--print",
+    "%(id)s|%(is_live)s|%(was_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(release_timestamp)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "LiveStart01|True|False|is_live|137+140|http_dash_segments_generator+http_dash_segments_generator|1704096000"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=LiveStart01",
+   "args": [
+    "--no-js-runtimes",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=LiveStart01",
+    "[youtube] LiveStart01: Downloading webpage",
+    "[youtube] LiveStart01: Downloading visionos player API JSON",
+    "[youtube] LiveStart01: Downloading m3u8 information",
+    "[info] Available formats for LiveStart01:",
+    "ID  EXT RESOLUTION FPS CH | FILESIZE   TBR PROTO | VCODEC        VBR ACODEC     ASR MORE INFO",
+    "-----------------------------------------------------------------------------------------------------",
+    "234 mp4 audio only        |                m3u8  | audio only        unknown        Default",
+    "18  mp4 640x360     30  2 |  792.00B  100k https | avc1.42001E       mp4a.40.2  44k 360p (incomplete)",
+    "230 mp4 640x360     30    |           962k m3u8  | avc1.4D401E  962k video only",
+    "232 mp4 1280x720    30    |          2448k m3u8  | avc1.4D401F 2448k video only"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=LiveStart01",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(id)s|%(is_live)s|%(was_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(release_timestamp)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "LiveStart01|True|False|is_live|18|https|1704096000"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  }
+ ]
+}

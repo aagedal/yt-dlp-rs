@@ -49,13 +49,19 @@ impl Guard {
     }
 
     pub(crate) fn interrupted(&self) -> bool {
-        #[cfg(unix)]
-        {
-            INTERRUPTED.load(Ordering::SeqCst)
-        }
-        #[cfg(not(unix))]
-        false
+        interrupted()
     }
+}
+
+/// Whether SIGINT arrived since a [`Guard`] was installed (for threads
+/// that do not hold it).
+pub(crate) fn interrupted() -> bool {
+    #[cfg(unix)]
+    {
+        INTERRUPTED.load(Ordering::SeqCst)
+    }
+    #[cfg(not(unix))]
+    false
 }
 
 impl Drop for Guard {

@@ -224,6 +224,7 @@ pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::clip::YoutubeClip;
 pub(crate) use youtube::comments::post_extract as youtube_comments;
 pub(crate) use youtube::live::prepare_fragments as youtube_live_fragments;
+pub(crate) use youtube::live::{LiveFeed, LiveFragments};
 pub(crate) use youtube::search::{YoutubeSearch, YoutubeSearchUrl};
 pub use youtube::search::{
     suitable as youtube_search_suitable, url_suitable as youtube_search_url_suitable,

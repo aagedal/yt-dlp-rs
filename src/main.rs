@@ -2435,6 +2435,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
             get_comments: args.write_comments,
+            live_from_start: args.live_from_start,
             // `--wait-for-video MIN[-MAX]` (validated with the other options).
             wait_for_video: args
                 .wait_for_video

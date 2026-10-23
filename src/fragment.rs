@@ -38,7 +38,8 @@ impl Reporter<'_> {
             stream_index: None,
             stream_count: None,
             fragment_index: Some(self.index),
-            fragment_count: Some(self.count),
+            // Live fragment lists have no count (`0`).
+            fragment_count: (self.count > 0).then_some(self.count),
             fragment,
         })
         .is_break()
@@ -564,6 +565,44 @@ fn download_with(
     }
     Ok(stored)
 }
+/// One generated live fragment (fragment `index`, zero-based) appended to
+/// `file` after `*stored` with `--fragment-retries`; `Ok(false)` when it was
+/// skipped as unavailable (never the first).
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn append_live(
+    client: &Client,
+    info: &VideoInfo,
+    index: usize,
+    fragment: &Fragment,
+    options: &DownloadOptions,
+    file: &mut fs::File,
+    stored: &mut u64,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<bool> {
+    let mut reporter = Reporter {
+        callback,
+        attempt: 1,
+        index: index as u32 + 1,
+        count: 0,
+        rate_limit: options.rate_limit,
+        fragment: None,
+    };
+    let prefix = *stored;
+    let appended = fetch_with_retries(
+        client,
+        info,
+        index,
+        fragment,
+        options,
+        &mut HashMap::new(),
+        file,
+        prefix,
+        stored,
+        &mut reporter,
+    )?;
+    Ok(appended.is_some())
+}
+
 /// One fragment with `--fragment-retries` (`Ok(None)` when skipped as
 /// unavailable): written to `file` after `prefix`, which a failed attempt
 /// truncates back to.
