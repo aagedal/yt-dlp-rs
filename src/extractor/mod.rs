@@ -97,6 +97,7 @@ mod vimeo;
 mod vk;
 mod vocaroo;
 mod weibo;
+mod xiaohongshu;
 mod xspf;
 mod yfanefa;
 pub(crate) mod youtube;
@@ -220,6 +221,7 @@ pub use vocaroo::{Vocaroo, suitable as vocaroo_suitable};
 pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
+pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;

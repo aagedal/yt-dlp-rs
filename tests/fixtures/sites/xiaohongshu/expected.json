@@ -1,0 +1,256 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6411cf99000000001300b6d9\", \"formats\": [{\"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/01e411cf99_h265.mp4\", \"fps\": 25, \"width\": 720, \"height\": 1280, \"vcodec\": \"h265\", \"acodec\": \"aac\", \"abr\": 128, \"vbr\": 900, \"audio_channels\": 2, \"tbr\": 1030, \"format\": \"HD\", \"filesize\": 792, \"duration\": 101.726, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\"}, {\"url\": \"https://sns-bak-v6.xhscdn.com/stream/110/259/01e411cf99_h265.mp4\", \"fps\": 25, \"width\": 720, \"height\": 1280, \"vcodec\": \"h265\", \"acodec\": \"aac\", \"abr\": 128, \"vbr\": 900, \"audio_channels\": 2, \"tbr\": 1030, \"format\": \"HD\", \"filesize\": 792, \"duration\": 101.726, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\"}, {\"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/01e411cf99_h264.mp4?sign=a&t=1\", \"fps\": 30, \"width\": 1080, \"height\": 1920, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"abr\": 128, \"vbr\": 1286, \"audio_channels\": 2, \"tbr\": 1418, \"format\": \"HD\", \"filesize\": 792, \"duration\": 101.726, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"2\"}, {\"url\": \"https://sns-bak-v1.xhscdn.com/stream/110/259/01e411cf99_h264.mp4\", \"fps\": 30, \"width\": 1080, \"height\": 1920, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"abr\": 128, \"vbr\": 1286, \"audio_channels\": 2, \"tbr\": 1418, \"format\": \"HD\", \"filesize\": 792, \"duration\": 101.726, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"3\"}, {\"format_id\": \"direct\", \"ext\": \"mp4\", \"filesize\": 792, \"url\": \"https://sns-video-bd.xhscdn.com/pre_post/1040g2t030vlc1h4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"direct - unknown\"}], \"thumbnails\": [{\"url\": \"https://sns-webpic-qc.xhscdn.com/202410251200/abcdef0123456789/1000g0082ka8l5_def!nc_n_webp_mw_1\", \"height\": 1920, \"width\": 1080, \"id\": \"0\", \"resolution\": \"1080x1920\"}, {\"url\": \"https://sns-webpic-qc.xhscdn.com/202410251200/abcdef0123456789/1000g0082ka8l5_pre!nc_n_webp_prv_1\", \"height\": 1920, \"width\": 1080, \"id\": \"1\", \"resolution\": \"1080x1920\"}], \"title\": \"\\u9999\\u5983\\u86cb\\u7cd5\\u4e5f\\u592a\\u9999\\u4e86\\u5427\\ud83d\\udd25\\u4e0d\\u9700\\u8981\\u5377\\u2757\\ufe0f\\u7edd\\u5bf9\\u7684\\u53cb\\u597d\", \"description\": \"#\\u4eca\\u65e5\\u5feb\\u4e50\\u4eca\\u65e5\\u53d1[\\u8bdd\\u9898]# #\\u5403\\u8d27\\u85af\\u770b\\u8fd9\\u91cc[\\u8bdd\\u9898]# #\\u9999\\u5983\\u86cb\\u7cd5[\\u8bdd\\u9898]# #\\u5c0f\\u4e94\\u5377\\u86cb\\u7cd5[\\u8bdd\\u9898]# #\\u65b0\\u624b\\u86cb\\u7cd5\\u5377[\\u8bdd\\u9898]#\", \"tags\": [\"\\u4eca\\u65e5\\u5feb\\u4e50\\u4eca\\u65e5\\u53d1\", \"\\u5403\\u8d27\\u85af\\u770b\\u8fd9\\u91cc\", \"\\u9999\\u5983\\u86cb\\u7cd5\", \"\\u5c0f\\u4e94\\u5377\\u86cb\\u7cd5\", \"\\u65b0\\u624b\\u86cb\\u7cd5\\u5377\"], \"uploader_id\": \"5c31698d0000000007018a31\", \"webpage_url\": \"https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9\", \"original_url\": \"https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9\", \"webpage_url_basename\": \"6411cf99000000001300b6d9\", \"webpage_url_domain\": \"xiaohongshu.com\", \"extractor\": \"XiaoHongShu\", \"extractor_key\": \"XiaoHongShu\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://sns-webpic-qc.xhscdn.com/202410251200/abcdef0123456789/1000g0082ka8l5_pre!nc_n_webp_prv_1\", \"display_id\": \"6411cf99000000001300b6d9\", \"fulltitle\": \"\\u9999\\u5983\\u86cb\\u7cd5\\u4e5f\\u592a\\u9999\\u4e86\\u5427\\ud83d\\udd25\\u4e0d\\u9700\\u8981\\u5377\\u2757\\ufe0f\\u7edd\\u5bf9\\u7684\\u53cb\\u597d\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"direct\", \"ext\": \"mp4\", \"filesize\": 792, \"url\": \"https://sns-video-bd.xhscdn.com/pre_post/1040g2t030vlc1h4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"direct - unknown\", \"_filename\": \"\\u9999\\u5983\\u86cb\\u7cd5\\u4e5f\\u592a\\u9999\\u4e86\\u5427\\ud83d\\udd25\\u4e0d\\u9700\\u8981\\u5377\\u2757\\ufe0f\\u7edd\\u5bf9\\u7684\\u53cb\\u597d [6411cf99000000001300b6d9].mp4\", \"filename\": \"\\u9999\\u5983\\u86cb\\u7cd5\\u4e5f\\u592a\\u9999\\u4e86\\u5427\\ud83d\\udd25\\u4e0d\\u9700\\u8981\\u5377\\u2757\\ufe0f\\u7edd\\u5bf9\\u7684\\u53cb\\u597d [6411cf99000000001300b6d9].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XiaoHongShu] Extracting URL: https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+    "[XiaoHongShu] 6411cf99000000001300b6d9: Downloading webpage",
+    "[XiaoHongShu] 6411cf99000000001300b6d9: Checking original video availability",
+    "[info] Available formats for 6411cf99000000001300b6d9:",
+    "ID     EXT RESOLUTION FPS CH | FILESIZE   TBR PROTO | VCODEC    VBR ACODEC   ABR",
+    "--------------------------------------------------------------------------------",
+    "0      mp4 720x1280    25  2 |  792.00B 1030k https | h265     900k aac     128k",
+    "1      mp4 720x1280    25  2 |  792.00B 1030k https | h265     900k aac     128k",
+    "2      mp4 1080x1920   30  2 |  792.00B 1418k https | h264    1286k aac     128k",
+    "3      mp4 1080x1920   30  2 |  792.00B 1418k https | h264    1286k aac     128k",
+    "direct mp4 unknown           |  792.00B       https | unknown       unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(tags)s|%(uploader_id)s|%(duration)s|%(format_id)s|%(format)s|%(ext)s|%(filesize)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "6411cf99000000001300b6d9|香妃蛋糕也太香了吧🔥不需要卷❗️绝对的友好|#今日快乐今日发[话题]# #吃货薯看这里[话题]# #香妃蛋糕[话题]# #小五卷蛋糕[话题]# #新手蛋糕卷[话题]#|['今日快乐今日发', '吃货薯看这里', '香妃蛋糕', '小五卷蛋糕', '新手蛋糕卷']|5c31698d0000000007018a31|NA|direct|direct - unknown|mp4|792|https://sns-webpic-qc.xhscdn.com/202410251200/abcdef0123456789/1000g0082ka8l5_pre!nc_n_webp_prv_1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XiaoHongShu] Extracting URL: https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+    "[XiaoHongShu] 6411cf99000000001300b6d9: Downloading webpage",
+    "[XiaoHongShu] 6411cf99000000001300b6d9: Checking original video availability",
+    "[info] 6411cf99000000001300b6d9: Downloading 1 format(s): direct",
+    "[download] Destination: 6411cf99000000001300b6d9.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "6411cf99000000001300b6d9.mp4": 792
+   }
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+   "args": [
+    "--no-progress",
+    "-f",
+    "2",
+    "-o",
+    "%(id)s-%(format_id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XiaoHongShu] Extracting URL: https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+    "[XiaoHongShu] 6411cf99000000001300b6d9: Downloading webpage",
+    "[XiaoHongShu] 6411cf99000000001300b6d9: Checking original video availability",
+    "[info] 6411cf99000000001300b6d9: Downloading 1 format(s): 2",
+    "[download] Destination: 6411cf99000000001300b6d9-2.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "6411cf99000000001300b6d9-2.mp4": 792
+   }
+  },
+  {
+   "url": "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"674051740000000007027a15\", \"formats\": [{\"url\": \"http://sns-bak-v8.xhscdn.com/stream/110/259/0204051_h264_sd.mp4\", \"fps\": 30, \"width\": 720, \"height\": 1280, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"abr\": 64, \"vbr\": 500, \"audio_channels\": 2, \"tbr\": 600, \"format\": \"SD\", \"filesize\": 792, \"duration\": 28.073, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\"}, {\"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/0204051_h264_sd.mp4\", \"fps\": 30, \"width\": 720, \"height\": 1280, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"abr\": 64, \"vbr\": 500, \"audio_channels\": 2, \"tbr\": 600, \"format\": \"SD\", \"filesize\": 792, \"duration\": 28.073, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\"}, {\"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/0204051_h264_hd.mp4\", \"fps\": 30, \"width\": 1080, \"height\": 1920, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"vbr\": 1286, \"tbr\": 1418, \"format\": \"HD\", \"filesize\": 792, \"duration\": 28.073, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 132, \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"2\"}, {\"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/0204051_h265.mp4\", \"fps\": 30, \"width\": 1080, \"height\": 1920, \"vcodec\": \"h265\", \"abr\": 128, \"vbr\": 1286, \"audio_channels\": 2, \"tbr\": 1418, \"format\": \"HD\", \"filesize\": 792, \"duration\": 28.0735, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"3\"}], \"thumbnails\": [{\"url\": \"https://sns-webpic-qc.xhscdn.com/202410251200/0123456789abcdef/1040g00831al_def\", \"width\": 720, \"id\": \"0\"}, {\"url\": \"https://sns-webpic-qc.xhscdn.com/202410251200/0123456789abcdef/1040g00831al_pre2\", \"height\": 1440, \"width\": 1080, \"id\": \"1\", \"resolution\": \"1080x1440\"}], \"title\": \"\\u76f8\\u4e92\\u559c\\u6b22\\u5c31\\u53ef\\u4ee5\\u4e86\", \"description\": \"#\\u5e7f\\u5dde[\\u8bdd\\u9898]# #\\u6df1\\u5733[\\u8bdd\\u9898]# #\\u9999\\u6e2f[\\u8bdd\\u9898]# #\\u8857\\u5934\\u91c7\\u8bbf[\\u8bdd\\u9898]# #\\u662f\\u4f60\\u559c\\u6b22\\u7684\\u7c7b\\u578b[\\u8bdd\\u9898]#\", \"tags\": [\"\\u5e7f\\u5dde\", \"\\u6df1\\u5733\", \"\\u9999\\u6e2f\", \"\\u8857\\u5934\\u91c7\\u8bbf\", \"\\u662f\\u4f60\\u559c\\u6b22\\u7684\\u7c7b\\u578b\"], \"uploader_id\": \"63439913000000001901f49a\", \"webpage_url\": \"https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=\", \"original_url\": \"https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=\", \"webpage_url_basename\": \"674051740000000007027a15\", \"webpage_url_domain\": \"xiaohongshu.com\", \"extractor\": \"XiaoHongShu\", \"extractor_key\": \"XiaoHongShu\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://sns-webpic-qc.xhscdn.com/202410251200/0123456789abcdef/1040g00831al_pre2\", \"display_id\": \"674051740000000007027a15\", \"fulltitle\": \"\\u76f8\\u4e92\\u559c\\u6b22\\u5c31\\u53ef\\u4ee5\\u4e86\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/0204051_h265.mp4\", \"fps\": 30, \"width\": 1080, \"height\": 1920, \"vcodec\": \"h265\", \"abr\": 128, \"vbr\": 1286, \"audio_channels\": 2, \"tbr\": 1418, \"format\": \"HD\", \"filesize\": 792, \"duration\": 28.0735, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"3\", \"_filename\": \"\\u76f8\\u4e92\\u559c\\u6b22\\u5c31\\u53ef\\u4ee5\\u4e86 [674051740000000007027a15].mp4\", \"filename\": \"\\u76f8\\u4e92\\u559c\\u6b22\\u5c31\\u53ef\\u4ee5\\u4e86 [674051740000000007027a15].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XiaoHongShu] Extracting URL: https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd...wG-9JIf9tnApNmteU2E=",
+    "[XiaoHongShu] 674051740000000007027a15: Downloading webpage",
+    "[info] Available formats for 674051740000000007027a15:",
+    "ID EXT RESOLUTION FPS CH | FILESIZE   TBR PROTO | VCODEC   VBR ACODEC   ABR",
+    "---------------------------------------------------------------------------",
+    "0  mp4 720x1280    30  2 |  792.00B  600k http  | h264    500k aac      64k",
+    "1  mp4 720x1280    30  2 |  792.00B  600k https | h264    500k aac      64k",
+    "2  mp4 1080x1920   30    |  792.00B 1418k https | h264   1286k aac     132k",
+    "3  mp4 1080x1920   30  2 |  792.00B 1418k https | h265   1286k unknown 128k"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(tags)s|%(uploader_id)s|%(duration)s|%(format_id)s|%(format)s|%(ext)s|%(filesize)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "674051740000000007027a15|相互喜欢就可以了|#广州[话题]# #深圳[话题]# #香港[话题]# #街头采访[话题]# #是你喜欢的类型[话题]#|['广州', '深圳', '香港', '街头采访', '是你喜欢的类型']|63439913000000001901f49a|28.0735|3|HD|mp4|792|https://sns-webpic-qc.xhscdn.com/202410251200/0123456789abcdef/1040g00831al_pre2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=",
+   "args": [
+    "--list-thumbnails"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XiaoHongShu] Extracting URL: https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd...wG-9JIf9tnApNmteU2E=",
+    "[XiaoHongShu] 674051740000000007027a15: Downloading webpage",
+    "[info] Available thumbnails for 674051740000000007027a15:",
+    "ID Width Height  URL",
+    "0  720   unknown https://sns-webpic-qc.xhscdn.com/202410251200/0123456789abcdef/1040g00831al_def",
+    "1  1080  1440    https://sns-webpic-qc.xhscdn.com/202410251200/0123456789abcdef/1040g00831al_pre2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa01",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"65a1b2c3000000001c00aa01\", \"formats\": [{\"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/p3_h264.mp4\", \"fps\": 30, \"width\": 1080, \"height\": 1920, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"abr\": 128, \"vbr\": 1286, \"audio_channels\": 2, \"tbr\": 1418, \"format\": \"HD\", \"filesize\": 792, \"duration\": 101.726, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\"}], \"thumbnails\": [], \"title\": \"\\u539f\\u89c6\\u9891\\u4e0d\\u53ef\\u7528\", \"description\": \"\", \"uploader_id\": \"5f0000000000000001000001\", \"webpage_url\": \"https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa01\", \"original_url\": \"https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa01\", \"webpage_url_basename\": \"65a1b2c3000000001c00aa01\", \"webpage_url_domain\": \"xiaohongshu.com\", \"extractor\": \"XiaoHongShu\", \"extractor_key\": \"XiaoHongShu\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"65a1b2c3000000001c00aa01\", \"fulltitle\": \"\\u539f\\u89c6\\u9891\\u4e0d\\u53ef\\u7528\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/p3_h264.mp4\", \"fps\": 30, \"width\": 1080, \"height\": 1920, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"abr\": 128, \"vbr\": 1286, \"audio_channels\": 2, \"tbr\": 1418, \"format\": \"HD\", \"filesize\": 792, \"duration\": 101.726, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"_filename\": \"\\u539f\\u89c6\\u9891\\u4e0d\\u53ef\\u7528 [65a1b2c3000000001c00aa01].mp4\", \"filename\": \"\\u539f\\u89c6\\u9891\\u4e0d\\u53ef\\u7528 [65a1b2c3000000001c00aa01].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [XiaoHongShu] 65a1b2c3000000001c00aa01: Original video is not available: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa01",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XiaoHongShu] Extracting URL: https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa01",
+    "[XiaoHongShu] 65a1b2c3000000001c00aa01: Downloading webpage",
+    "[XiaoHongShu] 65a1b2c3000000001c00aa01: Checking original video availability",
+    "[info] 65a1b2c3000000001c00aa01: Downloading 1 format(s): 0",
+    "[download] Destination: 65a1b2c3000000001c00aa01.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [XiaoHongShu] 65a1b2c3000000001c00aa01: Original video is not available: HTTP Error 404: Not Found"
+   ],
+   "files": {
+    "65a1b2c3000000001c00aa01.mp4": 792
+   }
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa02",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [XiaoHongShu] 65a1b2c3000000001c00aa02: Unable to extract initial state; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa03",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [XiaoHongShu] 65a1b2c3000000001c00aa03: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa04",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"65a1b2c3000000001c00aa04\", \"formats\": [{\"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/p6_h264.mp4\", \"fps\": 30, \"width\": 1080, \"height\": 1920, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"abr\": 128, \"vbr\": 1286, \"audio_channels\": 2, \"tbr\": 1418, \"format\": \"HD\", \"filesize\": 792, \"duration\": 101.726, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\"}], \"thumbnails\": [{\"url\": \"https://sns-webpic-qc.xhscdn.com/1/aa/p6_pre\", \"id\": \"0\"}], \"title\": \"\\u65e0\\u5c3a\\u5bf8\", \"description\": \"\", \"uploader_id\": \"5f0000000000000001000004\", \"webpage_url\": \"https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa04\", \"original_url\": \"https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa04\", \"webpage_url_basename\": \"65a1b2c3000000001c00aa04\", \"webpage_url_domain\": \"xiaohongshu.com\", \"extractor\": \"XiaoHongShu\", \"extractor_key\": \"XiaoHongShu\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://sns-webpic-qc.xhscdn.com/1/aa/p6_pre\", \"display_id\": \"65a1b2c3000000001c00aa04\", \"fulltitle\": \"\\u65e0\\u5c3a\\u5bf8\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/p6_h264.mp4\", \"fps\": 30, \"width\": 1080, \"height\": 1920, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"abr\": 128, \"vbr\": 1286, \"audio_channels\": 2, \"tbr\": 1418, \"format\": \"HD\", \"filesize\": 792, \"duration\": 101.726, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1080x1920\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"_filename\": \"\\u65e0\\u5c3a\\u5bf8 [65a1b2c3000000001c00aa04].mp4\", \"filename\": \"\\u65e0\\u5c3a\\u5bf8 [65a1b2c3000000001c00aa04].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa05",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"65a1b2c3000000001c00aa05\", \"formats\": [{\"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/p7.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"thumbnails\": [], \"title\": \"\\u4ec5\\u6709 og \\u6807\\u9898\", \"webpage_url\": \"https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa05\", \"original_url\": \"https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa05\", \"webpage_url_basename\": \"65a1b2c3000000001c00aa05\", \"webpage_url_domain\": \"xiaohongshu.com\", \"extractor\": \"XiaoHongShu\", \"extractor_key\": \"XiaoHongShu\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"65a1b2c3000000001c00aa05\", \"fulltitle\": \"\\u4ec5\\u6709 og \\u6807\\u9898\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://sns-video-qc.xhscdn.com/stream/110/259/p7.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u4ec5\\u6709 og \\u6807\\u9898 [65a1b2c3000000001c00aa05].mp4\", \"filename\": \"\\u4ec5\\u6709 og \\u6807\\u9898 [65a1b2c3000000001c00aa05].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa06",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [XiaoHongShu] 65a1b2c3000000001c00aa06: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

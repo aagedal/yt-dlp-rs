@@ -1,0 +1,103 @@
+{
+ "routes": [
+  {
+   "url": "https://www.xiaohongshu.com/explore/6411cf99000000001300b6d9",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p1.html"
+  },
+  {
+   "url": "https://www.xiaohongshu.com/discovery/item/674051740000000007027a15?xsec_token=CBgeL8Dxd1ZWBhwqRd568gAZ_iwG-9JIf9tnApNmteU2E=",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p2.html"
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa01",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p3.html"
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa02",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p4.html"
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa03",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p5.html"
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa04",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p6.html"
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa05",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p7.html"
+  },
+  {
+   "url": "https://www.xiaohongshu.com/explore/65a1b2c3000000001c00aa06",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "p8.html"
+  },
+  {
+   "url": "https://sns-video-bd.xhscdn.com/pre_post/1040g2t030vlc1h4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://sns-video-bd.xhscdn.com/pre_post/missing",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://sns-video-qc.xhscdn.com/stream/110/259/01e411cf99_h264.mp4?sign=a&t=1",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://sns-video-qc.xhscdn.com/stream/110/259/01e411cf99_h265.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://sns-video-qc.xhscdn.com/stream/110/259/0204051_h264_sd.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  },
+  {
+   "url": "https://sns-video-qc.xhscdn.com/stream/110/259/p3_h264.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  }
+ ]
+}
