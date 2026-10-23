@@ -1141,9 +1141,10 @@
       ],
       "rust": [
         "src/extractor/tiktok.rs",
-        "tests/fixtures/sites/tiktok/"
+        "tests/fixtures/sites/tiktok/",
+        "tests/fixtures/sites/douyin/"
       ],
-      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; no app API, subtitles, slideshows, user/sound/tag/collection lists or Douyin; compared with pinned upstream output through the fixture proxy"
+      "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, webpage/feed subtitles, slideshows as their audio track, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; TikTokUserIE (user page, embed-page secUid fallback, creator item_list pages) and TikTokCollectionIE as lazy flat url playlists; DouyinIE web detail API through _parse_aweme_video_app (no signature/verification challenge); no app API, aweme/detail SRT-data captions, TikTokSoundIE/TikTokEffectIE/TikTokTagIE (app API, _WORKING=False); TikTokLiveIE webcast room info with FLV/HLS pull formats and the live detail fallback; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "tumblr",

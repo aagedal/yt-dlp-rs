@@ -324,8 +324,13 @@ pub(crate) fn mark_int_quality(format: &mut crate::VideoFormat) {
     format.extra.insert(INT_QUALITY.into(), Value::Bool(true));
 }
 
+/// A format whose `preference` `FormatSorter._fill_sorting_fields` set
+/// (HEVC over FLV), after `video_ext`/`audio_ext`.
+pub(crate) const SORTER_PREFERENCE: &str = "__yt_dlp_rs_sorter_preference";
+
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
+    let sorter_preference = map.shift_remove(SORTER_PREFERENCE).is_some();
     if map.shift_remove(INT_QUALITY).is_some()
         && let Some(quality) = map.get("quality").and_then(Value::as_f64)
         && quality.fract() == 0.0
@@ -742,7 +747,9 @@ pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
         replay.take("http_headers");
     }
     // Keys this port has beyond the extractor's, before processing.
-    replay.rest_except(&|key| PROCESSED_FORMAT_KEYS.contains(&key));
+    replay.rest_except(&|key| {
+        PROCESSED_FORMAT_KEYS.contains(&key) || (sorter_preference && key == "preference")
+    });
     replay.format_steps();
     let mut out = replay.finish();
     // `_check_formats`' `f['__working']` is set after processing.

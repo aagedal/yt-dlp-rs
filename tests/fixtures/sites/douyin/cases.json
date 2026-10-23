@@ -1,0 +1,12 @@
+[
+ {"url": "https://www.douyin.com/video/7400000000000000001", "args": ["-J"]},
+ {"url": "https://www.douyin.com/video/7400000000000000001", "args": ["-F"]},
+ {"url": "https://www.douyin.com/video/7400000000000000001", "args": ["--list-subs"]},
+ {"url": "https://www.douyin.com/video/7400000000000000004", "args": ["-j"]},
+ {"url": "https://www.douyin.com/video/7400000000000000004", "args": ["--list-subs"]},
+ {"url": "https://douyin.com/video/7400000000000000002", "args": ["-J"]},
+ {"url": "https://www.douyin.com/video/7400000000000000003", "args": ["--print", "id"]},
+ {"url": "https://www.douyin.com/video/7400000000000000003", "copy": ["cookies.txt"], "args": ["--cookies", "cookies.txt", "--print", "id"]},
+ {"url": "https://www.douyin.com/video/7400000000000000001", "copy": ["cookies.txt"], "args": ["--cookies", "cookies.txt", "-f", "h264_1080p_1500000-1", "--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.douyin.com/video/7400000000000000001", "args": ["--write-subs", "--sub-langs", "en", "--skip-download", "--no-progress", "-o", "%(id)s.%(ext)s"]}
+]

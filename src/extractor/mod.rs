@@ -202,7 +202,13 @@ pub use ted::{
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use tiktok::{
-    TikTok, TikTokVm, suitable as tiktok_suitable, vm_suitable as tiktok_vm_suitable,
+    Douyin, TikTok, TikTokCollection, TikTokLive, TikTokUser, TikTokVm,
+    collection_suitable as tiktok_collection_suitable, douyin_suitable,
+    live_suitable as tiktok_live_suitable, suitable as tiktok_suitable,
+    user_suitable as tiktok_user_suitable, vm_suitable as tiktok_vm_suitable,
+};
+pub(crate) use tiktok::{
+    fetch_pages as fetch_tiktok_pages, is_pending_state as tiktok_pending_state,
 };
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
@@ -911,6 +917,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("tiktokuser:") && tiktok::user_suitable(url))
         || youtube::redirect::user_suitable(url)
 }
 

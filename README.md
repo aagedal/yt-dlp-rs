@@ -4,8 +4,8 @@ An incremental, native Rust adaptation of [yt-dlp](https://github.com/yt-dlp/yt-
 It downloads direct HTTP media and a limited subset of HTML5 media pages, with
 a foundation for porting extractors and tracking upstream changes. This is an
 early prototype. YouTube (videos, live streams, playlists, mixes, channels,
-search, hashtags and YouTube Music URLs), Reddit, X/Twitter, TikTok, Instagram
-and Facebook are extracted like pinned upstream on saved fixtures. YouTube was
+search, hashtags and YouTube Music URLs), Reddit, X/Twitter, TikTok, Douyin,
+Instagram and Facebook are extracted like pinned upstream on saved fixtures. YouTube was
 also spot-checked against the live site and pinned upstream on 2026-10-22
 (downloads, `-F`/`-j` output and playlist/channel listings matched); the other
 sites have not been verified live.
@@ -106,10 +106,11 @@ Supported today:
   Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
   posts (hosted videos, text-post videos and followed links), X/Twitter posts
   (GraphQL with a guest token; videos, multi-video playlists, cards), TikTok
-  videos (webpage data, the page's JS challenge, short links), Instagram
-  posts and reels (logged out; carousels as playlists), Facebook videos
-  (relay data with DASH, progressive URLs and captions), Vimeo player and
-  clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
+  videos (webpage data, the page's JS challenge, subtitles, slideshow audio,
+  short links), user and collection lists, livestreams, Douyin videos (web
+  detail API with browser cookies), Instagram posts and reels (logged out;
+  carousels as playlists), Facebook videos (relay data with DASH, progressive
+  URLs and captions), Vimeo player and clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs and clips,
   Bandcamp tracks, Rumble videos, Kick VODs, clips and live channels, Bluesky
   posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,
   Tumblr posts, Imgur media, galleries and albums, Bilibili videos, VK videos, Niconico videos, Weibo posts, TED talks, playlists and series, Rutube videos, LinkedIn posts, Internet Archive items, BitChute videos, Coub clips, Loom videos, OK.ru videos, plus

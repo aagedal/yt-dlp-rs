@@ -1134,6 +1134,21 @@ pub(crate) fn fill_format_fields(formats: &mut [VideoFormat]) {
             format.video_ext = Some(ext.clone());
             format.audio_ext = Some("none".into());
         }
+        // HEVC-over-FLV is out of FLV's original spec.
+        static HEVC: std::sync::LazyLock<regex::Regex> =
+            std::sync::LazyLock::new(|| regex::Regex::new(r"^(?:[hx]265|he?vc?)").unwrap());
+        if format
+            .extra
+            .get("preference")
+            .is_none_or(serde_json::Value::is_null)
+            && ext == "flv"
+            && HEVC.is_match(format.vcodec.as_deref().unwrap_or_default())
+        {
+            format.extra.insert("preference".into(), (-100).into());
+            format
+                .extra
+                .insert(crate::info_order::SORTER_PREFERENCE.into(), true.into());
+        }
         if matches!(ext.as_str(), "aac" | "opus" | "mp3" | "flac" | "vorbis")
             && format.acodec.is_none()
         {

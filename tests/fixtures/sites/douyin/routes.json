@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {"url": "https://www.douyin.com/aweme/v1/web/aweme/detail/?aweme_id=7400000000000000001", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "detail1.json"},
+  {"url": "https://www.douyin.com/aweme/v1/web/aweme/detail/?aweme_id=7400000000000000004", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "detail4.json"},
+  {"url": "https://www.douyin.com/aweme/v1/web/aweme/detail/?aweme_id=7400000000000000002", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body": ""},
+  {"url": "https://www.douyin.com/aweme/v1/web/aweme/detail/?aweme_id=7400000000000000003", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body": "{\"status_code\": 0, \"aweme_detail\": null}"},
+  {"url": "https://www.tiktok.com/@chaoyue/video/7400000000000000004", "status": 404, "headers": {"Content-Type": "text/html"}, "body": "Not Found"},
+  {"url": "https://v3-web.douyinvod.com/video/play.mp4", "request_headers": {"Cookie": "sid_tt=fixturesid"}, "headers": {"Content-Type": "video/mp4"}, "body": "0000ftypisom-douyin-play"},
+  {"url": "https://v26-web.douyinvod.com/caption/en.srt", "headers": {"Content-Type": "text/plain"}, "body": "1\n00:00:00,000 --> 00:00:01,000\nHello\n"}
+ ]
+}

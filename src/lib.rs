@@ -323,7 +323,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 127] = [
+const EXTRACTOR_NAMES: [&str; 131] = [
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -344,6 +344,7 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "Crtvg",
     "CultureUnplugged",
     "dailymotion",
+    "Douyin",
     "EbaumsWorld",
     "Ebay",
     "Epoch",
@@ -414,6 +415,9 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "TheIntercept",
     "ThisAmericanLife",
     "TikTok",
+    "tiktok:collection",
+    "tiktok:live",
+    "tiktok:user",
     "Tumblr",
     "Tweakers",
     "twitch:clips",
@@ -610,6 +614,10 @@ impl YoutubeDl {
                 Box::new(extractor::TwitterCard),
                 Box::new(extractor::TikTok),
                 Box::new(extractor::TikTokVm),
+                Box::new(extractor::TikTokUser),
+                Box::new(extractor::TikTokCollection),
+                Box::new(extractor::TikTokLive),
+                Box::new(extractor::Douyin),
                 Box::new(extractor::Instagram),
                 Box::new(extractor::Facebook),
                 Box::new(extractor::FacebookReel),
@@ -1369,6 +1377,16 @@ impl YoutubeDl {
     /// it has `limit` entries, or all of them; entries still pending remain.
     pub fn fetch_pending(&self, playlist: &mut PlaylistInfo, limit: Option<usize>) -> Result<()> {
         if let Some(pending) = playlist.pending.take() {
+            if extractor::tiktok_pending_state(&pending.state) {
+                playlist.pending = extractor::fetch_tiktok_pages(
+                    &self.client,
+                    pending.state,
+                    limit,
+                    &mut playlist.entries,
+                )?
+                .map(|state| PendingEntries { state });
+                return Ok(());
+            }
             playlist.pending = extractor::fetch_youtube_tab_pages(
                 &self.client,
                 pending.state,
@@ -1762,6 +1780,34 @@ impl YoutubeDl {
                     .and_then(|date| dates::py_int(&date.chars().take(4).collect::<String>()))
             {
                 entry.extra.insert("release_year".into(), year.into());
+            }
+            // `_fill_common_fields`: `live_status` from `is_live`/`was_live`
+            // (the first not `False`, if true; both `False` is `not_live`).
+            if entry.metadata.live_status.is_none() {
+                let flag = |key: &str| entry.extra.get(key).filter(|value| !value.is_null());
+                let falsy = |key: &str| flag(key) == Some(&serde_json::Value::Bool(false));
+                let truthy = |value: &serde_json::Value| match value {
+                    serde_json::Value::Bool(flag) => *flag,
+                    serde_json::Value::Number(number) => number.as_f64() != Some(0.0),
+                    serde_json::Value::String(text) => !text.is_empty(),
+                    serde_json::Value::Array(items) => !items.is_empty(),
+                    serde_json::Value::Object(items) => !items.is_empty(),
+                    serde_json::Value::Null => false,
+                };
+                let mut status = None;
+                for key in ["is_live", "was_live"] {
+                    if falsy(key) {
+                        continue;
+                    }
+                    if flag(key).is_some_and(truthy) {
+                        status = Some(key);
+                    }
+                    break;
+                }
+                if falsy("is_live") && falsy("was_live") {
+                    status = Some("not_live");
+                }
+                entry.metadata.live_status = status.map(str::to_owned);
             }
             // `_fill_common_fields`: `is_live`/`was_live` from `live_status`.
             if let Some(status) = entry.metadata.live_status.clone() {
