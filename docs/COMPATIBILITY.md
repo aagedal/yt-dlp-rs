@@ -771,9 +771,30 @@ the embed page's error messages, security check and known error pages,
 times), the info page's date and view count and `_format_sort_fields`.
 A YouTube embed is followed; Vimeo, Rutube, Dailymotion, Odnoklassniki and
 Sibnet embeds and VK's JS challenge (which needs upstream's
-`JSInterpreter`) are unsupported errors, and logins, user video lists and
-wall posts are not supported. `tests/fixtures/sites/vk/` is compared with
-pinned upstream output.
+`JSInterpreter`) are unsupported errors, and logins are not supported.
+
+VK wall posts (`vk.com/wall-1_2`, `?w=wall-1_2`, `m.`/`new.`) follow
+upstream `VKWallPostIE`: the `wkview.php` `show` payload's HTML as a
+playlist (`UPLOADER - Wall post ID`, the `wall_post_text` description) of
+its `data-audio` tracks (`m4a` formats, artist, track, cover thumbnails)
+and the `wl_post_body` links to VK videos (`url` entries for `VKIE`; a post
+without that element is upstream's `TypeError`). Upstream deduplicates the
+links with a `set`, in hash order; this port keeps page order, so posts
+linking several distinct videos may list them in another order.
+VK user/club video sections (`vk.com/video/@NAME[/all][?section=S]`,
+`vkvideo.ru/@NAME`) and playlists (`.../playlist/OWNER_ID`) follow upstream
+`VKUserVideosIE`: the page's `newCur` cursor `oid` (or the playlist ID), the
+`VideoInfoPanel__title` playlist title and `al_video.php`'s
+`load_videos_silent` pages as `VKIE` `url` entries. Upstream fetches the
+pages lazily while processing entries; this port fetches them all first.
+VK Play Live records (`vkplay.live`/`live.vkplay.ru`/`live.vkvideo.ru`
+`USER/record/ID`) and channels follow upstream `VKPlayIE` and
+`VKPlayLiveIE`: `api.vkplay.live`'s `public_video_stream` JSON (a failure is
+a warning) or the page's `initial-state` script, `playerUrls` HLS, DASH and
+progressive formats (with the named resolutions), the common metadata and
+`The channel is not currently live` for an offline channel. A live
+stream's HLS master playlist is read without its media playlists.
+`tests/fixtures/sites/vk/` is compared with pinned upstream output.
 
 Weibo posts (`weibo.com/UID/ID`, `m.weibo.cn/status|detail/ID`) follow
 upstream `WeiboIE`: the `ajax/statuses/show` JSON (a redirect to

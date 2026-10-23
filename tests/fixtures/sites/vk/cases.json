@@ -6,5 +6,19 @@
  {"url": "https://vk.com/video_ext.php?oid=-1&id=9", "args": ["--print", "id"]},
  {"url": "https://vk.com/video1_3?list=ln-abc", "args": ["--print", "id"]},
  {"url": "https://vk.com/clip1_4", "args": ["--print", "id"]},
- {"url": "https://vk.com/video-77521_162222515", "args": ["--no-progress", "-f", "url720", "-o", "%(id)s.%(ext)s"]}
+ {"url": "https://vk.com/video-77521_162222515", "args": ["--no-progress", "-f", "url720", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://vk.com/bs.official?w=wall-23538238_35", "args": ["-J"]},
+ {"url": "https://vk.com/wall-23538238_35", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://vk.com/wall-23538238_35", "args": ["--print", "%(playlist_index)s|%(id)s|%(title)s|%(artists)s|%(uploader)s|%(playlist_title)s|%(ext)s"]},
+ {"url": "https://m.vk.com/wall-1_2", "args": ["--print", "id"]},
+ {"url": "https://vk.com/wall-1_3", "args": ["--print", "id"]},
+ {"url": "https://vk.com/wall5_6", "args": ["-J"]},
+ {"url": "https://vk.com/video/@mobidevices", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://vk.com/video/@mobidevices?section=uploaded", "args": ["-J"]},
+ {"url": "https://vkvideo.ru/playlist/-204353299_426", "args": ["--flat-playlist", "--print", "%(id)s|%(url)s|%(playlist_id)s|%(playlist_title)s"]},
+ {"url": "https://vk.com/video/@nocursor", "args": ["--print", "id"]},
+ {"url": "https://vkplay.live/zitsmann/record/f5e6e3b5-dc52-4d14-965d-0680dd2882da", "args": ["-J"]},
+ {"url": "https://live.vkplay.ru/lebwa/record/33a4e4ce-e3ef-49db-bb14-f006cc6fabc9/records", "args": ["-j"]},
+ {"url": "https://live.vkvideo.ru/panterka", "args": ["--print", "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(release_timestamp)s|%(concurrent_view_count)s|%(view_count)s|%(like_count)s|%(uploader)s|%(uploader_id)s|%(categories)s|%(thumbnail)s|%(duration)s"]},
+ {"url": "https://vkplay.live/bayda", "args": ["--print", "id"]}
 ]

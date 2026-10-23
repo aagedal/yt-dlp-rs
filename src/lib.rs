@@ -323,7 +323,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 127] = [
+const EXTRACTOR_NAMES: [&str; 131] = [
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -423,6 +423,10 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "23video",
     "vimeo",
     "vk",
+    "vk:uservideos",
+    "vk:wallpost",
+    "VKPlay",
+    "VKPlayLive",
     "vm.tiktok",
     "Vocaroo",
     "Weibo",
@@ -635,6 +639,10 @@ impl YoutubeDl {
                 Box::new(extractor::Imgur),
                 Box::new(extractor::BiliBili),
                 Box::new(extractor::Vk),
+                Box::new(extractor::VkPlay),
+                Box::new(extractor::VkPlayLive),
+                Box::new(extractor::VkUserVideos),
+                Box::new(extractor::VkWallPost),
                 Box::new(extractor::Niconico),
                 Box::new(extractor::Weibo),
                 Box::new(extractor::WeiboVideo),
@@ -1762,6 +1770,37 @@ impl YoutubeDl {
                     .and_then(|date| dates::py_int(&date.chars().take(4).collect::<String>()))
             {
                 entry.extra.insert("release_year".into(), year.into());
+            }
+            // `_fill_common_fields`: without a `live_status`, the first of
+            // `is_live`/`was_live` that is not `False` decides it if truthy
+            // (both `False`: `not_live`).
+            if entry.metadata.live_status.is_none() {
+                let flag = |key: &str| entry.extra.get(key).cloned();
+                let mut status = None;
+                for key in ["is_live", "was_live"] {
+                    let value = flag(key);
+                    if value == Some(serde_json::Value::Bool(false)) {
+                        continue;
+                    }
+                    if value.as_ref().is_some_and(|value| match value {
+                        serde_json::Value::Null => false,
+                        serde_json::Value::Bool(flag) => *flag,
+                        serde_json::Value::Number(number) => number.as_f64() != Some(0.0),
+                        serde_json::Value::String(text) => !text.is_empty(),
+                        serde_json::Value::Array(items) => !items.is_empty(),
+                        serde_json::Value::Object(items) => !items.is_empty(),
+                    }) {
+                        status = Some(key.to_owned());
+                    }
+                    break;
+                }
+                if ["is_live", "was_live"]
+                    .iter()
+                    .all(|key| flag(key) == Some(serde_json::Value::Bool(false)))
+                {
+                    status = Some("not_live".into());
+                }
+                entry.metadata.live_status = status;
             }
             // `_fill_common_fields`: `is_live`/`was_live` from `live_status`.
             if let Some(status) = entry.metadata.live_status.clone() {

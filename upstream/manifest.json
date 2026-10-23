@@ -1225,9 +1225,10 @@
       ],
       "rust": [
         "src/extractor/vk.rs",
+        "src/extractor/vkplay.rs",
         "tests/fixtures/sites/vk/"
       ],
-      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; no JS challenge, other embeds, logins, VKUserVideosIE, VKWallPostIE or VK Play; compared with pinned upstream output through the fixture proxy"
+      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched eagerly); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; no JS challenge, other embeds or logins; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "vocaroo",
