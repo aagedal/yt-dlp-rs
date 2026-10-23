@@ -1635,7 +1635,28 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 for name in values.keys().filter(|name| {
                     !matches!(
                         name.as_str(),
-                        "player_client" | "player_skip" | "max_comments" | "comment_sort"
+                        "player_client"
+                            | "player_skip"
+                            | "max_comments"
+                            | "comment_sort"
+                            | "formats"
+                            | "include_duplicate_formats"
+                            | "skip"
+                            | "po_token"
+                            | "fetch_pot"
+                            | "pot_trace"
+                            | "visitor_data"
+                            | "data_sync_id"
+                            | "innertube_host"
+                            | "innertube_key"
+                            | "player_params"
+                            | "use_ad_playback_context"
+                            | "webpage_client"
+                            | "webpage_skip"
+                            | "player_js_version"
+                            | "player_js_variant"
+                            | "raise_incomplete_data"
+                            | "lang"
                     )
                 }) {
                     warning!(
@@ -2433,6 +2454,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 })
             }),
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
+            subtitles_wanted: args.write_subs || args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
             get_comments: args.write_comments,
             // `--wait-for-video MIN[-MAX]` (validated with the other options).
@@ -3797,7 +3819,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                     emit_listing(&mut stdout, &yt_dlp_rs::output::render_thumbnails(&info))?;
                 }
                 if args.list_subs {
-                    if !info.automatic_captions.is_empty() {
+                    if info.has_automatic_captions_key() {
                         emit_listing(&mut stdout, &render_automatic_captions(&info))?;
                     }
                     emit_listing(&mut stdout, &render_subtitles(&info))?;

@@ -1,5 +1,6 @@
 //! Narrow watch-page slice of YoutubeIE at the pinned upstream revision.
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
+mod args;
 mod challenge;
 mod chapters;
 pub(crate) mod clip;
@@ -8,6 +9,7 @@ pub(crate) use chapters::from_description as chapters_from_description;
 pub(crate) mod dict;
 mod innertube;
 mod metadata;
+mod pot;
 pub(crate) mod search;
 mod streams;
 mod subs;
@@ -31,6 +33,9 @@ pub struct YoutubeOptions {
     /// Include translated manual captions in automatic-caption metadata.
     /// Original ASR captions/translations are always discovered without fetching.
     pub include_translated_subtitles: bool,
+    /// `writesubtitles or writeautomaticsub or listsubtitles`: PO token
+    /// subtitle skips of non-default clients are warnings.
+    pub subtitles_wanted: bool,
     /// Upstream `noplaylist`: a watch URL with `list=` downloads just its video.
     pub no_playlist: bool,
     /// Upstream `wait_for_video`: wait for a video without formats.
@@ -49,6 +54,7 @@ pub struct WaitForVideo {
 
 struct ConfiguredYoutube {
     include_translated_subtitles: bool,
+    subtitles_wanted: bool,
     get_comments: bool,
     no_playlist: bool,
     wait_for_video: Option<WaitForVideo>,
@@ -61,6 +67,7 @@ impl Youtube {
         // with its headers, cookies and proxy.
         ConfiguredYoutube {
             include_translated_subtitles: options.include_translated_subtitles,
+            subtitles_wanted: options.subtitles_wanted,
             no_playlist: options.no_playlist,
             wait_for_video: options.wait_for_video,
             get_comments: options.get_comments,
@@ -69,9 +76,56 @@ impl Youtube {
     }
 }
 
+/// `_SUPPORTED_LANG_CODES`: YouTube's UI and API languages.
+const SUPPORTED_LANG_CODES: [&str; 83] = [
+    "af", "az", "id", "ms", "bs", "ca", "cs", "da", "de", "et", "en-IN", "en-GB", "en", "es",
+    "es-419", "es-US", "eu", "fil", "fr", "fr-CA", "gl", "hr", "zu", "is", "it", "sw", "lv", "lt",
+    "hu", "nl", "no", "uz", "pl", "pt-PT", "pt", "ro", "sq", "sk", "sl", "sr-Latn", "fi", "sv",
+    "vi", "tr", "be", "bg", "ky", "kk", "mk", "mn", "ru", "sr", "uk", "el", "hy", "iw", "ur", "ar",
+    "fa", "ne", "mr", "hi", "as", "bn", "pa", "gu", "or", "ta", "te", "kn", "ml", "si", "th", "lo",
+    "my", "ka", "am", "km", "zh-CN", "zh-TW", "zh-HK", "ja", "ko",
+];
+
+/// Upstream `_preferred_lang`: `youtube:lang`, validated against
+/// [`SUPPORTED_LANG_CODES`] (the warning is shown once).
+pub(crate) fn preferred_lang() -> Result<Option<String>> {
+    let Some(lang) = args::non_empty_case("lang") else {
+        return Ok(None);
+    };
+    if !SUPPORTED_LANG_CODES.contains(&lang.as_str()) {
+        return Err(Error::Reported(format!(
+            "Unsupported language code: {lang}. Supported language codes (case-sensitive): {}.",
+            SUPPORTED_LANG_CODES.join(", ")
+        )));
+    }
+    if lang != "en" {
+        crate::screen::warning_once(&format!(
+            "[youtube] Preferring \"{lang}\" translated fields. Note that some metadata extraction may fail or be incorrect."
+        ));
+    }
+    Ok(Some(lang))
+}
+
+/// The `hl` of requests: [`preferred_lang`], else English.
+pub(crate) fn request_lang() -> String {
+    preferred_lang()
+        .ok()
+        .flatten()
+        .unwrap_or_else(|| "en".to_owned())
+}
+
 /// Upstream `YoutubeBaseInfoExtractor._real_initialize`: `_initialize_pref`
-/// (English, UTC) and `_initialize_consent` (accept all; otherwise EU
-/// requests are redirected to consent.youtube.com).
+/// (the preferred language, else English; UTC) and `_initialize_consent`
+/// (accept all; otherwise EU requests are redirected to consent.youtube.com).
+/// An unsupported `youtube:lang` fails like upstream's `ExtractorError`
+/// (`[EXTRACTOR] ID: ...`).
+pub(crate) fn initialize_for(extractor: &str, id: &str) -> Result<()> {
+    preferred_lang().map_err(|error| Error::Reported(format!("[{extractor}] {id}: {error}")))?;
+    initialize();
+    Ok(())
+}
+
+/// [`initialize_for`] after the language was checked.
 pub(crate) fn initialize() {
     const HOME: &str = "https://www.youtube.com";
     let mut pref: Vec<(String, String)> = crate::cookies::get_cookie(HOME, "PREF")
@@ -83,7 +137,8 @@ pub(crate) fn initialize() {
         })
         .unwrap_or_default();
     // `dict.update`: replaced keys keep their position.
-    for (key, value) in [("hl", "en"), ("tz", "UTC")] {
+    let lang = request_lang();
+    for (key, value) in [("hl", lang.as_str()), ("tz", "UTC")] {
         match pref.iter_mut().find(|(name, _)| name == key) {
             Some(entry) => entry.1 = value.into(),
             None => pref.push((key.into(), value.into())),
@@ -452,6 +507,41 @@ fn unplayable_reason(id: &str, player_responses: &[Value]) -> Option<Error> {
     Some(fail(&reason))
 }
 
+/// `initial_title`: the title of the initial data's first structured
+/// description's `videoDescriptionHeaderRenderer`, else its player overlay's.
+fn initial_title(initial_data: Option<&Value>) -> Option<String> {
+    let data = initial_data?;
+    let sdcr = data
+        .get("engagementPanels")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .find_map(|panel| {
+            panel
+                .pointer(
+                    "/engagementPanelSectionListRenderer/content/structuredDescriptionContentRenderer",
+                )
+                .filter(|sdcr| sdcr.is_object())
+        });
+    let header = sdcr
+        .and_then(|sdcr| sdcr.get("items")?.as_array())
+        .into_iter()
+        .flatten()
+        .find_map(|item| {
+            item.get("videoDescriptionHeaderRenderer")
+                .filter(|renderer| renderer.is_object())
+        });
+    header
+        .and_then(|header| header.get("title"))
+        .and_then(metadata::text)
+        .or_else(|| {
+            data.pointer(
+                "/playerOverlays/playerOverlayRenderer/videoDetails/playerOverlayVideoDetailsRenderer/title",
+            )
+            .and_then(metadata::text)
+        })
+}
+
 /// `process_video_result`'s `raise_no_formats` for a video without formats
 /// or a reason (skipped formats were warned about while extracting).
 fn no_formats(id: &str) -> Error {
@@ -551,7 +641,8 @@ fn extract_clients(
     url: &Url,
     id: &str,
     runtime: Option<&challenge::Runtime>,
-    translated_manual: bool,
+    // Translated manual captions and whether subtitles are wanted.
+    (translated_manual, subtitles_wanted): (bool, bool),
     wait: bool,
     get_comments: bool,
 ) -> Result<Extraction> {
@@ -583,17 +674,40 @@ fn extract_clients(
     };
     let details = first("videoDetails").cloned().unwrap_or(Value::Null);
     // `get_first(video_details, 'title') or search_meta([...])`.
-    let title = details
-        .get("title")
-        .and_then(Value::as_str)
-        .filter(|title| !title.is_empty())
-        .map(str::to_owned)
+    // `(self._preferred_lang and translated_title) or get_first(video_details,
+    // 'title') or translated_title or search_meta([...])`, else the initial
+    // data's title.
+    let preferred_lang = preferred_lang().ok().flatten();
+    let translated_title = acquired.player_responses.iter().find_map(|response| {
+        response
+            .pointer("/microformat/playerMicroformatRenderer/title")
+            .and_then(metadata::text)
+    });
+    let mut title = translated_title
+        .clone()
+        .filter(|_| preferred_lang.is_some())
+        .or_else(|| {
+            details
+                .get("title")
+                .and_then(Value::as_str)
+                .filter(|title| !title.is_empty())
+                .map(str::to_owned)
+        })
+        .or_else(|| translated_title.clone())
         .or_else(|| {
             ["og:title", "twitter:title", "title"]
                 .into_iter()
                 .find_map(|name| crate::html::html_search_meta(&acquired.webpage, name))
         })
         .unwrap_or_default();
+    if title.is_empty()
+        && let Some(initial_title) = initial_title(acquired.initial_data.as_ref())
+    {
+        crate::screen::warning(
+            "[youtube] No title found in player responses; falling back to title from initial data. Other metadata may also be missing",
+        );
+        title = initial_title;
+    }
     let duration = details
         .get("lengthSeconds")
         .and_then(|value| {
@@ -624,6 +738,16 @@ fn extract_clients(
     if live_status == Some("post_live") {
         return Err(unsupported("post-live videos"));
     }
+    // `formats=duplicate,dashy,incomplete,missing_pot`, `skip=hls,dash` and
+    // `player_skip=js`.
+    let format_types = args::list("formats");
+    let mut all_formats = format_types.iter().any(|kind| kind == "duplicate");
+    if !args::list("include_duplicate_formats").is_empty() {
+        all_formats = true;
+        crate::screen::deprecated_feature(
+            "[youtube] include_duplicate_formats extractor argument is deprecated. Use formats=duplicate extractor argument instead",
+        );
+    }
     let context = streams::Context {
         client,
         video_id: id,
@@ -631,12 +755,12 @@ fn extract_clients(
         live_status,
         duration,
         verbose: crate::screen::verbose(),
-        all_formats: false,
-        skip_bad_formats: true,
-        dashy: false,
-        missing_pot: false,
-        skip_player_js: false,
-        skip_manifests: Default::default(),
+        all_formats,
+        skip_bad_formats: !format_types.iter().any(|kind| kind == "incomplete"),
+        dashy: format_types.iter().any(|kind| kind == "dashy"),
+        missing_pot: format_types.iter().any(|kind| kind == "missing_pot"),
+        skip_player_js: args::contains("player_skip", "js"),
+        skip_manifests: args::list("skip").into_iter().collect(),
         premium: acquired.premium,
     };
     let mut solver = JsSolver {
@@ -679,10 +803,15 @@ fn extract_clients(
     }
     // Captions from the client responses, into `_list_formats`' manifest
     // subtitles (the automatic captions' container).
-    let clients: Vec<(&str, &Value)> = acquired
+    let clients: Vec<subs::ClientCaptions<'_>> = acquired
         .responses
         .iter()
-        .map(|response| (response.client, &response.response))
+        .map(|response| subs::ClientCaptions {
+            client: response.client,
+            response: &response.response,
+            pot: &response.pot,
+            innertube_client_name: &response.innertube_client_name,
+        })
         .collect();
     let manifest_subtitles = match serde_json::to_value(&streams.subtitles) {
         Ok(Value::Object(map)) => map,
@@ -692,7 +821,12 @@ fn extract_clients(
         &acquired.player_responses,
         &clients,
         manifest_subtitles,
-        translated_manual,
+        &subs::Options {
+            video_id: id,
+            subs_wanted: subtitles_wanted,
+            // `'translated_subs' not in skip and (writeautomaticsub or listsubtitles)`.
+            translated: translated_manual && !args::contains("skip", "translated_subs"),
+        },
     );
     // `set_audio_lang_from_orig_subs_lang`: the first original language.
     if let Some(language) = captions.audio_languages.first() {
@@ -735,8 +869,12 @@ fn extract_clients(
         .iter()
         .filter_map(|response| response.pointer("/microformat/playerMicroformatRenderer"))
         .collect();
-    // `original_description if original_description is not None else
-    // translated_description`, else the initial data's.
+    // `((lang and translated_description) or original_description) if
+    // original_description is not None else translated_description`, else
+    // the initial data's.
+    let translated_description = microformats
+        .iter()
+        .find_map(|micro| micro.get("description").and_then(metadata::text));
     let description = acquired
         .player_responses
         .iter()
@@ -745,12 +883,13 @@ fn extract_clients(
                 .pointer("/videoDetails/shortDescription")
                 .filter(|value| !value.is_null())
         })
-        .map(|value| value.as_str().unwrap_or_default().to_owned())
-        .or_else(|| {
-            microformats
-                .iter()
-                .find_map(|micro| micro.get("description").and_then(metadata::text))
+        .map(|value| {
+            translated_description
+                .clone()
+                .filter(|_| preferred_lang.is_some())
+                .unwrap_or_else(|| value.as_str().unwrap_or_default().to_owned())
         })
+        .or_else(|| translated_description.clone())
         .or_else(|| {
             acquired.initial_data.as_ref().and_then(|data| {
                 data.get("engagementPanels")?
@@ -887,8 +1026,8 @@ impl Extractor for Youtube {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
-        initialize();
-        match extract_clients(client, url, &id, None, false, false, false)? {
+        initialize_for("youtube", &id)?;
+        match extract_clients(client, url, &id, None, (false, false), false, false)? {
             Extraction::Video(info) => Ok(Some(*info)),
             Extraction::Wait { .. } => unreachable!("waiting is not configured"),
         }
@@ -904,14 +1043,14 @@ impl Extractor for ConfiguredYoutube {
             return Ok(None);
         };
         crate::screen::set_extractor("youtube");
-        initialize();
+        initialize_for("youtube", &id)?;
         loop {
             match extract_clients(
                 client,
                 url,
                 &id,
                 self.runtime.as_ref(),
-                self.include_translated_subtitles,
+                (self.include_translated_subtitles, self.subtitles_wanted),
                 self.wait_for_video.is_some(),
                 self.get_comments,
             )? {

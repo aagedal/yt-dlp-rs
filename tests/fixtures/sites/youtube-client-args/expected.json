@@ -1,0 +1,301 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:innertube_host=YouTubei.GoogleAPIs.test;innertube_key=AbC",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos&host=alt"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_params=CgIQBg==",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos&params=1"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:webpage_client=web_safari",
+    "--print",
+    "title"
+   ],
+   "exit": 0,
+   "stdout": [
+    "safari page video \"'/\\ä↭𝕐"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:webpage_client=tv",
+    "--print",
+    "title"
+   ],
+   "exit": 0,
+   "stdout": [
+    "youtube-dl test video \"'/\\ä↭𝕐"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Invalid webpage_client \"tv\" requested; falling back to web",
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=web_safari;webpage_client=web_safari",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[info] Available formats for BaW_jenozKc:",
+    "ID EXT RESOLUTION | PROTO | VCODEC      ACODEC    MORE INFO",
+    "-----------------------------------------------------------",
+    "18 mp4 640x360    | https | avc1.42001E mp4a.40.2 360p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;use_ad_playback_context=true",
+    "--print",
+    "format_id",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "18",
+    "https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb&ad=1"
+   ],
+   "stderr": [
+    "WARNING: [youtube] BaW_jenozKc: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;use_ad_playback_context=false",
+    "--print",
+    "format_id",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "18",
+    "https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb"
+   ],
+   "stderr": [
+    "WARNING: [youtube] BaW_jenozKc: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:use_ad_playback_context=true",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;player_js_version=20348@0004de42",
+    "--print",
+    "format_id",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "18",
+    "https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb&sts=forced"
+   ],
+   "stderr": [
+    "WARNING: [youtube] BaW_jenozKc: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;player_js_version=20348",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Invalid player JS version \"20348\" specified. It should be \"actual\" or in the format of STS@HASH",
+    "WARNING: [youtube] BaW_jenozKc: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoStsVideo1",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=NoStsVideo1",
+    "[youtube] NoStsVideo1: Downloading webpage",
+    "[youtube] NoStsVideo1: Downloading player abcd1234-main",
+    "[youtube] NoStsVideo1: Downloading mweb player API JSON",
+    "[info] Available formats for NoStsVideo1:",
+    "ID EXT RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC      ACODEC    ASR MORE INFO",
+    "------------------------------------------------------------------------------------",
+    "18 mp4 640x360     30  2 |  792.00B 100k https | avc1.42001E mp4a.40.2 44k 360p"
+   ],
+   "stderr": [
+    "WARNING: [youtube] NoStsVideo1: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoStsVideo1",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;player_js_variant=tv",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=NoStsVideo1",
+    "[youtube] NoStsVideo1: Downloading webpage",
+    "[youtube] NoStsVideo1: Downloading player abcd1234-tv",
+    "[youtube] NoStsVideo1: Downloading mweb player API JSON",
+    "[info] Available formats for NoStsVideo1:",
+    "ID EXT RESOLUTION FPS CH | FILESIZE  TBR PROTO | VCODEC      ACODEC    ASR MORE INFO",
+    "------------------------------------------------------------------------------------",
+    "18 mp4 640x360     30  2 |  792.00B 100k https | avc1.42001E mp4a.40.2 44k 360p"
+   ],
+   "stderr": [
+    "WARNING: [youtube] NoStsVideo1: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoStsVideo1",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;player_js_variant=bogus",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb&sts=player"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Invalid player JS variant name \"bogus\" requested. Valid choices are: main, tcc, tce, es5, es6, es6_tcc, es6_tce, tv, tv_es6, phone, house",
+    "WARNING: [youtube] NoStsVideo1: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoStsVideo1",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs;player_js_variant=actual",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb&sts=player"
+   ],
+   "stderr": [
+    "WARNING: [youtube] NoStsVideo1: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoStsVideo1",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:player_client=mweb;player_skip=configs,js",
+    "--print",
+    "%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "https://rr1.googlevideo.test/videoplayback?itag=18&client=mweb&sts=none"
+   ],
+   "stderr": [
+    "WARNING: [youtube] NoStsVideo1: mweb client https formats require a GVS PO Token which was not provided. They will be skipped as they may yield HTTP Error 403. You can manually pass a GVS PO Token for this client with --extractor-args \"youtube:po_token=mweb.gvs+XXX\". For more information, refer to  https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide"
+   ],
+   "files": {}
+  }
+ ]
+}

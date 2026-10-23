@@ -212,6 +212,22 @@ pub(crate) fn mark_info(mut info: crate::VideoInfo, shape: &str) -> crate::Video
     info
 }
 
+impl crate::VideoInfo {
+    /// Whether upstream's dict has an `automatic_captions` key, as
+    /// `--list-subs` checks (`'automatic_captions' in info_dict`): any
+    /// captions, or an extractor's recorded key list naming it (YouTube
+    /// always sets the key, possibly to `{}`).
+    pub fn has_automatic_captions_key(&self) -> bool {
+        !self.automatic_captions.is_empty()
+            || self
+                .extra
+                .get(INFO_SHAPE)
+                .and_then(Value::as_str)
+                .and_then(|shape| shape.split_once(';'))
+                .is_some_and(|(_, keys)| keys.split(',').any(|key| key == "automatic_captions"))
+    }
+}
+
 /// Order each loaded subtitle track's keys like the file's track.
 fn reorder_tracks(languages: &mut Map<String, Value>, original: &Value) {
     for (language, tracks) in languages.iter_mut() {

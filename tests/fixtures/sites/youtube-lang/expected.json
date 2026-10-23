@@ -1,0 +1,155 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "%(title)s|%(description).40s|%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "youtube-dl test video \"'/\\ä↭𝕐|test chars:  \"'/\\ä↭𝕐",
+    "test URL: https://g|https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:lang=de",
+    "--print",
+    "%(title)s|%(description).40s|%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Deutscher Titel|Deutsche Beschreibung: test chars:  \"'/\\|https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos&hl=de"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Preferring \"de\" translated fields. Note that some metadata extraction may fail or be incorrect.",
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:lang=en",
+    "--print",
+    "%(title)s|%(description).40s|%(formats.0.url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Deutscher Titel|Deutsche Beschreibung: test chars:  \"'/\\|https://rr1.googlevideo.test/videoplayback?itag=251&client=visionos"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:lang=DE",
+    "--print",
+    "%(title)s|%(description).40s|%(formats.0.url)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube] BaW_jenozKc: Unsupported language code: DE. Supported language codes (case-sensitive): af, az, id, ms, bs, ca, cs, da, de, et, en-IN, en-GB, en, es, es-419, es-US, eu, fil, fr, fr-CA, gl, hr, zu, is, it, sw, lv, lt, hu, nl, no, uz, pl, pt-PT, pt, ro, sq, sk, sl, sr-Latn, fi, sv, vi, tr, be, bg, ky, kk, mk, mn, ru, sr, uk, el, hy, iw, ur, ar, fa, ne, mr, hi, as, bn, pa, gu, or, ta, te, kn, ml, si, th, lo, my, ka, am, km, zh-CN, zh-TW, zh-HK, ja, ko."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:lang=xx",
+    "--print",
+    "%(title)s|%(description).40s|%(formats.0.url)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube] BaW_jenozKc: Unsupported language code: xx. Supported language codes (case-sensitive): af, az, id, ms, bs, ca, cs, da, de, et, en-IN, en-GB, en, es, es-419, es-US, eu, fil, fr, fr-CA, gl, hr, zu, is, it, sw, lv, lt, hu, nl, no, uz, pl, pt-PT, pt, ro, sq, sk, sl, sr-Latn, fi, sv, vi, tr, be, bg, ky, kk, mk, mn, ru, sr, uk, el, hy, iw, ur, ar, fa, ne, mr, hi, as, bn, pa, gu, or, ta, te, kn, ml, si, th, lo, my, ka, am, km, zh-CN, zh-TW, zh-HK, ja, ko."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] Available automatic captions for BaW_jenozKc:",
+    "Language Name                Formats",
+    "de-en    German from English vtt, srt, ttml, srv3, srv2, srv1, json3",
+    "fr-en    French from English vtt, srt, ttml, srv3, srv2, srv1, json3",
+    "[info] Available subtitles for BaW_jenozKc:",
+    "Language Name    Formats",
+    "en       English vtt, srt, ttml, srv3, srv2, srv1, json3"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "--extractor-args",
+    "youtube:skip=translated_subs",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "BaW_jenozKc has no automatic captions",
+    "[info] Available subtitles for BaW_jenozKc:",
+    "Language Name    Formats",
+    "en       English vtt, srt, ttml, srv3, srv2, srv1, json3"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NoTitleVid1",
+   "args": [
+    "--no-js-runtimes",
+    "--print",
+    "title"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Overlay title"
+   ],
+   "stderr": [
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] No title found in player responses; falling back to title from initial data. Other metadata may also be missing"
+   ],
+   "files": {}
+  }
+ ]
+}
