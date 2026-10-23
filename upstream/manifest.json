@@ -1054,6 +1054,19 @@
       "scope": "SenIE content API player/details nodes (fatal HLS formats, VOD manifest fallback, title/description/tags traversal, generic title) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "snapchat",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/snapchat.py"
+      ],
+      "rust": [
+        "src/extractor/snapchat.rs",
+        "src/info_order.rs",
+        "tests/fixtures/sites/snapchat/"
+      ],
+      "scope": "SnapchatSpotlightIE (as of 2026.10.21) Next.js spotlight story matched by storyId; videoMetadata traversal as an untyped mp4 result (contentUrl, width/height, millisecond uploadDateMs/durationMs, -1 view counts as None, creator) then story description, string hashtags and engagement counts; no matching story is upstream's no-formats error; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "soundcloud",
       "status": "partial",
       "upstream": [
@@ -1108,6 +1121,19 @@
         "tests/fixtures/sites/ted/"
       ],
       "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "telegram",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/telegram.py"
+      ],
+      "rust": [
+        "src/extractor/telegram.rs",
+        "src/info_order.rs",
+        "tests/fixtures/sites/telegram/"
+      ],
+      "scope": "TelegramEmbedIE (as of 2026.10.21) embed frame (embed=1, single dropped), video players as mp4 formats with ?single=True webpage URLs, duration/thumbnail/timestamp with non-fatal warnings, cleaned message text, author and channel; multi-video posts as playlists unless ?single or --no-playlist; posts without their own video (upstream's 'returned nothing' warning) are an unsupported error; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "theintercept",

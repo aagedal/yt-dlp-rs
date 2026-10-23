@@ -1,0 +1,129 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA\", \"ext\": \"mp4\", \"title\": \"Views \\ud83d\\udc95\", \"description\": \"\", \"timestamp\": 1637777831.369, \"repost_count\": 318, \"url\": \"https://cf-st.sc-cdn.net/d/kKJHIR1QAznRKK9jgYYDq.27.IRZXSOY?mo=fixture\", \"width\": 540, \"height\": 960, \"duration\": 4.665, \"thumbnail\": \"https://cf-st.sc-cdn.net/d/kKJHIR1QAznRKK9jgYYDq.256.IRZXSOY?mo=fixture\", \"uploader\": \"shreypatel57\", \"uploader_url\": \"https://www.snapchat.com/add/shreypatel57\", \"webpage_url\": \"https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA\", \"original_url\": \"https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA\", \"webpage_url_basename\": \"W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA\", \"webpage_url_domain\": \"snapchat.com\", \"extractor\": \"SnapchatSpotlight\", \"extractor_key\": \"SnapchatSpotlight\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cf-st.sc-cdn.net/d/kKJHIR1QAznRKK9jgYYDq.256.IRZXSOY?mo=fixture\", \"id\": \"0\"}], \"display_id\": \"W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA\", \"fulltitle\": \"Views \\ud83d\\udc95\", \"duration_string\": \"4\", \"upload_date\": \"20211124\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"540x960\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 540x960\", \"_filename\": \"Views \\ud83d\\udc95 [W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA].mp4\", \"filename\": \"Views \\ud83d\\udc95 [W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ\", \"ext\": \"mp4\", \"title\": \"Spotlight Snap\", \"timestamp\": 1722720291.307, \"view_count\": 1544863, \"repost_count\": 9327, \"url\": \"https://cf-st.sc-cdn.net/i/ztfr6xFs0FOcFhwVczWfj.27.IRZXSOY?mo=fixture\", \"width\": 720, \"height\": 1280, \"duration\": 10.91, \"thumbnail\": \"https://cf-st.sc-cdn.net/i/ztfr6xFs0FOcFhwVczWfj.256.IRZXSOY?mo=fixture\", \"uploader\": \"ganda0535\", \"uploader_url\": \"https://www.snapchat.com/add/ganda0535\", \"description\": \"How he flirt her teacher\\ud83e\\udd2d\\ud83e\\udd2d\\ud83e\\udd29\\ud83d\\ude0d #kdrama#cdrama #dramaclips #dramaspotlight\", \"tags\": [\"#dramaspotlight\", \"#dramaclips\", \"#cdrama\", \"#kdrama\"], \"webpage_url\": \"https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ\", \"original_url\": \"https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ\", \"webpage_url_basename\": \"W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ\", \"webpage_url_domain\": \"snapchat.com\", \"extractor\": \"SnapchatSpotlight\", \"extractor_key\": \"SnapchatSpotlight\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cf-st.sc-cdn.net/i/ztfr6xFs0FOcFhwVczWfj.256.IRZXSOY?mo=fixture\", \"id\": \"0\"}], \"display_id\": \"W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ\", \"fulltitle\": \"Spotlight Snap\", \"duration_string\": \"10\", \"upload_date\": \"20240803\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x1280\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 0.56, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 720x1280\", \"_filename\": \"Spotlight Snap [W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ].mp4\", \"filename\": \"Spotlight Snap [W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[SnapchatSpotlight] Extracting URL: https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ",
+    "[SnapchatSpotlight] W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ: Downloading webpage",
+    "[info] Available formats for W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  mp4 720x1280   | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(duration_string)s|%(view_count)s|%(repost_count)s|%(uploader)s|%(uploader_url)s|%(tags)s|%(width)sx%(height)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ|Spotlight Snap|How he flirt her teacher🤭🤭🤩😍 #kdrama#cdrama #dramaclips #dramaspotlight|1722720291.307|20240803|10.91|10|1544863|9327|ganda0535|https://www.snapchat.com/add/ganda0535|['#dramaspotlight', '#dramaclips', '#cdrama', '#kdrama']|720x1280|0|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA",
+   "args": [
+    "--print",
+    "%(title)s|%(description)s|%(view_count)s|%(repost_count)s|%(timestamp)s|%(duration)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Views 💕||NA|318|1637777831.369|4.665|https://cf-st.sc-cdn.net/d/kKJHIR1QAznRKK9jgYYDq.256.IRZXSOY?mo=fixture"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[SnapchatSpotlight] Extracting URL: https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA",
+    "[SnapchatSpotlight] W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA: Downloading webpage",
+    "[info] W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA: Downloading 1 format(s): 0",
+    "[download] Destination: W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA.mp4": 27
+   }
+  },
+  {
+   "url": "https://snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYMissingStoryAAAAAA",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [SnapchatSpotlight] W7_EDlXWTBiXAEEniNoMPwAAYMissingStoryAAAAAA: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYNoNextDataAAAAAA",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [SnapchatSpotlight] W7_EDlXWTBiXAEEniNoMPwAAYNoNextDataAAAAAA: Unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYGoneAAAAAA",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [SnapchatSpotlight] W7_EDlXWTBiXAEEniNoMPwAAYGoneAAAAAA: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

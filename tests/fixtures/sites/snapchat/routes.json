@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYYWtidGhudGZpAX1TKn0JAX1TKnXJAAAAAA",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "views.html"
+  },
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYcnVjYWdwcGV1AZEaIYn5AZEaIYnrAAAAAQ",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "drama.html"
+  },
+  {
+   "url": "https://snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYMissingStoryAAAAAA",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "views.html"
+  },
+  {
+   "url": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYNoNextDataAAAAAA",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>Snapchat</title></head><body><div id=\"__next\"></div></body></html>"
+  },
+  {
+   "url": "https://cf-st.sc-cdn.net/d/kKJHIR1QAznRKK9jgYYDq.27.IRZXSOY?mo=fixture",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-snapchat-views"
+  },
+  {
+   "url": "https://cf-st.sc-cdn.net/i/ztfr6xFs0FOcFhwVczWfj.27.IRZXSOY?mo=fixture",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-snapchat-drama"
+  }
+ ]
+}

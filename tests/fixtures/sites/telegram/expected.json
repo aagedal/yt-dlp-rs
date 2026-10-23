@@ -1,0 +1,203 @@
+{
+ "upstream_commit": "897341241f2bfb2439fe0367f4c7c9ccd29a3828",
+ "cases": [
+  {
+   "url": "https://t.me/europa_press/613",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"613\", \"webpage_url\": \"https://t.me/europa_press/613?single=True\", \"duration\": 61, \"thumbnail\": \"https://cdn4.telesco.pe/file/europa_press_613_thumb.jpg\", \"formats\": [{\"url\": \"https://cdn4.telesco.pe/file/europa_press_613.mp4?token=fixture613\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"title\": \"\\ud83c\\uddea\\ud83c\\uddf8 El presidente del Gobierno visita La Palma  M\\u00e1s informaci\\u00f3n en europapress.es & nuestro canal\", \"description\": \"\\ud83c\\uddea\\ud83c\\uddf8 El presidente del Gobierno visita La Palma  M\\u00e1s informaci\\u00f3n en europapress.es & nuestro canal\", \"channel\": \"Europa Press \\u2714\", \"channel_id\": \"europa_press\", \"timestamp\": 1635631203, \"original_url\": \"https://t.me/europa_press/613\", \"webpage_url_basename\": \"613\", \"webpage_url_domain\": \"t.me\", \"extractor\": \"telegram:embed\", \"extractor_key\": \"TelegramEmbed\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn4.telesco.pe/file/europa_press_613_thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"613\", \"fulltitle\": \"\\ud83c\\uddea\\ud83c\\uddf8 El presidente del Gobierno visita La Palma  M\\u00e1s informaci\\u00f3n en europapress.es & nuestro canal\", \"duration_string\": \"1:01\", \"upload_date\": \"20211030\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn4.telesco.pe/file/europa_press_613.mp4?token=fixture613\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\ud83c\\uddea\\ud83c\\uddf8 El presidente del Gobierno visita La Palma  M\\u00e1s informaci\\u00f3n en europapress.es & nuestro canal [613].mp4\", \"filename\": \"\\ud83c\\uddea\\ud83c\\uddf8 El presidente del Gobierno visita La Palma  M\\u00e1s informaci\\u00f3n en europapress.es & nuestro canal [613].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/europa_press/613",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[telegram:embed] Extracting URL: https://t.me/europa_press/613",
+    "[telegram:embed] 613: Downloading embed frame",
+    "[info] Available formats for 613:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  mp4 unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/europa_press/613",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(channel)s|%(channel_id)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(duration_string)s|%(webpage_url)s|%(original_url)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "613|🇪🇸 El presidente del Gobierno visita La Palma  Más información en europapress.es & nuestro canal|Europa Press ✔|europa_press|1635631203|20211030|61|1:01|https://t.me/europa_press/613?single=True|https://t.me/europa_press/613|0|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/europa_press/613",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[telegram:embed] Extracting URL: https://t.me/europa_press/613",
+    "[telegram:embed] 613: Downloading embed frame",
+    "[info] 613: Downloading 1 format(s): 0",
+    "[download] Destination: 613.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "613.mp4": 25
+   }
+  },
+  {
+   "url": "https://t.me/vorposte/29342",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"vorposte-29342\", \"title\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442 29342\", \"description\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"29342\", \"webpage_url\": \"https://t.me/vorposte/29342?single=True\", \"duration\": 33, \"thumbnail\": \"https://cdn4.telesco.pe/file/vorposte_29342_thumb.jpg\", \"formats\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29342.mp4?token=fixture29342\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"title\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"description\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"channel\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442\", \"channel_id\": \"vorposte\", \"timestamp\": 1666384480, \"playlist_count\": 2, \"playlist\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442 29342\", \"playlist_id\": \"vorposte-29342\", \"playlist_title\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442 29342\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://t.me/vorposte/29342\", \"n_entries\": 2, \"webpage_url_basename\": \"29342\", \"webpage_url_domain\": \"t.me\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"telegram:embed\", \"extractor_key\": \"TelegramEmbed\", \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29342_thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"29342\", \"fulltitle\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"duration_string\": \"33\", \"upload_date\": \"20221021\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29342.mp4?token=fixture29342\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29342].mp4\", \"filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29342].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn4.telesco.pe/file/vorposte_29342.mp4?token=fixture29342\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"id\": \"29343\", \"webpage_url\": \"https://t.me/vorposte/29343?single=True\", \"duration\": 35, \"thumbnail\": \"https://cdn4.telesco.pe/file/vorposte_29343_thumb.jpg\", \"formats\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29343.mp4?token=fixture29343\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"title\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"description\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"channel\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442\", \"channel_id\": \"vorposte\", \"timestamp\": 1666384480, \"playlist_count\": 2, \"playlist\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442 29342\", \"playlist_id\": \"vorposte-29342\", \"playlist_title\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442 29342\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://t.me/vorposte/29342\", \"n_entries\": 2, \"webpage_url_basename\": \"29342\", \"webpage_url_domain\": \"t.me\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"telegram:embed\", \"extractor_key\": \"TelegramEmbed\", \"playlist_autonumber\": 2, \"thumbnails\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29343_thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"29343\", \"fulltitle\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"duration_string\": \"35\", \"upload_date\": \"20221021\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29343.mp4?token=fixture29343\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29343].mp4\", \"filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29343].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn4.telesco.pe/file/vorposte_29343.mp4?token=fixture29343\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://t.me/vorposte/29342\", \"original_url\": \"https://t.me/vorposte/29342\", \"webpage_url_basename\": \"29342\", \"webpage_url_domain\": \"t.me\", \"extractor\": \"telegram:embed\", \"extractor_key\": \"TelegramEmbed\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/vorposte/29342",
+   "args": [
+    "--print",
+    "%(playlist_index)s|%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s|%(duration)s|%(webpage_url)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|vorposte-29342|Форпост 29342|29342|Обстановка на линии фронта. Видео с места событий.|33|https://t.me/vorposte/29342?single=True|https://cdn4.telesco.pe/file/vorposte_29342_thumb.jpg",
+    "2|vorposte-29342|Форпост 29342|29343|Обстановка на линии фронта. Видео с места событий.|35|https://t.me/vorposte/29343?single=True|https://cdn4.telesco.pe/file/vorposte_29343_thumb.jpg"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/vorposte/29342",
+   "args": [
+    "--flat-playlist",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"29342\", \"webpage_url\": \"https://t.me/vorposte/29342?single=True\", \"duration\": 33, \"thumbnail\": \"https://cdn4.telesco.pe/file/vorposte_29342_thumb.jpg\", \"formats\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29342.mp4?token=fixture29342\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"title\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"description\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"channel\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442\", \"channel_id\": \"vorposte\", \"timestamp\": 1666384480, \"playlist_count\": 2, \"playlist\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442 29342\", \"playlist_id\": \"vorposte-29342\", \"playlist_title\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442 29342\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://t.me/vorposte/29342\", \"n_entries\": 2, \"webpage_url_basename\": \"29342\", \"webpage_url_domain\": \"t.me\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"telegram:embed\", \"extractor_key\": \"TelegramEmbed\", \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29342_thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"29342\", \"fulltitle\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"duration_string\": \"33\", \"upload_date\": \"20221021\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn4.telesco.pe/file/vorposte_29342.mp4?token=fixture29342\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29342].mp4\", \"filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29342].mp4\", \"_type\": \"video\"}",
+    "{\"id\": \"29343\", \"webpage_url\": \"https://t.me/vorposte/29343?single=True\", \"duration\": 35, \"thumbnail\": \"https://cdn4.telesco.pe/file/vorposte_29343_thumb.jpg\", \"formats\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29343.mp4?token=fixture29343\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"title\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"description\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"channel\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442\", \"channel_id\": \"vorposte\", \"timestamp\": 1666384480, \"playlist_count\": 2, \"playlist\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442 29342\", \"playlist_id\": \"vorposte-29342\", \"playlist_title\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442 29342\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://t.me/vorposte/29342\", \"n_entries\": 2, \"webpage_url_basename\": \"29342\", \"webpage_url_domain\": \"t.me\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"telegram:embed\", \"extractor_key\": \"TelegramEmbed\", \"playlist_autonumber\": 2, \"thumbnails\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29343_thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"29343\", \"fulltitle\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"duration_string\": \"35\", \"upload_date\": \"20221021\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn4.telesco.pe/file/vorposte_29343.mp4?token=fixture29343\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29343].mp4\", \"filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29343].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/vorposte/29342",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(playlist_index)s-%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[telegram:embed] Extracting URL: https://t.me/vorposte/29342",
+    "[telegram:embed] 29342: Downloading embed frame",
+    "[telegram:embed] Downloading playlist vorposte-29342 - add --no-playlist to download just the video 29342",
+    "[download] Downloading playlist: Форпост 29342",
+    "[telegram:embed] Playlist Форпост 29342: Downloading 2 items of 2",
+    "[download] Downloading item 1 of 2",
+    "[info] 29342: Downloading 1 format(s): 0",
+    "[download] Destination: 1-29342.mp4",
+    "[download] Download completed",
+    "[download] Downloading item 2 of 2",
+    "[info] 29343: Downloading 1 format(s): 0",
+    "[download] Destination: 2-29343.mp4",
+    "[download] Download completed",
+    "[download] Finished downloading playlist: Форпост 29342"
+   ],
+   "stderr": [],
+   "files": {
+    "1-29342.mp4": 27,
+    "2-29343.mp4": 34
+   }
+  },
+  {
+   "url": "https://t.me/vorposte/29343",
+   "args": [
+    "--no-playlist",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"29343\", \"webpage_url\": \"https://t.me/vorposte/29343?single=True\", \"duration\": 35, \"thumbnail\": \"https://cdn4.telesco.pe/file/vorposte_29343_thumb.jpg\", \"formats\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29343.mp4?token=fixture29343\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"title\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"description\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"channel\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442\", \"channel_id\": \"vorposte\", \"timestamp\": 1666384480, \"original_url\": \"https://t.me/vorposte/29343\", \"webpage_url_basename\": \"29343\", \"webpage_url_domain\": \"t.me\", \"extractor\": \"telegram:embed\", \"extractor_key\": \"TelegramEmbed\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29343_thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"29343\", \"fulltitle\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"duration_string\": \"35\", \"upload_date\": \"20221021\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn4.telesco.pe/file/vorposte_29343.mp4?token=fixture29343\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29343].mp4\", \"filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29343].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/vorposte/29342?single",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"29342\", \"webpage_url\": \"https://t.me/vorposte/29342?single=True\", \"duration\": 33, \"thumbnail\": \"https://cdn4.telesco.pe/file/vorposte_29342_thumb.jpg\", \"formats\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29342.mp4?token=fixture29342\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"title\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"description\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"channel\": \"\\u0424\\u043e\\u0440\\u043f\\u043e\\u0441\\u0442\", \"channel_id\": \"vorposte\", \"timestamp\": 1666384480, \"original_url\": \"https://t.me/vorposte/29342?single\", \"webpage_url_basename\": \"29342\", \"webpage_url_domain\": \"t.me\", \"extractor\": \"telegram:embed\", \"extractor_key\": \"TelegramEmbed\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn4.telesco.pe/file/vorposte_29342_thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"29342\", \"fulltitle\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439.\", \"duration_string\": \"33\", \"upload_date\": \"20221021\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn4.telesco.pe/file/vorposte_29342.mp4?token=fixture29342\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29342].mp4\", \"filename\": \"\\u041e\\u0431\\u0441\\u0442\\u0430\\u043d\\u043e\\u0432\\u043a\\u0430 \\u043d\\u0430 \\u043b\\u0438\\u043d\\u0438\\u0438 \\u0444\\u0440\\u043e\\u043d\\u0442\\u0430. \\u0412\\u0438\\u0434\\u0435\\u043e \\u0441 \\u043c\\u0435\\u0441\\u0442\\u0430 \\u0441\\u043e\\u0431\\u044b\\u0442\\u0438\\u0439. [29342].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/vorposte/29342?single=1&embed=0",
+   "args": [
+    "--print",
+    "%(id)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "29342|https://t.me/vorposte/29342?single=True|https://t.me/vorposte/29342?single=1&embed=0"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/clips_channel/77",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"77\", \"webpage_url\": \"https://t.me/clips_channel/77?single=True\", \"thumbnail\": null, \"formats\": [{\"url\": \"https://cdn4.telesco.pe/file/clips_77.mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"title\": \"telegram-embed video #77\", \"description\": null, \"channel\": null, \"channel_id\": \"clips_channel\", \"timestamp\": null, \"original_url\": \"https://t.me/clips_channel/77\", \"webpage_url_basename\": \"77\", \"webpage_url_domain\": \"t.me\", \"extractor\": \"telegram:embed\", \"extractor_key\": \"TelegramEmbed\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"77\", \"fulltitle\": \"\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn4.telesco.pe/file/clips_77.mp4\", \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"telegram-embed video #77 [77].mp4\", \"filename\": \"telegram-embed video #77 [77].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [telegram:embed] unable to extract timestamp; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [telegram:embed] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [telegram:embed] unable to extract thumbnail; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://t.me/europa_press/404",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [telegram:embed] 404: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
