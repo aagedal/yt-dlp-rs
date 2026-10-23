@@ -129,6 +129,11 @@ fn base_url(node: Node<'_, '_>, inherited: &Url, explicit: bool) -> Result<(Url,
         None => Ok((inherited.clone(), explicit)),
     }
 }
+/// A directory-like base is no direct resource; a query (OK.ru's
+/// `<BaseURL>?expires=...</BaseURL>` on `https://host/`) names one.
+fn directory(base: &Url) -> bool {
+    base.path().ends_with('/') && base.query().is_none()
+}
 fn range(text: &str) -> Result<ByteRange> {
     let (start, end) = text
         .split_once('-')
@@ -527,7 +532,7 @@ fn plans(
         ));
     }
     if address.kind.is_none() {
-        if !explicit_base || base.path().ends_with('/') {
+        if !explicit_base || directory(base) {
             return Err(bad(
                 "DASH representation has no explicit direct resource or addressing",
             ));
@@ -666,11 +671,13 @@ pub(crate) fn parse_with_subtitles(
     )
     .map_err(|error| bad(format!("invalid DASH XML: {error}")))?;
     let root = document.root_element();
+    // Upstream reads the namespace with `(?i)^{([^}]+)?}MPD$`; OK.ru serves
+    // `urn:mpeg:DASH:schema:MPD:2011`.
     if root.tag_name().name() != "MPD"
-        || !matches!(
-            root.tag_name().namespace(),
-            None | Some("urn:mpeg:dash:schema:mpd:2011")
-        )
+        || !root
+            .tag_name()
+            .namespace()
+            .is_none_or(|namespace| namespace.eq_ignore_ascii_case("urn:mpeg:dash:schema:mpd:2011"))
     {
         return Err(bad("expected a DASH MPD root"));
     }
@@ -694,6 +701,17 @@ pub(crate) fn parse_with_subtitles(
         }
         if node.ancestors().take(66).count() > 65 {
             return Err(bad("DASH XML nesting exceeds 64 element levels"));
+        }
+        // Upstream never reads `SegmentBase` (or its index ranges and
+        // `Initialization`): such a representation is its direct `BaseURL`.
+        if node
+            .ancestors()
+            .any(|ancestor| ancestor.tag_name().name() == "SegmentBase")
+        {
+            if node.tag_name().namespace() != root.tag_name().namespace() {
+                return Err(bad("unsupported DASH extension namespace"));
+            }
+            continue;
         }
         if matches!(
             node.tag_name().name(),
@@ -736,7 +754,7 @@ pub(crate) fn parse_with_subtitles(
         }
         if matches!(
             node.tag_name().name(),
-            "ContentProtection" | "SegmentBase" | "RepresentationIndex"
+            "ContentProtection" | "RepresentationIndex"
         ) {
             return Err(bad("DASH encryption and SIDX addressing are unsupported"));
         }
@@ -789,9 +807,10 @@ pub(crate) fn parse_with_subtitles(
     let mut formats = Vec::new();
     let mut subtitles = Vec::new();
     let mut total_fragments = 0usize;
-    // Upstream `stream_numbers[mpd_url]`: video, audio and image
-    // representations count in manifest order.
-    let mut stream_number = 0usize;
+    // Upstream `stream_numbers[f['url']]`: video, audio and image
+    // representations count in manifest order per format URL (the MPD, or
+    // an unfragmented representation's own resource).
+    let mut stream_numbers: BTreeMap<String, usize> = BTreeMap::new();
     for adaptation in children(period, "AdaptationSet") {
         let (adaptation_base, adaptation_explicit) =
             base_url(adaptation, &period_base, period_explicit)?;
@@ -829,7 +848,12 @@ pub(crate) fn parse_with_subtitles(
             let content_type = match declared {
                 "video" | "audio" | "text" => declared,
                 _ if matches!(mime, "image/avif" | "image/jpeg") => {
-                    stream_number += 1;
+                    let key = if address.kind.is_none() {
+                        &base
+                    } else {
+                        manifest
+                    };
+                    *stream_numbers.entry(key.to_string()).or_default() += 1;
                     continue;
                 }
                 _ => match &codecs {
@@ -856,7 +880,7 @@ pub(crate) fn parse_with_subtitles(
                 let ext = crate::extractor::direct::mimetype2ext_or(mime, None);
                 if address.kind.is_none() {
                     // "Assuming direct URL to unfragmented media."
-                    if explicit && !base.path().ends_with('/') {
+                    if explicit && !directory(&base) {
                         subtitles.push((
                             language,
                             crate::SubtitleFormat {
@@ -933,6 +957,23 @@ pub(crate) fn parse_with_subtitles(
                 representation.attribute("id"),
                 bandwidth,
             )?;
+            // "Assuming direct URL to unfragmented media": upstream's `url`
+            // is the resource itself, without a protocol or fragments.
+            let (direct, fragments) = if address.kind.is_none() {
+                (
+                    fragments.into_iter().next().map(|fragment| fragment.url),
+                    Vec::new(),
+                )
+            } else {
+                (None, fragments)
+            };
+            let stream_number = {
+                let counter = stream_numbers
+                    .entry(direct.as_ref().unwrap_or(manifest).to_string())
+                    .or_default();
+                *counter += 1;
+                *counter - 1
+            };
             total_fragments = total_fragments
                 .checked_add(fragments.len())
                 .filter(|count| *count <= LIMIT)
@@ -947,7 +988,15 @@ pub(crate) fn parse_with_subtitles(
             // base for relative fragment paths, and `_merge_mpd_periods`'s
             // `is_dash_periods`.
             let mut extra = serde_json::Map::new();
-            extra.insert(crate::info_order::FORMAT_SHAPE.into(), "dash".into());
+            extra.insert(
+                crate::info_order::FORMAT_SHAPE.into(),
+                if direct.is_some() {
+                    "dash-direct"
+                } else {
+                    "dash"
+                }
+                .into(),
+            );
             extra.insert("manifest_url".into(), manifest.as_str().into());
             if address.kind.is_some() {
                 // Without a BaseURL, upstream's base is the MPD's directory.
@@ -964,7 +1013,7 @@ pub(crate) fn parse_with_subtitles(
             formats.push(VideoFormat {
                 http_headers: None,
                 extra,
-                protocol: Some("http_dash_segments".into()),
+                protocol: direct.is_none().then(|| "http_dash_segments".into()),
                 vcodec: codecs.as_ref().map(|codecs| codecs.vcodec.clone()),
                 acodec: codecs.as_ref().map(|codecs| codecs.acodec.clone()),
                 dynamic_range: codecs
@@ -990,7 +1039,7 @@ pub(crate) fn parse_with_subtitles(
                 format: None,
                 aspect_ratio: None,
                 format_id,
-                url: manifest.clone(),
+                url: direct.clone().unwrap_or_else(|| manifest.clone()),
                 // Upstream `mimetype2ext(mime_type)`.
                 ext: ext.clone(),
                 stream_kind: kind,
@@ -1018,7 +1067,6 @@ pub(crate) fn parse_with_subtitles(
                 filesize: None,
                 fragments,
             });
-            stream_number += 1;
         }
     }
     if formats.is_empty() {
@@ -1233,7 +1281,14 @@ mod tests {
         let formats = parse(&text, &manifest()).unwrap();
         assert_eq!(formats[0].stream_kind, StreamKind::Standalone);
         assert!(formats[0].audio_group.is_none());
-        assert_eq!(urls(&formats[0]), ["https://example.com/path/movie.mp4"]);
+        // Upstream's direct format is the resource itself, not a fragment plan.
+        assert_eq!(
+            formats[0].url.as_str(),
+            "https://example.com/path/movie.mp4"
+        );
+        assert_eq!(formats[0].protocol, None);
+        assert!(formats[0].fragments.is_empty());
+        assert!(!formats[0].extra.contains_key("fragment_base_url"));
         assert!(
             parse(
                 &text.replace("<BaseURL>movie.mp4</BaseURL>", ""),
@@ -1242,6 +1297,41 @@ mod tests {
             .is_err()
         );
         assert!(parse(&text.replace("movie.mp4", "directory/"), &manifest()).is_err());
+    }
+    #[test]
+    fn okru_style_segment_base_representations_are_direct_resources() {
+        // OK.ru: an upper-case namespace, query-only BaseURLs on the host root
+        // and SegmentBase index ranges, all of which upstream ignores.
+        let text = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><MPD xmlns=\"urn:mpeg:DASH:schema:MPD:2011\" type=\"static\" mediaPresentationDuration=\"PT10S\"><Period duration=\"PT10S\" start=\"PT0S\"><AdaptationSet mimeType=\"video/webm\"><Representation id=\"0\" codecs=\"vp9\" bandwidth=\"1000\"><BaseURL>?type=4&amp;ct=21</BaseURL><SegmentBase indexRange=\"418-2018\" indexRangeExact=\"true\"><Initialization range=\"0-417\"/></SegmentBase></Representation><Representation id=\"1\" codecs=\"vp9\" bandwidth=\"2000\"><BaseURL>?type=0&amp;ct=21</BaseURL><SegmentBase indexRange=\"418-2018\"/></Representation></AdaptationSet><AdaptationSet mimeType=\"audio/webm\" codecs=\"opus\"><Representation id=\"2\" bandwidth=\"300\"><BaseURL>?type=0&amp;ct=22</BaseURL><SegmentBase indexRange=\"464-1299\"/></Representation></AdaptationSet></Period></MPD>";
+        let manifest = Url::parse("https://cdn.example.com/?type=4&ct=6").unwrap();
+        let formats = parse(text, &manifest).unwrap();
+        let urls: Vec<_> = formats.iter().map(|format| format.url.as_str()).collect();
+        assert_eq!(
+            urls,
+            [
+                "https://cdn.example.com/?type=4&ct=21",
+                "https://cdn.example.com/?type=0&ct=21",
+                "https://cdn.example.com/?type=0&ct=22",
+            ]
+        );
+        assert!(formats.iter().all(|format| format.protocol.is_none()));
+        assert!(formats.iter().all(|format| format.fragments.is_empty()));
+        // `stream_numbers[f['url']]` counts per resource.
+        assert!(
+            formats
+                .iter()
+                .all(|format| format.manifest_stream_number == Some(0))
+        );
+        // A bare directory base is still no resource.
+        assert!(parse(&text.replace("?type=4&amp;ct=21", "dir/"), &manifest).is_err());
+        // Index ranges outside SegmentBase stay unsupported.
+        assert!(
+            parse(
+                &text.replace("id=\"0\"", "id=\"0\" indexRange=\"0-1\""),
+                &manifest
+            )
+            .is_err()
+        );
     }
     #[test]
     fn saved_ffmpeg_timeline_duration_list_and_range_manifests_have_two_typed_plans() {
@@ -1267,7 +1357,6 @@ mod tests {
             text.replace("type=\"static\"", "type=\"dynamic\""),
             text.replace("</MPD>", "<Period/></MPD>"),
             text.replace("<Representation ", "<ContentProtection/><Representation "),
-            text.replace("<Representation ", "<SegmentBase/><Representation "),
             text.replace(
                 "<Representation ",
                 "<BaseURL>a/</BaseURL><BaseURL>b/</BaseURL><Representation ",

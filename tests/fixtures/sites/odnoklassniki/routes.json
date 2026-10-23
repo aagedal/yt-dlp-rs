@@ -72,6 +72,41 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom-ok"
+  },
+  {
+   "url": "https://ok.ru/video/20079905453",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div data-module=\"OKVideo\" data-options=\"{&quot;flashvars&quot;: {&quot;metadata&quot;: {&quot;provider&quot;: &quot;UPLOADED_ODKL&quot;, &quot;movie&quot;: {&quot;title&quot;: &quot;WebM DASH&quot;, &quot;poster&quot;: &quot;https://iv.okcdn.test/poster2.jpg&quot;, &quot;duration&quot;: &quot;101&quot;}, &quot;author&quot;: {&quot;id&quot;: &quot;1&quot;, &quot;name&quot;: &quot;OK&quot;}, &quot;videos&quot;: [{&quot;name&quot;: &quot;mobile&quot;, &quot;url&quot;: &quot;https://vd2.okcdn.test/?expires=1&amp;type=4&amp;id=2&quot;}, {&quot;name&quot;: &quot;hd&quot;, &quot;url&quot;: &quot;https://vd2.okcdn.test/?expires=1&amp;type=3&amp;id=2&quot;}], &quot;hlsManifestUrl&quot;: &quot;https://vd2.okcdn.test/video.m3u8?cmd=videoPlayerCdn&amp;type=2&amp;id=2&quot;, &quot;metadataWebmUrl&quot;: &quot;https://vd2.okcdn.test/?expires=1&amp;ch=-1&amp;type=4&amp;ct=6&amp;id=2&quot;}, &quot;videoId&quot;: &quot;20079905453&quot;}}\" data-x=\"1\"></div></body></html>"
+  },
+  {
+   "url": "https://vd2.okcdn.test/video.m3u8?cmd=videoPlayerCdn&type=2&id=2",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1144000,QUALITY=hd,FRAME-RATE=25,RESOLUTION=1280x720\n/expires/1/type/3/id/2/video/\n"
+  },
+  {
+   "url": "https://vd2.okcdn.test/expires/1/type/3/id/2/video/",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXTINF:10,\nseg.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://vd2.okcdn.test/?expires=1&ch=-1&type=4&ct=6&id=2",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><MPD xmlns=\"urn:mpeg:DASH:schema:MPD:2011\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" mediaPresentationDuration=\"PT100.912S\" minBufferTime=\"PT0.5S\" profiles=\"urn:webm:dash:profile:webm-on-demand:2012\" type=\"static\" xsi:schemaLocation=\"urn:mpeg:DASH:schema:MPD:2011\"><Period duration=\"PT100.912S\" id=\"0\" start=\"PT0S\"><AdaptationSet bitstreamSwitching=\"true\" id=\"0\" subsegmentAlignment=\"true\" subsegmentStartsWithSAP=\"1\"><Representation bandwidth=\"87936\" codecs=\"vp9\" frameRate=\"25\" height=\"144\" mimeType=\"video/webm\" quality=\"mobile\" width=\"256\" id=\"0\"><BaseURL>?expires=1&amp;type=4&amp;ct=21&amp;id=2</BaseURL><SegmentBase indexRange=\"418-2018\" indexRangeExact=\"true\"><Initialization range=\"0-417\"/></SegmentBase></Representation><Representation bandwidth=\"853334\" codecs=\"vp9\" frameRate=\"25\" height=\"720\" mimeType=\"video/webm\" quality=\"hd\" width=\"1280\" id=\"4\"><BaseURL>?expires=1&amp;type=3&amp;ct=21&amp;id=2</BaseURL><SegmentBase indexRange=\"420-2025\" indexRangeExact=\"true\"><Initialization range=\"0-417\"/></SegmentBase></Representation></AdaptationSet><AdaptationSet audioSamplingRate=\"48000\" bitstreamSwitching=\"true\" codecs=\"opus\" id=\"1\" mimeType=\"audio/webm\" subsegmentAlignment=\"true\" subsegmentStartsWithSAP=\"1\"><AudioChannelConfiguration schemeIdUri=\"urn:mpeg:dash:23003:3:audio_channel_configuration:2011\" value=\"2\"/><Representation bandwidth=\"35698\" id=\"6\"><BaseURL>?expires=1&amp;type=4&amp;ct=22&amp;id=2</BaseURL><SegmentBase indexRange=\"464-1293\" indexRangeExact=\"true\"><Initialization range=\"0-417\"/></SegmentBase></Representation><Representation bandwidth=\"202513\" id=\"7\"><BaseURL>?expires=1&amp;type=1&amp;ct=22&amp;id=2</BaseURL><SegmentBase indexRange=\"465-1301\" indexRangeExact=\"true\"><Initialization range=\"0-417\"/></SegmentBase></Representation></AdaptationSet></Period></MPD>"
+  },
+  {
+   "url": "https://vd2.okcdn.test/?expires=1&type=4&ct=22&id=2",
+   "headers": {
+    "Content-Type": "audio/webm"
+   },
+   "body": "webm-audio-6"
   }
  ]
 }
