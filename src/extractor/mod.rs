@@ -155,8 +155,9 @@ pub use instagram::{Instagram, suitable as instagram_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kick::{
-    KickClip, KickLive, KickVod, clip_suitable as kick_clip_suitable,
-    live_suitable as kick_live_suitable, vod_suitable as kick_vod_suitable,
+    KickClip, KickClips, KickLive, KickVideos, KickVod, clip_suitable as kick_clip_suitable,
+    clips_suitable as kick_clips_suitable, live_suitable as kick_live_suitable,
+    videos_suitable as kick_videos_suitable, vod_suitable as kick_vod_suitable,
 };
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};

@@ -1,25 +1,11 @@
 {
  "routes": [
   {
-   "url": "https://kick.com/api/v1/video/8dd97a8d-e17f-48fb-8bc3-565f88dbc9ea",
-   "headers": {
-    "Content-Type": "application/json"
-   },
-   "body": "{\"id\": 1, \"source\": \"https://stream.kick.com/ivs/v1/abc/media/hls/master.m3u8\", \"views\": 1234, \"created_at\": \"2023-12-25T23:35:17.000000Z\", \"livestream\": {\"session_title\": \"VOD title\", \"slug\": \"vod-slug\", \"duration\": 3600000, \"thumbnail\": \"https://images.kick.com/video_thumbnails/x.jpg\", \"is_mature\": false, \"is_live\": false, \"categories\": [{\"name\": \"Just Chatting\"}, {\"name\": \"Chess\"}], \"channel\": {\"id\": 668, \"slug\": \"xqc\", \"user_id\": 676, \"user\": {\"username\": \"xQc\", \"bio\": \"Bio text\"}}}}"
-  },
-  {
-   "url": "https://kick.com/api/v2/clips/clip_01GYXVB5Y8PWAPWCWMSBCFB05X/play",
-   "headers": {
-    "Content-Type": "application/json"
-   },
-   "body": "{\"clip\": {\"id\": \"clip_01GYXVB5Y8PWAPWCWMSBCFB05X\", \"title\": \"Clip title\", \"clip_url\": \"https://clips.kick.com/clips/x/master.m3u8\", \"thumbnail_url\": \"https://clips.kick.com/clips/x/thumb.png\", \"duration\": 30, \"views\": 99, \"likes\": 5, \"created_at\": \"2023-04-20T00:00:00Z\", \"is_mature\": true, \"category\": {\"name\": \"IRL\"}, \"channel\": {\"id\": \"17\", \"slug\": \"mxddy\"}, \"creator\": {\"id\": 5, \"username\": \"Clipper\"}}}"
-  },
-  {
    "url": "https://kick.com/api/v2/channels/buddha",
    "headers": {
     "Content-Type": "application/json"
    },
-   "body": "{\"id\": 123, \"user_id\": \"456\", \"playback_url\": \"https://stream.kick.com/live/master.m3u8\", \"user\": {\"id\": 456, \"username\": \"buddha\", \"bio\": \"Streamer bio\"}, \"livestream\": {\"slug\": \"live-slug\", \"session_title\": \"Live now\", \"created_at\": \"2024-01-01 10:00:00\", \"start_time\": \"2024-01-01 10:00:00\", \"viewer_count\": 500, \"is_mature\": false, \"thumbnail\": {\"url\": \"https://images.kick.com/live/x.webp\"}, \"channel_id\": 123}, \"recent_categories\": [{\"name\": \"GTA V\"}]}"
+   "body": "{\"id\": 123, \"user_id\": 456, \"followers_count\": 1000, \"verified\": true, \"playback_url\": \"https://stream.kick.com/live/master.m3u8\", \"user\": {\"id\": 456, \"username\": \"Buddha\", \"bio\": \"Streamer <b>bio</b>\\n line\"}, \"livestream\": {\"id\": 92722911, \"slug\": \"live-slug\", \"session_title\": \"Live &amp; now \", \"created_at\": \"2024-01-01 10:00:00\", \"start_time\": \"2024-01-01 10:05:00\", \"viewer_count\": 500, \"is_mature\": true, \"thumbnail\": {\"url\": \"https://images.kick.com/live/x.webp\"}, \"categories\": [{\"name\": \"GTA V\"}, {\"name\": \"\"}, {\"name\": \"Just Chatting\"}], \"tags\": [\"English\", \"\", \"rp\"]}}"
   },
   {
    "url": "https://kick.com/api/v2/channels/offline",
@@ -27,6 +13,106 @@
     "Content-Type": "application/json"
    },
    "body": "{\"id\": 1, \"livestream\": null}"
+  },
+  {
+   "url": "https://kick.com/api/v2/channels/nourl",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 2, \"livestream\": {\"id\": 5, \"is_mature\": false}}"
+  },
+  {
+   "url": "https://stream.kick.com/live/master.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://stream.kick.com/live/1080p60/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://stream.kick.com/live/480p30/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/8dd97a8d-e17f-48fb-8bc3-565f88dbc9ea/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback_url\": {\"vod\": \"https://stream.kick.com/ivs/v1/abc/media/hls/master.m3u8\"}, \"video_session\": {\"creator_id\": \"668\"}}",
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/01a0251f-ef48-702d-9289-d66922da0e84/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback_url\": {}, \"video_session\": {\"creator_id\": \"668\"}}",
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/01a02882-5428-7ea1-9237-97f070aab4cc/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"type\": \"not_found\", \"details\": \"Video not found\"}}",
+   "status": 404,
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/11111111-2222-3333-4444-555555555555/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback_url\": {\"vod\": \"https://stream.kick.com/ivs/v1/abc/media/hls/master.m3u8\"}, \"video_session\": {\"creator_id\": \"668\"}}",
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback_url\": {\"vod\": null}, \"video_session\": {}}",
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/ffffffff-0000-1111-2222-333333333333/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback_url\": {}, \"video_session\": {\"creator_id\": \"668\"}}",
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/22222222-3333-4444-5555-666666666666/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {}}",
+   "status": 404,
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
   },
   {
    "url": "https://stream.kick.com/ivs/v1/abc/media/hls/master.m3u8",
@@ -50,6 +136,121 @@
    "body_file": "media.m3u8"
   },
   {
+   "url": "https://web.kick.com/api/v1/channels/668/videos",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": [{\"id\": \"8dd97a8d-e17f-48fb-8bc3-565f88dbc9ea\", \"title\": \"VOD <i>title</i>\", \"status\": \"public\", \"is_mature\": true, \"category\": {\"name\": \"Just Chatting\"}, \"duration\": 3600, \"is_live\": false, \"tags\": [\"english\", \"\", \"chess\"], \"thumbnail\": {\"srcSet\": \"https://images.kick.com/video_thumbnails/x/1080.webp 1920w, https://images.kick.com/video_thumbnails/x/720.webp 1280w,https://images.kick.com/video_thumbnails/x/thumb.webp\"}, \"start_time\": \"2026-08-21T12:00:45.000Z\", \"viewer_count\": 1234, \"channel\": {\"username\": \"xQc\", \"slug\": \"xqc\"}}, {\"id\": \"01a0251f-ef48-702d-9289-d66922da0e84\", \"title\": \"Subscribers only\", \"status\": \"sub_only\", \"is_mature\": false, \"category\": {\"name\": \"\"}, \"duration\": 60, \"tags\": [], \"start_time\": \"2026-08-20T00:00:00Z\", \"viewer_count\": 99999, \"channel\": {\"username\": \"xQc\", \"slug\": \"xqc\"}}, {\"id\": \"ffffffff-0000-1111-2222-333333333333\", \"title\": \"Private one\", \"status\": \"private\", \"viewer_count\": 5, \"is_live\": true, \"channel\": {\"username\": \"xQc\", \"slug\": \"xqc\"}}, {\"id\": null, \"title\": \"No ID\", \"viewer_count\": 1}]}"
+  },
+  {
+   "url": "https://web.kick.com/api/v1/channels/668/me",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"subscription\": null}}"
+  },
+  {
+   "url": "https://kick.com/api/v2/channels/xqc",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 668, \"slug\": \"xqc\", \"user\": {\"username\": \"xQc\"}}"
+  },
+  {
+   "url": "https://kick.com/api/v2/channels/streamer",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 999, \"slug\": \"streamer\", \"user\": {\"username\": \"\"}}"
+  },
+  {
+   "url": "https://kick.com/api/v2/channels/nocreator",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"slug\": \"nocreator\"}"
+  },
+  {
+   "url": "https://web.kick.com/api/v1/channels/999/videos",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": [{\"id\": \"33333333-4444-5555-6666-777777777777\", \"title\": \"First stream\", \"status\": \"public\", \"duration\": 100, \"start_time\": \"2026-01-01T00:00:00Z\", \"viewer_count\": 10, \"is_live\": false, \"channel\": {\"username\": \"Streamer\", \"slug\": \"streamer\"}, \"category\": {\"name\": \"IRL\"}, \"thumbnail\": {\"srcSet\": \"https://images.kick.com/video_thumbnails/s1/360.webp 640w\"}}, {\"id\": \"44444444-5555-6666-7777-888888888888\", \"title\": \"Second stream\", \"status\": \"public\", \"duration\": 200, \"start_time\": \"2026-01-02T00:00:00Z\", \"viewer_count\": 20, \"is_live\": false, \"is_mature\": true, \"channel\": {\"username\": \"Streamer\", \"slug\": \"streamer\"}}]}"
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/33333333-4444-5555-6666-777777777777/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback_url\": {\"vod\": \"https://stream.kick.com/ivs/v1/abc/media/hls/master.m3u8\"}, \"video_session\": {\"creator_id\": \"999\"}}",
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/44444444-5555-6666-7777-888888888888/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback_url\": {\"vod\": \"https://stream.kick.com/ivs/v1/abc/media/hls/master.m3u8\"}, \"video_session\": {\"creator_id\": \"999\"}}",
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
+  },
+  {
+   "url": "https://kick.com/api/v2/channels/ongoing",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 777, \"user\": {\"username\": \"Ongoing\"}}"
+  },
+  {
+   "url": "https://web.kick.com/api/v1/channels/777/videos",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": [{\"id\": \"55555555-6666-7777-8888-999999999999\", \"title\": \"Still live\", \"status\": \"public\", \"is_live\": true, \"viewer_count\": 3, \"start_time\": \"2026-10-01T00:00:00Z\", \"tags\": [\"a\", \"b\"], \"channel\": {\"username\": \"Ongoing\", \"slug\": \"ongoing\"}}]}"
+  },
+  {
+   "url": "https://web.kick.com/api/v1/stream/55555555-6666-7777-8888-999999999999/playback",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playback_url\": {\"vod\": \"https://stream.kick.com/ivs/v1/abc/media/hls/master.m3u8\"}, \"video_session\": {\"creator_id\": \"777\"}}",
+   "request_body": [
+    "\"non_personalised_ads\": true"
+   ]
+  },
+  {
+   "url": "https://kick.com/api/v2/clips/clip_01GYXVB5Y8PWAPWCWMSBCFB05X",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"clip\": {\"id\": \"clip_01GYXVB5Y8PWAPWCWMSBCFB05X\", \"title\": \"Clip &quot;title&quot;\", \"playback_url\": \"https://clips.kick.com/clips/x/master.m3u8\", \"clip_url\": \"https://clips.kick.com/clips/x/clip.mp4\", \"thumbnail_url\": \"https://clips.kick.com/clips/x/thumb.png\", \"duration\": 30, \"likes_count\": 5, \"views_count\": 99, \"created_at\": \"2023-04-20T00:00:00Z\", \"is_mature\": true, \"category\": {\"name\": \"IRL\"}, \"channel\": {\"id\": 133789, \"slug\": \"mxddy\", \"username\": \"Mxddy\"}}}"
+  },
+  {
+   "url": "https://kick.com/api/v2/clips/clip_01H9SKET879NE7N9RJRRDS98J3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"clip\": {\"id\": \"clip_01H9SKET879NE7N9RJRRDS98J3\", \"title\": \"Direct clip\", \"clip_url\": \"https://clips.kick.com/clips/y/clip.mp4\", \"thumbnail_url\": \"https://clips.kick.com/clips/y/thumb.png\", \"duration\": 49.5, \"likes\": 7, \"views\": 1000, \"created_at\": \"2023-09-08T05:16:20Z\", \"is_mature\": false, \"category\": {\"name\": \"Just Chatting\"}, \"channel\": {\"id\": \"1772249\", \"slug\": \"destiny\", \"username\": \"Destiny\"}}}"
+  },
+  {
+   "url": "https://kick.com/api/v2/clips/clip_01J8RGZRKHXHXXKJEHGRM932A5",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"clip\": {\"id\": \"clip_01J8RGZRKHXHXXKJEHGRM932A5\", \"title\": \"No source\"}}"
+  },
+  {
+   "url": "https://kick.com/api/v2/clips/clip_missing",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"message\": \"Clip not found\"}",
+   "status": 404
+  },
+  {
    "url": "https://clips.kick.com/clips/x/master.m3u8",
    "headers": {
     "Content-Type": "application/x-mpegURL"
@@ -71,25 +272,39 @@
    "body_file": "media.m3u8"
   },
   {
-   "url": "https://stream.kick.com/live/master.m3u8",
+   "url": "https://clips.kick.com/clips/y/clip.mp4",
    "headers": {
-    "Content-Type": "application/x-mpegURL"
+    "Content-Type": "video/mp4"
    },
-   "body_file": "master.m3u8"
+   "body": "mp4"
   },
   {
-   "url": "https://stream.kick.com/live/1080p60/playlist.m3u8",
+   "url": "https://web.kick.com/api/v1/channels/668/clips?sort=views&time=week",
    "headers": {
-    "Content-Type": "application/x-mpegURL"
+    "Content-Type": "application/json"
    },
-   "body_file": "media.m3u8"
+   "body": "{\"data\": {\"clips\": [{\"id\": \"clip_01GYXVB5Y8PWAPWCWMSBCFB05X\", \"title\": \"Clip &quot;title&quot;\", \"playback_url\": \"https://clips.kick.com/clips/x/master.m3u8\", \"clip_url\": \"https://clips.kick.com/clips/x/clip.mp4\", \"thumbnail_url\": \"https://clips.kick.com/clips/x/thumb.png\", \"duration\": 30, \"likes_count\": 5, \"views_count\": 99, \"created_at\": \"2023-04-20T00:00:00Z\", \"is_mature\": true, \"category\": {\"name\": \"IRL\"}, \"channel\": {\"id\": 133789, \"slug\": \"mxddy\", \"username\": \"Mxddy\"}}, {\"id\": null, \"title\": \"skipped\"}], \"cursor\": \"page2\"}}"
   },
   {
-   "url": "https://stream.kick.com/live/480p30/playlist.m3u8",
+   "url": "https://web.kick.com/api/v1/channels/668/clips?sort=views&time=week&cursor=page2",
    "headers": {
-    "Content-Type": "application/x-mpegURL"
+    "Content-Type": "application/json"
    },
-   "body_file": "media.m3u8"
+   "body": "{\"data\": {\"clips\": [{\"id\": \"clip_01H9SKET879NE7N9RJRRDS98J3\", \"title\": \"Direct clip\", \"clip_url\": \"https://clips.kick.com/clips/y/clip.mp4\", \"thumbnail_url\": \"https://clips.kick.com/clips/y/thumb.png\", \"duration\": 49.5, \"likes\": 7, \"views\": 1000, \"created_at\": \"2023-09-08T05:16:20Z\", \"is_mature\": false, \"category\": {\"name\": \"Just Chatting\"}, \"channel\": {\"id\": \"1772249\", \"slug\": \"destiny\", \"username\": \"Destiny\"}}], \"cursor\": \"\"}}"
+  },
+  {
+   "url": "https://web.kick.com/api/v1/channels/668/clips?sort=date&time=day",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"clips\": [{\"id\": \"clip_01H9SKET879NE7N9RJRRDS98J3\", \"title\": \"Direct clip\", \"clip_url\": \"https://clips.kick.com/clips/y/clip.mp4\", \"thumbnail_url\": \"https://clips.kick.com/clips/y/thumb.png\", \"duration\": 49.5, \"likes\": 7, \"views\": 1000, \"created_at\": \"2023-09-08T05:16:20Z\", \"is_mature\": false, \"category\": {\"name\": \"Just Chatting\"}, \"channel\": {\"id\": \"1772249\", \"slug\": \"destiny\", \"username\": \"Destiny\"}}, {\"id\": \"clip_01GYXVB5Y8PWAPWCWMSBCFB05X\", \"title\": \"Clip &quot;title&quot;\", \"playback_url\": \"https://clips.kick.com/clips/x/master.m3u8\", \"clip_url\": \"https://clips.kick.com/clips/x/clip.mp4\", \"thumbnail_url\": \"https://clips.kick.com/clips/x/thumb.png\", \"duration\": 30, \"likes_count\": 5, \"views_count\": 99, \"created_at\": \"2023-04-20T00:00:00Z\", \"is_mature\": true, \"category\": {\"name\": \"IRL\"}, \"channel\": {\"id\": 133789, \"slug\": \"mxddy\", \"username\": \"Mxddy\"}}]}}"
+  },
+  {
+   "url": "https://web.kick.com/api/v1/channels/668/clips?sort=views&time=all",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"clips\": []}}"
   }
  ]
 }
