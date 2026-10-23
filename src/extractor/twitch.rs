@@ -332,6 +332,7 @@ fn access_token(
 /// `_extract_twitch_m3u8_formats(path, video_id, token, signature,
 /// live_from_start)`: the usher master's formats; a `403` JSON error names
 /// subscriber-only content or the usher's error.
+#[allow(clippy::too_many_arguments)]
 fn usher_formats(
     client: &Client,
     name: &'static str,
@@ -340,6 +341,7 @@ fn usher_formats(
     id: &str,
     access: &Value,
     live_from_start: bool,
+    live: bool,
 ) -> Result<Vec<crate::VideoFormat>> {
     use std::io::Read;
     let random = std::time::SystemTime::now()
@@ -451,7 +453,7 @@ fn usher_formats(
             None,
             true,
             None,
-            path != "vod",
+            live,
         ),
         Err(error) => Err(failed(error)),
     };
@@ -663,6 +665,8 @@ impl Extractor for TwitchVod {
         );
         info.insert("view_count".into(), int(video.get("viewCount"), 1).into());
         info.insert("chapters".into(), Value::Array(chapters));
+        // A VOD still recording (`is_live`) has a growing playlist.
+        let recording = is_live == Value::Bool(true);
         info.insert("is_live".into(), is_live);
         info.insert("was_live".into(), true.into());
         let access = access_token(client, VOD_NAME, &vod_id, "video", "id")?;
@@ -674,6 +678,7 @@ impl Extractor for TwitchVod {
             &vod_id,
             &access,
             LIVE_FROM_START.load(Ordering::Relaxed),
+            recording,
         )?;
         // `_extract_storyboard`.
         if let (Some(duration), Some(storyboard)) = (duration.filter(|d| *d != 0), &storyboard) {
@@ -1688,6 +1693,7 @@ impl Extractor for TwitchStream {
             &channel,
             &access,
             false,
+            true,
         )?;
         prefer_source(&mut formats);
         let sq_user = data

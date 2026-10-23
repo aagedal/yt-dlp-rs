@@ -204,6 +204,17 @@
   {
    "url": "https://gql.twitch.tv/gql",
    "request_body": [
+    "VideoMetadata",
+    "\"videoID\": \"4444444444\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "meta_recording.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
     "VideoMetadata"
    ],
    "headers": {
@@ -286,6 +297,37 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom-clip"
+  },
+  {
+   "url": "https://usher.ttvnw.net/vod/4444444444.m3u8?allow_source=true&allow_audio_only=true&allow_spectre=true&platform=web&player=twitchweb&supported_codecs=av1%2Ch265%2Ch264&playlist_include_framerate=true&sig=SIG123&token=TOKENVALUE",
+   "ignore_query": [
+    "p"
+   ],
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master_recording.m3u8"
+  },
+  {
+   "url": "https://d2nvs31859zcd8.cloudfront.net/rec_456/chunked/index-dvr.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "recording.m3u8"
+  },
+  {
+   "url": "https://d2nvs31859zcd8.cloudfront.net/rec_456/720p60/index-dvr.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "recording.m3u8"
+  },
+  {
+   "url": "https://d2nvs31859zcd8.cloudfront.net/rec_456/audio_only/index-dvr.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "recording.m3u8"
   }
  ]
 }

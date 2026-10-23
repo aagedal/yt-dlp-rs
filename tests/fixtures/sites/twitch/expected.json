@@ -399,6 +399,40 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/videos/4444444444",
+   "args": [
+    "--print",
+    "%(id)s|%(duration)s|%(is_live)s|%(was_live)s|%(live_status)s|%(thumbnails)s|%(format_id)s|%(protocol)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "v4444444444|5400|True|True|is_live|NA|1080p60|m3u8_native"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.twitch.tv/videos/4444444444",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[twitch:vod] Extracting URL: https://www.twitch.tv/videos/4444444444",
+    "[twitch:vod] 4444444444: Downloading stream metadata GraphQL",
+    "[twitch:vod] 4444444444: Downloading video access token GraphQL",
+    "[twitch:vod] 4444444444: Downloading m3u8 information",
+    "[info] Available formats for v4444444444:",
+    "ID         EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC      ACODEC     ABR MORE INFO",
+    "---------------------------------------------------------------------------------------------",
+    "Audio_Only mp4 audio only     | ~103.00MiB  160k m3u8  | audio only  mp4a.40.2 160k",
+    "720p60     mp4 1280x720    60 | ~  1.89GiB 3000k m3u8  | avc1.4D401F mp4a.40.2",
+    "1080p60    mp4 1920x1080   60 | ~  3.77GiB 6000k m3u8  | avc1.64002A mp4a.40.2      Source"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }
