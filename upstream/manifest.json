@@ -1191,7 +1191,7 @@
         "src/extractor/twitch.rs",
         "tests/fixtures/sites/twitch/"
       ],
-      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference; TwitchClipsIE signed qualities, thumbnails and metadata; no live streams, collections or channel lists; compared with pinned upstream output through the fixture proxy"
+      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference, usher 403 JSON errors (subscriber-only login hint) and live_from_start format marking; TwitchStreamIE stream GraphQL, stream access token, live usher HLS master, rerun/live titles, offline/missing-channel errors and --live-from-start VOD resolution; TwitchClipsIE signed qualities, thumbnails and metadata; TwitchVideosIE, TwitchVideosClipsIE and TwitchVideosCollectionsIE lazily paged GraphQL channel lists and TwitchCollectionIE, all as url_transparent entries; no login (_perform_login) or client_id extractor-arg; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "twitter",

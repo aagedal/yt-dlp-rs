@@ -1,0 +1,1 @@
+[{"data": {"user": {"id": "27446517", "videos": {"edges": [{"__typename": "VideoEdge", "cursor": "MQ", "node": {"__typename": "Video", "id": "1234567890", "title": "Big stream", "previewThumbnailURL": "https://static-cdn.jtvnw.net/cf_vods/abc/thumb/thumb0-320x180.jpg", "lengthSeconds": 3600, "viewCount": 4242, "publishedAt": "2023-02-22T23:06:31Z"}}]}}}}]

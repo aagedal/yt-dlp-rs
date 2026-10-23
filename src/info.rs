@@ -459,6 +459,10 @@ pub struct DownloaderOptions {
     /// Chunked HTTP downloading (YouTube HTTPS formats use 10 MiB).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub http_chunk_size: Option<u64>,
+    /// Other options (FFmpeg's `ffmpeg_args`/`ffmpeg_args_out`), kept for
+    /// the info dict.
+    #[serde(flatten, default)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
 }
 
 /// One upstream chapter dictionary.

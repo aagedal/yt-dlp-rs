@@ -323,7 +323,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
-const EXTRACTOR_NAMES: [&str; 127] = [
+const EXTRACTOR_NAMES: [&str; 132] = [
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -417,6 +417,11 @@ const EXTRACTOR_NAMES: [&str; 127] = [
     "Tumblr",
     "Tweakers",
     "twitch:clips",
+    "twitch:collection",
+    "twitch:stream",
+    "twitch:videos:clips",
+    "twitch:videos:collections",
+    "twitch:videos",
     "twitch:vod",
     "twitter",
     "twitter:card",
@@ -619,6 +624,11 @@ impl YoutubeDl {
                 Box::new(extractor::Soundcloud),
                 Box::new(extractor::TwitchVod),
                 Box::new(extractor::TwitchClips),
+                Box::new(extractor::TwitchCollection),
+                Box::new(extractor::TwitchVideosClips),
+                Box::new(extractor::TwitchVideosCollections),
+                Box::new(extractor::TwitchVideos),
+                Box::new(extractor::TwitchStream),
                 Box::new(extractor::Bandcamp),
                 Box::new(extractor::RumbleEmbed),
                 Box::new(extractor::Rumble),
@@ -1369,13 +1379,13 @@ impl YoutubeDl {
     /// it has `limit` entries, or all of them; entries still pending remain.
     pub fn fetch_pending(&self, playlist: &mut PlaylistInfo, limit: Option<usize>) -> Result<()> {
         if let Some(pending) = playlist.pending.take() {
-            playlist.pending = extractor::fetch_youtube_tab_pages(
-                &self.client,
-                pending.state,
-                limit,
-                &mut playlist.entries,
-            )?
-            .map(|state| PendingEntries { state });
+            let fetch = if pending.state["kind"] == "twitch" {
+                extractor::fetch_twitch_pages
+            } else {
+                extractor::fetch_youtube_tab_pages
+            };
+            playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
+                .map(|state| PendingEntries { state });
         }
         Ok(())
     }
@@ -1763,6 +1773,36 @@ impl YoutubeDl {
             {
                 entry.extra.insert("release_year".into(), year.into());
             }
+            // `_fill_common_fields`: `live_status` from `is_live`/`was_live`
+            // (the first not `False`, when truthy; `not_live` when both are).
+            if entry.metadata.live_status.is_none() {
+                let live_keys = ["is_live", "was_live"];
+                let is_false =
+                    |key: &str| entry.extra.get(key) == Some(&serde_json::Value::Bool(false));
+                let mut status = None;
+                for key in live_keys {
+                    if is_false(key) {
+                        continue;
+                    }
+                    if entry.extra.get(key).is_some_and(|value| match value {
+                        serde_json::Value::Null => false,
+                        serde_json::Value::Bool(value) => *value,
+                        serde_json::Value::Number(number) => number.as_f64() != Some(0.0),
+                        serde_json::Value::String(text) => !text.is_empty(),
+                        serde_json::Value::Array(items) => !items.is_empty(),
+                        serde_json::Value::Object(map) => !map.is_empty(),
+                    }) {
+                        status = Some(key);
+                    }
+                    break;
+                }
+                if live_keys.iter().all(|key| is_false(key)) {
+                    status = Some("not_live");
+                }
+                if let Some(status) = status {
+                    entry.metadata.live_status = Some(status.into());
+                }
+            }
             // `_fill_common_fields`: `is_live`/`was_live` from `live_status`.
             if let Some(status) = entry.metadata.live_status.clone() {
                 for key in ["is_live", "was_live"] {
@@ -1970,6 +2010,7 @@ impl YoutubeDl {
     /// `--live-from-start`: live streams keep their title and default format.
     pub fn with_live_from_start(mut self, from_start: bool) -> Self {
         self.live_from_start = from_start;
+        extractor::TWITCH_LIVE_FROM_START.store(from_start, std::sync::atomic::Ordering::Relaxed);
         self
     }
 
