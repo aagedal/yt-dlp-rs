@@ -381,7 +381,9 @@ fn dash_formats(manifest: &str, video_id: &str) -> Result<Vec<VideoFormat>> {
     }
     let mut formats: Vec<VideoFormat> = Vec::new();
     for mut format in parsed {
+        // The parser gives an unsegmented representation as its direct URL.
         let direct = match format.fragments.as_slice() {
+            [] => Some(format.url.clone()),
             [fragment] if fragment.byte_range.is_none() && fragment.path.is_none() => {
                 Some(fragment.url.clone())
             }
