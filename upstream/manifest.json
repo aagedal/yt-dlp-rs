@@ -1593,6 +1593,18 @@
       "scope": "TheStarIE mainartBrightcoveVideoId as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "maoritv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/maoritv.py"
+      ],
+      "rust": [
+        "src/extractor/maoritv.rs",
+        "tests/fixtures/sites/maoritv/"
+      ],
+      "scope": "MaoriTVIE data-main-video-id as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "formula1",
       "status": "partial",
       "upstream": [

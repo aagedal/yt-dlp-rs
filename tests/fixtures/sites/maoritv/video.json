@@ -1,0 +1,19 @@
+{
+ "id": "4774724855001",
+ "account_id": "1614493167001",
+ "name": "Kōrero Mai, Series 1 Episode 54",
+ "description": "Learn te reo Māori.",
+ "published_at": "2016-02-26T02:50:18Z",
+ "duration": 61000,
+ "sources": [
+  {
+   "container": "MP4",
+   "type": "video/mp4",
+   "src": "https://cdn.example.com/maoritv.mp4",
+   "avg_bitrate": 1000000,
+   "width": 1280,
+   "height": 720,
+   "codec": "H264"
+  }
+ ]
+}

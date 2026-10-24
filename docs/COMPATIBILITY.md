@@ -717,6 +717,12 @@ Formula 1 videos (`formula1.com/en/latest/video.SLUG.ID.html`) follow upstream
 Brightcove players above. `tests/fixtures/sites/formula1/` is compared with
 pinned upstream output.
 
+Māori Television shows (`maoritelevision.com/shows/.../SLUG`) follow upstream
+`MaoriTVIE`: the page's `data-main-video-id` (else upstream's error) as a
+`url` result of the `players.brightcove.net/1614493167001/HJlhIQhQf_default`
+player, extracted like Brightcove players above.
+`tests/fixtures/sites/maoritv/` is compared with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the

@@ -1,0 +1,29 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.maoritelevision.com/shows/korero-mai/S01E054/korero-mai-series-1-episode-54",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4774724855001\", \"thumbnails\": null, \"duration\": 61.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/maoritv.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkMAORITV\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"K\\u014drero Mai, Series 1 Episode 54\", \"description\": \"Learn te reo M\\u0101ori.\", \"timestamp\": 1456455018, \"uploader_id\": \"1614493167001\", \"original_url\": \"https://www.maoritelevision.com/shows/korero-mai/S01E054/korero-mai-series-1-episode-54\", \"webpage_url\": \"http://players.brightcove.net/1614493167001/HJlhIQhQf_default/index.html?videoId=4774724855001\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"4774724855001\", \"fulltitle\": \"K\\u014drero Mai, Series 1 Episode 54\", \"duration_string\": \"1:01\", \"upload_date\": \"20160226\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/maoritv.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkMAORITV\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"K\\u014drero Mai, Series 1 Episode 54 [4774724855001].mp4\", \"filename\": \"K\\u014drero Mai, Series 1 Episode 54 [4774724855001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.maoritelevision.com/shows/korero-mai/no-video",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [MaoriTV] no-video: Unable to extract brightcove id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
