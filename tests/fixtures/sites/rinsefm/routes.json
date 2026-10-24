@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://rinse.fm/api/query/v1/episodes/club-glow-15-12-2023-2000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"entry\": {\"id\": \"1536535\", \"title\": \"Club Glow - 15/12/2023 - 20:00\", \"fileUrl\": \"https://media.rinse.test/a.mp3\", \"episodeDate\": \"2023-12-15T00:00:00.000Z\", \"featuredImage\": [{\"filename\": \"club.jpg\"}], \"slug\": \"club-glow-15-12-2023-2000\"}}"
+  },
+  {
+   "url": "https://rinse.fm/api/query/v1/episodes/bare",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"entry\": {\"id\": \"77\", \"fileUrl\": \"https://media.rinse.test/b.mp3\", \"featuredImage\": [], \"slug\": null}}"
+  },
+  {
+   "url": "https://rinse.fm/api/query/v1/episodes/noentry",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"x\"}"
+  },
+  {
+   "url": "https://rinse.fm/api/query/v1/shows/resources",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"entry\": {\"title\": \"[re]sources\", \"description\": \"A show\"}, \"episodes\": [{\"id\": \"1536535\", \"title\": \"Club Glow - 15/12/2023 - 20:00\", \"fileUrl\": \"https://media.rinse.test/a.mp3\", \"episodeDate\": \"2023-12-15T00:00:00.000Z\", \"featuredImage\": [{\"filename\": \"club.jpg\"}], \"slug\": \"club-glow-15-12-2023-2000\"}, {\"id\": \"2\", \"title\": \"Video one\", \"fileUrl\": \"https://media.rinse.test/v.mp4\", \"slug\": \"v\"}, {\"id\": \"3\", \"title\": \"Second\", \"fileUrl\": \"https://media.rinse.test/s.m4a?x=1\", \"slug\": \"second\", \"episodeDate\": \"2024-01-01T10:00:00Z\"}]}"
+  },
+  {
+   "url": "https://rinse.fm/api/query/v1/shows/empty",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"episodes\": []}"
+  },
+  {
+   "url": "https://media.rinse.test/a.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body_file": "a.mp3"
+  }
+ ]
+}

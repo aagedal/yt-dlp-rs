@@ -1576,6 +1576,15 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+Rinse FM episodes (`rinse.fm/episodes/SLUG`) follow upstream `RinseFMIE`: the
+query API's episode `entry` as an untyped audio result (`vcodec: none`) with
+its title, release timestamp, imgix thumbnail and episode page URL, upstream's
+`KeyError('entry')` error and the generic title for untitled episodes. Shows
+(`rinse.fm/shows/SLUG`) follow `RinseFMArtistPlaylistIE`: the show's audio
+episodes (by `MEDIA_EXTENSIONS.audio`) as a playlist with the show's title and
+description. Episodes without a string ID or media URL remain explicit native
+errors. `tests/fixtures/sites/rinsefm/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

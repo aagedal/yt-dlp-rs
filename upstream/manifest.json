@@ -1438,6 +1438,18 @@
       "scope": "ReverbNationIE _VALID_URL and song API extraction (custom download note, untyped mp3 result, artist uploader fields, qualities-ranked thumbnails, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "rinsefm",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rinsefm.py"
+      ],
+      "rust": [
+        "src/extractor/rinsefm.rs",
+        "tests/fixtures/sites/rinsefm/"
+      ],
+      "scope": "RinseFMIE query API episode entry as an untyped audio result (vcodec none, title, release timestamp, imgix thumbnail, episode webpage_url), KeyError and generic-title behaviour, and RinseFMArtistPlaylistIE audio-episode playlists with show title/description compared with pinned upstream output through the fixture proxy; episodes without a string id or media URL remain explicit native errors"
+    },
+    {
       "name": "roya",
       "status": "partial",
       "upstream": [

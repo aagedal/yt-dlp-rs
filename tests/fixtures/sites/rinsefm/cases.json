@@ -1,0 +1,10 @@
+[
+ {"url": "https://rinse.fm/episodes/club-glow-15-12-2023-2000/", "args": ["-j"]},
+ {"url": "https://rinse.fm/episodes/club-glow-15-12-2023-2000/", "args": ["--print", "%(id)s|%(title)s|%(release_date)s|%(thumbnail)s|%(webpage_url)s|%(ext)s|%(vcodec)s"]},
+ {"url": "https://rinse.fm/episodes/club-glow-15-12-2023-2000/", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://rinse.fm/episodes/bare", "args": ["-j"]},
+ {"url": "https://rinse.fm/episodes/noentry", "args": ["-j"]},
+ {"url": "https://www.rinse.fm/shows/resources/", "args": ["-J"]},
+ {"url": "https://rinse.fm/shows/resources", "args": ["--flat-playlist", "--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"]},
+ {"url": "https://rinse.fm/shows/empty", "args": ["-J"]}
+]
