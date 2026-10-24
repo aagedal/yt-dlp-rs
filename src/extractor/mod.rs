@@ -161,6 +161,7 @@ mod vocaroo;
 mod webcamerapl;
 mod weibo;
 mod whyp;
+mod wimbledon;
 mod worldstarhiphop;
 mod xboxclips;
 mod xiaohongshu;
@@ -386,6 +387,7 @@ pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
 pub use whyp::{Whyp, suitable as whyp_suitable};
+pub use wimbledon::{Wimbledon, suitable as wimbledon_suitable};
 pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};

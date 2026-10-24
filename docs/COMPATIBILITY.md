@@ -758,6 +758,14 @@ warning and no key). Such doubly followed entries keep upstream's
 `original_url` position. `tests/fixtures/sites/tvanouvelles/` is compared
 with pinned upstream output.
 
+Wimbledon videos (`wimbledon.com/LOCALE/video/media/ID.html`) follow
+upstream `WimbledonIE`: the fatal related-content API JSON, then a
+`url_transparent` result of the `players.brightcove.net/3506358525001/
+default_default` player (extracted like Brightcove players above), overlaid
+with the API's non-`None` `title`, `description` and `parse_duration`d
+`metadata.duration`. Non-string titles or descriptions are rejected.
+`tests/fixtures/sites/wimbledon/` is compared with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
