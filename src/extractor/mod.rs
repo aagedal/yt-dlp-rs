@@ -540,8 +540,8 @@ pub use youtube::search::{
 pub use youtube::tab::suitable as youtube_tab_suitable;
 pub(crate) use youtube::tab::{YoutubeTab, fetch_pages as fetch_youtube_tab_pages};
 pub use youtube::{
-    WaitForVideo, Youtube, YoutubeOptions, extractor_suitable as youtube_extractor_suitable,
-    suitable as youtube_suitable,
+    JsRuntime, JsRuntimeName, WaitForVideo, Youtube, YoutubeOptions,
+    extractor_suitable as youtube_extractor_suitable, js_runtimes, suitable as youtube_suitable,
 };
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 

@@ -55,6 +55,7 @@ tractable for future agents.
   its bounded FFmpeg runner feeds the final stage of `src/postprocess.rs`.
 - `src/info_json.rs`: cleaned video/playlist info JSON values, `.info.json` naming and keep-existing or replacing atomic writes.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
+- `src/cache.rs`: upstream `Cache` (`--cache-dir`, own `yt-dlp-rs` root, upstream JSON envelope and `min_ver` checks).
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/audio.rs`, `src/audio/ffmpeg.rs`: pure audio plans and bounded local
   inspection/conversion; `src/audio_download.rs` adapts the audio-only API.

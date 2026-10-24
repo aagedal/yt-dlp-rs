@@ -36,7 +36,18 @@ pub(super) struct Batch {
 
 impl Batch {
     /// Deduplicate within each kind, retaining first appearance and kind order.
+    #[cfg(test)]
     pub(super) fn new(player: &str, inputs: &[(Kind, &str)]) -> Result<Self> {
+        Self::with_kinds(player, inputs, &[])
+    }
+
+    /// [`Self::new`], with an (empty) request for each `required` kind
+    /// that has no challenges.
+    pub(super) fn with_kinds(
+        player: &str,
+        inputs: &[(Kind, &str)],
+        required: &[Kind],
+    ) -> Result<Self> {
         if player.is_empty() || player.len() > MAX_PLAYER {
             return Err("player source is empty or exceeds 8 MiB".into());
         }
@@ -59,6 +70,14 @@ impl Batch {
             }
             if requests.iter().map(|r| r.challenges.len()).sum::<usize>() > MAX_CHALLENGES {
                 return Err("batch exceeds 128 unique challenges".into());
+            }
+        }
+        for &kind in required {
+            if !requests.iter().any(|request| request.kind == kind) {
+                requests.push(Request {
+                    kind,
+                    challenges: Vec::new(),
+                });
             }
         }
         if requests.is_empty() {
@@ -213,23 +232,123 @@ impl Solutions {
     }
 }
 
+/// A `--js-runtimes` runtime (upstream `supported_js_runtimes`), or the
+/// port's `--youtube-js-runtime` path.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JsRuntimeName {
+    Deno,
+    Node,
+    /// QuickJS or QuickJS-ng (`qjs`).
+    QuickJs,
+    Bun,
+    /// `--youtube-js-runtime PATH`: Deno or Node.js by its `--version` line.
+    Detect,
+}
+
+impl JsRuntimeName {
+    /// Upstream's runtime keys (lower case).
+    pub fn from_key(key: &str) -> Option<Self> {
+        Some(match key {
+            "deno" => Self::Deno,
+            "node" => Self::Node,
+            "quickjs" => Self::QuickJs,
+            "bun" => Self::Bun,
+            _ => return None,
+        })
+    }
+
+    /// `_determine_runtime_path`'s executable basename.
+    fn basename(self) -> &'static str {
+        match self {
+            Self::Deno | Self::Detect => "deno",
+            Self::Node => "node",
+            Self::QuickJs => "qjs",
+            Self::Bun => "bun",
+        }
+    }
+
+    /// The provider preference (`register_preference`): deno 1000, node
+    /// 900, quickjs 850, bun 800.
+    fn preference(self) -> u32 {
+        match self {
+            Self::Deno | Self::Detect => 1000,
+            Self::Node => 900,
+            Self::QuickJs => 850,
+            Self::Bun => 800,
+        }
+    }
+}
+
+/// An enabled runtime and its executable.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JsRuntime {
+    pub name: JsRuntimeName,
+    pub path: std::path::PathBuf,
+}
+
+/// Upstream `js_runtimes` from `--js-runtimes NAME[:PATH]` values (the
+/// last value per lower-cased name; unknown names are dropped), with each
+/// executable as `_determine_runtime_path` finds it: a bare name on `PATH`,
+/// a directory's `deno`/`node`/`qjs`/`bun`, or the path. Runtimes whose
+/// executable cannot be found are not available. Highest preference first.
+pub fn js_runtimes(values: &[&str]) -> Vec<JsRuntime> {
+    let mut enabled: Vec<(JsRuntimeName, &str)> = Vec::new();
+    for value in values {
+        let (key, path) = value.split_once(':').unwrap_or((value, ""));
+        let Some(name) = JsRuntimeName::from_key(&key.to_lowercase()) else {
+            continue;
+        };
+        enabled.retain(|(known, _)| *known != name);
+        enabled.push((name, path));
+    }
+    enabled.sort_by_key(|(name, _)| std::cmp::Reverse(name.preference()));
+    enabled
+        .into_iter()
+        .filter_map(|(name, path)| {
+            let file = format!("{}{}", name.basename(), std::env::consts::EXE_SUFFIX);
+            let path = if path.is_empty() {
+                std::env::split_paths(&std::env::var_os("PATH")?)
+                    .map(|dir| dir.join(&file))
+                    .find(|candidate| candidate.is_file())?
+            } else if std::path::Path::new(path).is_dir() {
+                std::path::Path::new(path).join(&file)
+            } else {
+                path.into()
+            };
+            Some(JsRuntime { name, path })
+        })
+        .collect()
+}
+
 /// Configuration is inert until an eligible URL actually needs a solution.
-/// Canonical executable resolution and version validation happen once, lazily.
+/// Canonical executable resolution and version validation happen once,
+/// lazily: the most preferred runtime whose version is supported.
 pub(super) struct Runtime {
-    path: std::path::PathBuf,
+    candidates: Vec<JsRuntime>,
     checked: std::sync::OnceLock<Result<runtime::DenoRuntime>>,
 }
 
 impl Runtime {
-    pub(super) fn new(path: std::path::PathBuf) -> Self {
-        Self {
-            path,
+    /// `None` without candidates (no JS runtime available).
+    pub(super) fn new(mut candidates: Vec<JsRuntime>) -> Option<Self> {
+        candidates.sort_by_key(|runtime| std::cmp::Reverse(runtime.name.preference()));
+        (!candidates.is_empty()).then(|| Self {
+            candidates,
             checked: std::sync::OnceLock::new(),
-        }
+        })
     }
     pub(super) fn checked(&self) -> Result<&runtime::DenoRuntime> {
         self.checked
-            .get_or_init(|| runtime::DenoRuntime::new(&self.path))
+            .get_or_init(|| {
+                let mut error = String::new();
+                for candidate in &self.candidates {
+                    match runtime::DenoRuntime::new(candidate.name, &candidate.path) {
+                        Ok(runtime) => return Ok(runtime),
+                        Err(reason) => error = reason,
+                    }
+                }
+                Err(error)
+            })
             .as_ref()
             .map_err(Clone::clone)
     }
@@ -239,6 +358,44 @@ impl Runtime {
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn js_runtimes_follow_upstream_options_and_preferences() {
+        let directory = tempfile::tempdir().unwrap();
+        let exe = |name: &str| format!("{name}{}", std::env::consts::EXE_SUFFIX);
+        let bun = directory.path().join("custom-bun");
+        std::fs::write(&bun, "").unwrap();
+        let qjs_dir = directory.path().to_str().unwrap();
+        let values = [
+            "deno:/nonexistent/deno",
+            "BUN:/old",
+            &format!("bun:{}", bun.display()),
+            &format!("quickjs:{qjs_dir}"),
+            "Node:/opt/node",
+            "rhino:/x",
+        ];
+        let runtimes = js_runtimes(&values);
+        let expected = [
+            (
+                JsRuntimeName::Deno,
+                std::path::PathBuf::from("/nonexistent/deno"),
+            ),
+            (JsRuntimeName::Node, "/opt/node".into()),
+            (JsRuntimeName::QuickJs, directory.path().join(exe("qjs"))),
+            (JsRuntimeName::Bun, bun.clone()),
+        ];
+        assert_eq!(
+            runtimes,
+            expected
+                .into_iter()
+                .map(|(name, path)| JsRuntime { name, path })
+                .collect::<Vec<_>>()
+        );
+        // A missing explicit runtime falls through to the next preference.
+        let runtime = Runtime::new(runtimes).unwrap();
+        assert!(runtime.checked().is_err());
+        assert!(Runtime::new(Vec::new()).is_none());
+    }
 
     #[test]
     fn grouping_deduplicates_per_kind_in_first_seen_order() {
