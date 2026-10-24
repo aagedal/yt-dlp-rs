@@ -1841,6 +1841,13 @@ Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
 `creator` with `creators` derived, `format_field`'s empty thumbnail without an
 image ID). A `None` `display_id` becomes the ID in place, like upstream.
 
+LNK videos (`lnk.lt/SECTION/ID`) follow upstream `LnkIE`: the video-config
+API's `videoInfo` with its `videoUrl` and (unless `drm`) `videoFairplayUrl`
+as fatal HLS formats (media playlists keep their URL's extension) and merged
+subtitles, the raw title, description, view count and duration, the
+`unified_strdate` air date, the `format_field` poster thumbnail (empty when
+absent) and `int_or_none` episode number with the programme as `series`.
+
 HitRecord records (`hitrecord.org/records/ID`) follow upstream `HitRecordIE`:
 the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python

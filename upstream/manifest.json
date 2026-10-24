@@ -1243,6 +1243,18 @@
       "scope": "LivestreamfailsIE _VALID_URL and clip API extraction (display_id, unified_timestamp, creator/creators, format_field thumbnail, KeyError message) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "lnk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lnk.py"
+      ],
+      "rust": [
+        "src/extractor/lnk.rs",
+        "tests/fixtures/sites/lnk/"
+      ],
+      "scope": "LnkIE video-config API videoInfo with fatal HLS (videoUrl and non-DRM videoFairplayUrl) formats and merged subtitles, unified_strdate airDate, format_field posterImage thumbnail and int_or_none episode number; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "loom",
       "status": "partial",
       "upstream": [

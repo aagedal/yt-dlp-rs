@@ -1,0 +1,48 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://lnk.lt/varom-pierdom/27186",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"27186\", \"title\": \"Varom pierdom 10 s.\", \"description\": \"Komedija.\", \"view_count\": 1234, \"duration\": 1320, \"upload_date\": \"20240305\", \"thumbnail\": \"https://lnk.lt/all-images/poster/27186.jpg\", \"episode_number\": 10, \"series\": \"Varom pierdom\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://lnk.test/hls/video.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}, {\"format_id\": \"200\", \"format_index\": null, \"url\": \"https://lnk.test/hls/video.m3u8\", \"manifest_url\": \"https://lnk.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\"}], \"subtitles\": {\"en\": [{\"url\": \"https://lnk.test/hls/subs_en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://lnk.test/hls/subs_de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://lnk.lt/varom-pierdom/27186\", \"original_url\": \"https://lnk.lt/varom-pierdom/27186\", \"webpage_url_basename\": \"27186\", \"webpage_url_domain\": \"lnk.lt\", \"extractor\": \"Lnk\", \"extractor_key\": \"Lnk\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://lnk.lt/all-images/poster/27186.jpg\", \"id\": \"0\"}], \"display_id\": \"27186\", \"fulltitle\": \"Varom pierdom 10 s.\", \"duration_string\": \"22:00\", \"release_year\": null, \"episode\": \"Episode 10\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"200\", \"format_index\": null, \"url\": \"https://lnk.test/hls/video.m3u8\", \"manifest_url\": \"https://lnk.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\", \"_filename\": \"Varom pierdom 10 s. [27186].mp4\", \"filename\": \"Varom pierdom 10 s. [27186].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://lnk.lt/varom-pierdom/27186",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Lnk] Extracting URL: https://lnk.lt/varom-pierdom/27186",
+    "[Lnk] 27186: Downloading JSON metadata",
+    "[Lnk] 27186: Downloading m3u8 information",
+    "[Lnk] 27186: Downloading m3u8 information",
+    "[info] Available subtitles for 27186:",
+    "Language Formats",
+    "en       vtt",
+    "de       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.lnk.lt/zinios/47289",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"47289\", \"title\": \"\\u017dinios\", \"description\": null, \"view_count\": null, \"upload_date\": null, \"thumbnail\": \"\", \"episode_number\": null, \"series\": null, \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://lnk.test/hls/video.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.lnk.lt/zinios/47289\", \"original_url\": \"https://www.lnk.lt/zinios/47289\", \"webpage_url_basename\": \"47289\", \"webpage_url_domain\": \"lnk.lt\", \"extractor\": \"Lnk\", \"extractor_key\": \"Lnk\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"47289\", \"fulltitle\": \"\\u017dinios\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://lnk.test/hls/video.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"\\u017dinios [47289].m3u8\", \"filename\": \"\\u017dinios [47289].m3u8\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}
