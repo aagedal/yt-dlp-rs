@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "http://api-live.dumpert.nl/mobile_api/json/info/6646981_951bc60f",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"items\": [{\"title\": \"Ik heb nieuws voor je\", \"description\": \"Niet schrikken hoor\", \"media\": [{\"mediatype\": \"FOTO\"}, {\"mediatype\": \"VIDEO\", \"duration\": 9, \"variants\": [{\"version\": \"mobile\", \"uri\": \"https://media.dumpert.nl/mobile/6646981_951bc60f.mp4\"}, {\"version\": \"tablet\", \"uri\": \"https://media.dumpert.nl/tablet/6646981_951bc60f.mp4\"}, {\"version\": \"720p\", \"uri\": \"https://media.dumpert.nl/720p/6646981_951bc60f.mp4\"}, {\"version\": \"original\", \"uri\": \"https://media.dumpert.nl/orig/6646981_951bc60f.mov\"}, {\"version\": \"embed\", \"uri\": \"\"}]}], \"stills\": {\"thumb\": \"https://media.dumpert.nl/sq_thumbs/6646981_951bc60f.jpg\", \"thumb-medium\": \"https://media.dumpert.nl/sq_thumbs/medium/6646981_951bc60f.jpg\", \"still-large\": \"https://media.dumpert.nl/stills/large/6646981_951bc60f.jpg\"}, \"stats\": {\"kudos_total\": 120, \"views_total\": \"4567\"}}]}"
+  },
+  {
+   "url": "http://api-live.dumpert.nl/mobile_api/json/info/100031688_b317a185",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"items\": [{\"title\": \"Epic schijnbeweging\", \"description\": \"<p>Die zag je niet eh</p>\", \"media\": [{\"mediatype\": \"VIDEO\", \"duration\": 12, \"variants\": [{\"version\": \"stream\", \"uri\": \"https://adaptive.dumpert.nl/100031688_b317a185/master.m3u8\"}, {\"version\": \"1080p\", \"uri\": \"https://media.dumpert.nl/1080p/100031688_b317a185.mp4\"}]}], \"stills\": {\"still\": \"https://media.dumpert.nl/stills/100031688_b317a185.png\"}, \"stats\": {}}]}"
+  },
+  {
+   "url": "https://adaptive.dumpert.nl/100031688_b317a185/master.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://adaptive.dumpert.nl/100031688_b317a185/low.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://adaptive.dumpert.nl/100031688_b317a185/high.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "http://api-live.dumpert.nl/mobile_api/json/info/6675421_dc440fe7",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"items\": [{\"title\": \"Kaal\", \"media\": [{\"mediatype\": \"VIDEO\", \"variants\": [{\"version\": \"flv\", \"uri\": \"https://media.dumpert.nl/flv/6675421_dc440fe7.flv\"}]}]}]}"
+  },
+  {
+   "url": "http://api-live.dumpert.nl/mobile_api/json/info/1_noitems",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"gentime\": 1}"
+  },
+  {
+   "url": "http://api-live.dumpert.nl/mobile_api/json/info/2_emptyitems",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"items\": []}"
+  },
+  {
+   "url": "http://api-live.dumpert.nl/mobile_api/json/info/3_novideo",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"items\": [{\"title\": \"Foto\", \"media\": [{\"mediatype\": \"FOTO\"}]}]}"
+  },
+  {
+   "url": "http://api-live.dumpert.nl/mobile_api/json/info/4_notitle",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"items\": [{\"media\": [{\"mediatype\": \"VIDEO\"}]}]}"
+  }
+ ]
+}

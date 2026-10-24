@@ -1584,6 +1584,17 @@ Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
 titles remain explicit native errors. `tests/fixtures/sites/clyp/` is
 compared with pinned upstream output.
 
+Dumpert items (`[www.|legacy.]dumpert.nl/item|embed|mediabase/ID` and
+`?selectedId=ID` pages) follow upstream `DumpertIE`: the
+`api-live.dumpert.nl/mobile_api/json/info/ID` JSON, its first item (a
+missing `items`/`title`/`media` is upstream's `KeyError`, an empty list the
+bare `list index out of range`, no `VIDEO` media the `StopIteration`), the
+video's variants as fatal HLS playlists (`m3u8_id` the version) or
+progressive formats ranked by `qualities(flv, mobile, tablet, 720p, 1080p)`,
+the `thumb`/`still` stills, duration and kudos/views stats. Non-array item or
+media lists and non-string titles or URIs remain explicit native errors.
+`tests/fixtures/sites/dumpert/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

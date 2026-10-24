@@ -1,0 +1,11 @@
+[
+ {"url": "https://www.dumpert.nl/item/6646981_951bc60f", "args": ["-j"]},
+ {"url": "https://www.dumpert.nl/item/6646981_951bc60f", "args": ["-F"]},
+ {"url": "https://www.dumpert.nl/toppers?selectedId=100031688_b317a185", "args": ["-j"]},
+ {"url": "https://www.dumpert.nl/toppers?selectedId=100031688_b317a185", "args": ["-F"]},
+ {"url": "http://legacy.dumpert.nl/embed/6675421/dc440fe7", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(duration)s|%(like_count)s|%(view_count)s|%(thumbnail)s|%(format_id)s"]},
+ {"url": "https://www.dumpert.nl/item/1_noitems", "args": ["-j"]},
+ {"url": "https://www.dumpert.nl/item/2_emptyitems", "args": ["-j"]},
+ {"url": "https://www.dumpert.nl/item/3_novideo", "args": ["-j"]},
+ {"url": "https://www.dumpert.nl/item/4_notitle", "args": ["-j"]}
+]

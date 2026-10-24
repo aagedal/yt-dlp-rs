@@ -569,6 +569,18 @@
       "scope": "DrTalksIE Next.js video data as a url_transparent BrightcoveNew result overlaid with title, summary and featured image, and the KeyError path, compared with pinned upstream output through the fixture proxy; non-Brightcove links are unsupported"
     },
     {
+      "name": "dumpert",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dumpert.py"
+      ],
+      "rust": [
+        "src/extractor/dumpert.rs",
+        "tests/fixtures/sites/dumpert/"
+      ],
+      "scope": "DumpertIE mobile_api info JSON, the first item's VIDEO media variants (fatal HLS with version ids or progressive URLs, qualities ranking), stills thumbnails, stats, duration and KeyError/IndexError/StopIteration paths compared with pinned upstream output through the fixture proxy; non-array item/media lists and non-string titles or URIs remain explicit native errors"
+    },
+    {
       "name": "ebaumsworld",
       "status": "partial",
       "upstream": [
