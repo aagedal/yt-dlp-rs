@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {"url": "https://api.iheart.com/api/v3/podcast/episodes/70346499", "headers": {"Content-Type": "application/json"}, "body": "{\"episode\": {\"id\": 70346499, \"title\": \"Part One: Alexander Lukashenko: The Dictator of Belarus\", \"description\": \"<p>Robert is joined by <b>Andrew</b> &amp; friends.</p>\", \"startDate\": 1597741200999, \"duration\": 4712, \"imageUrl\": \"https://www.iheart.com/podcast/images/1.jpg\", \"mediaUrl\": \"https://chtbl.com/track/5899E/podtrac.com/pts/redirect.mp3/traffic.megaphone.fm/BTB1.mp3?updated=1\"}}"},
+  {"url": "https://api.iheart.com/api/v3/podcast/episodes/111", "headers": {"Content-Type": "application/json"}, "body": "{\"episode\": {\"id\": 111, \"title\": \"Bare\", \"mediaUrl\": \"https://media.example.com/bare.m4a\"}}"},
+  {"url": "https://api.iheart.com/api/v3/podcast/episodes/222", "headers": {"Content-Type": "application/json"}, "body": "{\"episode\": {\"id\": 222, \"title\": \"Second\", \"description\": \"Second <i>one</i>\", \"startDate\": 1600000000000, \"duration\": 60, \"mediaUrl\": \"https://media.example.com/second.mp3\"}}"},
+  {"url": "https://traffic.megaphone.fm/BTB1.mp3?updated=1", "headers": {"Content-Type": "audio/mpeg"}, "body": "ID3fakemp3"},
+  {"url": "https://api.iheart.com/api/v3/podcast/podcasts/29236323/episodes?limit=1000000000", "headers": {"Content-Type": "application/json"}, "body": "{\"data\": [{\"id\": 222, \"title\": \"Listed second\", \"description\": \"<p>Listed</p>\", \"startDate\": 1600000000000, \"duration\": 61, \"imageUrl\": \"https://www.iheart.com/podcast/images/2.jpg\"}, {\"title\": \"no id\"}, {\"id\": \"111\"}]}"},
+  {"url": "https://api.iheart.com/api/v3/podcast/podcasts/29236323", "headers": {"Content-Type": "application/json"}, "body": "{\"title\": \"Behind the Bastards\", \"description\": \"Bastards podcast\"}"},
+  {"url": "https://api.iheart.com/api/v3/podcast/podcasts/555/episodes?limit=1000000000", "headers": {"Content-Type": "application/json"}, "body": "{\"data\": [{\"id\": 111}]}"}
+ ]
+}

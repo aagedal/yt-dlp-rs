@@ -3192,7 +3192,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("FilmArchiv", yt_dlp_rs::extractor::filmarchiv_suitable),
             ("Filmweb", yt_dlp_rs::extractor::filmweb_suitable),
             ("Formula1", yt_dlp_rs::extractor::formula1_suitable),
+            ("Freesound", yt_dlp_rs::extractor::freesound_suitable),
             ("FuyinTV", yt_dlp_rs::extractor::fuyintv_suitable),
+            ("Gab", yt_dlp_rs::extractor::gab_suitable),
             ("GameStar", yt_dlp_rs::extractor::gamestar_suitable),
             ("Glide", yt_dlp_rs::extractor::glide_suitable),
             ("GodResource", yt_dlp_rs::extractor::godresource_suitable),
@@ -3205,6 +3207,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("goodgame:stream", yt_dlp_rs::extractor::goodgame_suitable),
             ("Graspop", yt_dlp_rs::extractor::graspop_suitable),
             ("Harpodeon", yt_dlp_rs::extractor::harpodeon_suitable),
+            ("HearThisAt", yt_dlp_rs::extractor::hearthisat_suitable),
             ("HellPorno", yt_dlp_rs::extractor::hellporno_suitable),
             (
                 "HistoricFilms",
@@ -3215,6 +3218,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("html5", |_| false),
             ("Huajiao", yt_dlp_rs::extractor::huajiao_suitable),
             ("Hypem", yt_dlp_rs::extractor::hypem_suitable),
+            ("iheartradio", yt_dlp_rs::extractor::iheart_suitable),
+            (
+                "iheartradio:podcast",
+                yt_dlp_rs::extractor::iheart_podcast_suitable,
+            ),
             ("Iltalehti", yt_dlp_rs::extractor::iltalehti_suitable),
             ("Imgur", yt_dlp_rs::extractor::imgur_suitable),
             ("imgur:album", yt_dlp_rs::extractor::imgur_album_suitable),
@@ -3239,6 +3247,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("InstagramIOS", yt_dlp_rs::extractor::instagram_ios_suitable),
             (
+                "Internazionale",
+                yt_dlp_rs::extractor::internazionale_suitable,
+            ),
+            (
                 "IsraelNationalNews",
                 yt_dlp_rs::extractor::israelnationalnews_suitable,
             ),
@@ -3260,6 +3272,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("KTH", yt_dlp_rs::extractor::kth_suitable),
             ("Ku6", yt_dlp_rs::extractor::ku6_suitable),
             ("lbry", yt_dlp_rs::extractor::lbry_suitable),
+            ("Libsyn", yt_dlp_rs::extractor::libsyn_suitable),
             ("LinkedIn", yt_dlp_rs::extractor::linkedin_suitable),
             (
                 "Livestreamfails",
@@ -3541,7 +3554,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "23video\nAmadeusTV\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBigo\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBongaCams\nBreitBart\nbrightcove:new\nBundesliga\nCaltrans\nCAM4\nCGTN\nCJSW\nCloudflareStream\nCloudyCDN\nClyp\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\ndaystar:clip\ndemocracynow\ndlive:stream\ndlive:vod\nDouyin\nDrTalks\nDumpert\nEbaumsWorld\nEbay\nEpoch\nErocast\nEttuTv\nEuropeanTour\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmArchiv: FILMARCHIV ON\nFilmweb\nFormula1\nFuyinTV\nGameStar\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGolem\ngoodgame:stream\nGraspop\nHarpodeon\nHellPorno\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\nIltalehti\nImgur\nimgur:album\nimgur:gallery\nInc\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nIsraelNationalNews\nIvoox\nJove\nJWPlatform\nKaltura\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKommunetv\nKTH\nKu6\nlbry: odysee.com\nLinkedIn\nLivestreamfails\nloom\nmaariv.co.il\nMaoriTV\nMasters\nMatchiTV\nMatchTV\nmegaphone.fm: megaphone.fm embedded players\nmir24.tv\nmixcloud\nMochaVideo\nMovingImage\nMyVidster\nNetzkino\nNewsy\nniconico: [niconico] ニコニコ動画\nNobelPrize\nnts.live\nOdnoklassniki\nOneFootball\nOnePlacePodcast\nParlview\nPearVideo\npeer.tv\nperiscope: Periscope\nPhotobucket\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPopcornTV\nPremiershipRugby\nPressTV\nQingTing\nRadioZetPodcast\nReddit\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRoyaLive\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nScreenRec\nSen\nSkyNewsAU\nSnapchatSpotlight\nsoundcloud: [soundcloud]\nsoundgasm\nsoundgasm:profile\nSpiegel\nStreamable\nStreetVoice\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\ntelegram:embed\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nTrtCocukVideo\nTrtWorld\nTumblr: [tumblr]\ntv.dfb.de\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nVeo\nvimeo: [vimeo]\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nWebcamerapl\nWeibo\nWeiboVideo\nWhyp\nWorldStarHipHop\nXboxClips\nXiaoHongShu: 小红书\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "23video\nAmadeusTV\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBigo\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBongaCams\nBreitBart\nbrightcove:new\nBundesliga\nCaltrans\nCAM4\nCGTN\nCJSW\nCloudflareStream\nCloudyCDN\nClyp\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\ndaystar:clip\ndemocracynow\ndlive:stream\ndlive:vod\nDouyin\nDrTalks\nDumpert\nEbaumsWorld\nEbay\nEpoch\nErocast\nEttuTv\nEuropeanTour\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmArchiv: FILMARCHIV ON\nFilmweb\nFormula1\nFreesound\nFuyinTV\nGab\nGameStar\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGolem\ngoodgame:stream\nGraspop\nHarpodeon\nHearThisAt\nHellPorno\nHistoricFilms\nHitRecord\nhtml5\nHuajiao: 花椒直播\nHypem\niheartradio\niheartradio:podcast\nIltalehti\nImgur\nimgur:album\nimgur:gallery\nInc\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nInternazionale\nIsraelNationalNews\nIvoox\nJove\nJWPlatform\nKaltura\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKommunetv\nKTH\nKu6\nlbry: odysee.com\nLibsyn\nLinkedIn\nLivestreamfails\nloom\nmaariv.co.il\nMaoriTV\nMasters\nMatchiTV\nMatchTV\nmegaphone.fm: megaphone.fm embedded players\nmir24.tv\nmixcloud\nMochaVideo\nMovingImage\nMyVidster\nNetzkino\nNewsy\nniconico: [niconico] ニコニコ動画\nNobelPrize\nnts.live\nOdnoklassniki\nOneFootball\nOnePlacePodcast\nParlview\nPearVideo\npeer.tv\nperiscope: Periscope\nPhotobucket\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPopcornTV\nPremiershipRugby\nPressTV\nQingTing\nRadioZetPodcast\nReddit\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRoyaLive\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nScreenRec\nSen\nSkyNewsAU\nSnapchatSpotlight\nsoundcloud: [soundcloud]\nsoundgasm\nsoundgasm:profile\nSpiegel\nStreamable\nStreetVoice\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\ntelegram:embed\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nTrtCocukVideo\nTrtWorld\nTumblr: [tumblr]\ntv.dfb.de\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nVeo\nvimeo: [vimeo]\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nWebcamerapl\nWeibo\nWeiboVideo\nWhyp\nWorldStarHipHop\nXboxClips\nXiaoHongShu: 小红书\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }

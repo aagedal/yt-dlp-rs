@@ -1,0 +1,10 @@
+[
+ {"url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/episode/part-one-alexander-lukashenko-the-dictator-70346499/?embed=true", "args": ["-j"]},
+ {"url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/episode/part-one-alexander-lukashenko-the-dictator-70346499/", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "iheartradio:111", "args": ["-j"]},
+ {"url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/episode/missing-333/", "args": ["-j"]},
+ {"url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/", "args": ["-J"]},
+ {"url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.iheartpodcastnetwork.com/podcast/x-555", "args": ["-J"]},
+ {"url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/", "args": ["--print", "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(webpage_url)s|%(timestamp)s|%(description)s"]}
+]

@@ -5,6 +5,30 @@
   "upstream_version": "2026.10.21",
   "components": [
     {
+      "name": "freesound",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/freesound.py"
+      ],
+      "rust": [
+        "src/extractor/freesound.rs",
+        "tests/fixtures/sites/freesound/"
+      ],
+      "scope": "FreesoundIE og:audio song URL/title (fatal, upstream errors), non-fatal description, uploader and channels warnings, duration, sound_date upload date and tags, the doubled-host URL fix and the lq/hq MP3 preview formats compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "gab",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gab.py"
+      ],
+      "rust": [
+        "src/extractor/gab.rs",
+        "tests/fixtures/sites/gab/"
+      ],
+      "scope": "GabIE api/v1 status JSON: video/gifv attachments (indexed POST-N IDs) with original/playable formats (width, height, int tbr, parse_codecs acodec and its unknown-codec warning, asr, fps), display-name title, created_at timestamp, cleaned content, duration or length, counts and account fields, and the multi-video playlist compared with pinned upstream output through the fixture proxy; posts without videos (upstream's IndexError) and fields of unexpected types remain explicit native errors, and --print renders the int tbr as a float"
+    },
+    {
       "name": "generic-extraction",
       "status": "partial",
       "upstream": [
@@ -86,6 +110,18 @@
       "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, literal-ID and bounded resolution-based default/best/worst selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds/preferred HTTP-date; no nested playlists or unresolved URL results; bounded audio/video selectors, two-stream + pairs and / fallbacks with upstream FormatSorter order; predicate filtering of represented metadata before kind fallback, ranking and atomic pair/playlist selection; unselected result API shares whole-extraction retries and leaves library selection to the caller; parse_codecs/get_compatible_ext port with actual-upstream fixture and vcodec/acodec/dynamic_range/video_ext/audio_ext format fields; FormatSorter port (default order, settings, -S limits/closest/reverse, force, prefer-free) applied in process_result before index format IDs, with list-order best/worst and upstream _merge pairing (no rendition-group matching)"
     },
     {
+      "name": "hearthisat",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/hearthisat.py"
+      ],
+      "rust": [
+        "src/extractor/hearthisat.rs",
+        "tests/fixtures/sites/hearthisat/"
+      ],
+      "scope": "HearThisAtIE api-v2 track JSON (artist - title display ID, user/title title, artwork/thumb thumbnail, str_to_int counts, release timestamp, genre), the stream MP3 and known-extension download formats, the no-formats error and API HTTP errors compared with pinned upstream output through the fixture proxy; non-string IDs, user names and thumbnails and missing users or download file names remain explicit native errors"
+    },
+    {
       "name": "http-downloader",
       "status": "partial",
       "upstream": [
@@ -131,6 +167,42 @@
         "tests/fixtures/sites/nts/"
       ],
       "scope": "NTSLiveIE window._REACT_STATE_ episode with its first audio_sources URL as a url_transparent result (Mixcloud and direct media covered) overlaid with title/description/genres/timestamp/modified_timestamp, missing-react-state and 'url' errors compared with pinned upstream output through the fixture proxy; unparsable react states remain explicit native errors"
+    },
+    {
+      "name": "iheart",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/iheart.py"
+      ],
+      "rust": [
+        "src/extractor/iheart.rs",
+        "tests/fixtures/sites/iheart/"
+      ],
+      "scope": "IHeartRadioIE api.iheart.com v3 episode JSON (episode pages and iheartradio:ID, image/cleaned description/millisecond start timestamp/duration, clean_podcast_url media URL) and IHeartRadioPodcastIE episode list as iheartradio:ID url entries (flat and resolved) with the non-fatal podcast title/description lookup compared with pinned upstream output through the fixture proxy; non-string titles, media URLs and descriptions remain explicit native errors"
+    },
+    {
+      "name": "internazionale",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/internazionale.py"
+      ],
+      "rust": [
+        "src/extractor/internazionale.rs",
+        "tests/fixtures/sites/internazionale/"
+      ],
+      "scope": "InternazionaleIE data-video-title (or non-fatal og:title) title, fatal data-job-id/data-video-path, available_abroad host choice, non-fatal HLS (hls ids, mp4) and DASH (dash- ids) manifests, article:published_time timestamp and og thumbnail/description warnings, the generic title and no-formats error compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "libsyn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/libsyn.py"
+      ],
+      "rust": [
+        "src/extractor/libsyn.rs",
+        "tests/fixtures/sites/libsyn/"
+      ],
+      "scope": "LibsynIE HTML5 player playlistItem JSON (fatal), item/episode-title/data-title/title episode title, h3/podcast-title podcast prefix, info_text_body description, release-date div or JSON upload date, string-only parse_duration, thumbnail and the libsyn/main/download formats compared with pinned upstream output through the fixture proxy; the _EMBED_REGEX generic embeds are not ported and non-string player fields remain explicit native errors"
     },
     {
       "name": "orchestration-and-output",

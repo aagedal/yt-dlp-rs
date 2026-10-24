@@ -1,0 +1,8 @@
+{
+ "routes": [
+  {"url": "http://www.freesound.org/people/miklovan/sounds/194503/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://freesound.org/people/someone/sounds/1/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "bare.html"},
+  {"url": "https://freesound.org/people/someone/sounds/2/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "noaudio.html"},
+  {"url": "https://freesound.org/data/previews/194/194503_3527000-hq.mp3", "headers": {"Content-Type": "audio/mpeg"}, "body_file": "audio.mp3"}
+ ]
+}

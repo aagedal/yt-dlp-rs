@@ -1,0 +1,7 @@
+[
+ {"url": "https://www.hearthis.at/moofi/dr-kreep/", "args": ["-j"]},
+ {"url": "https://hearthis.at/moofi/dr-kreep/", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(genre)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(view_count)s|%(thumbnail)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://hearthis.at/moofi/dr-kreep/", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://hearthis.at/someone/plain-track.2/", "args": ["-j"]},
+ {"url": "https://hearthis.at/nobody/missing/", "args": ["-j"]}
+]

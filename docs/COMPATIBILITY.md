@@ -1698,6 +1698,69 @@ the path), the `caption_file` and `captions` subtitles (`en` by default), the
 non-string titles, paths or caption languages remain explicit native errors.
 `tests/fixtures/sites/democracynow/` is compared with pinned upstream output.
 
+
+Freesound sounds (`freesound.org/people/USER/sounds/ID`) follow upstream
+`FreesoundIE`: the page's fatal `og:audio` URL and `og:audio:title`, the
+non-fatal description, `og:audio:artist` uploader and channels info (their
+misses are upstream's warnings), the `duration` element in milliseconds, the
+`sound_date` upload date, the `tags` links and the low-quality preview plus
+its `-hq.mp3` sibling as ranked formats. `tests/fixtures/sites/freesound/`
+is compared with pinned upstream output.
+
+hearthis.at tracks (`hearthis.at/ARTIST/TITLE`) follow upstream
+`HearThisAtIE`: the `api-v2.hearthis.at` JSON for the same path, the
+`ARTIST - TITLE` display ID, the user name and track title joined as the
+title, the artwork (or thumb) thumbnail, `str_to_int` play counts and
+duration, the release timestamp and genre, and the stream MP3 plus the
+original download (only when its file name has a known extension, ranked
+higher) as audio formats. Non-string IDs, user names or thumbnails and
+missing users or download file names remain explicit native errors.
+`tests/fixtures/sites/hearthisat/` is compared with pinned upstream output.
+
+Libsyn episodes (`html5-player.libsyn.com/embed/episode/id/ID`) follow
+upstream `LibsynIE`: the player page (requested without the URL's trailing
+options) and its fatal `playlistItem` JSON, the item, `episode-title`,
+`data-title` or `<title>` episode title prefixed by the `<h3>` or
+`podcast-title` podcast name, the `info_text_body` description, the
+release-date div (or JSON) upload date, a string duration, the thumbnail and
+the libsyn/main/download URLs as formats. Libsyn iframes in other pages
+(upstream's `_EMBED_REGEX`) are not detected, and non-string player fields
+remain explicit native errors. `tests/fixtures/sites/libsyn/` is compared
+with pinned upstream output.
+
+iHeartRadio podcast episodes (`iheart.com/podcast/SHOW/episode/SLUG-ID` and
+`iheartradio:ID`) follow upstream `IHeartRadioIE`: the `api.iheart.com` v3
+episode JSON, its image, cleaned description, millisecond start date as the
+timestamp, duration and the `clean_podcast_url` media URL as the only
+format. Podcasts (`iheart.com/podcast/SHOW-ID`, also on
+`iheartpodcastnetwork.com`) follow `IHeartRadioPodcastIE`: the episode list
+(`limit=1000000000`) as `iheartradio:ID` `url` entries carrying the same
+fields (episodes without an ID are skipped) and the non-fatal podcast lookup
+for the playlist title and description. Non-string titles, media URLs and
+descriptions remain explicit native errors. `tests/fixtures/sites/iheart/`
+is compared with pinned upstream output.
+
+Gab posts (`gab.com/USER/posts/ID`) follow upstream `GabIE`: the
+`gab.com/api/v1/statuses/ID` JSON, each video or gifv attachment (numbered by
+its attachment index) with its original and playable MP4s as formats (their
+size, integer kbit/s `tbr`, the `parse_codecs` audio codec with its
+unknown-codec warning, sample rate and fps), the `DISPLAY_NAME on Gab`
+title, `created_at` timestamp, cleaned content, duration (or parsed length),
+like/comment/repost counts and the account's user name, ID and URL; posts with
+several videos are playlists. Posts without videos (upstream's `IndexError`)
+and fields of unexpected types remain explicit native errors, and output
+templates show the integer `tbr` as a float. `tests/fixtures/sites/gab/` is
+compared with pinned upstream output.
+
+Internazionale videos (`internazionale.it/video/.../SLUG`) follow upstream
+`InternazionaleIE`: the page's `data-video-title` (else the non-fatal
+`og:title`), fatal `data-job-id` and `data-video-path` attributes, the
+`video` or (not available abroad) `video-ita` host's non-fatal HLS
+(`hls` IDs, `mp4`) and DASH (`dash-` IDs) manifests, and the
+`article:published_time` timestamp, `og:image` and `og:description` (their
+misses are upstream's warnings). `tests/fixtures/sites/internazionale/` is
+compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

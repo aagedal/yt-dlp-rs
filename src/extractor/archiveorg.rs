@@ -16,7 +16,7 @@ pub struct ArchiveOrg;
 const NAME: &str = "archive.org";
 const KEY: &str = "ArchiveOrg";
 /// `KNOWN_EXTENSIONS`.
-const KNOWN_EXTENSIONS: [&str; 42] = [
+pub(crate) const KNOWN_EXTENSIONS: [&str; 42] = [
     "3g2", "3gp", "f4v", "mk3d", "divx", "mpg", "ogv", "m4v", "wmv", "avi", "flv", "mkv", "mov",
     "mp4", "webm", "aac", "ape", "asf", "f4a", "f4b", "m4b", "m4r", "oga", "ogx", "spx", "vorbis",
     "wma", "weba", "aiff", "alac", "flac", "m4a", "mka", "mp3", "ogg", "opus", "wav", "f4f", "f4m",

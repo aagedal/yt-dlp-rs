@@ -1,0 +1,7 @@
+[
+ {"url": "https://gab.com/ACT1TV/posts/107163961867310434", "args": ["-j"]},
+ {"url": "https://gab.com/ACT1TV/posts/107163961867310434", "args": ["--print", "%(id)s|%(title)s|%(timestamp)s|%(upload_date)s|%(description)s|%(duration)s|%(like_count)s|%(comment_count)s|%(repost_count)s|%(uploader)s|%(uploader_id)s|%(uploader_url)s|%(format_id)s|%(width)s|%(height)s|%(acodec)s|%(asr)s|%(fps)s"]},
+ {"url": "https://gab.com/ACT1TV/posts/107163961867310434", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.gab.com/someone/posts/200", "args": ["-J"]},
+ {"url": "https://gab.com/x/posts/404", "args": ["-j"]}
+]

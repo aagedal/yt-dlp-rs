@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "http://html5-player.libsyn.com/embed/episode/id/6385796", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://html5-player.libsyn.com/embed/episode/id/3727166", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "classes.html"},
+  {"url": "https://html5-player.libsyn.com/embed/episode/id/3", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "datatitle.html"},
+  {"url": "https://html5-player.libsyn.com/embed/episode/id/4", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body>nothing</body></html>"},
+  {"url": "https://traffic.libsyn.com/luckyandprepared/intro.mp3", "headers": {"Content-Type": "audio/mpeg"}, "body": "ID3fakemp3"}
+ ]
+}

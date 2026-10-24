@@ -49,7 +49,9 @@ mod fczenit;
 mod filmarchiv;
 mod filmweb;
 mod formula1;
+mod freesound;
 mod fuyintv;
+mod gab;
 mod gamestar;
 mod generic_urls;
 mod glide;
@@ -59,6 +61,7 @@ mod golem;
 mod goodgame;
 mod graspop;
 mod harpodeon;
+mod hearthisat;
 mod hellporno;
 mod historicfilms;
 mod hitrecord;
@@ -67,10 +70,12 @@ mod hrefli;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
+mod iheart;
 mod iltalehti;
 mod imgur;
 mod inc;
 mod instagram;
+mod internazionale;
 pub(crate) mod ism;
 mod israelnationalnews;
 mod ivoox;
@@ -87,6 +92,7 @@ mod kth;
 mod ku6;
 mod kvs;
 mod lbry;
+mod libsyn;
 mod linkedin;
 mod livestreamfails;
 mod loom;
@@ -239,7 +245,9 @@ pub use fczenit::{Fczenit, suitable as fczenit_suitable};
 pub use filmarchiv::{FilmArchiv, suitable as filmarchiv_suitable};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
 pub use formula1::{Formula1, suitable as formula1_suitable};
+pub use freesound::{Freesound, suitable as freesound_suitable};
 pub use fuyintv::{FuyinTv, suitable as fuyintv_suitable};
+pub use gab::{Gab, suitable as gab_suitable};
 pub use gamestar::{GameStar, suitable as gamestar_suitable};
 pub use glide::{Glide, suitable as glide_suitable};
 pub use godresource::{GodResource, suitable as godresource_suitable};
@@ -248,6 +256,7 @@ pub use golem::{Golem, suitable as golem_suitable};
 pub use goodgame::{GoodGame, suitable as goodgame_suitable};
 pub use graspop::{Graspop, suitable as graspop_suitable};
 pub use harpodeon::{Harpodeon, suitable as harpodeon_suitable};
+pub use hearthisat::{HearThisAt, suitable as hearthisat_suitable};
 pub use hellporno::{HellPorno, suitable as hellporno_suitable};
 pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hitrecord::{HitRecord, suitable as hitrecord_suitable};
@@ -256,6 +265,10 @@ pub use hrefli::{HrefLiRedirect, suitable as hrefli_suitable};
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
+pub use iheart::{
+    IHeartRadio, IHeartRadioPodcast, podcast_suitable as iheart_podcast_suitable,
+    suitable as iheart_suitable,
+};
 pub use iltalehti::{Iltalehti, suitable as iltalehti_suitable};
 pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
@@ -269,6 +282,7 @@ pub use instagram::{
     suitable as instagram_suitable, tag_suitable as instagram_tag_suitable,
     user_suitable as instagram_user_suitable,
 };
+pub use internazionale::{Internazionale, suitable as internazionale_suitable};
 pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
 pub use ivoox::{Ivoox, suitable as ivoox_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
@@ -285,6 +299,7 @@ pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
 pub use lbry::{Lbry, suitable as lbry_suitable};
+pub use libsyn::{Libsyn, suitable as libsyn_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
 pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable};
 pub use loom::{Loom, suitable as loom_suitable};
@@ -1318,6 +1333,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("iheartradio:") && iheart::suitable(url))
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))
         || (url.starts_with("tiktokuser:") && tiktok::user_suitable(url))
