@@ -668,6 +668,16 @@ result, empty elements as `None` (a generic title for an empty title) and a
 missing element as upstream's bare `AttributeError` text. XML parse errors
 carry this port's parser message rather than expat's.
 
+tv.dfb.de videos (`tv.dfb.de/video/SLUG/ID`) follow upstream `DFBIE`: the
+`hd_video.php` player XML's video entry, its stream access URL (protocol-relative
+as `https:`) and that URL's `&area=&format=iphone` variant, each token's
+`url?hdnea=auth` manifest as optional `hds` F4M formats (with `&hdcore=3.2.0`;
+`Unable to download f4m manifest` warnings) or optional `mp4` `hls` m3u8 formats,
+the title (else a generic one), `unified_strdate` upload date and the
+`images/ID_640x360.jpg` thumbnail. A token without `url`/`auth` is upstream's
+wrapped `KeyError`, a missing element its bare `AttributeError` text. F4M
+manifests with nested manifests or non-F4M documents are explicit native errors.
+
 eBay items (`ebay.com/itm/ID`) follow upstream `EbayIE`: the page's fatal
 `"video":` JSON `playlistMap`, its `HLS` (without an `ext`) and `DASH`
 manifests as non-fatal formats (subtitles ignored with upstream's warnings),

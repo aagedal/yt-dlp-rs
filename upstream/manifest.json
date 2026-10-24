@@ -437,6 +437,18 @@
       "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors; no playlists; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "dfb",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dfb.py"
+      ],
+      "rust": [
+        "src/extractor/dfb.rs",
+        "tests/fixtures/sites/dfb/"
+      ],
+      "scope": "DFBIE player XML, stream access token manifests (optional hds F4M with hdcore and hls m3u8 formats), title, unified_strdate upload date, thumbnail and wrapped AttributeError/KeyError messages compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "ebaumsworld",
       "status": "partial",
       "upstream": [
