@@ -546,6 +546,18 @@
       "scope": "ErocastIE song_data JSON, file_url/stream_url as fatal HLS formats (m4a), traverse_obj metadata (ISO 8601 timestamps, uploader, counts, permalink webpage_url) and missing-data error compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "ettutv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ettutv.py"
+      ],
+      "rust": [
+        "src/extractor/ettutv.rs",
+        "tests/fixtures/sites/ettutv/"
+      ],
+      "scope": "EttuTvIE player-settings, POSTed streamAccess stream as fatal HLS formats and subtitles (mp4), traverse_obj title/competition/image/unified_timestamp date/isLivestream and KeyError paths compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "facebook",
       "status": "partial",
       "upstream": [

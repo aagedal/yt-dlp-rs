@@ -668,6 +668,15 @@ webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
 variant IDs, the cleaned `<h1>` title and `is_live`. A live media-only
 playlist without `#EXT-X-ENDLIST` remains an explicit native error.
 
+ETTU TV player pages (`ettu.tv/LANG/playerpage/ID`) follow upstream
+`EttuTvIE`: the `player-settings` JSON (`language=en&showTitle=true&device=desktop`),
+its `streamAccess` URL POSTed with an empty body, the `data.stream` manifest
+as fatal HLS formats (`mp4`) and subtitles (a missing key is upstream's
+`KeyError`), with the title, `metaInformation.competition` description,
+`url_or_none` image, `unified_timestamp` date and boolean `isLivestream`
+when present. Non-string titles and non-absolute stream URLs remain
+explicit native errors.
+
 Erocast tracks (`erocast.me/track/ID`) follow upstream `ErocastIE`: the
 page's fatal `var song_data_ID` JSON, its `file_url` (else `stream_url`) as
 fatal `hls` formats (`m4a`), age limit 18 and the title, description,

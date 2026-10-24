@@ -1,0 +1,86 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.ettu.tv/en-int/playerpage/1573849",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1573849\", \"formats\": [{\"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://hls.ettu.example/1573849/720.m3u8\", \"manifest_url\": \"https://hls.ettu.example/1573849/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\"}], \"subtitles\": {}, \"title\": \"Ni Xia Lian - Shao Jieni\", \"description\": \"ITTF Europe Top 16 Cup\", \"thumbnail\": \"https://img.ettu.example/1573849.jpg\", \"timestamp\": 1677348600, \"is_live\": false, \"webpage_url\": \"https://www.ettu.tv/en-int/playerpage/1573849\", \"original_url\": \"https://www.ettu.tv/en-int/playerpage/1573849\", \"webpage_url_basename\": \"1573849\", \"webpage_url_domain\": \"ettu.tv\", \"extractor\": \"EttuTv\", \"extractor_key\": \"EttuTv\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.ettu.example/1573849.jpg\", \"id\": \"0\"}], \"display_id\": \"1573849\", \"fulltitle\": \"Ni Xia Lian - Shao Jieni\", \"upload_date\": \"20230225\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://hls.ettu.example/1573849/720.m3u8\", \"manifest_url\": \"https://hls.ettu.example/1573849/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\", \"_filename\": \"Ni Xia Lian - Shao Jieni [1573849].mp4\", \"filename\": \"Ni Xia Lian - Shao Jieni [1573849].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ettu.tv/en-int/playerpage/1573849",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[EttuTv] Extracting URL: https://www.ettu.tv/en-int/playerpage/1573849",
+    "[EttuTv] 1573849: Downloading JSON metadata",
+    "[EttuTv] 1573849: Downloading JSON metadata",
+    "[EttuTv] 1573849: Downloading m3u8 information",
+    "[info] Available formats for 1573849:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------",
+    "2000 mp4 1280x720   | 2000k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ettu.tv/en-int/playerpage/2",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"formats\": [{\"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://hls.ettu.example/1573849/720.m3u8\", \"manifest_url\": \"https://hls.ettu.example/1573849/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.ettu.tv/en-int/playerpage/2\", \"original_url\": \"https://www.ettu.tv/en-int/playerpage/2\", \"webpage_url_basename\": \"2\", \"webpage_url_domain\": \"ettu.tv\", \"extractor\": \"EttuTv\", \"extractor_key\": \"EttuTv\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": null, \"title\": \"EttuTv video #2\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://hls.ettu.example/1573849/720.m3u8\", \"manifest_url\": \"https://hls.ettu.example/1573849/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\", \"_filename\": \"EttuTv video #2 [2].mp4\", \"filename\": \"EttuTv video #2 [2].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ettu.tv/en-int/playerpage/3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3: An extractor error has occurred. (caused by KeyError('streamAccess')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ettu.tv/en-int/playerpage/4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 4: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ettu.tv/en-int/playerpage/5",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [EttuTv] 5: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
