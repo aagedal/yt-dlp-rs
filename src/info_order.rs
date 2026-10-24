@@ -2059,6 +2059,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         let mut parts = spec.split(';');
         let keys = parts.next().unwrap_or_default();
         let mut thumbnail_keys = None;
+        let mut thumbnail_all_set = false;
         let mut subtitle_keys = None;
         let mut chapter_keys = None;
         for part in parts {
@@ -2067,6 +2068,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             }
             if let Some(found) = part.strip_prefix("thumbnail=") {
                 thumbnail_keys = Some(found);
+            } else if let Some(found) = part.strip_prefix("thumbnail!=") {
+                // Every listed key is set, `None` values kept.
+                thumbnail_keys = Some(found);
+                thumbnail_all_set = true;
             } else if let Some(found) = part.strip_prefix("subtitle=") {
                 subtitle_keys = Some(found);
             }
@@ -2134,6 +2139,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                 for key in thumbnail_keys.split(',') {
                     if let Some(value) = thumbnail.shift_remove(key) {
                         ordered.insert(key.to_owned(), value);
+                    } else if thumbnail_all_set {
+                        ordered.insert(key.to_owned(), Value::Null);
                     }
                 }
                 ordered.append(thumbnail);

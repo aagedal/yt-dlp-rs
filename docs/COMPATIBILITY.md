@@ -2162,6 +2162,54 @@ ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's
 fatal JSON-LD as an untyped result overlaid with the `caption` meta title, the
 `itemprop="description"` span and the `duration` meta.
 
+NRK programs, clips, podcast episodes and channels (`nrk:ID`,
+`nrk:KIND/ID`, `nrk.no/video/PS*ID`, `nrk.no/video/SLUG_ID`,
+`v8[-.]psapi.nrk.no/mediaelement/ID`) follow upstream `NRKIE`: psapi
+`playback/manifest/program/ID?preferredCdn=akamai` and
+`playback/metadata/program/ID` (upstream's `Accept: application/vnd.nrk.psapi+json;
+version=9; player=tv-player; device=player-core` header; an HTTP 400 retries
+`playback/ITEM/ID`, whose redirects lead to `clip/`, `podcast/` or
+`channel/`), the manifest `id`, `nonPlayable` errors (`NRK said:
+endUserMessage` or upstream's message table, `IsGeoBlocked` types and
+`usageRights.isGeoBlocked` as upstream's geo-restriction error), the
+unencrypted assets' HLS master playlists (`adap` removed, `s=0`, the
+`bw_low`/`bw_high`/`no_audio_only` parameters stripped, the Telenor/ip-only
+CDN URLs retried once on a random `nrk-od-NN.akamaized.net` host when no
+format was found) and MP3 assets as `vcodec: none` formats, WebVTT
+`subtitles` keyed `LANGUAGE[-TYPE]` (`nb` without a language), the preplay
+title, subtitle as `alt_title`, `\r`-to-`\n` description, poster thumbnails
+(`url`, `width`, `height`), `parse_duration` of the manifest or metadata
+duration, the legal-age rating (`A` is 0), the on-demand `from` timestamp and,
+for `_links.series.name == 'series'`, the non-fatal `programs/ID` series,
+season and episode fields with upstream's title, `Sesong N`, `N.` and `(N:M)`
+fallbacks. Akamai HD (`akamaihd.net/i/`) assets, upstream's
+`_extract_akamai_formats`, are an explicit native error. NRK TV/Radio
+program URLs (`NRKTVIE`, `tv|radio.nrk[super].no/.../ABCD12345678`),
+`NRKTVDirekteIE` channels and `NRKRadioPodkastIE` episodes are `url`
+results of `nrk:ID`. `NRKTVEpisodeIE` (`tv.nrk.no/serie/S/sesong/N/episode/M`)
+follows the page's redirect to a program URL, else the `pageData` script's
+`initialState.selectedEpisodePrfId` (upstream's `Unable to extract page
+data` and `Unable to extract NRK ID` errors); like upstream's `url` result
+its season and episode numbers are not passed on. `NRKTVSeasonIE` and
+`NRKTVSeriesIE` read the `tv|radio/catalog/series|podcast/...` catalog
+(`pageSize=50`, `embeddedInstalmentsPageSize=50` for TV series) with
+upstream's `_embedded` episode/instalment lookups and non-fatal `next`
+pages (read eagerly rather than lazily), as playlists of `nrk:ID` entries
+(the series' embedded seasons and extra material, or `url` entries of the
+linked seasons when they outnumber the embedded ones, titled from
+`titles`, `TYPE.titles` or `seriesType.titles`). `NRKPlaylistIE` article
+pages (`nrk.no/SECTION/.../ID`, not `video` or `skole`) list the
+`class="... rich ..." data-video-id` items with the OpenGraph title and
+description. Linked-season entries are only listed with `--flat-playlist`:
+extracting them reaches the nested-playlist limitation of `url_transparent`
+entries (upstream itself does not match the catalog season links it
+builds). Upstream's geo-bypass `X-Forwarded-For` header (a random Norwegian
+address for `_GEO_COUNTRIES = ['NO']`) is not sent; the fixtures compare
+with `--no-geo-bypass`. `NRKSkoleIE` and `NRKTVEpisodesIE` are not ported:
+their endpoints (`nrkno-skole-prod.kube.nrk.no`, `tv.nrk.no/program/episodes`)
+no longer answer, so no real responses could be saved.
+`tests/fixtures/sites/nrk/` is compared with pinned upstream output.
+
 OK.ru (Odnoklassniki) videos (`ok.ru`/`odnoklassniki.ru` `video`,
 `videoembed`, `live`, `web-api/video/moviePlayer` and `dk?...st.mvId=`
 shapes, `fromTime` as `start_time`) follow upstream `OdnoklassnikiIE`: the

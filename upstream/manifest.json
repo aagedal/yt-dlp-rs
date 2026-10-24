@@ -1617,6 +1617,18 @@
       "scope": "NobelPrizeIE query ID, JSON-LD untyped result and meta/description overlay compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "nrk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nrk.py"
+      ],
+      "rust": [
+        "src/extractor/nrk.rs",
+        "tests/fixtures/sites/nrk/"
+      ],
+      "scope": "NRKIE psapi playback manifest/metadata (Accept header, HTTP 400 retry without program/, nonPlayable and geo-blocked errors), unencrypted HLS master formats (adap/s/bandwidth query rewrites, one random akamaized CDN retry for the Telenor/ip-only hosts) and MP3 assets, WebVTT subtitles, thumbnails, duration, age limit, timestamp and programs-API series fields with upstream's fallbacks; NRKTVIE, NRKTVDirekteIE and NRKRadioPodkastIE nrk:ID url results; NRKTVEpisodeIE redirect or pageData ID; NRKTVSeasonIE and NRKTVSeriesIE catalog playlists (pages read eagerly; linked-season entries only with --flat-playlist) and NRKPlaylistIE article items. Akamai HD (akamaihd.net/i/) assets are an explicit native error; no geo-bypass X-Forwarded-For header; NRKSkoleIE and NRKTVEpisodesIE (dead endpoints) are not ported. Compared with pinned upstream output through the fixture proxy (--no-geo-bypass)"
+    },
+    {
       "name": "odnoklassniki",
       "status": "partial",
       "upstream": [
