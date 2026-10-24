@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://www.ina.fr/video/I12055569/francois-hollande-je-crois-que-c-est-clair-video.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://apipartner.ina.fr/assets/I12055569.json?partnerId=2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset.json"
+  },
+  {
+   "url": "https://www.ina.fr/audio/P16173408",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  },
+  {
+   "url": "https://apipartner.ina.fr/assets/P16173408.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset2.json"
+  },
+  {
+   "url": "http://m.ina.fr/video/X1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page3.html"
+  },
+  {
+   "url": "https://apipartner.ina.fr/assets/X1.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "asset3.json"
+  },
+  {
+   "url": "https://www.ina.fr/ina-eclaire-actu/nothing",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "noapi.html"
+  }
+ ]
+}

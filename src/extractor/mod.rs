@@ -75,6 +75,7 @@ mod hypem;
 mod iheart;
 mod iltalehti;
 mod imgur;
+mod ina;
 mod inc;
 mod instagram;
 mod internazionale;
@@ -287,6 +288,7 @@ pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
     gallery_suitable as imgur_gallery_suitable, suitable as imgur_suitable,
 };
+pub use ina::{Ina, suitable as ina_suitable};
 pub use inc::{Inc, suitable as inc_suitable};
 pub(crate) use instagram::post_extract as instagram_comments;
 pub use instagram::{

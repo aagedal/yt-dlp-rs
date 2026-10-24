@@ -1867,6 +1867,13 @@ and presenter, or a product's poster and brand name. Upstream's `DE`
 geo-bypass `X-Forwarded-For` header is not sent; the fixtures compare with
 `--no-geo-bypass`.
 
+INA media (`ina.fr/.../ID`) follow upstream `InaIE`: the page's fatal
+`asset-details-url`, its `assets/ID` as the ID and the `ID.json` asset
+JSON's `resourceUrl` (else the upstream `KeyError`) as an untyped result,
+`mp4`/`mp3` for `video`/`audio` types (else the URL's extension), with the
+raw title, description, duration and thumbnail and the `unified_strdate`
+broadcast date.
+
 HitRecord records (`hitrecord.org/records/ID`) follow upstream `HitRecordIE`:
 the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python

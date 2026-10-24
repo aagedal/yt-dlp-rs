@@ -1074,6 +1074,18 @@
       "scope": "ImgurIE post API media, gifv page sources, GIF and Twitter formats and metadata; ImgurGalleryIE/ImgurAlbumIE album API playlists and url_transparent single videos; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "ina",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ina.py"
+      ],
+      "rust": [
+        "src/extractor/ina.rs",
+        "tests/fixtures/sites/ina/"
+      ],
+      "scope": "InaIE asset-details-url JSON (asset ID .json URL) resourceUrl as an untyped result with type-based ext (else the URL's), unified_strdate broadcast date and raw metadata; compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "inc",
       "status": "partial",
       "upstream": [
