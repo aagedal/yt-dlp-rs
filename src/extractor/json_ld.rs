@@ -432,6 +432,14 @@ pub(crate) fn search(html: &str) -> Map<String, Value> {
     info
 }
 
+/// `_json_ld(json_ld, video_id)` of one already parsed object.
+pub(crate) fn json_ld(value: &Value) -> Map<String, Value> {
+    let mut info = Map::new();
+    traverse(&mut info, std::slice::from_ref(value), true);
+    info.retain(|_, value| !value.is_null());
+    info
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

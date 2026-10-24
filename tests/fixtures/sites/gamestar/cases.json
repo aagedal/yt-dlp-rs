@@ -1,0 +1,7 @@
+[
+ {"url": "http://www.gamestar.de/videos/trailer,3/hobbit-3-die-schlacht-der-fuenf-heere,76110.html", "args": ["-j"]},
+ {"url": "http://www.gamestar.de/videos/trailer,3/hobbit-3-die-schlacht-der-fuenf-heere,76110.html", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "http://www.gamepro.de/videos/top-10-indie-spiele,95316.html", "args": ["-j"]},
+ {"url": "https://www.gamestar.de/videos/kein-video,1.html", "args": ["-j"]},
+ {"url": "https://www.gamestar.de/videos/ohne-kontext,2.html", "args": ["-j"]}
+]

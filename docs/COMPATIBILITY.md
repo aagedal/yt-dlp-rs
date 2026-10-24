@@ -1081,6 +1081,15 @@ generic title) and the non-fatal page's description meta (with its warning);
 a failed page download warns and then fails with upstream's escaped
 `TypeError` text.
 
+GameStar and GamePro videos (`gamestar.de|gamepro.de/videos/...,ID.html`)
+follow upstream `GameStarIE`: the first `application/ld+json` script
+containing `VideoObject` (fatal) through `_json_ld`, its title without the
+` - GameStar`/` - GamePro` suffix (a missing title is upstream's
+`KeyError`), `interactionCount` as `view_count`, the non-fatal comment count
+and the portal's `getVideoUrl.cfm` URL as an `mp4` untyped result. A
+JSON-LD script that does not parse is reported as unsupported rather than
+with upstream's Python `JSONDecodeError` text.
+
 Glide messages (`share.glide.me/ID`) follow upstream `GlideIE`: the page's
 generic title, first `<source>` URL (else the fatal OpenGraph video URL) and
 `video-thumbnail` image (else the OpenGraph image with its warning), each
