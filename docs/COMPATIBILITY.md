@@ -668,6 +668,14 @@ webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
 variant IDs, the cleaned `<h1>` title and `is_live`. A live media-only
 playlist without `#EXT-X-ENDLIST` remains an explicit native error.
 
+Erocast tracks (`erocast.me/track/ID`) follow upstream `ErocastIE`: the
+page's fatal `var song_data_ID` JSON, its `file_url` (else `stream_url`) as
+fatal `hls` formats (`m4a`), age limit 18 and the title, description,
+`parse_iso8601` release/modified timestamps, uploader name/ID/URL, artwork
+thumbnail, integer duration/plays/comments and `permalink_url` webpage URL
+when present. Song data that is not an object, or without an absolute
+stream URL, remains an explicit native error.
+
 Caltrans cameras (`*.ca.gov/vm/loc/DISTRICT/ID.htm`) follow upstream
 `CaltransIE`: the fatal `Global Vars` script, its `routePlace`,
 `locationName`, `posterURL` and `videoStreamURL` (each warning when absent),

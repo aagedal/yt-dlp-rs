@@ -1,0 +1,73 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://erocast.me/track/9787/f",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"9787\", \"formats\": [{\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://erocast.example/1220419/track.m3u8\", \"ext\": \"m4a\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\"}], \"age_limit\": 18, \"title\": \"[F4M] Your roommate\", \"description\": \"ExtraTerrestrial Tuesday!\", \"release_timestamp\": 1696178652, \"modified_timestamp\": 1714644000, \"uploader\": \"clarissaisshy\", \"uploader_id\": \"8113\", \"uploader_url\": \"https://erocast.me/clarissaisshy\", \"thumbnail\": \"https://erocast.example/1220418/lg.jpg\", \"duration\": 2307, \"view_count\": 1234, \"comment_count\": 5, \"webpage_url\": \"https://erocast.me/track/9787/f4m-your-roommate\", \"original_url\": \"https://erocast.me/track/9787/f\", \"webpage_url_basename\": \"f4m-your-roommate\", \"webpage_url_domain\": \"erocast.me\", \"extractor\": \"Erocast\", \"extractor_key\": \"Erocast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://erocast.example/1220418/lg.jpg\", \"id\": \"0\"}], \"display_id\": \"9787\", \"fulltitle\": \"[F4M] Your roommate\", \"duration_string\": \"38:27\", \"release_date\": \"20231001\", \"modified_date\": \"20240502\", \"release_year\": 2023, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://erocast.example/1220419/track.m3u8\", \"ext\": \"m4a\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\", \"_filename\": \"[F4M] Your roommate [9787].m4a\", \"filename\": \"[F4M] Your roommate [9787].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://erocast.me/track/9787/f",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Erocast] Extracting URL: https://erocast.me/track/9787/f",
+    "[Erocast] 9787: Downloading webpage",
+    "[Erocast] 9787: Downloading m3u8 information",
+    "[info] Available formats for 9787:",
+    "ID  EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "--------------------------------------------",
+    "hls m4a unknown    | m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://erocast.me/track/42",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"42\", \"formats\": [{\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://erocast.example/1220419/track.m3u8\", \"ext\": \"m4a\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\"}], \"age_limit\": 18, \"duration\": 12, \"webpage_url\": \"https://erocast.me/track/42\", \"original_url\": \"https://erocast.me/track/42\", \"webpage_url_basename\": \"42\", \"webpage_url_domain\": \"erocast.me\", \"extractor\": \"Erocast\", \"extractor_key\": \"Erocast\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"42\", \"fulltitle\": null, \"title\": \"Erocast video #42\", \"duration_string\": \"12\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://erocast.example/1220419/track.m3u8\", \"ext\": \"m4a\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\", \"_filename\": \"Erocast video #42 [42].m4a\", \"filename\": \"Erocast video #42 [42].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://erocast.me/track/7",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Erocast] 7: Unable to extract data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://erocast.me/track/404",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Erocast] 404: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -28,6 +28,7 @@ pub(crate) mod direct;
 mod ebaumsworld;
 mod ebay;
 mod epoch;
+mod erocast;
 mod f4m;
 mod facebook;
 mod fathom;
@@ -156,6 +157,7 @@ pub(crate) use direct::from_response as direct_media_info;
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub use ebay::{Ebay, suitable as ebay_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
+pub use erocast::{Erocast, suitable as erocast_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use facebook::{
     Facebook, FacebookAds, FacebookPluginsVideo, FacebookRedirectUrl, FacebookReel,
