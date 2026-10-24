@@ -1,0 +1,117 @@
+{
+ "routes": [
+  {
+   "url": "https://www.tumblr.com/api/v2/oauth2/token",
+   "request_headers": {
+    "Authorization": "Bearer tokenABC123",
+    "Content-Type": "application/x-www-form-urlencoded"
+   },
+   "request_body": [
+    "password=s3cret&grant_type=password&username=user%40example.com"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"access_token\": \"USER\", \"token_type\": \"bearer\"}"
+  },
+  {
+   "url": "https://www.tumblr.com/api/v2/oauth2/token",
+   "request_body": [
+    "password=pw&grant_type=password&username=tfa&tfa_token=123456"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"access_token\": \"USER\", \"token_type\": \"bearer\"}"
+  },
+  {
+   "url": "https://www.tumblr.com/api/v2/oauth2/token",
+   "request_body": [
+    "username=tfa&tfa_token="
+   ],
+   "status": 400,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"invalid_grant\", \"error_description\": \"Invalid two-factor code\"}"
+  },
+  {
+   "url": "https://www.tumblr.com/api/v2/oauth2/token",
+   "request_body": [
+    "password=wrong"
+   ],
+   "status": 401,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"invalid_grant\", \"error_description\": \"Invalid credentials\"}"
+  },
+  {
+   "url": "https://www.tumblr.com/api/v2/oauth2/token",
+   "request_body": [
+    "username=down"
+   ],
+   "status": 503,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://www.tumblr.com/login",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "login.html"
+  },
+  {
+   "url": "http://tatiana.tumblr.com/post/54196191430",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "post.html"
+  },
+  {
+   "url": "http://linker.tumblr.com/post/1111",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><title>x</title></html>"
+  },
+  {
+   "url": "https://www.tumblr.com/api/v2/blog/tatiana/posts/54196191430/permalink",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"timeline\": {\"elements\": [{\"summary\": \"Orphan Black summary\", \"blog_name\": \"tatiana\", \"timestamp\": 1372531936, \"like_count\": 44, \"reblog_count\": 3, \"tags\": [\"orphan black\", \"tv\"], \"is_nsfw\": false, \"content\": [{\"type\": \"text\", \"text\": \"First paragraph\"}, {\"type\": \"text\", \"text\": \"Second\"}, {\"type\": \"video\", \"provider\": \"tumblr\", \"media\": {\"url\": \"https://va.media.tumblr.com/tumblr_x.mp4\", \"width\": 1280, \"height\": 720}, \"poster\": [{\"url\": \"https://64.media.tumblr.com/poster.jpg\"}]}]}]}}}"
+  },
+  {
+   "url": "https://www.tumblr.com/api/v2/blog/linker/posts/1111/permalink",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"timeline\": {\"elements\": [{\"summary\": \"Linked clip\", \"blog_name\": \"linker\", \"content\": [{\"type\": \"video\", \"provider\": \"foo\", \"url\": \"https://media.example.test/clip.mp4\"}]}]}}}"
+  },
+  {
+   "url": "https://www.tumblr.com/video/tatiana/54196191430/700/",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "iframe.html"
+  },
+  {
+   "url": "https://media.example.test/clip.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom"
+  },
+  {
+   "url": "https://va.media.tumblr.com/tumblr_x_720.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-tumblr"
+  }
+ ]
+}

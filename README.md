@@ -281,6 +281,11 @@ Supported today:
   keyring are not implemented.
 - `--socket-timeout`, `--source-address`, `-4`/`-6` and `--no-check-certificates`
   configure every native HTTP client.
+- Account logins with `-u`/`-p`, `-2`, `--netrc`/`--netrc-location` and
+  `--netrc-cmd` (a native netrc parser) for Niconico, Dailymotion, Twitch, VK,
+  Tumblr and SoundCloud (OAuth tokens), with upstream's YouTube warnings and
+  unsupported-login warnings elsewhere; Vimeo logins and Adobe Pass are not
+  supported.
 - Explicit `--proxy URL` for HTTP/HTTPS or SOCKS4/4a/5/5h routing across the
   native HTTP clients. `--proxy ''` forces direct connections. Pinned SOCKS5
   compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.

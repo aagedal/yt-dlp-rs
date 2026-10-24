@@ -216,6 +216,7 @@ impl super::super::Extractor for YoutubeNotifications {
             return Ok(None);
         }
         crate::screen::set_extractor(NAME);
+        super::login(NAME, "")?;
         super::initialize();
         super::redirect::check_login_required(NAME)?;
         super::search::announce(NAME, &text);

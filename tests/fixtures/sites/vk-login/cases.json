@@ -1,0 +1,8 @@
+[
+ {"url": "https://vk.com/clip1_4", "args": ["--print", "id", "-u", "Вася *", "-p", "s3cret~"]},
+ {"url": "https://vk.com/clip1_4", "args": ["-s", "-u", "Вася *", "-p", "wrong"]},
+ {"url": "https://vk.com/video_ext.php?oid=-1&id=8", "args": ["-s", "-u", "Вася *", "-p", "wrong"]},
+ {"url": "https://vk.com/video-77521_162222515", "args": ["--print", "%(id)s|%(title)s", "-u", "Вася *", "-p", "s3cret~"]},
+ {"url": "https://vk.com/video-77521_162222515", "args": ["--print", "%(id)s|%(title)s"]},
+ {"url": "https://vk.com/clip1_4", "args": ["--print", "id", "--netrc-cmd", "printf 'machine vk login \"Вася *\" password s3cret~'"]}
+]

@@ -1,0 +1,123 @@
+{
+ "routes": [
+  {
+   "url": "https://www.twitch.tv/login",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><form id=\"login\" action=\"https://passport.twitch.tv/login\"><!-- <input type=\"hidden\" name=\"old\" value=\"1\"> --><input type=\"hidden\" name=\"csrf\" value=\"CSRF1\"><input type=\"text\" name=\"username\" value=\"\"><input type=\"submit\" id=\"go\" value=\"Log In\"></form></html>"
+  },
+  {
+   "url": "https://passport.twitch.tv/login",
+   "request_headers": {
+    "Origin": "https://www.twitch.tv",
+    "Content-Type": "text/plain;charset=UTF-8",
+    "Referer": "https://www.twitch.tv/login"
+   },
+   "request_body": [
+    "{\"csrf\": \"CSRF1\", \"go\": \"Log In\", \"username\": \"user\", \"password\": \"s3cret\", \"client_id\": \"ue6666qo983tsx6so1t0vnawi233wa\"}"
+   ],
+   "headers": {
+    "Content-Type": "application/json",
+    "Set-Cookie": "auth-token=USERTOKEN; Domain=.twitch.tv; Path=/"
+   },
+   "body": "{\"message\": \"Authenticated successfully\"}"
+  },
+  {
+   "url": "https://passport.twitch.tv/login",
+   "request_body": [
+    "\"password\": \"wrong\""
+   ],
+   "status": 400,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"Incorrect username or password.\", \"error_code\": 3001, \"error_description\": \"user credentials incorrect\"}"
+  },
+  {
+   "url": "https://passport.twitch.tv/login",
+   "request_body": [
+    "\"username\": \"coded\""
+   ],
+   "status": 400,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"\", \"error_code\": 1000}"
+  },
+  {
+   "url": "https://passport.twitch.tv/login",
+   "request_body": [
+    "\"username\": \"tfa\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"redirect_path\": \"/two_factor?x=1\"}"
+  },
+  {
+   "url": "https://passport.twitch.tv/two_factor?x=1",
+   "request_headers": {
+    "Origin": "https://www.twitch.tv",
+    "Content-Type": "text/plain;charset=UTF-8",
+    "Referer": "https://www.twitch.tv/login"
+   },
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><form ID=\"two-factor-submit\" action=\"/login/tfa\"><input type=\"hidden\" name=\"captcha\" value=\"CAP\"></form></html>"
+  },
+  {
+   "url": "https://passport.twitch.tv/login/tfa",
+   "request_headers": {
+    "Origin": "https://www.twitch.tv",
+    "Content-Type": "text/plain;charset=UTF-8",
+    "Referer": "https://passport.twitch.tv/two_factor?x=1"
+   },
+   "request_body": [
+    "{\"captcha\": \"CAP\", \"authy_token\": \"123456\", \"remember_2fa\": \"true\"}"
+   ],
+   "headers": {
+    "Content-Type": "application/json",
+    "Set-Cookie": "auth-token=USERTOKEN; Domain=.twitch.tv; Path=/"
+   },
+   "body": "{\"message\": \"Authenticated successfully\"}"
+  },
+  {
+   "url": "https://passport.twitch.tv/login/tfa",
+   "request_body": [
+    "\"authy_token\": \"000000\""
+   ],
+   "status": 400,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error_description\": \"Invalid authy token\"}"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_headers": {
+    "Authorization": "OAuth USERTOKEN"
+   },
+   "request_body": [
+    "ShareClipRenderStatus",
+    "FaintLightGullWholeWheat"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clip_user.json"
+  },
+  {
+   "url": "https://gql.twitch.tv/gql",
+   "request_body": [
+    "ShareClipRenderStatus",
+    "FaintLightGullWholeWheat"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "clip.json"
+  }
+ ]
+}

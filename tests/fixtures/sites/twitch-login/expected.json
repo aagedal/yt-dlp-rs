@@ -1,0 +1,130 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s",
+    "-u",
+    "user",
+    "-p",
+    "s3cret"
+   ],
+   "exit": 0,
+   "stdout": [
+    "396245304|Clip seen by the account"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "-s",
+    "-u",
+    "user",
+    "-p",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[twitch:clips] Downloading login page",
+    "[twitch:clips] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [twitch:clips] FaintLightGullWholeWheat: Unable to login. Twitch said: Incorrect username or password."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "-s",
+    "-u",
+    "coded",
+    "-p",
+    "x"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[twitch:clips] Downloading login page",
+    "[twitch:clips] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [twitch:clips] FaintLightGullWholeWheat: Unable to login. Twitch said: 1000"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s",
+    "-u",
+    "tfa",
+    "-p",
+    "x",
+    "-2",
+    "123456"
+   ],
+   "exit": 0,
+   "stdout": [
+    "396245304|Clip seen by the account"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "-s",
+    "-u",
+    "tfa",
+    "-p",
+    "x",
+    "-2",
+    "000000"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[twitch:clips] Downloading login page",
+    "[twitch:clips] Logging in",
+    "[twitch:clips] Downloading login redirect page",
+    "[twitch:clips] Submitting TFA token"
+   ],
+   "stderr": [
+    "ERROR: [twitch:clips] FaintLightGullWholeWheat: Unable to login. Twitch said: Invalid authy token"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s",
+    "--netrc-cmd",
+    "printf 'machine {} login user password s3cret'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "396245304|Clip seen by the account"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clips.twitch.tv/FaintLightGullWholeWheat",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "396245304|Clip title"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

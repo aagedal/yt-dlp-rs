@@ -13,6 +13,7 @@ use url::Url;
 pub struct Tumblr;
 
 const NAME: &str = "Tumblr";
+const OAUTH_URL: &str = "https://www.tumblr.com/api/v2/oauth2/token";
 const LOGIN_URL: &str = "https://www.tumblr.com/login";
 
 static VALID_URL: LazyLock<Regex> = LazyLock::new(|| {
@@ -144,6 +145,107 @@ impl Extractor for Tumblr {
         NAME
     }
 
+    fn netrc_machine(&self) -> Option<&'static str> {
+        Some("tumblr")
+    }
+
+    fn performs_login(&self) -> bool {
+        true
+    }
+
+    /// `_initialize_pre_login`: the login page's API token.
+    fn initialize_pre_login(
+        &self,
+        client: &Client,
+        _session: &super::login::Session,
+    ) -> Result<()> {
+        access_token(client);
+        Ok(())
+    }
+
+    /// `_perform_login`: the OAuth password grant with the API token
+    /// (`--twofactor` as `tfa_token`, or asked for once the API requires
+    /// it); 4xx answers are read, other failures are a `Login failed`
+    /// warning.
+    fn perform_login(
+        &self,
+        client: &Client,
+        session: &super::login::Session,
+        username: &str,
+        password: &str,
+    ) -> Result<()> {
+        let Some(token) = access_token(client) else {
+            return Ok(());
+        };
+        let mut data = vec![
+            ("password", password.to_owned()),
+            ("grant_type", "password".to_owned()),
+            ("username", username.to_owned()),
+        ];
+        if let Some(code) = super::login::twofactor().filter(|code| !code.is_empty()) {
+            data.push(("tfa_token", code));
+        }
+        let authorization = format!("Bearer {token}");
+        let expected: Vec<u16> = (400..500).collect();
+        let call_login = |data: &[(&str, String)]| -> Result<Option<Value>> {
+            let pairs: Vec<(&str, &str)> = data
+                .iter()
+                .map(|(key, value)| (*key, value.as_str()))
+                .collect();
+            let body = super::login::urlencode(&pairs);
+            let Some(page) = session.request_optional(
+                client,
+                &Url::parse(OAUTH_URL)?,
+                (Some("Logging in"), "Login failed"),
+                &[
+                    ("Content-Type", "application/x-www-form-urlencoded"),
+                    ("Authorization", &authorization),
+                ],
+                Some(body),
+                &expected,
+            )?
+            else {
+                return Ok(None);
+            };
+            match crate::json::from_str::<Value>(&page.text) {
+                Ok(value) => Ok(Some(value)),
+                Err(error) => {
+                    session.warning(&format!("Failed to parse JSON  (caused by {error})"));
+                    Ok(None)
+                }
+            }
+        };
+        let error = |response: &Option<Value>| {
+            response
+                .as_ref()
+                .and_then(|response| response.get("error"))
+                .filter(|error| super::nuxt::truthy(error))
+                .cloned()
+        };
+        let mut response = call_login(&data)?;
+        if error(&response)
+            .and_then(|error| error.as_str().map(str::to_owned))
+            .as_deref()
+            == Some("tfa_required")
+        {
+            let code = session.tfa_info("two-factor verification code")?;
+            match data.iter_mut().find(|(key, _)| *key == "tfa_token") {
+                Some(entry) => entry.1 = code,
+                None => data.push(("tfa_token", code)),
+            }
+            response = call_login(&data)?;
+        }
+        if error(&response).is_some() {
+            let response = response.unwrap_or_default();
+            let parts: Vec<&str> = ["error", "error_description"]
+                .into_iter()
+                .filter_map(|key| response.get(key).and_then(Value::as_str))
+                .collect();
+            return Err(session.bug(&format!("API returned error {}", parts.join(": "))));
+        }
+        Ok(())
+    }
+
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
         Ok(None)
     }
@@ -159,6 +261,7 @@ impl Extractor for Tumblr {
             .to_owned();
         let video_id = found["id"].to_owned();
         crate::screen::set_extractor(NAME);
+        self.initialize(client, NAME, &video_id)?;
         let token = access_token(client);
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",

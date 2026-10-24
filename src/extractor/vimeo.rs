@@ -1,5 +1,6 @@
-//! Upstream `VimeoIE` (`yt_dlp/extractor/vimeo.py`) without login or
-//! browser impersonation: player pages' `playerConfig` and vimeo.com
+//! Upstream `VimeoIE` (`yt_dlp/extractor/vimeo.py`) without logging in
+//! (credentials are an unsupported error, as logged-in extraction is not
+//! ported) or browser impersonation: player pages' `playerConfig` and vimeo.com
 //! pages' clip page config through `_parse_config` (progressive, per-CDN
 //! HLS/DASH formats, text tracks, thumbnails, chapters and live status).
 use super::Extractor;
@@ -497,11 +498,38 @@ impl Extractor for Vimeo {
         KEY
     }
 
+    fn netrc_machine(&self) -> Option<&'static str> {
+        Some("vimeo")
+    }
+
+    fn performs_login(&self) -> bool {
+        true
+    }
+
+    /// `VimeoBaseInfoExtractor._perform_login` without a `vimeo` cookie
+    /// would log in through the viewer token and then extract as the
+    /// account (the web client), which this port does not support.
+    fn perform_login(
+        &self,
+        _client: &Client,
+        _session: &super::login::Session,
+        _username: &str,
+        _password: &str,
+    ) -> Result<()> {
+        if crate::cookies::get_cookie("https://vimeo.com", "vimeo").is_some() {
+            return Ok(());
+        }
+        Err(Error::UnsupportedHtml5(
+            "Vimeo logins (--username/--netrc) are not supported natively".into(),
+        ))
+    }
+
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let Some((video_id, unlisted_hash)) = match_url(url.as_str()) else {
             return Ok(None);
         };
         crate::screen::set_extractor(NAME);
+        self.initialize(client, NAME, &video_id)?;
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())

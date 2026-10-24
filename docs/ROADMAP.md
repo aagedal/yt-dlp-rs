@@ -146,6 +146,9 @@ remain outside the current result contract.
    request-specific precedence. Shared in-memory cookies and explicit Netscape
    file persistence now cover the native HTTP clients; browser-cookie extraction,
    account-specific authentication and broader request configuration remain open.
+   The `InfoExtractor` login lifecycle (credentials, netrc files and commands,
+   two-factor codes) is ported, with logins for the extractors listed in
+   docs/COMPATIBILITY.md; Vimeo and Adobe Pass logins remain open.
    Explicit HTTP/HTTPS/SOCKS proxies and direct overrides now route all native
    clients, including verified HTTPS proxy/CONNECT transport. SOCKS4 user IDs,
    full upstream environment discovery/bypass and per-extractor proxy policies remain open.
