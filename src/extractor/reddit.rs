@@ -338,8 +338,8 @@ fn video(
 }
 
 /// `self.raise_no_formats(message, expected=True, video_id=ID)`.
-fn no_formats(id: &str, message: &str) -> Error {
-    Error::Reported(format!("[{NAME}] {id}: {message}"))
+fn no_formats(id: &str, message: &str) -> Result<()> {
+    crate::no_formats::raise_expected(NAME, Some(id), None, message)
 }
 
 impl Extractor for Reddit {
@@ -455,7 +455,16 @@ impl Extractor for Reddit {
                 entries.push(video(url, dict, formats, Default::default()));
             }
             if entries.is_empty() {
-                return Err(no_formats(&id, "No media found"));
+                no_formats(&id, "No media found")?;
+                // `return {**info, 'id': video_id}`.
+                let mut dict = info.clone();
+                dict.insert("id".into(), id.clone().into());
+                return Ok(Some(ExtractResult::Video(video(
+                    url,
+                    dict,
+                    Vec::new(),
+                    Default::default(),
+                ))));
             }
             let mut extra = info.clone();
             let title = extra
@@ -592,7 +601,22 @@ impl Extractor for Reddit {
         }
 
         if netloc == "v.redd.it" {
-            return Err(no_formats(&id, "This video is processing"));
+            no_formats(&id, "This video is processing")?;
+            // `{**info, 'id': path.split('/')[1], 'display_id': video_id}`.
+            let mut dict = info;
+            let path_id = parsed
+                .as_ref()
+                .and_then(|parsed| parsed.path().split('/').nth(1))
+                .unwrap_or_default()
+                .to_owned();
+            dict.insert("id".into(), path_id.into());
+            dict.insert("display_id".into(), id.clone().into());
+            return Ok(Some(ExtractResult::Video(video(
+                url,
+                dict,
+                Vec::new(),
+                Default::default(),
+            ))));
         }
 
         // Not hosted on Reddit: `url_transparent`.

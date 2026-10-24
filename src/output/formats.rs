@@ -27,6 +27,9 @@ pub fn render_formats_listing(info: &VideoInfo, as_table: bool) -> String {
 /// `as_table` is `listformats_table` (false for `--list-formats-old`).
 /// Text fields have terminal controls replaced by visible escapes.
 pub fn render_formats_table(info: &VideoInfo, as_table: bool) -> Option<String> {
+    if info.has_no_formats() {
+        return None;
+    }
     let Ok(Value::Object(info)) = serde_json::to_value(info) else {
         return None;
     };

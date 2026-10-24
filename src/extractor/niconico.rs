@@ -329,6 +329,11 @@ impl Extractor for Niconico {
         NAME
     }
 
+    /// `_GEO_BYPASS = False` and `_GEO_COUNTRIES = ['JP']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&["JP"])
+    }
+
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
         Ok(None)
     }
@@ -396,9 +401,13 @@ impl Extractor for Niconico {
             match reason.as_deref() {
                 Some("DOMESTIC_VIDEO" | "HIGH_RISK_COUNTRY_VIDEO") => {
                     // `raise_geo_restricted(countries=['JP'])`.
-                    return Err(fail(
-                        &video_id,
-                        "This video is not available from your location due to geo restriction\nThis video is available in Japan.\nYou might want to use a VPN or a proxy server (with --proxy) to workaround.",
+                    return Err(crate::geo::restricted(
+                        &fail(
+                            &video_id,
+                            "This video is not available from your location due to geo restriction",
+                        )
+                        .to_string(),
+                        &["JP"],
                     ));
                 }
                 Some("HARMFUL_VIDEO")

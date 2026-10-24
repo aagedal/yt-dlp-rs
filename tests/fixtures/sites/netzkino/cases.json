@@ -5,5 +5,14 @@
  {"url": "https://www.netzkino.de/details/locked", "args": ["--no-geo-bypass", "-j"]},
  {"url": "https://netzkino.de/details/bare", "args": ["--no-geo-bypass", "-j"]},
  {"url": "https://www.netzkino.de/details/none", "args": ["--no-geo-bypass", "-j"]},
- {"url": "https://www.netzkino.de/details/nonext", "args": ["--no-geo-bypass", "-j"]}
+ {"url": "https://www.netzkino.de/details/nonext", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.netzkino.de/details/locked", "args": ["--no-geo-bypass", "--ignore-no-formats-error", "-j"]},
+ {"url": "https://www.netzkino.de/details/none", "args": ["--no-geo-bypass", "--ignore-no-formats-error", "-j"]},
+ {"url": "https://www.netzkino.de/details/none", "args": ["--no-geo-bypass", "--ignore-no-formats-error", "--print", "%(id)s|%(title)s|%(formats)s|%(format_id)s|%(ext)s|%(url)s"]},
+ {"url": "https://www.netzkino.de/details/none", "args": ["--no-geo-bypass", "--ignore-no-formats-error", "-F"]},
+ {"url": "https://www.netzkino.de/details/none", "args": ["--no-geo-bypass", "--ignore-no-formats-error", "--print-to-file", "%(id)s|%(formats)s|%(ext)s", "%(id)s.txt", "--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.netzkino.de/details/none", "args": ["--no-geo-bypass", "--ignore-no-formats-error", "--no-ignore-no-formats-error", "-j"]},
+ {"url": "https://www.netzkino.de/details/snow-beast", "args": ["--xff", "198.51.100.7/32", "-j"]},
+ {"url": "https://www.netzkino.de/details/snow-beast", "args": ["--geo-bypass-ip-block", "198.51.100.0/24", "--xff", "never", "-j"]},
+ {"url": "https://www.netzkino.de/details/snow-beast", "args": ["--no-geo-bypass", "--geo-bypass-ip-block", "198.51.100.8/32", "--print", "%(http_headers)j"]}
 ]

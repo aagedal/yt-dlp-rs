@@ -281,6 +281,10 @@ Supported today:
   keyring are not implemented.
 - `--socket-timeout`, `--source-address`, `-4`/`-6` and `--no-check-certificates`
   configure every native HTTP client.
+- Geo restriction bypass: `--xff` (and `--geo-bypass*`) or an extractor's
+  upstream `_GEO_COUNTRIES` give a fake `X-Forwarded-For` address for its
+  requests, formats and downloads, with upstream's geo-restricted retry.
+  `--ignore-no-formats-error` keeps results without formats (metadata only).
 - Explicit `--proxy URL` for HTTP/HTTPS or SOCKS4/4a/5/5h routing across the
   native HTTP clients. `--proxy ''` forces direct connections. Pinned SOCKS5
   compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.

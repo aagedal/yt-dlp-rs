@@ -421,10 +421,12 @@ impl Extractor for Odnoklassniki {
             formats.push(format);
         }
         if formats.is_empty() && truthy(metadata.get("paymentInfo")).is_some() {
-            return Err(fail(
-                &video_id,
+            crate::no_formats::raise_expected(
+                NAME,
+                None,
+                Some(&video_id),
                 "This video is paid, subscribe to download it",
-            ));
+            )?;
         }
         dict.insert("formats".into(), json!([]));
 

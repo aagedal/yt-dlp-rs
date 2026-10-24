@@ -505,7 +505,12 @@ impl Extractor for Tumblr {
             ));
         }
         if entries.is_empty() {
-            return Err(fail(&video_id, "No video could be found in this post"));
+            crate::no_formats::raise_expected(
+                NAME,
+                Some(&video_id),
+                None,
+                "No video could be found in this post",
+            )?;
         }
         if entries.len() == 1 {
             let entry = entries.remove(0);

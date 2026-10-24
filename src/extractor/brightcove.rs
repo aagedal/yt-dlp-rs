@@ -297,9 +297,12 @@ fn call_api(client: &Client, api: &Url, id: &str, headers: &[(&str, &str)]) -> R
             .or_else(|| error.get("error_code"))
             .and_then(Value::as_str)
             .ok_or_else(|| unsupported("API errors without a message"))?;
-        // `raise_geo_restricted(msg=message)` and `ExtractorError(message)`;
-        // a policy key is never cached here, so `INVALID_POLICY_KEY` is
-        // not retried.
+        // `raise_geo_restricted(msg=message)` for `CLIENT_GEO`, else
+        // `ExtractorError(message)`; a policy key is never cached here, so
+        // `INVALID_POLICY_KEY` is not retried.
+        if error.get("error_subcode").and_then(Value::as_str) == Some("CLIENT_GEO") {
+            return Err(crate::geo::restricted(&format!("[{NAME}] {message}"), &[]));
+        }
         return Err(Error::Reported(format!("[{NAME}] {message}")));
     }
     crate::screen::expect_page(id, None, None);
@@ -466,7 +469,7 @@ fn parse_metadata(
             .find(|value| truthy(value))
             .and_then(Value::as_str)
             .ok_or_else(|| unsupported("API errors without a message"))?;
-        return Err(Error::Reported(format!("[{NAME}] {message}")));
+        crate::no_formats::raise_expected(NAME, None, None, message)?;
     }
     for format in &mut formats {
         let own = format.http_headers.get_or_insert_with(Map::new);

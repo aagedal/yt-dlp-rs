@@ -407,13 +407,23 @@ fn info_dict(
     }
     if formats.is_empty() {
         if has_drm {
-            return Err(fail(&track_id, "This video is DRM protected"));
+            // `report_drm`: `raise_no_formats(..., expected=True)`.
+            crate::no_formats::raise_expected(
+                NAME,
+                Some(&track_id),
+                None,
+                "This video is DRM protected",
+            )?;
         }
         if info.get("policy").and_then(Value::as_str) == Some("BLOCK") {
-            return Err(fail(
-                &track_id,
-                "This video is not available from your location due to geo restriction. You might want to use a VPN or a proxy server (with --proxy) to workaround.",
-            ));
+            // `raise_geo_restricted(metadata_available=True)` (no
+            // `temp_id`: the URL patterns have no `id` group).
+            crate::geo::restricted_metadata_available(
+                NAME,
+                &format!("[{NAME}] "),
+                "This video is not available from your location due to geo restriction",
+                &[],
+            )?;
         }
     }
     let text = |key: &str| info.get(key).and_then(Value::as_str);

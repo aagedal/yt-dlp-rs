@@ -4,5 +4,6 @@
  {"url": "https://rtrfm.com.au/show-episode/breakfast-2021-11-11/", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
  {"url": "https://www.rtrfm.com.au/shows/old/", "args": ["-j"]},
  {"url": "https://rtrfm.com.au/shows/none/", "args": ["-j"]},
- {"url": "https://rtrfm.com.au/shows/nokey/", "args": ["-j"]}
+ {"url": "https://rtrfm.com.au/shows/nokey/", "args": ["-j"]},
+ {"url": "https://www.rtrfm.com.au/shows/old/", "args": ["--ignore-no-formats-error", "-j"]}
 ]

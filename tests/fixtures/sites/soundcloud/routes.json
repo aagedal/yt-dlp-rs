@@ -75,6 +75,13 @@
     "Content-Type": "audio/mpeg"
    },
    "body": "ID3-fake-mp3-bytes"
+  },
+  {
+   "url": "https://api-v2.soundcloud.com/tracks/777?client_id=aaaaaaaaaaaaaaaaBBBBBBBBBBBBBBBB",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": 777, \"title\": \"Blocked here\", \"duration\": 1000, \"created_at\": \"2014-01-02T03:04:05Z\", \"permalink_url\": \"https://soundcloud.com/ethmusic/blocked\", \"policy\": \"BLOCK\", \"user\": {\"id\": 52984226, \"username\": \"ethmusic\", \"permalink\": \"ethmusic\"}, \"media\": {\"transcodings\": []}}"
   }
  ]
 }

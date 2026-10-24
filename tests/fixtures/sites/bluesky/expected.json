@@ -81,6 +81,19 @@
    "files": {
     "3l4omssdl632g.mp4": 17
    }
+  },
+  {
+   "url": "https://bsky.app/profile/poster.bsky.social/post/3textonly0001",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Bluesky] 3textonly0001: No video could be found in this post"
+   ],
+   "files": {}
   }
  ]
 }

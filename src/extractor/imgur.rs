@@ -338,11 +338,12 @@ impl Extractor for Imgur {
             formats.push(format);
         }
         if formats.is_empty() {
-            return Err(fail(
-                &video_id,
+            crate::no_formats::raise_expected(
                 NAME,
+                None,
+                Some(&video_id),
                 &format!("No sources found for video {video_id}. Maybe a plain image?"),
-            ));
+            )?;
         }
         // `_remove_duplicate_formats`.
         let mut seen = Vec::new();

@@ -25,6 +25,7 @@ mod fixup;
 pub mod format_select;
 pub mod format_sort;
 mod fragment;
+pub mod geo;
 mod hls;
 mod html;
 mod html_elements;
@@ -44,6 +45,7 @@ mod merge;
 pub mod metadata_parser;
 mod mhtml;
 mod modify_chapters;
+pub mod no_formats;
 pub mod output;
 mod playlist;
 mod postprocess;
@@ -2060,6 +2062,8 @@ impl YoutubeDl {
             ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),
         };
         for entry in entries {
+            // `__x_forwarded_for_ip`, copied to the formats' `http_headers`.
+            let fake_ip = entry.extra.shift_remove(geo::FAKE_IP_FIELD);
             // `_fill_common_fields`: a generic title for a missing or empty one.
             let missing = entry.extra.shift_remove(info::TITLE_MISSING).is_some();
             if missing {
@@ -2101,17 +2105,25 @@ impl YoutubeDl {
             // `process_video_result`: `raise_no_formats` for a result
             // without formats.
             if entry.extra.shift_remove(info::NO_FORMATS).is_some() {
-                let message = format!(
-                    "[{}] {}: No video formats found!; {}",
-                    entry.extractor, entry.id, BUG_REPORTS_MESSAGE
-                );
-                // A playlist entry's error is reported when the entry is
-                // processed; the other entries continue.
-                if playlist {
-                    entry.extra.insert(ENTRY_ERROR.into(), message.into());
-                    continue;
+                if no_formats::ignore() {
+                    // `--ignore-no-formats-error`: processing continues.
+                    screen::warning("No video formats found!");
+                    entry
+                        .extra
+                        .insert(info::FORMATS_IGNORED.into(), serde_json::Value::Bool(true));
+                } else {
+                    let message = format!(
+                        "[{}] {}: No video formats found!; {}",
+                        entry.extractor, entry.id, BUG_REPORTS_MESSAGE
+                    );
+                    // A playlist entry's error is reported when the entry is
+                    // processed; the other entries continue.
+                    if playlist {
+                        entry.extra.insert(ENTRY_ERROR.into(), message.into());
+                        continue;
+                    }
+                    return Err(Error::Reported(message));
                 }
-                return Err(Error::Reported(message));
             }
             // `process_video_result`: `display_id` defaults to the ID.
             // (a `None` value too, in its place).
@@ -2339,6 +2351,11 @@ impl YoutubeDl {
                         Some(entry) => entry.1 = value,
                         None => merged.push((name, value)),
                     }
+                }
+                if let Some(ip) = &fake_ip
+                    && !merged.iter().any(|(name, _)| name == "X-Forwarded-For")
+                {
+                    merged.push(("X-Forwarded-For".into(), ip.clone()));
                 }
                 format.http_headers = (!merged.is_empty()).then(|| merged.into_iter().collect());
                 // Cookies for the format URL become its `cookies` field.
@@ -2571,6 +2588,12 @@ impl YoutubeDl {
     /// Upstream `formats_to_download`: one result per selected format, each
     /// downloaded on its own by `process_info`.
     pub fn select_videos(&self, info: &VideoInfo, format: Option<&str>) -> Result<Vec<VideoInfo>> {
+        // `--ignore-no-formats-error`: "Process what we can, even without
+        // any available formats" (`formats_to_download = [{}]`).
+        if info.has_no_formats() {
+            screen::warning("Requested format is not available");
+            return Ok(vec![info.clone()]);
+        }
         // A playlist entry's `sort_formats` report (see `process_result`).
         if info.playlist_index.is_some() && !info.formats.is_empty() && screen::verbose() {
             for line in self.sorter(info)?.verbose_info() {
@@ -3077,7 +3100,19 @@ impl YoutubeDl {
             }
         };
         for extractor in extractors {
-            if let Some(mut info) = extractor.extract_result(&self.client, url)? {
+            geo::begin(extractor.key(), extractor.geo());
+            let mut extracted = extractor.extract_result(&self.client, url);
+            // `extract`: a geo restriction may retry with a fake IP.
+            if extracted.is_err() && geo::retry_with_fake_ip() {
+                geo::restart();
+                extracted = extractor.extract_result(&self.client, url);
+            }
+            let extracted = extracted?;
+            if extracted.is_none() {
+                geo::abandon();
+            }
+            if let Some(mut info) = extracted {
+                geo::attach(&mut info);
                 if let ExtractResult::Video(video) = &info
                     && let Some(marker) = video.extra.get(FOLLOW_TRANSPARENT).cloned()
                 {
@@ -3093,6 +3128,8 @@ impl YoutubeDl {
                         })
                         .unwrap_or_default();
                     let outer = url.clone();
+                    // The outer result's fake IP is among its forced fields.
+                    let outer_ip = geo::fake_ip();
                     let merge = |result: &mut ExtractResult| -> Result<()> {
                         let ExtractResult::Video(inner) = result else {
                             return Err(Error::UnsupportedHtml5(
@@ -3112,6 +3149,11 @@ impl YoutubeDl {
                             }
                         }
                         inner.webpage_url = outer.clone();
+                        if let Some(ip) = &outer_ip {
+                            inner
+                                .extra
+                                .insert(geo::FAKE_IP_FIELD.into(), ip.clone().into());
+                        }
                         let keys: Vec<&str> = fields.iter().map(|(key, _)| key.as_str()).collect();
                         inner.extra.insert(
                             info_order::INFO_SHAPE.into(),

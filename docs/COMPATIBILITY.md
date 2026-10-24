@@ -110,7 +110,9 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--keep-fragments`, `--no-keep-fragments` | Upstream fragment files `TMPFILENAME-FragN` (`NAME.part-FragN`, or `NAME-FragN` with `--no-part`) are kept beside the output, byte-identical to the assembled fragments, for unprocessed fragmented downloads; processed downloads keep them in their private workspace (removed) |
 | `--progress-template [TYPES:]TEMPLATE` | Upstream `_report_progress_status`: `download:` (default) templates render over `{'info': ..., 'progress': ...}` with `report_progress`'s fields (`status`, `downloaded_bytes`, `total_bytes`, `eta`, `speed`, `elapsed`, `fragment_index`/`fragment_count`, `filename`, `_percent_str`, `_speed_str`, `_eta_str`, `_total_bytes_str`, `_default_template`, ...) for downloading and finished statuses. `postprocess:` templates render for each postprocessor run's `started` and `finished` hooks (`progress.postprocessor` is upstream's `pp_key()`, e.g. `MetadataParser`, `SponsorBlock`, `SubtitlesConvertor`, `ThumbnailsConvertor`, `Exec`, `FixupM3u8`/`FixupM4a`/`FixupDuplicateMoov`/`FixupStretched`, `Merger`, `ExtractAudio`, `VideoRemuxer`/`VideoConvertor`, `EmbedSubtitle`, `ModifyChapters`, `Metadata`, `EmbedThumbnail`, `SplitChapters`, `XAttrMetadata`, `MoveFiles` and the playlist's `Concat`), in upstream's order and even when quiet (then on stderr), with no `finished` after a failure; `info` is the video's info dict as selected (or as parsed for `MetadataParser`/`SponsorBlock`), not each processor's updated copy. `download-title:`/`postprocess-title:` set the `--console-title` titles |
 | `--compat-options OPTS` | Upstream `_set_from_options_callback`/`orderedSet_from_options` (`all`, `youtube-dl`, `youtube-dlc` and year aliases, `-NAME` removal, `wrong OPTS for --compat-options: …`) and `set_compat_opts`: `abort-on-error`, `no-playlist-metafiles`, `no-clean-infojson`, `no-attach-info-json`, `mtime-by-default`, `filename` (`%(title)s-%(id)s.%(ext)s`), `format-sort` (`FormatSorter.ytdl_default` appended) and `no-keep-subs` change defaults, and an explicitly given option marks the compatibility option `*NAME` in `-v`'s `Compatibility options:` line. The others take effect where upstream reads them: `filename-sanitization` (youtube-dl's `sanitize_filename` with `is_id` from the field name), `allow-unsafe-exec-expansion` (no `--exec` template validation), `allow-unsafe-ext` (upstream's warning, and no unusual-extension check; path separators in an extension stay a native error), `embed-metadata` (`comment` is the description and `synopsis` is dropped), `format-spec` (`bestvideo+bestaudio/best` merge default), `list-formats` (the legacy `-F` layout), `playlist-index` (an entry's index is the one selected at its position before `--playlist-reverse`/`--playlist-random`), `prefer-vp9-sort` (`vcodec:vp9.2` in the default sort unless `format-sort`, and in YouTube's sort fields) and `no-direct-merge` (a partial download without ffmpeg downloads the whole file natively instead of aborting; merges FFmpegFD would download per format are a native error). `no-youtube-channel-redirect` (a channel URL without a tab is read as given, without the `/videos` redirect, tab checks, home-page rejection or conditional regional redirect) and `no-youtube-unavailable-videos` (no playlist reload with unavailable videos) are read by `youtube:tab` (see "YouTube playlists"). `no-certifi`, `prefer-legacy-http-handler`, `no-live-chat`, `no-external-downloader-progress` and `embed-thumbnail-atomicparsley` concern features this port does not have; pinned upstream never reads `no-youtube-prefer-utc-upload-date` or `seperate-video-versions`; and `playlist-match-filter` only affects unresolved (`url`) entries, which this port's playlists do not have. `manifest-filesize-approx` gives manifest formats `filesize_approx` too; `multistreams` enables both multistream options unless given (`*multistreams` when both were). `all` lists the options in this port's table order (upstream's set order varies) |
-| Accepted tuning and environment options | `--file-access-retries`, `--throttled-rate`, `--no-update`, `--cache-dir`/`--no-cache-dir`, `--no-plugin-dirs`, `--remote-components`, `--prefer-insecure`/`--prefer-unsecure`, `--ignore-no-formats-error`, `--allow-dynamic-mpd`/`--no-ignore-dynamic-mpd`/`--ignore-dynamic-mpd`/`--no-allow-dynamic-mpd`, the account (`-u`, `-p`, `-2`, `-n`, `--netrc-*`, `--video-password`, `--ap-*`) and geo (`--geo-verification-proxy`, `--xff`, `--geo-bypass*`) options are validated with upstream's messages (`buffer size "0" must be positive`, `invalid file access retry count "X" given`, `invalid time range to wait for video "X" given`, ...) and otherwise have no effect: the supported extractors use no password logins or geo bypass; `--wait-for-video` applies to YouTube (see below). `--mark-watched` applies to YouTube when cookies are passed (`--cookies`/`--cookies-from-browser`), like upstream `_mark_watched`: `Marking watched` and `Marking fully watched` requests to the player response's videostats URLs with upstream's query updates (a random `cpn`), `Unable to mark [fully ]watched` warnings otherwise (`youtube-watched`). `--rm-cache-dir` prints upstream's `Removing cache dir DIR ..` for this port's (unused) `yt-dlp-rs` cache directory. `-U`/`--update`/`--update-to` are errors (no self-update). `--js-runtimes deno[:PATH]` and `node[:PATH]` select the YouTube challenge runtime (a bare name is looked up on PATH; Deno is preferred like upstream's provider preference): the pinned Deno without permissions, or Node.js 22+ under its permission model (`--permission`, or `--experimental-permission --no-warnings=ExperimentalWarning` before 23.5.0) reading the solver from stdin, as upstream's `NodeJCP` runs it; `bun` and `quickjs`, `--extractor-args` for extractors other than `generic`, unported YouTube arguments and `youtubetab` arguments other than `skip`/`approximate_date`, `--plugin-dirs`, `--legacy-server-connect` and `--bidi-workaround` warn that they are not supported natively. `--encoding` follows upstream `write_string` for `utf-8`, `ascii`, `latin-1`, `cp1252`, `utf-16-le`/`-be`, `utf-32-le`/`-be` and the BOM codecs `utf-16`/`utf-32` (a little-endian BOM before every message, as CPython writes on little-endian hosts; with Python's aliases): every message, `--print`, JSON and listing line is encoded with `errors='ignore'`, while progress lines, the `[debug] Encodings:` line (whose `pref` names the encoding) and child processes' output are not; other codecs warn and keep UTF-8 (upstream raises `LookupError` for unknown names). `--impersonate` reports upstream's unavailable-target error and `--list-impersonate-targets` its table of unavailable `curl_cffi` targets; `--ap-list-mso` lists no providers |
+| Accepted tuning and environment options | `--file-access-retries`, `--throttled-rate`, `--no-update`, `--cache-dir`/`--no-cache-dir`, `--no-plugin-dirs`, `--remote-components`, `--prefer-insecure`/`--prefer-unsecure`, `--allow-dynamic-mpd`/`--no-ignore-dynamic-mpd`/`--ignore-dynamic-mpd`/`--no-allow-dynamic-mpd`, the account (`-u`, `-p`, `-2`, `-n`, `--netrc-*`, `--video-password`, `--ap-*`) and `--geo-verification-proxy` options are validated with upstream's messages (`buffer size "0" must be positive`, `invalid file access retry count "X" given`, `invalid time range to wait for video "X" given`, ...) and otherwise have no effect: the supported extractors use no password logins; `--wait-for-video` applies to YouTube (see below). `--mark-watched` applies to YouTube when cookies are passed (`--cookies`/`--cookies-from-browser`), like upstream `_mark_watched`: `Marking watched` and `Marking fully watched` requests to the player response's videostats URLs with upstream's query updates (a random `cpn`), `Unable to mark [fully ]watched` warnings otherwise (`youtube-watched`). `--rm-cache-dir` prints upstream's `Removing cache dir DIR ..` for this port's (unused) `yt-dlp-rs` cache directory. `-U`/`--update`/`--update-to` are errors (no self-update). `--js-runtimes deno[:PATH]` and `node[:PATH]` select the YouTube challenge runtime (a bare name is looked up on PATH; Deno is preferred like upstream's provider preference): the pinned Deno without permissions, or Node.js 22+ under its permission model (`--permission`, or `--experimental-permission --no-warnings=ExperimentalWarning` before 23.5.0) reading the solver from stdin, as upstream's `NodeJCP` runs it; `bun` and `quickjs`, `--extractor-args` for extractors other than `generic`, unported YouTube arguments and `youtubetab` arguments other than `skip`/`approximate_date`, `--plugin-dirs`, `--legacy-server-connect` and `--bidi-workaround` warn that they are not supported natively. `--encoding` follows upstream `write_string` for `utf-8`, `ascii`, `latin-1`, `cp1252`, `utf-16-le`/`-be`, `utf-32-le`/`-be` and the BOM codecs `utf-16`/`utf-32` (a little-endian BOM before every message, as CPython writes on little-endian hosts; with Python's aliases): every message, `--print`, JSON and listing line is encoded with `errors='ignore'`, while progress lines, the `[debug] Encodings:` line (whose `pref` names the encoding) and child processes' output are not; other codecs warn and keep UTF-8 (upstream raises `LookupError` for unknown names). `--impersonate` reports upstream's unavailable-target error and `--list-impersonate-targets` its table of unavailable `curl_cffi` targets; `--ap-list-mso` lists no providers |
+| `--xff VALUE`, `--geo-bypass`, `--no-geo-bypass`, `--geo-bypass-country CODE`, `--geo-bypass-ip-block IP_BLOCK` | Upstream's shared `geo_bypass` destination (the last option wins) and `validate_options`: `default`, `never`, a two-letter country code (unknown codes give no address, `Using fake IP None (ZZ)`) or a CIDR block read like `inet_aton`/`int`, else `Unsupported --xff "VALUE"`. See "Geo restriction bypass" |
+| `--ignore-no-formats-error`, `--no-ignore-no-formats-error` | Upstream `ignore_no_formats_error`: a result without formats warns `No video formats found!` and `Requested format is not available`, `-j`/`--print`/`-F` (`ID has no formats`) and the info JSON/sidecars use its metadata (`formats: []`, no format fields), and a download then fails with `[EXTRACTOR] ID: No video formats found!`; extractors' expected `raise_no_formats` errors and `raise_geo_restricted(metadata_available=True)` warn instead (see "Geo restriction bypass") |
 | `--client-certificate CERTFILE`, `--client-certificate-key KEYFILE`, `--client-certificate-password PASSWORD` | TLS client authentication for every request: a PEM certificate (optionally containing its key) plus an optional separate PEM key. Encrypted keys and `--client-certificate-password` are an explicit native error, because the rustls transport needs unencrypted keys |
 | `--enable-file-urls`, `file:` URLs | Upstream refuses `file:` URLs after `[generic] Extracting URL`/`Downloading webpage` with `file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk.`; with the option, local media files are direct links like urllib's file handler gives upstream (guessed Content-Type, mtime timestamp, protocol `file`) and are copied with progress. Local HTML pages and manifests remain an explicit native error |
 | `--http-chunk-size SIZE`, `--test` | Upstream `HttpFD` chunking for whole-file HTTP media: each request asks for `bytes=START-END` of a randomized 95-100% chunk (`--http-chunk-size`, else the format's `downloader_options.http_chunk_size`, which YouTube HTTPS formats set to 10 MiB like upstream); a matching `206` continues with the next chunk, other responses restart as a whole download (`Unable to resume` past the start), and the size limits compare against each response's end like upstream. Hidden `--test` keeps the first 10241 bytes (one `bytes=0-10240` request, even if Range is ignored). Request patterns compared with pinned upstream; fragments and FFmpeg downloads ignore `--test` |
@@ -653,10 +655,11 @@ others), HTTPS and RTMP streams are direct formats and other protocols warn
 `Skipping stream with unknown protocol`. Duplicate format URLs are removed;
 manifest subtitles get upstream's `-acc` (`-MAL.m3u8`) and `-forced` (no
 `_VO`) locales and merge without duplicate URLs. Metadata, captioned
-thumbnails and `chapters.elements` follow upstream's dict. Upstream retries a
-geoblocked video with a fake `X-Forwarded-For` address (a random-IP warning);
-this port does not send that header, so the restriction is reported directly
-(as upstream does with `--no-geo-bypass`).
+thumbnails and `chapters.elements` follow upstream's dict. A geoblocked video
+is upstream's `GeoRestrictedError` with the `_COUNTRIES_MAP` countries (`DE`
+and `FR` for other codes): without `--xff`, extraction is retried once with a
+fake `X-Forwarded-For` address from one of them (the random-IP warning), then
+the error lists the countries' names (see "Geo restriction bypass").
 
 Arte embeds (`arte.tv/player/vN/index.php?...json_url=URL`) follow
 `ArteTVEmbedIE`: the `json_url` config URL is followed as an `ArteTV` result.
@@ -1881,9 +1884,11 @@ for `DRM` licences, and the joined `pmd.netzkino-seite.netzkino.de` video URL
 as an untyped result with the original title, FSK age limit, cast, creators,
 categories, synopsis, runtime, country, year and cover image (`clean_html`
 and empty-value filtering as upstream), plus the generic title and
-`No video formats found!` error for pages without a movie. Upstream's
-`_GEO_COUNTRIES` fake `X-Forwarded-For` header is not sent natively, so the
-fixture's `-j` cases use `--no-geo-bypass`.
+`No video formats found!` error for pages without a movie. Like upstream's
+`_GEO_COUNTRIES = ['DE']`, requests and formats carry a random German
+`X-Forwarded-For` address unless `--xff`/`--no-geo-bypass` say otherwise, so
+the fixture's `-j` cases use `--no-geo-bypass` or a fixed `/32` block. The
+DRM error is a warning with `--ignore-no-formats-error`.
 `tests/fixtures/sites/netzkino/` is compared with pinned upstream output.
 
 Pear Video pages (`pearvideo.com/video_ID`) follow upstream `PearVideoIE`: the
@@ -2199,8 +2204,9 @@ its `application/x-mpegURL` sources as fatal `mp4` HLS formats with merged
 subtitles (no sources is the expected `No video found` error), the title (else
 the ID), a show's `unified_timestamp` of its date and hour, channel (a missing
 one warns with the video ID as the field name, like upstream), poster thumbnail
-and presenter, or a product's poster and brand name. Upstream's `DE`
-geo-bypass `X-Forwarded-For` header is not sent; the fixtures compare with
+and presenter, or a product's poster and brand name. Like upstream's
+`_GEO_COUNTRIES = ['DE']`, requests and formats carry a random German
+`X-Forwarded-For` address by default; the fixtures compare with
 `--no-geo-bypass`.
 
 INA media (`ina.fr/.../ID`) follow upstream `InaIE`: the page's fatal
@@ -2383,9 +2389,11 @@ pages (`nrk.no/SECTION/.../ID`, not `video` or `skole`) list the
 description. Linked-season entries are only listed with `--flat-playlist`:
 extracting them reaches the nested-playlist limitation of `url_transparent`
 entries (upstream itself does not match the catalog season links it
-builds). Upstream's geo-bypass `X-Forwarded-For` header (a random Norwegian
-address for `_GEO_COUNTRIES = ['NO']`) is not sent; the fixtures compare
-with `--no-geo-bypass`. `NRKSkoleIE` and `NRKTVEpisodesIE` are not ported:
+builds). `NRKIE`, `NRKTVSeasonIE` and `NRKTVSeriesIE` send upstream's
+geo-bypass `X-Forwarded-For` header (a random Norwegian address for
+`_GEO_COUNTRIES = ['NO']`, also in the formats' `http_headers`); the
+fixtures compare with `--no-geo-bypass` or a fixed `--xff` block, and the
+geo-blocked error lists `Norway` with upstream's VPN hint. `NRKSkoleIE` and `NRKTVEpisodesIE` are not ported:
 their endpoints (`nrkno-skole-prod.kube.nrk.no`, `tv.nrk.no/program/episodes`)
 no longer answer, so no real responses could be saved.
 `tests/fixtures/sites/nrk/` is compared with pinned upstream output.
@@ -4912,3 +4920,50 @@ Native boundaries: processed downloads use a private workspace, so they never
 resume an existing part file or destination (upstream resumes them before
 processing); nonregular and dangling-symlink destinations are refused instead
 of written through.
+
+## Geo restriction bypass
+
+Upstream `InfoExtractor._initialize_geo_bypass`, `__maybe_fake_ip_and_retry`
+and `GeoUtils` (`src/geo.rs`): before an extractor announces
+`Extracting URL`, a fake `X-Forwarded-For` address is chosen from
+`--geo-bypass-ip-block` (`[debug] [EXTRACTOR] Using fake IP IP as
+X-Forwarded-For`), else `--geo-bypass-country` or the extractor's
+`_GEO_COUNTRIES` (`[debug] Using fake IP IP (CC) as X-Forwarded-For`, from
+upstream's 240-country block table), unless `--xff never`/`--no-geo-bypass`;
+extractors' countries and blocks apply only when `_GEO_BYPASS` is true. The
+address is kept per extractor for the run, sent with every extraction
+request (`headers.setdefault`), and copied to each format's `http_headers`
+(`_calc_headers`, after the other headers) and so to `-j` and to native,
+fragment, subtitle and external downloads. Ported `_GEO_COUNTRIES`/
+`_GEO_BYPASS` values: NRK (`NRKIE`, `NRKTVSeasonIE`, `NRKTVSeriesIE`: `NO`),
+HSE (`DE`), Netzkino (`DE`), SVT (`SE`, no bypass), Niconico (`JP`, no
+bypass), and no bypass for YouTube, BitChute and Dailymotion. A
+`GeoRestrictedError` with countries (Arte's `_COUNTRIES_MAP`, NRK, YouTube,
+Dailymotion, Niconico) retries the extraction once with an address from one
+of them (`WARNING: [EXTRACTOR] Video is geo restricted. Retrying extraction
+with fake IP IP (CC) as X-Forwarded-For.`) unless an address is already set,
+a country is given, or bypassing is off; the reported error appends `This
+video is available in NAMES.` and upstream's VPN hint (also for Twitter
+broadcasts, BitChute, Brightcove `CLIENT_GEO` and SoundCloud). With
+`--ignore-no-formats-error` (or `--wait-for-video`), SVT's and SoundCloud's
+`metadata_available=True` restrictions warn instead. Random addresses are
+volatile, so the site fixtures pin them with `/32` blocks
+(`tests/fixtures/sites/{nrk,netzkino,arte}`) and `tests/geo_bypass.rs`
+checks the requests, debug lines, option precedence and the Arte retry
+against local servers.
+
+`--ignore-no-formats-error` turns these extractors' expected
+`raise_no_formats` errors into `[EXTRACTOR] [ID: ]MESSAGE` warnings and
+continues with their metadata: Netzkino and SoundCloud DRM, GoodGame offline
+channels, RTRFM expired episodes, Instagram posts without video, Twitter
+broadcasts/Spaces that have not started or have no replay and tweets without
+video, Tumblr posts without video, Reddit posts without media or still
+processing, BitChute unavailable videos, Dailymotion player errors,
+Odnoklassniki paid videos, Imgur plain images and Brightcove API errors
+(compared with pinned upstream output for Netzkino, GoodGame, RTRFM,
+Instagram, Twitter, NRK, SVT, Arte and Niconico). Not ported: YouTube's
+unplayable videos still raise their reason (upstream warns and lists the
+metadata), WebcameraPL's missing stream stays an error (upstream crashes
+after the warning), LBRY's offline livestreams and Vimeo/LinkedIn/archive.org
+paths are not wired, and Brightcove/JWPlatform smuggled `geo_countries`
+are not read. `--geo-verification-proxy` is accepted without effect.

@@ -354,9 +354,12 @@ fn raise_error(data: &Value, temp_id: &str) -> Error {
             == Some(&Value::Bool(true));
     if geo_blocked {
         // `raise_geo_restricted(msg, countries=['NO'])`.
-        return Error::Reported(format!(
-            "[{NAME}] {temp_id}: NRK har ikke rettigheter til å vise dette programmet utenfor Norge\nThis video is available in Norway.\nYou might want to use a VPN or a proxy server (with --proxy) to workaround."
-        ));
+        return crate::geo::restricted(
+            &format!(
+                "[{NAME}] {temp_id}: NRK har ikke rettigheter til å vise dette programmet utenfor Norge"
+            ),
+            &["NO"],
+        );
     }
     let known = match message_type {
         "ProgramRightsAreNotReady" => Some("Du kan dessverre ikke se eller høre programmet"),
@@ -475,6 +478,11 @@ fn playlist_result(
 impl Extractor for Nrk {
     fn key(&self) -> &'static str {
         NAME
+    }
+
+    /// `_GEO_COUNTRIES = ['NO']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["NO"])
     }
 
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
@@ -931,6 +939,11 @@ impl Extractor for NrkTvSeason {
         SEASON_NAME
     }
 
+    /// `_GEO_COUNTRIES = ['NO']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["NO"])
+    }
+
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
         Ok(None)
     }
@@ -988,6 +1001,11 @@ fn season_temp_id(url: &str) -> Option<String> {
 impl Extractor for NrkTvSeries {
     fn key(&self) -> &'static str {
         SERIES_NAME
+    }
+
+    /// `_GEO_COUNTRIES = ['NO']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["NO"])
     }
 
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {

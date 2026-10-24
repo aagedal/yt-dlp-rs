@@ -560,6 +560,11 @@ pub trait Extractor: Send + Sync {
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         Ok(self.extract(client, url)?.map(ExtractResult::Video))
     }
+
+    /// Upstream `_GEO_BYPASS`, `_GEO_COUNTRIES` and `_GEO_IP_BLOCKS`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::NONE
+    }
 }
 
 /// `[EXTRACTOR] ID: Unable to download WHAT: ERR (caused by REPR)`.

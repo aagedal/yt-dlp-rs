@@ -47,22 +47,25 @@ impl Extractor for Vocaroo {
         // `_request_webpage(HEADRequest(url), audio_id, headers=...)`.
         crate::screen::screen(&format!("[{NAME}] {id}: Downloading webpage"));
         crate::screen::before_extraction_request();
-        let response = client
-            .head(media.clone())
-            .header(reqwest::header::REFERER, REFERER)
-            .send()
-            .inspect(|_| crate::screen::after_request())
-            .map_err(Error::Http)
-            .and_then(crate::retry::check_response)
-            .map_err(|error| match error {
-                Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-                    extractor: NAME,
-                    id: id.clone(),
-                    what: "webpage",
-                    source: Box::new(error),
-                },
-                error => error,
-            })?;
+        let response = crate::geo::add_header(
+            client
+                .head(media.clone())
+                .header(reqwest::header::REFERER, REFERER),
+            &[],
+        )
+        .send()
+        .inspect(|_| crate::screen::after_request())
+        .map_err(Error::Http)
+        .and_then(crate::retry::check_response)
+        .map_err(|error| match error {
+            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
+                extractor: NAME,
+                id: id.clone(),
+                what: "webpage",
+                source: Box::new(error),
+            },
+            error => error,
+        })?;
         // `float_or_none(header, scale=1000)`.
         let timestamp = response
             .headers()

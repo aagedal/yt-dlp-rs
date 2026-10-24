@@ -242,6 +242,11 @@ impl Extractor for Dailymotion {
         KEY
     }
 
+    /// `_GEO_BYPASS = False`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&[])
+    }
+
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
         Ok(None)
     }
@@ -316,8 +321,16 @@ impl Extractor for Dailymotion {
                 .or_else(|| error.get("raw_message").and_then(Value::as_str))
                 .unwrap_or_default();
             if error.get("code").and_then(Value::as_str) == Some("DM007") {
-                // `raise_geo_restricted(msg=title)`.
-                return Err(fail(&xid, title));
+                // `raise_geo_restricted(msg=title, countries=allowed)`.
+                let allowed: Vec<&str> = media
+                    .pointer("/geoblockedCountries/allowed")
+                    .and_then(Value::as_array)
+                    .map(|allowed| allowed.iter().filter_map(Value::as_str).collect())
+                    .unwrap_or_default();
+                return Err(crate::geo::restricted(
+                    &fail(&xid, title).to_string(),
+                    &allowed,
+                ));
             }
             return Err(fail(&xid, &format!("{NAME} said: {title}")));
         }
@@ -402,7 +415,7 @@ impl Extractor for Dailymotion {
         if formats.is_empty()
             && let Some(error) = expected_error
         {
-            return Err(fail(&video_id, &error));
+            crate::no_formats::raise_expected(NAME, None, Some(&video_id), &error)?;
         }
         for format in &mut formats {
             if let Some((url, _)) = format.url.as_str().split_once('#')

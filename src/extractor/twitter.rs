@@ -1312,7 +1312,21 @@ impl Extractor for Twitter {
                 // `url_result(expanded_url, display_id=twid, **info)`: a
                 // `url` result, whose fields processing does not keep.
                 Some(expanded) if expanded != url.as_str() => follow(&expanded).map(Some),
-                _ => Err(fail(&twid, "No video could be found in this tweet")),
+                // `raise_no_formats(..., expected=True)`, then `return info`.
+                _ => {
+                    crate::no_formats::raise_expected(
+                        NAME,
+                        None,
+                        Some(&twid),
+                        "No video could be found in this tweet",
+                    )?;
+                    Ok(Some(ExtractResult::Video(video(
+                        url,
+                        info,
+                        Vec::new(),
+                        Default::default(),
+                    ))))
+                }
             };
         }
         if selected_entries.len() == 1
@@ -1628,11 +1642,20 @@ impl Extractor for TwitterBroadcast {
                 .into(),
         );
         if info.get("live_status").and_then(Value::as_str) == Some("is_upcoming") {
-            return Err(fail_as(
+            // `raise_no_formats(..., expected=True)`, then `return info`.
+            crate::no_formats::raise_expected(
                 BROADCAST_NAME,
-                &display_id,
+                None,
+                Some(&display_id),
                 "This live broadcast has not yet started",
-            ));
+            )?;
+            return Ok(Some(ExtractResult::Video(periscope::build(
+                url,
+                (BROADCAST_NAME, "TwitterBroadcast"),
+                info,
+                Vec::new(),
+                "url",
+            ))));
         }
         let media_key = broadcast
             .get("media_key")
@@ -1657,10 +1680,14 @@ impl Extractor for TwitterBroadcast {
             .or_else(|| source.get("location")?.as_str().map(str::to_owned))
             .ok_or_else(|| key_error(BROADCAST_NAME, &display_id, "location"))?;
         if m3u8_url.contains("/live_video_stream/geoblocked/") {
-            return Err(fail_as(
-                BROADCAST_NAME,
-                &display_id,
-                "This video is not available from your location due to geo restriction",
+            return Err(crate::geo::restricted(
+                &fail_as(
+                    BROADCAST_NAME,
+                    &display_id,
+                    "This video is not available from your location due to geo restriction",
+                )
+                .to_string(),
+                &[],
             ));
         }
         let manifest = Url::parse(&m3u8_url)?;
@@ -1735,17 +1762,19 @@ impl Extractor for TwitterSpaces {
         const REFERER: &str = "https://twitter.com/";
         let mut formats = Vec::new();
         if live_status == Some("is_upcoming") {
-            return Err(fail_as(
+            crate::no_formats::raise_expected(
                 SPACES_NAME,
-                &space_id,
+                None,
+                Some(&space_id),
                 "Twitter Space not started yet",
-            ));
+            )?;
         } else if !is_live && !truthy(metadata.get("is_space_available_for_replay")) {
-            return Err(fail_as(
+            crate::no_formats::raise_expected(
                 SPACES_NAME,
-                &space_id,
+                None,
+                Some(&space_id),
                 "Twitter Space ended and replay is disabled",
-            ));
+            )?;
         } else if let Some(media_key) = metadata.get("media_key").filter(|key| truthy(Some(key))) {
             let media_key = str_or_none(Some(media_key)).unwrap_or_default();
             let stream = call_api(
@@ -1804,11 +1833,12 @@ impl Extractor for TwitterSpaces {
             participants.join(", ")
         };
         if formats.is_empty() && live_status == Some("post_live") {
-            return Err(fail_as(
+            crate::no_formats::raise_expected(
                 SPACES_NAME,
-                &space_id,
+                None,
+                Some(&space_id),
                 "Twitter Space ended but not downloadable yet",
-            ));
+            )?;
         }
         let mut dict = Map::new();
         dict.insert("id".into(), space_id.clone().into());
