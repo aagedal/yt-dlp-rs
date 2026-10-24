@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://www.hse.de/dpl/c/tv-shows/505350",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "show.html"
+  },
+  {
+   "url": "https://www.hse.de/dpl/c/tv-shows/2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "show2.html"
+  },
+  {
+   "url": "https://www.hse.de/dpl/c/tv-shows/3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "show3.html"
+  },
+  {
+   "url": "https://www.hse.de/dpl/c/tv-shows/4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "noredux.html"
+  },
+  {
+   "url": "https://www.hse.de/dpl/p/product/408630",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "product.html"
+  },
+  {
+   "url": "https://www.hse.de/dpl/p/product/5",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "product2.html"
+  },
+  {
+   "url": "https://hse.test/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://hse.test/hls/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video.m3u8"
+  },
+  {
+   "url": "https://hse.test/hls/subs_en.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_en.m3u8"
+  },
+  {
+   "url": "https://hse.test/hls/subs_de.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_de.m3u8"
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "routes": [
+  {"url": "https://www.ilpost.it/episodes/1-avis-akvasas-ka/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://www.ilpost.it/episodes/second", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page2.html"},
+  {"url": "https://www.ilpost.it/episodes/missing", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page3.html"},
+  {"url": "https://www.ilpost.it/episodes/noplayer", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page4.html"},
+  {"url": "https://www.ilpost.it/episodes/nopost", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page5.html"},
+  {"url": "https://www.ilpost.it/wp-admin/admin-ajax.php", "request_body": ["action=checkpodcast&cookie=abc+def&post_id=2972047&podcast_id=235598"], "headers": {"Content-Type": "application/json"}, "body_file": "list.json"},
+  {"url": "https://www.ilpost.it/ajax2", "request_body": ["action=checkpodcast&cookie=&post_id=7&podcast_id=9"], "headers": {"Content-Type": "application/json"}, "body_file": "list2.json"},
+  {"url": "https://www.ilpost.it/ajax3", "request_body": ["post_id=8"], "headers": {"Content-Type": "application/json"}, "body": "{\"data\": {\"postcastList\": [{\"id\": 1}]}}"}
+ ]
+}

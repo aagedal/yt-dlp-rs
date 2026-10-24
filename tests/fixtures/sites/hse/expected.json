@@ -1,0 +1,104 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.hse.de/dpl/c/tv-shows/505350",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"505350\", \"title\": \"Kerstin Sommer & Freunde\", \"formats\": [{\"format_id\": \"200\", \"format_index\": null, \"url\": \"https://hse.test/hls/video.m3u8\", \"manifest_url\": \"https://hse.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\"}], \"timestamp\": 1648749600, \"thumbnail\": \"https://hse.test/poster.jpg\", \"channel\": \"HSE24\", \"uploader\": \"Kerstin Sommer\", \"subtitles\": {\"en\": [{\"url\": \"https://hse.test/hls/subs_en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://hse.test/hls/subs_de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://www.hse.de/dpl/c/tv-shows/505350\", \"original_url\": \"https://www.hse.de/dpl/c/tv-shows/505350\", \"webpage_url_basename\": \"505350\", \"webpage_url_domain\": \"hse.de\", \"extractor\": \"HSEShow\", \"extractor_key\": \"HSEShow\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://hse.test/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"505350\", \"fulltitle\": \"Kerstin Sommer & Freunde\", \"upload_date\": \"20220331\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"200\", \"format_index\": null, \"url\": \"https://hse.test/hls/video.m3u8\", \"manifest_url\": \"https://hse.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\", \"_filename\": \"Kerstin Sommer & Freunde [505350].mp4\", \"filename\": \"Kerstin Sommer & Freunde [505350].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hse.de/dpl/c/tv-shows/505350",
+   "args": [
+    "--no-geo-bypass",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[HSEShow] Extracting URL: https://www.hse.de/dpl/c/tv-shows/505350",
+    "[HSEShow] 505350: Downloading webpage",
+    "[HSEShow] 505350: Downloading m3u8 information",
+    "[info] Available subtitles for 505350:",
+    "Language Formats",
+    "en       vtt",
+    "de       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hse.de/dpl/c/tv-shows/2",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"title\": \"2\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://hse.test/hls/video.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"timestamp\": null, \"thumbnail\": null, \"channel\": null, \"uploader\": null, \"subtitles\": {}, \"webpage_url\": \"https://www.hse.de/dpl/c/tv-shows/2\", \"original_url\": \"https://www.hse.de/dpl/c/tv-shows/2\", \"webpage_url_basename\": \"2\", \"webpage_url_domain\": \"hse.de\", \"extractor\": \"HSEShow\", \"extractor_key\": \"HSEShow\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": \"2\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://hse.test/hls/video.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"2 [2].mp4\", \"filename\": \"2 [2].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [HSEShow] unable to extract 2; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.hse.de/dpl/c/tv-shows/3",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [HSEShow] 3: No video found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.hse.de/dpl/c/tv-shows/4",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [HSEShow] 4: Unable to extract redux data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.hse.de/dpl/p/product/408630",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"408630\", \"title\": \"Chicco Fitnessband\", \"formats\": [{\"format_id\": \"200\", \"format_index\": null, \"url\": \"https://hse.test/hls/video.m3u8\", \"manifest_url\": \"https://hse.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\"}], \"subtitles\": {\"en\": [{\"url\": \"https://hse.test/hls/subs_en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://hse.test/hls/subs_de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"thumbnail\": \"https://hse.test/p.jpg\", \"uploader\": \"CHICCO\", \"webpage_url\": \"https://www.hse.de/dpl/p/product/408630\", \"original_url\": \"https://www.hse.de/dpl/p/product/408630\", \"webpage_url_basename\": \"408630\", \"webpage_url_domain\": \"hse.de\", \"extractor\": \"HSEProduct\", \"extractor_key\": \"HSEProduct\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://hse.test/p.jpg\", \"id\": \"0\"}], \"display_id\": \"408630\", \"fulltitle\": \"Chicco Fitnessband\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"200\", \"format_index\": null, \"url\": \"https://hse.test/hls/video.m3u8\", \"manifest_url\": \"https://hse.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\", \"_filename\": \"Chicco Fitnessband [408630].mp4\", \"filename\": \"Chicco Fitnessband [408630].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.hse.de/dpl/p/product/5",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [HSEProduct] 5: No video found"
+   ],
+   "files": {}
+  }
+ ]
+}

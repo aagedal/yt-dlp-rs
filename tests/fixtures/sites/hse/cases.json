@@ -1,0 +1,9 @@
+[
+ {"url": "https://www.hse.de/dpl/c/tv-shows/505350", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.hse.de/dpl/c/tv-shows/505350", "args": ["--no-geo-bypass", "--list-subs"]},
+ {"url": "https://www.hse.de/dpl/c/tv-shows/2", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.hse.de/dpl/c/tv-shows/3", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.hse.de/dpl/c/tv-shows/4", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.hse.de/dpl/p/product/408630", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.hse.de/dpl/p/product/5", "args": ["--no-geo-bypass", "-j"]}
+]

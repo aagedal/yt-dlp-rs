@@ -1074,6 +1074,18 @@
       "scope": "GraspopIE festival stream (http: HLS manifest as fatal formats, name/poster traversal, generic title, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "gronkh",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gronkh.py"
+      ],
+      "rust": [
+        "src/extractor/gronkh.rs",
+        "tests/fixtures/sites/gronkh/"
+      ],
+      "scope": "GronkhIE video info and playlist API JSON with fatal HLS formats and subtitles, the info vtt_url appended to en subtitles, unified_strdate created_at, float source_length duration and float-offset chapters (an untitled chapter's processed key order is not covered); GronkhFeedIE and GronkhVodsIE are not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "harpodeon",
       "status": "partial",
       "upstream": [
@@ -1134,6 +1146,18 @@
       "scope": "HrefLiRedirectIE url_result of the text after href.li/? (followed by the suitable extractor, including the generic direct path) and the invalid-URL error compared with pinned upstream output through the fixture proxy; GenericIE's http:// guess for scheme-less targets is not ported"
     },
     {
+      "name": "hse",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/hse.py"
+      ],
+      "rust": [
+        "src/extractor/hse.rs",
+        "tests/fixtures/sites/hse/"
+      ],
+      "scope": "HSEShowIE and HSEProductIE window.__REDUX_DATA__ (clean_html, newlines removed) with fatal HLS sources (ext mp4) and merged subtitles, the expected No video found error, show unified_timestamp, channel search warning named by the video ID, presenter/brand uploader and ID title fallback; the _GEO_COUNTRIES X-Forwarded-For bypass header is not sent (compared with --no-geo-bypass). Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "huajiao",
       "status": "partial",
       "upstream": [
@@ -1158,6 +1182,18 @@
       "scope": "HypemIE _VALID_URL, displayList-data JSON (clean_html before parsing), serve/source JSON URL as an untyped mp3 result, error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "ilpost",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ilpost.py"
+      ],
+      "rust": [
+        "src/extractor/ilpost.rs",
+        "tests/fixtures/sites/ilpost/"
+      ],
+      "scope": "IlPostIE ilpostpodcast endpoint metadata, the checkpodcast form POST and the matching postcastList episode as an untyped audio result (title, description, raw URL, image, int timestamp, millisecond duration, free availability, series_id); episodes without a string title or audio URL are explicit native errors. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "iltalehti",
       "status": "partial",
       "upstream": [
@@ -1180,6 +1216,18 @@
         "tests/fixtures/sites/imgur/"
       ],
       "scope": "ImgurIE post API media, gifv page sources, GIF and Twitter formats and metadata; ImgurGalleryIE/ImgurAlbumIE album API playlists and url_transparent single videos; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ina",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ina.py"
+      ],
+      "rust": [
+        "src/extractor/ina.rs",
+        "tests/fixtures/sites/ina/"
+      ],
+      "scope": "InaIE asset-details-url JSON (asset ID .json URL) resourceUrl as an untyped result with type-based ext (else the URL's), unified_strdate broadcast date and raw metadata; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "inc",
@@ -1303,6 +1351,18 @@
       "scope": "KickerIE page's data-dmprivateid as a Dailymotion url result followed by the Dailymotion extractor compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "kickstarter",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kickstarter.py"
+      ],
+      "rust": [
+        "src/extractor/kickstarter.rs",
+        "tests/fixtures/sites/kickstarter/"
+      ],
+      "scope": "KickStarterIE native data-video-url as an untyped result with the fatal title (without the Kickstarter suffix), og:description and og:image (else poster img, warning) thumbnail; pages without a native video (upstream's generic embed fallback) are an explicit native error. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "kommunetv",
       "status": "partial",
       "upstream": [
@@ -1373,6 +1433,18 @@
         "tests/fixtures/sites/livestreamfails/"
       ],
       "scope": "LivestreamfailsIE _VALID_URL and clip API extraction (display_id, unified_timestamp, creator/creators, format_field thumbnail, KeyError message) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "lnk",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/lnk.py"
+      ],
+      "rust": [
+        "src/extractor/lnk.rs",
+        "tests/fixtures/sites/lnk/"
+      ],
+      "scope": "LnkIE video-config API videoInfo with fatal HLS (videoUrl and non-DRM videoFairplayUrl) formats and merged subtitles, unified_strdate airDate, format_field posterImage thumbnail and int_or_none episode number; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "loom",

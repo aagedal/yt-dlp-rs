@@ -1,0 +1,7 @@
+[
+ {"url": "https://www.ina.fr/video/I12055569/francois-hollande-je-crois-que-c-est-clair-video.html", "args": ["-j"]},
+ {"url": "https://www.ina.fr/video/I12055569/francois-hollande-je-crois-que-c-est-clair-video.html", "args": ["--print", "%(id)s|%(title)s|%(ext)s|%(upload_date)s|%(duration)s"]},
+ {"url": "https://www.ina.fr/audio/P16173408", "args": ["-j"]},
+ {"url": "http://m.ina.fr/video/X1", "args": ["-j"]},
+ {"url": "https://www.ina.fr/ina-eclaire-actu/nothing", "args": ["-j"]}
+]

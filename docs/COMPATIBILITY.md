@@ -1997,6 +1997,55 @@ Livestreamfails clips (`livestreamfails.com/clip|post/ID`) follow upstream
 `creator` with `creators` derived, `format_field`'s empty thumbnail without an
 image ID). A `None` `display_id` becomes the ID in place, like upstream.
 
+LNK videos (`lnk.lt/SECTION/ID`) follow upstream `LnkIE`: the video-config
+API's `videoInfo` with its `videoUrl` and (unless `drm`) `videoFairplayUrl`
+as fatal HLS formats (media playlists keep their URL's extension) and merged
+subtitles, the raw title, description, view count and duration, the
+`unified_strdate` air date, the `format_field` poster thumbnail (empty when
+absent) and `int_or_none` episode number with the programme as `series`.
+
+Gronkh streams (`gronkh.tv/[watch/]stream[s]/ID`) follow upstream `GronkhIE`:
+the video `info` and `playlist` API JSON (a missing `playlist_url` is the
+upstream `KeyError`), the playlist as fatal HLS formats (media playlists keep
+their URL's extension) and subtitles with the info's `vtt_url` appended to the
+`en` tracks, the raw title, views and preview thumbnail, the `unified_strdate`
+creation date, the `float_or_none` source length and the chapters whose
+offsets are numeric (else `None`). The feed and VOD listings are not ported.
+
+HSE TV shows (`hse.de/dpl/c/tv-shows/ID`) and products (`hse.de/dpl/p/product/ID`)
+follow upstream `HSEShowIE` and `HSEProductIE`: the page's fatal
+`window.__REDUX_DATA__` (cleaned like `_html_search_regex`, newlines removed),
+its `application/x-mpegURL` sources as fatal `mp4` HLS formats with merged
+subtitles (no sources is the expected `No video found` error), the title (else
+the ID), a show's `unified_timestamp` of its date and hour, channel (a missing
+one warns with the video ID as the field name, like upstream), poster thumbnail
+and presenter, or a product's poster and brand name. Upstream's `DE`
+geo-bypass `X-Forwarded-For` header is not sent; the fixtures compare with
+`--no-geo-bypass`.
+
+INA media (`ina.fr/.../ID`) follow upstream `InaIE`: the page's fatal
+`asset-details-url`, its `assets/ID` as the ID and the `ID.json` asset
+JSON's `resourceUrl` (else the upstream `KeyError`) as an untyped result,
+`mp4`/`mp3` for `video`/`audio` types (else the URL's extension), with the
+raw title, description, duration and thumbnail and the `unified_strdate`
+broadcast date.
+
+Kickstarter projects (`kickstarter.com/projects/ID/...`) follow upstream
+`KickStarterIE` for native videos: the page's `data-video-url` as an untyped
+result with the fatal cleaned `<title>` (without ` &mdash; Kickstarter`), the
+OpenGraph description and image (else the `poster` image, warning when
+absent). Pages without a native video, which upstream passes to the generic
+extractor for embeds, are an explicit native error.
+
+Il Post episodes (`ilpost.it/episodes/ID`) follow upstream `IlPostIE`: the
+page's `var ilpostpodcast` JSON (fatal; missing keys are upstream's
+`KeyError`), the `checkpodcast` form POST to its `ajax_url` and the
+`postcastList` entry whose `str(id)` is the post ID (else the `Episode could
+not be extracted` error), as an untyped audio-only result with the podcast ID
+as `series_id`, string title and description, `url_or_none` audio and image,
+`int_or_none` timestamp, millisecond duration and `free` availability.
+Episodes without a string title or audio URL are explicit native errors.
+
 HitRecord records (`hitrecord.org/records/ID`) follow upstream `HitRecordIE`:
 the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python
