@@ -5,6 +5,18 @@
   "upstream_version": "2026.10.21",
   "components": [
     {
+      "name": "freesound",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/freesound.py"
+      ],
+      "rust": [
+        "src/extractor/freesound.rs",
+        "tests/fixtures/sites/freesound/"
+      ],
+      "scope": "FreesoundIE og:audio song URL/title (fatal, upstream errors), non-fatal description, uploader and channels warnings, duration, sound_date upload date and tags, the doubled-host URL fix and the lq/hq MP3 preview formats compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "generic-extraction",
       "status": "partial",
       "upstream": [

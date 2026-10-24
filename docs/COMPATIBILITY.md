@@ -1576,6 +1576,14 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+Freesound sounds (`freesound.org/people/USER/sounds/ID`) follow upstream
+`FreesoundIE`: the page's fatal `og:audio` URL and `og:audio:title`, the
+non-fatal description, `og:audio:artist` uploader and channels info (their
+misses are upstream's warnings), the `duration` element in milliseconds, the
+`sound_date` upload date, the `tags` links and the low-quality preview plus
+its `-hq.mp3` sibling as ranked formats. `tests/fixtures/sites/freesound/`
+is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the
