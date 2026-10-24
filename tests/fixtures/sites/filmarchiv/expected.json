@@ -1,0 +1,104 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"f_0305p7xKrXUPBwoNE9x6mh\", \"title\": \"Der Wurstelprater zur Kaiserzeit\", \"description\": \"Not this one\", \"thumbnail\": \"https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1/poster.jpg\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/v360.m3u8\", \"manifest_url\": \"https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/playlist.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}, {\"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/v720.m3u8\", \"manifest_url\": \"https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/playlist.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\"}], \"subtitles\": {\"de\": [{\"url\": \"https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/subs_de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh\", \"original_url\": \"https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh\", \"webpage_url_basename\": \"f_0305p7xKrXUPBwoNE9x6mh\", \"webpage_url_domain\": \"filmarchiv.at\", \"extractor\": \"FilmArchiv\", \"extractor_key\": \"FilmArchiv\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"f_0305p7xKrXUPBwoNE9x6mh\", \"fulltitle\": \"Der Wurstelprater zur Kaiserzeit\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/v720.m3u8\", \"manifest_url\": \"https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/playlist.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\", \"_filename\": \"Der Wurstelprater zur Kaiserzeit [f_0305p7xKrXUPBwoNE9x6mh].mp4\", \"filename\": \"Der Wurstelprater zur Kaiserzeit [f_0305p7xKrXUPBwoNE9x6mh].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[FilmArchiv] Extracting URL: https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+    "[FilmArchiv] f_0305p7xKrXUPBwoNE9x6mh: Downloading webpage",
+    "[FilmArchiv] f_0305p7xKrXUPBwoNE9x6mh: Downloading m3u8 information",
+    "[info] Available formats for f_0305p7xKrXUPBwoNE9x6mh:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------",
+    "800  mp4 640x360    |  800k m3u8  | avc1.4d401e mp4a.40.2",
+    "2000 mp4 1280x720   | 2000k m3u8  | avc1.64001f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[FilmArchiv] Extracting URL: https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+    "[FilmArchiv] f_0305p7xKrXUPBwoNE9x6mh: Downloading webpage",
+    "[FilmArchiv] f_0305p7xKrXUPBwoNE9x6mh: Downloading m3u8 information",
+    "[info] Available subtitles for f_0305p7xKrXUPBwoNE9x6mh:",
+    "Language Formats",
+    "de       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)j|%(thumbnail)s|%(extractor)s|%(extractor_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "f_0305p7xKrXUPBwoNE9x6mh|Der Wurstelprater zur Kaiserzeit|\"Not this one\"|https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1/poster.jpg|FilmArchiv|FilmArchiv"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0306vI3wO0tJIsfrqYFQXF",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"f_0306vI3wO0tJIsfrqYFQXF\", \"title\": \"FilmArchiv video #f_0306vI3wO0tJIsfrqYFQXF\", \"description\": null, \"thumbnail\": \"https://cdn.filmarchiv.at/f_0306/vI3wO0tJIsfrqYFQXF_v1/poster.jpg\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.filmarchiv.at/f_0306/vI3wO0tJIsfrqYFQXF_v1_sv1/playlist.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.filmarchiv.at/de/filmarchiv-on/video/f_0306vI3wO0tJIsfrqYFQXF\", \"original_url\": \"https://www.filmarchiv.at/de/filmarchiv-on/video/f_0306vI3wO0tJIsfrqYFQXF\", \"webpage_url_basename\": \"f_0306vI3wO0tJIsfrqYFQXF\", \"webpage_url_domain\": \"filmarchiv.at\", \"extractor\": \"FilmArchiv\", \"extractor_key\": \"FilmArchiv\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.filmarchiv.at/f_0306/vI3wO0tJIsfrqYFQXF_v1/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"f_0306vI3wO0tJIsfrqYFQXF\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.filmarchiv.at/f_0306/vI3wO0tJIsfrqYFQXF_v1_sv1/playlist.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"FilmArchiv video #f_0306vI3wO0tJIsfrqYFQXF [f_0306vI3wO0tJIsfrqYFQXF].m3u8\", \"filename\": \"FilmArchiv video #f_0306vI3wO0tJIsfrqYFQXF [f_0306vI3wO0tJIsfrqYFQXF].m3u8\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0307brokenDesc",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"f_0307brokenDesc\", \"title\": \"Kaputt\", \"description\": null, \"thumbnail\": \"https://cdn.filmarchiv.at/f_0307/brokenDesc_v1/poster.jpg\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.filmarchiv.at/f_0307/brokenDesc_v1_sv1/playlist.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.filmarchiv.at/de/filmarchiv-on/video/f_0307brokenDesc\", \"original_url\": \"https://www.filmarchiv.at/de/filmarchiv-on/video/f_0307brokenDesc\", \"webpage_url_basename\": \"f_0307brokenDesc\", \"webpage_url_domain\": \"filmarchiv.at\", \"extractor\": \"FilmArchiv\", \"extractor_key\": \"FilmArchiv\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.filmarchiv.at/f_0307/brokenDesc_v1/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"f_0307brokenDesc\", \"fulltitle\": \"Kaputt\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.filmarchiv.at/f_0307/brokenDesc_v1_sv1/playlist.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"Kaputt [f_0307brokenDesc].m3u8\", \"filename\": \"Kaputt [f_0307brokenDesc].m3u8\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0308noPlaylist",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [FilmArchiv] f_0308noPlaylist: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

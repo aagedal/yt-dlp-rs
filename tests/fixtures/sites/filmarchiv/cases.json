@@ -1,0 +1,45 @@
+[
+ {
+  "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(description)j|%(thumbnail)s|%(extractor)s|%(extractor_key)s"
+  ]
+ },
+ {
+  "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0306vI3wO0tJIsfrqYFQXF",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0307brokenDesc",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0308noPlaylist",
+  "args": [
+   "-j"
+  ]
+ }
+]

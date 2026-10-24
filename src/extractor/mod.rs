@@ -28,6 +28,7 @@ mod f4m;
 mod facebook;
 mod fathom;
 mod fczenit;
+mod filmarchiv;
 mod filmweb;
 mod fuyintv;
 mod generic_urls;
@@ -144,6 +145,7 @@ pub use facebook::{
 };
 pub use fathom::{Fathom, suitable as fathom_suitable};
 pub use fczenit::{Fczenit, suitable as fczenit_suitable};
+pub use filmarchiv::{FilmArchiv, suitable as filmarchiv_suitable};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
 pub use fuyintv::{FuyinTv, suitable as fuyintv_suitable};
 pub use glide::{Glide, suitable as glide_suitable};

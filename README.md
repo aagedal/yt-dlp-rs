@@ -121,7 +121,7 @@ Supported today:
   QingTing programs, OnePlace episodes, SzTV videos, Photobucket media and
   This American Life episodes through their pages, JW Platform media through
   the media API (and The Intercept posts and Spiegel articles that embed it), 23video players
-  (and Filmweb articles that embed them), Vocaroo recordings, AudioBoom posts,
+  (and Filmweb articles that embed them), FILMARCHIV ON videos, Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Sen videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, Premiership Rugby videos, CJSW episodes,

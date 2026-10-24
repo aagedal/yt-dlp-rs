@@ -750,6 +750,14 @@ filesize}` thumbnails. Filmweb articles (`filmweb.no/trailere|filmnytt/articleID
 `filmnytt` pages through their `data-videoid`) follow upstream `FilmwebIE`:
 the trailer embed JSON's iframe as a `url_transparent` 23video result.
 
+FILMARCHIV ON videos (`filmarchiv.at/de/filmarchiv-on/video/f_ID`) follow
+upstream `FilmArchivIE`: the CDN `PREFIX/REST_v1_sv1/playlist.m3u8` derived
+from the media ID as fatal HLS formats and subtitles (no forced extension),
+the cleaned `<title-div>` content (else a generic title), the first cleaned
+`div.prose` inside a `div` whose class matches `.*\bborder-base-content\b`
+(regex `find_elements`; a parse error is no match, like `try_call`) and the
+CDN `poster.jpg` thumbnail.
+
 TikTok videos (`www.tiktok[v].com/@USER/video/ID`, `/embed/ID`,
 `/share/video/ID`) follow upstream `TikTokIE`'s webpage path (no app API
 without `app_info`): upstream's impersonation warning (this port cannot
