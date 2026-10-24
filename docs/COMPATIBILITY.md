@@ -1576,6 +1576,14 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
+`api.clyp.it/ID` JSON (with the URL's `token` query), its `OggUrl`,
+`Mp3Url`, `SecureOggUrl` and `SecureMp3Url` audio formats, the page's
+`wavStreamUrl`, the required `Title` (upstream's `KeyError`), description,
+`float_or_none` duration and `unified_timestamp` creation date. Non-string
+titles remain explicit native errors. `tests/fixtures/sites/clyp/` is
+compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

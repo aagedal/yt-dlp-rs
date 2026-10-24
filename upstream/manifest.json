@@ -449,6 +449,18 @@
       "scope": "CJSWIE episode page (fatal title/audio regexes, UUID ID, description, series, episode ID, audio format and download) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "clyp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/clyp.py"
+      ],
+      "rust": [
+        "src/extractor/clyp.rs",
+        "tests/fixtures/sites/clyp/"
+      ],
+      "scope": "ClypIE api.clyp.it JSON (with the URL's token), Ogg/MP3 and secure audio URLs, the page's wavStreamUrl, title KeyError, description/duration/timestamp compared with pinned upstream output through the fixture proxy; non-string titles remain explicit native errors"
+    },
+    {
       "name": "coub",
       "status": "partial",
       "upstream": [

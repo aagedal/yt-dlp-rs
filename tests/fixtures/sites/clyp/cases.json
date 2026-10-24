@@ -1,0 +1,8 @@
+[
+ {"url": "https://clyp.it/iynkjk4b", "args": ["-j"]},
+ {"url": "https://clyp.it/iynkjk4b", "args": ["-F"]},
+ {"url": "https://clyp.it/b04p1odi?token=b0078e077e15835845c528a44417719d", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(format_id)s|%(ext)s|%(acodec)s|%(url)s"]},
+ {"url": "https://clyp.it/v42214lc", "args": ["-j"]},
+ {"url": "https://clyp.it/notitle1", "args": ["-j"]},
+ {"url": "https://clyp.it/gone1", "args": ["-j"]}
+]

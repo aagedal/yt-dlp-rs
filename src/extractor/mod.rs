@@ -19,6 +19,7 @@ mod caltrans;
 mod cam4;
 mod cgtn;
 mod cjsw;
+mod clyp;
 mod coub;
 mod cozytv;
 mod crooksandliars;
@@ -189,6 +190,7 @@ pub use caltrans::{Caltrans, suitable as caltrans_suitable};
 pub use cam4::{Cam4, suitable as cam4_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
+pub use clyp::{Clyp, suitable as clyp_suitable};
 pub use coub::{Coub, suitable as coub_suitable};
 pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
@@ -1447,6 +1449,93 @@ pub(crate) fn proto_relative(url: &str) -> String {
         Some(rest) => format!("https://{rest}"),
         None => url.to_owned(),
     }
+}
+
+/// An upstream `{'url': ..., ...}` format dict in its key order (`None`
+/// values dropped); `ext` is processing's `determine_ext(url)` unless given.
+pub(crate) fn dict_format(
+    fields: Vec<(&str, serde_json::Value)>,
+    extractor: &str,
+    id: &str,
+) -> Result<crate::VideoFormat> {
+    let mut map = serde_json::Map::new();
+    for (key, value) in fields {
+        if !value.is_null() {
+            map.insert(key.to_owned(), value);
+        }
+    }
+    let keys: Vec<String> = map.keys().cloned().collect();
+    let has_quality = map.get("quality").is_some_and(serde_json::Value::is_i64);
+    if !map.contains_key("ext") {
+        let ext = map
+            .get("url")
+            .and_then(serde_json::Value::as_str)
+            .and_then(direct::determine_ext)
+            .unwrap_or_else(|| "unknown_video".into());
+        map.insert("ext".into(), ext.into());
+    }
+    let mut format: crate::VideoFormat = serde_json::from_value(serde_json::Value::Object(map))
+        .map_err(|error| crate::Error::Reported(format!("[{extractor}] {id}: {error}")))?;
+    crate::info_order::mark_format(&mut format, &format!("dict:{}", keys.join(",")));
+    if has_quality {
+        crate::info_order::mark_int_quality(&mut format);
+    }
+    Ok(format)
+}
+
+/// An upstream `return {...}` info dict: `fields` in its key order (a
+/// `formats` entry only marks the key's position) with
+/// the extracted `formats`.
+pub(crate) fn dict_info(
+    page: &Url,
+    (extractor, key): (&'static str, &'static str),
+    fields: Vec<(&str, serde_json::Value)>,
+    formats: Vec<crate::VideoFormat>,
+) -> crate::VideoInfo {
+    let first = formats
+        .first()
+        .map_or_else(|| page.clone(), |format| format.url.clone());
+    let mut info = direct::build_at(first.clone(), &first, String::new());
+    info.direct = None;
+    if formats.is_empty() {
+        info.extra.insert(
+            crate::info::NO_FORMATS.into(),
+            serde_json::Value::Bool(true),
+        );
+    }
+    info.formats = formats;
+    info.webpage_url = page.clone();
+    info.extractor = extractor.into();
+    info.extractor_key = key.into();
+    let mut keys = Vec::new();
+    let mut titled = false;
+    for (name, value) in fields {
+        keys.push(name.to_owned());
+        match name {
+            "id" => info.id = value.as_str().unwrap_or_default().to_owned(),
+            "title" => {
+                titled = true;
+                info.title = value.as_str().unwrap_or_default().to_owned();
+            }
+            "formats" => {}
+            _ => crate::metadata_parser::set_field(&mut info, name, value),
+        }
+    }
+    if !titled {
+        info.title = String::new();
+        info.extra.insert(
+            crate::info::TITLE_MISSING.into(),
+            serde_json::Value::Bool(true),
+        );
+    }
+    crate::info_order::mark_info(
+        info,
+        &format!(
+            "dict{};{}",
+            if titled { "" } else { "-untitled" },
+            keys.join(",")
+        ),
+    )
 }
 
 #[cfg(test)]
