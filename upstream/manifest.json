@@ -581,6 +581,18 @@
       "scope": "DFBIE player XML, stream access token manifests (optional hds F4M with hdcore and hls m3u8 formats), title, unified_strdate upload date, thumbnail and wrapped AttributeError/KeyError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "dlive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dlive.py"
+      ],
+      "rust": [
+        "src/extractor/dlive.rs",
+        "tests/fixtures/sites/dlive/"
+      ],
+      "scope": "DLiveVODIE pastBroadcast and DLiveStreamIE userByDisplayName GraphQL POSTs, the fatal HLS playlists (playbackUrl and live.prd.dlive.tv/hls/live/USERNAME.m3u8, mp4), description/thumbnail/millisecond timestamp/view counts, is_live, KeyError and None TypeError paths compared with pinned upstream output through the fixture proxy; non-string playback URLs and usernames remain explicit native errors"
+    },
+    {
       "name": "drtalks",
       "status": "partial",
       "upstream": [

@@ -27,9 +27,14 @@ pub fn suitable(url: &str) -> bool {
 }
 
 /// `_download_json(url, id, data=urlencode_postdata(...))`.
-fn post_json(client: &Client, url: &Url, id: &str, body: String) -> Result<Value> {
+pub(crate) fn post_json(
+    client: &Client,
+    url: &Url,
+    (extractor, id): (&'static str, &str),
+    body: String,
+) -> Result<Value> {
     use std::io::Read;
-    crate::screen::screen(&format!("[{NAME}] {id}: Downloading JSON metadata"));
+    crate::screen::screen(&format!("[{extractor}] {id}: Downloading JSON metadata"));
     let mut response = super::direct::post(
         client,
         url,
@@ -38,7 +43,7 @@ fn post_json(client: &Client, url: &Url, id: &str, body: String) -> Result<Value
     )
     .map_err(|error| match error {
         Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor: NAME,
+            extractor,
             id: id.to_owned(),
             what: "JSON metadata",
             source: Box::new(error),
@@ -53,7 +58,7 @@ fn post_json(client: &Client, url: &Url, id: &str, body: String) -> Result<Value
     let text = super::decode_webpage(&body, response.headers());
     crate::json::from_str(&text).map_err(|error| {
         Error::Reported(format!(
-            "[{NAME}] {id}: Failed to parse JSON  (caused by {error})"
+            "[{extractor}] {id}: Failed to parse JSON  (caused by {error})"
         ))
     })
 }
@@ -80,7 +85,7 @@ impl Extractor for CloudyCdn {
             .append_pair("version", "6.4.0")
             .append_pair("referer", url.as_str())
             .finish();
-        let data = post_json(client, &api, &id, body)?;
+        let data = post_json(client, &api, (NAME, &id), body)?;
         let mut formats = Vec::new();
         let mut subtitles = crate::Subtitles::default();
         // `('source', 'sources', ..., 'src', {url_or_none})`.

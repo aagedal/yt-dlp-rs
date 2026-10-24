@@ -1614,6 +1614,18 @@ detected natively, and undecodable tokens remain explicit native errors.
 `tests/fixtures/sites/cloudflarestream/` is compared with pinned upstream
 output.
 
+DLive past broadcasts (`dlive.tv/p/UPLOADER+ID`) and live streams
+(`dlive.tv/NAME`, not `p/`) follow upstream `DLiveVODIE` and `DLiveStreamIE`:
+the `graphigo.prd.dlive.tv` GraphQL POST (`pastBroadcast(permlink:...)` or
+`userByDisplayName(displayname:...)`; a missing key is upstream's `KeyError`,
+a `null` object the bare `'NoneType' object is not subscriptable`), the fatal
+HLS playlist (the broadcast's `playbackUrl`, or
+`live.prd.dlive.tv/hls/live/USERNAME.m3u8` for a live stream marked
+`is_live`), content, thumbnail, `int_or_none(createdAt, 1000)` timestamp and
+view/watching counts. Non-string playback URLs and usernames remain explicit
+native errors. `tests/fixtures/sites/dlive/` is compared with pinned upstream
+output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

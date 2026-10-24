@@ -32,6 +32,7 @@ mod dash;
 mod daystar;
 mod dfb;
 pub(crate) mod direct;
+mod dlive;
 mod drtalks;
 mod dumpert;
 mod ebaumsworld;
@@ -206,6 +207,10 @@ pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use dfb::{Dfb, suitable as dfb_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
+pub use dlive::{
+    DLiveStream, DLiveVod, stream_suitable as dlive_stream_suitable,
+    vod_suitable as dlive_vod_suitable,
+};
 pub use drtalks::{DrTalks, suitable as drtalks_suitable};
 pub use dumpert::{Dumpert, suitable as dumpert_suitable};
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
