@@ -168,6 +168,7 @@ mod trtcocuk;
 mod trtworld;
 mod tumblr;
 mod tvanouvelles;
+mod tvnoe;
 mod tweakers;
 mod twentythreevideo;
 mod twitch;
@@ -402,6 +403,7 @@ pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
     suitable as tvanouvelles_suitable,
 };
+pub use tvnoe::{TvNoe, suitable as tvnoe_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub(crate) use twitch::{

@@ -2098,6 +2098,18 @@
       "scope": "TVANouvellesIE videos as url results of the TVA Nouvelles BrightcoveNew player, and TVANouvellesArticleIE data-video-id videos as a playlist of TVANouvelles url results with the OpenGraph title and description (with upstream's warnings when missing), compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tvnoe",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tvnoe.py"
+      ],
+      "rust": [
+        "src/extractor/tvnoe.rs",
+        "tests/fixtures/sites/tvnoe/"
+      ],
+      "scope": "TVNoeIE INIT_PLAYER js_to_json tracks (upstream's nested track-group filter) as master-only HLS and DASH formats with unsupported-type warnings, description, h2 title, premiere release date, h1 series and player poster compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tweakers",
       "status": "partial",
       "upstream": [

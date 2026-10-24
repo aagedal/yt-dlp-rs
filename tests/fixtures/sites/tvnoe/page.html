@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head><title>Pomáhat potřebným nejen u nás | TV Noe</title></head>
+<body>
+<header><a href="/">TV Noe</a></header>
+<h1 class="porad-title">Outdoor Films s&nbsp;MUDr. Tomášem Kempným</h1>
+<h2>Pomáhat potřebným <em>nejen</em> u nás</h2>
+<div class="player">
+<video id="player-live" class="video-js" poster="/data/images/porad/43216.jpg" controls></video>
+</div>
+<p class="">Jak pomáhat potřebným &amp; proč?<br>Rozhovor s MUDr. Tomášem Kempným.</p>
+<div class="info">
+<span>Premiéra: 31.5.2025</span>
+<span>Repríza: 2.6.2025</span>
+</div>
+<script>
+var INIT_PLAYER = {
+    autoplay: false,
+    tracks: {
+        HLS: [{src: 'https://cdn.tvnoe.cz/vod/43216/playlist.m3u8', type: 'application/x-mpegURL'}],
+        DASH: [{src: 'https://cdn.tvnoe.cz/vod/43216/manifest.mpd', type: 'application/dash+xml'}],
+        OTHER: [
+            {src: 'https://cdn.tvnoe.cz/vod/43216/video.webm', type: 'video/webm'},
+            {src: 'https://cdn.tvnoe.cz/vod/43216/stream.f4m'},
+            {src: '/relative/only.m3u8', type: 'application/x-mpegURL'}
+        ]
+    }
+};
+</script>
+</body>
+</html>
