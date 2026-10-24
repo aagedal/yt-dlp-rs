@@ -1702,6 +1702,18 @@
       "scope": "RutubeIE and RutubeEmbedIE video API metadata and description chapters, play options balancer/live HLS and progressive formats and captions; no F4M formats or playlist extractors; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "sapo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sapo.py"
+      ],
+      "rust": [
+        "src/extractor/sapo.rs",
+        "tests/fixtures/sites/sapo/"
+      ],
+      "scope": "SapoIE rd3.videos.sapo.pt RSS item (MRSS synopsis, thumbnail, duration, author, date, counts, tags, m18) with SD and HD MP4 formats compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "screen9",
       "status": "partial",
       "upstream": [

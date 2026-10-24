@@ -124,7 +124,7 @@ Supported today:
   (and Filmweb articles that embed them), FILMARCHIV ON videos, Kaltura entries (`kaltura:` URLs, players and embeds) and the KTH Play, UN Web TV and Inc pages that delegate to them, Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Project Veritas videos, tele-TASK lectures, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Match TV live, mir24.tv news videos, Mocha videos, Sen videos, Kankanews videos, Kommunetv archives,
-  Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, VideoPress embeds, uStudio videos and embeds, 3Speak videos and users, TV Noe programmes, Telegraaf videos, Premiership Rugby videos, PressTV videos, CJSW episodes,
+  Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, SAPO Vídeos, VideoPress embeds, uStudio videos and embeds, 3Speak videos and users, TV Noe programmes, Telegraaf videos, Premiership Rugby videos, PressTV videos, CJSW episodes,
   Player.fm episodes, RTRFM shows, Roya TV live streams, HitRecord records, href.li redirects, Culture Unplugged films,
   Zhihu videos, CRTVG programmes, Breitbart videos, Brightcove players (and their embeds), DrTalks videos, Toronto Star videos, The Sun article videos, TVA Nouvelles videos and articles, Wimbledon videos, Screen9 embeds, The HighWire videos, The Guardian podcast episodes, Sky News Australia videos, European Tour videos, Māori Television shows, Formula 1 videos, CGTN news videos, JoVE
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin

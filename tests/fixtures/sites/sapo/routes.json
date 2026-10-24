@@ -1,0 +1,20 @@
+{
+ "routes": [
+  {
+   "url": "http://rd3.videos.sapo.pt/UBz95kOtiWYUMTA5Ghfi/rss2",
+   "headers": {"Content-Type": "application/rss+xml; charset=utf-8"},
+   "body_file": "rss.xml"
+  },
+  {
+   "url": "http://rd3.videos.sapo.pt/yLqjzPtbTimsn2wWBKHz/rss2",
+   "headers": {"Content-Type": "application/rss+xml; charset=utf-8"},
+   "body_file": "rss2.xml"
+  },
+  {
+   "url": "http://rd3.videos.sapo.pt/AAAAAAAAAAAAAAAAAAAA/rss2",
+   "status": 404,
+   "headers": {"Content-Type": "text/html"},
+   "body": "gone"
+  }
+ ]
+}

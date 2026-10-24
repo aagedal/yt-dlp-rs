@@ -913,6 +913,14 @@ std < dvd < hd, the `original` upload (quality 3, width/height), and the title
 (else a `KeyError`), description, poster, millisecond duration, upload
 timestamp and `parse_age_limit` rating.
 
+SAPO videos (`videos.sapo.pt|cv|ao|mz|tl/ID`) follow upstream `SapoIE`: the
+`rd3.videos.sapo.pt/ID/rss2` item's title, `sapo:synopse`, `media:content`
+URL, `parse_duration` time, author, `unified_strdate` date, integer view and
+comment counts, whitespace-split tags as categories and `m18` age limit, with
+the `videoFile` as the `sd` MP4 (`videoSize` width/height) and, when `HD` is
+`true`, its `/mov/39` variant as the 1280x720 `hd` MP4. Items missing an
+element upstream reads are explicit native errors.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,
