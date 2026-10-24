@@ -509,6 +509,18 @@
       "scope": "DFBIE player XML, stream access token manifests (optional hds F4M with hdcore and hls m3u8 formats), title, unified_strdate upload date, thumbnail and wrapped AttributeError/KeyError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "drtalks",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/drtalks.py"
+      ],
+      "rust": [
+        "src/extractor/drtalks.rs",
+        "tests/fixtures/sites/drtalks/"
+      ],
+      "scope": "DrTalksIE Next.js video data as a url_transparent BrightcoveNew result overlaid with title, summary and featured image, and the KeyError path, compared with pinned upstream output through the fixture proxy; non-Brightcove links are unsupported"
+    },
+    {
       "name": "ebaumsworld",
       "status": "partial",
       "upstream": [

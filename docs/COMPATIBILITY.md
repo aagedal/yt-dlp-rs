@@ -687,6 +687,13 @@ are followed (one) or listed (several) with the page smuggled as the
 key is not cached between runs. `tests/fixtures/sites/brightcove/` is compared
 with pinned upstream output.
 
+DrTalks videos (`drtalks.com/videos/SLUG`) follow upstream `DrTalksIE`: the
+page's Next.js `video` data (missing keys are upstream's `KeyError`) as a
+`url_transparent` result of its `brightcoveVideoLink` (extracted like
+Brightcove players above), overlaid with the page's title, `summury` and
+featured image. `tests/fixtures/sites/drtalks/` is compared with pinned
+upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
