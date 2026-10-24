@@ -1,0 +1,15 @@
+{
+ "routes": [
+  {
+   "url": "https://api.kaltura.nordu.net/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"0_uoop6oz9\"",
+    "\"widgetId\": \"_308\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "entry.json"
+  }
+ ]
+}

@@ -846,6 +846,18 @@
       "scope": "ImgurIE post API media, gifv page sources, GIF and Twitter formats and metadata; ImgurGalleryIE/ImgurAlbumIE album API playlists and url_transparent single videos; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "inc",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/inc.py"
+      ],
+      "rust": [
+        "src/extractor/inc.rs",
+        "tests/fixtures/sites/inc/"
+      ],
+      "scope": "IncIE kaltura_player element or pageInfo.videos vid_kaltura_id with the bizo partner ID (default 1034971) as a kaltura: url result compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "instagram",
       "status": "partial",
       "upstream": [
@@ -907,6 +919,18 @@
       "scope": "JWPlatformIE _VALID_URL (including jwplatform: pseudo-URLs) and v2 media JSON via _parse_jwplayer_data(require_title=True) compared with pinned upstream output through the fixture proxy; _extract_embed_urls on generic pages; no playlists"
     },
     {
+      "name": "kaltura",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kaltura.py"
+      ],
+      "rust": [
+        "src/extractor/kaltura.rs",
+        "tests/fixtures/sites/kaltura/"
+      ],
+      "scope": "KalturaIE kaltura: pseudo-URLs and kwidget/mwEmbedFrame player URLs through the html5/kwidget multirequest API (KalturaAPIException errors, smuggled service_url), flavor formats (status/chun/wvm filters, isOriginal URL checks, ks signing), playManifest HLS, caption subtitles, kalturaIframePackageData referenceId pages and _extract_embed_urls on generic pages compared with pinned upstream output through the fixture proxy; playlistAPI.kpl0Id playlists remain unsupported natively"
+    },
+    {
       "name": "kankanews",
       "status": "partial",
       "upstream": [
@@ -953,6 +977,18 @@
         "tests/fixtures/sites/kommunetv/"
       ],
       "scope": "KommunetvIE streams API (Accept header, title, query-less first file as non-fatal HLS formats, KeyError/IndexError/no-formats errors) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "kth",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kth.py"
+      ],
+      "rust": [
+        "src/extractor/kth.rs",
+        "tests/fixtures/sites/kth/"
+      ],
+      "scope": "KTHIE kaltura:308:ID url result smuggling the api.kaltura.nordu.net service URL compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "ku6",
@@ -1714,6 +1750,18 @@
         "tests/fixtures/sites/unistra/"
       ],
       "scope": "UnistraIE player file paths as SD/HD formats with fatal title/description/thumbnail regexes and the no-formats error compared with pinned upstream output through the fixture proxy; upstream's unordered set of paths is kept in page order"
+    },
+    {
+      "name": "unitednations",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/unitednations.py"
+      ],
+      "rust": [
+        "src/extractor/unitednations.rs",
+        "tests/fixtures/sites/unitednations/"
+      ],
+      "scope": "UnitedNationsWebTvIE page partnerId and kentryID as a kaltura: url result compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "veo",

@@ -1842,7 +1842,7 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 9] = [
+static EMBED_SITES: [EmbedSite; 10] = [
     EmbedSite {
         name: super::bitmovin::NAME,
         key: super::bitmovin::KEY,
@@ -1877,6 +1877,13 @@ static EMBED_SITES: [EmbedSite; 9] = [
         extractor: Some(&super::jwplatform::JwPlatform),
         embed_urls: super::jwplatform::embed_urls,
         temp_id: super::jwplatform::temp_id,
+    },
+    EmbedSite {
+        name: super::kaltura::NAME,
+        key: super::kaltura::KEY,
+        extractor: Some(&super::kaltura::Kaltura),
+        embed_urls: super::kaltura::embed_urls,
+        temp_id: super::kaltura::temp_id,
     },
     EmbedSite {
         name: super::maariv::NAME,

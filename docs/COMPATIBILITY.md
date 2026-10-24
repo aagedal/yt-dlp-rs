@@ -1358,6 +1358,40 @@ Player playlists are unsupported errors. On generic pages its
 embed detection, first in extractor order. A pseudo-URL result's
 `webpage_url_domain` is `null`, like upstream's `get_domain`.
 
+Kaltura media (`kaltura:PARTNER:ENTRY[:PLAYER]` pseudo-URLs and
+`kaltura.com` `index.php/kwidget`, `index.php/extwidget/preview` and
+`html5lib/VERSION/mwEmbedFrame.php` player URLs) follow upstream `KalturaIE`:
+the POSTed `api_v3/service/multirequest` JSON (html5 session, or the kwidget
+session for `html5lib/v2` URLs and `:kwidget`; a smuggled `service_url`
+replaces `cdnapi.kaltura.com`), failing with `Kaltura said: MESSAGE (INDEX)` on
+a `KalturaAPIException`. Ready flavor assets (not `chun`/`wvm`) become
+`EXT-BITRATE` formats on the entry's `dataUrl` (`flvclipper` rewritten to
+`serveFlavor`, signed with `flashvars[ks]` and a smuggled `source_url`
+referrer), an `isOriginal` flavor only after its `Checking ... URL` request
+succeeds; a `playManifest` URL adds the non-fatal `format/applehttp` HLS
+formats (ext `mp4`), and ready caption assets become subtitles served from
+`cdnapi.kaltura.com`. Player URLs take the partner from `wid`/`p`/`partner_id`
+and the entry from `entry_id` (else `Invalid URL`), or a
+`flashvars[referenceId]` page's `kalturaIframePackageData` (then the API for
+captions, its failure ignored). Missing entries keep upstream's bare
+`'NoneType' object is not subscriptable` and unknown player types its bare
+assertion error. `playlistAPI.kpl0Id` playlist player URLs are unsupported
+errors. On generic pages `_extract_embed_urls` (`kWidget.embed` calls, else
+`cdnapi` URLs followed by an `entry_id`, else iframe/meta players with an
+`entry_id` query, with a page's `embedIframeJs` script host smuggled as
+`service_url`) joins the embed detection after JW Platform.
+
+Kaltura-delegating pages follow their upstream extractors as `url` results
+extracted by the Kaltura extractor (so `webpage_url` is the `kaltura:` URL):
+KTH Play media (`play.kth.se/.../ID`, `KTHIE`) as `kaltura:308:ID` with the
+`api.kaltura.nordu.net` service URL smuggled; UN Web TV assets
+(`webtv.un.org/LANG/asset/X/ID`, `UnitedNationsWebTvIE`) from the page's
+`partnerId:` and `const kentryID` (each a fatal search); and inc.com articles
+(`IncIE`) from a `kaltura_player_ID` element, else the `pageInfo.videos` JSON
+`vid_kaltura_id`, with the `bizo_data_partner_id` (default `1034971`).
+A `pageInfo.videos` value that is not a single JSON object is an explicit
+native error.
+
 Kick (`kick.com`) follows upstream's five reworked extractors (yt-dlp
 `fe84bef`, release 2026.10.21), each requesting the site APIs (`kick.com/api/v2`,
 `web.kick.com/api/v1`, a `session_token` cookie as bearer token) with

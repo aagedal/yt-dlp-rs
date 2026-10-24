@@ -1,0 +1,43 @@
+[
+ {
+  "partnerId": 1034971,
+  "ks": "KS",
+  "objectType": "KalturaStartWidgetSessionResponse"
+ },
+ {
+  "objects": [
+   {
+    "id": "1_wqig47aq",
+    "name": "Bill Gates Says These 5 Books Will Make You Smarter",
+    "userId": "user@example.com",
+    "dataUrl": "https://cdnapisec.kaltura.com/p/1034971/sp/103497100/serveFlavor/entryId/1_wqig47aq/v/1",
+    "plays": 3,
+    "duration": 234,
+    "createdAt": 1750430976,
+    "thumbnailUrl": "http://cfvod.kaltura.com/p/1034971/thumbnail/entry_id/1_wqig47aq"
+   }
+  ]
+ },
+ [
+  {
+   "id": "1_wqig47aq_f",
+   "status": 2,
+   "fileExt": "mp4",
+   "bitrate": 900,
+   "width": 1280,
+   "height": 720,
+   "frameRate": 25,
+   "videoCodecId": "avc1"
+  }
+ ],
+ {
+  "objects": [
+   {
+    "id": "1_wqig47aq_c",
+    "status": 2,
+    "languageCode": "en",
+    "format": 3
+   }
+  ]
+ }
+]

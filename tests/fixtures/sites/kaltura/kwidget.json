@@ -1,0 +1,36 @@
+[
+ {
+  "ks": "x"
+ },
+ null,
+ {
+  "objects": [
+   {
+    "id": "1_kw",
+    "name": "Kwidget entry",
+    "userId": null,
+    "dataUrl": "https://cdnapisec.kaltura.com/p/243342/sp/24334200/flvclipper/entry_id/1_kw/version/100000",
+    "plays": 12,
+    "duration": 91,
+    "createdAt": 1533154447,
+    "thumbnailUrl": "https://cfvod.kaltura.com/p/243342/thumbnail/entry_id/1_kw"
+   }
+  ],
+  "totalCount": 1
+ },
+ [
+  {
+   "id": "1_f1",
+   "status": 2,
+   "fileExt": "mp4",
+   "bitrate": 700,
+   "width": 640,
+   "height": 360,
+   "frameRate": 30,
+   "videoCodecId": "avc1"
+  }
+ ],
+ {
+  "objects": []
+ }
+]

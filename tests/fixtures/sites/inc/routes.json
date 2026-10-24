@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"1_wqig47aq\"",
+    "\"widgetId\": \"_1034971\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "entry.json"
+  },
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"1_kqs38cgm\"",
+    "\"widgetId\": \"_1111\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "entry2.json"
+  },
+  {
+   "url": "http://www.inc.com/tip-sheet/bill-gates-says-these-5-books-will-make-you-smarter.html",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "player.html"
+  },
+  {
+   "url": "https://www.inc.com/oscar-raymundo/richard-branson-young-entrepeneurs.html",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "videos.html"
+  },
+  {
+   "url": "https://www.inc.com/video/nokey.html",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "nokey.html"
+  },
+  {
+   "url": "https://www.inc.com/video/none.html",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "none.html"
+  }
+ ]
+}

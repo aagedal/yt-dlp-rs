@@ -121,7 +121,7 @@ Supported today:
   QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and
   This American Life episodes through their pages, JW Platform media through
   the media API (and The Intercept posts, Spiegel articles, OneFootball videos, Bundesliga videos and Iltalehti articles that embed it), Israel National News articles (as playlists of their YouTube embeds), 23video players
-  (and Filmweb articles that embed them), FILMARCHIV ON videos, Vocaroo recordings, AudioBoom posts,
+  (and Filmweb articles that embed them), FILMARCHIV ON videos, Kaltura entries (`kaltura:` URLs, players and embeds) and the KTH Play, UN Web TV and Inc pages that delegate to them, Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Project Veritas videos, tele-TASK lectures, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Match TV live, mir24.tv news videos, Mocha videos, Sen videos, Kankanews videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, Premiership Rugby videos, PressTV videos, CJSW episodes,

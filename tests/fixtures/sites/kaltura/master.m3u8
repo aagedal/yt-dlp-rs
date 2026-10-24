@@ -1,0 +1,5 @@
+#EXTM3U
+#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720,CODECS="avc1.64001f,mp4a.40.2"
+https://cdnapisec.kaltura.com/hls/0_c03e1b5g/720.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=600000,RESOLUTION=640x360,CODECS="avc1.42c01e,mp4a.40.2"
+https://cdnapisec.kaltura.com/hls/0_c03e1b5g/360.m3u8
