@@ -1,0 +1,7 @@
+[
+ {"url": "https://app.veo.co/matches/20201027-last-period/", "args": ["-j"]},
+ {"url": "https://app.veo.co/matches/20201027-last-period/", "args": ["-F"]},
+ {"url": "https://app.veo.co/matches/bare", "args": ["-j"]},
+ {"url": "https://app.veo.co/matches/gone", "args": ["-j"]},
+ {"url": "https://app.veo.co/matches/novideos", "args": ["-j"]}
+]

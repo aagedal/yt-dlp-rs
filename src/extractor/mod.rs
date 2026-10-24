@@ -114,6 +114,7 @@ mod twitch;
 mod twitter;
 mod umg;
 mod unistra;
+mod veo;
 mod vimeo;
 mod vk;
 mod vkplay;
@@ -287,6 +288,7 @@ pub use twitter::{
 };
 pub use umg::{UmgDe, suitable as umg_suitable};
 pub use unistra::{Unistra, suitable as unistra_suitable};
+pub use veo::{Veo, suitable as veo_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,

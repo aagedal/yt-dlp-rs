@@ -1,0 +1,15 @@
+{
+ "routes": [
+  {"url": "https://app.veo.co/api/app/matches/20201027-last-period", "headers": {"Content-Type": "application/json"},
+   "body": "{\"title\": \"Akidemy u11s v Bradford Boys u11s (Game 3)\", \"thumbnail\": \"https://c.veocdn.com/abc/thumbnail.jpg\", \"created\": \"2020-10-28T01:06:48.123456Z\", \"view_count\": 42, \"duration\": 1916.4}"},
+  {"url": "https://app.veo.co/api/app/matches/20201027-last-period/videos", "headers": {"Content-Type": "application/json"},
+   "body": "[{\"mime_type\": \"video/mp4\", \"url\": \"https://c.veocdn.com/abc/standard/machine/1080p.mp4\", \"height\": 1080, \"width\": 1920, \"render_type\": \"standard\", \"bit_rate\": 4500500}, {\"mime_type\": \"video/mp2t\", \"url\": \"https://c.veocdn.com/abc/standard/machine/video.ts\", \"render_type\": \"standard\", \"height\": 1080}, {\"mime_type\": \"video/mp4\", \"url\": \"https://c.veocdn.com/abc/panorama/machine/video.mp4\", \"height\": 1440, \"width\": 5760, \"render_type\": \"panorama\", \"bit_rate\": 9000000}, {\"mime_type\": \"video/mp4\", \"url\": \"https://c.veocdn.com/abc/panorama/missing/video.mp4\", \"height\": 720, \"render_type\": \"panorama\"}, {\"mime_type\": \"video/mp4\", \"url\": null, \"height\": 480, \"render_type\": \"standard\"}, {\"url\": \"https://c.veocdn.com/abc/other/clip.mp4\", \"height\": \"360\", \"width\": 640}]"},
+  {"url": "https://c.veocdn.com/abc/panorama/machine/video.mp4", "headers": {"Content-Type": "video/mp4"}, "body": "MP4DATA"},
+  {"url": "https://c.veocdn.com/abc/panorama/missing/video.mp4", "status": 404, "headers": {"Content-Type": "text/plain"}, "body": "missing"},
+  {"url": "https://app.veo.co/api/app/matches/bare", "headers": {"Content-Type": "application/json"}, "body": "{\"title\": 12345}"},
+  {"url": "https://app.veo.co/api/app/matches/bare/videos", "headers": {"Content-Type": "application/json"}, "body": "[]"},
+  {"url": "https://app.veo.co/api/app/matches/gone", "status": 404, "headers": {"Content-Type": "application/json"}, "body": "{}"},
+  {"url": "https://app.veo.co/api/app/matches/novideos", "headers": {"Content-Type": "application/json"}, "body": "{\"title\": \"No videos\"}"},
+  {"url": "https://app.veo.co/api/app/matches/novideos/videos", "status": 403, "headers": {"Content-Type": "application/json"}, "body": "{}"}
+ ]
+}

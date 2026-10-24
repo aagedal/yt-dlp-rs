@@ -1007,6 +1007,15 @@ follows this port's HLS downloader selection rather than upstream's forced
 FFmpeg. `tests/fixtures/sites/twitter/` is compared with pinned upstream
 output.
 
+Veo matches (`app.veo.co/matches/ID`) follow upstream `VeoIE`: the match
+API's title, thumbnail, `created` timestamp, view count and duration, and the
+`videos` list as formats (`RENDER-HEIGHTp` IDs, MIME-type extensions, widths,
+heights and `bit_rate / 1000` integer VBRs); entries without a URL and
+`video/mp2t` files are skipped, and `panorama` videos are requested first
+(`Checking ... URL`) and skipped with upstream's message when invalid. No
+usable videos is upstream's `No video formats found!`. API values that are not
+objects or lists remain explicit native errors.
+
 Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel and
 `user` clip URLs) follow upstream `VimeoIE` as it runs without login or
 impersonation (with upstream's impersonation warning): player pages'

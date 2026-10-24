@@ -1,0 +1,76 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://app.veo.co/matches/20201027-last-period/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"20201027-last-period\", \"title\": \"Akidemy u11s v Bradford Boys u11s (Game 3)\", \"formats\": [{\"url\": \"https://c.veocdn.com/abc/other/clip.mp4\", \"format_id\": \"0\", \"ext\": \"mp4\", \"width\": 640, \"height\": 360, \"vbr\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - 640x360\"}, {\"url\": \"https://c.veocdn.com/abc/standard/machine/1080p.mp4\", \"format_id\": \"standard-1080p\", \"ext\": \"mp4\", \"width\": 1920, \"height\": 1080, \"vbr\": 4500, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"standard-1080p - 1920x1080\"}, {\"url\": \"https://c.veocdn.com/abc/panorama/machine/video.mp4\", \"format_id\": \"panorama-1440p\", \"ext\": \"mp4\", \"width\": 5760, \"height\": 1440, \"vbr\": 9000, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"5760x1440\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 4.0, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"panorama-1440p - 5760x1440\"}], \"thumbnail\": \"https://c.veocdn.com/abc/thumbnail.jpg\", \"timestamp\": 1603847208, \"view_count\": 42, \"duration\": 1916, \"webpage_url\": \"https://app.veo.co/matches/20201027-last-period/\", \"original_url\": \"https://app.veo.co/matches/20201027-last-period/\", \"webpage_url_basename\": \"20201027-last-period\", \"webpage_url_domain\": \"app.veo.co\", \"extractor\": \"Veo\", \"extractor_key\": \"Veo\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://c.veocdn.com/abc/thumbnail.jpg\", \"id\": \"0\"}], \"display_id\": \"20201027-last-period\", \"fulltitle\": \"Akidemy u11s v Bradford Boys u11s (Game 3)\", \"duration_string\": \"31:56\", \"upload_date\": \"20201028\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://c.veocdn.com/abc/panorama/machine/video.mp4\", \"format_id\": \"panorama-1440p\", \"ext\": \"mp4\", \"width\": 5760, \"height\": 1440, \"vbr\": 9000, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": null, \"tbr\": null, \"resolution\": \"5760x1440\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 4.0, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"panorama-1440p - 5760x1440\", \"_filename\": \"Akidemy u11s v Bradford Boys u11s (Game 3) [20201027-last-period].mp4\", \"filename\": \"Akidemy u11s v Bradford Boys u11s (Game 3) [20201027-last-period].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://app.veo.co/matches/20201027-last-period/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Veo] Extracting URL: https://app.veo.co/matches/20201027-last-period/",
+    "[Veo] 20201027-last-period: Downloading JSON metadata",
+    "[Veo] 20201027-last-period: Downloading video data",
+    "[Veo] 20201027-last-period: Checking panorama-1440p URL",
+    "[Veo] 20201027-last-period: Checking panorama-720p URL",
+    "[Veo] 20201027-last-period: panorama-720p URL is invalid, skipping: HTTP Error 404: Not Found",
+    "[info] Available formats for 20201027-last-period:",
+    "ID             EXT RESOLUTION | PROTO | VCODEC    VBR ACODEC",
+    "-------------------------------------------------------------",
+    "0              mp4 640x360    | https | unknown       unknown",
+    "standard-1080p mp4 1920x1080  | https | unknown 4500k unknown",
+    "panorama-1440p mp4 5760x1440  | https | unknown 9000k unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://app.veo.co/matches/bare",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Veo] bare: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://app.veo.co/matches/gone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Veo] gone: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://app.veo.co/matches/novideos",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Veo] novideos: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)"
+   ],
+   "files": {}
+  }
+ ]
+}
