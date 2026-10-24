@@ -521,6 +521,18 @@
       "scope": "CAM4IE streamInfo cdnURL as live HLS formats (mp4, live variant IDs), channel title, thumbnail and age limit compared with pinned upstream output through the fixture proxy; a missing or relative cdnURL remains a native error"
     },
     {
+      "name": "ccc",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ccc.py"
+      ],
+      "rust": [
+        "src/extractor/ccc.rs",
+        "tests/fixtures/sites/ccc/"
+      ],
+      "scope": "CCCIE event data-id, public events JSON recordings as formats (language/folder IDs, codecs, MiB filesize) with title, creator, description, thumbnail, timestamp, duration, view count and tags; CCCPlaylistIE is not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cgtn",
       "status": "partial",
       "upstream": [

@@ -1684,6 +1684,16 @@ episodes (by `MEDIA_EXTENSIONS.audio`) as a playlist with the show's title and
 description. Episodes without a string ID or media URL remain explicit native
 errors. `tests/fixtures/sites/rinsefm/` is compared with pinned upstream output.
 
+media.ccc.de events (`[www.]media.ccc.de/v/SLUG`) follow upstream `CCCIE`:
+the page's fatal `data-id`, the `media.ccc.de/public/events/ID` JSON and its
+recordings with a URL as formats (`LANGUAGE-FOLDER` format IDs, `h264`/audio
+codecs by folder, size in MiB as `filesize`), the required `title`
+(upstream's `KeyError`), the joined `persons` as `creator`, description,
+thumbnail, ISO 8601 date, length, view count and tags. Recordings without a
+string folder (upstream's `TypeError`) remain explicit native errors;
+conference playlists (`CCCPlaylistIE`) are not ported.
+`tests/fixtures/sites/ccc/` is compared with pinned upstream output.
+
 Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
 `api.clyp.it/ID` JSON (with the URL's `token` query), its `OggUrl`,
 `Mp3Url`, `SecureOggUrl` and `SecureMp3Url` audio formats, the page's
