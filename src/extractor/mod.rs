@@ -210,6 +210,7 @@ mod webcamerapl;
 mod weibo;
 mod whyp;
 mod wimbledon;
+mod wistia;
 mod worldstarhiphop;
 mod xboxclips;
 mod xiaohongshu;
@@ -504,6 +505,10 @@ pub use weibo::{
 };
 pub use whyp::{Whyp, suitable as whyp_suitable};
 pub use wimbledon::{Wimbledon, suitable as wimbledon_suitable};
+pub use wistia::{
+    Wistia, WistiaChannel, WistiaPlaylist, channel_suitable as wistia_channel_suitable,
+    playlist_suitable as wistia_playlist_suitable, suitable as wistia_suitable,
+};
 pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
@@ -1451,6 +1456,8 @@ pub fn pseudo_url(url: &str) -> bool {
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))
         || (url.starts_with("tiktokuser:") && tiktok::user_suitable(url))
+        || (url.starts_with("wistia:") && wistia::suitable(url))
+        || (url.starts_with("wistiachannel:") && wistia::channel_suitable(url))
         || youtube::redirect::user_suitable(url)
 }
 

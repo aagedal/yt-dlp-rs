@@ -2593,6 +2593,18 @@
       "scope": "WimbledonIE related-content metadata (title, description, parsed duration) over a url_transparent result of the Wimbledon BrightcoveNew player, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "wistia",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/wistia.py"
+      ],
+      "rust": [
+        "src/extractor/wistia.rs",
+        "tests/fixtures/sites/wistia/"
+      ],
+      "scope": "WistiaIE media config JSON (Referer, --video-password query, error and password-protection errors, KeyErrors) with asset formats (HLS m3u8_native plus ts copies, audio-only, original quality, int tbr), still thumbnails, the non-fatal HEAD extension check and caption subtitles; WistiaPlaylistIE embed_config entries; WistiaChannelIE --no-playlist wmediaid follow, series url entries and the wchanneljsonp page fallback (including upstream's Incorrect padding error); WistiaChannelIE/WistiaIE generic-page embeds (_EMBED_REGEX, wistia_async classes, data-wistia-id/Wistia.embed/id=wistia_ IDs, page query on channel embeds) with the TeachableIE-page exclusion. TeachableIE itself, unusual base64 padding and non-string asset fields are not ported (explicit native errors). Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "worldstarhiphop",
       "status": "partial",
       "upstream": [

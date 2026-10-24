@@ -2547,7 +2547,28 @@ fn youtube_tab_playlist(
     replay.finish()
 }
 
+/// One playlist dict (`-J`) in upstream order. A playlist reached by
+/// following a `url` result ([`FOLLOWED`]) has the result's `original_url`
+/// (passed on as extra info) ahead of its `webpage_url`.
 pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
+    let followed = map.shift_remove(FOLLOWED).is_some();
+    let map = shaped_playlist(map);
+    if !followed || !map.contains_key("original_url") {
+        return map;
+    }
+    let mut out = Map::new();
+    for (key, value) in &map {
+        if key == "webpage_url" {
+            out.insert("original_url".into(), map["original_url"].clone());
+        }
+        if key != "original_url" || !out.contains_key("original_url") {
+            out.insert(key.clone(), value.clone());
+        }
+    }
+    out
+}
+
+fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some(Value::String(shape)) = map.shift_remove(INFO_SHAPE) else {
         return map;
     };

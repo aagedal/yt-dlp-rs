@@ -1125,7 +1125,15 @@ impl GenericHttp {
     ) -> Result<Option<ExtractResult>> {
         if let [(site, embed)] = embeds.as_slice() {
             if let Some(extractor) = site.extractor {
-                return extractor.extract_result(client, embed);
+                let mut result = extractor.extract_result(client, embed)?;
+                // A followed playlist keeps the page as its `original_url`.
+                if let Some(ExtractResult::Playlist(playlist)) = &mut result {
+                    playlist.extra.insert(
+                        crate::info_order::FOLLOWED.into(),
+                        serde_json::Value::Bool(true),
+                    );
+                }
+                return Ok(result);
             }
             // `url_result(embed)`: followed by the downloader.
             let mut info = direct::build_at(embed.clone(), embed, String::new());
@@ -2023,6 +2031,7 @@ pub(crate) struct EmbedSite {
 }
 
 static EMBED_SITES: [EmbedSite; 11] = [
+static EMBED_SITES: [EmbedSite; 12] = [
     EmbedSite {
         name: super::bitmovin::NAME,
         key: super::bitmovin::KEY,
@@ -2092,6 +2101,18 @@ static EMBED_SITES: [EmbedSite; 11] = [
         extractor: Some(&super::vidyard::Vidyard),
         embed_urls: super::vidyard::embed_urls,
         temp_id: super::vidyard::temp_id,
+        name: super::wistia::CHANNEL_NAME,
+        key: super::wistia::CHANNEL_KEY,
+        extractor: Some(&super::wistia::WistiaChannel),
+        embed_urls: super::wistia::channel_embed_urls,
+        temp_id: super::wistia::channel_temp_id,
+    },
+    EmbedSite {
+        name: super::wistia::NAME,
+        key: super::wistia::KEY,
+        extractor: Some(&super::wistia::Wistia),
+        embed_urls: super::wistia::embed_urls,
+        temp_id: super::wistia::temp_id,
     },
     EmbedSite {
         name: "youtube",
