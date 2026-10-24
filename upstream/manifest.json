@@ -1341,6 +1341,18 @@
       "scope": "PlayerFmIE episode JSON as an untyped audio result (clean_podcast_url, integer ID, metadata traversal, missing-ID/no-formats errors, generic title) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "podbayfm",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/podbayfm.py"
+      ],
+      "rust": [
+        "src/extractor/podbayfm.rs",
+        "tests/fixtures/sites/podbayfm/"
+      ],
+      "scope": "PodbayFMIE __NEXT_DATA__ episode as an untyped MP3 result (clean_html description, JWT image thumbnail, timestamp, duration), next.js/KeyError/no-formats errors and generic title, and PodbayFMChannelIE paged podcast API playlists with timestamp-based episode webpage_url compared with pinned upstream output through the fixture proxy; episodes without a string id remain explicit native errors"
+    },
+    {
       "name": "popcorntv",
       "status": "partial",
       "upstream": [

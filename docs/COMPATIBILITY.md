@@ -1576,6 +1576,17 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+Podbay episodes (`podbay.fm/p/SLUG/e/ID`) follow upstream `PodbayFMIE`: the
+page's `__NEXT_DATA__` `pageProps.episode` as an untyped MP3 result
+(`vcodec: none`) with its `clean_html` description, the JWT-encoded image's
+thumbnail URL, timestamp and duration, upstream's next.js/`KeyError` errors and
+the generic title and `No video formats found!` error for bare episodes.
+Channels (`podbay.fm/p/SLUG`) follow `PodbayFMChannelIE`: the podcast API's
+10-episode pages (fetched until a short page) as a playlist with episode page
+URLs built from their timestamps. Episodes without a string ID remain explicit
+native errors. `tests/fixtures/sites/podbayfm/` is compared with pinned
+upstream output.
+
 Rinse FM episodes (`rinse.fm/episodes/SLUG`) follow upstream `RinseFMIE`: the
 query API's episode `entry` as an untyped audio result (`vcodec: none`) with
 its title, release timestamp, imgix thumbnail and episode page URL, upstream's

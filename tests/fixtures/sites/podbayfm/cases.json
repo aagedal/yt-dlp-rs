@@ -1,0 +1,11 @@
+[
+ {"url": "https://podbay.fm/p/behind-the-bastards/e/1647338400", "args": ["-j"]},
+ {"url": "https://podbay.fm/p/behind-the-bastards/e/1647338400", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(thumbnail)s|%(upload_date)s|%(duration)s|%(ext)s"]},
+ {"url": "https://podbay.fm/p/behind-the-bastards/e/1647338400", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://podbay.fm/p/behind-the-bastards/e/2", "args": ["-j"]},
+ {"url": "https://podbay.fm/p/behind-the-bastards/e/3", "args": ["-j"]},
+ {"url": "https://podbay.fm/p/behind-the-bastards/e/4", "args": ["-j"]},
+ {"url": "https://podbay.fm/p/behind-the-bastards", "args": ["-J"]},
+ {"url": "https://podbay.fm/p/behind-the-bastards", "args": ["--flat-playlist", "--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(duration)s"]},
+ {"url": "https://podbay.fm/p/untitled/", "args": ["-J"]}
+]

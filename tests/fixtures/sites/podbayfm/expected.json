@@ -1,0 +1,126 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/1647338400",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"62306451f4a48e58d0c4d6a8\", \"title\": \"Part One: Kissinger\", \"url\": \"https://media.podbay.test/a.mp3\", \"description\": \"We begin our epic six part series on Henry Kissinger.\", \"thumbnail\": \"https://img.podbay.test/k.jpg\", \"timestamp\": 1647338400, \"duration\": 5001, \"ext\": \"mp3\", \"vcodec\": \"none\", \"webpage_url\": \"https://podbay.fm/p/behind-the-bastards/e/1647338400\", \"original_url\": \"https://podbay.fm/p/behind-the-bastards/e/1647338400\", \"webpage_url_basename\": \"1647338400\", \"webpage_url_domain\": \"podbay.fm\", \"extractor\": \"PodbayFM\", \"extractor_key\": \"PodbayFM\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.podbay.test/k.jpg\", \"id\": \"0\"}], \"display_id\": \"62306451f4a48e58d0c4d6a8\", \"fulltitle\": \"Part One: Kissinger\", \"duration_string\": \"1:23:21\", \"upload_date\": \"20220315\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Part One\\uff1a Kissinger [62306451f4a48e58d0c4d6a8].mp3\", \"filename\": \"Part One\\uff1a Kissinger [62306451f4a48e58d0c4d6a8].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/1647338400",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(thumbnail)s|%(upload_date)s|%(duration)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "62306451f4a48e58d0c4d6a8|Part One: Kissinger|We begin our epic six part series on Henry Kissinger.|https://img.podbay.test/k.jpg|20220315|5001|mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/1647338400",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[PodbayFM] Extracting URL: https://podbay.fm/p/behind-the-bastards/e/1647338400",
+    "[PodbayFM] 1647338400: Downloading webpage",
+    "[info] 62306451f4a48e58d0c4d6a8: Downloading 1 format(s): 0",
+    "[download] Destination: 62306451f4a48e58d0c4d6a8.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "62306451f4a48e58d0c4d6a8.mp3": 778
+   }
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/2",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [PodbayFM] only: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3: An extractor error has occurred. (caused by KeyError('episode')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [PodbayFM] 4: Unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"behind-the-bastards\", \"title\": \"Behind the Bastards\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"62306451f4a48e58d0c4d6a8\", \"title\": \"Part One: Kissinger\", \"url\": \"https://media.podbay.test/a.mp3\", \"description\": \"We begin our epic six part series on Henry Kissinger.\", \"thumbnail\": \"https://img.podbay.test/k.jpg\", \"timestamp\": 1647338400, \"duration\": 5001, \"ext\": \"mp3\", \"vcodec\": \"none\", \"extractor\": \"PodbayFM\", \"extractor_key\": \"PodbayFM\", \"webpage_url\": \"https://podbay.fm/p/behind-the-bastards/e/1647338400\", \"playlist_count\": 2, \"playlist\": \"Behind the Bastards\", \"playlist_id\": \"behind-the-bastards\", \"playlist_title\": \"Behind the Bastards\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://podbay.fm/p/behind-the-bastards\", \"n_entries\": 2, \"webpage_url_basename\": \"behind-the-bastards\", \"webpage_url_domain\": \"podbay.fm\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://img.podbay.test/k.jpg\", \"id\": \"0\"}], \"display_id\": \"62306451f4a48e58d0c4d6a8\", \"fulltitle\": \"Part One: Kissinger\", \"duration_string\": \"1:23:21\", \"upload_date\": \"20220315\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Part One\\uff1a Kissinger [62306451f4a48e58d0c4d6a8].mp3\", \"filename\": \"Part One\\uff1a Kissinger [62306451f4a48e58d0c4d6a8].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"e2\", \"title\": \"Part Two\", \"url\": \"https://media.podbay.test/b.mp3\", \"timestamp\": 1647424800, \"duration\": 77, \"ext\": \"mp3\", \"vcodec\": \"none\", \"extractor\": \"PodbayFM\", \"extractor_key\": \"PodbayFM\", \"webpage_url\": \"https://podbay.fm/p/behind-the-bastards/e/1647424800\", \"playlist_count\": 2, \"playlist\": \"Behind the Bastards\", \"playlist_id\": \"behind-the-bastards\", \"playlist_title\": \"Behind the Bastards\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://podbay.fm/p/behind-the-bastards\", \"n_entries\": 2, \"webpage_url_basename\": \"behind-the-bastards\", \"webpage_url_domain\": \"podbay.fm\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"display_id\": \"e2\", \"fulltitle\": \"Part Two\", \"duration_string\": \"1:17\", \"upload_date\": \"20220316\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Part Two [e2].mp3\", \"filename\": \"Part Two [e2].mp3\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://podbay.fm/p/behind-the-bastards\", \"original_url\": \"https://podbay.fm/p/behind-the-bastards\", \"webpage_url_basename\": \"behind-the-bastards\", \"webpage_url_domain\": \"podbay.fm\", \"extractor\": \"PodbayFMChannel\", \"extractor_key\": \"PodbayFMChannel\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(duration)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "62306451f4a48e58d0c4d6a8|Part One: Kissinger|PodbayFM|https://podbay.fm/p/behind-the-bastards/e/1647338400|5001",
+    "e2|Part Two|PodbayFM|https://podbay.fm/p/behind-the-bastards/e/1647424800|77"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://podbay.fm/p/untitled/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"untitled\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://podbay.fm/p/untitled/\", \"original_url\": \"https://podbay.fm/p/untitled/\", \"webpage_url_basename\": \"untitled\", \"webpage_url_domain\": \"podbay.fm\", \"extractor\": \"PodbayFMChannel\", \"extractor_key\": \"PodbayFMChannel\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}
