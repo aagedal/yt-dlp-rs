@@ -668,6 +668,15 @@ webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
 variant IDs, the cleaned `<h1>` title and `is_live`. A live media-only
 playlist without `#EXT-X-ENDLIST` remains an explicit native error.
 
+Bigo rooms (`bigo.tv/[LANG/]ID`) follow upstream `BigoIE`: the POSTed
+`siteId` `getInternalStudioInfo` response (a non-dict is `Received invalid
+JSON data`, a truthy `code` the expected `Bigo says: MSG (code CODE)`, a
+falsy `alive` `The channel is not currently live`), its `hls_src` as fatal
+HLS formats (`mp4`, `m3u8` protocol) and subtitles, the `roomId` (else URL)
+ID, `roomTopic`/`nick_name`/URL title, `snapshot` thumbnail, uploader and
+`is_live`. A room without an absolute `hls_src` remains an explicit native
+error.
+
 CAM4 channels (`cam4.com/USER`) follow upstream `CAM4IE`: the
 `rest/v1.0/profile/USER/streamInfo` `cdnURL` as fatal live `hls` formats
 (`mp4`, live variant IDs), the channel name as title, `is_live`, age limit
