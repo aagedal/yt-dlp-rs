@@ -1,0 +1,6 @@
+[
+ {"url": "https://api.screen9.com/embed/8kTNEjvoXGM33dmWwF0uDA", "args": ["-j"]},
+ {"url": "https://folkhogskolekanalen.screen9.tv/media/8kTNEjvoXGM33dmWwF0uDA/ostersjon", "args": ["--list-subs"]},
+ {"url": "https://play.su.se/media/H1YA0EYNCxiesrSU1kaRBQ/baltic-breakfast", "args": ["-j"]},
+ {"url": "https://api.screen9.com/embed/noconfig", "args": ["-j"]}
+]

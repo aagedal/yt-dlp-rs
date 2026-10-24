@@ -748,6 +748,52 @@ Brightcove players above, in a playlist titled by the OpenGraph title (else
 upstream's warning and no title). `tests/fixtures/sites/thesun/` is compared
 with pinned upstream output.
 
+TVA Nouvelles videos (`tvanouvelles.ca/videos/ID`) follow upstream
+`TVANouvellesIE`: a `url` result of the `players.brightcove.net/1741764581/
+default_default` player, extracted like Brightcove players above. Other
+`tvanouvelles.ca` pages follow `TVANouvellesArticleIE`: each
+`data-video-id=ID` as a `url` result of `tvanouvelles.ca/videos/ID`, in a
+playlist with the OpenGraph title and description (each else upstream's
+warning and no key). Such doubly followed entries keep upstream's
+`original_url` position. `tests/fixtures/sites/tvanouvelles/` is compared
+with pinned upstream output.
+
+Wimbledon videos (`wimbledon.com/LOCALE/video/media/ID.html`) follow
+upstream `WimbledonIE`: the fatal related-content API JSON, then a
+`url_transparent` result of the `players.brightcove.net/3506358525001/
+default_default` player (extracted like Brightcove players above), overlaid
+with the API's non-`None` `title`, `description` and `parse_duration`d
+`metadata.duration`. Non-string titles or descriptions are rejected.
+`tests/fixtures/sites/wimbledon/` is compared with pinned upstream output.
+
+Screen9 videos (`*.screen9.tv|com/embed|media/ID`, `play.su.se/...`) follow
+upstream `Screen9IE`: the `api.screen9.com/embed/ID` page's fatal
+`var config` JSON, its first `application/x-mpegURL` source's HLS formats
+and subtitles, then its first `video/mp4` source as a `format: mp4` format
+(numbered when processed), with the first of `plugins.title.title`,
+`plugins.googleAnalytics.title` and `plugins.share.mediaTitle` as `title`,
+`plugins.title.description` and `poster`. Configs without both sources or
+with non-string metadata are rejected. `tests/fixtures/sites/screen9/` is
+compared with pinned upstream output.
+
+The HighWire videos (`thehighwire.com/ark-videos/SLUG`) follow upstream
+`TheHighWireIE`: the first `ark-video-embed` element's `src` (else
+upstream's `Unable to extract embed URL`), that page's first HTML5 media
+entry (`hls` m3u8 sources, poster thumbnail) and the article's cleaned
+`section-header` and `episode-description__copy` elements as `title` and
+`description`. `tests/fixtures/sites/thehighwire/` is compared with pinned
+upstream output.
+
+The Guardian podcast episodes (`theguardian.com/SECTION/audio/YYYY/mon/D/
+SLUG`) follow upstream `TheGuardianPodcastIE`: the first `podcast__player`
+element's `data-source` as the info's own format, the OpenGraph title (else
+the `content__headline` element), description and thumbnail, the `author`
+meta tag as `creator` and `article:published_time` as `release_date` (each
+missing value with upstream's warning). Pages without a player source are
+rejected (upstream fails later with `No video formats found!`); series
+playlists (`TheGuardianPodcastPlaylistIE`) are not ported.
+`tests/fixtures/sites/theguardian/` is compared with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the

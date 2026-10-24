@@ -1,0 +1,43 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://thehighwire.com/ark-videos/the-deposition-of-stanley-plotkin/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"the-deposition-of-stanley-plotkin\", \"title\": \"THE DEPOSITION OF STANLEY PLOTKIN\", \"description\": \"Under oath.\\nPart two.\", \"formats\": [{\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://cdn.arkengine.example/plotkin/master.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://embed.arkengine.example/v/plotkin\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"hls - unknown\"}], \"subtitles\": {}, \"thumbnail\": \"https://static.arkengine.example/video/plotkin.jpg\", \"webpage_url\": \"https://thehighwire.com/ark-videos/the-deposition-of-stanley-plotkin/\", \"original_url\": \"https://thehighwire.com/ark-videos/the-deposition-of-stanley-plotkin/\", \"webpage_url_basename\": \"the-deposition-of-stanley-plotkin\", \"webpage_url_domain\": \"thehighwire.com\", \"extractor\": \"TheHighWire\", \"extractor_key\": \"TheHighWire\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://static.arkengine.example/video/plotkin.jpg\", \"id\": \"0\"}], \"display_id\": \"the-deposition-of-stanley-plotkin\", \"fulltitle\": \"THE DEPOSITION OF STANLEY PLOTKIN\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://cdn.arkengine.example/plotkin/master.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://embed.arkengine.example/v/plotkin\"}, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"hls - unknown\", \"_filename\": \"THE DEPOSITION OF STANLEY PLOTKIN [the-deposition-of-stanley-plotkin].mp4\", \"filename\": \"THE DEPOSITION OF STANLEY PLOTKIN [the-deposition-of-stanley-plotkin].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://thehighwire.com/ark-videos/plain/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"plain\", \"formats\": [{\"url\": \"https://cdn.arkengine.example/plain.mp4\", \"vcodec\": null, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://embed.arkengine.example/v/plain\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"thumbnail\": null, \"webpage_url\": \"https://thehighwire.com/ark-videos/plain/\", \"original_url\": \"https://thehighwire.com/ark-videos/plain/\", \"webpage_url_basename\": \"plain\", \"webpage_url_domain\": \"thehighwire.com\", \"extractor\": \"TheHighWire\", \"extractor_key\": \"TheHighWire\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"plain\", \"fulltitle\": null, \"title\": \"TheHighWire video #plain\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.arkengine.example/plain.mp4\", \"vcodec\": null, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://embed.arkengine.example/v/plain\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"TheHighWire video #plain [plain].mp4\", \"filename\": \"TheHighWire video #plain [plain].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://thehighwire.com/ark-videos/no-embed/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TheHighWire] no-embed: Unable to extract embed URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

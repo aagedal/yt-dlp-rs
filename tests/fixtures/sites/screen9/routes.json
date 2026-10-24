@@ -1,0 +1,12 @@
+{
+ "routes": [
+  {"url": "https://api.screen9.com/embed/8kTNEjvoXGM33dmWwF0uDA", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "embed.html"},
+  {"url": "https://api.screen9.com/embed/H1YA0EYNCxiesrSU1kaRBQ", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "embed2.html"},
+  {"url": "https://api.screen9.com/embed/noconfig", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "embed3.html"},
+  {"url": "https://cdn.screen9.example/a/master.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "master.m3u8"},
+  {"url": "https://cdn.screen9.example/a/video.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "video.m3u8"},
+  {"url": "https://cdn.screen9.example/a/subs_en.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "subs_en.m3u8"},
+  {"url": "https://cdn.screen9.example/a/subs_de.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "subs_de.m3u8"},
+  {"url": "https://cdn.screen9.example/b/master.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "video.m3u8"}
+ ]
+}

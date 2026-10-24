@@ -479,6 +479,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "RumbleEmbed",
     "rutube",
     "rutube:embed",
+    "Screen9",
     "ScreenRec",
     "Sen",
     "SkylineWebcams",
@@ -497,6 +498,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "TedTalk",
     "telegram:embed",
     "TeleTask",
+    "TheGuardianPodcast",
+    "TheHighWire",
     "TheIntercept",
     "TheStar",
     "TheSun",
@@ -510,6 +513,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "TrtWorld",
     "Tumblr",
     "tv.dfb.de",
+    "TVANouvelles",
+    "TVANouvellesArticle",
     "Tweakers",
     "twitch:clips",
     "twitch:collection",
@@ -541,6 +546,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Weibo",
     "WeiboVideo",
     "Whyp",
+    "Wimbledon",
     "WorldStarHipHop",
     "XboxClips",
     "XiaoHongShu",
@@ -969,6 +975,12 @@ impl YoutubeDl {
                 Box::new(extractor::MaoriTV),
                 Box::new(extractor::EuropeanTour),
                 Box::new(extractor::SkyNewsAU),
+                Box::new(extractor::TvaNouvelles),
+                Box::new(extractor::TvaNouvellesArticle),
+                Box::new(extractor::Wimbledon),
+                Box::new(extractor::Screen9),
+                Box::new(extractor::TheHighWire),
+                Box::new(extractor::TheGuardianPodcast),
                 Box::new(extractor::TheSun),
                 Box::new(extractor::ThisAmericanLife),
                 Box::new(extractor::Toypics),
@@ -3010,7 +3022,17 @@ impl YoutubeDl {
                         .and_then(serde_json::Value::as_str)
                 {
                     let target = extractor::target_url(target)?;
-                    return self.extract_once_with(&target, before_processing);
+                    // A followed `url` result passes `original_url` on as
+                    // extra info (see `info_order::FOLLOWED`).
+                    let followed = |result: &mut ExtractResult| -> Result<()> {
+                        if let ExtractResult::Video(video) = result {
+                            video
+                                .extra
+                                .insert(info_order::FOLLOWED.into(), serde_json::Value::Bool(true));
+                        }
+                        before_processing(result)
+                    };
+                    return self.extract_once_with(&target, &followed);
                 }
                 before_processing(&mut info)?;
                 self.process_result(&mut info)?;

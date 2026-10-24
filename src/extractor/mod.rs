@@ -139,6 +139,7 @@ mod rss;
 mod rtrfm;
 mod rumble;
 mod rutube;
+mod screen9;
 mod screenrec;
 mod sen;
 mod skylinewebcams;
@@ -154,6 +155,8 @@ mod sztvhu;
 mod ted;
 mod telegram;
 mod teletask;
+mod theguardian;
+mod thehighwire;
 mod theintercept;
 mod thestar;
 mod thesun;
@@ -163,6 +166,7 @@ mod toypics;
 mod trtcocuk;
 mod trtworld;
 mod tumblr;
+mod tvanouvelles;
 mod tweakers;
 mod twentythreevideo;
 mod twitch;
@@ -178,6 +182,7 @@ mod vocaroo;
 mod webcamerapl;
 mod weibo;
 mod whyp;
+mod wimbledon;
 mod worldstarhiphop;
 mod xboxclips;
 mod xiaohongshu;
@@ -350,6 +355,7 @@ pub use rumble::{
 pub use rutube::{
     Rutube, RutubeEmbed, embed_suitable as rutube_embed_suitable, suitable as rutube_suitable,
 };
+pub use screen9::{Screen9, suitable as screen9_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
 pub use skylinewebcams::{SkylineWebcams, suitable as skylinewebcams_suitable};
@@ -371,6 +377,8 @@ pub use ted::{
 };
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use teletask::{TeleTask, suitable as teletask_suitable};
+pub use theguardian::{TheGuardianPodcast, suitable as theguardian_suitable};
+pub use thehighwire::{TheHighWire, suitable as thehighwire_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thestar::{TheStar, suitable as thestar_suitable};
 pub use thesun::{TheSun, suitable as thesun_suitable};
@@ -388,6 +396,10 @@ pub use toypics::{Toypics, suitable as toypics_suitable};
 pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
 pub use trtworld::{TrtWorld, suitable as trtworld_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
+pub use tvanouvelles::{
+    TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
+    suitable as tvanouvelles_suitable,
+};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub(crate) use twitch::{
@@ -425,6 +437,7 @@ pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
 pub use whyp::{Whyp, suitable as whyp_suitable};
+pub use wimbledon::{Wimbledon, suitable as wimbledon_suitable};
 pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};

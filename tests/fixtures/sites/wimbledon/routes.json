@@ -1,0 +1,10 @@
+{
+ "routes": [
+  {"url": "https://www.wimbledon.com/relatedcontent/rest/v2/wim_v1/en/content/wim_v1_6330247525112_en", "headers": {"Content-Type": "application/json"}, "body_file": "api.json"},
+  {"url": "https://www.wimbledon.com/relatedcontent/rest/v2/wim_v1/en/content/wim_v1_6330247525113_en", "headers": {"Content-Type": "application/json"}, "body_file": "api2.json"},
+  {"url": "http://players.brightcove.net/3506358525001/default_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "https://players.brightcove.net/3506358525001/default_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "https://edge.api.brightcove.com/playback/v1/accounts/3506358525001/videos/6330247525112", "headers": {"Content-Type": "application/json"}, "body_file": "video.json", "request_headers": {"Accept": "application/json;pk=BCpkWIM"}},
+  {"url": "https://edge.api.brightcove.com/playback/v1/accounts/3506358525001/videos/6330247525113", "headers": {"Content-Type": "application/json"}, "body_file": "video2.json", "request_headers": {"Accept": "application/json;pk=BCpkWIM"}}
+ ]
+}

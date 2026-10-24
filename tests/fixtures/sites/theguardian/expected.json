@@ -1,0 +1,35 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.theguardian.com/news/audio/2023/nov/03/plastic-eating-bacteria-podcast",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"plastic-eating-bacteria-podcast\", \"title\": \"\\u2018We are just getting started\\u2019: the plastic-eating bacteria \\u2013 podcast\", \"description\": \"Bacteria that eat plastic.\", \"creator\": \"Stephen Buranyi\", \"thumbnail\": \"https://i.guim.example/plastic.jpg\", \"release_date\": \"20231103\", \"url\": \"https://flex.acast.example/audio.guim.co.uk/2023/11/plastic.mp3\", \"webpage_url\": \"https://www.theguardian.com/news/audio/2023/nov/03/plastic-eating-bacteria-podcast\", \"original_url\": \"https://www.theguardian.com/news/audio/2023/nov/03/plastic-eating-bacteria-podcast\", \"webpage_url_basename\": \"plastic-eating-bacteria-podcast\", \"webpage_url_domain\": \"theguardian.com\", \"extractor\": \"TheGuardianPodcast\", \"extractor_key\": \"TheGuardianPodcast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://i.guim.example/plastic.jpg\", \"id\": \"0\"}], \"display_id\": \"plastic-eating-bacteria-podcast\", \"fulltitle\": \"\\u2018We are just getting started\\u2019: the plastic-eating bacteria \\u2013 podcast\", \"release_year\": 2023, \"creators\": [\"Stephen Buranyi\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u2018We are just getting started\\u2019\\uff1a the plastic-eating bacteria \\u2013 podcast [plastic-eating-bacteria-podcast].mp3\", \"filename\": \"\\u2018We are just getting started\\u2019\\uff1a the plastic-eating bacteria \\u2013 podcast [plastic-eating-bacteria-podcast].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.theguardian.com/football/audio/2023/nov/06/football-weekly",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"football-weekly\", \"title\": \"Football Weekly\", \"description\": null, \"creator\": null, \"thumbnail\": null, \"release_date\": null, \"url\": \"https://flex.acast.example/fw.mp3\", \"webpage_url\": \"https://www.theguardian.com/football/audio/2023/nov/06/football-weekly\", \"original_url\": \"https://www.theguardian.com/football/audio/2023/nov/06/football-weekly\", \"webpage_url_basename\": \"football-weekly\", \"webpage_url_domain\": \"theguardian.com\", \"extractor\": \"TheGuardianPodcast\", \"extractor_key\": \"TheGuardianPodcast\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"football-weekly\", \"fulltitle\": \"Football Weekly\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Football Weekly [football-weekly].mp3\", \"filename\": \"Football Weekly [football-weekly].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TheGuardianPodcast] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [TheGuardianPodcast] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [TheGuardianPodcast] unable to extract author; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [TheGuardianPodcast] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [TheGuardianPodcast] unable to extract article:published_time; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
