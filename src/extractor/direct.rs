@@ -40,7 +40,7 @@ pub(crate) fn request_expecting(
         request = request.header(*name, *value);
     }
     crate::screen::load_cookies()?;
-    let response = request.send();
+    let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
     let response = response?;
     if expected.contains(&response.status().as_u16()) {
@@ -65,7 +65,7 @@ pub(crate) fn head_with_headers(
         request = request.header(*name, *value);
     }
     crate::screen::load_cookies()?;
-    let response = request.send();
+    let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
     crate::retry::check_response(response?)
 }
@@ -97,7 +97,7 @@ pub(crate) fn post_expecting(
         request = request.header(*name, *value);
     }
     crate::screen::load_cookies()?;
-    let response = request.send();
+    let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
     let response = response?;
     if expected.contains(&response.status().as_u16()) {
@@ -126,7 +126,7 @@ fn probe_with_headers(
         request = request.header(*name, *value);
     }
     crate::screen::load_cookies()?;
-    let response = request.send();
+    let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
     let response = crate::retry::check_response(response?)?;
     if response.status() == reqwest::StatusCode::PARTIAL_CONTENT {

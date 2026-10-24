@@ -1387,7 +1387,7 @@
         "src/extractor/kick.rs",
         "tests/fixtures/sites/kick/"
       ],
-      "scope": "Reworked kick.py (fe84bef3969de96ceb39ca988425fdd3895bbfb1, release 2026.10.21): KickIE (v2 channel API, plain HLS IDs), KickVODIE (web.kick.com playback POST, channel video list metadata, smuggled availability, subscription check), KickClipIE (v2 clip API with 404 messages, HLS or direct sources), KickVideosIE (url_transparent VOD entries, date/views sort) and KickClipsIE (cursor-paginated clip entries, sort/range); compared with upstream output through the fixture proxy. Impersonation is unavailable (upstream's warning only)"
+      "scope": "Reworked kick.py (fe84bef3969de96ceb39ca988425fdd3895bbfb1, release 2026.10.21): KickIE (v2 channel API, plain HLS IDs), KickVODIE (web.kick.com playback POST, channel video list metadata, smuggled availability, subscription check), KickClipIE (v2 clip API with 404 messages, HLS or direct sources), KickVideosIE (url_transparent VOD entries, date/views sort) and KickClipsIE (cursor-paginated clip entries, sort/range); compared with upstream output through the fixture proxy. Impersonated with the impersonate feature, else upstream's warning"
     },
     {
       "name": "kicker",
@@ -3101,6 +3101,26 @@
         "tests/client_cert.rs"
       ],
       "scope": "Bounded global header defaults, repeated add-headers and explicit singular alias, convenience User-Agent/Referer normalization, extractor/transport request precedence across native clients/transfers, local retry/redirect propagation; explicit raw Cookie rejection; scoped cookies tracked separately; no general authentication/proxy/impersonation/default browser headers or upstream redirect/legacy-byte parity"
+    },
+    {
+      "name": "impersonation",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/networking/impersonate.py",
+        "yt_dlp/networking/_curlcffi.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/__init__.py",
+        "yt_dlp/extractor/common.py",
+        "test/test_networking.py"
+      ],
+      "rust": [
+        "src/impersonate.rs",
+        "src/impersonate/transport.rs",
+        "src/extractor/direct.rs",
+        "src/main.rs",
+        "tests/impersonate.rs"
+      ],
+      "scope": "ImpersonateTarget parsing/str/containment (upstream test cases), the supported-target preference order and resolution, --list-impersonate-targets (source wreq; tor omitted) and the unavailable-target error; extractor _request_webpage impersonate=/require_impersonation= with upstream's warning/error messages for TikTok, Kick, Vimeo, Mixcloud, Mir24Tv and Dailymotion's m3u8 retries; with the optional impersonate cargo feature, a wreq (BoringSSL) transport sending wreq-util Chrome/Edge/Firefox/Safari TLS ClientHello, HTTP/2 SETTINGS and default headers (std_headers values dropped like _get_impersonate_headers), checked against a local TLS server; no global --impersonate for every request, format/download impersonate fields, Instagram/Bandcamp impersonation, client certificates or curl_cffi target names"
     },
     {
       "name": "http-cookies",

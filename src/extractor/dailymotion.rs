@@ -226,7 +226,9 @@ fn media(client: &Client, xid: &str) -> Result<Value> {
 }
 
 /// `_extract_dailymotion_m3u8_formats_and_subtitles`: a request with
-/// randomized headers (the impersonated retries are unavailable here).
+/// randomized headers, then retries requiring Chrome and Firefox
+/// impersonation; the last error is returned when it is about
+/// impersonation, and warned about otherwise.
 fn m3u8_formats(
     client: &Client,
     url: &str,
@@ -235,44 +237,62 @@ fn m3u8_formats(
     let Ok(manifest) = Url::parse(url) else {
         return (Vec::new(), Default::default(), None);
     };
-    crate::screen::screen(&format!(
-        "[{NAME}] {id}: Downloading m3u8 information with randomized headers"
-    ));
     let headers = blockbuster_headers();
     let headers: Vec<(&str, &str)> = headers
         .iter()
         .map(|(name, value)| (name.as_str(), value.as_str()))
         .collect();
-    let parsed = super::direct::request_with_headers(client, &manifest, None, &headers).and_then(
-        |response| super::hls::from_response(client, response, &manifest, None, true, Some("hls")),
-    );
-    match parsed {
-        Ok(Some(stream)) => (stream.formats, stream.subtitles, None),
-        Ok(None) => (Vec::new(), Default::default(), None),
-        Err(error) => {
-            crate::screen::debug(&format!(
-                "{id}: Unable to download m3u8 information: {}",
-                crate::upstream_error_text(&error)
-            ));
-            // Both impersonated retries fail without an impersonate target.
-            for target in ["chrome", "firefox"] {
-                let note = if target == "chrome" {
-                    "Retrying m3u8 download with Chrome impersonation"
-                } else {
-                    "Retrying m3u8 download with Firefox impersonation"
+    let failed = |error: Error| {
+        format!(
+            "Unable to download m3u8 information: {}",
+            crate::upstream_error_text(&error)
+        )
+    };
+    let mut last_error = String::new();
+    for (note, target) in [
+        ("Downloading m3u8 information with randomized headers", None),
+        (
+            "Retrying m3u8 download with Chrome impersonation",
+            Some("chrome"),
+        ),
+        (
+            "Retrying m3u8 download with Firefox impersonation",
+            Some("firefox"),
+        ),
+    ] {
+        crate::screen::screen(&format!("[{NAME}] {id}: {note}"));
+        let response = match target {
+            None => super::direct::request_with_headers(client, &manifest, None, &headers)
+                .map_err(failed),
+            Some(target) => crate::impersonate::require(&[target]).and_then(|_impersonate| {
+                super::direct::request(client, &manifest, None).map_err(failed)
+            }),
+        };
+        match response {
+            Ok(response) => {
+                return match super::hls::from_response(
+                    client,
+                    response,
+                    &manifest,
+                    None,
+                    true,
+                    Some("hls"),
+                ) {
+                    Ok(Some(stream)) => (stream.formats, stream.subtitles, None),
+                    _ => (Vec::new(), Default::default(), None),
                 };
-                crate::screen::screen(&format!("[{NAME}] {id}: {note}"));
-                crate::screen::debug(&format!(
-                    "{id}: The extractor is attempting impersonation, but none of these impersonate targets are available: {target}. See  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
-                ));
             }
-            (
-                Vec::new(),
-                Default::default(),
-                Some("The extractor is attempting impersonation, but none of these impersonate targets are available: firefox. See  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies".into()),
-            )
+            Err(message) => {
+                crate::screen::debug(&format!("{id}: {message}"));
+                last_error = message;
+            }
         }
     }
+    if !last_error.contains("impersonation") {
+        crate::screen::warning(&format!("[{NAME}] {id}: {last_error}"));
+        return (Vec::new(), Default::default(), None);
+    }
+    (Vec::new(), Default::default(), Some(last_error))
 }
 
 impl Extractor for Dailymotion {

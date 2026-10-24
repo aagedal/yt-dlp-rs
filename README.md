@@ -35,8 +35,9 @@ Kuaishou have no upstream extractor.
 | VK | videos, clips, wall posts, user videos, VK Play | VK's JS challenge is unsupported |
 
 Tumblr, Twitch (VODs, clips, live, channel lists), Bluesky and Kick are
-supported too. Sites that need browser impersonation upstream (for example
-Dailymotion) are limited: impersonation is not available.
+supported too. Browser impersonation (TLS/HTTP2 fingerprints for the
+requests extractors mark, as upstream with `curl_cffi`) needs the optional
+`impersonate` build feature; default builds have no impersonate targets.
 
 Pre-release binaries for Linux, macOS and Windows are attached to the
 [GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases): pushing a
@@ -78,6 +79,10 @@ either binary or its containing directory.
 
 The example URLs illustrate syntax; replace them with actual media or supported HTML5 page URLs.
 Install locally with `cargo install --locked --path .` to use `yt-dlp-rs` directly.
+
+The default build uses rustls only. `cargo build --locked --features impersonate`
+adds the `wreq` impersonation transport (BoringSSL, built from source: it needs
+CMake and a C/C++ compiler) and its targets in `--list-impersonate-targets`.
 
 Supported today:
 

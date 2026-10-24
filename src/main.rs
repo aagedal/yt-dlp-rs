@@ -922,7 +922,8 @@ struct Args {
     /// Extractor arguments (not supported natively)
     #[arg(long, value_name = "IE_KEY:ARGS")]
     extractor_args: Vec<String>,
-    /// Client to impersonate (no impersonation targets are available)
+    /// Client to impersonate for requests (only targets from the optional
+    /// `impersonate` build feature are available)
     #[arg(long, value_name = "CLIENT[:OS]")]
     impersonate: Option<String>,
     /// List available clients to impersonate
@@ -2450,7 +2451,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .map_err(usage)?;
     let mut http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
     // Upstream `std_headers` precede `--add-headers` (which override them).
-    http_options.headers.splice(0..0, std_headers());
+    let std = std_headers();
+    yt_dlp_rs::impersonate::set_std_headers(std.clone());
+    http_options.headers.splice(0..0, std);
     let args_proxy = args.proxy.clone();
     http_options.proxy = args.proxy;
     http_options.socket_timeout = args.socket_timeout;
@@ -3083,10 +3086,8 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         screen!("[info] Available impersonate targets");
         writeln!(
             io::stdout().lock(),
-            "Client    OS   Source\n--------------------------------------------\n\
-             Tor       -    curl_cffi>=0.11 (unavailable)\nEdge      -    curl_cffi (unavailable)\n\
-             Firefox   -    curl_cffi>=0.10 (unavailable)\nSafari    -    curl_cffi (unavailable)\n\
-             Chrome    -    curl_cffi (unavailable)"
+            "{}",
+            yt_dlp_rs::impersonate::targets_table()
         )?;
         return Ok(true);
     }
@@ -3099,10 +3100,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         return Ok(true);
     }
     if let Some(target) = &args.impersonate {
-        report_error!(
-            "ERROR: Impersonate target \"{}\" is not available. Use --list-impersonate-targets to see available targets. You may be missing dependencies required to support this target.",
-            target.split(':').next().unwrap_or(target).to_lowercase()
-        );
+        // Validated by `validate_accepted_options`.
+        let target = yt_dlp_rs::impersonate::ImpersonateTarget::parse(&target.to_lowercase())
+            .unwrap_or_default();
+        if !yt_dlp_rs::impersonate::target_available(&target) {
+            report_error!(
+                "ERROR: Impersonate target \"{target}\" is not available. Use --list-impersonate-targets to see available targets. You may be missing dependencies required to support this target."
+            );
+        } else {
+            // Upstream impersonates every request; this port's extractors
+            // and downloaders share a plain client, and only the requests
+            // extractors mark for impersonation use the `wreq` transport.
+            report_error!(
+                "ERROR: --impersonate (impersonating every request) is not supported natively; extractors that request impersonation use an available target automatically"
+            );
+        }
         return Ok(false);
     }
     // Upstream `print_extractor_information`, for this port's extractors
@@ -6250,6 +6262,9 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
     }
     if args.password.is_some() && args.username.is_none() {
         return Err(usage("account username missing"));
+    }
+    if let Some(target) = &args.impersonate {
+        yt_dlp_rs::impersonate::ImpersonateTarget::parse(&target.to_lowercase()).map_err(usage)?;
     }
     // `--encoding`: messages are encoded with `errors='ignore'`.
     if let Some(name) = &args.encoding {

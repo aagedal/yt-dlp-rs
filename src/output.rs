@@ -12,6 +12,7 @@ mod thumbnails;
 pub(crate) mod traverse;
 pub use exec::{ExecCommand, ExecCommands, Stage, shell_quote};
 pub use filename::{OUTPUT_TYPES, OutputTemplates, parse_paths, replace_extension};
+pub(crate) use formats::render_table;
 pub use formats::{render_formats, render_formats_listing, render_formats_table};
 pub use links::{iri_to_uri, link_file};
 pub use print::{ForcedFields, PrintTemplate, PrintToFile, StagePaths};

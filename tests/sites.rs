@@ -119,6 +119,21 @@ fn site_extractors_match_saved_upstream_output() {
                 "stderr": stderr,
                 "files": files,
             });
+            // Upstream was captured without impersonate targets; with the
+            // `impersonate` feature the extractors impersonate instead of
+            // warning (through the same fixture proxy).
+            #[cfg(feature = "impersonate")]
+            let case = &{
+                let mut case = case.clone();
+                if let Some(lines) = case["stderr"].as_array_mut() {
+                    lines.retain(|line| {
+                        !line.as_str().is_some_and(|line| {
+                            line.contains("The extractor is attempting impersonation, but no impersonate target is available")
+                        })
+                    });
+                }
+                case
+            };
             for key in ["exit", "stdout", "stderr", "files"] {
                 if actual[key] != case[key] {
                     failures.push(format!(
