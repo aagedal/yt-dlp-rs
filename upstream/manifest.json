@@ -991,6 +991,18 @@
       "scope": "MastersIE related-content API (fatal HLS formats and subtitles, missing-manifest error, URL upload_date, first image set thumbnails) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "matchtv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/matchtv.py"
+      ],
+      "rust": [
+        "src/extractor/matchtv.rs",
+        "tests/fixtures/sites/matchtv/"
+      ],
+      "scope": "MatchTVIE fixed channel-106 iframe data-config feed rewritten to a live HLS master (live variant IDs), fixed title and is_live compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "megaphone",
       "status": "partial",
       "upstream": [
@@ -1005,6 +1017,18 @@
       "scope": "MegaphoneIE _VALID_URL/_EMBED_REGEX and page extraction (fatal og:audio:title/artist, og:image thumbnail warning, js_to_json episode object, KeyError messages) compared with pinned upstream output through the fixture proxy; generic-page embeds in extractor order with Streamable; _fill_common_fields deprecated multivalue fields (no deprecation warning)"
     },
     {
+      "name": "mir24tv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mir24tv.py"
+      ],
+      "rust": [
+        "src/extractor/mir24tv.rs",
+        "tests/fixtures/sites/mir24tv/"
+      ],
+      "scope": "Mir24TvIE player iframe source query (parse_qs last value, protocol-relative URL, required m3u8 URL) as fatal HLS formats and subtitles, og/title fallbacks, og thumbnail and impersonation warning compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "mixcloud",
       "status": "partial",
       "upstream": [
@@ -1015,6 +1039,18 @@
         "tests/fixtures/sites/mixcloud/"
       ],
       "scope": "MixcloudIE GraphQL cloudcast lookup, XOR-decrypted progressive/HLS/DASH stream URLs, restriction errors, comments and metadata; no user, playlist or favorites lists; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mocha",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mocha.py"
+      ],
+      "rust": [
+        "src/extractor/mocha.rs",
+        "tests/fixtures/sites/mocha/"
+      ],
+      "scope": "MochaVideoIE detail API (resolution HLS formats and subtitles, original MP4, raw metadata, scaled timestamp, string-key channel traversal, generic-title fallback, KeyError and AttributeError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "movingimage",
@@ -1185,6 +1221,18 @@
       "scope": "PremiershipRugbyIE article CMS hero media (fatal ext-less HLS formats and subtitles, ID/title/thumbnail/duration/tags/categories, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "presstv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/presstv.py"
+      ],
+      "rust": [
+        "src/extractor/presstv.rs",
+        "tests/fixtures/sites/presstv/"
+      ],
+      "scope": "PressTVIE hidden-input playback path as fixed-height MP4 formats, KeyError and fatal meta title messages, PressTV- prefix removal, OpenGraph thumbnail/description warnings, display_id and URL upload_date compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "projectveritas",
       "status": "partial",
       "upstream": [
@@ -1244,6 +1292,18 @@
         "tests/fixtures/sites/reverbnation/"
       ],
       "scope": "ReverbNationIE _VALID_URL and song API extraction (custom download note, untyped mp3 result, artist uploader fields, qualities-ranked thumbnails, KeyError messages) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "roya",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/roya.py"
+      ],
+      "rust": [
+        "src/extractor/roya.rs",
+        "tests/fixtures/sites/roya/"
+      ],
+      "scope": "RoyaLiveIE ticket API secured URL as live HLS formats (live variant IDs), KeyError messages, non-fatal schedule channel title (generic-title fallback) and is_live compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "rtrfm",

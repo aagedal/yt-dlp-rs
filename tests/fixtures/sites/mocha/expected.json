@@ -1,0 +1,111 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://video.mocha.com.vn/chuyen-meo-gia-su-tu-thong-diep-cuoc-song-v18694039",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"18694039\", \"display_id\": \"chuyen-meo-gia-su-tu-thong-diep-cuoc-song\", \"title\": \"Chuy\\u1ec7n m\\u00e8o gi\\u1ea3 s\\u01b0 t\\u1eed | Th\\u00f4ng \\u0111i\\u1ec7p cu\\u1ed9c s\\u1ed1ng\", \"formats\": [{\"url\": \"http://cdn.mocha.test/v/18694039/original.mp4\", \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}, {\"format_id\": \"600\", \"format_index\": null, \"url\": \"http://cdn.mocha.test/v/18694039/360/index.m3u8\", \"manifest_url\": \"http://cdn.mocha.test/v/18694039/master.m3u8\", \"tbr\": 600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"600 - 640x360\"}, {\"format_id\": \"1400\", \"format_index\": null, \"url\": \"http://cdn.mocha.test/v/18694039/720/index.m3u8\", \"manifest_url\": \"http://cdn.mocha.test/v/18694039/master.m3u8\", \"tbr\": 1400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1400 - 1280x720\"}], \"subtitles\": {\"vi\": [{\"url\": \"http://cdn.mocha.test/v/18694039/subs/vi.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"description\": \"\", \"duration\": 70, \"view_count\": 1234, \"like_count\": 5, \"dislike_count\": 0, \"thumbnail\": \"http://cdn.mocha.test/thumb.jpg\", \"timestamp\": 1652254203, \"is_live\": 0, \"channel\": null, \"channel_id\": null, \"channel_follower_count\": null, \"categories\": [\"Kids\"], \"comment_count\": 3, \"webpage_url\": \"http://video.mocha.com.vn/chuyen-meo-gia-su-tu-thong-diep-cuoc-song-v18694039\", \"original_url\": \"http://video.mocha.com.vn/chuyen-meo-gia-su-tu-thong-diep-cuoc-song-v18694039\", \"webpage_url_basename\": \"chuyen-meo-gia-su-tu-thong-diep-cuoc-song-v18694039\", \"webpage_url_domain\": \"video.mocha.com.vn\", \"extractor\": \"MochaVideo\", \"extractor_key\": \"MochaVideo\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://cdn.mocha.test/thumb.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Chuy\\u1ec7n m\\u00e8o gi\\u1ea3 s\\u01b0 t\\u1eed | Th\\u00f4ng \\u0111i\\u1ec7p cu\\u1ed9c s\\u1ed1ng\", \"duration_string\": \"1:10\", \"upload_date\": \"20220511\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"1400\", \"format_index\": null, \"url\": \"http://cdn.mocha.test/v/18694039/720/index.m3u8\", \"manifest_url\": \"http://cdn.mocha.test/v/18694039/master.m3u8\", \"tbr\": 1400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1400 - 1280x720\", \"_filename\": \"Chuy\\u1ec7n m\\u00e8o gi\\u1ea3 s\\u01b0 t\\u1eed \\uff5c Th\\u00f4ng \\u0111i\\u1ec7p cu\\u1ed9c s\\u1ed1ng [18694039].mp4\", \"filename\": \"Chuy\\u1ec7n m\\u00e8o gi\\u1ea3 s\\u01b0 t\\u1eed \\uff5c Th\\u00f4ng \\u0111i\\u1ec7p cu\\u1ed9c s\\u1ed1ng [18694039].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://video.mocha.com.vn/chuyen-meo-gia-su-tu-thong-diep-cuoc-song-v18694039",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[MochaVideo] Extracting URL: http://video.mocha.com.vn/chuyen-meo-gia-su-tu-thong-diep-cuoc-song-v18694039",
+    "[MochaVideo] chuyen-meo-gia-su-tu-thong-diep-cuoc-song-v18694039: Downloading JSON metadata",
+    "[MochaVideo] 18694039: Downloading m3u8 information",
+    "[info] Available formats for 18694039:",
+    "ID   EXT RESOLUTION |  FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "-------------------------------------------------------------------",
+    "0    mp4 unknown    |                 http  | unknown     unknown",
+    "600  mp4 640x360    | ~ 5.01MiB  600k m3u8  | avc1.4d401e mp4a.40.2",
+    "1400 mp4 1280x720   | ~11.68MiB 1400k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://video.mocha.com.vn/minimal-v5",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5\", \"display_id\": \"minimal-v5\", \"title\": \"MochaVideo video #5\", \"formats\": [{\"url\": \"http://cdn.mocha.test/v/5.mp4\", \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"description\": null, \"view_count\": null, \"like_count\": null, \"dislike_count\": null, \"thumbnail\": null, \"timestamp\": 1652254203, \"is_live\": null, \"channel\": \"Channel\", \"channel_id\": \"c1\", \"channel_follower_count\": 2, \"categories\": [], \"comment_count\": null, \"webpage_url\": \"http://video.mocha.com.vn/minimal-v5\", \"original_url\": \"http://video.mocha.com.vn/minimal-v5\", \"webpage_url_basename\": \"minimal-v5\", \"webpage_url_domain\": \"video.mocha.com.vn\", \"extractor\": \"MochaVideo\", \"extractor_key\": \"MochaVideo\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": null, \"upload_date\": \"20220511\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://cdn.mocha.test/v/5.mp4\", \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"MochaVideo video #5 [5].mp4\", \"filename\": \"MochaVideo video #5 [5].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.mocha.com.vn/no-original-v6",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 'NoneType' object has no attribute 'get'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.mocha.com.vn/no-data-v7",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.mocha.com.vn/no-id-v8",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: An extractor error has occurred. (caused by KeyError('id')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.mocha.com.vn/gone-v9",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [MochaVideo] gone-v9: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.mocha.com.vn/bad-hls-v10",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [MochaVideo] 10: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

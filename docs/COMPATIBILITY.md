@@ -390,6 +390,12 @@ the page's fatal `playShow[From]` show, date and title, the restream API's
 ID, `TITLE DATE` title, series, release date (and the `release_year`
 processing derives from it) and OpenGraph description.
 
+Roya TV live streams (`[en.]roya.tv/live-stream/ID`) follow upstream
+`RoyaLiveIE`: the ticket API's `data.secured_url` (missing keys are
+upstream's wrapped `KeyError`) as live `hls` HLS formats, the non-fatal
+schedule API's first page channel title whose `str(id)` matches (else the
+generic title after upstream's warning) and `is_live`.
+
 Rumble embeds (`rumble.com/embed/ID`) follow upstream `RumbleEmbedIE`: the
 embed JS API's `ua` formats (progressive by height, audio, timeline; HLS
 manifests non-fatally; tar archives skipped), live status, captions,
@@ -1381,6 +1387,20 @@ renditions; no manifest is upstream's `Failed to obtain m3u8 URL`), the API
 title (else the generic title), the URL date as `upload_date` and the first
 image set's named images as thumbnails.
 
+Match TV live (`matchtv.ru/on-air`, `video.matchtv.ru/iframe/channel/106`)
+follows upstream `MatchTVIE`: the fixed channel-106 iframe's `data-config`
+feed URL (else `Unable to extract video URL`) with `/feed/` replaced by
+`/media/` plus `.m3u8` as a live HLS master with live variant IDs, the fixed
+`Матч ТВ - Прямой эфир` title and `is_live`.
+
+mir24.tv news videos (`mir24.tv/news/ID/SLUG`) follow upstream `Mir24TvIE`:
+the page (requested with upstream's no-impersonate-target warning), its fatal
+`mir24.tv/players/` iframe URL, that URL's last non-blank `source` query
+value made protocol-relative `https:` (else upstream's `Unable to extract m3u8
+URL`) as fatal `hls` formats and subtitles, the `og:title` (else the
+`<title>` text with its warning, else the generic title) and the `og:image`
+thumbnail.
+
 Mixcloud shows (`mixcloud.com/USER/SLUG`) follow upstream `MixcloudIE`: the
 GraphQL cloudcast lookup (with upstream's impersonation warning), its
 XOR-encrypted progressive (5 MiB chunks), HLS and DASH stream URLs, the
@@ -1392,6 +1412,17 @@ MyVidster videos (`myvidster.com/video/ID`) follow upstream `MyVidsterIE`:
 the page's fatal `rel="videolink"` URL is followed through the registry as a
 `url_result`. A link that is not an absolute URL remains an explicit native
 error.
+
+Mocha videos (`video.mocha.com.vn/SLUG`) follow upstream `MochaVideoIE`: the
+`getVideoDetail` API (queried with the page URL) gives the `list_resolution`
+`video_path` playlists as fatal HLS formats and subtitles and the
+`original_path` string as an MP4 format (a missing one is upstream's bare
+`'NoneType' object has no attribute 'get'`), the stringified ID, slug (else
+the URL slug) `display_id`, name (else the generic title), raw description,
+duration, counts, thumbnail and `isLive`, `int_or_none(publish_time,
+scale=1000)` timestamp, `categoryname` categories and the `channels` `'0'`
+entry's channel fields (a string key, so never a list's first item), with
+upstream's unprefixed `KeyError` messages.
 
 Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
 `MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles
@@ -1496,6 +1527,14 @@ HLS formats and subtitles without an `ext` (a media playlist keeps its URL's
 extension), the `sourceSystemId` ID with the slug as `display_id`, hero title
 (else the generic title), thumbnail, `int_or_none(msDuration, scale=1000)`
 duration, raw tags and category texts, with upstream's `KeyError` messages.
+
+PressTV videos (`presstv.ir/SECTION/Y/M/D/ID[/SLUG]`) follow upstream
+`PressTVIE`: the page's `_hidden_inputs` (comments removed; `hidden`/`submit`
+inputs by `name` or `id`) `inpPlayback` path (else upstream's `KeyError`)
+without its last four characters as the fixed `180p`/`360p`/`720p`/`1080p`
+MP4 formats, the fatal `title` meta without a `PressTV-` prefix, the
+OpenGraph thumbnail and description (each warning when absent), the slug (else
+the ID) as `display_id` and the URL date as `upload_date`.
 
 QingTing programs (`qingting.fm`/`qtfm.cn` `[v]channels/C/programs/P`) follow
 upstream `QingTingIE`: the mobile program page's `window.__initStores` JSON

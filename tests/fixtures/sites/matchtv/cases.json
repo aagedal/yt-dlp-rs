@@ -1,0 +1,15 @@
+[
+ {
+  "url": "http://matchtv.ru/on-air/",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://video.matchtv.ru/iframe/channel/106",
+  "args": [
+   "-F"
+  ]
+ }
+]
