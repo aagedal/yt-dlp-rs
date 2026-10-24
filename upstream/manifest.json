@@ -1593,6 +1593,18 @@
       "scope": "TheStarIE mainartBrightcoveVideoId as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "europeantour",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/europeantour.py"
+      ],
+      "rust": [
+        "src/extractor/europeantour.rs",
+        "tests/fixtures/sites/europeantour/"
+      ],
+      "scope": "EuropeanTourIE brightcove-player video-id and ACCOUNT_ID as a url result of the BrightcoveNew player template, and the missing-player error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "maoritv",
       "status": "partial",
       "upstream": [

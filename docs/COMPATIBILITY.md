@@ -723,6 +723,14 @@ Māori Television shows (`maoritelevision.com/shows/.../SLUG`) follow upstream
 player, extracted like Brightcove players above.
 `tests/fixtures/sites/maoritv/` is compared with pinned upstream output.
 
+European Tour videos (`europeantour.com/dpworld-tour/news/video/SLUG`) follow
+upstream `EuropeanTourIE`: the page's `brightcove-player video-id` and last
+non-empty `"ACCOUNT_ID"` (else upstream's `'NoneType' object has no attribute
+'groups'` error) as a `url` result of that account's
+`players.brightcove.net/ACCOUNT/default_default` player, extracted like
+Brightcove players above. `tests/fixtures/sites/europeantour/` is compared with
+pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the

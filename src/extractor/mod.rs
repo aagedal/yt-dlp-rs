@@ -33,6 +33,7 @@ mod ebay;
 mod epoch;
 mod erocast;
 mod ettutv;
+mod europeantour;
 mod f4m;
 mod facebook;
 mod fathom;
@@ -187,6 +188,7 @@ pub use ebay::{Ebay, suitable as ebay_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
 pub use erocast::{Erocast, suitable as erocast_suitable};
 pub use ettutv::{EttuTv, suitable as ettutv_suitable};
+pub use europeantour::{EuropeanTour, suitable as europeantour_suitable};
 pub(crate) use f4m::fix_ampersands as fix_xml_ampersands;
 pub use facebook::{
     Facebook, FacebookAds, FacebookPluginsVideo, FacebookRedirectUrl, FacebookReel,
