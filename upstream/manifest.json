@@ -909,6 +909,18 @@
       "scope": "MegaphoneIE _VALID_URL/_EMBED_REGEX and page extraction (fatal og:audio:title/artist, og:image thumbnail warning, js_to_json episode object, KeyError messages) compared with pinned upstream output through the fixture proxy; generic-page embeds in extractor order with Streamable; _fill_common_fields deprecated multivalue fields (no deprecation warning)"
     },
     {
+      "name": "mir24tv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mir24tv.py"
+      ],
+      "rust": [
+        "src/extractor/mir24tv.rs",
+        "tests/fixtures/sites/mir24tv/"
+      ],
+      "scope": "Mir24TvIE player iframe source query (parse_qs last value, protocol-relative URL, required m3u8 URL) as fatal HLS formats and subtitles, og/title fallbacks, og thumbnail and impersonation warning compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "mixcloud",
       "status": "partial",
       "upstream": [

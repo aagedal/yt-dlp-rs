@@ -1320,6 +1320,14 @@ feed URL (else `Unable to extract video URL`) with `/feed/` replaced by
 `/media/` plus `.m3u8` as a live HLS master with live variant IDs, the fixed
 `Матч ТВ - Прямой эфир` title and `is_live`.
 
+mir24.tv news videos (`mir24.tv/news/ID/SLUG`) follow upstream `Mir24TvIE`:
+the page (requested with upstream's no-impersonate-target warning), its fatal
+`mir24.tv/players/` iframe URL, that URL's last non-blank `source` query
+value made protocol-relative `https:` (else upstream's `Unable to extract m3u8
+URL`) as fatal `hls` formats and subtitles, the `og:title` (else the
+`<title>` text with its warning, else the generic title) and the `og:image`
+thumbnail.
+
 Mixcloud shows (`mixcloud.com/USER/SLUG`) follow upstream `MixcloudIE`: the
 GraphQL cloudcast lookup (with upstream's impersonation warning), its
 XOR-encrypted progressive (5 MiB chunks), HLS and DASH stream URLs, the
