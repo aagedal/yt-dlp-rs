@@ -133,6 +133,18 @@
       "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication, bounded download retries for HTTP 5xx statuses and transport/body failures (HttpFD), upstream download error reporting, in-invocation range resume guarded by strong ETags, known lengths and response validation; shared transient HTTP classification/backoff with extraction; bounded Retry-After delay-seconds/preferred HTTP-date shared with extraction; byte-progress observers and cooperative cancellation checkpoints including retry-wait polling; FILE.part resume across invocations; no Last-Modified validators or obsolete HTTP-date Retry-After formats"
     },
     {
+      "name": "libsyn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/libsyn.py"
+      ],
+      "rust": [
+        "src/extractor/libsyn.rs",
+        "tests/fixtures/sites/libsyn/"
+      ],
+      "scope": "LibsynIE HTML5 player playlistItem JSON (fatal), item/episode-title/data-title/title episode title, h3/podcast-title podcast prefix, info_text_body description, release-date div or JSON upload date, string-only parse_duration, thumbnail and the libsyn/main/download formats compared with pinned upstream output through the fixture proxy; the _EMBED_REGEX generic embeds are not ported and non-string player fields remain explicit native errors"
+    },
+    {
       "name": "orchestration-and-output",
       "status": "partial",
       "upstream": [

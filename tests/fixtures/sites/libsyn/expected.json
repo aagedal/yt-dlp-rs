@@ -1,0 +1,74 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://html5-player.libsyn.com/embed/episode/id/6385796/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6385796\", \"title\": \"Lucky & Prepared - Introduction\", \"description\": \"Our guest is Glenn Lambert of the Saint.\", \"thumbnail\": \"https://assets.libsyn.com/content/1.jpg\", \"upload_date\": \"20171121\", \"duration\": 372, \"formats\": [{\"url\": \"https://traffic.libsyn.com/secure/luckyandprepared/intro.mp3\", \"format_id\": \"libsyn\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"libsyn - unknown\"}, {\"url\": \"https://traffic.libsyn.com/luckyandprepared/intro.mp3\", \"format_id\": \"main\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"main - unknown\"}], \"webpage_url\": \"http://html5-player.libsyn.com/embed/episode/id/6385796/\", \"original_url\": \"http://html5-player.libsyn.com/embed/episode/id/6385796/\", \"webpage_url_basename\": \"6385796\", \"webpage_url_domain\": \"html5-player.libsyn.com\", \"extractor\": \"Libsyn\", \"extractor_key\": \"Libsyn\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://assets.libsyn.com/content/1.jpg\", \"id\": \"0\"}], \"display_id\": \"6385796\", \"fulltitle\": \"Lucky & Prepared - Introduction\", \"duration_string\": \"6:12\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://traffic.libsyn.com/luckyandprepared/intro.mp3\", \"format_id\": \"main\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"main - unknown\", \"_filename\": \"Lucky & Prepared - Introduction [6385796].mp3\", \"filename\": \"Lucky & Prepared - Introduction [6385796].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://html5-player.libsyn.com/embed/episode/id/6385796/",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Libsyn] Extracting URL: http://html5-player.libsyn.com/embed/episode/id/6385796/",
+    "[Libsyn] 6385796: Downloading webpage",
+    "[info] 6385796: Downloading 1 format(s): main",
+    "[download] Destination: 6385796.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "6385796.mp3": 10
+   }
+  },
+  {
+   "url": "https://html5-player.libsyn.com/embed/episode/id/3727166",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3727166\", \"title\": \"Ninja & Co - Episode Two\", \"description\": null, \"thumbnail\": null, \"upload_date\": \"20191203\", \"formats\": [{\"url\": \"https://traffic.libsyn.com/ninja/two.mp3?dl=1\", \"format_id\": \"download\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"download - unknown\"}], \"webpage_url\": \"https://html5-player.libsyn.com/embed/episode/id/3727166\", \"original_url\": \"https://html5-player.libsyn.com/embed/episode/id/3727166\", \"webpage_url_basename\": \"3727166\", \"webpage_url_domain\": \"html5-player.libsyn.com\", \"extractor\": \"Libsyn\", \"extractor_key\": \"Libsyn\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3727166\", \"fulltitle\": \"Ninja & Co - Episode Two\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://traffic.libsyn.com/ninja/two.mp3?dl=1\", \"format_id\": \"download\", \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"download - unknown\", \"_filename\": \"Ninja & Co - Episode Two [3727166].mp3\", \"filename\": \"Ninja & Co - Episode Two [3727166].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://html5-player.libsyn.com/embed/episode/id/3",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(upload_date)s|%(duration)s|%(thumbnail)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3|Data Title|NA|NA|NA|NA|main|m4a"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://html5-player.libsyn.com/embed/episode/id/4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Libsyn] 4: Unable to extract JSON data block; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

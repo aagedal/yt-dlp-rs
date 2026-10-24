@@ -1594,6 +1594,17 @@ higher) as audio formats. Non-string IDs, user names or thumbnails and
 missing users or download file names remain explicit native errors.
 `tests/fixtures/sites/hearthisat/` is compared with pinned upstream output.
 
+Libsyn episodes (`html5-player.libsyn.com/embed/episode/id/ID`) follow
+upstream `LibsynIE`: the player page (requested without the URL's trailing
+options) and its fatal `playlistItem` JSON, the item, `episode-title`,
+`data-title` or `<title>` episode title prefixed by the `<h3>` or
+`podcast-title` podcast name, the `info_text_body` description, the
+release-date div (or JSON) upload date, a string duration, the thumbnail and
+the libsyn/main/download URLs as formats. Libsyn iframes in other pages
+(upstream's `_EMBED_REGEX`) are not detected, and non-string player fields
+remain explicit native errors. `tests/fixtures/sites/libsyn/` is compared
+with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the
