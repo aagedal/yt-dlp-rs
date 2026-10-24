@@ -83,6 +83,7 @@ mod movingimage;
 mod myvidster;
 mod niconico;
 mod nobelprize;
+pub mod nuxt;
 mod odnoklassniki;
 mod onefootball;
 mod oneplace;

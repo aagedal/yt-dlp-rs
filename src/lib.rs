@@ -11,6 +11,7 @@ mod cover_art;
 mod crypto;
 mod dash;
 pub mod dates;
+pub mod devalue;
 mod download;
 mod embed_metadata;
 mod embed_subtitles;

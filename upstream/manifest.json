@@ -1447,6 +1447,19 @@
       "scope": "StreamableIE _VALID_URL and ajax API extraction (status, reddit_title/title, files as formats with parse_codecs codecs, owner, float date_added/duration, plays) compared with pinned upstream output through the fixture proxy; _EMBED_REGEX iframes on generic pages via _extract_embeds url results (single followed, several as a playlist with flat url entries); pages mixing HTML5 media and embeds are an unsupported error"
     },
     {
+      "name": "nuxt",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/utils/jslib/devalue.py",
+        "test/test_devalue.py"
+      ],
+      "rust": [
+        "src/devalue.rs",
+        "src/extractor/nuxt.rs"
+      ],
+      "scope": "InfoExtractor._search_nuxt_data (window.__NUXT__ pure-function payloads through js_to_json with vars), _resolve_nuxt_array and _search_nuxt_json (devalue.parse_iter with the Nuxt revivers), unit-tested against upstream's test_search_nuxt_json, test_js_to_json_vars_strings and test_devalue cases; cycles resolve to null, NaN/Infinity to null, Date/RegExp to their strings and bytes to byte arrays; payloads that fail to parse as JSON are explicit native errors"
+    },
+    {
       "name": "streetvoice",
       "status": "partial",
       "upstream": [
