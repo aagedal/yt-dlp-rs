@@ -1,6 +1,7 @@
 mod amadeustv;
 mod angel;
 mod archiveorg;
+mod arte;
 mod audioboom;
 mod bandcamp;
 mod beacon;
@@ -218,6 +219,11 @@ mod zhihu;
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
+pub use arte::{
+    ArteTv, ArteTvCategory, ArteTvEmbed, ArteTvPlaylist,
+    category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,
+    playlist_suitable as artetv_playlist_suitable, suitable as artetv_suitable,
+};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
@@ -1418,6 +1424,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("kaltura:") && kaltura::suitable(url))
         || youtube::search::suitable(url)
         || (url.starts_with("at://") && bluesky::suitable(url))
+        || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
         || (url.starts_with("iheartradio:") && iheart::suitable(url))

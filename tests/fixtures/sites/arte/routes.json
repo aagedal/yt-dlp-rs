@@ -1,0 +1,21 @@
+{
+ "routes": [
+  {"url": "https://api.arte.tv/api/player/v2/config/en/127498-000-A", "request_headers": {"x-validated-age": "18"}, "headers": {"Content-Type": "application/json"}, "body_file": "config_en.json"},
+  {"url": "https://manifest-arte.akamaized.net/api/manifest/v1/Generate/b37e14e9-08f4-4407-bcf1-cf39fa176d54/en/XQ+KS+CHEV1/127498-000-A.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "master_en.m3u8"},
+  {"url": "https://api.arte.tv/api/player/v2/config/fr/100001-000-A", "request_headers": {"x-validated-age": "18"}, "headers": {"Content-Type": "application/json"}, "body_file": "config_multi.json"},
+  {"url": "https://manifest-arte.akamaized.net/fixture/m1.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "m1.m3u8"},
+  {"url": "https://manifest-arte.akamaized.net/fixture/m2.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "m2.m3u8"},
+  {"url": "https://manifest-arte.akamaized.net/fixture/missing.m3u8", "status": 404, "headers": {"Content-Type": "text/plain"}, "body": "not found"},
+  {"url": "https://api.arte.tv/api/player/v2/config/de/100002-000-A", "request_headers": {"x-validated-age": "18"}, "headers": {"Content-Type": "application/json"}, "body_file": "config_norights.json"},
+  {"url": "https://api.arte.tv/api/player/v2/config/de/LIVE", "request_headers": {"x-validated-age": "18"}, "headers": {"Content-Type": "application/json"}, "body_file": "config_live.json"},
+  {"url": "https://api.arte.tv/api/player/v2/config/None/100003-000-A", "request_headers": {"x-validated-age": "18"}, "headers": {"Content-Type": "application/json"}, "body_file": "config_program.json"},
+  {"url": "https://api.arte.tv/api/opa/v3/programs/en/RC-025704", "request_headers": {"Authorization": "Bearer Nzc1Yjc1ZjJkYjk1NWFhN2I2MWEwMmRlMzAzNjI5NmU3NWU3ODg4ODJjOWMxNTMxYzEzZGRjYjg2ZGE4MmIwOA"}, "headers": {"Content-Type": "application/json"}, "body_file": "programs_shows.json"},
+  {"url": "https://api.arte.tv/api/opa/v3/programs/de/RC-027513", "request_headers": {"Authorization": "Bearer Nzc1Yjc1ZjJkYjk1NWFhN2I2MWEwMmRlMzAzNjI5NmU3NWU3ODg4ODJjOWMxNTMxYzEzZGRjYjg2ZGE4MmIwOA"}, "headers": {"Content-Type": "application/json"}, "body_file": "programs_seasons.json"},
+  {"url": "https://api.arte.tv/api/player/v2/playlist/de/RC-027514", "request_headers": {"x-validated-age": "18"}, "headers": {"Content-Type": "application/json"}, "body_file": "season1.json"},
+  {"url": "https://api.arte.tv/api/player/v2/playlist/de/RC-027515", "request_headers": {"x-validated-age": "18"}, "headers": {"Content-Type": "application/json"}, "body_file": "season2.json"},
+  {"url": "https://api.arte.tv/api/opa/v3/programs/fr/RC-000010", "request_headers": {"Authorization": "Bearer Nzc1Yjc1ZjJkYjk1NWFhN2I2MWEwMmRlMzAzNjI5NmU3NWU3ODg4ODJjOWMxNTMxYzEzZGRjYjg2ZGE4MmIwOA"}, "headers": {"Content-Type": "application/json"}, "body_file": "programs_small.json"},
+  {"url": "https://api.arte.tv/api/player/v2/playlist/fr/RC-000011", "request_headers": {"x-validated-age": "18"}, "headers": {"Content-Type": "application/json"}, "body_file": "season_small.json"},
+  {"url": "https://api.arte.tv/api/opa/v3/programs/it/RC-000099", "request_headers": {"Authorization": "Bearer Nzc1Yjc1ZjJkYjk1NWFhN2I2MWEwMmRlMzAzNjI5NmU3NWU3ODg4ODJjOWMxNTMxYzEzZGRjYjg2ZGE4MmIwOA"}, "headers": {"Content-Type": "application/json"}, "body": "{\"programs\": []}"},
+  {"url": "https://www.arte.tv/en/videos/politics-and-society/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "category.html"}
+ ]
+}

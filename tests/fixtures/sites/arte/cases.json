@@ -1,0 +1,18 @@
+[
+ {"url": "https://www.arte.tv/en/videos/127498-000-A/gustave-fayet-dedicated-to-art/", "args": ["-j"]},
+ {"url": "https://www.arte.tv/en/videos/127498-000-A/gustave-fayet-dedicated-to-art/", "args": ["--print", "%(id)s|%(title)s|%(format_id)s|%(format_note)s|%(language_preference)s|%(upload_date)s|%(duration)s"]},
+ {"url": "https://api.arte.tv/api/player/v2/config/en/127498-000-A", "args": ["-j"]},
+ {"url": "https://www.arte.tv/fr/videos/100001-000-A/le-titre/", "args": ["-j"]},
+ {"url": "https://www.arte.tv/fr/videos/100001-000-A/le-titre/", "args": ["-F"]},
+ {"url": "https://www.arte.tv/fr/videos/100001-000-A/le-titre/", "args": ["--list-subs"]},
+ {"url": "https://www.arte.tv/de/videos/100002-000-A/expired/", "args": ["-j"]},
+ {"url": "https://api.arte.tv/api/player/v2/config/de/LIVE", "args": ["-j", "--no-geo-bypass"]},
+ {"url": "arte://program/100003-000-A", "args": ["-j"]},
+ {"url": "https://www.arte.tv/player/v5/index.php?json_url=https%3A%2F%2Fapi.arte.tv%2Fapi%2Fplayer%2Fv2%2Fconfig%2Ffr%2F100001-000-A&lang=fr&autoplay=true", "args": ["-j"]},
+ {"url": "https://www.arte.tv/player/v5/index.php?json_url=https%3A%2F%2Fapi.arte.tv%2Fapi%2Fplayer%2Fv2%2Fconfig%2Ffr%2F100001-000-A&lang=fr&autoplay=true", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.arte.tv/en/videos/RC-025704/dj-mehdi-made-in-france/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.arte.tv/de/videos/RC-027513/twin-peaks/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.arte.tv/fr/videos/RC-000010/petite-collection/", "args": ["-J"]},
+ {"url": "https://www.arte.tv/it/videos/RC-000099/vuoto/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.arte.tv/en/videos/politics-and-society/", "args": ["-J", "--flat-playlist"]}
+]
