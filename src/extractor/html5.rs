@@ -322,7 +322,13 @@ fn media_entries(base: &Url, document: &Html, site: bool) -> Result<Vec<Html5Ent
         }
         let mut urls = Vec::new();
         for (source, content_type, width, height, tbr, child, label) in sources {
-            let url = base.join(source)?;
+            // Site extractors keep `urljoin`'s protocol-relative URLs, which
+            // processing's `sanitize_url` makes HTTP.
+            let url = if site && source.starts_with("//") {
+                Url::parse(&format!("http:{source}"))?
+            } else {
+                base.join(source)?
+            };
             if !matches!(url.scheme(), "http" | "https") {
                 return Err(Error::UnsupportedScheme(url.scheme().into()));
             }
@@ -460,7 +466,6 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
 
 /// One `_parse_html5_media_entries` entry (`formats`, `subtitles` and the
 /// poster `thumbnail`).
-#[allow(dead_code)] // Used by site extractors.
 pub(crate) struct MediaEntry {
     pub formats: Vec<VideoFormat>,
     pub subtitles: Subtitles,

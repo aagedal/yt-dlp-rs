@@ -1716,6 +1716,18 @@
       "scope": "WeiboIE statuses JSON with the visitor cookie handshake, playback-list and fallback formats, mixed-media playlists and metadata; WeiboVideoIE TV component lookups; no WeiboUserIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "worldstarhiphop",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/worldstarhiphop.py"
+      ],
+      "rust": [
+        "src/extractor/worldstarhiphop.rs",
+        "tests/fixtures/sites/worldstarhiphop/"
+      ],
+      "scope": "WorldStarHipHopIE first _parse_html5_media_entries entry (formats, subtitles, poster) with the fatal heading/pinned title, compared with pinned upstream output through the fixture proxy; pages without HTML5 media (upstream's Generic url result) remain unsupported natively"
+    },
+    {
       "name": "xiaohongshu",
       "status": "partial",
       "upstream": [

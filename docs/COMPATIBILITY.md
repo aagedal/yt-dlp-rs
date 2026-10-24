@@ -1140,6 +1140,13 @@ post's title (72-character truncation), alt title, uploader, counts, tags and
 supported. `tests/fixtures/sites/weibo/` is compared with pinned upstream
 output.
 
+WorldStarHipHop videos (`www|m.worldstar{hiphop,candy}.com/{videos,android}/video.php?v=ID`)
+follow upstream `WorldStarHipHopIE`: the first `_parse_html5_media_entries`
+entry (formats with the page as `Referer`, tracks and poster) with the fatal
+`content-heading` (else `tc-sp-pinned-title`) title. Pages without HTML5
+media, which upstream hands to the generic extractor as a `url` result,
+remain explicit native errors.
+
 XiaoHongShu (RedNote) notes (`www.xiaohongshu.com/explore/ID`,
 `discovery/item/ID`) follow upstream `XiaoHongShuIE` (release 2026.10.21):
 the page's fatal `window.__INITIAL_STATE__` (through `js_to_json`), every
