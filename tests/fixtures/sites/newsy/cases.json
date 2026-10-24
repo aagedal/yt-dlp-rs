@@ -1,0 +1,8 @@
+[
+ {"url": "https://www.newsy.com/stories/nft-trend-leads-to-fraudulent-art-auctions/", "args": ["-j"]},
+ {"url": "https://www.newsy.com/stories/nft-trend-leads-to-fraudulent-art-auctions/", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(timestamp)s|%(duration)s|%(thumbnail)s|%(description)s"]},
+ {"url": "https://www.newsy.com/stories/no-ld", "args": ["-j"]},
+ {"url": "https://www.newsy.com/stories/no-stream", "args": ["-j"]},
+ {"url": "https://www.newsy.com/stories/no-id", "args": ["-j"]},
+ {"url": "https://www.newsy.com/stories/no-data", "args": ["-j"]}
+]

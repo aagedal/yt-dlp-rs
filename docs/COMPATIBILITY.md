@@ -1435,6 +1435,16 @@ covered by the fixtures); platforms without any metadata (upstream's
 `TypeError`) remain explicit native errors. `tests/fixtures/sites/trtworld/`
 is compared with pinned upstream output.
 
+Newsy stories (`www.newsy.com/stories/SLUG`) follow upstream `NewsyIE`: the
+page's `data-video-player` attribute (cleaned like `_html_search_regex`,
+parsed with `js_to_json`; its absence is upstream's `Unable to extract data`
+error), a truthy `stream` as fatal HLS formats and subtitles, the required
+`id` (upstream's `KeyError`), and `display_id`, `headline`, `duration` and
+`image` merged under the page's JSON-LD (`merge_dicts`, the JSON-LD's values
+win; a missing JSON-LD is upstream's warning). JSON-LD carrying media URLs,
+formats, IDs or subtitles remains an explicit native error.
+`tests/fixtures/sites/newsy/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

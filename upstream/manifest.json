@@ -1125,6 +1125,18 @@
       "scope": "MyVidsterIE rel=videolink URL as a followed url_result and the fatal missing-link message compared with pinned upstream output through the fixture proxy; non-absolute links remain explicit native errors"
     },
     {
+      "name": "newsy",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/newsy.py"
+      ],
+      "rust": [
+        "src/extractor/newsy.rs",
+        "tests/fixtures/sites/newsy/"
+      ],
+      "scope": "NewsyIE data-video-player attribute via js_to_json, fatal HLS formats and subtitles from a truthy stream, KeyError/Unable to extract data paths and the player metadata merged under the page JSON-LD (merge_dicts, missing-JSON-LD warning) compared with pinned upstream output through the fixture proxy; JSON-LD media URLs/formats/IDs/subtitles remain explicit native errors"
+    },
+    {
       "name": "niconico",
       "status": "partial",
       "upstream": [
