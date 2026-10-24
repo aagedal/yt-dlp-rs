@@ -1079,6 +1079,18 @@
       "scope": "SoundcloudIE client ID discovery, resolved track JSON, default transcoding formats, artwork thumbnails and metadata, DRM/geo errors; no original downloads, login, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "spiegel",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/spiegel.py"
+      ],
+      "rust": [
+        "src/extractor/spiegel.rs",
+        "tests/fixtures/sites/spiegel/"
+      ],
+      "scope": "SpiegelIE _VALID_URL and the page mediaId as a url_transparent jwplatform: result with display_id and og:title compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "streamable",
       "status": "partial",
       "upstream": [

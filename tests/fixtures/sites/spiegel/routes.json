@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Vulkan Tungurahua in Ecuador ist wieder aktiv - DER SPIEGEL - Wissenschaft\"></head><body><div data-settings=\"{&#34;mediaId&#34;:&#34;II0BUyxY&#34;,&#34;x&#34;:1}\"></div></body></html>"
+  },
+  {
+   "url": "https://www.spiegel.de/panorama/urteile-im-goldmuenzenprozess-a-aae8df48-43c1-4c61-867d-23f0a2d254b7",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>No og</title></head><body><script>var p = {'mediaId': \"II0BUyxY\"};</script></body></html>"
+  },
+  {
+   "url": "https://www.manager-magazin.de/video/missing-video-42.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Missing\"></head><body>nothing</body></html>"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/II0BUyxY",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"JW title\", \"playlist\": [{\"title\": \"JW title\", \"mediaid\": \"II0BUyxY\", \"image\": \"https://cdn.jwplayer.com/v2/media/II0BUyxY/poster.jpg\", \"duration\": 48, \"pubdate\": 1362997920, \"description\": \"JW description\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/II0BUyxY-1.mp4\", \"type\": \"video/mp4\", \"height\": 360, \"width\": 640, \"label\": \"360p\", \"bitrate\": 600000}]}]}"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/videos/II0BUyxY-1.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  }
+ ]
+}

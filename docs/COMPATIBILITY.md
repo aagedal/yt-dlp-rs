@@ -486,6 +486,12 @@ JW Platform extractor) overlaid with the post's display ID, raw title,
 excerpt, ISO 8601 date and comment count; no matching post is upstream's
 `Unable to find the current post`.
 
+Spiegel and manager magazin articles and videos (`spiegel.de/.../SLUG-ID[.html]`)
+follow upstream `SpiegelIE`: the page's `mediaId` (plain or `&#34;`-quoted;
+else upstream's `Unable to extract media id`) as a `url_transparent` result of
+`jwplatform:MEDIA` overlaid with the URL ID as `display_id` and the
+`og:title` when present.
+
 This American Life episodes (`thisamericanlife.org/radio-archives/episode/ID`,
 `play_full.php?play=ID`) follow upstream `ThisAmericanLifeIE`: the episode
 page's fatal `twitter:title`, description meta and OpenGraph image, with the
