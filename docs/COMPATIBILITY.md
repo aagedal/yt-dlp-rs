@@ -1605,6 +1605,18 @@ the libsyn/main/download URLs as formats. Libsyn iframes in other pages
 remain explicit native errors. `tests/fixtures/sites/libsyn/` is compared
 with pinned upstream output.
 
+iHeartRadio podcast episodes (`iheart.com/podcast/SHOW/episode/SLUG-ID` and
+`iheartradio:ID`) follow upstream `IHeartRadioIE`: the `api.iheart.com` v3
+episode JSON, its image, cleaned description, millisecond start date as the
+timestamp, duration and the `clean_podcast_url` media URL as the only
+format. Podcasts (`iheart.com/podcast/SHOW-ID`, also on
+`iheartpodcastnetwork.com`) follow `IHeartRadioPodcastIE`: the episode list
+(`limit=1000000000`) as `iheartradio:ID` `url` entries carrying the same
+fields (episodes without an ID are skipped) and the non-fatal podcast lookup
+for the playlist title and description. Non-string titles, media URLs and
+descriptions remain explicit native errors. `tests/fixtures/sites/iheart/`
+is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

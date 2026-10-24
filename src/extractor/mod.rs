@@ -63,6 +63,7 @@ mod hrefli;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
+mod iheart;
 mod iltalehti;
 mod imgur;
 mod inc;
@@ -240,6 +241,10 @@ pub use hrefli::{HrefLiRedirect, suitable as hrefli_suitable};
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
+pub use iheart::{
+    IHeartRadio, IHeartRadioPodcast, podcast_suitable as iheart_podcast_suitable,
+    suitable as iheart_suitable,
+};
 pub use iltalehti::{Iltalehti, suitable as iltalehti_suitable};
 pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
@@ -1295,6 +1300,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("iheartradio:") && iheart::suitable(url))
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))
         || (url.starts_with("tiktokuser:") && tiktok::user_suitable(url))
