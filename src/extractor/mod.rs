@@ -116,6 +116,7 @@ mod ninenews;
 mod nobelprize;
 mod nts;
 pub mod nuxt;
+mod nzonscreen;
 mod odnoklassniki;
 mod onefootball;
 mod onenewsnz;
@@ -332,6 +333,7 @@ pub use niconico::{Niconico, suitable as niconico_suitable};
 pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use nts::{NtsLive, suitable as nts_suitable};
+pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use onefootball::{OneFootball, suitable as onefootball_suitable};
 pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
@@ -1581,10 +1583,13 @@ pub(crate) fn dict_info(
     info.extractor_key = key.into();
     let mut keys = Vec::new();
     let mut titled = false;
+    // A `None` title keeps its key's position for processing's generic one.
+    let mut title_key = false;
     for (name, value) in fields {
         keys.push(name.to_owned());
         match name {
             "id" => info.id = value.as_str().unwrap_or_default().to_owned(),
+            "title" if value.is_null() => title_key = true,
             "title" => {
                 titled = true;
                 info.title = value.as_str().unwrap_or_default().to_owned();
@@ -1606,7 +1611,7 @@ pub(crate) fn dict_info(
         info,
         &format!(
             "dict{};{}",
-            if titled { "" } else { "-untitled" },
+            if titled || title_key { "" } else { "-untitled" },
             keys.join(",")
         ),
     )

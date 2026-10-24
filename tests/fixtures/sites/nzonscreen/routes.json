@@ -1,0 +1,6 @@
+{
+ "routes": [
+  {"url": "https://www.nzonscreen.com/title/shoop-shoop-diddy-wop-cumma-cumma-wang-dang-1982", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://www.nzonscreen.com/title/shes-a-mod-1964?collection=best-of-the-60s", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page2.html"}
+ ]
+}

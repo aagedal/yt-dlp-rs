@@ -1756,6 +1756,15 @@ Articles without such elements are upstream's expected `This article does
 not have a video.` `tests/fixtures/sites/onenewsnz/` is compared with pinned
 upstream output.
 
+NZ On Screen titles (`www.nzonscreen.com/title/SLUG`) follow upstream
+`NZOnScreenIE`: the page's `data-video-config` JSON (`uuid` as ID, stripped
+`label`/`description`, `thumbnail.path`, `float_or_none` duration), its
+`h264` `lo_res`/`hi_res` URLs as `lo`/`hi` mp4 formats ranked by order (the
+`hi` format with the config's width and height, `*_res_mb` as
+`filesize_approx`), the page `<title>` (else OpenGraph title) without
+` | NZ On Screen` as `alt_title`, and the site's `Referer`/`Origin` headers.
+`tests/fixtures/sites/nzonscreen/` is compared with pinned upstream output.
+
 Cloudflare Stream videos (`[watch.|iframe.|customer-X.]cloudflarestream.com|videodelivery.net|bytehighway.net/ID`
 and `embed/*.js?video=ID` scripts) follow upstream `CloudflareStreamIE`: a
 signed token's ID is its base64 payload's `sub`, and the

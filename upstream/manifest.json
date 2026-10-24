@@ -241,6 +241,18 @@
       "scope": "LibsynIE HTML5 player playlistItem JSON (fatal), item/episode-title/data-title/title episode title, h3/podcast-title podcast prefix, info_text_body description, release-date div or JSON upload date, string-only parse_duration, thumbnail and the libsyn/main/download formats compared with pinned upstream output through the fixture proxy; the _EMBED_REGEX generic embeds are not ported and non-string player fields remain explicit native errors"
     },
     {
+      "name": "nzonscreen",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nzonscreen.py"
+      ],
+      "rust": [
+        "src/extractor/nzonscreen.rs",
+        "tests/fixtures/sites/nzonscreen/"
+      ],
+      "scope": "NZOnScreenIE data-video-config h264 lo/hi formats with quality, size and dimensions, uuid ID, stripped label/description, alt_title and the site's Referer/Origin headers. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "onenewsnz",
       "status": "partial",
       "upstream": [
