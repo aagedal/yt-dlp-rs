@@ -1,0 +1,9 @@
+[
+ {"url": "https://www.netzkino.de/details/snow-beast", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.netzkino.de/details/snow-beast", "args": ["--print", "%(id)s|%(title)s|%(alt_title)s|%(age_limit)s|%(cast)s|%(creators)s|%(categories)s|%(description)s|%(duration)s|%(location)s|%(release_year)s|%(thumbnail)s|%(ext)s"]},
+ {"url": "https://www.netzkino.de/details/snow-beast", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.netzkino.de/details/locked", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://netzkino.de/details/bare", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.netzkino.de/details/none", "args": ["--no-geo-bypass", "-j"]},
+ {"url": "https://www.netzkino.de/details/nonext", "args": ["--no-geo-bypass", "-j"]}
+]

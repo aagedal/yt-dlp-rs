@@ -1576,6 +1576,17 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+Netzkino films (`netzkino.de/details/SLUG`) follow upstream `NetzkinoIE`: the
+page's `__NEXT_DATA__` dehydrated-state `CmsMovie` query, upstream's DRM error
+for `DRM` licences, and the joined `pmd.netzkino-seite.netzkino.de` video URL
+as an untyped result with the original title, FSK age limit, cast, creators,
+categories, synopsis, runtime, country, year and cover image (`clean_html`
+and empty-value filtering as upstream), plus the generic title and
+`No video formats found!` error for pages without a movie. Upstream's
+`_GEO_COUNTRIES` fake `X-Forwarded-For` header is not sent natively, so the
+fixture's `-j` cases use `--no-geo-bypass`.
+`tests/fixtures/sites/netzkino/` is compared with pinned upstream output.
+
 Pear Video pages (`pearvideo.com/video_ID`) follow upstream `PearVideoIE`: the
 page's `KINDUrl = "..."` assignments as formats ranked by upstream's
 `qualities` list (protocol-relative URLs as `http:`), else the
