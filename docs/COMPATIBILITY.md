@@ -1720,6 +1720,15 @@ OpenGraph title). Pages without such videos (upstream's generic-extractor
 fallback) remain explicit native errors.
 `tests/fixtures/sites/bostonglobe/` is compared with pinned upstream output.
 
+Dropbox shared files (`[www.]dropbox.com/s|sh|scl/fi|scl/fo|e/scl/...`)
+follow upstream `DropboxIE`: the URL basename (unquoted, extension removed)
+as title, the base64 `registerStreamedPrefetch` parts (last first), the
+first part's transcode HLS playlist (fatal) and thumbnail, and an `original`
+`dl=1` format when anonymous downloads are enabled. Password-protected files
+without `--video-password` keep upstream's error; the password flow (cookie
+and POST) is not ported.
+`tests/fixtures/sites/dropbox/` is compared with pinned upstream output.
+
 Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
 `api.clyp.it/ID` JSON (with the URL's `token` query), its `OggUrl`,
 `Mp3Url`, `SecureOggUrl` and `SecureMp3Url` audio formats, the page's

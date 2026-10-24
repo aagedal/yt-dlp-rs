@@ -749,6 +749,18 @@
       "scope": "DLiveVODIE pastBroadcast and DLiveStreamIE userByDisplayName GraphQL POSTs, the fatal HLS playlists (playbackUrl and live.prd.dlive.tv/hls/live/USERNAME.m3u8, mp4), description/thumbnail/millisecond timestamp/view counts, is_live, KeyError and None TypeError paths compared with pinned upstream output through the fixture proxy; non-string playback URLs and usernames remain explicit native errors"
     },
     {
+      "name": "dropbox",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dropbox.py"
+      ],
+      "rust": [
+        "src/extractor/dropbox.rs",
+        "tests/fixtures/sites/dropbox/"
+      ],
+      "scope": "DropboxIE prefetch parts, transcode HLS, thumbnail and anonymous original format with basename title; the password flow is not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "drtalks",
       "status": "partial",
       "upstream": [

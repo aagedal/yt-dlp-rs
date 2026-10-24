@@ -1,0 +1,73 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.dropbox.com/s/nelirfsxnmcfbfh/youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4?dl=0",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"nelirfsxnmcfbfh\", \"title\": \"youtube-dl test video '\\u00e4\\\"BaW_jenozKc\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://dl.dropboxusercontent.test/transcode/abc/low.m3u8\", \"manifest_url\": \"https://dl.dropboxusercontent.test/transcode/abc/hls.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}, {\"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://dl.dropboxusercontent.test/transcode/abc/high.m3u8\", \"manifest_url\": \"https://dl.dropboxusercontent.test/transcode/abc/hls.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\"}, {\"url\": \"https://www.dropbox.com/s/nelirfsxnmcfbfh/youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4?dl=1\", \"format_id\": \"original\", \"format_note\": \"Original\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - unknown (Original)\"}], \"subtitles\": {}, \"thumbnail\": \"https://www.dropbox.com/temp_thumb_from_token/s/nelirfsxnmcfbfh?size=1200x1200\", \"webpage_url\": \"https://www.dropbox.com/s/nelirfsxnmcfbfh/youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4?dl=0\", \"original_url\": \"https://www.dropbox.com/s/nelirfsxnmcfbfh/youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4?dl=0\", \"webpage_url_basename\": \"youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4\", \"webpage_url_domain\": \"dropbox.com\", \"extractor\": \"Dropbox\", \"extractor_key\": \"Dropbox\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.dropbox.com/temp_thumb_from_token/s/nelirfsxnmcfbfh?size=1200x1200\", \"id\": \"0\"}], \"display_id\": \"nelirfsxnmcfbfh\", \"fulltitle\": \"youtube-dl test video '\\u00e4\\\"BaW_jenozKc\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://www.dropbox.com/s/nelirfsxnmcfbfh/youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4?dl=1\", \"format_id\": \"original\", \"format_note\": \"Original\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - unknown (Original)\", \"_filename\": \"youtube-dl test video '\\u00e4\\uff02BaW_jenozKc [nelirfsxnmcfbfh].mp4\", \"filename\": \"youtube-dl test video '\\u00e4\\uff02BaW_jenozKc [nelirfsxnmcfbfh].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dropbox.com/s/nelirfsxnmcfbfh/youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4?dl=0",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Dropbox] Extracting URL: https://www.dropbox.com/s/nelirfsxnmcfbfh/youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4?dl=0",
+    "[Dropbox] nelirfsxnmcfbfh: Downloading webpage",
+    "[Dropbox] nelirfsxnmcfbfh: Downloading m3u8 information",
+    "[info] Available formats for nelirfsxnmcfbfh:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC    MORE INFO",
+    "-----------------------------------------------------------------------",
+    "800      mp4 640x360    |  800k m3u8  | avc1.42c01e mp4a.40.2",
+    "2400     mp4 1280x720   | 2400k m3u8  | avc1.4d401f mp4a.40.2",
+    "original mp4 unknown    |       https | unknown     unknown   Original"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dropbox.com/scl/fi/r2kd2skcy5ylbbta5y1pz/DJI_0003.MP4?dl=0&rlkey=wcdg",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"r2kd2skcy5ylbbta5y1pz\", \"title\": \"DJI_0003\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://dl.dropboxusercontent.test/transcode/abc/low.m3u8\", \"manifest_url\": \"https://dl.dropboxusercontent.test/transcode/abc/hls.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}, {\"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://dl.dropboxusercontent.test/transcode/abc/high.m3u8\", \"manifest_url\": \"https://dl.dropboxusercontent.test/transcode/abc/hls.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\"}], \"subtitles\": {}, \"thumbnail\": null, \"webpage_url\": \"https://www.dropbox.com/scl/fi/r2kd2skcy5ylbbta5y1pz/DJI_0003.MP4?dl=0&rlkey=wcdg\", \"original_url\": \"https://www.dropbox.com/scl/fi/r2kd2skcy5ylbbta5y1pz/DJI_0003.MP4?dl=0&rlkey=wcdg\", \"webpage_url_basename\": \"DJI_0003.MP4\", \"webpage_url_domain\": \"dropbox.com\", \"extractor\": \"Dropbox\", \"extractor_key\": \"Dropbox\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"r2kd2skcy5ylbbta5y1pz\", \"fulltitle\": \"DJI_0003\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://dl.dropboxusercontent.test/transcode/abc/high.m3u8\", \"manifest_url\": \"https://dl.dropboxusercontent.test/transcode/abc/hls.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\", \"_filename\": \"DJI_0003 [r2kd2skcy5ylbbta5y1pz].mp4\", \"filename\": \"DJI_0003 [r2kd2skcy5ylbbta5y1pz].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dropbox.com/sh/2mgpiuq7kv8nqdf/AABy?dl=0&preview=Drone+Shot.mp4",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2mgpiuq7kv8nqdf\", \"title\": \"AABy\", \"formats\": [{\"url\": \"https://www.dropbox.com/sh/2mgpiuq7kv8nqdf/AABy?dl=1&preview=Drone+Shot.mp4\", \"format_id\": \"original\", \"format_note\": \"Original\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"unknown_video\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - unknown (Original)\"}], \"subtitles\": {}, \"thumbnail\": null, \"webpage_url\": \"https://www.dropbox.com/sh/2mgpiuq7kv8nqdf/AABy?dl=0&preview=Drone+Shot.mp4\", \"original_url\": \"https://www.dropbox.com/sh/2mgpiuq7kv8nqdf/AABy?dl=0&preview=Drone+Shot.mp4\", \"webpage_url_basename\": \"AABy\", \"webpage_url_domain\": \"dropbox.com\", \"extractor\": \"Dropbox\", \"extractor_key\": \"Dropbox\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2mgpiuq7kv8nqdf\", \"fulltitle\": \"AABy\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://www.dropbox.com/sh/2mgpiuq7kv8nqdf/AABy?dl=1&preview=Drone+Shot.mp4\", \"format_id\": \"original\", \"format_note\": \"Original\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"unknown_video\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - unknown (Original)\", \"_filename\": \"AABy [2mgpiuq7kv8nqdf].unknown_video\", \"filename\": \"AABy [2mgpiuq7kv8nqdf].unknown_video\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dropbox.com/s/locked/secret.mp4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Dropbox] locked: Password protected video, use --video-password <password>"
+   ],
+   "files": {}
+  }
+ ]
+}
