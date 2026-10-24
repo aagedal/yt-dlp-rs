@@ -1595,6 +1595,15 @@ the `thumb`/`still` stills, duration and kudos/views stats. Non-array item or
 media lists and non-string titles or URIs remain explicit native errors.
 `tests/fixtures/sites/dumpert/` is compared with pinned upstream output.
 
+CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
+follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`
+JSON form POST (`version=6.4.0`, `referer`), each `source.sources[].src` URL
+as a non-fatal HLS playlist (with subtitles; `chunklist_bN_vo_` variants get
+`acodec` `none`), and the `{str}` name, `int_or_none` duration, ISO 8601
+upload date and poster URL. Generic-page iframe embeds are not detected
+natively. `tests/fixtures/sites/cloudycdn/` is compared with pinned upstream
+output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

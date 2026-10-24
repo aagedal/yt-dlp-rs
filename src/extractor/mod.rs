@@ -19,6 +19,7 @@ mod caltrans;
 mod cam4;
 mod cgtn;
 mod cjsw;
+mod cloudycdn;
 mod clyp;
 mod coub;
 mod cozytv;
@@ -191,6 +192,7 @@ pub use caltrans::{Caltrans, suitable as caltrans_suitable};
 pub use cam4::{Cam4, suitable as cam4_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
+pub use cloudycdn::{CloudyCdn, suitable as cloudycdn_suitable};
 pub use clyp::{Clyp, suitable as clyp_suitable};
 pub use coub::{Coub, suitable as coub_suitable};
 pub use cozytv::{CozyTv, suitable as cozytv_suitable};
@@ -1486,7 +1488,8 @@ pub(crate) fn dict_format(
 }
 
 /// An upstream `return {...}` info dict: `fields` in its key order (a
-/// `formats` entry only marks the key's position) with
+/// `formats` entry, or a `None` `subtitles` the caller sets, only marks the
+/// key's position) with
 /// the extracted `formats`.
 pub(crate) fn dict_info(
     page: &Url,
@@ -1520,6 +1523,8 @@ pub(crate) fn dict_info(
                 info.title = value.as_str().unwrap_or_default().to_owned();
             }
             "formats" => {}
+            // The caller's `info.subtitles`.
+            "subtitles" if value.is_null() => {}
             _ => crate::metadata_parser::set_field(&mut info, name, value),
         }
     }

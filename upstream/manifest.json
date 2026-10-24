@@ -449,6 +449,18 @@
       "scope": "CJSWIE episode page (fatal title/audio regexes, UUID ID, description, series, episode ID, audio format and download) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "cloudycdn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cloudycdn.py"
+      ],
+      "rust": [
+        "src/extractor/cloudycdn.rs",
+        "tests/fixtures/sites/cloudycdn/"
+      ],
+      "scope": "CloudyCDNIE player JSON form POST (version, referer), non-fatal HLS sources with subtitles and the video-only chunklist acodec fixup, title/duration/timestamp/poster metadata compared with pinned upstream output through the fixture proxy; generic-page iframe embeds are not detected"
+    },
+    {
       "name": "clyp",
       "status": "partial",
       "upstream": [
