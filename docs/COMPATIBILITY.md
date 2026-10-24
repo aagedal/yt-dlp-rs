@@ -1874,6 +1874,13 @@ JSON's `resourceUrl` (else the upstream `KeyError`) as an untyped result,
 raw title, description, duration and thumbnail and the `unified_strdate`
 broadcast date.
 
+Kickstarter projects (`kickstarter.com/projects/ID/...`) follow upstream
+`KickStarterIE` for native videos: the page's `data-video-url` as an untyped
+result with the fatal cleaned `<title>` (without ` &mdash; Kickstarter`), the
+OpenGraph description and image (else the `poster` image, warning when
+absent). Pages without a native video, which upstream passes to the generic
+extractor for embeds, are an explicit native error.
+
 HitRecord records (`hitrecord.org/records/ID`) follow upstream `HitRecordIE`:
 the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python

@@ -1207,6 +1207,18 @@
       "scope": "KickerIE page's data-dmprivateid as a Dailymotion url result followed by the Dailymotion extractor compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "kickstarter",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kickstarter.py"
+      ],
+      "rust": [
+        "src/extractor/kickstarter.rs",
+        "tests/fixtures/sites/kickstarter/"
+      ],
+      "scope": "KickStarterIE native data-video-url as an untyped result with the fatal title (without the Kickstarter suffix), og:description and og:image (else poster img, warning) thumbnail; pages without a native video (upstream's generic embed fallback) are an explicit native error. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "kommunetv",
       "status": "partial",
       "upstream": [

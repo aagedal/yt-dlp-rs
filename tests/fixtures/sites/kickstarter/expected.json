@@ -1,0 +1,55 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.kickstarter.com/projects/1404461844/intersection-the-story-of-josh-grant/description",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1404461844\", \"url\": \"https://d2pq0u4uni88oo.cloudfront.example/projects/1404461844/video-57078-h264_high.mp4\", \"title\": \"Intersection: The Story of Josh Grant by Kyle Cowling\", \"description\": \"A unique motocross documentary that examines the life and mind of one of sports most elite athletes: Josh Grant.\", \"thumbnail\": \"https://ksr.example/assets/josh.jpg\", \"webpage_url\": \"https://www.kickstarter.com/projects/1404461844/intersection-the-story-of-josh-grant/description\", \"original_url\": \"https://www.kickstarter.com/projects/1404461844/intersection-the-story-of-josh-grant/description\", \"webpage_url_basename\": \"description\", \"webpage_url_domain\": \"kickstarter.com\", \"extractor\": \"KickStarter\", \"extractor_key\": \"KickStarter\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://ksr.example/assets/josh.jpg\", \"id\": \"0\"}], \"display_id\": \"1404461844\", \"fulltitle\": \"Intersection: The Story of Josh Grant by Kyle Cowling\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Intersection\\uff1a The Story of Josh Grant by Kyle Cowling [1404461844].mp4\", \"filename\": \"Intersection\\uff1a The Story of Josh Grant by Kyle Cowling [1404461844].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.kickstarter.com/projects/1420158244/power-drive-2000/widget/video.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1420158244\", \"url\": \"https://ksr.example/projects/1420158244/video.mp4\", \"title\": \"Power Drive 2000\", \"description\": null, \"thumbnail\": \"https://ksr.example/assets/poster.jpg\", \"webpage_url\": \"https://www.kickstarter.com/projects/1420158244/power-drive-2000/widget/video.html\", \"original_url\": \"https://www.kickstarter.com/projects/1420158244/power-drive-2000/widget/video.html\", \"webpage_url_basename\": \"video.html\", \"webpage_url_domain\": \"kickstarter.com\", \"extractor\": \"KickStarter\", \"extractor_key\": \"KickStarter\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://ksr.example/assets/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"1420158244\", \"fulltitle\": \"Power Drive 2000\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Power Drive 2000 [1420158244].mp4\", \"filename\": \"Power Drive 2000 [1420158244].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.kickstarter.com/projects/3/bare/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3\", \"url\": \"https://ksr.example/projects/3/video\", \"title\": \"Bare & simple\", \"description\": null, \"thumbnail\": null, \"webpage_url\": \"https://www.kickstarter.com/projects/3/bare/\", \"original_url\": \"https://www.kickstarter.com/projects/3/bare/\", \"webpage_url_basename\": \"bare\", \"webpage_url_domain\": \"kickstarter.com\", \"extractor\": \"KickStarter\", \"extractor_key\": \"KickStarter\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3\", \"fulltitle\": \"Bare & simple\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"unknown_video\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Bare & simple [3].unknown_video\", \"filename\": \"Bare & simple [3].unknown_video\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [KickStarter] unable to extract thumbnail image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kickstarter.com/projects/4/notitle/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [KickStarter] 4: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

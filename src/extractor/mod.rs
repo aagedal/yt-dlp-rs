@@ -90,6 +90,7 @@ mod kaltura;
 mod kankanews;
 mod kick;
 mod kicker;
+mod kickstarter;
 mod kommunetv;
 mod kth;
 mod ku6;
@@ -310,6 +311,7 @@ pub use kick::{
     videos_suitable as kick_videos_suitable, vod_suitable as kick_vod_suitable,
 };
 pub use kicker::{Kicker, suitable as kicker_suitable};
+pub use kickstarter::{KickStarter, suitable as kickstarter_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};

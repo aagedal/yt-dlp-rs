@@ -115,7 +115,7 @@ Supported today:
   Megaphone players (`player.megaphone.fm/ID`) through their page,
   ReverbNation songs through the song API, Hypem tracks through their page
   and served source, HistoricFilms tapes through their page, Livestreamfails
-  clips through the clip API, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
+  clips through the clip API, Kickstarter native project videos through their page, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
   Glide messages through their share page, GodTube videos through their
   player XML, FC Zenit videos through the player API, BehindKink posts
   QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and
