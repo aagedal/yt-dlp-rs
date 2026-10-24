@@ -1719,6 +1719,15 @@ ID. Generic-page iframe and `<mux-player>`/`<mux-video>` embeds (and their
 smuggled `metadata-video-title`) are not detected natively.
 `tests/fixtures/sites/mux/` is compared with pinned upstream output.
 
+9News videos and articles (`9news.com.au/A/B[/C]/ID`) follow upstream
+`NineNewsIE`: the page's `__INITIAL_STATE__` JSON (`_search_json`'s greedy
+object, first value kept), its `videoIndex.currentVideo.brightcoveId` (else
+the first article `media` item of type `video`'s `urn`) and
+`videoIndex.config[.video].account`, as a `url` result of that account's
+`default_default` Brightcove player; a missing ID or account is upstream's
+`Unable to get the required video data`. `tests/fixtures/sites/ninenews/` is
+compared with pinned upstream output.
+
 Cloudflare Stream videos (`[watch.|iframe.|customer-X.]cloudflarestream.com|videodelivery.net|bytehighway.net/ID`
 and `embed/*.js?video=ID` scripts) follow upstream `CloudflareStreamIE`: a
 signed token's ID is its base64 payload's `sub`, and the

@@ -169,6 +169,18 @@
       "scope": "NetzkinoIE __NEXT_DATA__ dehydrated CmsMovie query, DRM licence error, joined PMD video URL as an untyped result with title/age limit/cast/creators/categories/description/duration/location/year/thumbnail, generic title and no-formats error compared with pinned upstream output through the fixture proxy; the _GEO_COUNTRIES X-Forwarded-For header is not sent natively (fixture -j cases use --no-geo-bypass)"
     },
     {
+      "name": "ninenews",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ninenews.py"
+      ],
+      "rust": [
+        "src/extractor/ninenews.rs",
+        "tests/fixtures/sites/ninenews/"
+      ],
+      "scope": "NineNewsIE __INITIAL_STATE__ brightcoveId (else the article's video media urn) and account as a url result of the account's default Brightcove player. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "nts",
       "status": "partial",
       "upstream": [
