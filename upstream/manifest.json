@@ -1486,6 +1486,18 @@
       "scope": "RutubeIE and RutubeEmbedIE video API metadata and description chapters, play options balancer/live HLS and progressive formats and captions; no F4M formats or playlist extractors; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "screen9",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/screen9.py"
+      ],
+      "rust": [
+        "src/extractor/screen9.rs",
+        "tests/fixtures/sites/screen9/"
+      ],
+      "scope": "Screen9IE embed config HLS formats and subtitles plus the progressive MP4 format, with the plugin title (title, googleAnalytics, share fallbacks), description and poster, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "screenrec",
       "status": "partial",
       "upstream": [

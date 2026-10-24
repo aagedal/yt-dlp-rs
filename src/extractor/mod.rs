@@ -121,6 +121,7 @@ mod rss;
 mod rtrfm;
 mod rumble;
 mod rutube;
+mod screen9;
 mod screenrec;
 mod sen;
 mod skylinewebcams;
@@ -308,6 +309,7 @@ pub use rumble::{
 pub use rutube::{
     Rutube, RutubeEmbed, embed_suitable as rutube_embed_suitable, suitable as rutube_suitable,
 };
+pub use screen9::{Screen9, suitable as screen9_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
 pub use skylinewebcams::{SkylineWebcams, suitable as skylinewebcams_suitable};

@@ -766,6 +766,16 @@ with the API's non-`None` `title`, `description` and `parse_duration`d
 `metadata.duration`. Non-string titles or descriptions are rejected.
 `tests/fixtures/sites/wimbledon/` is compared with pinned upstream output.
 
+Screen9 videos (`*.screen9.tv|com/embed|media/ID`, `play.su.se/...`) follow
+upstream `Screen9IE`: the `api.screen9.com/embed/ID` page's fatal
+`var config` JSON, its first `application/x-mpegURL` source's HLS formats
+and subtitles, then its first `video/mp4` source as a `format: mp4` format
+(numbered when processed), with the first of `plugins.title.title`,
+`plugins.googleAnalytics.title` and `plugins.share.mediaTitle` as `title`,
+`plugins.title.description` and `poster`. Configs without both sources or
+with non-string metadata are rejected. `tests/fixtures/sites/screen9/` is
+compared with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the

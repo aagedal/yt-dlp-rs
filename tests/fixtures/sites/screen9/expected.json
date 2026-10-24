@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://api.screen9.com/embed/8kTNEjvoXGM33dmWwF0uDA",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"8kTNEjvoXGM33dmWwF0uDA\", \"title\": \"\\u00d6stersj\\u00f6n i f\\u00f6r\\u00e4ndrat klimat\", \"description\": \"Ett seminarium.\", \"thumbnail\": \"https://cdn.screen9.example/a/poster.jpg\", \"formats\": [{\"url\": \"https://cdn.screen9.example/a/video.mp4\", \"format\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\"}, {\"format_id\": \"200\", \"format_index\": null, \"url\": \"https://cdn.screen9.example/a/video.m3u8\", \"manifest_url\": \"https://cdn.screen9.example/a/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\"}], \"subtitles\": {\"en\": [{\"url\": \"https://cdn.screen9.example/a/subs_en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://cdn.screen9.example/a/subs_de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://api.screen9.com/embed/8kTNEjvoXGM33dmWwF0uDA\", \"original_url\": \"https://api.screen9.com/embed/8kTNEjvoXGM33dmWwF0uDA\", \"webpage_url_basename\": \"8kTNEjvoXGM33dmWwF0uDA\", \"webpage_url_domain\": \"api.screen9.com\", \"extractor\": \"Screen9\", \"extractor_key\": \"Screen9\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.screen9.example/a/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"8kTNEjvoXGM33dmWwF0uDA\", \"fulltitle\": \"\\u00d6stersj\\u00f6n i f\\u00f6r\\u00e4ndrat klimat\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"200\", \"format_index\": null, \"url\": \"https://cdn.screen9.example/a/video.m3u8\", \"manifest_url\": \"https://cdn.screen9.example/a/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\", \"_filename\": \"\\u00d6stersj\\u00f6n i f\\u00f6r\\u00e4ndrat klimat [8kTNEjvoXGM33dmWwF0uDA].mp4\", \"filename\": \"\\u00d6stersj\\u00f6n i f\\u00f6r\\u00e4ndrat klimat [8kTNEjvoXGM33dmWwF0uDA].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://folkhogskolekanalen.screen9.tv/media/8kTNEjvoXGM33dmWwF0uDA/ostersjon",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Screen9] Extracting URL: https://folkhogskolekanalen.screen9.tv/media/8kTNEjvoXGM33dmWwF0uDA/ostersjon",
+    "[Screen9] 8kTNEjvoXGM33dmWwF0uDA: Downloading webpage",
+    "[Screen9] 8kTNEjvoXGM33dmWwF0uDA: Downloading m3u8 information",
+    "[info] Available subtitles for 8kTNEjvoXGM33dmWwF0uDA:",
+    "Language Formats",
+    "en       vtt",
+    "de       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://play.su.se/media/H1YA0EYNCxiesrSU1kaRBQ/baltic-breakfast",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"H1YA0EYNCxiesrSU1kaRBQ\", \"title\": \"Baltic Breakfast\", \"description\": null, \"thumbnail\": null, \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.screen9.example/b/master.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}, {\"url\": \"https://cdn.screen9.example/b/video.mp4\", \"format\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\"}], \"subtitles\": {}, \"webpage_url\": \"https://play.su.se/media/H1YA0EYNCxiesrSU1kaRBQ/baltic-breakfast\", \"original_url\": \"https://play.su.se/media/H1YA0EYNCxiesrSU1kaRBQ/baltic-breakfast\", \"webpage_url_basename\": \"baltic-breakfast\", \"webpage_url_domain\": \"play.su.se\", \"extractor\": \"Screen9\", \"extractor_key\": \"Screen9\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"H1YA0EYNCxiesrSU1kaRBQ\", \"fulltitle\": \"Baltic Breakfast\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.screen9.example/b/video.mp4\", \"format\": \"mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"_filename\": \"Baltic Breakfast [H1YA0EYNCxiesrSU1kaRBQ].mp4\", \"filename\": \"Baltic Breakfast [H1YA0EYNCxiesrSU1kaRBQ].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://api.screen9.com/embed/noconfig",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Screen9] noconfig: Unable to extract config; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
