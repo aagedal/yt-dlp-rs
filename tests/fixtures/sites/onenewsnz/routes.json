@@ -1,0 +1,10 @@
+{
+ "routes": [
+  {"url": "https://www.1news.co.nz/2022/09/29/cows-painted-green-on-parliament-lawn-in-climate-protest/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>Cows | 1News</title></head><body><script>Fusion.globalContent={\"headlines\": {\"basic\": \"Cows painted green on parliament lawn in climate protest\"}, \"content_elements\": [{\"subtype\": \"text\"}, {\"subtype\": \"video\", \"embed\": {\"config\": {\"brightcoveVideoId\": \"6312529169112\"}}}]};Fusion.x={\"a\": 1};</script></body></html>"},
+  {"url": "https://www.1news.co.nz/2022/09/30/now-is-the-time-to-get-moving/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><meta property=\"og:title\" content=\"Now is the time | 1News\"></head><body><script>Fusion.globalContent = {\"headlines\": {\"basic\": \"\"}, \"content_elements\": [{\"subtype\": \"youtube\", \"referent\": {\"id\": \"dQw4w9WgXcQ\"}}, {\"subtype\": \"youtube\", \"raw_oembed\": {\"_id\": \"https://www.youtube.com/watch?v=9bZkp7q19f0\"}}, {\"subtype\": \"youtube\", \"referent\": {}}, {\"subtype\": \"video\", \"embed\": {\"config\": {\"brightcoveAccount\": \"1234\", \"brightcoveVideoId\": \"555\"}}}]};</script></body></html>"},
+  {"url": "https://www.1news.co.nz/2022/10/01/no-video/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body><script>Fusion.globalContent = {\"content_elements\": [{\"subtype\": \"text\"}]};</script></body></html>"},
+  {"url": "https://players.brightcove.net/963482464001/0xpHIR6IB_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "http://players.brightcove.net/963482464001/0xpHIR6IB_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "https://edge.api.brightcove.com/playback/v1/accounts/963482464001/videos/6312529169112", "headers": {"Content-Type": "application/json"}, "body_file": "video.json", "request_headers": {"Accept": "application/json;pk=BCpkEUROPEANTOUR"}}
+ ]
+}

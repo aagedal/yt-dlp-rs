@@ -1,0 +1,8 @@
+[
+ {"url": "https://www.ilpost.it/episodes/1-avis-akvasas-ka/", "args": ["-j"]},
+ {"url": "https://www.ilpost.it/episodes/1-avis-akvasas-ka/", "args": ["--print", "%(id)s|%(title)s|%(ext)s|%(upload_date)s|%(duration)s|%(availability)s"]},
+ {"url": "https://www.ilpost.it/episodes/second", "args": ["-j"]},
+ {"url": "https://www.ilpost.it/episodes/missing", "args": ["-j"]},
+ {"url": "https://www.ilpost.it/episodes/noplayer", "args": ["-j"]},
+ {"url": "https://www.ilpost.it/episodes/nopost", "args": ["-j"]}
+]

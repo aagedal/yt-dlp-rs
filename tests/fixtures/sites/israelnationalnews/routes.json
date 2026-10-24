@@ -1,0 +1,19 @@
+{
+ "routes": [
+  {
+   "url": "https://www.israelnationalnews.com/Generic/NewAPI/Item?type=0&Item=354520",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"Title\": \"Article\", \"Content2\": [{\"type\": \"paragraph\", \"content\": [{\"type\": \"text\", \"text\": \"Hello\"}]}, {\"type\": \"embed\", \"content\": [{\"type\": \"iframe\", \"attrs\": {\"src\": \"https://www.youtube.com/embed/jA84wQhVvg8\"}}, {\"type\": \"iframe\", \"attrs\": {\"src\": null}}]}, {\"type\": \"embed\", \"content\": {\"a\": {\"attrs\": {\"src\": \"https://www.youtube.com/embed/BaW_jenozKc\"}}, \"b\": {\"attrs\": {\"src\": \"https://www.youtube.com/embed/jA84wQhVvg8\"}}}}]}"
+  },
+  {
+   "url": "https://www.israelnationalnews.com/Generic/NewAPI/Item?type=0&Item=1",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"Title\": \"No videos\", \"Content2\": [{\"type\": \"paragraph\", \"content\": [{\"type\": \"text\"}]}]}"
+  },
+  {
+   "url": "https://www.israelnationalnews.com/Generic/NewAPI/Item?type=0&Item=2",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"Title\": \"No content\"}"
+  }
+ ]
+}

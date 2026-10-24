@@ -1,0 +1,9 @@
+[
+ {"url": "https://dlive.tv/p/pdp+3mTzOl4WR", "args": ["-j"]},
+ {"url": "https://dlive.tv/p/pdp+3mTzOl4WR", "args": ["-F"]},
+ {"url": "https://dlive.tv/p/pdpreplay+D-RD-xSZg", "args": ["-j"]},
+ {"url": "https://dlive.tv/p/pdp+nokey", "args": ["-j"]},
+ {"url": "https://dlive.tv/pdp", "args": ["-F"]},
+ {"url": "https://dlive.tv/pdp", "args": ["--print", "%(id)s|%(fulltitle)s|%(description)s|%(thumbnail)s|%(uploader)s|%(uploader_id)s|%(is_live)s|%(live_status)s|%(timestamp)s|%(view_count)s|%(format_id)s|%(protocol)s|%(ext)s"]},
+ {"url": "https://www.dlive.tv/offline.user", "args": ["-j"]}
+]

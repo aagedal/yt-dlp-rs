@@ -1,0 +1,75 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.gamestar.de/videos/trailer,3/hobbit-3-die-schlacht-der-fuenf-heere,76110.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"url\": \"http://gamestar.de/_misc/videos/portal/getVideoUrl.cfm?premium=0&videoId=76110\", \"title\": \"Hobbit 3: Die Schlacht der F\\u00fcnf Heere - Teaser-Trailer zum dritten Teil\", \"description\": \"Der Teaser-Trailer zu Hobbit 3 & mehr\", \"thumbnails\": [{\"url\": \"https://images.gamestar.de/hobbit.jpg\", \"id\": \"0\"}], \"duration\": 17, \"timestamp\": 1406542380, \"view_count\": 1234, \"id\": \"76110\", \"ext\": \"mp4\", \"comment_count\": 42, \"webpage_url\": \"http://www.gamestar.de/videos/trailer,3/hobbit-3-die-schlacht-der-fuenf-heere,76110.html\", \"original_url\": \"http://www.gamestar.de/videos/trailer,3/hobbit-3-die-schlacht-der-fuenf-heere,76110.html\", \"webpage_url_basename\": \"hobbit-3-die-schlacht-der-fuenf-heere,76110.html\", \"webpage_url_domain\": \"gamestar.de\", \"extractor\": \"GameStar\", \"extractor_key\": \"GameStar\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://images.gamestar.de/hobbit.jpg\", \"display_id\": \"76110\", \"fulltitle\": \"Hobbit 3: Die Schlacht der F\\u00fcnf Heere - Teaser-Trailer zum dritten Teil\", \"duration_string\": \"17\", \"upload_date\": \"20140728\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Hobbit 3\\uff1a Die Schlacht der F\\u00fcnf Heere - Teaser-Trailer zum dritten Teil [76110].mp4\", \"filename\": \"Hobbit 3\\uff1a Die Schlacht der F\\u00fcnf Heere - Teaser-Trailer zum dritten Teil [76110].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.gamestar.de/videos/trailer,3/hobbit-3-die-schlacht-der-fuenf-heere,76110.html",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[GameStar] Extracting URL: http://www.gamestar.de/videos/trailer,3/hobbit-3-die-schlacht-der-fuenf-heere,76110.html",
+    "[GameStar] 76110: Downloading webpage",
+    "[info] 76110: Downloading 1 format(s): 0",
+    "[download] Destination: 76110.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "76110.mp4": 21
+   }
+  },
+  {
+   "url": "http://www.gamepro.de/videos/top-10-indie-spiele,95316.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Top 10 Indie-Spiele - GamePro - GameStar\", \"thumbnails\": [], \"duration\": 62, \"id\": \"95316\", \"url\": \"http://gamestar.de/_misc/videos/portal/getVideoUrl.cfm?premium=0&videoId=95316\", \"ext\": \"mp4\", \"view_count\": null, \"comment_count\": null, \"webpage_url\": \"http://www.gamepro.de/videos/top-10-indie-spiele,95316.html\", \"original_url\": \"http://www.gamepro.de/videos/top-10-indie-spiele,95316.html\", \"webpage_url_basename\": \"top-10-indie-spiele,95316.html\", \"webpage_url_domain\": \"gamepro.de\", \"extractor\": \"GameStar\", \"extractor_key\": \"GameStar\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"95316\", \"fulltitle\": \"Top 10 Indie-Spiele - GamePro - GameStar\", \"duration_string\": \"1:02\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Top 10 Indie-Spiele - GamePro - GameStar [95316].mp4\", \"filename\": \"Top 10 Indie-Spiele - GamePro - GameStar [95316].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [GameStar] unable to extract comment count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gamestar.de/videos/kein-video,1.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [GameStar] 1: Unable to extract JSON-LD; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gamestar.de/videos/ohne-kontext,2.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 2: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

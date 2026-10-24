@@ -1,0 +1,35 @@
+{
+ "routes": [
+  {
+   "url": "https://www.tvnoe.cz/porad/43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://cdn.tvnoe.cz/vod/43216/playlist.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://cdn.tvnoe.cz/vod/43216/manifest.mpd",
+   "headers": {"Content-Type": "application/dash+xml"},
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://www.tvnoe.cz/porad/43205-zamysleni",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "bare.html"
+  },
+  {
+   "url": "https://www.tvnoe.cz/porad/noplayer",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html><h2>Nic</h2></html>"
+  },
+  {
+   "url": "https://www.tvnoe.cz/porad/gone",
+   "status": 404,
+   "headers": {"Content-Type": "text/html"},
+   "body": "gone"
+  }
+ ]
+}

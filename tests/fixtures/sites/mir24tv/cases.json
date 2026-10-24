@@ -1,0 +1,52 @@
+[
+ {
+  "url": "https://mir24.tv/news/16635210/slug-16635210",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://mir24.tv/news/16635210/slug-16635210",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://mir24.tv/news/2/slug-2",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://mir24.tv/news/3/slug-3",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s"
+  ]
+ },
+ {
+  "url": "https://mir24.tv/news/4/slug-4",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://mir24.tv/news/5/slug-5",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://mir24.tv/news/6/slug-6",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://mir24.tv/news/7/slug-7",
+  "args": [
+   "-j"
+  ]
+ }
+]

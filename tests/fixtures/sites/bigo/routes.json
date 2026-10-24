@@ -1,0 +1,61 @@
+{
+ "routes": [
+  {
+   "url": "https://ta.bigo.tv/official_website/studio/getInternalStudioInfo",
+   "request_body": [
+    "siteId=221338632"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live.json"
+  },
+  {
+   "url": "https://ta.bigo.tv/official_website/studio/getInternalStudioInfo",
+   "request_body": [
+    "siteId=bare"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "bare.json"
+  },
+  {
+   "url": "https://ta.bigo.tv/official_website/studio/getInternalStudioInfo",
+   "request_body": [
+    "siteId=offline"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "offline.json"
+  },
+  {
+   "url": "https://ta.bigo.tv/official_website/studio/getInternalStudioInfo",
+   "request_body": [
+    "siteId=code"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "code.json"
+  },
+  {
+   "url": "https://ta.bigo.tv/official_website/studio/getInternalStudioInfo",
+   "request_body": [
+    "siteId=list"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "list.json"
+  },
+  {
+   "url": "https://hls.bigo.example/live/221338632.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  }
+ ]
+}

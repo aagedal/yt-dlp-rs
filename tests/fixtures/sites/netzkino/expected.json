@@ -1,0 +1,104 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.netzkino.de/details/snow-beast",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"snow-beast\", \"title\": \"Snow & Beast\", \"age_limit\": 12, \"alt_title\": \"Snow & Beast\", \"cast\": [\"John Schneider\", \"Jason London\"], \"creators\": [\"Brian Brough\", \"Anne Brough\"], \"categories\": [\"Horror\", \"Thriller\"], \"description\": \"A yeti hunts.\", \"duration\": 5400, \"location\": \"US\", \"release_year\": 2011, \"thumbnail\": \"https://img.netzkino.test/snow.jpg\", \"url\": \"https://pmd.netzkino-seite.netzkino.de/snow-beast.mp4\", \"webpage_url\": \"https://www.netzkino.de/details/snow-beast\", \"original_url\": \"https://www.netzkino.de/details/snow-beast\", \"webpage_url_basename\": \"snow-beast\", \"webpage_url_domain\": \"netzkino.de\", \"extractor\": \"Netzkino\", \"extractor_key\": \"Netzkino\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.netzkino.test/snow.jpg\", \"id\": \"0\"}], \"display_id\": \"snow-beast\", \"fulltitle\": \"Snow & Beast\", \"duration_string\": \"1:30:00\", \"creator\": \"Brian Brough, Anne Brough\", \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Snow & Beast [snow-beast].mp4\", \"filename\": \"Snow & Beast [snow-beast].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.netzkino.de/details/snow-beast",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(alt_title)s|%(age_limit)s|%(cast)s|%(creators)s|%(categories)s|%(description)s|%(duration)s|%(location)s|%(release_year)s|%(thumbnail)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "snow-beast|Snow & Beast|Snow & Beast|12|['John Schneider', 'Jason London']|['Brian Brough', 'Anne Brough']|['Horror', 'Thriller']|A yeti hunts.|5400|US|2011|https://img.netzkino.test/snow.jpg|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.netzkino.de/details/snow-beast",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Netzkino] Extracting URL: https://www.netzkino.de/details/snow-beast",
+    "[Netzkino] snow-beast: Downloading webpage",
+    "[info] snow-beast: Downloading 1 format(s): 0",
+    "[download] Destination: snow-beast.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "snow-beast.mp4": 792
+   }
+  },
+  {
+   "url": "https://www.netzkino.de/details/locked",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Netzkino] locked: This video is DRM protected"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://netzkino.de/details/bare",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"bare\", \"title\": \"Netzkino video #bare\", \"url\": \"https://pmd.netzkino-seite.netzkino.de/bare/x.mp4\", \"webpage_url\": \"https://netzkino.de/details/bare\", \"original_url\": \"https://netzkino.de/details/bare\", \"webpage_url_basename\": \"bare\", \"webpage_url_domain\": \"netzkino.de\", \"extractor\": \"Netzkino\", \"extractor_key\": \"Netzkino\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"bare\", \"fulltitle\": \"\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Netzkino video #bare [bare].mp4\", \"filename\": \"Netzkino video #bare [bare].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.netzkino.de/details/none",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [Netzkino] none: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.netzkino.de/details/nonext",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Netzkino] nonext: Unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

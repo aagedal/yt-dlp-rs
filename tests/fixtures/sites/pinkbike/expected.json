@@ -1,0 +1,123 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.pinkbike.com/video/402811/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"402811\", \"title\": \"Brandon Semenuk - RAW 100\", \"description\": \"Semenuk & friends ride\", \"thumbnail\": \"https://ep1.pinkbike.test/p/402.jpg\", \"duration\": 100, \"upload_date\": \"20110909\", \"uploader\": \"Semenuk\", \"location\": \"Kamloops, BC\", \"view_count\": 1234567, \"comment_count\": 12, \"formats\": [{\"url\": \"https://v.pinkbike.test/hd.mp4\", \"format_id\": \"hd\", \"height\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\"}, {\"url\": \"https://v.pinkbike.test/480.mp4\", \"format_id\": \"480p\", \"height\": 480, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"480p - 480p\"}, {\"url\": \"https://v.pinkbike.test/1080.mp4\", \"format_id\": \"1080p\", \"height\": 1080, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1080p\"}], \"webpage_url\": \"http://www.pinkbike.com/video/402811/\", \"original_url\": \"http://www.pinkbike.com/video/402811/\", \"webpage_url_basename\": \"402811\", \"webpage_url_domain\": \"pinkbike.com\", \"extractor\": \"Pinkbike\", \"extractor_key\": \"Pinkbike\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://ep1.pinkbike.test/p/402.jpg\", \"id\": \"0\"}], \"display_id\": \"402811\", \"fulltitle\": \"Brandon Semenuk - RAW 100\", \"duration_string\": \"1:40\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://v.pinkbike.test/1080.mp4\", \"format_id\": \"1080p\", \"height\": 1080, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1080p\", \"_filename\": \"Brandon Semenuk - RAW 100 [402811].mp4\", \"filename\": \"Brandon Semenuk - RAW 100 [402811].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.pinkbike.com/video/402811",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(thumbnail)s|%(duration)s|%(upload_date)s|%(uploader)s|%(location)s|%(view_count)s|%(comment_count)s|%(format_id)s|%(height)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "402811|Brandon Semenuk - RAW 100|Semenuk & friends ride|https://ep1.pinkbike.test/p/402.jpg|100|20110909|Semenuk|Kamloops, BC|1234567|12|1080p|1080"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.pinkbike.com/video/402811",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Pinkbike] Extracting URL: https://www.pinkbike.com/video/402811",
+    "[Pinkbike] 402811: Downloading webpage",
+    "[info] Available formats for 402811:",
+    "ID    EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "----------------------------------------------",
+    "hd    mp4 unknown    | https | unknown unknown",
+    "480p  mp4 480p       | https | unknown unknown",
+    "1080p mp4 1080p      | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.pinkbike.com/video/402811",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Pinkbike] Extracting URL: https://www.pinkbike.com/video/402811",
+    "[Pinkbike] 402811: Downloading webpage",
+    "[info] 402811: Downloading 1 format(s): 1080p",
+    "[download] Destination: 402811.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "402811.mp4": 792
+   }
+  },
+  {
+   "url": "http://es.pinkbike.org/i/kvid/kvid-y5.swf?id=2",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"title\": \"Plain Title\", \"description\": \"Rest of description\", \"thumbnail\": null, \"upload_date\": null, \"uploader\": null, \"location\": null, \"view_count\": null, \"comment_count\": null, \"formats\": [{\"url\": \"https://v.pinkbike.test/720.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\"}], \"webpage_url\": \"http://es.pinkbike.org/i/kvid/kvid-y5.swf?id=2\", \"original_url\": \"http://es.pinkbike.org/i/kvid/kvid-y5.swf?id=2\", \"webpage_url_basename\": \"kvid-y5.swf\", \"webpage_url_domain\": \"es.pinkbike.org\", \"extractor\": \"Pinkbike\", \"extractor_key\": \"Pinkbike\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": \"Plain Title\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://v.pinkbike.test/720.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\", \"_filename\": \"Plain Title [2].mp4\", \"filename\": \"Plain Title [2].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Pinkbike] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract uploader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract upload date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract location; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract Views; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract Comments; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pinkbike.com/video/3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Pinkbike] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract uploader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract upload date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract location; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract Views; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract Comments; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [Pinkbike] 3: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pinkbike.com/video/4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Pinkbike] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Pinkbike] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: unsupported operand type(s) for +: 'NoneType' and 'str'"
+   ],
+   "files": {}
+  }
+ ]
+}

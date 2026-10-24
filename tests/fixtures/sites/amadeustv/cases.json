@@ -1,0 +1,8 @@
+[
+ {"url": "http://www.amadeus.tv/library/65091a87ff85af59d9fc54c3", "args": ["-j"]},
+ {"url": "http://www.amadeus.tv/library/65091a87ff85af59d9fc54c3", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(description)s|%(thumbnail)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(view_count)s|%(format_id)s"]},
+ {"url": "http://www.amadeus.tv/library/b2", "args": ["-j"]},
+ {"url": "http://www.amadeus.tv/library/b2", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "http://www.amadeus.tv/library/c3", "args": ["-j"]},
+ {"url": "http://www.amadeus.tv/library/d4", "args": ["-j"]}
+]

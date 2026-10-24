@@ -1,0 +1,36 @@
+{
+ "routes": [
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"1_o7stmi6p\"",
+    "\"widgetId\": \"_2503451\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "entry.json"
+  },
+  {
+   "url": "https://webtv.un.org/en/asset/k1o/k1o7stmi6p",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://webtv.un.org/fr/asset/k1o/nopartner",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "nopartner.html"
+  },
+  {
+   "url": "https://webtv.un.org/es/asset/k1o/noentry",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "noentry.html"
+  }
+ ]
+}

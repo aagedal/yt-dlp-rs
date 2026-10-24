@@ -29,6 +29,12 @@ pub(crate) enum Playlist {
         #[cfg_attr(not(test), allow(dead_code))]
         ext: String,
     },
+    /// A media playlist without `#EXT-X-ENDLIST` (only from [`parse_live`]):
+    /// upstream returns it as one format without reading its segments.
+    LiveMedia {
+        /// All `#EXT-X-DISCONTINUITY*` lines.
+        discontinuities: u32,
+    },
 }
 
 #[derive(Debug)]
@@ -350,6 +356,17 @@ fn variant(
 }
 
 pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
+    parse_with(text, base, false)
+}
+
+/// [`parse`], returning [`Playlist::LiveMedia`] for a media playlist
+/// (`#EXT-X-TARGETDURATION`) without `#EXT-X-ENDLIST`, like upstream
+/// `_parse_m3u8_formats_and_subtitles`.
+pub(crate) fn parse_live(text: &str, base: &Url) -> Result<Playlist> {
+    parse_with(text, base, true)
+}
+
+fn parse_with(text: &str, base: &Url, allow_live: bool) -> Result<Playlist> {
     let lines: Vec<_> = text
         .trim_start_matches('\u{feff}')
         .lines()
@@ -457,6 +474,7 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
     let mut pending_duration = false;
     let mut pending_range = None;
     let mut endlist = false;
+    let mut target_duration = false;
     let mut media_seen = false;
     let mut has_map = false;
     let mut ext: Option<&str> = None;
@@ -554,6 +572,7 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
         } else if let Some(value) = line.strip_prefix("#EXT-X-TARGETDURATION:") {
             positive_integer(value)?;
             media_seen = true;
+            target_duration = true;
         } else if let Some(value) = line.strip_prefix("#EXT-X-MEDIA-SEQUENCE:") {
             if sequence_seen
                 || fragments.len() > usize::from(has_map)
@@ -703,6 +722,9 @@ pub(crate) fn parse(text: &str, base: &Url) -> Result<Playlist> {
             subtitles,
         });
     }
+    if !endlist && allow_live && target_duration {
+        return Ok(Playlist::LiveMedia { discontinuities });
+    }
     if !endlist {
         return Err(invalid("live HLS without ENDLIST is unsupported"));
     }
@@ -743,6 +765,21 @@ mod tests {
     use super::*;
     fn base() -> Url {
         Url::parse("https://example.com/path/list.m3u8?token=one").unwrap()
+    }
+    #[test]
+    fn live_media_only_with_parse_live() {
+        let live = "#EXTM3U\n#EXT-X-TARGETDURATION:2\n#EXTINF:2,\na.ts\n#EXT-X-DISCONTINUITY\n#EXTINF:2,\nb.ts\n";
+        assert!(parse(live, &base()).is_err());
+        assert!(matches!(
+            parse_live(live, &base()).unwrap(),
+            Playlist::LiveMedia { discontinuities: 1 }
+        ));
+        // Without TARGETDURATION it is not a media playlist upstream either.
+        assert!(parse_live("#EXTM3U\n#EXTINF:2,\na.ts\n", &base()).is_err());
+        assert!(matches!(
+            parse_live(&format!("{live}#EXT-X-ENDLIST"), &base()).unwrap(),
+            Playlist::Media { .. }
+        ));
     }
     fn media(text: &str) -> (Vec<Fragment>, String) {
         match parse(text, &base()).unwrap() {

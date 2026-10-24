@@ -1,0 +1,130 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.dumpert.nl/item/6646981_951bc60f",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6646981/951bc60f\", \"title\": \"Ik heb nieuws voor je\", \"description\": \"Niet schrikken hoor\", \"thumbnails\": [{\"id\": \"still-large\", \"url\": \"https://media.dumpert.nl/stills/large/6646981_951bc60f.jpg\"}, {\"id\": \"thumb\", \"url\": \"https://media.dumpert.nl/sq_thumbs/6646981_951bc60f.jpg\"}, {\"id\": \"thumb-medium\", \"url\": \"https://media.dumpert.nl/sq_thumbs/medium/6646981_951bc60f.jpg\"}], \"formats\": [{\"url\": \"https://media.dumpert.nl/orig/6646981_951bc60f.mov\", \"format_id\": \"original\", \"quality\": -1, \"protocol\": \"https\", \"ext\": \"mov\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - unknown\"}, {\"url\": \"https://media.dumpert.nl/mobile/6646981_951bc60f.mp4\", \"format_id\": \"mobile\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mobile - unknown\"}, {\"url\": \"https://media.dumpert.nl/tablet/6646981_951bc60f.mp4\", \"format_id\": \"tablet\", \"quality\": 2, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"tablet - unknown\"}, {\"url\": \"https://media.dumpert.nl/720p/6646981_951bc60f.mp4\", \"format_id\": \"720p\", \"quality\": 3, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - unknown\"}], \"duration\": 9, \"like_count\": 120, \"view_count\": 4567, \"webpage_url\": \"https://www.dumpert.nl/item/6646981_951bc60f\", \"original_url\": \"https://www.dumpert.nl/item/6646981_951bc60f\", \"webpage_url_basename\": \"6646981_951bc60f\", \"webpage_url_domain\": \"dumpert.nl\", \"extractor\": \"Dumpert\", \"extractor_key\": \"Dumpert\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://media.dumpert.nl/sq_thumbs/medium/6646981_951bc60f.jpg\", \"display_id\": \"6646981/951bc60f\", \"fulltitle\": \"Ik heb nieuws voor je\", \"duration_string\": \"9\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://media.dumpert.nl/720p/6646981_951bc60f.mp4\", \"format_id\": \"720p\", \"quality\": 3, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - unknown\", \"_filename\": \"Ik heb nieuws voor je [6646981\\u29f8951bc60f].mp4\", \"filename\": \"Ik heb nieuws voor je [6646981\\u29f8951bc60f].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dumpert.nl/item/6646981_951bc60f",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Dumpert] Extracting URL: https://www.dumpert.nl/item/6646981_951bc60f",
+    "[Dumpert] 6646981/951bc60f: Downloading JSON metadata",
+    "[info] Available formats for 6646981/951bc60f:",
+    "ID       EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------------",
+    "original mov unknown    | https | unknown unknown",
+    "mobile   mp4 unknown    | https | unknown unknown",
+    "tablet   mp4 unknown    | https | unknown unknown",
+    "720p     mp4 unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dumpert.nl/toppers?selectedId=100031688_b317a185",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"100031688/b317a185\", \"title\": \"Epic schijnbeweging\", \"description\": \"<p>Die zag je niet eh</p>\", \"thumbnails\": [{\"id\": \"still\", \"url\": \"https://media.dumpert.nl/stills/100031688_b317a185.png\"}], \"formats\": [{\"format_id\": \"stream-800\", \"format_index\": null, \"url\": \"https://adaptive.dumpert.nl/100031688_b317a185/low.m3u8\", \"manifest_url\": \"https://adaptive.dumpert.nl/100031688_b317a185/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": -1, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream-800 - 640x360\"}, {\"format_id\": \"stream-2400\", \"format_index\": null, \"url\": \"https://adaptive.dumpert.nl/100031688_b317a185/high.m3u8\", \"manifest_url\": \"https://adaptive.dumpert.nl/100031688_b317a185/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": -1, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"stream-2400 - 1280x720\"}, {\"url\": \"https://media.dumpert.nl/1080p/100031688_b317a185.mp4\", \"format_id\": \"1080p\", \"quality\": 4, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - unknown\"}], \"duration\": 12, \"like_count\": null, \"view_count\": null, \"webpage_url\": \"https://www.dumpert.nl/toppers?selectedId=100031688_b317a185\", \"original_url\": \"https://www.dumpert.nl/toppers?selectedId=100031688_b317a185\", \"webpage_url_basename\": \"toppers\", \"webpage_url_domain\": \"dumpert.nl\", \"extractor\": \"Dumpert\", \"extractor_key\": \"Dumpert\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://media.dumpert.nl/stills/100031688_b317a185.png\", \"display_id\": \"100031688/b317a185\", \"fulltitle\": \"Epic schijnbeweging\", \"duration_string\": \"12\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://media.dumpert.nl/1080p/100031688_b317a185.mp4\", \"format_id\": \"1080p\", \"quality\": 4, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - unknown\", \"_filename\": \"Epic schijnbeweging [100031688\\u29f8b317a185].mp4\", \"filename\": \"Epic schijnbeweging [100031688\\u29f8b317a185].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dumpert.nl/toppers?selectedId=100031688_b317a185",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Dumpert] Extracting URL: https://www.dumpert.nl/toppers?selectedId=100031688_b317a185",
+    "[Dumpert] 100031688/b317a185: Downloading JSON metadata",
+    "[Dumpert] 100031688/b317a185: Downloading m3u8 information",
+    "[info] Available formats for 100031688/b317a185:",
+    "ID          EXT RESOLUTION | FILESIZE   TBR PROTO | VCODEC      ACODEC",
+    "-------------------------------------------------------------------------",
+    "stream-800  mp4 640x360    | ~1.14MiB  800k m3u8  | avc1.42c01e mp4a.40.2",
+    "stream-2400 mp4 1280x720   | ~3.43MiB 2400k m3u8  | avc1.4d401f mp4a.40.2",
+    "1080p       mp4 unknown    |                https | unknown     unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://legacy.dumpert.nl/embed/6675421/dc440fe7",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(duration)s|%(like_count)s|%(view_count)s|%(thumbnail)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "6675421/dc440fe7|Kaal|NA|NA|NA|NA|NA|flv"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dumpert.nl/item/1_noitems",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 1_noitems: An extractor error has occurred. (caused by KeyError('items')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dumpert.nl/item/2_emptyitems",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dumpert.nl/item/3_novideo",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3_novideo: An extractor error has occurred. (caused by StopIteration()); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dumpert.nl/item/4_notitle",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 4_notitle: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

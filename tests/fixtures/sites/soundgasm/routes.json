@@ -1,0 +1,14 @@
+{
+ "routes": [
+  {"url": "http://soundgasm.net/u/ytdl/Piano-sample", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://soundgasm.net/u/ytdl/Piano-sample", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://media.soundgasm.net/sounds/88abd86ea000cafe98f96321b23cc1206cbcbcc9.m4a", "headers": {"Content-Type": "audio/mp4"}, "body": "M4ADATA"},
+  {"url": "https://soundgasm.net/u/ytdl/Old-layout", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "fallback.html"},
+  {"url": "https://soundgasm.net/u/ytdl/Bare-track", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "nodesc.html"},
+  {"url": "https://media.soundgasm.net/sounds/deadbeef.m4a", "headers": {"Content-Type": "audio/mp4"}, "body": "M4ADATA"},
+  {"url": "https://soundgasm.net/u/ytdl/Removed", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "empty.html"},
+  {"url": "https://soundgasm.net/u/ytdl", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "profile.html"},
+  {"url": "https://soundgasm.net/u/nobody/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "empty.html"},
+  {"url": "https://soundgasm.net/u/ytdl/Gone", "status": 404, "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "gone"}
+ ]
+}

@@ -1,0 +1,96 @@
+{
+ "routes": [
+  {
+   "url": "http://apivideo.mocha.com.vn:8081/onMediaBackendBiz/mochavideo/getVideoDetail?url=http%3A%2F%2Fvideo.mocha.com.vn%2Fchuyen-meo-gia-su-tu-thong-diep-cuoc-song-v18694039&token=",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"videoDetail\": {\"id\": 18694039, \"slug\": \"chuyen-meo-gia-su-tu-thong-diep-cuoc-song\", \"name\": \"Chuyện mèo giả sư tử | Thông điệp cuộc sống\", \"list_resolution\": [{\"video_path\": \"http://cdn.mocha.test/v/18694039/master.m3u8\", \"title\": \"720p\"}], \"original_path\": \"http://cdn.mocha.test/v/18694039/original.mp4\", \"description\": \"\", \"durationS\": 70, \"total_view\": 1234, \"total_like\": 5, \"total_unlike\": 0, \"image_path_thumb\": \"http://cdn.mocha.test/thumb.jpg\", \"publish_time\": 1652254203123, \"isLive\": 0, \"channels\": [{\"name\": \"Kids TV\", \"id\": 77, \"numfollow\": 900}], \"categories\": [{\"categoryname\": \"Kids\"}, {\"other\": 1}], \"total_comment\": 3}}}"
+  },
+  {
+   "url": "http://apivideo.mocha.com.vn:8081/onMediaBackendBiz/mochavideo/getVideoDetail?url=http%3A%2F%2Fvideo.mocha.com.vn%2Fminimal-v5&token=",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"videoDetail\": {\"id\": \"5\", \"original_path\": \"http://cdn.mocha.test/v/5.mp4\", \"publish_time\": \"1652254203999\", \"channels\": {\"0\": {\"name\": \"Channel\", \"id\": \"c1\", \"numfollow\": 2}}}}}"
+  },
+  {
+   "url": "http://apivideo.mocha.com.vn:8081/onMediaBackendBiz/mochavideo/getVideoDetail?url=http%3A%2F%2Fvideo.mocha.com.vn%2Fno-original-v6&token=",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"videoDetail\": {\"id\": 6, \"name\": \"x\"}}}"
+  },
+  {
+   "url": "http://apivideo.mocha.com.vn:8081/onMediaBackendBiz/mochavideo/getVideoDetail?url=http%3A%2F%2Fvideo.mocha.com.vn%2Fno-data-v7&token=",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": 0}"
+  },
+  {
+   "url": "http://apivideo.mocha.com.vn:8081/onMediaBackendBiz/mochavideo/getVideoDetail?url=http%3A%2F%2Fvideo.mocha.com.vn%2Fno-id-v8&token=",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"videoDetail\": {\"name\": \"x\"}}}"
+  },
+  {
+   "url": "http://apivideo.mocha.com.vn:8081/onMediaBackendBiz/mochavideo/getVideoDetail?url=http%3A%2F%2Fvideo.mocha.com.vn%2Fgone-v9&token=",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "http://apivideo.mocha.com.vn:8081/onMediaBackendBiz/mochavideo/getVideoDetail?url=http%3A%2F%2Fvideo.mocha.com.vn%2Fbad-hls-v10&token=",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"videoDetail\": {\"id\": 10, \"name\": \"y\", \"original_path\": \"http://cdn.mocha.test/v/10.mp4\", \"list_resolution\": [{\"video_path\": \"http://cdn.mocha.test/v/10/missing.m3u8\"}]}}}"
+  },
+  {
+   "url": "http://cdn.mocha.test/v/18694039/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "http://cdn.mocha.test/v/18694039/720/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "http://cdn.mocha.test/v/18694039/360/index.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "http://cdn.mocha.test/v/18694039/subs/vi.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "http://cdn.mocha.test/v/10/missing.m3u8",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "missing"
+  }
+ ]
+}

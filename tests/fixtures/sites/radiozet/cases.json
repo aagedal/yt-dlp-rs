@@ -1,0 +1,51 @@
+[
+ {
+  "url": "https://player.radiozet.pl/Podcasty/Show/O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.radiozet.pl/Podcasty/Show/O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(title)s|%(description)s|%(release_timestamp)s|%(release_date)s|%(duration)s|%(series)s|%(creator)s|%(thumbnail)s|%(ext)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://player.radiozet.pl/Podcasty/Show/minimal",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.radiozet.pl/Podcasty/Show/noid",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.radiozet.pl/Podcasty/Show/empty",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.radiozet.pl/Podcasty/Show/nodata",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.radiozet.pl/Podcasty/Show/nostream",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://player.radiozet.pl/Podcasty/Show/gone",
+  "args": [
+   "-j"
+  ]
+ }
+]

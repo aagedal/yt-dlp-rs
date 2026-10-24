@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.tele-task.de/archive/video/html5/26168/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"26168\", \"title\": \"Duplicate Detection\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"26168-speaker\", \"url\": \"https://stream.tele-task.de/26168/speaker.mp4\", \"title\": \"Duplicate Detection\", \"upload_date\": \"20141218\", \"playlist_count\": 2, \"playlist\": \"Duplicate Detection\", \"playlist_id\": \"26168\", \"playlist_title\": \"Duplicate Detection\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.tele-task.de/archive/video/html5/26168/\", \"n_entries\": 2, \"webpage_url\": \"http://www.tele-task.de/archive/video/html5/26168/\", \"webpage_url_basename\": \"26168\", \"webpage_url_domain\": \"tele-task.de\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"TeleTask\", \"extractor_key\": \"TeleTask\", \"playlist_autonumber\": 1, \"display_id\": \"26168-speaker\", \"fulltitle\": \"Duplicate Detection\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Duplicate Detection [26168-speaker].mp4\", \"filename\": \"Duplicate Detection [26168-speaker].mp4\", \"__write_download_archive\": false}]}, {\"id\": \"26168-slides\", \"url\": \"https://stream.tele-task.de/26168/slides.mp4\", \"title\": \"Duplicate Detection\", \"upload_date\": \"20141218\", \"playlist_count\": 2, \"playlist\": \"Duplicate Detection\", \"playlist_id\": \"26168\", \"playlist_title\": \"Duplicate Detection\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.tele-task.de/archive/video/html5/26168/\", \"n_entries\": 2, \"webpage_url\": \"http://www.tele-task.de/archive/video/html5/26168/\", \"webpage_url_basename\": \"26168\", \"webpage_url_domain\": \"tele-task.de\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"TeleTask\", \"extractor_key\": \"TeleTask\", \"playlist_autonumber\": 2, \"display_id\": \"26168-slides\", \"fulltitle\": \"Duplicate Detection\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Duplicate Detection [26168-slides].mp4\", \"filename\": \"Duplicate Detection [26168-slides].mp4\", \"__write_download_archive\": false}]}], \"webpage_url\": \"http://www.tele-task.de/archive/video/html5/26168/\", \"original_url\": \"http://www.tele-task.de/archive/video/html5/26168/\", \"webpage_url_basename\": \"26168\", \"webpage_url_domain\": \"tele-task.de\", \"extractor\": \"TeleTask\", \"extractor_key\": \"TeleTask\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.tele-task.de/archive/video/html5/7",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7\", \"title\": \"Graph & Trees\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"7-speaker\", \"url\": \"https://stream.tele-task.de/7/speaker.mp4\", \"title\": \"Graph & Trees\", \"upload_date\": null, \"playlist_count\": 1, \"playlist\": \"Graph & Trees\", \"playlist_id\": \"7\", \"playlist_title\": \"Graph & Trees\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.tele-task.de/archive/video/html5/7\", \"n_entries\": 1, \"webpage_url\": \"http://www.tele-task.de/archive/video/html5/7\", \"webpage_url_basename\": \"7\", \"webpage_url_domain\": \"tele-task.de\", \"playlist_index\": 1, \"__last_playlist_index\": 1, \"extractor\": \"TeleTask\", \"extractor_key\": \"TeleTask\", \"playlist_autonumber\": 1, \"display_id\": \"7-speaker\", \"fulltitle\": \"Graph & Trees\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Graph & Trees [7-speaker].mp4\", \"filename\": \"Graph & Trees [7-speaker].mp4\", \"__write_download_archive\": false}]}], \"webpage_url\": \"http://www.tele-task.de/archive/video/html5/7\", \"original_url\": \"http://www.tele-task.de/archive/video/html5/7\", \"webpage_url_basename\": \"7\", \"webpage_url_domain\": \"tele-task.de\", \"extractor\": \"TeleTask\", \"extractor_key\": \"TeleTask\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "WARNING: [TeleTask] unable to extract date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.tele-task.de/archive/video/html5/9/",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [TeleTask] 9: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

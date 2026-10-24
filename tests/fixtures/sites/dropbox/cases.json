@@ -1,0 +1,7 @@
+[
+ {"url": "https://www.dropbox.com/s/nelirfsxnmcfbfh/youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4?dl=0", "args": ["-j"]},
+ {"url": "https://www.dropbox.com/s/nelirfsxnmcfbfh/youtube-dl%20test%20video%20%27%C3%A4%22BaW_jenozKc.mp4?dl=0", "args": ["-F"]},
+ {"url": "https://www.dropbox.com/scl/fi/r2kd2skcy5ylbbta5y1pz/DJI_0003.MP4?dl=0&rlkey=wcdg", "args": ["-j"]},
+ {"url": "https://www.dropbox.com/sh/2mgpiuq7kv8nqdf/AABy?dl=0&preview=Drone+Shot.mp4", "args": ["-j"]},
+ {"url": "https://www.dropbox.com/s/locked/secret.mp4", "args": ["-j"]}
+]

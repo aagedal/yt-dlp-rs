@@ -285,7 +285,7 @@ pub(crate) fn elements_text_and_html_by_attribute(
     if unquoted {
         values.push(escaped);
     }
-    elements_matching(attribute, &values, html)
+    elements_matching(ANY_TAG, attribute, &values, html)
 }
 
 /// Upstream `get_elements_text_and_html_by_class(class_name, html)`: the
@@ -299,16 +299,45 @@ pub(crate) fn elements_text_and_html_by_class(
         format!(r#""(?:[^"]*\s)?{escaped}(?:\s[^"]*)?""#),
         format!(r"'(?:[^']*\s)?{escaped}(?:\s[^']*)?'"),
     ];
-    elements_matching("class", &values, html)
+    elements_matching(ANY_TAG, "class", &values, html)
+}
+
+/// The default `tag=r'[\w:.-]+'`.
+const ANY_TAG: &str = r"[\w:.-]+";
+
+/// Upstream `get_elements_text_and_html_by_attribute(attribute, value, html,
+/// tag=tag, escape_value=False)` (`find_elements(..., regex=True)`): the
+/// value is a regular expression, optionally quoted.
+pub(crate) fn elements_text_and_html_by_attribute_regex(
+    tag: &str,
+    attribute: &str,
+    value: &str,
+    html: &str,
+) -> Result<Vec<(String, String)>, String> {
+    if value.is_empty() {
+        return Ok(Vec::new());
+    }
+    // `(?P<_q>['"]{quote})(?-x:VALUE)(?P=_q)` as one alternative per quote.
+    let unquoted = !value
+        .chars()
+        .next()
+        .is_some_and(|first| first.is_whitespace() || "\"'`=<>".contains(first));
+    let mut values = vec![format!("\"(?:{value})\""), format!("'(?:{value})'")];
+    if unquoted {
+        values.push(format!("(?:{value})"));
+    }
+    elements_matching(tag, attribute, &values, html)
 }
 
 fn elements_matching(
+    tag: &str,
     attribute: &str,
     values: &[String],
     html: &str,
 ) -> Result<Vec<(String, String)>, String> {
     let pattern = format!(
-        r#"<(?P<tag>[\w:.-]+)(?:\s(?:[^>"']|"[^"]*"|'[^']*')*)?\s{}\s*=\s*(?:{})"#,
+        r#"<(?P<tag>{})(?:\s(?:[^>"']|"[^"]*"|'[^']*')*)?\s{}\s*=\s*(?:{})"#,
+        tag,
         regex::escape(attribute),
         values.join("|")
     );

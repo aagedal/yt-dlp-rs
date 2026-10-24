@@ -1,0 +1,45 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.peer.tv/de/841",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"841\", \"title\": \"Die Brunnenburg\", \"formats\": [{\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://cdn.peer.tv/vod/841/low.m3u8\", \"manifest_url\": \"https://cdn.peer.tv/vod/841/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://cdn.peer.tv/vod/841/high.m3u8\", \"manifest_url\": \"https://cdn.peer.tv/vod/841/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\"}], \"description\": \"Die Brunnenburg & ihre Geschichte.\", \"thumbnail\": null, \"webpage_url\": \"https://www.peer.tv/de/841\", \"original_url\": \"https://www.peer.tv/de/841\", \"webpage_url_basename\": \"841\", \"webpage_url_domain\": \"peer.tv\", \"extractor\": \"peer.tv\", \"extractor_key\": \"PeerTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"841\", \"fulltitle\": \"Die Brunnenburg\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://cdn.peer.tv/vod/841/high.m3u8\", \"manifest_url\": \"https://cdn.peer.tv/vod/841/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\", \"_filename\": \"Die Brunnenburg [841].mp4\", \"filename\": \"Die Brunnenburg [841].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [peer.tv] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.peer.tv/it/404",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"404\", \"title\": \"Cascate di ghiaccio\", \"formats\": [{\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://cdn.peer.tv/vod/404/index.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\"}], \"description\": \"Cascate\", \"thumbnail\": null, \"webpage_url\": \"https://www.peer.tv/it/404\", \"original_url\": \"https://www.peer.tv/it/404\", \"webpage_url_basename\": \"404\", \"webpage_url_domain\": \"peer.tv\", \"extractor\": \"peer.tv\", \"extractor_key\": \"PeerTV\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"404\", \"fulltitle\": \"Cascate di ghiaccio\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://cdn.peer.tv/vod/404/index.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - unknown\", \"_filename\": \"Cascate di ghiaccio [404].m3u8\", \"filename\": \"Cascate di ghiaccio [404].m3u8\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [peer.tv] unable to extract og:image; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.peer.tv/en/7",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [peer.tv] 7: Unable to extract video key; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

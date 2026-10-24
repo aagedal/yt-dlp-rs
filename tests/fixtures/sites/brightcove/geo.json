@@ -1,0 +1,7 @@
+[
+ {
+  "error_code": "ACCESS_DENIED",
+  "error_subcode": "CLIENT_GEO",
+  "message": "Access to this resource is forbidden by access policy."
+ }
+]

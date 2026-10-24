@@ -1,0 +1,52 @@
+{
+ "routes": [
+  {
+   "url": "https://www.thesun.co.uk/tvandshowbiz/2261604/orlando-bloom-and-katy-perry/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.the-sun.com/entertainment/7611415/no-title/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  },
+  {
+   "url": "http://players.brightcove.net/5067014667001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://players.brightcove.net/5067014667001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5067014667001/videos/5232946137001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkTHESUN"
+   }
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5067014667001/videos/5232946137002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video2.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkTHESUN"
+   }
+  }
+ ]
+}

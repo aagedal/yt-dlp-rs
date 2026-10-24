@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.rottentomatoes.com/m/toy_story_3/trailers/VycaVoBKhGuk",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://video.rt.example/low.m3u8\", \"manifest_url\": \"https://video.rt.example/trailer2.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://video.rt.example/high.m3u8\", \"manifest_url\": \"https://video.rt.example/trailer2.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\"}], \"id\": \"VycaVoBKhGuk\", \"title\": \"Toy Story 3: Trailer 2\", \"description\": \"\", \"duration\": 149.941, \"thumbnail\": \"https://images.rt.example/trailer2.jpg\", \"webpage_url\": \"https://www.rottentomatoes.com/m/toy_story_3/trailers/VycaVoBKhGuk\", \"original_url\": \"https://www.rottentomatoes.com/m/toy_story_3/trailers/VycaVoBKhGuk\", \"webpage_url_basename\": \"VycaVoBKhGuk\", \"webpage_url_domain\": \"rottentomatoes.com\", \"extractor\": \"RottenTomatoes\", \"extractor_key\": \"RottenTomatoes\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://images.rt.example/trailer2.jpg\", \"id\": \"0\"}], \"display_id\": \"VycaVoBKhGuk\", \"fulltitle\": \"Toy Story 3: Trailer 2\", \"duration_string\": \"2:29\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://video.rt.example/high.m3u8\", \"manifest_url\": \"https://video.rt.example/trailer2.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\", \"_filename\": \"Toy Story 3\\uff1a Trailer 2 [VycaVoBKhGuk].mp4\", \"filename\": \"Toy Story 3\\uff1a Trailer 2 [VycaVoBKhGuk].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.rottentomatoes.com/m/toy_story_3",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"id\": \"toy_story_3\", \"title\": \"Toy Story 3\", \"_type\": \"playlist\", \"entries\": [{\"formats\": [{\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://video.rt.example/low.m3u8\", \"manifest_url\": \"https://video.rt.example/trailer2.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://video.rt.example/high.m3u8\", \"manifest_url\": \"https://video.rt.example/trailer2.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\"}], \"id\": \"VycaVoBKhGuk\", \"title\": \"Toy Story 3: Trailer 2\", \"description\": \"\", \"duration\": 149.941, \"thumbnail\": \"https://images.rt.example/trailer2.jpg\", \"playlist_count\": 2, \"playlist\": \"Toy Story 3\", \"playlist_id\": \"toy_story_3\", \"playlist_title\": \"Toy Story 3\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"http://www.rottentomatoes.com/m/toy_story_3\", \"n_entries\": 2, \"webpage_url\": \"http://www.rottentomatoes.com/m/toy_story_3\", \"webpage_url_basename\": \"toy_story_3\", \"webpage_url_domain\": \"rottentomatoes.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"RottenTomatoes\", \"extractor_key\": \"RottenTomatoes\", \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://images.rt.example/trailer2.jpg\", \"id\": \"0\"}], \"display_id\": \"VycaVoBKhGuk\", \"fulltitle\": \"Toy Story 3: Trailer 2\", \"duration_string\": \"2:29\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"hls-2400\", \"url\": \"https://video.rt.example/high.m3u8\", \"manifest_url\": \"https://video.rt.example/trailer2.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\", \"_filename\": \"Toy Story 3\\uff1a Trailer 2 [VycaVoBKhGuk].mp4\", \"filename\": \"Toy Story 3\\uff1a Trailer 2 [VycaVoBKhGuk].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://video.rt.example/high.m3u8\", \"manifest_url\": \"https://video.rt.example/trailer2.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\"}, null], \"webpage_url\": \"http://www.rottentomatoes.com/m/toy_story_3\", \"original_url\": \"http://www.rottentomatoes.com/m/toy_story_3\", \"webpage_url_basename\": \"toy_story_3\", \"webpage_url_domain\": \"rottentomatoes.com\", \"extractor\": \"RottenTomatoes\", \"extractor_key\": \"RottenTomatoes\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [RottenTomatoes] toy_story_3: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [RottenTomatoes] Broken1: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.rottentomatoes.com/m/toy_story_3/trailers",
+   "args": [
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s|%(description)s|%(duration)s|%(thumbnail)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "toy_story_3-trailers|NA|VycaVoBKhGuk|Toy Story 3: Trailer 2||149.941|https://images.rt.example/trailer2.jpg|hls-2400",
+    "toy_story_3-trailers|NA|Clip22|Clip &amp; more|A clip.|NA|NA|hls-2400"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.rottentomatoes.com/m/toy_story_3/trailers/Missing1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [RottenTomatoes] Missing1: Unable to extract video from webpage; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

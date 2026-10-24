@@ -1,0 +1,10 @@
+[
+ {"url": "http://soundgasm.net/u/ytdl/Piano-sample", "args": ["-j"]},
+ {"url": "https://soundgasm.net/u/ytdl/Old-layout", "args": ["-j"]},
+ {"url": "https://soundgasm.net/u/ytdl/Bare-track", "args": ["-j"]},
+ {"url": "https://soundgasm.net/u/ytdl/Removed", "args": ["-j"]},
+ {"url": "https://soundgasm.net/u/ytdl/Gone", "args": ["-j"]},
+ {"url": "https://soundgasm.net/u/ytdl", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://soundgasm.net/u/ytdl", "args": ["-j"]},
+ {"url": "https://soundgasm.net/u/nobody/", "args": ["-J"]}
+]

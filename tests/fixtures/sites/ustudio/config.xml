@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <qualities>
+    <quality name="sd">
+      <video url="http://v1.ustudio.com/media/Uxu2my9bgSph/480.mp4?a=1&amp;amp;b=2" width="640" height="480"/>
+      <image url="http://v1.ustudio.com/media/Uxu2my9bgSph/480.jpg" width="640" height="480"/>
+    </quality>
+    <quality name="hd">
+      <video url="http://v1.ustudio.com/media/Uxu2my9bgSph/720.mp4" width="1280"/>
+      <video url=""/>
+      <image url="http://v1.ustudio.com/media/Uxu2my9bgSph/720.jpg"/>
+    </quality>
+  </qualities>
+</config>

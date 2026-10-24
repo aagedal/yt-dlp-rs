@@ -1,0 +1,126 @@
+{
+ "routes": [
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"0_c03e1b5g\"",
+    "\"clientTag\": \"html5:v3.1.0\"",
+    "\"widgetId\": \"_1926081\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "html5.json"
+  },
+  {
+   "url": "https://api.example.org/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"0_c03e1b5g\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "html5.json"
+  },
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"1_kw\"",
+    "\"clientTag\": \"kwidget:v2.89\"",
+    "\"widgetId\": \"_243342\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "kwidget.json"
+  },
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"0_missing\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "missing.json"
+  },
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"0_gone\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "exception.json"
+  },
+  {
+   "url": "http://cdnapi.kaltura.com/api_v3/service/multirequest",
+   "request_body": [
+    "\"redirectFromEntryId\": \"0_ref\""
+   ],
+   "status": 500,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_orig",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "mp4"
+  },
+  {
+   "url": "https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_bad",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "no"
+  },
+  {
+   "url": "https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/applehttp/protocol/https",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://cdnapisec.kaltura.com/hls/0_c03e1b5g/720.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "720.m3u8"
+  },
+  {
+   "url": "https://cdnapisec.kaltura.com/hls/0_c03e1b5g/360.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "360.m3u8"
+  },
+  {
+   "url": "https://www.kaltura.com/index.php/extwidget/preview/partner_id/1337/uiconf_id/9/flashvars[referenceId]/ref1",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "reference.html"
+  },
+  {
+   "url": "https://news.example.test/kwidget",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "embed.html"
+  },
+  {
+   "url": "https://news.example.test/iframe",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body_file": "iframe.html"
+  }
+ ]
+}

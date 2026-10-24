@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.pearvideo.com/video_1076290",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"Description\" content=\"meta desc\"></head><body><h1 class=\"video-tt\">小浣熊在主人家玻璃上滚石头：没砸</h1><div class=\"summary\">A raccoon rolls stones</div><div class=\"date\">2017-05-08 16:28</div><script>var contId=\"1076290\",ldUrl=\"\",sdUrl=\"https://video.pear.test/sd.mp4\",hdUrl='https://video.pear.test/hd.mp4',srcUrl=\"//video.pear.test/src.mp4\";</script></body></html>"
+  },
+  {
+   "url": "http://www.pearvideo.com/video_2000",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta name=\"description\" content=\"Meta only\"></head><body><div data-title=\"API video\" data-x=\"1\"></div></body></html>"
+  },
+  {
+   "url": "https://www.pearvideo.com/videoStatus.jsp?contId=2000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"systemTime\": \"1700000000000\", \"videoInfo\": {\"videos\": {\"hdUrl\": \"https://video.pear.test/hd2.mp4\", \"sdUrl\": \"\", \"srcUrl\": \"https://video.pear.test/mp4/1700000000000-111-hd.mp4\"}}}"
+  },
+  {
+   "url": "https://www.pearvideo.com/video_3000",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><div data-title=\"Nothing\"></div><div class=\"date\">bad</div></body></html>"
+  },
+  {
+   "url": "https://www.pearvideo.com/videoStatus.jsp?contId=3000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"systemTime\": \"1\", \"videoInfo\": {}}"
+  },
+  {
+   "url": "https://www.pearvideo.com/video_4000",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>no title</body></html>"
+  },
+  {
+   "url": "https://www.pearvideo.com/videoStatus.jsp?contId=4000",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"systemTime\": \"1\"}"
+  },
+  {
+   "url": "http://video.pear.test/src.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  }
+ ]
+}

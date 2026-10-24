@@ -1,0 +1,85 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.bigo.tv/ja/221338632",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(uploader)s|%(uploader_id)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "6576287577575737440|REST room|True|is_live|Shin|221338632|https://snap.bigo.example/a.jpg|0|mp4|m3u8|https://hls.bigo.example/live/221338632.m3u8"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bigo.tv/221338632",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Bigo] Extracting URL: https://www.bigo.tv/221338632",
+    "[Bigo] 221338632: Downloading JSON metadata",
+    "[Bigo] 221338632: Downloading m3u8 information",
+    "[info] Available formats for 6576287577575737440:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  mp4 unknown    | m3u8F | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://bigo.tv/bare",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(uploader)s|%(uploader_id)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "bare|bare|True|is_live||bare|NA|0|mp4|m3u8|https://hls.bigo.example/live/221338632.m3u8"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bigo.tv/en/offline",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Bigo] offline: The channel is not currently live"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bigo.tv/en/code",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Bigo] code: Bigo says: forbidden (code 403)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.bigo.tv/en/list",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Bigo] list: Received invalid JSON data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

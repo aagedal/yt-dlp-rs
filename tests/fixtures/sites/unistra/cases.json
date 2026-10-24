@@ -1,0 +1,9 @@
+[
+ {"url": "http://utv.unistra.fr/video.php?id_video=154", "args": ["-j"]},
+ {"url": "http://utv.unistra.fr/video.php?id_video=154", "args": ["-F"]},
+ {"url": "http://utv.unistra.fr/index.php?id_video=1", "args": ["-j"]},
+ {"url": "http://utv.unistra.fr/index.php?id_video=2", "args": ["-j"]},
+ {"url": "http://utv.unistra.fr/index.php?id_video=3", "args": ["-j"]},
+ {"url": "http://utv.unistra.fr/index.php?id_video=4", "args": ["-j"]},
+ {"url": "http://utv.unistra.fr/index.php?id_video=5", "args": ["-j"]}
+]

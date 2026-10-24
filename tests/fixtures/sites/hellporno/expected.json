@@ -1,0 +1,83 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://hellporno.com/videos/dixie-is-posing-with-naked-ass-very-erotic/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"ext\": \"mp4\", \"width\": null, \"height\": 480, \"tbr\": null, \"format_id\": \"480p\", \"url\": \"https://hellporno.com/get_file/1/149116.mp4/\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://hellporno.com/videos/dixie-is-posing-with-naked-ass-very-erotic/\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"480p - 480p\"}, {\"ext\": \"mp4\", \"width\": null, \"height\": 720, \"tbr\": null, \"format_id\": \"720p_HD\", \"url\": \"https://hellporno.com/get_file/1/149116_720p.mp4/\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://hellporno.com/videos/dixie-is-posing-with-naked-ass-very-erotic/\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"720p_HD - 720p\"}], \"subtitles\": {}, \"thumbnail\": \"http://hellporno.com/contents/videos_screenshots/149000/149116/preview.jpg\", \"id\": \"149116\", \"display_id\": \"dixie-is-posing-with-naked-ass-very-erotic\", \"title\": \"Dixie is posing with naked ass very erotic\", \"description\": \"Dixie &amp; friends posing\", \"categories\": [\"Babes\", \"Solo\", \"Posing\"], \"duration\": 240, \"timestamp\": 1398762720, \"view_count\": 1234, \"age_limit\": 18, \"webpage_url\": \"http://hellporno.com/videos/dixie-is-posing-with-naked-ass-very-erotic/\", \"original_url\": \"http://hellporno.com/videos/dixie-is-posing-with-naked-ass-very-erotic/\", \"webpage_url_basename\": \"dixie-is-posing-with-naked-ass-very-erotic\", \"webpage_url_domain\": \"hellporno.com\", \"extractor\": \"HellPorno\", \"extractor_key\": \"HellPorno\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://hellporno.com/contents/videos_screenshots/149000/149116/preview.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Dixie is posing with naked ass very erotic\", \"duration_string\": \"4:00\", \"upload_date\": \"20140429\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"ext\": \"mp4\", \"width\": null, \"height\": 720, \"tbr\": null, \"format_id\": \"720p_HD\", \"url\": \"https://hellporno.com/get_file/1/149116_720p.mp4/\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://hellporno.com/videos/dixie-is-posing-with-naked-ass-very-erotic/\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"720p_HD - 720p\", \"_filename\": \"Dixie is posing with naked ass very erotic [149116].mp4\", \"filename\": \"Dixie is posing with naked ass very erotic [149116].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://hellporno.com/videos/dixie-is-posing-with-naked-ass-very-erotic/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[HellPorno] Extracting URL: http://hellporno.com/videos/dixie-is-posing-with-naked-ass-very-erotic/",
+    "[HellPorno] dixie-is-posing-with-naked-ass-very-erotic: Downloading webpage",
+    "[info] Available formats for 149116:",
+    "ID      EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "------------------------------------------------",
+    "480p    mp4 480p       | https | unknown unknown",
+    "720p_HD mp4 720p       | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://hellporno.net/v/186271/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"url\": \"https://hellporno.net/v/186271.mp4\", \"vcodec\": null, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://hellporno.net/v/186271/\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"id\": \"186271\", \"display_id\": \"186271\", \"title\": \"Bare clip\", \"categories\": [], \"age_limit\": 18, \"webpage_url\": \"https://hellporno.net/v/186271/\", \"original_url\": \"https://hellporno.net/v/186271/\", \"webpage_url_basename\": \"186271\", \"webpage_url_domain\": \"hellporno.net\", \"extractor\": \"HellPorno\", \"extractor_key\": \"HellPorno\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Bare clip\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://hellporno.net/v/186271.mp4\", \"vcodec\": null, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://hellporno.net/v/186271/\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Bare clip [186271].mp4\", \"filename\": \"Bare clip [186271].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [HellPorno] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [HellPorno] unable to extract OpenGraph video:duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [HellPorno] unable to extract OpenGraph video:release_date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [HellPorno] unable to extract view count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.hellporno.com/videos/novideo/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.hellporno.com/videos/notitle/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"url\": \"https://www.hellporno.com/videos/notitle/a.mp4\", \"vcodec\": null, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.hellporno.com/videos/notitle/\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"id\": \"notitle\", \"display_id\": \"notitle\", \"categories\": [], \"age_limit\": 18, \"webpage_url\": \"https://www.hellporno.com/videos/notitle/\", \"original_url\": \"https://www.hellporno.com/videos/notitle/\", \"webpage_url_basename\": \"notitle\", \"webpage_url_domain\": \"hellporno.com\", \"extractor\": \"HellPorno\", \"extractor_key\": \"HellPorno\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": null, \"title\": \"HellPorno video #notitle\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://www.hellporno.com/videos/notitle/a.mp4\", \"vcodec\": null, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.hellporno.com/videos/notitle/\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"HellPorno video #notitle [notitle].mp4\", \"filename\": \"HellPorno video #notitle [notitle].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [HellPorno] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [HellPorno] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [HellPorno] unable to extract OpenGraph video:duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [HellPorno] unable to extract OpenGraph video:release_date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [HellPorno] unable to extract view count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  }
+ ]
+}

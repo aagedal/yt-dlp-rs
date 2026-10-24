@@ -1,0 +1,18 @@
+[
+ {
+  "partnerId": 1926081,
+  "ks": "djJ8MTkyNjA4MXw",
+  "userId": 0,
+  "objectType": "KalturaStartWidgetSessionResponse"
+ },
+ {
+  "code": "ENTRY_ID_NOT_FOUND",
+  "message": "Entry id \"0_gone\" not found",
+  "objectType": "KalturaAPIException",
+  "args": {}
+ },
+ [],
+ {
+  "objects": []
+ }
+]

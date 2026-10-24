@@ -1,0 +1,78 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.freesound.org/people/miklovan/sounds/194503/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"194503\", \"title\": \"gulls in the city.wav\", \"description\": \"the sounds of seagulls in the city\", \"duration\": 130.233, \"uploader\": \"miklovan\", \"upload_date\": \"20130715\", \"tags\": [\"gulls\", \"city\"], \"formats\": [{\"url\": \"https://freesound.org/data/previews/194/194503_3527000-lq.mp3\", \"format_note\": \"Stereo\", \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown (Stereo)\"}, {\"url\": \"https://freesound.org/data/previews/194/194503_3527000-hq.mp3\", \"format_note\": \"Stereo\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - unknown (Stereo)\"}], \"webpage_url\": \"http://www.freesound.org/people/miklovan/sounds/194503/\", \"original_url\": \"http://www.freesound.org/people/miklovan/sounds/194503/\", \"webpage_url_basename\": \"194503\", \"webpage_url_domain\": \"freesound.org\", \"extractor\": \"Freesound\", \"extractor_key\": \"Freesound\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"194503\", \"fulltitle\": \"gulls in the city.wav\", \"duration_string\": \"2:10\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://freesound.org/data/previews/194/194503_3527000-hq.mp3\", \"format_note\": \"Stereo\", \"quality\": 1, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - unknown (Stereo)\", \"_filename\": \"gulls in the city.wav [194503].mp3\", \"filename\": \"gulls in the city.wav [194503].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.freesound.org/people/miklovan/sounds/194503/",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(duration)s|%(uploader)s|%(upload_date)s|%(tags)s|%(format_id)s|%(format_note)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "194503|gulls in the city.wav|the sounds of seagulls in the city|130.233|miklovan|20130715|['gulls', 'city']|1|Stereo|mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.freesound.org/people/miklovan/sounds/194503/",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Freesound] Extracting URL: http://www.freesound.org/people/miklovan/sounds/194503/",
+    "[Freesound] 194503: Downloading webpage",
+    "[info] 194503: Downloading 1 format(s): 1",
+    "[download] Destination: 194503.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "194503.mp3": 13
+   }
+  },
+  {
+   "url": "https://freesound.org/people/someone/sounds/1/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1\", \"title\": \"bare & sound\", \"description\": null, \"uploader\": null, \"upload_date\": null, \"tags\": null, \"formats\": [{\"url\": \"https://cdn.freesound.org/previews/1/1_2.mp3\", \"format_note\": null, \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://freesound.org/people/someone/sounds/1/\", \"original_url\": \"https://freesound.org/people/someone/sounds/1/\", \"webpage_url_basename\": \"1\", \"webpage_url_domain\": \"freesound.org\", \"extractor\": \"Freesound\", \"extractor_key\": \"Freesound\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1\", \"fulltitle\": \"bare & sound\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.freesound.org/previews/1/1_2.mp3\", \"format_note\": null, \"quality\": 0, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"bare & sound [1].mp3\", \"filename\": \"bare & sound [1].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Freesound] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Freesound] unable to extract uploader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Freesound] unable to extract channels info; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://freesound.org/people/someone/sounds/2/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Freesound] 2: Unable to extract song url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

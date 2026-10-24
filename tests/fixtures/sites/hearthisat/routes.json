@@ -1,0 +1,8 @@
+{
+ "routes": [
+  {"url": "https://api-v2.hearthis.at/moofi/dr-kreep/", "headers": {"Content-Type": "application/json"}, "body": "{\"id\": \"150939\", \"title\": \"Dr Kreep\", \"user\": {\"username\": \"Moofi\"}, \"genre\": \"Experimental\", \"description\": \"Creepy Patch. Mutable Instruments Braids Vowel + Formant Mode.\", \"thumb\": \"https://images.hearthis.at/thumb.jpg\", \"playback_count\": \"1,234\", \"duration\": \"71\", \"release_timestamp\": 1421564134, \"stream_url\": \"https://hearthis.at/moofi/dr-kreep/listen/\", \"download_url\": \"https://hearthis.at/moofi/dr-kreep/download/\", \"download_filename\": \"Moofi - Dr Kreep.wav\"}"},
+  {"url": "https://api-v2.hearthis.at/someone/plain-track.2/", "headers": {"Content-Type": "application/json"}, "body": "{\"id\": \"77\", \"title\": \"Plain\", \"user\": {}, \"artwork_url\": \"https://images.hearthis.at/art.png\", \"thumb\": \"https://images.hearthis.at/thumb.png\", \"download_url\": \"https://hearthis.at/someone/plain-track.2/download/\", \"download_filename\": \"plain.zip\"}"},
+  {"url": "https://hearthis.at/moofi/dr-kreep/listen/", "headers": {"Content-Type": "audio/mpeg"}, "body": "ID3fakemp3"},
+  {"url": "https://hearthis.at/moofi/dr-kreep/download/", "headers": {"Content-Type": "audio/wav"}, "body": "RIFFfakewav"}
+ ]
+}

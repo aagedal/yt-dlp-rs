@@ -1,0 +1,29 @@
+{
+ "routes": [
+  {
+   "url": "https://onefootball.com/en/video/highlights-fc-zuerich-3-3-fc-basel-34012334",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://onefootball.com/en/video/klopp-fumes-at-var-decisions-in-west-ham-defeat-34041020",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "nold.html"
+  },
+  {
+   "url": "https://onefootball.com/de/video/no-player-here-1",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html><head><title>Nothing</title></head><body>No video</body></html>"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/Y2VtcWAT",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"title\": \"JW title\", \"description\": \"JW description\", \"kind\": \"Single Item\", \"playlist\": [{\"title\": \"JW title\", \"mediaid\": \"Y2VtcWAT\", \"image\": \"https://cdn.jwplayer.com/v2/media/Y2VtcWAT/poster.jpg?width=720\", \"duration\": 375, \"pubdate\": 1635874895, \"description\": \"JW description\", \"tags\": \"Football,Soccer,OneFootball\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/Y2VtcWAT-1.mp4\", \"type\": \"video/mp4\", \"height\": 720, \"width\": 1280, \"label\": \"720p\", \"bitrate\": 1500000}]}]}"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/leVJrMho",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"title\": \"Klopp fumes at VAR decisions in West Ham defeat\", \"playlist\": [{\"title\": \"Klopp fumes at VAR decisions in West Ham defeat\", \"mediaid\": \"leVJrMho\", \"image\": \"https://cdn.jwplayer.com/v2/media/leVJrMho/poster.jpg?width=720\", \"duration\": 93, \"pubdate\": 1636315232, \"description\": \"Klopp was not happy.\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/leVJrMho-1.mp4\", \"type\": \"video/mp4\", \"height\": 360, \"width\": 640, \"label\": \"360p\", \"bitrate\": 600000}]}]}"
+  }
+ ]
+}

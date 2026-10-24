@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://lnk.lt/api/video/video-config/27186",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videoInfo\": {\"title\": \"Varom pierdom 10 s.\", \"description\": \"Komedija.\", \"viewsCount\": 1234, \"duration\": 1320, \"airDate\": \"2024-03-05T20:00:00+02:00\", \"posterImage\": \"poster/27186.jpg\", \"episodeNumber\": \"10\", \"programTitle\": \"Varom pierdom\", \"videoUrl\": \"https://lnk.test/hls/master.m3u8\", \"videoFairplayUrl\": \"https://lnk.test/hls/video.m3u8\", \"drm\": false}}"
+  },
+  {
+   "url": "https://lnk.lt/api/video/video-config/47289",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videoInfo\": {\"title\": \"Žinios\", \"videoUrl\": \"https://lnk.test/hls/video.m3u8\", \"videoFairplayUrl\": \"https://lnk.test/hls/fp.m3u8\", \"drm\": true, \"posterImage\": null}}"
+  },
+  {
+   "url": "https://lnk.test/hls/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video.m3u8"
+  },
+  {
+   "url": "https://lnk.test/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://lnk.test/hls/subs_en.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_en.m3u8"
+  },
+  {
+   "url": "https://lnk.test/hls/subs_de.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_de.m3u8"
+  }
+ ]
+}

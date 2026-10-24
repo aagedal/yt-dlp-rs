@@ -1,0 +1,72 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.telegraaf.nl/video/734366489/historisch-scheepswrak-slaat-na-100-jaar-los",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"gaMItuoSeUg2\", \"title\": \"Historisch scheepswrak slaat na 100 jaar los\", \"description\": \"Een historisch scheepswrak is losgeslagen.\", \"formats\": [{\"format_id\": \"dash-1\", \"manifest_url\": \"https://content.tmgvideo.nl/dash/gaMItuoSeUg2/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 69.248, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://content.tmgvideo.nl/dash/gaMItuoSeUg2/manifest.mpd\", \"fragment_base_url\": \"https://content.tmgvideo.nl/dash/gaMItuoSeUg2/\", \"fragments\": [{\"path\": \"init-stream1.m4s\"}, {\"path\": \"chunk-stream1-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 69.248, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-1 - audio only (DASH audio)\"}, {\"format_id\": \"dash-0\", \"manifest_url\": \"https://content.tmgvideo.nl/dash/gaMItuoSeUg2/manifest.mpd\", \"ext\": \"mp4\", \"width\": 320, \"height\": 240, \"tbr\": 56.115, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.f4000d\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://content.tmgvideo.nl/dash/gaMItuoSeUg2/manifest.mpd\", \"fragment_base_url\": \"https://content.tmgvideo.nl/dash/gaMItuoSeUg2/\", \"fragments\": [{\"path\": \"init-stream0.m4s\"}, {\"path\": \"chunk-stream0-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 56.115, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-0 - 320x240 (DASH video)\"}, {\"url\": \"https://content.tmgvideo.nl/mp4/gaMItuoSeUg2_360.mp4\", \"width\": 640, \"height\": 360, \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - 640x360\"}, {\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://content.tmgvideo.nl/hls/gaMItuoSeUg2/low.m3u8\", \"manifest_url\": \"https://content.tmgvideo.nl/hls/gaMItuoSeUg2/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"url\": \"https://content.tmgvideo.nl/mp4/gaMItuoSeUg2_720.mp4\", \"width\": 1280, \"height\": 720, \"format_id\": \"http-720p\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http-720p - 1280x720\"}, {\"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://content.tmgvideo.nl/hls/gaMItuoSeUg2/high.m3u8\", \"manifest_url\": \"https://content.tmgvideo.nl/hls/gaMItuoSeUg2/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\"}], \"duration\": 55, \"thumbnail\": \"https://images.tmgvideo.nl/poster/gaMItuoSeUg2.jpg\", \"timestamp\": 1572805527, \"webpage_url\": \"https://www.telegraaf.nl/video/734366489/historisch-scheepswrak-slaat-na-100-jaar-los\", \"original_url\": \"https://www.telegraaf.nl/video/734366489/historisch-scheepswrak-slaat-na-100-jaar-los\", \"webpage_url_basename\": \"historisch-scheepswrak-slaat-na-100-jaar-los\", \"webpage_url_domain\": \"telegraaf.nl\", \"extractor\": \"Telegraaf\", \"extractor_key\": \"Telegraaf\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://images.tmgvideo.nl/poster/gaMItuoSeUg2.jpg\", \"id\": \"0\"}], \"display_id\": \"gaMItuoSeUg2\", \"fulltitle\": \"Historisch scheepswrak slaat na 100 jaar los\", \"duration_string\": \"55\", \"upload_date\": \"20191103\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://content.tmgvideo.nl/hls/gaMItuoSeUg2/high.m3u8\", \"manifest_url\": \"https://content.tmgvideo.nl/hls/gaMItuoSeUg2/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\", \"_filename\": \"Historisch scheepswrak slaat na 100 jaar los [gaMItuoSeUg2].mp4\", \"filename\": \"Historisch scheepswrak slaat na 100 jaar los [gaMItuoSeUg2].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Telegraaf] Ignoring subtitle tracks found in the DASH manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Telegraaf] Unknown adaptive format f4m"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.telegraaf.nl/video/734366489/historisch-scheepswrak-slaat-na-100-jaar-los",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Telegraaf] Extracting URL: https://www.telegraaf.nl/video/734366489/historisch-scheepswrak-slaat-na-100-jaar-los",
+    "[Telegraaf] 734366489: Downloading JSON metadata",
+    "[Telegraaf] gaMItuoSeUg2: Downloading JSON metadata",
+    "[Telegraaf] gaMItuoSeUg2: Downloading m3u8 information",
+    "[Telegraaf] gaMItuoSeUg2: Downloading MPD manifest",
+    "[info] Available formats for gaMItuoSeUg2:",
+    "ID        EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC      VBR ACODEC     ABR ASR MORE INFO",
+    "-----------------------------------------------------------------------------------------------------------",
+    "dash-1    m4a audio only | ~464.92KiB   69k dash  | audio only      mp4a.40.2  69k 44k DASH audio, m4a_dash",
+    "dash-0    mp4 320x240    | ~376.75KiB   56k dash  | avc1.f4000d 56k video only         DASH video, mp4_dash",
+    "http      mp4 640x360    |                  https | unknown         unknown",
+    "hls-800   mp4 640x360    | ~  5.25MiB  800k m3u8  | avc1.42c01e     mp4a.40.2",
+    "http-720p mp4 1280x720   |                  https | unknown         unknown",
+    "hls-2400  mp4 1280x720   | ~ 15.74MiB 2400k m3u8  | avc1.4d401f     mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [Telegraaf] Ignoring subtitle tracks found in the DASH manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Telegraaf] Unknown adaptive format f4m"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.telegraaf.nl/video/111/x",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"second\", \"title\": \"Alleen progressief\", \"description\": null, \"formats\": [{\"url\": \"https://content.tmgvideo.nl/mp4/second.mp4\", \"width\": null, \"height\": null, \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}], \"thumbnail\": null, \"timestamp\": null, \"webpage_url\": \"https://www.telegraaf.nl/video/111/x\", \"original_url\": \"https://www.telegraaf.nl/video/111/x\", \"webpage_url_basename\": \"x\", \"webpage_url_domain\": \"telegraaf.nl\", \"extractor\": \"Telegraaf\", \"extractor_key\": \"Telegraaf\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"second\", \"fulltitle\": \"Alleen progressief\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://content.tmgvideo.nl/mp4/second.mp4\", \"width\": null, \"height\": null, \"format_id\": \"http\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_filename\": \"Alleen progressief [second].mp4\", \"filename\": \"Alleen progressief [second].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.telegraaf.nl/video/222",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Telegraaf] 222: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

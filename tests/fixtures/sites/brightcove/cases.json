@@ -1,0 +1,38 @@
+[
+ {
+  "url": "https://players.brightcove.net/1111111111001/default_default/index.html?videoId=6300000000001",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/2222222222001/abc123_default/index.html?videoId=6300000000002",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/3333333333001/default_default/index.html?videoId=6300000000003",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/4444444444001/default_default/index.html?videoId=6300000000004",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/5555555555001/default_default/index.html?videoId=6300000000005",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.example.com/news/embed-page",
+  "args": [
+   "-j"
+  ]
+ }
+]

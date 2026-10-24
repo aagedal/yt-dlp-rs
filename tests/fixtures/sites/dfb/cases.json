@@ -1,0 +1,39 @@
+[
+ {
+  "url": "http://tv.dfb.de/video/u-19-em-stimmen-zum-spiel-gegen-russland/11633/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://tv.dfb.de/video/u-19-em-stimmen-zum-spiel-gegen-russland/11633/",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "http://tv.dfb.de/video/u-19-em-stimmen-zum-spiel-gegen-russland/11633/",
+  "args": [
+   "--print",
+   "%(id)s|%(display_id)s|%(title)s|%(upload_date)s|%(thumbnail)s|%(extractor)s|%(extractor_key)s"
+  ]
+ },
+ {
+  "url": "https://tv.dfb.de/video/leer/2",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://tv.dfb.de/video/ohne-auth/3",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://tv.dfb.de/video/ohne-datum/4",
+  "args": [
+   "-j"
+  ]
+ }
+]

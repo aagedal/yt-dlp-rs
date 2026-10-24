@@ -1,0 +1,91 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.trtworld.com/video/news/turkiye-switches-to-sustainable-tourism-16067690",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"16067690\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://hls.trtworld.test/v360.m3u8\", \"manifest_url\": \"https://hls.trtworld.test/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}, {\"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://hls.trtworld.test/v720.m3u8\", \"manifest_url\": \"https://hls.trtworld.test/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\"}], \"title\": \"T\\u00fcrkiye switches to sustainable tourism\", \"description\": \"Tourism in T\\u00fcrkiye.\", \"thumbnail\": \"https://cdn-i.pr.trt.com.tr/trtworld/17647563_0-0-1920-1080.jpeg\", \"release_timestamp\": 1701529569, \"webpage_url\": \"https://www.trtworld.com/video/news/turkiye-switches-to-sustainable-tourism-16067690\", \"original_url\": \"https://www.trtworld.com/video/news/turkiye-switches-to-sustainable-tourism-16067690\", \"webpage_url_basename\": \"turkiye-switches-to-sustainable-tourism-16067690\", \"webpage_url_domain\": \"trtworld.com\", \"extractor\": \"TrtWorld\", \"extractor_key\": \"TrtWorld\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn-i.pr.trt.com.tr/trtworld/17647563_0-0-1920-1080.jpeg\", \"id\": \"0\"}], \"display_id\": \"16067690\", \"fulltitle\": \"T\\u00fcrkiye switches to sustainable tourism\", \"release_date\": \"20231202\", \"release_year\": 2023, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2000\", \"format_index\": null, \"url\": \"https://hls.trtworld.test/v720.m3u8\", \"manifest_url\": \"https://hls.trtworld.test/master.m3u8\", \"tbr\": 2000.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2000 - 1280x720\", \"_filename\": \"T\\u00fcrkiye switches to sustainable tourism [16067690].mp4\", \"filename\": \"T\\u00fcrkiye switches to sustainable tourism [16067690].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtworld.com/video/news/turkiye-switches-to-sustainable-tourism-16067690",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(release_timestamp)s|%(release_date)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "16067690|Türkiye switches to sustainable tourism|1701529569|20231202|https://cdn-i.pr.trt.com.tr/trtworld/17647563_0-0-1920-1080.jpeg"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtworld.com/video/one-offs/frames-from-anatolia-14541780",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14541780\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://hls.trtworld.test/media.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}, {\"format_id\": \"http\", \"url\": \"https://cdn.trtworld.test/clip.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\"}], \"title\": \"Frames From Anatolia\", \"release_timestamp\": 1692440844, \"webpage_url\": \"https://www.trtworld.com/video/one-offs/frames-from-anatolia-14541780\", \"original_url\": \"https://www.trtworld.com/video/one-offs/frames-from-anatolia-14541780\", \"webpage_url_basename\": \"frames-from-anatolia-14541780\", \"webpage_url_domain\": \"trtworld.com\", \"extractor\": \"TrtWorld\", \"extractor_key\": \"TrtWorld\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"14541780\", \"fulltitle\": \"Frames From Anatolia\", \"release_date\": \"20230819\", \"release_year\": 2023, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"http\", \"url\": \"https://cdn.trtworld.test/clip.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - unknown\", \"_filename\": \"Frames From Anatolia [14541780].mp4\", \"filename\": \"Frames From Anatolia [14541780].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtworld.com/video/news/nothing-1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TrtWorld] 1: No video found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtworld.com/video/news/noplatforms-2",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 2: An extractor error has occurred. (caused by KeyError('platforms')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtworld.com/video/news/broken-3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [TrtWorld] 3: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "ERROR: [TrtWorld] 3: No video found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtworld.com/video/news/nonuxt-4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TrtWorld] 4: Unable to extract __NUXT__; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

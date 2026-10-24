@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/1647338400",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>x</title></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"episode\": {\"_id\": \"62306451f4a48e58d0c4d6a8\", \"title\": \"Part One: Kissinger\", \"mediaURL\": \"https://media.podbay.test/a.mp3\", \"description\": \"<p>We begin our epic six part series on <b>Henry Kissinger</b>.</p>\", \"image\": \"eyJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiAiaHR0cHM6Ly9pbWcucG9kYmF5LnRlc3Qvay5qcGciLCAidyI6IDF9.sig\", \"timestamp\": 1647338400, \"duration\": 5001}}}}</script></body></html>"
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>x</title></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {\"episode\": {\"_id\": \"only\"}}}}</script></body></html>"
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>x</title></head><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"pageProps\": {}}}</script></body></html>"
+  },
+  {
+   "url": "https://podbay.fm/p/behind-the-bastards/e/4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nothing</html>"
+  },
+  {
+   "url": "https://podbay.fm/api/podcast?reverse=true&page=0&slug=behind-the-bastards",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"podcast\": {\"title\": \"Behind the Bastards\", \"episodes\": [{\"_id\": \"62306451f4a48e58d0c4d6a8\", \"title\": \"Part One: Kissinger\", \"mediaURL\": \"https://media.podbay.test/a.mp3\", \"description\": \"<p>We begin our epic six part series on <b>Henry Kissinger</b>.</p>\", \"image\": \"eyJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiAiaHR0cHM6Ly9pbWcucG9kYmF5LnRlc3Qvay5qcGciLCAidyI6IDF9.sig\", \"timestamp\": 1647338400, \"duration\": 5001}, {\"_id\": \"e2\", \"title\": \"Part Two\", \"mediaURL\": \"https://media.podbay.test/b.mp3\", \"image\": \"not-a-jwt\", \"timestamp\": 1647424800, \"duration\": \"77\"}]}}"
+  },
+  {
+   "url": "https://podbay.fm/api/podcast?reverse=true&page=0&slug=untitled",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"podcast\": {\"episodes\": []}}"
+  },
+  {
+   "url": "https://media.podbay.test/a.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body_file": "a.mp3"
+  }
+ ]
+}

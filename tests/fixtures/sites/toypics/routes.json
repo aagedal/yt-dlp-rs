@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://videos.toypics.net/view/514/chancebulged,-2-1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://videos.toypics.net/view/9/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "notitle.html"
+  },
+  {
+   "url": "https://videos.toypics.net/view/10/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "novideo.html"
+  },
+  {
+   "url": "https://videos.toypics.net/view/11/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nouploader.html"
+  }
+ ]
+}

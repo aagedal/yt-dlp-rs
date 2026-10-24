@@ -1,0 +1,115 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://rinse.fm/episodes/club-glow-15-12-2023-2000/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1536535\", \"title\": \"Club Glow - 15/12/2023 - 20:00\", \"url\": \"https://media.rinse.test/a.mp3\", \"release_timestamp\": 1702598400, \"thumbnail\": \"https://rinse.imgix.net/media/club.jpg\", \"webpage_url\": \"https://rinse.fm/episodes/club-glow-15-12-2023-2000\", \"vcodec\": \"none\", \"extractor_key\": \"RinseFM\", \"extractor\": \"RinseFM\", \"original_url\": \"https://rinse.fm/episodes/club-glow-15-12-2023-2000/\", \"webpage_url_basename\": \"club-glow-15-12-2023-2000\", \"webpage_url_domain\": \"rinse.fm\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://rinse.imgix.net/media/club.jpg\", \"id\": \"0\"}], \"display_id\": \"1536535\", \"fulltitle\": \"Club Glow - 15/12/2023 - 20:00\", \"release_date\": \"20231215\", \"release_year\": 2023, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Club Glow - 15\\u29f812\\u29f82023 - 20_00 [1536535].mp3\", \"filename\": \"Club Glow - 15\\u29f812\\u29f82023 - 20_00 [1536535].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://rinse.fm/episodes/club-glow-15-12-2023-2000/",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(release_date)s|%(thumbnail)s|%(webpage_url)s|%(ext)s|%(vcodec)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1536535|Club Glow - 15/12/2023 - 20:00|20231215|https://rinse.imgix.net/media/club.jpg|https://rinse.fm/episodes/club-glow-15-12-2023-2000|mp3|none"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://rinse.fm/episodes/club-glow-15-12-2023-2000/",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[RinseFM] Extracting URL: https://rinse.fm/episodes/club-glow-15-12-2023-2000/",
+    "[RinseFM] club-glow-15-12-2023-2000: Downloading episode data from API",
+    "[info] 1536535: Downloading 1 format(s): 0",
+    "[download] Destination: 1536535.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "1536535.mp3": 778
+   }
+  },
+  {
+   "url": "https://rinse.fm/episodes/bare",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"77\", \"url\": \"https://media.rinse.test/b.mp3\", \"vcodec\": \"none\", \"extractor_key\": \"RinseFM\", \"extractor\": \"RinseFM\", \"webpage_url\": \"https://rinse.fm/episodes/bare\", \"original_url\": \"https://rinse.fm/episodes/bare\", \"webpage_url_basename\": \"bare\", \"webpage_url_domain\": \"rinse.fm\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"77\", \"fulltitle\": null, \"title\": \"RinseFM video #77\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"RinseFM video #77 [77].mp3\", \"filename\": \"RinseFM video #77 [77].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://rinse.fm/episodes/noentry",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: noentry: An extractor error has occurred. (caused by KeyError('entry')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.rinse.fm/shows/resources/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"[re]sources\", \"description\": \"A show\", \"id\": \"resources\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"1536535\", \"title\": \"Club Glow - 15/12/2023 - 20:00\", \"url\": \"https://media.rinse.test/a.mp3\", \"release_timestamp\": 1702598400, \"thumbnail\": \"https://rinse.imgix.net/media/club.jpg\", \"webpage_url\": \"https://rinse.fm/episodes/club-glow-15-12-2023-2000\", \"vcodec\": \"none\", \"extractor_key\": \"RinseFM\", \"extractor\": \"RinseFM\", \"playlist_count\": 2, \"playlist\": \"[re]sources\", \"playlist_id\": \"resources\", \"playlist_title\": \"[re]sources\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.rinse.fm/shows/resources/\", \"n_entries\": 2, \"webpage_url_basename\": \"resources\", \"webpage_url_domain\": \"rinse.fm\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://rinse.imgix.net/media/club.jpg\", \"id\": \"0\"}], \"display_id\": \"1536535\", \"fulltitle\": \"Club Glow - 15/12/2023 - 20:00\", \"release_date\": \"20231215\", \"release_year\": 2023, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Club Glow - 15\\u29f812\\u29f82023 - 20_00 [1536535].mp3\", \"filename\": \"Club Glow - 15\\u29f812\\u29f82023 - 20_00 [1536535].mp3\", \"__write_download_archive\": false}]}, {\"id\": \"3\", \"title\": \"Second\", \"url\": \"https://media.rinse.test/s.m4a?x=1\", \"release_timestamp\": 1704103200, \"webpage_url\": \"https://rinse.fm/episodes/second\", \"vcodec\": \"none\", \"extractor_key\": \"RinseFM\", \"extractor\": \"RinseFM\", \"playlist_count\": 2, \"playlist\": \"[re]sources\", \"playlist_id\": \"resources\", \"playlist_title\": \"[re]sources\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.rinse.fm/shows/resources/\", \"n_entries\": 2, \"webpage_url_basename\": \"resources\", \"webpage_url_domain\": \"rinse.fm\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"display_id\": \"3\", \"fulltitle\": \"Second\", \"release_date\": \"20240101\", \"release_year\": 2024, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"requested_downloads\": [{\"_filename\": \"Second [3].m4a\", \"filename\": \"Second [3].m4a\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://www.rinse.fm/shows/resources/\", \"original_url\": \"https://www.rinse.fm/shows/resources/\", \"webpage_url_basename\": \"resources\", \"webpage_url_domain\": \"rinse.fm\", \"extractor\": \"RinseFMArtistPlaylist\", \"extractor_key\": \"RinseFMArtistPlaylist\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://rinse.fm/shows/resources",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1536535|Club Glow - 15/12/2023 - 20:00|RinseFM|https://rinse.fm/episodes/club-glow-15-12-2023-2000",
+    "3|Second|RinseFM|https://rinse.fm/episodes/second"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://rinse.fm/shows/empty",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"empty\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://rinse.fm/shows/empty\", \"original_url\": \"https://rinse.fm/shows/empty\", \"webpage_url_basename\": \"empty\", \"webpage_url_domain\": \"rinse.fm\", \"extractor\": \"RinseFMArtistPlaylist\", \"extractor_key\": \"RinseFMArtistPlaylist\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,104 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://dlive.tv/p/pdp+3mTzOl4WR",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3mTzOl4WR\", \"title\": \"Minecraft with james charles epic\", \"uploader_id\": \"pdp\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://playback.prd.dlive.tv/pdp/3mTzOl4WR/low.m3u8\", \"manifest_url\": \"https://playback.prd.dlive.tv/pdp/3mTzOl4WR/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}, {\"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://playback.prd.dlive.tv/pdp/3mTzOl4WR/high.m3u8\", \"manifest_url\": \"https://playback.prd.dlive.tv/pdp/3mTzOl4WR/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\"}], \"description\": \"Minecraft stream\", \"thumbnail\": \"https://images.prd.dlive.tv/3mTzOl4WR.jpg\", \"timestamp\": 1562011015, \"view_count\": 42, \"webpage_url\": \"https://dlive.tv/p/pdp+3mTzOl4WR\", \"original_url\": \"https://dlive.tv/p/pdp+3mTzOl4WR\", \"webpage_url_basename\": \"pdp+3mTzOl4WR\", \"webpage_url_domain\": \"dlive.tv\", \"extractor\": \"dlive:vod\", \"extractor_key\": \"DLiveVOD\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://images.prd.dlive.tv/3mTzOl4WR.jpg\", \"id\": \"0\"}], \"display_id\": \"3mTzOl4WR\", \"fulltitle\": \"Minecraft with james charles epic\", \"upload_date\": \"20190701\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://playback.prd.dlive.tv/pdp/3mTzOl4WR/high.m3u8\", \"manifest_url\": \"https://playback.prd.dlive.tv/pdp/3mTzOl4WR/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\", \"_filename\": \"Minecraft with james charles epic [3mTzOl4WR].mp4\", \"filename\": \"Minecraft with james charles epic [3mTzOl4WR].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://dlive.tv/p/pdp+3mTzOl4WR",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[dlive:vod] Extracting URL: https://dlive.tv/p/pdp+3mTzOl4WR",
+    "[dlive:vod] 3mTzOl4WR: Downloading JSON metadata",
+    "[dlive:vod] 3mTzOl4WR: Downloading m3u8 information",
+    "[info] Available formats for 3mTzOl4WR:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------",
+    "800  mp4 640x360    |  800k m3u8  | avc1.42c01e mp4a.40.2",
+    "2400 mp4 1280x720   | 2400k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://dlive.tv/p/pdpreplay+D-RD-xSZg",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 'NoneType' object is not subscriptable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://dlive.tv/p/pdp+nokey",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nokey: An extractor error has occurred. (caused by KeyError('playbackUrl')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://dlive.tv/pdp",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[dlive:stream] Extracting URL: https://dlive.tv/pdp",
+    "[dlive:stream] pdp: Downloading JSON metadata",
+    "[dlive:stream] pdp: Downloading m3u8 information",
+    "[info] Available formats for pdp:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------",
+    "800  mp4 640x360    |  800k m3u8  | avc1.42c01e mp4a.40.2",
+    "2400 mp4 1280x720   | 2400k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://dlive.tv/pdp",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(description)s|%(thumbnail)s|%(uploader)s|%(uploader_id)s|%(is_live)s|%(live_status)s|%(timestamp)s|%(view_count)s|%(format_id)s|%(protocol)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "pdp|Live with pdp|Live now|https://images.prd.dlive.tv/live.jpg|pdp|pewdiepie|True|is_live|1700000000|7|2400|m3u8_native|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dlive.tv/offline.user",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 'NoneType' object is not subscriptable"
+   ],
+   "files": {}
+  }
+ ]
+}

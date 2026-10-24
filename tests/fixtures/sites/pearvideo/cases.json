@@ -1,0 +1,9 @@
+[
+ {"url": "https://www.pearvideo.com/video_1076290", "args": ["-j"]},
+ {"url": "https://www.pearvideo.com/video_1076290", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(upload_date)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://www.pearvideo.com/video_1076290", "args": ["-F"]},
+ {"url": "https://www.pearvideo.com/video_1076290", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "http://www.pearvideo.com/video_2000", "args": ["-j"]},
+ {"url": "https://www.pearvideo.com/video_3000", "args": ["-j"]},
+ {"url": "https://www.pearvideo.com/video_4000", "args": ["-j"]}
+]

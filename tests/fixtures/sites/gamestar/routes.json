@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "http://www.gamestar.de/videos/trailer,3/hobbit-3-die-schlacht-der-fuenf-heere,76110.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"application/ld+json\">{\"@context\": \"http://schema.org\", \"@type\": \"WebSite\", \"name\": \"GameStar\"}</script><script type=\"application/ld+json\">{\"@context\": \"http://schema.org\", \"@type\": \"VideoObject\", \"name\": \"Hobbit 3: Die Schlacht der Fünf Heere - Teaser-Trailer zum dritten Teil - GameStar\", \"description\": \"Der Teaser-Trailer zu Hobbit 3 &amp; mehr\", \"thumbnailUrl\": \"https://images.gamestar.de/hobbit.jpg\", \"uploadDate\": \"2014-07-28T10:13:00+00:00\", \"duration\": \"PT17S\", \"contentUrl\": \"https://cdn.gamestar.de/hobbit.mp4\", \"interactionCount\": \"1234\"}</script></head><body><span>Kommentare</span> <span class=\"count big\">( 42 )</span></body></html>"
+  },
+  {
+   "url": "http://www.gamepro.de/videos/top-10-indie-spiele,95316.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type='application/ld+json'>{\"@context\": \"http://schema.org\", \"@type\": \"VideoObject\", \"name\": \"Top 10 Indie-Spiele - GamePro - GameStar\", \"duration\": \"PT1M2S\"}</script></head><body></body></html>"
+  },
+  {
+   "url": "https://www.gamestar.de/videos/kein-video,1.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"application/ld+json\">{\"@context\": \"http://schema.org\", \"@type\": \"WebSite\"}</script></head></html>"
+  },
+  {
+   "url": "https://www.gamestar.de/videos/ohne-kontext,2.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"application/ld+json\">{\"@type\": \"VideoObject\", \"name\": \"No context\"}</script></head></html>"
+  },
+  {
+   "url": "http://gamestar.de/_misc/videos/portal/getVideoUrl.cfm?premium=0&videoId=76110",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-gamestar"
+  }
+ ]
+}

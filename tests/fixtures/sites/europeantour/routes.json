@@ -1,0 +1,59 @@
+{
+ "routes": [
+  {
+   "url": "https://www.europeantour.com/dpworld-tour/news/video/the-best-shots-of-the-2021-seasons/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.europeantour.com/dpworld-tour/news/video/empty-account/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  },
+  {
+   "url": "https://www.europeantour.com/dpworld-tour/news/video/no-player/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page3.html"
+  },
+  {
+   "url": "http://players.brightcove.net/5136026580001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://players.brightcove.net/5136026580001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5136026580001/videos/6287788195001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkEUROPEANTOUR"
+   }
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5136026580001/videos/6287788195002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video2.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkEUROPEANTOUR"
+   }
+  }
+ ]
+}

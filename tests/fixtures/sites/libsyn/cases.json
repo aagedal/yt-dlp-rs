@@ -1,0 +1,7 @@
+[
+ {"url": "http://html5-player.libsyn.com/embed/episode/id/6385796/", "args": ["-j"]},
+ {"url": "http://html5-player.libsyn.com/embed/episode/id/6385796/", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://html5-player.libsyn.com/embed/episode/id/3727166", "args": ["-j"]},
+ {"url": "https://html5-player.libsyn.com/embed/episode/id/3", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(upload_date)s|%(duration)s|%(thumbnail)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://html5-player.libsyn.com/embed/episode/id/4", "args": ["-j"]}
+]

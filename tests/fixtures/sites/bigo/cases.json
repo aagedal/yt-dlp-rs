@@ -1,0 +1,40 @@
+[
+ {
+  "url": "https://www.bigo.tv/ja/221338632",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(uploader)s|%(uploader_id)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://www.bigo.tv/221338632",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://bigo.tv/bare",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(uploader)s|%(uploader_id)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://www.bigo.tv/en/offline",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.bigo.tv/en/code",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.bigo.tv/en/list",
+  "args": [
+   "-j"
+  ]
+ }
+]

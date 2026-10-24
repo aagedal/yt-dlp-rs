@@ -1,0 +1,73 @@
+{
+ "routes": [
+  {
+   "url": "https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/0f4c6243d6903502c01251f228b91a71",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/aa11",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  },
+  {
+   "url": "https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/bb22",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page3.html"
+  },
+  {
+   "url": "http://players.brightcove.net/5348771529001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://players.brightcove.net/5348771529001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5348771529001/videos/6277184925001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkSKYNEWSAU"
+   }
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/5348771529001/videos/6277184925002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video2.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkSKYNEWSAU"
+   }
+  },
+  {
+   "url": "https://content.api.news/v3/videos/brightcove/5348771529001-6277184925001?api_key=6krsj3w249nk779d8fukqx9f",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api.json"
+  },
+  {
+   "url": "https://content.api.news/v3/videos/brightcove/5348771529001-6277184925002?api_key=6krsj3w249nk779d8fukqx9f",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api2.json"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "routes": [
+  {
+   "url": "https://www.netzkino.de/details/snow-beast",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"__dehydratedState\": {\"queries\": [{\"state\": {\"data\": {\"data\": {\"menu\": {\"__typename\": \"CmsMenu\"}}}}}, {\"state\": {\"data\": {\"data\": {\"movie\": {\"__typename\": \"CmsMovie\", \"originalTitle\": \"Snow &amp; Beast\", \"fskRating\": \"12\", \"cast\": {\"nodes\": [{\"person\": {\"name\": \"John Schneider\"}}, {\"person\": {\"name\": \"\"}}, {\"person\": {\"name\": \"Jason London\"}}]}, \"directors\": {\"nodes\": [{\"person\": {\"name\": \"Brian Brough\"}}]}, \"writers\": {\"nodes\": [{\"person\": {\"name\": \"Anne Brough\"}}]}, \"categories\": {\"nodes\": [{\"category\": {\"title\": \"Horror\"}}, {\"category\": {\"title\": \"Thriller\"}}]}, \"longSynopsis\": \"<p>A yeti <b>hunts</b>.</p>\", \"runtimeInSeconds\": 5400, \"productionCountry\": \"US\", \"productionYear\": 2011, \"coverImage\": {\"masterUrl\": \"https://img.netzkino.test/snow.jpg\"}, \"videoSource\": {\"pmdUrl\": \"snow-beast.mp4\"}, \"licenses\": {\"nodes\": [{\"properties\": \"HD\"}, {\"properties\": \"AVOD\"}]}}}}}}]}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.netzkino.de/details/locked",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"__dehydratedState\": {\"queries\": [{\"state\": {\"data\": {\"data\": {\"menu\": {\"__typename\": \"CmsMenu\"}}}}}, {\"state\": {\"data\": {\"data\": {\"movie\": {\"__typename\": \"CmsMovie\", \"originalTitle\": \"Locked\", \"videoSource\": {\"pmdUrl\": \"locked.mp4\"}, \"licenses\": {\"nodes\": [{\"properties\": \"DRM\"}]}}}}}}]}}}</script></body></html>"
+  },
+  {
+   "url": "https://netzkino.de/details/bare",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"__dehydratedState\": {\"queries\": [{\"state\": {\"data\": {\"data\": {\"menu\": {\"__typename\": \"CmsMenu\"}}}}}, {\"state\": {\"data\": {\"data\": {\"m\": {\"__typename\": \"CmsMovie\", \"originalTitle\": \"\", \"videoSource\": {\"pmdUrl\": \"/bare/x.mp4\"}, \"cast\": {\"nodes\": []}}}}}}]}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.netzkino.de/details/none",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\": {\"__dehydratedState\": {\"queries\": [{\"state\": {\"data\": {\"data\": {\"menu\": {\"__typename\": \"CmsMenu\"}}}}}, {\"state\": {\"data\": {\"data\": {\"other\": {\"__typename\": \"CmsSeries\"}}}}}]}}}</script></body></html>"
+  },
+  {
+   "url": "https://www.netzkino.de/details/nonext",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nothing</html>"
+  },
+  {
+   "url": "https://pmd.netzkino-seite.netzkino.de/snow-beast.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  }
+ ]
+}

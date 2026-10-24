@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {"url": "https://media.ccc.de/v/30C3_-_5443_-_en_-_saal_g_-_201312281830_-_introduction_to_processor_design_-_byterazor", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://media.ccc.de/public/events/1839", "headers": {"Content-Type": "application/json"}, "body_file": "event.json"},
+  {"url": "https://media.ccc.de/v/39c3-schlechte-karten", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body><div data-id='16261'></div></body></html>"},
+  {"url": "https://media.ccc.de/public/events/16261", "headers": {"Content-Type": "application/json"}, "body": "{\"title\": \"Schlechte Karten\", \"persons\": [\"Bianca Kastl\", 5], \"date\": \"bad\", \"length\": \"3619\", \"recordings\": []}"},
+  {"url": "https://media.ccc.de/v/noid", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html></html>"},
+  {"url": "https://media.ccc.de/v/notitle", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<div data-id=\"7\"></div>"},
+  {"url": "https://media.ccc.de/public/events/7", "headers": {"Content-Type": "application/json"}, "body": "{\"recordings\": []}"}
+ ]
+}

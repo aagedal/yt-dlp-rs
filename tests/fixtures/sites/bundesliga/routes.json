@@ -1,0 +1,15 @@
+{
+ "routes": [
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/bhhHkKyN",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"title\": \"Watch: Alphonso Davies and Jeremie Frimpong head-to-head\", \"playlist\": [{\"title\": \"Watch: Alphonso Davies and Jeremie Frimpong head-to-head\", \"mediaid\": \"bhhHkKyN\", \"description\": \"Two of the fastest full-backs.\", \"duration\": 146, \"pubdate\": 1664366511, \"image\": \"https://cdn.jwplayer.com/v2/media/bhhHkKyN/poster.jpg?width=720\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/bhhHkKyN-1.mp4\", \"type\": \"video/mp4\", \"height\": 720, \"width\": 1280, \"label\": \"720p\", \"bitrate\": 2000000}]}]}"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/ROHjs06G",
+   "status": 404,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{}"
+  }
+ ]
+}

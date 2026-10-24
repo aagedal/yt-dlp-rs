@@ -1,0 +1,7 @@
+[
+ {"url": "https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(duration)s|%(webpage_url)s"]},
+ {"url": "https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2", "args": ["-J"]},
+ {"url": "https://www.iltalehti.fi/politiikka/a/1ce49d85-1670-428b-8db8-d2479b9950a4", "args": ["-J"]},
+ {"url": "https://www.iltalehti.fi/kotimaa/a/2022", "args": ["-J"]}
+]

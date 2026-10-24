@@ -1,0 +1,76 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://embed.cloudycdn.services/ltv/media/46k_d23-6000-105?",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"46k_d23-6000-105\", \"formats\": [{\"format_id\": \"600\", \"format_index\": null, \"url\": \"https://cdn.cloudycdn.test/ltv/46k/chunklist_b600000_slv.m3u8\", \"manifest_url\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"tbr\": 600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"600 - 640x360\"}, {\"format_id\": \"1200\", \"format_index\": null, \"url\": \"https://cdn.cloudycdn.test/ltv/46k/chunklist_b1200000_vo_slv.m3u8\", \"manifest_url\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1200.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1200 - 1280x720\"}], \"subtitles\": {}, \"title\": \"D23-6000-105_cetstud\", \"duration\": 1442, \"timestamp\": 1700589151, \"thumbnail\": \"https://store.bstrm.net/tmsp00060/assets/media/660858/placeholder1700589200.jpg\", \"webpage_url\": \"https://embed.cloudycdn.services/ltv/media/46k_d23-6000-105?\", \"original_url\": \"https://embed.cloudycdn.services/ltv/media/46k_d23-6000-105?\", \"webpage_url_basename\": \"46k_d23-6000-105\", \"webpage_url_domain\": \"embed.cloudycdn.services\", \"extractor\": \"CloudyCDN\", \"extractor_key\": \"CloudyCDN\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://store.bstrm.net/tmsp00060/assets/media/660858/placeholder1700589200.jpg\", \"id\": \"0\"}], \"display_id\": \"46k_d23-6000-105\", \"fulltitle\": \"D23-6000-105_cetstud\", \"duration_string\": \"24:02\", \"upload_date\": \"20231121\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"600\", \"format_index\": null, \"url\": \"https://cdn.cloudycdn.test/ltv/46k/chunklist_b600000_slv.m3u8\", \"manifest_url\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"tbr\": 600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"600 - 640x360\", \"_filename\": \"D23-6000-105_cetstud [46k_d23-6000-105].mp4\", \"filename\": \"D23-6000-105_cetstud [46k_d23-6000-105].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://embed.cloudycdn.services/ltv/media/46k_d23-6000-105",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[CloudyCDN] Extracting URL: https://embed.cloudycdn.services/ltv/media/46k_d23-6000-105",
+    "[CloudyCDN] 46k_d23-6000-105: Downloading JSON metadata",
+    "[CloudyCDN] 46k_d23-6000-105: Downloading m3u8 information",
+    "[info] Available formats for 46k_d23-6000-105:",
+    "ID   EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC",
+    "---------------------------------------------------------------------------",
+    "600  mp4 640x360    | ~103.14MiB  600k m3u8  | unknown           unknown",
+    "1200 mp4 1280x720   | ~206.28MiB 1200k m3u8  | avc1.4d401f 1200k video only"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://embed.backscreen.com/ltv/media/32j_z25-0600-127?",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(thumbnail)s|%(format_id)s|%(acodec)s|%(vcodec)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "32j_z25-0600-127|Z25-0600-127-DZ|1906|1746632402|20250507|NA|600|NA|NA"
+   ],
+   "stderr": [
+    "WARNING: [CloudyCDN] 32j_z25-0600-127: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://embed.cloudycdn.services/izm/media/26e_lv-8-5-1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [CloudyCDN] 26e_lv-8-5-1: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://embed.cloudycdn.services/izm/media/gone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [CloudyCDN] gone: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -309,7 +309,6 @@ fn json_simulation_does_not_fetch_fragments_or_create_output() {
 fn unsupported_manifests_fail_before_any_output_or_fragment_request() {
     let server = Server::new();
     for path in [
-        "/live.m3u8",
         "/encrypted.m3u8",
         "/malformed.m3u8",
         "/nested.m3u8",
@@ -501,5 +500,90 @@ fn info_json_formats_have_no_fragments_and_reload_from_the_playlist() {
             "[hlsnative] Downloading m3u8 manifest\n[hlsnative] Total fragments: 2\n[download] Destination: out.mp4"
         ),
         "{stdout}"
+    );
+}
+
+/// Upstream `_parse_m3u8_formats_and_subtitles` returns a media playlist
+/// without `#EXT-X-ENDLIST` as one format without reading its segments, and
+/// generic's live-status check marks it `is_live`.
+#[test]
+fn live_media_playlist_extracts_as_one_live_format() {
+    let server = Server::new();
+    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["-j", &server.url("/live.m3u8")])
+        .output()
+        .unwrap();
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    let json: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
+    let formats = json["formats"].as_array().unwrap();
+    assert_eq!(formats.len(), 1);
+    assert_eq!(formats[0]["url"], server.url("/live.m3u8"));
+    assert_eq!(formats[0]["protocol"], "m3u8_native");
+    assert_eq!(json["live_status"], "is_live");
+    assert_eq!(json["is_live"], true);
+    assert!(json.get("fragments").is_none());
+    assert!(server.paths().iter().all(|path| path == "/live.m3u8"));
+}
+
+/// Upstream `_get_suitable_downloader`: live HLS downloads through FFmpegFD;
+/// without FFmpeg the native downloader still rejects the unfinished playlist.
+#[cfg(unix)]
+#[test]
+fn live_media_playlist_downloads_through_ffmpeg() {
+    use std::os::unix::fs::PermissionsExt;
+    let server = Server::new();
+    let tools = tempfile::tempdir().unwrap();
+    let ffmpeg = tools.path().join("ffmpeg");
+    let log = tools.path().join("args");
+    std::fs::write(
+        &ffmpeg,
+        format!(
+            "#!/bin/sh\n\
+             case \"$1\" in -version) echo 'ffmpeg version live-fixture'; exit 0;; esac\n\
+             echo \"$@\" >> '{}'\n\
+             for last; do :; done\n\
+             printf live > \"${{last#file:}}\"\n",
+            log.display()
+        ),
+    )
+    .unwrap();
+    std::fs::set_permissions(&ffmpeg, std::fs::Permissions::from_mode(0o755)).unwrap();
+    let directory = tempfile::tempdir().unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ffmpeg-location", &ffmpeg.display().to_string()])
+        .args(["-o", "out.%(ext)s", &server.url("/live.m3u8")])
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    let args = std::fs::read_to_string(&log).unwrap();
+    assert!(args.contains(&server.url("/live.m3u8")), "{args}");
+    assert!(
+        server.paths().iter().all(|path| !path.contains("segment")),
+        "{:?}",
+        server.paths()
+    );
+    assert!(directory.path().join("out.mp4").exists());
+
+    let directory = tempfile::tempdir().unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
+        .args(["--ffmpeg-location", "/nonexistent/ffmpeg"])
+        .arg(server.url("/live.m3u8"))
+        .current_dir(directory.path())
+        .output()
+        .unwrap();
+    assert!(!result.status.success());
+    assert!(
+        String::from_utf8_lossy(&result.stderr).contains("ENDLIST"),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
     );
 }

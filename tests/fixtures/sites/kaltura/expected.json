@@ -1,0 +1,179 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "kaltura:1926081:0_c03e1b5g",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0_c03e1b5g\", \"title\": \"Straight from the Heart\", \"formats\": [{\"format_id\": \"mp4-56\", \"ext\": \"mp4\", \"tbr\": 56, \"fps\": 0, \"filesize_approx\": 1048576, \"container\": \"isom\", \"vcodec\": \"none\", \"height\": null, \"width\": null, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_audio\", \"protocol\": \"https\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 56, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-56 - audio only\"}, {\"format_id\": \"mp4-400\", \"ext\": \"mp4\", \"tbr\": 400, \"fps\": 25, \"filesize_approx\": 180400000, \"container\": null, \"vcodec\": null, \"height\": 270, \"width\": 480, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_noext\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480x270\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-400 - 480x270\"}, {\"format_id\": \"hls-600\", \"format_index\": null, \"url\": \"https://cdnapisec.kaltura.com/hls/0_c03e1b5g/360.m3u8\", \"manifest_url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/applehttp/protocol/https\", \"tbr\": 600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-600 - 640x360\"}, {\"format_id\": \"mov-800.0\", \"ext\": \"mov\", \"tbr\": 800, \"fps\": 25, \"filesize_approx\": 360800000, \"container\": \"qt\", \"vcodec\": \"\", \"height\": 360, \"width\": 640, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_qt\", \"protocol\": \"https\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mov-800.0 - 640x360\"}, {\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://cdnapisec.kaltura.com/hls/0_c03e1b5g/720.m3u8\", \"manifest_url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/applehttp/protocol/https\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}, {\"format_id\": \"mp4-1200\", \"ext\": \"mp4\", \"tbr\": 1200, \"fps\": 29, \"filesize_approx\": 41943040, \"container\": \"isom\", \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_hd\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 1280x720\"}, {\"format_id\": \"mp4-2500\", \"ext\": \"mp4\", \"tbr\": 2500, \"fps\": 25, \"filesize_approx\": 52428800, \"container\": \"isom\", \"vcodec\": \"avc1\", \"height\": 1080, \"width\": 1920, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_orig\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-2500 - 1920x1080\"}], \"subtitles\": {\"en\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_en\", \"ext\": \"vtt\"}], \"German\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_de\", \"ext\": \"srt\"}], \"fr\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_fr\", \"ext\": \"ttml\"}, {\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_xx\", \"ext\": \"ttml\"}]}, \"description\": \"The Allman Brothers Band, 12/16/1981\", \"thumbnail\": \"https://cfvod.kaltura.com/p/1926081/sp/192608100/thumbnail/entry_id/0_c03e1b5g/version/100002\", \"duration\": 3608, \"timestamp\": 1387486483, \"uploader_id\": \"mlundberg@example.com\", \"view_count\": 57, \"webpage_url\": \"kaltura:1926081:0_c03e1b5g\", \"original_url\": \"kaltura:1926081:0_c03e1b5g\", \"webpage_url_basename\": \"1926081:0_c03e1b5g\", \"webpage_url_domain\": null, \"extractor\": \"Kaltura\", \"extractor_key\": \"Kaltura\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cfvod.kaltura.com/p/1926081/sp/192608100/thumbnail/entry_id/0_c03e1b5g/version/100002\", \"id\": \"0\"}], \"display_id\": \"0_c03e1b5g\", \"fulltitle\": \"Straight from the Heart\", \"duration_string\": \"1:00:08\", \"upload_date\": \"20131219\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-2500\", \"ext\": \"mp4\", \"tbr\": 2500, \"fps\": 25, \"filesize_approx\": 52428800, \"container\": \"isom\", \"vcodec\": \"avc1\", \"height\": 1080, \"width\": 1920, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_orig\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-2500 - 1920x1080\", \"_filename\": \"Straight from the Heart [0_c03e1b5g].mp4\", \"filename\": \"Straight from the Heart [0_c03e1b5g].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "kaltura:1926081:0_c03e1b5g",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Kaltura] Extracting URL: kaltura:1926081:0_c03e1b5g",
+    "[Kaltura] 0_c03e1b5g: Downloading video info JSON (Kaltura html5 player)",
+    "[Kaltura] 0_c03e1b5g: Checking mp4-2500 URL",
+    "[Kaltura] 0_c03e1b5g: Checking mov-4000 URL",
+    "[Kaltura] 0_c03e1b5g: mov-4000 URL is invalid, skipping: HTTP Error 404: Not Found",
+    "[Kaltura] 0_c03e1b5g: Downloading m3u8 information",
+    "[info] Available formats for 0_c03e1b5g:",
+    "ID        EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC      ACODEC    ABR MORE INFO",
+    "-------------------------------------------------------------------------------------------",
+    "mp4-56    mp4 audio only     | ≈  1.00MiB   56k https | audio only  unknown   56k isom",
+    "mp4-400   mp4 480x270     25 | ≈172.04MiB  400k https | unknown     unknown",
+    "hls-600   mp4 640x360        | ~258.06MiB  600k m3u8  | avc1.42c01e mp4a.40.2",
+    "mov-800.0 mov 640x360     25 | ≈344.09MiB  800k https | unknown     unknown       qt",
+    "hls-1500  mp4 1280x720       | ~645.16MiB 1500k m3u8  | avc1.64001f mp4a.40.2",
+    "mp4-1200  mp4 1280x720    29 | ≈ 40.00MiB 1200k https | avc1        unknown       isom",
+    "mp4-2500  mp4 1920x1080   25 | ≈ 50.00MiB 2500k https | avc1        unknown       isom"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "kaltura:1926081:0_c03e1b5g",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Kaltura] Extracting URL: kaltura:1926081:0_c03e1b5g",
+    "[Kaltura] 0_c03e1b5g: Downloading video info JSON (Kaltura html5 player)",
+    "[Kaltura] 0_c03e1b5g: Checking mp4-2500 URL",
+    "[Kaltura] 0_c03e1b5g: Checking mov-4000 URL",
+    "[Kaltura] 0_c03e1b5g: mov-4000 URL is invalid, skipping: HTTP Error 404: Not Found",
+    "[Kaltura] 0_c03e1b5g: Downloading m3u8 information",
+    "[info] Available subtitles for 0_c03e1b5g:",
+    "Language Formats",
+    "en       vtt",
+    "German   srt",
+    "fr       ttml, ttml"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://cdnapisec.kaltura.com/html5/html5lib/v2.30.2/mwEmbedFrame.php/p/1337/uiconf_id/20540612/entry_id/1_kw?wid=_243342&flashvars[ks]=KSX",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1_kw\", \"title\": \"Kwidget entry\", \"formats\": [{\"format_id\": \"mp4-700\", \"ext\": \"mp4\", \"tbr\": 700, \"fps\": 30, \"filesize_approx\": 7962500, \"container\": null, \"vcodec\": \"avc1\", \"height\": 360, \"width\": 640, \"url\": \"https://cdnapisec.kaltura.com/p/243342/sp/24334200/serveFlavor/flavorId/1_f1/ks/KSX\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-700 - 640x360\"}], \"subtitles\": {}, \"description\": null, \"thumbnail\": \"https://cfvod.kaltura.com/p/243342/thumbnail/entry_id/1_kw\", \"duration\": 91, \"timestamp\": 1533154447, \"uploader_id\": \"\", \"view_count\": 12, \"webpage_url\": \"https://cdnapisec.kaltura.com/html5/html5lib/v2.30.2/mwEmbedFrame.php/p/1337/uiconf_id/20540612/entry_id/1_kw?wid=_243342&flashvars[ks]=KSX\", \"original_url\": \"https://cdnapisec.kaltura.com/html5/html5lib/v2.30.2/mwEmbedFrame.php/p/1337/uiconf_id/20540612/entry_id/1_kw?wid=_243342&flashvars[ks]=KSX\", \"webpage_url_basename\": \"1_kw\", \"webpage_url_domain\": \"cdnapisec.kaltura.com\", \"extractor\": \"Kaltura\", \"extractor_key\": \"Kaltura\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cfvod.kaltura.com/p/243342/thumbnail/entry_id/1_kw\", \"id\": \"0\"}], \"display_id\": \"1_kw\", \"fulltitle\": \"Kwidget entry\", \"duration_string\": \"1:31\", \"upload_date\": \"20180801\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-700\", \"ext\": \"mp4\", \"tbr\": 700, \"fps\": 30, \"filesize_approx\": 7962500, \"container\": null, \"vcodec\": \"avc1\", \"height\": 360, \"width\": 640, \"url\": \"https://cdnapisec.kaltura.com/p/243342/sp/24334200/serveFlavor/flavorId/1_f1/ks/KSX\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-700 - 640x360\", \"_filename\": \"Kwidget entry [1_kw].mp4\", \"filename\": \"Kwidget entry [1_kw].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "kaltura:1926081:0_missing",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 'NoneType' object is not subscriptable"
+   ],
+   "files": {}
+  },
+  {
+   "url": "kaltura:1926081:0_gone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Kaltura] 0_gone: Kaltura said: Entry id \"0_gone\" not found (1); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "kaltura:1926081:0_c03e1b5g:flash",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: "
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kaltura.com/index.php/kwidget",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Kaltura] Invalid URL"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kaltura.com/index.php/kwidget/uiconf_id/1/entry_id/0_x",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Kaltura] Invalid URL"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kaltura.com/index.php/extwidget/preview/partner_id/1337/uiconf_id/9/flashvars[referenceId]/ref1",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0_ref\", \"title\": \"Reference entry\", \"formats\": [{\"format_id\": \"mp4-500\", \"ext\": \"mp4\", \"tbr\": 500, \"fps\": 25, \"filesize_approx\": 625000, \"container\": null, \"vcodec\": null, \"height\": 180, \"width\": 320, \"url\": \"https://cdnapisec.kaltura.com/p/1337/sp/133700/serveFlavor/entryId/0_ref/flavorId/0_r1\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-500 - 320x180\"}], \"subtitles\": {}, \"description\": null, \"thumbnail\": null, \"duration\": 10, \"timestamp\": null, \"uploader_id\": \"\", \"view_count\": null, \"webpage_url\": \"https://www.kaltura.com/index.php/extwidget/preview/partner_id/1337/uiconf_id/9/flashvars[referenceId]/ref1\", \"original_url\": \"https://www.kaltura.com/index.php/extwidget/preview/partner_id/1337/uiconf_id/9/flashvars[referenceId]/ref1\", \"webpage_url_basename\": \"ref1\", \"webpage_url_domain\": \"kaltura.com\", \"extractor\": \"Kaltura\", \"extractor_key\": \"Kaltura\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"0_ref\", \"fulltitle\": \"Reference entry\", \"duration_string\": \"10\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-500\", \"ext\": \"mp4\", \"tbr\": 500, \"fps\": 25, \"filesize_approx\": 625000, \"container\": null, \"vcodec\": null, \"height\": 180, \"width\": 320, \"url\": \"https://cdnapisec.kaltura.com/p/1337/sp/133700/serveFlavor/entryId/0_ref/flavorId/0_r1\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x180\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-500 - 320x180\", \"_filename\": \"Reference entry [0_ref].mp4\", \"filename\": \"Reference entry [0_ref].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://news.example.test/kwidget",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "0_c03e1b5g|Straight from the Heart|Kaltura|kaltura:1926081:0_c03e1b5g#__youtubedl_smuggle=%7B%22service_url%22%3A+%22https%3A%2F%2Fapi.example.org%22%7D|https://news.example.test/kwidget|mp4-2500"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://news.example.test/iframe",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0_c03e1b5g\", \"title\": \"Straight from the Heart\", \"formats\": [{\"format_id\": \"mp4-56\", \"ext\": \"mp4\", \"tbr\": 56, \"fps\": 0, \"filesize_approx\": 1048576, \"container\": \"isom\", \"vcodec\": \"none\", \"height\": null, \"width\": null, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_audio\", \"protocol\": \"https\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 56, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-56 - audio only\"}, {\"format_id\": \"mp4-400\", \"ext\": \"mp4\", \"tbr\": 400, \"fps\": 25, \"filesize_approx\": 180400000, \"container\": null, \"vcodec\": null, \"height\": 270, \"width\": 480, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_noext\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480x270\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-400 - 480x270\"}, {\"format_id\": \"hls-600\", \"format_index\": null, \"url\": \"https://cdnapisec.kaltura.com/hls/0_c03e1b5g/360.m3u8\", \"manifest_url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/applehttp/protocol/https\", \"tbr\": 600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-600 - 640x360\"}, {\"format_id\": \"mov-800.0\", \"ext\": \"mov\", \"tbr\": 800, \"fps\": 25, \"filesize_approx\": 360800000, \"container\": \"qt\", \"vcodec\": \"\", \"height\": 360, \"width\": 640, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_qt\", \"protocol\": \"https\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mov-800.0 - 640x360\"}, {\"format_id\": \"hls-1500\", \"format_index\": null, \"url\": \"https://cdnapisec.kaltura.com/hls/0_c03e1b5g/720.m3u8\", \"manifest_url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/applehttp/protocol/https\", \"tbr\": 1500.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1500 - 1280x720\"}, {\"format_id\": \"mp4-1200\", \"ext\": \"mp4\", \"tbr\": 1200, \"fps\": 29, \"filesize_approx\": 41943040, \"container\": \"isom\", \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_hd\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-1200 - 1280x720\"}, {\"format_id\": \"mp4-2500\", \"ext\": \"mp4\", \"tbr\": 2500, \"fps\": 25, \"filesize_approx\": 52428800, \"container\": \"isom\", \"vcodec\": \"avc1\", \"height\": 1080, \"width\": 1920, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_orig\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-2500 - 1920x1080\"}], \"subtitles\": {\"en\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_en\", \"ext\": \"vtt\"}], \"German\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_de\", \"ext\": \"srt\"}], \"fr\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_fr\", \"ext\": \"ttml\"}, {\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_xx\", \"ext\": \"ttml\"}]}, \"description\": \"The Allman Brothers Band, 12/16/1981\", \"thumbnail\": \"https://cfvod.kaltura.com/p/1926081/sp/192608100/thumbnail/entry_id/0_c03e1b5g/version/100002\", \"duration\": 3608, \"timestamp\": 1387486483, \"uploader_id\": \"mlundberg@example.com\", \"view_count\": 57, \"original_url\": \"https://news.example.test/iframe\", \"webpage_url\": \"kaltura:1926081:0_c03e1b5g\", \"webpage_url_basename\": \"1926081:0_c03e1b5g\", \"webpage_url_domain\": null, \"extractor\": \"Kaltura\", \"extractor_key\": \"Kaltura\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cfvod.kaltura.com/p/1926081/sp/192608100/thumbnail/entry_id/0_c03e1b5g/version/100002\", \"id\": \"0\"}], \"display_id\": \"0_c03e1b5g\", \"fulltitle\": \"Straight from the Heart\", \"duration_string\": \"1:00:08\", \"upload_date\": \"20131219\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-2500\", \"ext\": \"mp4\", \"tbr\": 2500, \"fps\": 25, \"filesize_approx\": 52428800, \"container\": \"isom\", \"vcodec\": \"avc1\", \"height\": 1080, \"width\": 1920, \"url\": \"https://cdnapisec.kaltura.com/p/1926081/sp/192608100/playManifest/entryId/0_c03e1b5g/format/url/protocol/https/flavorId/0_orig\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-2500 - 1920x1080\", \"_filename\": \"Straight from the Heart [0_c03e1b5g].mp4\", \"filename\": \"Straight from the Heart [0_c03e1b5g].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  }
+ ]
+}

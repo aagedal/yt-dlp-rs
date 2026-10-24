@@ -1,0 +1,76 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://media.ccc.de/v/30C3_-_5443_-_en_-_saal_g_-_201312281830_-_introduction_to_processor_design_-_byterazor#video",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1839\", \"display_id\": \"30C3_-_5443_-_en_-_saal_g_-_201312281830_-_introduction_to_processor_design_-_byterazor\", \"title\": \"Introduction to Processor Design\", \"creator\": \"byterazor\", \"description\": \"Processor design is no rocket science.\\nIt is fun.\", \"thumbnail\": \"https://static.media.ccc.de/media/congress/2013/5443-h264-iprod_preview.jpg\", \"timestamp\": 1388251800, \"duration\": 3710, \"view_count\": 2345, \"tags\": [\"30C3\", \"Hardware & Making\"], \"formats\": [{\"format_id\": \"eng-mp3\", \"url\": \"https://cdn.media.ccc.de/congress/2013/mp3/a.mp3\", \"width\": 0, \"height\": 0, \"filesize\": 53477376, \"language\": \"eng\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"eng-mp3 - audio only\"}, {\"format_id\": \"opus\", \"url\": \"https://cdn.media.ccc.de/congress/2013/opus/a.opus\", \"width\": 0, \"height\": 0, \"filesize\": 41943040, \"language\": null, \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"opus\", \"audio_ext\": \"opus\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"opus\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"opus - audio only\"}, {\"format_id\": \"deu\", \"url\": \"https://cdn.media.ccc.de/x/a.mkv\", \"width\": null, \"height\": null, \"filesize\": 1048576, \"language\": \"deu\", \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"mkv\", \"video_ext\": \"mkv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"deu - unknown\"}, {\"format_id\": \"eng-h264-sd\", \"url\": \"https://cdn.media.ccc.de/congress/2013/h264-sd/a.mp4\", \"width\": 720, \"height\": 576, \"filesize\": 109051904, \"language\": \"eng\", \"vcodec\": \"h264\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720x576\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.25, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"eng-h264-sd - 720x576\"}, {\"format_id\": \"eng-webm-hd\", \"url\": \"https://cdn.media.ccc.de/congress/2013/webm-hd/a.webm\", \"width\": 1920, \"height\": 1080, \"filesize\": 314572800, \"language\": \"eng\", \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"eng-webm-hd - 1920x1080\"}, {\"format_id\": \"eng-h264-hd\", \"url\": \"https://cdn.media.ccc.de/congress/2013/h264-hd/a.mp4\", \"width\": 1920, \"height\": 1080, \"filesize\": 478150656, \"language\": \"eng\", \"vcodec\": \"h264\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"eng-h264-hd - 1920x1080\"}], \"webpage_url\": \"https://media.ccc.de/v/30C3_-_5443_-_en_-_saal_g_-_201312281830_-_introduction_to_processor_design_-_byterazor#video\", \"original_url\": \"https://media.ccc.de/v/30C3_-_5443_-_en_-_saal_g_-_201312281830_-_introduction_to_processor_design_-_byterazor#video\", \"webpage_url_basename\": \"30C3_-_5443_-_en_-_saal_g_-_201312281830_-_introduction_to_processor_design_-_byterazor\", \"webpage_url_domain\": \"media.ccc.de\", \"extractor\": \"media.ccc.de\", \"extractor_key\": \"CCC\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://static.media.ccc.de/media/congress/2013/5443-h264-iprod_preview.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Introduction to Processor Design\", \"duration_string\": \"1:01:50\", \"upload_date\": \"20131228\", \"release_year\": null, \"creators\": [\"byterazor\"], \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"eng-h264-hd\", \"url\": \"https://cdn.media.ccc.de/congress/2013/h264-hd/a.mp4\", \"width\": 1920, \"height\": 1080, \"filesize\": 478150656, \"language\": \"eng\", \"vcodec\": \"h264\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"eng-h264-hd - 1920x1080\", \"_filename\": \"Introduction to Processor Design [1839].mp4\", \"filename\": \"Introduction to Processor Design [1839].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://media.ccc.de/v/30C3_-_5443_-_en_-_saal_g_-_201312281830_-_introduction_to_processor_design_-_byterazor#video",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[media.ccc.de] Extracting URL: https://media.ccc.de/v/30C3_-_5443_-_en_-_saal_g_-_201312281830_-_introduction_to_processor_design_-_byterazor#video",
+    "[media.ccc.de] 30C3_-_5443_-_en_-_saal_g_-_201312281830_-_introduction_to_processor_design_-_byterazor: Downloading webpage",
+    "[media.ccc.de] 1839: Downloading JSON metadata",
+    "[info] Available formats for 1839:",
+    "ID          EXT  RESOLUTION |   FILESIZE PROTO | VCODEC     ACODEC  MORE INFO",
+    "-----------------------------------------------------------------------------",
+    "eng-mp3     mp3  audio only |   51.00MiB https | audio only mp3     [eng]",
+    "opus        opus audio only |   40.00MiB https | audio only opus",
+    "deu         mkv  unknown    |    1.00MiB https | unknown    unknown [deu]",
+    "eng-h264-sd mp4  720x576    |  104.00MiB https | h264       unknown [eng]",
+    "eng-webm-hd webm 1920x1080  |  300.00MiB https | unknown    unknown [eng]",
+    "eng-h264-hd mp4  1920x1080  |  456.00MiB https | h264       unknown [eng]"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://media.ccc.de/v/39c3-schlechte-karten",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [media.ccc.de] 16261: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://media.ccc.de/v/noid",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [media.ccc.de] noid: Unable to extract event id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://media.ccc.de/v/notitle",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: notitle: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

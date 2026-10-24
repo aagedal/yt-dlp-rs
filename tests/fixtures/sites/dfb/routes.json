@@ -1,0 +1,116 @@
+{
+ "routes": [
+  {
+   "url": "http://tv.dfb.de/server/hd_video.php?play=11633",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<playlist><video><title>U 19-EM: Stimmen zum Spiel gegen Russland</title><url>\n //tv.dfb.de/server/streamaccess.php?id=11633 \n</url><time_date>14.07.2015</time_date></video></playlist>"
+  },
+  {
+   "url": "https://tv.dfb.de/server/streamaccess.php?id=11633",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><streamaccess><token url=\"https://dfbstream.example.test/hds/11633/manifest.f4m\" auth=\"exp=1~acl=*~hmac=ab\"/></streamaccess>"
+  },
+  {
+   "url": "https://tv.dfb.de/server/streamaccess.php?id=11633&area=&format=iphone",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><streamaccess><token url=\"https://dfbstream.example.test/hls/11633/master.m3u8\" auth=\"exp=2~hmac=cd\"/></streamaccess>"
+  },
+  {
+   "url": "https://dfbstream.example.test/hds/11633/manifest.f4m?hdnea=exp=1~acl=*~hmac=ab&hdcore=3.2.0",
+   "headers": {
+    "Content-Type": "application/f4m+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\">\n <id>clip</id>\n <streamType>recorded</streamType>\n <duration>10</duration>\n <bootstrapInfo profile=\"named\" id=\"bootstrap0\">AAAA</bootstrapInfo>\n <media streamId=\"hi\" url=\"clip_hi\" bitrate=\"1500\" width=\"1280\" height=\"720\" bootstrapInfoId=\"bootstrap0\"/>\n <media streamId=\"lo\" url=\"clip_lo\" bitrate=\"400\" width=\"640\" height=\"360\" bootstrapInfoId=\"bootstrap0\"/>\n</manifest>"
+  },
+  {
+   "url": "https://dfbstream.example.test/hls/11633/master.m3u8?hdnea=exp=2~hmac=cd",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1200000,RESOLUTION=960x540,CODECS=\"avc1.4d401f,mp4a.40.2\"\nhttps://dfbstream.example.test/hls/11633_540.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=600000,RESOLUTION=640x360,CODECS=\"avc1.4d401e,mp4a.40.2\"\nhttps://dfbstream.example.test/hls/11633_360.m3u8\n"
+  },
+  {
+   "url": "https://dfbstream.example.test/hls/11633_540.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-VERSION:3\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://dfbstream.example.test/hls/11633_360.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-VERSION:3\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "http://tv.dfb.de/server/hd_video.php?play=2",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<playlist><video><title></title><url>http://tv.dfb.de/server/streamaccess.php?id=2</url><time_date/></video></playlist>"
+  },
+  {
+   "url": "http://tv.dfb.de/server/streamaccess.php?id=2",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><streamaccess><token url=\"https://dfbstream.example.test/hds/2/manifest.f4m\" auth=\"a\"/></streamaccess>"
+  },
+  {
+   "url": "http://tv.dfb.de/server/streamaccess.php?id=2&area=&format=iphone",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><streamaccess><token url=\"https://dfbstream.example.test/hls/2/master.m3u8\" auth=\"b\"/></streamaccess>"
+  },
+  {
+   "url": "http://tv.dfb.de/server/hd_video.php?play=3",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<playlist><video><title>T</title><url>http://tv.dfb.de/server/streamaccess.php?id=3</url><time_date>2015-07-14</time_date></video></playlist>"
+  },
+  {
+   "url": "http://tv.dfb.de/server/streamaccess.php?id=3",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><streamaccess><token url=\"https://dfbstream.example.test/hds/3/manifest.f4m\"/></streamaccess>"
+  },
+  {
+   "url": "http://tv.dfb.de/server/hd_video.php?play=4",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<playlist><video><title>T</title><url>http://tv.dfb.de/server/streamaccess.php?id=4</url></video></playlist>"
+  },
+  {
+   "url": "http://tv.dfb.de/server/streamaccess.php?id=4",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><streamaccess><token url=\"https://dfbstream.example.test/hls/4/master.m3u8\" auth=\"z\"/></streamaccess>"
+  },
+  {
+   "url": "http://tv.dfb.de/server/streamaccess.php?id=4&area=&format=iphone",
+   "headers": {
+    "Content-Type": "text/xml"
+   },
+   "body": "<?xml version=\"1.0\"?><streamaccess><token url=\"https://dfbstream.example.test/hls/4/master.m3u8\" auth=\"z\"/></streamaccess>"
+  },
+  {
+   "url": "https://dfbstream.example.test/hls/4/master.m3u8?hdnea=z",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-VERSION:3\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  }
+ ]
+}

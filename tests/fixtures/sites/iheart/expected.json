@@ -1,0 +1,112 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/episode/part-one-alexander-lukashenko-the-dictator-70346499/?embed=true",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"thumbnail\": \"https://www.iheart.com/podcast/images/1.jpg\", \"description\": \"Robert is joined by Andrew & friends.\", \"timestamp\": 1597741200, \"duration\": 4712, \"id\": \"70346499\", \"title\": \"Part One: Alexander Lukashenko: The Dictator of Belarus\", \"url\": \"https://podtrac.com/pts/redirect.mp3/traffic.megaphone.fm/BTB1.mp3?updated=1\", \"webpage_url\": \"https://www.iheart.com/podcast/105-behind-the-bastards-29236323/episode/part-one-alexander-lukashenko-the-dictator-70346499/?embed=true\", \"original_url\": \"https://www.iheart.com/podcast/105-behind-the-bastards-29236323/episode/part-one-alexander-lukashenko-the-dictator-70346499/?embed=true\", \"webpage_url_basename\": \"part-one-alexander-lukashenko-the-dictator-70346499\", \"webpage_url_domain\": \"iheart.com\", \"extractor\": \"iheartradio\", \"extractor_key\": \"IHeartRadio\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.iheart.com/podcast/images/1.jpg\", \"id\": \"0\"}], \"display_id\": \"70346499\", \"fulltitle\": \"Part One: Alexander Lukashenko: The Dictator of Belarus\", \"duration_string\": \"1:18:32\", \"upload_date\": \"20200818\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Part One\\uff1a Alexander Lukashenko\\uff1a The Dictator of Belarus [70346499].mp3\", \"filename\": \"Part One\\uff1a Alexander Lukashenko\\uff1a The Dictator of Belarus [70346499].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/episode/part-one-alexander-lukashenko-the-dictator-70346499/",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[iheartradio] Extracting URL: https://www.iheart.com/podcast/105-behind-the-bastards-29236323/episode/part-one-alexander-lukash...e-dictator-70346499/",
+    "[iheartradio] 70346499: Downloading JSON metadata",
+    "[info] 70346499: Downloading 1 format(s): 0"
+   ],
+   "stderr": [
+    "ERROR: unable to download video data: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "iheartradio:111",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"thumbnail\": null, \"description\": null, \"timestamp\": null, \"id\": \"111\", \"title\": \"Bare\", \"url\": \"https://media.example.com/bare.m4a\", \"webpage_url\": \"iheartradio:111\", \"original_url\": \"iheartradio:111\", \"webpage_url_basename\": \"111\", \"webpage_url_domain\": null, \"extractor\": \"iheartradio\", \"extractor_key\": \"IHeartRadio\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"111\", \"fulltitle\": \"Bare\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Bare [111].m4a\", \"filename\": \"Bare [111].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/episode/missing-333/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [iheartradio] 333: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"29236323\", \"title\": \"Behind the Bastards\", \"description\": \"Bastards podcast\", \"_type\": \"playlist\", \"entries\": [{\"thumbnail\": null, \"description\": \"Second one\", \"timestamp\": 1600000000, \"duration\": 60, \"id\": \"222\", \"title\": \"Second\", \"url\": \"https://media.example.com/second.mp3\", \"webpage_url\": \"iheartradio:222\", \"original_url\": \"iheartradio:222\", \"webpage_url_basename\": \"222\", \"webpage_url_domain\": null, \"extractor\": \"iheartradio\", \"extractor_key\": \"IHeartRadio\", \"playlist_count\": 2, \"playlist\": \"Behind the Bastards\", \"playlist_id\": \"29236323\", \"playlist_title\": \"Behind the Bastards\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.iheart.com/podcast/105-behind-the-bastards-29236323/\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"display_id\": \"222\", \"fulltitle\": \"Second\", \"duration_string\": \"1:00\", \"upload_date\": \"20200913\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Second [222].mp3\", \"filename\": \"Second [222].mp3\", \"__write_download_archive\": false}]}, {\"thumbnail\": null, \"description\": null, \"timestamp\": null, \"id\": \"111\", \"title\": \"Bare\", \"url\": \"https://media.example.com/bare.m4a\", \"webpage_url\": \"iheartradio:111\", \"original_url\": \"iheartradio:111\", \"webpage_url_basename\": \"111\", \"webpage_url_domain\": null, \"extractor\": \"iheartradio\", \"extractor_key\": \"IHeartRadio\", \"playlist_count\": 2, \"playlist\": \"Behind the Bastards\", \"playlist_id\": \"29236323\", \"playlist_title\": \"Behind the Bastards\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.iheart.com/podcast/105-behind-the-bastards-29236323/\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"display_id\": \"111\", \"fulltitle\": \"Bare\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Bare [111].m4a\", \"filename\": \"Bare [111].m4a\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://www.iheart.com/podcast/105-behind-the-bastards-29236323/\", \"original_url\": \"https://www.iheart.com/podcast/105-behind-the-bastards-29236323/\", \"webpage_url_basename\": \"105-behind-the-bastards-29236323\", \"webpage_url_domain\": \"iheart.com\", \"extractor\": \"iheartradio:podcast\", \"extractor_key\": \"IHeartRadioPodcast\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"29236323\", \"title\": \"Behind the Bastards\", \"description\": \"Bastards podcast\", \"_type\": \"playlist\", \"entries\": [{\"thumbnail\": \"https://www.iheart.com/podcast/images/2.jpg\", \"description\": \"Listed\", \"timestamp\": 1600000000, \"duration\": 61, \"_type\": \"url\", \"id\": \"222\", \"title\": \"Listed second\", \"url\": \"iheartradio:222\", \"ie_key\": \"IHeartRadio\", \"__x_forwarded_for_ip\": null}, {\"thumbnail\": null, \"description\": null, \"timestamp\": null, \"duration\": null, \"_type\": \"url\", \"id\": \"111\", \"title\": null, \"url\": \"iheartradio:111\", \"ie_key\": \"IHeartRadio\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.iheart.com/podcast/105-behind-the-bastards-29236323/\", \"original_url\": \"https://www.iheart.com/podcast/105-behind-the-bastards-29236323/\", \"webpage_url_basename\": \"105-behind-the-bastards-29236323\", \"webpage_url_domain\": \"iheart.com\", \"extractor\": \"iheartradio:podcast\", \"extractor_key\": \"IHeartRadioPodcast\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.iheartpodcastnetwork.com/podcast/x-555",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"555\", \"_type\": \"playlist\", \"entries\": [{\"thumbnail\": null, \"description\": null, \"timestamp\": null, \"id\": \"111\", \"title\": \"Bare\", \"url\": \"https://media.example.com/bare.m4a\", \"webpage_url\": \"iheartradio:111\", \"original_url\": \"iheartradio:111\", \"webpage_url_basename\": \"111\", \"webpage_url_domain\": null, \"extractor\": \"iheartradio\", \"extractor_key\": \"IHeartRadio\", \"playlist_count\": 1, \"playlist\": \"555\", \"playlist_id\": \"555\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.iheartpodcastnetwork.com/podcast/x-555\", \"n_entries\": 1, \"playlist_index\": 1, \"__last_playlist_index\": 1, \"playlist_autonumber\": 1, \"display_id\": \"111\", \"fulltitle\": \"Bare\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"requested_downloads\": [{\"_filename\": \"Bare [111].m4a\", \"filename\": \"Bare [111].m4a\", \"__write_download_archive\": false}]}], \"webpage_url\": \"https://www.iheartpodcastnetwork.com/podcast/x-555\", \"original_url\": \"https://www.iheartpodcastnetwork.com/podcast/x-555\", \"webpage_url_basename\": \"x-555\", \"webpage_url_domain\": \"iheartpodcastnetwork.com\", \"extractor\": \"iheartradio:podcast\", \"extractor_key\": \"IHeartRadioPodcast\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [iheartradio:podcast] 555: Unable to download JSON metadata: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.iheart.com/podcast/105-behind-the-bastards-29236323/",
+   "args": [
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(title)s|%(webpage_url)s|%(timestamp)s|%(description)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "29236323|Behind the Bastards|1|222|Second|iheartradio:222|1600000000|Second one",
+    "29236323|Behind the Bastards|2|111|Bare|iheartradio:111|NA|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

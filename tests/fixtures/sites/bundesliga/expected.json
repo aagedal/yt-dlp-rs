@@ -1,0 +1,42 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.bundesliga.com/en/bundesliga/videos?vid=bhhHkKyN",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"bhhHkKyN\", \"title\": \"Watch: Alphonso Davies and Jeremie Frimpong head-to-head\", \"description\": \"Two of the fastest full-backs.\", \"thumbnail\": \"https://cdn.jwplayer.com/v2/media/bhhHkKyN/poster.jpg?width=720\", \"timestamp\": 1664366511, \"duration\": 146.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/bhhHkKyN-1.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 2000, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 36500000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}], \"original_url\": \"https://www.bundesliga.com/en/bundesliga/videos?vid=bhhHkKyN\", \"webpage_url\": \"jwplatform:bhhHkKyN\", \"webpage_url_basename\": \"bhhHkKyN\", \"webpage_url_domain\": null, \"extractor\": \"JWPlatform\", \"extractor_key\": \"JWPlatform\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.jwplayer.com/v2/media/bhhHkKyN/poster.jpg?width=720\", \"id\": \"0\"}], \"display_id\": \"bhhHkKyN\", \"fulltitle\": \"Watch: Alphonso Davies and Jeremie Frimpong head-to-head\", \"duration_string\": \"2:26\", \"upload_date\": \"20220928\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.jwplayer.com/videos/bhhHkKyN-1.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 2000, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 36500000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_filename\": \"Watch\\uff1a Alphonso Davies and Jeremie Frimpong head-to-head [bhhHkKyN].mp4\", \"filename\": \"Watch\\uff1a Alphonso Davies and Jeremie Frimpong head-to-head [bhhHkKyN].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bundesliga.com/de/bundesliga/videos/goals/x?vid=bhhHkKyN",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s|%(duration)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "bhhHkKyN|Watch: Alphonso Davies and Jeremie Frimpong head-to-head|JWPlatform|jwplatform:bhhHkKyN|https://www.bundesliga.com/de/bundesliga/videos/goals/x?vid=bhhHkKyN|146.0"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.bundesliga.com/en/bundesliga/videos/latest-features/T8IKc8TX?vid=ROHjs06G",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [JWPlatform] ROHjs06G: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

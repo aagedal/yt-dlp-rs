@@ -1,0 +1,8 @@
+[
+ {"url": "https://de.bongacams.net/claireashton", "args": ["-F"]},
+ {"url": "https://de.bongacams.net/claireashton", "args": ["--print", "%(id)s|%(fulltitle)s|%(uploader)s|%(uploader_id)s|%(like_count)s|%(is_live)s|%(live_status)s|%(age_limit)s"]},
+ {"url": "https://de.bongacams.net/plain", "args": ["--print", "%(id)s|%(fulltitle)s|%(uploader)s|%(uploader_id)s|%(like_count)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"]},
+ {"url": "https://de.bongacams.net/nolocal", "args": ["-j"]},
+ {"url": "https://de.bongacams.net/offline", "args": ["-j"]},
+ {"url": "https://bongacams.com/apierror", "args": ["-j"]}
+]

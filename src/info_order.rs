@@ -20,6 +20,9 @@ pub(crate) const FORMAT_SHAPE: &str = "__yt_dlp_rs_format_shape";
 /// `"append"` when its section keys are new, `"keep"` when the extractor
 /// already set `section_start`.
 pub(crate) const SECTION_UPDATE: &str = "__yt_dlp_rs_section_update";
+/// An info dict reached by following a `url` result: upstream passes the
+/// result's `original_url` on as extra info, ahead of the default keys.
+pub(crate) const FOLLOWED: &str = "__yt_dlp_rs_followed";
 
 /// How an upstream step sets a key.
 #[derive(Clone, Copy)]
@@ -208,6 +211,7 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(INFO_SHAPE);
     map.shift_remove(FORMAT_SHAPE);
     map.shift_remove(INT_QUALITY);
+    map.shift_remove(FOLLOWED);
 }
 
 /// Record the upstream code path that built an info dict.
@@ -942,6 +946,7 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    let followed = map.shift_remove(FOLLOWED).is_some();
     let section_update = map
         .shift_remove(SECTION_UPDATE)
         .and_then(|mode| mode.as_str().map(str::to_owned));
@@ -982,8 +987,12 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     // An `-untitled` shape: upstream's dict has no `title`, so
     // `_fill_common_fields` adds the generic one after `fulltitle`.
-    let untitled = shape.ends_with("-untitled");
-    let shape = shape.strip_suffix("-untitled").unwrap_or(&shape).to_owned();
+    // (`dict_info`'s `dict-untitled;KEYS` likewise.)
+    let untitled = shape.ends_with("-untitled") || shape.starts_with("dict-untitled;");
+    let shape = match shape.strip_prefix("dict-untitled;") {
+        Some(keys) => format!("dict;{keys}"),
+        None => shape.strip_suffix("-untitled").unwrap_or(&shape).to_owned(),
+    };
     // The selected format's keys, which `info_dict.update(format)` merges.
     let merged = map
         .get("requested_formats")
@@ -1007,6 +1016,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "qingting"
             | "oneplace"
             | "sztvhu"
+            | "theguardianpodcast"
             | "thisamericanlife"
             | "photobucket"
             | "vocaroo"
@@ -1081,7 +1091,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "generic-found-hls-entry"
             | "generic-found-dash-entry"
             | "xspf-entry"
-    ) || (shape.starts_with("dict;")
+    ) || ((shape.starts_with("dict;") || shape.starts_with("untyped-dict;"))
         // A resolved `url` entry gets the playlist's keys after its
         // extraction's URL fields instead.
         && !transparent_entry
@@ -1256,6 +1266,16 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("title", Take),
             ("description", Assign),
             ("thumbnail", Assign),
+        ],
+        // `TheGuardianPodcastIE._real_extract`'s dict (its own format).
+        "theguardianpodcast" => &[
+            ("id", Take),
+            ("title", Assign),
+            ("description", Assign),
+            ("creator", Assign),
+            ("thumbnail", Assign),
+            ("release_date", Assign),
+            ("url", Take),
         ],
         // `OnePlacePodcastIE._real_extract`'s dict (its own format).
         "oneplace" => &[
@@ -2181,6 +2201,11 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             && replay.get("original_url").is_some()
             && (transparent_result || replay.get("original_url") != replay.get("webpage_url"))
         {
+            replay.take("original_url");
+        }
+        // A playlist `url` entry whose extractor returned another `url`
+        // result.
+        if transparent_entry && followed && replay.get("original_url").is_some() {
             replay.take("original_url");
         }
         for key in [

@@ -1,0 +1,40 @@
+{
+ "routes": [
+  {
+   "url": "http://www.presstv.ir/Detail/2016/04/09/459911/Australian-sewerage-treatment-facility-/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.presstv.ir/Detail/2016/4/9/1/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "bare.html"
+  },
+  {
+   "url": "https://www.presstv.ir/Detail/2016/04/09/2/no-title",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "notitle.html"
+  },
+  {
+   "url": "https://www.presstv.ir/Detail/2016/04/09/3/no-input",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "noinput.html"
+  },
+  {
+   "url": "https://www.presstv.ir/Detail/2016/04/09/4/gone",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "gone"
+  }
+ ]
+}

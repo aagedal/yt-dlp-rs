@@ -1,0 +1,88 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.amadeus.tv/library/65091a87ff85af59d9fc54c3",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5576678021301411311\", \"display_id\": \"65091a87ff85af59d9fc54c3\", \"formats\": [{\"url\": \"http://v.test/t210.mp4\", \"format_id\": \"http-210\", \"width\": 640, \"height\": 360, \"filesize\": 1000, \"vcodec\": \"h264\", \"fps\": 29.97, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://www.amadeus.tv/\"}, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-210 - 640x360\"}, {\"url\": \"http://v.test/src.mp4\", \"format_id\": \"http-0\", \"width\": 1920, \"height\": 1080, \"filesize\": 5000, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"fps\": 25.0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://www.amadeus.tv/\"}, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-0 - 1920x1080\"}], \"title\": \"Jieon Park - \\u7b2c\\u4e94\\u5c4a\", \"thumbnail\": \"http://1253584441.vod2.myqcloud.com/cover.jpg\", \"duration\": 1264.8, \"description\": \"Violin.\\nRound 3\", \"timestamp\": 1695034800, \"view_count\": 1234, \"webpage_url\": \"http://www.amadeus.tv/library/65091a87ff85af59d9fc54c3\", \"original_url\": \"http://www.amadeus.tv/library/65091a87ff85af59d9fc54c3\", \"webpage_url_basename\": \"65091a87ff85af59d9fc54c3\", \"webpage_url_domain\": \"amadeus.tv\", \"extractor\": \"AmadeusTV\", \"extractor_key\": \"AmadeusTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://1253584441.vod2.myqcloud.com/cover.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Jieon Park - \\u7b2c\\u4e94\\u5c4a\", \"duration_string\": \"21:04\", \"upload_date\": \"20230918\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://v.test/src.mp4\", \"format_id\": \"http-0\", \"width\": 1920, \"height\": 1080, \"filesize\": 5000, \"vcodec\": \"h264\", \"acodec\": \"aac\", \"fps\": 25.0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://www.amadeus.tv/\"}, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"http-0 - 1920x1080\", \"_filename\": \"Jieon Park - \\u7b2c\\u4e94\\u5c4a [5576678021301411311].mp4\", \"filename\": \"Jieon Park - \\u7b2c\\u4e94\\u5c4a [5576678021301411311].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.amadeus.tv/library/65091a87ff85af59d9fc54c3",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(description)s|%(thumbnail)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(view_count)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "5576678021301411311|65091a87ff85af59d9fc54c3|Jieon Park - 第五届|Violin.",
+    "Round 3|http://1253584441.vod2.myqcloud.com/cover.jpg|1264.8|1695034800|20230918|1234|http-0"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.amadeus.tv/library/b2",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"222\", \"display_id\": \"b2\", \"formats\": [{\"url\": \"http://v.test/b.mp4\", \"format_id\": \"http-0\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://www.amadeus.tv/\"}, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"http-0 - unknown\"}], \"duration\": 30.0, \"title\": \"\\u4e2d\\u6587\", \"webpage_url\": \"http://www.amadeus.tv/library/b2\", \"original_url\": \"http://www.amadeus.tv/library/b2\", \"webpage_url_basename\": \"b2\", \"webpage_url_domain\": \"amadeus.tv\", \"extractor\": \"AmadeusTV\", \"extractor_key\": \"AmadeusTV\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"\\u4e2d\\u6587\", \"duration_string\": \"30\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://v.test/b.mp4\", \"format_id\": \"http-0\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://www.amadeus.tv/\"}, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"http-0 - unknown\", \"_filename\": \"\\u4e2d\\u6587 [222].mp4\", \"filename\": \"\\u4e2d\\u6587 [222].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.amadeus.tv/library/b2",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[AmadeusTV] Extracting URL: http://www.amadeus.tv/library/b2",
+    "[AmadeusTV] b2: Downloading webpage",
+    "[AmadeusTV] 222: Downloading JSON metadata",
+    "[info] 222: Downloading 1 format(s): http-0",
+    "[download] Destination: 222.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "222.mp4": 792
+   }
+  },
+  {
+   "url": "http://www.amadeus.tv/library/c3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [AmadeusTV] c3: Unable to extract actual video ID; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.amadeus.tv/library/d4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [AmadeusTV] d4: Unable to extract __NUXT__; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

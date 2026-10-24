@@ -1,0 +1,7 @@
+[
+ {"url": "https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html", "args": ["-j"]},
+ {"url": "https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(description)s|%(timestamp)s|%(extractor)s|%(webpage_url)s"]},
+ {"url": "https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.spiegel.de/panorama/urteile-im-goldmuenzenprozess-a-aae8df48-43c1-4c61-867d-23f0a2d254b7", "args": ["-j"]},
+ {"url": "https://www.manager-magazin.de/video/missing-video-42.html", "args": ["-j"]}
+]

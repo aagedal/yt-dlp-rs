@@ -115,21 +115,21 @@ Supported today:
   Megaphone players (`player.megaphone.fm/ID`) through their page,
   ReverbNation songs through the song API, Hypem tracks through their page
   and served source, HistoricFilms tapes through their page, Livestreamfails
-  clips through the clip API, EbaumsWorld videos through the player XML,
+  clips through the clip API, Il Post podcast episodes through the podcast endpoint, Kickstarter native project videos through their page, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
   Glide messages through their share page, GodTube videos through their
   player XML, FC Zenit videos through the player API, BehindKink posts
-  QingTing programs, OnePlace episodes, SzTV videos, Photobucket media and
+  QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and
   This American Life episodes through their pages, JW Platform media through
-  the media API (and The Intercept posts that embed it), 23video players
-  (and Filmweb articles that embed them), Vocaroo recordings, AudioBoom posts,
-  Tweakers videos, Angel episodes, Blogger videos (and their embeds), Nobel
-  Prize media, Bild clips, Masters videos, Sen videos, Kommunetv archives,
-  Graspop concerts, CozyTV replays, Premiership Rugby videos, CJSW episodes,
-  Player.fm episodes, RTRFM shows, HitRecord records, Culture Unplugged films,
-  Zhihu videos, CRTVG programmes, Breitbart videos, CGTN news videos, JoVE
+  the media API (and The Intercept posts, Spiegel articles, OneFootball videos, Bundesliga videos and Iltalehti articles that embed it), Israel National News articles (as playlists of their YouTube embeds), 23video players
+  (and Filmweb articles that embed them), FILMARCHIV ON videos, Kaltura entries (`kaltura:` URLs, players and embeds) and the KTH Play, UN Web TV and Inc pages that delegate to them, Vocaroo recordings, AudioBoom posts,
+  Tweakers videos, Project Veritas videos, tele-TASK lectures, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
+  Prize media, Bild clips, Masters videos, Match TV live, mir24.tv news videos, Mocha videos, Sen videos, Kankanews videos, Kommunetv archives,
+  Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, SAPO Vídeos, VideoPress embeds, uStudio videos and embeds, 3Speak videos and users, TV Noe programmes, Telegraaf videos, Premiership Rugby videos, PressTV videos, CJSW episodes,
+  Player.fm episodes, RTRFM shows, Roya TV live streams, HitRecord records, href.li redirects, Culture Unplugged films,
+  Zhihu videos, CRTVG programmes, Breitbart videos, Brightcove players (and their embeds), DrTalks videos, Toronto Star videos, The Sun article videos, TVA Nouvelles videos and articles, Wimbledon videos, Screen9 embeds, The HighWire videos, The Guardian podcast episodes, Sky News Australia videos, European Tour videos, Māori Television shows, Formula 1 videos, NZ On Screen titles, 1News articles, Mediaite articles, Rotten Tomatoes trailers and movie pages, 9News videos and articles, CGTN news videos, JoVE
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
-  ScreenRec shares, Ku6 shows, Fuyin TV videos, Moving Image Archive films,
+  ScreenRec shares, Ku6 shows, GoodGame live streams, Fuyin TV videos, GameStar and GamePro videos, Golem videos, Moving Image Archive films, MyVidster links, ETTU TV matches, Erocast tracks, Caltrans traffic cameras, Bigo live rooms, CAM4 live channels, Université de Strasbourg UTV videos, Veo matches, Nobel   Prize media, webcamera.pl and SkylineWebcams live cameras, JoVE   videos, Bitmovin   streams and Crooks and Liars videos (and their embeds), Soundgasm sounds and profiles, StreetVoice songs, Ivoox audios, Amadeus TV library videos, Whyp tracks, TRT Çocuk videos, WorldStarHipHop videos, Xbox clips, HellPorno videos, Toypics videos, MATCHi TV streams, BongaCams live rooms, Daystar clips, Newsy stories, TRT World videos, Pinkbike videos, NTS episodes, Netzkino films, Pear Video videos, Podbay episodes and channels, Rinse FM episodes and shows, Democracy Now! shows and stories, DLive past broadcasts and live streams, Cloudflare Stream videos, CloudyCDN/Backscreen embeds, Dumpert items, Clyp audio clips, Elonet films, Dropbox shared videos, Boston Globe article videos, Beacon TV content, Clipchamp shares, media.ccc.de events, Internazionale videos, Gab posts, iHeartRadio podcast episodes and podcasts, Libsyn episodes, hearthis.at tracks, Freesound sounds, Mux videos,
   Fathom shares, Maariv players (and their embeds), Harpodeon films,
   Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
   posts (hosted videos, text-post videos and followed links), X/Twitter posts
@@ -145,7 +145,7 @@ Supported today:
   (relay data with DASH, progressive URLs and captions; server JS, pagelet
   and tahoe player pages; watch parties; JSON-LD metadata), Facebook ad
   library ads and `flx/warn` redirects, Vimeo player and
-  clip pages, Dailymotion videos, SoundCloud tracks, Twitch VODs, clips, live streams,
+  clip pages, Dailymotion videos (and the kicker.de videos that embed them), SoundCloud tracks, Twitch VODs, clips, live streams,
   channel video/clip/collection lists and collections,
   Bandcamp tracks, Rumble videos, Kick VODs, clips, live channels and channel video/clip lists, Bluesky
   posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams,

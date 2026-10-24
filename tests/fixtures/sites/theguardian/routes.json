@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "https://www.theguardian.com/news/audio/2023/nov/03/plastic-eating-bacteria-podcast",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.theguardian.com/football/audio/2023/nov/06/football-weekly",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  }
+ ]
+}

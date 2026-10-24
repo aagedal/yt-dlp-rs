@@ -1,0 +1,7 @@
+[
+ {"url": "http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html", "args": ["-J"]},
+ {"url": "http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html", "args": ["-F"]},
+ {"url": "http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://video.golem.de/x/1/y.html", "args": ["-j"]},
+ {"url": "https://video.golem.de/x/2/y.html", "args": ["-j"]}
+]

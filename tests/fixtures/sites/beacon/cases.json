@@ -1,0 +1,9 @@
+[
+ {"url": "https://beacon.tv/content/welcome-to-beacon", "args": ["-j"]},
+ {"url": "https://beacon.tv/content/welcome-to-beacon", "args": ["-F"]},
+ {"url": "https://beacon.tv/content/pod", "args": ["-j"]},
+ {"url": "https://beacon.tv/content/members", "args": ["-j"]},
+ {"url": "https://beacon.tv/content/article", "args": ["-j"]},
+ {"url": "https://beacon.tv/content/broken", "args": ["-j"]},
+ {"url": "https://beacon.tv/content/missing", "args": ["-j"]}
+]

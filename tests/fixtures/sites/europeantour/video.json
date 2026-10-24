@@ -1,0 +1,19 @@
+{
+ "id": "6287788195001",
+ "account_id": "5136026580001",
+ "name": "The best shots of the 2021 seasons",
+ "description": "Best shots.",
+ "published_at": "2021-12-20T14:22:21Z",
+ "duration": 61000,
+ "sources": [
+  {
+   "container": "MP4",
+   "type": "video/mp4",
+   "src": "https://cdn.example.com/europeantour.mp4",
+   "avg_bitrate": 1000000,
+   "width": 1280,
+   "height": 720,
+   "codec": "H264"
+  }
+ ]
+}

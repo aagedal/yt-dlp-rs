@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://www.kickstarter.com/projects/1404461844/intersection-the-story-of-josh-grant/description",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.kickstarter.com/projects/1420158244/power-drive-2000/widget/video.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "widget.html"
+  },
+  {
+   "url": "https://www.kickstarter.com/projects/3/bare/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "bare.html"
+  },
+  {
+   "url": "https://www.kickstarter.com/projects/4/notitle/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "notitle.html"
+  }
+ ]
+}

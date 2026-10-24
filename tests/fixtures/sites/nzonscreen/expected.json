@@ -1,0 +1,49 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.nzonscreen.com/title/shoop-shoop-diddy-wop-cumma-cumma-wang-dang-1982",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"726ed6585c6bfb30\", \"display_id\": \"shoop-shoop-diddy-wop-cumma-cumma-wang-dang-1982\", \"title\": \"Monte Video - \\\"Shoop Shoop, Diddy Wop\\\"\", \"description\": \"Monte Video - \\\"Shoop Shoop, Diddy Wop\\\"\", \"alt_title\": \"Shoop Shoop Diddy Wop Cumma Cumma Wang Dang | Music Video\", \"thumbnail\": \"https://www.nzonscreen.com/content/images/shoop.jpg\", \"duration\": 158.0, \"formats\": [{\"url\": \"https://media.nzonscreen.example/shoop_lo.mp4\", \"format_id\": \"lo\", \"ext\": \"mp4\", \"quality\": 0, \"height\": null, \"width\": null, \"filesize_approx\": 13107200.0, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.nzonscreen.com/\", \"Origin\": \"https://www.nzonscreen.com/\"}, \"format\": \"lo - unknown\"}, {\"url\": \"https://media.nzonscreen.example/shoop_hi.mp4\", \"format_id\": \"hi\", \"ext\": \"mp4\", \"quality\": 1, \"height\": 576, \"width\": 1024, \"filesize_approx\": 41943040.0, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1024x576\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.nzonscreen.com/\", \"Origin\": \"https://www.nzonscreen.com/\"}, \"format\": \"hi - 1024x576\"}], \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.nzonscreen.com/\", \"Origin\": \"https://www.nzonscreen.com/\"}, \"webpage_url\": \"https://www.nzonscreen.com/title/shoop-shoop-diddy-wop-cumma-cumma-wang-dang-1982\", \"original_url\": \"https://www.nzonscreen.com/title/shoop-shoop-diddy-wop-cumma-cumma-wang-dang-1982\", \"webpage_url_basename\": \"shoop-shoop-diddy-wop-cumma-cumma-wang-dang-1982\", \"webpage_url_domain\": \"nzonscreen.com\", \"extractor\": \"NZOnScreen\", \"extractor_key\": \"NZOnScreen\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.nzonscreen.com/content/images/shoop.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Monte Video - \\\"Shoop Shoop, Diddy Wop\\\"\", \"duration_string\": \"2:38\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://media.nzonscreen.example/shoop_hi.mp4\", \"format_id\": \"hi\", \"ext\": \"mp4\", \"quality\": 1, \"height\": 576, \"width\": 1024, \"filesize_approx\": 41943040.0, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1024x576\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"format\": \"hi - 1024x576\", \"_filename\": \"Monte Video - \\uff02Shoop Shoop, Diddy Wop\\uff02 [726ed6585c6bfb30].mp4\", \"filename\": \"Monte Video - \\uff02Shoop Shoop, Diddy Wop\\uff02 [726ed6585c6bfb30].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nzonscreen.com/title/shes-a-mod-1964?collection=best-of-the-60s",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3dbe709ff03c36f1\", \"display_id\": \"shes-a-mod-1964\", \"title\": \"NZOnScreen video #3dbe709ff03c36f1\", \"description\": null, \"alt_title\": \"She's a Mod | Music Video\", \"thumbnail\": null, \"formats\": [{\"url\": \"https://media.nzonscreen.example/mod_hi.mp4\", \"format_id\": \"hi\", \"ext\": \"mp4\", \"quality\": 0, \"height\": null, \"width\": null, \"filesize_approx\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.nzonscreen.com/\", \"Origin\": \"https://www.nzonscreen.com/\"}, \"format\": \"hi - unknown\"}], \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.nzonscreen.com/\", \"Origin\": \"https://www.nzonscreen.com/\"}, \"webpage_url\": \"https://www.nzonscreen.com/title/shes-a-mod-1964?collection=best-of-the-60s\", \"original_url\": \"https://www.nzonscreen.com/title/shes-a-mod-1964?collection=best-of-the-60s\", \"webpage_url_basename\": \"shes-a-mod-1964\", \"webpage_url_domain\": \"nzonscreen.com\", \"extractor\": \"NZOnScreen\", \"extractor_key\": \"NZOnScreen\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://media.nzonscreen.example/mod_hi.mp4\", \"format_id\": \"hi\", \"ext\": \"mp4\", \"quality\": 0, \"height\": null, \"width\": null, \"filesize_approx\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"format\": \"hi - unknown\", \"_filename\": \"NZOnScreen video #3dbe709ff03c36f1 [3dbe709ff03c36f1].mp4\", \"filename\": \"NZOnScreen video #3dbe709ff03c36f1 [3dbe709ff03c36f1].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nzonscreen.com/title/shoop-shoop-diddy-wop-cumma-cumma-wang-dang-1982",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[NZOnScreen] Extracting URL: https://www.nzonscreen.com/title/shoop-shoop-diddy-wop-cumma-cumma-wang-dang-1982",
+    "[NZOnScreen] shoop-shoop-diddy-wop-cumma-cumma-wang-dang-1982: Downloading webpage",
+    "[info] Available formats for 726ed6585c6bfb30:",
+    "ID EXT RESOLUTION |  FILESIZE PROTO | VCODEC  ACODEC",
+    "-----------------------------------------------------",
+    "lo mp4 unknown    | ≈12.50MiB https | unknown unknown",
+    "hi mp4 1024x576   | ≈40.00MiB https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,83 @@
+{
+ "routes": [
+  {
+   "url": "https://ticket.roya-tv.com/api/v5/fastchannel/1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"secured_url\": \"https://stream.roya.tv/live/1/master.m3u8?token=abc\"}}"
+  },
+  {
+   "url": "https://ticket.roya-tv.com/api/v5/fastchannel/21",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"secured_url\": \"https://stream.roya.tv/live/21/master.m3u8\"}}"
+  },
+  {
+   "url": "https://ticket.roya-tv.com/api/v5/fastchannel/3",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"other\": 1}}"
+  },
+  {
+   "url": "https://ticket.roya-tv.com/api/v5/fastchannel/4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": false}"
+  },
+  {
+   "url": "https://ticket.roya-tv.com/api/v5/fastchannel/5",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://ticket.roya-tv.com/api/v5/fastchannel/6",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"secured_url\": \"https://stream.roya.tv/live/6/master.m3u8\"}}"
+  },
+  {
+   "url": "https://ticket.roya-tv.com/api/v5/fastchannel/7",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"secured_url\": \"https://stream.roya.tv/live/21/master.m3u8\"}}"
+  },
+  {
+   "url": "https://backend.roya.tv/api/v01/channels/schedule-pagination",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": [{\"channel\": [{\"id\": 1, \"title\": \"Roya TV\"}, {\"title\": \"No id\"}, {\"id\": \"21\", \"title\": 7}, {\"id\": \"21\", \"title\": \"Roya News\"}, {\"id\": 6, \"title\": null}]}, {\"channel\": [{\"id\": 6, \"title\": \"Second page\"}]}]}"
+  },
+  {
+   "url": "https://stream.roya.tv/live/1/master.m3u8?token=abc",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://stream.roya.tv/live/21/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://stream.roya.tv/live/6/master.m3u8",
+   "status": 403,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "denied"
+  }
+ ]
+}

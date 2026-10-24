@@ -1,0 +1,68 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.ina.fr/video/I12055569/francois-hollande-je-crois-que-c-est-clair-video.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"I12055569\", \"url\": \"https://cdn-hls.ina.example/I12055569/video.mp4?token=1\", \"ext\": \"mp4\", \"title\": \"Fran\\u00e7ois Hollande \\\"Je crois que c'est clair\\\"\", \"description\": \"Tout d'abord, l'\\u00e9lection de Fran\\u00e7ois Hollande.\", \"upload_date\": \"20120506\", \"duration\": 10, \"thumbnail\": \"https://cdn-hls.ina.example/I12055569/thumb.jpeg\", \"webpage_url\": \"https://www.ina.fr/video/I12055569/francois-hollande-je-crois-que-c-est-clair-video.html\", \"original_url\": \"https://www.ina.fr/video/I12055569/francois-hollande-je-crois-que-c-est-clair-video.html\", \"webpage_url_basename\": \"francois-hollande-je-crois-que-c-est-clair-video.html\", \"webpage_url_domain\": \"ina.fr\", \"extractor\": \"Ina\", \"extractor_key\": \"Ina\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn-hls.ina.example/I12055569/thumb.jpeg\", \"id\": \"0\"}], \"display_id\": \"I12055569\", \"fulltitle\": \"Fran\\u00e7ois Hollande \\\"Je crois que c'est clair\\\"\", \"duration_string\": \"10\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Fran\\u00e7ois Hollande \\uff02Je crois que c'est clair\\uff02 [I12055569].mp4\", \"filename\": \"Fran\\u00e7ois Hollande \\uff02Je crois que c'est clair\\uff02 [I12055569].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ina.fr/video/I12055569/francois-hollande-je-crois-que-c-est-clair-video.html",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(ext)s|%(upload_date)s|%(duration)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "I12055569|François Hollande \"Je crois que c'est clair\"|mp4|20120506|10"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ina.fr/audio/P16173408",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"P16173408\", \"url\": \"https://cdn-hls.ina.example/P16173408/audio.m4a\", \"ext\": \"m4a\", \"title\": \"Ina video #P16173408\", \"description\": null, \"upload_date\": null, \"thumbnail\": null, \"webpage_url\": \"https://www.ina.fr/audio/P16173408\", \"original_url\": \"https://www.ina.fr/audio/P16173408\", \"webpage_url_basename\": \"P16173408\", \"webpage_url_domain\": \"ina.fr\", \"extractor\": \"Ina\", \"extractor_key\": \"Ina\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"P16173408\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"video_ext\": \"m4a\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Ina video #P16173408 [P16173408].m4a\", \"filename\": \"Ina video #P16173408 [P16173408].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://m.ina.fr/video/X1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: X1: An extractor error has occurred. (caused by KeyError('resourceUrl')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ina.fr/ina-eclaire-actu/nothing",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Ina] nothing: Unable to extract api_url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

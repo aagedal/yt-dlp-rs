@@ -1,0 +1,34 @@
+[
+ {
+  "url": "https://cwwp2.dot.ca.gov/vm/loc/d3/hwy50at24th.htm",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://cwwp2.dot.ca.gov/vm/loc/d3/hwy50at24th.htm",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://cwwp2.dot.ca.gov/vm/loc/d3/partial.htm",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://cwwp2.dot.ca.gov/vm/loc/d3/noscript.htm",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://cwwp2.dot.ca.gov/vm/loc/d3/gone.htm",
+  "args": [
+   "-j"
+  ]
+ }
+]

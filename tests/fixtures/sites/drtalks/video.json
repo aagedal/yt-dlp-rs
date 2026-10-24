@@ -1,0 +1,24 @@
+{
+ "id": "6366193757112",
+ "account_id": "6314452011001",
+ "name": "API name",
+ "description": "API description",
+ "tags": [
+  "resilience"
+ ],
+ "published_at": "2024-12-18T18:30:59.123Z",
+ "duration": 2800682,
+ "poster": "https://cf-images.us-east-1.prod.boltdns.net/v1/static/6314452011001/x/1920x1080/match/image.jpg",
+ "sources": [
+  {
+   "container": "MP4",
+   "type": "video/mp4",
+   "src": "https://cdn.example.com/drtalks.mp4",
+   "avg_bitrate": 2000000,
+   "width": 1920,
+   "height": 1080,
+   "codec": "H264",
+   "size": 1000
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+[
+ {"url": "https://www.skylinewebcams.com/it/webcam/italia/lazio/roma/scalinata-piazza-di-spagna-barcaccia.html", "args": ["--print", "%(id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s|%(webpage_url_basename)s|%(extractor)s"]},
+ {"url": "https://www.skylinewebcams.com/it/webcam/italia/lazio/roma/scalinata-piazza-di-spagna-barcaccia.html", "args": ["-F"]},
+ {"url": "https://www.skylinewebcams.com/en/webcam/italia/veneto/venezia/rialto.html", "args": ["--print", "%(id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"]},
+ {"url": "https://www.skylinewebcams.com/en/webcam/x/notitle.html", "args": ["--print", "%(id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(protocol)s|%(url)s"]},
+ {"url": "https://www.skylinewebcams.com/en/webcam/x/offline.html", "args": ["-j"]},
+ {"url": "https://www.skylinewebcams.com/en/webcam/x/gone.html", "args": ["-j"]}
+]

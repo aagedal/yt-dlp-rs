@@ -1,0 +1,70 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Pekka Toverin arvio\", \"id\": \"9\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"JWPlatform\", \"_type\": \"url\", \"url\": \"jwplatform:gYjjaf1L\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"JWPlatform\", \"_type\": \"url\", \"url\": \"jwplatform:18R6zkLi\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2\", \"original_url\": \"https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2\", \"webpage_url_basename\": \"9fbd067f-94e4-46cd-8748-9d958eb4dae2\", \"webpage_url_domain\": \"iltalehti.fi\", \"extractor\": \"Iltalehti\", \"extractor_key\": \"Iltalehti\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(duration)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "gYjjaf1L|Sensuroimaton Päivärinta|JWPlatform|9|Pekka Toverin arvio|1|2089.0|jwplatform:gYjjaf1L",
+    "18R6zkLi|Nord Stream|JWPlatform|9|Pekka Toverin arvio|2|165.0|jwplatform:18R6zkLi"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Pekka Toverin arvio\", \"id\": \"9\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"gYjjaf1L\", \"title\": \"Sensuroimaton P\\u00e4iv\\u00e4rinta\", \"description\": \"\", \"thumbnail\": \"https://cdn.jwplayer.com/v2/media/gYjjaf1L/poster.jpg\", \"timestamp\": 1664360878, \"duration\": 2089.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/gYjjaf1L-1.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}], \"webpage_url\": \"jwplatform:gYjjaf1L\", \"original_url\": \"jwplatform:gYjjaf1L\", \"webpage_url_basename\": \"gYjjaf1L\", \"webpage_url_domain\": null, \"extractor\": \"JWPlatform\", \"extractor_key\": \"JWPlatform\", \"playlist_count\": 2, \"playlist\": \"Pekka Toverin arvio\", \"playlist_id\": \"9\", \"playlist_title\": \"Pekka Toverin arvio\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnails\": [{\"url\": \"https://cdn.jwplayer.com/v2/media/gYjjaf1L/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"gYjjaf1L\", \"fulltitle\": \"Sensuroimaton P\\u00e4iv\\u00e4rinta\", \"duration_string\": \"34:49\", \"upload_date\": \"20220928\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.jwplayer.com/videos/gYjjaf1L-1.mp4\", \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_filename\": \"Sensuroimaton P\\u00e4iv\\u00e4rinta [gYjjaf1L].mp4\", \"filename\": \"Sensuroimaton P\\u00e4iv\\u00e4rinta [gYjjaf1L].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn.jwplayer.com/videos/gYjjaf1L-1.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}, {\"id\": \"18R6zkLi\", \"title\": \"Nord Stream\", \"description\": null, \"thumbnail\": null, \"timestamp\": 1664435867, \"duration\": 165.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/18R6zkLi-1.mp4\", \"width\": 640, \"height\": 360, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"360p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\"}], \"webpage_url\": \"jwplatform:18R6zkLi\", \"original_url\": \"jwplatform:18R6zkLi\", \"webpage_url_basename\": \"18R6zkLi\", \"webpage_url_domain\": null, \"extractor\": \"JWPlatform\", \"extractor_key\": \"JWPlatform\", \"playlist_count\": 2, \"playlist\": \"Pekka Toverin arvio\", \"playlist_id\": \"9\", \"playlist_title\": \"Pekka Toverin arvio\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"display_id\": \"18R6zkLi\", \"fulltitle\": \"Nord Stream\", \"duration_string\": \"2:45\", \"upload_date\": \"20220929\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://cdn.jwplayer.com/videos/18R6zkLi-1.mp4\", \"width\": 640, \"height\": 360, \"ext\": \"mp4\", \"format_id\": \"360p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\", \"_filename\": \"Nord Stream [18R6zkLi].mp4\", \"filename\": \"Nord Stream [18R6zkLi].mp4\", \"__write_download_archive\": false}], \"url\": \"https://cdn.jwplayer.com/videos/18R6zkLi-1.mp4\", \"width\": 640, \"height\": 360, \"tbr\": null, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"360p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\"}], \"webpage_url\": \"https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2\", \"original_url\": \"https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2\", \"webpage_url_basename\": \"9fbd067f-94e4-46cd-8748-9d958eb4dae2\", \"webpage_url_domain\": \"iltalehti.fi\", \"extractor\": \"Iltalehti\", \"extractor_key\": \"Iltalehti\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.iltalehti.fi/politiikka/a/1ce49d85-1670-428b-8db8-d2479b9950a4",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": null, \"id\": \"1\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.iltalehti.fi/politiikka/a/1ce49d85-1670-428b-8db8-d2479b9950a4\", \"original_url\": \"https://www.iltalehti.fi/politiikka/a/1ce49d85-1670-428b-8db8-d2479b9950a4\", \"webpage_url_basename\": \"1ce49d85-1670-428b-8db8-d2479b9950a4\", \"webpage_url_domain\": \"iltalehti.fi\", \"extractor\": \"Iltalehti\", \"extractor_key\": \"Iltalehti\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.iltalehti.fi/kotimaa/a/2022",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Iltalehti] 2: Unable to extract json; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://api.gronkh.tv/v1/video/info?episode=657",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"H.O.R.D.E. - DAS ZWEiTE ZEiTALTER 🎲 Session 1\", \"views\": 4321, \"preview_url\": \"https://cdn.gronkh.test/preview/657.jpg\", \"created_at\": \"2022-11-11T18:30:00.000Z\", \"source_length\": 31463, \"vtt_url\": \"https://cdn.gronkh.test/657.vtt\", \"chapters\": [{\"title\": \"Intro\", \"offset\": 0}, {\"title\": \"Spiel\", \"offset\": \"120.5\"}, {\"title\": \"Broken\"}, {\"title\": \"Ende\", \"offset\": 900}]}"
+  },
+  {
+   "url": "https://api.gronkh.tv/v1/video/playlist?episode=657",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playlist_url\": \"https://cdn.gronkh.test/hls/master.m3u8\"}"
+  },
+  {
+   "url": "https://api.gronkh.tv/v1/video/info?episode=536",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"GTV0536\", \"chapters\": []}"
+  },
+  {
+   "url": "https://api.gronkh.tv/v1/video/playlist?episode=536",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"playlist_url\": \"https://cdn.gronkh.test/hls/video.m3u8\"}"
+  },
+  {
+   "url": "https://api.gronkh.tv/v1/video/info?episode=546",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"title\": \"Missing\"}"
+  },
+  {
+   "url": "https://api.gronkh.tv/v1/video/playlist?episode=546",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://cdn.gronkh.test/hls/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video.m3u8"
+  },
+  {
+   "url": "https://cdn.gronkh.test/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://cdn.gronkh.test/hls/subs_en.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_en.m3u8"
+  },
+  {
+   "url": "https://cdn.gronkh.test/hls/subs_de.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_de.m3u8"
+  }
+ ]
+}

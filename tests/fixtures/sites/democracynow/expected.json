@@ -1,0 +1,89 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.democracynow.org/shows/2015/7/3",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2015-0703-001\", \"title\": \"Daily Show for July 03, 2015\", \"description\": \"Headlines for July 03, 2015 & more\", \"thumbnail\": \"https://assets.democracynow.test/images/2015-0703.jpg\", \"subtitles\": {\"en\": [{\"url\": \"http://www.democracynow.org/captions/dn2015-0703.vtt\", \"ext\": \"vtt\"}, {\"url\": \"https://cdn.democracynow.test/en2.srt\", \"ext\": \"srt\"}], \"es\": [{\"url\": \"http://www.democracynow.org/captions/es.vtt\", \"ext\": \"vtt\"}]}, \"formats\": [{\"url\": \"https://traffic.libsyn.test/democracynow/dn2015-0703-001.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}, {\"url\": \"http://www.democracynow.org/video/dn2015-0703-001.mp4\", \"vcodec\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - unknown\"}, {\"url\": \"https://hot.democracynow.test/dn2015-0703-001-hi.mp4\", \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"2\", \"format\": \"2 - unknown\"}], \"webpage_url\": \"http://www.democracynow.org/shows/2015/7/3\", \"original_url\": \"http://www.democracynow.org/shows/2015/7/3\", \"webpage_url_basename\": \"3\", \"webpage_url_domain\": \"democracynow.org\", \"extractor\": \"democracynow\", \"extractor_key\": \"Democracynow\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://assets.democracynow.test/images/2015-0703.jpg\", \"id\": \"0\"}], \"display_id\": \"2015-0703-001\", \"fulltitle\": \"Daily Show for July 03, 2015\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://hot.democracynow.test/dn2015-0703-001-hi.mp4\", \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"2\", \"format\": \"2 - unknown\", \"_filename\": \"Daily Show for July 03, 2015 [2015-0703-001].mp4\", \"filename\": \"Daily Show for July 03, 2015 [2015-0703-001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.democracynow.org/shows/2015/7/3",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[democracynow] Extracting URL: http://www.democracynow.org/shows/2015/7/3",
+    "[democracynow] shows/2015/7/3: Downloading webpage",
+    "[info] Available formats for 2015-0703-001:",
+    "ID EXT RESOLUTION | PROTO | VCODEC     ACODEC",
+    "----------------------------------------------",
+    "0  mp3 audio only | https | audio only mp3",
+    "1  mp4 unknown    | http  | unknown    unknown",
+    "2  mp4 unknown    | https | unknown    unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.democracynow.org/shows/2015/7/3",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[democracynow] Extracting URL: http://www.democracynow.org/shows/2015/7/3",
+    "[democracynow] shows/2015/7/3: Downloading webpage",
+    "[info] Available subtitles for 2015-0703-001:",
+    "Language Formats",
+    "en       srt, vtt",
+    "es       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.democracynow.org/2015/7/3/this_flag_comes_down_today_bree",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2015/7/3/this_flag_comes_down_today_bree\", \"title\": \"\\\"This Flag Comes Down Today\\\": Bree Newsome\", \"description\": null, \"thumbnail\": null, \"subtitles\": {}, \"formats\": [{\"url\": \"https://hot.democracynow.test/dn/\", \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"unknown_video\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://www.democracynow.org/2015/7/3/this_flag_comes_down_today_bree\", \"original_url\": \"https://www.democracynow.org/2015/7/3/this_flag_comes_down_today_bree\", \"webpage_url_basename\": \"this_flag_comes_down_today_bree\", \"webpage_url_domain\": \"democracynow.org\", \"extractor\": \"democracynow\", \"extractor_key\": \"Democracynow\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2015/7/3/this_flag_comes_down_today_bree\", \"fulltitle\": \"\\\"This Flag Comes Down Today\\\": Bree Newsome\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://hot.democracynow.test/dn/\", \"vcodec\": null, \"protocol\": \"https\", \"ext\": \"unknown_video\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\uff02This Flag Comes Down Today\\uff02\\uff1a Bree Newsome [2015\\u29f87\\u29f83\\u29f8this_flag_comes_down_today_bree].unknown_video\", \"filename\": \"\\uff02This Flag Comes Down Today\\uff02\\uff1a Bree Newsome [2015\\u29f87\\u29f83\\u29f8this_flag_comes_down_today_bree].unknown_video\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.democracynow.org/nojson",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [democracynow] nojson: Unable to extract json; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.democracynow.org/notitle",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: notitle: An extractor error has occurred. (caused by KeyError('title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

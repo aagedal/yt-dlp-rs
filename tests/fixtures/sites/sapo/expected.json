@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://videos.sapo.pt/UBz95kOtiWYUMTA5Ghfi",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"UBz95kOtiWYUMTA5Ghfi\", \"title\": \"Benfica - Marcas na Hit\\u00f3ria\", \"description\": \"Marcas & golos do Benfica.\", \"thumbnail\": \"http://cache01.stv.sapo.pt/thumbs/UBz95kOtiWYUMTA5Ghfi.jpg\", \"duration\": 264, \"uploader\": \"tiago_1988\", \"upload_date\": \"20080229\", \"view_count\": 1234, \"comment_count\": 7, \"categories\": [\"benfica\", \"cabral\", \"desporto\", \"futebol\"], \"age_limit\": 0, \"formats\": [{\"url\": \"http://rd3.videos.sapo.pt/UBz95kOtiWYUMTA5Ghfi/mov/1\", \"ext\": \"mp4\", \"format_id\": \"sd\", \"width\": 384, \"height\": 288, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"384x288\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.33, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - 384x288\"}, {\"url\": \"http://rd3.videos.sapo.pt/UBz95kOtiWYUMTA5Ghfi/mov/39\", \"ext\": \"mp4\", \"format_id\": \"hd\", \"width\": 1280, \"height\": 720, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 1280x720\"}], \"webpage_url\": \"http://videos.sapo.pt/UBz95kOtiWYUMTA5Ghfi\", \"original_url\": \"http://videos.sapo.pt/UBz95kOtiWYUMTA5Ghfi\", \"webpage_url_basename\": \"UBz95kOtiWYUMTA5Ghfi\", \"webpage_url_domain\": \"videos.sapo.pt\", \"extractor\": \"Sapo\", \"extractor_key\": \"Sapo\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://cache01.stv.sapo.pt/thumbs/UBz95kOtiWYUMTA5Ghfi.jpg\", \"id\": \"0\"}], \"display_id\": \"UBz95kOtiWYUMTA5Ghfi\", \"fulltitle\": \"Benfica - Marcas na Hit\\u00f3ria\", \"duration_string\": \"4:24\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://rd3.videos.sapo.pt/UBz95kOtiWYUMTA5Ghfi/mov/39\", \"ext\": \"mp4\", \"format_id\": \"hd\", \"width\": 1280, \"height\": 720, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - 1280x720\", \"_filename\": \"Benfica - Marcas na Hit\\u00f3ria [UBz95kOtiWYUMTA5Ghfi].mp4\", \"filename\": \"Benfica - Marcas na Hit\\u00f3ria [UBz95kOtiWYUMTA5Ghfi].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://videos.sapo.pt/UBz95kOtiWYUMTA5Ghfi",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Sapo] Extracting URL: http://videos.sapo.pt/UBz95kOtiWYUMTA5Ghfi",
+    "[Sapo] UBz95kOtiWYUMTA5Ghfi: Downloading XML",
+    "[info] Available formats for UBz95kOtiWYUMTA5Ghfi:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "sd mp4 384x288    | http  | unknown unknown",
+    "hd mp4 1280x720   | http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://v2.videos.sapo.pt/yLqjzPtbTimsn2wWBKHz",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"yLqjzPtbTimsn2wWBKHz\", \"title\": \"Hipnose Condicionativa\", \"description\": null, \"thumbnail\": null, \"uploader\": \"sapozen\", \"upload_date\": \"20140610\", \"view_count\": 0, \"comment_count\": 0, \"categories\": [], \"age_limit\": 18, \"formats\": [{\"url\": \"http://rd3.videos.sapo.pt/yLqjzPtbTimsn2wWBKHz/mov/2\", \"ext\": \"mp4\", \"format_id\": \"sd\", \"width\": 1280, \"height\": 720, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - 1280x720\"}], \"webpage_url\": \"http://v2.videos.sapo.pt/yLqjzPtbTimsn2wWBKHz\", \"original_url\": \"http://v2.videos.sapo.pt/yLqjzPtbTimsn2wWBKHz\", \"webpage_url_basename\": \"yLqjzPtbTimsn2wWBKHz\", \"webpage_url_domain\": \"v2.videos.sapo.pt\", \"extractor\": \"Sapo\", \"extractor_key\": \"Sapo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"yLqjzPtbTimsn2wWBKHz\", \"fulltitle\": \"Hipnose Condicionativa\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://rd3.videos.sapo.pt/yLqjzPtbTimsn2wWBKHz/mov/2\", \"ext\": \"mp4\", \"format_id\": \"sd\", \"width\": 1280, \"height\": 720, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - 1280x720\", \"_filename\": \"Hipnose Condicionativa [yLqjzPtbTimsn2wWBKHz].mp4\", \"filename\": \"Hipnose Condicionativa [yLqjzPtbTimsn2wWBKHz].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.videos.sapo.cv/AAAAAAAAAAAAAAAAAAAA",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Sapo] AAAAAAAAAAAAAAAAAAAA: Unable to download XML: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

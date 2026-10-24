@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "http://www.amadeus.tv/library/65091a87ff85af59d9fc54c3",
+   "body": "<html><head><title>Amadeus</title></head><body><div id=\"__nuxt\"></div><script>window.__NUXT__=(function(a,b,c,d){return {layout:\"default\",data:[{}],fetch:{\"0\":{item:{video:a,title:b,title_en:\"English\",description:c,date:\"2023-09-18T11:00:00.000Z\",view:d}}},error:null,serverRendered:true}}(\"5576678021301411311\",\"Jieon Park - 第五届\",\"Violin.\\nRound 3\",1234));</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "http://www.amadeus.tv/library/b2",
+   "body": "<html><head><title>Amadeus</title></head><body><div id=\"__nuxt\"></div><script>window.__NUXT__=(function(a,b,c,d){return {layout:\"default\",data:[{}],fetch:{\"0\":{item:{video:a,title_cn:b}}},error:null,serverRendered:true}}(\"222\",\"中文\",null,null));</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "http://www.amadeus.tv/library/c3",
+   "body": "<html><head><title>Amadeus</title></head><body><div id=\"__nuxt\"></div><script>window.__NUXT__=(function(a,b,c,d){return {layout:\"default\",data:[{}],fetch:{\"0\":{item:{video:a}}},error:null,serverRendered:true}}(\"\",null,null,null));</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "http://www.amadeus.tv/library/d4",
+   "body": "<html></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "http://playvideo.qcloud.com/getplayinfo/v2/1253584441/5576678021301411311",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": 0, \"coverInfo\": {\"coverUrl\": \"http://1253584441.vod2.myqcloud.com/cover.jpg\"}, \"videoInfo\": {\"basicInfo\": {\"name\": \"Jieon Park basic\"}, \"sourceVideo\": {\"url\": \"http://v.test/src.mp4\", \"definition\": 0, \"width\": 1920, \"height\": 1080, \"size\": 5000, \"floatDuration\": 1264.8, \"duration\": 1265, \"videoStreamList\": [{\"codec\": \"h264\", \"fps\": 25}], \"audioStreamList\": [{\"codec\": \"aac\"}]}, \"transcodeList\": [{\"url\": \"http://v.test/t210.mp4\", \"definition\": 210, \"width\": \"640\", \"height\": 360, \"totalSize\": 1000, \"size\": 999, \"videoStreamList\": [{\"codec\": \"h264\", \"fps\": \"29.97\"}]}, {\"url\": \"not a url\", \"definition\": 220}, \"junk\"]}}"
+  },
+  {
+   "url": "http://playvideo.qcloud.com/getplayinfo/v2/1253584441/222",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"videoInfo\": {\"sourceVideo\": {\"url\": \"http://v.test/b.mp4\", \"duration\": \"30\"}}}"
+  },
+  {
+   "url": "http://v.test/b.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  }
+ ]
+}

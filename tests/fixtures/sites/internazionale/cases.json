@@ -1,0 +1,7 @@
+[
+ {"url": "https://www.internazionale.it/video/2015/01/19/richard-linklater-racconta-una-scena-di-boyhood", "args": ["-j"]},
+ {"url": "https://www.internazionale.it/video/2015/01/19/richard-linklater-racconta-una-scena-di-boyhood", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(thumbnail)s|%(description)s|%(timestamp)s|%(upload_date)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://www.internazionale.it/video/2020/02/02/solo-italia", "args": ["-j"]},
+ {"url": "https://www.internazionale.it/video/notitle", "args": ["-j"]},
+ {"url": "https://www.internazionale.it/video/noid", "args": ["-j"]}
+]

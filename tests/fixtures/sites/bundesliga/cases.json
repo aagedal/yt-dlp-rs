@@ -1,0 +1,5 @@
+[
+ {"url": "https://www.bundesliga.com/en/bundesliga/videos?vid=bhhHkKyN", "args": ["-j"]},
+ {"url": "https://www.bundesliga.com/de/bundesliga/videos/goals/x?vid=bhhHkKyN", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s|%(duration)s"]},
+ {"url": "https://www.bundesliga.com/en/bundesliga/videos/latest-features/T8IKc8TX?vid=ROHjs06G", "args": ["-j"]}
+]

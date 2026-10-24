@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {"url": "https://www.9news.com.au/videos/national/fair-trading-pulls-dozens-of-toys-from-shelves/clqgc7dvj000y0jnvfism0w5m", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://www.9news.com.au/national/outrage-as-parents-banned-from-giving-gifts-to-kindergarten-teachers/e19b49d4-a1a4-4533-9089-6e10e2d9386a", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page2.html"},
+  {"url": "https://www.9news.com.au/national/no-video-here/abc-123", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page3.html"},
+  {"url": "https://players.brightcove.net/664969388001/default_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "http://players.brightcove.net/664969388001/default_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "https://edge.api.brightcove.com/playback/v1/accounts/664969388001/videos/6343717246112", "headers": {"Content-Type": "application/json"}, "body_file": "video.json", "request_headers": {"Accept": "application/json;pk=BCpkEUROPEANTOUR"}},
+  {"url": "https://edge.api.brightcove.com/playback/v1/accounts/664969388001/videos/6343716797112", "headers": {"Content-Type": "application/json"}, "body_file": "video2.json", "request_headers": {"Accept": "application/json;pk=BCpkEUROPEANTOUR"}}
+ ]
+}

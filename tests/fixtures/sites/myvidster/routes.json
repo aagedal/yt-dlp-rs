@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "http://www.myvidster.com/video/32059805/Hot_chemistry",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>x</title><link rel=\"videolink\" href=\"https://media.example.test/clips/3685814.mp4\"></head><body></body></html>"
+  },
+  {
+   "url": "https://media.example.test/clips/3685814.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "MP4DATA"
+  },
+  {
+   "url": "http://www.myvidster.com/video/7/none",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>removed</body></html>"
+  }
+ ]
+}

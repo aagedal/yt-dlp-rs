@@ -1,0 +1,53 @@
+[
+ {
+  "url": "https://en.roya.tv/live-stream/1",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://roya.tv/live-stream/21",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://roya.tv/live-stream/21",
+  "args": [
+   "--print",
+   "%(fulltitle)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://roya.tv/live-stream/3",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://roya.tv/live-stream/4",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://roya.tv/live-stream/5",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://roya.tv/live-stream/6",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://roya.tv/live-stream/7",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(format_id)s"
+  ]
+ }
+]

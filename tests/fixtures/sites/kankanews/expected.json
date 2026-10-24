@@ -1,0 +1,113 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/00310276054.shtml?appid=1088227",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"4485057\", \"url\": \"http://mediaplay.kksmg.com/2022/11/08/h264_450k_mp4_1a388ad771e0e4cc28b0da44d245054e_ncm.mp4\", \"title\": \"\\u89c6\\u9891\\uff5c\\u7b2c23\\u4e2a\\u4e2d\\u56fd\\u8bb0\\u8005\\u8282\\uff0c\\u6211\\u4eec\\u5728\\u8fdb\\u535a\\u5207\\u86cb\\u7cd5\", \"thumbnail\": \"https://skin.kankanews.com/v6/2022/11/08/thumb.jpg\", \"webpage_url\": \"https://www.kankanews.com/a/2022-11-08/00310276054.shtml?appid=1088227\", \"original_url\": \"https://www.kankanews.com/a/2022-11-08/00310276054.shtml?appid=1088227\", \"webpage_url_basename\": \"00310276054.shtml\", \"webpage_url_domain\": \"kankanews.com\", \"extractor\": \"KankaNews\", \"extractor_key\": \"KankaNews\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://skin.kankanews.com/v6/2022/11/08/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"4485057\", \"fulltitle\": \"\\u89c6\\u9891\\uff5c\\u7b2c23\\u4e2a\\u4e2d\\u56fd\\u8bb0\\u8005\\u8282\\uff0c\\u6211\\u4eec\\u5728\\u8fdb\\u535a\\u5207\\u86cb\\u7cd5\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u89c6\\u9891\\uff5c\\u7b2c23\\u4e2a\\u4e2d\\u56fd\\u8bb0\\u8005\\u8282\\uff0c\\u6211\\u4eec\\u5728\\u8fdb\\u535a\\u5207\\u86cb\\u7cd5 [4485057].mp4\", \"filename\": \"\\u89c6\\u9891\\uff5c\\u7b2c23\\u4e2a\\u4e2d\\u56fd\\u8bb0\\u8005\\u8282\\uff0c\\u6211\\u4eec\\u5728\\u8fdb\\u535a\\u5207\\u86cb\\u7cd5 [4485057].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/00310276054.shtml",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(thumbnail)s|%(ext)s|%(format_id)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "4485057|视频｜第23个中国记者节，我们在进博切蛋糕|https://skin.kankanews.com/v6/2022/11/08/thumb.jpg|mp4|0|http://mediaplay.kksmg.com/2022/11/08/h264_450k_mp4_1a388ad771e0e4cc28b0da44d245054e_ncm.mp4"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/005.shtml",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14\", \"url\": \"http://mediaplay.kksmg.com/a.mp4\", \"title\": \"\\u89c6\\u9891\\uff5c\\u7b2c23\\u4e2a\\u4e2d\\u56fd\\u8bb0\\u8005\\u8282\\uff0c\\u6211\\u4eec\\u5728\\u8fdb\\u535a\\u5207\\u86cb\\u7cd5\", \"thumbnail\": null, \"webpage_url\": \"https://www.kankanews.com/a/2022-11-08/005.shtml\", \"original_url\": \"https://www.kankanews.com/a/2022-11-08/005.shtml\", \"webpage_url_basename\": \"005.shtml\", \"webpage_url_domain\": \"kankanews.com\", \"extractor\": \"KankaNews\", \"extractor_key\": \"KankaNews\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"14\", \"fulltitle\": \"\\u89c6\\u9891\\uff5c\\u7b2c23\\u4e2a\\u4e2d\\u56fd\\u8bb0\\u8005\\u8282\\uff0c\\u6211\\u4eec\\u5728\\u8fdb\\u535a\\u5207\\u86cb\\u7cd5\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"\\u89c6\\u9891\\uff5c\\u7b2c23\\u4e2a\\u4e2d\\u56fd\\u8bb0\\u8005\\u8282\\uff0c\\u6211\\u4eec\\u5728\\u8fdb\\u535a\\u5207\\u86cb\\u7cd5 [14].mp4\", \"filename\": \"\\u89c6\\u9891\\uff5c\\u7b2c23\\u4e2a\\u4e2d\\u56fd\\u8bb0\\u8005\\u8282\\uff0c\\u6211\\u4eec\\u5728\\u8fdb\\u535a\\u5207\\u86cb\\u7cd5 [14].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/001.shtml",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [KankaNews] 001: Unable to extract video id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/002.shtml",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [KankaNews] 002: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/003.shtml",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: 003: An extractor error has occurred. (caused by KeyError('video')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/004.shtml",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: 004: An extractor error has occurred. (caused by KeyError('videourl')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/404.shtml",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [KankaNews] 404: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

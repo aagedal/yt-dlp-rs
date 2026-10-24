@@ -1,4 +1,4 @@
-//! Upstream `js_to_json(code)` (no `vars`, not strict): JavaScript object
+//! Upstream `js_to_json(code, vars={})` (not strict): JavaScript object
 //! literals as JSON text, and `_parse_json(..., ignore_extra=True)`'s
 //! `raw_decode(s.lstrip())` of its first value.
 //!
@@ -185,7 +185,7 @@ fn push_char(out: &mut String, c: char) {
 }
 
 /// `fix_kv` for one matched token.
-fn fix_kv(token: &str) -> String {
+fn fix_kv(token: &str, vars: &Vars) -> String {
     match token {
         "true" | "false" | "null" => return token.to_owned(),
         "undefined" | "void 0" => return "null".into(),
@@ -202,7 +202,7 @@ fn fix_kv(token: &str) -> String {
             static TEMPLATE: LazyLock<Regex> = LazyLock::new(|| regex(r"(?s)\$\{([^}]+)\}"));
             TEMPLATE
                 .replace_all(inner, |captures: &regex::Captures<'_>| {
-                    let evaluated = js_to_json(&captures[1]);
+                    let evaluated = js_to_json_vars(&captures[1], vars);
                     if evaluated.starts_with('"')
                         && let Ok(Value::String(text)) = serde_json::from_str::<Value>(&evaluated)
                     {
@@ -249,11 +249,26 @@ fn fix_kv(token: &str) -> String {
             value.to_string()
         };
     }
+    // `vars[v]` when it is JSON text, else `json.dumps(vars[v])`.
+    if let Some((_, value)) = vars.iter().rev().find(|(name, _)| name == token) {
+        if crate::json::from_str::<Value>(value).is_ok() {
+            return value.clone();
+        }
+        return crate::output::python_json_dumps(&Value::String(value.clone()));
+    }
     format!("\"{token}\"")
 }
 
+/// `vars`: names and the JSON text substituted for them.
+pub type Vars = [(String, String)];
+
 /// Upstream `js_to_json(code)`.
 pub fn js_to_json(code: &str) -> String {
+    js_to_json_vars(code, &[])
+}
+
+/// Upstream `js_to_json(code, vars)`.
+pub fn js_to_json_vars(code: &str, vars: &Vars) -> String {
     static ARRAY: LazyLock<Regex> = LazyLock::new(|| regex(r"(?:new\s+)?Array\((.*?)\)"));
     static MAP: LazyLock<Regex> = LazyLock::new(|| regex(r"new Map\((\[.*?\])?\)"));
     static DATE: LazyLock<Regex> = LazyLock::new(|| {
@@ -266,7 +281,7 @@ pub fn js_to_json(code: &str) -> String {
     });
     let code = ARRAY.replace_all(code, "[$1]");
     let code = MAP.replace_all(&code, |captures: &regex::Captures<'_>| {
-        let pairs = js_to_json(captures.get(1).map_or("[]", |found| found.as_str()));
+        let pairs = js_to_json_vars(captures.get(1).map_or("[]", |found| found.as_str()), vars);
         let map: serde_json::Map<String, Value> =
             serde_json::from_str::<Vec<(Value, Value)>>(&pairs)
                 .unwrap_or_default()
@@ -295,7 +310,7 @@ pub fn js_to_json(code: &str) -> String {
         match token_at(bytes, index) {
             Some(length) => {
                 out.push_str(&code[copied..index]);
-                out.push_str(&fix_kv(&code[index..index + length]));
+                out.push_str(&fix_kv(&code[index..index + length], vars));
                 index += length;
                 copied = index;
             }
@@ -333,5 +348,51 @@ mod tests {
         for (input, expected) in cases {
             assert_eq!(js_to_json(&input), expected, "{input:?}");
         }
+    }
+
+    fn vars(pairs: &[(&str, &str)]) -> Vec<(String, String)> {
+        pairs
+            .iter()
+            .map(|(name, value)| ((*name).to_owned(), (*value).to_owned()))
+            .collect()
+    }
+
+    /// `test_utils.py` `test_js_to_json_vars_strings`.
+    #[test]
+    fn substitutes_vars_like_upstream() {
+        let code = "{\n    'null': a,\n    'nullStr': b,\n    'true': c,\n    'trueStr': d,\n    'false': e,\n    'falseStr': f,\n    'unresolvedVar': g,\n}";
+        let substituted = vars(&[
+            ("a", "null"),
+            ("b", "\"null\""),
+            ("c", "true"),
+            ("d", "\"true\""),
+            ("e", "false"),
+            ("f", "\"false\""),
+            ("g", "var"),
+        ]);
+        let parsed: Value = serde_json::from_str(&js_to_json_vars(code, &substituted)).unwrap();
+        assert_eq!(
+            parsed,
+            serde_json::json!({
+                "null": null,
+                "nullStr": "null",
+                "true": true,
+                "trueStr": "true",
+                "false": false,
+                "falseStr": "false",
+                "unresolvedVar": "var",
+            })
+        );
+        // Substitution reaches template literals and `new Map`.
+        let substituted = vars(&[("x", "\"one\""), ("y", "2")]);
+        assert_eq!(js_to_json_vars("`${x}`", &substituted), "\"one\"");
+        assert_eq!(
+            js_to_json_vars("new Map([[x, y]])", &substituted),
+            "{\"one\": 2}"
+        );
+        assert_eq!(
+            js_to_json_vars("[x.y, z]", &substituted),
+            "[\"x.y\", \"z\"]"
+        );
     }
 }

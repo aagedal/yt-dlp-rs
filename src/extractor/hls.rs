@@ -47,6 +47,12 @@ fn hls_extra(master: Option<&Url>, shape: &str) -> serde_json::Map<String, serde
 }
 
 pub(crate) fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
+    read_playlist_with(response, false)
+}
+
+/// [`read_playlist`]; with `allow_live`, an unfinished media playlist is
+/// [`Playlist::LiveMedia`].
+fn read_playlist_with(response: Response, allow_live: bool) -> Result<(Url, Playlist)> {
     if response
         .content_length()
         .is_some_and(|size| size > MAX_MANIFEST_BYTES)
@@ -107,12 +113,18 @@ pub(crate) fn read_playlist(response: Response) -> Result<(Url, Playlist)> {
     crate::screen::page_read(&base, &bytes)?;
     let text = std::str::from_utf8(&bytes)
         .map_err(|_| unsupported("only UTF-8/ASCII HLS playlists are supported"))?;
-    Ok((base.clone(), crate::hls::parse(text, &base)?))
+    let playlist = if allow_live {
+        crate::hls::parse_live(text, &base)?
+    } else {
+        crate::hls::parse(text, &base)?
+    };
+    Ok((base.clone(), playlist))
 }
 
 /// Upstream generic `_extra_manifest_info` ("Checking m3u8 live status"):
 /// the first `m3u8_native` format's playlist, refetched without failing
-/// extraction, supplies a missing VOD duration.
+/// extraction, supplies a missing VOD duration; without one (no
+/// `#EXT-X-ENDLIST`), the stream `is_live`.
 pub(crate) fn check_live_status(client: &Client, info: &mut VideoInfo) {
     let Some(format) = info
         .formats
@@ -136,6 +148,9 @@ pub(crate) fn check_live_status(client: &Client, info: &mut VideoInfo) {
         return;
     }
     let duration = vod_duration(&String::from_utf8_lossy(&bytes));
+    if duration.is_none() {
+        info.metadata.live_status = Some("is_live".into());
+    }
     info.metadata.duration = info
         .metadata
         .duration
@@ -257,7 +272,7 @@ pub(crate) fn from_response_with(
     if !force_hls && !recognized(&response) {
         return Ok(None);
     }
-    let (manifest_url, playlist) = read_playlist(response)?;
+    let (manifest_url, playlist) = read_playlist_with(response, true)?;
     let filename = manifest_url
         .path_segments()
         .and_then(|mut segments| segments.next_back())
@@ -328,6 +343,17 @@ pub(crate) fn from_response_with(
             .collect::<Vec<_>>()
             .join("-")
     };
+    let playlist = match playlist {
+        // Upstream returns an unfinished (live) media playlist as is, without
+        // reading its segments; live HLS downloads through FFmpeg.
+        Playlist::LiveMedia { discontinuities } => Playlist::Media {
+            fragments: Vec::new(),
+            discontinuity: Vec::new(),
+            discontinuities,
+            ext: String::new(),
+        },
+        playlist => playlist,
+    };
     match playlist {
         Playlist::Media {
             fragments,
@@ -379,6 +405,7 @@ pub(crate) fn from_response_with(
             info.ext = "mp4".into();
             info.fragments = info.formats[0].fragments.clone();
         }
+        Playlist::LiveMedia { .. } => unreachable!("converted to a media format above"),
         Playlist::Master {
             variants,
             audio,

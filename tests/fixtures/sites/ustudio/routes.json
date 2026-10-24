@@ -1,0 +1,50 @@
+{
+ "routes": [
+  {
+   "url": "http://v1.ustudio.com/embed/Uxu2my9bgSph/ustudio/config.xml",
+   "headers": {"Content-Type": "application/xml"},
+   "body_file": "config.xml"
+  },
+  {
+   "url": "http://ustudio.com/video/Uxu2my9bgSph/san_francisco_golden_gate_bridge",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "video.html"
+  },
+  {
+   "url": "http://v1.ustudio.com/embed/bare1/ustudio/config.xml",
+   "headers": {"Content-Type": "application/xml"},
+   "body": "<config><qualities><quality><video url=\"http://v1.ustudio.com/media/bare1/a.mp4\"/></quality></qualities></config>"
+  },
+  {
+   "url": "https://www.ustudio.com/video/bare1/bare",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html><head><meta property=\"og:title\" content=\"Bare\"></head></html>"
+  },
+  {
+   "url": "http://v1.ustudio.com/embed/notitle/ustudio/config.xml",
+   "headers": {"Content-Type": "application/xml"},
+   "body": "<config/>"
+  },
+  {
+   "url": "http://ustudio.com/video/notitle/x",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html></html>"
+  },
+  {
+   "url": "http://v1.ustudio.com/embed/gone/ustudio/config.xml",
+   "status": 404,
+   "headers": {"Content-Type": "text/html"},
+   "body": "gone"
+  },
+  {
+   "url": "http://app.ustudio.com/embed/DeN7VdYRDKhP/Uw7G1kMCe65T/config.json",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "embed.json"
+  },
+  {
+   "url": "http://app.ustudio.com/embed/DeN7VdYRDKhP/noname/config.json",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"videos\": [{\"description\": \"x\"}]}"
+  }
+ ]
+}

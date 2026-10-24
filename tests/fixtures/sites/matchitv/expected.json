@@ -1,0 +1,82 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://matchi.tv/watch?s=0euhjzrxsjm",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0euhjzrxsjm\", \"title\": \"Court 2 at Stratford Padel Club 2024-07-13T18:32:24\", \"thumbnail\": \"https://thumbnails.padelgo.tv/0euhjzrxsjm.jpg\", \"upload_date\": \"20240713\", \"formats\": [{\"format_id\": \"hls-900\", \"format_index\": null, \"url\": \"https://streams.padelgo.tv/v2/streams/m3u8/0euhjzrxsjm/anonymous/video.m3u8\", \"manifest_url\": \"https://streams.padelgo.tv/v2/streams/m3u8/0euhjzrxsjm/anonymous/playlist.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-900 - 1280x720\"}], \"webpage_url\": \"https://matchi.tv/watch?s=0euhjzrxsjm\", \"original_url\": \"https://matchi.tv/watch?s=0euhjzrxsjm\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"matchi.tv\", \"extractor\": \"MatchiTV\", \"extractor_key\": \"MatchiTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://thumbnails.padelgo.tv/0euhjzrxsjm.jpg\", \"id\": \"0\"}], \"display_id\": \"0euhjzrxsjm\", \"fulltitle\": \"Court 2 at Stratford Padel Club 2024-07-13T18:32:24\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-900\", \"format_index\": null, \"url\": \"https://streams.padelgo.tv/v2/streams/m3u8/0euhjzrxsjm/anonymous/video.m3u8\", \"manifest_url\": \"https://streams.padelgo.tv/v2/streams/m3u8/0euhjzrxsjm/anonymous/playlist.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-900 - 1280x720\", \"_filename\": \"Court 2 at Stratford Padel Club 2024-07-13T18_32_24 [0euhjzrxsjm].mp4\", \"filename\": \"Court 2 at Stratford Padel Club 2024-07-13T18_32_24 [0euhjzrxsjm].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://matchi.tv/watch?s=0euhjzrxsjm",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(upload_date)s|%(thumbnail)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "0euhjzrxsjm|Court 2 at Stratford Padel Club 2024-07-13T18:32:24|20240713|https://thumbnails.padelgo.tv/0euhjzrxsjm.jpg|hls-900|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://matchi.tv/watch?s=nodata1",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"nodata1\", \"title\": \"MatchiTV video #nodata1\", \"thumbnail\": \"https://thumbnails.padelgo.tv/nodata1.jpg\", \"upload_date\": null, \"formats\": [{\"format_id\": \"hls-900\", \"format_index\": null, \"url\": \"https://streams.padelgo.tv/v2/streams/m3u8/nodata1/anonymous/video.m3u8\", \"manifest_url\": \"https://streams.padelgo.tv/v2/streams/m3u8/nodata1/anonymous/playlist.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-900 - 1280x720\"}], \"webpage_url\": \"https://matchi.tv/watch?s=nodata1\", \"original_url\": \"https://matchi.tv/watch?s=nodata1\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"matchi.tv\", \"extractor\": \"MatchiTV\", \"extractor_key\": \"MatchiTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://thumbnails.padelgo.tv/nodata1.jpg\", \"id\": \"0\"}], \"display_id\": \"nodata1\", \"fulltitle\": \"\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-900\", \"format_index\": null, \"url\": \"https://streams.padelgo.tv/v2/streams/m3u8/nodata1/anonymous/video.m3u8\", \"manifest_url\": \"https://streams.padelgo.tv/v2/streams/m3u8/nodata1/anonymous/playlist.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-900 - 1280x720\", \"_filename\": \"MatchiTV video #nodata1 [nodata1].mp4\", \"filename\": \"MatchiTV video #nodata1 [nodata1].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [MatchiTV] unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://matchi.tv/watch?s=onlydate2",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(upload_date)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "onlydate2|2024-01-02T03:04:05|20240102"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://matchi.tv/watch?s=empty3",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"empty3\", \"title\": \"MatchiTV video #empty3\", \"thumbnail\": \"https://thumbnails.padelgo.tv/empty3.jpg\", \"upload_date\": null, \"formats\": [{\"format_id\": \"hls-900\", \"format_index\": null, \"url\": \"https://streams.padelgo.tv/v2/streams/m3u8/empty3/anonymous/video.m3u8\", \"manifest_url\": \"https://streams.padelgo.tv/v2/streams/m3u8/empty3/anonymous/playlist.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-900 - 1280x720\"}], \"webpage_url\": \"https://matchi.tv/watch?s=empty3\", \"original_url\": \"https://matchi.tv/watch?s=empty3\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"matchi.tv\", \"extractor\": \"MatchiTV\", \"extractor_key\": \"MatchiTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://thumbnails.padelgo.tv/empty3.jpg\", \"id\": \"0\"}], \"display_id\": \"empty3\", \"fulltitle\": \"\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-900\", \"format_index\": null, \"url\": \"https://streams.padelgo.tv/v2/streams/m3u8/empty3/anonymous/video.m3u8\", \"manifest_url\": \"https://streams.padelgo.tv/v2/streams/m3u8/empty3/anonymous/playlist.m3u8\", \"tbr\": 900.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-900 - 1280x720\", \"_filename\": \"MatchiTV video #empty3 [empty3].mp4\", \"filename\": \"MatchiTV video #empty3 [empty3].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://matchi.tv/watch?s=gone4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [MatchiTV] unable to extract next.js data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [MatchiTV] gone4: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

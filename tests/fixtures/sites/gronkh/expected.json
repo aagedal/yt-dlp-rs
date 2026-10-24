@@ -1,0 +1,60 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://gronkh.tv/streams/657",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"657\", \"title\": \"H.O.R.D.E. - DAS ZWEiTE ZEiTALTER \\ud83c\\udfb2 Session 1\", \"view_count\": 4321, \"thumbnail\": \"https://cdn.gronkh.test/preview/657.jpg\", \"upload_date\": \"20221111\", \"formats\": [{\"format_id\": \"200\", \"format_index\": null, \"url\": \"https://cdn.gronkh.test/hls/video.m3u8\", \"manifest_url\": \"https://cdn.gronkh.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\"}], \"subtitles\": {\"en\": [{\"url\": \"https://cdn.gronkh.test/hls/subs_en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}, {\"url\": \"https://cdn.gronkh.test/657.vtt\", \"ext\": \"vtt\"}], \"de\": [{\"url\": \"https://cdn.gronkh.test/hls/subs_de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"duration\": 31463.0, \"chapters\": [{\"title\": \"Intro\", \"start_time\": 0.0, \"end_time\": 120.5}, {\"title\": \"Spiel\", \"start_time\": 120.5, \"end_time\": 900.0}, {\"title\": \"Ende\", \"start_time\": 900.0, \"end_time\": 31463.0}], \"webpage_url\": \"https://gronkh.tv/streams/657\", \"original_url\": \"https://gronkh.tv/streams/657\", \"webpage_url_basename\": \"657\", \"webpage_url_domain\": \"gronkh.tv\", \"extractor\": \"Gronkh\", \"extractor_key\": \"Gronkh\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.gronkh.test/preview/657.jpg\", \"id\": \"0\"}], \"display_id\": \"657\", \"fulltitle\": \"H.O.R.D.E. - DAS ZWEiTE ZEiTALTER \\ud83c\\udfb2 Session 1\", \"duration_string\": \"8:44:23\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"200\", \"format_index\": null, \"url\": \"https://cdn.gronkh.test/hls/video.m3u8\", \"manifest_url\": \"https://cdn.gronkh.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\", \"_filename\": \"H.O.R.D.E. - DAS ZWEiTE ZEiTALTER \\ud83c\\udfb2 Session 1 [657].mp4\", \"filename\": \"H.O.R.D.E. - DAS ZWEiTE ZEiTALTER \\ud83c\\udfb2 Session 1 [657].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://gronkh.tv/streams/657",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Gronkh] Extracting URL: https://gronkh.tv/streams/657",
+    "[Gronkh] 657: Downloading JSON metadata",
+    "[Gronkh] 657: Downloading JSON metadata",
+    "[Gronkh] 657: Downloading m3u8 information",
+    "[info] Available subtitles for 657:",
+    "Language Formats",
+    "en       vtt, vtt",
+    "de       vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://gronkh.tv/stream/536",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"536\", \"title\": \"GTV0536\", \"view_count\": null, \"thumbnail\": null, \"upload_date\": null, \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.gronkh.test/hls/video.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"chapters\": null, \"webpage_url\": \"https://gronkh.tv/stream/536\", \"original_url\": \"https://gronkh.tv/stream/536\", \"webpage_url_basename\": \"536\", \"webpage_url_domain\": \"gronkh.tv\", \"extractor\": \"Gronkh\", \"extractor_key\": \"Gronkh\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"536\", \"fulltitle\": \"GTV0536\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.gronkh.test/hls/video.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"GTV0536 [536].m3u8\", \"filename\": \"GTV0536 [536].m3u8\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://gronkh.tv/watch/stream/546",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 546: An extractor error has occurred. (caused by KeyError('playlist_url')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

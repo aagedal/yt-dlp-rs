@@ -1,0 +1,38 @@
+[
+ {
+  "url": "https://www.ettu.tv/en-int/playerpage/1573849",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.ettu.tv/en-int/playerpage/1573849",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.ettu.tv/en-int/playerpage/2",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.ettu.tv/en-int/playerpage/3",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.ettu.tv/en-int/playerpage/4",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.ettu.tv/en-int/playerpage/5",
+  "args": [
+   "-j"
+  ]
+ }
+]

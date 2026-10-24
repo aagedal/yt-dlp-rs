@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {"url": "http://www.bostonglobe.com/metro/2017/02/11/tree-finally-succumbs/h1b4lviqzMTIn9sVy8F3gP/story.html", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://www.bostonglobe.com/metro/2017/02/12/two-videos/abc123/story.html", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page2.html"},
+  {"url": "https://www.bostonglobe.com/metro/2017/02/13/untitled/def456/story.html", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<video data-brightcove-video-id=\"1\" data-account=\"2\" data-player=\"p\" data-embed=\"default\"></video><video data-brightcove-video-id=\"3\" data-account=\"2\" data-player=\"p\" data-embed=\"default\"></video>"},
+  {"url": "http://players.brightcove.net/5067014667001/SJWAiyYWg_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "https://players.brightcove.net/5067014667001/SJWAiyYWg_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "https://edge.api.brightcove.com/playback/v1/accounts/5067014667001/videos/5232946137001", "headers": {"Content-Type": "application/json"}, "body_file": "video.json", "request_headers": {"Accept": "application/json;pk=BCpkGLOBE"}},
+  {"url": "https://edge.api.brightcove.com/playback/v1/accounts/5067014667001/videos/5232946137002", "headers": {"Content-Type": "application/json"}, "body_file": "video2.json", "request_headers": {"Accept": "application/json;pk=BCpkGLOBE"}}
+ ]
+}

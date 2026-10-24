@@ -1,0 +1,47 @@
+{
+ "routes": [
+  {
+   "url": "https://cloudflarestream.com/31c9291ab41fac05471db4e73aa11717/manifest/video.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "video.m3u8"
+  },
+  {
+   "url": "https://cloudflarestream.com/31c9291ab41fac05471db4e73aa11717/manifest/low.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://cloudflarestream.com/31c9291ab41fac05471db4e73aa11717/manifest/high.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://cloudflarestream.com/31c9291ab41fac05471db4e73aa11717/manifest/video.mpd",
+   "headers": {"Content-Type": "application/dash+xml"},
+   "body_file": "video.mpd"
+  },
+  {
+   "url": "https://bytehighway.net/81d80727f3022488598f68d323c1ad5e/manifest/video.m3u8",
+   "status": 404,
+   "headers": {"Content-Type": "text/plain"},
+   "body": "gone"
+  },
+  {
+   "url": "https://bytehighway.net/81d80727f3022488598f68d323c1ad5e/manifest/video.mpd",
+   "headers": {"Content-Type": "application/dash+xml"},
+   "body_file": "video.mpd"
+  },
+  {
+   "url": "https://cloudflarestream.com/eyJhbGciOiJSUzI1NiJ9.eyJraWQiOiAiayIsICJzdWIiOiAiMGU4ZTA0MGFlYzc3Njg2MmUxZDYzMmE2OTllZGY1OWUifQ.c2ln/manifest/video.m3u8",
+   "status": 403,
+   "headers": {"Content-Type": "text/plain"},
+   "body": "denied"
+  },
+  {
+   "url": "https://cloudflarestream.com/eyJhbGciOiJSUzI1NiJ9.eyJraWQiOiAiayIsICJzdWIiOiAiMGU4ZTA0MGFlYzc3Njg2MmUxZDYzMmE2OTllZGY1OWUifQ.c2ln/manifest/video.mpd",
+   "status": 403,
+   "headers": {"Content-Type": "text/plain"},
+   "body": "denied"
+  }
+ ]
+}

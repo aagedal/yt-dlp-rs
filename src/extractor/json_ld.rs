@@ -28,7 +28,7 @@ pub(crate) fn yield_json_ld(html: &str) -> Vec<Value> {
 }
 
 /// Raw control characters inside JSON strings as `\u00XX` escapes.
-fn escape_controls(text: &str) -> String {
+pub(crate) fn escape_controls(text: &str) -> String {
     let mut out = String::with_capacity(text.len());
     let mut in_string = false;
     let mut escaped = false;
@@ -428,6 +428,14 @@ fn traverse(info: &mut Map<String, Value>, items: &[Value], top: bool) {
 pub(crate) fn search(html: &str) -> Map<String, Value> {
     let mut info = Map::new();
     traverse(&mut info, &yield_json_ld(html), true);
+    info.retain(|_, value| !value.is_null());
+    info
+}
+
+/// `_json_ld(json_ld, video_id)` of one already parsed object.
+pub(crate) fn json_ld(value: &Value) -> Map<String, Value> {
+    let mut info = Map::new();
+    traverse(&mut info, std::slice::from_ref(value), true);
     info.retain(|_, value| !value.is_null());
     info
 }

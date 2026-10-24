@@ -1,0 +1,54 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://href.li/?https://media.example.com/clips/cat.mp4?utm_source=share&x=1",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"cat\", \"title\": \"cat\", \"timestamp\": null, \"direct\": true, \"formats\": [{\"format_id\": \"mp4\", \"url\": \"https://media.example.com/clips/cat.mp4?utm_source=share&x=1\", \"ext\": \"mp4\", \"vcodec\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - unknown\"}], \"subtitles\": {}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"hls_aes\": null, \"original_url\": \"https://href.li/?https://media.example.com/clips/cat.mp4?utm_source=share&x=1\", \"webpage_url\": \"https://media.example.com/clips/cat.mp4?utm_source=share&x=1\", \"webpage_url_basename\": \"cat.mp4\", \"webpage_url_domain\": \"media.example.com\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"cat\", \"fulltitle\": \"cat\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4\", \"url\": \"https://media.example.com/clips/cat.mp4?utm_source=share&x=1\", \"ext\": \"mp4\", \"vcodec\": null, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"mp4 - unknown\", \"_filename\": \"cat [cat].mp4\", \"filename\": \"cat [cat].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://href.li/?https://media.example.com/clips/cat.mp4?utm_source=share&x=1",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "cat|cat|generic|https://media.example.com/clips/cat.mp4?utm_source=share&x=1|https://href.li/?https://media.example.com/clips/cat.mp4?utm_source=share&x=1|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://href.li/?https://player.radiozet.pl/Podcasty/Show/missing",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [RadioZetPodcast] missing: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://href.li/?not-a-url",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [generic] 'not-a-url' is not a valid URL"
+   ],
+   "files": {}
+  }
+ ]
+}

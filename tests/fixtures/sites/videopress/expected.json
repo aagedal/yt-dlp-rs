@@ -1,0 +1,75 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://videopress.com/embed/kUJmAcSf",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"kUJmAcSf\", \"title\": \"VideoPress Demo\", \"description\": \"\", \"thumbnail\": \"https://videos.files.wordpress.com/kUJmAcSf/poster.jpg\", \"duration\": 635.0, \"timestamp\": 1434983935, \"age_limit\": 0, \"formats\": [{\"url\": \"https://cdn.example.com/extra.mp4\", \"format_id\": \"fmt_extra-mp4\", \"ext\": \"mp4\", \"quality\": -1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"fmt_extra-mp4 - unknown\"}, {\"url\": \"https://videos.files.wordpress.com/kUJmAcSf/videopress-demo_fmt1.ogv\", \"format_id\": \"std-ogg\", \"ext\": \"ogv\", \"quality\": 0, \"protocol\": \"https\", \"video_ext\": \"ogv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"std-ogg - unknown\"}, {\"url\": \"https://videos.files.wordpress.com/kUJmAcSf/videopress-demo_std.mp4\", \"format_id\": \"std-mp4\", \"ext\": \"mp4\", \"quality\": 0, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"std-mp4 - unknown\"}, {\"url\": \"https://videos.files.wordpress.com/kUJmAcSf/videopress-demo_dvd.mp4\", \"format_id\": \"dvd-mp4\", \"ext\": \"mp4\", \"quality\": 1, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dvd-mp4 - unknown\"}, {\"url\": \"https://videos.files.wordpress.com/kUJmAcSf/videopress-demo_hd.mp4\", \"format_id\": \"hd-mp4\", \"ext\": \"mp4\", \"quality\": 2, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd-mp4 - unknown\"}, {\"url\": \"https://videos.files.wordpress.com/kUJmAcSf/videopress-demo.mov\", \"format_id\": \"original\", \"quality\": 3, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mov\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\"}], \"webpage_url\": \"https://videopress.com/embed/kUJmAcSf\", \"original_url\": \"https://videopress.com/embed/kUJmAcSf\", \"webpage_url_basename\": \"kUJmAcSf\", \"webpage_url_domain\": \"videopress.com\", \"extractor\": \"VideoPress\", \"extractor_key\": \"VideoPress\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://videos.files.wordpress.com/kUJmAcSf/poster.jpg\", \"id\": \"0\"}], \"display_id\": \"kUJmAcSf\", \"fulltitle\": \"VideoPress Demo\", \"duration_string\": \"10:35\", \"upload_date\": \"20150622\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://videos.files.wordpress.com/kUJmAcSf/videopress-demo.mov\", \"format_id\": \"original\", \"quality\": 3, \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"ext\": \"mov\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\", \"_filename\": \"VideoPress Demo [kUJmAcSf].mov\", \"filename\": \"VideoPress Demo [kUJmAcSf].mov\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://video.wordpress.com/embed/kUJmAcSf",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[VideoPress] Extracting URL: https://video.wordpress.com/embed/kUJmAcSf",
+    "[VideoPress] kUJmAcSf: Downloading JSON metadata",
+    "[info] Available formats for kUJmAcSf:",
+    "ID            EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "------------------------------------------------------",
+    "fmt_extra-mp4 mp4 unknown    | https | unknown unknown",
+    "std-ogg       ogv unknown    | https | unknown unknown",
+    "std-mp4       mp4 unknown    | https | unknown unknown",
+    "dvd-mp4       mp4 unknown    | https | unknown unknown",
+    "hd-mp4        mp4 unknown    | https | unknown unknown",
+    "original      mov 1280x720   | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://videopress.com/embed/iH3gstfZ",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"iH3gstfZ\", \"title\": \"Mature\", \"description\": null, \"thumbnail\": null, \"timestamp\": null, \"age_limit\": null, \"formats\": [{\"url\": \"http://videos.files.wordpress.com/iH3gstfZ/a/b.ogg\", \"format_id\": \"hd-ogg\", \"ext\": \"ogg\", \"quality\": 2, \"protocol\": \"http\", \"video_ext\": \"ogg\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd-ogg - unknown\"}], \"webpage_url\": \"https://videopress.com/embed/iH3gstfZ\", \"original_url\": \"https://videopress.com/embed/iH3gstfZ\", \"webpage_url_basename\": \"iH3gstfZ\", \"webpage_url_domain\": \"videopress.com\", \"extractor\": \"VideoPress\", \"extractor_key\": \"VideoPress\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"iH3gstfZ\", \"fulltitle\": \"Mature\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://videos.files.wordpress.com/iH3gstfZ/a/b.ogg\", \"format_id\": \"hd-ogg\", \"ext\": \"ogg\", \"quality\": 2, \"protocol\": \"http\", \"video_ext\": \"ogg\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd-ogg - unknown\", \"_filename\": \"Mature [iH3gstfZ].ogg\", \"filename\": \"Mature [iH3gstfZ].ogg\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://videopress.com/embed/notitle",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [generic] notitle: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://videopress.com/embed/goneGone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [VideoPress] goneGone: Unable to download JSON metadata: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)"
+   ],
+   "files": {}
+  }
+ ]
+}

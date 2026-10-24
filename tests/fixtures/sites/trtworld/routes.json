@@ -1,0 +1,65 @@
+{
+ "routes": [
+  {
+   "url": "https://www.trtworld.com/video/news/turkiye-switches-to-sustainable-tourism-16067690",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!doctype html><html><head><title>TRT World</title></head><body><script>window.__NUXT__=(function(a,b,c){return {layout:\"default\",data:[{videoData:{content:{platforms:{website:{metadata:{hls_url:a},fields:{title:{text:\"T\\u00fcrkiye switches to sustainable tourism\"},description:{text:b},thumbnail:{url:\"https:\\u002F\\u002Fcdn-i.pr.trt.com.tr\\u002Ftrtworld\\u002F17647563_0-0-1920-1080.jpeg\"}},published:{date:\"2023-12-02T15:06:09Z\"}},youtube:{metadata:{youtubeId:c}}}}}}],fetch:{},error:null}}(\"https:\\u002F\\u002Fhls.trtworld.test\\u002Fmaster.m3u8\",\"Tourism in T\\u00fcrkiye.\",\"zEns2dWl00w\"));</script></body></html>"
+  },
+  {
+   "url": "https://www.trtworld.com/video/one-offs/frames-from-anatolia-14541780",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!doctype html><html><head><title>TRT World</title></head><body><script>window.__NUXT__=(function(a){return {data:[{videoData:{content:{platforms:{website:{metadata:{hls_url:\"https:\\u002F\\u002Fcdn.trtworld.test\\u002Fclip.mp4\",url:a}},ott:{fields:{title:{text:\"Frames From Anatolia\"},thumbnail:{url:\"not a url\"}},published:{date:\"2023-08-19T10:27:24Z\"}}}}}}]}}(\"https:\\u002F\\u002Fhls.trtworld.test\\u002Fmedia.m3u8\"));</script></body></html>"
+  },
+  {
+   "url": "https://www.trtworld.com/video/news/nothing-1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!doctype html><html><head><title>TRT World</title></head><body><script>window.__NUXT__=(function(z){return {data:[{videoData:{content:{platforms:{website:{metadata:{}}}}}}]}}(1));</script></body></html>"
+  },
+  {
+   "url": "https://www.trtworld.com/video/news/noplatforms-2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!doctype html><html><head><title>TRT World</title></head><body><script>window.__NUXT__=(function(z){return {data:[{videoData:{content:{}}}]}}(1));</script></body></html>"
+  },
+  {
+   "url": "https://www.trtworld.com/video/news/broken-3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!doctype html><html><head><title>TRT World</title></head><body><script>window.__NUXT__=(function(z){return {data:[{videoData:{content:{platforms:{website:{metadata:{hls_url:\"https:\\u002F\\u002Fhls.trtworld.test\\u002Fmissing.m3u8\"},fields:{title:{text:\"x\"}}}}}}}]}}(1));</script></body></html>"
+  },
+  {
+   "url": "https://www.trtworld.com/video/news/nonuxt-4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>x</title></head><body></body></html>"
+  },
+  {
+   "url": "https://hls.trtworld.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://hls.trtworld.test/media.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://hls.trtworld.test/missing.m3u8",
+   "status": 404,
+   "body": "nope"
+  }
+ ]
+}

@@ -1,0 +1,50 @@
+{
+ "routes": [
+  {
+   "url": "https://api.clyp.it/iynkjk4b",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"Title\": \"research\", \"Description\": \"#Research\", \"Duration\": 51.278, \"DateCreated\": \"2015-06-28T20:56:21.597Z\", \"OggUrl\": \"https://audio.clyp.it/iynkjk4b.ogg?Expires=1\", \"Mp3Url\": \"https://audio.clyp.it/iynkjk4b.mp3?Expires=1\", \"SecureOggUrl\": \"https://audio.clyp.it/iynkjk4b.ogg?Secure=1\", \"SecureMp3Url\": \"https://audio.clyp.it/iynkjk4b.mp3?Secure=1\"}"
+  },
+  {
+   "url": "https://clyp.it/iynkjk4b",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html><script>var foo = 1;</script></html>"
+  },
+  {
+   "url": "https://api.clyp.it/b04p1odi?token=b0078e077e15835845c528a44417719d",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"Title\": \"GJ! (Reward Edit)\", \"Description\": \"Metal Resistance (THE ONE edition)\", \"Duration\": \"177.789\", \"DateCreated\": \"2018-06-05T10:27:58Z\", \"SecureMp3Url\": \"https://audio.clyp.it/b04p1odi.mp3\"}"
+  },
+  {
+   "url": "https://clyp.it/b04p1odi?token=b0078e077e15835845c528a44417719d",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html></html>"
+  },
+  {
+   "url": "https://api.clyp.it/v42214lc",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"Title\": \"i dont wanna go (old version)\", \"Description\": null, \"Duration\": 113, \"DateCreated\": \"2020-12-07T13:41:45.0Z\", \"OggUrl\": \"\"}"
+  },
+  {
+   "url": "https://clyp.it/v42214lc",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<script>var wavStreamUrl = 'https://audio.clyp.it/v42214lc.wav?a=1&amp;b=2';</script>"
+  },
+  {
+   "url": "https://api.clyp.it/notitle1",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"Mp3Url\": \"https://audio.clyp.it/notitle1.mp3\"}"
+  },
+  {
+   "url": "https://clyp.it/notitle1",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html></html>"
+  },
+  {
+   "url": "https://api.clyp.it/gone1",
+   "status": 404,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{}"
+  }
+ ]
+}

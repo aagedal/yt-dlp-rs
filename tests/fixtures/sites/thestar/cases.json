@@ -1,0 +1,14 @@
+[
+ {
+  "url": "http://www.thestar.com/life/2016/02/01/mankind.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.thestar.com/news/no-video.html",
+  "args": [
+   "-j"
+  ]
+ }
+]

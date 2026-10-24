@@ -1,0 +1,74 @@
+{
+ "routes": [
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0305p7xKrXUPBwoNE9x6mh",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!DOCTYPE html><html><head><title>Ignored</title></head><body><title-div class=\"h1\"> Der Wurstelprater <i>zur</i> Kaiserzeit </title-div><div class=\"flex border-base-content-x\"><div class=\"prose\">Not this one</div></div><div class=\"mt-4 border-base-content p-2\"><p>Intro</p><div class=\"prose max-w-none\"><p>Der Wiener Prater &amp; seine Attraktionen.</p><p>Zweiter<br>Absatz</p></div><div class=\"prose\">Second prose</div></div></body></html>"
+  },
+  {
+   "url": "https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID=\"subs\",NAME=\"Deutsch\",LANGUAGE=\"de\",DEFAULT=YES,AUTOSELECT=YES,URI=\"subs_de.m3u8\"\n#EXT-X-STREAM-INF:BANDWIDTH=2000000,RESOLUTION=1280x720,CODECS=\"avc1.64001f,mp4a.40.2\",SUBTITLES=\"subs\"\nv720.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360,CODECS=\"avc1.4d401e,mp4a.40.2\",SUBTITLES=\"subs\"\nv360.m3u8\n"
+  },
+  {
+   "url": "https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/v720.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-VERSION:3\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/v360.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-VERSION:3\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://cdn.filmarchiv.at/f_0305/p7xKrXUPBwoNE9x6mh_v1_sv1/subs_de.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXTINF:10.0,\nsub0.vtt\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0306vI3wO0tJIsfrqYFQXF",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><h1>Nur Text</h1><div class=\"prose\">lonely</div></body></html>"
+  },
+  {
+   "url": "https://cdn.filmarchiv.at/f_0306/vI3wO0tJIsfrqYFQXF_v1_sv1/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-VERSION:3\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0307brokenDesc",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><title-div>Kaputt</title-div><div class=\"border-base-content\"><div class=\"prose\">x</div></body></html>"
+  },
+  {
+   "url": "https://cdn.filmarchiv.at/f_0307/brokenDesc_v1_sv1/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXT-X-VERSION:3\n#EXTINF:10.0,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://www.filmarchiv.at/de/filmarchiv-on/video/f_0308noPlaylist",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><title-div>Ohne</title-div></body></html>"
+  }
+ ]
+}

@@ -1,0 +1,53 @@
+{
+ "routes": [
+  {
+   "url": "https://player.cloudycdn.services/player/ltv/media/46k_d23-6000-105/",
+   "request_body": ["version=6.4.0", "referer=https%3A%2F%2Fembed.cloudycdn.services%2Fltv%2Fmedia%2F46k_d23-6000-105%3F"],
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"name\": \"D23-6000-105_cetstud\", \"duration\": 1442, \"upload_date\": \"2023-11-21T17:52:31+00:00\", \"source\": {\"poster\": \"https://store.bstrm.net/tmsp00060/assets/media/660858/placeholder1700589200.jpg\", \"sources\": [{\"src\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"type\": \"application/x-mpegURL\"}, {\"src\": \"not a url\"}, {\"type\": \"x\"}]}}"
+  },
+  {
+   "url": "https://player.cloudycdn.services/player/ltv/media/46k_d23-6000-105/",
+   "request_body": ["version=6.4.0", "referer=https%3A%2F%2Fembed.cloudycdn.services%2Fltv%2Fmedia%2F46k_d23-6000-105"],
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"name\": \"D23-6000-105_cetstud\", \"duration\": 1442, \"upload_date\": \"2023-11-21T17:52:31+00:00\", \"source\": {\"poster\": \"https://store.bstrm.net/tmsp00060/assets/media/660858/placeholder1700589200.jpg\", \"sources\": [{\"src\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\", \"type\": \"application/x-mpegURL\"}]}}"
+  },
+  {
+   "url": "https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://cdn.cloudycdn.test/ltv/46k/chunklist_b1200000_vo_slv.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://cdn.cloudycdn.test/ltv/46k/chunklist_b600000_slv.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://player.backscreen.com/player/ltv/media/32j_z25-0600-127/",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"name\": \"Z25-0600-127-DZ\", \"duration\": \"1906\", \"upload_date\": \"2025-05-07T15:40:02Z\", \"source\": {\"sources\": [{\"src\": \"https://cdn.backscreen.test/32j/missing.m3u8\"}, {\"src\": \"https://cdn.cloudycdn.test/ltv/46k/playlist.m3u8\"}]}}"
+  },
+  {
+   "url": "https://cdn.backscreen.test/32j/missing.m3u8",
+   "status": 404,
+   "headers": {"Content-Type": "text/plain"},
+   "body": "gone"
+  },
+  {
+   "url": "https://player.cloudycdn.services/player/izm/media/26e_lv-8-5-1/",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"name\": 5, \"source\": {}}"
+  },
+  {
+   "url": "https://player.cloudycdn.services/player/izm/media/gone/",
+   "status": 404,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{}"
+  }
+ ]
+}

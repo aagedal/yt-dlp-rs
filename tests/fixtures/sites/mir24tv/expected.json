@@ -1,0 +1,124 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://mir24.tv/news/16635210/slug-16635210",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"16635210\", \"title\": \"\\u0414\\u043d\\u0438 \\u043a\\u0443\\u043b\\u044c\\u0442\\u0443\\u0440\\u044b \\u0420\\u043e\\u0441\\u0441\\u0438\\u0438 & \\u0423\\u0437\\u0431\\u0435\\u043a\\u0438\\u0441\\u0442\\u0430\\u043d\", \"thumbnail\": \"https://mir24.tv/img/a.jpg\", \"formats\": [{\"format_id\": \"hls-600\", \"format_index\": null, \"url\": \"https://cdn.mir24.test/hls/b/360.m3u8\", \"manifest_url\": \"https://cdn.mir24.test/hls/b/master.m3u8\", \"tbr\": 600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-600 - 640x360\"}, {\"format_id\": \"hls-1400\", \"format_index\": null, \"url\": \"https://cdn.mir24.test/hls/b/720.m3u8\", \"manifest_url\": \"https://cdn.mir24.test/hls/b/master.m3u8\", \"tbr\": 1400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1400 - 1280x720\"}], \"subtitles\": {}, \"webpage_url\": \"https://mir24.tv/news/16635210/slug-16635210\", \"original_url\": \"https://mir24.tv/news/16635210/slug-16635210\", \"webpage_url_basename\": \"slug-16635210\", \"webpage_url_domain\": \"mir24.tv\", \"extractor\": \"mir24.tv\", \"extractor_key\": \"Mir24Tv\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://mir24.tv/img/a.jpg\", \"id\": \"0\"}], \"display_id\": \"16635210\", \"fulltitle\": \"\\u0414\\u043d\\u0438 \\u043a\\u0443\\u043b\\u044c\\u0442\\u0443\\u0440\\u044b \\u0420\\u043e\\u0441\\u0441\\u0438\\u0438 & \\u0423\\u0437\\u0431\\u0435\\u043a\\u0438\\u0441\\u0442\\u0430\\u043d\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-1400\", \"format_index\": null, \"url\": \"https://cdn.mir24.test/hls/b/720.m3u8\", \"manifest_url\": \"https://cdn.mir24.test/hls/b/master.m3u8\", \"tbr\": 1400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1400 - 1280x720\", \"_filename\": \"\\u0414\\u043d\\u0438 \\u043a\\u0443\\u043b\\u044c\\u0442\\u0443\\u0440\\u044b \\u0420\\u043e\\u0441\\u0441\\u0438\\u0438 & \\u0423\\u0437\\u0431\\u0435\\u043a\\u0438\\u0441\\u0442\\u0430\\u043d [16635210].mp4\", \"filename\": \"\\u0414\\u043d\\u0438 \\u043a\\u0443\\u043b\\u044c\\u0442\\u0443\\u0440\\u044b \\u0420\\u043e\\u0441\\u0441\\u0438\\u0438 & \\u0423\\u0437\\u0431\\u0435\\u043a\\u0438\\u0441\\u0442\\u0430\\u043d [16635210].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [mir24.tv] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mir24.tv/news/16635210/slug-16635210",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[mir24.tv] Extracting URL: https://mir24.tv/news/16635210/slug-16635210",
+    "[mir24.tv] 16635210: Downloading webpage",
+    "[mir24.tv] 16635210: Downloading m3u8 information",
+    "[info] Available formats for 16635210:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC  ACODEC",
+    "-------------------------------------------------------",
+    "hls-600  mp4 640x360    |  600k m3u8  | unknown unknown",
+    "hls-1400 mp4 1280x720   | 1400k m3u8  | unknown unknown"
+   ],
+   "stderr": [
+    "WARNING: [mir24.tv] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mir24.tv/news/2/slug-2",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|Only \"title\"|hls-1400"
+   ],
+   "stderr": [
+    "WARNING: [mir24.tv] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mir24.tv/news/3/slug-3",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3|mir24.tv video #3"
+   ],
+   "stderr": [
+    "WARNING: [mir24.tv] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "WARNING: [mir24.tv] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mir24.tv/news/4/slug-4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [mir24.tv] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [mir24.tv] 4: Unable to extract iframe URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mir24.tv/news/5/slug-5",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [mir24.tv] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [mir24.tv] 5: Unable to extract m3u8 URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mir24.tv/news/6/slug-6",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [mir24.tv] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [mir24.tv] 6: Unable to extract m3u8 URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://mir24.tv/news/7/slug-7",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [mir24.tv] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies",
+    "ERROR: [mir24.tv] 7: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

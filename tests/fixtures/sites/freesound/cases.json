@@ -1,0 +1,7 @@
+[
+ {"url": "http://www.freesound.org/people/miklovan/sounds/194503/", "args": ["-j"]},
+ {"url": "http://www.freesound.org/people/miklovan/sounds/194503/", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(duration)s|%(uploader)s|%(upload_date)s|%(tags)s|%(format_id)s|%(format_note)s|%(ext)s"]},
+ {"url": "http://www.freesound.org/people/miklovan/sounds/194503/", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://freesound.org/people/someone/sounds/1/", "args": ["-j"]},
+ {"url": "https://freesound.org/people/someone/sounds/2/", "args": ["-j"]}
+]

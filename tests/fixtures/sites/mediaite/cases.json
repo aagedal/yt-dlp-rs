@@ -1,0 +1,5 @@
+[
+ {"url": "https://www.mediaite.com/sports/bill-burr-roasts-nfl/", "args": ["-j"]},
+ {"url": "https://www.mediaite.com/tv/joe-scarborough-goes-off/", "args": ["--print", "%(id)s|%(title)s|%(timestamp)s|%(duration)s|%(format_id)s|%(ext)s|%(extractor)s"]},
+ {"url": "https://www.mediaite.com/tv/no-video/", "args": ["-j"]}
+]

@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "https://www.mediaite.com/sports/bill-burr-roasts-nfl/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body><script src=\"https://cdn.jwplayer.com/players/vPHKITzy-Abc123.js\"></script><div data-video-id=\"other\"></div></body></html>"},
+  {"url": "https://www.mediaite.com/tv/joe-scarborough-goes-off/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body><div class=\"jw\" data-video-id=\"eeFcK4Xm\"></div></body></html>"},
+  {"url": "https://www.mediaite.com/tv/no-video/", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body>nothing</body></html>"},
+  {"url": "https://cdn.jwplayer.com/v2/media/vPHKITzy", "headers": {"Content-Type": "application/json"}, "body": "{\"title\": \"Bill Burr On NFL\", \"kind\": \"Single Item\", \"playlist\": [{\"title\": \"Bill Burr On NFL And Black Lives Matter\", \"mediaid\": \"vPHKITzy\", \"image\": \"https://cdn.jwplayer.com/v2/media/vPHKITzy/poster.jpg?width=720\", \"duration\": 55, \"pubdate\": 1631630185, \"description\": \"\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/vPHKITzy-1.m4a\", \"type\": \"audio/mp4\", \"label\": \"AAC Audio\", \"bitrate\": 113000}, {\"file\": \"https://cdn.jwplayer.com/videos/vPHKITzy-2.mp4\", \"type\": \"video/mp4\", \"height\": 720, \"width\": 1280, \"label\": \"720p\", \"bitrate\": 1500000}]}]}"},
+  {"url": "https://cdn.jwplayer.com/v2/media/eeFcK4Xm", "headers": {"Content-Type": "application/json"}, "body": "{\"kind\": \"Single Item\", \"playlist\": [{\"title\": \"Morning Joe-6_16_52 am.mp4\", \"mediaid\": \"eeFcK4Xm\", \"duration\": 258, \"pubdate\": 1631618057, \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/eeFcK4Xm-1.mp4\", \"type\": \"video/mp4\", \"height\": 360, \"width\": 640, \"label\": \"360p\"}]}]}"}
+ ]
+}

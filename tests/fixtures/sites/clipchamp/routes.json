@@ -1,0 +1,14 @@
+{
+ "routes": [
+  {"url": "https://clipchamp.com/watch/gRXZ4ZhdDaU", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://iframe.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body><stream-player customer-domain-prefix=\"customer-abc123\"></stream-player></body></html>"},
+  {"url": "https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/video.mpd?parentOrigin=https%3A%2F%2Fclipchamp.com", "headers": {"Content-Type": "application/dash+xml"}, "body_file": "video.mpd"},
+  {"url": "https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/video.m3u8?parentOrigin=https%3A%2F%2Fclipchamp.com", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "video.m3u8"},
+  {"url": "https://clipchamp.com/watch/nosub", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\":{\"pageProps\":{\"video\":{\"storage_location\":\"cf_stream\",\"download_url\":\"deadbeef\",\"creator\":{\"last_name\":\"Solo\"}}}}}</script>"},
+  {"url": "https://iframe.cloudflarestream.com/deadbeef", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html></html>"},
+  {"url": "https://customer-2ut9yn3y6fta1yxe.cloudflarestream.com/deadbeef/manifest/video.m3u8?parentOrigin=https%3A%2F%2Fclipchamp.com", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "video.m3u8"},
+  {"url": "https://clipchamp.com/watch/s3clip", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\":{\"pageProps\":{\"video\":{\"storage_location\":\"s3\"}}}}</script>"},
+  {"url": "https://clipchamp.com/watch/novideo", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\":{\"pageProps\":{}}}</script>"},
+  {"url": "https://clipchamp.com/watch/nopath", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<script id=\"__NEXT_DATA__\" type=\"application/json\">{\"props\":{\"pageProps\":{\"video\":{\"storage_location\":\"cf_stream\"}}}}</script>"}
+ ]
+}

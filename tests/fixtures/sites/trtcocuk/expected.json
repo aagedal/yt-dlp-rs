@@ -1,0 +1,81 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.trtcocuk.net.tr/video/kaptan-pengu-ve-arkadaslari-1",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3789738\", \"formats\": [{\"format_id\": \"200\", \"format_index\": null, \"url\": \"https://trt.test/hls/video.m3u8\", \"manifest_url\": \"https://trt.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\"}], \"subtitles\": {\"en\": [{\"url\": \"https://trt.test/hls/subs_en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://trt.test/hls/subs_de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"season_number\": 1, \"release_timestamp\": 1607513774, \"series\": \"\\\"Kaptan Pengu ve Arkada\\u015flar\\u0131\\\"\", \"title\": \"Kaptan Pengu ve Arkada\\u015flar\\u0131 1 B\\u00f6l\\u00fcm \\u0130zle TRT \\u00c7ocuk\", \"webpage_url\": \"https://www.trtcocuk.net.tr/video/kaptan-pengu-ve-arkadaslari-1\", \"original_url\": \"https://www.trtcocuk.net.tr/video/kaptan-pengu-ve-arkadaslari-1\", \"webpage_url_basename\": \"kaptan-pengu-ve-arkadaslari-1\", \"webpage_url_domain\": \"trtcocuk.net.tr\", \"extractor\": \"TrtCocukVideo\", \"extractor_key\": \"TrtCocukVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3789738\", \"fulltitle\": \"Kaptan Pengu ve Arkada\\u015flar\\u0131 1 B\\u00f6l\\u00fcm \\u0130zle TRT \\u00c7ocuk\", \"release_date\": \"20201209\", \"release_year\": 2020, \"season\": \"Season 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"200\", \"format_index\": null, \"url\": \"https://trt.test/hls/video.m3u8\", \"manifest_url\": \"https://trt.test/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\", \"_filename\": \"Kaptan Pengu ve Arkada\\u015flar\\u0131 1 B\\u00f6l\\u00fcm \\u0130zle TRT \\u00c7ocuk [3789738].mp4\", \"filename\": \"Kaptan Pengu ve Arkada\\u015flar\\u0131 1 B\\u00f6l\\u00fcm \\u0130zle TRT \\u00c7ocuk [3789738].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtcocuk.net.tr/video/kaptan-pengu-ve-arkadaslari-1",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(series)s|%(season_number)s|%(season)s|%(release_timestamp)s|%(release_date)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "3789738|Kaptan Pengu ve Arkadaşları 1 Bölüm İzle TRT Çocuk|\"Kaptan Pengu ve Arkadaşları\"|1|Season 1|1607513774|20201209"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtcocuk.net.tr/video/sef-rokanin-lezzet-dunyasi-17",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"10260842\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://trt.test/hls/video.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"season_number\": null, \"release_timestamp\": null, \"series\": null, \"title\": \"TrtCocukVideo video #10260842\", \"webpage_url\": \"https://www.trtcocuk.net.tr/video/sef-rokanin-lezzet-dunyasi-17\", \"original_url\": \"https://www.trtcocuk.net.tr/video/sef-rokanin-lezzet-dunyasi-17\", \"webpage_url_basename\": \"sef-rokanin-lezzet-dunyasi-17\", \"webpage_url_domain\": \"trtcocuk.net.tr\", \"extractor\": \"TrtCocukVideo\", \"extractor_key\": \"TrtCocukVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"10260842\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://trt.test/hls/video.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"TrtCocukVideo video #10260842 [10260842].m3u8\", \"filename\": \"TrtCocukVideo video #10260842 [10260842].m3u8\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [TrtCocukVideo] unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtcocuk.net.tr/video/nodata-3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nodata-3: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtcocuk.net.tr/video/nonuxt-4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [TrtCocukVideo] nonuxt-4: Unable to extract __NUXT__; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.trtcocuk.net.tr/video/novideo-5",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: novideo-5: An extractor error has occurred. (caused by KeyError('video')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

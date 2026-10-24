@@ -1,0 +1,78 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.ilpost.it/episodes/1-avis-akvasas-ka/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2972047\", \"display_id\": \"1-avis-akvasas-ka\", \"series_id\": \"235598\", \"vcodec\": \"none\", \"title\": \"1. Avis akvasas ka\", \"description\": \"\", \"url\": \"https://www.ilpost.it/wp-content/uploads/2023/12/28/1703781217-l-invasione-pt1-v6.mp3\", \"thumbnail\": \"https://www.ilpost.it/img/avis.jpg\", \"timestamp\": 1703835014, \"duration\": 2495.0, \"availability\": \"public\", \"webpage_url\": \"https://www.ilpost.it/episodes/1-avis-akvasas-ka/\", \"original_url\": \"https://www.ilpost.it/episodes/1-avis-akvasas-ka/\", \"webpage_url_basename\": \"1-avis-akvasas-ka\", \"webpage_url_domain\": \"ilpost.it\", \"extractor\": \"IlPost\", \"extractor_key\": \"IlPost\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.ilpost.it/img/avis.jpg\", \"id\": \"0\"}], \"fulltitle\": \"1. Avis akvasas ka\", \"duration_string\": \"41:35\", \"upload_date\": \"20231229\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"1. Avis akvasas ka [2972047].mp3\", \"filename\": \"1. Avis akvasas ka [2972047].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ilpost.it/episodes/1-avis-akvasas-ka/",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(ext)s|%(upload_date)s|%(duration)s|%(availability)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2972047|1. Avis akvasas ka|mp3|20231229|2495.0|public"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ilpost.it/episodes/second",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7\", \"display_id\": \"second\", \"series_id\": \"9\", \"vcodec\": \"none\", \"title\": \"Sette\", \"url\": \"https://cdn.ilpost.example/7.mp3\", \"availability\": \"subscriber_only\", \"webpage_url\": \"https://www.ilpost.it/episodes/second\", \"original_url\": \"https://www.ilpost.it/episodes/second\", \"webpage_url_basename\": \"second\", \"webpage_url_domain\": \"ilpost.it\", \"extractor\": \"IlPost\", \"extractor_key\": \"IlPost\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Sette\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Sette [7].mp3\", \"filename\": \"Sette [7].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ilpost.it/episodes/missing",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [IlPost] missing: Episode could not be extracted; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ilpost.it/episodes/noplayer",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [IlPost] noplayer: Unable to extract metadata; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.ilpost.it/episodes/nopost",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nopost: An extractor error has occurred. (caused by KeyError('post_id')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "http://www.tvanouvelles.ca/2016/11/17/des-policiers", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "article.html"},
+  {"url": "https://www.tvanouvelles.ca/2016/11/18/sans-video", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "article2.html"},
+  {"url": "http://players.brightcove.net/1741764581/default_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "https://players.brightcove.net/1741764581/default_default/config.json", "headers": {"Content-Type": "application/json"}, "body_file": "config.json"},
+  {"url": "https://edge.api.brightcove.com/playback/v1/accounts/1741764581/videos/5117035533001", "headers": {"Content-Type": "application/json"}, "body_file": "video.json", "request_headers": {"Accept": "application/json;pk=BCpkTVA"}}
+ ]
+}

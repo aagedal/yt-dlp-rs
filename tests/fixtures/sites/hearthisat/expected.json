@@ -1,0 +1,74 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.hearthis.at/moofi/dr-kreep/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"150939\", \"display_id\": \"moofi - dr-kreep\", \"title\": \"Moofi - Dr Kreep\", \"formats\": [{\"format_id\": \"mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"url\": \"https://hearthis.at/moofi/dr-kreep/listen/\", \"ext\": \"mp3\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\"}, {\"format_id\": \"wav\", \"vcodec\": \"none\", \"ext\": \"wav\", \"url\": \"https://hearthis.at/moofi/dr-kreep/download/\", \"acodec\": \"wav\", \"quality\": 2, \"protocol\": \"https\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"wav - audio only\"}], \"thumbnail\": \"https://images.hearthis.at/thumb.jpg\", \"description\": \"Creepy Patch. Mutable Instruments Braids Vowel + Formant Mode.\", \"duration\": 71, \"timestamp\": 1421564134, \"view_count\": 1234, \"genre\": \"Experimental\", \"webpage_url\": \"https://www.hearthis.at/moofi/dr-kreep/\", \"original_url\": \"https://www.hearthis.at/moofi/dr-kreep/\", \"webpage_url_basename\": \"dr-kreep\", \"webpage_url_domain\": \"hearthis.at\", \"extractor\": \"HearThisAt\", \"extractor_key\": \"HearThisAt\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://images.hearthis.at/thumb.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Moofi - Dr Kreep\", \"duration_string\": \"1:11\", \"upload_date\": \"20150118\", \"release_year\": null, \"genres\": [\"Experimental\"], \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"wav\", \"vcodec\": \"none\", \"ext\": \"wav\", \"url\": \"https://hearthis.at/moofi/dr-kreep/download/\", \"acodec\": \"wav\", \"quality\": 2, \"protocol\": \"https\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"wav - audio only\", \"_filename\": \"Moofi - Dr Kreep [150939].wav\", \"filename\": \"Moofi - Dr Kreep [150939].wav\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://hearthis.at/moofi/dr-kreep/",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(genre)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(view_count)s|%(thumbnail)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "150939|moofi - dr-kreep|Moofi - Dr Kreep|Experimental|71|1421564134|20150118|1234|https://images.hearthis.at/thumb.jpg|wav|wav"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://hearthis.at/moofi/dr-kreep/",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[HearThisAt] Extracting URL: https://hearthis.at/moofi/dr-kreep/",
+    "[HearThisAt] moofi - dr-kreep: Downloading JSON metadata",
+    "[info] 150939: Downloading 1 format(s): wav",
+    "[download] Destination: 150939.wav",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "150939.wav": 11
+   }
+  },
+  {
+   "url": "https://hearthis.at/someone/plain-track.2/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [HearThisAt] 77: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://hearthis.at/nobody/missing/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [HearThisAt] nobody - missing: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

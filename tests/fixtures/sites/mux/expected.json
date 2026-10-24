@@ -1,0 +1,42 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://stream.new/v/OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j/embed",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j\", \"title\": \"OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://stream.mux.com/low.m3u8\", \"manifest_url\": \"https://stream.mux.com/OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}, {\"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://stream.mux.com/high.m3u8\", \"manifest_url\": \"https://stream.mux.com/OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\"}], \"subtitles\": {\"en\": [{\"url\": \"https://stream.mux.com/subs.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://stream.new/v/OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j/embed\", \"original_url\": \"https://stream.new/v/OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j/embed\", \"webpage_url_basename\": \"embed\", \"webpage_url_domain\": \"stream.new\", \"extractor\": \"Mux\", \"extractor_key\": \"Mux\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j\", \"fulltitle\": \"OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://stream.mux.com/high.m3u8\", \"manifest_url\": \"https://stream.mux.com/OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\", \"_filename\": \"OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j [OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j].mp4\", \"filename\": \"OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j [OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.mux.com/JBuasdg35Hw7tYmTe9k68QLPQKixL300YsWHDz5Flit8?playback-token=old&playback-token=tok.en",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s|%(subtitles)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "JBuasdg35Hw7tYmTe9k68QLPQKixL300YsWHDz5Flit8|JBuasdg35Hw7tYmTe9k68QLPQKixL300YsWHDz5Flit8|2400|mp4|m3u8_native|https://stream.mux.com/high.m3u8|{'en': [{'url': 'https://stream.mux.com/subs.m3u8', 'ext': 'vtt', 'protocol': 'm3u8_native'}]}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.mux.com/gone-404",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Mux] gone-404: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

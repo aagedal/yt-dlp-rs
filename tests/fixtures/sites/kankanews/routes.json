@@ -1,0 +1,121 @@
+{
+ "routes": [
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/00310276054.shtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/00310276054.shtml?appid=1088227",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://api-app.kankanews.com/kankan/pc/getvideo?omsid=4485057&platform=pc&version=1.0",
+   "ignore_query": [
+    "nonce",
+    "timestamp",
+    "sign"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api.json"
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/001.shtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page_noid.html"
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/002.shtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page_notitle.html"
+  },
+  {
+   "url": "https://api-app.kankanews.com/kankan/pc/getvideo?omsid=11&platform=pc&version=1.0",
+   "ignore_query": [
+    "nonce",
+    "timestamp",
+    "sign"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api_notitle.json"
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/003.shtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page_novideo.html"
+  },
+  {
+   "url": "https://api-app.kankanews.com/kankan/pc/getvideo?omsid=12&platform=pc&version=1.0",
+   "ignore_query": [
+    "nonce",
+    "timestamp",
+    "sign"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api_novideo.json"
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/004.shtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page_nourl.html"
+  },
+  {
+   "url": "https://api-app.kankanews.com/kankan/pc/getvideo?omsid=13&platform=pc&version=1.0",
+   "ignore_query": [
+    "nonce",
+    "timestamp",
+    "sign"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api_nourl.json"
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/005.shtml",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page_nothumb.html"
+  },
+  {
+   "url": "https://api-app.kankanews.com/kankan/pc/getvideo?omsid=14&platform=pc&version=1.0",
+   "ignore_query": [
+    "nonce",
+    "timestamp",
+    "sign"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api_notitle.json"
+  },
+  {
+   "url": "https://www.kankanews.com/a/2022-11-08/404.shtml",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "gone"
+  }
+ ]
+}

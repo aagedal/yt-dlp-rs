@@ -1,0 +1,90 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"show\", \"title\": \"Pender Street Steppers & YU SU\", \"timestamp\": 1712073600, \"direct\": true, \"formats\": [{\"format_id\": \"mpeg\", \"url\": \"https://media.nts.test/show.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mpeg - audio only\"}], \"subtitles\": {}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"hls_aes\": null, \"original_url\": \"https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024\", \"webpage_url\": \"https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024\", \"webpage_url_basename\": \"yu-su-2nd-april-2024\", \"webpage_url_domain\": \"nts.live\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"description\": \"A two hour show\", \"genres\": [\"Deep House\", \"House\"], \"modified_timestamp\": 1712564687, \"playlist\": null, \"playlist_index\": null, \"display_id\": \"show\", \"fulltitle\": \"Pender Street Steppers & YU SU\", \"upload_date\": \"20240402\", \"modified_date\": \"20240408\", \"release_year\": null, \"genre\": \"Deep House, House\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mpeg\", \"url\": \"https://media.nts.test/show.mp3\", \"ext\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"mpeg - audio only\", \"_filename\": \"Pender Street Steppers & YU SU [show].mp3\", \"filename\": \"Pender Street Steppers & YU SU [show].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(genres)s|%(timestamp)s|%(modified_date)s|%(extractor)s|%(webpage_url)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "show|Pender Street Steppers & YU SU|A two hour show|['Deep House', 'House']|1712073600|20240408|generic|https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024|mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[nts.live] Extracting URL: https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024",
+    "[nts.live] yu-su-2nd-april-2024: Downloading webpage",
+    "[generic] Extracting URL: https://media.nts.test/show.mp3",
+    "[generic] show: Downloading webpage",
+    "[info] show: Downloading 1 format(s): mpeg",
+    "[download] Destination: show.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "show.mp3": 778
+   }
+  },
+  {
+   "url": "https://www.nts.live/shows/absolute-fiction/episodes/absolute-fiction-23rd-july-2022",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"dholbach_cryptkeeper\", \"formats\": [{\"format_id\": \"http\", \"url\": \"https://stream.mixcloud.com/a/cryptkeeper.m4a\", \"vcodec\": \"none\", \"downloader_options\": {\"http_chunk_size\": 5242880}, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - audio only\"}, {\"format_id\": \"hls-128\", \"format_index\": null, \"url\": \"https://audio.mixcloud.com/hls/hls/128.m3u8\", \"manifest_url\": \"https://audio.mixcloud.com/hls/master.m3u8\", \"tbr\": 128.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-128 - audio only\"}], \"comments\": [{\"text\": \"nice\", \"author\": \"Fan\", \"author_id\": \"fan1\", \"timestamp\": 1420070400}], \"title\": \"Absolute Fiction\", \"description\": \"A great mix\", \"thumbnail\": \"https://thumbnailer.mixcloud.com/unsafe/1024x1024/x.jpg\", \"timestamp\": 1658588400, \"duration\": 3723, \"uploader\": \"Daniel Holbach\", \"uploader_id\": \"dholbach\", \"uploader_url\": \"https://www.mixcloud.com/dholbach/\", \"view_count\": 99, \"like_count\": 10, \"repost_count\": 2, \"comment_count\": 2, \"tags\": [\"House\"], \"artists\": [\"Artist A\"], \"original_url\": \"https://www.nts.live/shows/absolute-fiction/episodes/absolute-fiction-23rd-july-2022\", \"webpage_url\": \"https://www.nts.live/shows/absolute-fiction/episodes/absolute-fiction-23rd-july-2022\", \"webpage_url_basename\": \"absolute-fiction-23rd-july-2022\", \"webpage_url_domain\": \"nts.live\", \"extractor\": \"mixcloud\", \"extractor_key\": \"Mixcloud\", \"genres\": [\"Minimal Synth\"], \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://thumbnailer.mixcloud.com/unsafe/1024x1024/x.jpg\", \"id\": \"0\"}], \"display_id\": \"dholbach_cryptkeeper\", \"fulltitle\": \"Absolute Fiction\", \"duration_string\": \"1:02:03\", \"upload_date\": \"20220723\", \"release_year\": null, \"artist\": \"Artist A\", \"genre\": \"Minimal Synth\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-128\", \"format_index\": null, \"url\": \"https://audio.mixcloud.com/hls/hls/128.m3u8\", \"manifest_url\": \"https://audio.mixcloud.com/hls/master.m3u8\", \"tbr\": 128.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-128 - audio only\", \"_filename\": \"Absolute Fiction [dholbach_cryptkeeper].mp4\", \"filename\": \"Absolute Fiction [dholbach_cryptkeeper].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [mixcloud] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nts.live/shows/x/episodes/nosource",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 'url'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://nts.live/shows/x/episodes/nostate",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [nts.live] nostate: Unable to extract react state; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
