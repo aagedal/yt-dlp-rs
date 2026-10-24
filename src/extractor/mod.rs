@@ -127,6 +127,7 @@ mod newsy;
 mod niconico;
 mod ninenews;
 mod nobelprize;
+mod nrk;
 mod nts;
 pub mod nuxt;
 mod nzonscreen;
@@ -375,6 +376,13 @@ pub use newsy::{Newsy, suitable as newsy_suitable};
 pub use niconico::{Niconico, suitable as niconico_suitable};
 pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
+pub use nrk::{
+    Nrk, NrkPlaylist, NrkRadioPodkast, NrkTv, NrkTvDirekte, NrkTvEpisode, NrkTvSeason, NrkTvSeries,
+    direkte_suitable as nrk_tv_direkte_suitable, episode_suitable as nrk_tv_episode_suitable,
+    playlist_suitable as nrk_playlist_suitable, podkast_suitable as nrk_radio_podkast_suitable,
+    season_suitable as nrk_tv_season_suitable, series_suitable as nrk_tv_series_suitable,
+    suitable as nrk_suitable, tv_suitable as nrk_tv_suitable,
+};
 pub use nts::{NtsLive, suitable as nts_suitable};
 pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
@@ -1482,6 +1490,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("nrk:") && nrk::suitable(url))
         || (url.starts_with("peertube:") && peertube::suitable(url))
         || (url.starts_with("svt:") && svt::suitable(url))
         || (url.starts_with("iheartradio:") && iheart::suitable(url))
@@ -1648,7 +1657,7 @@ pub(crate) fn proto_relative(url: &str) -> String {
 }
 
 /// An upstream `{'url': ..., ...}` format dict in its key order (`None`
-/// values keep their keys); `ext` is processing's `determine_ext(url)`
+/// values keep their keys); `ext` is processing's `determine_ext(url).lower()`
 /// unless given.
 pub(crate) fn dict_format(
     fields: Vec<(&str, serde_json::Value)>,
@@ -1668,7 +1677,8 @@ pub(crate) fn dict_format(
             .get("url")
             .and_then(serde_json::Value::as_str)
             .and_then(direct::determine_ext)
-            .unwrap_or_else(|| "unknown_video".into());
+            .unwrap_or_else(|| "unknown_video".into())
+            .to_lowercase();
         map.insert("ext".into(), ext.into());
     }
     // Processing numbers formats without a `format_id`.
