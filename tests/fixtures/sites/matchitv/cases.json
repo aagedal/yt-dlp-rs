@@ -1,0 +1,8 @@
+[
+ {"url": "https://matchi.tv/watch?s=0euhjzrxsjm", "args": ["-j"]},
+ {"url": "https://matchi.tv/watch?s=0euhjzrxsjm", "args": ["--print", "%(id)s|%(title)s|%(upload_date)s|%(thumbnail)s|%(format_id)s|%(ext)s"]},
+ {"url": "https://matchi.tv/watch?s=nodata1", "args": ["-j"]},
+ {"url": "https://matchi.tv/watch?s=onlydate2", "args": ["--print", "%(id)s|%(title)s|%(upload_date)s"]},
+ {"url": "https://matchi.tv/watch?s=empty3", "args": ["-j"]},
+ {"url": "https://matchi.tv/watch?s=gone4", "args": ["-j"]}
+]

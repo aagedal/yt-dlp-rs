@@ -1063,6 +1063,18 @@
       "scope": "MastersIE related-content API (fatal HLS formats and subtitles, missing-manifest error, URL upload_date, first image set thumbnails) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "matchitv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/matchitv.py"
+      ],
+      "rust": [
+        "src/extractor/matchitv.rs",
+        "tests/fixtures/sites/matchitv/"
+      ],
+      "scope": "MatchiTVIE non-fatal __NEXT_DATA__ loadedMedia court/start-time title and upload date, the fixed padelgo.tv thumbnail and fatal HLS playlist (hls ids, mp4), the missing-next.js warning and generic empty title compared with pinned upstream output through the fixture proxy; non-string court descriptions remain explicit native errors"
+    },
+    {
       "name": "matchtv",
       "status": "partial",
       "upstream": [

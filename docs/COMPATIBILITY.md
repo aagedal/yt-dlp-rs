@@ -1465,6 +1465,15 @@ the room), display name and lovers count, and the fatal live HLS playlist
 native errors. `tests/fixtures/sites/bongacams/` is compared with pinned
 upstream output.
 
+MATCHi TV streams (`matchi.tv/watch?s=ID`) follow upstream `MatchiTVIE`: the
+page's non-fatal `__NEXT_DATA__` (a missing one is upstream's warning)
+`props.pageProps.loadedMedia` dict, its `courtDescription` and
+`startDateTime` joined as the title (an empty title becomes upstream's
+generic one), the start date as `upload_date`, the fixed padelgo.tv
+thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
+`mp4`). Non-string court descriptions remain explicit native errors.
+`tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

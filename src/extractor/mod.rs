@@ -80,6 +80,7 @@ mod livestreamfails;
 mod loom;
 mod maariv;
 mod masters;
+mod matchitv;
 mod matchtv;
 mod megaphone;
 mod mir24tv;
@@ -249,6 +250,7 @@ pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable}
 pub use loom::{Loom, suitable as loom_suitable};
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
+pub use matchitv::{MatchiTv, suitable as matchitv_suitable};
 pub use matchtv::{MatchTv, suitable as matchtv_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use mir24tv::{Mir24Tv, suitable as mir24tv_suitable};
