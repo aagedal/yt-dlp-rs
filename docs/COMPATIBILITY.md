@@ -1250,6 +1250,15 @@ with the page as Referer, the `videoInfo` heading's title, creator (and the
 derived `creators`) and year (one warning when absent), and the description
 meta with its warning.
 
+HellPorno videos (`hellporno.com/videos/SLUG`, `hellporno.net/v/ID`) follow
+upstream `HellPornoIE`: the optional `<title>` (without ` - Hell Porno`), the
+first `_parse_html5_media_entries` entry (none is `list index out of
+range`) merged with `merge_dicts` (absent values are left out) with the
+`chs_object`/`params['video_id']` ID (else the slug), the description,
+`keywords` categories, OpenGraph `video:duration` and `video:release_date`,
+views and an age limit of 18; missing optional values are upstream's
+warnings.
+
 HistoricFilms tapes (`historicfilms.com/tapes/ID`, `/playID`) follow upstream
 `HistoricFilmsIE`: the fatal tape ID, OpenGraph title/description, the
 `thumbnailUrl` meta or OpenGraph image, the `duration` meta through
