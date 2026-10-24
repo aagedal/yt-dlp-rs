@@ -1,0 +1,19 @@
+{
+ "routes": [
+  {
+   "url": "https://media.example.com/clips/cat.mp4?utm_source=share&x=1",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "clip.mp4"
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/missing",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "gone"
+  }
+ ]
+}

@@ -1191,6 +1191,12 @@ cleaned body description, millisecond duration, timestamp, uploader, Python
 `str()` of the user ID, counts and string tag texts, with upstream's
 `KeyError` messages.
 
+href.li redirects (`href.li/?URL`) follow upstream `HrefLiRedirectIE`: the
+text after `?` is followed as a `url` result by whichever extractor suits it
+(unlisted in `--extractor-descriptions`); a target that is not an absolute URL
+gives GenericIE's `is not a valid URL` error, while GenericIE's `http://`
+guess for domain-like targets is not ported.
+
 Huajiao lives (`huajiao.com/l/ID`) follow upstream `HuajiaoIE`: the page's
 fatal `var feed` JSON, its `formated_title` (upstream's `KeyError`), the
 description meta (with its warning), `parse_duration`, image, space-delimited

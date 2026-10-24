@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://href.li/?https://media.example.com/clips/cat.mp4?utm_source=share&x=1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://href.li/?https://media.example.com/clips/cat.mp4?utm_source=share&x=1",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s|%(ext)s"
+  ]
+ },
+ {
+  "url": "https://href.li/?https://player.radiozet.pl/Podcasty/Show/missing",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://href.li/?not-a-url",
+  "args": [
+   "-j"
+  ]
+ }
+]

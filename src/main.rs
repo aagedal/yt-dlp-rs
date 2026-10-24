@@ -3180,6 +3180,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 yt_dlp_rs::extractor::historicfilms_suitable,
             ),
             ("HitRecord", yt_dlp_rs::extractor::hitrecord_suitable),
+            ("href.li", yt_dlp_rs::extractor::hrefli_suitable),
             ("html5", |_| false),
             ("Huajiao", yt_dlp_rs::extractor::huajiao_suitable),
             ("Hypem", yt_dlp_rs::extractor::hypem_suitable),

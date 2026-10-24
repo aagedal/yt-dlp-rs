@@ -125,7 +125,7 @@ Supported today:
   Tweakers videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Sen videos, Kankanews videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, Premiership Rugby videos, CJSW episodes,
-  Player.fm episodes, RTRFM shows, HitRecord records, Culture Unplugged films,
+  Player.fm episodes, RTRFM shows, HitRecord records, href.li redirects, Culture Unplugged films,
   Zhihu videos, CRTVG programmes, Breitbart videos, CGTN news videos, JoVE
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
