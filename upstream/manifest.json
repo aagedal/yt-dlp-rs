@@ -341,6 +341,18 @@
       "scope": "BreitBartIE JW Player manifest as fatal HLS formats, generic title, OpenGraph warnings and RTA age limit compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bundesliga",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bundesliga.py"
+      ],
+      "rust": [
+        "src/extractor/bundesliga.rs",
+        "tests/fixtures/sites/bundesliga/"
+      ],
+      "scope": "BundesligaIE vid query as a jwplatform: url result followed by the JWPlatform extractor compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cgtn",
       "status": "partial",
       "upstream": [

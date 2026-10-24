@@ -492,6 +492,10 @@ a `url_transparent` result (extracted by the JW Platform extractor) overlaid
 with `_old_archive_ids` and the non-fatal JSON-LD fields without `url`; a page
 without JSON-LD warns `unable to extract JSON-LD` like upstream.
 
+Bundesliga videos (`bundesliga.com/LL/bundesliga/videos[/...]?vid=ID`) follow
+upstream `BundesligaIE`: a `url` result of `jwplatform:ID`, extracted by the
+JW Platform extractor (so its `webpage_url` is the `jwplatform:` URL).
+
 Iltalehti articles (`iltalehti.fi/SECTION/a/ID`, with upstream's
 single-character ID) follow upstream `IltalehtiIE`: the fatal `window.App`
 state through `js_to_json`, the articles' main media and body properties with
