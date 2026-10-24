@@ -1,3 +1,4 @@
+mod amadeustv;
 mod angel;
 mod archiveorg;
 mod audioboom;
@@ -145,6 +146,7 @@ mod yfanefa;
 pub(crate) mod youtube;
 mod zhihu;
 
+pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};

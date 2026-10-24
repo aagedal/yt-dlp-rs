@@ -567,6 +567,17 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+Amadeus TV library videos (`[www.]amadeus.tv/library/HEX`) follow upstream
+`AmadeusTVIE`: the page's `window.__NUXT__` fetch data (`_search_nuxt_data`,
+`fetch['0']`), the item's Tencent Cloud video ID (else upstream's `Unable to
+extract actual video ID`), the `playvideo.qcloud.com` play info (with a
+`Referer`) whose source video and transcodes with URLs become HTTP formats
+(`http-DEFINITION` IDs, `http-0` without one, sizes, dimensions, first
+stream codecs and fps), and the play info's name, cover and duration
+overridden by the item's first title/description, ISO 8601 date and views.
+Non-string codecs remain explicit native errors.
+`tests/fixtures/sites/amadeustv/` is compared with pinned upstream output.
+
 Angel episodes (`angel.com/watch/SERIES/episode/ID/season-N/episode-N/SLUG`)
 follow upstream `AngelIE`: the page's JSON-LD `url` as a fatal HLS manifest
 (`Downloading HD m3u8 information`), the OpenGraph title, description and
