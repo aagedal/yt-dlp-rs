@@ -1576,6 +1576,16 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+NTS episodes (`nts.live/shows/SHOW/episodes/SLUG`) follow upstream
+`NTSLiveIE`: the page's `window._REACT_STATE_` episode, whose first valid
+`audio_sources` URL is followed as a `url_transparent` result (Mixcloud pages
+and direct media are covered; SoundCloud goes through the native SoundCloud
+extractor but has no NTS fixture) overlaid with the episode's name,
+description, genres, broadcast timestamp and updated timestamp, upstream's
+missing-react-state error and processing's `'url'` error for episodes without
+an audio source. Unparsable react states remain explicit native errors.
+`tests/fixtures/sites/nts/` is compared with pinned upstream output.
+
 Netzkino films (`netzkino.de/details/SLUG`) follow upstream `NetzkinoIE`: the
 page's `__NEXT_DATA__` dehydrated-state `CmsMovie` query, upstream's DRM error
 for `DRM` licences, and the joined `pmd.netzkino-seite.netzkino.de` video URL

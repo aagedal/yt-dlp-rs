@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script>window._REACT_STATE_ = {\"episode\": {\"name\": \"Pender Street Steppers & YU SU\", \"description\": \"A two hour show\", \"genres\": [{\"value\": \"Deep House\"}, {\"value\": \"House\"}, {\"id\": 3}], \"broadcast\": \"2024-04-02T16:00:00Z\", \"updated\": \"2024-04-08T08:24:47+00:00\", \"audio_sources\": [{\"source\": \"x\", \"url\": \"not a url\"}, {\"url\": \"https://media.nts.test/show.mp3\"}, {\"url\": \"https://media.nts.test/other.mp3\"}]}};</script></body></html>"
+  },
+  {
+   "url": "https://www.nts.live/shows/x/episodes/nosource",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script>window._REACT_STATE_ = {\"episode\": {\"name\": \"No source\"}};</script></body></html>"
+  },
+  {
+   "url": "https://nts.live/shows/x/episodes/nostate",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>nothing</html>"
+  },
+  {
+   "url": "https://www.nts.live/shows/absolute-fiction/episodes/absolute-fiction-23rd-july-2022",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><script>window._REACT_STATE_ = {\"episode\": {\"name\": \"Absolute Fiction\", \"genres\": [{\"value\": \"Minimal Synth\"}], \"broadcast\": \"2022-07-23T15:00:00Z\", \"audio_sources\": [{\"url\": \"https://www.mixcloud.com/dholbach/cryptkeeper/\"}]}};</script></body></html>"
+  },
+  {
+   "url": "https://app.mixcloud.com/graphql?query=%7B%0A++cloudcastLookup%28lookup%3A+%7Busername%3A+%22dholbach%22%2C+slug%3A+%22cryptkeeper%22%7D%29+%7B%0A++++audioLength%0A++++comments%28first%3A+100%29+%7B%0A++++++edges+%7B%0A++++++++node+%7B%0A++++++++++comment%0A++++++++++created%0A++++++++++user+%7B%0A++++++++++++displayName%0A++++++++++++username%0A++++++++++%7D%0A++++++++%7D%0A++++++%7D%0A++++++totalCount%0A++++%7D%0A++++description%0A++++favorites+%7B%0A++++++totalCount%0A++++%7D%0A++++featuringArtistList%0A++++isExclusive%0A++++name%0A++++owner+%7B%0A++++++displayName%0A++++++url%0A++++++username%0A++++%7D%0A++++picture%28width%3A+1024%2C+height%3A+1024%29+%7B%0A++++++++url%0A++++%7D%0A++++plays%0A++++publishDate%0A++++reposts+%7B%0A++++++totalCount%0A++++%7D%0A++++streamInfo+%7B%0A++++++dashUrl%0A++++++hlsUrl%0A++++++url%0A++++%7D%0A++++tags+%7B%0A++++++tag+%7B%0A++++++++name%0A++++++%7D%0A++++%7D%0A++++restrictedReason%0A++++id%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "cast.json"
+  },
+  {
+   "url": "https://audio.mixcloud.com/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://audio.mixcloud.com/hls/hls/128.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://stream.mixcloud.com/a/cryptkeeper.m4a",
+   "headers": {
+    "Content-Type": "audio/mp4"
+   },
+   "body": "0000ftypM4A-mix"
+  },
+  {
+   "url": "https://media.nts.test/show.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body_file": "a.mp3"
+  }
+ ]
+}

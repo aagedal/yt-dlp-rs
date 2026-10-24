@@ -121,6 +121,18 @@
       "scope": "NetzkinoIE __NEXT_DATA__ dehydrated CmsMovie query, DRM licence error, joined PMD video URL as an untyped result with title/age limit/cast/creators/categories/description/duration/location/year/thumbnail, generic title and no-formats error compared with pinned upstream output through the fixture proxy; the _GEO_COUNTRIES X-Forwarded-For header is not sent natively (fixture -j cases use --no-geo-bypass)"
     },
     {
+      "name": "nts",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nts.py"
+      ],
+      "rust": [
+        "src/extractor/nts.rs",
+        "tests/fixtures/sites/nts/"
+      ],
+      "scope": "NTSLiveIE window._REACT_STATE_ episode with its first audio_sources URL as a url_transparent result (Mixcloud and direct media covered) overlaid with title/description/genres/timestamp/modified_timestamp, missing-react-state and 'url' errors compared with pinned upstream output through the fixture proxy; unparsable react states remain explicit native errors"
+    },
+    {
       "name": "orchestration-and-output",
       "status": "partial",
       "upstream": [

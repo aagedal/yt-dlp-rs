@@ -1,0 +1,8 @@
+[
+ {"url": "https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024", "args": ["-j"]},
+ {"url": "https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(genres)s|%(timestamp)s|%(modified_date)s|%(extractor)s|%(webpage_url)s|%(ext)s"]},
+ {"url": "https://www.nts.live/shows/yu-su/episodes/yu-su-2nd-april-2024", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.nts.live/shows/absolute-fiction/episodes/absolute-fiction-23rd-july-2022", "args": ["-j"]},
+ {"url": "https://www.nts.live/shows/x/episodes/nosource", "args": ["-j"]},
+ {"url": "https://nts.live/shows/x/episodes/nostate", "args": ["-j"]}
+]
