@@ -1677,6 +1677,18 @@
       "scope": "TeleTaskIE (marked broken) video class/source pairs as a playlist of untyped entries with the fatal title and optional date, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "theguardian",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/theguardian.py"
+      ],
+      "rust": [
+        "src/extractor/theguardian.rs",
+        "tests/fixtures/sites/theguardian/"
+      ],
+      "scope": "TheGuardianPodcastIE podcast__player data-source with OpenGraph title (content__headline fallback), description and thumbnail, author creator and published release_date; TheGuardianPodcastPlaylistIE is not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "thehighwire",
       "status": "partial",
       "upstream": [

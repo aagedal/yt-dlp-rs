@@ -1012,6 +1012,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "qingting"
             | "oneplace"
             | "sztvhu"
+            | "theguardianpodcast"
             | "thisamericanlife"
             | "photobucket"
             | "vocaroo"
@@ -1261,6 +1262,16 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             ("title", Take),
             ("description", Assign),
             ("thumbnail", Assign),
+        ],
+        // `TheGuardianPodcastIE._real_extract`'s dict (its own format).
+        "theguardianpodcast" => &[
+            ("id", Take),
+            ("title", Assign),
+            ("description", Assign),
+            ("creator", Assign),
+            ("thumbnail", Assign),
+            ("release_date", Assign),
+            ("url", Take),
         ],
         // `OnePlacePodcastIE._real_extract`'s dict (its own format).
         "oneplace" => &[

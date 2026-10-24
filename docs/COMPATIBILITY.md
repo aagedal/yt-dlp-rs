@@ -784,6 +784,16 @@ entry (`hls` m3u8 sources, poster thumbnail) and the article's cleaned
 `description`. `tests/fixtures/sites/thehighwire/` is compared with pinned
 upstream output.
 
+The Guardian podcast episodes (`theguardian.com/SECTION/audio/YYYY/mon/D/
+SLUG`) follow upstream `TheGuardianPodcastIE`: the first `podcast__player`
+element's `data-source` as the info's own format, the OpenGraph title (else
+the `content__headline` element), description and thumbnail, the `author`
+meta tag as `creator` and `article:published_time` as `release_date` (each
+missing value with upstream's warning). Pages without a player source are
+rejected (upstream fails later with `No video formats found!`); series
+playlists (`TheGuardianPodcastPlaylistIE`) are not ported.
+`tests/fixtures/sites/theguardian/` is compared with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
