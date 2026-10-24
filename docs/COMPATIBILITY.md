@@ -1584,6 +1584,16 @@ misses are upstream's warnings), the `duration` element in milliseconds, the
 its `-hq.mp3` sibling as ranked formats. `tests/fixtures/sites/freesound/`
 is compared with pinned upstream output.
 
+hearthis.at tracks (`hearthis.at/ARTIST/TITLE`) follow upstream
+`HearThisAtIE`: the `api-v2.hearthis.at` JSON for the same path, the
+`ARTIST - TITLE` display ID, the user name and track title joined as the
+title, the artwork (or thumb) thumbnail, `str_to_int` play counts and
+duration, the release timestamp and genre, and the stream MP3 plus the
+original download (only when its file name has a known extension, ranked
+higher) as audio formats. Non-string IDs, user names or thumbnails and
+missing users or download file names remain explicit native errors.
+`tests/fixtures/sites/hearthisat/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

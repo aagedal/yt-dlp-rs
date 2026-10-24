@@ -98,6 +98,18 @@
       "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, literal-ID and bounded resolution-based default/best/worst selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds/preferred HTTP-date; no nested playlists or unresolved URL results; bounded audio/video selectors, two-stream + pairs and / fallbacks with upstream FormatSorter order; predicate filtering of represented metadata before kind fallback, ranking and atomic pair/playlist selection; unselected result API shares whole-extraction retries and leaves library selection to the caller; parse_codecs/get_compatible_ext port with actual-upstream fixture and vcodec/acodec/dynamic_range/video_ext/audio_ext format fields; FormatSorter port (default order, settings, -S limits/closest/reverse, force, prefer-free) applied in process_result before index format IDs, with list-order best/worst and upstream _merge pairing (no rendition-group matching)"
     },
     {
+      "name": "hearthisat",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/hearthisat.py"
+      ],
+      "rust": [
+        "src/extractor/hearthisat.rs",
+        "tests/fixtures/sites/hearthisat/"
+      ],
+      "scope": "HearThisAtIE api-v2 track JSON (artist - title display ID, user/title title, artwork/thumb thumbnail, str_to_int counts, release timestamp, genre), the stream MP3 and known-extension download formats, the no-formats error and API HTTP errors compared with pinned upstream output through the fixture proxy; non-string IDs, user names and thumbnails and missing users or download file names remain explicit native errors"
+    },
+    {
       "name": "http-downloader",
       "status": "partial",
       "upstream": [
