@@ -583,6 +583,11 @@ struct Args {
     /// repeated
     #[arg(long, value_name = "REGEX", allow_hyphen_values = true)]
     download_sections: Vec<String>,
+    /// Write the timecode a section's first frame has in the whole video,
+    /// so clips line up with a full download (needs ffprobe and an mp4/mov
+    /// result, e.g. with --remux-video mp4; yt-dlp-rs extension)
+    #[arg(long)]
+    section_timecode: bool,
     /// Containers that may be used when merging formats, separated by "/",
     /// e.g. "mp4/mkv"; ignored if no merge is required (currently supported:
     /// avi, flv, mkv, mov, mp4, webm)
@@ -2593,6 +2598,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         prefer_free: args.prefer_free_formats,
     });
     downloader = downloader.with_multistreams(args.video_multistreams, args.audio_multistreams);
+    if args.section_timecode {
+        downloader = downloader.with_section_timecode(processors.video.clone());
+    }
     if let Some(formats) = &args.merge_output_format {
         downloader =
             downloader.with_merge_output_format(formats.split('/').map(str::to_owned).collect());

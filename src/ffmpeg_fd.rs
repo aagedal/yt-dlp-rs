@@ -146,13 +146,56 @@ pub(crate) struct LocalInput {
     pub start_time: f64,
 }
 
+/// Each input with its `manifest_stream_number`.
+fn inputs(info: &VideoInfo) -> Vec<(VideoInfo, usize)> {
+    if info.requested_formats.is_empty() {
+        let number = info
+            .formats
+            .iter()
+            .find(|format| info.format_id.as_deref() == Some(format.format_id.as_str()))
+            .and_then(|format| format.manifest_stream_number);
+        vec![(info.clone(), number.unwrap_or(0))]
+    } else {
+        info.requested_formats
+            .iter()
+            .map(|format| {
+                (
+                    info.with_selected_format(format),
+                    format.manifest_stream_number.unwrap_or(0),
+                )
+            })
+            .collect()
+    }
+}
+
+/// The output format (`-f`) for the last input's protocol.
+fn muxer<'a>(settings: &Settings, info: &'a VideoInfo, protocol: &str) -> &'a str {
+    if protocol.starts_with("m3u8") {
+        // `use_mpegts`: `--hls-use-mpegts`, else whether the stream is live.
+        if settings
+            .hls_use_mpegts
+            .unwrap_or_else(|| crate::is_live(info))
+        {
+            "mpegts"
+        } else {
+            "mp4"
+        }
+    } else if protocol == "rtmp" {
+        "flv"
+    } else {
+        out_format(&info.ext)
+    }
+}
+
 /// `FFmpegFD._call_downloader` arguments, without the executable; `local`
-/// replaces the inputs' URLs.
+/// replaces the inputs' URLs and `timecode` adds `-timecode` (both port
+/// extensions).
 fn arguments(
     network: &Network<'_>,
     settings: &Settings,
     info: &VideoInfo,
     local: Option<&[LocalInput]>,
+    timecode: Option<&str>,
     temporary: &Path,
     piped: bool,
 ) -> Result<Vec<OsString>> {
@@ -171,25 +214,7 @@ fn arguments(
         .filter(|start| start.as_f64() != 0.0)
         .unwrap_or(PyNumber::Int(0));
     let end = info.section_end.filter(|end| end.as_f64() != 0.0);
-    // Each input with its `manifest_stream_number`.
-    let formats: Vec<(VideoInfo, usize)> = if info.requested_formats.is_empty() {
-        let number = info
-            .formats
-            .iter()
-            .find(|format| info.format_id.as_deref() == Some(format.format_id.as_str()))
-            .and_then(|format| format.manifest_stream_number);
-        vec![(info.clone(), number.unwrap_or(0))]
-    } else {
-        info.requested_formats
-            .iter()
-            .map(|format| {
-                (
-                    info.with_selected_format(format),
-                    format.manifest_stream_number.unwrap_or(0),
-                )
-            })
-            .collect()
-    };
+    let formats = inputs(info);
     let mut protocol = String::new();
     for (input, (format, _)) in formats.iter().enumerate() {
         protocol = format.protocol.clone().unwrap_or_default();
@@ -247,22 +272,10 @@ fn arguments(
             crate::download::TEST_FILE_SIZE.to_string().into(),
         ]);
     }
-    let format = if protocol.starts_with("m3u8") {
-        // `use_mpegts`: `--hls-use-mpegts`, else whether the stream is live.
-        if settings
-            .hls_use_mpegts
-            .unwrap_or_else(|| crate::is_live(info))
-        {
-            "mpegts"
-        } else {
-            "mp4"
-        }
-    } else if protocol == "rtmp" {
-        "flv"
-    } else {
-        out_format(&info.ext)
-    };
-    args.extend(["-f".into(), format.into()]);
+    if let Some(timecode) = timecode {
+        args.extend(["-timecode".into(), timecode.into()]);
+    }
+    args.extend(["-f".into(), muxer(settings, info, &protocol).into()]);
     // `_configuration_args(('_o1', '_o', ''))` (with `default`).
     let keys = ["ffmpeg_o1", "ffmpeg_o", "ffmpeg", "default"].map(String::from);
     args.extend(configured(settings, &keys).iter().map(OsString::from));
@@ -286,6 +299,7 @@ pub(crate) fn download(
     settings: &Settings,
     info: &VideoInfo,
     local: Option<&[LocalInput]>,
+    timecode: Option<&crate::section_timecode::Request>,
     destination: &Path,
     options: &DownloadOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
@@ -296,6 +310,7 @@ pub(crate) fn download(
         settings,
         info,
         local,
+        timecode,
         destination,
         options,
         None,
@@ -325,6 +340,7 @@ pub(crate) fn download_piped(
         settings,
         info,
         None,
+        None,
         destination,
         options,
         Some(connection),
@@ -339,6 +355,7 @@ fn run(
     settings: &Settings,
     info: &VideoInfo,
     local: Option<&[LocalInput]>,
+    timecode: Option<&crate::section_timecode::Request>,
     destination: &Path,
     options: &DownloadOptions,
     connection: Option<Connection>,
@@ -373,7 +390,40 @@ fn run(
         }
     };
     let piped = connection.is_some();
-    let args = arguments(network, settings, info, local, &temporary, piped)?;
+    let timecode = timecode
+        .filter(|_| crate::sections::is_partial(info))
+        .and_then(|request| {
+            let formats = inputs(info);
+            let probed: Vec<_> = formats
+                .iter()
+                .enumerate()
+                .map(|(index, (format, _))| crate::section_timecode::Input {
+                    info: format,
+                    local: local.and_then(|local| local.get(index)),
+                    headers: matches!(format.url.scheme(), "http" | "https")
+                        .then(|| header_lines(network, format, &format.url)),
+                })
+                .collect();
+            let protocol = formats
+                .last()
+                .and_then(|(format, _)| format.protocol.clone())
+                .unwrap_or_default();
+            crate::section_timecode::timecode(
+                request,
+                info,
+                &probed,
+                muxer(settings, info, &protocol),
+            )
+        });
+    let args = arguments(
+        network,
+        settings,
+        info,
+        local,
+        timecode.as_deref(),
+        &temporary,
+        piped,
+    )?;
     let progress = |phase, downloaded_bytes| DownloadProgress {
         attempt: 1,
         phase,
@@ -514,6 +564,7 @@ mod tests {
             &Settings::default(),
             &info,
             None,
+            None,
             Path::new("o.mp4.part"),
             false,
         )
@@ -556,6 +607,7 @@ mod tests {
             },
             &info,
             None,
+            None,
             Path::new("o"),
             false,
         )
@@ -590,11 +642,19 @@ mod tests {
             .insert("ffmpeg_i1".into(), vec!["-ss".into(), "1".into()]);
         settings.args.insert("default".into(), vec!["-x".into()]);
         settings.args.insert("ffmpeg".into(), vec!["-y2".into()]);
-        let args: Vec<_> = arguments(&network, &settings, &info, None, Path::new("o"), false)
-            .unwrap()
-            .iter()
-            .map(|arg| arg.to_string_lossy().into_owned())
-            .collect();
+        let args: Vec<_> = arguments(
+            &network,
+            &settings,
+            &info,
+            None,
+            None,
+            Path::new("o"),
+            false,
+        )
+        .unwrap()
+        .iter()
+        .map(|arg| arg.to_string_lossy().into_owned())
+        .collect();
         // `_i1` wins over `_i` before the input; `ffmpeg` over `default` before the output.
         let input = args.iter().position(|arg| arg == "-i").unwrap();
         assert_eq!(&args[input - 2..input], ["-ss", "1"]);
@@ -627,6 +687,7 @@ mod tests {
                 &network,
                 &Settings::default(),
                 info,
+                None,
                 None,
                 Path::new("o"),
                 false,

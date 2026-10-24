@@ -31,6 +31,8 @@ pub(crate) struct Params<'a> {
     pub settings: &'a ffmpeg_fd::Settings,
     /// `--http-chunk-size`, else each format's `http_chunk_size`.
     pub chunk: Option<u64>,
+    /// `--section-timecode`.
+    pub timecode: Option<&'a crate::section_timecode::Request>,
 }
 
 /// One input stream to fetch.
@@ -314,6 +316,7 @@ pub(crate) fn download(
         params.settings,
         info,
         Some(&local),
+        params.timecode,
         destination,
         options,
         callback,
