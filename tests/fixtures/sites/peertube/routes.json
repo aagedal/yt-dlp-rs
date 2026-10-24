@@ -1,0 +1,29 @@
+{
+ "routes": [
+  {"url": "https://framatube.org/api/v1/videos/9c9de5e8-0a1e-484a-b099-e80766180a6d/", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "video.json"},
+  {"url": "https://framatube.org/api/v1/videos/9c9de5e8-0a1e-484a-b099-e80766180a6d/description", "status": 404, "headers": {"Content-Type": "application/json; charset=utf-8"}, "body": "{\"type\": \"about:blank\", \"status\": 404}"},
+  {"url": "https://framatube.org/api/v1/videos/9c9de5e8-0a1e-484a-b099-e80766180a6d/captions", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "captions.json"},
+  {"url": "https://framatube.org/static/streaming-playlists/hls/9c9de5e8-0a1e-484a-b099-e80766180a6d/c28d0633-b88d-44c0-a236-e5f40f7e2d35-master.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "master.m3u8"},
+  {"url": "https://framatube.org/api/v1/videos/00000000-0000-4000-8000-000000000000/", "status": 404, "headers": {"Content-Type": "application/json; charset=utf-8"}, "body": "{\"type\": \"about:blank\", \"status\": 404}"},
+  {"url": "https://peertube2.cpy.re/api/v1/videos/3fbif9S3WmtTP8gGsC5HBd/", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "video2.json"},
+  {"url": "https://peertube2.cpy.re/api/v1/videos/122d093a-1ede-43bd-bd34-59d2931ffc5e/", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "video2.json"},
+  {"url": "https://peertube2.cpy.re/static/web-videos/122d093a-1ede-43bd-bd34-59d2931ffc5e-480.mp4", "headers": {"Content-Type": "video/mp4"}, "body": "not really an mp4 file"},
+  {"url": "https://peertube.debian.social/api/v1/videos/0b04f13d-1e18-4f1d-814e-4979aa7c9c44/", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "video3.json"},
+  {"url": "https://peertube.debian.social/api/v1/videos/0b04f13d-1e18-4f1d-814e-4979aa7c9c44/description", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "description3.json"},
+  {"url": "https://spacepub.space/api/v1/videos/d8943b2d-8280-497b-85ec-bc282ec2afdc/", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "live.json"},
+  {"url": "https://spacepub.space/static/streaming-playlists/hls/d8943b2d-8280-497b-85ec-bc282ec2afdc/master.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "live.m3u8"},
+  {"url": "https://vod.ksite.de/api/v1/videos/fed67262-6edb-4d1c-833b-daa9085c71d7/", "request_headers": {"x-peertube-video-password": "thepassword"}, "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "password.json"},
+  {"url": "https://vod.ksite.de/api/v1/videos/fed67262-6edb-4d1c-833b-daa9085c71d7/", "status": 403, "headers": {"Content-Type": "application/json; charset=utf-8"}, "body": "{\"type\": \"about:blank\", \"status\": 403, \"code\": \"video_requires_password\"}"},
+  {"url": "https://vod.ksite.de/static/streaming-playlists/hls/fed67262/master.m3u8", "request_headers": {"x-peertube-video-password": "thepassword"}, "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "live.m3u8"},
+  {"url": "https://framatube.org/api/v1/video-channels/joinpeertube", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "channel.json"},
+  {"url": "https://framatube.org/api/v1/video-channels/joinpeertube/videos?sort=-createdAt&start=0&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "channel_page1.json"},
+  {"url": "https://framatube.org/api/v1/accounts/framasoft", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "account.json"},
+  {"url": "https://framatube.org/api/v1/accounts/framasoft/videos?sort=-createdAt&start=0&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "account_page1.json"},
+  {"url": "https://framatube.org/api/v1/accounts/framasoft/videos?sort=-createdAt&start=30&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "account_page2.json"},
+  {"url": "https://framatube.org/api/v1/video-playlists/oZG9JjrNAH9H4FryYyMrQM", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "playlist.json"},
+  {"url": "https://framatube.org/api/v1/video-playlists/oZG9JjrNAH9H4FryYyMrQM/videos?sort=-createdAt&start=0&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body_file": "playlist_page1.json"},
+  {"url": "https://framatube.org/api/v1/video-channels/missing/videos?sort=-createdAt&start=0&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body": "{\"total\": 0, \"data\": []}"},
+  {"url": "https://framatube.org/api/v1/accounts/empty", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body": "{\"id\": 9, \"name\": \"empty\"}"},
+  {"url": "https://framatube.org/api/v1/accounts/empty/videos?sort=-createdAt&start=0&count=30&nsfw=both", "headers": {"Content-Type": "application/json; charset=utf-8"}, "body": "{\"total\": 0, \"data\": []}"}
+ ]
+}

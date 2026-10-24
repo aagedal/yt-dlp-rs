@@ -135,6 +135,7 @@ mod onenewsnz;
 mod oneplace;
 mod parlview;
 mod pearvideo;
+mod peertube;
 mod peertv;
 mod periscope;
 mod photobucket;
@@ -373,6 +374,10 @@ pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use pearvideo::{PearVideo, suitable as pearvideo_suitable};
+pub use peertube::{
+    PeerTube, PeerTubePlaylist, playlist_suitable as peertube_playlist_suitable,
+    suitable as peertube_suitable,
+};
 pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
@@ -884,6 +889,32 @@ pub(crate) fn extract_m3u8_master_optional_headers(
         "Downloading m3u8 information",
         headers,
     )
+}
+
+/// `_extract_m3u8_formats(url, id, live=True, headers=HEADERS,
+/// fatal=False)`: only the master playlist is read, its variants keep no
+/// bitrate IDs, and the manifest's subtitles are dropped with upstream's
+/// warning; the `headers` are sent with the manifest request alone.
+pub(crate) fn extract_m3u8_live_optional_headers(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    headers: &[(&str, &str)],
+) -> Option<crate::VideoInfo> {
+    let mut stream = extract_manifest_optional_note_headers(
+        client,
+        manifest,
+        extractor,
+        id,
+        false,
+        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        ("m3u8 information", "HLS"),
+        "Downloading m3u8 information",
+        headers,
+    )?;
+    hls::live_format_ids(&mut stream.formats, None);
+    Some(stream)
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -1420,6 +1451,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("peertube:") && peertube::suitable(url))
         || (url.starts_with("iheartradio:") && iheart::suitable(url))
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))

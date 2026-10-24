@@ -1,0 +1,21 @@
+[
+ {"url": "https://framatube.org/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d", "args": ["-j"]},
+ {"url": "https://framatube.org/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d", "args": ["--write-subs", "--sub-langs", "all", "-j"]},
+ {"url": "https://framatube.org/videos/watch/9c9de5e8-0a1e-484a-b099-e80766180a6d", "args": ["--list-subs"]},
+ {"url": "https://framatube.org/videos/embed/9c9de5e8-0a1e-484a-b099-e80766180a6d", "args": ["--print", "%(id)s|%(title)s|%(uploader)s|%(uploader_id)s|%(channel)s|%(channel_id)s|%(language)s|%(license)s|%(duration)s|%(upload_date)s|%(categories)s|%(tags)s|%(is_live)s|%(format_id)s|%(webpage_url)s"]},
+ {"url": "https://peertube2.cpy.re/w/3fbif9S3WmtTP8gGsC5HBd", "args": ["-j"]},
+ {"url": "https://peertube2.cpy.re/api/v1/videos/122d093a-1ede-43bd-bd34-59d2931ffc5e", "args": ["--print", "%(id)s|%(title)s|%(language)s|%(categories)s|%(tags)s|%(thumbnail)s|%(webpage_url)s"]},
+ {"url": "https://peertube2.cpy.re/w/122d093a-1ede-43bd-bd34-59d2931ffc5e", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://peertube.debian.social/videos/watch/0b04f13d-1e18-4f1d-814e-4979aa7c9c44", "args": ["-j"]},
+ {"url": "https://peertube.debian.social/videos/watch/0b04f13d-1e18-4f1d-814e-4979aa7c9c44", "args": ["-F"]},
+ {"url": "peertube:spacepub.space:d8943b2d-8280-497b-85ec-bc282ec2afdc", "args": ["--print", "%(id)s|%(is_live)s|%(live_status)s|%(uploader)s|%(channel_id)s|%(thumbnail)s|%(formats.:.format_id)s|%(webpage_url)s"]},
+ {"url": "https://vod.ksite.de/videos/embed/fed67262-6edb-4d1c-833b-daa9085c71d7", "args": ["--video-password", "thepassword", "-j"]},
+ {"url": "https://vod.ksite.de/videos/embed/fed67262-6edb-4d1c-833b-daa9085c71d7", "args": ["-j"]},
+ {"url": "https://framatube.org/w/00000000-0000-4000-8000-000000000000", "args": ["-j"]},
+ {"url": "https://framatube.org/c/joinpeertube/videos", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://framatube.org/a/framasoft/videos", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://framatube.org/a/framasoft", "args": ["--flat-playlist", "--print", "%(id)s|%(title)s|%(ie_key)s|%(url)s|%(playlist_id)s|%(playlist_title)s|%(playlist_index)s"]},
+ {"url": "https://framatube.org/w/p/oZG9JjrNAH9H4FryYyMrQM", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://framatube.org/a/empty", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://framatube.org/c/missing/videos", "args": ["--flat-playlist", "-j"]}
+]
