@@ -329,6 +329,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
 const EXTRACTOR_NAMES: &[&str] = &[
+    "1News",
     "9News",
     "AmadeusTV",
     "Angel",
@@ -810,6 +811,7 @@ impl YoutubeDl {
                 Box::new(extractor::NineNews),
                 Box::new(extractor::RottenTomatoes),
                 Box::new(extractor::Mediaite),
+                Box::new(extractor::OneNewsNz),
                 Box::new(extractor::CloudflareStream),
                 Box::new(extractor::CloudyCdn),
                 Box::new(extractor::Dumpert),

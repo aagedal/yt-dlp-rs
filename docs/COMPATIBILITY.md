@@ -1746,6 +1746,16 @@ like JW Platform's (`_parse_jwplayer_data` with the item's `mediaid` as the
 video ID). Multi-item JW Player playlists remain explicit native errors.
 `tests/fixtures/sites/mediaite/` is compared with pinned upstream output.
 
+1News articles (`[www.](1|one)news.co.nz/YYYY/MM/DD/SLUG`) follow upstream
+`OneNewsNZIE`: the `Fusion.globalContent` JSON's `content_elements`, each
+`video` element as a `url` result of its `brightcoveAccount` (default
+`963482464001`) `0xpHIR6IB_default` Brightcove player and each `youtube`
+element's `referent.id` (else `raw_oembed._id`) as a YouTube `url` result,
+in a playlist titled by `headlines.basic` (else the generic page title).
+Articles without such elements are upstream's expected `This article does
+not have a video.` `tests/fixtures/sites/onenewsnz/` is compared with pinned
+upstream output.
+
 Cloudflare Stream videos (`[watch.|iframe.|customer-X.]cloudflarestream.com|videodelivery.net|bytehighway.net/ID`
 and `embed/*.js?video=ID` scripts) follow upstream `CloudflareStreamIE`: a
 signed token's ID is its base64 payload's `sub`, and the

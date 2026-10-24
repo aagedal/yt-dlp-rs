@@ -241,6 +241,18 @@
       "scope": "LibsynIE HTML5 player playlistItem JSON (fatal), item/episode-title/data-title/title episode title, h3/podcast-title podcast prefix, info_text_body description, release-date div or JSON upload date, string-only parse_duration, thumbnail and the libsyn/main/download formats compared with pinned upstream output through the fixture proxy; the _EMBED_REGEX generic embeds are not ported and non-string player fields remain explicit native errors"
     },
     {
+      "name": "onenewsnz",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/onenewsnz.py"
+      ],
+      "rust": [
+        "src/extractor/onenewsnz.rs",
+        "tests/fixtures/sites/onenewsnz/"
+      ],
+      "scope": "OneNewsNZIE Fusion.globalContent video (Brightcove) and youtube content elements as a playlist of url results titled by headlines.basic or the generic page title. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "orchestration-and-output",
       "status": "partial",
       "upstream": [
