@@ -1,0 +1,8 @@
+[
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["-s", "-u", "oauth", "-p", "GOODTOKEN"]},
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["--print", "%(id)s|%(title)s", "-u", "oauth", "-p", "GOODTOKEN"]},
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["--print", "%(id)s|%(title)s", "-u", "oauth", "-p", "BADTOKEN"]},
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["-s", "-u", "someone", "-p", "pw"]},
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["--print", "%(id)s|%(title)s", "--cookies", "cookies.txt"], "copy": ["cookies.txt"]},
+ {"url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy", "args": ["--print", "%(id)s|%(title)s", "--netrc-cmd", "printf 'machine soundcloud login oauth password GOODTOKEN'"]}
+]

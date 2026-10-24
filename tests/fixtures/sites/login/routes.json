@@ -1,0 +1,18 @@
+{
+ "routes": [
+  {
+   "url": "http://www.freesound.org/people/miklovan/sounds/194503/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "freesound.html"
+  },
+  {
+   "url": "https://media.example.test/clips/cat.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-login"
+  }
+ ]
+}

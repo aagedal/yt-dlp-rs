@@ -35,7 +35,7 @@ pub fn suitable(url: &str) -> bool {
 
 /// `re.sub(r'<!--(?:(?!<!--).)*-->', '', html)`: each comment start runs
 /// greedily to the last `-->` before a newline or the next `<!--`.
-fn strip_comments(html: &str) -> String {
+pub(crate) fn strip_comments(html: &str) -> String {
     let mut out = String::with_capacity(html.len());
     let mut rest = html;
     while let Some(start) = rest.find("<!--") {

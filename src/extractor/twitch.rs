@@ -39,6 +39,29 @@ const CLIENT_ID: &str = "ue6666qo983tsx6so1t0vnawi233wa";
 /// `_login_hint()` of an extractor supporting login (`_NETRC_MACHINE = 'twitch'`).
 const LOGIN_HINT: &str = "Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (twitch) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies";
 
+/// `TwitchBaseIE`'s login hooks.
+macro_rules! twitch_login {
+    () => {
+        fn netrc_machine(&self) -> Option<&'static str> {
+            Some("twitch")
+        }
+
+        fn performs_login(&self) -> bool {
+            true
+        }
+
+        fn perform_login(
+            &self,
+            client: &Client,
+            session: &super::login::Session,
+            username: &str,
+            password: &str,
+        ) -> Result<()> {
+            perform_login(client, session, username, password)
+        }
+    };
+}
+
 /// Upstream `live_from_start`: VOD formats are marked `is_from_start`, and a
 /// live stream resolves to the VOD being recorded.
 pub(crate) static LIVE_FROM_START: AtomicBool = AtomicBool::new(false);
@@ -518,6 +541,8 @@ fn prefer_source(formats: &mut [crate::VideoFormat]) {
 }
 
 impl Extractor for TwitchVod {
+    twitch_login!();
+
     fn key(&self) -> &'static str {
         VOD_NAME
     }
@@ -528,6 +553,7 @@ impl Extractor for TwitchVod {
         };
         let vod_id = found["id"].to_owned();
         crate::screen::set_extractor(VOD_NAME);
+        self.initialize(client, VOD_NAME, &vod_id)?;
         crate::screen::screen(&format!(
             "[{VOD_NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())
@@ -751,6 +777,8 @@ impl Extractor for TwitchVod {
 }
 
 impl Extractor for TwitchClips {
+    twitch_login!();
+
     fn key(&self) -> &'static str {
         CLIPS_NAME
     }
@@ -761,6 +789,7 @@ impl Extractor for TwitchClips {
         };
         let slug = found["id"].to_owned();
         crate::screen::set_extractor(CLIPS_NAME);
+        self.initialize(client, CLIPS_NAME, &slug)?;
         crate::screen::screen(&format!(
             "[{CLIPS_NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())
@@ -989,13 +1018,150 @@ impl Extractor for TwitchClips {
     }
 }
 
-fn announce(name: &'static str, url: &Url) {
+/// `initialize()` (logging in once per extractor) and the `Extracting URL`
+/// line.
+fn announce(
+    extractor: &dyn Extractor,
+    client: &Client,
+    (name, id): (&'static str, &str),
+    url: &Url,
+) -> Result<()> {
     crate::screen::set_extractor(name);
+    extractor.initialize(client, name, id)?;
     crate::screen::screen(&format!(
         "[{name}] Extracting URL: {}",
         crate::screen::extracting_url(url.as_str())
     ));
+    Ok(())
 }
+
+/// `TwitchBaseIE._perform_login`: the login page's hidden inputs with the
+/// credentials as JSON to the form's action (Twitch's error, else its
+/// redirect page), and a two-factor token when that page asks for it.
+fn perform_login(
+    client: &Client,
+    session: &super::login::Session,
+    username: &str,
+    password: &str,
+) -> Result<()> {
+    const LOGIN_FORM_URL: &str = "https://www.twitch.tv/login";
+    let fail = |message: &str| session.error(&format!("Unable to login. Twitch said: {message}"));
+    let login_step = |page: &super::login::Page,
+                      note: &str,
+                      data: &[(&str, &str)]|
+     -> Result<Option<super::login::Page>> {
+        let mut form = super::login::hidden_inputs(&page.text);
+        for (key, value) in data {
+            super::login::set_field(&mut form, key, value);
+        }
+        let post_url = POST_URL
+            .captures(&page.text)
+            .and_then(|found| found.get(1).or_else(|| found.get(2)))
+            .map_or("https://passport.twitch.tv/login", |found| found.as_str());
+        let post_url = page.url.join(post_url)?;
+        let referer = page.url.to_string();
+        let headers = [
+            ("Referer", referer.as_str()),
+            ("Origin", "https://www.twitch.tv"),
+            ("Content-Type", "text/plain;charset=UTF-8"),
+        ];
+        let body = Value::Object(
+            form.into_iter()
+                .map(|(key, value)| (key, Value::String(value)))
+                .collect(),
+        );
+        let answer = session.request(
+            client,
+            &post_url,
+            (Some(note), "Unable to download JSON metadata"),
+            &headers,
+            Some(crate::output::python_json_dumps(&body)),
+            &[400],
+        )?;
+        let response: Value = crate::json::from_str(&answer.text).map_err(|error| {
+            session.error(&format!("Failed to parse JSON  (caused by {error})"))
+        })?;
+        // `dict_get(response, ('error', 'error_description', 'error_code'))`.
+        let error = ["error", "error_description", "error_code"]
+            .into_iter()
+            .filter_map(|key| response.get(key))
+            .find(|value| super::nuxt::truthy(value));
+        if let Some(error) = error {
+            return Err(fail(&match error {
+                Value::String(text) => text.clone(),
+                other => other.to_string(),
+            }));
+        }
+        if response
+            .get("message")
+            .and_then(Value::as_str)
+            .is_some_and(|message| message.contains("Authenticated successfully"))
+        {
+            return Ok(None);
+        }
+        let redirect = response
+            .get("redirect")
+            .filter(|value| super::nuxt::truthy(value))
+            .or_else(|| response.get("redirect_path"))
+            .and_then(Value::as_str)
+            .ok_or_else(|| {
+                session
+                    .bug("An extractor error has occurred. (caused by KeyError('redirect_path'))")
+            })?;
+        let redirect = post_url.join(redirect)?;
+        session
+            .request(
+                client,
+                &redirect,
+                (
+                    Some("Downloading login redirect page"),
+                    "Unable to download webpage",
+                ),
+                &headers,
+                None,
+                &[],
+            )
+            .map(Some)
+    };
+    let login_page = session.request(
+        client,
+        &Url::parse(LOGIN_FORM_URL)?,
+        (Some("Downloading login page"), "Unable to download webpage"),
+        &[],
+        None,
+        &[],
+    )?;
+    // Some TOR nodes and public proxies are blocked completely.
+    if login_page.text.contains("blacklist_message") {
+        return Err(fail(&crate::html::clean_html(&login_page.text)));
+    }
+    let Some(redirect_page) = login_step(
+        &login_page,
+        "Logging in",
+        &[
+            ("username", username),
+            ("password", password),
+            ("client_id", CLIENT_ID),
+        ],
+    )?
+    else {
+        return Ok(());
+    };
+    if TWO_FACTOR.is_match(&redirect_page.text) {
+        let token = session.tfa_info("two-factor authentication token")?;
+        login_step(
+            &redirect_page,
+            "Submitting TFA token",
+            &[("authy_token", &token), ("remember_2fa", "true")],
+        )?;
+    }
+    Ok(())
+}
+
+static POST_URL: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<form[^>]+action=(?:"(.+?)"|'(.+?)')"#).unwrap());
+static TWO_FACTOR: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"(?i)<form[^>]+id="two-factor-submit""#).unwrap());
 
 /// An unexpected response shape: upstream's uncaught Python error.
 fn bug(name: &str, id: &str, cause: &str) -> Error {
@@ -1412,6 +1578,8 @@ fn lazy_listing(
 }
 
 impl Extractor for TwitchVideos {
+    twitch_login!();
+
     fn key(&self) -> &'static str {
         VIDEOS_NAME
     }
@@ -1420,7 +1588,7 @@ impl Extractor for TwitchVideos {
         Ok(None)
     }
 
-    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         if !videos_suitable(url.as_str()) {
             return Ok(None);
         }
@@ -1428,7 +1596,7 @@ impl Extractor for TwitchVideos {
             return Ok(None);
         };
         let channel = found["id"].to_owned();
-        announce(VIDEOS_NAME, url);
+        announce(self, client, (VIDEOS_NAME, &channel), url)?;
         let filter = query_value(url, "filter").unwrap_or_else(|| "all".into());
         let sort = query_value(url, "sort").unwrap_or_else(|| "time".into());
         let (broadcast_type, label) = match filter.as_str() {
@@ -1461,6 +1629,8 @@ impl Extractor for TwitchVideos {
 }
 
 impl Extractor for TwitchVideosClips {
+    twitch_login!();
+
     fn key(&self) -> &'static str {
         VIDEOS_CLIPS_NAME
     }
@@ -1469,12 +1639,12 @@ impl Extractor for TwitchVideosClips {
         Ok(None)
     }
 
-    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         let Some(found) = VIDEOS_CLIPS_URL.captures(url.as_str()) else {
             return Ok(None);
         };
         let channel = found["id"].to_owned();
-        announce(VIDEOS_CLIPS_NAME, url);
+        announce(self, client, (VIDEOS_CLIPS_NAME, &channel), url)?;
         let range = query_value(url, "range").unwrap_or_else(|| "7d".into());
         let (filter, label) = match range.as_str() {
             "24hr" => ("LAST_DAY", "Top 24H"),
@@ -1501,6 +1671,8 @@ impl Extractor for TwitchVideosClips {
 }
 
 impl Extractor for TwitchVideosCollections {
+    twitch_login!();
+
     fn key(&self) -> &'static str {
         VIDEOS_COLLECTIONS_NAME
     }
@@ -1509,12 +1681,12 @@ impl Extractor for TwitchVideosCollections {
         Ok(None)
     }
 
-    fn extract_result(&self, _client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
+    fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         let Some(found) = VIDEOS_COLLECTIONS_URL.captures(url.as_str()) else {
             return Ok(None);
         };
         let channel = found["id"].to_owned();
-        announce(VIDEOS_COLLECTIONS_NAME, url);
+        announce(self, client, (VIDEOS_COLLECTIONS_NAME, &channel), url)?;
         Ok(Some(lazy_listing(
             url,
             VIDEOS_COLLECTIONS_NAME,
@@ -1533,6 +1705,8 @@ impl Extractor for TwitchVideosCollections {
 }
 
 impl Extractor for TwitchCollection {
+    twitch_login!();
+
     fn key(&self) -> &'static str {
         COLLECTION_NAME
     }
@@ -1546,7 +1720,7 @@ impl Extractor for TwitchCollection {
             return Ok(None);
         };
         let collection_id = found["id"].to_owned();
-        announce(COLLECTION_NAME, url);
+        announce(self, client, (COLLECTION_NAME, &collection_id), url)?;
         let data = gql(
             client,
             COLLECTION_NAME,
@@ -1593,6 +1767,8 @@ impl Extractor for TwitchCollection {
 }
 
 impl Extractor for TwitchStream {
+    twitch_login!();
+
     fn key(&self) -> &'static str {
         STREAM_NAME
     }
@@ -1613,7 +1789,7 @@ impl Extractor for TwitchStream {
         };
         let temp_id = found["id"].to_owned();
         let channel = temp_id.to_lowercase();
-        announce(STREAM_NAME, url);
+        announce(self, client, (STREAM_NAME, &temp_id), url)?;
         let data = gql(
             client,
             STREAM_NAME,

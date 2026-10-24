@@ -324,9 +324,122 @@ fn lenient_resolution(text: &str) -> (Option<u32>, Option<u32>) {
     }
 }
 
+/// `find_element(cls=CLASS)`: the first such element's content.
+fn element_by_class(class: &str, html: &str) -> Option<String> {
+    crate::html_elements::elements_text_and_html_by_class(class, html)
+        .ok()?
+        .into_iter()
+        .next()
+        .map(|(text, _)| text)
+}
+
+/// `traverse_obj(page, ({find_element(...)}, ..., {clean_html}))`: a
+/// nonempty cleaned text.
+fn cleaned(text: Option<String>) -> Option<String> {
+    text.map(|text| crate::html::clean_html(&text))
+        .filter(|text| !text.is_empty())
+}
+
+static POST_URL: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<form[^>]+action=(?:"(.+?)"|'(.+?)')"#).unwrap());
+
 impl Extractor for Niconico {
     fn key(&self) -> &'static str {
         NAME
+    }
+
+    fn netrc_machine(&self) -> Option<&'static str> {
+        Some("niconico")
+    }
+
+    fn performs_login(&self) -> bool {
+        true
+    }
+
+    /// `NiconicoBaseIE._perform_login`: the session cookies, the
+    /// `mail_tel`/`password` form, and the MFA one-time password if asked.
+    fn perform_login(
+        &self,
+        client: &Client,
+        session: &super::login::Session,
+        username: &str,
+        password: &str,
+    ) -> Result<()> {
+        const LOGIN_BASE: &str = "https://account.nicovideo.jp";
+        const FORM: (&str, &str) = ("Content-Type", "application/x-www-form-urlencoded");
+        let login_error = |message: &str| session.error(&format!("Unable to login: {message}"));
+        if logged_in() {
+            return Ok(());
+        }
+        session.request(
+            client,
+            &Url::parse(&format!("{LOGIN_BASE}/login"))?,
+            (
+                Some("Requesting session cookies"),
+                "Unable to download webpage",
+            ),
+            &[],
+            None,
+            &[],
+        )?;
+        let referer = format!("{LOGIN_BASE}/login");
+        let data = super::login::urlencode(&[("mail_tel", username), ("password", password)]);
+        let webpage = session.request(
+            client,
+            &Url::parse(&format!("{LOGIN_BASE}/login/redirector"))?,
+            (Some("Logging in"), "Unable to log in"),
+            &[FORM, ("Referer", &referer)],
+            Some(data),
+            &[],
+        )?;
+        if logged_in() {
+            return Ok(());
+        }
+        let notice = element_by_class("notice error", &webpage.text)
+            .and_then(|notice| element_by_class("notice__text", &notice));
+        if let Some(message) = cleaned(notice) {
+            return Err(login_error(&message));
+        }
+        if webpage.text.contains("oneTimePw") {
+            let found = POST_URL
+                .captures(&webpage.text)
+                .ok_or_else(|| session.bug("Unable to extract post url"))?;
+            let post_url = found.get(1).or_else(|| found.get(2)).unwrap().as_str();
+            let otp = session.tfa_info("6 digit number shown on app")?;
+            let data = super::login::urlencode(&[("otp", &otp)]);
+            let mfa = session.request(
+                client,
+                &Url::parse(LOGIN_BASE)?.join(post_url)?,
+                (Some("Performing MFA"), "Unable to complete MFA"),
+                &[FORM],
+                Some(data),
+                &[],
+            )?;
+            if logged_in() {
+                return Ok(());
+            }
+            if mfa
+                .url
+                .query_pairs()
+                .any(|(key, value)| key == "error-code" && !value.is_empty())
+            {
+                let message = cleaned(element_by_class("pageMainMsg", &mfa.text));
+                return Err(login_error(
+                    message.as_deref().unwrap_or("MFA session expired"),
+                ));
+            }
+            if mfa.text.contains("formError") {
+                let message = cleaned(element_by_class("formError", &mfa.text).and_then(|error| {
+                    crate::html_elements::element_text_and_html_by_tag("div", &error)
+                        .ok()
+                        .map(|(text, _)| text)
+                }));
+                return Err(login_error(
+                    message.as_deref().unwrap_or("MFA challenge failed"),
+                ));
+            }
+        }
+        Err(session.bug("Unable to login: Unexpected login error"))
     }
 
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
@@ -340,6 +453,7 @@ impl Extractor for Niconico {
         };
         let video_id = found["id"].to_owned();
         crate::screen::set_extractor(NAME);
+        self.initialize(client, NAME, &video_id)?;
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",
             crate::screen::extracting_url(page.as_str())

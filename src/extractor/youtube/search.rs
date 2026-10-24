@@ -293,6 +293,7 @@ impl super::super::Extractor for YoutubeSearch {
         let Some(found) = SEARCH_RE.captures(&text) else {
             return Ok(None);
         };
+        super::login(NAME, "")?;
         announce(NAME, &text);
         super::initialize();
         let query = found["query"].to_owned();
@@ -322,6 +323,7 @@ impl super::super::Extractor for YoutubeSearchUrl {
         if !url_suitable(url.as_str()) {
             return Ok(None);
         }
+        super::login(URL_NAME, "")?;
         announce(URL_NAME, url.as_str());
         super::initialize();
         // `parse_qs`: blank values are dropped.
@@ -381,6 +383,7 @@ impl super::super::Extractor for YoutubeMusicSearchUrl {
         if !music_url_suitable(text) {
             return Ok(None);
         }
+        super::login(MUSIC_URL_NAME, "")?;
         announce(MUSIC_URL_NAME, text);
         super::initialize();
         let first = |key: &str| super::urls::first_qs(text, key);

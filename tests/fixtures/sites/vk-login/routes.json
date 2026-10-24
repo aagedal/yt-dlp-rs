@@ -1,0 +1,80 @@
+{
+ "routes": [
+  {
+   "url": "https://vk.com/",
+   "headers": {
+    "Content-Type": "text/html; charset=windows-1251",
+    "Set-Cookie": "remixlhk=FIRST; expires=Thu, 01 Jan 2099 00:00:00 GMT; path=/; domain=.vk.com"
+   },
+   "body": "<form method=\"post\" action=\"https://login.vk.com/?act=login\"><input type=\"hidden\" name=\"act\" value=\"login\"><input type=\"hidden\" name=\"ip_h\" value=\"abc\"><input type=\"hidden\" name=\"lg_h\" value=\"def\"><input type=\"text\" name=\"email\"><input type=\"password\" name=\"pass\"></form>"
+  },
+  {
+   "url": "https://vk.com/login",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+   },
+   "request_body": [
+    "act=login&ip_h=abc&lg_h=def&email=%C2%E0%F1%FF+%2A&pass=s3cret~"
+   ],
+   "headers": {
+    "Content-Type": "text/html",
+    "Set-Cookie": "remixsid=SID; path=/; domain=.vk.com"
+   },
+   "body": "<html><script>parent.onLoginDone(\"/id1\")</script></html>"
+  },
+  {
+   "url": "https://vk.com/login",
+   "request_body": [
+    "&pass=wrong"
+   ],
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><script>parent.onLoginFailed(4, {})</script></html>"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=1_4"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [\"3\", []]}"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-77521_162222515"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [\"\", \"<div class=\\\"mv_info\\\"><div class=\\\"mv_info_date\\\">2 Jun 2013</div><span class=\\\"mv_views_count\\\">12,345 views</span></div>\", null, {\"mvData\": {\"title\": \"Ignored title\", \"desc\": \"\", \"duration\": 229, \"likes\": 77, \"commcount\": \"5\"}, \"player\": {\"params\": [{\"md_title\": \"Elvis &amp; friends\", \"md_author\": \"Elvis Presley &amp; co\", \"author_id\": -77521, \"jpg\": \"https://sun9.userapi.test/thumb.jpg\", \"duration\": 230, \"date\": 1370000000, \"description\": \"<b>First</b> line<br>second\", \"live\": 0, \"url240\": \"https://vkvd.test/v-240.mp4\", \"url720\": \"https://vkvd.test/v-720.mp4\", \"cache480\": \"https://vkvd.test/c-480.mp4\", \"hls\": \"https://vkvd.test/video.m3u8\", \"hls_live_playback\": \"https://vkvd.test/live.m3u8\", \"dash_uni\": \"https://vkvd.test/uni.mpd\", \"rtmp\": \"rtmp://vkvd.test/live/stream\", \"jpg_big\": \"not a url\", \"subs\": [{\"lang\": \"ru\", \"title\": \"Russian.vtt\", \"url\": \"https://vkvd.test/ru.vtt\"}, {\"url\": \"https://vkvd.test/en.srt\"}], \"time_codes\": [{\"time\": 0, \"text\": \"Start &amp; intro\"}, {\"time\": \"x\", \"text\": \"bad\"}, {\"time\": 60, \"text\": \"Song\"}]}]}}]]}",
+   "request_headers": {
+    "Cookie": "remixlhk=FIRST; remixsid=SID"
+   }
+  },
+  {
+   "url": "https://vkvd.test/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1500000,RESOLUTION=1280x720,CODECS=\"avc1.64001f,mp4a.40.2\"\nhttps://vkvd.test/hls-720.m3u8\n"
+  },
+  {
+   "url": "https://vkvd.test/hls-720.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:10\n#EXTINF:10,\nseg0.ts\n#EXT-X-ENDLIST\n"
+  },
+  {
+   "url": "https://vkvd.test/v-720.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-vk"
+  }
+ ]
+}

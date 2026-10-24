@@ -12,6 +12,7 @@ use url::Url;
 pub struct Dailymotion;
 
 const NAME: &str = "dailymotion";
+const MACHINE: &str = "dailymotion";
 const KEY: &str = "Dailymotion";
 const COMMON_MEDIA_FIELDS: &str =
     "description\n      geoblockedCountries {\n        allowed\n      }\n      xid";
@@ -119,44 +120,81 @@ fn post_json(
     })
 }
 
-/// `_get_token(xid)`: a cookie's token, else a client-credentials token.
-fn token(client: &Client) -> Result<String> {
+/// `_get_token(xid)`: a cookie's token, else a token for the account
+/// (`_get_login_info`: a `password` grant) or the client (a
+/// `client_credentials` grant). A 400 answer is its `error_description`.
+fn token(client: &Client, xid: &str) -> Result<String> {
     for name in ["access_token", "client_token"] {
         if let Some(token) = crate::cookies::get_cookie("https://www.dailymotion.com/", name) {
             return Ok(token);
         }
     }
     let url = Url::parse("https://graphql.api.dailymotion.com/oauth/token")?;
-    let body = url::form_urlencoded::Serializer::new(String::new())
-        .append_pair("client_id", "f1a362d288c1b98099c7")
-        .append_pair("client_secret", "eea605b96e01c796ff369935357eca920c5da4c5")
-        .append_pair("grant_type", "client_credentials")
-        .finish();
-    let response = post_json(
+    let mut form = vec![
+        ("client_id", "f1a362d288c1b98099c7"),
+        ("client_secret", "eea605b96e01c796ff369935357eca920c5da4c5"),
+    ];
+    let login = super::login::get_login_info(NAME, Some(MACHINE))?
+        .filter(|(username, _)| !username.is_empty());
+    match &login {
+        Some((username, password)) => form.extend([
+            ("grant_type", "password"),
+            ("password", password.as_str()),
+            ("username", username.as_str()),
+        ]),
+        None => form.push(("grant_type", "client_credentials")),
+    }
+    let session = super::login::Session {
+        ie: NAME,
+        id: xid.to_owned(),
+        machine: Some(MACHINE),
+    };
+    let page = session.request(
         client,
         &url,
-        "",
-        "Downloading Access Token",
+        (
+            Some("Downloading Access Token"),
+            "Unable to download JSON metadata",
+        ),
         &[("Content-Type", "application/x-www-form-urlencoded")],
-        body,
+        Some(super::login::urlencode(&form)),
+        &[400],
     )?;
+    let response: Value = crate::json::from_str(&page.text).map_err(|error| {
+        Error::Reported(format!(
+            "[{NAME}] {xid}: Failed to parse JSON  (caused by {error})"
+        ))
+    })?;
+    let key_error = |key: &str| {
+        Error::Reported(format!(
+            "[{NAME}] {xid}: An extractor error has occurred. (caused by KeyError('{key}')); {}",
+            crate::BUG_REPORTS_MESSAGE
+        ))
+    };
+    if page.status == 400 {
+        let description = response
+            .get("error_description")
+            .and_then(Value::as_str)
+            .ok_or_else(|| key_error("error_description"))?;
+        return Err(session.error(description));
+    }
     let token = response
         .get("access_token")
         .and_then(Value::as_str)
-        .ok_or_else(|| {
-            Error::Reported(format!(
-                "[{NAME}] An extractor error has occurred. (caused by KeyError('access_token')); {}",
-                crate::BUG_REPORTS_MESSAGE
-            ))
-        })?
+        .ok_or_else(|| key_error("access_token"))?
         .to_owned();
-    crate::cookies::set_cookie("www.dailymotion.com", "client_token", &token);
+    let cookie = if login.is_some() {
+        "access_token"
+    } else {
+        "client_token"
+    };
+    crate::cookies::set_cookie("www.dailymotion.com", cookie, &token);
     Ok(token)
 }
 
 /// `_call_api('media', xid, fields, note)`.
 fn media(client: &Client, xid: &str) -> Result<Value> {
-    let token = token(client)?;
+    let token = token(client, xid)?;
     let fields = format!(
         "... on Video {{\n      {COMMON_MEDIA_FIELDS}\n      stats {{\n        likes {{\n          total\n        }}\n        views {{\n          total\n        }}\n      }}\n    }}\n    ... on Live {{\n      {COMMON_MEDIA_FIELDS}\n      audienceCount\n      isOnAir\n    }}"
     );
@@ -246,11 +284,17 @@ impl Extractor for Dailymotion {
         Ok(None)
     }
 
+    /// `DailymotionBaseInfoExtractor` logs in while requesting its token.
+    fn netrc_machine(&self) -> Option<&'static str> {
+        Some(MACHINE)
+    }
+
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         let Some((mut video_id, is_playlist, mut playlist_id)) = match_url(url.as_str()) else {
             return Ok(None);
         };
         crate::screen::set_extractor(NAME);
+        self.initialize(client, NAME, &video_id)?;
         // `_real_initialize`: no `ff` cookie and no age limit turn the family
         // filter off.
         let family = crate::cookies::get_cookie("https://www.dailymotion.com/", "ff");

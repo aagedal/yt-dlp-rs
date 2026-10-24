@@ -1,0 +1,9 @@
+[
+ {"url": "https://www.dailymotion.com/video/x8abc", "args": ["--print", "%(id)s|%(description)s|%(like_count)s", "-u", "user@example.com", "-p", "s3cret&pw"]},
+ {"url": "https://www.dailymotion.com/video/x8abc", "args": ["-s", "-u", "user@example.com", "-p", "wrong"]},
+ {"url": "https://www.dailymotion.com/video/x8abc", "args": ["--print", "%(id)s|%(description)s|%(like_count)s", "--netrc-cmd", "printf 'machine dailymotion login user@example.com password s3cret&pw'"]},
+ {"url": "https://www.dailymotion.com/video/x8abc", "args": ["-s", "-u", "nobody", "-p", "x"]},
+ {"url": "https://www.dailymotion.com/video/x8abc", "args": ["--print", "%(id)s|%(description)s|%(like_count)s", "--netrc", "--netrc-location", "dm.netrc"], "copy": ["dm.netrc"]},
+ {"url": "https://www.dailymotion.com/video/x8abc", "args": ["-s", "--netrc-cmd", "printf 'machine vimeo login a password b'"]},
+ {"url": "https://www.dailymotion.com/video/x8abc", "args": ["-s"]}
+]

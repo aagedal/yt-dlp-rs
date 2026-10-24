@@ -1,0 +1,136 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+   "args": [
+    "-s",
+    "-u",
+    "user@example.com",
+    "-p",
+    "s3cret"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Tumblr] Downloading login page",
+    "[Tumblr] Logging in",
+    "[Tumblr] Extracting URL: http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+    "[Tumblr] 54196191430: Downloading webpage",
+    "[Tumblr] 54196191430: Downloading JSON metadata",
+    "[Tumblr] 54196191430: Downloading iframe page",
+    "[info] 54196191430: Downloading 1 format(s): hd"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+   "args": [
+    "-s",
+    "-u",
+    "user@example.com",
+    "-p",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[Tumblr] Downloading login page",
+    "[Tumblr] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [Tumblr] 54196191430: API returned error invalid_grant: Invalid credentials; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+   "args": [
+    "-s",
+    "-u",
+    "tfa",
+    "-p",
+    "pw",
+    "-2",
+    "123456"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Tumblr] Downloading login page",
+    "[Tumblr] Logging in",
+    "[Tumblr] Extracting URL: http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+    "[Tumblr] 54196191430: Downloading webpage",
+    "[Tumblr] 54196191430: Downloading JSON metadata",
+    "[Tumblr] 54196191430: Downloading iframe page",
+    "[info] 54196191430: Downloading 1 format(s): hd"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+   "args": [
+    "-s",
+    "-u",
+    "tfa",
+    "-p",
+    "pw",
+    "-2",
+    "000000"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[Tumblr] Downloading login page",
+    "[Tumblr] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [Tumblr] 54196191430: API returned error invalid_grant: Invalid two-factor code; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+   "args": [
+    "-s",
+    "-u",
+    "down",
+    "-p",
+    "pw"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Tumblr] Downloading login page",
+    "[Tumblr] Logging in",
+    "[Tumblr] Extracting URL: http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+    "[Tumblr] 54196191430: Downloading webpage",
+    "[Tumblr] 54196191430: Downloading JSON metadata",
+    "[Tumblr] 54196191430: Downloading iframe page",
+    "[info] 54196191430: Downloading 1 format(s): hd"
+   ],
+   "stderr": [
+    "WARNING: [Tumblr] Login failed: HTTP Error 503: OK"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+   "args": [
+    "-s",
+    "--netrc-cmd",
+    "printf 'machine tumblr login user@example.com password s3cret'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Tumblr] Downloading login page",
+    "[Tumblr] Executing command: printf 'machine tumblr login user@example.com password s3cret'",
+    "[Tumblr] Logging in",
+    "[Tumblr] Extracting URL: http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd",
+    "[Tumblr] 54196191430: Downloading webpage",
+    "[Tumblr] 54196191430: Downloading JSON metadata",
+    "[Tumblr] 54196191430: Downloading iframe page",
+    "[info] 54196191430: Downloading 1 format(s): hd"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

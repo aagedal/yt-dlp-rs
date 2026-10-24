@@ -249,6 +249,7 @@ impl super::super::Extractor for YoutubeRedirect {
         }
         let name = kind.name();
         crate::screen::set_extractor(name);
+        super::login(name, "")?;
         super::initialize();
         if kind.login_required() {
             check_login_required(name)?;

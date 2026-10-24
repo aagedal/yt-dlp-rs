@@ -248,9 +248,11 @@ fn check_challenge(name: &str, final_url: &Url, video_id: &str) -> Result<()> {
     if final_url.path() != "/challenge.html" {
         return Ok(());
     }
-    crate::screen::screen(&format!(
-        "[{name}] [{video_id}] Received a JS challenge response"
-    ));
+    crate::screen::screen(&if video_id.is_empty() {
+        format!("[{name}] Received a JS challenge response")
+    } else {
+        format!("[{name}] [{video_id}] Received a JS challenge response")
+    });
     Err(Error::UnsupportedHtml5(
         "VK JS challenges are not supported natively".into(),
     ))
@@ -381,12 +383,120 @@ fn element_by_class(class: &str, html: &str) -> Option<String> {
         .map(|(text, _)| text)
 }
 
-fn start(name: &'static str, page: &Url) {
+/// `initialize()` (logging in once per extractor) and the `Extracting URL`
+/// line.
+fn start(
+    extractor: &dyn Extractor,
+    client: &Client,
+    (name, temp): (&'static str, Option<&str>),
+    page: &Url,
+) -> Result<()> {
     crate::screen::set_extractor(name);
+    extractor.initialize(client, name, temp.unwrap_or_default())?;
     crate::screen::screen(&format!(
         "[{name}] Extracting URL: {}",
         crate::screen::extracting_url(page.as_str())
     ));
+    Ok(())
+}
+
+/// `str.encode('cp1251')` for the login form; characters outside the code
+/// page are upstream's `UnicodeEncodeError`.
+fn cp1251(text: &str) -> Result<Vec<u8>> {
+    let (bytes, _, unmappable) = encoding_rs::WINDOWS_1251.encode(text);
+    if unmappable {
+        return Err(Error::Reported(format!(
+            "[{NAME}] the credentials are not encodable as cp1251"
+        )));
+    }
+    Ok(bytes.into_owned())
+}
+
+/// `VKBaseIE._perform_login`: the home page's hidden inputs with the
+/// cp1251 `email`/`pass`, its first `remixlhk` cookie, and the login POST
+/// (`onLoginFailed` is a wrong username or password).
+fn perform_login(
+    client: &Client,
+    session: &super::login::Session,
+    username: &str,
+    password: &str,
+) -> Result<()> {
+    let login_page = session.request(
+        client,
+        &Url::parse("https://vk.com")?,
+        (Some("Downloading login page"), "Unable to download webpage"),
+        &[],
+        None,
+        &[],
+    )?;
+    check_challenge(session.ie, &login_page.url, "")?;
+    let mut form: Vec<(String, Vec<u8>)> = super::login::hidden_inputs(&login_page.text)
+        .into_iter()
+        .map(|(key, value)| (key, value.into_bytes()))
+        .collect();
+    for (key, value) in [("email", cp1251(username)?), ("pass", cp1251(password)?)] {
+        match form.iter_mut().find(|(name, _)| name == key) {
+            Some(entry) => entry.1 = value,
+            None => form.push((key.to_owned(), value)),
+        }
+    }
+    // `_apply_first_set_cookie_header(url_handle, 'remixlhk')`.
+    static REMIXLHK: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"remixlhk=(.+?);.*?\b[Dd]omain=(.+?)(?:[,;]|$)").unwrap());
+    for header in login_page.headers.get_all(reqwest::header::SET_COOKIE) {
+        let header = String::from_utf8_lossy(header.as_bytes());
+        if let Some(found) = REMIXLHK.captures(&header) {
+            crate::cookies::set_cookie(&found[2], "remixlhk", &found[1]);
+            break;
+        }
+    }
+    let body = form
+        .iter()
+        .map(|(key, value)| {
+            format!(
+                "{}={}",
+                super::login::quote_plus(key.as_bytes()),
+                super::login::quote_plus(value)
+            )
+        })
+        .collect::<Vec<_>>()
+        .join("&");
+    let page = session.request(
+        client,
+        &Url::parse("https://vk.com/login")?,
+        (Some("Logging in"), "Unable to download webpage"),
+        &[],
+        Some(body),
+        &[],
+    )?;
+    check_challenge(session.ie, &page.url, "")?;
+    if page.text.contains("onLoginFailed") {
+        return Err(session.error("Unable to login, incorrect username and/or password"));
+    }
+    Ok(())
+}
+
+/// `VKBaseIE`'s login hooks.
+macro_rules! vk_login {
+    () => {
+        fn netrc_machine(&self) -> Option<&'static str> {
+            Some("vk")
+        }
+
+        fn performs_login(&self) -> bool {
+            true
+        }
+
+        fn perform_login(
+            &self,
+            client: &Client,
+            session: &super::login::Session,
+            username: &str,
+            password: &str,
+        ) -> Result<()> {
+            perform_login(client, session, username, password)
+        }
+    };
 }
 
 /// An extractor's info dict (`dict`, in upstream's key order) as an info.
@@ -456,6 +566,8 @@ fn py_scalar(value: &Value) -> Option<String> {
 }
 
 impl Extractor for VkWallPost {
+    vk_login!();
+
     fn key(&self) -> &'static str {
         WALL_POST
     }
@@ -471,7 +583,7 @@ impl Extractor for VkWallPost {
         };
         let post_id = found["id"].to_owned();
         let temp = Some(post_id.as_str());
-        start(WALL_POST, page);
+        start(self, client, (WALL_POST, temp), page)?;
         let wall = format!("wall{post_id}");
         let payload = download_payload(
             client,
@@ -627,6 +739,8 @@ impl Extractor for VkWallPost {
 }
 
 impl Extractor for VkUserVideos {
+    vk_login!();
+
     fn key(&self) -> &'static str {
         USER_VIDEOS
     }
@@ -642,7 +756,7 @@ impl Extractor for VkUserVideos {
             return Ok(None);
         };
         let temp = Some(u_id.as_str());
-        start(USER_VIDEOS, page);
+        start(self, client, (USER_VIDEOS, temp), page)?;
         let (webpage, final_url) =
             super::download_webpage_handle(client, page, USER_VIDEOS, &u_id)?;
         check_challenge(USER_VIDEOS, &final_url, &u_id)?;
@@ -818,6 +932,8 @@ fn format_from(mut format: Map<String, Value>, id: &str) -> Result<crate::VideoF
 }
 
 impl Extractor for Vk {
+    vk_login!();
+
     fn key(&self) -> &'static str {
         NAME
     }
@@ -830,10 +946,10 @@ impl Extractor for Vk {
         let Some(found) = VALID_URL.captures(page.as_str()) else {
             return Ok(None);
         };
-        start(NAME, page);
         // `get_temp_id`: the embed's `id` group, `None` for pages.
         let temp_id = found.name("id").map(|id| id.as_str().to_owned());
         let temp = temp_id.as_deref();
+        start(self, client, (NAME, temp), page)?;
         let mut mv_data = json!({});
         let (video_id, info_page, player) = if let Some(video_id) = found.name("videoid") {
             let video_id = video_id.as_str().to_owned();

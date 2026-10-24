@@ -35,6 +35,7 @@ impl super::super::Extractor for YoutubeClip {
         };
         let clip_id = found["id"].to_owned();
         crate::screen::set_extractor(NAME);
+        super::login(NAME, &clip_id)?;
         super::initialize();
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",

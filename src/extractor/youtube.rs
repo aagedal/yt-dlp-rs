@@ -155,10 +155,30 @@ pub(crate) fn request_lang() -> String {
 /// (accept all; otherwise EU requests are redirected to consent.youtube.com).
 /// An unsupported `youtube:lang` fails like upstream's `ExtractorError`
 /// (`[EXTRACTOR] ID: ...`).
-pub(crate) fn initialize_for(extractor: &str, id: &str) -> Result<()> {
+pub(crate) fn initialize_for(extractor: &'static str, id: &str) -> Result<()> {
     preferred_lang().map_err(|error| Error::Reported(format!("[{extractor}] {id}: {error}")))?;
+    login(extractor, id)?;
     initialize();
     Ok(())
+}
+
+/// `YoutubeBaseInfoExtractor._perform_login` (once per extractor, with
+/// `--username` or the `youtube` netrc machine): OAuth logins are an
+/// error, password logins a warning; only cookies authenticate.
+pub(crate) fn login(extractor: &'static str, id: &str) -> Result<()> {
+    super::login::initialize_login(extractor, id, "youtube", |session, username, _| {
+        if username.starts_with("oauth") {
+            return Err(session.error(&format!(
+                "Login with OAuth is no longer supported. {}",
+                watch::LOGIN_HINT
+            )));
+        }
+        session.warning(&format!(
+            "Login with password is not supported for YouTube. {}",
+            watch::LOGIN_HINT
+        ));
+        Ok(())
+    })
 }
 
 /// [`initialize_for`] after the language was checked.

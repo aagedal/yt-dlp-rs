@@ -109,6 +109,7 @@ mod libsyn;
 mod linkedin;
 mod livestreamfails;
 mod lnk;
+pub mod login;
 mod loom;
 mod maariv;
 mod maoritv;
@@ -560,6 +561,46 @@ pub trait Extractor: Send + Sync {
     /// Override to support playlists. Existing video-only extractors need no changes.
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         Ok(self.extract(client, url)?.map(ExtractResult::Video))
+    }
+
+    /// Upstream `_NETRC_MACHINE`: set by extractors supporting password
+    /// logins (`--username`, `--netrc`); others warn about `--username`.
+    fn netrc_machine(&self) -> Option<&'static str> {
+        None
+    }
+
+    /// Whether the extractor defines `_perform_login` (only then are the
+    /// credentials looked up while initializing).
+    fn performs_login(&self) -> bool {
+        false
+    }
+
+    /// Upstream `_initialize_pre_login`.
+    fn initialize_pre_login(&self, _client: &Client, _session: &login::Session) -> Result<()> {
+        Ok(())
+    }
+
+    /// Upstream `_perform_login(username, password)`.
+    fn perform_login(
+        &self,
+        _client: &Client,
+        _session: &login::Session,
+        _username: &str,
+        _password: &str,
+    ) -> Result<()> {
+        Ok(())
+    }
+
+    /// Upstream `_real_initialize`.
+    fn real_initialize(&self, _client: &Client, _session: &login::Session) -> Result<()> {
+        Ok(())
+    }
+
+    /// Upstream `initialize()` (call it once the URL matched, before the
+    /// `Extracting URL` line): the login lifecycle once per run, `ie` being
+    /// the extractor's name and `id` the URL's ID for errors.
+    fn initialize(&self, client: &Client, ie: &'static str, id: &str) -> Result<()> {
+        login::initialize(self, client, ie, id)
     }
 }
 
@@ -1563,6 +1604,8 @@ pub(crate) fn user_agent() -> String {
         .map(|agent| agent.clone())
         .unwrap_or_default()
 }
+
+pub use login::{Credentials, set_credentials};
 
 /// Upstream `params['videopassword']` (`--video-password`).
 static VIDEO_PASSWORD: std::sync::RwLock<Option<String>> = std::sync::RwLock::new(None);

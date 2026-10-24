@@ -1,0 +1,105 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://vk.com/clip1_4",
+   "args": [
+    "--print",
+    "id",
+    "-u",
+    "Вася *",
+    "-p",
+    "s3cret~"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [vk] This video is only available for registered users. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vk) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/clip1_4",
+   "args": [
+    "-s",
+    "-u",
+    "Вася *",
+    "-p",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vk] Downloading login page",
+    "[vk] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [vk] Unable to login, incorrect username and/or password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-1&id=8",
+   "args": [
+    "-s",
+    "-u",
+    "Вася *",
+    "-p",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[vk] Downloading login page",
+    "[vk] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [vk] 8: Unable to login, incorrect username and/or password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video-77521_162222515",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s",
+    "-u",
+    "Вася *",
+    "-p",
+    "s3cret~"
+   ],
+   "exit": 0,
+   "stdout": [
+    "-77521_162222515|Elvis & friends"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video-77521_162222515",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [vk] -77521_162222515: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/clip1_4",
+   "args": [
+    "--print",
+    "id",
+    "--netrc-cmd",
+    "printf 'machine vk login \"Вася *\" password s3cret~'"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [vk] This video is only available for registered users. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vk) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  }
+ ]
+}

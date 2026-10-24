@@ -1,0 +1,99 @@
+{
+ "routes": [
+  {
+   "url": "https://graphql.api.dailymotion.com/oauth/token",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+   },
+   "request_body": [
+    "client_id=f1a362d288c1b98099c7&client_secret=eea605b96e01c796ff369935357eca920c5da4c5&grant_type=password&password=s3cret%26pw&username=user%40example.com"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"access_token\": \"USERTOKEN\", \"expires_in\": 36000}"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/oauth/token",
+   "request_body": [
+    "grant_type=password&password=wrong"
+   ],
+   "status": 400,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"error\": \"invalid_grant\", \"error_description\": \"Invalid username or password\"}"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/oauth/token",
+   "request_body": [
+    "client_id=f1a362d288c1b98099c7&client_secret=eea605b96e01c796ff369935357eca920c5da4c5&grant_type=client_credentials"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"access_token\": \"TOKEN1\", \"expires_in\": 36000}"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_headers": {
+    "Authorization": "Bearer USERTOKEN"
+   },
+   "request_body": [
+    "x8abc"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"media\": {\"description\": \"Seen by the account\", \"geoblockedCountries\": {\"allowed\": []}, \"xid\": \"x8abc\", \"stats\": {\"likes\": {\"total\": 1}, \"views\": {\"total\": 2}}}}}"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_headers": {
+    "Authorization": "Bearer TOKEN1"
+   },
+   "request_body": [
+    "x8abc"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media.json"
+  },
+  {
+   "url": "https://www.dailymotion.com/player/metadata/video/x8abc?app=com.dailymotion.neon",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "metadata.json"
+  },
+  {
+   "url": "https://www.dailymotion.com/cdn/manifest/video/x8abc.m3u8?sec=abc",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://proxy.dmcdn.net/x8abc/H264-512x288/video.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://proxy.dmcdn.net/x8abc/H264-1280x720-60/video.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://proxy.dmcdn.net/x8abc/H264-1920x1080/video.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-dm"
+  }
+ ]
+}

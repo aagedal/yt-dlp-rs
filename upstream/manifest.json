@@ -110,6 +110,27 @@
       "scope": "Small typed video info and progressive VideoFormat subset, ExtractResult video/PlaylistInfo variants for fully extracted HTML5 entries, literal-ID and bounded resolution-based default/best/worst selection, ordered extractor registry, shared direct response inspection, opt-in whole-extraction retries with bounded Retry-After delay-seconds/preferred HTTP-date; no nested playlists or unresolved URL results; bounded audio/video selectors, two-stream + pairs and / fallbacks with upstream FormatSorter order; predicate filtering of represented metadata before kind fallback, ranking and atomic pair/playlist selection; unselected result API shares whole-extraction retries and leaves library selection to the caller; parse_codecs/get_compatible_ext port with actual-upstream fixture and vcodec/acodec/dynamic_range/video_ext/audio_ext format fields; FormatSorter port (default order, settings, -S limits/closest/reverse, force, prefer-free) applied in process_result before index format IDs, with list-order best/worst and upstream _merge pairing (no rendition-group matching)"
     },
     {
+      "name": "extractor-login",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/common.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/__init__.py"
+      ],
+      "rust": [
+        "src/extractor/login.rs",
+        "src/netrc.rs",
+        "src/getpass.rs",
+        "src/extractor/mod.rs",
+        "src/main.rs",
+        "tests/login.rs",
+        "tests/usage_errors.rs",
+        "tests/fixtures/sites/login/",
+        "tests/fixtures/sites/niconico-login/"
+      ],
+      "scope": "InfoExtractor account handling: _get_login_info (--username/--password, else --netrc-cmd with the {} machine placeholder, Executing command and Command returned error code N, or --netrc/--netrc-location with ~ expansion and directory/.netrc handling) through a Python netrc (3.11+) parser (machine/default/login/user/account/password, macdef, quoting, comments, NetrcParseError and OSError texts as Failed to parse .netrc warnings, No authenticators for MACHINE), _get_tfa_info (--twofactor, else a getpass prompt), _login_hint/raise_login_required texts, the initialize lifecycle (_initialize_pre_login, _perform_login with found credentials, _real_initialize; once per extractor per run, a failed login retried by the next URL), the Login with password is not supported warning for extractors without a netrc machine, upstream validate_options account errors and the account password prompt; compared with pinned upstream output through the fixture proxy. Adobe Pass (--ap-*) is not covered"
+    },
+    {
       "name": "hearthisat",
       "status": "partial",
       "upstream": [
@@ -785,9 +806,10 @@
       ],
       "rust": [
         "src/extractor/dailymotion.rs",
-        "tests/fixtures/sites/dailymotion/"
+        "tests/fixtures/sites/dailymotion/",
+        "tests/fixtures/sites/dailymotion-login/"
       ],
-      "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors; no playlists; compared with pinned upstream output through the fixture proxy"
+      "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors; no playlists; compared with pinned upstream output through the fixture proxy; account tokens through _get_login_info (password grant, 400 error_description) compared with pinned upstream through tests/fixtures/sites/dailymotion-login/"
     },
     {
       "name": "daystar",
@@ -1629,9 +1651,10 @@
       ],
       "rust": [
         "src/extractor/niconico.rs",
-        "tests/fixtures/sites/niconico/"
+        "tests/fixtures/sites/niconico/",
+        "tests/fixtures/sites/niconico-login/"
       ],
-      "scope": "NiconicoIE watch API with its errors, domand access-rights HLS formats, thumbnails and metadata; no comment subtitles, logins, playlists, series, search, live or user pages; compared with pinned upstream output through the fixture proxy"
+      "scope": "NiconicoIE watch API with its errors, domand access-rights HLS formats, thumbnails and metadata; NiconicoBaseIE login (session cookies, mail_tel/password form, notice errors, MFA one-time password with formError/error-code messages, unexpected-login error) with a user_session cookie switching to the v3 API; no comment subtitles, playlists, series, search, live or user pages; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "nobelprize",
@@ -2053,9 +2076,10 @@
       ],
       "rust": [
         "src/extractor/soundcloud.rs",
-        "tests/fixtures/sites/soundcloud/"
+        "tests/fixtures/sites/soundcloud/",
+        "tests/fixtures/sites/soundcloud-login/"
       ],
-      "scope": "SoundcloudIE client ID discovery, resolved track JSON, default transcoding formats, artwork thumbnails and metadata, DRM/geo errors; no original downloads, login, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
+      "scope": "SoundcloudIE client ID discovery, resolved track JSON, default transcoding formats, artwork thumbnails and metadata, DRM/geo errors; `--username oauth --password TOKEN` and oauth_token cookie verification (connect/session) authorizing API requests, with upstream password-login error and invalid-token warnings; no original downloads, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "soundgasm",
@@ -2388,9 +2412,10 @@
       ],
       "rust": [
         "src/extractor/tumblr.rs",
-        "tests/fixtures/sites/tumblr/"
+        "tests/fixtures/sites/tumblr/",
+        "tests/fixtures/sites/tumblr-login/"
       ],
-      "scope": "TumblrIE anonymous API token, post page and permalink API, iframe/post-media video formats, provider embeds as url results and post metadata; no logins; compared with pinned upstream output through the fixture proxy"
+      "scope": "TumblrIE anonymous API token, post page and permalink API, iframe/post-media video formats, provider embeds as url results and post metadata; OAuth password-grant login with the API token (tfa_token, tfa_required retry, API errors, non-fatal Login failed warnings); compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "tvanouvelles",
@@ -2448,9 +2473,10 @@
       ],
       "rust": [
         "src/extractor/twitch.rs",
-        "tests/fixtures/sites/twitch/"
+        "tests/fixtures/sites/twitch/",
+        "tests/fixtures/sites/twitch-login/"
       ],
-      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference, usher 403 JSON errors (subscriber-only login hint) and live_from_start format marking; TwitchStreamIE stream GraphQL, stream access token, live usher HLS master, rerun/live titles, offline/missing-channel errors and --live-from-start VOD resolution; TwitchClipsIE signed qualities, thumbnails and metadata; TwitchVideosIE, TwitchVideosClipsIE and TwitchVideosCollectionsIE lazily paged GraphQL channel lists and TwitchCollectionIE, all as url_transparent entries; no login (_perform_login) or client_id extractor-arg; compared with pinned upstream output through the fixture proxy"
+      "scope": "TwitchVodIE GraphQL metadata/chapters/storyboards, access token and usher HLS formats with source preference, usher 403 JSON errors (subscriber-only login hint) and live_from_start format marking; TwitchStreamIE stream GraphQL, stream access token, live usher HLS master, rerun/live titles, offline/missing-channel errors and --live-from-start VOD resolution; TwitchClipsIE signed qualities, thumbnails and metadata; TwitchVideosIE, TwitchVideosClipsIE and TwitchVideosCollectionsIE lazily paged GraphQL channel lists and TwitchCollectionIE, all as url_transparent entries; no login (_perform_login) or client_id extractor-arg; compared with pinned upstream output through the fixture proxy; TwitchBaseIE login (login page hidden inputs posted as JSON to the form action, Twitch errors, redirect page, two-factor authy token step) for every Twitch extractor, the auth-token cookie authorizing GraphQL, compared with pinned upstream through tests/fixtures/sites/twitch-login/"
     },
     {
       "name": "twitter",
@@ -2558,9 +2584,10 @@
       ],
       "rust": [
         "src/extractor/vimeo.rs",
-        "tests/fixtures/sites/vimeo/"
+        "tests/fixtures/sites/vimeo/",
+        "tests/login.rs"
       ],
-      "scope": "VimeoIE without login: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; API-only URLs are the login-required error; no passwords, albums, on-demand, events or original formats; compared with pinned upstream output through the fixture proxy"
+      "scope": "VimeoIE without login (--username/--netrc credentials are an unsupported native error unless a vimeo cookie is present): player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; API-only URLs are the login-required error; no passwords, albums, on-demand, events or original formats; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "vk",
@@ -2571,9 +2598,10 @@
       "rust": [
         "src/extractor/vk.rs",
         "src/extractor/vkplay.rs",
-        "tests/fixtures/sites/vk/"
+        "tests/fixtures/sites/vk/",
+        "tests/fixtures/sites/vk-login/"
       ],
-      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched eagerly); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; no JS challenge, other embeds or logins; compared with pinned upstream output through the fixture proxy"
+      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched eagerly); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; no JS challenge, other embeds or logins; compared with pinned upstream output through the fixture proxy; VKBaseIE login (home page hidden inputs, cp1251 email/pass, first remixlhk Set-Cookie, onLoginFailed error) for VKIE, VKWallPostIE and VKUserVideosIE, compared with pinned upstream through tests/fixtures/sites/vk-login/"
     },
     {
       "name": "vocaroo",
@@ -2800,9 +2828,10 @@
         "src/live_dash.rs",
         "src/mhtml.rs",
         "tests/youtube_live.rs",
-        "src/data/iso3166.txt"
+        "src/data/iso3166.txt",
+        "tests/fixtures/sites/youtube-login/"
       ],
-      "scope": "Upstream YoutubeIE._real_extract over the InnerTube client flow (watch page, ytcfg, per-client player API requests, default tv_samsung/visionos/web clients with a JS runtime, visionos only without, age-gate and authenticated cookie clients), _extract_formats_and_subtitles (https, HLS/DASH manifests, dashy, multi-audio/DRC, storyboards with MhtmlFD), JS challenge solving through the vendored EJS solver under Deno/Node, captions/automatic captions, live chat (YoutubeLiveChatFD), live, upcoming, post-live and --live-from-start (DashSegmentsFD generator) streams, multifeed, --mark-watched, the documented youtube/youtubetab extractor arguments including configured PO tokens (no PO token provider plugins), title/duration/geo/trailer fallbacks and the full info dict in upstream key order; YoutubeTabIE playlists, mixes, channel tabs (nested multi-tab channels), feeds, hashtags, posts and shelves with browse API continuations; the redirect, feed-keyword, truncated, consent, playlist, YtBe, user, notification and music search extractors and the full YoutubeIE._VALID_URL; YoutubeSearchIE and YoutubeSearchURLIE; YoutubeIE._EMBED_REGEX embeds on generic pages; saved site fixtures tests/fixtures/sites/youtube*/ compared against pinned upstream output. SABR streaming is not supported"
+      "scope": "Upstream YoutubeIE._real_extract over the InnerTube client flow (watch page, ytcfg, per-client player API requests, default tv_samsung/visionos/web clients with a JS runtime, visionos only without, age-gate and authenticated cookie clients), _extract_formats_and_subtitles (https, HLS/DASH manifests, dashy, multi-audio/DRC, storyboards with MhtmlFD), JS challenge solving through the vendored EJS solver under Deno/Node, captions/automatic captions, live chat (YoutubeLiveChatFD), live, upcoming, post-live and --live-from-start (DashSegmentsFD generator) streams, multifeed, --mark-watched, the documented youtube/youtubetab extractor arguments including configured PO tokens (no PO token provider plugins), title/duration/geo/trailer fallbacks and the full info dict in upstream key order; YoutubeTabIE playlists, mixes, channel tabs (nested multi-tab channels), feeds, hashtags, posts and shelves with browse API continuations; the redirect, feed-keyword, truncated, consent, playlist, YtBe, user, notification and music search extractors and the full YoutubeIE._VALID_URL; YoutubeSearchIE and YoutubeSearchURLIE; YoutubeIE._EMBED_REGEX embeds on generic pages; saved site fixtures tests/fixtures/sites/youtube*/ compared against pinned upstream output. SABR streaming is not supported; YoutubeBaseInfoExtractor._perform_login once per extractor (password logins warn, oauth usernames are the no-longer-supported error), compared with pinned upstream through tests/fixtures/sites/youtube-login/"
     },
     {
       "name": "youtube-challenge-runtime",

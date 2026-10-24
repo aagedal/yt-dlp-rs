@@ -193,6 +193,7 @@ pub(crate) fn after_request() {
 }
 
 pub(crate) fn screen(text: &str) {
+    crate::extractor::login::before_screen_line(text);
     deliver(Message::Screen(text));
 }
 
