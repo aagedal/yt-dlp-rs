@@ -1848,6 +1848,14 @@ subtitles, the raw title, description, view count and duration, the
 `unified_strdate` air date, the `format_field` poster thumbnail (empty when
 absent) and `int_or_none` episode number with the programme as `series`.
 
+Gronkh streams (`gronkh.tv/[watch/]stream[s]/ID`) follow upstream `GronkhIE`:
+the video `info` and `playlist` API JSON (a missing `playlist_url` is the
+upstream `KeyError`), the playlist as fatal HLS formats (media playlists keep
+their URL's extension) and subtitles with the info's `vtt_url` appended to the
+`en` tracks, the raw title, views and preview thumbnail, the `unified_strdate`
+creation date, the `float_or_none` source length and the chapters whose
+offsets are numeric (else `None`). The feed and VOD listings are not ported.
+
 HitRecord records (`hitrecord.org/records/ID`) follow upstream `HitRecordIE`:
 the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python

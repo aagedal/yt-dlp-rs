@@ -1,0 +1,6 @@
+[
+ {"url": "https://gronkh.tv/streams/657", "args": ["-j"]},
+ {"url": "https://gronkh.tv/streams/657", "args": ["--list-subs"]},
+ {"url": "https://gronkh.tv/stream/536", "args": ["-j"]},
+ {"url": "https://gronkh.tv/watch/stream/546", "args": ["-j"]}
+]

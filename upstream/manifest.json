@@ -942,6 +942,18 @@
       "scope": "GraspopIE festival stream (http: HLS manifest as fatal formats, name/poster traversal, generic title, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "gronkh",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gronkh.py"
+      ],
+      "rust": [
+        "src/extractor/gronkh.rs",
+        "tests/fixtures/sites/gronkh/"
+      ],
+      "scope": "GronkhIE video info and playlist API JSON with fatal HLS formats and subtitles, the info vtt_url appended to en subtitles, unified_strdate created_at, float source_length duration and float-offset chapters (an untitled chapter's processed key order is not covered); GronkhFeedIE and GronkhVodsIE are not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "harpodeon",
       "status": "partial",
       "upstream": [
