@@ -1593,6 +1593,18 @@
       "scope": "TheStarIE mainartBrightcoveVideoId as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "formula1",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/formula1.py"
+      ],
+      "rust": [
+        "src/extractor/formula1.rs",
+        "tests/fixtures/sites/formula1/"
+      ],
+      "scope": "Formula1IE URL Brightcove ID as a url result of the BrightcoveNew player template, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "thisamericanlife",
       "status": "partial",
       "upstream": [

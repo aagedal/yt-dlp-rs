@@ -711,6 +711,12 @@ result of its `players.brightcove.net/794267642001/default_default` player,
 extracted like Brightcove players above. `tests/fixtures/sites/thestar/` is
 compared with pinned upstream output.
 
+Formula 1 videos (`formula1.com/en/latest/video.SLUG.ID.html`) follow upstream
+`Formula1IE`: the URL's Brightcove ID as a `url` result of the
+`players.brightcove.net/6057949432001/S1WMrhjlh_default` player, extracted like
+Brightcove players above. `tests/fixtures/sites/formula1/` is compared with
+pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
