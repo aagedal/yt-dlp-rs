@@ -123,7 +123,7 @@ Supported today:
   the media API (and The Intercept posts, Spiegel articles, OneFootball videos, Bundesliga videos and Iltalehti articles that embed it), Israel National News articles (as playlists of their YouTube embeds), 23video players
   (and Filmweb articles that embed them), FILMARCHIV ON videos, Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Project Veritas videos, tele-TASK lectures, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
-  Prize media, Bild clips, Masters videos, Match TV live, Sen videos, Kankanews videos, Kommunetv archives,
+  Prize media, Bild clips, Masters videos, Match TV live, Mocha videos, Sen videos, Kankanews videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, Premiership Rugby videos, PressTV videos, CJSW episodes,
   Player.fm episodes, RTRFM shows, Roya TV live streams, HitRecord records, href.li redirects, Culture Unplugged films,
   Zhihu videos, CRTVG programmes, Breitbart videos, CGTN news videos, JoVE

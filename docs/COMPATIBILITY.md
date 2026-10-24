@@ -1332,6 +1332,17 @@ the page's fatal `rel="videolink"` URL is followed through the registry as a
 `url_result`. A link that is not an absolute URL remains an explicit native
 error.
 
+Mocha videos (`video.mocha.com.vn/SLUG`) follow upstream `MochaVideoIE`: the
+`getVideoDetail` API (queried with the page URL) gives the `list_resolution`
+`video_path` playlists as fatal HLS formats and subtitles and the
+`original_path` string as an MP4 format (a missing one is upstream's bare
+`'NoneType' object has no attribute 'get'`), the stringified ID, slug (else
+the URL slug) `display_id`, name (else the generic title), raw description,
+duration, counts, thumbnail and `isLive`, `int_or_none(publish_time,
+scale=1000)` timestamp, `categoryname` categories and the `channels` `'0'`
+entry's channel fields (a string key, so never a list's first item), with
+upstream's unprefixed `KeyError` messages.
+
 Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
 `MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles
 ignored with upstream's warning), the fatal `Title` field without

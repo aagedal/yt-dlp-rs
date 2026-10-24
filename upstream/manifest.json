@@ -921,6 +921,18 @@
       "scope": "MixcloudIE GraphQL cloudcast lookup, XOR-decrypted progressive/HLS/DASH stream URLs, restriction errors, comments and metadata; no user, playlist or favorites lists; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "mocha",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mocha.py"
+      ],
+      "rust": [
+        "src/extractor/mocha.rs",
+        "tests/fixtures/sites/mocha/"
+      ],
+      "scope": "MochaVideoIE detail API (resolution HLS formats and subtitles, original MP4, raw metadata, scaled timestamp, string-key channel traversal, generic-title fallback, KeyError and AttributeError messages) compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "movingimage",
       "status": "partial",
       "upstream": [
