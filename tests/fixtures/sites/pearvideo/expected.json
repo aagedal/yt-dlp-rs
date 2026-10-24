@@ -1,0 +1,108 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.pearvideo.com/video_1076290",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1076290\", \"title\": \"\\u5c0f\\u6d63\\u718a\\u5728\\u4e3b\\u4eba\\u5bb6\\u73bb\\u7483\\u4e0a\\u6eda\\u77f3\\u5934\\uff1a\\u6ca1\\u7838\", \"description\": \"A raccoon rolls stones\", \"timestamp\": 1494260880, \"formats\": [{\"url\": \"https://video.pear.test/sd.mp4\", \"format_id\": \"sd\", \"quality\": 3, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"sd - unknown\"}, {\"url\": \"https://video.pear.test/hd.mp4\", \"format_id\": \"hd\", \"quality\": 5, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd - unknown\"}, {\"url\": \"http://video.pear.test/src.mp4\", \"format_id\": \"src\", \"quality\": 6, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"src - unknown\"}], \"webpage_url\": \"https://www.pearvideo.com/video_1076290\", \"original_url\": \"https://www.pearvideo.com/video_1076290\", \"webpage_url_basename\": \"video_1076290\", \"webpage_url_domain\": \"pearvideo.com\", \"extractor\": \"PearVideo\", \"extractor_key\": \"PearVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1076290\", \"fulltitle\": \"\\u5c0f\\u6d63\\u718a\\u5728\\u4e3b\\u4eba\\u5bb6\\u73bb\\u7483\\u4e0a\\u6eda\\u77f3\\u5934\\uff1a\\u6ca1\\u7838\", \"upload_date\": \"20170508\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://video.pear.test/src.mp4\", \"format_id\": \"src\", \"quality\": 6, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"src - unknown\", \"_filename\": \"\\u5c0f\\u6d63\\u718a\\u5728\\u4e3b\\u4eba\\u5bb6\\u73bb\\u7483\\u4e0a\\u6eda\\u77f3\\u5934\\uff1a\\u6ca1\\u7838 [1076290].mp4\", \"filename\": \"\\u5c0f\\u6d63\\u718a\\u5728\\u4e3b\\u4eba\\u5bb6\\u73bb\\u7483\\u4e0a\\u6eda\\u77f3\\u5934\\uff1a\\u6ca1\\u7838 [1076290].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.pearvideo.com/video_1076290",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(timestamp)s|%(upload_date)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1076290|小浣熊在主人家玻璃上滚石头：没砸|A raccoon rolls stones|1494260880|20170508|src|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.pearvideo.com/video_1076290",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[PearVideo] Extracting URL: https://www.pearvideo.com/video_1076290",
+    "[PearVideo] 1076290: Downloading webpage",
+    "[info] Available formats for 1076290:",
+    "ID  EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "--------------------------------------------",
+    "sd  mp4 unknown    | https | unknown unknown",
+    "hd  mp4 unknown    | https | unknown unknown",
+    "src mp4 unknown    | http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.pearvideo.com/video_1076290",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[PearVideo] Extracting URL: https://www.pearvideo.com/video_1076290",
+    "[PearVideo] 1076290: Downloading webpage",
+    "[info] 1076290: Downloading 1 format(s): src",
+    "[download] Destination: 1076290.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "1076290.mp4": 792
+   }
+  },
+  {
+   "url": "http://www.pearvideo.com/video_2000",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2000\", \"title\": \"API video\", \"description\": \"Meta only\", \"timestamp\": null, \"formats\": [{\"format_id\": \"hdUrl\", \"url\": \"https://video.pear.test/hd2.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hdUrl - unknown\"}, {\"format_id\": \"srcUrl\", \"url\": \"https://video.pear.test/mp4/cont-2000-111-hd.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"srcUrl - unknown\"}], \"webpage_url\": \"http://www.pearvideo.com/video_2000\", \"original_url\": \"http://www.pearvideo.com/video_2000\", \"webpage_url_basename\": \"video_2000\", \"webpage_url_domain\": \"pearvideo.com\", \"extractor\": \"PearVideo\", \"extractor_key\": \"PearVideo\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2000\", \"fulltitle\": \"API video\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"srcUrl\", \"url\": \"https://video.pear.test/mp4/cont-2000-111-hd.mp4\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"srcUrl - unknown\", \"_filename\": \"API video [2000].mp4\", \"filename\": \"API video [2000].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [PearVideo] unable to extract timestamp; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pearvideo.com/video_3000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [PearVideo] unable to extract Description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [PearVideo] 3000: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.pearvideo.com/video_4000",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [PearVideo] 4000: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

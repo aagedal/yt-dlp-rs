@@ -1576,6 +1576,16 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+Pear Video pages (`pearvideo.com/video_ID`) follow upstream `PearVideoIE`: the
+page's `KINDUrl = "..."` assignments as formats ranked by upstream's
+`qualities` list (protocol-relative URLs as `http:`), else the
+`videoStatus.jsp` API's non-empty videos (the `srcUrl` system time replaced
+with `cont-ID`), the fatal heading/`data-title` title, the summary or
+`Description` meta description and the date's `unified_timestamp`, with
+upstream's warnings and `No video formats found!` error. Non-string API video
+URLs remain explicit native errors. `tests/fixtures/sites/pearvideo/` is
+compared with pinned upstream output.
+
 Podbay episodes (`podbay.fm/p/SLUG/e/ID`) follow upstream `PodbayFMIE`: the
 page's `__NEXT_DATA__` `pageProps.episode` as an untyped MP3 result
 (`vcodec: none`) with its `clean_html` description, the JWT-encoded image's

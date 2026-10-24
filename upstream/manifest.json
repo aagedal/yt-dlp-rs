@@ -1293,6 +1293,18 @@
       "scope": "ParlviewIE API file as fatal HLS formats and subtitles, metadata traversal (title fallback, duration, ISO 8601 timestamp, thumbnail) and KeyError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "pearvideo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/pearvideo.py"
+      ],
+      "rust": [
+        "src/extractor/pearvideo.rs",
+        "tests/fixtures/sites/pearvideo/"
+      ],
+      "scope": "PearVideoIE page KINDUrl formats ranked by qualities, videoStatus.jsp API fallback (srcUrl systemTime replacement), title/summary/Description meta/date timestamp with upstream warnings and title/no-formats errors compared with pinned upstream output through the fixture proxy; non-string API video URLs remain explicit native errors"
+    },
+    {
       "name": "peertv",
       "status": "partial",
       "upstream": [
