@@ -1,0 +1,20 @@
+{
+ "id": "6343716797112",
+ "account_id": "664969388001",
+ "name": "Outrage as parents banned from giving gifts",
+ "description": "Fair Trading Australia have been forced to pull dozens of toys from shelves over hazard fears.",
+ "published_at": "2023-12-22T07:55:48Z",
+ "duration": 93440,
+ "tags": ["networkclip", "toys"],
+ "sources": [
+  {
+   "container": "MP4",
+   "type": "video/mp4",
+   "src": "https://cdn.example.com/9news.mp4",
+   "avg_bitrate": 1000000,
+   "width": 1280,
+   "height": 720,
+   "codec": "H264"
+  }
+ ]
+}

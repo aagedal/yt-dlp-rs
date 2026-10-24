@@ -107,20 +107,25 @@ mod maoritv;
 mod masters;
 mod matchitv;
 mod matchtv;
+mod mediaite;
 mod megaphone;
 mod mir24tv;
 mod mixcloud;
 mod mocha;
 mod movingimage;
+mod mux;
 mod myvidster;
 mod netzkino;
 mod newsy;
 mod niconico;
+mod ninenews;
 mod nobelprize;
 mod nts;
 pub mod nuxt;
+mod nzonscreen;
 mod odnoklassniki;
 mod onefootball;
+mod onenewsnz;
 mod oneplace;
 mod parlview;
 mod pearvideo;
@@ -140,6 +145,7 @@ mod radiozet;
 mod reddit;
 mod reverbnation;
 mod rinsefm;
+mod rottentomatoes;
 mod roya;
 mod rss;
 mod rtrfm;
@@ -325,19 +331,24 @@ pub use maoritv::{MaoriTV, suitable as maoritv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
 pub use matchitv::{MatchiTv, suitable as matchitv_suitable};
 pub use matchtv::{MatchTv, suitable as matchtv_suitable};
+pub use mediaite::{Mediaite, suitable as mediaite_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use mir24tv::{Mir24Tv, suitable as mir24tv_suitable};
 pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
 pub use mocha::{MochaVideo, suitable as mocha_suitable};
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
+pub use mux::{Mux, suitable as mux_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
 pub use newsy::{Newsy, suitable as newsy_suitable};
 pub use niconico::{Niconico, suitable as niconico_suitable};
+pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use nts::{NtsLive, suitable as nts_suitable};
+pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
 pub use onefootball::{OneFootball, suitable as onefootball_suitable};
+pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use pearvideo::{PearVideo, suitable as pearvideo_suitable};
@@ -359,6 +370,7 @@ pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use rinsefm::{RinseFm, suitable as rinsefm_suitable};
 pub use rinsefm::{RinseFmArtistPlaylist, playlist_suitable as rinsefm_playlist_suitable};
+pub use rottentomatoes::{RottenTomatoes, suitable as rottentomatoes_suitable};
 pub use roya::{RoyaLive, suitable as roya_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
 pub use rumble::{
@@ -1604,10 +1616,13 @@ pub(crate) fn dict_info(
     info.extractor_key = key.into();
     let mut keys = Vec::new();
     let mut titled = false;
+    // A `None` title keeps its key's position for processing's generic one.
+    let mut title_key = false;
     for (name, value) in fields {
         keys.push(name.to_owned());
         match name {
             "id" => info.id = value.as_str().unwrap_or_default().to_owned(),
+            "title" if value.is_null() => title_key = true,
             "title" => {
                 titled = true;
                 info.title = value.as_str().unwrap_or_default().to_owned();
@@ -1629,7 +1644,7 @@ pub(crate) fn dict_info(
         info,
         &format!(
             "dict{};{}",
-            if titled { "" } else { "-untitled" },
+            if titled || title_key { "" } else { "-untitled" },
             keys.join(",")
         ),
     )

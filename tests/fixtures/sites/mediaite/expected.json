@@ -1,0 +1,42 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.mediaite.com/sports/bill-burr-roasts-nfl/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"vPHKITzy\", \"title\": \"Bill Burr On NFL And Black Lives Matter\", \"description\": \"\", \"thumbnail\": \"https://cdn.jwplayer.com/v2/media/vPHKITzy/poster.jpg?width=720\", \"timestamp\": 1631630185, \"duration\": 55.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/vPHKITzy-1.m4a\", \"vcodec\": \"none\", \"ext\": \"m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}, {\"url\": \"https://cdn.jwplayer.com/videos/vPHKITzy-2.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1500, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 10312500, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}], \"webpage_url\": \"https://www.mediaite.com/sports/bill-burr-roasts-nfl/\", \"original_url\": \"https://www.mediaite.com/sports/bill-burr-roasts-nfl/\", \"webpage_url_basename\": \"bill-burr-roasts-nfl\", \"webpage_url_domain\": \"mediaite.com\", \"extractor\": \"Mediaite\", \"extractor_key\": \"Mediaite\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.jwplayer.com/v2/media/vPHKITzy/poster.jpg?width=720\", \"id\": \"0\"}], \"display_id\": \"vPHKITzy\", \"fulltitle\": \"Bill Burr On NFL And Black Lives Matter\", \"duration_string\": \"55\", \"upload_date\": \"20210914\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.jwplayer.com/videos/vPHKITzy-2.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1500, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 10312500, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_filename\": \"Bill Burr On NFL And Black Lives Matter [vPHKITzy].mp4\", \"filename\": \"Bill Burr On NFL And Black Lives Matter [vPHKITzy].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mediaite.com/tv/joe-scarborough-goes-off/",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(timestamp)s|%(duration)s|%(format_id)s|%(ext)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "eeFcK4Xm|Morning Joe-6_16_52 am.mp4|1631618057|258.0|360p|mp4|Mediaite"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.mediaite.com/tv/no-video/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Mediaite] Unable to extract id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

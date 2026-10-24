@@ -1,0 +1,10 @@
+{
+ "routes": [
+  {"url": "https://stream.mux.com/OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "master.m3u8"},
+  {"url": "https://stream.mux.com/JBuasdg35Hw7tYmTe9k68QLPQKixL300YsWHDz5Flit8.m3u8?token=tok.en", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "master.m3u8"},
+  {"url": "https://stream.mux.com/low.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "media.m3u8"},
+  {"url": "https://stream.mux.com/high.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "media.m3u8"},
+  {"url": "https://stream.mux.com/subs.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "subs.m3u8"},
+  {"url": "https://stream.mux.com/gone-404.m3u8", "status": 404, "headers": {"Content-Type": "text/plain"}, "body": "gone"}
+ ]
+}

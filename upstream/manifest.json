@@ -145,6 +145,30 @@
       "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication, bounded download retries for HTTP 5xx statuses and transport/body failures (HttpFD), upstream download error reporting, in-invocation range resume guarded by strong ETags, known lengths and response validation; shared transient HTTP classification/backoff with extraction; bounded Retry-After delay-seconds/preferred HTTP-date shared with extraction; byte-progress observers and cooperative cancellation checkpoints including retry-wait polling; FILE.part resume across invocations; no Last-Modified validators or obsolete HTTP-date Retry-After formats"
     },
     {
+      "name": "mediaite",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mediaite.py"
+      ],
+      "rust": [
+        "src/extractor/mediaite.rs",
+        "tests/fixtures/sites/mediaite/"
+      ],
+      "scope": "MediaiteIE jwplayer player/data-video-id media ID and its cdn.jwplayer.com/v2/media JSON parsed like JWPlatform (single-item playlists only). Compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "mux",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mux.py"
+      ],
+      "rust": [
+        "src/extractor/mux.rs",
+        "tests/fixtures/sites/mux/"
+      ],
+      "scope": "MuxIE stream.new/v and player.mux.com playback IDs as the fatal stream.mux.com HLS playlist (playback-token as token) with subtitles and the ID as title; generic-page iframe and mux-player embeds are not detected. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "netzkino",
       "status": "partial",
       "upstream": [
@@ -155,6 +179,18 @@
         "tests/fixtures/sites/netzkino/"
       ],
       "scope": "NetzkinoIE __NEXT_DATA__ dehydrated CmsMovie query, DRM licence error, joined PMD video URL as an untyped result with title/age limit/cast/creators/categories/description/duration/location/year/thumbnail, generic title and no-formats error compared with pinned upstream output through the fixture proxy; the _GEO_COUNTRIES X-Forwarded-For header is not sent natively (fixture -j cases use --no-geo-bypass)"
+    },
+    {
+      "name": "ninenews",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ninenews.py"
+      ],
+      "rust": [
+        "src/extractor/ninenews.rs",
+        "tests/fixtures/sites/ninenews/"
+      ],
+      "scope": "NineNewsIE __INITIAL_STATE__ brightcoveId (else the article's video media urn) and account as a url result of the account's default Brightcove player. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "nts",
@@ -203,6 +239,30 @@
         "tests/fixtures/sites/libsyn/"
       ],
       "scope": "LibsynIE HTML5 player playlistItem JSON (fatal), item/episode-title/data-title/title episode title, h3/podcast-title podcast prefix, info_text_body description, release-date div or JSON upload date, string-only parse_duration, thumbnail and the libsyn/main/download formats compared with pinned upstream output through the fixture proxy; the _EMBED_REGEX generic embeds are not ported and non-string player fields remain explicit native errors"
+    },
+    {
+      "name": "nzonscreen",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/nzonscreen.py"
+      ],
+      "rust": [
+        "src/extractor/nzonscreen.rs",
+        "tests/fixtures/sites/nzonscreen/"
+      ],
+      "scope": "NZOnScreenIE data-video-config h264 lo/hi formats with quality, size and dimensions, uuid ID, stripped label/description, alt_title and the site's Referer/Origin headers. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "onenewsnz",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/onenewsnz.py"
+      ],
+      "rust": [
+        "src/extractor/onenewsnz.rs",
+        "tests/fixtures/sites/onenewsnz/"
+      ],
+      "scope": "OneNewsNZIE Fusion.globalContent video (Brightcove) and youtube content elements as a playlist of url results titled by headlines.basic or the generic page title. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "orchestration-and-output",
@@ -1724,6 +1784,18 @@
         "tests/fixtures/sites/rinsefm/"
       ],
       "scope": "RinseFMIE query API episode entry as an untyped audio result (vcodec none, title, release timestamp, imgix thumbnail, episode webpage_url), KeyError and generic-title behaviour, and RinseFMArtistPlaylistIE audio-episode playlists with show title/description compared with pinned upstream output through the fixture proxy; episodes without a string id or media URL remain explicit native errors"
+    },
+    {
+      "name": "rottentomatoes",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rottentomatoes.py"
+      ],
+      "rust": [
+        "src/extractor/rottentomatoes.rs",
+        "tests/fixtures/sites/rottentomatoes/"
+      ],
+      "scope": "RottenTomatoesIE heroVideos/videos script JSON, each hls video's non-fatal formats with publicId, title, description, duration and image, as the named trailer or a playlist titled by scoreboard__title. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "roya",

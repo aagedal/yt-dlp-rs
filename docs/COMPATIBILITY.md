@@ -1763,6 +1763,59 @@ upload date and poster URL. Generic-page iframe embeds are not detected
 natively. `tests/fixtures/sites/cloudycdn/` is compared with pinned upstream
 output.
 
+Mux videos (`stream.new/v/ID` and `player.mux.com/ID`) follow upstream
+`MuxIE`: the fatal `https://stream.mux.com/ID.m3u8` playlist (the URL's last
+`playback-token` as `token`) with its formats and subtitles, titled by the
+ID. Generic-page iframe and `<mux-player>`/`<mux-video>` embeds (and their
+smuggled `metadata-video-title`) are not detected natively.
+`tests/fixtures/sites/mux/` is compared with pinned upstream output.
+
+9News videos and articles (`9news.com.au/A/B[/C]/ID`) follow upstream
+`NineNewsIE`: the page's `__INITIAL_STATE__` JSON (`_search_json`'s greedy
+object, first value kept), its `videoIndex.currentVideo.brightcoveId` (else
+the first article `media` item of type `video`'s `urn`) and
+`videoIndex.config[.video].account`, as a `url` result of that account's
+`default_default` Brightcove player; a missing ID or account is upstream's
+`Unable to get the required video data`. `tests/fixtures/sites/ninenews/` is
+compared with pinned upstream output.
+
+Rotten Tomatoes movie and trailer pages (`rottentomatoes.com/m/MOVIE[/trailers[/ID]]`)
+follow upstream `RottenTomatoesIE`: the `heroVideos`/`videos` script's greedy
+`[{...}]` JSON, each video with a truthy `publicId` and `file` and `type`
+`hls` as an entry of its non-fatal `hls` formats (manifest subtitles ignored)
+with the present `publicId`, title, description, `float_or_none` duration and
+`url_or_none` image. A trailer ID selects its video (`Unable to extract video
+from webpage` when absent); otherwise the page is a playlist
+(`MOVIE[-trailers]`) titled by the cleaned `scoreboard__title` element.
+`tests/fixtures/sites/rottentomatoes/` is compared with pinned upstream
+output.
+
+Mediaite articles (`mediaite.com/SECTION/SLUG`, not `/category`) follow
+upstream `MediaiteIE`: the page's `cdn.jwplayer.com/players/ID` (else
+`data-video-id`) media ID, its `cdn.jwplayer.com/v2/media/ID` JSON parsed
+like JW Platform's (`_parse_jwplayer_data` with the item's `mediaid` as the
+video ID). Multi-item JW Player playlists remain explicit native errors.
+`tests/fixtures/sites/mediaite/` is compared with pinned upstream output.
+
+1News articles (`[www.](1|one)news.co.nz/YYYY/MM/DD/SLUG`) follow upstream
+`OneNewsNZIE`: the `Fusion.globalContent` JSON's `content_elements`, each
+`video` element as a `url` result of its `brightcoveAccount` (default
+`963482464001`) `0xpHIR6IB_default` Brightcove player and each `youtube`
+element's `referent.id` (else `raw_oembed._id`) as a YouTube `url` result,
+in a playlist titled by `headlines.basic` (else the generic page title).
+Articles without such elements are upstream's expected `This article does
+not have a video.` `tests/fixtures/sites/onenewsnz/` is compared with pinned
+upstream output.
+
+NZ On Screen titles (`www.nzonscreen.com/title/SLUG`) follow upstream
+`NZOnScreenIE`: the page's `data-video-config` JSON (`uuid` as ID, stripped
+`label`/`description`, `thumbnail.path`, `float_or_none` duration), its
+`h264` `lo_res`/`hi_res` URLs as `lo`/`hi` mp4 formats ranked by order (the
+`hi` format with the config's width and height, `*_res_mb` as
+`filesize_approx`), the page `<title>` (else OpenGraph title) without
+` | NZ On Screen` as `alt_title`, and the site's `Referer`/`Origin` headers.
+`tests/fixtures/sites/nzonscreen/` is compared with pinned upstream output.
+
 Cloudflare Stream videos (`[watch.|iframe.|customer-X.]cloudflarestream.com|videodelivery.net|bytehighway.net/ID`
 and `embed/*.js?video=ID` scripts) follow upstream `CloudflareStreamIE`: a
 signed token's ID is its base64 payload's `sub`, and the
