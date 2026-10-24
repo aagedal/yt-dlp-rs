@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://drtalks.com/videos/six-pillars/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://drtalks.com/videos/bare/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://drtalks.com/videos/missing/",
+  "args": [
+   "-j"
+  ]
+ }
+]

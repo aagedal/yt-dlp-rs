@@ -365,6 +365,18 @@
       "scope": "BreitBartIE JW Player manifest as fatal HLS formats, generic title, OpenGraph warnings and RTA age limit compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "brightcove",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/brightcove.py"
+      ],
+      "rust": [
+        "src/extractor/brightcove.rs",
+        "tests/fixtures/sites/brightcove/"
+      ],
+      "scope": "BrightcoveNewIE players.brightcove.net video URLs: policy key from config.json (non-fatal) else index.min.js catalog/policyKey, Playback API with Accept pk header and smuggled referrer/token, _parse_brightcove_metadata (non-fatal HLS/DASH with subtitles, progressive and streaming HTTP sources, DRM flags, captions, thumbnails, metadata), 401/403 API errors (geo and messages) and raise_no_formats errors; _extract_brightcove_urls iframe and <video>+player-script embeds on generic pages (smuggled referrer) compared with pinned upstream output through the fixture proxy; playlists, TVE (Adobe Pass) videos, RTMP sources, <video>-only embeds needing _is_valid_url and BrightcoveLegacyIE are unsupported"
+    },
+    {
       "name": "bundesliga",
       "status": "partial",
       "upstream": [
@@ -507,6 +519,18 @@
         "tests/fixtures/sites/dfb/"
       ],
       "scope": "DFBIE player XML, stream access token manifests (optional hds F4M with hdcore and hls m3u8 formats), title, unified_strdate upload date, thumbnail and wrapped AttributeError/KeyError messages compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "drtalks",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/drtalks.py"
+      ],
+      "rust": [
+        "src/extractor/drtalks.rs",
+        "tests/fixtures/sites/drtalks/"
+      ],
+      "scope": "DrTalksIE Next.js video data as a url_transparent BrightcoveNew result overlaid with title, summary and featured image, and the KeyError path, compared with pinned upstream output through the fixture proxy; non-Brightcove links are unsupported"
     },
     {
       "name": "ebaumsworld",
@@ -1555,6 +1579,18 @@
         "tests/fixtures/sites/theintercept/"
       ],
       "scope": "TheInterceptIE initialStoreTree post as a url_transparent jwplatform: result compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "thestar",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/thestar.py"
+      ],
+      "rust": [
+        "src/extractor/thestar.rs",
+        "tests/fixtures/sites/thestar/"
+      ],
+      "scope": "TheStarIE mainartBrightcoveVideoId as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "thisamericanlife",

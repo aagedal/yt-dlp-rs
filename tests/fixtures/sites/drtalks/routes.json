@@ -1,0 +1,42 @@
+{
+ "routes": [
+  {
+   "url": "https://drtalks.com/videos/six-pillars/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://drtalks.com/videos/bare/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  },
+  {
+   "url": "https://drtalks.com/videos/missing/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page3.html"
+  },
+  {
+   "url": "https://players.brightcove.net/6314452011001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/6314452011001/videos/6366193757112",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkDRTALKS"
+   }
+  }
+ ]
+}

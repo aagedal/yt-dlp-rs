@@ -1842,7 +1842,7 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 8] = [
+static EMBED_SITES: [EmbedSite; 9] = [
     EmbedSite {
         name: super::bitmovin::NAME,
         key: super::bitmovin::KEY,
@@ -1856,6 +1856,13 @@ static EMBED_SITES: [EmbedSite; 8] = [
         extractor: Some(&super::blogger::Blogger),
         embed_urls: super::blogger::embed_urls,
         temp_id: super::blogger::temp_id,
+    },
+    EmbedSite {
+        name: super::brightcove::NAME,
+        key: super::brightcove::KEY,
+        extractor: Some(&super::brightcove::BrightcoveNew),
+        embed_urls: super::brightcove::embed_urls,
+        temp_id: super::brightcove::temp_id,
     },
     EmbedSite {
         name: super::crooksandliars::NAME,

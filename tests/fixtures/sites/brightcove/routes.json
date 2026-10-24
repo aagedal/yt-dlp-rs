@@ -1,0 +1,121 @@
+{
+ "routes": [
+  {
+   "url": "https://players.brightcove.net/1111111111001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/1111111111001/videos/6300000000001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTUREKEY1"
+   }
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://manifest.prod.boltdns.net/manifest/v1/dash/manifest.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://players.brightcove.net/2222222222001/abc123_default/index.min.js",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body_file": "catalog.js"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/2222222222001/videos/6300000000002",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "geo.json",
+   "status": 403,
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkCATALOGKEY2"
+   }
+  },
+  {
+   "url": "https://players.brightcove.net/3333333333001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "nokey.json"
+  },
+  {
+   "url": "https://players.brightcove.net/3333333333001/default_default/index.min.js",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body_file": "policy.js"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/3333333333001/videos/6300000000003",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "notfound.json",
+   "status": 403,
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkREGEXKEY3"
+   }
+  },
+  {
+   "url": "https://players.brightcove.net/4444444444001/default_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/4444444444001/videos/6300000000004",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "unplayable.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTUREKEY1"
+   }
+  },
+  {
+   "url": "https://players.brightcove.net/5555555555001/default_default/index.min.js",
+   "headers": {
+    "Content-Type": "application/javascript"
+   },
+   "body_file": "none.js"
+  },
+  {
+   "url": "https://www.example.com/news/embed-page",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "embed.html"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/1111111111001/videos/6300000000005",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "embedded.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFIXTUREKEY1",
+    "Referer": "https://www.example.com/news/embed-page",
+    "Origin": "https://www.example.com"
+   }
+  }
+ ]
+}
