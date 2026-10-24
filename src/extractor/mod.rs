@@ -130,6 +130,7 @@ mod telegram;
 mod teletask;
 mod theintercept;
 mod thestar;
+mod thesun;
 mod thisamericanlife;
 mod tiktok;
 mod trtcocuk;
@@ -307,6 +308,7 @@ pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use teletask::{TeleTask, suitable as teletask_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thestar::{TheStar, suitable as thestar_suitable};
+pub use thesun::{TheSun, suitable as thesun_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use tiktok::{
     Douyin, TikTok, TikTokCollection, TikTokLive, TikTokUser, TikTokVm,

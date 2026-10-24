@@ -1593,6 +1593,18 @@
       "scope": "TheStarIE mainartBrightcoveVideoId as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "thesun",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/thesun.py"
+      ],
+      "rust": [
+        "src/extractor/thesun.rs",
+        "tests/fixtures/sites/thesun/"
+      ],
+      "scope": "TheSunIE data-video-id-pending videos as a playlist of BrightcoveNew url results titled by the OpenGraph title (with upstream's warning when missing), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "skynewsau",
       "status": "partial",
       "upstream": [

@@ -740,6 +740,14 @@ Brightcove players above), overlaid with the `content.api.news` video's
 without a `-` are rejected. `tests/fixtures/sites/skynewsau/` is compared
 with pinned upstream output.
 
+The Sun articles (`thesun.co.uk/SECTION/ID/...`, `the-sun.com/SECTION/ID/...`)
+follow upstream `TheSunIE`: each `<video data-video-id-pending>` as a `url`
+result of its `data-account` (default `5067014667001`)
+`players.brightcove.net/ACCOUNT/default_default` player, extracted like
+Brightcove players above, in a playlist titled by the OpenGraph title (else
+upstream's warning and no title). `tests/fixtures/sites/thesun/` is compared
+with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
