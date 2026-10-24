@@ -873,6 +873,18 @@
       "scope": "OdnoklassnikiIE player options, flashvars or POSTed metadata, progressive/HLS/DASH/RTMP formats, subtitles, errors and url/url_transparent results; no embedded DASH manifests; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "onefootball",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/onefootball.py"
+      ],
+      "rust": [
+        "src/extractor/onefootball.rs",
+        "tests/fixtures/sites/onefootball/"
+      ],
+      "scope": "OneFootballIE JW Player manifest URL as a url_transparent JWPlatform result with the old archive ID and non-fatal JSON-LD fields compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "oneplace",
       "status": "partial",
       "upstream": [

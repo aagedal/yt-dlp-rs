@@ -486,6 +486,12 @@ JW Platform extractor) overlaid with the post's display ID, raw title,
 excerpt, ISO 8601 date and comment count; no matching post is upstream's
 `Unable to find the current post`.
 
+OneFootball videos (`onefootball.com/LL/video/SLUG-ID`) follow upstream
+`OneFootballIE`: the page's fatal `cdn.jwplayer.com/manifests/ID.m3u8` URL as
+a `url_transparent` result (extracted by the JW Platform extractor) overlaid
+with `_old_archive_ids` and the non-fatal JSON-LD fields without `url`; a page
+without JSON-LD warns `unable to extract JSON-LD` like upstream.
+
 This American Life episodes (`thisamericanlife.org/radio-archives/episode/ID`,
 `play_full.php?play=ID`) follow upstream `ThisAmericanLifeIE`: the episode
 page's fatal `twitter:title`, description meta and OpenGraph image, with the
