@@ -100,6 +100,7 @@ mod soundcloud;
 mod soundgasm;
 mod spiegel;
 mod streamable;
+mod streetvoice;
 mod sztvhu;
 mod ted;
 mod telegram;
@@ -247,6 +248,7 @@ pub use soundgasm::{
 };
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
+pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
 pub use ted::{
     TedEmbed, TedPlaylist, TedSeries, TedTalk, embed_suitable as ted_embed_suitable,

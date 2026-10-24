@@ -443,6 +443,16 @@ and geo-blocked tracks are upstream's errors. Original downloads, logins,
 comments, sets, users, stations and search are not supported.
 `tests/fixtures/sites/soundcloud/` is compared with pinned upstream output.
 
+StreetVoice songs (`[SUB.]streetvoice.com/USER/songs/ID`) follow upstream
+`StreetVoiceIE`: the v4 song API's metadata (the `name` is required, else
+upstream's `KeyError`; synopsis, image, length, ISO 8601 creation time, user
+nickname/ID/URL, play/like/comment/share counts and album name) and the
+`hls/file`, `file` and `file/original` URLs, each fetched with an empty POST
+whose HTTP errors and empty bodies are upstream's warnings, as `mp3` audio
+formats (`m3u8_native` for HLS; `.mp3.NNNk` URLs give the ABR/TBR). Format
+responses whose body is not empty but fails to parse remain explicit native
+errors, since this port does not reproduce Python's `JSONDecodeError` text.
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file

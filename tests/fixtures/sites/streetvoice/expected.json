@@ -1,0 +1,80 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://streetvoice.com/skippylu/songs/123688/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"123688\", \"formats\": [{\"ext\": \"mp3\", \"format_id\": \"http\", \"url\": \"https://cdn.streetvoice.com/music/123688/song.mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"http - audio only\"}, {\"ext\": \"mp3\", \"format_id\": \"hls\", \"url\": \"https://cdn.streetvoice.com/music/123688/hls/song.mp3.128k.m3u8\", \"vcodec\": \"none\", \"protocol\": \"m3u8_native\", \"abr\": 128, \"tbr\": 128, \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 4320000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - audio only\"}], \"title\": \"\\u6d41\\u6d6a\", \"description\": \"A song about wandering.\", \"thumbnail\": \"https://cdn.streetvoice.com/images/123688.jpg\", \"duration\": 270, \"timestamp\": 1285261661, \"uploader\": \"Crispy\\u8106\\u6a02\\u5718\", \"uploader_id\": \"627810\", \"uploader_url\": \"https://streetvoice.com/skippylu/\", \"view_count\": 1234, \"like_count\": 56, \"comment_count\": 7, \"repost_count\": null, \"track\": \"\\u6d41\\u6d6a\", \"track_id\": \"123688\", \"album\": \"2010\", \"webpage_url\": \"https://streetvoice.com/skippylu/songs/123688/\", \"original_url\": \"https://streetvoice.com/skippylu/songs/123688/\", \"webpage_url_basename\": \"123688\", \"webpage_url_domain\": \"streetvoice.com\", \"extractor\": \"StreetVoice\", \"extractor_key\": \"StreetVoice\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.streetvoice.com/images/123688.jpg\", \"id\": \"0\"}], \"display_id\": \"123688\", \"fulltitle\": \"\\u6d41\\u6d6a\", \"duration_string\": \"4:30\", \"upload_date\": \"20100923\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"ext\": \"mp3\", \"format_id\": \"hls\", \"url\": \"https://cdn.streetvoice.com/music/123688/hls/song.mp3.128k.m3u8\", \"vcodec\": \"none\", \"protocol\": \"m3u8_native\", \"abr\": 128, \"tbr\": 128, \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 4320000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls - audio only\", \"_filename\": \"\\u6d41\\u6d6a [123688].mp3\", \"filename\": \"\\u6d41\\u6d6a [123688].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [StreetVoice] 123688: Unable to download JSON metadata: HTTP Error 403: Forbidden"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://streetvoice.com/skippylu/songs/123688/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[StreetVoice] Extracting URL: https://streetvoice.com/skippylu/songs/123688/",
+    "[StreetVoice] 123688: Downloading JSON metadata",
+    "[StreetVoice] 123688: Downloading hls format URL",
+    "[StreetVoice] 123688: Downloading http format URL",
+    "[StreetVoice] 123688: Downloading original format URL",
+    "[info] Available formats for 123688:",
+    "ID   EXT RESOLUTION | FILESIZE  TBR PROTO | VCODEC     ACODEC  ABR",
+    "------------------------------------------------------------------",
+    "http mp3 audio only |               https | audio only mp3",
+    "hls  mp3 audio only | ≈4.12MiB 128k m3u8  | audio only mp3    128k"
+   ],
+   "stderr": [
+    "WARNING: [StreetVoice] 123688: Unable to download JSON metadata: HTTP Error 403: Forbidden"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://tw.streetvoice.com/someone/songs/2/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2\", \"formats\": [{\"ext\": \"mp3\", \"format_id\": \"original\", \"url\": \"https://cdn.streetvoice.com/music/2/original.wav\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - audio only\"}], \"title\": \"Bare\", \"description\": null, \"thumbnail\": null, \"timestamp\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"view_count\": null, \"like_count\": null, \"comment_count\": null, \"repost_count\": null, \"track\": \"Bare\", \"track_id\": \"2\", \"album\": null, \"webpage_url\": \"http://tw.streetvoice.com/someone/songs/2/\", \"original_url\": \"http://tw.streetvoice.com/someone/songs/2/\", \"webpage_url_basename\": \"2\", \"webpage_url_domain\": \"tw.streetvoice.com\", \"extractor\": \"StreetVoice\", \"extractor_key\": \"StreetVoice\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"2\", \"fulltitle\": \"Bare\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"ext\": \"mp3\", \"format_id\": \"original\", \"url\": \"https://cdn.streetvoice.com/music/2/original.wav\", \"vcodec\": \"none\", \"protocol\": \"https\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - audio only\", \"_filename\": \"Bare [2].mp3\", \"filename\": \"Bare [2].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [StreetVoice] 2: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://streetvoice.com/x/songs/3/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3: An extractor error has occurred. (caused by KeyError('name')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://streetvoice.com/x/songs/4/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [StreetVoice] 4: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

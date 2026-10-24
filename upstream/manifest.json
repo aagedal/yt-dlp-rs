@@ -1279,6 +1279,18 @@
       "scope": "StreamableIE _VALID_URL and ajax API extraction (status, reddit_title/title, files as formats with parse_codecs codecs, owner, float date_added/duration, plays) compared with pinned upstream output through the fixture proxy; _EMBED_REGEX iframes on generic pages via _extract_embeds url results (single followed, several as a playlist with flat url entries); pages mixing HTML5 media and embeds are an unsupported error"
     },
     {
+      "name": "streetvoice",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/streetvoice.py"
+      ],
+      "rust": [
+        "src/extractor/streetvoice.rs",
+        "tests/fixtures/sites/streetvoice/"
+      ],
+      "scope": "StreetVoiceIE v4 song API metadata and non-fatal POSTed HLS/HTTP/original file URLs as mp3 formats, with KeyError, HTTP warning and empty-body warning paths compared with pinned upstream output through the fixture proxy; other unparsable format responses remain explicit native errors"
+    },
+    {
       "name": "sztvhu",
       "status": "partial",
       "upstream": [
