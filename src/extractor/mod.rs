@@ -68,6 +68,7 @@ mod historicfilms;
 mod hitrecord;
 pub(crate) mod hls;
 mod hrefli;
+mod hse;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
@@ -270,6 +271,10 @@ pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hitrecord::{HitRecord, suitable as hitrecord_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use hrefli::{HrefLiRedirect, suitable as hrefli_suitable};
+pub use hse::{
+    HseProduct, HseShow, product_suitable as hse_product_suitable,
+    show_suitable as hse_show_suitable,
+};
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};

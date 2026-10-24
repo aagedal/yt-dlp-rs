@@ -1014,6 +1014,18 @@
       "scope": "HrefLiRedirectIE url_result of the text after href.li/? (followed by the suitable extractor, including the generic direct path) and the invalid-URL error compared with pinned upstream output through the fixture proxy; GenericIE's http:// guess for scheme-less targets is not ported"
     },
     {
+      "name": "hse",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/hse.py"
+      ],
+      "rust": [
+        "src/extractor/hse.rs",
+        "tests/fixtures/sites/hse/"
+      ],
+      "scope": "HSEShowIE and HSEProductIE window.__REDUX_DATA__ (clean_html, newlines removed) with fatal HLS sources (ext mp4) and merged subtitles, the expected No video found error, show unified_timestamp, channel search warning named by the video ID, presenter/brand uploader and ID title fallback; the _GEO_COUNTRIES X-Forwarded-For bypass header is not sent (compared with --no-geo-bypass). Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "huajiao",
       "status": "partial",
       "upstream": [

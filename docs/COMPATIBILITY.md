@@ -1856,6 +1856,17 @@ their URL's extension) and subtitles with the info's `vtt_url` appended to the
 creation date, the `float_or_none` source length and the chapters whose
 offsets are numeric (else `None`). The feed and VOD listings are not ported.
 
+HSE TV shows (`hse.de/dpl/c/tv-shows/ID`) and products (`hse.de/dpl/p/product/ID`)
+follow upstream `HSEShowIE` and `HSEProductIE`: the page's fatal
+`window.__REDUX_DATA__` (cleaned like `_html_search_regex`, newlines removed),
+its `application/x-mpegURL` sources as fatal `mp4` HLS formats with merged
+subtitles (no sources is the expected `No video found` error), the title (else
+the ID), a show's `unified_timestamp` of its date and hour, channel (a missing
+one warns with the video ID as the field name, like upstream), poster thumbnail
+and presenter, or a product's poster and brand name. Upstream's `DE`
+geo-bypass `X-Forwarded-For` header is not sent; the fixtures compare with
+`--no-geo-bypass`.
+
 HitRecord records (`hitrecord.org/records/ID`) follow upstream `HitRecordIE`:
 the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python
