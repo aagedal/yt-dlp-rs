@@ -45,6 +45,7 @@ mod iltalehti;
 mod imgur;
 mod instagram;
 pub(crate) mod ism;
+mod israelnationalnews;
 mod jove;
 mod json_ld;
 mod jwplatform;
@@ -168,6 +169,7 @@ pub use instagram::{
     suitable as instagram_suitable, tag_suitable as instagram_tag_suitable,
     user_suitable as instagram_user_suitable,
 };
+pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kick::{

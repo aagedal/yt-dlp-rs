@@ -500,6 +500,12 @@ state through `js_to_json`, the articles' main media and body properties with
 `canonical_title` (else `None`). App state that does not parse remains an
 explicit native error.
 
+Israel National News articles (`israelnationalnews.com/news/ID`) follow
+upstream `IsraelNationalNewsIE`: the `Generic/NewAPI/Item` JSON's `Content2`
+blocks' `content` `attrs.src` URLs as a playlist of unique `Youtube` URL
+results (resolved by the YouTube extractor); none is upstream's expected
+`This article does not have any videos`.
+
 This American Life episodes (`thisamericanlife.org/radio-archives/episode/ID`,
 `play_full.php?play=ID`) follow upstream `ThisAmericanLifeIE`: the episode
 page's fatal `twitter:title`, description meta and OpenGraph image, with the
