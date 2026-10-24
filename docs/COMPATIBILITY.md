@@ -1241,6 +1241,11 @@ restriction and exclusive-content errors, comments and metadata. User
 uploads, playlists and favorites are not supported.
 `tests/fixtures/sites/mixcloud/` is compared with pinned upstream output.
 
+MyVidster videos (`myvidster.com/video/ID`) follow upstream `MyVidsterIE`:
+the page's fatal `rel="videolink"` URL is followed through the registry as a
+`url_result`. A link that is not an absolute URL remains an explicit native
+error.
+
 Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
 `MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles
 ignored with upstream's warning), the fatal `Title` field without

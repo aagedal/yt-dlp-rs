@@ -837,6 +837,18 @@
       "scope": "MovingImageIE player HLS formats and labelled field regexes (fatal title, warnings) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "myvidster",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/myvidster.py"
+      ],
+      "rust": [
+        "src/extractor/myvidster.rs",
+        "tests/fixtures/sites/myvidster/"
+      ],
+      "scope": "MyVidsterIE rel=videolink URL as a followed url_result and the fatal missing-link message compared with pinned upstream output through the fixture proxy; non-absolute links remain explicit native errors"
+    },
+    {
       "name": "niconico",
       "status": "partial",
       "upstream": [
