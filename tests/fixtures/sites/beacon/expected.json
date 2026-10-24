@@ -1,0 +1,97 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://beacon.tv/content/welcome-to-beacon",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"welcome-to-beacon\", \"title\": \"Your home for Critical Role!\", \"description\": \"Beacon is the home of Critical Role.\", \"thumbnail\": \"https://cdn.jwplayer.com/v2/media/I4CkkEvN/poster.jpg?width=720\", \"timestamp\": 1715227200, \"duration\": 105.494, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/I4CkkEvN-Ab2.m4a\", \"vcodec\": \"none\", \"ext\": \"m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}, {\"format_id\": \"1\", \"format_index\": null, \"url\": \"https://cdn.jwplayer.com/manifests/I4CkkEvN.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1 - unknown\"}, {\"url\": \"https://cdn.jwplayer.com/videos/I4CkkEvN-Zx1.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 2000, \"filesize\": 26000000, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\"}], \"webpage_url\": \"https://beacon.tv/content/welcome-to-beacon\", \"original_url\": \"https://beacon.tv/content/welcome-to-beacon\", \"webpage_url_basename\": \"welcome-to-beacon\", \"webpage_url_domain\": \"beacon.tv\", \"extractor\": \"BeaconTv\", \"extractor_key\": \"BeaconTv\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.jwplayer.com/v2/media/I4CkkEvN/poster.jpg?width=720\", \"id\": \"0\"}], \"display_id\": \"welcome-to-beacon\", \"fulltitle\": \"Your home for Critical Role!\", \"duration_string\": \"1:45\", \"upload_date\": \"20240509\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.jwplayer.com/videos/I4CkkEvN-Zx1.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 2000, \"filesize\": 26000000, \"ext\": \"mp4\", \"format_id\": \"720p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 1280x720\", \"_filename\": \"Your home for Critical Role! [welcome-to-beacon].mp4\", \"filename\": \"Your home for Critical Role! [welcome-to-beacon].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beacon.tv/content/welcome-to-beacon",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[BeaconTv] Extracting URL: https://beacon.tv/content/welcome-to-beacon",
+    "[BeaconTv] welcome-to-beacon: Downloading webpage",
+    "[BeaconTv] welcome-to-beacon: Downloading m3u8 information",
+    "[info] Available formats for welcome-to-beacon:",
+    "ID   EXT RESOLUTION |  FILESIZE   TBR PROTO | VCODEC     ACODEC",
+    "----------------------------------------------------------------",
+    "0    m4a audio only |                 https | audio only unknown",
+    "1    mp4 unknown    |                 m3u8  | unknown    unknown",
+    "720p mp4 1280x720   |  24.80MiB 2000k https | unknown    unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beacon.tv/content/pod",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"pod\", \"title\": \"Pod\", \"description\": null, \"thumbnail\": null, \"timestamp\": null, \"duration\": 30.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/Pod1-x.m4a\", \"vcodec\": \"none\", \"ext\": \"m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\"}], \"webpage_url\": \"https://beacon.tv/content/pod\", \"original_url\": \"https://beacon.tv/content/pod\", \"webpage_url_basename\": \"pod\", \"webpage_url_domain\": \"beacon.tv\", \"extractor\": \"BeaconTv\", \"extractor_key\": \"BeaconTv\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"pod\", \"fulltitle\": \"Pod\", \"duration_string\": \"30\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.jwplayer.com/videos/Pod1-x.m4a\", \"vcodec\": \"none\", \"ext\": \"m4a\", \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Pod [pod].m4a\", \"filename\": \"Pod [pod].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://beacon.tv/content/members",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [BeaconTv] members: This video/podcast is for members only. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://beacon.tv/content/article",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [BeaconTv] article: Content is not a video/podcast"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://beacon.tv/content/broken",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [BeaconTv] broken: Failed to extract content; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://beacon.tv/content/missing",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [BeaconTv] missing: Failed to extract content data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

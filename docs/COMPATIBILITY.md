@@ -1702,6 +1702,16 @@ the non-fatal `dash`/`hls` manifests with the `parentOrigin` query, plus the
 creator's name as `uploader`, project name, creation timestamp and thumbnail.
 `tests/fixtures/sites/clipchamp/` is compared with pinned upstream output.
 
+Beacon TV content (`[www.]beacon.tv/content/SLUG`) follows upstream
+`BeaconTvIE`: the next.js Apollo state's `Content:` entry with the slug
+(upstream's `Failed to extract content data`), its JSON-encoded JW Player
+video or podcast audio data parsed like `_parse_jwplayer_data`, overridden by
+the content's title, description and `publishedAt` timestamp. Non-media
+content, members-only content (upstream's login-required error) and missing
+player data keep upstream's errors. The shared JW Player path fetches an HLS
+master's variant playlists, so fixtures use media playlists.
+`tests/fixtures/sites/beacon/` is compared with pinned upstream output.
+
 Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
 `api.clyp.it/ID` JSON (with the URL's `token` query), its `OggUrl`,
 `Mp3Url`, `SecureOggUrl` and `SecureMp3Url` audio formats, the page's

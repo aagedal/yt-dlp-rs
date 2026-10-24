@@ -3,6 +3,7 @@ mod angel;
 mod archiveorg;
 mod audioboom;
 mod bandcamp;
+mod beacon;
 mod behindkink;
 mod bigo;
 mod bild;
@@ -198,6 +199,7 @@ pub use angel::{Angel, suitable as angel_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
+pub use beacon::{BeaconTv, suitable as beacon_suitable};
 pub use behindkink::{BehindKink, suitable as behindkink_suitable};
 pub use bigo::{Bigo, suitable as bigo_suitable};
 pub use bild::{Bild, suitable as bild_suitable};
@@ -558,6 +560,27 @@ pub(crate) fn extract_m3u8_fatal_live(
     )?;
     hls::live_format_ids(&mut info.formats, m3u8_id);
     Ok(info)
+}
+
+/// [`extract_m3u8_fatal`] reading only the master playlist, like upstream:
+/// the formats' media playlists are fetched when downloading.
+pub(crate) fn extract_m3u8_fatal_master(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+    keep_subtitles: bool,
+) -> crate::Result<crate::VideoInfo> {
+    extract_m3u8_fatal_with(
+        client,
+        manifest,
+        extractor,
+        id,
+        m3u8_id,
+        keep_subtitles,
+        true,
+    )
 }
 
 fn extract_m3u8_fatal_with(

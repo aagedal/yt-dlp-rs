@@ -1,0 +1,11 @@
+{
+ "routes": [
+  {"url": "https://beacon.tv/content/welcome-to-beacon", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://cdn.jwplayer.com/manifests/I4CkkEvN.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "media.m3u8"},
+  {"url": "https://beacon.tv/content/pod", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "podcast.html"},
+  {"url": "https://beacon.tv/content/members", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "members.html"},
+  {"url": "https://beacon.tv/content/article", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "members.html"},
+  {"url": "https://beacon.tv/content/broken", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "members.html"},
+  {"url": "https://beacon.tv/content/missing", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "members.html"}
+ ]
+}

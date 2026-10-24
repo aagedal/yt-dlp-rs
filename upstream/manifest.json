@@ -353,6 +353,18 @@
       "scope": "BandcampIE track pages: tralbum/embed data, streaming files, free download formats via stat URLs, metadata and tags; no albums, artist pages or weekly shows; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "beacon",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/beacon.py"
+      ],
+      "rust": [
+        "src/extractor/beacon.rs",
+        "tests/fixtures/sites/beacon/"
+      ],
+      "scope": "BeaconTvIE Apollo Content entry, JSON-encoded JW Player video/podcast data with content title, description and timestamp, and upstream's content/members errors. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "behindkink",
       "status": "partial",
       "upstream": [
