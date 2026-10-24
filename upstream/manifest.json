@@ -353,6 +353,18 @@
       "scope": "BlueskyIE post threads: video embed HLS and PDS blob formats with captions, external links, record media and quoted posts, metadata; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bongacams",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bongacams.py"
+      ],
+      "rust": [
+        "src/extractor/bongacams.rs",
+        "tests/fixtures/sites/bongacams/"
+      ],
+      "scope": "BongaCamsIE amf.php getRoomData form POST, performer username/display name/lovers count, KeyError paths and the fatal live HLS playlist (hls ids, mp4, age_limit, is_live) compared with pinned upstream output through the fixture proxy; non-string video server URLs remain explicit native errors"
+    },
+    {
       "name": "breitbart",
       "status": "partial",
       "upstream": [

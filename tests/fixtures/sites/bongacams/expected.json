@@ -1,0 +1,86 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://de.bongacams.net/claireashton",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[BongaCams] Extracting URL: https://de.bongacams.net/claireashton",
+    "[BongaCams] claireashton: Downloading JSON metadata",
+    "[BongaCams] claireashton: Downloading m3u8 information",
+    "[info] Available formats for claireashton:",
+    "ID    EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "----------------------------------------------------------",
+    "hls-0 mp4 640x360    |  600k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-1 mp4 1280x720   | 1500k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://de.bongacams.net/claireashton",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(uploader)s|%(uploader_id)s|%(like_count)s|%(is_live)s|%(live_status)s|%(age_limit)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "claireashton|Claire Ashton|Claire Ashton|ClaireAshton|1234|True|is_live|18"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://de.bongacams.net/plain",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(uploader)s|%(uploader_id)s|%(like_count)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "plain|plain|NA|plain|77|hls-1|mp4|m3u8_native|https://live.bongacams.test/hls/stream_plain/chunks720.m3u8"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://de.bongacams.net/nolocal",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nolocal: An extractor error has occurred. (caused by KeyError('localData')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://de.bongacams.net/offline",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [BongaCams] offline: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://bongacams.com/apierror",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [BongaCams] apierror: Unable to download JSON metadata: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  }
+ ]
+}

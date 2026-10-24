@@ -1455,6 +1455,16 @@ manifest request), the `og:`/`twitter:` title and description (non-fatal,
 with upstream's warnings) and the configuration's required `image:` thumbnail.
 `tests/fixtures/sites/daystar/` is compared with pinned upstream output.
 
+BongaCams rooms (`[SUB.]bongacamsN.com|net/ROOM`) follow upstream
+`BongaCamsIE`: the host's `tools/amf.php` `getRoomData` form POST (with
+`X-Requested-With: XMLHttpRequest`; a missing `localData` or
+`videoServerUrl` is upstream's `KeyError`), the performer's username (else
+the room), display name and lovers count, and the fatal live HLS playlist
+`SERVER/hls/stream_USERNAME/playlist.m3u8` (`m3u8_id='hls'`, `mp4`) with
+`age_limit` 18 and `is_live`. Non-string video server URLs remain explicit
+native errors. `tests/fixtures/sites/bongacams/` is compared with pinned
+upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the
