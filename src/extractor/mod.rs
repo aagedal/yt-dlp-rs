@@ -162,6 +162,7 @@ mod theintercept;
 mod thestar;
 mod thesun;
 mod thisamericanlife;
+mod threespeak;
 mod tiktok;
 mod toypics;
 mod trtcocuk;
@@ -386,6 +387,8 @@ pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thestar::{TheStar, suitable as thestar_suitable};
 pub use thesun::{TheSun, suitable as thesun_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
+pub use threespeak::{ThreeSpeak, suitable as threespeak_suitable};
+pub use threespeak::{ThreeSpeakUser, user_suitable as threespeak_user_suitable};
 pub use tiktok::{
     Douyin, TikTok, TikTokCollection, TikTokLive, TikTokUser, TikTokVm,
     collection_suitable as tiktok_collection_suitable, douyin_suitable,

@@ -1,0 +1,9 @@
+[
+ {"url": "https://3speak.tv/watch?v=dannyshine/wjgoxyfy", "args": ["-j"]},
+ {"url": "https://3speak.tv/watch?v=dannyshine/wjgoxyfy", "args": ["-F"]},
+ {"url": "https://3speak.tv/watch?v=someone/rootonly", "args": ["-j"]},
+ {"url": "https://3speak.tv/watch?v=someone/nometa", "args": ["-j"]},
+ {"url": "https://3speak.tv/watch?v=someone/nojson", "args": ["-j"]},
+ {"url": "https://3speak.tv/user/theycallmedan", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://3speak.tv/user/theycallmedan", "args": ["--flat-playlist", "--print", "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s"]}
+]

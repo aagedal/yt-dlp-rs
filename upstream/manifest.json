@@ -2025,6 +2025,18 @@
       "scope": "ThisAmericanLifeIE page meta fields and 64k HLS stream as an untyped m3u8_native result compared with pinned upstream output through the fixture proxy (listing and JSON)"
     },
     {
+      "name": "threespeak",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/threespeak.py"
+      ],
+      "rust": [
+        "src/extractor/threespeak.rs",
+        "tests/fixtures/sites/threespeak/"
+      ],
+      "scope": "ThreeSpeakIE doubly encoded JSON.parse post (ogvideo and IPFS HLS master playlists, original MP4 file, metadata) and ThreeSpeakUserIE data-payout playlist compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tiktok",
       "status": "partial",
       "upstream": [

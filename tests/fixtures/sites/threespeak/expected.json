@@ -1,0 +1,108 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://3speak.tv/watch?v=dannyshine/wjgoxyfy",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"wjgoxyfy\", \"title\": \"Can People who took the Vax think Critically\", \"uploader\": \"dannyshine\", \"description\": \"Can people who took the vax think critically? A \\\"comedy\\\" take.\", \"tags\": [\"sex\", \"covid\", \"comedy\"], \"thumbnail\": \"https://img.3speakcontent.co/wjgoxyfy/thumbnails/default.png\", \"upload_date\": \"20211021\", \"formats\": [{\"format_id\": \"https-800\", \"format_index\": null, \"url\": \"https://threespeakvideo.b-cdn.net/wjgoxyfy/low.m3u8\", \"manifest_url\": \"https://threespeakvideo.b-cdn.net/wjgoxyfy/default.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-800 - 640x360\"}, {\"format_id\": \"https-2400\", \"format_index\": null, \"url\": \"https://threespeakvideo.b-cdn.net/wjgoxyfy/high.m3u8\", \"manifest_url\": \"https://threespeakvideo.b-cdn.net/wjgoxyfy/default.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-2400 - 1280x720\"}, {\"url\": \"https://threespeakvideo.b-cdn.net/wjgoxyfy/wjgoxyfy.mp4\", \"ext\": \"mp4\", \"format_id\": \"https-mp4\", \"duration\": 2703.867833, \"filesize\": 1620054781, \"quality\": 11, \"format_note\": \"Original file\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-mp4 - unknown (Original file)\"}], \"subtitles\": {}, \"webpage_url\": \"https://3speak.tv/watch?v=dannyshine/wjgoxyfy\", \"original_url\": \"https://3speak.tv/watch?v=dannyshine/wjgoxyfy\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"3speak.tv\", \"extractor\": \"ThreeSpeak\", \"extractor_key\": \"ThreeSpeak\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://img.3speakcontent.co/wjgoxyfy/thumbnails/default.png\", \"id\": \"0\"}], \"display_id\": \"wjgoxyfy\", \"fulltitle\": \"Can People who took the Vax think Critically\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://threespeakvideo.b-cdn.net/wjgoxyfy/wjgoxyfy.mp4\", \"ext\": \"mp4\", \"format_id\": \"https-mp4\", \"duration\": 2703.867833, \"filesize\": 1620054781, \"quality\": 11, \"format_note\": \"Original file\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-mp4 - unknown (Original file)\", \"_filename\": \"Can People who took the Vax think Critically [wjgoxyfy].mp4\", \"filename\": \"Can People who took the Vax think Critically [wjgoxyfy].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [ThreeSpeak] wjgoxyfy: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://3speak.tv/watch?v=dannyshine/wjgoxyfy",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ThreeSpeak] Extracting URL: https://3speak.tv/watch?v=dannyshine/wjgoxyfy",
+    "[ThreeSpeak] wjgoxyfy: Downloading webpage",
+    "[ThreeSpeak] wjgoxyfy: Downloading m3u8 information",
+    "[ThreeSpeak] wjgoxyfy: Downloading m3u8 information",
+    "[info] Available formats for wjgoxyfy:",
+    "ID         EXT RESOLUTION | FILESIZE   TBR PROTO | VCODEC      ACODEC    MORE INFO",
+    "--------------------------------------------------------------------------------------",
+    "https-800  mp4 640x360    |           800k m3u8  | avc1.42c01e mp4a.40.2",
+    "https-2400 mp4 1280x720   |          2400k m3u8  | avc1.4d401f mp4a.40.2",
+    "https-mp4  mp4 unknown    |  1.51GiB       https | unknown     unknown   Original file"
+   ],
+   "stderr": [
+    "WARNING: [ThreeSpeak] wjgoxyfy: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://3speak.tv/watch?v=someone/rootonly",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"rootonly\", \"title\": \"Root title only\", \"uploader\": \"someone\", \"description\": null, \"tags\": null, \"thumbnail\": \"i\", \"upload_date\": null, \"formats\": [{\"url\": \"https://threespeakvideo.b-cdn.net/rootonly/r.mp4\", \"ext\": \"mp4\", \"format_id\": \"https-mp4\", \"duration\": null, \"filesize\": null, \"quality\": 11, \"format_note\": \"Original file\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-mp4 - unknown (Original file)\"}], \"subtitles\": {}, \"webpage_url\": \"https://3speak.tv/watch?v=someone/rootonly\", \"original_url\": \"https://3speak.tv/watch?v=someone/rootonly\", \"webpage_url_basename\": \"watch\", \"webpage_url_domain\": \"3speak.tv\", \"extractor\": \"ThreeSpeak\", \"extractor_key\": \"ThreeSpeak\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"i\", \"id\": \"0\"}], \"display_id\": \"rootonly\", \"fulltitle\": \"Root title only\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://threespeakvideo.b-cdn.net/rootonly/r.mp4\", \"ext\": \"mp4\", \"format_id\": \"https-mp4\", \"duration\": null, \"filesize\": null, \"quality\": 11, \"format_note\": \"Original file\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"https-mp4 - unknown (Original file)\", \"_filename\": \"Root title only [rootonly].mp4\", \"filename\": \"Root title only [rootonly].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [ThreeSpeak] unable to extract og m3u8; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://3speak.tv/watch?v=someone/nometa",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nometa: An extractor error has occurred. (caused by KeyError('json_metadata')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://3speak.tv/watch?v=someone/nojson",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [ThreeSpeak] nojson: Unable to extract json; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://3speak.tv/user/theycallmedan",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"theycallmedan\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"ThreeSpeak\", \"_type\": \"url\", \"url\": \"https://3speak.tv/watch?v=theycallmedan/abcdefgh\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"ThreeSpeak\", \"_type\": \"url\", \"url\": \"https://3speak.tv/watch?v=theycallmedan/ijklmnop\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://3speak.tv/user/theycallmedan\", \"original_url\": \"https://3speak.tv/user/theycallmedan\", \"webpage_url_basename\": \"theycallmedan\", \"webpage_url_domain\": \"3speak.tv\", \"extractor\": \"ThreeSpeakUser\", \"extractor_key\": \"ThreeSpeakUser\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://3speak.tv/user/theycallmedan",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "abcdefgh|https://3speak.tv/watch?v=theycallmedan/abcdefgh|ThreeSpeak|theycallmedan|1",
+    "ijklmnop|https://3speak.tv/watch?v=theycallmedan/ijklmnop|ThreeSpeak|theycallmedan|2"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

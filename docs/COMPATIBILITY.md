@@ -885,6 +885,15 @@ extract init player`) gives, from each `tracks` group's entries with a URL
 description, `<h2>` title, first `Premiéra:` date, `<h1>` series and the
 `player-live` poster joined to `www.tvnoe.cz`.
 
+3Speak videos (`3speak.tv/watch?v=USER/ID`) follow upstream `ThreeSpeakIE`:
+the page's `JSON.parse('...')` post, decoded twice, and its `json_metadata`
+give non-fatal `https` (`ogvideo` meta, else an `unable to extract og m3u8`
+warning) and `ipfs` HLS master playlists with subtitles, the original
+`https-mp4` file (duration, filesize, quality 11), and the title (else
+`root_title`), author, description, tags, first image and `unified_strdate`
+date. User pages (`3speak.tv/user/USER`) follow `ThreeSpeakUserIE`: each
+`data-payout` video as a `ThreeSpeak` URL entry.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,

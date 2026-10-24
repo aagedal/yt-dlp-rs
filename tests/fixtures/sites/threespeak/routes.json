@@ -1,0 +1,40 @@
+{
+ "routes": [
+  {
+   "url": "https://3speak.tv/watch?v=dannyshine/wjgoxyfy",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "watch.html"
+  },
+  {
+   "url": "https://threespeakvideo.b-cdn.net/wjgoxyfy/default.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://ipfs.3speak.tv/ipfs/QmHash/manifest.m3u8",
+   "status": 404,
+   "headers": {"Content-Type": "text/html"},
+   "body": "gone"
+  },
+  {
+   "url": "https://3speak.tv/watch?v=someone/rootonly",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "watch2.html"
+  },
+  {
+   "url": "https://3speak.tv/watch?v=someone/nometa",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "nometa.html"
+  },
+  {
+   "url": "https://3speak.tv/watch?v=someone/nojson",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html>nothing</html>"
+  },
+  {
+   "url": "https://3speak.tv/user/theycallmedan",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "user.html"
+  }
+ ]
+}
