@@ -1677,6 +1677,18 @@
       "scope": "TeleTaskIE (marked broken) video class/source pairs as a playlist of untyped entries with the fatal title and optional date, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "thehighwire",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/thehighwire.py"
+      ],
+      "rust": [
+        "src/extractor/thehighwire.rs",
+        "tests/fixtures/sites/thehighwire/"
+      ],
+      "scope": "TheHighWireIE ark-video-embed iframe page's first HTML5 media entry (hls m3u8 sources, poster) with the page's section-header title and episode description, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "theintercept",
       "status": "partial",
       "upstream": [

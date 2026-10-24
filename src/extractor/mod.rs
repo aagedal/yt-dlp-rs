@@ -137,6 +137,7 @@ mod sztvhu;
 mod ted;
 mod telegram;
 mod teletask;
+mod thehighwire;
 mod theintercept;
 mod thestar;
 mod thesun;
@@ -331,6 +332,7 @@ pub use ted::{
 };
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use teletask::{TeleTask, suitable as teletask_suitable};
+pub use thehighwire::{TheHighWire, suitable as thehighwire_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thestar::{TheStar, suitable as thestar_suitable};
 pub use thesun::{TheSun, suitable as thesun_suitable};

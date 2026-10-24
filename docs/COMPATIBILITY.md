@@ -776,6 +776,14 @@ and subtitles, then its first `video/mp4` source as a `format: mp4` format
 with non-string metadata are rejected. `tests/fixtures/sites/screen9/` is
 compared with pinned upstream output.
 
+The HighWire videos (`thehighwire.com/ark-videos/SLUG`) follow upstream
+`TheHighWireIE`: the first `ark-video-embed` element's `src` (else
+upstream's `Unable to extract embed URL`), that page's first HTML5 media
+entry (`hls` m3u8 sources, poster thumbnail) and the article's cleaned
+`section-header` and `episode-description__copy` elements as `title` and
+`description`. `tests/fixtures/sites/thehighwire/` is compared with pinned
+upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
