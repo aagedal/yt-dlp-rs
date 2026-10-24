@@ -35,6 +35,7 @@ mod info_order;
 mod interrupt;
 mod ism_fd;
 pub mod js_to_json;
+pub mod jsinterp;
 mod json;
 mod live_dash;
 pub mod manifest_args;

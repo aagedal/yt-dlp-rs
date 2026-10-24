@@ -2,7 +2,8 @@
 //! payload for video/clip pages and `video_ext.php` embeds (with their
 //! error pages), the player params' progressive, HLS, DASH and RTMP
 //! formats, subtitles, chapters and metadata. A YouTube embed is followed;
-//! other embedded players and VK's JS challenge are reported as unsupported.
+//! other embedded players are reported as unsupported. VK's JS challenge
+//! is solved with the native [`crate::jsinterp`] interpreter.
 //!
 //! `VKWallPostIE`: `wkview.php`'s wall post HTML as a playlist of its
 //! `data-audio` tracks and linked videos. `VKUserVideosIE`: user/club video
@@ -242,18 +243,127 @@ fn cleaned(value: Option<&Value>) -> Option<String> {
         .filter(|text| !text.is_empty())
 }
 
-/// `VKBaseIE._download_webpage_handle`'s JS challenge, which needs upstream's
-/// `JSInterpreter` to run the page's salt function.
-fn check_challenge(name: &str, final_url: &Url, video_id: &str) -> Result<()> {
+/// `VKBaseIE._download_webpage_handle`'s JS challenge: for a response that
+/// ended on `/challenge.html`, the page's salt function runs in the native
+/// [`crate::jsinterp`] interpreter and `key=md5(HASH429:SALT)` is submitted
+/// (which sets the `solution429` cookie). `true` when the request is to be
+/// made again.
+fn solve_challenge(
+    client: &Client,
+    name: &str,
+    temp: Option<&str>,
+    final_url: &Url,
+    webpage: &str,
+    video_id: &str,
+) -> Result<bool> {
+    static SALT: LazyLock<Regex> = LazyLock::new(|| {
+        Regex::new(r"(?s)var\s+salt\s*=\s*\(\s*function\s*\(\)\s*(\{.+?\})\s*\)\(\);\s*var\s+hash")
+            .unwrap()
+    });
     if final_url.path() != "/challenge.html" {
-        return Ok(());
+        return Ok(false);
     }
     crate::screen::screen(&format!(
         "[{name}] [{video_id}] Received a JS challenge response"
     ));
-    Err(Error::UnsupportedHtml5(
-        "VK JS challenges are not supported natively".into(),
-    ))
+    let bug = |message: &str| {
+        fail_as(
+            name,
+            temp,
+            &format!("{message}; {}", crate::BUG_REPORTS_MESSAGE),
+        )
+    };
+    // `parse_qs` (blank values dropped), last `hash429`.
+    let query = parse_qs(final_url);
+    let Some(hash) = query
+        .iter()
+        .find(|(key, _)| key == "hash429")
+        .and_then(|(_, values)| values.last())
+    else {
+        return Err(bug("Unable to extract challenge hash"));
+    };
+    let Some(found) = SALT.captures(webpage) else {
+        return Err(bug("Unable to extract JS challenge salt function"));
+    };
+    let jsi = crate::jsinterp::JsInterpreter::new(format!("function salt() {}", &found[1]));
+    let salt = jsi
+        .extract_function("salt")
+        .and_then(|salt| jsi.call(&salt, Vec::new()))
+        .map_err(|error| match error {
+            crate::jsinterp::JsError::Python {
+                kind: "KeyError", ..
+            } => bug_as(name, temp, &error.repr()),
+            error => fail_as(name, temp, &error.to_string()),
+        })?;
+    let salt = crate::jsinterp::py_str(&salt);
+    crate::screen::debug(&format!(
+        "[{name}] Generated salt with native JS interpreter: {salt}"
+    ));
+    let key_hash = crate::md5::hex(format!("{hash}:{salt}").as_bytes());
+    crate::screen::debug(&format!("[{name}] JS challenge key hash: {key_hash}"));
+    // `update_url_query(challenge_url, {'key': key_hash})`.
+    let mut query = query;
+    match query.iter_mut().find(|(key, _)| key == "key") {
+        Some((_, values)) => *values = vec![key_hash],
+        None => query.push(("key".into(), vec![key_hash])),
+    }
+    let mut submit = final_url.clone();
+    submit.set_query(None);
+    {
+        let mut pairs = submit.query_pairs_mut();
+        for (key, values) in &query {
+            for value in values {
+                pairs.append_pair(key, value);
+            }
+        }
+    }
+    // Request with the challenge key and the response should set a
+    // 'solution429' cookie.
+    crate::screen::screen(&format!(
+        "[{name}] {video_id}: Submitting JS challenge solution"
+    ));
+    super::direct::request(client, &submit, None)
+        .map_err(|error| {
+            Error::Reported(super::request_errnote_text(
+                name,
+                video_id,
+                "Unable to solve JS challenge",
+                &error,
+            ))
+        })
+        .map(drop)?;
+    Ok(true)
+}
+
+/// `urllib.parse.parse_qs(url.query)`: values grouped by key, blank values
+/// dropped.
+fn parse_qs(url: &Url) -> Vec<(String, Vec<String>)> {
+    let mut query: Vec<(String, Vec<String>)> = Vec::new();
+    for (key, value) in url.query_pairs() {
+        if value.is_empty() {
+            continue;
+        }
+        match query.iter_mut().find(|(other, _)| *other == key) {
+            Some((_, values)) => values.push(value.into_owned()),
+            None => query.push((key.into_owned(), vec![value.into_owned()])),
+        }
+    }
+    query
+}
+
+/// `_download_webpage_handle(url, video_id)` through the JS challenge.
+fn download_webpage_handle(
+    client: &Client,
+    page: &Url,
+    name: &'static str,
+    temp: Option<&str>,
+    video_id: &str,
+) -> Result<(String, Url)> {
+    let (webpage, final_url) = super::download_webpage_handle(client, page, name, video_id)?;
+    if solve_challenge(client, name, temp, &final_url, &webpage, video_id)? {
+        return super::download_webpage_handle(client, page, name, video_id);
+    }
+    Ok((webpage, final_url))
 }
 
 /// `VKBaseIE._download_payload(path, video_id, data)`: a POST of `data` and
@@ -274,40 +384,47 @@ fn download_payload(
         body.append_pair(key, value);
     }
     body.append_pair("al", "1");
-    crate::screen::screen(&format!("[{name}] {video_id}: Downloading JSON metadata"));
+    let body = body.finish();
     let extractor = static_name(name);
-    let mut response = super::direct::post(
-        client,
-        &endpoint,
-        &[
-            ("Content-Type", "application/x-www-form-urlencoded"),
-            ("Referer", endpoint.as_str()),
-            ("X-Requested-With", "XMLHttpRequest"),
-        ],
-        body.finish(),
-    )
-    .map_err(|error| match error {
-        Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
-            extractor,
-            id: video_id.to_owned(),
-            what: "JSON metadata",
-            source: Box::new(error),
-        },
-        error => error,
-    })?;
-    check_challenge(name, &response.url().clone(), video_id)?;
-    let mut bytes = Vec::new();
-    response
-        .read_to_end(&mut bytes)
-        .map_err(Error::ExtractionRead)?;
-    let json: Value = crate::json::from_str(&super::decode_webpage(&bytes, response.headers()))
-        .map_err(|error| {
-            fail_as(
-                name,
-                Some(video_id),
-                &format!("Failed to parse JSON  (caused by {error})"),
-            )
+    let fetch = || -> Result<(String, Url)> {
+        crate::screen::screen(&format!("[{name}] {video_id}: Downloading JSON metadata"));
+        let mut response = super::direct::post(
+            client,
+            &endpoint,
+            &[
+                ("Content-Type", "application/x-www-form-urlencoded"),
+                ("Referer", endpoint.as_str()),
+                ("X-Requested-With", "XMLHttpRequest"),
+            ],
+            body.clone(),
+        )
+        .map_err(|error| match error {
+            Error::Http(_) | Error::HttpRetryAfter { .. } => Error::ExtractorRequest {
+                extractor,
+                id: video_id.to_owned(),
+                what: "JSON metadata",
+                source: Box::new(error),
+            },
+            error => error,
         })?;
+        let mut bytes = Vec::new();
+        response
+            .read_to_end(&mut bytes)
+            .map_err(Error::ExtractionRead)?;
+        let text = super::decode_webpage(&bytes, response.headers());
+        Ok((text, response.url().clone()))
+    };
+    let (mut text, final_url) = fetch()?;
+    if solve_challenge(client, name, temp, &final_url, &text, video_id)? {
+        text = fetch()?.0;
+    }
+    let json: Value = crate::json::from_str(&text).map_err(|error| {
+        fail_as(
+            name,
+            Some(video_id),
+            &format!("Failed to parse JSON  (caused by {error})"),
+        )
+    })?;
     let Some(pair) = json.get("payload") else {
         return Err(bug_as(name, temp, "KeyError('payload')"));
     };
@@ -643,9 +760,7 @@ impl Extractor for VkUserVideos {
         };
         let temp = Some(u_id.as_str());
         start(USER_VIDEOS, page);
-        let (webpage, final_url) =
-            super::download_webpage_handle(client, page, USER_VIDEOS, &u_id)?;
-        check_challenge(USER_VIDEOS, &final_url, &u_id)?;
+        let (webpage, _) = download_webpage_handle(client, page, USER_VIDEOS, temp, &u_id)?;
         let (page_id, section) = if u_id.starts_with('@') {
             let cursor = match super::search_json(&NEW_CUR, &webpage, false) {
                 Some(Some(cursor)) => cursor,
@@ -864,9 +979,7 @@ impl Extractor for Vk {
                 "https://vk.com/video_ext.php?{}",
                 &found["embed_query"]
             ))?;
-            let (info_page, final_url) =
-                super::download_webpage_handle(client, &embed, NAME, &video_id)?;
-            check_challenge(NAME, &final_url, &video_id)?;
+            let (info_page, _) = download_webpage_handle(client, &embed, NAME, temp, &video_id)?;
             if let Some(message) = ERROR_MESSAGES
                 .iter()
                 .find_map(|pattern| pattern.captures(&info_page))

@@ -2546,6 +2546,21 @@
       "scope": "VimeoIE without login: player page playerConfig and clip page config through _parse_config (progressive, per-CDN HLS/DASH incl. sep variants, text tracks, thumbnails, chapters, live status) merged with page metadata; API-only URLs are the login-required error; no passwords, albums, on-demand, events or original formats; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "jsinterp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/jsinterp.py",
+        "test/test_jsinterp.py"
+      ],
+      "rust": [
+        "src/jsinterp/",
+        "tests/fixtures/jsinterp/",
+        "tools/capture_jsinterp.py",
+        "tools/test_capture_jsinterp.py"
+      ],
+      "scope": "JSInterpreter (extract_function/_code, extract_object, call_function, the statement/expression evaluator with _separate, the _OPERATORS _js_* helpers, int_to_int32, js_number_to_string, JS_Undefined/JS_Break/JS_Continue/JS_Throw, regex literals as strings, new Date, the String/Math/Array members it implements and its error messages) as a native module over Python-like values; every test_jsinterp.py case (skipped ones ignored) and a captured corpus compared with pinned upstream results; unbounded ints (past i64 floats), complex powers and str % formatting differ"
+    },
+    {
       "name": "vk",
       "status": "partial",
       "upstream": [
@@ -2556,7 +2571,7 @@
         "src/extractor/vkplay.rs",
         "tests/fixtures/sites/vk/"
       ],
-      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched eagerly); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; no JS challenge, other embeds or logins; compared with pinned upstream output through the fixture proxy"
+      "scope": "VKIE al_video payload and video_ext embeds with their errors, player params formats, subtitles, chapters and metadata; YouTube embeds followed; VKWallPostIE wkview payload as a playlist of data-audio tracks and linked videos; VKUserVideosIE sections and playlists through load_videos_silent pages (fetched eagerly); VKPlayIE records and VKPlayLiveIE streams from the API or the initial-state script; the JS challenge (challenge.html salt function run by the native JSInterpreter, md5 key submission and the request repeated with its cookie; missing hash/salt and interpreter errors); no other embeds or logins; compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "vocaroo",

@@ -299,6 +299,95 @@
     "ERROR: [VKPlayLive] bayda: The channel is not currently live"
    ],
    "files": {}
+  },
+  {
+   "url": "https://vk.com/video-5_100",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"-5_100\", \"formats\": [{\"format_id\": \"url720\", \"url\": \"https://vkvd.test/v-720.mp4\", \"ext\": \"mp4\", \"source_preference\": 1, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"url720 - 720p\"}], \"subtitles\": {}, \"title\": \"Challenged clip\", \"duration\": 10, \"uploader_id\": \"-5\", \"timestamp\": 1370000000, \"view_count\": null, \"is_live\": false, \"_format_sort_fields\": [\"res\", \"source\"], \"webpage_url\": \"https://vk.com/video-5_100\", \"original_url\": \"https://vk.com/video-5_100\", \"webpage_url_basename\": \"video-5_100\", \"webpage_url_domain\": \"vk.com\", \"extractor\": \"vk\", \"extractor_key\": \"VK\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"-5_100\", \"fulltitle\": \"Challenged clip\", \"duration_string\": \"10\", \"upload_date\": \"20130531\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"url720\", \"url\": \"https://vkvd.test/v-720.mp4\", \"ext\": \"mp4\", \"source_preference\": 1, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"url720 - 720p\", \"_filename\": \"Challenged clip [-5_100].mp4\", \"filename\": \"Challenged clip [-5_100].mp4\", \"__write_download_archive\": false}], \"format_id\": \"url720\", \"url\": \"https://vkvd.test/v-720.mp4\", \"ext\": \"mp4\", \"source_preference\": 1, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"url720 - 720p\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video-5_100",
+   "args": [
+    "--no-progress",
+    "-f",
+    "url720",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[vk] Extracting URL: https://vk.com/video-5_100",
+    "[vk] -5_100: Downloading JSON metadata",
+    "[vk] [-5_100] Received a JS challenge response",
+    "[vk] -5_100: Submitting JS challenge solution",
+    "[vk] -5_100: Downloading JSON metadata",
+    "[info] -5_100: Downloading 1 format(s): url720",
+    "[download] Destination: -5_100.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "-5_100.mp4": 15
+   }
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-5&id=101&hash=h",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "-5_101|Embed after challenge|https://vkvd.test/e-360.mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video-5_102",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [vk] Unable to extract JS challenge salt function; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video-5_103",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [vk] Uncaught exception nope; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-5&id=104",
+   "args": [
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [vk] 104: Unable to extract challenge hash; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
   }
  ]
 }

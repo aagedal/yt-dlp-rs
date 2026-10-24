@@ -32,7 +32,7 @@ Kuaishou have no upstream extractor.
 | LinkedIn | posts | learning courses not ported |
 | XiaoHongShu (RedNote) | video notes | |
 | Bilibili | videos | bangumi, spaces and audio not ported |
-| VK | videos, clips, wall posts, user videos, VK Play | VK's JS challenge is unsupported |
+| VK | videos, clips, wall posts, user videos, VK Play | logins not supported |
 
 Tumblr, Twitch (VODs, clips, live, channel lists), Bluesky and Kick are
 supported too. Sites that need browser impersonation upstream (for example

@@ -1461,8 +1461,15 @@ the embed page's error messages, security check and known error pages,
 (`dash*`) and RTMP formats, subtitles, chapters (`time_codes` with int
 times), the info page's date and view count and `_format_sort_fields`.
 A YouTube embed is followed; Vimeo, Rutube, Dailymotion, Odnoklassniki and
-Sibnet embeds and VK's JS challenge (which needs upstream's
-`JSInterpreter`) are unsupported errors, and logins are not supported.
+Sibnet embeds are unsupported errors, and logins are not supported.
+VK's JS challenge (`VKBaseIE._download_webpage_handle`, for the payload
+POSTs, embed pages and user video pages) is solved like upstream: a response
+ending on `/challenge.html` has its `salt` function run by the native
+JavaScript interpreter (below), `key=md5(hash429:salt)` is requested with
+`Submitting JS challenge solution` (`Unable to solve JS challenge` on
+failure) and the original request is made again with the cookie it sets. A
+missing `hash429`, a missing salt function and interpreter errors are
+upstream's errors; `tests/fixtures/sites/vk/` covers them.
 
 VK wall posts (`vk.com/wall-1_2`, `?w=wall-1_2`, `m.`/`new.`) follow
 upstream `VKWallPostIE`: the `wkview.php` `show` payload's HTML as a
@@ -2785,6 +2792,39 @@ simulation diagnostics, or sequential downloads; it exposes no playlist wrapper
 JSON option, playlist selection, nested playlists, or unresolved URL results.
 
 MIME checks identify supported responses; they do not verify media containers.
+
+## JavaScript interpreter
+
+`src/jsinterp/` ports upstream's `yt_dlp/jsinterp.py` (`JSInterpreter`) for
+extractors that run small page scripts natively (VK's challenge salt). It
+follows upstream's string-rewriting evaluator rather than JavaScript:
+`extract_function`/`extract_function_code`/`extract_object`/`call_function`,
+statements split by `_separate`, `var`/`let`/`const` scoping in
+`LocalNameSpace` chains (a function's first scope persists between calls),
+`if`/`else` (no `else if`), `for`, `switch`, `try`/`catch`/`finally`,
+`break`/`continue`/`throw`, comma and ternary expressions, `void`, `new Date`
+(`unified_timestamp`), regex literals as `PATTERN/FLAGS` strings, the
+`_OPERATORS` table over Python semantics (the `_js_*` helpers, ToInt32
+bitwise operators, `===` as Python `is`, `%` with the divisor's sign), the
+`String.fromCharCode`, `Math.pow`, `prototype.call`/`apply` and the
+string/array methods upstream implements (`split`, `join`, `reverse`,
+`slice`, `splice`, `unshift`, `pop`, `push`, `forEach`, `indexOf`,
+`charCodeAt`), Python's `str`/`repr`/`json.dumps` forms of its values and
+upstream's error messages (`Unsupported JS expression`, `Could not find JS
+function "NAME"`, `Could not find object NAME`, `Failed to evaluate`, `Cannot
+get index`, `Uncaught exception`, ...). `int_to_int32` and
+`js_number_to_string` are shared (X/Twitter's syndication token uses the
+latter).
+
+Every `test/test_jsinterp.py` case is a Rust test (upstream's skipped ones
+are ignored), and `tests/fixtures/jsinterp/` holds a corpus of over 400
+snippets whose pinned upstream results (`tools/capture_jsinterp.py`; Python
+exceptions compared by class) this port matches. Not kept: Python's
+unbounded integers (past `i64` this uses floats), complex results of
+negative bases to fractional powers, `str % value` formatting, and object
+identity of floats (`===` on floats is false, as for separate literals
+upstream) and of ints outside CPython's small-int cache (`-5..=1024` on the
+Python 3.15 the corpus was captured with).
 
 ## Download retries
 
