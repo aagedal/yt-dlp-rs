@@ -1,0 +1,54 @@
+{
+ "routes": [
+  {
+   "url": "https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html",
+   "body": "<html><head><meta property=\"og:image\" content=\"https://static-1.ivoox.com/og.jpg\"><meta property=\"og:description\" content=\"OG description\"><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"PodcastEpisode\", \"name\": \"LD name\", \"description\": \"LD description\", \"datePublished\": \"2025-03-23T12:00:00+00:00\"}</script></head><body><div data-prm-author=\"Santiago Camacho\" data-prm-pubdate=\"2025-03-23T12:00:00Z\" data-prm-podname=\"DIAS EXTRA&Ntilde;OS\" data-prm-title=\"Page title &amp; more\"></div><script>window.__NUXT__=(function(a,b,c){return {data:[{data:{audio:{title:\"DEx 08x30\",description:b,image:\"https:\\u002F\\u002Fstatic-1.ivoox.com\\u002Faudios\\u002Fxxl.jpg\",uploadDate:\"2025-03-23 13:00:00\",duration:\"11837\",downloadUrl:a,mediaUrl:a,tags:[{name:\"españa\"},{name:c},{id:3}]}}}]}}(\"\\u002Fdl\\u002F143594959.mp3\",\"Nuxt description\",\"asesinos\"));</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://vcore-web.ivoox.com/v1/public/audios/143594959/download-url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"downloadUrl\": \"/dl/143594959.mp3\"}}"
+  },
+  {
+   "url": "https://www.ivoox.com/en/bare-audios-mp3_rf_2_1.html",
+   "body": "<html><head><meta property=\"og:description\" content=\"Only OG\"></head><body></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://vcore-web.ivoox.com/v1/public/audios/2/download-url",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://go.ivoox.com/rf/3",
+   "body": "<html><body><div data-prm-title=\"Go title\"></div><script>window.__NUXT__=(function(a){return {data:[{data:{audio:{tags:[],duration:a}}}]}}(null));</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://vcore-web.ivoox.com/v1/public/audios/3/download-url",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"data\": {\"downloadUrl\": \"https://files.ivoox.com/3.mp3\"}}"
+  },
+  {
+   "url": "https://ivoox.com/dl/143594959.mp3",
+   "headers": {
+    "Content-Type": "audio/mpeg"
+   },
+   "body": "ID3-fixture"
+  }
+ ]
+}

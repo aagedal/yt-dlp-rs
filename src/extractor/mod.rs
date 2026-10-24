@@ -59,6 +59,7 @@ mod imgur;
 mod instagram;
 pub(crate) mod ism;
 mod israelnationalnews;
+mod ivoox;
 mod jove;
 mod json_ld;
 mod jwplatform;
@@ -219,6 +220,7 @@ pub use instagram::{
     user_suitable as instagram_user_suitable,
 };
 pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
+pub use ivoox::{Ivoox, suitable as ivoox_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kankanews::{KankaNews, suitable as kankanews_suitable};

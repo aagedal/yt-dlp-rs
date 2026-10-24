@@ -86,8 +86,8 @@ fn function_patterns(context_name: &str) -> [Regex; 2] {
 
 /// `_search_nuxt_data(webpage, video_id, context_name, fatal=fatal,
 /// traverse=path)`: `traverse_obj(result, path) or {}`. A fatal miss is
-/// upstream's `Unable to extract CONTEXT` error; a non-fatal one warns and
-/// gives `{}`.
+/// upstream's `Unable to extract CONTEXT` error; a non-fatal one (a `default`)
+/// quietly gives `{}`.
 pub fn search_nuxt_data(
     webpage: &str,
     extractor: &str,
@@ -107,7 +107,6 @@ pub fn search_nuxt_data(
                 crate::BUG_REPORTS_MESSAGE
             )));
         }
-        super::search_warning(extractor, context_name);
         return Ok(Value::Object(Map::new()));
     };
     let values = loads(&crate::js_to_json::js_to_json(&format!(

@@ -1293,6 +1293,19 @@ GraphQL timeline pages (trying upstream's signature templates on `403`) as
 so a page error ends the extraction instead of upstream's partial playlist.
 `tests/fixtures/sites/instagram/` is compared with pinned upstream output.
 
+Ivoox audios (`[www.]ivoox.com/[LANG/]SLUG_rf_ID_1.html`,
+`go.ivoox.com/rf/ID`) follow upstream `IvooxIE`: the page's
+`window.__NUXT__` audio data (`_search_nuxt_data`, non-fatal and quiet),
+the non-fatal `vcore-web.ivoox.com` download-URL API (its HTTP errors are
+upstream's warnings), the distinct download/media paths joined to
+`https://ivoox.com` as formats with a `Referer`, the page's `data-prm-*`
+author/date/podcast/title, OpenGraph thumbnail and description, JSON-LD
+fields and the Nuxt title, description, image, upload date, duration and
+tag names, in upstream's override order. Several distinct download paths
+(whose order upstream takes from a randomized Python set), unparsable API
+responses and failed page downloads remain explicit native errors.
+`tests/fixtures/sites/ivoox/` is compared with pinned upstream output.
+
 JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal
 chapters ID, the chapters XML's root `video` attribute (`Downloading chapters
 XML`; none is upstream's `Failed to get the video URL`) as an untyped result,
