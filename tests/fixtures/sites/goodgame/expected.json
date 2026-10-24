@@ -1,0 +1,76 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://goodgame.ru/TGW#autoplay",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(channel)s|%(channel_id)s|%(channel_url)s|%(uploader)s|%(uploader_id)s|%(thumbnail)s|%(concurrent_view_count)s|%(channel_follower_count)s|%(age_limit)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "198263|Стрим TGW|True|is_live|JosephStalin|7998|https://goodgame.ru/TGW|JosephStalin|2899|https://hls.goodgame.ru/previews/198263_240.jpg|41|12|18|1|mp4|m3u8_native|https://hls.goodgame.ru/hls/198263_720.m3u8"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://goodgame.ru/TGW",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[goodgame:stream] Extracting URL: https://goodgame.ru/TGW",
+    "[goodgame:stream] TGW: Downloading JSON metadata",
+    "[goodgame:stream] TGW: Downloading m3u8 information",
+    "[info] Available formats for 198263:",
+    "ID EXT RESOLUTION |   TBR PROTO | VCODEC  ACODEC",
+    "-------------------------------------------------",
+    "0  mp4 640x360    |  640k m3u8  | unknown unknown",
+    "1  mp4 1280x720   | 1280k m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://goodgame.ru/Mr.Gray",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(channel)s|%(channel_id)s|%(channel_url)s|%(uploader)s|%(uploader_id)s|%(thumbnail)s|%(concurrent_view_count)s|%(channel_follower_count)s|%(age_limit)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "555|NA|True|is_live|NA|abc|NA|NA|NA|ftp://bad|NA|NA|NA|1|mp4|m3u8_native|https://hls.goodgame.ru/hls/555_720.m3u8"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://goodgame.ru/Offline",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [goodgame:stream] Offline: User is offline"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://goodgame.ru/NoKey",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: NoKey: An extractor error has occurred. (caused by KeyError('streamkey')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

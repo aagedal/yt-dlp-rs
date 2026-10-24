@@ -618,6 +618,18 @@
       "scope": "GodTubeIE (_WORKING = False warning and listing) player config/media XML extraction compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "goodgame",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/goodgame.py"
+      ],
+      "rust": [
+        "src/extractor/goodgame.rs",
+        "tests/fixtures/sites/goodgame/"
+      ],
+      "scope": "GoodGameIE stream API, offline error and live master HLS playlist with traverse_obj channel fields compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "graspop",
       "status": "partial",
       "upstream": [

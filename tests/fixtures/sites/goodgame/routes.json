@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://goodgame.ru/api/4/users/TGW/stream",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streamkey\": \"198263\", \"status\": true, \"title\": \"Стрим TGW\", \"channelkey\": \"JosephStalin\", \"id\": 7998, \"link\": \"https://goodgame.ru/TGW\", \"streamer\": {\"username\": \"JosephStalin\", \"id\": 2899}, \"preview\": \"//hls.goodgame.ru/previews/198263_240.jpg\", \"viewers\": 41, \"followers\": \"12\", \"adult\": true}"
+  },
+  {
+   "url": "https://goodgame.ru/api/4/users/Mr.Gray/stream",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streamkey\": \"555\", \"status\": 1, \"channelkey\": 5, \"id\": \"abc\", \"link\": \"not a url\", \"streamer\": {\"id\": null}, \"preview\": \"ftp://bad\", \"viewers\": \"1,000\", \"adult\": false}"
+  },
+  {
+   "url": "https://goodgame.ru/api/4/users/Offline/stream",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streamkey\": \"777\", \"status\": false, \"title\": \"Off\"}"
+  },
+  {
+   "url": "https://goodgame.ru/api/4/users/NoKey/stream",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": true, \"title\": \"x\"}"
+  },
+  {
+   "url": "https://hls.goodgame.ru/manifest/198263_master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720\nhttps://hls.goodgame.ru/hls/198263_720.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=640000,RESOLUTION=640x360\nhttps://hls.goodgame.ru/hls/198263_360.m3u8\n"
+  },
+  {
+   "url": "https://hls.goodgame.ru/manifest/555_master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720\nhttps://hls.goodgame.ru/hls/555_720.m3u8\n#EXT-X-STREAM-INF:BANDWIDTH=640000,RESOLUTION=640x360\nhttps://hls.goodgame.ru/hls/555_360.m3u8\n"
+  },
+  {
+   "url": "https://hls.goodgame.ru/hls/198263_720.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXT-X-MEDIA-SEQUENCE:7\n#EXTINF:4.0,\nhttps://hls.goodgame.ru/hls/seg7.ts\n"
+  },
+  {
+   "url": "https://hls.goodgame.ru/hls/198263_360.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body": "#EXTM3U\n#EXT-X-TARGETDURATION:4\n#EXT-X-MEDIA-SEQUENCE:7\n#EXTINF:4.0,\nhttps://hls.goodgame.ru/hls/seg7.ts\n"
+  }
+ ]
+}

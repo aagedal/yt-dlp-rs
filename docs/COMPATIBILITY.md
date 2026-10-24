@@ -1108,6 +1108,15 @@ warning) follow upstream `GodTubeIE`: the player config XML (`Downloading
 player config XML`: file, author, ISO 8601 date, duration, image) and media
 XML title (`Downloading media XML`) as an untyped result.
 
+GoodGame streams (`goodgame.ru/CHANNEL`, not `channel/`) follow upstream
+`GoodGameIE` (`goodgame:stream`): the `api/4/users/CHANNEL/stream` JSON's
+`streamkey` as the ID (missing: upstream's `KeyError`), `User is offline`
+for a false `status`, otherwise the live master playlist's variants (not
+fetched, as upstream's `live=True`) with `is_live`, and the `traverse_obj`
+title, channel, uploader, proto-relative thumbnail, viewer/follower counts
+and `adult` age limit. A master URL that serves a live media playlist is
+not supported natively (no `ENDLIST`), unlike upstream.
+
 Graspop concerts (`vod.graspop.be/LL/ID/`) follow upstream `GraspopIE`: the
 Proximus festival stream's `source.assetUri` over `http:` as fatal HLS
 formats, the string `name` title (else the generic title) and the URL-valued
