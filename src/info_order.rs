@@ -987,8 +987,12 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     };
     // An `-untitled` shape: upstream's dict has no `title`, so
     // `_fill_common_fields` adds the generic one after `fulltitle`.
-    let untitled = shape.ends_with("-untitled");
-    let shape = shape.strip_suffix("-untitled").unwrap_or(&shape).to_owned();
+    // (`dict_info`'s `dict-untitled;KEYS` likewise.)
+    let untitled = shape.ends_with("-untitled") || shape.starts_with("dict-untitled;");
+    let shape = match shape.strip_prefix("dict-untitled;") {
+        Some(keys) => format!("dict;{keys}"),
+        None => shape.strip_suffix("-untitled").unwrap_or(&shape).to_owned(),
+    };
     // The selected format's keys, which `info_dict.update(format)` merges.
     let merged = map
         .get("requested_formats")

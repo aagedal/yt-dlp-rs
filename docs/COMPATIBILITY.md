@@ -1694,6 +1694,14 @@ string folder (upstream's `TypeError`) remain explicit native errors;
 conference playlists (`CCCPlaylistIE`) are not ported.
 `tests/fixtures/sites/ccc/` is compared with pinned upstream output.
 
+Clipchamp shares (`[www.]clipchamp.com/watch/ID`) follow upstream
+`ClipchampIE`: the next.js `video` data (only the `cf_stream` storage
+location; others are upstream's error), the Cloudflare Stream iframe's
+`customer-domain-prefix` (upstream's default subdomain with its warning) and
+the non-fatal `dash`/`hls` manifests with the `parentOrigin` query, plus the
+creator's name as `uploader`, project name, creation timestamp and thumbnail.
+`tests/fixtures/sites/clipchamp/` is compared with pinned upstream output.
+
 Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
 `api.clyp.it/ID` JSON (with the URL's `token` query), its `OggUrl`,
 `Mp3Url`, `SecureOggUrl` and `SecureMp3Url` audio formats, the page's

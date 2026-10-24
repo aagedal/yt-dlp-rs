@@ -557,6 +557,18 @@
       "scope": "CJSWIE episode page (fatal title/audio regexes, UUID ID, description, series, episode ID, audio format and download) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "clipchamp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/clipchamp.py"
+      ],
+      "rust": [
+        "src/extractor/clipchamp.rs",
+        "tests/fixtures/sites/clipchamp/"
+      ],
+      "scope": "ClipchampIE next.js video data (cf_stream only), Cloudflare Stream iframe subdomain and non-fatal dash/hls manifests with parentOrigin, uploader, title, timestamp and thumbnail. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cloudflarestream",
       "status": "partial",
       "upstream": [

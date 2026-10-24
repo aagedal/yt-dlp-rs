@@ -1,0 +1,92 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://clipchamp.com/watch/gRXZ4ZhdDaU",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"gRXZ4ZhdDaU\", \"formats\": [{\"format_id\": \"dash-a1\", \"manifest_url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/video.mpd?parentOrigin=https%3A%2F%2Fclipchamp.com\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-a1 - audio only (DASH audio)\"}, {\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/low.m3u8\", \"manifest_url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/video.m3u8?parentOrigin=https%3A%2F%2Fclipchamp.com\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"dash-v1\", \"manifest_url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/video.mpd?parentOrigin=https%3A%2F%2Fclipchamp.com\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-v1 - 1280x720 (DASH video)\"}, {\"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/high.m3u8\", \"manifest_url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/video.m3u8?parentOrigin=https%3A%2F%2Fclipchamp.com\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\"}], \"uploader\": \"Alexander Schwartz\", \"title\": \"Untitled video\", \"timestamp\": 1680810380, \"thumbnail\": \"https://videodelivery.net/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/thumbnails/thumbnail.jpg\", \"webpage_url\": \"https://clipchamp.com/watch/gRXZ4ZhdDaU\", \"original_url\": \"https://clipchamp.com/watch/gRXZ4ZhdDaU\", \"webpage_url_basename\": \"gRXZ4ZhdDaU\", \"webpage_url_domain\": \"clipchamp.com\", \"extractor\": \"Clipchamp\", \"extractor_key\": \"Clipchamp\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://videodelivery.net/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/thumbnails/thumbnail.jpg\", \"id\": \"0\"}], \"display_id\": \"gRXZ4ZhdDaU\", \"fulltitle\": \"Untitled video\", \"upload_date\": \"20230406\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/high.m3u8\", \"manifest_url\": \"https://customer-abc123.cloudflarestream.com/b8bdd0ed3b9e4b1a8d01f2c2a1e7e9f5/manifest/video.m3u8?parentOrigin=https%3A%2F%2Fclipchamp.com\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\", \"_filename\": \"Untitled video [gRXZ4ZhdDaU].mp4\", \"filename\": \"Untitled video [gRXZ4ZhdDaU].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clipchamp.com/watch/gRXZ4ZhdDaU",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Clipchamp] Extracting URL: https://clipchamp.com/watch/gRXZ4ZhdDaU",
+    "[Clipchamp] gRXZ4ZhdDaU: Downloading webpage",
+    "[Clipchamp] gRXZ4ZhdDaU: Downloading player iframe",
+    "[Clipchamp] gRXZ4ZhdDaU: Downloading MPD manifest",
+    "[Clipchamp] gRXZ4ZhdDaU: Downloading m3u8 information",
+    "[info] Available formats for gRXZ4ZhdDaU:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC        VBR ACODEC      ABR ASR MORE INFO",
+    "-------------------------------------------------------------------------------------------------------",
+    "dash-a1  m4a audio only |  128k https | audio only        mp4a.40.2  128k 48k [en] DASH audio, m4a_dash",
+    "hls-800  mp4 640x360    |  800k m3u8  | avc1.42c01e       mp4a.40.2",
+    "dash-v1  mp4 1280x720   | 1000k https | avc1.4d401f 1000k video only          DASH video, mp4_dash",
+    "hls-2400 mp4 1280x720   | 2400k m3u8  | avc1.4d401f       mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clipchamp.com/watch/nosub",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"nosub\", \"formats\": [{\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://customer-2ut9yn3y6fta1yxe.cloudflarestream.com/deadbeef/manifest/low.m3u8\", \"manifest_url\": \"https://customer-2ut9yn3y6fta1yxe.cloudflarestream.com/deadbeef/manifest/video.m3u8?parentOrigin=https%3A%2F%2Fclipchamp.com\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://customer-2ut9yn3y6fta1yxe.cloudflarestream.com/deadbeef/manifest/high.m3u8\", \"manifest_url\": \"https://customer-2ut9yn3y6fta1yxe.cloudflarestream.com/deadbeef/manifest/video.m3u8?parentOrigin=https%3A%2F%2Fclipchamp.com\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\"}], \"uploader\": \"Solo\", \"webpage_url\": \"https://clipchamp.com/watch/nosub\", \"original_url\": \"https://clipchamp.com/watch/nosub\", \"webpage_url_basename\": \"nosub\", \"webpage_url_domain\": \"clipchamp.com\", \"extractor\": \"Clipchamp\", \"extractor_key\": \"Clipchamp\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"nosub\", \"fulltitle\": null, \"title\": \"Clipchamp video #nosub\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://customer-2ut9yn3y6fta1yxe.cloudflarestream.com/deadbeef/manifest/high.m3u8\", \"manifest_url\": \"https://customer-2ut9yn3y6fta1yxe.cloudflarestream.com/deadbeef/manifest/video.m3u8?parentOrigin=https%3A%2F%2Fclipchamp.com\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\", \"_filename\": \"Clipchamp video #nosub [nosub].mp4\", \"filename\": \"Clipchamp video #nosub [nosub].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Clipchamp] unable to extract subdomain; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Clipchamp] nosub: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://clipchamp.com/watch/s3clip",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Clipchamp] s3clip: Unsupported clip storage location \"s3\"; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://clipchamp.com/watch/novideo",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: novideo: An extractor error has occurred. (caused by KeyError('video')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://clipchamp.com/watch/nopath",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nopath: An extractor error has occurred. (caused by KeyError('download_url')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
