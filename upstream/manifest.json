@@ -2232,6 +2232,18 @@
       "scope": "VeoIE match API metadata and video list formats (mp2t and URL-less entries skipped, panorama URLs checked) and the no-formats error compared with pinned upstream output through the fixture proxy; non-object API values remain explicit native errors"
     },
     {
+      "name": "videopress",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/videopress.py"
+      ],
+      "rust": [
+        "src/extractor/videopress.rs",
+        "tests/fixtures/sites/videopress/"
+      ],
+      "scope": "VideoPressIE public-api.wordpress.com video JSON (random birthday query ignored by the fixture route), MP4/Ogg files joined to file_url_base with qualities, original upload, duration, timestamp and parse_age_limit rating compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "vimeo",
       "status": "partial",
       "upstream": [

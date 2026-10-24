@@ -904,6 +904,15 @@ formats and thumbnails, then the page's OpenGraph title and description,
 `EXT[-HEIGHTp]` formats, image thumbnails, description, duration, keywords and
 the URL's uploader ID.
 
+VideoPress embeds (`videopress.com|video.wordpress.com/embed/ID`) follow
+upstream `VideoPressIE`: the `public-api.wordpress.com/rest/v1.1/videos/ID`
+JSON, requested with a random 1950-1995 `birth_year`/`birth_month`/`birth_day`
+and the upstream `fields` list, gives each `files` entry's `mp4`/`ogg` path
+joined to `file_url_base` (https, else http) as `QUALITY-EXT` formats ranked
+std < dvd < hd, the `original` upload (quality 3, width/height), and the title
+(else a `KeyError`), description, poster, millisecond duration, upload
+timestamp and `parse_age_limit` rating.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,

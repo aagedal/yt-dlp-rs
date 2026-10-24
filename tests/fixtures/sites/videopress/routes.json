@@ -1,0 +1,29 @@
+{
+ "routes": [
+  {
+   "url": "https://public-api.wordpress.com/rest/v1.1/videos/kUJmAcSf?fields=description%2Cduration%2Cfile_url_base%2Cfiles%2Cheight%2Coriginal%2Cposter%2Crating%2Ctitle%2Cupload_date%2Cwidth",
+   "ignore_query": ["birth_year", "birth_month", "birth_day"],
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "video.json"
+  },
+  {
+   "url": "https://public-api.wordpress.com/rest/v1.1/videos/iH3gstfZ?fields=description%2Cduration%2Cfile_url_base%2Cfiles%2Cheight%2Coriginal%2Cposter%2Crating%2Ctitle%2Cupload_date%2Cwidth",
+   "ignore_query": ["birth_year", "birth_month", "birth_day"],
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"title\": \"Mature\", \"rating\": \"R-17\", \"file_url_base\": {\"http\": \"http://videos.files.wordpress.com/iH3gstfZ/\"}, \"files\": {\"hd\": {\"ogg\": \"a/b.ogg\"}}}"
+  },
+  {
+   "url": "https://public-api.wordpress.com/rest/v1.1/videos/notitle?fields=description%2Cduration%2Cfile_url_base%2Cfiles%2Cheight%2Coriginal%2Cposter%2Crating%2Ctitle%2Cupload_date%2Cwidth",
+   "ignore_query": ["birth_year", "birth_month", "birth_day"],
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"description\": \"x\"}"
+  },
+  {
+   "url": "https://public-api.wordpress.com/rest/v1.1/videos/goneGone?fields=description%2Cduration%2Cfile_url_base%2Cfiles%2Cheight%2Coriginal%2Cposter%2Crating%2Ctitle%2Cupload_date%2Cwidth",
+   "ignore_query": ["birth_year", "birth_month", "birth_day"],
+   "status": 403,
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"error\": \"unauthorized\"}"
+  }
+ ]
+}

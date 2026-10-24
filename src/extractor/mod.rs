@@ -179,6 +179,7 @@ mod unistra;
 mod unitednations;
 mod ustudio;
 mod veo;
+mod videopress;
 mod vimeo;
 mod vk;
 mod vkplay;
@@ -433,6 +434,7 @@ pub use unitednations::{UnitedNationsWebTv, suitable as unitednations_suitable};
 pub use ustudio::{Ustudio, suitable as ustudio_suitable};
 pub use ustudio::{UstudioEmbed, embed_suitable as ustudio_embed_suitable};
 pub use veo::{Veo, suitable as veo_suitable};
+pub use videopress::{VideoPress, suitable as videopress_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,
