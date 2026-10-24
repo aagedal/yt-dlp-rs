@@ -1,0 +1,27 @@
+[
+ {
+  "url": "https://www.cam4.com/foxynesss",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(age_limit)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://www.cam4.com/foxynesss",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "https://www.cam4.com/gone",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.cam4.com/nostream",
+  "args": [
+   "-j"
+  ]
+ }
+]

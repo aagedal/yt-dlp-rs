@@ -1,0 +1,40 @@
+{
+ "routes": [
+  {
+   "url": "https://cwwp2.dot.ca.gov/vm/loc/d3/hwy50at24th.htm",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://cwwp2.dot.ca.gov/vm/loc/d3/partial.htm",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "partial.html"
+  },
+  {
+   "url": "https://cwwp2.dot.ca.gov/vm/loc/d3/noscript.htm",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "noscript.html"
+  },
+  {
+   "url": "https://wzmedia.dot.ca.gov/D3/50_24th.stream/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://cwwp2.dot.ca.gov/vm/loc/d3/gone.htm",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "gone"
+  }
+ ]
+}

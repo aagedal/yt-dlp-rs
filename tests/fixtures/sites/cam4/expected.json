@@ -1,0 +1,61 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.cam4.com/foxynesss",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(age_limit)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "foxynesss|foxynesss|True|is_live|18|https://snapshots.xcdnpro.com/thumbnails/foxynesss|hls-1|mp4|m3u8_native|1280|720|https://cdn.cam4.example/foxynesss/chunklist_720.m3u8"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.cam4.com/foxynesss",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[CAM4] Extracting URL: https://www.cam4.com/foxynesss",
+    "[CAM4] foxynesss: Downloading JSON metadata",
+    "[CAM4] foxynesss: Downloading m3u8 information",
+    "[info] Available formats for foxynesss:",
+    "ID    EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "----------------------------------------------------------",
+    "hls-0 mp4 640x360    |  800k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-1 mp4 1280x720   | 2400k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.cam4.com/gone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [CAM4] gone: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.cam4.com/nostream",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [CAM4] nostream: Failed to download m3u8 information: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

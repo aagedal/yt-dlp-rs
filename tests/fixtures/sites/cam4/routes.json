@@ -1,0 +1,33 @@
+{
+ "routes": [
+  {
+   "url": "https://www.cam4.com/rest/v1.0/profile/foxynesss/streamInfo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "info.json"
+  },
+  {
+   "url": "https://cdn.cam4.example/foxynesss/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.cam4.com/rest/v1.0/profile/gone/streamInfo",
+   "status": 404,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://www.cam4.com/rest/v1.0/profile/nostream/streamInfo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"cdnURL\":\"https://cdn.cam4.example/nostream/playlist.m3u8\"}"
+  }
+ ]
+}

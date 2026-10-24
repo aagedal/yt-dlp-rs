@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://www.ettu.tv/api/v3/contents/1573849/player-settings?language=en&showTitle=true&device=desktop",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "settings.json"
+  },
+  {
+   "url": "https://www.ettu.tv/api/v3/contents/2/player-settings?language=en&showTitle=true&device=desktop",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "bare.json"
+  },
+  {
+   "url": "https://www.ettu.tv/api/v3/contents/3/player-settings?language=en&showTitle=true&device=desktop",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "nostream.json"
+  },
+  {
+   "url": "https://www.ettu.tv/api/v3/contents/4/player-settings?language=en&showTitle=true&device=desktop",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"streamAccess\": \"https://access.ettu.example/4\"}"
+  },
+  {
+   "url": "https://access.ettu.example/1573849",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "access.json"
+  },
+  {
+   "url": "https://access.ettu.example/2",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "access2.json"
+  },
+  {
+   "url": "https://access.ettu.example/4",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "nodata.json"
+  },
+  {
+   "url": "https://hls.ettu.example/1573849/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://hls.ettu.example/1573849/720.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "720.m3u8"
+  }
+ ]
+}

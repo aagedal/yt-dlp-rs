@@ -668,6 +668,46 @@ webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
 variant IDs, the cleaned `<h1>` title and `is_live`. A live media-only
 playlist without `#EXT-X-ENDLIST` remains an explicit native error.
 
+ETTU TV player pages (`ettu.tv/LANG/playerpage/ID`) follow upstream
+`EttuTvIE`: the `player-settings` JSON (`language=en&showTitle=true&device=desktop`),
+its `streamAccess` URL POSTed with an empty body, the `data.stream` manifest
+as fatal HLS formats (`mp4`) and subtitles (a missing key is upstream's
+`KeyError`), with the title, `metaInformation.competition` description,
+`url_or_none` image, `unified_timestamp` date and boolean `isLivestream`
+when present. Non-string titles and non-absolute stream URLs remain
+explicit native errors.
+
+Erocast tracks (`erocast.me/track/ID`) follow upstream `ErocastIE`: the
+page's fatal `var song_data_ID` JSON, its `file_url` (else `stream_url`) as
+fatal `hls` formats (`m4a`), age limit 18 and the title, description,
+`parse_iso8601` release/modified timestamps, uploader name/ID/URL, artwork
+thumbnail, integer duration/plays/comments and `permalink_url` webpage URL
+when present. Song data that is not an object, or without an absolute
+stream URL, remains an explicit native error.
+
+Caltrans cameras (`*.ca.gov/vm/loc/DISTRICT/ID.htm`) follow upstream
+`CaltransIE`: the fatal `Global Vars` script, its `routePlace`,
+`locationName`, `posterURL` and `videoStreamURL` (each warning when absent),
+the stream as fatal live HLS formats (`ts`, live variant IDs), the
+`ROUTE : LOCATION` title (`None` for a missing part), poster thumbnail and
+`is_live`. A page without an absolute `videoStreamURL` remains an explicit
+native error.
+
+Bigo rooms (`bigo.tv/[LANG/]ID`) follow upstream `BigoIE`: the POSTed
+`siteId` `getInternalStudioInfo` response (a non-dict is `Received invalid
+JSON data`, a truthy `code` the expected `Bigo says: MSG (code CODE)`, a
+falsy `alive` `The channel is not currently live`), its `hls_src` as fatal
+HLS formats (`mp4`, `m3u8` protocol) and subtitles, the `roomId` (else URL)
+ID, `roomTopic`/`nick_name`/URL title, `snapshot` thumbnail, uploader and
+`is_live`. A room without an absolute `hls_src` remains an explicit native
+error.
+
+CAM4 channels (`cam4.com/USER`) follow upstream `CAM4IE`: the
+`rest/v1.0/profile/USER/streamInfo` `cdnURL` as fatal live `hls` formats
+(`mp4`, live variant IDs), the channel name as title, `is_live`, age limit
+18 and the `snapshots.xcdnpro.com` thumbnail. Stream info without an
+absolute `cdnURL` remains an explicit native error.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,

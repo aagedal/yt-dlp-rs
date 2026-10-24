@@ -257,6 +257,18 @@
       "scope": "BehindKinkIE (_WORKING = False) page source URL and OpenGraph fields compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bigo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bigo.py"
+      ],
+      "rust": [
+        "src/extractor/bigo.rs",
+        "tests/fixtures/sites/bigo/"
+      ],
+      "scope": "BigoIE POSTed getInternalStudioInfo room data, its hls_src as fatal HLS formats (mp4, m3u8 protocol), title/uploader fallbacks, Bigo says/invalid JSON/not live errors compared with pinned upstream output through the fixture proxy; a missing hls_src remains a native error"
+    },
+    {
       "name": "bild",
       "status": "partial",
       "upstream": [
@@ -351,6 +363,30 @@
         "tests/fixtures/sites/bundesliga/"
       ],
       "scope": "BundesligaIE vid query as a jwplatform: url result followed by the JWPlatform extractor compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "caltrans",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/caltrans.py"
+      ],
+      "rust": [
+        "src/extractor/caltrans.rs",
+        "tests/fixtures/sites/caltrans/"
+      ],
+      "scope": "CaltransIE page Global Vars script (route place, location name, poster and fatal-less stream URL with upstream warnings) as live HLS formats (ts, live variant IDs) compared with pinned upstream output through the fixture proxy; a missing videoStreamURL remains a native error"
+    },
+    {
+      "name": "cam4",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cam4.py"
+      ],
+      "rust": [
+        "src/extractor/cam4.rs",
+        "tests/fixtures/sites/cam4/"
+      ],
+      "scope": "CAM4IE streamInfo cdnURL as live HLS formats (mp4, live variant IDs), channel title, thumbnail and age limit compared with pinned upstream output through the fixture proxy; a missing or relative cdnURL remains a native error"
     },
     {
       "name": "cgtn",
@@ -496,6 +532,30 @@
         "tests/fixtures/sites/epoch/"
       ],
       "scope": "EpochIE videobox data-id (get_element_html_by_id/extract_attributes over an html.parser-like tokenizer, with its parse errors), fatal HLS formats and subtitles and <title> compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "erocast",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/erocast.py"
+      ],
+      "rust": [
+        "src/extractor/erocast.rs",
+        "tests/fixtures/sites/erocast/"
+      ],
+      "scope": "ErocastIE song_data JSON, file_url/stream_url as fatal HLS formats (m4a), traverse_obj metadata (ISO 8601 timestamps, uploader, counts, permalink webpage_url) and missing-data error compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "ettutv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ettutv.py"
+      ],
+      "rust": [
+        "src/extractor/ettutv.rs",
+        "tests/fixtures/sites/ettutv/"
+      ],
+      "scope": "EttuTvIE player-settings, POSTed streamAccess stream as fatal HLS formats and subtitles (mp4), traverse_obj title/competition/image/unified_timestamp date/isLivestream and KeyError paths compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "facebook",
