@@ -1728,6 +1728,17 @@ the first article `media` item of type `video`'s `urn`) and
 `Unable to get the required video data`. `tests/fixtures/sites/ninenews/` is
 compared with pinned upstream output.
 
+Rotten Tomatoes movie and trailer pages (`rottentomatoes.com/m/MOVIE[/trailers[/ID]]`)
+follow upstream `RottenTomatoesIE`: the `heroVideos`/`videos` script's greedy
+`[{...}]` JSON, each video with a truthy `publicId` and `file` and `type`
+`hls` as an entry of its non-fatal `hls` formats (manifest subtitles ignored)
+with the present `publicId`, title, description, `float_or_none` duration and
+`url_or_none` image. A trailer ID selects its video (`Unable to extract video
+from webpage` when absent); otherwise the page is a playlist
+(`MOVIE[-trailers]`) titled by the cleaned `scoreboard__title` element.
+`tests/fixtures/sites/rottentomatoes/` is compared with pinned upstream
+output.
+
 Cloudflare Stream videos (`[watch.|iframe.|customer-X.]cloudflarestream.com|videodelivery.net|bytehighway.net/ID`
 and `embed/*.js?video=ID` scripts) follow upstream `CloudflareStreamIE`: a
 signed token's ID is its base64 payload's `sub`, and the

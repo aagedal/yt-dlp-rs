@@ -1678,6 +1678,18 @@
       "scope": "RinseFMIE query API episode entry as an untyped audio result (vcodec none, title, release timestamp, imgix thumbnail, episode webpage_url), KeyError and generic-title behaviour, and RinseFMArtistPlaylistIE audio-episode playlists with show title/description compared with pinned upstream output through the fixture proxy; episodes without a string id or media URL remain explicit native errors"
     },
     {
+      "name": "rottentomatoes",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/rottentomatoes.py"
+      ],
+      "rust": [
+        "src/extractor/rottentomatoes.rs",
+        "tests/fixtures/sites/rottentomatoes/"
+      ],
+      "scope": "RottenTomatoesIE heroVideos/videos script JSON, each hls video's non-fatal formats with publicId, title, description, duration and image, as the named trailer or a playlist titled by scoreboard__title. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "roya",
       "status": "partial",
       "upstream": [

@@ -1,0 +1,6 @@
+[
+ {"url": "https://www.rottentomatoes.com/m/toy_story_3/trailers/VycaVoBKhGuk", "args": ["-j"]},
+ {"url": "http://www.rottentomatoes.com/m/toy_story_3", "args": ["-J"]},
+ {"url": "http://www.rottentomatoes.com/m/toy_story_3/trailers", "args": ["--print", "%(playlist_id)s|%(playlist_title)s|%(id)s|%(title)s|%(description)s|%(duration)s|%(thumbnail)s|%(format_id)s"]},
+ {"url": "http://www.rottentomatoes.com/m/toy_story_3/trailers/Missing1", "args": ["-j"]}
+]
