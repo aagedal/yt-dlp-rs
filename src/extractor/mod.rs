@@ -88,6 +88,7 @@ mod qingting;
 mod radiozet;
 mod reddit;
 mod reverbnation;
+mod roya;
 mod rss;
 mod rtrfm;
 mod rumble;
@@ -227,6 +228,7 @@ pub use qingting::{QingTing, suitable as qingting_suitable};
 pub use radiozet::{RadioZetPodcast, suitable as radiozet_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
+pub use roya::{RoyaLive, suitable as roya_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};
 pub use rumble::{
     Rumble, RumbleEmbed, embed_suitable as rumble_embed_suitable, suitable as rumble_suitable,

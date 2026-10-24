@@ -390,6 +390,12 @@ the page's fatal `playShow[From]` show, date and title, the restream API's
 ID, `TITLE DATE` title, series, release date (and the `release_year`
 processing derives from it) and OpenGraph description.
 
+Roya TV live streams (`[en.]roya.tv/live-stream/ID`) follow upstream
+`RoyaLiveIE`: the ticket API's `data.secured_url` (missing keys are
+upstream's wrapped `KeyError`) as live `hls` HLS formats, the non-fatal
+schedule API's first page channel title whose `str(id)` matches (else the
+generic title after upstream's warning) and `is_live`.
+
 Rumble embeds (`rumble.com/embed/ID`) follow upstream `RumbleEmbedIE`: the
 embed JS API's `ua` formats (progressive by height, audio, timeline; HLS
 manifests non-fatally; tar archives skipped), live status, captions,

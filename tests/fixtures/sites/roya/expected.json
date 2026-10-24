@@ -1,0 +1,114 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://en.roya.tv/live-stream/1",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|Roya TV|True|is_live|hls-1|mp4|m3u8_native|1920|1080|https://stream.roya.tv/live/1/1080/index.m3u8"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://roya.tv/live-stream/21",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[RoyaLive] Extracting URL: https://roya.tv/live-stream/21",
+    "[RoyaLive] 21: Downloading JSON metadata",
+    "[RoyaLive] 21: Downloading JSON metadata",
+    "[RoyaLive] 21: Downloading m3u8 information",
+    "[info] Available formats for 21:",
+    "ID    EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "----------------------------------------------------------",
+    "hls-0 mp4 854x480    |  900k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-1 mp4 1920x1080  | 2500k m3u8  | avc1.640028 mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://roya.tv/live-stream/21",
+   "args": [
+    "--print",
+    "%(fulltitle)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "Roya News|hls-1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://roya.tv/live-stream/3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3: An extractor error has occurred. (caused by KeyError('secured_url')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://roya.tv/live-stream/4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 4: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://roya.tv/live-stream/5",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [RoyaLive] 5: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://roya.tv/live-stream/6",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [RoyaLive] 6: Failed to download m3u8 information: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://roya.tv/live-stream/7",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "7|NA|hls-1"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  }
+ ]
+}
