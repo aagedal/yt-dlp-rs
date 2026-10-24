@@ -1,7 +1,7 @@
 pub mod encoding;
 pub(crate) mod exec;
 mod filename;
-mod formats;
+pub(crate) mod formats;
 mod links;
 mod print;
 pub mod progress;

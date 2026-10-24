@@ -62,10 +62,11 @@ fn strip_comments(html: &str) -> String {
     out
 }
 
-/// `InfoExtractor._hidden_inputs(html)`.
-fn hidden_inputs(html: &str) -> std::collections::HashMap<String, String> {
+/// `InfoExtractor._hidden_inputs(html)`: the dict's items in insertion
+/// order.
+pub(crate) fn hidden_inputs(html: &str) -> Vec<(String, String)> {
     let html = strip_comments(html);
-    let mut inputs = std::collections::HashMap::new();
+    let mut inputs: Vec<(String, String)> = Vec::new();
     for found in INPUT.captures_iter(&html) {
         let attributes = crate::html_elements::extract_attributes(&found[1]);
         let kind = attributes.get("type").and_then(Value::as_str);
@@ -81,7 +82,10 @@ fn hidden_inputs(html: &str) -> std::collections::HashMap<String, String> {
         let name = truthy("name").or_else(|| truthy("id"));
         let value = attributes.get("value").and_then(Value::as_str);
         if let (Some(name), Some(value)) = (name, value) {
-            inputs.insert(name.to_owned(), value.to_owned());
+            match inputs.iter_mut().find(|(existing, _)| existing == name) {
+                Some((_, slot)) => *slot = value.to_owned(),
+                None => inputs.push((name.to_owned(), value.to_owned())),
+            }
         }
     }
     inputs
@@ -117,7 +121,8 @@ impl Extractor for PressTv {
         ));
         let webpage = download_webpage(client, url, NAME, &display_id)?;
         let video_url = hidden_inputs(&webpage)
-            .remove("inpPlayback")
+            .into_iter()
+            .find_map(|(name, value)| (name == "inpPlayback").then_some(value))
             .ok_or_else(|| {
                 Error::Reported(format!(
                     "{id}: An extractor error has occurred. (caused by KeyError('inpPlayback')); {}",

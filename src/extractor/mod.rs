@@ -1,3 +1,4 @@
+pub mod adobepass;
 mod amadeustv;
 mod angel;
 mod archiveorg;

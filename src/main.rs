@@ -1688,6 +1688,24 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
     yt_dlp_rs::extractor::set_video_password(args.video_password.clone());
+    if args.ap_username.is_some() && args.ap_password.is_none() {
+        // Upstream prompts `Type TV provider account password and press
+        // [Return]: ` (getpass).
+        report_error!(
+            "ERROR: --ap-username without --ap-password needs an interactive password prompt, which is not supported natively"
+        );
+        return Ok(false);
+    }
+    yt_dlp_rs::extractor::adobepass::set_options(yt_dlp_rs::extractor::adobepass::Options {
+        mso: args.ap_mso.clone(),
+        login: yt_dlp_rs::extractor::adobepass::LoginOptions {
+            username: args.ap_username.clone(),
+            password: args.ap_password.clone(),
+            netrc: args.netrc,
+            netrc_location: args.netrc_location.clone(),
+            netrc_cmd: args.netrc_cmd.clone(),
+        },
+    });
     yt_dlp_rs::extractor::set_youtube_tab_playlist_items(args.playlist_items.as_deref());
     // HttpFD's initial block size and resizing.
     if let Some(size) = args.buffer_size.as_deref().and_then(parse_bytes) {
@@ -3091,10 +3109,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         return Ok(true);
     }
     if args.ap_list_mso {
-        // No supported extractor uses Adobe Pass.
-        writeln!(
+        write!(
             io::stdout().lock(),
-            "Supported TV Providers:\nmso  mso name"
+            "{}",
+            yt_dlp_rs::extractor::adobepass::list_mso_text()
         )?;
         return Ok(true);
     }
@@ -6244,6 +6262,17 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
                 warning!("WARNING: --encoding {name} is not supported natively; output is UTF-8")
             }
         }
+    }
+    // Upstream's TV provider (Adobe Pass) account validation.
+    if args.ap_password.is_some() && args.ap_username.is_none() {
+        return Err(usage("TV Provider account username missing"));
+    }
+    if let Some(mso) = &args.ap_mso
+        && !yt_dlp_rs::extractor::adobepass::supported_mso(mso)
+    {
+        return Err(usage(format!(
+            "Unsupported TV Provider \"{mso}\", use --ap-list-mso to get a list of supported TV Providers"
+        )));
     }
     for (name, value, strict) in [
         ("buffer size", &args.buffer_size, true),
