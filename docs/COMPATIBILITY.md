@@ -1729,6 +1729,12 @@ without `--video-password` keep upstream's error; the password flow (cookie
 and POST) is not ported.
 `tests/fixtures/sites/dropbox/` is compared with pinned upstream output.
 
+Elonet records (`elonet.finna.fi/Record/kavi.elonet_elokuva_ID`) follow
+upstream `ElonetIE`: the first `video-data` source's non-fatal HLS or DASH
+manifest (other extensions are upstream's `Unknown streaming format` error),
+the required OpenGraph title and optional description and thumbnail.
+`tests/fixtures/sites/elonet/` is compared with pinned upstream output.
+
 Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
 `api.clyp.it/ID` JSON (with the URL's `token` query), its `OggUrl`,
 `Mp3Url`, `SecureOggUrl` and `SecureMp3Url` audio formats, the page's

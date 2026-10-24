@@ -1,0 +1,10 @@
+{
+ "routes": [
+  {"url": "https://elonet.finna.fi/Record/kavi.elonet_elokuva_107867", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><meta property=\"og:title\" content=\"Valkoinen peura\"><meta property=\"og:description\" content=\"Suomalainen elokuva &amp; klassikko.\"><meta property=\"og:image\" content=\"https://elonet.finna.fi/Cover/Show?id=kavi.elonet_elokuva_107867&amp;size=large\"></head><body><div id='video-data' class='x' data-video-sources=\"[{&quot;src&quot;:&quot;https://elonet.test/hls/107867/master.m3u8&quot;,&quot;type&quot;:&quot;application/x-mpegURL&quot;}]\"></div></body></html>"},
+  {"url": "https://elonet.test/hls/107867/master.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "master.m3u8"},
+  {"url": "https://elonet.finna.fi/Record/kavi.elonet_elokuva_116539", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><meta property=\"og:title\" content=\"Minulla on tiikeri\"></head><body><div id='video-data' data-video-sources=\"[{&quot;src&quot;:&quot;https://elonet.test/dash/116539/manifest.mpd&quot;}]\"></div></body></html>"},
+  {"url": "https://elonet.test/dash/116539/manifest.mpd", "headers": {"Content-Type": "application/dash+xml"}, "body_file": "manifest.mpd"},
+  {"url": "https://elonet.finna.fi/Record/kavi.elonet_elokuva_1", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<div id='video-data' data-video-sources=\"[{&quot;src&quot;:&quot;https://elonet.test/a.mp4&quot;}]\"></div>"},
+  {"url": "https://elonet.finna.fi/Record/kavi.elonet_elokuva_2", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html></html>"}
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://elonet.finna.fi/Record/kavi.elonet_elokuva_107867",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"107867\", \"title\": \"Valkoinen peura\", \"description\": \"Suomalainen elokuva & klassikko.\", \"thumbnail\": \"https://elonet.finna.fi/Cover/Show?id=kavi.elonet_elokuva_107867&size=large\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://elonet.test/hls/107867/low.m3u8\", \"manifest_url\": \"https://elonet.test/hls/107867/master.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}, {\"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://elonet.test/hls/107867/high.m3u8\", \"manifest_url\": \"https://elonet.test/hls/107867/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\"}], \"subtitles\": {}, \"webpage_url\": \"https://elonet.finna.fi/Record/kavi.elonet_elokuva_107867\", \"original_url\": \"https://elonet.finna.fi/Record/kavi.elonet_elokuva_107867\", \"webpage_url_basename\": \"kavi.elonet_elokuva_107867\", \"webpage_url_domain\": \"elonet.finna.fi\", \"extractor\": \"Elonet\", \"extractor_key\": \"Elonet\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://elonet.finna.fi/Cover/Show?id=kavi.elonet_elokuva_107867&size=large\", \"id\": \"0\"}], \"display_id\": \"107867\", \"fulltitle\": \"Valkoinen peura\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://elonet.test/hls/107867/high.m3u8\", \"manifest_url\": \"https://elonet.test/hls/107867/master.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\", \"_filename\": \"Valkoinen peura [107867].mp4\", \"filename\": \"Valkoinen peura [107867].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://elonet.finna.fi/Record/kavi.elonet_elokuva_107867",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Elonet] Extracting URL: https://elonet.finna.fi/Record/kavi.elonet_elokuva_107867",
+    "[Elonet] 107867: Downloading webpage",
+    "[Elonet] 107867: Downloading m3u8 information",
+    "[info] Available formats for 107867:",
+    "ID   EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "---------------------------------------------------------",
+    "800  mp4 640x360    |  800k m3u8  | avc1.42c01e mp4a.40.2",
+    "2400 mp4 1280x720   | 2400k m3u8  | avc1.4d401f mp4a.40.2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://elonet.finna.fi/Record/kavi.elonet_elokuva_116539",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"116539\", \"title\": \"Minulla on tiikeri\", \"description\": null, \"thumbnail\": null, \"formats\": [{\"format_id\": \"a1\", \"manifest_url\": \"https://elonet.test/dash/116539/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://elonet.test/dash/116539/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"a1 - audio only (DASH audio)\"}, {\"format_id\": \"v1\", \"manifest_url\": \"https://elonet.test/dash/116539/manifest.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://elonet.test/dash/116539/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"v1 - 1280x720 (DASH video)\"}], \"subtitles\": {}, \"webpage_url\": \"https://elonet.finna.fi/Record/kavi.elonet_elokuva_116539\", \"original_url\": \"https://elonet.finna.fi/Record/kavi.elonet_elokuva_116539\", \"webpage_url_basename\": \"kavi.elonet_elokuva_116539\", \"webpage_url_domain\": \"elonet.finna.fi\", \"extractor\": \"Elonet\", \"extractor_key\": \"Elonet\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"116539\", \"fulltitle\": \"Minulla on tiikeri\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_formats\": [{\"format_id\": \"v1\", \"manifest_url\": \"https://elonet.test/dash/116539/manifest.mpd\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 1000.0, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://elonet.test/dash/116539/video_720.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1000.0, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"v1 - 1280x720 (DASH video)\"}, {\"format_id\": \"a1\", \"manifest_url\": \"https://elonet.test/dash/116539/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 128.0, \"asr\": 48000, \"fps\": null, \"language\": \"en\", \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://elonet.test/dash/116539/audio_128.mp4\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128.0, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"a1 - audio only (DASH audio)\"}], \"format\": \"v1 - 1280x720 (DASH video)+a1 - audio only (DASH audio)\", \"format_id\": \"v1+a1\", \"ext\": \"mp4\", \"protocol\": \"https+https\", \"language\": \"en\", \"format_note\": \"DASH video+DASH audio\", \"filesize_approx\": null, \"tbr\": 1128.0, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": null, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.4d401f\", \"vbr\": 1000.0, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": \"mp4a.40.2\", \"abr\": 128.0, \"asr\": 48000, \"audio_channels\": null, \"_filename\": \"Minulla on tiikeri [116539].mp4\", \"filename\": \"Minulla on tiikeri [116539].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Elonet] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [Elonet] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://elonet.finna.fi/Record/kavi.elonet_elokuva_1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Elonet] 1: Unknown streaming format mp4; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://elonet.finna.fi/Record/kavi.elonet_elokuva_2",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Elonet] 2: Unable to extract json; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}
