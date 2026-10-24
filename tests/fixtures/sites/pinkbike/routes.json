@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "http://www.pinkbike.com/video/402811",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Brandon Semenuk - RAW 100 Video - Pinkbike\"><meta property=\"og:description\" content=\"Brandon Semenuk - RAW 100. Og desc\"><meta property=\"og:image\" content=\"https://ep1.pinkbike.test/p/402.jpg\"><meta property=\"video:duration\" content=\"100\"></head><body><video><source data-quality=\"480p\" type=\"video/mp4\" src=\"https://v.pinkbike.test/480.mp4\"><source data-quality='1080p' type='video/mp4' src='https://v.pinkbike.test/1080.mp4'><source data-quality=\"hd\" type=\"video/mp4\" src=\"https://v.pinkbike.test/hd.mp4\"></video><div id=\"media-description\" class=\"x\">Semenuk &amp; friends\n ride</div><a href=\"/u/semenuk\" rel=\"author nofollow\">Semenuk</a><span class=\"fullTime\" data-x=\"1\" title=\"Sep 9, 2011 10:20 AM\">Sep 9</span><dl><dt>Location</dt>\n <dd>Kamloops, BC <a>x</a></dd></dl><span class=\"stat-num\">1,234,567</span> <span class=\"stat-label\">Views</span><span class=\"stat-num\">12</span><span class=\"stat-label\">Comments</span></body></html>"
+  },
+  {
+   "url": "http://www.pinkbike.com/video/2",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Plain Title\"><meta property=\"og:description\" content=\"Plain Title. Rest of description\"></head><body><script>var html = \"<source data-quality=\\\"720p\\\" src=\\\"https://v.pinkbike.test/720.mp4\\\">\";</script></body></html>"
+  },
+  {
+   "url": "http://www.pinkbike.com/video/3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Only Title Video - Pinkbike\"></head><body></body></html>"
+  },
+  {
+   "url": "http://www.pinkbike.com/video/4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>nothing</body></html>"
+  },
+  {
+   "url": "https://v.pinkbike.test/1080.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body_file": "a.mp4"
+  }
+ ]
+}

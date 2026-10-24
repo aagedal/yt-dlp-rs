@@ -1353,6 +1353,18 @@
       "scope": "PhotobucketIE page MEDIA JSON and embed file= URL as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "pinkbike",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/pinkbike.py"
+      ],
+      "rust": [
+        "src/extractor/pinkbike.rs",
+        "tests/fixtures/sites/pinkbike/"
+      ],
+      "scope": "PinkbikeIE data-quality/src formats (plain and escaped quotes, heights), OpenGraph title/description/thumbnail, video:duration, uploader, upload date, location and view/comment counts with upstream warnings, NoneType/no-formats errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "pinterest",
       "status": "partial",
       "upstream": [

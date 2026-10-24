@@ -1576,6 +1576,17 @@ thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
 `mp4`). Non-string court descriptions remain explicit native errors.
 `tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
 
+Pinkbike videos (`pinkbike.com/video/ID` and the old
+`es.pinkbike.org/i/kvid/kvid-y5.swf?id=ID` player) follow upstream
+`PinkbikeIE`: the `http://www.pinkbike.com/video/ID` page's
+`data-quality`/`src` pairs (plain or JavaScript-escaped quotes, `NNNp`
+heights) as formats, the OpenGraph title without ` Video - Pinkbike`, the
+media description or OpenGraph description without the title prefix, the
+thumbnail, `video:duration`, author link, `fullTime` upload date, location and
+view/comment counters, with upstream's warnings, its `NoneType` error when
+both title and description are missing and `No video formats found!`.
+`tests/fixtures/sites/pinkbike/` is compared with pinned upstream output.
+
 NTS episodes (`nts.live/shows/SHOW/episodes/SLUG`) follow upstream
 `NTSLiveIE`: the page's `window._REACT_STATE_` episode, whose first valid
 `audio_sources` URL is followed as a `url_transparent` result (Mixcloud pages

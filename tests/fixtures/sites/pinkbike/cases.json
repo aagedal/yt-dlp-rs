@@ -1,0 +1,9 @@
+[
+ {"url": "http://www.pinkbike.com/video/402811/", "args": ["-j"]},
+ {"url": "https://www.pinkbike.com/video/402811", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(thumbnail)s|%(duration)s|%(upload_date)s|%(uploader)s|%(location)s|%(view_count)s|%(comment_count)s|%(format_id)s|%(height)s"]},
+ {"url": "https://www.pinkbike.com/video/402811", "args": ["-F"]},
+ {"url": "https://www.pinkbike.com/video/402811", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "http://es.pinkbike.org/i/kvid/kvid-y5.swf?id=2", "args": ["-j"]},
+ {"url": "https://www.pinkbike.com/video/3", "args": ["-j"]},
+ {"url": "https://www.pinkbike.com/video/4", "args": ["-j"]}
+]
