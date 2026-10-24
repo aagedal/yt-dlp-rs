@@ -1,0 +1,5 @@
+[
+ {"url": "https://stream.new/v/OCtRWZiZqKvLbnZ32WSEYiGNvHdAmB01j/embed", "args": ["-j"]},
+ {"url": "https://player.mux.com/JBuasdg35Hw7tYmTe9k68QLPQKixL300YsWHDz5Flit8?playback-token=old&playback-token=tok.en", "args": ["--print", "%(id)s|%(title)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s|%(subtitles)s"]},
+ {"url": "https://player.mux.com/gone-404", "args": ["-j"]}
+]

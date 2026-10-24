@@ -1712,6 +1712,13 @@ upload date and poster URL. Generic-page iframe embeds are not detected
 natively. `tests/fixtures/sites/cloudycdn/` is compared with pinned upstream
 output.
 
+Mux videos (`stream.new/v/ID` and `player.mux.com/ID`) follow upstream
+`MuxIE`: the fatal `https://stream.mux.com/ID.m3u8` playlist (the URL's last
+`playback-token` as `token`) with its formats and subtitles, titled by the
+ID. Generic-page iframe and `<mux-player>`/`<mux-video>` embeds (and their
+smuggled `metadata-video-title`) are not detected natively.
+`tests/fixtures/sites/mux/` is compared with pinned upstream output.
+
 Cloudflare Stream videos (`[watch.|iframe.|customer-X.]cloudflarestream.com|videodelivery.net|bytehighway.net/ID`
 and `embed/*.js?video=ID` scripts) follow upstream `CloudflareStreamIE`: a
 signed token's ID is its base64 payload's `sub`, and the

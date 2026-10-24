@@ -145,6 +145,18 @@
       "scope": "Streaming whole-file transfers, page referrers for HTML5 media, no-clobber publication, bounded download retries for HTTP 5xx statuses and transport/body failures (HttpFD), upstream download error reporting, in-invocation range resume guarded by strong ETags, known lengths and response validation; shared transient HTTP classification/backoff with extraction; bounded Retry-After delay-seconds/preferred HTTP-date shared with extraction; byte-progress observers and cooperative cancellation checkpoints including retry-wait polling; FILE.part resume across invocations; no Last-Modified validators or obsolete HTTP-date Retry-After formats"
     },
     {
+      "name": "mux",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/mux.py"
+      ],
+      "rust": [
+        "src/extractor/mux.rs",
+        "tests/fixtures/sites/mux/"
+      ],
+      "scope": "MuxIE stream.new/v and player.mux.com playback IDs as the fatal stream.mux.com HLS playlist (playback-token as token) with subtitles and the ID as title; generic-page iframe and mux-player embeds are not detected. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "netzkino",
       "status": "partial",
       "upstream": [
