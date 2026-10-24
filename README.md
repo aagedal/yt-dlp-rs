@@ -115,13 +115,13 @@ Supported today:
   Megaphone players (`player.megaphone.fm/ID`) through their page,
   ReverbNation songs through the song API, Hypem tracks through their page
   and served source, HistoricFilms tapes through their page, Livestreamfails
-  clips through the clip API, EbaumsWorld videos through the player XML,
+  clips through the clip API, EbaumsWorld and tv.dfb.de videos through the player XML,
   Glide messages through their share page, GodTube videos through their
   player XML, FC Zenit videos through the player API, BehindKink posts
   QingTing programs, OnePlace episodes, SzTV videos, Photobucket media and
   This American Life episodes through their pages, JW Platform media through
-  the media API (and The Intercept posts that embed it), 23video players
-  (and Filmweb articles that embed them), Vocaroo recordings, AudioBoom posts,
+  the media API (and The Intercept posts and Spiegel articles that embed it), 23video players
+  (and Filmweb articles that embed them), FILMARCHIV ON videos, Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Sen videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, Premiership Rugby videos, CJSW episodes,

@@ -1,0 +1,93 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://tv.dfb.de/video/u-19-em-stimmen-zum-spiel-gegen-russland/11633/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"11633\", \"display_id\": \"u-19-em-stimmen-zum-spiel-gegen-russland\", \"title\": \"U 19-EM: Stimmen zum Spiel gegen Russland\", \"thumbnail\": \"http://tv.dfb.de/images/11633_640x360.jpg\", \"upload_date\": \"20150714\", \"formats\": [{\"format_id\": \"hds-400\", \"url\": \"https://dfbstream.example.test/hds/11633/manifest.f4m?hdnea=exp=1~acl=*~hmac=ab&hdcore=3.2.0\", \"manifest_url\": \"https://dfbstream.example.test/hds/11633/manifest.f4m?hdnea=exp=1~acl=*~hmac=ab&hdcore=3.2.0\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 400, \"width\": 640, \"height\": 360, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-400 - 640x360\"}, {\"format_id\": \"hls-600\", \"format_index\": null, \"url\": \"https://dfbstream.example.test/hls/11633_360.m3u8\", \"manifest_url\": \"https://dfbstream.example.test/hls/11633/master.m3u8?hdnea=exp=2~hmac=cd\", \"tbr\": 600.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-600 - 640x360\"}, {\"format_id\": \"hls-1200\", \"format_index\": null, \"url\": \"https://dfbstream.example.test/hls/11633_540.m3u8\", \"manifest_url\": \"https://dfbstream.example.test/hls/11633/master.m3u8?hdnea=exp=2~hmac=cd\", \"tbr\": 1200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-1200 - 960x540\"}, {\"format_id\": \"hds-1500\", \"url\": \"https://dfbstream.example.test/hds/11633/manifest.f4m?hdnea=exp=1~acl=*~hmac=ab&hdcore=3.2.0\", \"manifest_url\": \"https://dfbstream.example.test/hds/11633/manifest.f4m?hdnea=exp=1~acl=*~hmac=ab&hdcore=3.2.0\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1500 - 1280x720\"}], \"webpage_url\": \"http://tv.dfb.de/video/u-19-em-stimmen-zum-spiel-gegen-russland/11633/\", \"original_url\": \"http://tv.dfb.de/video/u-19-em-stimmen-zum-spiel-gegen-russland/11633/\", \"webpage_url_basename\": \"11633\", \"webpage_url_domain\": \"tv.dfb.de\", \"extractor\": \"tv.dfb.de\", \"extractor_key\": \"DFB\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://tv.dfb.de/images/11633_640x360.jpg\", \"id\": \"0\"}], \"fulltitle\": \"U 19-EM: Stimmen zum Spiel gegen Russland\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hds-1500\", \"url\": \"https://dfbstream.example.test/hds/11633/manifest.f4m?hdnea=exp=1~acl=*~hmac=ab&hdcore=3.2.0\", \"manifest_url\": \"https://dfbstream.example.test/hds/11633/manifest.f4m?hdnea=exp=1~acl=*~hmac=ab&hdcore=3.2.0\", \"ext\": \"flv\", \"protocol\": \"f4m\", \"tbr\": 1500, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"preference\": null, \"quality\": null, \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hds-1500 - 1280x720\", \"_filename\": \"U 19-EM\\uff1a Stimmen zum Spiel gegen Russland [11633].flv\", \"filename\": \"U 19-EM\\uff1a Stimmen zum Spiel gegen Russland [11633].flv\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://tv.dfb.de/video/u-19-em-stimmen-zum-spiel-gegen-russland/11633/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[tv.dfb.de] Extracting URL: http://tv.dfb.de/video/u-19-em-stimmen-zum-spiel-gegen-russland/11633/",
+    "[tv.dfb.de] u-19-em-stimmen-zum-spiel-gegen-russland: Downloading XML",
+    "[tv.dfb.de] u-19-em-stimmen-zum-spiel-gegen-russland: Downloading XML",
+    "[tv.dfb.de] u-19-em-stimmen-zum-spiel-gegen-russland: Downloading f4m manifest",
+    "[tv.dfb.de] u-19-em-stimmen-zum-spiel-gegen-russland: Downloading XML",
+    "[tv.dfb.de] u-19-em-stimmen-zum-spiel-gegen-russland: Downloading m3u8 information",
+    "[info] Available formats for 11633:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "-------------------------------------------------------------",
+    "hds-400  flv 640x360    |  400k f4m   | unknown     unknown",
+    "hls-600  mp4 640x360    |  600k m3u8  | avc1.4d401e mp4a.40.2",
+    "hls-1200 mp4 960x540    | 1200k m3u8  | avc1.4d401f mp4a.40.2",
+    "hds-1500 flv 1280x720   | 1500k f4m   | unknown     unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://tv.dfb.de/video/u-19-em-stimmen-zum-spiel-gegen-russland/11633/",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(upload_date)s|%(thumbnail)s|%(extractor)s|%(extractor_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "11633|u-19-em-stimmen-zum-spiel-gegen-russland|U 19-EM: Stimmen zum Spiel gegen Russland|20150714|http://tv.dfb.de/images/11633_640x360.jpg|tv.dfb.de|DFB"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tv.dfb.de/video/leer/2",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [tv.dfb.de] leer: Unable to download f4m manifest: HTTP Error 404: Not Found",
+    "WARNING: [tv.dfb.de] leer: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [tv.dfb.de] 2: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://tv.dfb.de/video/ohne-auth/3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3: An extractor error has occurred. (caused by KeyError('auth')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://tv.dfb.de/video/ohne-datum/4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 'NoneType' object has no attribute 'text'"
+   ],
+   "files": {}
+  }
+ ]
+}

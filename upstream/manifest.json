@@ -437,6 +437,18 @@
       "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors; no playlists; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "dfb",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dfb.py"
+      ],
+      "rust": [
+        "src/extractor/dfb.rs",
+        "tests/fixtures/sites/dfb/"
+      ],
+      "scope": "DFBIE player XML, stream access token manifests (optional hds F4M with hdcore and hls m3u8 formats), title, unified_strdate upload date, thumbnail and wrapped AttributeError/KeyError messages compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "ebaumsworld",
       "status": "partial",
       "upstream": [
@@ -508,6 +520,18 @@
         "tests/fixtures/sites/fczenit/"
       ],
       "scope": "FczenitIE page MSI id and msi/video JSON (qualities as formats, tags, duration, date) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "filmarchiv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/filmarchiv.py"
+      ],
+      "rust": [
+        "src/extractor/filmarchiv.rs",
+        "tests/fixtures/sites/filmarchiv/"
+      ],
+      "scope": "FilmArchivIE CDN playlist from the media ID as fatal HLS formats and subtitles (no forced ext), title-div title, regex find_elements border-base-content/prose description and poster thumbnail compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "filmweb",
@@ -1089,6 +1113,18 @@
         "tests/fixtures/sites/soundcloud/"
       ],
       "scope": "SoundcloudIE client ID discovery, resolved track JSON, default transcoding formats, artwork thumbnails and metadata, DRM/geo errors; no original downloads, login, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "spiegel",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/spiegel.py"
+      ],
+      "rust": [
+        "src/extractor/spiegel.rs",
+        "tests/fixtures/sites/spiegel/"
+      ],
+      "scope": "SpiegelIE _VALID_URL and the page mediaId as a url_transparent jwplatform: result with display_id and og:title compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "streamable",

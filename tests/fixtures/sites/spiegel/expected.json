@@ -1,0 +1,76 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"II0BUyxY\", \"title\": \"Vulkan Tungurahua in Ecuador ist wieder aktiv - DER SPIEGEL - Wissenschaft\", \"description\": \"JW description\", \"thumbnail\": \"https://cdn.jwplayer.com/v2/media/II0BUyxY/poster.jpg\", \"timestamp\": 1362997920, \"duration\": 48.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/II0BUyxY-1.mp4\", \"width\": 640, \"height\": 360, \"tbr\": 600, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"360p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 3600000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\"}], \"original_url\": \"https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html\", \"webpage_url\": \"https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html\", \"webpage_url_basename\": \"vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html\", \"webpage_url_domain\": \"spiegel.de\", \"extractor\": \"JWPlatform\", \"extractor_key\": \"JWPlatform\", \"display_id\": \"1259285\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.jwplayer.com/v2/media/II0BUyxY/poster.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Vulkan Tungurahua in Ecuador ist wieder aktiv - DER SPIEGEL - Wissenschaft\", \"duration_string\": \"48\", \"upload_date\": \"20130311\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.jwplayer.com/videos/II0BUyxY-1.mp4\", \"width\": 640, \"height\": 360, \"tbr\": 600, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"360p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 3600000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\", \"_filename\": \"Vulkan Tungurahua in Ecuador ist wieder aktiv - DER SPIEGEL - Wissenschaft [II0BUyxY].mp4\", \"filename\": \"Vulkan Tungurahua in Ecuador ist wieder aktiv - DER SPIEGEL - Wissenschaft [II0BUyxY].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(description)s|%(timestamp)s|%(extractor)s|%(webpage_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "II0BUyxY|1259285|Vulkan Tungurahua in Ecuador ist wieder aktiv - DER SPIEGEL - Wissenschaft|JW description|1362997920|JWPlatform|https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Spiegel] Extracting URL: https://www.spiegel.de/video/vulkan-tungurahua-in-ecuador-ist-wieder-aktiv-video-1259285.html",
+    "[Spiegel] 1259285: Downloading webpage",
+    "[JWPlatform] Extracting URL: jwplatform:II0BUyxY",
+    "[JWPlatform] II0BUyxY: Downloading JSON metadata",
+    "[info] II0BUyxY: Downloading 1 format(s): 360p",
+    "[download] Destination: II0BUyxY.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "II0BUyxY.mp4": 792
+   }
+  },
+  {
+   "url": "https://www.spiegel.de/panorama/urteile-im-goldmuenzenprozess-a-aae8df48-43c1-4c61-867d-23f0a2d254b7",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"II0BUyxY\", \"title\": \"JW title\", \"description\": \"JW description\", \"thumbnail\": \"https://cdn.jwplayer.com/v2/media/II0BUyxY/poster.jpg\", \"timestamp\": 1362997920, \"duration\": 48.0, \"subtitles\": {}, \"alt_title\": null, \"genre\": null, \"channel\": null, \"season_number\": null, \"episode_number\": null, \"release_year\": null, \"age_limit\": null, \"formats\": [{\"url\": \"https://cdn.jwplayer.com/videos/II0BUyxY-1.mp4\", \"width\": 640, \"height\": 360, \"tbr\": 600, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"360p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 3600000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\"}], \"original_url\": \"https://www.spiegel.de/panorama/urteile-im-goldmuenzenprozess-a-aae8df48-43c1-4c61-867d-23f0a2d254b7\", \"webpage_url\": \"https://www.spiegel.de/panorama/urteile-im-goldmuenzenprozess-a-aae8df48-43c1-4c61-867d-23f0a2d254b7\", \"webpage_url_basename\": \"urteile-im-goldmuenzenprozess-a-aae8df48-43c1-4c61-867d-23f0a2d254b7\", \"webpage_url_domain\": \"spiegel.de\", \"extractor\": \"JWPlatform\", \"extractor_key\": \"JWPlatform\", \"display_id\": \"aae8df48-43c1-4c61-867d-23f0a2d254b7\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.jwplayer.com/v2/media/II0BUyxY/poster.jpg\", \"id\": \"0\"}], \"fulltitle\": \"JW title\", \"duration_string\": \"48\", \"upload_date\": \"20130311\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.jwplayer.com/videos/II0BUyxY-1.mp4\", \"width\": 640, \"height\": 360, \"tbr\": 600, \"filesize\": null, \"ext\": \"mp4\", \"format_id\": \"360p\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 3600000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 640x360\", \"_filename\": \"JW title [II0BUyxY].mp4\", \"filename\": \"JW title [II0BUyxY].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.manager-magazin.de/video/missing-video-42.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Spiegel] 42: Unable to extract media id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

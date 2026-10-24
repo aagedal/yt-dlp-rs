@@ -486,6 +486,12 @@ JW Platform extractor) overlaid with the post's display ID, raw title,
 excerpt, ISO 8601 date and comment count; no matching post is upstream's
 `Unable to find the current post`.
 
+Spiegel and manager magazin articles and videos (`spiegel.de/.../SLUG-ID[.html]`)
+follow upstream `SpiegelIE`: the page's `mediaId` (plain or `&#34;`-quoted;
+else upstream's `Unable to extract media id`) as a `url_transparent` result of
+`jwplatform:MEDIA` overlaid with the URL ID as `display_id` and the
+`og:title` when present.
+
 This American Life episodes (`thisamericanlife.org/radio-archives/episode/ID`,
 `play_full.php?play=ID`) follow upstream `ThisAmericanLifeIE`: the episode
 page's fatal `twitter:title`, description meta and OpenGraph image, with the
@@ -675,6 +681,16 @@ result, empty elements as `None` (a generic title for an empty title) and a
 missing element as upstream's bare `AttributeError` text. XML parse errors
 carry this port's parser message rather than expat's.
 
+tv.dfb.de videos (`tv.dfb.de/video/SLUG/ID`) follow upstream `DFBIE`: the
+`hd_video.php` player XML's video entry, its stream access URL (protocol-relative
+as `https:`) and that URL's `&area=&format=iphone` variant, each token's
+`url?hdnea=auth` manifest as optional `hds` F4M formats (with `&hdcore=3.2.0`;
+`Unable to download f4m manifest` warnings) or optional `mp4` `hls` m3u8 formats,
+the title (else a generic one), `unified_strdate` upload date and the
+`images/ID_640x360.jpg` thumbnail. A token without `url`/`auth` is upstream's
+wrapped `KeyError`, a missing element its bare `AttributeError` text. F4M
+manifests with nested manifests or non-F4M documents are explicit native errors.
+
 eBay items (`ebay.com/itm/ID`) follow upstream `EbayIE`: the page's fatal
 `"video":` JSON `playlistMap`, its `HLS` (without an `ext`) and `DASH`
 manifests as non-fatal formats (subtitles ignored with upstream's warnings),
@@ -746,6 +762,14 @@ downloads as formats and the named images as `{id, url, width, height,
 filesize}` thumbnails. Filmweb articles (`filmweb.no/trailere|filmnytt/articleID.ece`,
 `filmnytt` pages through their `data-videoid`) follow upstream `FilmwebIE`:
 the trailer embed JSON's iframe as a `url_transparent` 23video result.
+
+FILMARCHIV ON videos (`filmarchiv.at/de/filmarchiv-on/video/f_ID`) follow
+upstream `FilmArchivIE`: the CDN `PREFIX/REST_v1_sv1/playlist.m3u8` derived
+from the media ID as fatal HLS formats and subtitles (no forced extension),
+the cleaned `<title-div>` content (else a generic title), the first cleaned
+`div.prose` inside a `div` whose class matches `.*\bborder-base-content\b`
+(regex `find_elements`; a parse error is no match, like `try_call`) and the
+CDN `poster.jpg` thumbnail.
 
 TikTok videos (`www.tiktok[v].com/@USER/video/ID`, `/embed/ID`,
 `/share/video/ID`) follow upstream `TikTokIE`'s webpage path (no app API
