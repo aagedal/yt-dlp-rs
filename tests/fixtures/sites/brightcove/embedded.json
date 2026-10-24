@@ -1,0 +1,16 @@
+{
+ "id": "6300000000005",
+ "account_id": "1111111111001",
+ "name": "Embedded",
+ "duration": 5000,
+ "sources": [
+  {
+   "container": "MP4",
+   "type": "video/mp4",
+   "src": "https://cdn.example.com/embedded.mp4",
+   "avg_bitrate": 500000,
+   "width": 640,
+   "height": 360
+  }
+ ]
+}

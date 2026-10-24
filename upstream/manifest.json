@@ -353,6 +353,18 @@
       "scope": "BreitBartIE JW Player manifest as fatal HLS formats, generic title, OpenGraph warnings and RTA age limit compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "brightcove",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/brightcove.py"
+      ],
+      "rust": [
+        "src/extractor/brightcove.rs",
+        "tests/fixtures/sites/brightcove/"
+      ],
+      "scope": "BrightcoveNewIE players.brightcove.net video URLs: policy key from config.json (non-fatal) else index.min.js catalog/policyKey, Playback API with Accept pk header and smuggled referrer/token, _parse_brightcove_metadata (non-fatal HLS/DASH with subtitles, progressive and streaming HTTP sources, DRM flags, captions, thumbnails, metadata), 401/403 API errors (geo and messages) and raise_no_formats errors; _extract_brightcove_urls iframe and <video>+player-script embeds on generic pages (smuggled referrer) compared with pinned upstream output through the fixture proxy; playlists, TVE (Adobe Pass) videos, RTMP sources, <video>-only embeds needing _is_valid_url and BrightcoveLegacyIE are unsupported"
+    },
+    {
       "name": "bundesliga",
       "status": "partial",
       "upstream": [

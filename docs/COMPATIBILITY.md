@@ -667,6 +667,26 @@ upstream's warning), the page's generic title (else the generic video title),
 OpenGraph description and thumbnail (with upstream's warnings) and RTA age
 limit.
 
+Brightcove players (`players.brightcove.net/ACCOUNT/PLAYER_EMBED/index.html?videoId=ID`)
+follow upstream `BrightcoveNewIE`: the player's `config.json` policy key
+(non-fatal, with upstream's warning), else `index.min.js`'s `catalog({...})`
+or `policyKey: "..."` (else upstream's error), then the Playback API with the
+`Accept: application/json;pk=KEY` header (plus the smuggled `referrer` as
+Referer/Origin, or a smuggled `token`). 401/403 API answers report the API's
+message (geo restrictions included) and a source-less video its first error
+like upstream. `_parse_brightcove_metadata` gives non-fatal `hls`/`dash`
+manifest formats and subtitles, progressive and streaming HTTP sources with
+upstream's format IDs, DRM flags, the request headers on every format,
+captions text tracks, the nine resized poster thumbnails and the
+name/description/tags/published_at/account_id metadata. Generic pages with
+player iframes or `<video data-video-id>` tags followed by a player script
+are followed (one) or listed (several) with the page smuggled as the
+`referrer`. Playlists, TV Everywhere (Adobe Pass) videos, RTMP sources,
+`<video>` tags without a player script (upstream probes them with
+`_is_valid_url`) and `BrightcoveLegacyIE` URLs are not supported; the policy
+key is not cached between runs. `tests/fixtures/sites/brightcove/` is compared
+with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
