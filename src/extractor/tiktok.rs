@@ -335,12 +335,6 @@ fn truthy(value: Option<&Value>) -> bool {
     }
 }
 
-fn impersonation_warning(name: &str) {
-    crate::screen::warning_once(&format!(
-        "[{name}] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
-    ));
-}
-
 /// A page request: `what` is the error note's object (`Unable to download
 /// WHAT`); a non-fatal request without one fails silently (`errnote=False`).
 struct PageRequest<'a> {
@@ -359,6 +353,16 @@ fn download_page(
     url: &Url,
     request: PageRequest<'_>,
 ) -> Result<Option<(String, Url)>> {
+    Ok(download_page_target(client, url, request)?.map(|(page, url, _)| (page, url)))
+}
+
+/// [`download_page`] with the response's impersonate target
+/// (`urlh.extensions.get("impersonate")`).
+fn download_page_target(
+    client: &Client,
+    url: &Url,
+    request: PageRequest<'_>,
+) -> Result<Option<(String, Url, Option<String>)>> {
     use std::io::Read;
     let PageRequest {
         name,
@@ -368,9 +372,11 @@ fn download_page(
         fatal,
         impersonate,
     } = request;
-    if impersonate {
-        impersonation_warning(name);
-    }
+    let scope = impersonate.then(|| {
+        crate::impersonate::attempt(crate::impersonate::ANY, |message| {
+            crate::screen::warning_once(&format!("[{name}] {message}"));
+        })
+    });
     crate::screen::screen(&format!("[{name}] {id}: {note}"));
     let mut response = match super::direct::request(client, url, None) {
         Ok(response) => response,
@@ -398,9 +404,11 @@ fn download_page(
     response
         .read_to_end(&mut body)
         .map_err(Error::ExtractionRead)?;
+    let target = scope.and_then(|scope| scope.target().map(ToString::to_string));
     Ok(Some((
         String::from_utf8_lossy(&body).into_owned(),
         page_url,
+        target,
     )))
 }
 
@@ -421,11 +429,14 @@ fn webpage(
         fatal,
         impersonate: true,
     };
-    let Some((page, page_url)) = download_page(client, url, request)? else {
+    let Some((page, page_url, target)) = download_page_target(client, url, request)? else {
         return Ok(None);
     };
     crate::screen::debug(&format!("Webpage size: {} bytes", page.len()));
-    crate::screen::debug("Impersonation target: None");
+    crate::screen::debug(&format!(
+        "Impersonation target: {}",
+        target.as_deref().unwrap_or("None")
+    ));
     if page_url.path() == "/login" {
         let message = "TikTok is requiring login for access to this content";
         if fatal {

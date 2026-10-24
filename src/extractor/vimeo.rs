@@ -91,12 +91,6 @@ fn fail(id: &str, message: &str) -> Error {
     Error::Reported(format!("[{NAME}] {id}: {message}"))
 }
 
-fn impersonation_warning() {
-    crate::screen::warning_once(&format!(
-        "[{NAME}] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
-    ));
-}
-
 /// `_parse_config(config, video_id)`: the info dict and its formats.
 fn parse_config(
     client: &Client,
@@ -525,9 +519,12 @@ impl Extractor for Vimeo {
         {
             page = Url::parse(&format!("https://vimeo.com/{video_id}"))?;
         }
-        if page.scheme() == "https" {
-            impersonation_warning();
-        }
+        // `impersonate=is_secure`.
+        let impersonate = (page.scheme() == "https").then(|| {
+            crate::impersonate::attempt(crate::impersonate::ANY, |message| {
+                crate::screen::warning_once(&format!("[{NAME}] {message}"));
+            })
+        });
         let referer = url.as_str().to_owned();
         crate::screen::screen(&format!("[{NAME}] {video_id}: Downloading webpage"));
         let response =
@@ -548,6 +545,7 @@ impl Extractor for Vimeo {
             response
                 .read_to_end(&mut body)
                 .map_err(Error::ExtractionRead)?;
+            drop(impersonate);
             String::from_utf8_lossy(&body).into_owned()
         };
         if page.host_str() == Some("player.vimeo.com") {

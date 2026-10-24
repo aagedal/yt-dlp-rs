@@ -29,6 +29,7 @@ mod hls;
 mod html;
 mod html_elements;
 mod http;
+pub mod impersonate;
 mod info;
 mod info_json;
 mod info_order;
@@ -711,7 +712,7 @@ impl YoutubeDl {
         let headers = http.header_map()?;
         let proxy_url = http.proxy.clone();
         let proxy = http.transport_config()?;
-        let cookies = http.cookies.unwrap_or_default();
+        let cookies = http.cookies.clone().unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
         extractor::GET_COMMENTS.store(youtube.get_comments, std::sync::atomic::Ordering::Relaxed);
@@ -739,6 +740,7 @@ impl YoutubeDl {
             traffic::enable();
         }
         let client = proxy.apply(builder)?.build()?;
+        impersonate::configure(&http, &cookies)?;
         let youtube_runtime = youtube.js_runtime.clone();
         Ok(Self {
             client,
