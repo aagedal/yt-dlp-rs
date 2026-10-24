@@ -871,6 +871,28 @@ Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 with its description, poster, duration and account; an empty item list is
 upstream's bare `IndexError`.
 
+Project Veritas pages (`projectveritas.com/news|video/SLUG`) follow upstream
+`ProjectVeritasIE` (marked broken): the `page-data/TYPE/SLUG/page-data.json`
+`video` (else `post`) object, its `muxAsset` (else the first one in the
+rich-text body; neither is the expected `No video on the provided url.`) and
+`stream.mux.com/PLAYBACK.m3u8` as fatal HLS formats without a forced
+extension, with the title, `unified_strdate` date and the OpenGraph image
+with every `//` removed, like upstream. Posts without an image (an upstream
+`AttributeError`) or a playback ID remain explicit native errors.
+
+tele-TASK lectures (`tele-task.de/archive/video/html5/ID`) follow upstream
+`TeleTaskIE` (marked broken, so the broken-site warning comes first): the
+page's `<video class="KIND"><source src>` pairs as a playlist of untyped
+`ID-KIND` entries with the fatal `itemprop="name"` title and the optional
+`Date:` cell as `upload_date` (warning when absent).
+
+Universal Music Deutschland videos (`universal-music.de/ARTIST/videos/SLUG-ID`)
+follow upstream `UMGDeIE`: the page's fatal JSON-LD (title, thumbnails,
+duration, timestamp, view count) overridden by the `umg-artist-screenname`
+meta as `artists` (an empty list, with a warning, when absent), the cleaned
+`_3Y0Lj` element as description (else `null`), the slug as `display_id` and
+fatal `hls.universal-music.de/get?id=ID` HLS formats.
+
 Twitch VODs (`twitch.tv/videos/ID`, `/CHANNEL/v/ID`, player and schedule
 URLs) follow upstream `TwitchVodIE`: the persisted GraphQL metadata,
 chapter-moment and storyboard operations, the video playback access token,
@@ -1292,6 +1314,11 @@ XOR-encrypted progressive (5 MiB chunks), HLS and DASH stream URLs, the
 restriction and exclusive-content errors, comments and metadata. User
 uploads, playlists and favorites are not supported.
 `tests/fixtures/sites/mixcloud/` is compared with pinned upstream output.
+
+MyVidster videos (`myvidster.com/video/ID`) follow upstream `MyVidsterIE`:
+the page's fatal `rel="videolink"` URL is followed through the registry as a
+`url_result`. A link that is not an absolute URL remains an explicit native
+error.
 
 Moving Image Archive films (`movingimage.nls.uk/film/ID`) follow upstream
 `MovingImageIE`: the player's fatal `file` manifest as HLS formats (subtitles

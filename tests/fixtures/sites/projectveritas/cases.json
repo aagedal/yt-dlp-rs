@@ -1,0 +1,26 @@
+[
+ {
+  "url": "https://www.projectveritas.com/news/exclusive-hospitals/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.projectveritas.com/video/ballot-harvester/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.projectveritas.com/news/text-only",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.projectveritas.com/video/gone",
+  "args": [
+   "-j"
+  ]
+ }
+]

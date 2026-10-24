@@ -1,0 +1,43 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.universal-music.de/sido/videos/jedes-wort-ist-gold-wert-457803",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Jedes Wort ist Gold wert\", \"description\": \"Das neue Video & mehr.\\nZweite Zeile\", \"thumbnails\": [{\"url\": \"https://images.universal-music.de/img/assets/457803/sido.jpg\", \"id\": \"0\"}], \"duration\": 210, \"timestamp\": 1513591800, \"view_count\": 1234, \"id\": \"457803\", \"artists\": [\"Sido\"], \"display_id\": \"jedes-wort-ist-gold-wert-457803\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://hls.universal-music.de/low.m3u8\", \"manifest_url\": \"https://hls.universal-music.de/get?id=457803\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}, {\"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://hls.universal-music.de/high.m3u8\", \"manifest_url\": \"https://hls.universal-music.de/get?id=457803\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\"}], \"webpage_url\": \"https://www.universal-music.de/sido/videos/jedes-wort-ist-gold-wert-457803\", \"original_url\": \"https://www.universal-music.de/sido/videos/jedes-wort-ist-gold-wert-457803\", \"webpage_url_basename\": \"jedes-wort-ist-gold-wert-457803\", \"webpage_url_domain\": \"universal-music.de\", \"extractor\": \"umg:de\", \"extractor_key\": \"UMGDe\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://images.universal-music.de/img/assets/457803/sido.jpg\", \"fulltitle\": \"Jedes Wort ist Gold wert\", \"duration_string\": \"3:30\", \"upload_date\": \"20171218\", \"release_year\": null, \"artist\": \"Sido\", \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://hls.universal-music.de/high.m3u8\", \"manifest_url\": \"https://hls.universal-music.de/get?id=457803\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\", \"_filename\": \"Jedes Wort ist Gold wert [457803].mp4\", \"filename\": \"Jedes Wort ist Gold wert [457803].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.universal-music.de/alexander-eder/videos/der-doktor-hat-gesagt-609533",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Der Doktor hat gesagt\", \"thumbnails\": [], \"duration\": 146, \"timestamp\": 1742982100, \"id\": \"609533\", \"artists\": [], \"description\": null, \"display_id\": \"der-doktor-hat-gesagt-609533\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://hls.universal-music.de/get?id=609533\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://www.universal-music.de/alexander-eder/videos/der-doktor-hat-gesagt-609533\", \"original_url\": \"https://www.universal-music.de/alexander-eder/videos/der-doktor-hat-gesagt-609533\", \"webpage_url_basename\": \"der-doktor-hat-gesagt-609533\", \"webpage_url_domain\": \"universal-music.de\", \"extractor\": \"umg:de\", \"extractor_key\": \"UMGDe\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Der Doktor hat gesagt\", \"duration_string\": \"2:26\", \"upload_date\": \"20250326\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://hls.universal-music.de/get?id=609533\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"Der Doktor hat gesagt [609533].mp4\", \"filename\": \"Der Doktor hat gesagt [609533].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [umg:de] unable to extract umg-artist-screenname; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.universal-music.de/sido/videos/kein-video-1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [umg:de] 1: Unable to extract JSON-LD; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

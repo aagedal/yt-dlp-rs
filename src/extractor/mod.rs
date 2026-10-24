@@ -68,6 +68,7 @@ mod masters;
 mod megaphone;
 mod mixcloud;
 mod movingimage;
+mod myvidster;
 mod niconico;
 mod nobelprize;
 mod odnoklassniki;
@@ -81,6 +82,7 @@ mod pinterest;
 mod playerfm;
 mod popcorntv;
 mod premiershiprugby;
+mod projectveritas;
 mod qingting;
 mod radiozet;
 mod reddit;
@@ -99,6 +101,7 @@ mod streamable;
 mod sztvhu;
 mod ted;
 mod telegram;
+mod teletask;
 mod theintercept;
 mod thisamericanlife;
 mod tiktok;
@@ -107,6 +110,7 @@ mod tweakers;
 mod twentythreevideo;
 mod twitch;
 mod twitter;
+mod umg;
 mod vimeo;
 mod vk;
 mod vkplay;
@@ -202,6 +206,7 @@ pub use masters::{Masters, suitable as masters_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
+pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use niconico::{Niconico, suitable as niconico_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
@@ -215,6 +220,7 @@ pub use pinterest::{Pinterest, suitable as pinterest_suitable};
 pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
 pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
 pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitable};
+pub use projectveritas::{ProjectVeritas, suitable as projectveritas_suitable};
 pub use qingting::{QingTing, suitable as qingting_suitable};
 pub use radiozet::{RadioZetPodcast, suitable as radiozet_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
@@ -239,6 +245,7 @@ pub use ted::{
     talk_suitable as ted_talk_suitable,
 };
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
+pub use teletask::{TeleTask, suitable as teletask_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use tiktok::{
@@ -270,6 +277,7 @@ pub use twitter::{
     card_suitable as twitter_card_suitable, shortener_suitable as twitter_shortener_suitable,
     spaces_suitable as twitter_spaces_suitable, suitable as twitter_suitable,
 };
+pub use umg::{UmgDe, suitable as umg_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,

@@ -921,6 +921,18 @@
       "scope": "MovingImageIE player HLS formats and labelled field regexes (fatal title, warnings) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "myvidster",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/myvidster.py"
+      ],
+      "rust": [
+        "src/extractor/myvidster.rs",
+        "tests/fixtures/sites/myvidster/"
+      ],
+      "scope": "MyVidsterIE rel=videolink URL as a followed url_result and the fatal missing-link message compared with pinned upstream output through the fixture proxy; non-absolute links remain explicit native errors"
+    },
+    {
       "name": "niconico",
       "status": "partial",
       "upstream": [
@@ -1063,6 +1075,18 @@
         "tests/fixtures/sites/premiershiprugby/"
       ],
       "scope": "PremiershipRugbyIE article CMS hero media (fatal ext-less HLS formats and subtitles, ID/title/thumbnail/duration/tags/categories, KeyError messages) compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "projectveritas",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/projectveritas.py"
+      ],
+      "rust": [
+        "src/extractor/projectveritas.rs",
+        "tests/fixtures/sites/projectveritas/"
+      ],
+      "scope": "ProjectVeritasIE (marked broken) page-data.json video/post, Mux asset (direct or rich-text body) fatal HLS formats without a forced ext, title, unified_strdate date and slash-stripped OpenGraph image, with the no-video and KeyError messages, compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "qingting",
@@ -1268,6 +1292,18 @@
       "scope": "TelegramEmbedIE (as of 2026.10.21) embed frame (embed=1, single dropped), video players as mp4 formats with ?single=True webpage URLs, duration/thumbnail/timestamp with non-fatal warnings, cleaned message text, author and channel; multi-video posts as playlists unless ?single or --no-playlist; posts without their own video (upstream's 'returned nothing' warning) are an unsupported error; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "teletask",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/teletask.py"
+      ],
+      "rust": [
+        "src/extractor/teletask.rs",
+        "tests/fixtures/sites/teletask/"
+      ],
+      "scope": "TeleTaskIE (marked broken) video class/source pairs as a playlist of untyped entries with the fatal title and optional date, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "theintercept",
       "status": "partial",
       "upstream": [
@@ -1365,6 +1401,18 @@
         "tests/fixtures/sites/twitter/"
       ],
       "scope": "TwitterIE GraphQL (guest token or auth cookies), legacy and syndication APIs selected with the api extractor argument, the HTTP 429 syndication fallback, _graphql_to_legacy errors, HLS/MP4 variants, thumbnails, metadata, multi-video playlists, /video/N with --no-playlist, unified/VMAP cards and followed player/summary/broadcast/audiospace/periscope cards and links; TwitterCardIE redirects; TwitterShortenerIE (t.co, tco:); TwitterAmplifyIE; TwitterBroadcastIE broadcasts and live events; TwitterSpacesIE; PeriscopeBaseIE/PeriscopeIE HLS broadcasts (no RTMP, PeriscopeUserIE or embeds); compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "umg",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/umg.py"
+      ],
+      "rust": [
+        "src/extractor/umg.rs",
+        "tests/fixtures/sites/umg/"
+      ],
+      "scope": "UMGDeIE fatal JSON-LD spread, umg-artist-screenname artists (warning when absent), _3Y0Lj description element and fatal hls.universal-music.de HLS formats compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "vimeo",

@@ -122,14 +122,14 @@ Supported today:
   This American Life episodes through their pages, JW Platform media through
   the media API (and The Intercept posts, Spiegel articles, OneFootball videos, Bundesliga videos and Iltalehti articles that embed it), Israel National News articles (as playlists of their YouTube embeds), 23video players
   (and Filmweb articles that embed them), FILMARCHIV ON videos, Vocaroo recordings, AudioBoom posts,
-  Tweakers videos, Angel episodes, Blogger videos (and their embeds), Nobel
+  Tweakers videos, Project Veritas videos, tele-TASK lectures, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Sen videos, Kankanews videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, Premiership Rugby videos, CJSW episodes,
   Player.fm episodes, RTRFM shows, HitRecord records, href.li redirects, Culture Unplugged films,
   Zhihu videos, CRTVG programmes, Breitbart videos, CGTN news videos, JoVE
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
-  ScreenRec shares, Ku6 shows, Fuyin TV videos, Moving Image Archive films,
+  ScreenRec shares, Ku6 shows, Fuyin TV videos, Moving Image Archive films, MyVidster links,
   Fathom shares, Maariv players (and their embeds), Harpodeon films,
   Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
   posts (hosted videos, text-post videos and followed links), X/Twitter posts

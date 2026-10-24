@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://www.projectveritas.com/page-data/news/exclusive-hospitals/page-data.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"result\": {\"data\": {\"post\": {\"id\": \"51910aab-365a-5cf1-88f2-8eb1ca5fd3c6\", \"title\": \"Exclusive: Inside The Hospitals\", \"date\": \"March 27, 2020\", \"image\": {\"ogImage\": {\"src\": \"//images.ctfassets.net/abc/hospital.jpg\"}}, \"body\": {\"json\": {\"content\": [{\"data\": {}}, {\"data\": {\"target\": {\"fields\": {\"muxAsset\": {\"en-US\": {\"playbackId\": \"PbNews01\"}}}}}}]}}}}}}"
+  },
+  {
+   "url": "https://stream.mux.com/PbNews01.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://www.projectveritas.com/page-data/video/ballot-harvester/page-data.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"result\": {\"data\": {\"video\": {\"id\": \"c5aab304-a56b-54b1-9f0b-03b77bc5f2f6\", \"title\": \"Ballot Harvester\", \"date\": \"2020-09-27T12:00:00.000Z\", \"image\": {\"ogImage\": {\"src\": \"//images.ctfassets.net/abc/ballot.jpg\"}}, \"muxAsset\": {\"playbackId\": \"PbVideo02\"}}}}}"
+  },
+  {
+   "url": "https://stream.mux.com/PbVideo02.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://stream.mux.com/low.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://stream.mux.com/high.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://www.projectveritas.com/page-data/news/text-only/page-data.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"result\": {\"data\": {\"post\": {\"id\": \"x1\", \"title\": \"Text only\", \"image\": {\"ogImage\": {\"src\": \"//i/x.jpg\"}}, \"body\": {\"json\": {\"content\": []}}}}}}"
+  },
+  {
+   "url": "https://www.projectveritas.com/page-data/video/gone/page-data.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": \"gone\"}"
+  }
+ ]
+}

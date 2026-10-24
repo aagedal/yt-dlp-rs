@@ -1081,7 +1081,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             | "generic-found-hls-entry"
             | "generic-found-dash-entry"
             | "xspf-entry"
-    ) || (shape.starts_with("dict;")
+    ) || ((shape.starts_with("dict;") || shape.starts_with("untyped-dict;"))
         // A resolved `url` entry gets the playlist's keys after its
         // extraction's URL fields instead.
         && !transparent_entry
