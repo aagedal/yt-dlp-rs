@@ -1,0 +1,18 @@
+{
+ "svtId": "ch-svt1",
+ "programTitle": "SVT1",
+ "live": false,
+ "simulcast": true,
+ "contentDuration": 0,
+ "blockedForChildren": null,
+ "rights": {
+  "geoBlockedSweden": true
+ },
+ "videoReferences": [
+  {
+   "format": "hls",
+   "url": "https://svt-live.akamaized.net/svt1/live.m3u8"
+  }
+ ],
+ "subtitleReferences": null
+}

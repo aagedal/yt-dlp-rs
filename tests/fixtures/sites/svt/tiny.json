@@ -1,0 +1,25 @@
+{
+ "data": {
+  "listablesBySlug": [
+   {
+    "associatedContent": [
+     {
+      "items": [
+       {
+        "item": {
+         "videoSvtId": "ePBvGRq"
+        }
+       }
+      ],
+      "id": "season-1-tiny",
+      "name": null
+     }
+    ],
+    "id": "tiny1",
+    "longDescription": "",
+    "name": "",
+    "shortDescription": "Kort"
+   }
+  ]
+ }
+}

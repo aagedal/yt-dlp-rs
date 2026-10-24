@@ -1,0 +1,21 @@
+{
+ "svtId": "geoOnly",
+ "programTitle": "Trollflöjten",
+ "episodeTitle": "",
+ "contentDuration": 9000,
+ "live": false,
+ "rights": {
+  "validFrom": "1975-01-01T00:00:00+01:00",
+  "geoBlockedSweden": true
+ },
+ "videoReferences": [
+  {
+   "format": "hls",
+   "url": "https://svt-vod-3p.akamaized.net/geo/hls.m3u8"
+  },
+  {
+   "format": "dash",
+   "url": "https://svt-vod-3p.akamaized.net/geo/dash.mpd"
+  }
+ ]
+}

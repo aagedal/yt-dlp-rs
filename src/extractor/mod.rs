@@ -171,6 +171,7 @@ mod soundgasm;
 mod spiegel;
 mod streamable;
 mod streetvoice;
+mod svt;
 mod sztvhu;
 mod ted;
 mod telegraaf;
@@ -422,6 +423,10 @@ pub use soundgasm::{
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
+pub use svt::{
+    SvtPage, SvtPlay, SvtSeries, page_suitable as svt_page_suitable,
+    series_suitable as svt_series_suitable, suitable as svt_suitable,
+};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
 pub use ted::{
     TedEmbed, TedPlaylist, TedSeries, TedTalk, embed_suitable as ted_embed_suitable,
@@ -1441,6 +1446,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("svt:") && svt::suitable(url))
         || (url.starts_with("iheartradio:") && iheart::suitable(url))
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))

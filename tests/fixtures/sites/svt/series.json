@@ -1,0 +1,88 @@
+{
+ "data": {
+  "listablesBySlug": [
+   {
+    "associatedContent": [
+     {
+      "items": [
+       {
+        "item": {
+         "videoSvtId": "eyBd9aj"
+        }
+       },
+       {
+        "item": {
+         "videoSvtId": "jNgEavK"
+        }
+       },
+       {
+        "item": {
+         "videoSvtId": "eQJLg9j"
+        }
+       },
+       {
+        "item": {}
+       }
+      ],
+      "id": "season-1-jpmQYgn",
+      "name": "Säsong 1"
+     },
+     {
+      "items": [
+       {
+        "item": {
+         "videoSvtId": "KGYQwde"
+        }
+       },
+       {
+        "item": {
+         "videoSvtId": "eYa2R3e"
+        }
+       },
+       {
+        "item": {
+         "videoSvtId": "e55qMre"
+        }
+       },
+       {
+        "item": null
+       }
+      ],
+      "id": "season-2-jpmQYgn",
+      "name": "Säsong 2"
+     },
+     {
+      "items": [
+       {
+        "item": {
+         "videoSvtId": "jNdm1R8"
+        }
+       },
+       {
+        "item": {
+         "videoSvtId": "jVJD1Dj"
+        }
+       },
+       {
+        "item": {
+         "videoSvtId": "e9q9xme"
+        }
+       },
+       {
+        "item": {
+         "videoSvtId": 12345
+        }
+       }
+      ],
+      "id": "season-3-jpmQYgn",
+      "name": "Säsong 3"
+     }
+    ],
+    "id": "jpmQYgn",
+    "longDescription": "Slaget om Östersjön är en kamp om miljarder, på liv och död. Under seriens gång för Dahlénrederiet en ständig kamp mot  andra rederier om farlederna mellan Sverige och Finland.  Dramaserien om familjen Dahlén, båten M/S Freja och dess besättning är den längsta tv-serien i svensk historia.",
+    "name": "Rederiet",
+    "shortDescription": "Kärlek och dramatik på Östersjön"
+   }
+  ]
+ }
+}
