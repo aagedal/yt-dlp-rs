@@ -3317,6 +3317,25 @@
       "scope": "--download-sections ranges, chapters and from-url through upstream's FFmpegFD, plus --downloader ffmpeg and the CurlFD/WgetFD/Aria2cFD/AxelFD/HttpieFD whole-file command lines (the pinned upstream has no external fragment downloaders)"
     },
     {
+      "name": "protocol-downloaders",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/downloader/__init__.py",
+        "yt_dlp/downloader/rtmp.py",
+        "yt_dlp/downloader/websocket.py",
+        "yt_dlp/downloader/external.py",
+        "yt_dlp/postprocessor/ffmpeg.py"
+      ],
+      "rust": [
+        "src/rtmp_fd.rs",
+        "src/websocket_fd.rs",
+        "src/ffmpeg_fd.rs",
+        "src/fixup.rs",
+        "tests/protocol_downloaders.rs"
+      ],
+      "scope": "PROTOCOL_MAP's RtmpFD (rtmpdump command line from the format's RTMP fields, continuedl/no_resume/rtmp_live resume options, --test, the RD_INCOMPLETE/RD_FAILED resume loop, progress lines and messages), FFmpegFD for rtmp_ffmpeg and --downloader rtmp:ffmpeg (-rtmp_* options, -f flv, -fs with --test) limited to FFmpegFD.SUPPORTED_PROTOCOLS, and WebSocketFragmentFD (websocket_frag piped into FFmpeg's stdin with the format's http_headers, then FixupTimestamp/FixupDuration) with fake executables and a local websocket server; mms/rtsp keep HttpFD (unsupported schemes), merged RTMP/websocket formats and the niconico/FC2/Soop/BunnyCDN downloaders are not ported"
+    },
+    {
       "name": "ffmpeg-fixups",
       "status": "partial",
       "upstream": [

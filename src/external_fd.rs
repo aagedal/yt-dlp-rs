@@ -230,7 +230,7 @@ fn configuration_args(settings: &ExternalSettings, kind: Kind) -> Vec<String> {
 }
 
 /// The request headers for the format (`info_dict['http_headers']`).
-fn http_headers(info: &VideoInfo) -> Vec<(String, String)> {
+pub(crate) fn http_headers(info: &VideoInfo) -> Vec<(String, String)> {
     info.extra
         .get("http_headers")
         .and_then(Value::as_object)
@@ -572,6 +572,7 @@ pub(crate) fn download(
         phase,
         downloaded_bytes,
         total_bytes,
+        total_bytes_estimate: None,
         stream_index: None,
         stream_count: None,
         fragment_index: None,

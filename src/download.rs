@@ -38,6 +38,8 @@ pub struct DownloadProgress {
     pub downloaded_bytes: u64,
     /// Total from validated download response headers, absent when unknown.
     pub total_bytes: Option<u64>,
+    /// An estimated total (RtmpFD's `total_bytes_estimate` from its percent).
+    pub total_bytes_estimate: Option<u64>,
     pub phase: DownloadPhase,
     /// One-based selected input stream, present only for merged downloads.
     pub stream_index: Option<u8>,
@@ -155,6 +157,7 @@ impl Reporter<'_> {
             attempt: self.attempt,
             downloaded_bytes,
             total_bytes: self.total,
+            total_bytes_estimate: None,
             phase,
             stream_index: None,
             stream_count: None,
@@ -698,6 +701,7 @@ fn join_subtitle_fragments(
                 callback(DownloadProgress {
                     downloaded_bytes: stored + progress.downloaded_bytes,
                     total_bytes: None,
+                    total_bytes_estimate: None,
                     fragment_index: Some(index as u32 + 1),
                     fragment_count: Some(fragments.len() as u32),
                     fragment: None,
@@ -729,6 +733,7 @@ fn join_subtitle_fragments(
         attempt: 1,
         downloaded_bytes: bytes,
         total_bytes: Some(bytes),
+        total_bytes_estimate: None,
         phase: DownloadPhase::Publishing,
         stream_index: None,
         stream_count: None,

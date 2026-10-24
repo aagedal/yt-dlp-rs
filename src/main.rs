@@ -7839,7 +7839,10 @@ impl<'a> ProgressReporter<'a> {
                 (Some(index.saturating_sub(1)), estimate)
             }
             (Some(index), _) => (Some(index.saturating_sub(1)), None),
-            _ => (None, None),
+            _ => (
+                None,
+                progress.total_bytes_estimate.map(|total| total as f64),
+            ),
         };
         let remaining = progress
             .total_bytes

@@ -49,6 +49,7 @@ mod playlist;
 mod postprocess;
 pub mod pp_args;
 mod retry;
+mod rtmp_fd;
 pub mod screen;
 pub mod sections;
 mod sha1;
@@ -59,6 +60,7 @@ mod subtitles;
 mod thumbnail_process;
 mod traffic;
 mod video;
+mod websocket_fd;
 mod webvtt;
 pub mod xattr;
 
@@ -1314,7 +1316,7 @@ impl YoutubeDl {
         // Other fixups skip FFmpegFD downloads and merges.
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
         if !info.requested_formats.is_empty() || options.converted || (ffmpeg_fd && !live_m3u8) {
-            return Ok(());
+            return self.fixup_websocket(info, path, shown, policy);
         }
         let m3u8 = live_m3u8
             || (!ffmpeg_fd
@@ -1364,6 +1366,67 @@ impl YoutubeDl {
             } else {
                 screen::postprocess("FixupM4a", || self.fixup_m4a_as(path, shown))?;
             }
+        }
+        self.fixup_websocket(info, path, shown, policy)
+    }
+
+    /// The last fixups, after any conversion too: `FFmpegFixupTimestampPP`
+    /// and `FFmpegFixupDurationPP` for WebSocketFragmentFD downloads.
+    fn fixup_websocket(
+        &self,
+        info: &VideoInfo,
+        path: &Path,
+        shown: &Path,
+        policy: &str,
+    ) -> Result<()> {
+        if !info.requested_formats.is_empty() || info.protocol.as_deref() != Some("websocket_frag")
+        {
+            return Ok(());
+        }
+        let setts = std::cell::OnceCell::new();
+        for (message, pp) in [
+            ("Malformed timestamps detected", "FixupTimestamp"),
+            ("Malformed duration detected", "FixupDuration"),
+        ] {
+            let Some(ffmpeg) = self.ffmpeg.as_deref().filter(|_| policy != "warn") else {
+                let hint = if policy == "warn" {
+                    ""
+                } else {
+                    ". Install ffmpeg to fix this automatically"
+                };
+                screen::warning(&format!("{}: {message}{hint}", info.id));
+                continue;
+            };
+            screen::postprocess(pp, || {
+                // `_restrict_to(images=False)`.
+                if info.vcodec.as_deref() == Some("none") && info.acodec.as_deref() == Some("none")
+                {
+                    screen::screen(&format!("[{pp}] Skipping images"));
+                    return Ok(());
+                }
+                let container = crate::container::sniff(path).unwrap_or(info.ext.as_str());
+                let ext = info.ext.to_lowercase();
+                let mut proceed = || std::ops::ControlFlow::Continue(());
+                if pp == "FixupTimestamp" {
+                    let setts = *setts.get_or_init(|| fixup::has_setts(ffmpeg));
+                    if !setts {
+                        screen::warning(
+                            "A re-encode is needed to fix timestamps in older versions of ffmpeg. Please install ffmpeg 4.4 or later to fixup without re-encoding",
+                        );
+                    }
+                    screen::screen(&format!(
+                        "[{pp}] Fixing frame timestamp of \"{}\"",
+                        shown.display()
+                    ));
+                    fixup::fix_timestamps(ffmpeg, path, container, &ext, setts, &mut proceed)
+                } else {
+                    screen::screen(&format!(
+                        "[{pp}] Fixing video duration of \"{}\"",
+                        shown.display()
+                    ));
+                    fixup::copy_stream(pp, ffmpeg, path, container, &ext, &mut proceed)
+                }
+            })?;
         }
         Ok(())
     }
@@ -1600,6 +1663,10 @@ impl YoutubeDl {
             "dashsegments"
         } else if let Some(external) = &external {
             external.basename()
+        } else if matches!(info.protocol.as_deref(), Some("rtmp" | "rtmpe")) {
+            "rtmp"
+        } else if info.protocol.as_deref() == Some("websocket_frag") {
+            "web_socket_fragment"
         } else if info.protocol.as_deref() == Some("f4m") {
             "f4m"
         } else if info.protocol.as_deref() == Some("ism") {
@@ -1854,13 +1921,15 @@ impl YoutubeDl {
     }
 
     /// Whether a selected format has the `m3u8` protocol, which upstream
-    /// downloads with FFmpegFD unless `--downloader native` is given.
+    /// downloads with FFmpegFD unless `--downloader native` is given, or
+    /// `rtmp_ffmpeg` (`PROTOCOL_MAP`'s FFmpegFD for any downloader).
     fn forced_ffmpeg_hls(&self, info: &VideoInfo) -> bool {
         let forced = |protocol: &str| {
-            protocol == "m3u8"
-                && !self
-                    .downloader_name(protocol)
-                    .is_some_and(|name| name.eq_ignore_ascii_case("native"))
+            protocol == "rtmp_ffmpeg"
+                || (protocol == "m3u8"
+                    && !self
+                        .downloader_name(protocol)
+                        .is_some_and(|name| name.eq_ignore_ascii_case("native")))
         };
         if info.requested_formats.is_empty() {
             info.protocol.as_deref().is_some_and(forced)
@@ -1917,9 +1986,11 @@ impl YoutubeDl {
                 .map(VideoFormat::determine_protocol)
                 .collect()
         };
-        protocols
-            .iter()
-            .all(|protocol| self.downloader_name(protocol).is_some_and(is_ffmpeg_name))
+        // `FFmpegFD.supports`: its `SUPPORTED_PROTOCOLS` only.
+        protocols.iter().all(|protocol| {
+            ffmpeg_fd::SUPPORTED_PROTOCOLS.contains(&protocol.as_str())
+                && self.downloader_name(protocol).is_some_and(is_ffmpeg_name)
+        })
     }
 
     /// Upstream `check_formats`.
@@ -1963,6 +2034,7 @@ impl YoutubeDl {
     /// `--test`: download only the first 10241 bytes of HTTP media.
     pub fn with_test(mut self, test: bool) -> Self {
         self.test = test;
+        self.ffmpeg_settings.test = test;
         self
     }
 
@@ -3254,6 +3326,43 @@ impl YoutubeDl {
                 &mut callback,
             );
         }
+        // Upstream `PROTOCOL_MAP`'s RtmpFD and WebSocketFragmentFD.
+        if info.requested_formats.is_empty()
+            && matches!(info.protocol.as_deref(), Some("rtmp" | "rtmpe"))
+        {
+            let params = rtmp_fd::Params {
+                options: &options,
+                continue_download: self.external_settings.continue_download,
+                test: self.test,
+            };
+            return rtmp_fd::download(&params, info, destination.as_ref(), &mut callback);
+        }
+        if info.requested_formats.is_empty() && info.protocol.as_deref() == Some("websocket_frag") {
+            let network = ffmpeg_fd::Network {
+                headers: &self.headers,
+                cookies: &self.cookies,
+                proxy: self.proxy.as_deref(),
+            };
+            // `_calc_headers`: the defaults updated by the format's own.
+            let mut headers = self.info_headers.clone();
+            for (name, value) in external_fd::http_headers(info) {
+                let name = ffmpeg_fd::py_title(&name);
+                match headers.iter_mut().find(|(existing, _)| *existing == name) {
+                    Some(entry) => entry.1 = value,
+                    None => headers.push((name, value)),
+                }
+            }
+            return websocket_fd::download(
+                self.ffmpeg.as_deref(),
+                headers,
+                &network,
+                &self.ffmpeg_settings,
+                info,
+                destination.as_ref(),
+                &options,
+                &mut callback,
+            );
+        }
         // Upstream `DashSegmentsFD` with a fragment generator.
         if info.requested_formats.is_empty()
             && info.protocol.as_deref() == Some("http_dash_segments_generator")
@@ -3595,6 +3704,7 @@ impl YoutubeDl {
                     attempt: 1,
                     downloaded_bytes: bytes,
                     total_bytes: Some(bytes),
+                    total_bytes_estimate: None,
                     phase: DownloadPhase::Publishing,
                     stream_index: Some(index as u8 + 1),
                     stream_count: Some(count),
@@ -3755,6 +3865,7 @@ impl YoutubeDl {
                 attempt: 1,
                 downloaded_bytes: stored,
                 total_bytes: Some(stored),
+                total_bytes_estimate: None,
                 phase: DownloadPhase::Merging,
                 stream_index: None,
                 stream_count: Some(count),
@@ -3773,6 +3884,7 @@ impl YoutubeDl {
             attempt: 1,
             downloaded_bytes: bytes,
             total_bytes: Some(bytes),
+            total_bytes_estimate: None,
             phase: DownloadPhase::Publishing,
             stream_index: None,
             stream_count: Some(count),

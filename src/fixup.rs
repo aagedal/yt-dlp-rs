@@ -89,8 +89,54 @@ pub(crate) fn set_aspect(
         ffmpeg,
         path,
         container,
+        (&[], true),
         None,
         &["-aspect".into(), format!("{ratio:.6}").into()],
+        Some(crate::embed_metadata::muxer(ext)),
+        callback,
+    )
+}
+
+/// Whether FFmpeg has the `setts` bitstream filter (`ffmpeg -bsfs`).
+pub(crate) fn has_setts(ffmpeg: &Path) -> bool {
+    std::process::Command::new(ffmpeg)
+        .arg("-bsfs")
+        .stdin(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .output()
+        .is_ok_and(|output| {
+            String::from_utf8_lossy(&output.stdout)
+                .lines()
+                .any(|line| line.trim() == "setts")
+        })
+}
+
+/// `FFmpegFixupTimestampPP` (`trim` 0.001): `-c copy -bsf
+/// setts=ts=TS-STARTPTS` with `setts`, else the `setpts` re-encode, then
+/// `stream_copy_opts(False)` and `-ss 0.001`.
+pub(crate) fn fix_timestamps(
+    ffmpeg: &Path,
+    path: &Path,
+    container: &str,
+    ext: &str,
+    setts: bool,
+    callback: &mut dyn FnMut() -> ControlFlow<()>,
+) -> Result<()> {
+    let options: Vec<OsString> = if setts {
+        ["-c", "copy", "-bsf", "setts=ts=TS-STARTPTS"]
+            .map(OsString::from)
+            .into()
+    } else {
+        ["-vf", "setpts=PTS-STARTPTS"].map(OsString::from).into()
+    };
+    stream_copy_with(
+        "FixupTimestamp",
+        ffmpeg,
+        path,
+        container,
+        (&options, false),
+        None,
+        &["-ss".into(), "0.001".into()],
         Some(crate::embed_metadata::muxer(ext)),
         callback,
     )
@@ -115,6 +161,7 @@ fn stream_copy(
         ffmpeg,
         path,
         container,
+        (&[], true),
         Some(muxer),
         &extra,
         None,
@@ -122,14 +169,16 @@ fn stream_copy(
     )
 }
 
-/// `stream_copy_opts()`, then `-f MUXER` and `extra` (or `extra` then the
-/// output's own muxer `late_muxer`, as `_fixup` options are ordered).
+/// `options` then `stream_copy_opts(copy)`, then `-f MUXER` and `extra`
+/// (or `extra` then the output's own muxer `late_muxer`, as `_fixup`
+/// options are ordered).
 #[allow(clippy::too_many_arguments)]
 fn stream_copy_with(
     pp: &str,
     ffmpeg: &Path,
     path: &Path,
     container: &str,
+    (options, copy): (&[OsString], bool),
     muxer: Option<&str>,
     extra: &[OsString],
     late_muxer: Option<&str>,
@@ -178,11 +227,15 @@ fn stream_copy_with(
     args.push("-i".into());
     args.push(input.clone().into_os_string());
     // `stream_copy_opts()` then `-f mp4` (and the AAC bitstream filter).
+    args.extend(options.iter().cloned());
     args.extend(
-        ["-map", "0", "-dn", "-ignore_unknown", "-c", "copy"]
+        ["-map", "0", "-dn", "-ignore_unknown"]
             .into_iter()
             .map(OsString::from),
     );
+    if copy {
+        args.extend(["-c".into(), "copy".into()]);
+    }
     if let Some(muxer) = muxer {
         args.extend(["-f".into(), muxer.into()]);
     }

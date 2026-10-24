@@ -47,6 +47,9 @@ tractable for future agents.
 - `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
 - `src/dash.rs` and `src/extractor/dash.rs`: bounded static single-period MPD parsing and generic/HTML5 acquisition.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
+- `src/rtmp_fd.rs` and `src/websocket_fd.rs`: upstream's RtmpFD (`rtmpdump`) and
+  WebSocketFragmentFD (a websocket client piped into FFmpegFD's stdin, reusable by
+  the unported niconico/FC2 live downloaders).
 - `src/playlist.rs`: playlist item/range parsing, ordered index deduplication and fully extracted entry selection.
 - `src/subtitles.rs`: ordered subtitle metadata, language/format selection and sidecar name planning; `src/output/subtitles.rs` renders inventories.
 - `src/subtitle_convert.rs`: subtitle conversion publication/retention; nested
