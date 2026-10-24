@@ -642,6 +642,18 @@
       "scope": "HitRecordIE records API as an untyped result (metadata conversions, tags, KeyError messages, download) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "hrefli",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/hrefli.py"
+      ],
+      "rust": [
+        "src/extractor/hrefli.rs",
+        "tests/fixtures/sites/hrefli/"
+      ],
+      "scope": "HrefLiRedirectIE url_result of the text after href.li/? (followed by the suitable extractor, including the generic direct path) and the invalid-URL error compared with pinned upstream output through the fixture proxy; GenericIE's http:// guess for scheme-less targets is not ported"
+    },
+    {
       "name": "huajiao",
       "status": "partial",
       "upstream": [
@@ -713,6 +725,18 @@
         "tests/fixtures/sites/jwplatform/"
       ],
       "scope": "JWPlatformIE _VALID_URL (including jwplatform: pseudo-URLs) and v2 media JSON via _parse_jwplayer_data(require_title=True) compared with pinned upstream output through the fixture proxy; _extract_embed_urls on generic pages; no playlists"
+    },
+    {
+      "name": "kankanews",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kankanews.py"
+      ],
+      "rust": [
+        "src/extractor/kankanews.rs",
+        "tests/fixtures/sites/kankanews/"
+      ],
+      "scope": "KankaNewsIE (_WORKING = False) omsid, signed getvideo API query (random nonce/timestamp ignored by the fixture proxy), title regex and thumbnail as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "kick",
@@ -1003,6 +1027,18 @@
         "tests/fixtures/sites/qingting/"
       ],
       "scope": "QingTingIE mobile page __initStores JSON (_search_json, traverse_obj fields) as an untyped m4a result compared with pinned upstream output through the fixture proxy; JSON decode error texts differ"
+    },
+    {
+      "name": "radiozet",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/radiozet.py"
+      ],
+      "rust": [
+        "src/extractor/radiozet.rs",
+        "tests/fixtures/sites/radiozet/"
+      ],
+      "scope": "RadioZetPodcastIE player data-id and getPodcast API entry (stripped title/description/series/creator, raw timestamp/duration/thumbnail) as an untyped result compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "reddit",

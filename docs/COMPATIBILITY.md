@@ -1144,6 +1144,13 @@ upstream's lazy generator). Live downloads have this port's live HLS limits.
 `--use-extractors` matches every extractor by its upstream name.
 `tests/fixtures/sites/kick/` is compared with upstream output.
 
+Kankanews articles (`kankanews.com/a/DATE/ID.shtml`), marked broken upstream
+(`_WORKING = False`, with its warning), follow upstream `KankaNewsIE`: the
+page's `omsid` and the `getvideo` API signed with a random nonce, the current
+timestamp and the double MD5 `sign`, giving the video URL as an untyped result
+with the `g.title` title and `titlepic` thumbnail; missing API keys are
+upstream's `KeyError` extractor errors.
+
 Kommunetv archives (`SUBDOMAIN.kommunetv.no/archive/ID`) follow upstream
 `KommunetvIE`: the Oslo streams API (requested with `Accept:
 application/json`), its `stream.title` and first playlist's first file
@@ -1207,6 +1214,12 @@ the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python
 `str()` of the user ID, counts and string tag texts, with upstream's
 `KeyError` messages.
+
+href.li redirects (`href.li/?URL`) follow upstream `HrefLiRedirectIE`: the
+text after `?` is followed as a `url` result by whichever extractor suits it
+(unlisted in `--extractor-descriptions`); a target that is not an absolute URL
+gives GenericIE's `is not a valid URL` error, while GenericIE's `http://`
+guess for domain-like targets is not ported.
 
 Huajiao lives (`huajiao.com/l/ID`) follow upstream `HuajiaoIE`: the page's
 fatal `var feed` JSON, its `formated_title` (upstream's `KeyError`), the
@@ -1365,6 +1378,14 @@ upstream `QingTingIE`: the mobile program page's `window.__initStores` JSON
 (`_search_json`) with the program title and audio URL, channel title and
 podcaster as an untyped `m4a` audio result; a missing audio URL is upstream's
 `No video formats found!`.
+
+Radio ZET podcasts (`player.radiozet.pl/Podcasty/SHOW/ID`) follow upstream
+`RadioZetPodcastIE`: the page's `id="player"` `data-id` (else the
+`Unable to extract podcast id` error) and the first `getPodcast` API entry as
+an untyped result with stripped title, description, series and creator and
+raw `release_timestamp`, thumbnail and duration (every key set, `None`
+included); an empty or missing `data` list and a missing stream URL give
+upstream's `IndexError`, `KeyError` and `No video formats found!` errors.
 
 ReverbNation songs (`reverbnation.com/.../song/ID`) follow upstream
 `ReverbNationIE`: the `api.reverbnation.com/song/ID` JSON (`Downloading

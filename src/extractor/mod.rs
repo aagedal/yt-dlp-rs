@@ -40,6 +40,7 @@ mod harpodeon;
 mod historicfilms;
 mod hitrecord;
 pub(crate) mod hls;
+mod hrefli;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
@@ -50,6 +51,7 @@ mod jove;
 mod json_ld;
 mod jwplatform;
 mod jwplayer;
+mod kankanews;
 mod kick;
 mod kommunetv;
 mod ku6;
@@ -76,6 +78,7 @@ mod playerfm;
 mod popcorntv;
 mod premiershiprugby;
 mod qingting;
+mod radiozet;
 mod reddit;
 mod reverbnation;
 mod rss;
@@ -158,6 +161,7 @@ pub use harpodeon::{Harpodeon, suitable as harpodeon_suitable};
 pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hitrecord::{HitRecord, suitable as hitrecord_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
+pub use hrefli::{HrefLiRedirect, suitable as hrefli_suitable};
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
@@ -174,6 +178,7 @@ pub use instagram::{
 };
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
+pub use kankanews::{KankaNews, suitable as kankanews_suitable};
 pub use kick::{
     KickClip, KickClips, KickLive, KickVideos, KickVod, clip_suitable as kick_clip_suitable,
     clips_suitable as kick_clips_suitable, live_suitable as kick_live_suitable,
@@ -203,6 +208,7 @@ pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
 pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
 pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitable};
 pub use qingting::{QingTing, suitable as qingting_suitable};
+pub use radiozet::{RadioZetPodcast, suitable as radiozet_suitable};
 pub use reddit::{Reddit, suitable as reddit_suitable};
 pub use reverbnation::{ReverbNation, suitable as reverbnation_suitable};
 pub use rtrfm::{Rtrfm, suitable as rtrfm_suitable};

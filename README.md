@@ -118,14 +118,14 @@ Supported today:
   clips through the clip API, EbaumsWorld and tv.dfb.de videos through the player XML,
   Glide messages through their share page, GodTube videos through their
   player XML, FC Zenit videos through the player API, BehindKink posts
-  QingTing programs, OnePlace episodes, SzTV videos, Photobucket media and
+  QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and
   This American Life episodes through their pages, JW Platform media through
   the media API (and The Intercept posts and Spiegel articles that embed it), 23video players
   (and Filmweb articles that embed them), FILMARCHIV ON videos, Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Angel episodes, Blogger videos (and their embeds), Nobel
-  Prize media, Bild clips, Masters videos, Sen videos, Kommunetv archives,
+  Prize media, Bild clips, Masters videos, Sen videos, Kankanews videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, Premiership Rugby videos, CJSW episodes,
-  Player.fm episodes, RTRFM shows, HitRecord records, Culture Unplugged films,
+  Player.fm episodes, RTRFM shows, HitRecord records, href.li redirects, Culture Unplugged films,
   Zhihu videos, CRTVG programmes, Breitbart videos, CGTN news videos, JoVE
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,

@@ -1,0 +1,104 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"42154\", \"display_id\": \"O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu\", \"title\": \"O przedmiotach szkolnych, kt\\u00f3re przydaj\\u0105 si\\u0119 w \\u017cyciu\", \"description\": \"Opis podcastu.\", \"release_timestamp\": 1592985480, \"url\": \"https://cdn.radiozet.pl/podcast/42154.mp3\", \"thumbnail\": \"https://cdn.radiozet.pl/img/42154.png\", \"duration\": 83, \"series\": \"Nie Ma Za Co\", \"creator\": \"Katarzyna Pakosi\\u0144ska\", \"webpage_url\": \"https://player.radiozet.pl/Podcasty/Show/O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu\", \"original_url\": \"https://player.radiozet.pl/Podcasty/Show/O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu\", \"webpage_url_basename\": \"O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu\", \"webpage_url_domain\": \"player.radiozet.pl\", \"extractor\": \"RadioZetPodcast\", \"extractor_key\": \"RadioZetPodcast\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.radiozet.pl/img/42154.png\", \"id\": \"0\"}], \"fulltitle\": \"O przedmiotach szkolnych, kt\\u00f3re przydaj\\u0105 si\\u0119 w \\u017cyciu\", \"duration_string\": \"1:23\", \"release_date\": \"20200624\", \"release_year\": 2020, \"creators\": [\"Katarzyna Pakosi\\u0144ska\"], \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"O przedmiotach szkolnych, kt\\u00f3re przydaj\\u0105 si\\u0119 w \\u017cyciu [42154].mp3\", \"filename\": \"O przedmiotach szkolnych, kt\\u00f3re przydaj\\u0105 si\\u0119 w \\u017cyciu [42154].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(description)s|%(release_timestamp)s|%(release_date)s|%(duration)s|%(series)s|%(creator)s|%(thumbnail)s|%(ext)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "42154|O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu|O przedmiotach szkolnych, które przydają się w życiu|Opis podcastu.|1592985480|20200624|83|Nie Ma Za Co|Katarzyna Pakosińska|https://cdn.radiozet.pl/img/42154.png|mp3|0"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/minimal",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"777\", \"display_id\": \"minimal\", \"title\": \"RadioZetPodcast video #777\", \"description\": null, \"release_timestamp\": null, \"url\": \"https://cdn.radiozet.pl/podcast/777.mp3\", \"thumbnail\": null, \"series\": null, \"creator\": null, \"webpage_url\": \"https://player.radiozet.pl/Podcasty/Show/minimal\", \"original_url\": \"https://player.radiozet.pl/Podcasty/Show/minimal\", \"webpage_url_basename\": \"minimal\", \"webpage_url_domain\": \"player.radiozet.pl\", \"extractor\": \"RadioZetPodcast\", \"extractor_key\": \"RadioZetPodcast\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"RadioZetPodcast video #777 [777].mp3\", \"filename\": \"RadioZetPodcast video #777 [777].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/noid",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [RadioZetPodcast] noid: Unable to extract podcast id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/empty",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/nodata",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nodata: An extractor error has occurred. (caused by KeyError('data')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/nostream",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [RadioZetPodcast] nostream: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/gone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [RadioZetPodcast] gone: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,51 @@
+[
+ {
+  "url": "https://www.kankanews.com/a/2022-11-08/00310276054.shtml?appid=1088227",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kankanews.com/a/2022-11-08/00310276054.shtml",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(thumbnail)s|%(ext)s|%(format_id)s|%(url)s"
+  ]
+ },
+ {
+  "url": "https://www.kankanews.com/a/2022-11-08/005.shtml",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kankanews.com/a/2022-11-08/001.shtml",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kankanews.com/a/2022-11-08/002.shtml",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kankanews.com/a/2022-11-08/003.shtml",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kankanews.com/a/2022-11-08/004.shtml",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kankanews.com/a/2022-11-08/404.shtml",
+  "args": [
+   "-j"
+  ]
+ }
+]
