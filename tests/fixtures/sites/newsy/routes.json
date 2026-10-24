@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://www.newsy.com/stories/nft-trend-leads-to-fraudulent-art-auctions/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"VideoObject\",\"name\":\"NFT Art Auctions Have A Piracy Problem\",\"description\":\"Some description.\",\"uploadDate\":\"2021-05-18T12:00:00Z\",\"thumbnailUrl\":\"https://cdn.newsy.test/ld.jpg\"}</script></head><body><div class=\"player\" data-video-player=\"{id:'609d65125b086c24fb529312',headline:'Ignored headline',duration:339630,image:'https://cdn.newsy.test/x/1620927824_xyrrP4.jpg',stream:'https://hls.newsy.test/master.m3u8'}\"></div></body></html>"
+  },
+  {
+   "url": "https://www.newsy.com/stories/no-ld",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div class=\"player\" data-video-player=\"{&quot;id&quot;:&quot;abc&quot;,&quot;headline&quot;:&quot;From &amp; data&quot;,&quot;stream&quot;:&quot;https://hls.newsy.test/video.m3u8&quot;}\"></div></body></html>"
+  },
+  {
+   "url": "https://www.newsy.com/stories/no-stream",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div class=\"player\" data-video-player=\"{id:'nostream',headline:'No stream',stream:''}\"></div></body></html>"
+  },
+  {
+   "url": "https://www.newsy.com/stories/no-id",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div class=\"player\" data-video-player=\"{headline:'No id'}\"></div></body></html>"
+  },
+  {
+   "url": "https://www.newsy.com/stories/no-data",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>nothing</body></html>"
+  },
+  {
+   "url": "https://hls.newsy.test/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://hls.newsy.test/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video.m3u8"
+  },
+  {
+   "url": "https://hls.newsy.test/subs_en.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_en.m3u8"
+  },
+  {
+   "url": "https://hls.newsy.test/subs_de.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_de.m3u8"
+  }
+ ]
+}

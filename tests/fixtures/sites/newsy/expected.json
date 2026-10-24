@@ -1,0 +1,82 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.newsy.com/stories/nft-trend-leads-to-fraudulent-art-auctions/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"NFT Art Auctions Have A Piracy Problem\", \"description\": \"Some description.\", \"thumbnails\": [{\"url\": \"https://cdn.newsy.test/ld.jpg\", \"id\": \"0\"}], \"timestamp\": 1621339200, \"id\": \"609d65125b086c24fb529312\", \"display_id\": \"nft-trend-leads-to-fraudulent-art-auctions\", \"duration\": 339630, \"thumbnail\": \"https://cdn.newsy.test/x/1620927824_xyrrP4.jpg\", \"formats\": [{\"format_id\": \"200\", \"format_index\": null, \"url\": \"https://hls.newsy.test/video.m3u8\", \"manifest_url\": \"https://hls.newsy.test/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\"}], \"subtitles\": {\"en\": [{\"url\": \"https://hls.newsy.test/subs_en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://hls.newsy.test/subs_de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://www.newsy.com/stories/nft-trend-leads-to-fraudulent-art-auctions/\", \"original_url\": \"https://www.newsy.com/stories/nft-trend-leads-to-fraudulent-art-auctions/\", \"webpage_url_basename\": \"nft-trend-leads-to-fraudulent-art-auctions\", \"webpage_url_domain\": \"newsy.com\", \"extractor\": \"Newsy\", \"extractor_key\": \"Newsy\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"NFT Art Auctions Have A Piracy Problem\", \"duration_string\": \"94:20:30\", \"upload_date\": \"20210518\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"200\", \"format_index\": null, \"url\": \"https://hls.newsy.test/video.m3u8\", \"manifest_url\": \"https://hls.newsy.test/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\", \"_filename\": \"NFT Art Auctions Have A Piracy Problem [609d65125b086c24fb529312].mp4\", \"filename\": \"NFT Art Auctions Have A Piracy Problem [609d65125b086c24fb529312].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.newsy.com/stories/nft-trend-leads-to-fraudulent-art-auctions/",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(timestamp)s|%(duration)s|%(thumbnail)s|%(description)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "609d65125b086c24fb529312|nft-trend-leads-to-fraudulent-art-auctions|NFT Art Auctions Have A Piracy Problem|1621339200|339630|https://cdn.newsy.test/x/1620927824_xyrrP4.jpg|Some description."
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.newsy.com/stories/no-ld",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"abc\", \"display_id\": \"no-ld\", \"title\": \"From & data\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://hls.newsy.test/video.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://www.newsy.com/stories/no-ld\", \"original_url\": \"https://www.newsy.com/stories/no-ld\", \"webpage_url_basename\": \"no-ld\", \"webpage_url_domain\": \"newsy.com\", \"extractor\": \"Newsy\", \"extractor_key\": \"Newsy\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"From & data\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://hls.newsy.test/video.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"From & data [abc].m3u8\", \"filename\": \"From & data [abc].m3u8\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Newsy] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.newsy.com/stories/no-stream",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Newsy] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: [Newsy] nostream: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.newsy.com/stories/no-id",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Newsy] unable to extract JSON-LD ; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: no-id: An extractor error has occurred. (caused by KeyError('id')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.newsy.com/stories/no-data",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Newsy] no-data: Unable to extract data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

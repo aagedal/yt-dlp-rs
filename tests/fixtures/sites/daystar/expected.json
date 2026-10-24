@@ -1,0 +1,83 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://player.daystar.tv/0MTO2ITM",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0MTO2ITM\", \"title\": \"The Dark World of COVID Pt. 1 | Aaron Siri\", \"description\": \"a420d320dda734e5f29458df3606c5f4\", \"thumbnail\": \"https://images.lightcast.test/thumb.jpg\", \"formats\": [{\"format_id\": \"200\", \"format_index\": null, \"url\": \"https://www.lightcast.com/hls/video.m3u8\", \"manifest_url\": \"https://www.lightcast.com/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\"}], \"subtitles\": {\"en\": [{\"url\": \"https://www.lightcast.com/hls/subs_en.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}], \"de\": [{\"url\": \"https://www.lightcast.com/hls/subs_de.m3u8\", \"ext\": \"vtt\", \"protocol\": \"m3u8_native\"}]}, \"webpage_url\": \"https://player.daystar.tv/0MTO2ITM\", \"original_url\": \"https://player.daystar.tv/0MTO2ITM\", \"webpage_url_basename\": \"0MTO2ITM\", \"webpage_url_domain\": \"player.daystar.tv\", \"extractor\": \"daystar:clip\", \"extractor_key\": \"DaystarClip\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://images.lightcast.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"0MTO2ITM\", \"fulltitle\": \"The Dark World of COVID Pt. 1 | Aaron Siri\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"200\", \"format_index\": null, \"url\": \"https://www.lightcast.com/hls/video.m3u8\", \"manifest_url\": \"https://www.lightcast.com/hls/master.m3u8\", \"tbr\": 200.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 240, \"vcodec\": \"avc1.42c00d\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"200 - 320x240\", \"_filename\": \"The Dark World of COVID Pt. 1 \\uff5c Aaron Siri [0MTO2ITM].mp4\", \"filename\": \"The Dark World of COVID Pt. 1 \\uff5c Aaron Siri [0MTO2ITM].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.daystar.tv/0MTO2ITM",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(thumbnail)s|%(extractor)s|%(extractor_key)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "0MTO2ITM|The Dark World of COVID Pt. 1 | Aaron Siri|a420d320dda734e5f29458df3606c5f4|https://images.lightcast.test/thumb.jpg|daystar:clip|DaystarClip"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://player.daystar.tv/MEDIA1",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MEDIA1\", \"title\": \"daystar-clip video #MEDIA1\", \"description\": null, \"thumbnail\": \"https://images.lightcast.test/thumb.jpg\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.lightcast.test/video.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"webpage_url\": \"https://player.daystar.tv/MEDIA1\", \"original_url\": \"https://player.daystar.tv/MEDIA1\", \"webpage_url_basename\": \"MEDIA1\", \"webpage_url_domain\": \"player.daystar.tv\", \"extractor\": \"daystar:clip\", \"extractor_key\": \"DaystarClip\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://images.lightcast.test/thumb.jpg\", \"id\": \"0\"}], \"display_id\": \"MEDIA1\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://cdn.lightcast.test/video.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"daystar-clip video #MEDIA1 [MEDIA1].mp4\", \"filename\": \"daystar-clip video #MEDIA1 [MEDIA1].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [daystar:clip] MEDIA1: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [daystar:clip] unable to extract og:title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [daystar:clip] unable to extract og:description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.daystar.tv/NOIFRAME",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [daystar:clip] NOIFRAME: Unable to extract src iframe; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.daystar.tv/NOSRC",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [daystar:clip] NOSRC: Unable to extract m3u8 source; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://player.daystar.tv/NOTHUMB",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [daystar:clip] NOTHUMB: Unable to extract thumbnail; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

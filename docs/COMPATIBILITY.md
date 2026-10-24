@@ -1525,6 +1525,57 @@ series and the page `<title>` (its absence is upstream's warning and generic
 title). Non-string `video` values remain explicit native errors.
 `tests/fixtures/sites/trtcocuk/` is compared with pinned upstream output.
 
+TRT World videos (`www.trtworld.com/video/SECTION/SLUG-ID`) follow upstream
+`TrtWorldIE`: the page's `window.__NUXT__` data (`_search_nuxt_data`,
+`data[0]`; a missing `videoData`, `content` or `platforms` is upstream's
+`KeyError`), the website and OTT platforms' `hls_url`/`url` media as
+non-fatal master-only HLS formats (`.m3u8`) or `http` formats, the first
+platform with a title, description, thumbnail or ISO 8601 release timestamp,
+and upstream's `No video found` error. Without formats, the YouTube
+platform's `youtubeId` is a `url` result for the YouTube extractor (not
+covered by the fixtures); platforms without any metadata (upstream's
+`TypeError`) remain explicit native errors. `tests/fixtures/sites/trtworld/`
+is compared with pinned upstream output.
+
+Newsy stories (`www.newsy.com/stories/SLUG`) follow upstream `NewsyIE`: the
+page's `data-video-player` attribute (cleaned like `_html_search_regex`,
+parsed with `js_to_json`; its absence is upstream's `Unable to extract data`
+error), a truthy `stream` as fatal HLS formats and subtitles, the required
+`id` (upstream's `KeyError`), and `display_id`, `headline`, `duration` and
+`image` merged under the page's JSON-LD (`merge_dicts`, the JSON-LD's values
+win; a missing JSON-LD is upstream's warning). JSON-LD carrying media URLs,
+formats, IDs or subtitles remains an explicit native error.
+`tests/fixtures/sites/newsy/` is compared with pinned upstream output.
+
+Daystar clips (`player.daystar.tv/ID`) follow upstream `DaystarClipIE`: the
+player page's first `<iframe src>` (its absence is upstream's `Unable to
+extract src iframe` error), that URL's `config2.php` configuration requested
+with the iframe as `Referer`, its `sources` list (`js_to_json`) whose `m3u8`
+files are joined to `https://www.lightcast.com/embed/` and read as non-fatal
+master-only HLS formats and merged subtitles (the `Referer` sent with the
+manifest request), the `og:`/`twitter:` title and description (non-fatal,
+with upstream's warnings) and the configuration's required `image:` thumbnail.
+`tests/fixtures/sites/daystar/` is compared with pinned upstream output.
+
+BongaCams rooms (`[SUB.]bongacamsN.com|net/ROOM`) follow upstream
+`BongaCamsIE`: the host's `tools/amf.php` `getRoomData` form POST (with
+`X-Requested-With: XMLHttpRequest`; a missing `localData` or
+`videoServerUrl` is upstream's `KeyError`), the performer's username (else
+the room), display name and lovers count, and the fatal live HLS playlist
+`SERVER/hls/stream_USERNAME/playlist.m3u8` (`m3u8_id='hls'`, `mp4`) with
+`age_limit` 18 and `is_live`. Non-string video server URLs remain explicit
+native errors. `tests/fixtures/sites/bongacams/` is compared with pinned
+upstream output.
+
+MATCHi TV streams (`matchi.tv/watch?s=ID`) follow upstream `MatchiTVIE`: the
+page's non-fatal `__NEXT_DATA__` (a missing one is upstream's warning)
+`props.pageProps.loadedMedia` dict, its `courtDescription` and
+`startDateTime` joined as the title (an empty title becomes upstream's
+generic one), the start date as `upload_date`, the fixed padelgo.tv
+thumbnail and the fatal `streams.padelgo.tv` HLS playlist (`m3u8_id='hls'`,
+`mp4`). Non-string court descriptions remain explicit native errors.
+`tests/fixtures/sites/matchitv/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

@@ -1,0 +1,9 @@
+[
+ {"url": "https://www.trtworld.com/video/news/turkiye-switches-to-sustainable-tourism-16067690", "args": ["-j"]},
+ {"url": "https://www.trtworld.com/video/news/turkiye-switches-to-sustainable-tourism-16067690", "args": ["--print", "%(id)s|%(title)s|%(release_timestamp)s|%(release_date)s|%(thumbnail)s"]},
+ {"url": "https://www.trtworld.com/video/one-offs/frames-from-anatolia-14541780", "args": ["-j"]},
+ {"url": "https://www.trtworld.com/video/news/nothing-1", "args": ["-j"]},
+ {"url": "https://www.trtworld.com/video/news/noplatforms-2", "args": ["-j"]},
+ {"url": "https://www.trtworld.com/video/news/broken-3", "args": ["-j"]},
+ {"url": "https://www.trtworld.com/video/news/nonuxt-4", "args": ["-j"]}
+]

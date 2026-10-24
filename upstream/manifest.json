@@ -353,6 +353,18 @@
       "scope": "BlueskyIE post threads: video embed HLS and PDS blob formats with captions, external links, record media and quoted posts, metadata; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bongacams",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bongacams.py"
+      ],
+      "rust": [
+        "src/extractor/bongacams.rs",
+        "tests/fixtures/sites/bongacams/"
+      ],
+      "scope": "BongaCamsIE amf.php getRoomData form POST, performer username/display name/lovers count, KeyError paths and the fatal live HLS playlist (hls ids, mp4, age_limit, is_live) compared with pinned upstream output through the fixture proxy; non-string video server URLs remain explicit native errors"
+    },
+    {
       "name": "breitbart",
       "status": "partial",
       "upstream": [
@@ -507,6 +519,18 @@
         "tests/fixtures/sites/dailymotion/"
       ],
       "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors; no playlists; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "daystar",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/daystar.py"
+      ],
+      "rust": [
+        "src/extractor/daystar.rs",
+        "tests/fixtures/sites/daystar/"
+      ],
+      "scope": "DaystarClipIE player iframe, Referer-requested config2.php sources via js_to_json as non-fatal HLS formats and merged subtitles (lightcast embed urljoin), og/twitter title and description with the non-fatal warnings, fatal iframe/sources/thumbnail regexes compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "dfb",
@@ -1087,6 +1111,18 @@
       "scope": "MastersIE related-content API (fatal HLS formats and subtitles, missing-manifest error, URL upload_date, first image set thumbnails) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "matchitv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/matchitv.py"
+      ],
+      "rust": [
+        "src/extractor/matchitv.rs",
+        "tests/fixtures/sites/matchitv/"
+      ],
+      "scope": "MatchiTVIE non-fatal __NEXT_DATA__ loadedMedia court/start-time title and upload date, the fixed padelgo.tv thumbnail and fatal HLS playlist (hls ids, mp4), the missing-next.js warning and generic empty title compared with pinned upstream output through the fixture proxy; non-string court descriptions remain explicit native errors"
+    },
+    {
       "name": "matchtv",
       "status": "partial",
       "upstream": [
@@ -1171,6 +1207,18 @@
         "tests/fixtures/sites/myvidster/"
       ],
       "scope": "MyVidsterIE rel=videolink URL as a followed url_result and the fatal missing-link message compared with pinned upstream output through the fixture proxy; non-absolute links remain explicit native errors"
+    },
+    {
+      "name": "newsy",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/newsy.py"
+      ],
+      "rust": [
+        "src/extractor/newsy.rs",
+        "tests/fixtures/sites/newsy/"
+      ],
+      "scope": "NewsyIE data-video-player attribute via js_to_json, fatal HLS formats and subtitles from a truthy stream, KeyError/Unable to extract data paths and the player metadata merged under the page JSON-LD (merge_dicts, missing-JSON-LD warning) compared with pinned upstream output through the fixture proxy; JSON-LD media URLs/formats/IDs/subtitles remain explicit native errors"
     },
     {
       "name": "niconico",
@@ -1748,6 +1796,18 @@
         "tests/fixtures/sites/trtcocuk/"
       ],
       "scope": "TrtCocukVideoIE window.__NUXT__ data via _search_nuxt_data, JSON-string or plain HLS video URL (fatal formats and subtitles), KeyError paths, season/release/series metadata and the page title (with the missing-title warning) compared with pinned upstream output through the fixture proxy; non-string video values remain explicit native errors"
+    },
+    {
+      "name": "trtworld",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/trtworld.py"
+      ],
+      "rust": [
+        "src/extractor/trtworld.rs",
+        "tests/fixtures/sites/trtworld/"
+      ],
+      "scope": "TrtWorldIE window.__NUXT__ data via _search_nuxt_data, website/OTT hls_url/url media as non-fatal HLS or http formats, first-platform title/description/thumbnail/release metadata, KeyError and No video found paths compared with pinned upstream output through the fixture proxy; the YouTube-ID url result is untested and metadata-less platforms (upstream TypeError) remain explicit native errors"
     },
     {
       "name": "tumblr",

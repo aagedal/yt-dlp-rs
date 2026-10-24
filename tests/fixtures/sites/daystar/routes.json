@@ -1,0 +1,115 @@
+{
+ "routes": [
+  {
+   "url": "https://player.daystar.tv/0MTO2ITM",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"The Dark World of COVID Pt. 1 | Aaron Siri\"><meta name=\"twitter:description\" content=\"a420d320dda734e5f29458df3606c5f4\"></head><body><iframe width=\"100%\" src=\"https://www.lightcast.com/embed/player.php?id=a\" allowfullscreen></iframe></body></html>"
+  },
+  {
+   "url": "https://player.daystar.tv/MEDIA1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><iframe width=\"100%\" src=\"https://www.lightcast.com/embed/player.php?id=b\" allowfullscreen></iframe></body></html>"
+  },
+  {
+   "url": "https://player.daystar.tv/NOIFRAME",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>none</body></html>"
+  },
+  {
+   "url": "https://player.daystar.tv/NOSRC",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"The Dark World of COVID Pt. 1 | Aaron Siri\"><meta name=\"twitter:description\" content=\"a420d320dda734e5f29458df3606c5f4\"></head><body><iframe width=\"100%\" src=\"https://www.lightcast.com/embed/player.php?id=d\" allowfullscreen></iframe></body></html>"
+  },
+  {
+   "url": "https://player.daystar.tv/NOTHUMB",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"The Dark World of COVID Pt. 1 | Aaron Siri\"><meta name=\"twitter:description\" content=\"a420d320dda734e5f29458df3606c5f4\"></head><body><iframe width=\"100%\" src=\"https://www.lightcast.com/embed/player.php?id=e\" allowfullscreen></iframe></body></html>"
+  },
+  {
+   "url": "https://www.lightcast.com/embed/config2.php?id=a",
+   "request_headers": {
+    "Referer": "https://www.lightcast.com/embed/player.php?id=a"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>jwplayer(\"p\").setup({image: \"https://images.lightcast.test/thumb.jpg\", sources: [{file: \"/hls/master.m3u8\", type: \"m3u8\"}, {file: \"https://cdn.lightcast.test/clip.mp4\", type: \"mp4\"}, {type: \"m3u8\"}], width: \"100%\"});</script></html>"
+  },
+  {
+   "url": "https://www.lightcast.com/embed/config2.php?id=b",
+   "request_headers": {
+    "Referer": "https://www.lightcast.com/embed/player.php?id=b"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>jwplayer(\"p\").setup({image: \"https://images.lightcast.test/thumb.jpg\", sources: [{'file': 'https://cdn.lightcast.test/video.m3u8', 'type': 'm3u8'}, {file: 'missing.m3u8', type: 'm3u8'}], width: \"100%\"});</script></html>"
+  },
+  {
+   "url": "https://www.lightcast.com/embed/config2.php?id=d",
+   "request_headers": {
+    "Referer": "https://www.lightcast.com/embed/player.php?id=d"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>no sources</html>"
+  },
+  {
+   "url": "https://www.lightcast.com/embed/config2.php?id=e",
+   "request_headers": {
+    "Referer": "https://www.lightcast.com/embed/player.php?id=e"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>jwplayer(\"p\").setup({ sources: [], width: \"100%\"});</script></html>"
+  },
+  {
+   "url": "https://www.lightcast.com/hls/master.m3u8",
+   "request_headers": {
+    "Referer": "https://www.lightcast.com/embed/player.php?id=a"
+   },
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://www.lightcast.com/hls/subs_en.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_en.m3u8"
+  },
+  {
+   "url": "https://www.lightcast.com/hls/subs_de.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_de.m3u8"
+  },
+  {
+   "url": "https://cdn.lightcast.test/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video.m3u8"
+  },
+  {
+   "url": "https://www.lightcast.com/embed/missing.m3u8",
+   "status": 404,
+   "body": "nope"
+  }
+ ]
+}

@@ -11,6 +11,7 @@ pub(crate) mod bitchute;
 mod bitmovin;
 mod blogger;
 mod bluesky;
+mod bongacams;
 mod breitbart;
 pub(crate) mod brightcove;
 mod bundesliga;
@@ -25,6 +26,7 @@ mod crtvg;
 mod cultureunplugged;
 mod dailymotion;
 mod dash;
+mod daystar;
 mod dfb;
 pub(crate) mod direct;
 mod drtalks;
@@ -85,6 +87,7 @@ mod loom;
 mod maariv;
 mod maoritv;
 mod masters;
+mod matchitv;
 mod matchtv;
 mod megaphone;
 mod mir24tv;
@@ -92,6 +95,7 @@ mod mixcloud;
 mod mocha;
 mod movingimage;
 mod myvidster;
+mod newsy;
 mod niconico;
 mod nobelprize;
 pub mod nuxt;
@@ -139,6 +143,7 @@ mod thisamericanlife;
 mod tiktok;
 mod toypics;
 mod trtcocuk;
+mod trtworld;
 mod tumblr;
 mod tweakers;
 mod twentythreevideo;
@@ -176,6 +181,7 @@ pub use bitchute::{BitChute, suitable as bitchute_suitable};
 pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
 pub use bluesky::{Bluesky, suitable as bluesky_suitable};
+pub use bongacams::{BongaCams, suitable as bongacams_suitable};
 pub use breitbart::{BreitBart, suitable as breitbart_suitable};
 pub use brightcove::{BrightcoveNew, suitable as brightcove_new_suitable};
 pub use bundesliga::{Bundesliga, suitable as bundesliga_suitable};
@@ -189,6 +195,7 @@ pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
 pub use dailymotion::{Dailymotion, suitable as dailymotion_suitable};
+pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use dfb::{Dfb, suitable as dfb_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
@@ -263,6 +270,7 @@ pub use loom::{Loom, suitable as loom_suitable};
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use maoritv::{MaoriTV, suitable as maoritv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
+pub use matchitv::{MatchiTv, suitable as matchitv_suitable};
 pub use matchtv::{MatchTv, suitable as matchtv_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use mir24tv::{Mir24Tv, suitable as mir24tv_suitable};
@@ -270,6 +278,7 @@ pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
 pub use mocha::{MochaVideo, suitable as mocha_suitable};
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};
 pub use myvidster::{MyVidster, suitable as myvidster_suitable};
+pub use newsy::{Newsy, suitable as newsy_suitable};
 pub use niconico::{Niconico, suitable as niconico_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
@@ -333,6 +342,7 @@ pub(crate) use tiktok::{
 };
 pub use toypics::{Toypics, suitable as toypics_suitable};
 pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
+pub use trtworld::{TrtWorld, suitable as trtworld_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
@@ -706,12 +716,60 @@ fn extract_manifest_optional_note(
     id: &str,
     keep_subtitles: bool,
     parse: &dyn Fn(reqwest::blocking::Response) -> crate::Result<Option<crate::VideoInfo>>,
+    what: (&str, &str),
+    note: &str,
+) -> Option<crate::VideoInfo> {
+    extract_manifest_optional_note_headers(
+        client,
+        manifest,
+        extractor,
+        id,
+        keep_subtitles,
+        parse,
+        what,
+        note,
+        &[],
+    )
+}
+
+/// `_extract_m3u8_formats_and_subtitles(url, id, headers=HEADERS,
+/// fatal=False)`: only the master playlist is read, the `headers` sent with
+/// the manifest request alone.
+pub(crate) fn extract_m3u8_master_optional_headers(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    headers: &[(&str, &str)],
+) -> Option<crate::VideoInfo> {
+    extract_manifest_optional_note_headers(
+        client,
+        manifest,
+        extractor,
+        id,
+        true,
+        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        ("m3u8 information", "HLS"),
+        "Downloading m3u8 information",
+        headers,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn extract_manifest_optional_note_headers(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    keep_subtitles: bool,
+    parse: &dyn Fn(reqwest::blocking::Response) -> crate::Result<Option<crate::VideoInfo>>,
     (what, name): (&str, &str),
     note: &str,
+    headers: &[(&str, &str)],
 ) -> Option<crate::VideoInfo> {
     let note = format!("[{extractor}] {id}: {note}");
     crate::screen::expect_page(id, Some(note.clone()), None);
-    let response = direct::request(client, manifest, None);
+    let response = direct::request_with_headers(client, manifest, None, headers);
     if response.is_err() {
         crate::screen::screen(&note);
     }

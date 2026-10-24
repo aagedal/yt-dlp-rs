@@ -1,0 +1,98 @@
+{
+ "routes": [
+  {
+   "url": "https://de.bongacams.net/tools/amf.php",
+   "request_body": [
+    "args%5B%5D=claireashton&args%5B%5D=false",
+    "method=getRoomData"
+   ],
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest"
+   },
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"status\": \"success\", \"localData\": {\"videoServerUrl\": \"https://live.bongacams.test\"}, \"performerData\": {\"username\": \"ClaireAshton\", \"displayName\": \"Claire Ashton\", \"loversCount\": 1234}}"
+  },
+  {
+   "url": "https://de.bongacams.net/tools/amf.php",
+   "request_body": [
+    "args%5B%5D=plain&args%5B%5D=false",
+    "method=getRoomData"
+   ],
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest"
+   },
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"localData\": {\"videoServerUrl\": \"https://live.bongacams.test\"}, \"performerData\": {\"username\": \"\", \"loversCount\": \"77\"}}"
+  },
+  {
+   "url": "https://de.bongacams.net/tools/amf.php",
+   "request_body": [
+    "args%5B%5D=nolocal&args%5B%5D=false",
+    "method=getRoomData"
+   ],
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest"
+   },
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"performerData\": {}}"
+  },
+  {
+   "url": "https://de.bongacams.net/tools/amf.php",
+   "request_body": [
+    "args%5B%5D=offline&args%5B%5D=false",
+    "method=getRoomData"
+   ],
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest"
+   },
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"localData\": {\"videoServerUrl\": \"https://live.bongacams.test\"}}"
+  },
+  {
+   "url": "https://bongacams.com/tools/amf.php",
+   "request_body": [
+    "args%5B%5D=apierror&args%5B%5D=false",
+    "method=getRoomData"
+   ],
+   "request_headers": {
+    "X-Requested-With": "XMLHttpRequest"
+   },
+   "status": 500,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  {
+   "url": "https://live.bongacams.test/hls/stream_ClaireAshton/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playlist.m3u8"
+  },
+  {
+   "url": "https://live.bongacams.test/hls/stream_plain/playlist.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "playlist.m3u8"
+  },
+  {
+   "url": "https://live.bongacams.test/hls/stream_offline/playlist.m3u8",
+   "status": 404,
+   "body": "offline"
+  }
+ ]
+}
