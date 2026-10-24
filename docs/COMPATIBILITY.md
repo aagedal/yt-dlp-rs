@@ -1626,6 +1626,16 @@ view/watching counts. Non-string playback URLs and usernames remain explicit
 native errors. `tests/fixtures/sites/dlive/` is compared with pinned upstream
 output.
 
+Democracy Now! pages (`[www.]democracynow.org/PATH`) follow upstream
+`DemocracynowIE`: the page's `<script type="text/json">` player data (a
+fatal `json` regex; a missing `title` is upstream's `KeyError`), its `file`,
+`audio` (`vcodec` `none`), `video` and `high_res_video` URLs joined to the page
+without their query (the ID is the first media basename without `dn`, else
+the path), the `caption_file` and `captions` subtitles (`en` by default), the
+`og:description` and the `image` thumbnail. Non-object player data and
+non-string titles, paths or caption languages remain explicit native errors.
+`tests/fixtures/sites/democracynow/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

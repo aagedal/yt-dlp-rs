@@ -30,6 +30,7 @@ mod cultureunplugged;
 mod dailymotion;
 mod dash;
 mod daystar;
+mod democracynow;
 mod dfb;
 pub(crate) mod direct;
 mod dlive;
@@ -204,6 +205,7 @@ pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
 pub use dailymotion::{Dailymotion, suitable as dailymotion_suitable};
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
+pub use democracynow::{Democracynow, suitable as democracynow_suitable};
 pub use dfb::{Dfb, suitable as dfb_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
@@ -1463,19 +1465,20 @@ pub(crate) fn proto_relative(url: &str) -> String {
 }
 
 /// An upstream `{'url': ..., ...}` format dict in its key order (`None`
-/// values dropped); `ext` is processing's `determine_ext(url)` unless given.
+/// values keep their keys); `ext` is processing's `determine_ext(url)`
+/// unless given.
 pub(crate) fn dict_format(
     fields: Vec<(&str, serde_json::Value)>,
     extractor: &str,
     id: &str,
 ) -> Result<crate::VideoFormat> {
+    let keys: Vec<String> = fields.iter().map(|(key, _)| (*key).to_owned()).collect();
     let mut map = serde_json::Map::new();
     for (key, value) in fields {
         if !value.is_null() {
             map.insert(key.to_owned(), value);
         }
     }
-    let keys: Vec<String> = map.keys().cloned().collect();
     let has_quality = map.get("quality").is_some_and(serde_json::Value::is_i64);
     if !map.contains_key("ext") {
         let ext = map
@@ -1484,6 +1487,10 @@ pub(crate) fn dict_format(
             .and_then(direct::determine_ext)
             .unwrap_or_else(|| "unknown_video".into());
         map.insert("ext".into(), ext.into());
+    }
+    // Processing numbers formats without a `format_id`.
+    if !map.contains_key("format_id") {
+        map.insert("format_id".into(), "".into());
     }
     let mut format: crate::VideoFormat = serde_json::from_value(serde_json::Value::Object(map))
         .map_err(|error| crate::Error::Reported(format!("[{extractor}] {id}: {error}")))?;

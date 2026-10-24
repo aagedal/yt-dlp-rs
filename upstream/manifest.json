@@ -569,6 +569,18 @@
       "scope": "DaystarClipIE player iframe, Referer-requested config2.php sources via js_to_json as non-fatal HLS formats and merged subtitles (lightcast embed urljoin), og/twitter title and description with the non-fatal warnings, fatal iframe/sources/thumbnail regexes compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "democracynow",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/democracynow.py"
+      ],
+      "rust": [
+        "src/extractor/democracynow.rs",
+        "tests/fixtures/sites/democracynow/"
+      ],
+      "scope": "DemocracynowIE inline text/json player data (fatal regex, title KeyError), file/audio/video/high_res_video URLs without queries (audio vcodec none, media-basename ID), caption_file and captions subtitles, og:description and image compared with pinned upstream output through the fixture proxy; non-object player data and non-string titles, paths or caption languages remain explicit native errors"
+    },
+    {
       "name": "dfb",
       "status": "partial",
       "upstream": [
