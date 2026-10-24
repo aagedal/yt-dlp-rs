@@ -486,6 +486,16 @@ JW Platform extractor) overlaid with the post's display ID, raw title,
 excerpt, ISO 8601 date and comment count; no matching post is upstream's
 `Unable to find the current post`.
 
+Soundgasm sounds (`soundgasm.net/u/USER/SLUG`) follow upstream `SoundgasmIE`:
+the page's fatal jPlayer `m4a` URL as the result's own audio-only format
+(`unknown_video` without an extension), the raw `jp-title` text (else the
+slug), the `jp-description` or older `Description:` item (else upstream's
+warning and `null`), the URL's `.m4a` name as the ID (else the slug) and the
+URL user as uploader. Profiles (`soundgasm.net/u/USER`) follow
+`SoundgasmProfileIE`: the page's `/u/USER/` links as a playlist of
+`Soundgasm` results. Relative audio or profile links remain explicit native
+errors.
+
 Spiegel and manager magazin articles and videos (`spiegel.de/.../SLUG-ID[.html]`)
 follow upstream `SpiegelIE`: the page's `mediaId` (plain or `&#34;`-quoted;
 else upstream's `Unable to extract media id`) as a `url_transparent` result of

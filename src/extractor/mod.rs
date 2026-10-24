@@ -96,6 +96,7 @@ mod sen;
 mod smil;
 mod snapchat;
 mod soundcloud;
+mod soundgasm;
 mod spiegel;
 mod streamable;
 mod sztvhu;
@@ -236,6 +237,10 @@ pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
 pub use snapchat::{SnapchatSpotlight, suitable as snapchat_suitable};
 pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};
+pub use soundgasm::{
+    Soundgasm, SoundgasmProfile, profile_suitable as soundgasm_profile_suitable,
+    suitable as soundgasm_suitable,
+};
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
