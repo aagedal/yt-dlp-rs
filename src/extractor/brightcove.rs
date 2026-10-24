@@ -749,7 +749,50 @@ impl Extractor for BrightcoveNew {
                     missing.join(", ")
                 )));
             }
-            return Err(unsupported("TV Everywhere (Adobe Pass) videos"));
+            // `get_temp_id` is None: errors have no video id.
+            let key_error = |key: &str| {
+                Error::Reported(format!(
+                    "[{NAME}] An extractor error has occurred. (caused by KeyError('{key}')); {}",
+                    crate::BUG_REPORTS_MESSAGE
+                ))
+            };
+            let custom_fields = data
+                .get("custom_fields")
+                .ok_or_else(|| key_error("custom_fields"))?;
+            let custom = |key: &str| -> Result<String> {
+                match custom_fields.get(key) {
+                    Some(Value::String(text)) => Ok(text.clone()),
+                    Some(_) => Err(unsupported("Adobe Pass custom fields that are not strings")),
+                    None => Err(key_error(key)),
+                }
+            };
+            let source_url = smuggled_text("source_url")
+                .ok_or_else(|| unsupported("smuggled source URLs that are not strings"))?;
+            let tve_token = super::adobepass::extract_mvpd_auth(
+                client,
+                &super::adobepass::Caller {
+                    extractor: NAME,
+                    id: &video_id,
+                    prefix: format!("[{NAME}] "),
+                },
+                &source_url,
+                &custom("bcadobepassrequestorid")?,
+                &custom("bcadobepassresourceid")?,
+                &smuggled["software_statement"],
+            )?;
+            let accept = format!("application/json;pk={policy_key}");
+            let data = super::download_json_headers(
+                client,
+                &super::update_url_query(&api, &[("tveToken", &tve_token)]),
+                NAME,
+                &video_id,
+                &[("Accept", &accept)],
+            )?;
+            let Value::Object(data) = data else {
+                return Err(unsupported("API responses that are not objects"));
+            };
+            headers.retain(|(name, _)| name != "Authorization");
+            return parse_metadata(client, &data, &video_id, &headers, url).map(Some);
         }
         // `headers.pop('Authorization')` before the formats get them.
         headers.retain(|(name, _)| name != "Authorization");
