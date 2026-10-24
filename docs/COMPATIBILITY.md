@@ -904,6 +904,14 @@ page's `<video class="KIND"><source src>` pairs as a playlist of untyped
 `ID-KIND` entries with the fatal `itemprop="name"` title and the optional
 `Date:` cell as `upload_date` (warning when absent).
 
+Université de Strasbourg UTV videos (`utv.unistra.fr/{index,video}.php?id_video=ID`)
+follow upstream `UnistraIE`: the player's `file` paths as `SD`/`HD` formats
+(`-HD.mp4` is HD) on `vod-flash.u-strasbg.fr:8080`, with the fatal `UTV - `
+title, `Description` meta and `image` thumbnail; no files is upstream's
+`No video formats found!`. Upstream collects the paths in a `set`, whose
+order is unspecified; this port keeps page order, so only fixtures whose
+formats sort apart by quality are compared.
+
 Universal Music Deutschland videos (`universal-music.de/ARTIST/videos/SLUG-ID`)
 follow upstream `UMGDeIE`: the page's fatal JSON-LD (title, thumbnails,
 duration, timestamp, view count) overridden by the `umg-artist-screenname`

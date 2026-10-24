@@ -122,7 +122,7 @@ Supported today:
   This American Life episodes through their pages, JW Platform media through
   the media API (and The Intercept posts, Spiegel articles, OneFootball videos, Bundesliga videos and Iltalehti articles that embed it), Israel National News articles (as playlists of their YouTube embeds), 23video players
   (and Filmweb articles that embed them), FILMARCHIV ON videos, Vocaroo recordings, AudioBoom posts,
-  Tweakers videos, Project Veritas videos, tele-TASK lectures, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
+  Tweakers videos, Project Veritas videos, tele-TASK lectures, Universal Music Deutschland videos, Université de Strasbourg UTV videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Sen videos, Kankanews videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl and SkylineWebcams live cameras, Premiership Rugby videos, CJSW episodes,
   Player.fm episodes, RTRFM shows, HitRecord records, href.li redirects, Culture Unplugged films,

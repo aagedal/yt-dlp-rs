@@ -1439,6 +1439,18 @@
       "scope": "UMGDeIE fatal JSON-LD spread, umg-artist-screenname artists (warning when absent), _3Y0Lj description element and fatal hls.universal-music.de HLS formats compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "unistra",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/unistra.py"
+      ],
+      "rust": [
+        "src/extractor/unistra.rs",
+        "tests/fixtures/sites/unistra/"
+      ],
+      "scope": "UnistraIE player file paths as SD/HD formats with fatal title/description/thumbnail regexes and the no-formats error compared with pinned upstream output through the fixture proxy; upstream's unordered set of paths is kept in page order"
+    },
+    {
       "name": "vimeo",
       "status": "partial",
       "upstream": [

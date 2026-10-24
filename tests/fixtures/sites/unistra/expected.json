@@ -1,0 +1,95 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://utv.unistra.fr/video.php?id_video=154",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"154\", \"title\": \"M!ss Yella & friends\", \"description\": \"Un portrait de M!ss Yella & ses amis\", \"thumbnail\": \"http://utv.unistra.fr/images/154.jpg\", \"formats\": [{\"url\": \"http://vod-flash.u-strasbg.fr:8080/vod/154.mp4\", \"format_id\": \"SD\", \"quality\": 0, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"SD - unknown\"}, {\"url\": \"http://vod-flash.u-strasbg.fr:8080/vod/154-HD.mp4\", \"format_id\": \"HD\", \"quality\": 1, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD - unknown\"}], \"webpage_url\": \"http://utv.unistra.fr/video.php?id_video=154\", \"original_url\": \"http://utv.unistra.fr/video.php?id_video=154\", \"webpage_url_basename\": \"video.php\", \"webpage_url_domain\": \"utv.unistra.fr\", \"extractor\": \"Unistra\", \"extractor_key\": \"Unistra\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://utv.unistra.fr/images/154.jpg\", \"id\": \"0\"}], \"display_id\": \"154\", \"fulltitle\": \"M!ss Yella & friends\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://vod-flash.u-strasbg.fr:8080/vod/154-HD.mp4\", \"format_id\": \"HD\", \"quality\": 1, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"HD - unknown\", \"_filename\": \"M!ss Yella & friends [154].mp4\", \"filename\": \"M!ss Yella & friends [154].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://utv.unistra.fr/video.php?id_video=154",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Unistra] Extracting URL: http://utv.unistra.fr/video.php?id_video=154",
+    "[Unistra] 154: Downloading webpage",
+    "[info] Available formats for 154:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "SD mp4 unknown    | http  | unknown unknown",
+    "HD mp4 unknown    | http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://utv.unistra.fr/index.php?id_video=1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Unistra] 1: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://utv.unistra.fr/index.php?id_video=2",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Unistra] 2: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://utv.unistra.fr/index.php?id_video=3",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Unistra] 3: Unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://utv.unistra.fr/index.php?id_video=4",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Unistra] 4: Unable to extract thumbnail; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://utv.unistra.fr/index.php?id_video=5",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Unistra] 5: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

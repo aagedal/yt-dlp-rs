@@ -1,0 +1,12 @@
+{
+ "routes": [
+  {"url": "http://utv.unistra.fr/video.php?id_video=154", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "http://vod-flash.u-strasbg.fr:8080/vod/154-HD.mp4", "headers": {"Content-Type": "video/mp4"}, "body": "MP4DATA"},
+  {"url": "http://vod-flash.u-strasbg.fr:8080/vod/154.mp4", "headers": {"Content-Type": "video/mp4"}, "body": "MP4DATA"},
+  {"url": "http://utv.unistra.fr/index.php?id_video=1", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "nofiles.html"},
+  {"url": "http://utv.unistra.fr/index.php?id_video=2", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "notitle.html"},
+  {"url": "http://utv.unistra.fr/index.php?id_video=3", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "nodesc.html"},
+  {"url": "http://utv.unistra.fr/index.php?id_video=4", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "nothumb.html"},
+  {"url": "http://utv.unistra.fr/index.php?id_video=5", "status": 404, "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "gone"}
+ ]
+}

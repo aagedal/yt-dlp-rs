@@ -113,6 +113,7 @@ mod twentythreevideo;
 mod twitch;
 mod twitter;
 mod umg;
+mod unistra;
 mod vimeo;
 mod vk;
 mod vkplay;
@@ -285,6 +286,7 @@ pub use twitter::{
     spaces_suitable as twitter_spaces_suitable, suitable as twitter_suitable,
 };
 pub use umg::{UmgDe, suitable as umg_suitable};
+pub use unistra::{Unistra, suitable as unistra_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,
