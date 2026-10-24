@@ -1004,6 +1004,13 @@ page's `<video class="KIND"><source src>` pairs as a playlist of untyped
 `ID-KIND` entries with the fatal `itemprop="name"` title and the optional
 `Date:` cell as `upload_date` (warning when absent).
 
+Toypics videos (`videos.toypics.net/view/ID`) follow upstream `ToypicsIE`
+(marked broken, so the broken-site warning comes first): the first
+`_parse_html5_media_entries` entry's formats (none is upstream's `list index
+out of range`), the fatal `view-video-title` heading (else the `- Toypics`
+title), the optional `More videos from` uploader and an age limit of 18.
+`ToypicsUserIE` profile playlists are not supported.
+
 Université de Strasbourg UTV videos (`utv.unistra.fr/{index,video}.php?id_video=ID`)
 follow upstream `UnistraIE`: the player's `file` paths as `SD`/`HD` formats
 (`-HD.mp4` is HD) on `vod-flash.u-strasbg.fr:8080`, with the fatal `UTV - `
@@ -1187,6 +1194,21 @@ description, duration, ISO 8601 creation time and artwork, and the first
 user's name and ID. `tests/fixtures/sites/whyp/` is compared with pinned
 upstream output.
 
+WorldStarHipHop videos (`www|m.worldstar{hiphop,candy}.com/{videos,android}/video.php?v=ID`)
+follow upstream `WorldStarHipHopIE`: the first `_parse_html5_media_entries`
+entry (formats with the page as `Referer`, tracks and poster) with the fatal
+`content-heading` (else `tc-sp-pinned-title`) title. Pages without HTML5
+media, which upstream hands to the generic extractor as a `url` result,
+remain explicit native errors.
+
+Xbox clips (`xboxclips.com/video.php?...vid=ID`, `gameclips.io/USER/ID`)
+follow upstream `XboxClipsIE`: `video.php` URLs are rewritten to
+`gameclips.io/GAMERTAG/VID` (a missing parameter is upstream's `KeyError`),
+then the first `_parse_html5_media_entries` entry (none is `list index out
+of range`) with the `og:title`/`twitter:title` meta, the `Recorded:` date,
+the `parse_filesize` size as `filesize_approx`, and the duration and view
+count (each missing value a warning).
+
 XiaoHongShu (RedNote) notes (`www.xiaohongshu.com/explore/ID`,
 `discovery/item/ID`) follow upstream `XiaoHongShuIE` (release 2026.10.21):
 the page's fatal `window.__INITIAL_STATE__` (through `js_to_json`), every
@@ -1281,6 +1303,15 @@ Harpodeon films (`harpodeon.com/video|preview/SLUG/ID`) follow upstream
 with the page as Referer, the `videoInfo` heading's title, creator (and the
 derived `creators`) and year (one warning when absent), and the description
 meta with its warning.
+
+HellPorno videos (`hellporno.com/videos/SLUG`, `hellporno.net/v/ID`) follow
+upstream `HellPornoIE`: the optional `<title>` (without ` - Hell Porno`), the
+first `_parse_html5_media_entries` entry (none is `list index out of
+range`) merged with `merge_dicts` (absent values are left out) with the
+`chs_object`/`params['video_id']` ID (else the slug), the description,
+`keywords` categories, OpenGraph `video:duration` and `video:release_date`,
+views and an age limit of 18; missing optional values are upstream's
+warnings.
 
 HistoricFilms tapes (`historicfilms.com/tapes/ID`, `/playID`) follow upstream
 `HistoricFilmsIE`: the fatal tape ID, OpenGraph title/description, the

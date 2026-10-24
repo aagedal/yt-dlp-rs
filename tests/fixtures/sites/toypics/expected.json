@@ -1,0 +1,80 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://videos.toypics.net/view/514/chancebulged,-2-1/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"514\", \"formats\": [{\"ext\": \"mp4\", \"width\": null, \"height\": 480, \"tbr\": null, \"format_id\": \"480p\", \"url\": \"http://videos.toypics.net/media/514/480.mp4\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://videos.toypics.net/view/514/chancebulged,-2-1/\"}, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"480p - 480p\"}, {\"ext\": \"mp4\", \"width\": null, \"height\": 720, \"tbr\": null, \"format_id\": \"720p\", \"url\": \"https://videos.toypics.net/media/514/720.mp4\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://videos.toypics.net/view/514/chancebulged,-2-1/\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"720p - 720p\"}], \"title\": \"Chance-Bulge'd, 2\", \"uploader\": \"kidsune\", \"age_limit\": 18, \"webpage_url\": \"http://videos.toypics.net/view/514/chancebulged,-2-1/\", \"original_url\": \"http://videos.toypics.net/view/514/chancebulged,-2-1/\", \"webpage_url_basename\": \"chancebulged,-2-1\", \"webpage_url_domain\": \"videos.toypics.net\", \"extractor\": \"Toypics\", \"extractor_key\": \"Toypics\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"514\", \"fulltitle\": \"Chance-Bulge'd, 2\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"ext\": \"mp4\", \"width\": null, \"height\": 720, \"tbr\": null, \"format_id\": \"720p\", \"url\": \"https://videos.toypics.net/media/514/720.mp4\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://videos.toypics.net/view/514/chancebulged,-2-1/\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"720p - 720p\", \"_filename\": \"Chance-Bulge'd, 2 [514].mp4\", \"filename\": \"Chance-Bulge'd, 2 [514].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://videos.toypics.net/view/514/chancebulged,-2-1/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Toypics] Extracting URL: http://videos.toypics.net/view/514/chancebulged,-2-1/",
+    "[Toypics] 514: Downloading webpage",
+    "[info] Available formats for 514:",
+    "ID   EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "---------------------------------------------",
+    "480p mp4 480p       | http  | unknown unknown",
+    "720p mp4 720p       | https | unknown unknown"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://videos.toypics.net/view/9/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [Toypics] 9: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://videos.toypics.net/view/10/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://videos.toypics.net/view/11/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"11\", \"formats\": [{\"url\": \"https://videos.toypics.net/media/11/a.webm\", \"vcodec\": null, \"ext\": \"webm\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://videos.toypics.net/view/11/\"}, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"title\": \"Plain clip\", \"uploader\": null, \"age_limit\": 18, \"webpage_url\": \"https://videos.toypics.net/view/11/\", \"original_url\": \"https://videos.toypics.net/view/11/\", \"webpage_url_basename\": \"11\", \"webpage_url_domain\": \"videos.toypics.net\", \"extractor\": \"Toypics\", \"extractor_key\": \"Toypics\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"11\", \"fulltitle\": \"Plain clip\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://videos.toypics.net/media/11/a.webm\", \"vcodec\": null, \"ext\": \"webm\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://videos.toypics.net/view/11/\"}, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Plain clip [11].webm\", \"filename\": \"Plain clip [11].webm\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "WARNING: [Toypics] unable to extract uploader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

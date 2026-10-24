@@ -1,0 +1,27 @@
+[
+ {
+  "url": "http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO",
+  "args": [
+   "-F",
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://m.worldstarcandy.com/android/video.php?v=pinned",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.worldstarhiphop.com/videos/video.php?v=notitle",
+  "args": [
+   "-j"
+  ]
+ }
+]

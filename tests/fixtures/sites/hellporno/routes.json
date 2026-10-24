@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "http://hellporno.com/videos/dixie-is-posing-with-naked-ass-very-erotic/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://hellporno.net/v/186271/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "bare.html"
+  },
+  {
+   "url": "https://www.hellporno.com/videos/novideo/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Nothing - Hell Porno</title></head><body></body></html>"
+  },
+  {
+   "url": "https://www.hellporno.com/videos/notitle/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><video src='a.mp4'></video></body></html>"
+  }
+ ]
+}

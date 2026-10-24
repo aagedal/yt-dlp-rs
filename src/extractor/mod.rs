@@ -49,6 +49,7 @@ mod golem;
 mod goodgame;
 mod graspop;
 mod harpodeon;
+mod hellporno;
 mod historicfilms;
 mod hitrecord;
 pub(crate) mod hls;
@@ -128,6 +129,7 @@ mod theintercept;
 mod thestar;
 mod thisamericanlife;
 mod tiktok;
+mod toypics;
 mod trtcocuk;
 mod tumblr;
 mod tweakers;
@@ -144,6 +146,8 @@ mod vocaroo;
 mod webcamerapl;
 mod weibo;
 mod whyp;
+mod worldstarhiphop;
+mod xboxclips;
 mod xiaohongshu;
 mod xspf;
 mod yfanefa;
@@ -205,6 +209,7 @@ pub use golem::{Golem, suitable as golem_suitable};
 pub use goodgame::{GoodGame, suitable as goodgame_suitable};
 pub use graspop::{Graspop, suitable as graspop_suitable};
 pub use harpodeon::{Harpodeon, suitable as harpodeon_suitable};
+pub use hellporno::{HellPorno, suitable as hellporno_suitable};
 pub use historicfilms::{HistoricFilms, suitable as historicfilms_suitable};
 pub use hitrecord::{HitRecord, suitable as hitrecord_suitable};
 pub use hls::set_split_discontinuity as hls_split_discontinuity;
@@ -309,6 +314,7 @@ pub use tiktok::{
 pub(crate) use tiktok::{
     fetch_pages as fetch_tiktok_pages, is_pending_state as tiktok_pending_state,
 };
+pub use toypics::{Toypics, suitable as toypics_suitable};
 pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
@@ -347,6 +353,8 @@ pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
 pub use whyp::{Whyp, suitable as whyp_suitable};
+pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
+pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::YoutubeUnsupported;

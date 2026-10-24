@@ -1,0 +1,91 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://xboxclips.com/video.php?uid=2533274823424419&gamertag=Iabdulelah&vid=074a69a9-5faf-46aa-b93b-9909c1720325",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"0\", \"url\": \"https://d1oxgasfe3wsxn.cloudfront.net/074a69a9-5faf-46aa-b93b-9909c1720325.mp4\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://gameclips.io/Iabdulelah/074a69a9-5faf-46aa-b93b-9909c1720325\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"thumbnail\": \"https://gameclips.io/thumbs/074a69a9.png\", \"id\": \"074a69a9-5faf-46aa-b93b-9909c1720325\", \"title\": \"iAbdulElah playing Titanfall\", \"upload_date\": \"20140807\", \"filesize_approx\": null, \"duration\": 56, \"view_count\": 1234, \"webpage_url\": \"http://xboxclips.com/video.php?uid=2533274823424419&gamertag=Iabdulelah&vid=074a69a9-5faf-46aa-b93b-9909c1720325\", \"original_url\": \"http://xboxclips.com/video.php?uid=2533274823424419&gamertag=Iabdulelah&vid=074a69a9-5faf-46aa-b93b-9909c1720325\", \"webpage_url_basename\": \"video.php\", \"webpage_url_domain\": \"xboxclips.com\", \"extractor\": \"XboxClips\", \"extractor_key\": \"XboxClips\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://gameclips.io/thumbs/074a69a9.png\", \"id\": \"0\"}], \"display_id\": \"074a69a9-5faf-46aa-b93b-9909c1720325\", \"fulltitle\": \"iAbdulElah playing Titanfall\", \"duration_string\": \"56\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"0\", \"url\": \"https://d1oxgasfe3wsxn.cloudfront.net/074a69a9-5faf-46aa-b93b-9909c1720325.mp4\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://gameclips.io/Iabdulelah/074a69a9-5faf-46aa-b93b-9909c1720325\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"format\": \"0 - unknown\", \"_filename\": \"iAbdulElah playing Titanfall [074a69a9-5faf-46aa-b93b-9909c1720325].mp4\", \"filename\": \"iAbdulElah playing Titanfall [074a69a9-5faf-46aa-b93b-9909c1720325].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://gameclips.io/Iabdulelah/074a69a9-5faf-46aa-b93b-9909c1720325",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[XboxClips] Extracting URL: https://gameclips.io/Iabdulelah/074a69a9-5faf-46aa-b93b-9909c1720325",
+    "[XboxClips] 074a69a9-5faf-46aa-b93b-9909c1720325: Downloading webpage",
+    "[info] Available formats for 074a69a9-5faf-46aa-b93b-9909c1720325:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  mp4 unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://gameclips.io/someone/11111111-2222-3333-4444-555555555555",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"url\": \"https://gameclips.io/clips/b.webm\", \"vcodec\": null, \"ext\": \"webm\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://gameclips.io/someone/11111111-2222-3333-4444-555555555555\"}, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"thumbnail\": null, \"id\": \"11111111-2222-3333-4444-555555555555\", \"title\": \"Only & twitter\", \"upload_date\": \"20200715\", \"filesize_approx\": null, \"view_count\": null, \"webpage_url\": \"https://gameclips.io/someone/11111111-2222-3333-4444-555555555555\", \"original_url\": \"https://gameclips.io/someone/11111111-2222-3333-4444-555555555555\", \"webpage_url_basename\": \"11111111-2222-3333-4444-555555555555\", \"webpage_url_domain\": \"gameclips.io\", \"extractor\": \"XboxClips\", \"extractor_key\": \"XboxClips\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"11111111-2222-3333-4444-555555555555\", \"fulltitle\": \"Only & twitter\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://gameclips.io/clips/b.webm\", \"vcodec\": null, \"ext\": \"webm\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://gameclips.io/someone/11111111-2222-3333-4444-555555555555\"}, \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Only & twitter [11111111-2222-3333-4444-555555555555].webm\", \"filename\": \"Only & twitter [11111111-2222-3333-4444-555555555555].webm\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [XboxClips] unable to extract file size; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [XboxClips] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [XboxClips] unable to extract view count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.gameclips.io/x/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"url\": \"https://www.gameclips.io/clips/c.mp4\", \"vcodec\": null, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.gameclips.io/x/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"thumbnail\": null, \"id\": \"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\", \"title\": \"XboxClips video #aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\", \"upload_date\": null, \"filesize_approx\": null, \"view_count\": null, \"webpage_url\": \"https://www.gameclips.io/x/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\", \"original_url\": \"https://www.gameclips.io/x/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\", \"webpage_url_basename\": \"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\", \"webpage_url_domain\": \"gameclips.io\", \"extractor\": \"XboxClips\", \"extractor_key\": \"XboxClips\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\", \"fulltitle\": null, \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://www.gameclips.io/clips/c.mp4\", \"vcodec\": null, \"ext\": \"mp4\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.gameclips.io/x/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"XboxClips video #aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee [aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee].mp4\", \"filename\": \"XboxClips video #aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee [aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [XboxClips] unable to extract og:title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [XboxClips] unable to extract duration; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [XboxClips] unable to extract view count; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://gameclips.io/x/99999999-bbbb-cccc-dddd-eeeeeeeeeeee",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: list index out of range"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://xboxclips.com/video.php?uid=1&vid=074a69a9-5faf-46aa-b93b-9909c1720325",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 074a69a9-5faf-46aa-b93b-9909c1720325: An extractor error has occurred. (caused by KeyError('gamertag')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

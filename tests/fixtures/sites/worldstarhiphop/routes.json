@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {
+   "url": "http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://m.worldstarcandy.com/android/video.php?v=pinned",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "pinned.html"
+  },
+  {
+   "url": "https://www.worldstarhiphop.com/videos/video.php?v=notitle",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "notitle.html"
+  }
+ ]
+}

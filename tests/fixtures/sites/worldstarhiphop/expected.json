@@ -1,0 +1,62 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"0\", \"url\": \"https://hw-videos.worldstarhiphop.com/u/vid/2015/04/wshh6a7q1ny0G34ZwuIO.mp4\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"0 - unknown\"}], \"subtitles\": {\"en\": [{\"url\": \"http://www.worldstarhiphop.com/captions/wshh6a7q1ny0G34ZwuIO.vtt\", \"ext\": \"vtt\"}]}, \"thumbnail\": \"https://hw-images.worldstarhiphop.com/u/pic/2015/04/wshh6a7q1ny0G34ZwuIO.jpg\", \"id\": \"wshh6a7q1ny0G34ZwuIO\", \"title\": \"KO Of The Week: MMA Fighter Gets Knocked Out By Swift Head Kick!\", \"webpage_url\": \"http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO\", \"original_url\": \"http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO\", \"webpage_url_basename\": \"video.php\", \"webpage_url_domain\": \"worldstarhiphop.com\", \"extractor\": \"WorldStarHipHop\", \"extractor_key\": \"WorldStarHipHop\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://hw-images.worldstarhiphop.com/u/pic/2015/04/wshh6a7q1ny0G34ZwuIO.jpg\", \"id\": \"0\"}], \"display_id\": \"wshh6a7q1ny0G34ZwuIO\", \"fulltitle\": \"KO Of The Week: MMA Fighter Gets Knocked Out By Swift Head Kick!\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"ext\": \"mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"format_id\": \"0\", \"url\": \"https://hw-videos.worldstarhiphop.com/u/vid/2015/04/wshh6a7q1ny0G34ZwuIO.mp4\", \"vcodec\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"0 - unknown\", \"_filename\": \"KO Of The Week\\uff1a MMA Fighter Gets Knocked Out By Swift Head Kick! [wshh6a7q1ny0G34ZwuIO].mp4\", \"filename\": \"KO Of The Week\\uff1a MMA Fighter Gets Knocked Out By Swift Head Kick! [wshh6a7q1ny0G34ZwuIO].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO",
+   "args": [
+    "-F",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[WorldStarHipHop] Extracting URL: http://www.worldstarhiphop.com/videos/video.php?v=wshh6a7q1ny0G34ZwuIO",
+    "[WorldStarHipHop] wshh6a7q1ny0G34ZwuIO: Downloading webpage",
+    "[info] Available subtitles for wshh6a7q1ny0G34ZwuIO:",
+    "Language Formats",
+    "en       vtt",
+    "[info] Available formats for wshh6a7q1ny0G34ZwuIO:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  mp4 unknown    | https | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://m.worldstarcandy.com/android/video.php?v=pinned",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"formats\": [{\"url\": \"http://hw-videos.worldstarcandy.com/u/vid/x.m4v\", \"vcodec\": null, \"ext\": \"m4v\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://m.worldstarcandy.com/android/video.php?v=pinned\"}, \"protocol\": \"http\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"subtitles\": {}, \"thumbnail\": null, \"id\": \"pinned\", \"title\": \"Pinned & Title\", \"webpage_url\": \"https://m.worldstarcandy.com/android/video.php?v=pinned\", \"original_url\": \"https://m.worldstarcandy.com/android/video.php?v=pinned\", \"webpage_url_basename\": \"video.php\", \"webpage_url_domain\": \"m.worldstarcandy.com\", \"extractor\": \"WorldStarHipHop\", \"extractor_key\": \"WorldStarHipHop\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"pinned\", \"fulltitle\": \"Pinned & Title\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://hw-videos.worldstarcandy.com/u/vid/x.m4v\", \"vcodec\": null, \"ext\": \"m4v\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://m.worldstarcandy.com/android/video.php?v=pinned\"}, \"protocol\": \"http\", \"video_ext\": \"m4v\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Pinned & Title [pinned].m4v\", \"filename\": \"Pinned & Title [pinned].m4v\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.worldstarhiphop.com/videos/video.php?v=notitle",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [WorldStarHipHop] notitle: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

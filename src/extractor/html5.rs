@@ -96,6 +96,8 @@ pub(crate) static FORCE_GENERIC: std::sync::atomic::AtomicBool =
 
 struct Html5Source {
     url: Url,
+    /// `parse_content_type(type)['ext']`.
+    type_ext: Option<String>,
     hls_hint: bool,
     dash_hint: bool,
     width: Option<u32>,
@@ -240,20 +242,48 @@ fn nonempty(value: Option<&str>) -> Option<&str> {
     value.map(str::trim).filter(|value| !value.is_empty())
 }
 
-fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
-    let document = Html::parse_document(html);
-    let base = document
-        .select(&selector("base[href]"))
-        .next()
-        .map(|base| page_url.join(base.value().attr("href").unwrap_or("")))
-        .transpose()?
-        .unwrap_or_else(|| page_url.clone());
+/// `dict_get(attrs, ('src', 'data-video-src', 'data-src', 'data-source'))`
+/// for site extractors; the generic subset reads only `src`.
+fn media_src(element: &scraper::node::Element, site: bool) -> Option<&str> {
+    if !site {
+        return nonempty(element.attr("src"));
+    }
+    ["src", "data-video-src", "data-src", "data-source"]
+        .into_iter()
+        .filter_map(|name| element.attr(name))
+        .find(|value| !value.is_empty())
+        .and_then(|value| nonempty(Some(value)))
+}
+
+/// `parse_content_type(...)['ext']`: `mimetype2ext` of the type's MIME.
+fn content_type_ext(content_type: Option<&str>) -> Option<String> {
+    static PATTERN: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"[^/]+/[^;]+").unwrap());
+    let mime = PATTERN.find(content_type.filter(|value| !value.is_empty())?)?;
+    let ext = direct::mimetype2ext_or(mime.as_str(), None);
+    (!ext.is_empty()).then_some(ext)
+}
+
+/// The media elements of `_parse_html5_media_entries`. `site` selects the
+/// upstream behaviour site extractors rely on (the `amp-`/`dl8-` tags, the
+/// `data-*` source attributes and subtitle-only entries); the generic subset
+/// keeps its narrower, tested behaviour.
+fn media_entries(base: &Url, document: &Html, site: bool) -> Result<Vec<Html5Entry>> {
+    let tags = if site {
+        "video, audio, amp-video, amp-audio, dl8-video, dl8-audio, dl8-live-video, dl8-live-audio"
+    } else {
+        "video, audio"
+    };
     let mut entries = Vec::new();
-    for element in document.select(&selector("video, audio")) {
+    for element in document.select(&selector(tags)) {
         // Validate every alternative, including unselected manifests.
         let mut sources = Vec::new();
-        let vcodec = (element.value().name() == "audio").then(|| "none".to_owned());
-        if let Some(src) = nonempty(element.value().attr("src")) {
+        let vcodec = element
+            .value()
+            .name()
+            .ends_with("audio")
+            .then(|| "none".to_owned());
+        if let Some(src) = media_src(element.value(), site) {
             // Media element dimensions describe the player, not its source.
             sources.push((
                 src,
@@ -267,7 +297,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
         }
         for child in element.children().filter_map(scraper::ElementRef::wrap) {
             if child.value().name() == "source"
-                && let Some(src) = nonempty(child.value().attr("src"))
+                && let Some(src) = media_src(child.value(), site)
             {
                 let (width, height, tbr) = source_metadata(child.value());
                 sources.push((
@@ -287,12 +317,18 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                 ));
             }
         }
-        if sources.is_empty() {
+        if sources.is_empty() && !site {
             continue;
         }
         let mut urls = Vec::new();
         for (source, content_type, width, height, tbr, child, label) in sources {
-            let url = base.join(source)?;
+            // Site extractors keep `urljoin`'s protocol-relative URLs, which
+            // processing's `sanitize_url` makes HTTP.
+            let url = if site && source.starts_with("//") {
+                Url::parse(&format!("http:{source}"))?
+            } else {
+                base.join(source)?
+            };
             if !matches!(url.scheme(), "http" | "https") {
                 return Err(Error::UnsupportedScheme(url.scheme().into()));
             }
@@ -302,6 +338,7 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
                 .and_then(content_type_codecs)
                 .and_then(|codecs| crate::codecs::parse(Some(codecs)));
             urls.push(Html5Source {
+                type_ext: content_type_ext(content_type),
                 url,
                 width,
                 height,
@@ -369,12 +406,27 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
             Some(poster) if scheme_relative(poster) => Some(poster.to_owned()),
             Some(poster) => base.join(poster).ok().map(String::from),
         };
+        if urls.is_empty() && subtitles.entries.is_empty() {
+            continue;
+        }
         entries.push(Html5Entry {
             sources: urls,
             subtitles,
             thumbnail,
         });
     }
+    Ok(entries)
+}
+
+fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
+    let document = Html::parse_document(html);
+    let base = document
+        .select(&selector("base[href]"))
+        .next()
+        .map(|base| page_url.join(base.value().attr("href").unwrap_or("")))
+        .transpose()?
+        .unwrap_or_else(|| page_url.clone());
+    let entries = media_entries(&base, &document, false)?;
     if entries.is_empty() {
         return Ok(None);
     }
@@ -410,6 +462,134 @@ fn parse_page(page_url: &Url, html: &str) -> Result<Option<Html5Page>> {
         playlist_title,
         id,
     }))
+}
+
+/// One `_parse_html5_media_entries` entry (`formats`, `subtitles` and the
+/// poster `thumbnail`).
+pub(crate) struct MediaEntry {
+    pub formats: Vec<VideoFormat>,
+    pub subtitles: Subtitles,
+    pub thumbnail: Option<String>,
+}
+
+/// Upstream `InfoExtractor._parse_html5_media_entries(base_url, webpage,
+/// video_id, m3u8_id=m3u8_id, mpd_id=mpd_id)` for site extractors: every
+/// media element's sources (plain URLs are not requested; `m3u8`/`mpd`
+/// sources are non-fatal manifest downloads), tracks and poster, each format
+/// with the base URL as its `Referer`. Sources whose URLs are not HTTP(S)
+/// remain explicit errors.
+pub(crate) fn parse_html5_media_entries(
+    client: &Client,
+    base_url: &Url,
+    html: &str,
+    video_id: &str,
+    extractor: &'static str,
+    m3u8_id: Option<&str>,
+    mpd_id: Option<&str>,
+) -> Result<Vec<MediaEntry>> {
+    let document = Html::parse_document(html);
+    let referer = || {
+        Some(serde_json::Map::from_iter([(
+            "Referer".to_owned(),
+            serde_json::Value::from(base_url.as_str()),
+        )]))
+    };
+    let mut entries = Vec::new();
+    for entry in media_entries(base_url, &document, true)? {
+        let mut formats = Vec::new();
+        for source in &entry.sources {
+            let ext = source
+                .type_ext
+                .clone()
+                .or_else(|| direct::determine_ext(source.url.as_str()))
+                .unwrap_or_else(|| "unknown_video".into());
+            let manifest = match ext.as_str() {
+                "m3u8" => Some(
+                    super::extract_m3u8_optional(
+                        client,
+                        &source.url,
+                        extractor,
+                        video_id,
+                        m3u8_id,
+                        false,
+                    )
+                    .map(|mut info| {
+                        // `_extract_m3u8_formats(..., ext='mp4')`.
+                        for format in &mut info.formats {
+                            if format.ext.is_empty() || format.ext == "unknown_video" {
+                                format.ext = "mp4".into();
+                            }
+                        }
+                        info
+                    }),
+                ),
+                "mpd" => Some(super::extract_mpd_optional_note(
+                    client,
+                    &source.url,
+                    extractor,
+                    video_id,
+                    mpd_id,
+                    "Downloading MPD manifest",
+                )),
+                _ => None,
+            };
+            if let Some(manifest) = manifest {
+                for mut format in manifest.map(|info| info.formats).unwrap_or_default() {
+                    if let Some(serde_json::Value::String(shape)) =
+                        format.extra.get(crate::info_order::FORMAT_SHAPE)
+                    {
+                        let shape = format!("html5+{shape}");
+                        crate::info_order::mark_format(&mut format, &shape);
+                    }
+                    let mut headers = format.http_headers.take().unwrap_or_default();
+                    headers.insert("Referer".into(), base_url.as_str().into());
+                    format.http_headers = Some(headers);
+                    formats.push(format);
+                }
+                continue;
+            }
+            let mut map = serde_json::Map::new();
+            map.insert("url".into(), source.url.as_str().into());
+            map.insert("ext".into(), ext.into());
+            map.insert(
+                "vcodec".into(),
+                source
+                    .vcodec
+                    .clone()
+                    .map_or(serde_json::Value::Null, Into::into),
+            );
+            let shape = if source.element {
+                if let Some(codecs) = &source.codecs {
+                    map.insert("acodec".into(), codecs.acodec.clone().into());
+                    if let Some(range) = codecs.dynamic_range {
+                        map.insert("dynamic_range".into(), range.into());
+                    }
+                }
+                map.insert("width".into(), source.width.into());
+                map.insert("height".into(), source.height.into());
+                map.insert("tbr".into(), source.tbr.into());
+                map.insert(
+                    "format_id".into(),
+                    source.label.clone().unwrap_or_default().into(),
+                );
+                "html5-source"
+            } else {
+                map.insert("format_id".into(), "".into());
+                "html5-src"
+            };
+            let mut format: VideoFormat = serde_json::from_value(serde_json::Value::Object(map))
+                .map_err(|error| unsupported(&format!("HTML5 media: {error}")))?;
+            format.http_headers = referer();
+            crate::info_order::mark_format(&mut format, shape);
+            formats.push(format);
+        }
+        entries.push(MediaEntry {
+            formats,
+            subtitles: entry.subtitles,
+            thumbnail: entry.thumbnail,
+        });
+    }
+    Ok(entries)
 }
 
 impl Extractor for GenericHttp {
@@ -2545,6 +2725,39 @@ fn webpage_error(id: &str, error: Error) -> Error {
 /// `Unable to download webpage: ERR (caused by REPR)` for `Error::Webpage`.
 pub(crate) fn webpage_error_text(id: &str, error: &Error) -> String {
     super::request_error_text("generic", id, "webpage", error)
+}
+
+#[cfg(test)]
+mod media_entries_tests {
+    use super::*;
+
+    #[test]
+    fn site_entries_follow_upstream_parse_html5_media_entries() {
+        let base = Url::parse("https://example.com/watch/1").unwrap();
+        let html = r#"<video poster="/p.jpg"><source data-src="/a.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" label="720p"></video>
+            <amp-audio src="b"></amp-audio><video><track src="/s.vtt" srclang="en"></video><video></video>"#;
+        let client = Client::new();
+        let entries =
+            parse_html5_media_entries(&client, &base, html, "1", "test", None, None).unwrap();
+        assert_eq!(entries.len(), 3);
+        let first = &entries[0].formats[0];
+        assert_eq!(first.url.as_str(), "https://example.com/a.mp4");
+        assert_eq!((first.ext.as_str(), first.height), ("mp4", Some(720)));
+        assert_eq!(first.format_id, "720p");
+        assert_eq!(
+            first.http_headers.as_ref().unwrap()["Referer"],
+            "https://example.com/watch/1"
+        );
+        assert_eq!(
+            entries[0].thumbnail.as_deref(),
+            Some("https://example.com/p.jpg")
+        );
+        let audio = &entries[1].formats[0];
+        assert_eq!(audio.ext, "unknown_video");
+        assert_eq!(audio.vcodec.as_deref(), Some("none"));
+        assert!(entries[2].formats.is_empty());
+        assert_eq!(entries[2].subtitles.entries.len(), 1);
+    }
 }
 
 #[cfg(test)]

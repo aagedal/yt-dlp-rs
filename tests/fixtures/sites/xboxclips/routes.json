@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://gameclips.io/Iabdulelah/074a69a9-5faf-46aa-b93b-9909c1720325",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://gameclips.io/someone/11111111-2222-3333-4444-555555555555",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "bare.html"
+  },
+  {
+   "url": "https://www.gameclips.io/x/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "notitle.html"
+  },
+  {
+   "url": "https://gameclips.io/x/99999999-bbbb-cccc-dddd-eeeeeeeeeeee",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body>gone</body></html>"
+  }
+ ]
+}
