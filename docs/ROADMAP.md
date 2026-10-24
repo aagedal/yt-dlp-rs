@@ -138,7 +138,7 @@ remain outside the current result contract.
    feed native fragment downloads and explicit FFmpeg copy merging, including
    MPEG-TS video and AAC/TS audio. Static single-period DASH templates/timelines/lists/ranges and native
    representation downloads are implemented; explicit FFmpeg merges separate
-   tracks. Dynamic/multi-period/SIDX DASH, SAMPLE-AES/DRM and live HLS,
+   tracks. Dynamic/multi-period/SIDX DASH, SAMPLE-AES/DRM and native (non-FFmpeg) live HLS,
    external video/subtitle renditions, discontinuities,
    persistent resume across invocations, extraction cancellation, and CLI signal handling remain open.
    Global custom headers and User-Agent/Referer options apply across extraction,

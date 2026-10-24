@@ -29,5 +29,18 @@
   "args": [
    "-j"
   ]
+ },
+ {
+  "url": "https://kamera-live.webcamera.pl/",
+  "args": [
+   "--print",
+   "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s|%(manifest_url)s|%(format_index)s|%(has_drm)s"
+  ]
+ },
+ {
+  "url": "https://kamera-live.webcamera.pl/",
+  "args": [
+   "-F"
+  ]
  }
 ]

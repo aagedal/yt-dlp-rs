@@ -699,7 +699,7 @@
         "src/extractor/goodgame.rs",
         "tests/fixtures/sites/goodgame/"
       ],
-      "scope": "GoodGameIE stream API, offline error and live master HLS playlist with traverse_obj channel fields compared with pinned upstream output through the fixture proxy"
+      "scope": "GoodGameIE stream API, offline error and live master HLS playlist (a live media-only playlist is one format) with traverse_obj channel fields compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "graspop",
@@ -1689,7 +1689,7 @@
         "src/extractor/webcamerapl.rs",
         "tests/fixtures/sites/webcamerapl/"
       ],
-      "scope": "WebcameraplIE ROT13 data-src live HLS master (live variant IDs), heading title and expected no-formats error compared with pinned upstream output through the fixture proxy; live media-only playlists without ENDLIST remain unsupported natively"
+      "scope": "WebcameraplIE ROT13 data-src live HLS master (live variant IDs), heading title and expected no-formats error compared with pinned upstream output through the fixture proxy and a live media-only playlist (no ENDLIST) as one format"
     },
     {
       "name": "weibo",

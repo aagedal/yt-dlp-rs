@@ -67,6 +67,37 @@
     "ERROR: [Webcamerapl] gone: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
    ],
    "files": {}
+  },
+  {
+   "url": "https://kamera-live.webcamera.pl/",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(width)s|%(height)s|%(url)s|%(manifest_url)s|%(format_index)s|%(has_drm)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "kamera-live|KAMERA NA ZYWO|True|is_live|0|m3u8|m3u8_native|NA|NA|https://hoktastream2.webcamera.pl/live_cam/live_cam.stream/chunklist.m3u8|NA|NA|False"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://kamera-live.webcamera.pl/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Webcamerapl] Extracting URL: https://kamera-live.webcamera.pl/",
+    "[Webcamerapl] kamera-live: Downloading webpage",
+    "[Webcamerapl] kamera-live: Downloading m3u8 information",
+    "[info] Available formats for kamera-live:",
+    "ID EXT  RESOLUTION | PROTO | VCODEC  ACODEC",
+    "--------------------------------------------",
+    "0  m3u8 unknown    | m3u8  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

@@ -700,7 +700,7 @@ webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
 `WebcameraplIE`: the ROT13-decoded `data-src` manifest (else the expected
 `No video/audio found` error) as live HLS formats and subtitles with live
 variant IDs, the cleaned `<h1>` title and `is_live`. A live media-only
-playlist without `#EXT-X-ENDLIST` remains an explicit native error.
+playlist (no `#EXT-X-ENDLIST`) is one format, as upstream.
 
 ETTU TV player pages (`ettu.tv/LANG/playerpage/ID`) follow upstream
 `EttuTvIE`: the `player-settings` JSON (`language=en&showTitle=true&device=desktop`),
@@ -1215,7 +1215,7 @@ for a false `status`, otherwise the live master playlist's variants (not
 fetched, as upstream's `live=True`) with `is_live`, and the `traverse_obj`
 title, channel, uploader, proto-relative thumbnail, viewer/follower counts
 and `adult` age limit. A master URL that serves a live media playlist is
-not supported natively (no `ENDLIST`), unlike upstream.
+one format, as upstream.
 
 Graspop concerts (`vod.graspop.be/LL/ID/`) follow upstream `GraspopIE`: the
 Proximus festival stream's `source.assetUri` over `http:` as fatal HLS
@@ -2401,8 +2401,14 @@ read before selection; segment bodies are not probed. One master level, at most
 256 variants and 1000000 retained fragments across a master (500000 per
 media playlist, enough for multi-day Twitch VODs) are supported.
 
-Media playlists require `EXT-X-ENDLIST`, nonempty positive-duration segments and
-HTTP(S) URLs. A nonzero media sequence is permitted for a completed VOD. Without
+Like upstream `_parse_m3u8_formats_and_subtitles`, a media playlist
+(`EXT-X-TARGETDURATION`) without `EXT-X-ENDLIST` is extracted as one
+`m3u8_native` format for the manifest URL without reading its segments; the
+generic "Checking m3u8 live status" refetch then marks it `is_live`, and live
+HLS downloads through FFmpeg (`_get_suitable_downloader`). Without FFmpeg the
+native downloader rejects the unfinished playlist (no live HlsFD refresh).
+Natively downloaded media playlists require `EXT-X-ENDLIST`, nonempty
+positive-duration segments and HTTP(S) URLs. A nonzero media sequence is permitted for a completed VOD. Without
 an initialization map, `.aac` segments produce AAC and other ordinary/extensionless
 segment URLs default to MPEG-TS (`ts`); clear nested manifests/HTML and MP4 media
 without initialization are rejected. One initial `EXT-X-MAP` produces fragmented
