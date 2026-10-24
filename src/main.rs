@@ -3242,6 +3242,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 "PremiershipRugby",
                 yt_dlp_rs::extractor::premiershiprugby_suitable,
             ),
+            (
+                "ProjectVeritas (CURRENTLY BROKEN)",
+                yt_dlp_rs::extractor::projectveritas_suitable,
+            ),
             ("QingTing", yt_dlp_rs::extractor::qingting_suitable),
             ("Reddit", yt_dlp_rs::extractor::reddit_suitable),
             ("ReverbNation", yt_dlp_rs::extractor::reverbnation_suitable),

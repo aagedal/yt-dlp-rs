@@ -1,0 +1,59 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.projectveritas.com/news/exclusive-hospitals/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"51910aab-365a-5cf1-88f2-8eb1ca5fd3c6\", \"title\": \"Exclusive: Inside The Hospitals\", \"upload_date\": \"20200327\", \"thumbnail\": \"images.ctfassets.net/abc/hospital.jpg\", \"formats\": [{\"format_id\": \"0\", \"format_index\": null, \"url\": \"https://stream.mux.com/PbNews01.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://www.projectveritas.com/news/exclusive-hospitals/\", \"original_url\": \"https://www.projectveritas.com/news/exclusive-hospitals/\", \"webpage_url_basename\": \"exclusive-hospitals\", \"webpage_url_domain\": \"projectveritas.com\", \"extractor\": \"ProjectVeritas\", \"extractor_key\": \"ProjectVeritas\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"images.ctfassets.net/abc/hospital.jpg\", \"id\": \"0\"}], \"display_id\": \"51910aab-365a-5cf1-88f2-8eb1ca5fd3c6\", \"fulltitle\": \"Exclusive: Inside The Hospitals\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"0\", \"format_index\": null, \"url\": \"https://stream.mux.com/PbNews01.m3u8\", \"ext\": \"m3u8\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"m3u8\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"0 - unknown\", \"_filename\": \"Exclusive\\uff1a Inside The Hospitals [51910aab-365a-5cf1-88f2-8eb1ca5fd3c6].m3u8\", \"filename\": \"Exclusive\\uff1a Inside The Hospitals [51910aab-365a-5cf1-88f2-8eb1ca5fd3c6].m3u8\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.projectveritas.com/video/ballot-harvester/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"c5aab304-a56b-54b1-9f0b-03b77bc5f2f6\", \"title\": \"Ballot Harvester\", \"upload_date\": \"20200927\", \"thumbnail\": \"images.ctfassets.net/abc/ballot.jpg\", \"formats\": [{\"format_id\": \"800\", \"format_index\": null, \"url\": \"https://stream.mux.com/low.m3u8\", \"manifest_url\": \"https://stream.mux.com/PbVideo02.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"800 - 640x360\"}, {\"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://stream.mux.com/high.m3u8\", \"manifest_url\": \"https://stream.mux.com/PbVideo02.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\"}], \"webpage_url\": \"https://www.projectveritas.com/video/ballot-harvester/\", \"original_url\": \"https://www.projectveritas.com/video/ballot-harvester/\", \"webpage_url_basename\": \"ballot-harvester\", \"webpage_url_domain\": \"projectveritas.com\", \"extractor\": \"ProjectVeritas\", \"extractor_key\": \"ProjectVeritas\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"images.ctfassets.net/abc/ballot.jpg\", \"id\": \"0\"}], \"display_id\": \"c5aab304-a56b-54b1-9f0b-03b77bc5f2f6\", \"fulltitle\": \"Ballot Harvester\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2400\", \"format_index\": null, \"url\": \"https://stream.mux.com/high.m3u8\", \"manifest_url\": \"https://stream.mux.com/PbVideo02.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2400 - 1280x720\", \"_filename\": \"Ballot Harvester [c5aab304-a56b-54b1-9f0b-03b77bc5f2f6].mp4\", \"filename\": \"Ballot Harvester [c5aab304-a56b-54b1-9f0b-03b77bc5f2f6].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.projectveritas.com/news/text-only",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [ProjectVeritas] text-only: No video on the provided url."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.projectveritas.com/video/gone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: gone: An extractor error has occurred. (caused by KeyError('result')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

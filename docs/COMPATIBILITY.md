@@ -810,6 +810,15 @@ Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 with its description, poster, duration and account; an empty item list is
 upstream's bare `IndexError`.
 
+Project Veritas pages (`projectveritas.com/news|video/SLUG`) follow upstream
+`ProjectVeritasIE` (marked broken): the `page-data/TYPE/SLUG/page-data.json`
+`video` (else `post`) object, its `muxAsset` (else the first one in the
+rich-text body; neither is the expected `No video on the provided url.`) and
+`stream.mux.com/PLAYBACK.m3u8` as fatal HLS formats without a forced
+extension, with the title, `unified_strdate` date and the OpenGraph image
+with every `//` removed, like upstream. Posts without an image (an upstream
+`AttributeError`) or a playback ID remain explicit native errors.
+
 tele-TASK lectures (`tele-task.de/archive/video/html5/ID`) follow upstream
 `TeleTaskIE` (marked broken, so the broken-site warning comes first): the
 page's `<video class="KIND"><source src>` pairs as a playlist of untyped

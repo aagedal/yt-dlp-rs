@@ -957,6 +957,18 @@
       "scope": "PremiershipRugbyIE article CMS hero media (fatal ext-less HLS formats and subtitles, ID/title/thumbnail/duration/tags/categories, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "projectveritas",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/projectveritas.py"
+      ],
+      "rust": [
+        "src/extractor/projectveritas.rs",
+        "tests/fixtures/sites/projectveritas/"
+      ],
+      "scope": "ProjectVeritasIE (marked broken) page-data.json video/post, Mux asset (direct or rich-text body) fatal HLS formats without a forced ext, title, unified_strdate date and slash-stripped OpenGraph image, with the no-video and KeyError messages, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "qingting",
       "status": "partial",
       "upstream": [
