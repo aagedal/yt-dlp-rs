@@ -611,6 +611,17 @@ pub(crate) fn request_error_text(
     what: &str,
     error: &crate::Error,
 ) -> String {
+    request_errnote_text(extractor, id, &format!("Unable to download {what}"), error)
+}
+
+/// [`request_error_text`] for a request's own `errnote`:
+/// `[EXTRACTOR] ID: ERRNOTE: ERR (caused by REPR)`.
+pub(crate) fn request_errnote_text(
+    extractor: &str,
+    id: &str,
+    errnote: &str,
+    error: &crate::Error,
+) -> String {
     let text = crate::upstream_error_text(error);
     let status = match error {
         crate::Error::Http(source) | crate::Error::HttpRetryAfter { source, .. } => source.status(),
@@ -620,7 +631,7 @@ pub(crate) fn request_error_text(
         Some(_) => format!("<{}>", text.replacen("HTTP Error ", "HTTPError ", 1)),
         None => format!("TransportError({})", crate::batch::py_repr(&text)),
     };
-    format!("[{extractor}] {id}: Unable to download {what}: {text} (caused by {cause})")
+    format!("[{extractor}] {id}: {errnote}: {text} (caused by {cause})")
 }
 
 /// Upstream `_report_ignoring_subs(NAME)` for `_extract_m3u8_formats` and

@@ -1,0 +1,1867 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "code": "function f(){ return 1 + 2 * 3 - 4 / 2; }",
+   "result": "5.0"
+  },
+  {
+   "code": "function f(){ return 7 / 2; }",
+   "result": "3.5"
+  },
+  {
+   "code": "function f(){ return 10 / 4 * 2; }",
+   "result": "5.0"
+  },
+  {
+   "code": "function f(){ return 2 ** 3 ** 2; }",
+   "result": "64"
+  },
+  {
+   "code": "function f(){ return 5 % 3; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return -5 % 3; }",
+   "result": "-2"
+  },
+  {
+   "code": "function f(){ var a = -5; return a % 3; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ var a = 5.5; return a % 2; }",
+   "result": "1.5"
+  },
+  {
+   "code": "function f(){ var a = -5.5; return a % 2; }",
+   "result": "0.5"
+  },
+  {
+   "code": "function f(){ return 1 / 3; }",
+   "result": "0.3333333333333333"
+  },
+  {
+   "code": "function f(){ return 0.1 + 0.2; }",
+   "result": "0.30000000000000004"
+  },
+  {
+   "code": "function f(){ return 1e3; }",
+   "result": "1000.0"
+  },
+  {
+   "code": "function f(){ return 1e21; }",
+   "result": "1e+21"
+  },
+  {
+   "code": "function f(){ return 1.5e-7; }",
+   "result": "1.5e-07"
+  },
+  {
+   "code": "function f(){ return 0x1F; }",
+   "result": "31"
+  },
+  {
+   "code": "function f(){ return 017; }",
+   "result": "17"
+  },
+  {
+   "code": "function f(){ return 2.0; }",
+   "result": "2.0"
+  },
+  {
+   "code": "function f(){ return 3 - 1.5; }",
+   "result": "1.5"
+  },
+  {
+   "code": "function f(){ return 100000 * 100000; }",
+   "result": "10000000000"
+  },
+  {
+   "code": "function f(){ return 9007199254740993; }",
+   "result": "9007199254740993"
+  },
+  {
+   "code": "function f(){ return 2 ** 0.5; }",
+   "result": "1.4142135623730951"
+  },
+  {
+   "code": "function f(){ return 2 ** -1; }",
+   "result": "0.5"
+  },
+  {
+   "code": "function f(){ return 0 ** -1; }",
+   "error": "Exception",
+   "message": "Failed to evaluate 0 ** -1 in: 0 ** -1"
+  },
+  {
+   "code": "function f(){ return 4 ** 0.5; }",
+   "result": "2.0"
+  },
+  {
+   "code": "function f(){ var a = -8; return a ** 0.5; }",
+   "divergence": "Python returns a complex number; this port raises",
+   "result": "(1.7319121124709868e-16+2.8284271247461903j)"
+  },
+  {
+   "code": "function f(){ return -2 * -3; }",
+   "result": "6"
+  },
+  {
+   "code": "function f(){ return 1 - - 1; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return 5 - -3 - 2; }",
+   "result": "6"
+  },
+  {
+   "code": "function f(){ return +5; }",
+   "result": "5"
+  },
+  {
+   "code": "function f(){ return -(3); }",
+   "result": "-3"
+  },
+  {
+   "code": "function f(){ return 2 * (3 + 4); }",
+   "result": "14"
+  },
+  {
+   "code": "function f(){ return ((2)); }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return 1 + 2 + \"3\"; }",
+   "result": "'33'"
+  },
+  {
+   "code": "function f(){ return \"1\" + 2 + 3; }",
+   "result": "'123'"
+  },
+  {
+   "code": "function f(){ return \"a\" * 3; }",
+   "result": "'aaa'"
+  },
+  {
+   "code": "function f(){ var a = \"ab\"; return a * 2; }",
+   "result": "'abab'"
+  },
+  {
+   "code": "function f(){ return [1] * 2; }",
+   "result": "[1, 1]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; return a + [3]; }",
+   "result": "[1, 2, 3]"
+  },
+  {
+   "code": "function f(){ return true + true; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return true * 3; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return null + null; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return null * 5; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return \"5\" - 2; }",
+   "error": "Exception",
+   "message": "Failed to evaluate '5' - 2 in: __yt_dlp_jsinterp_obj1 - 2"
+  },
+  {
+   "code": "function f(){ return \"5\" * \"2\"; }",
+   "error": "Exception",
+   "message": "Failed to evaluate '5' * '2' in: __yt_dlp_jsinterp_obj1 * \"2\""
+  },
+  {
+   "code": "function f(){ return 5 / \"a\"; }",
+   "error": "Exception",
+   "message": "Failed to evaluate 5 / 'a' in: 5 / \"a\""
+  },
+  {
+   "code": "function f(){ return 0 / 0; }",
+   "result": "nan"
+  },
+  {
+   "code": "function f(){ return 3 / 0; }",
+   "result": "inf"
+  },
+  {
+   "code": "function f(){ return -3 / 0; }",
+   "result": "-inf"
+  },
+  {
+   "code": "function f(){ var z = 0; return 3 / z; }",
+   "result": "inf"
+  },
+  {
+   "code": "function f(){ return 0 / 5; }",
+   "result": "0.0"
+  },
+  {
+   "code": "function f(){ return null / 5; }",
+   "result": "0.0"
+  },
+  {
+   "code": "function f(){ return 5 % null; }",
+   "result": "nan"
+  },
+  {
+   "code": "function f(){ return null % 5; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return 2 ** null; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ return null ** 2; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return 0 ** 0; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ return NaN + 1; }",
+   "result": "nan"
+  },
+  {
+   "code": "function f(){ return NaN == NaN; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return NaN === NaN; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return Infinity; }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f(){ return 1e400; }",
+   "result": "inf"
+  },
+  {
+   "code": "function f(){ return 5 | 3; }",
+   "result": "7"
+  },
+  {
+   "code": "function f(){ return 5 & 3; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ return 5 ^ 3; }",
+   "result": "6"
+  },
+  {
+   "code": "function f(){ return -1 >> 1; }",
+   "result": "-1"
+  },
+  {
+   "code": "function f(){ return -1 << 31; }",
+   "result": "-2147483648"
+  },
+  {
+   "code": "function f(){ return 1 << 32; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return 1 << 31; }",
+   "result": "-2147483648"
+  },
+  {
+   "code": "function f(){ return 2147483647 + 1 | 0; }",
+   "result": "-2147483648"
+  },
+  {
+   "code": "function f(){ return 4294967296 | 0; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return 3.7 | 0; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return -3.7 | 0; }",
+   "result": "-3"
+  },
+  {
+   "code": "function f(){ return \"abc\" | 0; }",
+   "error": "Exception",
+   "message": "Failed to evaluate 'abc' | 0 in: __yt_dlp_jsinterp_obj1 | 0"
+  },
+  {
+   "code": "function f(){ return [] | 0; }",
+   "error": "Exception",
+   "message": "Failed to evaluate [] | 0 in: __yt_dlp_jsinterp_obj1| 0"
+  },
+  {
+   "code": "function f(){ return 1 << -1; }",
+   "error": "Exception",
+   "message": "Failed to evaluate 1 << -1 in: 1 << -1"
+  },
+  {
+   "code": "function f(){ return 8 >> 1.9; }",
+   "result": "4"
+  },
+  {
+   "code": "function f(){ return 1e20 | 0; }",
+   "result": "1661992960"
+  },
+  {
+   "code": "function f(){ return 2 ** 53 | 0; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return \"0x10\" | 0; }",
+   "error": "Exception",
+   "message": "Failed to evaluate '0x10' | 0 in: __yt_dlp_jsinterp_obj1 | 0"
+  },
+  {
+   "code": "function f(){ return \" 12 \" | 0; }",
+   "result": "12"
+  },
+  {
+   "code": "function f(){ return \"1e3\" | 0; }",
+   "result": "1000"
+  },
+  {
+   "code": "function f(){ return \"inf\" | 0; }",
+   "error": "Exception",
+   "message": "Failed to evaluate 'inf' | 0 in: __yt_dlp_jsinterp_obj1 | 0"
+  },
+  {
+   "code": "function f(){ return \"nan\" | 0; }",
+   "error": "Exception",
+   "message": "Failed to evaluate 'nan' | 0 in: __yt_dlp_jsinterp_obj1 | 0"
+  },
+  {
+   "code": "function f(){ return 1 < 2; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return 2 <= 2; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return \"b\" > \"a\"; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return \"10\" < \"9\"; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return \"10\" < 9; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return 10 < \"9\"; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return null < 1; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return null == undefined; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return null === undefined; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return 1 == 1.0; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return 1 === 1.0; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return true == 1; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return true === 1; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return \"1\" == 1; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return [1] == [1]; }",
+   "error": "Exception",
+   "message": "Failed to evaluate [1] == [1] in: __yt_dlp_jsinterp_obj1== [1]"
+  },
+  {
+   "code": "function f(){ return [1, 2] < [1, 3]; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return [1] < 2; }",
+   "error": "Exception",
+   "message": "Failed to evaluate [1] < 2 in: __yt_dlp_jsinterp_obj1< 2"
+  },
+  {
+   "code": "function f(){ var a = [1]; var b = a; return a === b; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ var a = [1]; return a === [1]; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return {} < {}; }",
+   "result": "{}"
+  },
+  {
+   "code": "function f(){ return \"abc\" === \"abc\"; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return 300 === 300; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return 1 != 2; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return null != null; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return undefined != null; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return \"a\" < 1; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return true < 2; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return false >= 0; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return 1 && 2; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return 0 || \"x\"; }",
+   "result": "'x'"
+  },
+  {
+   "code": "function f(){ return \"\" || 0; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return null ?? 5; }",
+   "result": "5"
+  },
+  {
+   "code": "function f(){ return undefined ?? null ?? 3; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return 0 ?? 1; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return 1 ? 2 : 3; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return 0 ? 2 : 3; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return 1 ? 0 ? 4 : 5 : 6; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression in: 5 : 6"
+  },
+  {
+   "code": "function f(){ return \"\" ? 1 : 2; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return [] ? 1 : 2; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ return {} ? 1 : 2; }",
+   "result": "{}"
+  },
+  {
+   "code": "function f(){ return NaN ? 1 : 2; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return 0.0 ? 1 : 2; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return 1 ?; }",
+   "error": "TypeError",
+   "message": "'bool' object is not iterable"
+  },
+  {
+   "code": "function f(){ return 0 ? 1; }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ return !0; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return !1; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ return !!\"\"; }",
+   "result": "''"
+  },
+  {
+   "code": "function f(){ return true && false || true; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return \"abc\".length; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return \"a\\u00e9b\".length; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return \"x\" + undefined; }",
+   "result": "\"x<class 'yt_dlp.jsinterp.JS_Undefined'>\""
+  },
+  {
+   "code": "function f(){ return \"x\" + null; }",
+   "result": "'xNone'"
+  },
+  {
+   "code": "function f(){ return \"x\" + [1, \"a\"]; }",
+   "result": "\"x[1, 'a']\""
+  },
+  {
+   "code": "function f(){ return \"x\" + {a: 1}; }",
+   "result": "\"x{'a': 1}\""
+  },
+  {
+   "code": "function f(){ return \"x\" + 1.0; }",
+   "result": "'x1.0'"
+  },
+  {
+   "code": "function f(){ return \"x\" + 1e16; }",
+   "result": "'x1e+16'"
+  },
+  {
+   "code": "function f(){ return \"x\" + 0.00001; }",
+   "result": "'x1e-05'"
+  },
+  {
+   "code": "function f(){ return \"x\" + -0.0; }",
+   "result": "'x-0.0'"
+  },
+  {
+   "code": "function f(){ return 'single' + \"double\"; }",
+   "result": "'singledouble'"
+  },
+  {
+   "code": "function f(){ return \"esc\\\"aped\"; }",
+   "result": "'esc\"aped'"
+  },
+  {
+   "code": "function f(){ return \"tab\\there\"; }",
+   "result": "'tab\\there'"
+  },
+  {
+   "code": "function f(){ return \"line\\nbreak\"; }",
+   "result": "'line\\nbreak'"
+  },
+  {
+   "code": "function f(){ return \"\\x41\\u0042\"; }",
+   "result": "'AB'"
+  },
+  {
+   "code": "function f(){ return 'it\\'s'; }",
+   "result": "\"it's\""
+  },
+  {
+   "code": "function f(){ return \"a,b;c\".split(\",\"); }",
+   "result": "['a', 'b;c']"
+  },
+  {
+   "code": "function f(){ return \"abc\".split(\"\"); }",
+   "result": "['a', 'b', 'c']"
+  },
+  {
+   "code": "function f(){ return \"a-b-c\".split(\"-\", 2); }",
+   "error": "Exception",
+   "message": "split with limit argument is not implemented in: __yt_dlp_jsinterp_obj1.split(\"-\", 2)"
+  },
+  {
+   "code": "function f(){ return \"abc\"[1]; }",
+   "error": "Exception",
+   "message": "Cannot get index 1 in: 'abc'"
+  },
+  {
+   "code": "function f(){ return \"abc\".charCodeAt(1); }",
+   "result": "98"
+  },
+  {
+   "code": "function f(){ return \"abc\".charCodeAt(-1); }",
+   "result": "99"
+  },
+  {
+   "code": "function f(){ return \"abc\".charCodeAt(5); }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ return \"abc\".charCodeAt(1.5); }",
+   "result": "97"
+  },
+  {
+   "code": "function f(){ return \"abcdef\".slice(2, 4); }",
+   "result": "'cd'"
+  },
+  {
+   "code": "function f(){ return \"abcdef\".slice(-2); }",
+   "result": "'ef'"
+  },
+  {
+   "code": "function f(){ return \"abcdef\".slice(1.5); }",
+   "error": "TypeError",
+   "message": "slice indices must be integers or have an __index__ method"
+  },
+  {
+   "code": "function f(){ return \"hello\".indexOf(\"l\"); }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return \"hello\".indexOf(\"l\", 3); }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return \"hello\".indexOf(\"z\"); }",
+   "result": "-1"
+  },
+  {
+   "code": "function f(){ return \"hello\".indexOf(\"\"); }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return \"hello\".indexOf(1); }",
+   "error": "TypeError",
+   "message": "index() argument 1 must be str, not int"
+  },
+  {
+   "code": "function f(){ return \"abc\".reverse(); }",
+   "error": "AttributeError",
+   "message": "'str' object has no attribute 'reverse'"
+  },
+  {
+   "code": "function f(){ return \"abc\".join(\"\"); }",
+   "error": "Exception",
+   "message": "join must be applied on a list in: __yt_dlp_jsinterp_obj1.join(\"\")"
+  },
+  {
+   "code": "function f(){ return \"abc\".foo(); }",
+   "error": "TypeError",
+   "message": "string indices must be integers, not 'str'"
+  },
+  {
+   "code": "function f(){ return \"abc\".length + 1; }",
+   "result": "4"
+  },
+  {
+   "code": "function f(){ return String.fromCharCode(97, 98); }",
+   "result": "'ab'"
+  },
+  {
+   "code": "function f(){ return String.fromCharCode(1.5); }",
+   "error": "TypeError",
+   "message": "'float' object cannot be interpreted as an integer"
+  },
+  {
+   "code": "function f(){ return String.fromCharCode(); }",
+   "error": "Exception",
+   "message": "fromCharCode takes one or more arguments in: String.fromCharCode()"
+  },
+  {
+   "code": "function f(){ return String.fromCharCode(128512); }",
+   "result": "'😀'"
+  },
+  {
+   "code": "function f(){ return String.prototype.split.call(\"a.b\", \".\"); }",
+   "result": "['a', 'b']"
+  },
+  {
+   "code": "function f(){ return String.prototype.split.call(1, \".\"); }",
+   "error": "Exception",
+   "message": "prototype.split.call needs binding to type <class 'str'> in: String.prototype.split.call(1, \".\")"
+  },
+  {
+   "code": "function f(){ return String.prototype.slice.call(\"abc\", 1); }",
+   "result": "'bc'"
+  },
+  {
+   "code": "function f(){ return String.prototype.split.bind(\"a\", \".\"); }",
+   "error": "Exception",
+   "message": "Unsupported Function method bind in: String.prototype.split.bind(\"a\", \".\")"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3].length; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3][1]; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3][-1]; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3][5]; }",
+   "error": "Exception",
+   "message": "Cannot get index 5 in: [1, 2, 3]"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3][\"1\"]; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3][1.9]; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return [[1, 2], [3]][0][1]; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; a.push(3, 4); return a; }",
+   "result": "[1, 2, 3, 4]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; return a.push(3); }",
+   "result": "[1, 2, 3]"
+  },
+  {
+   "code": "function f(){ var a = []; return a.pop(); }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; a.pop(); return a; }",
+   "result": "[1]"
+  },
+  {
+   "code": "function f(){ var a = [3, 1, 2]; return a.reverse(); }",
+   "result": "[2, 1, 3]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2, 3]; return a.slice(1); }",
+   "result": "[2, 3]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2, 3]; return a.slice(-2, -1); }",
+   "result": "[2]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2, 3]; return a.slice(1, 2, 3); }",
+   "error": "Exception",
+   "message": "slice takes between 0 and 2 arguments in: a.slice(1, 2, 3)"
+  },
+  {
+   "code": "function f(){ var a = [1, 2, 3, 4]; return a.splice(1, 2); }",
+   "result": "[2, 3]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2, 3, 4]; a.splice(1, 2, \"x\", \"y\", \"z\"); return a; }",
+   "result": "[1, 'x', 'y', 'z', 4]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2, 3, 4]; a.splice(-1); return a; }",
+   "result": "[1, 2, 3]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2, 3, 4]; a.splice(1); return a; }",
+   "result": "[1]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2, 3]; a.splice(5, 1, 9); return a; }",
+   "result": "[1, 2, 3, 9]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; a.unshift(0, -1); return a; }",
+   "result": "[0, -1, 1, 2]"
+  },
+  {
+   "code": "function f(){ return [\"a\", \"b\"].join(\"-\"); }",
+   "result": "'a-b'"
+  },
+  {
+   "code": "function f(){ return [1, 2].join(\"-\"); }",
+   "error": "TypeError",
+   "message": "sequence item 0: expected str instance, int found"
+  },
+  {
+   "code": "function f(){ return [].join(\"-\"); }",
+   "result": "''"
+  },
+  {
+   "code": "function f(){ return [\"a\"].join(1); }",
+   "error": "AttributeError",
+   "message": "'int' object has no attribute 'join'"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3].indexOf(2); }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3].indexOf(4); }",
+   "result": "-1"
+  },
+  {
+   "code": "function f(){ return [1, 2, 1].indexOf(1, 1); }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return [1, 2, 1].indexOf(1, -1); }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return [1, \"1\"].indexOf(\"1\"); }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ return [true].indexOf(1); }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; a[0] = 9; return a; }",
+   "result": "[9, 2]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; a[-1] = 9; return a; }",
+   "result": "[1, 9]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; a[5] = 9; return a; }",
+   "error": "Exception",
+   "message": "Cannot get index 5 in: [1, 2]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; a[0] += 5; return a; }",
+   "result": "[6, 2]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; a[\"0\"] = 3; return a; }",
+   "error": "Exception",
+   "message": "List index 0 must be integer in: a[\"0\"] = 3"
+  },
+  {
+   "code": "function f(){ var a = [1, [2, 3]]; a[1][0] = 7; return a; }",
+   "result": "[1, [7, 3]]"
+  },
+  {
+   "code": "function f(){ return Array.prototype.join.call([1], \"\"); }",
+   "error": "TypeError",
+   "message": "sequence item 0: expected str instance, int found"
+  },
+  {
+   "code": "function f(){ return Array.prototype.join.call([\"a\", \"b\"], \"+\"); }",
+   "result": "'a+b'"
+  },
+  {
+   "code": "function f(){ return Array.prototype.join.apply([\"a\", \"b\"], [\"+\"]); }",
+   "result": "'a+b'"
+  },
+  {
+   "code": "function f(){ return Array.prototype.join.apply([\"a\"], \"+\"); }",
+   "error": "Exception",
+   "message": "prototype.join.apply second argument needs to be a list in: Array.prototype.join.apply([\"a\"], \"+\")"
+  },
+  {
+   "code": "function f(){ return Array.prototype.slice.call([1, 2, 3], 1); }",
+   "result": "[2, 3]"
+  },
+  {
+   "code": "function f(){ return Array.prototype.join.call(\"ab\", \"\"); }",
+   "error": "Exception",
+   "message": "prototype.join.call needs binding to type <class 'list'> in: Array.prototype.join.call(\"ab\", \"\")"
+  },
+  {
+   "code": "function f(){ return Array.isArray([]); }",
+   "error": "TypeError",
+   "message": "list() takes no keyword arguments"
+  },
+  {
+   "code": "function f(){ return [1, 2].forEach(function(x, i){ return x * i; }); }",
+   "result": "[0, 2]"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; var s = 0; a.forEach(function(x){ s = s + x; }); return s; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ var a = [1, 2]; return a.forEach(); }",
+   "error": "Exception",
+   "message": "forEach takes one or more arguments in: a.forEach()"
+  },
+  {
+   "code": "function f(){ var x = [function(){ return 5; }]; return x[0](); }",
+   "result": "5"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3].length - 1; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var a = [1, 2, 3]; return a[a.length - 1]; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return [1, , 3]; }",
+   "result": "[1, None, 3]"
+  },
+  {
+   "code": "function f(){ return [1, 2,]; }",
+   "result": "[1, 2, None]"
+  },
+  {
+   "code": "function f(){ return {a: 1, b: \"x\"}; }",
+   "result": "{'a': 1, 'b': 'x'}"
+  },
+  {
+   "code": "function f(){ return {\"a\": 1}[\"a\"]; }",
+   "result": "{'a': 1}"
+  },
+  {
+   "code": "function f(){ return {a: 1}.a; }",
+   "result": "{'a': 1}"
+  },
+  {
+   "code": "function f(){ var o = {a: 1, b: 2}; return o.b; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var o = {a: 1}; return o.c; }",
+   "error": "Exception",
+   "message": "Cannot get index c in: {'a': 1}"
+  },
+  {
+   "code": "function f(){ var o = {a: 1}; return o?.c; }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f(){ var o = {a: 1}; return o?.a; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ var o = {1: \"x\"}; return o[1]; }",
+   "error": "Exception",
+   "message": "Cannot get index 1 in: {1: 'x'}"
+  },
+  {
+   "code": "function f(){ var o = {a : 1}; return o.a; }",
+   "error": "Exception",
+   "message": "Cannot get index a in: {'a ': 1}"
+  },
+  {
+   "code": "function f(){ var o = {a: 1}; o[\"a\"] = 2; return o; }",
+   "error": "Exception",
+   "message": "List index a must be integer in: o[\"a\"] = 2"
+  },
+  {
+   "code": "function f(){ var o = {\"0\": 1}; o[0] = 2; return o; }",
+   "result": "{'0': 1, 0: 2}"
+  },
+  {
+   "code": "function f(){ var o = {a: 1, a: 2}; return o; }",
+   "result": "{'a': 2}"
+  },
+  {
+   "code": "function f(){ var o = {a: {b: 3}}; return o.a.b; }",
+   "error": "Exception",
+   "message": "Cannot get index a.b in: {'a': {'b': 3}}"
+  },
+  {
+   "code": "function f(){ var o = {f: function(x){ return x + 1; }}; return o.f(1); }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var o = {a: 1}; return o.length; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ var o = {a: [1, 2]}; return o.a.length; }",
+   "error": "Exception",
+   "message": "Cannot get index a.length in: {'a': [1, 2]}"
+  },
+  {
+   "code": "function f(){ return {a: 1,}; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression in: a: 1"
+  },
+  {
+   "code": "function f(){ var o = {}; return o; }",
+   "result": "{}"
+  },
+  {
+   "code": "function f(){ var k = \"a\"; var o = {[k]: 1}; return o; }",
+   "error": "TypeError",
+   "message": "cannot use 'list' as a dict key (unhashable type: 'list')"
+  },
+  {
+   "code": "function f(){ var o = {a: 1}; return o[\"a\"] + o.a; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var o = {a: 1, b: undefined}; return o; }",
+   "result": "{'a': 1, 'b': <class 'yt_dlp.jsinterp.JS_Undefined'>}"
+  },
+  {
+   "code": "function f(){ var a; return a; }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f(){ let a = 1; let b = a + 1; return b; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ const a = 5; return a; }",
+   "result": "5"
+  },
+  {
+   "code": "function f(){ a = 1; a += 2; a -= 1; a *= 5; return a; }",
+   "result": "10"
+  },
+  {
+   "code": "function f(){ var a = 7; a %= 4; return a; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ var a = 7; a /= 2; return a; }",
+   "result": "3.5"
+  },
+  {
+   "code": "function f(){ var a = 2; a **= 3; return a; }",
+   "result": "8"
+  },
+  {
+   "code": "function f(){ var a = 6; a |= 1; return a; }",
+   "result": "7"
+  },
+  {
+   "code": "function f(){ var a = 6; a &= 3; return a; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var a = 6; a ^= 3; return a; }",
+   "result": "5"
+  },
+  {
+   "code": "function f(){ var a = 1; a <<= 4; return a; }",
+   "result": "16"
+  },
+  {
+   "code": "function f(){ var a = -16; a >>= 2; return a; }",
+   "result": "-4"
+  },
+  {
+   "code": "function f(){ var a = null; a ??= 4; return a; }",
+   "result": "4"
+  },
+  {
+   "code": "function f(){ var a = 0; a ||= 4; return a; }",
+   "result": "4"
+  },
+  {
+   "code": "function f(){ var a = 1; a &&= 4; return a; }",
+   "result": "4"
+  },
+  {
+   "code": "function f(){ var a = 1, b = 2; return a + b; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ var a = 1, b; return b; }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f(){ var a = b = 3; return a + b; }",
+   "result": "6"
+  },
+  {
+   "code": "function f(){ x = 5; return x; }",
+   "result": "5"
+  },
+  {
+   "code": "function f(){ return y; }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f(){ return yy + 1; }",
+   "result": "nan"
+  },
+  {
+   "code": "function f(){ var a = 1; var a = 2; return a; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var a = 1; { a = 2 }; return a; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var i = 0; i++; i++; return i; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var i = 0; return i++ + 1; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ var i = 0; return ++i + 1; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var i = 5; i--; --i; return i; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ var i = 1.5; i++; return i; }",
+   "result": "2.5"
+  },
+  {
+   "code": "function f(){ var i = \"a\"; i++; return i; }",
+   "error": "TypeError",
+   "message": "can only concatenate str (not \"int\") to str"
+  },
+  {
+   "code": "function f(){ return z++; }",
+   "error": "KeyError",
+   "message": "'z'"
+  },
+  {
+   "code": "function f(){ var a = [1]; a[0]++; return a; }",
+   "result": "[1]"
+  },
+  {
+   "code": "function f(){ var x = 1; var y = x++ + x++; return [x, y]; }",
+   "result": "[3, 6]"
+  },
+  {
+   "code": "function f(){ var nullable = 1; return nullable; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression nullable in: return nullable"
+  },
+  {
+   "code": "function f(){ var iffy = 2; return iffy; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression iffy in: return iffy"
+  },
+  {
+   "code": "function f(){ var trueish = 3; return trueish; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression trueish in: return trueish"
+  },
+  {
+   "code": "function f(){ var NaNa = 1; return NaNa; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression NaNa in: return NaNa"
+  },
+  {
+   "code": "function f(){ var $a = 1, _b = 2; return $a + _b; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ var a = 5; return a.toString(); }",
+   "error": "TypeError",
+   "message": "'int' object is not subscriptable"
+  },
+  {
+   "code": "function f(){ var a = 0; if (a) { return 1 } return 2; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var a = 1; if (a) { return 1 } else { return 2 } }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ var a = 0; if (a) { return 1 } else if (a + 1) { return 3 } return 2; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression in: else if (a + 1) { return 3 } return 2"
+  },
+  {
+   "code": "function f(){ if (1) return 5; }",
+   "error": "KeyError",
+   "message": "'r'"
+  },
+  {
+   "code": "function f(){ var r = 0; if (1) { r = 3; } return r; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ var r = 0; for (var i = 0; i < 5; i++) { r += i; } return r; }",
+   "result": "10"
+  },
+  {
+   "code": "function f(){ var r = 0; for (var i = 0; i < 5; i++) r += i; return r; }",
+   "result": "10"
+  },
+  {
+   "code": "function f(){ var r = 0; for (var i = 10; i > 0; i -= 3) { r++; } return r; }",
+   "result": "4"
+  },
+  {
+   "code": "function f(){ var r = []; for (var i = 0; i < 3; i++) { if (i == 1) { continue } r.push(i); } return r; }",
+   "result": "[0, 2]"
+  },
+  {
+   "code": "function f(){ var r = []; for (var i = 0; i < 9; i++) { if (i == 3) { break } r.push(i); } return r; }",
+   "result": "[0, 1, 2]"
+  },
+  {
+   "code": "function f(){ for (;;) { return 1; } return 2; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ var r = 0; for (var i = 0; i < 3; i++) { for (var j = 0; j < 3; j++) { r++; } } return r; }",
+   "result": "9"
+  },
+  {
+   "code": "function f(){ var i = 0; while (i < 3) { i++; } return i; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression while (i < 3) { 0; } return i in: while (i < 3) { i++; } return i"
+  },
+  {
+   "code": "function f(){ var i = 0; do { i++ } while (i < 3); return i; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression do { 0 } while (i < 3) in: do { i++ } while (i < 3)"
+  },
+  {
+   "code": "function f(){ switch (2) { case 1: return \"a\"; case 2: return \"b\"; } }",
+   "error": "ValueError",
+   "message": "not enough values to unpack (expected 2, got 1)"
+  },
+  {
+   "code": "function f(){ var r = \"\"; switch (\"x\") { case \"x\": r += \"1\"; case \"y\": r += \"2\"; break; default: r += \"3\"; } return r; }",
+   "result": "'12'"
+  },
+  {
+   "code": "function f(){ var r = 0; switch (5) { default: r = 9; } return r; }",
+   "result": "9"
+  },
+  {
+   "code": "function f(){ var r = 0; switch (1) { case 1: r = 1; } return r; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ switch (1) { case 1: return [7, 0]; } }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ switch (1) { case 1: return \"ab\"; } }",
+   "result": "'a'"
+  },
+  {
+   "code": "function f(){ switch (1) { case 1: return 5; } }",
+   "error": "TypeError",
+   "message": "cannot unpack non-iterable int object"
+  },
+  {
+   "code": "function f(){ try { throw \"e\" } catch (e) { return 1 } }",
+   "error": "JS_Throw",
+   "message": "Uncaught exception e"
+  },
+  {
+   "code": "function f(){ try { throw \"e\" } catch(e) { return e } }",
+   "error": "JS_Throw",
+   "message": "Uncaught exception e"
+  },
+  {
+   "code": "function f(){ try { throw \"e\" } catch(e){ return e } }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f(){ try { x.y() } catch(e){ return \"caught\" } }",
+   "result": "'caught'"
+  },
+  {
+   "code": "function f(){ try { return 1 } finally { return 2 } }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ try { throw 1 } catch { return 3 } }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ var r = 0; try { r = 1 } finally { r = 2 } return r; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ try { throw [1, 2] } catch(e){ return 1 } }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ throw {a: 1}; }",
+   "error": "JS_Throw",
+   "message": "Uncaught exception {'a': 1}"
+  },
+  {
+   "code": "function f(){ throw \"x\" + 1; }",
+   "error": "JS_Throw",
+   "message": "Uncaught exception x1"
+  },
+  {
+   "code": "function f(){ throw null; }",
+   "error": "JS_Throw",
+   "message": "Uncaught exception None"
+  },
+  {
+   "code": "function f(){ break; }",
+   "error": "JS_Break",
+   "message": "Invalid break"
+  },
+  {
+   "code": "function f(){ continue; }",
+   "error": "JS_Continue",
+   "message": "Invalid continue"
+  },
+  {
+   "code": "function f(){ return void 0; }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ return void (1 + 2); }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ return (1, 2, 3); }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ var a = (1, 2); return a; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return 1, 2; }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ var f2 = function(a){ return a * 2 }; return f2(4); }",
+   "result": "8"
+  },
+  {
+   "code": "function f(){ var g = function(){ return arguments; }; return g(); }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f(){ return (function(){ return 3 })(); }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return (function(a){ return a })(4); }",
+   "result": "4"
+  },
+  {
+   "code": "function f(){ var h = function(a, b){ return [a, b]; }; return h(1); }",
+   "result": "[1, None]"
+  },
+  {
+   "code": "function f(){ var h = function(a){ return a; }; return h(1, 2); }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ function inner() { return 1 } return inner(); }",
+   "error": "Exception",
+   "message": "Unsupported JS expression in: function inner() { return 1 } return inner()"
+  },
+  {
+   "code": "function f(){ return missing(); }",
+   "error": "Exception",
+   "message": "Could not find JS function \"missing\""
+  },
+  {
+   "code": "function f(){ var x = 1; return x(); }",
+   "error": "TypeError",
+   "message": "'int' object is not callable"
+  },
+  {
+   "code": "function f(){ return console.debug(1); }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ return console.log(1); }",
+   "error": "Exception",
+   "message": "Could not find object console"
+  },
+  {
+   "code": "function f(){ return Math.pow(2, 3); }",
+   "result": "8"
+  },
+  {
+   "code": "function f(){ return Math.pow(2, 0.5); }",
+   "result": "1.4142135623730951"
+  },
+  {
+   "code": "function f(){ return Math.pow(2); }",
+   "error": "Exception",
+   "message": "pow takes two arguments in: Math.pow(2)"
+  },
+  {
+   "code": "function f(){ return Math.floor(1.5); }",
+   "error": "Exception",
+   "message": "Unsupported Math method floor in: Math.floor(1.5)"
+  },
+  {
+   "code": "function f(){ return Math.PI; }",
+   "error": "Exception",
+   "message": "Cannot get index PI in: <class 'float'>"
+  },
+  {
+   "code": "function f(){ return String; }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f(){ return new Date(\"1 January 1970 00:00:10 UTC\"); }",
+   "result": "10000"
+  },
+  {
+   "code": "function f(){ return new Date(0); }",
+   "error": "Exception",
+   "message": "Failed to parse date '0' in: new Date(0)"
+  },
+  {
+   "code": "function f(){ return new Date(\"garbage\"); }",
+   "error": "Exception",
+   "message": "Failed to parse date '\"garbage\"' in: new Date(\"garbage\")"
+  },
+  {
+   "code": "function f(){ return new Map(); }",
+   "error": "Exception",
+   "message": "Unsupported object Map() in: new Map()"
+  },
+  {
+   "code": "function f(){ return new Array(3); }",
+   "error": "Exception",
+   "message": "Unsupported object Array(3) in: new Array(3)"
+  },
+  {
+   "code": "function f(){ return Array(1, 2); }",
+   "result": "[1, 2]"
+  },
+  {
+   "code": "function f(){ var r = /ab+c/gi; return r; }",
+   "result": "'/ab+c/re.IGNORECASE|0x800'"
+  },
+  {
+   "code": "function f(){ return /x/; }",
+   "result": "'/x/0'"
+  },
+  {
+   "code": "function f(){ var r = /[/]/; return r; }",
+   "result": "'/[/]/0'"
+  },
+  {
+   "code": "function f(){ return /a/.test(\"a\"); }",
+   "error": "Exception",
+   "message": "Could not find JS function \"__yt_dlp_jsinterp_obj1test\""
+  },
+  {
+   "code": "function f(){ return /a/g.test(\"a\"); }",
+   "error": "Exception",
+   "message": "Could not find JS function \"__yt_dlp_jsinterp_obj1test\""
+  },
+  {
+   "code": "function f(){ var r = /a\\/b/; return r; }",
+   "result": "'/a\\\\/b/0'"
+  },
+  {
+   "code": "function f(){ return 4 / 2 / 1; }",
+   "result": "2.0"
+  },
+  {
+   "code": "function f(){ return; }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ ;;; return 3; }",
+   "result": "3"
+  },
+  {
+   "code": "function f(){ return\"q\"; }",
+   "result": "'q'"
+  },
+  {
+   "code": "function f(){ return'q'; }",
+   "result": "'q'"
+  },
+  {
+   "code": "function f(){ return(5); }",
+   "error": "Exception",
+   "message": "Could not find JS function \"return\""
+  },
+  {
+   "code": "function f(){ return [1, 2, 3].slice(1).length; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return {a: [1, {b: 2}]}.a[1].b; }",
+   "result": "{'a': [1, {'b': 2}]}"
+  },
+  {
+   "code": "function f(){ var a = {b: [5, 6]}; return a.b[1]; }",
+   "error": "Exception",
+   "message": "Cannot get index b[1] in: {'b': [5, 6]}"
+  },
+  {
+   "code": "function f(){ var a = [[1, 2]]; return a[0].length; }",
+   "result": "2"
+  },
+  {
+   "code": "function f(){ return 1 @ 2; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression 1 @ 2 in: return 1 @ 2"
+  },
+  {
+   "code": "function f(){ return 1 +; }",
+   "result": "1"
+  },
+  {
+   "code": "function f(){ return (1; }",
+   "error": "Exception",
+   "message": "No terminating paren } in: { return (1; }"
+  },
+  {
+   "code": "function f(){ return [1; }",
+   "error": "Exception",
+   "message": "No terminating paren } in: { return [1; }"
+  },
+  {
+   "code": "function f(){ return \"unterminated; }",
+   "error": "Exception",
+   "message": "No terminating paren } in: { return \"unterminated; }"
+  },
+  {
+   "code": "function f(){ var a = 1 return a; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression in: 1 return a"
+  },
+  {
+   "code": "function f(){ return true; }",
+   "result": "True"
+  },
+  {
+   "code": "function f(){ return false; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ return null; }",
+   "result": "None"
+  },
+  {
+   "code": "function f(){ return undefined; }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f(){ return -0; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return 00; }",
+   "result": "0"
+  },
+  {
+   "code": "function f(){ return 1.; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression 1. in: return 1."
+  },
+  {
+   "code": "function f(){ return .5; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression .5 in: return .5"
+  },
+  {
+   "code": "function f(){ return 1_000; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression 1_000 in: return 1_000"
+  },
+  {
+   "code": "function f(){ return \"a\" + \"b\" === \"ab\"; }",
+   "result": "False"
+  },
+  {
+   "code": "function f(){ var s = \"x\"; s += 1 + 2; return s; }",
+   "result": "'x3'"
+  },
+  {
+   "code": "function f(){ return typeof 1; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression typeof 1 in: return typeof 1"
+  },
+  {
+   "code": "function f(){ return 1 in [1]; }",
+   "error": "Exception",
+   "message": "Unsupported JS expression 1 in [1] in: return 1 in [1]"
+  },
+  {
+   "code": "function f(){ return [1, 2, 3].map(function(x){ return x }); }",
+   "error": "ValueError",
+   "message": "invalid literal for int() with base 10: 'map'"
+  },
+  {
+   "code": "function f(){ return \"a\".concat(\"b\"); }",
+   "error": "TypeError",
+   "message": "string indices must be integers, not 'str'"
+  },
+  {
+   "code": "function f(){ return \"abc\".substring(1); }",
+   "error": "TypeError",
+   "message": "string indices must be integers, not 'str'"
+  },
+  {
+   "code": "function f(a, b) { return a + b; }",
+   "args": [
+    1,
+    2
+   ],
+   "result": "3"
+  },
+  {
+   "code": "function f(a, b) { return a + b; }",
+   "args": [
+    "a",
+    2
+   ],
+   "result": "'a2'"
+  },
+  {
+   "code": "function f(a, b) { return [a, b]; }",
+   "args": [
+    1
+   ],
+   "result": "[1, None]"
+  },
+  {
+   "code": "function f(a) { return a.length; }",
+   "args": [
+    [
+     1,
+     2,
+     3
+    ]
+   ],
+   "result": "3"
+  },
+  {
+   "code": "function f(a) { return a.b; }",
+   "args": [
+    {
+     "b": 4
+    }
+   ],
+   "result": "4"
+  },
+  {
+   "code": "function f(a) { a.push(1); return a; }",
+   "args": [
+    []
+   ],
+   "result": "[1]"
+  },
+  {
+   "code": "function f(a) { return a ? \"t\" : \"f\"; }",
+   "args": [
+    []
+   ],
+   "result": "'t'"
+  },
+  {
+   "code": "function f(a) { return a * 2; }",
+   "args": [
+    2.5
+   ],
+   "result": "5.0"
+  },
+  {
+   "code": "function f(a) { return a; }",
+   "args": [
+    12345678901234567890
+   ],
+   "divergence": "Python ints are unbounded; past i64 this port keeps a float",
+   "result": "12345678901234567890"
+  },
+  {
+   "code": "var g = function(x) { return x + 1; }; function f() { return g(1); }",
+   "result": "2"
+  },
+  {
+   "code": "var o = {g: function(x){return x * 3}}; function f() { return o.g(2); }",
+   "result": "6"
+  },
+  {
+   "code": "var o = {\"g\": function(x,y){return x + y}}; function f() { return o.g(2, 3); }",
+   "result": "5"
+  },
+  {
+   "code": "var o = {g: function(x){return x * 3}}; function f() { return o?.h; }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f() { return p.q(); } var p = {q: function(){return 1}, r: function(a){return a}};",
+   "result": "1"
+  },
+  {
+   "code": "function f() { return n?.x; }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function f() { return n?.x(); }",
+   "result": "<class 'yt_dlp.jsinterp.JS_Undefined'>"
+  },
+  {
+   "code": "function g(n) { return n <= 1 ? 1 : n * g(n - 1); } function f() { return g(5); }",
+   "result": "120"
+  },
+  {
+   "code": "function g(a) { a = a + 1; return a; } function f() { g(1); return g(5); }",
+   "result": "6"
+  },
+  {
+   "code": "function f() { var c = 0; var inc = function(){ c = c + 1; return c; }; inc(); inc(); return c; }",
+   "result": "2"
+  },
+  {
+   "code": "function f() { var x = 1; var g = function(){ var x = 2; return x; }; return [g(), x]; }",
+   "result": "[2, 1]"
+  },
+  {
+   "code": "function f() { var g = function(){ return h(); }; var h = function(){ return 7; }; return g(); }",
+   "result": "7"
+  },
+  {
+   "code": "function f(a) {\n var b = a\n + 1;\n return b;\n}",
+   "args": [
+    1
+   ],
+   "result": "2"
+  },
+  {
+   "code": "function f() { return 1; }",
+   "func": "g",
+   "error": "Exception",
+   "message": "Could not find JS function \"g\""
+  },
+  {
+   "code": "xyz = function(a){ return a + \"!\"; }",
+   "func": "xyz",
+   "args": [
+    "hi"
+   ],
+   "error": "Exception",
+   "message": "Could not find JS function \"xyz\""
+  },
+  {
+   "code": "var obj = {k: 1}, f = function(){ return 9; };",
+   "result": "9"
+  },
+  {
+   "code": "function f() { var a = [3, 1, 2]; var t = a[0]; a[0] = a[2]; a[2] = t; return a; }",
+   "result": "[2, 1, 3]"
+  },
+  {
+   "code": "function f(a) { var b = a.split(\"\"); b.reverse(); b.splice(0, 1); return b.join(\"\"); }",
+   "args": [
+    "abcdef"
+   ],
+   "result": "'edcba'"
+  },
+  {
+   "code": "function f(a) { var c = a[0]; a[0] = a[3 % a.length]; a[3 % a.length] = c; return a; }",
+   "args": [
+    [
+     "a",
+     "b",
+     "c"
+    ]
+   ],
+   "result": "['a', 'b', 'c']"
+  },
+  {
+   "code": "var Xy={qk:function(a,b){a.splice(0,b)},Ww:function(a){a.reverse()},Bp:function(a,b){var c=a[0];a[0]=a[b%a.length];a[b%a.length]=c}};\nfunction sig(a){a=a.split(\"\");Xy.Ww(a,47);Xy.qk(a,2);Xy.Bp(a,64);Xy.qk(a,1);return a.join(\"\")}",
+   "func": "sig",
+   "args": [
+    "0123456789abcdefghijklmnopqrstuvwxyz"
+   ],
+   "result": "'wvutsrqponmlkjihgfedcba987654x210'"
+  },
+  {
+   "code": "var $a={\"x1\":function(a){return a.reverse()},'y2':function(a,b){return a.slice(b)}};function g(a){a=a.split(\"\");a=$a.x1(a);a=$a.y2(a,3);return a.join(\"\")}",
+   "func": "g",
+   "args": [
+    "abcdefgh"
+   ],
+   "result": "'edcba'"
+  },
+  {
+   "code": "function n(a){var b=a.split(\"\"),c=[310,\"x\",function(d,e){d.push(e)},-12,function(d){d.reverse()}];c[2](b,\"Z\");c[4](b);try{c[9](b)}catch(f){b.push(\"E\")}return b.join(\"\")}",
+   "func": "n",
+   "args": [
+    "abc"
+   ],
+   "result": "'ZcbaE'"
+  },
+  {
+   "code": "function n(a){var b=a.split(\"\"),c=[];for(var d=0;d<b.length;d++){c.push(b[d].charCodeAt(0)^7)}return c}",
+   "func": "n",
+   "args": [
+    "yt-dlp"
+   ],
+   "result": "[126, 115, 42, 99, 107, 119]"
+  },
+  {
+   "code": "function n(a){var b=a.split(\"\");var c=0;for(var d=b.length-1;d>=0;d--){c=(c*31+b[d].charCodeAt(0))%1000003}return c}",
+   "func": "n",
+   "args": [
+    "hello world"
+   ],
+   "result": "443569"
+  },
+  {
+   "code": "function n(a){var b=[1,2,3,4,5];b.forEach(function(c,d){b[d]=c*a});return b}",
+   "func": "n",
+   "args": [
+    3
+   ],
+   "result": "[3, 6, 9, 12, 15]"
+  },
+  {
+   "code": "function n(a){var m={k:a};switch(m.k){case \"a\":return 1;case \"b\":return 2;default:return 3}}",
+   "func": "n",
+   "args": [
+    "b"
+   ],
+   "error": "TypeError",
+   "message": "cannot unpack non-iterable int object"
+  }
+ ]
+}

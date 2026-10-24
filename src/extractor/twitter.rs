@@ -525,82 +525,11 @@ fn graphql_to_legacy(data: &Value, id: &str) -> Result<Map<String, Value>> {
     Ok(status)
 }
 
-/// `jsinterp.js_number_to_string(val, radix)`: JavaScript's
-/// `Number.prototype.toString(radix)` for a radix other than 10.
-fn js_number_to_string(value: f64, radix: u32) -> String {
-    if value.is_nan() {
-        return "NaN".into();
-    }
-    if value == 0.0 {
-        return "0".into();
-    }
-    if value.is_infinite() {
-        return if value < 0.0 { "-Infinity" } else { "Infinity" }.into();
-    }
-    const ALPHABET: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyz";
-    // Digits, with `-2` for `.` and `-1` for `-`.
-    let mut result: std::collections::VecDeque<i64> = std::collections::VecDeque::new();
-    let sign = value < 0.0;
-    let value = value.abs();
-    let mut integer = value.trunc();
-    let mut fraction = value - integer;
-    let radix_f = f64::from(radix);
-    // `max(math.nextafter(.0, math.inf), math.ulp(val) / 2)`.
-    let ulp = f64::from_bits(value.to_bits() + 1) - value;
-    let mut delta = f64::max(f64::from_bits(1), ulp / 2.0);
-    if fraction >= delta {
-        result.push_back(-2);
-    }
-    while fraction >= delta {
-        delta *= radix_f;
-        let scaled = fraction * radix_f;
-        let digit = scaled.trunc();
-        fraction = scaled - digit;
-        let digit = digit as i64;
-        result.push_back(digit);
-        let needs_rounding = fraction > 0.5 || (fraction == 0.5 && digit & 1 == 1);
-        if needs_rounding && fraction + delta > 1.0 {
-            let mut carried = false;
-            for index in (1..result.len()).rev() {
-                if result[index] + 1 < i64::from(radix) {
-                    result[index] += 1;
-                    carried = true;
-                    break;
-                }
-                result.pop_back();
-            }
-            if !carried {
-                integer += 1.0;
-            }
-            break;
-        }
-    }
-    let mut integer = integer as u128;
-    let radix = u128::from(radix);
-    result.push_front((integer % radix) as i64);
-    integer /= radix;
-    while integer > 0 {
-        result.push_front((integer % radix) as i64);
-        integer /= radix;
-    }
-    if sign {
-        result.push_front(-1);
-    }
-    result
-        .into_iter()
-        .map(|digit| match digit {
-            -2 => '.',
-            -1 => '-',
-            digit => char::from(ALPHABET[digit as usize]),
-        })
-        .collect()
-}
-
 /// `_generate_syndication_token(twid)`:
 /// `((Number(twid) / 1e15) * Math.PI).toString(36).replace(/(0+|\.)/g, '')`.
 fn syndication_token(twid: &str) -> String {
     let number = twid.parse::<u128>().unwrap_or_default() as f64;
-    js_number_to_string((number / 1e15) * std::f64::consts::PI, 36)
+    crate::jsinterp::js_number_to_string((number / 1e15) * std::f64::consts::PI, Some(36))
         .chars()
         .filter(|c| !matches!(c, '0' | '.'))
         .collect()
@@ -1948,7 +1877,13 @@ mod tests {
         ] {
             assert_eq!(syndication_token(twid), token, "{twid}");
         }
-        assert_eq!(js_number_to_string(255.5, 16), "ff.8");
-        assert_eq!(js_number_to_string(-0.25, 2), "-0.01");
+        assert_eq!(
+            crate::jsinterp::js_number_to_string(255.5, Some(16)),
+            "ff.8"
+        );
+        assert_eq!(
+            crate::jsinterp::js_number_to_string(-0.25, Some(2)),
+            "-0.01"
+        );
     }
 }

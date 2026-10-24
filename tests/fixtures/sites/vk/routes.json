@@ -269,6 +269,129 @@
     "Content-Type": "application/vnd.apple.mpegurl"
    },
    "body": "#EXTM3U\n#EXT-X-TARGETDURATION:2\n#EXT-X-MEDIA-SEQUENCE:100\n#EXTINF:2,\nlive100.ts\n"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-5_100&"
+   ],
+   "request_headers": {
+    "Cookie": "solution429=ok"
+   },
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"payload\": [0, [\"\", \"<div class=\\\"mv_info\\\"></div>\", null, {\"mvData\": {\"title\": \"Ignored\", \"duration\": 10}, \"player\": {\"params\": [{\"md_title\": \"Challenged clip\", \"author_id\": -5, \"date\": 1370000000, \"url720\": \"https://vkvd.test/v-720.mp4\"}]}}]]}"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-5_100&"
+   ],
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?hash429=feedc0de"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=feedc0de",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script>\nvar salt = (function(){ var a = \"dGVzdA\", b = [], c = 0; for (var i = 0; i < a.length; i++) { c = (c + a.charCodeAt(i) * 31) ^ i; b.push(String.fromCharCode(97 + c % 26)); } return b.reverse().join(\"\") + c; })();\nvar hash = \"x\";\n</script></head><body>Checking your browser</body></html>"
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=feedc0de&key=68da9aced45ae524988bd46eff9db4f5",
+   "headers": {
+    "Set-Cookie": "solution429=ok; Domain=.vk.com; Path=/",
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "ok"
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-5&id=101&hash=h",
+   "request_headers": {
+    "Cookie": "solution429=ok"
+   },
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>\nvar playerParams = {\"params\": [{\"md_title\": \"Embed after challenge\", \"url360\": \"https://vkvd.test/e-360.mp4\", \"date\": 1600000000}]};\n</script></html>"
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-5&id=101&hash=h",
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?hash429=0ff1ce&hash429=ab12"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=0ff1ce&hash429=ab12",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script>\nvar salt = (function(){ var r = \"\"; var k = [3, 1, 4, 1, 5]; for (var i = 0; i < k.length; i++) { switch (k[i]) { case 1: r += \"a\"; break; case 3: r += \"b\"; break; default: r += String.fromCharCode(48 + k[i]); } } try { throw r } catch(e){ r = r + \"!\" } return r.split(\"\").reverse().join(\"\") + (1 << 5 ^ 7); })();\nvar hash = \"x\";\n</script></head><body>Checking your browser</body></html>"
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=0ff1ce&hash429=ab12&key=7b0b1c632967b92876eef53d29808c2f",
+   "headers": {
+    "Set-Cookie": "solution429=ok; Domain=.vk.com; Path=/",
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "ok"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-5_102&"
+   ],
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?hash429=nosalt"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=nosalt",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>no salt</html>"
+  },
+  {
+   "url": "https://vk.com/al_video.php",
+   "request_body": [
+    "video=-5_103&"
+   ],
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?hash429=throws"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?hash429=throws",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script>\nvar salt = (function(){ throw \"nope\" })();\nvar hash = \"x\";\n</script></head><body>Checking your browser</body></html>"
+  },
+  {
+   "url": "https://vk.com/video_ext.php?oid=-5&id=104",
+   "status": 302,
+   "headers": {
+    "Location": "https://vk.com/challenge.html?other=1"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://vk.com/challenge.html?other=1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><script>\nvar salt = (function(){ var a = \"dGVzdA\", b = [], c = 0; for (var i = 0; i < a.length; i++) { c = (c + a.charCodeAt(i) * 31) ^ i; b.push(String.fromCharCode(97 + c % 26)); } return b.reverse().join(\"\") + c; })();\nvar hash = \"x\";\n</script></head><body>Checking your browser</body></html>"
   }
  ]
 }
