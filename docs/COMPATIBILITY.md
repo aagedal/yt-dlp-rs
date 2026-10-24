@@ -869,6 +869,14 @@ CAM4 channels (`cam4.com/USER`) follow upstream `CAM4IE`: the
 18 and the `snapshots.xcdnpro.com` thumbnail. Stream info without an
 absolute `cdnURL` remains an explicit native error.
 
+Telegraaf videos (`telegraaf.nl/video/ID`) follow upstream `TelegraafIE`: the
+`app.telegraaf.nl/graphql` article query (with the app User-Agent) gives the
+first video ID, whose `content.tmgvideo.nl` playlist item supplies non-fatal
+`hls`/`dash` adaptive formats (others warn `Unknown adaptive format`),
+progressive `http[-LABEL]` files, and the title, description, duration, poster
+and space-delimited ISO 8601 timestamp. Responses without the expected video
+ID or item are explicit native errors.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,

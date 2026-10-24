@@ -1868,6 +1868,18 @@
       "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "telegraaf",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/telegraaf.py"
+      ],
+      "rust": [
+        "src/extractor/telegraaf.rs",
+        "tests/fixtures/sites/telegraaf/"
+      ],
+      "scope": "TelegraafIE graphql article video ID, tmgvideo playlist item (master-only HLS, DASH, progressive formats, unknown adaptive warning), metadata and HTTP errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "telegram",
       "status": "partial",
       "upstream": [
