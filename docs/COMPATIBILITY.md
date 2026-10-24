@@ -596,6 +596,40 @@ item's dict; several make a playlist. Wayback Machine YouTube captures
 (`web.archive:youtube`) are not supported. `tests/fixtures/sites/archiveorg/`
 is compared with pinned upstream output.
 
+Arte videos (`arte.tv/LANG/videos/ID`, `api.arte.tv/api/player/vN/config/LANG/ID`,
+`arte://program/ID`, including `LIVE`) follow upstream `ArteTVIE`: the player
+config API (`x-validated-age: 18`; an `arte://` URL requests the `None`
+language like upstream), the `Video restricted to 'CODE'` error for a
+geoblocked area and the broadcast-rights error without `rights`. Each stream's
+first version gives the `VERSION-LABEL [SHORT-LABEL]` `format_note` and the
+`_VERSION_CODE_RE` `language_preference` (six preference digits as a decimal
+`int`, `-1` for unmatched codes); HLS streams are non-fatal master playlists
+with the version code as `m3u8_id` (`cc`/`OGsub` short labels sorted after the
+others), HTTPS and RTMP streams are direct formats and other protocols warn
+`Skipping stream with unknown protocol`. Duplicate format URLs are removed;
+manifest subtitles get upstream's `-acc` (`-MAL.m3u8`) and `-forced` (no
+`_VO`) locales and merge without duplicate URLs. Metadata, captioned
+thumbnails and `chapters.elements` follow upstream's dict. Upstream retries a
+geoblocked video with a fake `X-Forwarded-For` address (a random-IP warning);
+this port does not send that header, so the restriction is reported directly
+(as upstream does with `--no-geo-bypass`).
+
+Arte embeds (`arte.tv/player/vN/index.php?...json_url=URL`) follow
+`ArteTVEmbedIE`: the `json_url` config URL is followed as an `ArteTV` result.
+Generic-page embed detection (`_EMBED_REGEX`) is not ported. Collections
+(`arte.tv/LANG/videos/RC-NNNNNN`) follow `ArteTVPlaylistIE`: the OPA programs
+API's first program (title and short description), then each `SEASON` child's
+player playlist items with a provider ID and link as `url_transparent` entries
+(title, subtitle as `alt_title`, duration, age rating), else the `SHOW`
+videos as `ArteTV` URL entries. Category pages (`arte.tv/LANG/videos/PATH`, not
+a video or collection) follow `ArteTVCategoryIE`: absolute links to this
+language's videos and collections (the page itself skipped, duplicates
+dropped) with the OpenGraph or `<title>` title before its last `|` and the
+OpenGraph description. `tests/fixtures/sites/arte/` (a saved config and
+master playlist, saved collection and season responses, and synthetic
+multi-stream, playlist and category responses) is compared with pinned
+upstream output.
+
 AudioBoom posts (`audioboom.com/posts|boos/ID`) follow upstream `AudioBoomIE`:
 the post page's `V5DetailPagePlayer` React props (`_search_json` with
 `unescapeHTML`) for the clip URL, title, description (else its cleaned

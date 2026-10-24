@@ -1,0 +1,11 @@
+#EXTM3U
+#EXT-X-VERSION:7
+#EXT-X-INDEPENDENT-SEGMENTS
+#EXT-X-STREAM-INF:BANDWIDTH=2030416,AVERAGE-BANDWIDTH=969048,CODECS="avc1.4D001E,mp4a.40.2",RESOLUTION=768x432,FRAME-RATE=25.000,SUBTITLES="subs"
+https://arte-cmafhls.akamaized.net/fixture/m1_v432.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=5169672,AVERAGE-BANDWIDTH=2686672,CODECS="avc1.640028,mp4a.40.2",RESOLUTION=1920x1080,FRAME-RATE=25.000,SUBTITLES="subs"
+https://arte-cmafhls.akamaized.net/fixture/m1_v1080.m3u8
+#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="fr",NAME="Français",URI="https://arte-cmafhls.akamaized.net/fixture/m1_st_VO-FRA.m3u8"
+#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="fr",NAME="Français (sourds et malentendants)",URI="https://arte-cmafhls.akamaized.net/fixture/m1_st_VF-MAL.m3u8"
+#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="fr",NAME="Français (forcés)",URI="https://arte-cmafhls.akamaized.net/fixture/m1_st_VF.m3u8"
+#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="de",NAME="Deutsch",URI="https://arte-cmafhls.akamaized.net/fixture/st_VO-DEU.m3u8"

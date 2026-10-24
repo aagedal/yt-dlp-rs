@@ -388,6 +388,18 @@
       "scope": "ArchiveOrgIE embed playlist, metadata API item/file fields, known-extension formats, thumbnails, reviews and playlists; no YoutubeWebArchiveIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "arte",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/arte.py"
+      ],
+      "rust": [
+        "src/extractor/arte.rs",
+        "tests/fixtures/sites/arte/"
+      ],
+      "scope": "ArteTVIE _VALID_URL (arte.tv videos, api.arte.tv player config and arte://program URLs) with the x-validated-age config request, geoblocking and broadcast-rights errors, HLS master playlists (non-fatal, m3u8_id = version code) and HTTPS/RTMP streams with the version-label format_note and the version-code language_preference, cc/OGsub streams last, the unknown-protocol warning, -acc/-forced subtitle locales with URL-deduplicated merging, duplicate-format removal, metadata, thumbnails and chapters; ArteTVEmbedIE json_url followed as a url result; ArteTVPlaylistIE season items as url_transparent entries (title, alt_title, duration, age_limit) and show videos as ArteTV url entries; ArteTVCategoryIE linked video and collection URLs. Not ported: the fake X-Forwarded-For retry on geo restriction (the error is reported without the retry warning) and generic-page _EMBED_REGEX detection. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "audioboom",
       "status": "partial",
       "upstream": [
