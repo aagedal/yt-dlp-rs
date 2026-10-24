@@ -1147,6 +1147,14 @@ entry (formats with the page as `Referer`, tracks and poster) with the fatal
 media, which upstream hands to the generic extractor as a `url` result,
 remain explicit native errors.
 
+Xbox clips (`xboxclips.com/video.php?...vid=ID`, `gameclips.io/USER/ID`)
+follow upstream `XboxClipsIE`: `video.php` URLs are rewritten to
+`gameclips.io/GAMERTAG/VID` (a missing parameter is upstream's `KeyError`),
+then the first `_parse_html5_media_entries` entry (none is `list index out
+of range`) with the `og:title`/`twitter:title` meta, the `Recorded:` date,
+the `parse_filesize` size as `filesize_approx`, and the duration and view
+count (each missing value a warning).
+
 XiaoHongShu (RedNote) notes (`www.xiaohongshu.com/explore/ID`,
 `discovery/item/ID`) follow upstream `XiaoHongShuIE` (release 2026.10.21):
 the page's fatal `window.__INITIAL_STATE__` (through `js_to_json`), every

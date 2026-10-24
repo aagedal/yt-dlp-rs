@@ -1740,6 +1740,18 @@
       "scope": "XiaoHongShuIE (release 2026.10.21) __INITIAL_STATE__ stream formats (master and backup URLs), original-video direct format with its unavailable warning, image thumbnails, title/description/tags/uploader ID and missing-state/no-formats errors compared with upstream output through the fixture proxy; non-HTTP stream URLs refused"
     },
     {
+      "name": "xboxclips",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/xboxclips.py"
+      ],
+      "rust": [
+        "src/extractor/xboxclips.rs",
+        "tests/fixtures/sites/xboxclips/"
+      ],
+      "scope": "XboxClipsIE video.php to gameclips.io rewrite, first _parse_html5_media_entries entry, og/twitter title, recording date, parse_filesize size, duration and views, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "yfanefa",
       "status": "partial",
       "upstream": [

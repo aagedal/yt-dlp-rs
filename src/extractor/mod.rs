@@ -138,6 +138,7 @@ mod vocaroo;
 mod webcamerapl;
 mod weibo;
 mod worldstarhiphop;
+mod xboxclips;
 mod xiaohongshu;
 mod xspf;
 mod yfanefa;
@@ -336,6 +337,7 @@ pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
 pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
+pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
