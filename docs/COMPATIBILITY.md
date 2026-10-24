@@ -1308,6 +1308,12 @@ renditions; no manifest is upstream's `Failed to obtain m3u8 URL`), the API
 title (else the generic title), the URL date as `upload_date` and the first
 image set's named images as thumbnails.
 
+Match TV live (`matchtv.ru/on-air`, `video.matchtv.ru/iframe/channel/106`)
+follows upstream `MatchTVIE`: the fixed channel-106 iframe's `data-config`
+feed URL (else `Unable to extract video URL`) with `/feed/` replaced by
+`/media/` plus `.m3u8` as a live HLS master with live variant IDs, the fixed
+`Матч ТВ - Прямой эфир` title and `is_live`.
+
 Mixcloud shows (`mixcloud.com/USER/SLUG`) follow upstream `MixcloudIE`: the
 GraphQL cloudcast lookup (with upstream's impersonation warning), its
 XOR-encrypted progressive (5 MiB chunks), HLS and DASH stream URLs, the

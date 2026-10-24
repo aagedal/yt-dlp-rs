@@ -65,6 +65,7 @@ mod livestreamfails;
 mod loom;
 mod maariv;
 mod masters;
+mod matchtv;
 mod megaphone;
 mod mixcloud;
 mod movingimage;
@@ -203,6 +204,7 @@ pub use livestreamfails::{Livestreamfails, suitable as livestreamfails_suitable}
 pub use loom::{Loom, suitable as loom_suitable};
 pub use maariv::{Maariv, suitable as maariv_suitable};
 pub use masters::{Masters, suitable as masters_suitable};
+pub use matchtv::{MatchTv, suitable as matchtv_suitable};
 pub use megaphone::{Megaphone, suitable as megaphone_suitable};
 pub use mixcloud::{Mixcloud, suitable as mixcloud_suitable};
 pub use movingimage::{MovingImage, suitable as movingimage_suitable};

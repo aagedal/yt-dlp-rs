@@ -883,6 +883,18 @@
       "scope": "MastersIE related-content API (fatal HLS formats and subtitles, missing-manifest error, URL upload_date, first image set thumbnails) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "matchtv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/matchtv.py"
+      ],
+      "rust": [
+        "src/extractor/matchtv.rs",
+        "tests/fixtures/sites/matchtv/"
+      ],
+      "scope": "MatchTVIE fixed channel-106 iframe data-config feed rewritten to a live HLS master (live variant IDs), fixed title and is_live compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "megaphone",
       "status": "partial",
       "upstream": [
