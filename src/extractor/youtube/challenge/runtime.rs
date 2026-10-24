@@ -726,8 +726,14 @@ console.log('denied');
     /// Copies share the helper's directory; each test uses its own names.
     fn named_fake(name: &str) -> PathBuf {
         let path = fake().with_file_name(format!("{name}{}", std::env::consts::EXE_SUFFIX));
-        if !path.exists() {
-            std::fs::copy(fake(), &path).unwrap();
+        // A hard link opens no file for writing, so another test's process
+        // spawn can't inherit a write handle and make this one's exec fail
+        // with ETXTBSY ("Text file busy"). Parallel tests may share a name.
+        if !path.exists()
+            && let Err(error) = std::fs::hard_link(fake(), &path)
+            && error.kind() != std::io::ErrorKind::AlreadyExists
+        {
+            panic!("cannot link {}: {error}", path.display());
         }
         path
     }

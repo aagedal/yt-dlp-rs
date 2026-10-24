@@ -69,6 +69,11 @@ fn site_extractors_match_saved_upstream_output() {
                 .iter()
                 .map(|arg| arg.as_str().unwrap())
                 .collect();
+            // `--netrc-cmd` commands are captured as POSIX shell; upstream
+            // runs them with cmd.exe on Windows, where they differ.
+            if cfg!(windows) && args.contains(&"--netrc-cmd") {
+                continue;
+            }
             // `copy`: input files (such as a cookies file), not compared.
             let copied: Vec<&str> = case["copy"]
                 .as_array()

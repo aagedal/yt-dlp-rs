@@ -107,7 +107,7 @@ impl Netrc {
     /// (`[Errno 2] No such file or directory: 'PATH'`). Invalid UTF-8 is
     /// replaced (upstream retries with the locale encoding).
     pub fn from_file(path: &str) -> Result<Self, String> {
-        let bytes = std::fs::read(path).map_err(|error| os_error_text(&error, path))?;
+        let bytes = std::fs::read(path).map_err(|error| open_error_text(&error, path))?;
         Self::parse(&String::from_utf8_lossy(&bytes), path).map_err(|error| error.to_string())
     }
 
@@ -212,7 +212,25 @@ impl Netrc {
     }
 }
 
-/// Python's `OSError` text for a failed open: `[Errno N] STRERROR: 'PATH'`.
+/// Python's `OSError` text for a failed `open()`. On Windows, CPython maps
+/// the Win32 error to an errno and words it with the C runtime's `strerror`
+/// (`[Errno 2] No such file or directory`), not with `FormatMessage`.
+fn open_error_text(error: &std::io::Error, path: &str) -> String {
+    let errno = match error.raw_os_error() {
+        // ERROR_FILE_NOT_FOUND, ERROR_PATH_NOT_FOUND; ERROR_ACCESS_DENIED.
+        Some(2 | 3) if cfg!(windows) => Some((2, "No such file or directory")),
+        Some(5) if cfg!(windows) => Some((13, "Permission denied")),
+        _ => None,
+    };
+    match errno {
+        Some((code, strerror)) => {
+            format!("[Errno {code}] {strerror}: {}", crate::batch::py_repr(path))
+        }
+        None => os_error_text(error, path),
+    }
+}
+
+/// Python's `OSError` text: `[Errno N] STRERROR: 'PATH'`.
 pub(crate) fn os_error_text(error: &std::io::Error, path: &str) -> String {
     match error.raw_os_error() {
         Some(code) => {

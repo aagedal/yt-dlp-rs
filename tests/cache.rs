@@ -94,7 +94,7 @@ fn corrupt_entries_warn_and_disabled_caches_are_untouched() {
     assert!(output.status.success());
     let warning = format!(
         "WARNING: Cache retrieval from {} failed (1)",
-        cache.join("soundcloud/client_id.json").display()
+        cache.join("soundcloud").join("client_id.json").display()
     );
     assert!(
         text(&output.stderr).lines().any(|line| line == warning),
