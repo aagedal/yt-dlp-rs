@@ -932,6 +932,44 @@ CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
 
+PeerTube videos follow upstream `PeerTubeIE` on its listed instances
+(`_INSTANCES_RE`, generated into `src/extractor/peertube/instances.rs` from
+the pinned checkout by `tools/generate_peertube_instances.py`; matched
+case-sensitively like upstream) at `/videos/watch/ID`, `/videos/embed/ID`,
+`/api/vN/videos/ID` and `/w/ID` (a UUID or 22-character short ID), and on any
+host through `peertube:HOST:ID`. The `/api/v1/videos/ID/` JSON (fatal, with
+upstream's `Unable to download webpage` error text) gives the formats: every
+streaming playlist's `playlistUrl` as non-fatal live-style HLS formats (only
+the master playlist read, variants numbered; manifest subtitles dropped with
+upstream's warning), then the `files` and the playlists' `files` as
+`resolution.label` formats (`parse_resolution` width/height, `int_or_none`
+size, `fps`, or `vcodec: none` for `0p`). `is_live` is set by a playlist URL
+and cleared by any file format, as upstream. A description of 250 characters
+or more is replaced by the non-fatal `description` endpoint's; `--write-subs`/
+`--list-subs` read the non-fatal `captions` endpoint (`captionPath` joined to
+the host, `en` without a language). The metadata is upstream's: thumbnail,
+`publishedAt` timestamp, account and channel names, integer IDs and URLs,
+language, licence, duration and counts, list tags, category, the canonical
+`/videos/watch/ID` `webpage_url`, and `age_limit` always `None` (upstream's
+`nsfw is bool` check). `--video-password` is sent as
+`x-peertube-video-password` with the API and manifest requests and becomes the
+result's `http_headers`.
+
+PeerTube accounts (`/a/NAME`), video channels (`/c/NAME`) and video playlists
+(`/w/p/ID`) on the same instances follow upstream `PeerTubePlaylistIE`: the
+non-fatal `/api/v1/TYPE/ID` information (a failed request is upstream's
+`'bool' object has no attribute 'get'` error) gives the `displayName` title,
+description, `createdAt` timestamp, owner account name and ID (else the
+item's own) as `channel`/`channel_id` and the `https://HOST` +
+`thumbnailPath` thumbnail (else `''`); the `/videos?sort=-createdAt` pages of
+30 give `url` entries for `https://HOST/w/SHORT_UUID` with their names. Pages
+are fetched up front until one is shorter than 30 entries; upstream's
+`OnDemandPagedList` fetches only the pages `--playlist-items` needs, so a
+partial selection may make more requests here (the selected entries are the
+same). Not ported: PeerTube detection on other hosts (GenericIE's
+`_EMBED_REGEX` iframes and `og:platform` page check), which stays the
+generic extractor's unsupported-URL path.
+
 peer.tv videos (`peer.tv/de|it|en/ID`) follow upstream `PeerTVIE`: the page's
 `player.peer.tv/js/KEY` script (fetched with the `www.peer.tv` Referer) gives
 the session ID, the player page's `playlist_url` the fatal `hls` formats

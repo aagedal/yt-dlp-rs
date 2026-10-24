@@ -2539,6 +2539,8 @@ fn youtube_tab_playlist(
         replay.take(old);
         replay.take(new);
     }
+    // `_sanitize_thumbnails`: `thumbnails` from a lone `thumbnail`.
+    replay.take("thumbnails");
     for key in ["requested_entries", "playlist_count", "epoch"] {
         replay.take(key);
     }

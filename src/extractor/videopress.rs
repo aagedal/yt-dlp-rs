@@ -94,7 +94,7 @@ fn parse_age_limit(value: Option<&Value>) -> Value {
 }
 
 /// `urljoin(base_url, path)`.
-fn urljoin(base: Option<&str>, path: &str) -> Option<String> {
+pub(crate) fn urljoin(base: Option<&str>, path: &str) -> Option<String> {
     static ABSOLUTE: LazyLock<Regex> =
         LazyLock::new(|| Regex::new(r"^(?:[a-zA-Z][a-zA-Z0-9+\-.]*:)?//").unwrap());
     static BASE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^(?:https?:)?//").unwrap());

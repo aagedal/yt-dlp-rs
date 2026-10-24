@@ -477,6 +477,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "OnePlacePodcast",
     "Parlview",
     "PearVideo",
+    "PeerTube",
+    "PeerTube:Playlist",
     "peer.tv",
     "periscope",
     "Photobucket",
@@ -1017,6 +1019,8 @@ impl YoutubeDl {
                 Box::new(extractor::OneFootball),
                 Box::new(extractor::OnePlacePodcast),
                 Box::new(extractor::Parlview),
+                Box::new(extractor::PeerTube),
+                Box::new(extractor::PeerTubePlaylist),
                 Box::new(extractor::PeerTv),
                 Box::new(extractor::Photobucket),
                 Box::new(extractor::PlayerFm),
@@ -1983,11 +1987,6 @@ impl YoutubeDl {
         }
         // A playlist's entries report their sort order as each is processed.
         let playlist = matches!(result, ExtractResult::Playlist(_));
-        if let ExtractResult::Playlist(playlist) = result
-            && let Some(serde_json::Value::Array(thumbnails)) = playlist.extra.get_mut("thumbnails")
-        {
-            info::sanitize_thumbnail_values(thumbnails);
-        }
         // `_fill_common_fields(final=False)`: a playlist's `upload_date`.
         if let ExtractResult::Playlist(playlist) = result
             && !playlist.extra.contains_key("upload_date")
@@ -2023,6 +2022,21 @@ impl YoutubeDl {
                     }
                     _ => {}
                 }
+            }
+        }
+        // `_sanitize_thumbnails`, after `_fill_common_fields`: a lone
+        // truthy `thumbnail` becomes the `thumbnails` list.
+        if let ExtractResult::Playlist(playlist) = result {
+            if !playlist.extra.contains_key("thumbnails")
+                && let Some(serde_json::Value::String(thumbnail)) = playlist.extra.get("thumbnail")
+                && !thumbnail.is_empty()
+            {
+                let thumbnails = serde_json::json!([{"url": thumbnail}]);
+                playlist.extra.insert("thumbnails".into(), thumbnails);
+            }
+            if let Some(serde_json::Value::Array(thumbnails)) = playlist.extra.get_mut("thumbnails")
+            {
+                info::sanitize_thumbnail_values(thumbnails);
             }
         }
         let entries = match result {
