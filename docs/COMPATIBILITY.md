@@ -1345,6 +1345,17 @@ non-album ID) as a `url_transparent` result with the album's title and
 description. `tests/fixtures/sites/imgur/` is compared with pinned upstream
 output.
 
+TRT Çocuk videos (`www.trtcocuk.net.tr/video/SLUG`) follow upstream
+`TrtCocukVideoIE`: the page's `window.__NUXT__` data (`_search_nuxt_data`,
+`data[0].data`; a missing `data`, `video` or `id` is upstream's `KeyError`),
+the `video` value parsed as JSON when it is a JSON string (else used as
+the URL) and extracted as fatal HLS formats and subtitles (media playlists
+keep their URL's extension), the stringified `id`, `season` number, ISO 8601
+`publishedDate` as the release timestamp, the first show's title as the
+series and the page `<title>` (its absence is upstream's warning and generic
+title). Non-string `video` values remain explicit native errors.
+`tests/fixtures/sites/trtcocuk/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

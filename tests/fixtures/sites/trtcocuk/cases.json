@@ -1,0 +1,8 @@
+[
+ {"url": "https://www.trtcocuk.net.tr/video/kaptan-pengu-ve-arkadaslari-1", "args": ["-j"]},
+ {"url": "https://www.trtcocuk.net.tr/video/kaptan-pengu-ve-arkadaslari-1", "args": ["--print", "%(id)s|%(title)s|%(series)s|%(season_number)s|%(season)s|%(release_timestamp)s|%(release_date)s"]},
+ {"url": "https://www.trtcocuk.net.tr/video/sef-rokanin-lezzet-dunyasi-17", "args": ["-j"]},
+ {"url": "https://www.trtcocuk.net.tr/video/nodata-3", "args": ["-j"]},
+ {"url": "https://www.trtcocuk.net.tr/video/nonuxt-4", "args": ["-j"]},
+ {"url": "https://www.trtcocuk.net.tr/video/novideo-5", "args": ["-j"]}
+]
