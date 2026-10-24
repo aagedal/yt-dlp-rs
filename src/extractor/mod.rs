@@ -199,6 +199,7 @@ mod unitednations;
 mod ustudio;
 mod veo;
 mod videopress;
+pub(crate) mod vidyard;
 mod vimeo;
 mod vk;
 mod vkplay;
@@ -476,6 +477,7 @@ pub use ustudio::{Ustudio, suitable as ustudio_suitable};
 pub use ustudio::{UstudioEmbed, embed_suitable as ustudio_embed_suitable};
 pub use veo::{Veo, suitable as veo_suitable};
 pub use videopress::{VideoPress, suitable as videopress_suitable};
+pub use vidyard::{Vidyard, suitable as vidyard_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,
@@ -873,13 +875,25 @@ pub(crate) fn extract_m3u8_master_optional_headers(
     id: &str,
     headers: &[(&str, &str)],
 ) -> Option<crate::VideoInfo> {
+    extract_m3u8_master_optional_headers_id(client, manifest, extractor, id, None, headers)
+}
+
+/// [`extract_m3u8_master_optional_headers`] with an `m3u8_id`.
+pub(crate) fn extract_m3u8_master_optional_headers_id(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+    headers: &[(&str, &str)],
+) -> Option<crate::VideoInfo> {
     extract_manifest_optional_note_headers(
         client,
         manifest,
         extractor,
         id,
         true,
-        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        &|response| hls::from_response_with(client, response, manifest, None, true, m3u8_id, true),
         ("m3u8 information", "HLS"),
         "Downloading m3u8 information",
         headers,

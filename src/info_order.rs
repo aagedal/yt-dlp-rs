@@ -2085,14 +2085,29 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         if let Some(chapter_keys) = chapter_keys
             && let Some(Value::Array(chapters)) = replay.out.get_mut("chapters")
         {
-            for chapter in chapters.iter_mut().filter_map(Value::as_object_mut) {
+            for (index, chapter) in chapters
+                .iter_mut()
+                .filter_map(Value::as_object_mut)
+                .enumerate()
+            {
+                // Processing's `<Untitled Chapter N>` title is added last.
+                let untitled = format!("<Untitled Chapter {}>", index + 1);
+                let generated = chapter
+                    .get("title")
+                    .is_some_and(|title| title.as_str() == Some(untitled.as_str()));
                 let mut ordered = Map::new();
                 for key in chapter_keys.split(',') {
+                    if generated && key == "title" {
+                        continue;
+                    }
                     if let Some(value) = chapter.shift_remove(key) {
                         ordered.insert(key.to_owned(), value);
                     }
                 }
                 ordered.append(chapter);
+                if generated && let Some(title) = ordered.shift_remove("title") {
+                    ordered.insert("title".into(), title);
+                }
                 *chapter = ordered;
             }
         }

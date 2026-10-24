@@ -1,0 +1,311 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://vyexample03.hubs.vidyard.com/watch/oTDMPlUv--51Th455G5u7Q",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Homepage Video\", \"duration\": 99, \"thumbnails\": [{\"url\": \"https://cdn.vidyard.com/thumbnails/50347/OUPa5LTKV46849sLYngMqQ.jpg\", \"id\": \"0\"}, {\"url\": \"https://cdn.vidyard.com/thumbnails/50347/OUPa5LTKV46849sLYngMqQ_small.jpg\", \"id\": \"1\"}], \"id\": \"oTDMPlUv--51Th455G5u7Q\", \"display_id\": \"50347\", \"description\": \"Look I changed the description.\", \"tags\": [\"these\", \"are\", \"all\", \"tags\"], \"formats\": [{\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/PfmIdlPMTDoUM2twdxylFw/hd.mp4/index.m3u8?tok=d\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"hls - unknown\"}, {\"url\": \"https://cdn.vidyard.com/videos/PfmIdlPMTDoUM2twdxylFw/sd.mp4?tok=c\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-360p\", \"height\": 360, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-360p - 360p\"}, {\"url\": \"https://cdn.vidyard.com/videos/PfmIdlPMTDoUM2twdxylFw/480p.mp4?tok=b\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-480p\", \"height\": 480, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-480p - 480p\"}, {\"url\": \"https://cdn.vidyard.com/videos/PfmIdlPMTDoUM2twdxylFw/hd.mp4?tok=a\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-720p\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-720p - 720p\"}], \"subtitles\": {}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"webpage_url\": \"https://vyexample03.hubs.vidyard.com/watch/oTDMPlUv--51Th455G5u7Q\", \"original_url\": \"https://vyexample03.hubs.vidyard.com/watch/oTDMPlUv--51Th455G5u7Q\", \"webpage_url_basename\": \"oTDMPlUv--51Th455G5u7Q\", \"webpage_url_domain\": \"vyexample03.hubs.vidyard.com\", \"extractor\": \"Vidyard\", \"extractor_key\": \"Vidyard\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://cdn.vidyard.com/thumbnails/50347/OUPa5LTKV46849sLYngMqQ_small.jpg\", \"fulltitle\": \"Homepage Video\", \"duration_string\": \"1:39\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.vidyard.com/videos/PfmIdlPMTDoUM2twdxylFw/hd.mp4?tok=a\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-720p\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"http-mp4-720p - 720p\", \"_filename\": \"Homepage Video [oTDMPlUv--51Th455G5u7Q].mp4\", \"filename\": \"Homepage Video [oTDMPlUv--51Th455G5u7Q].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Vidyard] oTDMPlUv--51Th455G5u7Q: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://embed.vidyard.com/share/oTDMPlUv--51Th455G5u7Q",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Vidyard] Extracting URL: https://embed.vidyard.com/share/oTDMPlUv--51Th455G5u7Q",
+    "[Vidyard] oTDMPlUv--51Th455G5u7Q: Downloading JSON metadata",
+    "[Vidyard] oTDMPlUv--51Th455G5u7Q: Downloading m3u8 information",
+    "[Vidyard] oTDMPlUv--51Th455G5u7Q: Downloading m3u8 information",
+    "[Vidyard] oTDMPlUv--51Th455G5u7Q: Downloading additional metadata",
+    "[info] Available formats for oTDMPlUv--51Th455G5u7Q:",
+    "ID            EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "------------------------------------------------------",
+    "hls           mp4 unknown    | m3u8  | unknown unknown",
+    "http-mp4-360p mp4 360p       | https | unknown unknown",
+    "http-mp4-480p mp4 480p       | https | unknown unknown",
+    "http-mp4-720p mp4 720p       | https | unknown unknown"
+   ],
+   "stderr": [
+    "WARNING: [Vidyard] oTDMPlUv--51Th455G5u7Q: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.vidyard.com/oTDMPlUv--51Th455G5u7Q/type/standalone",
+   "args": [
+    "-f",
+    "http-mp4-360p",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Vidyard] Extracting URL: https://play.vidyard.com/oTDMPlUv--51Th455G5u7Q/type/standalone",
+    "[Vidyard] oTDMPlUv--51Th455G5u7Q: Downloading JSON metadata",
+    "[Vidyard] oTDMPlUv--51Th455G5u7Q: Downloading m3u8 information",
+    "[Vidyard] oTDMPlUv--51Th455G5u7Q: Downloading m3u8 information",
+    "[Vidyard] oTDMPlUv--51Th455G5u7Q: Downloading additional metadata",
+    "[info] oTDMPlUv--51Th455G5u7Q: Downloading 1 format(s): http-mp4-360p",
+    "[download] Destination: oTDMPlUv--51Th455G5u7Q.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [Vidyard] oTDMPlUv--51Th455G5u7Q: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {
+    "oTDMPlUv--51Th455G5u7Q.mp4": 14537
+   }
+  },
+  {
+   "url": "https://share.vidyard.com/watch/wL237MtNgZUHo6e8WPiJbF",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Adding & Editing Video Chapters\", \"duration\": 135.46, \"thumbnails\": [{\"url\": \"https://cdn.vidyard.com/thumbnails/25926870/bvSEZS3dGY7DByQ_bzB57avIZ_hsvhr4.jpg\", \"id\": \"0\"}, {\"url\": \"https://cdn.vidyard.com/thumbnails/25926870/bvSEZS3dGY7DByQ_bzB57avIZ_hsvhr4_small.jpg\", \"id\": \"1\"}], \"chapters\": [{\"title\": \"Adding new chapters\", \"start_time\": 0.0, \"end_time\": 74.0}, {\"title\": \"Previewing your video\", \"start_time\": 74.0, \"end_time\": 91.0}, {\"title\": \"Editing your chapters\", \"start_time\": 91.0, \"end_time\": 105.0}, {\"title\": \"Share a link to a specific chapter\", \"start_time\": 105.0, \"end_time\": 135.46}], \"id\": \"wL237MtNgZUHo6e8WPiJbF\", \"display_id\": \"25926870\", \"formats\": [{\"format_id\": \"hls-313\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/index-f3-v1-a1.m3u8\", \"manifest_url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/master.m3u8?tok=j\", \"tbr\": 313.864, \"ext\": \"mp4\", \"fps\": 30.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 342, \"vcodec\": \"avc1.4d481f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x342\", \"aspect_ratio\": 1.87, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"hls-313 - 640x342\"}, {\"url\": \"https://cdn.vidyard.com/videos/sX36qdlCAvT7s-wvuNsS_Q/sd.mp4?tok=h\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-360p\", \"height\": 360, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-360p - 360p\"}, {\"format_id\": \"hls-502\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/index-f2-v1-a1.m3u8\", \"manifest_url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/master.m3u8?tok=j\", \"tbr\": 502.073, \"ext\": \"mp4\", \"fps\": 30.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 854, \"height\": 456, \"vcodec\": \"avc1.4d481f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"854x456\", \"aspect_ratio\": 1.87, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"hls-502 - 854x456\"}, {\"format_id\": \"hls-1045\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/index-f1-v1-a1.m3u8\", \"manifest_url\": \"https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/master.m3u8?tok=j\", \"tbr\": 1045.146, \"ext\": \"mp4\", \"fps\": 30.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 682, \"vcodec\": \"avc1.64081f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x682\", \"aspect_ratio\": 1.88, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"hls-1045 - 1280x682\"}, {\"url\": \"https://cdn.vidyard.com/videos/sX36qdlCAvT7s-wvuNsS_Q/hd.mp4?tok=g\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-720p\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-720p - 720p\"}], \"subtitles\": {\"en\": [{\"url\": \"https://cdn.vidyard.com/transcriptions/XHw3e665f-59t4hUZXz6_g/Y91JVr4sCt1ln3gXyz4FhQ.vtt?tok=f\", \"name\": \"English\", \"ext\": \"vtt\"}]}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"webpage_url\": \"https://share.vidyard.com/watch/wL237MtNgZUHo6e8WPiJbF\", \"original_url\": \"https://share.vidyard.com/watch/wL237MtNgZUHo6e8WPiJbF\", \"webpage_url_basename\": \"wL237MtNgZUHo6e8WPiJbF\", \"webpage_url_domain\": \"share.vidyard.com\", \"extractor\": \"Vidyard\", \"extractor_key\": \"Vidyard\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://cdn.vidyard.com/thumbnails/25926870/bvSEZS3dGY7DByQ_bzB57avIZ_hsvhr4_small.jpg\", \"fulltitle\": \"Adding & Editing Video Chapters\", \"duration_string\": \"2:15\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.vidyard.com/videos/sX36qdlCAvT7s-wvuNsS_Q/hd.mp4?tok=g\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-720p\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"http-mp4-720p - 720p\", \"_filename\": \"Adding & Editing Video Chapters [wL237MtNgZUHo6e8WPiJbF].mp4\", \"filename\": \"Adding & Editing Video Chapters [wL237MtNgZUHo6e8WPiJbF].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://play.vidyard.com/wL237MtNgZUHo6e8WPiJbF.html",
+   "args": [
+    "--print",
+    "%(id)s|%(display_id)s|%(title)s|%(duration)s|%(thumbnail)s|%(chapters)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "wL237MtNgZUHo6e8WPiJbF|25926870|Adding & Editing Video Chapters|135.46|https://cdn.vidyard.com/thumbnails/25926870/bvSEZS3dGY7DByQ_bzB57avIZ_hsvhr4_small.jpg|[{'title': 'Adding new chapters', 'start_time': 0.0, 'end_time': 74.0}, {'title': 'Previewing your video', 'start_time': 74.0, 'end_time': 91.0}, {'title': 'Editing your chapters', 'start_time': 91.0, 'end_time': 105.0}, {'title': 'Share a link to a specific chapter', 'start_time': 105.0, 'end_time': 135.46}]|http-mp4-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://play.vidyard.com/player/wL237MtNgZUHo6e8WPiJbF.json?disable_analytics=0",
+   "args": [
+    "--write-subs",
+    "--skip-download",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Vidyard] Extracting URL: https://play.vidyard.com/player/wL237MtNgZUHo6e8WPiJbF.json?disable_analytics=0",
+    "[Vidyard] wL237MtNgZUHo6e8WPiJbF: Downloading JSON metadata",
+    "[Vidyard] wL237MtNgZUHo6e8WPiJbF: Downloading m3u8 information",
+    "[Vidyard] wL237MtNgZUHo6e8WPiJbF: Downloading additional metadata",
+    "[info] wL237MtNgZUHo6e8WPiJbF: Downloading subtitles: en",
+    "[info] wL237MtNgZUHo6e8WPiJbF: Downloading 1 format(s): http-mp4-720p",
+    "[info] Writing video subtitles to: wL237MtNgZUHo6e8WPiJbF.en.vtt",
+    "[download] Destination: wL237MtNgZUHo6e8WPiJbF.en.vtt",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "wL237MtNgZUHo6e8WPiJbF.en.vtt": 44
+   }
+  },
+  {
+   "url": "https://play.vidyard.com/wL237MtNgZUHo6e8WPiJbF",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Vidyard] Extracting URL: https://play.vidyard.com/wL237MtNgZUHo6e8WPiJbF",
+    "[Vidyard] wL237MtNgZUHo6e8WPiJbF: Downloading JSON metadata",
+    "[Vidyard] wL237MtNgZUHo6e8WPiJbF: Downloading m3u8 information",
+    "[Vidyard] wL237MtNgZUHo6e8WPiJbF: Downloading additional metadata",
+    "[info] Available subtitles for wL237MtNgZUHo6e8WPiJbF:",
+    "Language Name    Formats",
+    "en       English vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"pwu7pCYWSwAnPxs8nDoFrE\", \"title\": \"PLAYLIST - Palm Beach Shutters- Bi-Fold Track System Installation\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"Install Palm Beach Shutters with a Bi-Fold Track System (Video 1 of 6)\", \"duration\": 258.666, \"thumbnails\": [{\"url\": \"https://cdn.vidyard.com/thumbnails/41974005/IJw7oCaJcF1h7WWu3OVZ8A_small.png\", \"id\": \"0\"}], \"chapters\": [{\"start_time\": 0, \"end_time\": 1.5, \"title\": \"<Untitled Chapter 1>\"}, {\"start_time\": 1.5, \"end_time\": 2.5005, \"title\": \"<Untitled Chapter 2>\"}, {\"title\": \"Second\", \"start_time\": 2.5005, \"end_time\": 258.666}], \"id\": \"SyStyHtYujcBHe5PkZc5DL\", \"display_id\": \"41974005\", \"description\": \"In this video, you will learn the first step & more.<br>\", \"tags\": [\"shutters\"], \"formats\": [{\"url\": \"https://cdn.vidyard.com/videos/a/low\", \"ext\": \"unknown_video\", \"format_id\": \"http-dash-low\", \"protocol\": \"https\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-dash-low - unknown\"}, {\"url\": \"https://cdn.vidyard.com/videos/a/plain.webm\", \"ext\": \"webm\", \"format_id\": \"http-mp4\", \"protocol\": \"https\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4 - unknown\"}, {\"url\": \"https://cdn.vidyard.com/videos/a/hd.mp4\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-1280x720\", \"width\": 1280, \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-1280x720 - 1280x720\"}, {\"url\": \"https://cdn.vidyard.com/videos/a/manifest.mpd\", \"ext\": \"mpd\", \"format_id\": \"http-dash-4k\", \"height\": 2160, \"protocol\": \"https\", \"video_ext\": \"mpd\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"2160p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-dash-4k - 2160p\"}], \"subtitles\": {\"en\": [{\"url\": \"https://cdn.vidyard.com/transcriptions/a/en.vtt\", \"name\": \"English\", \"ext\": \"vtt\"}], \"und\": [{\"url\": \"https://cdn.vidyard.com/transcriptions/a/und.vtt\", \"name\": \"Auto\", \"ext\": \"vtt\"}]}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"playlist_count\": 2, \"playlist\": \"PLAYLIST - Palm Beach Shutters- Bi-Fold Track System Installation\", \"playlist_id\": \"pwu7pCYWSwAnPxs8nDoFrE\", \"playlist_title\": \"PLAYLIST - Palm Beach Shutters- Bi-Fold Track System Installation\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE\", \"n_entries\": 2, \"webpage_url\": \"https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE\", \"webpage_url_basename\": \"pwu7pCYWSwAnPxs8nDoFrE\", \"webpage_url_domain\": \"thelink.hubs.vidyard.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"Vidyard\", \"extractor_key\": \"Vidyard\", \"playlist_autonumber\": 1, \"thumbnail\": \"https://cdn.vidyard.com/thumbnails/41974005/IJw7oCaJcF1h7WWu3OVZ8A_small.png\", \"fulltitle\": \"Install Palm Beach Shutters with a Bi-Fold Track System (Video 1 of 6)\", \"duration_string\": \"4:18\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"url\": \"https://cdn.vidyard.com/videos/a/manifest.mpd\", \"ext\": \"mpd\", \"format_id\": \"http-dash-4k\", \"height\": 2160, \"protocol\": \"https\", \"video_ext\": \"mpd\", \"audio_ext\": \"none\", \"resolution\": \"2160p\", \"dynamic_range\": \"SDR\", \"format\": \"http-dash-4k - 2160p\", \"_filename\": \"Install Palm Beach Shutters with a Bi-Fold Track System (Video 1 of 6) [SyStyHtYujcBHe5PkZc5DL].mpd\", \"filename\": \"Install Palm Beach Shutters with a Bi-Fold Track System (Video 1 of 6) [SyStyHtYujcBHe5PkZc5DL].mpd\", \"__write_download_archive\": false}], \"url\": \"https://cdn.vidyard.com/videos/a/manifest.mpd\", \"ext\": \"mpd\", \"format_id\": \"http-dash-4k\", \"height\": 2160, \"protocol\": \"https\", \"video_ext\": \"mpd\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"2160p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"http-dash-4k - 2160p\"}, {\"thumbnails\": [], \"id\": \"1Fw4B84jZTXLXWqkE71RiM\", \"display_id\": \"5861113\", \"title\": \"Install Palm Beach Shutters with a Bi-Fold Track System (Video 2 of 6)\", \"duration\": 167, \"formats\": [{\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/b/sd.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"hls - unknown\"}], \"subtitles\": {}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"playlist_count\": 2, \"playlist\": \"PLAYLIST - Palm Beach Shutters- Bi-Fold Track System Installation\", \"playlist_id\": \"pwu7pCYWSwAnPxs8nDoFrE\", \"playlist_title\": \"PLAYLIST - Palm Beach Shutters- Bi-Fold Track System Installation\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE\", \"n_entries\": 2, \"webpage_url\": \"https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE\", \"webpage_url_basename\": \"pwu7pCYWSwAnPxs8nDoFrE\", \"webpage_url_domain\": \"thelink.hubs.vidyard.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"Vidyard\", \"extractor_key\": \"Vidyard\", \"playlist_autonumber\": 2, \"fulltitle\": \"Install Palm Beach Shutters with a Bi-Fold Track System (Video 2 of 6)\", \"duration_string\": \"2:47\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format_id\": \"hls\", \"url\": \"https://cdn.vidyard.com/media/hls/b/sd.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"format\": \"hls - unknown\", \"_filename\": \"Install Palm Beach Shutters with a Bi-Fold Track System (Video 2 of 6) [1Fw4B84jZTXLXWqkE71RiM].mp4\", \"filename\": \"Install Palm Beach Shutters with a Bi-Fold Track System (Video 2 of 6) [1Fw4B84jZTXLXWqkE71RiM].mp4\", \"__write_download_archive\": false}], \"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/b/sd.m3u8\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"hls - unknown\"}], \"webpage_url\": \"https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE\", \"original_url\": \"https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE\", \"webpage_url_basename\": \"pwu7pCYWSwAnPxs8nDoFrE\", \"webpage_url_domain\": \"thelink.hubs.vidyard.com\", \"extractor\": \"Vidyard\", \"extractor_key\": \"Vidyard\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [Vidyard] pwu7pCYWSwAnPxs8nDoFrE: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [Vidyard] pwu7pCYWSwAnPxs8nDoFrE: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [Vidyard] 1Fw4B84jZTXLXWqkE71RiM: Unable to download JSON metadata: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_id)s|%(playlist_title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "SyStyHtYujcBHe5PkZc5DL|Install Palm Beach Shutters with a Bi-Fold Track System (Video 1 of 6)|pwu7pCYWSwAnPxs8nDoFrE|PLAYLIST - Palm Beach Shutters- Bi-Fold Track System Installation",
+    "1Fw4B84jZTXLXWqkE71RiM|Install Palm Beach Shutters with a Bi-Fold Track System (Video 2 of 6)|pwu7pCYWSwAnPxs8nDoFrE|PLAYLIST - Palm Beach Shutters- Bi-Fold Track System Installation"
+   ],
+   "stderr": [
+    "WARNING: [Vidyard] pwu7pCYWSwAnPxs8nDoFrE: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [Vidyard] pwu7pCYWSwAnPxs8nDoFrE: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [Vidyard] 1Fw4B84jZTXLXWqkE71RiM: Unable to download JSON metadata: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.vidyard.com/NOPAYLOAD1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: NOPAYLOAD1: An extractor error has occurred. (caused by KeyError('payload')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.vidyard.com/NOTFOUND1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Vidyard] NOTFOUND1: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.vidyard.com/ERROR1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: ERROR1: An extractor error has occurred. (caused by KeyError('chapters')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.vidyard.com/EMPTY1",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"12345\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://play.vidyard.com/EMPTY1\", \"original_url\": \"https://play.vidyard.com/EMPTY1\", \"webpage_url_basename\": \"EMPTY1\", \"webpage_url_domain\": \"play.vidyard.com\", \"extractor\": \"Vidyard\", \"extractor_key\": \"Vidyard\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://play.vidyard.com/NOSRC1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: NOSRC1: An extractor error has occurred. (caused by KeyError('sources')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://play.vidyard.com/MINIMAL1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Vidyard] MINIMAL1: Failed to parse JSON: Expecting value in '': line 1 column 1 (char 0)",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [Vidyard] MINIMAL1: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/iframe",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"Homepage Video\", \"duration\": 99, \"thumbnails\": [{\"url\": \"https://cdn.vidyard.com/thumbnails/50347/OUPa5LTKV46849sLYngMqQ.jpg\", \"id\": \"0\"}, {\"url\": \"https://cdn.vidyard.com/thumbnails/50347/OUPa5LTKV46849sLYngMqQ_small.jpg\", \"id\": \"1\"}], \"id\": \"oTDMPlUv--51Th455G5u7Q\", \"display_id\": \"50347\", \"description\": \"Look I changed the description.\", \"tags\": [\"these\", \"are\", \"all\", \"tags\"], \"formats\": [{\"format_id\": \"hls\", \"format_index\": null, \"url\": \"https://cdn.vidyard.com/media/hls/PfmIdlPMTDoUM2twdxylFw/hd.mp4/index.m3u8?tok=d\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"hls - unknown\"}, {\"url\": \"https://cdn.vidyard.com/videos/PfmIdlPMTDoUM2twdxylFw/sd.mp4?tok=c\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-360p\", \"height\": 360, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-360p - 360p\"}, {\"url\": \"https://cdn.vidyard.com/videos/PfmIdlPMTDoUM2twdxylFw/480p.mp4?tok=b\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-480p\", \"height\": 480, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-480p - 480p\"}, {\"url\": \"https://cdn.vidyard.com/videos/PfmIdlPMTDoUM2twdxylFw/hd.mp4?tok=a\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-720p\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"format\": \"http-mp4-720p - 720p\"}], \"subtitles\": {}, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://play.vidyard.com/\"}, \"original_url\": \"https://example.test/iframe\", \"webpage_url\": \"https://play.vidyard.com/oTDMPlUv--51Th455G5u7Q\", \"webpage_url_basename\": \"oTDMPlUv--51Th455G5u7Q\", \"webpage_url_domain\": \"play.vidyard.com\", \"extractor\": \"Vidyard\", \"extractor_key\": \"Vidyard\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://cdn.vidyard.com/thumbnails/50347/OUPa5LTKV46849sLYngMqQ_small.jpg\", \"fulltitle\": \"Homepage Video\", \"duration_string\": \"1:39\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.vidyard.com/videos/PfmIdlPMTDoUM2twdxylFw/hd.mp4?tok=a\", \"ext\": \"mp4\", \"format_id\": \"http-mp4-720p\", \"height\": 720, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"http-mp4-720p - 720p\", \"_filename\": \"Homepage Video [oTDMPlUv--51Th455G5u7Q].mp4\", \"filename\": \"Homepage Video [oTDMPlUv--51Th455G5u7Q].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [Vidyard] oTDMPlUv--51Th455G5u7Q: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://example.test/proto",
+   "args": [
+    "--print",
+    "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "wL237MtNgZUHo6e8WPiJbF|Vidyard|http://play.vidyard.com/wL237MtNgZUHo6e8WPiJbF|http://example.test/proto"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/many",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"many\", \"title\": \"Many embeds\", \"timestamp\": null, \"description\": \"Two players\", \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Vidyard\", \"_type\": \"url\", \"url\": \"https://play.vidyard.com/wL237MtNgZUHo6e8WPiJbF\", \"extractor\": \"Vidyard\", \"extractor_key\": \"Vidyard\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Vidyard\", \"_type\": \"url\", \"url\": \"https://play.vidyard.com/oTDMPlUv--51Th455G5u7Q\", \"extractor\": \"Vidyard\", \"extractor_key\": \"Vidyard\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://example.test/many\", \"original_url\": \"https://example.test/many\", \"webpage_url_basename\": \"many\", \"webpage_url_domain\": \"example.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://example.test/many",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(playlist_id)s|%(playlist_index)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "wL237MtNgZUHo6e8WPiJbF|Adding & Editing Video Chapters|many|1",
+    "oTDMPlUv--51Th455G5u7Q|Homepage Video|many|2"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [Vidyard] oTDMPlUv--51Th455G5u7Q: Failed to download m3u8 information: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  }
+ ]
+}

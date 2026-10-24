@@ -1,0 +1,25 @@
+{
+ "routes": [
+  {"url": "https://play.vidyard.com/player/oTDMPlUv--51Th455G5u7Q.json", "headers": {"Content-Type": "application/json"}, "body_file": "player_oTDMPlUv--51Th455G5u7Q.json"},
+  {"url": "https://play.vidyard.com/video/oTDMPlUv--51Th455G5u7Q", "headers": {"Content-Type": "application/json"}, "body_file": "video_oTDMPlUv--51Th455G5u7Q.json"},
+  {"url": "https://cdn.vidyard.com/media/hls/PfmIdlPMTDoUM2twdxylFw/hd.mp4/index.m3u8?tok=d", "request_headers": {"Referer": "https://play.vidyard.com/"}, "headers": {"Content-Type": "application/x-mpegURL"}, "body_file": "media.m3u8"},
+  {"url": "https://cdn.vidyard.com/videos/PfmIdlPMTDoUM2twdxylFw/sd.mp4?tok=c", "headers": {"Content-Type": "video/mp4"}, "body_file": "../streamable/media.mp4"},
+  {"url": "https://play.vidyard.com/player/wL237MtNgZUHo6e8WPiJbF.json", "headers": {"Content-Type": "application/json"}, "body_file": "player_wL237MtNgZUHo6e8WPiJbF.json"},
+  {"url": "https://play.vidyard.com/video/wL237MtNgZUHo6e8WPiJbF", "headers": {"Content-Type": "application/json"}, "body_file": "video_wL237MtNgZUHo6e8WPiJbF.json"},
+  {"url": "https://cdn.vidyard.com/media/hls/sX36qdlCAvT7s-wvuNsS_Q/,hd,480p,sd,.mp4.urlset/master.m3u8?tok=j", "request_headers": {"Referer": "https://play.vidyard.com/"}, "headers": {"Content-Type": "application/x-mpegURL"}, "body_file": "master.m3u8"},
+  {"url": "https://cdn.vidyard.com/transcriptions/XHw3e665f-59t4hUZXz6_g/Y91JVr4sCt1ln3gXyz4FhQ.vtt?tok=f", "headers": {"Content-Type": "text/vtt"}, "body": "WEBVTT\n\n00:00:00.000 --> 00:00:02.000\nHello\n"},
+  {"url": "https://play.vidyard.com/player/pwu7pCYWSwAnPxs8nDoFrE.json", "headers": {"Content-Type": "application/json"}, "body_file": "player_pwu7pCYWSwAnPxs8nDoFrE.json"},
+  {"url": "https://play.vidyard.com/video/SyStyHtYujcBHe5PkZc5DL", "headers": {"Content-Type": "application/json"}, "body_file": "video_SyStyHtYujcBHe5PkZc5DL.json"},
+  {"url": "https://cdn.vidyard.com/media/hls/b/sd.m3u8", "request_headers": {"Referer": "https://play.vidyard.com/"}, "headers": {"Content-Type": "application/x-mpegURL"}, "body_file": "media.m3u8"},
+  {"url": "https://play.vidyard.com/player/NOPAYLOAD1.json", "headers": {"Content-Type": "application/json"}, "body": "{\"type\": \"pomo-player\"}"},
+  {"url": "https://play.vidyard.com/player/NOTFOUND1.json", "status": 404, "headers": {"Content-Type": "application/json"}, "body": "{\"type\":\"error\",\"payload\":{\"code\":404,\"title\":\"Video Not Found\",\"message\":\"This video does not exist or may have been deleted.\"}}"},
+  {"url": "https://play.vidyard.com/player/ERROR1.json", "headers": {"Content-Type": "application/json"}, "body": "{\"type\":\"error\",\"payload\":{\"code\":403,\"title\":\"There was an error loading this video\",\"message\":\"Please try again\"}}"},
+  {"url": "https://play.vidyard.com/player/EMPTY1.json", "headers": {"Content-Type": "application/json"}, "body": "{\"type\":\"pomo-player\",\"payload\":{\"playerUuid\":12345,\"chapters\":[]}}"},
+  {"url": "https://play.vidyard.com/player/NOSRC1.json", "headers": {"Content-Type": "application/json"}, "body": "{\"type\":\"pomo-player\",\"payload\":{\"playerUuid\":\"NOSRC1\",\"chapters\":[{\"facadeUuid\":\"NOSRC1\"}]}}"},
+  {"url": "https://play.vidyard.com/player/MINIMAL1.json", "headers": {"Content-Type": "application/json"}, "body": "{\"type\":\"pomo-player\",\"payload\":{\"playerUuid\":\"MINIMAL1\",\"chapters\":[{\"facadeUuid\":\"MINIMAL1\",\"videoId\":true,\"sources\":\"none\"}]}}"},
+  {"url": "https://play.vidyard.com/video/MINIMAL1", "headers": {"Content-Type": "text/html"}, "body": "<html>not json</html>"},
+  {"url": "https://example.test/iframe", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>Iframe page</title></head><body><iframe class=\"vidyard_iframe\" title=\"Homepage Player\" src=\"//play.vidyard.com/oTDMPlUv--51Th455G5u7Q.html?\" width=\"640\" height=\"360\"></iframe></body></html>"},
+  {"url": "http://example.test/proto", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>Proto page</title></head><body><iframe class=\"vidyard_iframe\" src=\"//play.vidyard.com/wL237MtNgZUHo6e8WPiJbF.html?\"></iframe></body></html>"},
+  {"url": "https://example.test/many", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>Many embeds</title><meta property=\"og:description\" content=\"Two players\"></head><body><img style=\"width: 100%;\" class=\"vidyard-player-embed\" src=\"https://play.vidyard.com/wL237MtNgZUHo6e8WPiJbF.jpg\" data-uuid=\"wL237MtNgZUHo6e8WPiJbF\" data-v=\"4\" data-type=\"inline\" /><script type=\"text/javascript\" id=\"vidyard_embed_code_oTDMPlUv--51Th455G5u7Q\" src=\"//play.vidyard.com/oTDMPlUv--51Th455G5u7Q.js?v=3.1.1&type=inline\"></script></body></html>"}
+ ]
+}

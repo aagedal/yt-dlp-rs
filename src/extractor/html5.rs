@@ -2022,7 +2022,7 @@ pub(crate) struct EmbedSite {
     temp_id: fn(&str) -> Option<String>,
 }
 
-static EMBED_SITES: [EmbedSite; 10] = [
+static EMBED_SITES: [EmbedSite; 11] = [
     EmbedSite {
         name: super::bitmovin::NAME,
         key: super::bitmovin::KEY,
@@ -2085,6 +2085,13 @@ static EMBED_SITES: [EmbedSite; 10] = [
         extractor: Some(&super::streamable::Streamable),
         embed_urls: super::streamable::embed_urls,
         temp_id: super::streamable::temp_id,
+    },
+    EmbedSite {
+        name: super::vidyard::NAME,
+        key: super::vidyard::KEY,
+        extractor: Some(&super::vidyard::Vidyard),
+        embed_urls: super::vidyard::embed_urls,
+        temp_id: super::vidyard::temp_id,
     },
     EmbedSite {
         name: "youtube",

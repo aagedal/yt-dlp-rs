@@ -913,6 +913,32 @@ std < dvd < hd, the `original` upload (quality 3, width/height), and the title
 (else a `KeyError`), description, poster, millisecond duration, upload
 timestamp and `parse_age_limit` rating.
 
+Vidyard videos (`*.vidyard.com|*.hubs.vidyard.com/watch/ID`,
+`embed|share.vidyard.com/share/ID`, `play.vidyard.com/[player/]ID`) follow
+upstream `VidyardIE`: the `play.vidyard.com/player/ID.json` `payload` (missing
+`payload`/`chapters`/`sources`/`facadeUuid` keys are upstream's `KeyError`s),
+one chapter as a video and several (or none) as a playlist of the processed
+chapters with the `str(playerUuid)` ID and the player `name`. Each chapter's
+`sources.hls` `auto` master (else, when it gives no formats, every variant
+URL) is read non-fatally with the `Referer: https://play.vidyard.com/` header
+as `hls` formats and subtitles; the other source lists' valid URLs become
+`http-TYPE-PROFILE` formats with `mimetype2ext` extensions and
+`parse_resolution` sizes, without duplicate URLs. `vttUrl` captions are
+merged by language (else `und`) with their names. The non-fatal
+`play.vidyard.com/video/FACADE` metadata (title, integer duration, thumbnail
+list and `videoSections` chapters in seconds) is overlaid in upstream's dict
+order by the chapter's ID, integer `videoId` as `display_id`, title,
+unescaped non-empty description, millisecond (else integer second) duration,
+small/normal thumbnails and tag names, with the Referer as `http_headers`.
+On generic pages `_extract_embed_urls` finds `play.vidyard.com` iframes
+(joined to the page URL), `vidyard-player-embed` `<img>`/`<div>` `data-uuid`s
+and `vidyard_embed_code_ID` scripts, after Streamable's in the embed order.
+Not ported: upstream builds the playlist entries lazily, so a chapter's
+`KeyError` there is an uncaught Python exception; this port extracts every
+chapter first and reports the extractor error. Non-string source profiles,
+caption languages/names and player names are explicit native errors (upstream
+would raise a `TypeError` or format them with `str`).
+
 SAPO videos (`videos.sapo.pt|cv|ao|mz|tl/ID`) follow upstream `SapoIE`: the
 `rd3.videos.sapo.pt/ID/rss2` item's title, `sapo:synopse`, `media:content`
 URL, `parse_duration` time, author, `unified_strdate` date, integer view and
