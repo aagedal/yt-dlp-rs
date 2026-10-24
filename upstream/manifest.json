@@ -157,6 +157,18 @@
       "scope": "IHeartRadioIE api.iheart.com v3 episode JSON (episode pages and iheartradio:ID, image/cleaned description/millisecond start timestamp/duration, clean_podcast_url media URL) and IHeartRadioPodcastIE episode list as iheartradio:ID url entries (flat and resolved) with the non-fatal podcast title/description lookup compared with pinned upstream output through the fixture proxy; non-string titles, media URLs and descriptions remain explicit native errors"
     },
     {
+      "name": "internazionale",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/internazionale.py"
+      ],
+      "rust": [
+        "src/extractor/internazionale.rs",
+        "tests/fixtures/sites/internazionale/"
+      ],
+      "scope": "InternazionaleIE data-video-title (or non-fatal og:title) title, fatal data-job-id/data-video-path, available_abroad host choice, non-fatal HLS (hls ids, mp4) and DASH (dash- ids) manifests, article:published_time timestamp and og thumbnail/description warnings, the generic title and no-formats error compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "libsyn",
       "status": "partial",
       "upstream": [

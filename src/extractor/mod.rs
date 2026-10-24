@@ -69,6 +69,7 @@ mod iltalehti;
 mod imgur;
 mod inc;
 mod instagram;
+mod internazionale;
 pub(crate) mod ism;
 mod israelnationalnews;
 mod ivoox;
@@ -260,6 +261,7 @@ pub use instagram::{
     suitable as instagram_suitable, tag_suitable as instagram_tag_suitable,
     user_suitable as instagram_user_suitable,
 };
+pub use internazionale::{Internazionale, suitable as internazionale_suitable};
 pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
 pub use ivoox::{Ivoox, suitable as ivoox_suitable};
 pub use jove::{Jove, suitable as jove_suitable};

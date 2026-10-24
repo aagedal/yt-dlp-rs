@@ -1,0 +1,10 @@
+{
+ "routes": [
+  {"url": "https://www.internazionale.it/video/2015/01/19/richard-linklater-racconta-una-scena-di-boyhood", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://www.internazionale.it/video/2020/02/02/solo-italia", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "italy.html"},
+  {"url": "https://www.internazionale.it/video/notitle", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body><div data-job-id=\"1\" data-video-path=\"p\"></div></body></html>"},
+  {"url": "https://www.internazionale.it/video/noid", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body><div data-video-title=\"x\"></div></body></html>"},
+  {"url": "https://video.internazionale.it/video/2015/01/30/265968.m3u8", "headers": {"Content-Type": "application/vnd.apple.mpegurl"}, "body_file": "playlist.m3u8"},
+  {"url": "https://video.internazionale.it/video/2015/01/30/265968.mpd", "headers": {"Content-Type": "application/dash+xml"}, "body_file": "manifest.mpd"}
+ ]
+}

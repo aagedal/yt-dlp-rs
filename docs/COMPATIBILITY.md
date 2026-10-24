@@ -1629,6 +1629,15 @@ and fields of unexpected types remain explicit native errors, and output
 templates show the integer `tbr` as a float. `tests/fixtures/sites/gab/` is
 compared with pinned upstream output.
 
+Internazionale videos (`internazionale.it/video/.../SLUG`) follow upstream
+`InternazionaleIE`: the page's `data-video-title` (else the non-fatal
+`og:title`), fatal `data-job-id` and `data-video-path` attributes, the
+`video` or (not available abroad) `video-ita` host's non-fatal HLS
+(`hls` IDs, `mp4`) and DASH (`dash-` IDs) manifests, and the
+`article:published_time` timestamp, `og:image` and `og:description` (their
+misses are upstream's warnings). `tests/fixtures/sites/internazionale/` is
+compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the
