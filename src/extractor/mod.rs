@@ -56,6 +56,7 @@ mod jwplatform;
 mod jwplayer;
 mod kankanews;
 mod kick;
+mod kicker;
 mod kommunetv;
 mod ku6;
 mod kvs;
@@ -195,6 +196,7 @@ pub use kick::{
     clips_suitable as kick_clips_suitable, live_suitable as kick_live_suitable,
     videos_suitable as kick_videos_suitable, vod_suitable as kick_vod_suitable,
 };
+pub use kicker::{Kicker, suitable as kicker_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
 pub use lbry::{Lbry, suitable as lbry_suitable};

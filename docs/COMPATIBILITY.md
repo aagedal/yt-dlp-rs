@@ -1203,6 +1203,12 @@ application/json`), its `stream.title` and first playlist's first file
 without query or fragment as non-fatal `hls` formats, with upstream's
 `KeyError`, bare `IndexError` and `No video formats found!` errors.
 
+Kicker videos (`www.kicker.de/SLUG/video`) follow upstream `KickerIE`: the
+page's fatal `data-dmprivateid` as a `url` result of
+`dailymotion.com/video/ID`, extracted by the Dailymotion extractor (its
+`video_title` is dropped by `url` results; a page without `<title>` warns
+`unable to extract title` like upstream).
+
 Ku6 shows (`v.ku6.com/show/ID[...].html`) follow upstream `Ku6IE`: the page's
 fatal greedy `<h1 title=...>` heading (often empty, so processing's generic
 title) and the player JSON's `data.f` URL as an untyped result, with

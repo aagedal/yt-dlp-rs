@@ -787,6 +787,18 @@
       "scope": "Reworked kick.py (fe84bef3969de96ceb39ca988425fdd3895bbfb1, release 2026.10.21): KickIE (v2 channel API, plain HLS IDs), KickVODIE (web.kick.com playback POST, channel video list metadata, smuggled availability, subscription check), KickClipIE (v2 clip API with 404 messages, HLS or direct sources), KickVideosIE (url_transparent VOD entries, date/views sort) and KickClipsIE (cursor-paginated clip entries, sort/range); compared with upstream output through the fixture proxy. Impersonation is unavailable (upstream's warning only)"
     },
     {
+      "name": "kicker",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kicker.py"
+      ],
+      "rust": [
+        "src/extractor/kicker.rs",
+        "tests/fixtures/sites/kicker/"
+      ],
+      "scope": "KickerIE page's data-dmprivateid as a Dailymotion url result followed by the Dailymotion extractor compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "kommunetv",
       "status": "partial",
       "upstream": [

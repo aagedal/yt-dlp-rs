@@ -1,0 +1,5 @@
+[
+ {"url": "https://www.kicker.de/pogba-dembel-co-die-top-11-der-abloesefreien-spieler-905049/video", "args": ["-j"]},
+ {"url": "https://www.kicker.de/ohne-titel/video", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://www.kicker.de/ohne-video/video", "args": ["-j"]}
+]

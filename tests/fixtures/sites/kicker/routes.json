@@ -1,0 +1,77 @@
+{
+ "routes": [
+  {
+   "url": "https://www.kicker.de/pogba-dembel-co-die-top-11-der-abloesefreien-spieler-905049/video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Pogba, Dembel&#233; &amp; Co.: Die Top 11 der ablösefreien Spieler | kicker</title></head><body><div class=\"kick__video\" data-dmprivateid=\"x8abc\" data-other=\"1\"></div></body></html>"
+  },
+  {
+   "url": "https://www.kicker.de/ohne-titel/video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><div data-dmprivateid = 'x8abc'></div></body></html>"
+  },
+  {
+   "url": "https://www.kicker.de/ohne-video/video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>Kein Video | kicker</title></head><body><div data-id=\"x8abc\"></div></body></html>"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/oauth/token",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"access_token\": \"TOKEN1\", \"expires_in\": 36000}"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "x8abc"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "media.json"
+  },
+  {
+   "url": "https://www.dailymotion.com/player/metadata/video/x8abc?app=com.dailymotion.neon",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "metadata.json"
+  },
+  {
+   "url": "https://www.dailymotion.com/cdn/manifest/video/x8abc.m3u8?sec=abc",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://proxy.dmcdn.net/x8abc/H264-512x288/video.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://proxy.dmcdn.net/x8abc/H264-1280x720-60/video.m3u8",
+   "headers": {
+    "Content-Type": "application/x-mpegURL"
+   },
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://proxy.dmcdn.net/x8abc/H264-1920x1080/video.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-dm"
+  }
+ ]
+}
