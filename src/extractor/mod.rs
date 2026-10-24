@@ -73,6 +73,7 @@ pub(crate) mod html5;
 mod huajiao;
 mod hypem;
 mod iheart;
+mod ilpost;
 mod iltalehti;
 mod imgur;
 mod ina;
@@ -284,6 +285,7 @@ pub use iheart::{
     IHeartRadio, IHeartRadioPodcast, podcast_suitable as iheart_podcast_suitable,
     suitable as iheart_suitable,
 };
+pub use ilpost::{IlPost, suitable as ilpost_suitable};
 pub use iltalehti::{Iltalehti, suitable as iltalehti_suitable};
 pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,

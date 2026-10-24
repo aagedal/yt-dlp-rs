@@ -1881,6 +1881,15 @@ OpenGraph description and image (else the `poster` image, warning when
 absent). Pages without a native video, which upstream passes to the generic
 extractor for embeds, are an explicit native error.
 
+Il Post episodes (`ilpost.it/episodes/ID`) follow upstream `IlPostIE`: the
+page's `var ilpostpodcast` JSON (fatal; missing keys are upstream's
+`KeyError`), the `checkpodcast` form POST to its `ajax_url` and the
+`postcastList` entry whose `str(id)` is the post ID (else the `Episode could
+not be extracted` error), as an untyped audio-only result with the podcast ID
+as `series_id`, string title and description, `url_or_none` audio and image,
+`int_or_none` timestamp, millisecond duration and `free` availability.
+Episodes without a string title or audio URL are explicit native errors.
+
 HitRecord records (`hitrecord.org/records/ID`) follow upstream `HitRecordIE`:
 the records API's `source_url.mp4_url` as an untyped result with its title,
 cleaned body description, millisecond duration, timestamp, uploader, Python
