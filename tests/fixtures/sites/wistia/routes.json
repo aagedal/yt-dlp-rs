@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {"url": "http://fast.wistia.net/embed/medias/a6ndpko1wg.json", "headers": {"Content-Type": "application/json"}, "body_file": "media_a6ndpko1wg.json"},
+  {"url": "http://fast.wistia.net/embed/medias/5vd7p4bct5.json", "request_headers": {"Referer": "http://fast.wistia.net/embed/iframe/5vd7p4bct5"}, "headers": {"Content-Type": "application/json"}, "body_file": "media_5vd7p4bct5.json"},
+  {"url": "http://fast.wistia.net/embed/medias/5vd7p4bct5.json", "request_headers": {"Referer": "http://fast.wistia.net/embed/medias/5vd7p4bct5"}, "headers": {"Content-Type": "application/json"}, "body_file": "media_5vd7p4bct5.json"},
+  {"url": "http://fast.wistia.net/embed/medias/hlsmedia01.json", "headers": {"Content-Type": "application/json"}, "body_file": "media_hlsmedia01.json"},
+  {"url": "http://fast.wistia.net/embed/medias/errmedia01.json", "headers": {"Content-Type": "application/json"}, "body": "{\"error\": true, \"iframe\": true}"},
+  {"url": "http://fast.wistia.net/embed/medias/passwrdvid.json", "headers": {"Content-Type": "application/json"}, "body": "{\"media\": {\"hashedId\": \"passwrdvid\", \"name\": \"Locked\", \"assets\": [], \"embed_options\": {\"plugin\": {\"passwordProtectedVideo\": {\"on\": \"true\"}}}}}"},
+  {"url": "http://fast.wistia.net/embed/medias/passwrdvid.json?password=letmein", "headers": {"Content-Type": "application/json"}, "body": "{\"media\": {\"hashedId\": \"passwrdvid\", \"name\": \"Locked\", \"assets\": [], \"embedOptions\": {\"plugin\": {\"passwordProtectedVideo\": {\"on\": \"true\"}}}}}"},
+  {"url": "http://fast.wistia.net/embed/medias/nonamemed1.json", "headers": {"Content-Type": "application/json"}, "body": "{\"media\": {\"hashedId\": \"nonamemed1\", \"assets\": []}}"},
+  {"url": "http://fast.wistia.net/embed/medias/noassets01.json", "headers": {"Content-Type": "application/json"}, "body": "{\"media\": {\"hashedId\": \"noassets01\", \"name\": \"No assets\"}}"},
+  {"url": "http://fast.wistia.net/embed/medias/emptymedia.json", "headers": {"Content-Type": "application/json"}, "body": "{\"media\": {\"hashedId\": \"emptymedia\", \"name\": \"Nothing playable\", \"assets\": [{\"type\": \"storyboard\", \"url\": \"https://embed-ssl.wistia.com/deliveries/board.jpg\"}]}}"},
+  {"url": "http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin", "headers": {"Content-Type": "video/mp4", "Content-Disposition": "inline"}, "body": ""},
+  {"url": "http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.bin", "headers": {"Content-Type": "image/png", "Content-Disposition": "inline"}, "body": ""},
+  {"url": "http://embed.wistia.com/deliveries/0b5ac32a7b795b91180891d14a673f47.bin", "headers": {"Content-Type": "video/quicktime", "Content-Disposition": "inline"}, "body": ""},
+  {"url": "http://embed.wistia.com/deliveries/83e6ec693e2c05a0ce65809cbaead86a.bin", "headers": {"Content-Type": "image/jpeg", "Content-Disposition": "inline"}, "body": ""},
+  {"url": "http://embed.wistia.com/deliveries/3edc7b8b5d638393b68168c8cc1e035db6827040.bin", "headers": {"Content-Type": "image/jpeg"}, "body": ""},
+  {"url": "http://embed.wistia.com/deliveries/f92713f591a772658bc0f4589611a86d5e20a7b5.bin", "headers": {"Content-Type": "image/jpeg"}, "body": ""},
+  {"url": "https://embed-ssl.wistia.com/deliveries/still.bin?image_crop_resized=640x360", "headers": {"Content-Type": "application/octet-stream", "Content-Disposition": "attachment; filename=\"still.webp\""}, "body": ""},
+  {"url": "http://fast.wistia.net/embed/playlists/aodt9etokc.json", "headers": {"Content-Type": "application/json"}, "body_file": "playlist.json"},
+  {"url": "http://fast.wistia.net/embed/playlists/errplaylst.json", "headers": {"Content-Type": "application/json"}, "body": "{\"error\": \"Playlist not found\"}"},
+  {"url": "http://fast.wistia.net/embed/channel/sapab9p6qd.json", "headers": {"Content-Type": "application/json"}, "body_file": "channel.json"},
+  {"url": "http://fast.wistia.net/embed/channel/fallbackch.json", "status": 403, "headers": {"Content-Type": "application/json"}, "body": "{}"},
+  {"url": "https://fast.wistia.net/embed/channel/fallbackch", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "channel_page.html"},
+  {"url": "http://fast.wistia.net/embed/channel/errchannel.json", "headers": {"Content-Type": "application/json"}, "body": "{\"error\": \"Cannot load channel.\"}"},
+  {"url": "https://fast.wistia.net/embed/channel/errchannel", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><body>Cannot load channel.</body></html>"},
+  {"url": "https://www.example.test/one", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>One embed</title></head><body><iframe src=\"//fast.wistia.net/embed/iframe/a6ndpko1wg?videoFoam=true\" allowfullscreen></iframe></body></html>"},
+  {"url": "https://www.example.test/many", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>Many embeds</title><meta property=\"og:description\" content=\"Several Wistia players\"></head><body><script src=\"https://fast.wistia.com/embed/medias/hlsmedia01.jsonp\" async></script><div class=\"wistia_responsive_padding\"><div class=\"wistia_embed wistia_async_5vd7p4bct5 videoFoam=true\" style=\"height:100%\">&nbsp;</div></div><div class='wistia_channel wistia_async_sapab9p6qd mode=inline'></div><span data-wistia-id=\"a6ndpko1wg\"></span><script>Wistia.embed(\"5vd7p4bct5\");</script></body></html>"},
+  {"url": "https://www.example.test/channel?wmediaid=a6ndpko1wg&wchannelid=sapab9p6qd", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>Channel embed</title></head><body><section id=\"c\" class=\"wistia_channel wistia_async_sapab9p6qd mode=popover\"></section></body></html>"},
+  {"url": "https://www.example.test/school", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "<html><head><title>School blog</title><link rel=\"stylesheet\" href=\"https://assets.teachablecdn.com/x.css\"></head><body><script>teachableTracker.linker:autoLink</script><div id=\"wistia_hlsmedia01\"></div></body></html>"}
+ ]
+}

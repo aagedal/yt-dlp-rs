@@ -766,6 +766,44 @@ with the API's non-`None` `title`, `description` and `parse_duration`d
 `metadata.duration`. Non-string titles or descriptions are rejected.
 `tests/fixtures/sites/wimbledon/` is compared with pinned upstream output.
 
+Wistia media (`wistia:ID`, `*.wistia.net|com/[embed/]iframe|medias/ID`)
+follow upstream `WistiaIE`: the `http://fast.wistia.net/embed/medias/ID.json`
+config (Referer the input URL if it is HTTP, else the config's base URL;
+`--video-password` as the `password` query), its truthy `error` (`Error while
+getting the playlist: ...`) and the `passwordProtectedVideo` plugin errors,
+then the `media` dict's `KeyError`s (`media`, `hashedId`, `name`, `assets`).
+Assets with a URL and status 2 (or none) that are not previews or
+storyboards are formats (`TYPE-DISPLAY_NAME` IDs for `*_video` types, int
+`tbr`, `quality` 1 for the original, audio-only `Audio` assets, else
+width/height/codec; `container`/`ext`/`filesize`, or for HLS assets the
+`m3u8_native` mp4 format after its `ts-` `.ts` copy); `still`/`still_image`
+assets are thumbnails with `.bin` replaced by the real extension. An asset
+without an `ext` (and every thumbnail with a `.bin` URL) gets upstream's
+`Checking media extension` HEAD request (`urlhandle_detect_ext`, `mov` as
+`mp4`; a failed request warns `HEAD request returned error` and keeps `bin`).
+Captions are `captions/ID.vtt?language=LANG` subtitles (a repeated language
+replaces the earlier URL in place). `WistiaPlaylistIE`
+(`.../playlists/ID`) is a playlist of the first playlist's `medias`
+`embed_config` media dicts. `WistiaChannelIE` (`wistiachannel:ID`,
+`.../channel/ID`) follows `wistia:MEDIA` for a `wmediaid`/`wvideo[id]` query
+under `--no-playlist` (else `Downloading channel ...`), and otherwise is a
+playlist of `url` entries (`title` from `name`) of the first series' sections'
+`videos`/`episodes` with a truthy `hashedId`, with the series title and
+description; any API failure warns and falls back to the channel page's
+base64 `wchanneljsonp` data (upstream's regex default makes a missing value
+the channel ID, whose decoding fails with upstream's `Incorrect padding`
+JSON error). Non-string asset fields, unusual base64 padding and channel data
+that is not UTF-8 JSON are explicit native errors. On generic pages the
+`WistiaChannelIE` (`wistia_channel wistia_async_ID` classes, as
+`wistiachannel:ID` with the page URL's query) and `WistiaIE` embeds
+(`_EMBED_REGEX` iframe/script/meta URLs, other `wistia_async_ID` classes,
+`data-wistia-id`, `Wistia.embed(...)` and `id="wistia_..."`) are detected in
+that order; upstream's media-ID fallback never runs (it tests a generator).
+Pages that TeachableIE claims (its `teachableTracker` check on
+`/courses`/`/p` URLs) report no Wistia embeds, as upstream, but TeachableIE
+itself is not ported. `tests/fixtures/sites/wistia/` is compared with pinned
+upstream output.
+
 Screen9 videos (`*.screen9.tv|com/embed|media/ID`, `play.su.se/...`) follow
 upstream `Screen9IE`: the `api.screen9.com/embed/ID` page's fatal
 `var config` JSON, its first `application/x-mpegURL` source's HLS formats
@@ -2268,14 +2306,14 @@ information of song ID`) as an untyped `mp3` audio-only result with the artist
 as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
 `qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
 
-On generic pages, the embeds of Blogger, JW Platform, Megaphone, Streamable and YouTube
+On generic pages, the embeds of Blogger, JW Platform, Megaphone, Streamable, Wistia (above) and YouTube
 (`YoutubeIE._EMBED_REGEX`: iframe/embed/object/SWFObject/`data-video-url`
 `youtube[-nocookie].com/embed|v|p/ID` URLs and lazy-load watch links, kept when
 this port's YouTube extractor accepts them), in
 upstream extractor order (each HTML-unescaped, joined to the page URL,
 suitable and unique, with `Identified N NAME embed(s)` debug lines), are `url`
 results like upstream `_extract_embeds`: one is followed (`original_url` stays
-the page), several form the page's playlist (`--flat-playlist` keeps
+the page, also ahead of a followed playlist's `webpage_url`), several form the page's playlist (`--flat-playlist` keeps
 `ie_key`/`extractor` entries with the `_match_id` temporary ID). A page with
 both HTML5 media and these embeds is an unsupported error; other sites' embeds
 are not detected.
