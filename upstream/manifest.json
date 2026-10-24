@@ -618,6 +618,18 @@
       "scope": "GodTubeIE (_WORKING = False warning and listing) player config/media XML extraction compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "golem",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/golem.py"
+      ],
+      "rust": [
+        "src/extractor/golem.rs",
+        "tests/fixtures/sites/golem/"
+      ],
+      "scope": "GolemIE XML config title, playtime, child-element formats and teaser thumbnails with _int/_float warnings compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "goodgame",
       "status": "partial",
       "upstream": [

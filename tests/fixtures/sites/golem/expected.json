@@ -1,0 +1,97 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"14095\", \"title\": \"iPhone 6 und 6 Plus - Test\", \"duration\": 300.44, \"formats\": [{\"format_id\": \"teaser\", \"url\": \"http://video.golem.de/thumbs/14095_640.jpg\", \"height\": 360, \"width\": 640, \"filesize\": null, \"ext\": \"unknown_video\", \"protocol\": \"http\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"teaser - 640x360\"}, {\"format_id\": \"medium\", \"url\": \"http://video.golem.de/14095/medium.mp4\", \"height\": 360, \"width\": 640, \"filesize\": 32000000, \"ext\": \"mp4\", \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"medium - 640x360\"}, {\"format_id\": \"high\", \"url\": \"https://cdn.golem.de/14095/high.mp4\", \"height\": 720, \"width\": 1280, \"filesize\": 65309548, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - 1280x720\"}], \"thumbnails\": [{\"url\": \"http://video.golem.de/thumbs/inner.jpg\", \"width\": null, \"height\": null, \"id\": \"0\"}, {\"url\": \"http://video.golem.de/thumbs/14095_640.jpg\", \"width\": 640, \"height\": 360, \"id\": \"1\", \"resolution\": \"640x360\"}], \"webpage_url\": \"http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html\", \"original_url\": \"http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html\", \"webpage_url_basename\": \"iphone-6-und-6-plus-test.html\", \"webpage_url_domain\": \"video.golem.de\", \"extractor\": \"Golem\", \"extractor_key\": \"Golem\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://video.golem.de/thumbs/14095_640.jpg\", \"display_id\": \"14095\", \"fulltitle\": \"iPhone 6 und 6 Plus - Test\", \"duration_string\": \"5:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"high\", \"url\": \"https://cdn.golem.de/14095/high.mp4\", \"height\": 720, \"width\": 1280, \"filesize\": 65309548, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - 1280x720\", \"_filename\": \"iPhone 6 und 6 Plus - Test [14095].mp4\", \"filename\": \"iPhone 6 und 6 Plus - Test [14095].mp4\", \"__write_download_archive\": false}], \"format_id\": \"high\", \"url\": \"https://cdn.golem.de/14095/high.mp4\", \"height\": 720, \"width\": 1280, \"filesize\": 65309548, \"ext\": \"mp4\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"high - 1280x720\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Golem] Failed to extract filesize: Could not parse value None",
+    "WARNING: [Golem] Failed to extract thumbnail width: Could not parse value 'big'",
+    "WARNING: [Golem] Failed to extract thumbnail height: Could not parse value None"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Golem] Extracting URL: http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html",
+    "[Golem] 14095: Downloading XML",
+    "[info] Available formats for 14095:",
+    "ID     EXT           RESOLUTION |  FILESIZE PROTO | VCODEC  ACODEC",
+    "-------------------------------------------------------------------",
+    "teaser unknown_video 640x360    |           http  | unknown unknown",
+    "medium mp4           640x360    |  30.52MiB http  | unknown unknown",
+    "high   mp4           1280x720   |  62.28MiB https | unknown unknown"
+   ],
+   "stderr": [
+    "WARNING: [Golem] Failed to extract filesize: Could not parse value None",
+    "WARNING: [Golem] Failed to extract thumbnail width: Could not parse value 'big'",
+    "WARNING: [Golem] Failed to extract thumbnail height: Could not parse value None"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Golem] Extracting URL: http://video.golem.de/handy/14095/iphone-6-und-6-plus-test.html",
+    "[Golem] 14095: Downloading XML",
+    "[info] 14095: Downloading 1 format(s): high",
+    "[download] Destination: 14095.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: [Golem] Failed to extract filesize: Could not parse value None",
+    "WARNING: [Golem] Failed to extract thumbnail width: Could not parse value 'big'",
+    "WARNING: [Golem] Failed to extract thumbnail height: Could not parse value None"
+   ],
+   "files": {
+    "14095.mp4": 18
+   }
+  },
+  {
+   "url": "https://video.golem.de/x/1/y.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1\", \"title\": \"golem\", \"formats\": [{\"format_id\": \"low\", \"url\": \"http://video.golem.de/1/low\", \"height\": null, \"width\": null, \"filesize\": null, \"ext\": \"unknown_video\", \"protocol\": \"http\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"low - unknown\"}], \"thumbnails\": [], \"webpage_url\": \"https://video.golem.de/x/1/y.html\", \"original_url\": \"https://video.golem.de/x/1/y.html\", \"webpage_url_basename\": \"y.html\", \"webpage_url_domain\": \"video.golem.de\", \"extractor\": \"Golem\", \"extractor_key\": \"Golem\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1\", \"fulltitle\": \"golem\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"low\", \"url\": \"http://video.golem.de/1/low\", \"height\": null, \"width\": null, \"filesize\": null, \"ext\": \"unknown_video\", \"protocol\": \"http\", \"video_ext\": \"unknown_video\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"low - unknown\", \"_filename\": \"golem [1].unknown_video\", \"filename\": \"golem [1].unknown_video\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Golem] Failed to extract duration: Could not parse value 'abc'",
+    "WARNING: [Golem] Failed to extract height: Could not parse value None",
+    "WARNING: [Golem] Failed to extract width: Could not parse value None",
+    "WARNING: [Golem] Failed to extract filesize: Could not parse value None"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://video.golem.de/x/2/y.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Golem] 2: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

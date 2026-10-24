@@ -1,0 +1,32 @@
+{
+ "routes": [
+  {
+   "url": "https://video.golem.de/xml/14095.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<video>\n <title>iPhone 6 und 6 Plus - Test</title>\n <playtime>300.44</playtime>\n <teaser width=\"640\" height=\"360\"><url>/thumbs/14095_640.jpg</url></teaser>\n <medium width=\"640\" height=\"360\"><url>/14095/medium.mp4</url><filename>iphone-6-medium.mp4</filename><filesize>32000000</filesize></medium>\n <high width=\"1280\" height=\"720\"><url>https://cdn.golem.de/14095/high.mp4</url><filename>iphone-6-high.mp4</filename><filesize>65309548</filesize></high>\n <empty width=\"1\" height=\"1\"><url></url></empty>\n <extra><teaser width=\"big\"><url>thumbs/inner.jpg</url></teaser></extra>\n</video>\n"
+  },
+  {
+   "url": "https://video.golem.de/xml/1.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<video>\n <playtime>abc</playtime>\n <low><url>/1/low</url></low>\n</video>\n"
+  },
+  {
+   "url": "https://video.golem.de/xml/2.xml",
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<?xml version=\"1.0\"?>\n<video><title></title><playtime>12</playtime></video>\n"
+  },
+  {
+   "url": "https://cdn.golem.de/14095/high.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "0000ftypisom-golem"
+  }
+ ]
+}

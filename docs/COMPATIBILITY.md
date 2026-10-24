@@ -1108,6 +1108,15 @@ warning) follow upstream `GodTubeIE`: the player config XML (`Downloading
 player config XML`: file, author, ISO 8601 date, duration, image) and media
 XML title (`Downloading media XML`) as an untyped result.
 
+Golem videos (`video.golem.de/.../ID/...`) follow upstream `GolemIE`: the
+`video.golem.de/xml/ID.xml` config's `title` (default `golem`) and float
+`playtime`, one format per top-level child element with a non-empty `url`
+(joined to `http://video.golem.de`, the element name as `format_id`, its
+`width`/`height` attributes, `filesize` and `filename` extension), and every
+`teaser` element's thumbnail, with upstream's `_int`/`_float`
+`Failed to extract NAME: Could not parse value REPR` warnings and
+`No video formats found!` error. XML parse errors are this port's text.
+
 GoodGame streams (`goodgame.ru/CHANNEL`, not `channel/`) follow upstream
 `GoodGameIE` (`goodgame:stream`): the `api/4/users/CHANNEL/stream` JSON's
 `streamkey` as the ID (missing: upstream's `KeyError`), `User is offline`
