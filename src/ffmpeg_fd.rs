@@ -130,7 +130,6 @@ pub(crate) fn py_title(name: &str) -> String {
         .collect()
 }
 
-/// `FFmpegFD._call_downloader` arguments, without the executable.
 /// Upstream `cli_configuration_args`: the first key with arguments.
 fn configured<'a>(settings: &'a Settings, keys: &[String]) -> &'a [String] {
     keys.iter()
@@ -138,10 +137,22 @@ fn configured<'a>(settings: &'a Settings, keys: &[String]) -> &'a [String] {
         .map_or(&[], Vec::as_slice)
 }
 
+/// A local file standing in for one input's URL: the segments of a partial
+/// download (`indexed_fd`), whose timestamps keep the original timeline.
+pub(crate) struct LocalInput {
+    pub path: PathBuf,
+    /// The original file's start time, which upstream's relative `-ss` is
+    /// measured from; the local file starts later.
+    pub start_time: f64,
+}
+
+/// `FFmpegFD._call_downloader` arguments, without the executable; `local`
+/// replaces the inputs' URLs.
 fn arguments(
     network: &Network<'_>,
     settings: &Settings,
     info: &VideoInfo,
+    local: Option<&[LocalInput]>,
     temporary: &Path,
     piped: bool,
 ) -> Result<Vec<OsString>> {
@@ -182,15 +193,25 @@ fn arguments(
     let mut protocol = String::new();
     for (input, (format, _)) in formats.iter().enumerate() {
         protocol = format.protocol.clone().unwrap_or_default();
+        let local = local.and_then(|local| local.get(input));
         // FFmpegSinkFD's input is `-` (FFmpeg's stdin), not an HTTP URL.
-        if !piped && matches!(format.url.scheme(), "http" | "https") {
+        if !piped && local.is_none() && matches!(format.url.scheme(), "http" | "https") {
             let headers = header_lines(network, format, &format.url);
             if !headers.is_empty() {
                 args.extend(["-headers".into(), headers.into()]);
             }
         }
         if start.as_f64() != 0.0 {
-            args.extend(["-ss".into(), py_str(start).into()]);
+            match local {
+                // The same position as a relative `-ss` on the whole file.
+                Some(local) => args.extend([
+                    "-seek_timestamp".into(),
+                    "1".into(),
+                    "-ss".into(),
+                    crate::screen::py_float(start.as_f64() + local.start_time).into(),
+                ]),
+                None => args.extend(["-ss".into(), py_str(start).into()]),
+            }
         }
         if let Some(end) = end {
             args.extend(["-t".into(), py_str(difference(end, start)).into()]);
@@ -202,8 +223,17 @@ fn arguments(
         // `_configuration_args(('_i1', '_i'))` before each input.
         let keys = [format!("ffmpeg_i{}", input + 1), "ffmpeg_i".into()];
         args.extend(configured(settings, &keys).iter().map(OsString::from));
-        let url = if piped { "-" } else { format.url.as_str() };
-        args.extend(["-i".into(), url.into()]);
+        match local {
+            Some(local) => {
+                let mut path = OsString::from("file:");
+                path.push(&local.path);
+                args.extend(["-i".into(), path]);
+            }
+            None => {
+                let url = if piped { "-" } else { format.url.as_str() };
+                args.extend(["-i".into(), url.into()]);
+            }
+        }
     }
     args.extend(["-c".into(), "copy".into()]);
     if !info.requested_formats.is_empty() || protocol == "http_dash_segments" {
@@ -249,11 +279,13 @@ pub(crate) type Connection = Box<dyn FnOnce(&mut dyn std::io::Write) + Send>;
 
 /// `ExternalFD.real_download` with `FFmpegFD`: run FFmpeg into the
 /// temporary name, then publish it and report one finished status.
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn download(
     ffmpeg: &Path,
     network: &Network<'_>,
     settings: &Settings,
     info: &VideoInfo,
+    local: Option<&[LocalInput]>,
     destination: &Path,
     options: &DownloadOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
@@ -263,6 +295,7 @@ pub(crate) fn download(
         network,
         settings,
         info,
+        local,
         destination,
         options,
         None,
@@ -291,6 +324,7 @@ pub(crate) fn download_piped(
         network,
         settings,
         info,
+        None,
         destination,
         options,
         Some(connection),
@@ -304,6 +338,7 @@ fn run(
     network: &Network<'_>,
     settings: &Settings,
     info: &VideoInfo,
+    local: Option<&[LocalInput]>,
     destination: &Path,
     options: &DownloadOptions,
     connection: Option<Connection>,
@@ -338,7 +373,7 @@ fn run(
         }
     };
     let piped = connection.is_some();
-    let args = arguments(network, settings, info, &temporary, piped)?;
+    let args = arguments(network, settings, info, local, &temporary, piped)?;
     let progress = |phase, downloaded_bytes| DownloadProgress {
         attempt: 1,
         phase,
@@ -478,6 +513,7 @@ mod tests {
             &network,
             &Settings::default(),
             &info,
+            None,
             Path::new("o.mp4.part"),
             false,
         )
@@ -519,6 +555,7 @@ mod tests {
                 ..Default::default()
             },
             &info,
+            None,
             Path::new("o"),
             false,
         )
@@ -553,7 +590,7 @@ mod tests {
             .insert("ffmpeg_i1".into(), vec!["-ss".into(), "1".into()]);
         settings.args.insert("default".into(), vec!["-x".into()]);
         settings.args.insert("ffmpeg".into(), vec!["-y2".into()]);
-        let args: Vec<_> = arguments(&network, &settings, &info, Path::new("o"), false)
+        let args: Vec<_> = arguments(&network, &settings, &info, None, Path::new("o"), false)
             .unwrap()
             .iter()
             .map(|arg| arg.to_string_lossy().into_owned())
@@ -586,11 +623,18 @@ mod tests {
             proxy: None,
         };
         let render = |info: &VideoInfo| -> Vec<String> {
-            arguments(&network, &Settings::default(), info, Path::new("o"), false)
-                .unwrap()
-                .iter()
-                .map(|arg| arg.to_string_lossy().into_owned())
-                .collect()
+            arguments(
+                &network,
+                &Settings::default(),
+                info,
+                None,
+                Path::new("o"),
+                false,
+            )
+            .unwrap()
+            .iter()
+            .map(|arg| arg.to_string_lossy().into_owned())
+            .collect()
         };
         // Upstream maps a single DASH format's stream too.
         let single = render(&info);

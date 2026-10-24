@@ -33,6 +33,7 @@ mod html;
 mod html_elements;
 mod http;
 pub mod impersonate;
+mod indexed_fd;
 mod info;
 mod info_json;
 mod info_order;
@@ -45,6 +46,7 @@ mod live_dash;
 pub mod manifest_args;
 mod match_filter;
 mod md5;
+mod media_index;
 mod merge;
 pub mod metadata_parser;
 mod mhtml;
@@ -85,7 +87,7 @@ pub use extractor::YoutubeOptions;
 pub use format_sort::FormatSorter;
 pub use http::HttpOptions;
 pub use info::{
-    ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
+    ByteIndex, ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
 pub use info::{COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, NESTED_INDEX, PendingEntries};
@@ -3350,11 +3352,48 @@ impl YoutubeDl {
                 cookies: &self.cookies,
                 proxy: self.proxy.as_deref(),
             };
+            // Indexed single-file streams fetch only the section's segments,
+            // unless `--downloader ffmpeg` names FFmpeg for them.
+            let ffmpeg_named = |protocol: &str| {
+                self.downloader_name(protocol)
+                    .is_some_and(|name| name.eq_ignore_ascii_case("ffmpeg"))
+            };
+            let named = if info.requested_formats.is_empty() {
+                ffmpeg_named(
+                    &info
+                        .protocol
+                        .clone()
+                        .unwrap_or_else(|| info.url.scheme().to_owned()),
+                )
+            } else {
+                info.requested_formats
+                    .iter()
+                    .any(|format| ffmpeg_named(&format.determine_protocol()))
+            };
+            if !named && indexed_fd::supported(info) {
+                let params = indexed_fd::Params {
+                    client: &self.client,
+                    ffmpeg,
+                    network: &network,
+                    settings: &self.ffmpeg_settings,
+                    chunk: self.http_chunk_size,
+                };
+                if let Some(size) = indexed_fd::download(
+                    &params,
+                    info,
+                    destination.as_ref(),
+                    &options,
+                    &mut callback,
+                )? {
+                    return Ok(size);
+                }
+            }
             return ffmpeg_fd::download(
                 ffmpeg,
                 &network,
                 &self.ffmpeg_settings,
                 info,
+                None,
                 destination.as_ref(),
                 &options,
                 &mut callback,

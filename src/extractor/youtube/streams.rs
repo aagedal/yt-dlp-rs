@@ -751,6 +751,11 @@ pub(super) fn extract(
                     url = set_query(&url, "pot", token);
                 }
                 format.insert("url".into(), url.into());
+                // Port extension: the segment index location for fast
+                // partial downloads (`to_format` moves it out of the dict).
+                if let Some(ranges) = byte_index(stream) {
+                    format.insert(BYTE_INDEX.into(), ranges);
+                }
                 if let Some(itag) = &stream_id.0 {
                     itags.entry(itag.clone()).or_default().push((
                         "https".into(),
@@ -1199,9 +1204,27 @@ fn merge_subtitles(target: &mut crate::Subtitles, source: crate::Subtitles) {
     }
 }
 
+/// The private format dict key holding `[[init start, end], [index start, end]]`.
+const BYTE_INDEX: &str = "__byte_index";
+
+/// A stream's `initRange` and `indexRange` (decimal strings).
+fn byte_index(stream: &Value) -> Option<Value> {
+    let range = |key: &str| -> Option<[u64; 2]> {
+        let range = stream.get(key)?;
+        let bound =
+            |key: &str| int_or_none(range.get(key)).and_then(|value| u64::try_from(value).ok());
+        let (start, end) = (bound("start")?, bound("end")?);
+        (start <= end).then_some([start, end])
+    };
+    Some(json!([range("initRange")?, range("indexRange")?]))
+}
+
 /// A format dict as this port's typed format (unmodelled keys in `extra`).
 pub(super) fn to_format(dict: &Map<String, Value>, video_id: &str) -> Result<VideoFormat> {
     let mut value = dict.clone();
+    let ranges = value
+        .shift_remove(BYTE_INDEX)
+        .and_then(|ranges| serde_json::from_value::<[[u64; 2]; 2]>(ranges).ok());
     // Typed fields must hold their own types; upstream keeps `None`s.
     for key in [
         "asr",
@@ -1221,7 +1244,11 @@ pub(super) fn to_format(dict: &Map<String, Value>, video_id: &str) -> Result<Vid
             value.shift_remove(key);
         }
     }
-    let format: VideoFormat = serde_json::from_value(Value::Object(value))
+    let mut format: VideoFormat = serde_json::from_value(Value::Object(value))
         .map_err(|error| Error::Reported(format!("[youtube] {video_id}: {error}")))?;
+    format.byte_index = ranges.map(|[init, index]| crate::ByteIndex {
+        init: (init[0], init[1]),
+        index: (index[0], index[1]),
+    });
     Ok(format)
 }
