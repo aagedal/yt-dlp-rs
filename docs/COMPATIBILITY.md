@@ -1423,6 +1423,18 @@ series and the page `<title>` (its absence is upstream's warning and generic
 title). Non-string `video` values remain explicit native errors.
 `tests/fixtures/sites/trtcocuk/` is compared with pinned upstream output.
 
+TRT World videos (`www.trtworld.com/video/SECTION/SLUG-ID`) follow upstream
+`TrtWorldIE`: the page's `window.__NUXT__` data (`_search_nuxt_data`,
+`data[0]`; a missing `videoData`, `content` or `platforms` is upstream's
+`KeyError`), the website and OTT platforms' `hls_url`/`url` media as
+non-fatal master-only HLS formats (`.m3u8`) or `http` formats, the first
+platform with a title, description, thumbnail or ISO 8601 release timestamp,
+and upstream's `No video found` error. Without formats, the YouTube
+platform's `youtubeId` is a `url` result for the YouTube extractor (not
+covered by the fixtures); platforms without any metadata (upstream's
+`TypeError`) remain explicit native errors. `tests/fixtures/sites/trtworld/`
+is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

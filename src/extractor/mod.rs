@@ -129,6 +129,7 @@ mod thestar;
 mod thisamericanlife;
 mod tiktok;
 mod trtcocuk;
+mod trtworld;
 mod tumblr;
 mod tweakers;
 mod twentythreevideo;
@@ -310,6 +311,7 @@ pub(crate) use tiktok::{
     fetch_pages as fetch_tiktok_pages, is_pending_state as tiktok_pending_state,
 };
 pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
+pub use trtworld::{TrtWorld, suitable as trtworld_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};

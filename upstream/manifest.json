@@ -1630,6 +1630,18 @@
       "scope": "TrtCocukVideoIE window.__NUXT__ data via _search_nuxt_data, JSON-string or plain HLS video URL (fatal formats and subtitles), KeyError paths, season/release/series metadata and the page title (with the missing-title warning) compared with pinned upstream output through the fixture proxy; non-string video values remain explicit native errors"
     },
     {
+      "name": "trtworld",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/trtworld.py"
+      ],
+      "rust": [
+        "src/extractor/trtworld.rs",
+        "tests/fixtures/sites/trtworld/"
+      ],
+      "scope": "TrtWorldIE window.__NUXT__ data via _search_nuxt_data, website/OTT hls_url/url media as non-fatal HLS or http formats, first-platform title/description/thumbnail/release metadata, KeyError and No video found paths compared with pinned upstream output through the fixture proxy; the YouTube-ID url result is untested and metadata-less platforms (upstream TypeError) remain explicit native errors"
+    },
+    {
       "name": "tumblr",
       "status": "partial",
       "upstream": [
