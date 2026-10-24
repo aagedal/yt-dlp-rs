@@ -1739,6 +1739,13 @@ from webpage` when absent); otherwise the page is a playlist
 `tests/fixtures/sites/rottentomatoes/` is compared with pinned upstream
 output.
 
+Mediaite articles (`mediaite.com/SECTION/SLUG`, not `/category`) follow
+upstream `MediaiteIE`: the page's `cdn.jwplayer.com/players/ID` (else
+`data-video-id`) media ID, its `cdn.jwplayer.com/v2/media/ID` JSON parsed
+like JW Platform's (`_parse_jwplayer_data` with the item's `mediaid` as the
+video ID). Multi-item JW Player playlists remain explicit native errors.
+`tests/fixtures/sites/mediaite/` is compared with pinned upstream output.
+
 Cloudflare Stream videos (`[watch.|iframe.|customer-X.]cloudflarestream.com|videodelivery.net|bytehighway.net/ID`
 and `embed/*.js?video=ID` scripts) follow upstream `CloudflareStreamIE`: a
 signed token's ID is its base64 payload's `sub`, and the
