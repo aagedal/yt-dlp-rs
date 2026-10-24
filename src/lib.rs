@@ -11,6 +11,7 @@ mod cover_art;
 mod crypto;
 mod dash;
 pub mod dates;
+pub mod devalue;
 mod download;
 mod embed_metadata;
 mod embed_subtitles;
@@ -328,6 +329,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 /// Upstream extractor names this port knows, in `gen_extractor_classes`
 /// order (`end` is the unsupported-URL fallback).
 const EXTRACTOR_NAMES: &[&str] = &[
+    "AmadeusTV",
     "Angel",
     "archive.org",
     "AudioBoom",
@@ -392,6 +394,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "instagram:tag",
     "instagram:user",
     "IsraelNationalNews",
+    "Ivoox",
     "Jove",
     "JWPlatform",
     "KankaNews",
@@ -464,6 +467,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "tiktok:collection",
     "tiktok:live",
     "tiktok:user",
+    "TrtCocukVideo",
     "Tumblr",
     "tv.dfb.de",
     "Tweakers",
@@ -495,6 +499,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Webcamerapl",
     "Weibo",
     "WeiboVideo",
+    "Whyp",
     "XiaoHongShu",
     "yfanefa",
     "youtube:clip",
@@ -727,6 +732,7 @@ impl YoutubeDl {
                 Box::new(extractor::Mixcloud),
                 Box::new(extractor::Pinterest),
                 Box::new(extractor::Lbry),
+                Box::new(extractor::TrtCocukVideo),
                 Box::new(extractor::Tumblr),
                 Box::new(extractor::Iltalehti),
                 Box::new(extractor::ImgurAlbum),
@@ -798,6 +804,7 @@ impl YoutubeDl {
                 )),
                 // After every YouTube extractor.
                 Box::new(extractor::YoutubeUnsupported),
+                Box::new(extractor::AmadeusTv),
                 Box::new(extractor::Angel),
                 Box::new(extractor::AudioBoom),
                 Box::new(extractor::BehindKink),
@@ -839,6 +846,7 @@ impl YoutubeDl {
                 Box::new(extractor::Huajiao),
                 Box::new(extractor::Hypem),
                 Box::new(extractor::IsraelNationalNews),
+                Box::new(extractor::Ivoox),
                 Box::new(extractor::Jove),
                 Box::new(extractor::JwPlatform),
                 Box::new(extractor::KankaNews),
@@ -890,6 +898,7 @@ impl YoutubeDl {
                 Box::new(extractor::Veo),
                 Box::new(extractor::Vocaroo),
                 Box::new(extractor::Webcamerapl),
+                Box::new(extractor::Whyp),
                 Box::new(extractor::XiaoHongShu),
                 Box::new(extractor::Yfanefa),
                 Box::new(extractor::Zhihu),

@@ -1,0 +1,7 @@
+[
+ {"url": "https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html", "args": ["-j"]},
+ {"url": "https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(uploader)s|%(channel)s|%(timestamp)s|%(thumbnail)s|%(duration)s|%(tags)s|%(ext)s"]},
+ {"url": "https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.ivoox.com/en/bare-audios-mp3_rf_2_1.html", "args": ["-j"]},
+ {"url": "https://go.ivoox.com/rf/3", "args": ["-j"]}
+]

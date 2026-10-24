@@ -28,7 +28,7 @@ pub(crate) fn yield_json_ld(html: &str) -> Vec<Value> {
 }
 
 /// Raw control characters inside JSON strings as `\u00XX` escapes.
-fn escape_controls(text: &str) -> String {
+pub(crate) fn escape_controls(text: &str) -> String {
     let mut out = String::with_capacity(text.len());
     let mut in_string = false;
     let mut escaped = false;

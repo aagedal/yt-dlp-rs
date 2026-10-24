@@ -1,3 +1,4 @@
+mod amadeustv;
 mod angel;
 mod archiveorg;
 mod audioboom;
@@ -58,6 +59,7 @@ mod imgur;
 mod instagram;
 pub(crate) mod ism;
 mod israelnationalnews;
+mod ivoox;
 mod jove;
 mod json_ld;
 mod jwplatform;
@@ -83,6 +85,7 @@ mod movingimage;
 mod myvidster;
 mod niconico;
 mod nobelprize;
+pub mod nuxt;
 mod odnoklassniki;
 mod onefootball;
 mod oneplace;
@@ -122,6 +125,7 @@ mod teletask;
 mod theintercept;
 mod thisamericanlife;
 mod tiktok;
+mod trtcocuk;
 mod tumblr;
 mod tweakers;
 mod twentythreevideo;
@@ -136,12 +140,14 @@ mod vkplay;
 mod vocaroo;
 mod webcamerapl;
 mod weibo;
+mod whyp;
 mod xiaohongshu;
 mod xspf;
 mod yfanefa;
 pub(crate) mod youtube;
 mod zhihu;
 
+pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
@@ -214,6 +220,7 @@ pub use instagram::{
     user_suitable as instagram_user_suitable,
 };
 pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
+pub use ivoox::{Ivoox, suitable as ivoox_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kankanews::{KankaNews, suitable as kankanews_suitable};
@@ -296,6 +303,7 @@ pub use tiktok::{
 pub(crate) use tiktok::{
     fetch_pages as fetch_tiktok_pages, is_pending_state as tiktok_pending_state,
 };
+pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
@@ -332,6 +340,7 @@ pub use webcamerapl::{Webcamerapl, suitable as webcamerapl_suitable};
 pub use weibo::{
     Weibo, WeiboVideo, suitable as weibo_suitable, video_suitable as weibo_video_suitable,
 };
+pub use whyp::{Whyp, suitable as whyp_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
 pub(crate) use youtube::YoutubeUnsupported;

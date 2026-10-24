@@ -1,0 +1,67 @@
+{
+ "routes": [
+  {
+   "url": "https://www.trtcocuk.net.tr/video/kaptan-pengu-ve-arkadaslari-1",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<!doctype html><html><head><title>Kaptan Pengu ve Arkada\u015flar\u0131 1 B\u00f6l\u00fcm \u0130zle TRT \u00c7ocuk</title></head><body><script>window.__NUXT__=(function(a,b,c,d,e){return {layout:\"default\",data:[{data:{id:3789738,video:\"\\\"https:\\u002F\\u002Ftrt.test\\u002Fhls\\u002Fmaster.m3u8\\\"\",season:d,publishedDate:\"2020-12-09T11:36:14Z\",show:[{title:b}],title:c,slug:e}}],fetch:{},error:a,state:{}}}(null,\"\\\"Kaptan Pengu ve Arkada\u015flar\u0131\\\"\",\"Kaptan Pengu 1\",\"1\",\"kaptan-pengu-ve-arkadaslari-1\"));</script></body></html>"
+  },
+  {
+   "url": "https://www.trtcocuk.net.tr/video/sef-rokanin-lezzet-dunyasi-17",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head></head><body><script>window.__NUXT__=(function(a,b){return {data:[{data:{id:\"10260842\",video:a,season:b,show:[]}}]}}(\"https:\\u002F\\u002Ftrt.test\\u002Fhls\\u002Fvideo.m3u8\",void 0));</script></body></html>"
+  },
+  {
+   "url": "https://www.trtcocuk.net.tr/video/nodata-3",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>No data</title></head><body><script>window.__NUXT__=(function(a){return {data:[{other:a}]}}(1));</script></body></html>"
+  },
+  {
+   "url": "https://www.trtcocuk.net.tr/video/nonuxt-4",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>No nuxt</title></head><body></body></html>"
+  },
+  {
+   "url": "https://www.trtcocuk.net.tr/video/novideo-5",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><title>No video</title></head><body><script>window.__NUXT__=(function(a){return {data:[{data:{id:a}}]}}(5));</script></body></html>"
+  },
+  {
+   "url": "https://trt.test/hls/master.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://trt.test/hls/video.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "video.m3u8"
+  },
+  {
+   "url": "https://trt.test/hls/subs_en.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_en.m3u8"
+  },
+  {
+   "url": "https://trt.test/hls/subs_de.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "subs_de.m3u8"
+  }
+ ]
+}

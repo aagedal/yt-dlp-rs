@@ -1,0 +1,77 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"143594959\", \"formats\": [{\"url\": \"https://ivoox.com/dl/143594959.mp3\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html\"}, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"uploader\": \"Santiago Camacho\", \"timestamp\": 1742734800, \"channel\": \"DIAS EXTRA\\u00d1OS\", \"title\": \"DEx 08x30\", \"thumbnail\": \"https://static-1.ivoox.com/audios/xxl.jpg\", \"description\": \"Nuxt description\", \"episode\": \"LD name\", \"duration\": 11837, \"tags\": [\"espa\\u00f1a\", \"asesinos\"], \"webpage_url\": \"https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html\", \"original_url\": \"https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html\", \"webpage_url_basename\": \"dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html\", \"webpage_url_domain\": \"ivoox.com\", \"extractor\": \"Ivoox\", \"extractor_key\": \"Ivoox\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://static-1.ivoox.com/audios/xxl.jpg\", \"id\": \"0\"}], \"display_id\": \"143594959\", \"fulltitle\": \"DEx 08x30\", \"duration_string\": \"3:17:17\", \"upload_date\": \"20250323\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://ivoox.com/dl/143594959.mp3\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html\"}, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"DEx 08x30 [143594959].mp3\", \"filename\": \"DEx 08x30 [143594959].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(uploader)s|%(channel)s|%(timestamp)s|%(thumbnail)s|%(duration)s|%(tags)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "143594959|DEx 08x30|Nuxt description|Santiago Camacho|DIAS EXTRAÑOS|1742734800|https://static-1.ivoox.com/audios/xxl.jpg|11837|['españa', 'asesinos']|mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Ivoox] Extracting URL: https://www.ivoox.com/dex-08x30-rostros-del-mal-audios-mp3_rf_143594959_1.html",
+    "[Ivoox] 143594959: Downloading webpage",
+    "[Ivoox] 143594959: Fetching direct download link",
+    "[info] 143594959: Downloading 1 format(s): 0",
+    "[download] Destination: 143594959.mp3",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "143594959.mp3": 11
+   }
+  },
+  {
+   "url": "https://www.ivoox.com/en/bare-audios-mp3_rf_2_1.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [Ivoox] 2: Unable to download JSON metadata: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [Ivoox] 2: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://go.ivoox.com/rf/3",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"3\", \"formats\": [{\"url\": \"https://files.ivoox.com/3.mp3\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://go.ivoox.com/rf/3\"}, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"uploader\": null, \"timestamp\": null, \"channel\": null, \"title\": \"Go title\", \"thumbnail\": null, \"description\": null, \"webpage_url\": \"https://go.ivoox.com/rf/3\", \"original_url\": \"https://go.ivoox.com/rf/3\", \"webpage_url_basename\": \"3\", \"webpage_url_domain\": \"go.ivoox.com\", \"extractor\": \"Ivoox\", \"extractor_key\": \"Ivoox\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"3\", \"fulltitle\": \"Go title\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://files.ivoox.com/3.mp3\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://go.ivoox.com/rf/3\"}, \"protocol\": \"https\", \"ext\": \"mp3\", \"video_ext\": \"mp3\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Go title [3].mp3\", \"filename\": \"Go title [3].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

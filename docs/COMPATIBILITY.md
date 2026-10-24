@@ -567,6 +567,17 @@ upstream `MegaphoneIE`: the page's fatal `og:audio:title`/`og:audio:artist`
 proto-relative as `https:` as the single format, raw `duration`; missing keys are
 upstream's `KeyError` extractor errors).
 
+Amadeus TV library videos (`[www.]amadeus.tv/library/HEX`) follow upstream
+`AmadeusTVIE`: the page's `window.__NUXT__` fetch data (`_search_nuxt_data`,
+`fetch['0']`), the item's Tencent Cloud video ID (else upstream's `Unable to
+extract actual video ID`), the `playvideo.qcloud.com` play info (with a
+`Referer`) whose source video and transcodes with URLs become HTTP formats
+(`http-DEFINITION` IDs, `http-0` without one, sizes, dimensions, first
+stream codecs and fps), and the play info's name, cover and duration
+overridden by the item's first title/description, ISO 8601 date and views.
+Non-string codecs remain explicit native errors.
+`tests/fixtures/sites/amadeustv/` is compared with pinned upstream output.
+
 Angel episodes (`angel.com/watch/SERIES/episode/ID/season-N/episode-N/SLUG`)
 follow upstream `AngelIE`: the page's JSON-LD `url` as a fatal HLS manifest
 (`Downloading HD m3u8 information`), the OpenGraph title, description and
@@ -1133,6 +1144,16 @@ post's title (72-character truncation), alt title, uploader, counts, tags and
 supported. `tests/fixtures/sites/weibo/` is compared with pinned upstream
 output.
 
+Whyp tracks (`[www.]whyp.it/tracks/[ID/]SLUG`) follow upstream `WhypIE`:
+the page's Nuxt 3 `__NUXT_DATA__` payload (`_search_nuxt_json`, resolved
+natively from the devalue array; resolution errors are upstream's), the
+required Pinia data and first track dict (`Unable to extract pinia/track
+data`), the track's `audio`, `lossy` and `lossless` URLs as audio formats
+(sizes, lossless preferred, a `Referer` header), its ID, title, slug,
+description, duration, ISO 8601 creation time and artwork, and the first
+user's name and ID. `tests/fixtures/sites/whyp/` is compared with pinned
+upstream output.
+
 XiaoHongShu (RedNote) notes (`www.xiaohongshu.com/explore/ID`,
 `discovery/item/ID`) follow upstream `XiaoHongShuIE` (release 2026.10.21):
 the page's fatal `window.__INITIAL_STATE__` (through `js_to_json`), every
@@ -1272,6 +1293,19 @@ GraphQL timeline pages (trying upstream's signature templates on `403`) as
 so a page error ends the extraction instead of upstream's partial playlist.
 `tests/fixtures/sites/instagram/` is compared with pinned upstream output.
 
+Ivoox audios (`[www.]ivoox.com/[LANG/]SLUG_rf_ID_1.html`,
+`go.ivoox.com/rf/ID`) follow upstream `IvooxIE`: the page's
+`window.__NUXT__` audio data (`_search_nuxt_data`, non-fatal and quiet),
+the non-fatal `vcore-web.ivoox.com` download-URL API (its HTTP errors are
+upstream's warnings), the distinct download/media paths joined to
+`https://ivoox.com` as formats with a `Referer`, the page's `data-prm-*`
+author/date/podcast/title, OpenGraph thumbnail and description, JSON-LD
+fields and the Nuxt title, description, image, upload date, duration and
+tag names, in upstream's override order. Several distinct download paths
+(whose order upstream takes from a randomized Python set), unparsable API
+responses and failed page downloads remain explicit native errors.
+`tests/fixtures/sites/ivoox/` is compared with pinned upstream output.
+
 JoVE videos (`jove.com/video/ID`) follow upstream `JoveIE`: the page's fatal
 chapters ID, the chapters XML's root `video` attribute (`Downloading chapters
 XML`; none is upstream's `Failed to get the video URL`) as an untyped result,
@@ -1344,6 +1378,17 @@ animated/video items as `url` results, and a gallery's single video (or a
 non-album ID) as a `url_transparent` result with the album's title and
 description. `tests/fixtures/sites/imgur/` is compared with pinned upstream
 output.
+
+TRT Çocuk videos (`www.trtcocuk.net.tr/video/SLUG`) follow upstream
+`TrtCocukVideoIE`: the page's `window.__NUXT__` data (`_search_nuxt_data`,
+`data[0].data`; a missing `data`, `video` or `id` is upstream's `KeyError`),
+the `video` value parsed as JSON when it is a JSON string (else used as
+the URL) and extracted as fatal HLS formats and subtitles (media playlists
+keep their URL's extension), the stringified `id`, `season` number, ISO 8601
+`publishedDate` as the release timestamp, the first show's title as the
+series and the page `<title>` (its absence is upstream's warning and generic
+title). Non-string `video` values remain explicit native errors.
+`tests/fixtures/sites/trtcocuk/` is compared with pinned upstream output.
 
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
