@@ -123,7 +123,7 @@ Supported today:
   the media API (and The Intercept posts that embed it), 23video players
   (and Filmweb articles that embed them), Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Angel episodes, Blogger videos (and their embeds), Nobel
-  Prize media, Bild clips, Masters videos, Sen videos, Kommunetv archives,
+  Prize media, Bild clips, Masters videos, Sen videos, Kankanews videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, Premiership Rugby videos, CJSW episodes,
   Player.fm episodes, RTRFM shows, HitRecord records, Culture Unplugged films,
   Zhihu videos, CRTVG programmes, Breitbart videos, CGTN news videos, JoVE

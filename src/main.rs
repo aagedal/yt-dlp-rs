@@ -3206,6 +3206,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("InstagramIOS", yt_dlp_rs::extractor::instagram_ios_suitable),
             ("Jove", yt_dlp_rs::extractor::jove_suitable),
             ("JWPlatform", yt_dlp_rs::extractor::jwplatform_suitable),
+            (
+                "KankaNews (CURRENTLY BROKEN)",
+                yt_dlp_rs::extractor::kankanews_suitable,
+            ),
             ("kick:clip", yt_dlp_rs::extractor::kick_clip_suitable),
             ("kick:clips", yt_dlp_rs::extractor::kick_clips_suitable),
             ("kick:live", yt_dlp_rs::extractor::kick_live_suitable),

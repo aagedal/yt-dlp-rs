@@ -48,6 +48,7 @@ mod jove;
 mod json_ld;
 mod jwplatform;
 mod jwplayer;
+mod kankanews;
 mod kick;
 mod kommunetv;
 mod ku6;
@@ -170,6 +171,7 @@ pub use instagram::{
 };
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
+pub use kankanews::{KankaNews, suitable as kankanews_suitable};
 pub use kick::{
     KickClip, KickClips, KickLive, KickVideos, KickVod, clip_suitable as kick_clip_suitable,
     clips_suitable as kick_clips_suitable, live_suitable as kick_live_suitable,

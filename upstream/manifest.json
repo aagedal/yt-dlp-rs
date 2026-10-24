@@ -691,6 +691,18 @@
       "scope": "JWPlatformIE _VALID_URL (including jwplatform: pseudo-URLs) and v2 media JSON via _parse_jwplayer_data(require_title=True) compared with pinned upstream output through the fixture proxy; _extract_embed_urls on generic pages; no playlists"
     },
     {
+      "name": "kankanews",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/kankanews.py"
+      ],
+      "rust": [
+        "src/extractor/kankanews.rs",
+        "tests/fixtures/sites/kankanews/"
+      ],
+      "scope": "KankaNewsIE (_WORKING = False) omsid, signed getvideo API query (random nonce/timestamp ignored by the fixture proxy), title regex and thumbnail as an untyped result compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "kick",
       "status": "partial",
       "upstream": [

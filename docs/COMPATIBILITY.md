@@ -1120,6 +1120,13 @@ upstream's lazy generator). Live downloads have this port's live HLS limits.
 `--use-extractors` matches every extractor by its upstream name.
 `tests/fixtures/sites/kick/` is compared with upstream output.
 
+Kankanews articles (`kankanews.com/a/DATE/ID.shtml`), marked broken upstream
+(`_WORKING = False`, with its warning), follow upstream `KankaNewsIE`: the
+page's `omsid` and the `getvideo` API signed with a random nonce, the current
+timestamp and the double MD5 `sign`, giving the video URL as an untyped result
+with the `g.title` title and `titlepic` thumbnail; missing API keys are
+upstream's `KeyError` extractor errors.
+
 Kommunetv archives (`SUBDOMAIN.kommunetv.no/archive/ID`) follow upstream
 `KommunetvIE`: the Oslo streams API (requested with `Accept:
 application/json`), its `stream.title` and first playlist's first file
