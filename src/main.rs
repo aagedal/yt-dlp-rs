@@ -942,7 +942,7 @@ struct Args {
     /// Download all formats (unsupported: equivalent to -f all)
     #[arg(long)]
     all_formats: bool,
-    /// Account credentials (unused by the supported extractors)
+    /// Account credentials (for the extractors supporting logins)
     #[arg(short = 'u', long, value_name = "USERNAME")]
     username: Option<String>,
     #[arg(short = 'p', long, value_name = "PASSWORD")]
@@ -1688,6 +1688,21 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
     yt_dlp_rs::extractor::set_video_password(args.video_password.clone());
+    // Upstream asks for the account password of `-u` without `-p`.
+    let password = match (&args.username, &args.password) {
+        (Some(_), None) => Some(yt_dlp_rs::getpass::getpass(
+            "Type account password and press [Return]: ",
+        )?),
+        _ => args.password.clone(),
+    };
+    yt_dlp_rs::extractor::set_credentials(yt_dlp_rs::extractor::Credentials {
+        username: args.username.clone(),
+        password,
+        twofactor: args.twofactor.clone(),
+        usenetrc: args.netrc,
+        netrc_location: args.netrc_location.clone(),
+        netrc_cmd: args.netrc_cmd.clone(),
+    });
     yt_dlp_rs::extractor::set_youtube_tab_playlist_items(args.playlist_items.as_deref());
     // HttpFD's initial block size and resizing.
     if let Some(size) = args.buffer_size.as_deref().and_then(parse_bytes) {
@@ -6236,6 +6251,21 @@ fn hls_use_mpegts(args: &Args) -> Option<bool> {
 }
 
 fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
+    // Upstream `validate_options`: usernames and passwords.
+    let given = |value: &Option<String>| value.as_deref().is_some_and(|value| !value.is_empty());
+    if [args.netrc, given(&args.netrc_cmd), given(&args.username)]
+        .into_iter()
+        .filter(|given| *given)
+        .count()
+        > 1
+    {
+        return Err(usage(
+            ".netrc, netrc command and username/password are mutually exclusive options",
+        ));
+    }
+    if args.password.is_some() && args.username.is_none() {
+        return Err(usage("account username missing"));
+    }
     // `--encoding`: messages are encoded with `errors='ignore'`.
     if let Some(name) = &args.encoding {
         match yt_dlp_rs::output::encoding::Encoding::lookup(name) {

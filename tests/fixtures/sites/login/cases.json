@@ -1,0 +1,6 @@
+[
+ {"url": "http://www.freesound.org/people/miklovan/sounds/194503/", "args": ["-s", "-u", "bob", "-p", "pw", "http://www.freesound.org/people/miklovan/sounds/194503/"]},
+ {"url": "http://www.freesound.org/people/miklovan/sounds/194503/", "args": ["-s", "--netrc-cmd", "printf 'default login bob password pw'"]},
+ {"url": "http://www.freesound.org/people/miklovan/sounds/194503/", "args": ["-s", "-u", "", "-p", "pw"]},
+ {"url": "https://href.li/?https://media.example.test/clips/cat.mp4", "args": ["-s", "-u", "bob", "-p", "pw"]}
+]

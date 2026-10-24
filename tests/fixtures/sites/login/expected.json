@@ -1,0 +1,82 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.freesound.org/people/miklovan/sounds/194503/",
+   "args": [
+    "-s",
+    "-u",
+    "bob",
+    "-p",
+    "pw",
+    "http://www.freesound.org/people/miklovan/sounds/194503/"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Freesound] Extracting URL: http://www.freesound.org/people/miklovan/sounds/194503/",
+    "[Freesound] 194503: Downloading webpage",
+    "[info] 194503: Downloading 1 format(s): 1",
+    "[Freesound] Extracting URL: http://www.freesound.org/people/miklovan/sounds/194503/",
+    "[Freesound] 194503: Downloading webpage",
+    "[info] 194503: Downloading 1 format(s): 1"
+   ],
+   "stderr": [
+    "WARNING: [Freesound] Login with password is not supported for this website. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://www.freesound.org/people/miklovan/sounds/194503/",
+   "args": [
+    "-s",
+    "--netrc-cmd",
+    "printf 'default login bob password pw'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Freesound] Extracting URL: http://www.freesound.org/people/miklovan/sounds/194503/",
+    "[Freesound] 194503: Downloading webpage",
+    "[info] 194503: Downloading 1 format(s): 1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.freesound.org/people/miklovan/sounds/194503/",
+   "args": [
+    "-s",
+    "-u",
+    "",
+    "-p",
+    "pw"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Freesound] Extracting URL: http://www.freesound.org/people/miklovan/sounds/194503/",
+    "[Freesound] 194503: Downloading webpage",
+    "[info] 194503: Downloading 1 format(s): 1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://href.li/?https://media.example.test/clips/cat.mp4",
+   "args": [
+    "-s",
+    "-u",
+    "bob",
+    "-p",
+    "pw"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[href.li] Extracting URL: https://href.li/?https://media.example.test/clips/cat.mp4",
+    "[generic] Extracting URL: https://media.example.test/clips/cat.mp4",
+    "[generic] cat: Downloading webpage",
+    "[info] cat: Downloading 1 format(s): mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

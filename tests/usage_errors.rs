@@ -74,6 +74,15 @@ fn validation_messages_and_layout_follow_upstream() {
             vec!["--limit-rate", "0"],
             r#"rate limit "0" must be positive"#,
         ),
+        (
+            vec!["--netrc", "-u", "user", "-p", "pw"],
+            ".netrc, netrc command and username/password are mutually exclusive options",
+        ),
+        (
+            vec!["--netrc-cmd", "echo", "-n"],
+            ".netrc, netrc command and username/password are mutually exclusive options",
+        ),
+        (vec!["-p", "pw"], "account username missing"),
     ] {
         let mut all = args.clone();
         all.push(url);
