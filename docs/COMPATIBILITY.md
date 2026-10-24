@@ -668,6 +668,12 @@ webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
 variant IDs, the cleaned `<h1>` title and `is_live`. A live media-only
 playlist without `#EXT-X-ENDLIST` remains an explicit native error.
 
+CAM4 channels (`cam4.com/USER`) follow upstream `CAM4IE`: the
+`rest/v1.0/profile/USER/streamInfo` `cdnURL` as fatal live `hls` formats
+(`mp4`, live variant IDs), the channel name as title, `is_live`, age limit
+18 and the `snapshots.xcdnpro.com` thumbnail. Stream info without an
+absolute `cdnURL` remains an explicit native error.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,

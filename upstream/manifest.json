@@ -353,6 +353,18 @@
       "scope": "BundesligaIE vid query as a jwplatform: url result followed by the JWPlatform extractor compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "cam4",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cam4.py"
+      ],
+      "rust": [
+        "src/extractor/cam4.rs",
+        "tests/fixtures/sites/cam4/"
+      ],
+      "scope": "CAM4IE streamInfo cdnURL as live HLS formats (mp4, live variant IDs), channel title, thumbnail and age limit compared with pinned upstream output through the fixture proxy; a missing or relative cdnURL remains a native error"
+    },
+    {
       "name": "cgtn",
       "status": "partial",
       "upstream": [
