@@ -1593,6 +1593,18 @@
       "scope": "TheStarIE mainartBrightcoveVideoId as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "skynewsau",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/skynewsau.py"
+      ],
+      "rust": [
+        "src/extractor/skynewsau.rs",
+        "tests/fixtures/sites/skynewsau/"
+      ],
+      "scope": "SkyNewsAUIE embedcode as a url_transparent BrightcoveNew result overlaid with the content.api.news caption and creation date, and the missing-embedcode error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "europeantour",
       "status": "partial",
       "upstream": [

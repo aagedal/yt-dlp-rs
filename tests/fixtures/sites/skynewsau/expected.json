@@ -1,0 +1,41 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/0f4c6243d6903502c01251f228b91a71",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6277184925001\", \"thumbnails\": null, \"duration\": 61.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/skynewsau.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSKYNEWSAU\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Incredible vision shows lava overflowing\", \"description\": \"Lava flows.\", \"timestamp\": 1634271300, \"uploader_id\": \"5348771529001\", \"original_url\": \"https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/0f4c6243d6903502c01251f228b91a71\", \"webpage_url\": \"https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/0f4c6243d6903502c01251f228b91a71\", \"webpage_url_basename\": \"0f4c6243d6903502c01251f228b91a71\", \"webpage_url_domain\": \"skynews.com.au\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"upload_date\": \"20211015\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6277184925001\", \"fulltitle\": \"Incredible vision shows lava overflowing\", \"duration_string\": \"1:01\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/skynewsau.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSKYNEWSAU\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"Incredible vision shows lava overflowing [6277184925001].mp4\", \"filename\": \"Incredible vision shows lava overflowing [6277184925001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/aa11",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6277184925002\", \"thumbnails\": null, \"duration\": 61.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/skynewsau2.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSKYNEWSAU\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Second Brightcove title\", \"description\": \"Second.\", \"timestamp\": 1634357700, \"uploader_id\": \"5348771529001\", \"original_url\": \"https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/aa11\", \"webpage_url\": \"https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/aa11\", \"webpage_url_basename\": \"aa11\", \"webpage_url_domain\": \"skynews.com.au\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6277184925002\", \"fulltitle\": \"Second Brightcove title\", \"duration_string\": \"1:01\", \"upload_date\": \"20211016\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/skynewsau2.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkSKYNEWSAU\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"Second Brightcove title [6277184925002].mp4\", \"filename\": \"Second Brightcove title [6277184925002].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/bb22",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [SkyNewsAU] bb22: Unable to extract embedcode; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

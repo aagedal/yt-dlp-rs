@@ -731,6 +731,15 @@ non-empty `"ACCOUNT_ID"` (else upstream's `'NoneType' object has no attribute
 Brightcove players above. `tests/fixtures/sites/europeantour/` is compared with
 pinned upstream output.
 
+Sky News Australia videos (`skynews.com.au/SECTION/SUB/SLUG/video/ID`) follow
+upstream `SkyNewsAUIE`: the page's `embedcode` (`ACCOUNT-VIDEO`, else
+upstream's error) as a `url_transparent` result of that account's
+`players.brightcove.net/ACCOUNT/default_default` player (extracted like
+Brightcove players above), overlaid with the `content.api.news` video's
+`caption` as `title` and `date.created` as `upload_date`. Embed codes
+without a `-` are rejected. `tests/fixtures/sites/skynewsau/` is compared
+with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the
