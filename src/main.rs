@@ -3272,6 +3272,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("rutube:embed", yt_dlp_rs::extractor::rutube_embed_suitable),
             ("ScreenRec", yt_dlp_rs::extractor::screenrec_suitable),
             ("Sen", yt_dlp_rs::extractor::sen_suitable),
+            (
+                "SkylineWebcams (CURRENTLY BROKEN)",
+                yt_dlp_rs::extractor::skylinewebcams_suitable,
+            ),
             ("SnapchatSpotlight", yt_dlp_rs::extractor::snapchat_suitable),
             ("soundcloud", yt_dlp_rs::extractor::soundcloud_suitable),
             ("soundgasm", yt_dlp_rs::extractor::soundgasm_suitable),

@@ -1,0 +1,9 @@
+{
+ "routes": [
+  {"url": "https://www.skylinewebcams.com/it/webcam/italia/lazio/roma/scalinata-piazza-di-spagna-barcaccia.html", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "page.html"},
+  {"url": "https://www.skylinewebcams.com/en/webcam/italia/veneto/venezia/rialto.html", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "relative.html"},
+  {"url": "https://www.skylinewebcams.com/en/webcam/x/notitle.html", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "notitle.html"},
+  {"url": "https://www.skylinewebcams.com/en/webcam/x/offline.html", "headers": {"Content-Type": "text/html; charset=utf-8"}, "body_file": "nostream.html"},
+  {"url": "https://www.skylinewebcams.com/en/webcam/x/gone.html", "status": 404, "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": "gone"}
+ ]
+}

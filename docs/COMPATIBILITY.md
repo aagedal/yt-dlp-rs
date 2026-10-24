@@ -496,6 +496,14 @@ URL user as uploader. Profiles (`soundgasm.net/u/USER`) follow
 `Soundgasm` results. Relative audio or profile links remain explicit native
 errors.
 
+SkylineWebcams live cameras (`skylinewebcams.com/LL/webcam/.../SLUG.html`)
+follow upstream `SkylineWebcamsIE` (marked broken upstream, with its
+warning): the page's fatal `url`/`source` `m3u8` URL as the result's own live
+`mp4` format (protocol `m3u8`, a protocol-relative URL sanitized to `http:`),
+with the OpenGraph title and description (each else upstream's warning; no
+title gets processing's generic one). Live titles carry the extraction time,
+so fixtures compare `--print` fields.
+
 Spiegel and manager magazin articles and videos (`spiegel.de/.../SLUG-ID[.html]`)
 follow upstream `SpiegelIE`: the page's `mediaId` (plain or `&#34;`-quoted;
 else upstream's `Unable to extract media id`) as a `url_transparent` result of

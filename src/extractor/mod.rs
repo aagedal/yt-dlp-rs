@@ -93,6 +93,7 @@ mod rumble;
 mod rutube;
 mod screenrec;
 mod sen;
+mod skylinewebcams;
 mod smil;
 mod snapchat;
 mod soundcloud;
@@ -235,6 +236,7 @@ pub use rutube::{
 };
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
+pub use skylinewebcams::{SkylineWebcams, suitable as skylinewebcams_suitable};
 pub use snapchat::{SnapchatSpotlight, suitable as snapchat_suitable};
 pub use soundcloud::{Soundcloud, suitable as soundcloud_suitable};
 pub use soundgasm::{

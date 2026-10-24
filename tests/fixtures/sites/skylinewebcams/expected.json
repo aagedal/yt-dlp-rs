@@ -1,0 +1,99 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.skylinewebcams.com/it/webcam/italia/lazio/roma/scalinata-piazza-di-spagna-barcaccia.html",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(live_status)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s|%(webpage_url_basename)s|%(extractor)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "scalinata-piazza-di-spagna-barcaccia|Live Webcam Scalinata di Piazza di Spagna - La Barcaccia|Roma, veduta sulla Scalinata di Piazza di Spagna e sulla Barcaccia|True|is_live|0|mp4|m3u8|https://hd-auth.skylinewebcams.com/live.m3u8?a=abc123|scalinata-piazza-di-spagna-barcaccia.html|SkylineWebcams"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.skylinewebcams.com/it/webcam/italia/lazio/roma/scalinata-piazza-di-spagna-barcaccia.html",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[SkylineWebcams] Extracting URL: https://www.skylinewebcams.com/it/webcam/italia/lazio/roma/scalinata-piazza-di-spagna-barcaccia.html",
+    "[SkylineWebcams] scalinata-piazza-di-spagna-barcaccia: Downloading webpage",
+    "[info] Available formats for scalinata-piazza-di-spagna-barcaccia:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  mp4 unknown    | m3u8F | unknown unknown"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.skylinewebcams.com/en/webcam/italia/veneto/venezia/rialto.html",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "rialto|Live Webcam Rialto|NA|True|0|mp4|m3u8|http://cdn.skylinewebcams.com/rialto.m3u8"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "WARNING: [SkylineWebcams] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.skylinewebcams.com/en/webcam/x/notitle.html",
+   "args": [
+    "--print",
+    "%(id)s|%(fulltitle)s|%(description)s|%(is_live)s|%(protocol)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "notitle|NA|NA|True|m3u8|https://cdn.skylinewebcams.com/x.m3u8"
+   ],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "WARNING: [SkylineWebcams] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [SkylineWebcams] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.skylinewebcams.com/en/webcam/x/offline.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [SkylineWebcams] offline: Unable to extract stream url; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.skylinewebcams.com/en/webcam/x/gone.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: The program functionality for this site has been marked as broken, and will probably not work.",
+    "ERROR: [SkylineWebcams] gone: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
