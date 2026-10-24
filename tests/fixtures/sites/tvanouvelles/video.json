@@ -1,0 +1,19 @@
+{
+ "id": "5117035533001",
+ "account_id": "1741764581",
+ "name": "First clip",
+ "description": "First.",
+ "published_at": "2016-11-25T10:00:00Z",
+ "duration": 61000,
+ "sources": [
+  {
+   "container": "MP4",
+   "type": "video/mp4",
+   "src": "https://cdn.example.com/tva.mp4",
+   "avg_bitrate": 1000000,
+   "width": 1280,
+   "height": 720,
+   "codec": "H264"
+  }
+ ]
+}

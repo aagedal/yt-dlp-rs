@@ -20,6 +20,9 @@ pub(crate) const FORMAT_SHAPE: &str = "__yt_dlp_rs_format_shape";
 /// `"append"` when its section keys are new, `"keep"` when the extractor
 /// already set `section_start`.
 pub(crate) const SECTION_UPDATE: &str = "__yt_dlp_rs_section_update";
+/// An info dict reached by following a `url` result: upstream passes the
+/// result's `original_url` on as extra info, ahead of the default keys.
+pub(crate) const FOLLOWED: &str = "__yt_dlp_rs_followed";
 
 /// How an upstream step sets a key.
 #[derive(Clone, Copy)]
@@ -208,6 +211,7 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(INFO_SHAPE);
     map.shift_remove(FORMAT_SHAPE);
     map.shift_remove(INT_QUALITY);
+    map.shift_remove(FOLLOWED);
 }
 
 /// Record the upstream code path that built an info dict.
@@ -942,6 +946,7 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    let followed = map.shift_remove(FOLLOWED).is_some();
     let section_update = map
         .shift_remove(SECTION_UPDATE)
         .and_then(|mode| mode.as_str().map(str::to_owned));
@@ -2181,6 +2186,11 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             && replay.get("original_url").is_some()
             && (transparent_result || replay.get("original_url") != replay.get("webpage_url"))
         {
+            replay.take("original_url");
+        }
+        // A playlist `url` entry whose extractor returned another `url`
+        // result.
+        if transparent_entry && followed && replay.get("original_url").is_some() {
             replay.take("original_url");
         }
         for key in [

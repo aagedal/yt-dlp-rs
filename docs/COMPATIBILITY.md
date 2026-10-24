@@ -748,6 +748,16 @@ Brightcove players above, in a playlist titled by the OpenGraph title (else
 upstream's warning and no title). `tests/fixtures/sites/thesun/` is compared
 with pinned upstream output.
 
+TVA Nouvelles videos (`tvanouvelles.ca/videos/ID`) follow upstream
+`TVANouvellesIE`: a `url` result of the `players.brightcove.net/1741764581/
+default_default` player, extracted like Brightcove players above. Other
+`tvanouvelles.ca` pages follow `TVANouvellesArticleIE`: each
+`data-video-id=ID` as a `url` result of `tvanouvelles.ca/videos/ID`, in a
+playlist with the OpenGraph title and description (each else upstream's
+warning and no key). Such doubly followed entries keep upstream's
+`original_url` position. `tests/fixtures/sites/tvanouvelles/` is compared
+with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the

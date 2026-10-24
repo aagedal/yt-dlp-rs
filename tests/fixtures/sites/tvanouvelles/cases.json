@@ -1,0 +1,6 @@
+[
+ {"url": "http://www.tvanouvelles.ca/videos/5117035533001", "args": ["-j"]},
+ {"url": "http://www.tvanouvelles.ca/2016/11/17/des-policiers", "args": ["-J", "--flat-playlist"]},
+ {"url": "http://www.tvanouvelles.ca/2016/11/17/des-policiers", "args": ["-J"]},
+ {"url": "https://www.tvanouvelles.ca/2016/11/18/sans-video", "args": ["-J"]}
+]

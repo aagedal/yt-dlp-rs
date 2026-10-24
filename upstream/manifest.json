@@ -1822,6 +1822,18 @@
       "scope": "TumblrIE anonymous API token, post page and permalink API, iframe/post-media video formats, provider embeds as url results and post metadata; no logins; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "tvanouvelles",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tvanouvelles.py"
+      ],
+      "rust": [
+        "src/extractor/tvanouvelles.rs",
+        "tests/fixtures/sites/tvanouvelles/"
+      ],
+      "scope": "TVANouvellesIE videos as url results of the TVA Nouvelles BrightcoveNew player, and TVANouvellesArticleIE data-video-id videos as a playlist of TVANouvelles url results with the OpenGraph title and description (with upstream's warnings when missing), compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tweakers",
       "status": "partial",
       "upstream": [

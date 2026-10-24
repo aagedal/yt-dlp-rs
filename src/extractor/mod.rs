@@ -145,6 +145,7 @@ mod toypics;
 mod trtcocuk;
 mod trtworld;
 mod tumblr;
+mod tvanouvelles;
 mod tweakers;
 mod twentythreevideo;
 mod twitch;
@@ -344,6 +345,10 @@ pub use toypics::{Toypics, suitable as toypics_suitable};
 pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
 pub use trtworld::{TrtWorld, suitable as trtworld_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
+pub use tvanouvelles::{
+    TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
+    suitable as tvanouvelles_suitable,
+};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub(crate) use twitch::{
