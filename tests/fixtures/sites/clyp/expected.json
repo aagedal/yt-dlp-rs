@@ -1,0 +1,87 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://clyp.it/iynkjk4b",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"iynkjk4b\", \"title\": \"research\", \"description\": \"#Research\", \"duration\": 51.278, \"timestamp\": 1435524981, \"formats\": [{\"url\": \"https://audio.clyp.it/iynkjk4b.mp3?Expires=1\", \"format_id\": \"Mp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Mp3 - audio only\"}, {\"url\": \"https://audio.clyp.it/iynkjk4b.mp3?Secure=1\", \"format_id\": \"SecureMp3\", \"vcodec\": \"none\", \"acodec\": \"mp3\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"SecureMp3 - audio only\"}, {\"url\": \"https://audio.clyp.it/iynkjk4b.ogg?Expires=1\", \"format_id\": \"Ogg\", \"vcodec\": \"none\", \"acodec\": \"ogg\", \"protocol\": \"https\", \"ext\": \"ogg\", \"audio_ext\": \"ogg\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"Ogg - audio only\"}, {\"url\": \"https://audio.clyp.it/iynkjk4b.ogg?Secure=1\", \"format_id\": \"SecureOgg\", \"vcodec\": \"none\", \"acodec\": \"ogg\", \"protocol\": \"https\", \"ext\": \"ogg\", \"audio_ext\": \"ogg\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"SecureOgg - audio only\"}], \"webpage_url\": \"https://clyp.it/iynkjk4b\", \"original_url\": \"https://clyp.it/iynkjk4b\", \"webpage_url_basename\": \"iynkjk4b\", \"webpage_url_domain\": \"clyp.it\", \"extractor\": \"Clyp\", \"extractor_key\": \"Clyp\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"iynkjk4b\", \"fulltitle\": \"research\", \"duration_string\": \"51\", \"upload_date\": \"20150628\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://audio.clyp.it/iynkjk4b.ogg?Secure=1\", \"format_id\": \"SecureOgg\", \"vcodec\": \"none\", \"acodec\": \"ogg\", \"protocol\": \"https\", \"ext\": \"ogg\", \"audio_ext\": \"ogg\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"SecureOgg - audio only\", \"_filename\": \"research [iynkjk4b].ogg\", \"filename\": \"research [iynkjk4b].ogg\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clyp.it/iynkjk4b",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Clyp] Extracting URL: https://clyp.it/iynkjk4b",
+    "[Clyp] iynkjk4b: Downloading JSON metadata",
+    "[Clyp] iynkjk4b: Downloading webpage",
+    "[info] Available formats for iynkjk4b:",
+    "ID        EXT RESOLUTION | PROTO | VCODEC     ACODEC",
+    "----------------------------------------------------",
+    "Mp3       mp3 audio only | https | audio only mp3",
+    "SecureMp3 mp3 audio only | https | audio only mp3",
+    "Ogg       ogg audio only | https | audio only ogg",
+    "SecureOgg ogg audio only | https | audio only ogg"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clyp.it/b04p1odi?token=b0078e077e15835845c528a44417719d",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(description)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(format_id)s|%(ext)s|%(acodec)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "b04p1odi|GJ! (Reward Edit)|Metal Resistance (THE ONE edition)|177.789|1528194478|20180605|SecureMp3|mp3|mp3|https://audio.clyp.it/b04p1odi.mp3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clyp.it/v42214lc",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"v42214lc\", \"title\": \"i dont wanna go (old version)\", \"description\": null, \"duration\": 113.0, \"timestamp\": 1607348505, \"formats\": [{\"url\": \"https://audio.clyp.it/v42214lc.wav?a=1&b=2\", \"format_id\": \"wavStreamUrl\", \"vcodec\": \"none\", \"acodec\": \"wav\", \"protocol\": \"https\", \"ext\": \"wav\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"wavStreamUrl - audio only\"}], \"webpage_url\": \"https://clyp.it/v42214lc\", \"original_url\": \"https://clyp.it/v42214lc\", \"webpage_url_basename\": \"v42214lc\", \"webpage_url_domain\": \"clyp.it\", \"extractor\": \"Clyp\", \"extractor_key\": \"Clyp\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"v42214lc\", \"fulltitle\": \"i dont wanna go (old version)\", \"duration_string\": \"1:53\", \"upload_date\": \"20201207\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://audio.clyp.it/v42214lc.wav?a=1&b=2\", \"format_id\": \"wavStreamUrl\", \"vcodec\": \"none\", \"acodec\": \"wav\", \"protocol\": \"https\", \"ext\": \"wav\", \"audio_ext\": \"wav\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"wavStreamUrl - audio only\", \"_filename\": \"i dont wanna go (old version) [v42214lc].wav\", \"filename\": \"i dont wanna go (old version) [v42214lc].wav\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://clyp.it/notitle1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: notitle1: An extractor error has occurred. (caused by KeyError('Title')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://clyp.it/gone1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Clyp] gone1: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

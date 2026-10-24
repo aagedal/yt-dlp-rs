@@ -1,0 +1,7 @@
+[
+ {"url": "https://embed.cloudycdn.services/ltv/media/46k_d23-6000-105?", "args": ["-j"]},
+ {"url": "https://embed.cloudycdn.services/ltv/media/46k_d23-6000-105", "args": ["-F"]},
+ {"url": "https://embed.backscreen.com/ltv/media/32j_z25-0600-127?", "args": ["--print", "%(id)s|%(title)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(thumbnail)s|%(format_id)s|%(acodec)s|%(vcodec)s"]},
+ {"url": "https://embed.cloudycdn.services/izm/media/26e_lv-8-5-1", "args": ["-j"]},
+ {"url": "https://embed.cloudycdn.services/izm/media/gone", "args": ["-j"]}
+]

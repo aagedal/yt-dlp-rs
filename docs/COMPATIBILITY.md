@@ -1638,6 +1638,66 @@ episodes (by `MEDIA_EXTENSIONS.audio`) as a playlist with the show's title and
 description. Episodes without a string ID or media URL remain explicit native
 errors. `tests/fixtures/sites/rinsefm/` is compared with pinned upstream output.
 
+Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
+`api.clyp.it/ID` JSON (with the URL's `token` query), its `OggUrl`,
+`Mp3Url`, `SecureOggUrl` and `SecureMp3Url` audio formats, the page's
+`wavStreamUrl`, the required `Title` (upstream's `KeyError`), description,
+`float_or_none` duration and `unified_timestamp` creation date. Non-string
+titles remain explicit native errors. `tests/fixtures/sites/clyp/` is
+compared with pinned upstream output.
+
+Dumpert items (`[www.|legacy.]dumpert.nl/item|embed|mediabase/ID` and
+`?selectedId=ID` pages) follow upstream `DumpertIE`: the
+`api-live.dumpert.nl/mobile_api/json/info/ID` JSON, its first item (a
+missing `items`/`title`/`media` is upstream's `KeyError`, an empty list the
+bare `list index out of range`, no `VIDEO` media the `StopIteration`), the
+video's variants as fatal HLS playlists (`m3u8_id` the version) or
+progressive formats ranked by `qualities(flv, mobile, tablet, 720p, 1080p)`,
+the `thumb`/`still` stills, duration and kudos/views stats. Non-array item or
+media lists and non-string titles or URIs remain explicit native errors.
+`tests/fixtures/sites/dumpert/` is compared with pinned upstream output.
+
+CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
+follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`
+JSON form POST (`version=6.4.0`, `referer`), each `source.sources[].src` URL
+as a non-fatal HLS playlist (with subtitles; `chunklist_bN_vo_` variants get
+`acodec` `none`), and the `{str}` name, `int_or_none` duration, ISO 8601
+upload date and poster URL. Generic-page iframe embeds are not detected
+natively. `tests/fixtures/sites/cloudycdn/` is compared with pinned upstream
+output.
+
+Cloudflare Stream videos (`[watch.|iframe.|customer-X.]cloudflarestream.com|videodelivery.net|bytehighway.net/ID`
+and `embed/*.js?video=ID` scripts) follow upstream `CloudflareStreamIE`: a
+signed token's ID is its base64 payload's `sub`, and the
+`https://DOMAIN/ID/manifest/video.m3u8` (`m3u8_id='hls'`) and `video.mpd`
+(`mpd_id='dash'`) manifests are both non-fatal, with the ID as title and
+`thumbnails/thumbnail.jpg`. Generic-page script/iframe embeds are not
+detected natively, and undecodable tokens remain explicit native errors.
+`tests/fixtures/sites/cloudflarestream/` is compared with pinned upstream
+output.
+
+DLive past broadcasts (`dlive.tv/p/UPLOADER+ID`) and live streams
+(`dlive.tv/NAME`, not `p/`) follow upstream `DLiveVODIE` and `DLiveStreamIE`:
+the `graphigo.prd.dlive.tv` GraphQL POST (`pastBroadcast(permlink:...)` or
+`userByDisplayName(displayname:...)`; a missing key is upstream's `KeyError`,
+a `null` object the bare `'NoneType' object is not subscriptable`), the fatal
+HLS playlist (the broadcast's `playbackUrl`, or
+`live.prd.dlive.tv/hls/live/USERNAME.m3u8` for a live stream marked
+`is_live`), content, thumbnail, `int_or_none(createdAt, 1000)` timestamp and
+view/watching counts. Non-string playback URLs and usernames remain explicit
+native errors. `tests/fixtures/sites/dlive/` is compared with pinned upstream
+output.
+
+Democracy Now! pages (`[www.]democracynow.org/PATH`) follow upstream
+`DemocracynowIE`: the page's `<script type="text/json">` player data (a
+fatal `json` regex; a missing `title` is upstream's `KeyError`), its `file`,
+`audio` (`vcodec` `none`), `video` and `high_res_video` URLs joined to the page
+without their query (the ID is the first media basename without `dn`, else
+the path), the `caption_file` and `captions` subtitles (`en` by default), the
+`og:description` and the `image` thumbnail. Non-object player data and
+non-string titles, paths or caption languages remain explicit native errors.
+`tests/fixtures/sites/democracynow/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

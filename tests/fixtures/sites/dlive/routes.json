@@ -1,0 +1,64 @@
+{
+ "routes": [
+  {
+   "url": "https://graphigo.prd.dlive.tv/",
+   "request_body": ["pastBroadcast(permlink:", "pdp+3mTzOl4WR"],
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"data\": {\"pastBroadcast\": {\"content\": \"Minecraft stream\", \"createdAt\": \"1562011015999\", \"length\": 600, \"playbackUrl\": \"https://playback.prd.dlive.tv/pdp/3mTzOl4WR/master.m3u8\", \"title\": \"Minecraft with james charles epic\", \"thumbnailUrl\": \"https://images.prd.dlive.tv/3mTzOl4WR.jpg\", \"viewCount\": 42}}}"
+  },
+  {
+   "url": "https://playback.prd.dlive.tv/pdp/3mTzOl4WR/master.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://playback.prd.dlive.tv/pdp/3mTzOl4WR/low.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://playback.prd.dlive.tv/pdp/3mTzOl4WR/high.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://graphigo.prd.dlive.tv/",
+   "request_body": ["pdpreplay+D-RD-xSZg"],
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"data\": {\"pastBroadcast\": null}}"
+  },
+  {
+   "url": "https://graphigo.prd.dlive.tv/",
+   "request_body": ["pdp+nokey"],
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"data\": {\"pastBroadcast\": {\"title\": \"No playback\"}}}"
+  },
+  {
+   "url": "https://graphigo.prd.dlive.tv/",
+   "request_body": ["userByDisplayName(displayname:", "\\\"pdp\\\""],
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"data\": {\"userByDisplayName\": {\"livestream\": {\"content\": \"Live now\", \"createdAt\": 1700000000123, \"title\": \"Live with pdp\", \"thumbnailUrl\": \"https://images.prd.dlive.tv/live.jpg\", \"watchingCount\": \"7\"}, \"username\": \"pewdiepie\"}}}"
+  },
+  {
+   "url": "https://live.prd.dlive.tv/hls/live/pewdiepie.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://live.prd.dlive.tv/hls/live/low.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://live.prd.dlive.tv/hls/live/high.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "media.m3u8"
+  },
+  {
+   "url": "https://graphigo.prd.dlive.tv/",
+   "request_body": ["offline.user"],
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"data\": {\"userByDisplayName\": {\"livestream\": null, \"username\": \"offline\"}}}"
+  }
+ ]
+}

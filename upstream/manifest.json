@@ -473,6 +473,42 @@
       "scope": "CJSWIE episode page (fatal title/audio regexes, UUID ID, description, series, episode ID, audio format and download) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "cloudflarestream",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cloudflarestream.py"
+      ],
+      "rust": [
+        "src/extractor/cloudflarestream.rs",
+        "tests/fixtures/sites/cloudflarestream/"
+      ],
+      "scope": "CloudflareStreamIE watch/iframe/customer/embed-script URLs and signed tokens (base64 payload sub), the non-fatal manifest/video.m3u8 (hls) and video.mpd (dash) formats with subtitles, ID title and thumbnail compared with pinned upstream output through the fixture proxy; generic-page script/iframe embeds are not detected and undecodable tokens remain explicit native errors"
+    },
+    {
+      "name": "cloudycdn",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cloudycdn.py"
+      ],
+      "rust": [
+        "src/extractor/cloudycdn.rs",
+        "tests/fixtures/sites/cloudycdn/"
+      ],
+      "scope": "CloudyCDNIE player JSON form POST (version, referer), non-fatal HLS sources with subtitles and the video-only chunklist acodec fixup, title/duration/timestamp/poster metadata compared with pinned upstream output through the fixture proxy; generic-page iframe embeds are not detected"
+    },
+    {
+      "name": "clyp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/clyp.py"
+      ],
+      "rust": [
+        "src/extractor/clyp.rs",
+        "tests/fixtures/sites/clyp/"
+      ],
+      "scope": "ClypIE api.clyp.it JSON (with the URL's token), Ogg/MP3 and secure audio URLs, the page's wavStreamUrl, title KeyError, description/duration/timestamp compared with pinned upstream output through the fixture proxy; non-string titles remain explicit native errors"
+    },
+    {
       "name": "coub",
       "status": "partial",
       "upstream": [
@@ -557,6 +593,18 @@
       "scope": "DaystarClipIE player iframe, Referer-requested config2.php sources via js_to_json as non-fatal HLS formats and merged subtitles (lightcast embed urljoin), og/twitter title and description with the non-fatal warnings, fatal iframe/sources/thumbnail regexes compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "democracynow",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/democracynow.py"
+      ],
+      "rust": [
+        "src/extractor/democracynow.rs",
+        "tests/fixtures/sites/democracynow/"
+      ],
+      "scope": "DemocracynowIE inline text/json player data (fatal regex, title KeyError), file/audio/video/high_res_video URLs without queries (audio vcodec none, media-basename ID), caption_file and captions subtitles, og:description and image compared with pinned upstream output through the fixture proxy; non-object player data and non-string titles, paths or caption languages remain explicit native errors"
+    },
+    {
       "name": "dfb",
       "status": "partial",
       "upstream": [
@@ -569,6 +617,18 @@
       "scope": "DFBIE player XML, stream access token manifests (optional hds F4M with hdcore and hls m3u8 formats), title, unified_strdate upload date, thumbnail and wrapped AttributeError/KeyError messages compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "dlive",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dlive.py"
+      ],
+      "rust": [
+        "src/extractor/dlive.rs",
+        "tests/fixtures/sites/dlive/"
+      ],
+      "scope": "DLiveVODIE pastBroadcast and DLiveStreamIE userByDisplayName GraphQL POSTs, the fatal HLS playlists (playbackUrl and live.prd.dlive.tv/hls/live/USERNAME.m3u8, mp4), description/thumbnail/millisecond timestamp/view counts, is_live, KeyError and None TypeError paths compared with pinned upstream output through the fixture proxy; non-string playback URLs and usernames remain explicit native errors"
+    },
+    {
       "name": "drtalks",
       "status": "partial",
       "upstream": [
@@ -579,6 +639,18 @@
         "tests/fixtures/sites/drtalks/"
       ],
       "scope": "DrTalksIE Next.js video data as a url_transparent BrightcoveNew result overlaid with title, summary and featured image, and the KeyError path, compared with pinned upstream output through the fixture proxy; non-Brightcove links are unsupported"
+    },
+    {
+      "name": "dumpert",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/dumpert.py"
+      ],
+      "rust": [
+        "src/extractor/dumpert.rs",
+        "tests/fixtures/sites/dumpert/"
+      ],
+      "scope": "DumpertIE mobile_api info JSON, the first item's VIDEO media variants (fatal HLS with version ids or progressive URLs, qualities ranking), stills thumbnails, stats, duration and KeyError/IndexError/StopIteration paths compared with pinned upstream output through the fixture proxy; non-array item/media lists and non-string titles or URIs remain explicit native errors"
     },
     {
       "name": "ebaumsworld",

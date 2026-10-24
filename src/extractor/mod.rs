@@ -19,6 +19,9 @@ mod caltrans;
 mod cam4;
 mod cgtn;
 mod cjsw;
+mod cloudflarestream;
+mod cloudycdn;
+mod clyp;
 mod coub;
 mod cozytv;
 mod crooksandliars;
@@ -27,9 +30,12 @@ mod cultureunplugged;
 mod dailymotion;
 mod dash;
 mod daystar;
+mod democracynow;
 mod dfb;
 pub(crate) mod direct;
+mod dlive;
 mod drtalks;
+mod dumpert;
 mod ebaumsworld;
 mod ebay;
 mod epoch;
@@ -195,6 +201,9 @@ pub use caltrans::{Caltrans, suitable as caltrans_suitable};
 pub use cam4::{Cam4, suitable as cam4_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
+pub use cloudflarestream::{CloudflareStream, suitable as cloudflarestream_suitable};
+pub use cloudycdn::{CloudyCdn, suitable as cloudycdn_suitable};
+pub use clyp::{Clyp, suitable as clyp_suitable};
 pub use coub::{Coub, suitable as coub_suitable};
 pub use cozytv::{CozyTv, suitable as cozytv_suitable};
 pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
@@ -202,10 +211,16 @@ pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
 pub use dailymotion::{Dailymotion, suitable as dailymotion_suitable};
 pub use daystar::{DaystarClip, suitable as daystar_suitable};
+pub use democracynow::{Democracynow, suitable as democracynow_suitable};
 pub use dfb::{Dfb, suitable as dfb_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
+pub use dlive::{
+    DLiveStream, DLiveVod, stream_suitable as dlive_stream_suitable,
+    vod_suitable as dlive_vod_suitable,
+};
 pub use drtalks::{DrTalks, suitable as drtalks_suitable};
+pub use dumpert::{Dumpert, suitable as dumpert_suitable};
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub use ebay::{Ebay, suitable as ebay_suitable};
 pub use epoch::{Epoch, suitable as epoch_suitable};
@@ -1461,6 +1476,101 @@ pub(crate) fn proto_relative(url: &str) -> String {
         Some(rest) => format!("https://{rest}"),
         None => url.to_owned(),
     }
+}
+
+/// An upstream `{'url': ..., ...}` format dict in its key order (`None`
+/// values keep their keys); `ext` is processing's `determine_ext(url)`
+/// unless given.
+pub(crate) fn dict_format(
+    fields: Vec<(&str, serde_json::Value)>,
+    extractor: &str,
+    id: &str,
+) -> Result<crate::VideoFormat> {
+    let keys: Vec<String> = fields.iter().map(|(key, _)| (*key).to_owned()).collect();
+    let mut map = serde_json::Map::new();
+    for (key, value) in fields {
+        if !value.is_null() {
+            map.insert(key.to_owned(), value);
+        }
+    }
+    let has_quality = map.get("quality").is_some_and(serde_json::Value::is_i64);
+    if !map.contains_key("ext") {
+        let ext = map
+            .get("url")
+            .and_then(serde_json::Value::as_str)
+            .and_then(direct::determine_ext)
+            .unwrap_or_else(|| "unknown_video".into());
+        map.insert("ext".into(), ext.into());
+    }
+    // Processing numbers formats without a `format_id`.
+    if !map.contains_key("format_id") {
+        map.insert("format_id".into(), "".into());
+    }
+    let mut format: crate::VideoFormat = serde_json::from_value(serde_json::Value::Object(map))
+        .map_err(|error| crate::Error::Reported(format!("[{extractor}] {id}: {error}")))?;
+    crate::info_order::mark_format(&mut format, &format!("dict:{}", keys.join(",")));
+    if has_quality {
+        crate::info_order::mark_int_quality(&mut format);
+    }
+    Ok(format)
+}
+
+/// An upstream `return {...}` info dict: `fields` in its key order (a
+/// `formats` entry, or a `None` `subtitles` the caller sets, only marks the
+/// key's position) with
+/// the extracted `formats`.
+pub(crate) fn dict_info(
+    page: &Url,
+    (extractor, key): (&'static str, &'static str),
+    fields: Vec<(&str, serde_json::Value)>,
+    formats: Vec<crate::VideoFormat>,
+) -> crate::VideoInfo {
+    let first = formats
+        .first()
+        .map_or_else(|| page.clone(), |format| format.url.clone());
+    let mut info = direct::build_at(first.clone(), &first, String::new());
+    info.direct = None;
+    if formats.is_empty() {
+        info.extra.insert(
+            crate::info::NO_FORMATS.into(),
+            serde_json::Value::Bool(true),
+        );
+    }
+    info.formats = formats;
+    info.webpage_url = page.clone();
+    info.extractor = extractor.into();
+    info.extractor_key = key.into();
+    let mut keys = Vec::new();
+    let mut titled = false;
+    for (name, value) in fields {
+        keys.push(name.to_owned());
+        match name {
+            "id" => info.id = value.as_str().unwrap_or_default().to_owned(),
+            "title" => {
+                titled = true;
+                info.title = value.as_str().unwrap_or_default().to_owned();
+            }
+            "formats" => {}
+            // The caller's `info.subtitles`.
+            "subtitles" if value.is_null() => {}
+            _ => crate::metadata_parser::set_field(&mut info, name, value),
+        }
+    }
+    if !titled {
+        info.title = String::new();
+        info.extra.insert(
+            crate::info::TITLE_MISSING.into(),
+            serde_json::Value::Bool(true),
+        );
+    }
+    crate::info_order::mark_info(
+        info,
+        &format!(
+            "dict{};{}",
+            if titled { "" } else { "-untitled" },
+            keys.join(",")
+        ),
+    )
 }
 
 #[cfg(test)]
