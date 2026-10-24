@@ -129,7 +129,7 @@ Supported today:
   Zhihu videos, CRTVG programmes, Breitbart videos, CGTN news videos, JoVE
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
-  ScreenRec shares, Ku6 shows, Fuyin TV videos, Moving Image Archive films, MyVidster links, Bigo live rooms, CAM4 live channels,
+  ScreenRec shares, Ku6 shows, Fuyin TV videos, Moving Image Archive films, MyVidster links, Caltrans traffic cameras, Bigo live rooms, CAM4 live channels,
   Fathom shares, Maariv players (and their embeds), Harpodeon films,
   Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
   posts (hosted videos, text-post videos and followed links), X/Twitter posts

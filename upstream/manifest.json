@@ -365,6 +365,18 @@
       "scope": "BundesligaIE vid query as a jwplatform: url result followed by the JWPlatform extractor compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "caltrans",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/caltrans.py"
+      ],
+      "rust": [
+        "src/extractor/caltrans.rs",
+        "tests/fixtures/sites/caltrans/"
+      ],
+      "scope": "CaltransIE page Global Vars script (route place, location name, poster and fatal-less stream URL with upstream warnings) as live HLS formats (ts, live variant IDs) compared with pinned upstream output through the fixture proxy; a missing videoStreamURL remains a native error"
+    },
+    {
       "name": "cam4",
       "status": "partial",
       "upstream": [

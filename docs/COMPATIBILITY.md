@@ -668,6 +668,14 @@ webcamera.pl cameras (`SUBDOMAIN.webcamera.pl`) follow upstream
 variant IDs, the cleaned `<h1>` title and `is_live`. A live media-only
 playlist without `#EXT-X-ENDLIST` remains an explicit native error.
 
+Caltrans cameras (`*.ca.gov/vm/loc/DISTRICT/ID.htm`) follow upstream
+`CaltransIE`: the fatal `Global Vars` script, its `routePlace`,
+`locationName`, `posterURL` and `videoStreamURL` (each warning when absent),
+the stream as fatal live HLS formats (`ts`, live variant IDs), the
+`ROUTE : LOCATION` title (`None` for a missing part), poster thumbnail and
+`is_live`. A page without an absolute `videoStreamURL` remains an explicit
+native error.
+
 Bigo rooms (`bigo.tv/[LANG/]ID`) follow upstream `BigoIE`: the POSTed
 `siteId` `getInternalStudioInfo` response (a non-dict is `Received invalid
 JSON data`, a truthy `code` the expected `Bigo says: MSG (code CODE)`, a
