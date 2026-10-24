@@ -3,6 +3,7 @@ mod audio;
 mod audio_download;
 pub mod batch;
 pub mod browser_cookies;
+pub mod cache;
 pub mod codecs;
 pub mod config;
 pub mod container;
@@ -136,7 +137,7 @@ pub struct YoutubeDl {
     /// `--live-from-start`.
     live_from_start: bool,
     /// The YouTube JavaScript runtime, for live-from-start refetches.
-    youtube_runtime: Option<PathBuf>,
+    youtube_runtime: Vec<extractor::JsRuntime>,
     format_sort: FormatSortOptions,
     prefer_best: bool,
     /// Global request headers and proxy for FFmpeg network inputs.
@@ -741,7 +742,7 @@ impl YoutubeDl {
             traffic::enable();
         }
         let client = proxy.apply(builder)?.build()?;
-        let youtube_runtime = youtube.js_runtime.clone();
+        let youtube_runtime = youtube.runtimes();
         Ok(Self {
             client,
             ffmpeg: None,
@@ -1747,12 +1748,13 @@ impl YoutubeDl {
         merged: bool,
         callback: &mut dyn FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<Vec<u64>> {
-        let feed = extractor::LiveFeed::new(&self.client, info, self.youtube_runtime.as_deref())
-            .ok_or_else(|| {
+        let feed = extractor::LiveFeed::new(&self.client, info, &self.youtube_runtime).ok_or_else(
+            || {
                 Error::Reported(
                     "the stream needs to be re-extracted to download it from the start".into(),
                 )
-            })?;
+            },
+        )?;
         let mut jobs = Vec::new();
         for (stream, path) in streams {
             screen::screen("[dashsegments] Total fragments: unknown (live)");

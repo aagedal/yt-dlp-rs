@@ -2792,6 +2792,7 @@
       "status": "partial",
       "upstream": [
         "yt_dlp/extractor/youtube/jsc/",
+        "yt_dlp/utils/_jsruntime.py",
         "yt_dlp/extractor/youtube/_video.py",
         "test/test_jsc/"
       ],
@@ -2810,7 +2811,19 @@
         "upstream/notes/youtube-n-extraction.md",
         "upstream/notes/youtube-signature-extraction.md"
       ],
-      "scope": "Private offline EJS 0.8.0 assets/protocol and bounded explicit-path Deno 2.9.7 runner, exact saved-player n/signature vectors, strict complete JSON validation and process/pipe budgets; canonical-origin bounded player discovery/acquisition with validated redirects and pure progressive n/signature URL rewriting, saved-player-to-media private pipeline; prerequisite runtime CI matrix passed on Linux/macOS/Windows; opt-in signature/query-n and HLS path-n extraction with shared complete batches and explicit lazy runtime configuration; no other runtimes, caches or live-site support"
+      "scope": "Private offline EJS 0.8.0 assets/protocol and bounded explicit-path Deno 2.9.7 runner, exact saved-player n/signature vectors, strict complete JSON validation and process/pipe budgets; canonical-origin bounded player discovery/acquisition with validated redirects and pure progressive n/signature URL rewriting, saved-player-to-media private pipeline; prerequisite runtime CI matrix passed on Linux/macOS/Windows; opt-in signature/query-n and HLS path-n extraction with shared complete batches and explicit lazy runtime configuration; --js-runtimes deno/node/quickjs/bun[:PATH] with upstream JsRuntime version detection and minimums (quickjs via qjs --help, QuickJS-ng), provider preference deno>node>quickjs>bun, the DenoJCP/NodeJCP/BunJCP/QuickJSJCP command lines for the builtin solver (no npm or remote components), stderr cleaning and the bun deprecation/unsupported and QuickJS slow-version messages (fake runtimes in tests/helpers/challenge_runtime.rs); youtube-sigfuncs disk cache (min_ver 2025.07.21) through src/cache.rs; no runtime installation, EJS script cache/web/npm sources or live-site support"
+    },
+    {
+      "name": "filesystem-cache",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/cache.py"
+      ],
+      "rust": [
+        "src/cache.rs",
+        "tests/cache.rs"
+      ],
+      "scope": "Upstream Cache: --cache-dir/--no-cache-dir (last wins), --rm-cache-dir messages and its cache/tmp path guard, SECTION/quoted-KEY.json files with the {\"yt-dlp_version\", \"data\"} envelope written atomically, load with min_ver version checks, pre-2022.08.19 unversioned entries, Saving/Loading/Discarding debug lines and the retrieval/write warnings (OS error text instead of a Python traceback); the default root is this port's ${XDG_CACHE_HOME:-~/.cache}/yt-dlp-rs and entries record the pinned upstream version 2026.10.21. Used by the soundcloud client_id, brightcove policy key (INVALID_POLICY_KEY refresh) and youtube-sigfuncs entries; other ported extractors' upstream cache users are not ported"
     },
     {
       "name": "manifest-downloaders",

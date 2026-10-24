@@ -369,7 +369,7 @@ fn player_variant_and_path(player_url: &str) -> Option<(String, Option<&'static 
 }
 
 /// `_player_js_cache_key`: `PLAYER_ID-VARIANT`.
-fn player_js_cache_key(player_url: &str) -> Option<String> {
+pub(super) fn player_js_cache_key(player_url: &str) -> Option<String> {
     let (id, variant, path) = player_variant_and_path(player_url)?;
     let variant = match variant {
         Some(variant) => variant.to_owned(),

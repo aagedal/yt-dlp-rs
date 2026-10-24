@@ -508,7 +508,7 @@ struct Args {
     /// Default HTTP Referer (extractor request headers can override it)
     #[arg(long, value_name = "URL", overrides_with = "referer")]
     referer: Option<String>,
-    /// Explicit path to Deno 2.3+ or Node.js 22+ for YouTube player challenges (no runtime discovery or installation)
+    /// Explicit path to Deno 2.3+ or Node.js 22+ for YouTube player challenges, replacing --js-runtimes
     #[arg(long, value_name = "PATH")]
     youtube_js_runtime: Option<PathBuf>,
     /// Extract audio with local ffmpeg/ffprobe after downloading
@@ -894,15 +894,16 @@ struct Args {
     no_update: bool,
     #[arg(long, hide = true, value_name = "[CHANNEL]@[TAG]")]
     update_to: Option<String>,
-    /// Location in the filesystem where cached data is stored (this port caches nothing)
-    #[arg(long, value_name = "DIR")]
+    /// Location in the filesystem where some downloaded information (such as client ids and signatures) is stored permanently. By default ${XDG_CACHE_HOME}/yt-dlp-rs
+    #[arg(long, value_name = "DIR", overrides_with = "no_cache_dir")]
     cache_dir: Option<String>,
-    #[arg(long, hide = true)]
+    /// Disable filesystem caching
+    #[arg(long, overrides_with = "cache_dir")]
     no_cache_dir: bool,
     /// Delete the cache directory
     #[arg(long)]
     rm_cache_dir: bool,
-    /// JavaScript runtimes (RUNTIME[:PATH]; deno and node are supported)
+    /// Additional JavaScript runtime to enable, with an optional location (the binary or its directory); deno, node, quickjs, bun in order of priority, only deno by default
     #[arg(long, value_name = "RUNTIME[:PATH]")]
     js_runtimes: Vec<String>,
     #[arg(long, hide = true)]
@@ -2450,35 +2451,19 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let mut downloader = YoutubeDl::with_options(
         YoutubeOptions {
-            // `--js-runtimes deno[:PATH]`/`node[:PATH]` (`deno` is enabled by
-            // default; `--no-js-runtimes` clears it): the last value for each,
-            // a bare name looked up on PATH. Upstream prefers Deno's provider
-            // to Node.js's.
-            js_runtime: args.youtube_js_runtime.or_else(|| {
+            // `--js-runtimes NAME[:PATH]` (`deno` is enabled by default;
+            // `--no-js-runtimes` clears it); upstream's provider preference
+            // picks among the available runtimes.
+            js_runtime: args.youtube_js_runtime,
+            js_runtimes: {
                 let mut enabled: Vec<&str> = if args.no_js_runtimes {
                     Vec::new()
                 } else {
                     vec!["deno"]
                 };
                 enabled.extend(args.js_runtimes.iter().map(String::as_str));
-                ["deno", "node"].into_iter().find_map(|runtime| {
-                    let value = enabled.iter().rev().find(|value| {
-                        let name = value.split_once(':').map_or(**value, |(name, _)| name);
-                        name.eq_ignore_ascii_case(runtime)
-                    })?;
-                    let path = value.split_once(':').map_or("", |(_, path)| path);
-                    if !path.is_empty() {
-                        return Some(PathBuf::from(path));
-                    }
-                    std::env::var_os("PATH").and_then(|paths| {
-                        std::env::split_paths(&paths)
-                            .map(|dir| {
-                                dir.join(format!("{runtime}{}", std::env::consts::EXE_SUFFIX))
-                            })
-                            .find(|candidate| candidate.is_file())
-                    })
-                })
-            }),
+                yt_dlp_rs::extractor::js_runtimes(&enabled)
+            },
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
             subtitles_wanted: args.write_subs || args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
@@ -3049,31 +3034,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         report_error!("ERROR: yt-dlp-rs cannot update itself; install a newer release instead");
         return Ok(false);
     }
-    // Upstream `Cache.remove` (this port stores no cache).
+    // `cachedir`: `--cache-dir DIR` or `--no-cache-dir`, whichever is last.
+    if args.no_cache_dir {
+        yt_dlp_rs::cache::configure(None);
+    } else if let Some(directory) = &args.cache_dir {
+        yt_dlp_rs::cache::configure(Some(directory));
+    }
     if args.rm_cache_dir {
-        if args.no_cache_dir {
-            screen!("Cache is disabled (Did you combine --no-cache-dir and --rm-cache-dir?)");
-        } else {
-            let directory = args
-                .cache_dir
-                .clone()
-                .map(PathBuf::from)
-                .unwrap_or_else(|| {
-                    std::env::var_os("XDG_CACHE_HOME")
-                        .map(PathBuf::from)
-                        .or_else(|| {
-                            std::env::var_os("HOME").map(|home| PathBuf::from(home).join(".cache"))
-                        })
-                        .unwrap_or_default()
-                        .join("yt-dlp-rs")
-                });
-            let mut line = format!("Removing cache dir {} .", directory.display());
-            if directory.is_dir() {
-                std::fs::remove_dir_all(&directory)?;
-                line.push('.');
-            }
-            line.push('.');
-            screen!("{line}");
+        if let Err(error) = yt_dlp_rs::cache::remove() {
+            report_error!("ERROR: {error}");
+            return Ok(false);
         }
         if urls.is_empty() && args.load_info_json.is_none() {
             return Ok(true);
@@ -6301,10 +6271,6 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         if !matches!(name.as_str(), "deno" | "node" | "bun" | "quickjs") {
             warning!(
                 "WARNING: Ignoring unsupported JavaScript runtime(s): {name}. Supported runtimes: deno, node, bun, quickjs."
-            );
-        } else if !matches!(name.as_str(), "deno" | "node") {
-            warning!(
-                "WARNING: JavaScript runtime {name} is not supported natively; use deno or node"
             );
         }
     }

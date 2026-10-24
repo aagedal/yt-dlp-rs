@@ -18,6 +18,17 @@
    }
   },
   {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/1111111111001/videos/6300000000001",
+   "status": 401,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "invalidkey.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkSTALEKEY"
+   }
+  },
+  {
    "url": "https://manifest.prod.boltdns.net/manifest/v1/hls/master.m3u8",
    "headers": {
     "Content-Type": "application/vnd.apple.mpegurl"

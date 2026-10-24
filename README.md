@@ -157,9 +157,10 @@ Supported today:
 - YouTube single-video watch, short-link, Shorts, embed and live URL shapes,
   extracted like upstream from the watch page plus one player API request per
   default InnerTube client. With a JS runtime (deno, enabled by default as
-  upstream does, or `--js-runtimes node`) the clients are `tv_samsung`,
+  upstream does, or `--js-runtimes node`, `quickjs` or `bun`) the clients are `tv_samsung`,
   `visionos` and `web`, and `n`/signature challenges are solved through the
-  bundled pinned EJS release. Without one, only `visionos` is used, with
+  bundled pinned EJS release (signature solutions are cached in
+  `~/.cache/yt-dlp-rs` in upstream's format, see `--cache-dir`). Without one, only `visionos` is used, with
   upstream's warning. HTTPS, HLS and DASH formats follow upstream's
   `_extract_formats_and_subtitles`: PO-token policies skip token-requiring
   formats unless a `po_token` is configured; HTTPS formats download in 10 MiB

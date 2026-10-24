@@ -128,6 +128,8 @@ fn update_client_id(client: &Client) -> Result<String> {
         match script {
             Ok(script) => {
                 if let Some(found) = CLIENT_ID.captures(&script) {
+                    // `_store_client_id`.
+                    crate::cache::store("soundcloud", "client_id", &Value::from(&found[1]));
                     return Ok(found[1].to_owned());
                 }
             }
@@ -143,14 +145,21 @@ fn update_client_id(client: &Client) -> Result<String> {
     )))
 }
 
-/// The cached (per run) client ID.
+/// The client ID for this run.
 static CLIENT: Mutex<Option<String>> = Mutex::new(None);
 
+/// `_initialize_pre_login`: the cached `soundcloud` / `client_id`, else a
+/// new one.
 fn client_id(client: &Client) -> Result<String> {
     if let Some(id) = CLIENT.lock().ok().and_then(|id| id.clone()) {
         return Ok(id);
     }
-    let id = update_client_id(client)?;
+    let cached = crate::cache::load("soundcloud", "client_id", None)
+        .and_then(|id| id.as_str().filter(|id| !id.is_empty()).map(str::to_owned));
+    let id = match cached {
+        Some(id) => id,
+        None => update_client_id(client)?,
+    };
     if let Ok(mut slot) = CLIENT.lock() {
         *slot = Some(id.clone());
     }
@@ -180,8 +189,11 @@ fn call_api(
                         Error::Http(error) if error.status().is_some_and(|status| matches!(status.as_u16(), 401 | 403))
                     ) =>
             {
+                // `_store_client_id(None)`, then `_update_client_id`.
+                crate::cache::store("soundcloud", "client_id", &Value::Null);
+                let id = update_client_id(client)?;
                 if let Ok(mut slot) = CLIENT.lock() {
-                    *slot = None;
+                    *slot = Some(id);
                 }
             }
             Err(error) => return Err(error),
