@@ -473,6 +473,18 @@
       "scope": "BongaCamsIE amf.php getRoomData form POST, performer username/display name/lovers count, KeyError paths and the fatal live HLS playlist (hls ids, mp4, age_limit, is_live) compared with pinned upstream output through the fixture proxy; non-string video server URLs remain explicit native errors"
     },
     {
+      "name": "bostonglobe",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bostonglobe.py"
+      ],
+      "rust": [
+        "src/extractor/bostonglobe.rs",
+        "tests/fixtures/sites/bostonglobe/"
+      ],
+      "scope": "BostonGlobeIE Brightcove video tags as brightcove:new url results (one followed, several as an OpenGraph-titled playlist); the generic fallback is not ported. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "breitbart",
       "status": "partial",
       "upstream": [

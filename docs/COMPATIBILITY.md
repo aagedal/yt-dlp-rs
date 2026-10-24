@@ -1712,6 +1712,14 @@ player data keep upstream's errors. The shared JW Player path fetches an HLS
 master's variant playlists, so fixtures use media playlists.
 `tests/fixtures/sites/beacon/` is compared with pinned upstream output.
 
+Boston Globe articles (`[www.]bostonglobe.com/.../ID/NAME[.html]`) follow
+upstream `BostonGlobeIE`: `<video>` tags with Brightcove video, account,
+player and embed attributes as `players.brightcove.net` URLs handed to
+`brightcove:new` (one followed directly, several as a playlist titled by the
+OpenGraph title). Pages without such videos (upstream's generic-extractor
+fallback) remain explicit native errors.
+`tests/fixtures/sites/bostonglobe/` is compared with pinned upstream output.
+
 Clyp clips (`[www.]clyp.it/ID`) follow upstream `ClypIE`: the
 `api.clyp.it/ID` JSON (with the URL's `token` query), its `OggUrl`,
 `Mp3Url`, `SecureOggUrl` and `SecureMp3Url` audio formats, the page's

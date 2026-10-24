@@ -1,0 +1,6 @@
+[
+ {"url": "http://www.bostonglobe.com/metro/2017/02/11/tree-finally-succumbs/h1b4lviqzMTIn9sVy8F3gP/story.html", "args": ["-j"]},
+ {"url": "https://www.bostonglobe.com/metro/2017/02/12/two-videos/abc123/story.html", "args": ["-J"]},
+ {"url": "https://www.bostonglobe.com/metro/2017/02/12/two-videos/abc123/story.html", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.bostonglobe.com/metro/2017/02/13/untitled/def456/story.html", "args": ["-J", "--flat-playlist"]}
+]
