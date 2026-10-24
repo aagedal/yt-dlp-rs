@@ -694,6 +694,12 @@ Brightcove players above), overlaid with the page's title, `summury` and
 featured image. `tests/fixtures/sites/drtalks/` is compared with pinned
 upstream output.
 
+Toronto Star pages (`thestar.com/.../SLUG.html`) follow upstream `TheStarIE`:
+the page's `mainartBrightcoveVideoId` (else upstream's error) as a `url`
+result of its `players.brightcove.net/794267642001/default_default` player,
+extracted like Brightcove players above. `tests/fixtures/sites/thestar/` is
+compared with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the

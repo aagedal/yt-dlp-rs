@@ -1544,6 +1544,18 @@
       "scope": "TheInterceptIE initialStoreTree post as a url_transparent jwplatform: result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "thestar",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/thestar.py"
+      ],
+      "rust": [
+        "src/extractor/thestar.rs",
+        "tests/fixtures/sites/thestar/"
+      ],
+      "scope": "TheStarIE mainartBrightcoveVideoId as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "thisamericanlife",
       "status": "partial",
       "upstream": [
