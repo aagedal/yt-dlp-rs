@@ -1,0 +1,45 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.thesun.co.uk/tvandshowbiz/2261604/orlando-bloom-and-katy-perry/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5232946137001\", \"thumbnails\": null, \"duration\": 61.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/thesun.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkTHESUN\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"First clip\", \"description\": \"First.\", \"timestamp\": 1480068000, \"uploader_id\": \"5067014667001\", \"webpage_url\": \"http://players.brightcove.net/5067014667001/default_default/index.html?videoId=5232946137001\", \"original_url\": \"http://players.brightcove.net/5067014667001/default_default/index.html?videoId=5232946137001\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist_count\": 2, \"playlist\": \"Orlando Bloom & Katy Perry\", \"playlist_id\": \"2261604\", \"playlist_title\": \"Orlando Bloom & Katy Perry\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.thesun.co.uk/tvandshowbiz/2261604/orlando-bloom-and-katy-perry/\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"display_id\": \"5232946137001\", \"fulltitle\": \"First clip\", \"duration_string\": \"1:01\", \"upload_date\": \"20161125\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/thesun.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkTHESUN\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"First clip [5232946137001].mp4\", \"filename\": \"First clip [5232946137001].mp4\", \"_type\": \"video\"}",
+    "{\"id\": \"5232946137002\", \"thumbnails\": null, \"duration\": 61.0, \"formats\": [{\"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/thesun2.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkTHESUN\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"Second clip\", \"description\": \"Second.\", \"timestamp\": 1480071600, \"uploader_id\": \"5067014667001\", \"webpage_url\": \"http://players.brightcove.net/5067014667001/default_default/index.html?videoId=5232946137002\", \"original_url\": \"http://players.brightcove.net/5067014667001/default_default/index.html?videoId=5232946137002\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist_count\": 2, \"playlist\": \"Orlando Bloom & Katy Perry\", \"playlist_id\": \"2261604\", \"playlist_title\": \"Orlando Bloom & Katy Perry\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.thesun.co.uk/tvandshowbiz/2261604/orlando-bloom-and-katy-perry/\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"display_id\": \"5232946137002\", \"fulltitle\": \"Second clip\", \"duration_string\": \"1:01\", \"upload_date\": \"20161125\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 1000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": \"H264\", \"url\": \"https://cdn.example.com/thesun2.mp4\", \"format_id\": \"http-1000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkTHESUN\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 7625000, \"format\": \"http-1000k-720p - 1280x720\", \"_filename\": \"Second clip [5232946137002].mp4\", \"filename\": \"Second clip [5232946137002].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.thesun.co.uk/tvandshowbiz/2261604/orlando-bloom-and-katy-perry/",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2261604\", \"title\": \"Orlando Bloom & Katy Perry\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"BrightcoveNew\", \"id\": \"5232946137001\", \"_type\": \"url\", \"url\": \"http://players.brightcove.net/5067014667001/default_default/index.html?videoId=5232946137001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"BrightcoveNew\", \"id\": \"5232946137002\", \"_type\": \"url\", \"url\": \"http://players.brightcove.net/5067014667001/default_default/index.html?videoId=5232946137002\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.thesun.co.uk/tvandshowbiz/2261604/orlando-bloom-and-katy-perry/\", \"original_url\": \"https://www.thesun.co.uk/tvandshowbiz/2261604/orlando-bloom-and-katy-perry/\", \"webpage_url_basename\": \"orlando-bloom-and-katy-perry\", \"webpage_url_domain\": \"thesun.co.uk\", \"extractor\": \"TheSun\", \"extractor_key\": \"TheSun\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.the-sun.com/entertainment/7611415/no-title/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"7611415\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.the-sun.com/entertainment/7611415/no-title/\", \"original_url\": \"https://www.the-sun.com/entertainment/7611415/no-title/\", \"webpage_url_basename\": \"no-title\", \"webpage_url_domain\": \"the-sun.com\", \"extractor\": \"TheSun\", \"extractor_key\": \"TheSun\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [TheSun] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

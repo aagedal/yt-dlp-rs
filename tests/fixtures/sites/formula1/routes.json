@@ -1,0 +1,28 @@
+{
+ "routes": [
+  {
+   "url": "http://players.brightcove.net/6057949432001/S1WMrhjlh_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://players.brightcove.net/6057949432001/S1WMrhjlh_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/6057949432001/videos/6060988138001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkFORMULA1"
+   }
+  }
+ ]
+}

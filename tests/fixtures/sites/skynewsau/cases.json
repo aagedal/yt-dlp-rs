@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/0f4c6243d6903502c01251f228b91a71",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/aa11",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.skynews.com.au/world-news/united-states/lava-overflowing/video/bb22",
+  "args": [
+   "-j"
+  ]
+ }
+]

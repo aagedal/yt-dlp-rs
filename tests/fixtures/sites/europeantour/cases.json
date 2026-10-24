@@ -1,0 +1,20 @@
+[
+ {
+  "url": "https://www.europeantour.com/dpworld-tour/news/video/the-best-shots-of-the-2021-seasons/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.europeantour.com/dpworld-tour/news/video/empty-account/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.europeantour.com/dpworld-tour/news/video/no-player/",
+  "args": [
+   "-j"
+  ]
+ }
+]

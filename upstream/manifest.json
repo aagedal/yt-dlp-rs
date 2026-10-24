@@ -1641,6 +1641,66 @@
       "scope": "TheStarIE mainartBrightcoveVideoId as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "thesun",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/thesun.py"
+      ],
+      "rust": [
+        "src/extractor/thesun.rs",
+        "tests/fixtures/sites/thesun/"
+      ],
+      "scope": "TheSunIE data-video-id-pending videos as a playlist of BrightcoveNew url results titled by the OpenGraph title (with upstream's warning when missing), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "skynewsau",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/skynewsau.py"
+      ],
+      "rust": [
+        "src/extractor/skynewsau.rs",
+        "tests/fixtures/sites/skynewsau/"
+      ],
+      "scope": "SkyNewsAUIE embedcode as a url_transparent BrightcoveNew result overlaid with the content.api.news caption and creation date, and the missing-embedcode error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "europeantour",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/europeantour.py"
+      ],
+      "rust": [
+        "src/extractor/europeantour.rs",
+        "tests/fixtures/sites/europeantour/"
+      ],
+      "scope": "EuropeanTourIE brightcove-player video-id and ACCOUNT_ID as a url result of the BrightcoveNew player template, and the missing-player error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "maoritv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/maoritv.py"
+      ],
+      "rust": [
+        "src/extractor/maoritv.rs",
+        "tests/fixtures/sites/maoritv/"
+      ],
+      "scope": "MaoriTVIE data-main-video-id as a url result of the BrightcoveNew player template, and the missing-ID error, compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "formula1",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/formula1.py"
+      ],
+      "rust": [
+        "src/extractor/formula1.rs",
+        "tests/fixtures/sites/formula1/"
+      ],
+      "scope": "Formula1IE URL Brightcove ID as a url result of the BrightcoveNew player template, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "thisamericanlife",
       "status": "partial",
       "upstream": [

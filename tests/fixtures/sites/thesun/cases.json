@@ -1,0 +1,21 @@
+[
+ {
+  "url": "https://www.thesun.co.uk/tvandshowbiz/2261604/orlando-bloom-and-katy-perry/",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.thesun.co.uk/tvandshowbiz/2261604/orlando-bloom-and-katy-perry/",
+  "args": [
+   "-J",
+   "--flat-playlist"
+  ]
+ },
+ {
+  "url": "https://www.the-sun.com/entertainment/7611415/no-title/",
+  "args": [
+   "-J"
+  ]
+ }
+]

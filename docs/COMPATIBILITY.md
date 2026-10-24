@@ -711,6 +711,43 @@ result of its `players.brightcove.net/794267642001/default_default` player,
 extracted like Brightcove players above. `tests/fixtures/sites/thestar/` is
 compared with pinned upstream output.
 
+Formula 1 videos (`formula1.com/en/latest/video.SLUG.ID.html`) follow upstream
+`Formula1IE`: the URL's Brightcove ID as a `url` result of the
+`players.brightcove.net/6057949432001/S1WMrhjlh_default` player, extracted like
+Brightcove players above. `tests/fixtures/sites/formula1/` is compared with
+pinned upstream output.
+
+Māori Television shows (`maoritelevision.com/shows/.../SLUG`) follow upstream
+`MaoriTVIE`: the page's `data-main-video-id` (else upstream's error) as a
+`url` result of the `players.brightcove.net/1614493167001/HJlhIQhQf_default`
+player, extracted like Brightcove players above.
+`tests/fixtures/sites/maoritv/` is compared with pinned upstream output.
+
+European Tour videos (`europeantour.com/dpworld-tour/news/video/SLUG`) follow
+upstream `EuropeanTourIE`: the page's `brightcove-player video-id` and last
+non-empty `"ACCOUNT_ID"` (else upstream's `'NoneType' object has no attribute
+'groups'` error) as a `url` result of that account's
+`players.brightcove.net/ACCOUNT/default_default` player, extracted like
+Brightcove players above. `tests/fixtures/sites/europeantour/` is compared with
+pinned upstream output.
+
+Sky News Australia videos (`skynews.com.au/SECTION/SUB/SLUG/video/ID`) follow
+upstream `SkyNewsAUIE`: the page's `embedcode` (`ACCOUNT-VIDEO`, else
+upstream's error) as a `url_transparent` result of that account's
+`players.brightcove.net/ACCOUNT/default_default` player (extracted like
+Brightcove players above), overlaid with the `content.api.news` video's
+`caption` as `title` and `date.created` as `upload_date`. Embed codes
+without a `-` are rejected. `tests/fixtures/sites/skynewsau/` is compared
+with pinned upstream output.
+
+The Sun articles (`thesun.co.uk/SECTION/ID/...`, `the-sun.com/SECTION/ID/...`)
+follow upstream `TheSunIE`: each `<video data-video-id-pending>` as a `url`
+result of its `data-account` (default `5067014667001`)
+`players.brightcove.net/ACCOUNT/default_default` player, extracted like
+Brightcove players above, in a playlist titled by the OpenGraph title (else
+upstream's warning and no title). `tests/fixtures/sites/thesun/` is compared
+with pinned upstream output.
+
 CGTN news videos (`news.cgtn.com/news/YYYY-MM-DD/SLUG-ID/index.html`) follow
 upstream `CGTNIE`: the fatal `data-video` manifest as `hls` formats (subtitles
 ignored with upstream's warning), the date span (UTC+8) as `timestamp`, the

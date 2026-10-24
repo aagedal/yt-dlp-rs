@@ -1,0 +1,42 @@
+{
+ "routes": [
+  {
+   "url": "https://www.maoritelevision.com/shows/korero-mai/S01E054/korero-mai-series-1-episode-54",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.maoritelevision.com/shows/korero-mai/no-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  },
+  {
+   "url": "http://players.brightcove.net/1614493167001/HJlhIQhQf_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://players.brightcove.net/1614493167001/HJlhIQhQf_default/config.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "config.json"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/1614493167001/videos/4774724855001",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkMAORITV"
+   }
+  }
+ ]
+}

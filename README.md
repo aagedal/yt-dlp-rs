@@ -126,7 +126,7 @@ Supported today:
   Prize media, Bild clips, Masters videos, Match TV live, mir24.tv news videos, Mocha videos, Sen videos, Kankanews videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, Premiership Rugby videos, PressTV videos, CJSW episodes,
   Player.fm episodes, RTRFM shows, Roya TV live streams, HitRecord records, href.li redirects, Culture Unplugged films,
-  Zhihu videos, CRTVG programmes, Breitbart videos, Brightcove players (and their embeds), DrTalks videos, Toronto Star videos, CGTN news videos, JoVE
+  Zhihu videos, CRTVG programmes, Breitbart videos, Brightcove players (and their embeds), DrTalks videos, Toronto Star videos, The Sun article videos, Sky News Australia videos, European Tour videos, Māori Television shows, Formula 1 videos, CGTN news videos, JoVE
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
   ScreenRec shares, Ku6 shows, GoodGame live streams, Fuyin TV videos, GameStar and GamePro videos, Golem videos, Moving Image Archive films, MyVidster links, ETTU TV matches, Erocast tracks, Caltrans traffic cameras, Bigo live rooms, CAM4 live channels, Université de Strasbourg UTV videos, Veo matches, Nobel   Prize media, webcamera.pl and SkylineWebcams live cameras, JoVE   videos, Bitmovin   streams and Crooks and Liars videos (and their embeds), Soundgasm sounds and profiles, StreetVoice songs, Ivoox audios, Amadeus TV library videos, Whyp tracks, TRT Çocuk videos, WorldStarHipHop videos, Xbox clips, HellPorno videos, Toypics videos,
