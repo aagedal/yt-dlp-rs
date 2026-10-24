@@ -1366,6 +1366,18 @@
       "scope": "SenIE content API player/details nodes (fatal HLS formats, VOD manifest fallback, title/description/tags traversal, generic title) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "skylinewebcams",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/skylinewebcams.py"
+      ],
+      "rust": [
+        "src/extractor/skylinewebcams.rs",
+        "tests/fixtures/sites/skylinewebcams/"
+      ],
+      "scope": "SkylineWebcamsIE live m3u8 stream URL as its own format with OpenGraph title/description warnings and the fatal missing-stream message compared with pinned upstream output through the fixture proxy (marked broken upstream)"
+    },
+    {
       "name": "snapchat",
       "status": "partial",
       "upstream": [
@@ -1389,6 +1401,18 @@
         "tests/fixtures/sites/soundcloud/"
       ],
       "scope": "SoundcloudIE client ID discovery, resolved track JSON, default transcoding formats, artwork thumbnails and metadata, DRM/geo errors; no original downloads, login, comments, sets, users or search; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "soundgasm",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/soundgasm.py"
+      ],
+      "rust": [
+        "src/extractor/soundgasm.rs",
+        "tests/fixtures/sites/soundgasm/"
+      ],
+      "scope": "SoundgasmIE jPlayer m4a URL, title/description fallbacks and audio ID, and SoundgasmProfileIE sound links as a playlist, compared with pinned upstream output through the fixture proxy; relative audio or profile links remain explicit native errors"
     },
     {
       "name": "spiegel",
@@ -1421,6 +1445,18 @@
         "tools/test_capture_sites.py"
       ],
       "scope": "StreamableIE _VALID_URL and ajax API extraction (status, reddit_title/title, files as formats with parse_codecs codecs, owner, float date_added/duration, plays) compared with pinned upstream output through the fixture proxy; _EMBED_REGEX iframes on generic pages via _extract_embeds url results (single followed, several as a playlist with flat url entries); pages mixing HTML5 media and embeds are an unsupported error"
+    },
+    {
+      "name": "streetvoice",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/streetvoice.py"
+      ],
+      "rust": [
+        "src/extractor/streetvoice.rs",
+        "tests/fixtures/sites/streetvoice/"
+      ],
+      "scope": "StreetVoiceIE v4 song API metadata and non-fatal POSTed HLS/HTTP/original file URLs as mp3 formats, with KeyError, HTTP warning and empty-body warning paths compared with pinned upstream output through the fixture proxy; other unparsable format responses remain explicit native errors"
     },
     {
       "name": "sztvhu",
@@ -1581,6 +1617,30 @@
         "tests/fixtures/sites/umg/"
       ],
       "scope": "UMGDeIE fatal JSON-LD spread, umg-artist-screenname artists (warning when absent), _3Y0Lj description element and fatal hls.universal-music.de HLS formats compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "unistra",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/unistra.py"
+      ],
+      "rust": [
+        "src/extractor/unistra.rs",
+        "tests/fixtures/sites/unistra/"
+      ],
+      "scope": "UnistraIE player file paths as SD/HD formats with fatal title/description/thumbnail regexes and the no-formats error compared with pinned upstream output through the fixture proxy; upstream's unordered set of paths is kept in page order"
+    },
+    {
+      "name": "veo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/veo.py"
+      ],
+      "rust": [
+        "src/extractor/veo.rs",
+        "tests/fixtures/sites/veo/"
+      ],
+      "scope": "VeoIE match API metadata and video list formats (mp2t and URL-less entries skipped, panorama URLs checked) and the no-formats error compared with pinned upstream output through the fixture proxy; non-object API values remain explicit native errors"
     },
     {
       "name": "vimeo",

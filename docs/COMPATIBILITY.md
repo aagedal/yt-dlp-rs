@@ -449,6 +449,16 @@ and geo-blocked tracks are upstream's errors. Original downloads, logins,
 comments, sets, users, stations and search are not supported.
 `tests/fixtures/sites/soundcloud/` is compared with pinned upstream output.
 
+StreetVoice songs (`[SUB.]streetvoice.com/USER/songs/ID`) follow upstream
+`StreetVoiceIE`: the v4 song API's metadata (the `name` is required, else
+upstream's `KeyError`; synopsis, image, length, ISO 8601 creation time, user
+nickname/ID/URL, play/like/comment/share counts and album name) and the
+`hls/file`, `file` and `file/original` URLs, each fetched with an empty POST
+whose HTTP errors and empty bodies are upstream's warnings, as `mp3` audio
+formats (`m3u8_native` for HLS; `.mp3.NNNk` URLs give the ABR/TBR). Format
+responses whose body is not empty but fails to parse remain explicit native
+errors, since this port does not reproduce Python's `JSONDecodeError` text.
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file
@@ -491,6 +501,24 @@ slug, as a `url_transparent` result of `jwplatform:VIDEO` (extracted by the
 JW Platform extractor) overlaid with the post's display ID, raw title,
 excerpt, ISO 8601 date and comment count; no matching post is upstream's
 `Unable to find the current post`.
+
+Soundgasm sounds (`soundgasm.net/u/USER/SLUG`) follow upstream `SoundgasmIE`:
+the page's fatal jPlayer `m4a` URL as the result's own audio-only format
+(`unknown_video` without an extension), the raw `jp-title` text (else the
+slug), the `jp-description` or older `Description:` item (else upstream's
+warning and `null`), the URL's `.m4a` name as the ID (else the slug) and the
+URL user as uploader. Profiles (`soundgasm.net/u/USER`) follow
+`SoundgasmProfileIE`: the page's `/u/USER/` links as a playlist of
+`Soundgasm` results. Relative audio or profile links remain explicit native
+errors.
+
+SkylineWebcams live cameras (`skylinewebcams.com/LL/webcam/.../SLUG.html`)
+follow upstream `SkylineWebcamsIE` (marked broken upstream, with its
+warning): the page's fatal `url`/`source` `m3u8` URL as the result's own live
+`mp4` format (protocol `m3u8`, a protocol-relative URL sanitized to `http:`),
+with the OpenGraph title and description (each else upstream's warning; no
+title gets processing's generic one). Live titles carry the extraction time,
+so fixtures compare `--print` fields.
 
 Spiegel and manager magazin articles and videos (`spiegel.de/.../SLUG-ID[.html]`)
 follow upstream `SpiegelIE`: the page's `mediaId` (plain or `&#34;`-quoted;
@@ -932,6 +960,14 @@ page's `<video class="KIND"><source src>` pairs as a playlist of untyped
 `ID-KIND` entries with the fatal `itemprop="name"` title and the optional
 `Date:` cell as `upload_date` (warning when absent).
 
+Université de Strasbourg UTV videos (`utv.unistra.fr/{index,video}.php?id_video=ID`)
+follow upstream `UnistraIE`: the player's `file` paths as `SD`/`HD` formats
+(`-HD.mp4` is HD) on `vod-flash.u-strasbg.fr:8080`, with the fatal `UTV - `
+title, `Description` meta and `image` thumbnail; no files is upstream's
+`No video formats found!`. Upstream collects the paths in a `set`, whose
+order is unspecified; this port keeps page order, so only fixtures whose
+formats sort apart by quality are compared.
+
 Universal Music Deutschland videos (`universal-music.de/ARTIST/videos/SLUG-ID`)
 follow upstream `UMGDeIE`: the page's fatal JSON-LD (title, thumbnails,
 duration, timestamp, view count) overridden by the `umg-artist-screenname`
@@ -1026,6 +1062,15 @@ covered as far as their metadata; downloading the `m3u8` (FFmpeg) protocol
 follows this port's HLS downloader selection rather than upstream's forced
 FFmpeg. `tests/fixtures/sites/twitter/` is compared with pinned upstream
 output.
+
+Veo matches (`app.veo.co/matches/ID`) follow upstream `VeoIE`: the match
+API's title, thumbnail, `created` timestamp, view count and duration, and the
+`videos` list as formats (`RENDER-HEIGHTp` IDs, MIME-type extensions, widths,
+heights and `bit_rate / 1000` integer VBRs); entries without a URL and
+`video/mp2t` files are skipped, and `panorama` videos are requested first
+(`Checking ... URL`) and skipped with upstream's message when invalid. No
+usable videos is upstream's `No video formats found!`. API values that are not
+objects or lists remain explicit native errors.
 
 Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel and
 `user` clip URLs) follow upstream `VimeoIE` as it runs without login or

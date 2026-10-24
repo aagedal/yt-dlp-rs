@@ -1,0 +1,107 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://soundgasm.net/u/ytdl/Piano-sample",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"88abd86ea000cafe98f96321b23cc1206cbcbcc9\", \"display_id\": \"Piano-sample\", \"url\": \"https://media.soundgasm.net/sounds/88abd86ea000cafe98f96321b23cc1206cbcbcc9.m4a\", \"vcodec\": \"none\", \"title\": \"Piano sample\", \"description\": \"Royalty Free Sample Music\", \"uploader\": \"ytdl\", \"webpage_url\": \"http://soundgasm.net/u/ytdl/Piano-sample\", \"original_url\": \"http://soundgasm.net/u/ytdl/Piano-sample\", \"webpage_url_basename\": \"Piano-sample\", \"webpage_url_domain\": \"soundgasm.net\", \"extractor\": \"soundgasm\", \"extractor_key\": \"Soundgasm\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Piano sample\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Piano sample [88abd86ea000cafe98f96321b23cc1206cbcbcc9].m4a\", \"filename\": \"Piano sample [88abd86ea000cafe98f96321b23cc1206cbcbcc9].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://soundgasm.net/u/ytdl/Old-layout",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"Old-layout\", \"display_id\": \"Old-layout\", \"url\": \"https://media.soundgasm.net/stream?file=abc\", \"vcodec\": \"none\", \"title\": \"Old-layout\", \"description\": \"An older layout with two lines\", \"uploader\": \"ytdl\", \"webpage_url\": \"https://soundgasm.net/u/ytdl/Old-layout\", \"original_url\": \"https://soundgasm.net/u/ytdl/Old-layout\", \"webpage_url_basename\": \"Old-layout\", \"webpage_url_domain\": \"soundgasm.net\", \"extractor\": \"soundgasm\", \"extractor_key\": \"Soundgasm\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Old-layout\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"unknown_video\", \"audio_ext\": \"unknown_video\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Old-layout [Old-layout].unknown_video\", \"filename\": \"Old-layout [Old-layout].unknown_video\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://soundgasm.net/u/ytdl/Bare-track",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"deadbeef\", \"display_id\": \"Bare-track\", \"url\": \"https://media.soundgasm.net/sounds/deadbeef.m4a\", \"vcodec\": \"none\", \"title\": \"Bare &amp; raw\", \"description\": null, \"uploader\": \"ytdl\", \"webpage_url\": \"https://soundgasm.net/u/ytdl/Bare-track\", \"original_url\": \"https://soundgasm.net/u/ytdl/Bare-track\", \"webpage_url_basename\": \"Bare-track\", \"webpage_url_domain\": \"soundgasm.net\", \"extractor\": \"soundgasm\", \"extractor_key\": \"Soundgasm\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Bare &amp; raw\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Bare &amp; raw [deadbeef].m4a\", \"filename\": \"Bare &amp; raw [deadbeef].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [soundgasm] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://soundgasm.net/u/ytdl/Removed",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [soundgasm] Unable to extract audio URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://soundgasm.net/u/ytdl/Gone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [soundgasm] Gone: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://soundgasm.net/u/ytdl",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ytdl\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Soundgasm\", \"_type\": \"url\", \"url\": \"https://soundgasm.net/u/ytdl/Piano-sample\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Soundgasm\", \"_type\": \"url\", \"url\": \"https://soundgasm.net/u/ytdl/Bare-track\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://soundgasm.net/u/ytdl\", \"original_url\": \"https://soundgasm.net/u/ytdl\", \"webpage_url_basename\": \"ytdl\", \"webpage_url_domain\": \"soundgasm.net\", \"extractor\": \"soundgasm:profile\", \"extractor_key\": \"SoundgasmProfile\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://soundgasm.net/u/ytdl",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"88abd86ea000cafe98f96321b23cc1206cbcbcc9\", \"display_id\": \"Piano-sample\", \"url\": \"https://media.soundgasm.net/sounds/88abd86ea000cafe98f96321b23cc1206cbcbcc9.m4a\", \"vcodec\": \"none\", \"title\": \"Piano sample\", \"description\": \"Royalty Free Sample Music\", \"uploader\": \"ytdl\", \"webpage_url\": \"https://soundgasm.net/u/ytdl/Piano-sample\", \"original_url\": \"https://soundgasm.net/u/ytdl/Piano-sample\", \"webpage_url_basename\": \"Piano-sample\", \"webpage_url_domain\": \"soundgasm.net\", \"extractor\": \"soundgasm\", \"extractor_key\": \"Soundgasm\", \"playlist_count\": 2, \"playlist\": \"ytdl\", \"playlist_id\": \"ytdl\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://soundgasm.net/u/ytdl\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"fulltitle\": \"Piano sample\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Piano sample [88abd86ea000cafe98f96321b23cc1206cbcbcc9].m4a\", \"filename\": \"Piano sample [88abd86ea000cafe98f96321b23cc1206cbcbcc9].m4a\", \"_type\": \"video\"}",
+    "{\"id\": \"deadbeef\", \"display_id\": \"Bare-track\", \"url\": \"https://media.soundgasm.net/sounds/deadbeef.m4a\", \"vcodec\": \"none\", \"title\": \"Bare &amp; raw\", \"description\": null, \"uploader\": \"ytdl\", \"webpage_url\": \"https://soundgasm.net/u/ytdl/Bare-track\", \"original_url\": \"https://soundgasm.net/u/ytdl/Bare-track\", \"webpage_url_basename\": \"Bare-track\", \"webpage_url_domain\": \"soundgasm.net\", \"extractor\": \"soundgasm\", \"extractor_key\": \"Soundgasm\", \"playlist_count\": 2, \"playlist\": \"ytdl\", \"playlist_id\": \"ytdl\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://soundgasm.net/u/ytdl\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"fulltitle\": \"Bare &amp; raw\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"protocol\": \"https\", \"ext\": \"m4a\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - audio only\", \"_filename\": \"Bare &amp; raw [deadbeef].m4a\", \"filename\": \"Bare &amp; raw [deadbeef].m4a\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [soundgasm] unable to extract description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://soundgasm.net/u/nobody/",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"nobody\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://soundgasm.net/u/nobody/\", \"original_url\": \"https://soundgasm.net/u/nobody/\", \"webpage_url_basename\": \"nobody\", \"webpage_url_domain\": \"soundgasm.net\", \"extractor\": \"soundgasm:profile\", \"extractor_key\": \"SoundgasmProfile\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}
