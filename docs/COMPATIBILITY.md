@@ -1604,6 +1604,16 @@ upload date and poster URL. Generic-page iframe embeds are not detected
 natively. `tests/fixtures/sites/cloudycdn/` is compared with pinned upstream
 output.
 
+Cloudflare Stream videos (`[watch.|iframe.|customer-X.]cloudflarestream.com|videodelivery.net|bytehighway.net/ID`
+and `embed/*.js?video=ID` scripts) follow upstream `CloudflareStreamIE`: a
+signed token's ID is its base64 payload's `sub`, and the
+`https://DOMAIN/ID/manifest/video.m3u8` (`m3u8_id='hls'`) and `video.mpd`
+(`mpd_id='dash'`) manifests are both non-fatal, with the ID as title and
+`thumbnails/thumbnail.jpg`. Generic-page script/iframe embeds are not
+detected natively, and undecodable tokens remain explicit native errors.
+`tests/fixtures/sites/cloudflarestream/` is compared with pinned upstream
+output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

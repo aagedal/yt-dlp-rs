@@ -1,0 +1,6 @@
+[
+ {"url": "https://embed.cloudflarestream.com/embed/we4g.fla9.latest.js?video=31c9291ab41fac05471db4e73aa11717", "args": ["-j"]},
+ {"url": "https://watch.cloudflarestream.com/31c9291ab41fac05471db4e73aa11717", "args": ["-F"]},
+ {"url": "https://iframe.bytehighway.net/81d80727f3022488598f68d323c1ad5e", "args": ["--print", "%(id)s|%(title)s|%(thumbnail)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"]},
+ {"url": "https://watch.cloudflarestream.com/eyJhbGciOiJSUzI1NiJ9.eyJraWQiOiAiayIsICJzdWIiOiAiMGU4ZTA0MGFlYzc3Njg2MmUxZDYzMmE2OTllZGY1OWUifQ.c2ln", "args": ["-j"]}
+]

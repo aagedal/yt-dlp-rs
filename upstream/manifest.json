@@ -449,6 +449,18 @@
       "scope": "CJSWIE episode page (fatal title/audio regexes, UUID ID, description, series, episode ID, audio format and download) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "cloudflarestream",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/cloudflarestream.py"
+      ],
+      "rust": [
+        "src/extractor/cloudflarestream.rs",
+        "tests/fixtures/sites/cloudflarestream/"
+      ],
+      "scope": "CloudflareStreamIE watch/iframe/customer/embed-script URLs and signed tokens (base64 payload sub), the non-fatal manifest/video.m3u8 (hls) and video.mpd (dash) formats with subtitles, ID title and thumbnail compared with pinned upstream output through the fixture proxy; generic-page script/iframe embeds are not detected and undecodable tokens remain explicit native errors"
+    },
+    {
       "name": "cloudycdn",
       "status": "partial",
       "upstream": [
