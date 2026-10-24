@@ -960,6 +960,13 @@ page's `<video class="KIND"><source src>` pairs as a playlist of untyped
 `ID-KIND` entries with the fatal `itemprop="name"` title and the optional
 `Date:` cell as `upload_date` (warning when absent).
 
+Toypics videos (`videos.toypics.net/view/ID`) follow upstream `ToypicsIE`
+(marked broken, so the broken-site warning comes first): the first
+`_parse_html5_media_entries` entry's formats (none is upstream's `list index
+out of range`), the fatal `view-video-title` heading (else the `- Toypics`
+title), the optional `More videos from` uploader and an age limit of 18.
+`ToypicsUserIE` profile playlists are not supported.
+
 Université de Strasbourg UTV videos (`utv.unistra.fr/{index,video}.php?id_video=ID`)
 follow upstream `UnistraIE`: the player's `file` paths as `SD`/`HD` formats
 (`-HD.mp4` is HD) on `vod-flash.u-strasbg.fr:8080`, with the fatal `UTV - `

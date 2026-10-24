@@ -3322,6 +3322,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("tiktok:live", yt_dlp_rs::extractor::tiktok_live_suitable),
             ("tiktok:user", yt_dlp_rs::extractor::tiktok_user_suitable),
+            (
+                "Toypics (CURRENTLY BROKEN)",
+                yt_dlp_rs::extractor::toypics_suitable,
+            ),
             ("Tumblr", yt_dlp_rs::extractor::tumblr_suitable),
             ("tv.dfb.de", yt_dlp_rs::extractor::dfb_suitable),
             ("Tweakers", yt_dlp_rs::extractor::tweakers_suitable),

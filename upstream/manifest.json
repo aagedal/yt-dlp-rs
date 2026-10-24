@@ -1545,6 +1545,18 @@
       "scope": "TikTokIE webpage universal data with the native JS challenge solver, _parse_aweme_video_web formats/metadata, webpage/feed subtitles, slideshows as their audio track, status-code errors, __needs_testing format checks; TikTokVMIE short-link redirects; TikTokUserIE (user page, embed-page secUid fallback, creator item_list pages) and TikTokCollectionIE as lazy flat url playlists; DouyinIE web detail API through _parse_aweme_video_app (no signature/verification challenge); no app API, aweme/detail SRT-data captions, TikTokSoundIE/TikTokEffectIE/TikTokTagIE (app API, _WORKING=False); TikTokLiveIE webcast room info with FLV/HLS pull formats and the live detail fallback; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "toypics",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/toypics.py"
+      ],
+      "rust": [
+        "src/extractor/toypics.rs",
+        "tests/fixtures/sites/toypics/"
+      ],
+      "scope": "ToypicsIE (marked broken) first _parse_html5_media_entries entry's formats, fatal heading/title, optional uploader and age limit, compared with pinned upstream output through the fixture proxy; ToypicsUserIE profile playlists are not ported"
+    },
+    {
       "name": "tumblr",
       "status": "partial",
       "upstream": [

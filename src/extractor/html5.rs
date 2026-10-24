@@ -473,7 +473,6 @@ pub(crate) struct MediaEntry {
 /// sources are non-fatal manifest downloads), tracks and poster, each format
 /// with the base URL as its `Referer`. Sources whose URLs are not HTTP(S)
 /// remain explicit errors.
-#[allow(dead_code)] // Used by site extractors.
 pub(crate) fn parse_html5_media_entries(
     client: &Client,
     base_url: &Url,
