@@ -1,0 +1,40 @@
+{
+ "routes": [
+  {
+   "url": "https://app.telegraaf.nl/graphql?query=%7B%0A++article%28uid%3A+734366489%29+%7B%0A++++videos+%7B%0A++++++videoId%0A++++%7D%0A++%7D%0A%7D",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"data\": {\"article\": {\"videos\": [{\"videoId\": \"gaMItuoSeUg2\"}]}}}"
+  },
+  {
+   "url": "https://content.tmgvideo.nl/playlist/item=gaMItuoSeUg2/playlist.json",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "item.json"
+  },
+  {
+   "url": "https://content.tmgvideo.nl/hls/gaMItuoSeUg2/master.m3u8",
+   "headers": {"Content-Type": "application/vnd.apple.mpegurl"},
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://content.tmgvideo.nl/dash/gaMItuoSeUg2/manifest.mpd",
+   "headers": {"Content-Type": "application/dash+xml"},
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://app.telegraaf.nl/graphql?query=%7B%0A++article%28uid%3A+111%29+%7B%0A++++videos+%7B%0A++++++videoId%0A++++%7D%0A++%7D%0A%7D",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"data\": {\"article\": {\"videos\": [{\"videoId\": \"second\"}]}}}"
+  },
+  {
+   "url": "https://content.tmgvideo.nl/playlist/item=second/playlist.json",
+   "headers": {"Content-Type": "application/json"},
+   "body_file": "item2.json"
+  },
+  {
+   "url": "https://app.telegraaf.nl/graphql?query=%7B%0A++article%28uid%3A+222%29+%7B%0A++++videos+%7B%0A++++++videoId%0A++++%7D%0A++%7D%0A%7D",
+   "status": 404,
+   "headers": {"Content-Type": "text/html"},
+   "body": "gone"
+  }
+ ]
+}

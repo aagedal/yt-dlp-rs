@@ -869,6 +869,58 @@ CAM4 channels (`cam4.com/USER`) follow upstream `CAM4IE`: the
 18 and the `snapshots.xcdnpro.com` thumbnail. Stream info without an
 absolute `cdnURL` remains an explicit native error.
 
+Telegraaf videos (`telegraaf.nl/video/ID`) follow upstream `TelegraafIE`: the
+`app.telegraaf.nl/graphql` article query (with the app User-Agent) gives the
+first video ID, whose `content.tmgvideo.nl` playlist item supplies non-fatal
+`hls`/`dash` adaptive formats (others warn `Unknown adaptive format`),
+progressive `http[-LABEL]` files, and the title, description, duration, poster
+and space-delimited ISO 8601 timestamp. Responses without the expected video
+ID or item are explicit native errors.
+
+TV Noe programmes (`tvnoe.cz/porad/ID`) follow upstream `TVNoeIE`: the page's
+`var INIT_PLAYER` object (through `js_to_json`, else the fatal `Unable to
+extract init player`) gives, from each `tracks` group's entries with a URL
+`src`, non-fatal `hls` (master playlist only) and `dash` formats by MIME type
+(other types warn `Unsupported stream type`), with the cleaned `<p class="">`
+description, `<h2>` title, first `Premiéra:` date, `<h1>` series and the
+`player-live` poster joined to `www.tvnoe.cz`.
+
+3Speak videos (`3speak.tv/watch?v=USER/ID`) follow upstream `ThreeSpeakIE`:
+the page's `JSON.parse('...')` post, decoded twice, and its `json_metadata`
+give non-fatal `https` (`ogvideo` meta, else an `unable to extract og m3u8`
+warning) and `ipfs` HLS master playlists with subtitles, the original
+`https-mp4` file (duration, filesize, quality 11), and the title (else
+`root_title`), author, description, tags, first image and `unified_strdate`
+date. User pages (`3speak.tv/user/USER`) follow `ThreeSpeakUserIE`: each
+`data-payout` video as a `ThreeSpeak` URL entry.
+
+uStudio videos (`ustudio.com/video/ID/DISPLAY_ID`) follow upstream
+`UstudioIE`: the `v1.ustudio.com` `config.xml` `qualities/quality/video` and
+`image` entries with a `url` (unescaped again, with integer width/height) as
+formats and thumbnails, then the page's OpenGraph title and description,
+`Uploaded by ... on` date and uploader, each warning when absent. Embeds
+(`app|embed.ustudio.com/embed/UID/ID`) follow `UstudioEmbedIE`: the first
+`config.json` video's `name` (else a `KeyError`), `transcodes` as
+`EXT[-HEIGHTp]` formats, image thumbnails, description, duration, keywords and
+the URL's uploader ID.
+
+VideoPress embeds (`videopress.com|video.wordpress.com/embed/ID`) follow
+upstream `VideoPressIE`: the `public-api.wordpress.com/rest/v1.1/videos/ID`
+JSON, requested with a random 1950-1995 `birth_year`/`birth_month`/`birth_day`
+and the upstream `fields` list, gives each `files` entry's `mp4`/`ogg` path
+joined to `file_url_base` (https, else http) as `QUALITY-EXT` formats ranked
+std < dvd < hd, the `original` upload (quality 3, width/height), and the title
+(else a `KeyError`), description, poster, millisecond duration, upload
+timestamp and `parse_age_limit` rating.
+
+SAPO videos (`videos.sapo.pt|cv|ao|mz|tl/ID`) follow upstream `SapoIE`: the
+`rd3.videos.sapo.pt/ID/rss2` item's title, `sapo:synopse`, `media:content`
+URL, `parse_duration` time, author, `unified_strdate` date, integer view and
+comment counts, whitespace-split tags as categories and `m18` age limit, with
+the `videoFile` as the `sd` MP4 (`videoSize` width/height) and, when `HD` is
+`true`, its `/mov/39` variant as the 1280x720 `hd` MP4. Items missing an
+element upstream reads are explicit native errors.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,

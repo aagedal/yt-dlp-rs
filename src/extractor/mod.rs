@@ -151,6 +151,7 @@ mod rss;
 mod rtrfm;
 mod rumble;
 mod rutube;
+mod sapo;
 mod screen9;
 mod screenrec;
 mod sen;
@@ -165,6 +166,7 @@ mod streamable;
 mod streetvoice;
 mod sztvhu;
 mod ted;
+mod telegraaf;
 mod telegram;
 mod teletask;
 mod theguardian;
@@ -173,12 +175,14 @@ mod theintercept;
 mod thestar;
 mod thesun;
 mod thisamericanlife;
+mod threespeak;
 mod tiktok;
 mod toypics;
 mod trtcocuk;
 mod trtworld;
 mod tumblr;
 mod tvanouvelles;
+mod tvnoe;
 mod tweakers;
 mod twentythreevideo;
 mod twitch;
@@ -186,7 +190,9 @@ mod twitter;
 mod umg;
 mod unistra;
 mod unitednations;
+mod ustudio;
 mod veo;
+mod videopress;
 mod vimeo;
 mod vk;
 mod vkplay;
@@ -379,6 +385,7 @@ pub use rumble::{
 pub use rutube::{
     Rutube, RutubeEmbed, embed_suitable as rutube_embed_suitable, suitable as rutube_suitable,
 };
+pub use sapo::{Sapo, suitable as sapo_suitable};
 pub use screen9::{Screen9, suitable as screen9_suitable};
 pub use screenrec::{ScreenRec, suitable as screenrec_suitable};
 pub use sen::{Sen, suitable as sen_suitable};
@@ -399,6 +406,7 @@ pub use ted::{
     playlist_suitable as ted_playlist_suitable, series_suitable as ted_series_suitable,
     talk_suitable as ted_talk_suitable,
 };
+pub use telegraaf::{Telegraaf, suitable as telegraaf_suitable};
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
 pub use teletask::{TeleTask, suitable as teletask_suitable};
 pub use theguardian::{TheGuardianPodcast, suitable as theguardian_suitable};
@@ -407,6 +415,8 @@ pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thestar::{TheStar, suitable as thestar_suitable};
 pub use thesun::{TheSun, suitable as thesun_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
+pub use threespeak::{ThreeSpeak, suitable as threespeak_suitable};
+pub use threespeak::{ThreeSpeakUser, user_suitable as threespeak_user_suitable};
 pub use tiktok::{
     Douyin, TikTok, TikTokCollection, TikTokLive, TikTokUser, TikTokVm,
     collection_suitable as tiktok_collection_suitable, douyin_suitable,
@@ -424,6 +434,7 @@ pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
     suitable as tvanouvelles_suitable,
 };
+pub use tvnoe::{TvNoe, suitable as tvnoe_suitable};
 pub use tweakers::{Tweakers, suitable as tweakers_suitable};
 pub use twentythreevideo::{TwentyThreeVideo, suitable as twentythreevideo_suitable};
 pub(crate) use twitch::{
@@ -446,7 +457,10 @@ pub use twitter::{
 pub use umg::{UmgDe, suitable as umg_suitable};
 pub use unistra::{Unistra, suitable as unistra_suitable};
 pub use unitednations::{UnitedNationsWebTv, suitable as unitednations_suitable};
+pub use ustudio::{Ustudio, suitable as ustudio_suitable};
+pub use ustudio::{UstudioEmbed, embed_suitable as ustudio_embed_suitable};
 pub use veo::{Veo, suitable as veo_suitable};
+pub use videopress::{VideoPress, suitable as videopress_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,

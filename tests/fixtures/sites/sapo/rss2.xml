@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:sapo="http://videos.sapo.pt/mrss/">
+  <channel>
+    <item>
+      <title>Hipnose Condicionativa</title>
+      <pubDate>Tue, 10 Jun 2014 08:00:00 +0100</pubDate>
+      <media:content type="image/jpeg"/>
+      <sapo:synopse></sapo:synopse>
+      <sapo:time>unknown</sapo:time>
+      <sapo:author>sapozen</sapo:author>
+      <sapo:views>0</sapo:views>
+      <sapo:comment_count>0</sapo:comment_count>
+      <sapo:tags></sapo:tags>
+      <sapo:m18>true</sapo:m18>
+      <sapo:videoFile>http://rd3.videos.sapo.pt/yLqjzPtbTimsn2wWBKHz/mov/2</sapo:videoFile>
+      <sapo:videoSize>1280x720</sapo:videoSize>
+      <sapo:HD>false</sapo:HD>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,85 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.tvnoe.cz/porad/43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas\", \"description\": \"Jak pom\\u00e1hat pot\\u0159ebn\\u00fdm & pro\\u010d?\\nRozhovor s MUDr. Tom\\u00e1\\u0161em Kempn\\u00fdm.\", \"formats\": [{\"format_id\": \"dash-1\", \"manifest_url\": \"https://cdn.tvnoe.cz/vod/43216/manifest.mpd\", \"ext\": \"m4a\", \"width\": null, \"height\": null, \"tbr\": 69.248, \"asr\": 44100, \"fps\": null, \"language\": null, \"format_note\": \"DASH audio\", \"filesize\": null, \"container\": \"m4a_dash\", \"vcodec\": \"none\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": null, \"url\": \"https://cdn.tvnoe.cz/vod/43216/manifest.mpd\", \"fragment_base_url\": \"https://cdn.tvnoe.cz/vod/43216/\", \"fragments\": [{\"path\": \"init-stream1.m4s\"}, {\"path\": \"chunk-stream1-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream1-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 1, \"is_dash_periods\": true, \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 69.248, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-1 - audio only (DASH audio)\"}, {\"format_id\": \"dash-0\", \"manifest_url\": \"https://cdn.tvnoe.cz/vod/43216/manifest.mpd\", \"ext\": \"mp4\", \"width\": 320, \"height\": 240, \"tbr\": 56.115, \"asr\": null, \"fps\": null, \"language\": null, \"format_note\": \"DASH video\", \"filesize\": null, \"container\": \"mp4_dash\", \"vcodec\": \"avc1.f4000d\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"url\": \"https://cdn.tvnoe.cz/vod/43216/manifest.mpd\", \"fragment_base_url\": \"https://cdn.tvnoe.cz/vod/43216/\", \"fragments\": [{\"path\": \"init-stream0.m4s\"}, {\"path\": \"chunk-stream0-00001.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00002.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00003.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00004.m4s\", \"duration\": 2.0}, {\"path\": \"chunk-stream0-00005.m4s\", \"duration\": 2.0}], \"protocol\": \"http_dash_segments\", \"manifest_stream_number\": 0, \"is_dash_periods\": true, \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 56.115, \"resolution\": \"320x240\", \"aspect_ratio\": 1.33, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"dash-0 - 320x240 (DASH video)\"}, {\"format_id\": \"hls-800\", \"format_index\": null, \"url\": \"https://cdn.tvnoe.cz/vod/43216/low.m3u8\", \"manifest_url\": \"https://cdn.tvnoe.cz/vod/43216/playlist.m3u8\", \"tbr\": 800.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.42c01e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-800 - 640x360\"}, {\"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://cdn.tvnoe.cz/vod/43216/high.m3u8\", \"manifest_url\": \"https://cdn.tvnoe.cz/vod/43216/playlist.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\"}], \"title\": \"Pom\\u00e1hat pot\\u0159ebn\\u00fdm nejen u n\\u00e1s\", \"release_date\": \"20250531\", \"series\": \"Outdoor Films s\\u00a0MUDr. Tom\\u00e1\\u0161em Kempn\\u00fdm\", \"thumbnail\": \"https://www.tvnoe.cz/data/images/porad/43216.jpg\", \"webpage_url\": \"https://www.tvnoe.cz/porad/43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas\", \"original_url\": \"https://www.tvnoe.cz/porad/43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas\", \"webpage_url_basename\": \"43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas\", \"webpage_url_domain\": \"tvnoe.cz\", \"extractor\": \"tvnoe\", \"extractor_key\": \"TVNoe\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://www.tvnoe.cz/data/images/porad/43216.jpg\", \"id\": \"0\"}], \"display_id\": \"43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas\", \"fulltitle\": \"Pom\\u00e1hat pot\\u0159ebn\\u00fdm nejen u n\\u00e1s\", \"release_year\": 2025, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"hls-2400\", \"format_index\": null, \"url\": \"https://cdn.tvnoe.cz/vod/43216/high.m3u8\", \"manifest_url\": \"https://cdn.tvnoe.cz/vod/43216/playlist.m3u8\", \"tbr\": 2400.0, \"ext\": \"mp4\", \"fps\": null, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-2400 - 1280x720\", \"_filename\": \"Pom\\u00e1hat pot\\u0159ebn\\u00fdm nejen u n\\u00e1s [43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas].mp4\", \"filename\": \"Pom\\u00e1hat pot\\u0159ebn\\u00fdm nejen u n\\u00e1s [43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [tvnoe] Ignoring subtitle tracks found in the DASH manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [tvnoe] Unsupported stream type: webm",
+    "WARNING: [tvnoe] Unsupported stream type: None"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tvnoe.cz/porad/43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[tvnoe] Extracting URL: https://www.tvnoe.cz/porad/43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas",
+    "[tvnoe] 43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas: Downloading webpage",
+    "[tvnoe] 43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas: Downloading m3u8 information",
+    "[tvnoe] 43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas: Downloading MPD manifest",
+    "[info] Available formats for 43216-outdoor-films-s-mudr-tomasem-kempnym-pomahat-potrebnym-nejen-u-nas:",
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC      VBR ACODEC     ABR ASR MORE INFO",
+    "-----------------------------------------------------------------------------------------------",
+    "dash-1   m4a audio only |   69k dash  | audio only      mp4a.40.2  69k 44k DASH audio, m4a_dash",
+    "dash-0   mp4 320x240    |   56k dash  | avc1.f4000d 56k video only         DASH video, mp4_dash",
+    "hls-800  mp4 640x360    |  800k m3u8  | avc1.42c01e     mp4a.40.2",
+    "hls-2400 mp4 1280x720   | 2400k m3u8  | avc1.4d401f     mp4a.40.2"
+   ],
+   "stderr": [
+    "WARNING: [tvnoe] Ignoring subtitle tracks found in the DASH manifest; if any subtitle tracks are missing, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [tvnoe] Unsupported stream type: webm",
+    "WARNING: [tvnoe] Unsupported stream type: None"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tvnoe.cz/porad/43205-zamysleni",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [tvnoe] 43205-zamysleni: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [tvnoe] 43205-zamysleni: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tvnoe.cz/porad/noplayer",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [tvnoe] noplayer: Unable to extract init player; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.tvnoe.cz/porad/gone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [tvnoe] gone: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

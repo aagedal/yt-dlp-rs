@@ -1846,6 +1846,18 @@
       "scope": "RutubeIE and RutubeEmbedIE video API metadata and description chapters, play options balancer/live HLS and progressive formats and captions; no F4M formats or playlist extractors; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "sapo",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/sapo.py"
+      ],
+      "rust": [
+        "src/extractor/sapo.rs",
+        "tests/fixtures/sites/sapo/"
+      ],
+      "scope": "SapoIE rd3.videos.sapo.pt RSS item (MRSS synopsis, thumbnail, duration, author, date, counts, tags, m18) with SD and HD MP4 formats compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "screen9",
       "status": "partial",
       "upstream": [
@@ -2012,6 +2024,18 @@
       "scope": "TedTalkIE Next.js video data formats, external url results and metadata; TedPlaylistIE, TedSeriesIE and TedEmbedIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "telegraaf",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/telegraaf.py"
+      ],
+      "rust": [
+        "src/extractor/telegraaf.rs",
+        "tests/fixtures/sites/telegraaf/"
+      ],
+      "scope": "TelegraafIE graphql article video ID, tmgvideo playlist item (master-only HLS, DASH, progressive formats, unknown adaptive warning), metadata and HTTP errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "telegram",
       "status": "partial",
       "upstream": [
@@ -2157,6 +2181,18 @@
       "scope": "ThisAmericanLifeIE page meta fields and 64k HLS stream as an untyped m3u8_native result compared with pinned upstream output through the fixture proxy (listing and JSON)"
     },
     {
+      "name": "threespeak",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/threespeak.py"
+      ],
+      "rust": [
+        "src/extractor/threespeak.rs",
+        "tests/fixtures/sites/threespeak/"
+      ],
+      "scope": "ThreeSpeakIE doubly encoded JSON.parse post (ogvideo and IPFS HLS master playlists, original MP4 file, metadata) and ThreeSpeakUserIE data-payout playlist compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "tiktok",
       "status": "partial",
       "upstream": [
@@ -2228,6 +2264,18 @@
         "tests/fixtures/sites/tvanouvelles/"
       ],
       "scope": "TVANouvellesIE videos as url results of the TVA Nouvelles BrightcoveNew player, and TVANouvellesArticleIE data-video-id videos as a playlist of TVANouvelles url results with the OpenGraph title and description (with upstream's warnings when missing), compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "tvnoe",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tvnoe.py"
+      ],
+      "rust": [
+        "src/extractor/tvnoe.rs",
+        "tests/fixtures/sites/tvnoe/"
+      ],
+      "scope": "TVNoeIE INIT_PLAYER js_to_json tracks (upstream's nested track-group filter) as master-only HLS and DASH formats with unsupported-type warnings, description, h2 title, premiere release date, h1 series and player poster compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "tweakers",
@@ -2316,6 +2364,18 @@
       "scope": "UnitedNationsWebTvIE page partnerId and kentryID as a kaltura: url result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "ustudio",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ustudio.py"
+      ],
+      "rust": [
+        "src/extractor/ustudio.rs",
+        "tests/fixtures/sites/ustudio/"
+      ],
+      "scope": "UstudioIE config XML video/image qualities with OpenGraph title/description, upload date and uploader warnings, and UstudioEmbedIE config JSON transcodes, images and metadata compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "veo",
       "status": "partial",
       "upstream": [
@@ -2326,6 +2386,18 @@
         "tests/fixtures/sites/veo/"
       ],
       "scope": "VeoIE match API metadata and video list formats (mp2t and URL-less entries skipped, panorama URLs checked) and the no-formats error compared with pinned upstream output through the fixture proxy; non-object API values remain explicit native errors"
+    },
+    {
+      "name": "videopress",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/videopress.py"
+      ],
+      "rust": [
+        "src/extractor/videopress.rs",
+        "tests/fixtures/sites/videopress/"
+      ],
+      "scope": "VideoPressIE public-api.wordpress.com video JSON (random birthday query ignored by the fixture route), MP4/Ogg files joined to file_url_base with qualities, original upload, duration, timestamp and parse_age_limit rating compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "vimeo",
