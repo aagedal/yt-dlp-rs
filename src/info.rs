@@ -9,6 +9,45 @@ pub(crate) const TITLE_MISSING: &str = "__yt_dlp_rs_title_missing";
 /// `raise_no_formats` after `_fill_common_fields`.
 pub(crate) const NO_FORMATS: &str = "__yt_dlp_rs_no_formats";
 
+/// A processed result without formats under `--ignore-no-formats-error`:
+/// upstream's info dict has `formats: []` and none of a format's fields
+/// (this port's top-level URL and extension are placeholders).
+pub(crate) const FORMATS_IGNORED: &str = "__yt_dlp_rs_formats_ignored";
+
+/// The top-level format fields a result without formats does not have.
+pub(crate) const FORMAT_FIELDS: [&str; 30] = [
+    "url",
+    "ext",
+    "protocol",
+    "direct",
+    "format_id",
+    "format",
+    "format_note",
+    "resolution",
+    "aspect_ratio",
+    "dynamic_range",
+    "vcodec",
+    "acodec",
+    "video_ext",
+    "audio_ext",
+    "vbr",
+    "abr",
+    "tbr",
+    "fps",
+    "asr",
+    "audio_channels",
+    "width",
+    "height",
+    "filesize",
+    "filesize_approx",
+    "http_headers",
+    "container",
+    "downloader_options",
+    "fragments",
+    "manifest_url",
+    "cookies",
+];
+
 /// `YoutubeDL._deprecated_multivalue_fields`.
 pub(crate) const MULTIVALUE_FIELDS: [(&str, &str); 5] = [
     ("album_artist", "album_artists"),
@@ -791,6 +830,12 @@ pub struct VideoInfo {
 }
 
 impl VideoInfo {
+    /// Whether this result was processed without formats
+    /// (`--ignore-no-formats-error`).
+    pub fn has_no_formats(&self) -> bool {
+        self.extra.contains_key(FORMATS_IGNORED)
+    }
+
     /// This result narrowed to one of its formats (upstream
     /// `new_info.update(fmt)` for a requested format's download).
     pub fn with_selected_format(&self, format: &VideoFormat) -> VideoInfo {

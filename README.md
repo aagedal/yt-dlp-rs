@@ -290,8 +290,11 @@ Supported today:
 - Account logins with `-u`/`-p`, `-2`, `--netrc`/`--netrc-location` and
   `--netrc-cmd` (a native netrc parser) for Niconico, Dailymotion, Twitch, VK,
   Tumblr and SoundCloud (OAuth tokens), with upstream's YouTube warnings and
-  unsupported-login warnings elsewhere; Vimeo logins and Adobe Pass are not
-  supported.
+  unsupported-login warnings elsewhere; Vimeo logins are not supported.
+- Geo restriction bypass: `--xff` (and `--geo-bypass*`) or an extractor's
+  upstream `_GEO_COUNTRIES` give a fake `X-Forwarded-For` address for its
+  requests, formats and downloads, with upstream's geo-restricted retry.
+  `--ignore-no-formats-error` keeps results without formats (metadata only).
 - Explicit `--proxy URL` for HTTP/HTTPS or SOCKS4/4a/5/5h routing across the
   native HTTP clients. `--proxy ''` forces direct connections. Pinned SOCKS5
   compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.

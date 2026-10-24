@@ -127,6 +127,20 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom"
+  },
+  {
+   "url": "https://www.reddit.com/r/pics/comments/img123/.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "noimg.json"
+  },
+  {
+   "url": "https://www.reddit.com/r/videos/comments/prc123/.json",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "processing.json"
   }
  ]
 }

@@ -486,6 +486,7 @@ pub(crate) fn download(
         &HttpResource {
             url: &info.url,
             referrer: (!info.is_direct()).then_some(&info.webpage_url),
+            forwarded_for: crate::geo::forwarded_for(info),
             validate_media: !info.is_direct(),
             subtitle: false,
             limits: (options.min_filesize, options.max_filesize),
@@ -571,6 +572,8 @@ pub(crate) fn download_subtitle(
         &HttpResource {
             url: &subtitle.url,
             referrer: Some(&info.webpage_url),
+            // `sub_copy.setdefault(\'http_headers\', info_dict.get(\'http_headers\'))`.
+            forwarded_for: crate::geo::forwarded_for(info),
             validate_media: false,
             subtitle: true,
             limits: (None, None),
@@ -679,6 +682,7 @@ fn join_subtitle_fragments(
             &HttpResource {
                 url: &fragment.url,
                 referrer: Some(&info.webpage_url),
+                forwarded_for: crate::geo::forwarded_for(info),
                 validate_media: false,
                 subtitle: true,
                 limits: (None, None),
@@ -765,6 +769,7 @@ pub(crate) fn download_thumbnail(
         &HttpResource {
             url,
             referrer: None,
+            forwarded_for: None,
             validate_media: false,
             subtitle: false,
             limits: (None, None),
@@ -783,6 +788,8 @@ pub(crate) fn download_thumbnail(
 struct HttpResource<'a> {
     url: &'a url::Url,
     referrer: Option<&'a url::Url>,
+    /// The format's fake `X-Forwarded-For` (`--xff`).
+    forwarded_for: Option<&'a str>,
     validate_media: bool,
     subtitle: bool,
     /// Minimum/maximum declared total length in bytes.
@@ -1025,6 +1032,9 @@ fn chunked_attempt(
         if let Some(referrer) = resource.referrer {
             request = request.header(REFERER, referrer.as_str());
         }
+        if let Some(ip) = resource.forwarded_for {
+            request = request.header("X-Forwarded-For", ip);
+        }
         crate::screen::load_cookies().map_err(AttemptFailure::from)?;
         let mut response = request
             .send()
@@ -1169,6 +1179,9 @@ fn download_attempt(
         }
         if let Some(referrer) = resource.referrer {
             request = request.header(REFERER, referrer.as_str());
+        }
+        if let Some(ip) = resource.forwarded_for {
+            request = request.header("X-Forwarded-For", ip);
         }
         request
     };

@@ -1649,6 +1649,11 @@ impl Extractor for Youtube {
     fn key(&self) -> &'static str {
         "Youtube"
     }
+
+    /// `_GEO_BYPASS = False`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&[])
+    }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         video_only(self.extract_result(client, url)?)
     }
@@ -1699,6 +1704,11 @@ impl Extraction {
 impl Extractor for ConfiguredYoutube {
     fn key(&self) -> &'static str {
         "Youtube"
+    }
+
+    /// `_GEO_BYPASS = False`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&[])
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         video_only(self.extract_result(client, url)?)

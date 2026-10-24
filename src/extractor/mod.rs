@@ -602,6 +602,11 @@ pub trait Extractor: Send + Sync {
     fn initialize(&self, client: &Client, ie: &'static str, id: &str) -> Result<()> {
         login::initialize(self, client, ie, id)
     }
+
+    /// Upstream `_GEO_BYPASS`, `_GEO_COUNTRIES` and `_GEO_IP_BLOCKS`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::NONE
+    }
 }
 
 /// `[EXTRACTOR] ID: Unable to download WHAT: ERR (caused by REPR)`.

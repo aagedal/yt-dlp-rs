@@ -76,16 +76,19 @@ impl Extractor for GoodGame {
             Some(Value::Object(object)) => !object.is_empty(),
             Some(Value::Bool(true)) => true,
         };
-        if !live {
-            // `raise_no_formats('User is offline', expected=True)`.
-            return Err(Error::Reported(format!(
-                "[{NAME}] {channel_name}: User is offline"
-            )));
-        }
-        let manifest = Url::parse(&format!(
-            "https://hls.goodgame.ru/manifest/{player_id}_master.m3u8"
-        ))?;
-        let mut info = extract_m3u8_fatal_live(client, &manifest, NAME, &channel_name, None, true)?;
+        let mut info = if live {
+            let manifest = Url::parse(&format!(
+                "https://hls.goodgame.ru/manifest/{player_id}_master.m3u8"
+            ))?;
+            extract_m3u8_fatal_live(client, &manifest, NAME, &channel_name, None, true)?
+        } else {
+            // `raise_no_formats('User is offline', expected=True)`, then
+            // the dict without formats.
+            crate::no_formats::raise_expected(NAME, Some(&channel_name), None, "User is offline")?;
+            let mut info = super::dict_info(url, (NAME, "GoodGame"), Vec::new(), Vec::new());
+            info.extra.shift_remove(crate::info::TITLE_MISSING);
+            info
+        };
         let is_live = !info.formats.is_empty();
         info.id = player_id;
         info.webpage_url = url.clone();

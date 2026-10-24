@@ -18,5 +18,7 @@
  {"url": "https://www.svtplay.se/tiny?tab=season-1-tiny", "args": ["-J", "--flat-playlist"]},
  {"url": "https://www.svt.se/nyheter/lokalt/skane/forsvarsmakten-om-trafikkaoset", "args": ["-J"]},
  {"url": "https://www.svt.se/nyheter/utan-video", "args": ["-J"]},
- {"url": "https://www.svt.se/sport/ingen-data", "args": ["-J"]}
+ {"url": "https://www.svt.se/sport/ingen-data", "args": ["-J"]},
+ {"url": "https://www.oppetarkiv.se/video/5219710/trollflojten?modalId=geoOnly", "args": ["--ignore-no-formats-error", "-j"]},
+ {"url": "https://www.svt.se/barnkanalen/barnplay/kar/geoOnly/", "args": ["--ignore-no-formats-error", "--print", "%(id)s|%(title)s|%(formats)s"]}
 ]

@@ -39,6 +39,7 @@ pub(crate) fn request_expecting(
     for (name, value) in headers {
         request = request.header(*name, *value);
     }
+    request = crate::geo::add_header(request, headers);
     crate::screen::load_cookies()?;
     let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
@@ -64,6 +65,7 @@ pub(crate) fn head_with_headers(
     for (name, value) in headers {
         request = request.header(*name, *value);
     }
+    request = crate::geo::add_header(request, headers);
     crate::screen::load_cookies()?;
     let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
@@ -96,6 +98,7 @@ pub(crate) fn post_expecting(
     for (name, value) in headers {
         request = request.header(*name, *value);
     }
+    request = crate::geo::add_header(request, headers);
     crate::screen::load_cookies()?;
     let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();
@@ -125,6 +128,7 @@ fn probe_with_headers(
     for (name, value) in headers {
         request = request.header(*name, *value);
     }
+    request = crate::geo::add_header(request, headers);
     crate::screen::load_cookies()?;
     let response = crate::impersonate::send(request);
     crate::screen::flush_traffic();

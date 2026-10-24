@@ -968,9 +968,10 @@ struct Args {
     /// List all supported multiple-system operators
     #[arg(long)]
     ap_list_mso: bool,
-    /// Geo-restriction options (unused by the supported extractors)
+    /// Proxy to verify the IP address for some geo-restricted sites (unused by the supported extractors)
     #[arg(long, value_name = "URL")]
     geo_verification_proxy: Option<String>,
+    /// How to fake the X-Forwarded-For header to try bypassing geographic restriction: "default", "never", an IP block in CIDR notation or a two-letter country code
     #[arg(long, value_name = "VALUE")]
     xff: Option<String>,
     #[arg(long, hide = true)]
@@ -1626,6 +1627,32 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
+    // `--xff` and its hidden aliases share upstream's `geo_bypass`
+    // destination: the last one given wins.
+    let xff = [
+        ("xff", None),
+        ("geo_bypass", Some("default")),
+        ("no_geo_bypass", Some("never")),
+        ("geo_bypass_country", None),
+        ("geo_bypass_ip_block", None),
+    ]
+    .into_iter()
+    .filter(|(id, _)| matches.value_source(id) == Some(clap::parser::ValueSource::CommandLine))
+    .filter_map(|(id, constant)| {
+        let index = matches.indices_of(id)?.max()?;
+        let value = match constant {
+            Some(constant) => constant.to_owned(),
+            None => matches.get_one::<String>(id)?.clone(),
+        };
+        Some((index, value))
+    })
+    .max_by_key(|(index, _)| *index)
+    .map_or_else(|| "default".to_owned(), |(_, value)| value);
+    yt_dlp_rs::geo::set_options(yt_dlp_rs::geo::GeoOptions::parse(&xff).map_err(usage)?);
+    yt_dlp_rs::no_formats::set(
+        args.ignore_no_formats_error,
+        args.wait_for_video.is_some() && !args.no_wait_for_video,
+    );
     // `--extractor-args`: GenericIE's, YouTube's, YoutubeTabIE's and TwitterIE's ported
     // arguments are used; other extractors' are not.
     let extractor_args =
@@ -4345,13 +4372,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 if requested.is_empty() {
                     return Ok(());
                 }
-                screen!(
-                    "[info] {}: Downloading {} format(s): {}",
-                    info.id,
-                    format_ids.len(),
-                    format_ids.join(", ")
-                );
-                if requested != [None] {
+                // `if best_format and requested_ranges`: not for the empty
+                // format of a result without formats.
+                if !info.has_no_formats() {
+                    screen!(
+                        "[info] {}: Downloading {} format(s): {}",
+                        info.id,
+                        format_ids.len(),
+                        format_ids.join(", ")
+                    );
+                }
+                if requested != [None] && !info.has_no_formats() {
                     screen!(
                         "[info] {}: Downloading {} time ranges: {}",
                         info.id,
@@ -4931,6 +4962,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                                 force_record(&info)?;
                                 return Ok(());
+                            }
+                            // `dl`: `raise_no_formats(info, forced=True)` for a
+                            // result without formats (`--ignore-no-formats-error`).
+                            if info.has_no_formats() {
+                                return Err(EntryExtractionError(format!(
+                                    "[{}] {}: No video formats found!",
+                                    info.extractor, info.id
+                                ))
+                                .into());
                             }
                             // Upstream `FileDownloader.download` reuses a single file
                             // found under its own name only with --no-overwrites

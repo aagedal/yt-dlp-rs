@@ -283,10 +283,12 @@ fn extract_video(
         .unwrap_or(&empty);
     if formats.is_empty() && rights.get("geoBlockedSweden").is_some_and(truthy) {
         // `raise_geo_restricted(msg, countries=['SE'], metadata_available=True)`.
-        return Err(Error::Reported(format!(
-            "{}This video is only available in Sweden\nThis video is available in Sweden.\nYou might want to use a VPN or a proxy server (with --proxy) to workaround.",
-            prefix(name, temp_id)
-        )));
+        crate::geo::restricted_metadata_available(
+            name,
+            &prefix(name, temp_id),
+            "This video is only available in Sweden",
+            &["SE"],
+        )?;
     }
 
     if let Some(Value::Array(references)) =
@@ -423,6 +425,11 @@ fn urql_svt_id(data: &Value) -> Result<Option<String>> {
 impl Extractor for SvtPlay {
     fn key(&self) -> &'static str {
         PLAY_KEY
+    }
+
+    /// `_GEO_BYPASS = False` and `_GEO_COUNTRIES = ['SE']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&["SE"])
     }
 
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
@@ -575,6 +582,11 @@ fn series_query(slug: &str) -> String {
 impl Extractor for SvtSeries {
     fn key(&self) -> &'static str {
         SERIES_KEY
+    }
+
+    /// `_GEO_BYPASS = False` and `_GEO_COUNTRIES = ['SE']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&["SE"])
     }
 
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
@@ -767,6 +779,11 @@ fn page_video_ids(data: &Value) -> Vec<String> {
 impl Extractor for SvtPage {
     fn key(&self) -> &'static str {
         PAGE_KEY
+    }
+
+    /// `_GEO_BYPASS = False` and `_GEO_COUNTRIES = ['SE']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&["SE"])
     }
 
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {

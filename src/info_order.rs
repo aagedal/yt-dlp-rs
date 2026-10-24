@@ -946,6 +946,9 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    // `--ignore-no-formats-error`: `info_dict['formats'] = []` after
+    // `_has_drm`, and no format is merged.
+    let no_formats = map.shift_remove(crate::info::FORMATS_IGNORED).is_some();
     let followed = map.shift_remove(FOLLOWED).is_some();
     let section_update = map
         .shift_remove(SECTION_UPDATE)
@@ -1901,10 +1904,19 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         ],
         _ => &[],
     };
-    if untyped {
-        // Upstream has no `formats`: the info dict is the only format.
-        replay.ours.shift_remove("formats");
-    }
+    // Upstream has no `formats`: the info dict is the only format (or,
+    // without formats, they are assigned after `_has_drm` unless the
+    // extractor's dict has them).
+    let own_formats = extractor.iter().any(|(key, _)| *key == "formats")
+        || ["dict;", "untyped-dict;"].iter().any(|prefix| {
+            shape
+                .strip_prefix(prefix)
+                .and_then(|spec| spec.split(';').next())
+                .is_some_and(|keys| keys.split(',').any(|key| key == "formats"))
+        });
+    let held_formats = (untyped || (no_formats && !own_formats))
+        .then(|| replay.ours.shift_remove("formats"))
+        .flatten();
     if untitled {
         let titled: Vec<(&str, Set)> = extractor
             .iter()
@@ -2297,7 +2309,14 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     replay.assign("requested_subtitles");
     replay.assign("_has_drm");
-    if untyped {
+    if no_formats {
+        match held_formats {
+            Some(formats) => {
+                replay.out.insert("formats".into(), formats);
+            }
+            None => replay.take("formats"),
+        }
+    } else if untyped {
         replay.format_steps();
     }
     // The first `prepare_outtmpl` sets `epoch` before format selection.
@@ -2351,6 +2370,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         replay
             .out
             .insert("requested_downloads".into(), Value::Array(downloads));
+    }
+    // `process_video_result`: `info_dict.pop('duration', None)` for a
+    // missing duration, before the format's keys are merged.
+    for map in [&mut replay.out, &mut replay.ours] {
+        if map.get("duration").is_some_and(Value::is_null) {
+            map.shift_remove("duration");
+        }
     }
     // `info_dict.update(format)` (or `_merge`'s dict, whose keys are all
     // assigned): the format's values, including its `None`s.

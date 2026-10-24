@@ -506,6 +506,40 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://twitter.com/i/broadcasts/1upcoming0000",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"display_id\": \"1upcoming0000\", \"live_status\": \"is_upcoming\", \"id\": \"1upcoming0000\", \"title\": \"Soon & live\", \"release_timestamp\": 1700000000, \"uploader\": \"Planner\", \"uploader_id\": \"planner\", \"uploader_url\": null, \"webpage_url\": \"https://twitter.com/i/broadcasts/1upcoming0000\", \"original_url\": \"https://twitter.com/i/broadcasts/1upcoming0000\", \"webpage_url_basename\": \"1upcoming0000\", \"webpage_url_domain\": \"twitter.com\", \"extractor\": \"twitter:broadcast\", \"extractor_key\": \"TwitterBroadcast\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Soon & live\", \"release_date\": \"20231114\", \"release_year\": 2023, \"is_live\": false, \"was_live\": false, \"requested_subtitles\": null, \"_has_drm\": null, \"formats\": [], \"_filename\": \"Soon & live [1upcoming0000].NA\", \"filename\": \"Soon & live [1upcoming0000].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [twitter:broadcast] This live broadcast has not yet started",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://twitter.com/i/spaces/1vAxRAVQWONJl",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1vAxRAVQWONJl\", \"description\": \"Twitter Space participated by nobody yet\", \"formats\": [], \"http_headers\": {\"Referer\": \"https://twitter.com/\"}, \"live_status\": \"was_live\", \"title\": \"No replay\", \"timestamp\": 1681409554, \"uploader\": \"Google Cloud\", \"uploader_id\": \"googlecloud\", \"webpage_url\": \"https://twitter.com/i/spaces/1vAxRAVQWONJl\", \"original_url\": \"https://twitter.com/i/spaces/1vAxRAVQWONJl\", \"webpage_url_basename\": \"1vAxRAVQWONJl\", \"webpage_url_domain\": \"twitter.com\", \"extractor\": \"twitter:spaces\", \"extractor_key\": \"TwitterSpaces\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"1vAxRAVQWONJl\", \"fulltitle\": \"No replay\", \"upload_date\": \"20230413\", \"release_year\": null, \"is_live\": false, \"was_live\": true, \"requested_subtitles\": null, \"_has_drm\": null, \"_filename\": \"No replay [1vAxRAVQWONJl].NA\", \"filename\": \"No replay [1vAxRAVQWONJl].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [twitter:spaces] Twitter Space ended and replay is disabled",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
   }
  ]
 }

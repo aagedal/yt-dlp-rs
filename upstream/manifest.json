@@ -3198,6 +3198,24 @@
       "scope": "Explicit shared HTTP/HTTPS/SOCKS4/4a/5/5h routing, empty direct override, pinned aliases/default ports and SOCKS5 remote DNS/auth gating; HTTP proxy Basic credentials, verified CONNECT/HTTPS-proxy transport and bounded-player routing; reject unsupported SOCKS4 user IDs and legacy per-request headers; existing reqwest environment/system routing retained without full upstream discovery/bypass/PAC, geo-verification or per-extractor proxy parity"
     },
     {
+      "name": "geo-bypass-and-no-formats",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/common.py",
+        "yt_dlp/utils/_utils.py",
+        "yt_dlp/YoutubeDL.py",
+        "yt_dlp/options.py",
+        "yt_dlp/__init__.py"
+      ],
+      "rust": [
+        "src/geo.rs",
+        "src/no_formats.rs",
+        "src/extractor/direct.rs",
+        "tests/geo_bypass.rs"
+      ],
+      "scope": "_initialize_geo_bypass/__maybe_fake_ip_and_retry with GeoUtils' country block table and random_ipv4, --xff/--geo-bypass/--no-geo-bypass/--geo-bypass-country/--geo-bypass-ip-block (shared destination, Unsupported --xff), the X-Forwarded-For header on extraction requests, formats' http_headers and native downloads, ported extractors' _GEO_COUNTRIES/_GEO_BYPASS, GeoRestrictedError country names, raise_geo_restricted(metadata_available=True), and --ignore-no-formats-error (raise_no_formats warnings, formats: [] results, the forced dl error); smuggled geo_countries and --geo-verification-proxy are out of scope"
+    },
+    {
       "name": "audio-extraction",
       "status": "partial",
       "upstream": [

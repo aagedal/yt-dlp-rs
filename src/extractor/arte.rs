@@ -107,6 +107,20 @@ fn unsupported(text: &str) -> Error {
 }
 
 /// An `ExtractorError(..., expected=True)`.
+/// `ArteTVIE._COUNTRIES_MAP`, "all obtained by exhaustive testing".
+const DE_FR: [&str; 13] = [
+    "BL", "DE", "FR", "GF", "GP", "MF", "MQ", "NC", "PF", "PM", "RE", "WF", "YT",
+];
+const EUR_DE_FR: [&str; 17] = [
+    "AT", "BL", "CH", "DE", "FR", "GF", "GP", "LI", "MC", "MF", "MQ", "NC", "PF", "PM", "RE", "WF",
+    "YT",
+];
+const SAT: [&str; 47] = [
+    "AD", "AT", "AX", "BG", "BL", "CH", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GB", "GF",
+    "GR", "HR", "HU", "IE", "IS", "IT", "KN", "LI", "LT", "LU", "LV", "MC", "MF", "MQ", "MT", "NC",
+    "NL", "NO", "PF", "PL", "PM", "PT", "RE", "RO", "SE", "SI", "SK", "SM", "VA", "WF", "YT",
+];
+
 fn expected(extractor: &str, id: &str, message: &str) -> Error {
     Error::Reported(format!("[{extractor}] {id}: {message}"))
 }
@@ -362,12 +376,20 @@ impl Extractor for ArteTv {
                     .ok_or_else(|| key_error(&video_id, "code"))?
                     .as_str()
                     .ok_or_else(|| unsupported("geoblocking codes that are not strings"))?;
-                // `GeoRestrictedError`; the fake X-Forwarded-For retry is
-                // not ported.
-                return Err(expected(
-                    NAME,
-                    &video_id,
-                    &format!("Video restricted to {}", crate::batch::py_repr(code)),
+                // `GeoRestrictedError(..., countries=_COUNTRIES_MAP.get(code,
+                // ('DE', 'FR')))`.
+                let countries: &[&str] = match code {
+                    "DE_FR" => &DE_FR,
+                    "EUR_DE_FR" => &EUR_DE_FR,
+                    "SAT" => &SAT,
+                    _ => &["DE", "FR"],
+                };
+                return Err(crate::geo::restricted(
+                    &format!(
+                        "[{NAME}] {video_id}: Video restricted to {}",
+                        crate::batch::py_repr(code)
+                    ),
+                    countries,
                 ));
             }
         }

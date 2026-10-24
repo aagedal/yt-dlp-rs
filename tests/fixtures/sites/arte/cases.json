@@ -14,5 +14,7 @@
  {"url": "https://www.arte.tv/de/videos/RC-027513/twin-peaks/", "args": ["-J", "--flat-playlist"]},
  {"url": "https://www.arte.tv/fr/videos/RC-000010/petite-collection/", "args": ["-J"]},
  {"url": "https://www.arte.tv/it/videos/RC-000099/vuoto/", "args": ["-J", "--flat-playlist"]},
- {"url": "https://www.arte.tv/en/videos/politics-and-society/", "args": ["-J", "--flat-playlist"]}
+ {"url": "https://www.arte.tv/en/videos/politics-and-society/", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://api.arte.tv/api/player/v2/config/de/LIVE", "args": ["-j", "--xff", "192.0.2.1/32"]},
+ {"url": "https://api.arte.tv/api/player/v2/config/de/LIVE", "args": ["-j", "--geo-bypass-country", "ZZ"]}
 ]

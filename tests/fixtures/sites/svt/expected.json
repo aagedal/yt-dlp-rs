@@ -265,6 +265,43 @@
     "ERROR: [svt:page] ingen-data: Unable to extract json data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://www.oppetarkiv.se/video/5219710/trollflojten?modalId=geoOnly",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [svt:play] 5219710: Unable to download webpage: HTTP Error 404: Not Found",
+    "WARNING: [svt:play] geoOnly: Failed to download m3u8 information: HTTP Error 403: Forbidden",
+    "WARNING: [svt:play] geoOnly: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: [svt:play] This video is only available in Sweden",
+    "WARNING: [svt:play] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: expected string or bytes-like object, got 'NoneType'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.svt.se/barnkanalen/barnplay/kar/geoOnly/",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "%(id)s|%(title)s|%(formats)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [svt:play] Unable to download webpage: HTTP Error 404: Not Found",
+    "WARNING: [svt:play] geoOnly: Failed to download m3u8 information: HTTP Error 403: Forbidden",
+    "WARNING: [svt:play] geoOnly: Failed to download MPD manifest: HTTP Error 404: Not Found",
+    "WARNING: [svt:play] This video is only available in Sweden",
+    "WARNING: [svt:play] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "ERROR: expected string or bytes-like object, got 'NoneType'"
+   ],
+   "files": {}
   }
  ]
 }

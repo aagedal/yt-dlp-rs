@@ -82,6 +82,24 @@
     "ERROR: nokey: An extractor error has occurred. (caused by KeyError('u')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://www.rtrfm.com.au/shows/old/",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"old-2020-01-02\", \"title\": \"Old Show 2020-01-02\", \"series\": \"Old Show\", \"url\": null, \"release_date\": \"2020-01-02\", \"description\": null, \"webpage_url\": \"https://www.rtrfm.com.au/shows/old/\", \"original_url\": \"https://www.rtrfm.com.au/shows/old/\", \"webpage_url_basename\": \"old\", \"webpage_url_domain\": \"rtrfm.com.au\", \"extractor\": \"RTRFM\", \"extractor_key\": \"RTRFM\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"old-2020-01-02\", \"fulltitle\": \"Old Show 2020-01-02\", \"release_year\": 2020, \"requested_subtitles\": null, \"_has_drm\": null, \"formats\": [], \"_filename\": \"Old Show 2020-01-02 [old-2020-01-02].NA\", \"filename\": \"Old Show 2020-01-02 [old-2020-01-02].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [RTRFM] Expired or no episode on this date",
+    "WARNING: [RTRFM] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
   }
  ]
 }

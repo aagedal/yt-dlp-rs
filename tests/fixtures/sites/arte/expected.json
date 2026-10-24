@@ -243,6 +243,34 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://api.arte.tv/api/player/v2/config/de/LIVE",
+   "args": [
+    "-j",
+    "--xff",
+    "192.0.2.1/32"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [ArteTV] LIVE: Video restricted to 'DE_FR'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://api.arte.tv/api/player/v2/config/de/LIVE",
+   "args": [
+    "-j",
+    "--geo-bypass-country",
+    "ZZ"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [ArteTV] LIVE: Video restricted to 'DE_FR'"
+   ],
+   "files": {}
   }
  ]
 }

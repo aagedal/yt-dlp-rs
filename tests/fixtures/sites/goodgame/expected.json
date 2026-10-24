@@ -71,6 +71,23 @@
     "ERROR: NoKey: An extractor error has occurred. (caused by KeyError('streamkey')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "https://goodgame.ru/Offline",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"777\", \"formats\": [], \"subtitles\": {}, \"is_live\": false, \"title\": \"Off\", \"webpage_url\": \"https://goodgame.ru/Offline\", \"original_url\": \"https://goodgame.ru/Offline\", \"webpage_url_basename\": \"Offline\", \"webpage_url_domain\": \"goodgame.ru\", \"extractor\": \"goodgame:stream\", \"extractor_key\": \"GoodGame\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"777\", \"fulltitle\": \"Off\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"_filename\": \"Off [777].NA\", \"filename\": \"Off [777].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [goodgame:stream] Offline: User is offline",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
   }
  ]
 }

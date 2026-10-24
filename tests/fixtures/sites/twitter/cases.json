@@ -34,5 +34,7 @@
  {"url": "https://x.com/i/spaces/1NotFound0000", "args": ["-j"]},
  {"url": "https://t.co/AbC123", "args": ["--print", "%(id)s|%(extractor)s|%(webpage_url)s"]},
  {"url": "tco:AbC123", "args": ["--print", "%(id)s|%(extractor)s|%(webpage_url)s"]},
- {"url": "https://amp.twimg.com/v/0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951", "args": ["-J"]}
+ {"url": "https://amp.twimg.com/v/0ba0c3c7-0af3-4c0a-bed5-7efd1ffa2951", "args": ["-J"]},
+ {"url": "https://twitter.com/i/broadcasts/1upcoming0000", "args": ["--ignore-no-formats-error", "-j"]},
+ {"url": "https://twitter.com/i/spaces/1vAxRAVQWONJl", "args": ["--ignore-no-formats-error", "-j"]}
 ]

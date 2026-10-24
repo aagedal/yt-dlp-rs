@@ -456,6 +456,66 @@
     "ERROR: [NRK] 1: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
    ],
    "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/direkte/nrk1",
+   "args": [
+    "--no-geo-bypass",
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"nrk1\", \"title\": \"NRK1\", \"alt_title\": \"\", \"description\": \"\", \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/3v8jiEz2V1O8jLUkavef9A9-KL23EAnNFhJHRAEc971A\", \"width\": 300, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://gfx.nrk.no/3v8jiEz2V1O8jLUkavef9AhWLtSBbLc1lhJHRAEc971A\", \"width\": 600, \"height\": null, \"id\": \"1\"}], \"age_limit\": null, \"formats\": [], \"subtitles\": {}, \"timestamp\": null, \"original_url\": \"https://tv.nrk.no/direkte/nrk1\", \"webpage_url\": \"nrk:nrk1\", \"webpage_url_basename\": \"nrk1\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/3v8jiEz2V1O8jLUkavef9AhWLtSBbLc1lhJHRAEc971A\", \"display_id\": \"nrk1\", \"fulltitle\": \"NRK1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"_filename\": \"NRK1 [nrk1].NA\", \"filename\": \"NRK1 [nrk1].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/tour-de-ski/MSPO40010515/06-01-2015",
+   "args": [
+    "--xff",
+    "203.0.113.9/32",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NRK] MSPO40010515: NRK har ikke rettigheter til å vise dette programmet utenfor Norge"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/program/MDDP12000117",
+   "args": [
+    "--xff",
+    "203.0.113.9/32",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MDDP12000117\", \"title\": \"Alarm Trolltunga\", \"alt_title\": \"Str\\u00f8mmen av turister mot Trolltunga eksploderer. R\\u00f8de Kors-mannskaper m\\u00e5 rykke ut dag og natt for \\u00e5 redde turister i n\\u00f8d.\", \"description\": \"Str\\u00f8mmen av turister mot Trolltunga eksploderer. R\\u00f8de Kors-mannskaper m\\u00e5 rykke ut dag og natt for \\u00e5 redde turister i n\\u00f8d.\", \"duration\": 2223.44, \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwiA75H4o4RMNl9B7icZFgzA\", \"width\": 300, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwW6MfdjhIJPVl9B7icZFgzA\", \"width\": 600, \"height\": null, \"id\": \"1\"}, {\"url\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwQVRlZaOE0cll9B7icZFgzA\", \"width\": 960, \"height\": null, \"id\": \"2\"}], \"age_limit\": 6, \"formats\": [{\"format_id\": \"aud1-Undetermined\", \"format_note\": \"Undetermined\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/A0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"language\": \"und\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"aud1-Undetermined - audio only (Undetermined)\"}, {\"format_id\": \"268\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 268.273, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 180, \"vcodec\": \"avc1.42c00c\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 268.273, \"resolution\": \"320x180\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"268 - 320x180\"}, {\"format_id\": \"442\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V1_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 442.536, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"vcodec\": \"avc1.42c015\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 442.536, \"resolution\": \"480x270\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"442 - 480x270\"}, {\"format_id\": \"687\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V2_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 687.294, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 687.294, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"687 - 640x360\"}, {\"format_id\": \"1387\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V3_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 1387.202, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1387.202, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"1387 - 960x540\"}, {\"format_id\": \"2368\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 2368.435, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2368.435, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"2368 - 1280x720\"}], \"subtitles\": {\"nb-nor\": [{\"url\": \"https://undertekst.nrk.no/MDDP12/00/MDDP12000117/NOR/MDDP12000117.vtt\", \"ext\": \"vtt\"}], \"nb-ttv\": [{\"url\": \"https://undertekst.nrk.no/MDDP12/00/MDDP12000117/TTV/MDDP12000117.vtt\", \"ext\": \"vtt\"}]}, \"timestamp\": 1498591822, \"original_url\": \"https://tv.nrk.no/program/MDDP12000117\", \"webpage_url\": \"nrk:MDDP12000117\", \"webpage_url_basename\": \"MDDP12000117\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwQVRlZaOE0cll9B7icZFgzA\", \"display_id\": \"MDDP12000117\", \"fulltitle\": \"Alarm Trolltunga\", \"duration_string\": \"37:03\", \"upload_date\": \"20170627\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_formats\": [{\"format_id\": \"2368\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 2368.435, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2368.435, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"2368 - 1280x720\"}, {\"format_id\": \"aud1-Undetermined\", \"format_note\": \"Undetermined\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/A0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"language\": \"und\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"aud1-Undetermined - audio only (Undetermined)\"}], \"format\": \"2368 - 1280x720+aud1-Undetermined - audio only (Undetermined)\", \"format_id\": \"2368+aud1-Undetermined\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"und\", \"format_note\": \"Undetermined\", \"filesize_approx\": null, \"tbr\": 2368.435, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": 25.0, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.64001f\", \"vbr\": 2368.435, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": null, \"asr\": null, \"audio_channels\": null, \"_filename\": \"Alarm Trolltunga [MDDP12000117].mp4\", \"filename\": \"Alarm Trolltunga [MDDP12000117].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nrk:MDDP12000117",
+   "args": [
+    "--geo-bypass-ip-block",
+    "203.0.113.10/32",
+    "--print",
+    "%(http_headers)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "NA"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

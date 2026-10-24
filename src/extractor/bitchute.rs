@@ -115,12 +115,7 @@ fn call_api(
         let errors = errors.join(". ");
         if !errors.is_empty() && errors.contains("location") {
             // `raise_geo_restricted(errors)`.
-            return Err(fail(
-                id,
-                &format!(
-                    "{errors}\nYou might want to use a VPN or a proxy server (with --proxy) to workaround."
-                ),
-            ));
+            return Err(crate::geo::restricted(&fail(id, &errors).to_string(), &[]));
         }
         let reason = status.canonical_reason().unwrap_or("Forbidden");
         return failure(format!(
@@ -182,6 +177,11 @@ impl Extractor for BitChute {
         NAME
     }
 
+    /// `_GEO_BYPASS = False`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&[])
+    }
+
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
         Ok(None)
     }
@@ -240,10 +240,12 @@ impl Extractor for BitChute {
             }
         }
         if formats.is_empty() {
-            return Err(fail(
-                &video_id,
+            crate::no_formats::raise_expected(
+                NAME,
+                Some(&video_id),
+                None,
                 "Video is unavailable. Please make sure this video is playable in the browser before reporting this issue.",
-            ));
+            )?;
         }
         let video = call_api(client, "video", &data, &video_id, false)?;
         let channel = match video

@@ -27,5 +27,9 @@
  {"url": "https://radio.nrk.no/podkast/ulrikkes_univers", "args": ["--no-geo-bypass", "--flat-playlist", "-J"]},
  {"url": "https://www.nrk.no/troms/gjenopplev-den-historiske-solformorkelsen-1.12270763", "args": ["--no-geo-bypass", "--flat-playlist", "-J"]},
  {"url": "https://www.nrk.no/kultur/bok/rivertonprisen-til-karin-fossum-1.12266449", "args": ["--no-geo-bypass", "--flat-playlist", "-J"]},
- {"url": "https://www.nrk.no/kultur/bok/rivertonprisen-til-karin-fossum-1.12266449", "args": ["--no-geo-bypass", "--print", "%(id)s|%(title)s|%(playlist_id)s|%(playlist_index)s"]}
+ {"url": "https://www.nrk.no/kultur/bok/rivertonprisen-til-karin-fossum-1.12266449", "args": ["--no-geo-bypass", "--print", "%(id)s|%(title)s|%(playlist_id)s|%(playlist_index)s"]},
+ {"url": "https://tv.nrk.no/direkte/nrk1", "args": ["--no-geo-bypass", "--ignore-no-formats-error", "-j"]},
+ {"url": "https://tv.nrk.no/serie/tour-de-ski/MSPO40010515/06-01-2015", "args": ["--xff", "203.0.113.9/32", "-j"]},
+ {"url": "https://tv.nrk.no/program/MDDP12000117", "args": ["--xff", "203.0.113.9/32", "-j"]},
+ {"url": "nrk:MDDP12000117", "args": ["--geo-bypass-ip-block", "203.0.113.10/32", "--print", "%(http_headers)j"]}
 ]

@@ -305,9 +305,13 @@ fn call_api(
             .or_else(|| error.get("error_code"))
             .and_then(Value::as_str)
             .ok_or_else(|| unsupported("API errors without a message"))?;
-        // `raise_geo_restricted(msg=message)` and `ExtractorError(message)`.
-        if error.get("error_subcode").and_then(Value::as_str) != Some("CLIENT_GEO")
-            && error.get("error_code").and_then(Value::as_str) == Some("INVALID_POLICY_KEY")
+        // `raise_geo_restricted(msg=message)` for `CLIENT_GEO`, else
+        // `ExtractorError(message)`; a cached policy key the API rejects is
+        // extracted again.
+        if error.get("error_subcode").and_then(Value::as_str) == Some("CLIENT_GEO") {
+            return Err(crate::geo::restricted(&format!("[{NAME}] {message}"), &[]));
+        }
+        if error.get("error_code").and_then(Value::as_str) == Some("INVALID_POLICY_KEY")
             && retry_key
         {
             return Ok(None);
@@ -478,7 +482,7 @@ fn parse_metadata(
             .find(|value| truthy(value))
             .and_then(Value::as_str)
             .ok_or_else(|| unsupported("API errors without a message"))?;
-        return Err(Error::Reported(format!("[{NAME}] {message}")));
+        crate::no_formats::raise_expected(NAME, None, None, message)?;
     }
     for format in &mut formats {
         let own = format.http_headers.get_or_insert_with(Map::new);

@@ -112,6 +112,20 @@
    "files": {
     "sm9.mp4": 24
    }
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm400",
+   "args": [
+    "--ignore-no-formats-error",
+    "--print",
+    "id"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [niconico] sm400: This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
   }
  ]
 }
