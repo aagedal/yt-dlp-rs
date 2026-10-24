@@ -70,6 +70,8 @@ fn requests(mso: &str) -> Vec<String> {
             "--no-check-certificate",
             "--user-agent",
             "fixture",
+            // Each run extracts the Brightcove policy key again.
+            "--no-cache-dir",
         ])
         .args(["-j", "--ap-mso", mso, "--ap-username", "fixture-user"])
         .args(["--ap-password", "fixture-pass", VIDEO])

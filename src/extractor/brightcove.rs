@@ -708,7 +708,7 @@ impl Extractor for BrightcoveNew {
                 .map(str::to_owned)
         });
         let mut extracted = false;
-        let data = loop {
+        let (data, policy_key) = loop {
             let key = match policy_key.take() {
                 Some(key) => key,
                 None => {
@@ -725,7 +725,7 @@ impl Extractor for BrightcoveNew {
                 .map(|(name, value)| (name.as_str(), value.as_str()))
                 .collect();
             match call_api(client, &api, &video_id, &request_headers, !extracted)? {
-                Some(data) => break data,
+                Some(data) => break (data, key),
                 None => crate::cache::store("brightcove", &cache_key, &Value::Null),
             }
         };
