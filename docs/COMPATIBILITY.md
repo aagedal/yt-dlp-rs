@@ -1133,6 +1133,16 @@ post's title (72-character truncation), alt title, uploader, counts, tags and
 supported. `tests/fixtures/sites/weibo/` is compared with pinned upstream
 output.
 
+Whyp tracks (`[www.]whyp.it/tracks/[ID/]SLUG`) follow upstream `WhypIE`:
+the page's Nuxt 3 `__NUXT_DATA__` payload (`_search_nuxt_json`, resolved
+natively from the devalue array; resolution errors are upstream's), the
+required Pinia data and first track dict (`Unable to extract pinia/track
+data`), the track's `audio`, `lossy` and `lossless` URLs as audio formats
+(sizes, lossless preferred, a `Referer` header), its ID, title, slug,
+description, duration, ISO 8601 creation time and artwork, and the first
+user's name and ID. `tests/fixtures/sites/whyp/` is compared with pinned
+upstream output.
+
 XiaoHongShu (RedNote) notes (`www.xiaohongshu.com/explore/ID`,
 `discovery/item/ID`) follow upstream `XiaoHongShuIE` (release 2026.10.21):
 the page's fatal `window.__INITIAL_STATE__` (through `js_to_json`), every

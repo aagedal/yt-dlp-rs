@@ -1,0 +1,60 @@
+{
+ "routes": [
+  {
+   "url": "https://whyp.it/tracks/example-track-HPuZgly3yViP",
+   "body": "<html><body><div id=\"__nuxt\"></div><script type=\"application/json\" data-nuxt-data=\"nuxt-app\" data-ssr=\"true\" id=\"__NUXT_DATA__\">[[\"ShallowReactive\", 1], {\"data\": 2, \"state\": 3, \"pinia\": 4}, {}, {}, {\"track\": 5, \"user\": 21}, {\"data\": 6}, {\"18337\": 7}, {\"id\": 8, \"title\": 9, \"slug\": 10, \"description\": 11, \"duration\": 12, \"created_at\": 13, \"artwork_url\": 14, \"audio_url\": 15, \"audio_size\": 16, \"lossy_url\": 17, \"lossy_size\": 18, \"lossless_url\": 19, \"lossless_size\": 20}, 18337, \"Example Track\", \"example-track\", \"An example track.\\nWith lines.\", 135.63, \"2022-01-26T17:03:03.000000Z\", \"https://cdn.whyp.it/art.jpg\", \"https://cdn.whyp.it/a.mp3\", 2000, \"https://cdn.whyp.it/b.mp3\", null, \"https://cdn.whyp.it/c.flac\", \"9000\", {\"data\": 22}, {\"1\": 23}, {\"id\": 24, \"username\": 25}, 1, \"Brad\"]</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.whyp.it/tracks/18337/home-page-example-track-b4kq7",
+   "body": "<html><body><div id=\"__nuxt\"></div><script type=\"application/json\" data-nuxt-data=\"nuxt-app\" data-ssr=\"true\" id=\"__NUXT_DATA__\">[[\"ShallowReactive\", 1], {\"data\": 2, \"state\": 3, \"pinia\": 4}, {}, {}, {\"track\": 5, \"user\": 21}, {\"data\": 6}, {\"18337\": 7}, {\"id\": 8, \"title\": 9, \"slug\": 10, \"description\": 11, \"duration\": 12, \"created_at\": 13, \"artwork_url\": 14, \"audio_url\": 15, \"audio_size\": 16, \"lossy_url\": 17, \"lossy_size\": 18, \"lossless_url\": 19, \"lossless_size\": 20}, 18337, \"Example Track\", \"example-track\", \"An example track.\\nWith lines.\", 135.63, \"2022-01-26T17:03:03.000000Z\", \"https://cdn.whyp.it/art.jpg\", \"https://cdn.whyp.it/a.mp3\", 2000, \"https://cdn.whyp.it/b.mp3\", null, \"https://cdn.whyp.it/c.flac\", \"9000\", {\"data\": 22}, {\"1\": 23}, {\"id\": 24, \"username\": 25}, 1, \"Brad\"]</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.whyp.it/tracks/22222/bare",
+   "body": "<html><body><div id=\"__nuxt\"></div><script type=\"application/json\" data-nuxt-data=\"nuxt-app\" data-ssr=\"true\" id=\"__NUXT_DATA__\">[[\"ShallowReactive\", 1], {\"pinia\": 2}, {\"track\": 3, \"user\": 10}, {\"data\": 4}, [5, 6], null, {\"title\": 7, \"lossless_url\": 8, \"duration\": 9}, \"Bare\", \"nope\", \"12\", {\"data\": 11}, []]</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.whyp.it/tracks/33333/notrack",
+   "body": "<html><body><div id=\"__nuxt\"></div><script type=\"application/json\" data-nuxt-data=\"nuxt-app\" data-ssr=\"true\" id=\"__NUXT_DATA__\">[[\"ShallowReactive\", 1], {\"pinia\": 2}, {\"track\": 3}, {\"data\": 4}, {}]</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.whyp.it/tracks/nopinia",
+   "body": "<html><body><div id=\"__nuxt\"></div><script type=\"application/json\" data-nuxt-data=\"nuxt-app\" data-ssr=\"true\" id=\"__NUXT_DATA__\">[[\"ShallowReactive\", 1], {\"data\": 2}, {}]</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.whyp.it/tracks/nonuxt",
+   "body": "<html></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://www.whyp.it/tracks/44444/badnuxt",
+   "body": "<html><body><div id=\"__nuxt\"></div><script type=\"application/json\" data-nuxt-data=\"nuxt-app\" data-ssr=\"true\" id=\"__NUXT_DATA__\">[[\"Bogus\", 1], {\"data\": 2}, {}]</script></body></html>",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   }
+  },
+  {
+   "url": "https://cdn.whyp.it/c.flac",
+   "headers": {
+    "Content-Type": "audio/flac"
+   },
+   "body": "fLaC-fixture"
+  }
+ ]
+}

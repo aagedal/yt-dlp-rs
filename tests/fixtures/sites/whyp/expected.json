@@ -1,0 +1,110 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://whyp.it/tracks/example-track-HPuZgly3yViP",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"18337\", \"formats\": [{\"url\": \"https://cdn.whyp.it/b.mp3\", \"format_id\": \"lossy\", \"filesize\": null, \"vcodec\": \"none\", \"quality\": -1, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://whyp.it/\"}, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"format\": \"lossy - audio only\"}, {\"url\": \"https://cdn.whyp.it/a.mp3\", \"format_id\": \"audio\", \"filesize\": 2000, \"vcodec\": \"none\", \"quality\": -1, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://whyp.it/\"}, \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format\": \"audio - audio only\"}, {\"url\": \"https://cdn.whyp.it/c.flac\", \"format_id\": \"lossless\", \"filesize\": 9000, \"vcodec\": \"none\", \"quality\": 10, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://whyp.it/\"}, \"protocol\": \"https\", \"ext\": \"flac\", \"audio_ext\": \"flac\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format\": \"lossless - audio only\"}], \"title\": \"Example Track\", \"display_id\": \"example-track\", \"description\": \"An example track.\\nWith lines.\", \"duration\": 135.63, \"timestamp\": 1643216583, \"thumbnail\": \"https://cdn.whyp.it/art.jpg\", \"uploader\": \"Brad\", \"uploader_id\": \"1\", \"webpage_url\": \"https://whyp.it/tracks/example-track-HPuZgly3yViP\", \"original_url\": \"https://whyp.it/tracks/example-track-HPuZgly3yViP\", \"webpage_url_basename\": \"example-track-HPuZgly3yViP\", \"webpage_url_domain\": \"whyp.it\", \"extractor\": \"Whyp\", \"extractor_key\": \"Whyp\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"https://cdn.whyp.it/art.jpg\", \"id\": \"0\"}], \"fulltitle\": \"Example Track\", \"duration_string\": \"2:15\", \"upload_date\": \"20220126\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://cdn.whyp.it/c.flac\", \"format_id\": \"lossless\", \"filesize\": 9000, \"vcodec\": \"none\", \"quality\": 10, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"Referer\": \"https://whyp.it/\"}, \"protocol\": \"https\", \"ext\": \"flac\", \"audio_ext\": \"flac\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"flac\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"format\": \"lossless - audio only\", \"_filename\": \"Example Track [18337].flac\", \"filename\": \"Example Track [18337].flac\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.whyp.it/tracks/18337/home-page-example-track-b4kq7",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(display_id)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(uploader)s|%(uploader_id)s|%(thumbnail)s|%(ext)s|%(format_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "18337|Example Track|example-track|135.63|1643216583|20220126|Brad|1|https://cdn.whyp.it/art.jpg|flac|lossless"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.whyp.it/tracks/18337/home-page-example-track-b4kq7",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Whyp] Extracting URL: https://www.whyp.it/tracks/18337/home-page-example-track-b4kq7",
+    "[Whyp] 18337: Downloading webpage",
+    "[info] 18337: Downloading 1 format(s): lossless",
+    "[download] Destination: 18337.flac",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "18337.flac": 12
+   }
+  },
+  {
+   "url": "https://www.whyp.it/tracks/22222/bare",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Whyp] 22222: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.whyp.it/tracks/33333/notrack",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Whyp] 33333: Unable to extract track data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.whyp.it/tracks/nopinia",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Whyp] Unable to extract pinia data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.whyp.it/tracks/nonuxt",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Whyp] Unable to extract Nuxt JSON data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.whyp.it/tracks/44444/badnuxt",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Whyp] 44444: Error resolving Nuxt JSON: Invalid type at 0: 'Bogus'; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+[
+ {"url": "https://whyp.it/tracks/example-track-HPuZgly3yViP", "args": ["-j"]},
+ {"url": "https://www.whyp.it/tracks/18337/home-page-example-track-b4kq7", "args": ["--print", "%(id)s|%(title)s|%(display_id)s|%(duration)s|%(timestamp)s|%(upload_date)s|%(uploader)s|%(uploader_id)s|%(thumbnail)s|%(ext)s|%(format_id)s"]},
+ {"url": "https://www.whyp.it/tracks/18337/home-page-example-track-b4kq7", "args": ["--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.whyp.it/tracks/22222/bare", "args": ["-j"]},
+ {"url": "https://www.whyp.it/tracks/33333/notrack", "args": ["-j"]},
+ {"url": "https://www.whyp.it/tracks/nopinia", "args": ["-j"]},
+ {"url": "https://www.whyp.it/tracks/nonuxt", "args": ["-j"]},
+ {"url": "https://www.whyp.it/tracks/44444/badnuxt", "args": ["-j"]}
+]

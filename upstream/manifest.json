@@ -1729,6 +1729,18 @@
       "scope": "WeiboIE statuses JSON with the visitor cookie handshake, playback-list and fallback formats, mixed-media playlists and metadata; WeiboVideoIE TV component lookups; no WeiboUserIE; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "whyp",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/whyp.py"
+      ],
+      "rust": [
+        "src/extractor/whyp.rs",
+        "tests/fixtures/sites/whyp/"
+      ],
+      "scope": "WhypIE __NUXT_DATA__ payload via _search_nuxt_json, required pinia/track data, audio/lossy/lossless formats with Referer headers, track and user metadata, and Nuxt search/resolution errors compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "xiaohongshu",
       "status": "partial",
       "upstream": [
