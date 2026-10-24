@@ -1,0 +1,8 @@
+[
+ {"url": "https://player.daystar.tv/0MTO2ITM", "args": ["-j"]},
+ {"url": "https://player.daystar.tv/0MTO2ITM", "args": ["--print", "%(id)s|%(title)s|%(description)s|%(thumbnail)s|%(extractor)s|%(extractor_key)s"]},
+ {"url": "https://player.daystar.tv/MEDIA1", "args": ["-j"]},
+ {"url": "https://player.daystar.tv/NOIFRAME", "args": ["-j"]},
+ {"url": "https://player.daystar.tv/NOSRC", "args": ["-j"]},
+ {"url": "https://player.daystar.tv/NOTHUMB", "args": ["-j"]}
+]

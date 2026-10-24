@@ -1445,6 +1445,16 @@ win; a missing JSON-LD is upstream's warning). JSON-LD carrying media URLs,
 formats, IDs or subtitles remains an explicit native error.
 `tests/fixtures/sites/newsy/` is compared with pinned upstream output.
 
+Daystar clips (`player.daystar.tv/ID`) follow upstream `DaystarClipIE`: the
+player page's first `<iframe src>` (its absence is upstream's `Unable to
+extract src iframe` error), that URL's `config2.php` configuration requested
+with the iframe as `Referer`, its `sources` list (`js_to_json`) whose `m3u8`
+files are joined to `https://www.lightcast.com/embed/` and read as non-fatal
+master-only HLS formats and merged subtitles (the `Referer` sent with the
+manifest request), the `og:`/`twitter:` title and description (non-fatal,
+with upstream's warnings) and the configuration's required `image:` thumbnail.
+`tests/fixtures/sites/daystar/` is compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

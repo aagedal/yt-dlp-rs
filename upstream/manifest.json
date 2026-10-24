@@ -509,6 +509,18 @@
       "scope": "DailymotionIE token, GraphQL media and player metadata, randomized-header HLS with PROGRESSIVE-URI formats, progressive H264 formats, subtitles, thumbnails and metadata, geo/API errors; no playlists; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "daystar",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/daystar.py"
+      ],
+      "rust": [
+        "src/extractor/daystar.rs",
+        "tests/fixtures/sites/daystar/"
+      ],
+      "scope": "DaystarClipIE player iframe, Referer-requested config2.php sources via js_to_json as non-fatal HLS formats and merged subtitles (lightcast embed urljoin), og/twitter title and description with the non-fatal warnings, fatal iframe/sources/thumbnail regexes compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "dfb",
       "status": "partial",
       "upstream": [

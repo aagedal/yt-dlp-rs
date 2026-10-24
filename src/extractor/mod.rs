@@ -25,6 +25,7 @@ mod crtvg;
 mod cultureunplugged;
 mod dailymotion;
 mod dash;
+mod daystar;
 mod dfb;
 pub(crate) mod direct;
 mod drtalks;
@@ -178,6 +179,7 @@ pub use crooksandliars::{CrooksAndLiars, suitable as crooksandliars_suitable};
 pub use crtvg::{Crtvg, suitable as crtvg_suitable};
 pub use cultureunplugged::{CultureUnplugged, suitable as cultureunplugged_suitable};
 pub use dailymotion::{Dailymotion, suitable as dailymotion_suitable};
+pub use daystar::{DaystarClip, suitable as daystar_suitable};
 pub use dfb::{Dfb, suitable as dfb_suitable};
 pub use direct::DirectHttp;
 pub(crate) use direct::from_response as direct_media_info;
@@ -684,12 +686,60 @@ fn extract_manifest_optional_note(
     id: &str,
     keep_subtitles: bool,
     parse: &dyn Fn(reqwest::blocking::Response) -> crate::Result<Option<crate::VideoInfo>>,
+    what: (&str, &str),
+    note: &str,
+) -> Option<crate::VideoInfo> {
+    extract_manifest_optional_note_headers(
+        client,
+        manifest,
+        extractor,
+        id,
+        keep_subtitles,
+        parse,
+        what,
+        note,
+        &[],
+    )
+}
+
+/// `_extract_m3u8_formats_and_subtitles(url, id, headers=HEADERS,
+/// fatal=False)`: only the master playlist is read, the `headers` sent with
+/// the manifest request alone.
+pub(crate) fn extract_m3u8_master_optional_headers(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    headers: &[(&str, &str)],
+) -> Option<crate::VideoInfo> {
+    extract_manifest_optional_note_headers(
+        client,
+        manifest,
+        extractor,
+        id,
+        true,
+        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        ("m3u8 information", "HLS"),
+        "Downloading m3u8 information",
+        headers,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn extract_manifest_optional_note_headers(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    keep_subtitles: bool,
+    parse: &dyn Fn(reqwest::blocking::Response) -> crate::Result<Option<crate::VideoInfo>>,
     (what, name): (&str, &str),
     note: &str,
+    headers: &[(&str, &str)],
 ) -> Option<crate::VideoInfo> {
     let note = format!("[{extractor}] {id}: {note}");
     crate::screen::expect_page(id, Some(note.clone()), None);
-    let response = direct::request(client, manifest, None);
+    let response = direct::request_with_headers(client, manifest, None, headers);
     if response.is_err() {
         crate::screen::screen(&note);
     }
