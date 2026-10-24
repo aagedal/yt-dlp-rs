@@ -1342,6 +1342,14 @@ upstream `QingTingIE`: the mobile program page's `window.__initStores` JSON
 podcaster as an untyped `m4a` audio result; a missing audio URL is upstream's
 `No video formats found!`.
 
+Radio ZET podcasts (`player.radiozet.pl/Podcasty/SHOW/ID`) follow upstream
+`RadioZetPodcastIE`: the page's `id="player"` `data-id` (else the
+`Unable to extract podcast id` error) and the first `getPodcast` API entry as
+an untyped result with stripped title, description, series and creator and
+raw `release_timestamp`, thumbnail and duration (every key set, `None`
+included); an empty or missing `data` list and a missing stream URL give
+upstream's `IndexError`, `KeyError` and `No video formats found!` errors.
+
 ReverbNation songs (`reverbnation.com/.../song/ID`) follow upstream
 `ReverbNationIE`: the `api.reverbnation.com/song/ID` JSON (`Downloading
 information of song ID`) as an untyped `mp3` audio-only result with the artist

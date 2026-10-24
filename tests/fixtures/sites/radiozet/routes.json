@@ -1,0 +1,89 @@
+{
+ "routes": [
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/O-przedmiotach-szkolnych-ktore-przydaja-sie-w-zyciu",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://player.radiozet.pl/api/podcasts/getPodcast/(node)/42154/(station)/radiozet",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api.json"
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/minimal",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page2.html"
+  },
+  {
+   "url": "https://player.radiozet.pl/api/podcasts/getPodcast/(node)/777/(station)/radiozet",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "api2.json"
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/noid",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "noid.html"
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/empty",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page_empty.html"
+  },
+  {
+   "url": "https://player.radiozet.pl/api/podcasts/getPodcast/(node)/empty/(station)/radiozet",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "empty.json"
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/nodata",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page_nodata.html"
+  },
+  {
+   "url": "https://player.radiozet.pl/api/podcasts/getPodcast/(node)/nodata/(station)/radiozet",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "nodata.json"
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/nostream",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page_nostream.html"
+  },
+  {
+   "url": "https://player.radiozet.pl/api/podcasts/getPodcast/(node)/nostream/(station)/radiozet",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "nostream.json"
+  },
+  {
+   "url": "https://player.radiozet.pl/Podcasty/Show/gone",
+   "status": 404,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "gone"
+  }
+ ]
+}

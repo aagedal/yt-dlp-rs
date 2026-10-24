@@ -118,7 +118,7 @@ Supported today:
   clips through the clip API, EbaumsWorld videos through the player XML,
   Glide messages through their share page, GodTube videos through their
   player XML, FC Zenit videos through the player API, BehindKink posts
-  QingTing programs, OnePlace episodes, SzTV videos, Photobucket media and
+  QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and
   This American Life episodes through their pages, JW Platform media through
   the media API (and The Intercept posts that embed it), 23video players
   (and Filmweb articles that embed them), Vocaroo recordings, AudioBoom posts,
