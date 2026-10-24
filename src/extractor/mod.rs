@@ -41,6 +41,7 @@ pub(crate) mod hls;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
+mod iltalehti;
 mod imgur;
 mod instagram;
 pub(crate) mod ism;
@@ -155,6 +156,7 @@ pub use hls::set_split_discontinuity as hls_split_discontinuity;
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
+pub use iltalehti::{Iltalehti, suitable as iltalehti_suitable};
 pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
     gallery_suitable as imgur_gallery_suitable, suitable as imgur_suitable,

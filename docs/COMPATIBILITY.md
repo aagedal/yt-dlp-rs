@@ -492,6 +492,14 @@ a `url_transparent` result (extracted by the JW Platform extractor) overlaid
 with `_old_archive_ids` and the non-fatal JSON-LD fields without `url`; a page
 without JSON-LD warns `unable to extract JSON-LD` like upstream.
 
+Iltalehti articles (`iltalehti.fi/SECTION/a/ID`, with upstream's
+single-character ID) follow upstream `IltalehtiIE`: the fatal `window.App`
+state through `js_to_json`, the articles' main media and body properties with
+`provider` `jwplayer` as a playlist of unique `jwplatform:ID` results
+(extracted by the JW Platform extractor), titled by the first
+`canonical_title` (else `None`). App state that does not parse remains an
+explicit native error.
+
 This American Life episodes (`thisamericanlife.org/radio-archives/episode/ID`,
 `play_full.php?play=ID`) follow upstream `ThisAmericanLifeIE`: the episode
 page's fatal `twitter:title`, description meta and OpenGraph image, with the

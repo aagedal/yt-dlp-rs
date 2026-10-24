@@ -642,6 +642,18 @@
       "scope": "HypemIE _VALID_URL, displayList-data JSON (clean_html before parsing), serve/source JSON URL as an untyped mp3 result, error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "iltalehti",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/iltalehti.py"
+      ],
+      "rust": [
+        "src/extractor/iltalehti.rs",
+        "tests/fixtures/sites/iltalehti/"
+      ],
+      "scope": "IltalehtiIE window.App state (js_to_json), main media and body jwplayer items as a playlist of jwplatform: results with the canonical title compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "imgur",
       "status": "partial",
       "upstream": [
