@@ -810,6 +810,12 @@ Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 with its description, poster, duration and account; an empty item list is
 upstream's bare `IndexError`.
 
+tele-TASK lectures (`tele-task.de/archive/video/html5/ID`) follow upstream
+`TeleTaskIE` (marked broken, so the broken-site warning comes first): the
+page's `<video class="KIND"><source src>` pairs as a playlist of untyped
+`ID-KIND` entries with the fatal `itemprop="name"` title and the optional
+`Date:` cell as `upload_date` (warning when absent).
+
 Universal Music Deutschland videos (`universal-music.de/ARTIST/videos/SLUG-ID`)
 follow upstream `UMGDeIE`: the page's fatal JSON-LD (title, thumbnails,
 duration, timestamp, view count) overridden by the `umg-artist-screenname`

@@ -88,6 +88,7 @@ mod streamable;
 mod sztvhu;
 mod ted;
 mod telegram;
+mod teletask;
 mod theintercept;
 mod thisamericanlife;
 mod tiktok;
@@ -217,6 +218,7 @@ pub use ted::{
     talk_suitable as ted_talk_suitable,
 };
 pub use telegram::{TelegramEmbed, suitable as telegram_suitable};
+pub use teletask::{TeleTask, suitable as teletask_suitable};
 pub use theintercept::{TheIntercept, suitable as theintercept_suitable};
 pub use thisamericanlife::{ThisAmericanLife, suitable as thisamericanlife_suitable};
 pub use tiktok::{

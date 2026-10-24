@@ -122,7 +122,7 @@ Supported today:
   This American Life episodes through their pages, JW Platform media through
   the media API (and The Intercept posts that embed it), 23video players
   (and Filmweb articles that embed them), Vocaroo recordings, AudioBoom posts,
-  Tweakers videos, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
+  Tweakers videos, tele-TASK lectures, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Sen videos, Kommunetv archives,
   Graspop concerts, CozyTV replays, Premiership Rugby videos, CJSW episodes,
   Player.fm episodes, RTRFM shows, HitRecord records, Culture Unplugged films,

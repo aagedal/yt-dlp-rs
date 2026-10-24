@@ -3261,6 +3261,10 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("TedSeries", yt_dlp_rs::extractor::ted_series_suitable),
             ("TedTalk", yt_dlp_rs::extractor::ted_talk_suitable),
             ("telegram:embed", yt_dlp_rs::extractor::telegram_suitable),
+            (
+                "TeleTask (CURRENTLY BROKEN)",
+                yt_dlp_rs::extractor::teletask_suitable,
+            ),
             ("TheIntercept", yt_dlp_rs::extractor::theintercept_suitable),
             (
                 "ThisAmericanLife",

@@ -1136,6 +1136,18 @@
       "scope": "TelegramEmbedIE (as of 2026.10.21) embed frame (embed=1, single dropped), video players as mp4 formats with ?single=True webpage URLs, duration/thumbnail/timestamp with non-fatal warnings, cleaned message text, author and channel; multi-video posts as playlists unless ?single or --no-playlist; posts without their own video (upstream's 'returned nothing' warning) are an unsupported error; compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "teletask",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/teletask.py"
+      ],
+      "rust": [
+        "src/extractor/teletask.rs",
+        "tests/fixtures/sites/teletask/"
+      ],
+      "scope": "TeleTaskIE (marked broken) video class/source pairs as a playlist of untyped entries with the fatal title and optional date, compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "theintercept",
       "status": "partial",
       "upstream": [
