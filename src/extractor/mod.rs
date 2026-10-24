@@ -96,6 +96,7 @@ mod tweakers;
 mod twentythreevideo;
 mod twitch;
 mod twitter;
+mod umg;
 mod vimeo;
 mod vk;
 mod vkplay;
@@ -247,6 +248,7 @@ pub use twitter::{
     card_suitable as twitter_card_suitable, shortener_suitable as twitter_shortener_suitable,
     spaces_suitable as twitter_spaces_suitable, suitable as twitter_suitable,
 };
+pub use umg::{UmgDe, suitable as umg_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,

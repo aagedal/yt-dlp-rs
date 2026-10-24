@@ -1235,6 +1235,18 @@
       "scope": "TwitterIE GraphQL (guest token or auth cookies), legacy and syndication APIs selected with the api extractor argument, the HTTP 429 syndication fallback, _graphql_to_legacy errors, HLS/MP4 variants, thumbnails, metadata, multi-video playlists, /video/N with --no-playlist, unified/VMAP cards and followed player/summary/broadcast/audiospace/periscope cards and links; TwitterCardIE redirects; TwitterShortenerIE (t.co, tco:); TwitterAmplifyIE; TwitterBroadcastIE broadcasts and live events; TwitterSpacesIE; PeriscopeBaseIE/PeriscopeIE HLS broadcasts (no RTMP, PeriscopeUserIE or embeds); compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "umg",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/umg.py"
+      ],
+      "rust": [
+        "src/extractor/umg.rs",
+        "tests/fixtures/sites/umg/"
+      ],
+      "scope": "UMGDeIE fatal JSON-LD spread, umg-artist-screenname artists (warning when absent), _3Y0Lj description element and fatal hls.universal-music.de HLS formats compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "vimeo",
       "status": "partial",
       "upstream": [

@@ -810,6 +810,13 @@ Tweakers videos (`tweakers.net/video/ID`) follow upstream `TweakersIE`: the
 with its description, poster, duration and account; an empty item list is
 upstream's bare `IndexError`.
 
+Universal Music Deutschland videos (`universal-music.de/ARTIST/videos/SLUG-ID`)
+follow upstream `UMGDeIE`: the page's fatal JSON-LD (title, thumbnails,
+duration, timestamp, view count) overridden by the `umg-artist-screenname`
+meta as `artists` (an empty list, with a warning, when absent), the cleaned
+`_3Y0Lj` element as description (else `null`), the slug as `display_id` and
+fatal `hls.universal-music.de/get?id=ID` HLS formats.
+
 Twitch VODs (`twitch.tv/videos/ID`, `/CHANNEL/v/ID`, player and schedule
 URLs) follow upstream `TwitchVodIE`: the persisted GraphQL metadata,
 chapter-moment and storyboard operations, the video playback access token,
