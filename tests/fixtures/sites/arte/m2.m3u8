@@ -1,0 +1,7 @@
+#EXTM3U
+#EXT-X-VERSION:7
+#EXT-X-STREAM-INF:BANDWIDTH=3300848,CODECS="avc1.64001F,mp4a.40.2",RESOLUTION=1280x720,AUDIO="aud",SUBTITLES="subs"
+https://arte-cmafhls.akamaized.net/fixture/m2_v720.m3u8
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="aud",LANGUAGE="de",NAME="Deutsch",DEFAULT=YES,URI="https://arte-cmafhls.akamaized.net/fixture/m2_aud_VA.m3u8"
+#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="de",NAME="Deutsch",URI="https://arte-cmafhls.akamaized.net/fixture/st_VO-DEU.m3u8"
+#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",LANGUAGE="fr",NAME="Français",URI="https://arte-cmafhls.akamaized.net/fixture/m2_st_VO-FRA.m3u8"

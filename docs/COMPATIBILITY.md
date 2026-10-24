@@ -104,13 +104,18 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--clean-info-json`, `--clean-infojson`, `--no-clean-info-json`, `--no-clean-infojson` | Upstream `clean_infojson`: the default drops `None` values, `__` keys and the private bookkeeping keys; `--no-clean-info-json` writes every represented field |
 | `-N N`, `--concurrent-fragments N` | Upstream concurrent fragment downloads for HLS and DASH: N workers fetch fragments (each with its own `--fragment-retries` and skip handling) into private files beside the output, appended in order; progress reports completed fragments and in-flight bytes. Upstream's `concurrent fragments "N" must be positive` validation. Screen lines match sequential downloads apart from progress timing |
 | `--downloader [PROTO:]NAME`, `--external-downloader`, `--downloader-args NAME:ARGS`, `--hls-prefer-native`, `--hls-prefer-ffmpeg` | Upstream `get_suitable_downloader` for `native` and `ffmpeg`/`avconv` (names or paths) per simplified protocol (`http`, `ftp`, `m3u8`, `dash`, `rtmp`, `default`): FFmpegFD downloads whole formats (merging all-FFmpeg pairs directly, without HlsFD's manifest line or fixups) when ffmpeg is available, otherwise the native downloaders run like upstream's `can_download` fallback. FFmpeg `--downloader-args` follow `_configuration_args` (`ffmpeg_iN`/`ffmpeg_i` before each input, `ffmpeg_oN`/`ffmpeg_o`/`ffmpeg`/`default` before the output); unnamed arguments print upstream's `External Downloader arguments given without specifying name` warning and move to the default downloader's key. `curl`, `wget`, `aria2c`, `axel` and `httpie` (names or paths, matched like `get_external_downloader`) run upstream's `CurlFD`/`WgetFD`/`Aria2cFD`/`AxelFD`/`HttpieFD` command lines for whole-file `http`/`https`/`ftp`/`ftps` formats without `hls_aes` or extractor query arguments, including merged formats' separate streams. That covers the headers, cookies (curl reads them from stdin; wget and aria2c load the `--cookies` file or an announced temporary file; axel and httpie get a `Cookie` header), `continuedl`, `noprogress`, `--limit-rate`, retries, `--max-filesize`, `--source-address`, `--proxy`, `--no-check-certificates`, aria2c's `--remote-time` from `--mtime`/`--no-mtime`, and `_configuration_args` keys. The tool writes the `.part` file, which is then renamed and reported like `ExternalFD.real_download`; a non-zero exit reports the captured stderr and `ERROR: NAME exited with code N`. An executable that cannot be run, other protocols and stdout output use the native downloaders, like upstream's `can_download`. As in the pinned upstream, no external downloader supports the `m3u8_frag_urls`/`dash_frag_urls` protocols, so HLS and DASH formats keep the native fragment downloaders. Unknown names are upstream's `No such [PROTO ]external downloader "NAME"` usage error. The HLS preference flags only affect the `m3u8` protocol, which no supported extractor produces |
+| RTMP, `rtmp_ffmpeg` and `websocket_frag` downloads (`PROTOCOL_MAP`) | `rtmp`/`rtmpe` formats run upstream's RtmpFD: `rtmpdump` (from `PATH`, checked with `-h`; otherwise `ERROR: RTMP download detected but "rtmpdump" could not be run. Please install`) with upstream's command line from the format's `player_url`, `page_url`, `app`, `play_path`, `tc_url`, `flash_version`, `rtmp_live`, `rtmp_conn` (list or string), `rtmp_protocol` and `rtmp_real_time`, `--stop 1` for `--test`, and `--resume`/`--skip 1` from `continuedl` and `no_resume` (accumulated into the resume loop's commands as upstream's in-place `+=` does). Its `kB / sec (percent)` stderr lines are progress with the `~` estimated total, other lines print as `[rtmpdump] LINE` with `--verbose`; exit 3 is `ERROR: [rtmpdump] Could not connect to RTMP server.`, exits 1/2 (outside `--test` and live streams) resume after 5 seconds with `[rtmpdump] Downloaded N bytes` and the advertisement message, and other failures are `ERROR: rtmpdump exited with code N`; interrupting a live download completes it (`[rtmpdump] Interrupted by user`). Speed and ETA come from this port's progress calculator rather than RtmpFD's resume-relative values. `rtmp_ffmpeg` formats, and `rtmp` with `--downloader [rtmp:]ffmpeg`, use FFmpegFD with its `-rtmp_swfverify`/`-rtmp_pageurl`/`-rtmp_app`/`-rtmp_playpath`/`-rtmp_tcurl`/`-rtmp_flashver`/`-rtmp_live live`/`-rtmp_conn` options and `-f flv` for `rtmp` (only); without ffmpeg `rtmp_ffmpeg` is `ERROR: m3u8 download detected but ffmpeg could not be found. Please install`. `--downloader ffmpeg` applies only to FFmpegFD's `SUPPORTED_PROTOCOLS` (`http`, `https`, `ftp`, `ftps`, `m3u8`, `m3u8_native`, `rtmp`, `rtmp_ffmpeg`, `http_dash_segments`), so `rtmpe` keeps RtmpFD; with `--test` every FFmpegFD download gets `-fs 10241`. `websocket_frag` formats run WebSocketFragmentFD (`Invoking web_socket_fragment downloader`): FFmpegFD reads `-i -` while a websocket client (`ws:`/`wss:` with the Mozilla roots) writes each binary or (UTF-8) text message into its stdin, sending the format's `http_headers` with the default headers in the handshake and, like upstream's `websockets.connect`, no cookies or proxy. The connection's end acts as upstream's interrupt: a live download completes (`[ffmpeg] Interrupted by user`; FFmpeg here reads its closed stdin to the end rather than being killed), any other one is `ERROR: Interrupted by user`; a failed connection prints its error to stderr instead of upstream's thread traceback. Afterwards upstream's `FixupTimestamp` (`-c copy -bsf setts=ts=TS-STARTPTS`, or the `setpts` re-encode with upstream's warning when `ffmpeg -bsfs` lacks `setts`) and `FixupDuration` run under the `--fixup` policies. Not supported: merged RTMP or websocket formats (`requested_formats`), `mms`/`rtsp` (upstream's HttpFD has no handler for them either; they fail as unsupported URL schemes), the pinned upstream's niconico/FC2/Soop/BunnyCDN site downloaders (their extractors are not ported), and upstream's removed RtspFD (`mplayer`/`mpv`), which the pinned version no longer has |
 | `--extractor-args generic:ARGS`, `--live-from-start` | Parsed like upstream (`IE_KEY:ARGS`, `;`-separated `KEY=VAL[,VAL]` with `\,` escapes, keys lowercased with `-` as `_`; a later value for the same extractor replaces it; malformed values are upstream's usage error). GenericIE's HLS/DASH arguments follow `_extra_manifest_info`: `fragment_query`/`key_query` (a URL's query, a query, or empty for the manifest's) become `extra_param_to_segment_url`/`extra_param_to_key_url`, `variant_query` updates every format URL, `hls_key=URI_OR_HEX_KEY[,HEX_IV]` becomes `hls_aes`, and `is_live` replaces the live check. The native HLS/DASH downloaders add the queries to fragment and key URLs and use the external key/IV. A live result gets `is_live`/`was_live`, upstream's default `best/bestvideo+bestaudio`, FFmpegFD and `--hls-use-mpegts` by default, and the title suffix ` YYYY-MM-DD HH:MM` (local time) unless `--live-from-start`. With `--live-from-start`, a live result keeps only its `is_from_start` formats (else upstream's `--live-from-start is passed, but there are no formats that can be downloaded from the start` error), and without it those formats are dropped; YouTube's are described under "YouTube formats". Live manifests are otherwise downloaded as finite VOD playlists. YouTube's `player_client`, `player_skip`, `formats`, `skip`, `po_token`, `fetch_pot`, `pot_trace`, `visitor_data`, `data_sync_id`, `innertube_host`, `innertube_key`, `player_params`, `use_ad_playback_context`, `webpage_client`, `webpage_skip`, `player_js_version`, `player_js_variant`, `raise_incomplete_data`, `lang`, `max_comments` and `comment_sort` are used (see [YouTube extractor arguments](#youtube-extractor-arguments)); and so are `youtubetab:skip=webpage,authcheck` and `youtubetab:approximate_date` (see "YouTube playlists"); other YouTube and `youtubetab` arguments warn individually; arguments for other extractors warn and are ignored |
 | FFmpeg postprocessor failures | Like upstream's `real_run_ffmpeg`, postprocessor FFmpeg runs use `-loglevel repeat+info`, succeed on exit status 0 whatever stderr says, and fail with `ERROR: Postprocessing: LINE` from the last line of stderr (for example `Conversion failed!`) |
 | `--postprocessor-args NAME:ARGS`, `--ppa` | Upstream `_configuration_args` for this port's FFmpeg postprocessors (`Merger`, `ExtractAudio`, `VideoRemuxer`, `VideoConvertor`, `Metadata`, `EmbedSubtitle`, `EmbedThumbnail`, `SubtitlesConvertor`, `ThumbnailsConvertor`, `SplitChapters`, `FixupM3u8`, `FixupM4a`): shlex-split values by case-insensitive `PP[+EXE][_i[N]\|_o[N]]` key (a later value replaces an earlier one); `PP+ffmpeg_iN`/`PP+ffmpeg_i` go before each input's `-i`, and `PP+ffmpeg_o1`/`PP+ffmpeg_o`/`PP+ffmpeg`, then `PP` and `ffmpeg` together, then `default` before the output file (a key given without arguments still ends the search). Unnamed values print `Post-Processor arguments given without specifying name. The arguments will be given to all post-processors` and become `default`; `wrong --ppa formatting; …` usage errors. The arguments join this port's own FFmpeg command lines, which differ from upstream's; ffprobe, AtomicParsley and unimplemented postprocessors (`ModifyChapters`, `FixupStretched`, `FixupTimestamp`, `FixupDuration`) take none |
 | `--keep-fragments`, `--no-keep-fragments` | Upstream fragment files `TMPFILENAME-FragN` (`NAME.part-FragN`, or `NAME-FragN` with `--no-part`) are kept beside the output, byte-identical to the assembled fragments, for unprocessed fragmented downloads; processed downloads keep them in their private workspace (removed) |
 | `--progress-template [TYPES:]TEMPLATE` | Upstream `_report_progress_status`: `download:` (default) templates render over `{'info': ..., 'progress': ...}` with `report_progress`'s fields (`status`, `downloaded_bytes`, `total_bytes`, `eta`, `speed`, `elapsed`, `fragment_index`/`fragment_count`, `filename`, `_percent_str`, `_speed_str`, `_eta_str`, `_total_bytes_str`, `_default_template`, ...) for downloading and finished statuses. `postprocess:` templates render for each postprocessor run's `started` and `finished` hooks (`progress.postprocessor` is upstream's `pp_key()`, e.g. `MetadataParser`, `SponsorBlock`, `SubtitlesConvertor`, `ThumbnailsConvertor`, `Exec`, `FixupM3u8`/`FixupM4a`/`FixupDuplicateMoov`/`FixupStretched`, `Merger`, `ExtractAudio`, `VideoRemuxer`/`VideoConvertor`, `EmbedSubtitle`, `ModifyChapters`, `Metadata`, `EmbedThumbnail`, `SplitChapters`, `XAttrMetadata`, `MoveFiles` and the playlist's `Concat`), in upstream's order and even when quiet (then on stderr), with no `finished` after a failure; `info` is the video's info dict as selected (or as parsed for `MetadataParser`/`SponsorBlock`), not each processor's updated copy. `download-title:`/`postprocess-title:` set the `--console-title` titles |
 | `--compat-options OPTS` | Upstream `_set_from_options_callback`/`orderedSet_from_options` (`all`, `youtube-dl`, `youtube-dlc` and year aliases, `-NAME` removal, `wrong OPTS for --compat-options: …`) and `set_compat_opts`: `abort-on-error`, `no-playlist-metafiles`, `no-clean-infojson`, `no-attach-info-json`, `mtime-by-default`, `filename` (`%(title)s-%(id)s.%(ext)s`), `format-sort` (`FormatSorter.ytdl_default` appended) and `no-keep-subs` change defaults, and an explicitly given option marks the compatibility option `*NAME` in `-v`'s `Compatibility options:` line. The others take effect where upstream reads them: `filename-sanitization` (youtube-dl's `sanitize_filename` with `is_id` from the field name), `allow-unsafe-exec-expansion` (no `--exec` template validation), `allow-unsafe-ext` (upstream's warning, and no unusual-extension check; path separators in an extension stay a native error), `embed-metadata` (`comment` is the description and `synopsis` is dropped), `format-spec` (`bestvideo+bestaudio/best` merge default), `list-formats` (the legacy `-F` layout), `playlist-index` (an entry's index is the one selected at its position before `--playlist-reverse`/`--playlist-random`), `prefer-vp9-sort` (`vcodec:vp9.2` in the default sort unless `format-sort`, and in YouTube's sort fields) and `no-direct-merge` (a partial download without ffmpeg downloads the whole file natively instead of aborting; merges FFmpegFD would download per format are a native error). `no-youtube-channel-redirect` (a channel URL without a tab is read as given, without the `/videos` redirect, tab checks, home-page rejection or conditional regional redirect) and `no-youtube-unavailable-videos` (no playlist reload with unavailable videos) are read by `youtube:tab` (see "YouTube playlists"). `no-certifi`, `prefer-legacy-http-handler`, `no-live-chat`, `no-external-downloader-progress` and `embed-thumbnail-atomicparsley` concern features this port does not have; pinned upstream never reads `no-youtube-prefer-utc-upload-date` or `seperate-video-versions`; and `playlist-match-filter` only affects unresolved (`url`) entries, which this port's playlists do not have. `manifest-filesize-approx` gives manifest formats `filesize_approx` too; `multistreams` enables both multistream options unless given (`*multistreams` when both were). `all` lists the options in this port's table order (upstream's set order varies) |
-| Accepted tuning and environment options | `--file-access-retries`, `--throttled-rate`, `--no-update`, `--cache-dir`/`--no-cache-dir`, `--no-plugin-dirs`, `--remote-components`, `--prefer-insecure`/`--prefer-unsecure`, `--ignore-no-formats-error`, `--allow-dynamic-mpd`/`--no-ignore-dynamic-mpd`/`--ignore-dynamic-mpd`/`--no-allow-dynamic-mpd`, the account (`-u`, `-p`, `-2`, `-n`, `--netrc-*`, `--video-password`, `--ap-*`) and geo (`--geo-verification-proxy`, `--xff`, `--geo-bypass*`) options are validated with upstream's messages (`buffer size "0" must be positive`, `invalid file access retry count "X" given`, `invalid time range to wait for video "X" given`, ...) and otherwise have no effect: the supported extractors use no password logins or geo bypass; `--wait-for-video` applies to YouTube (see below). `--mark-watched` applies to YouTube when cookies are passed (`--cookies`/`--cookies-from-browser`), like upstream `_mark_watched`: `Marking watched` and `Marking fully watched` requests to the player response's videostats URLs with upstream's query updates (a random `cpn`), `Unable to mark [fully ]watched` warnings otherwise (`youtube-watched`). `--rm-cache-dir` prints upstream's `Removing cache dir DIR ..` for this port's (unused) `yt-dlp-rs` cache directory. `-U`/`--update`/`--update-to` are errors (no self-update). `--js-runtimes deno[:PATH]` and `node[:PATH]` select the YouTube challenge runtime (a bare name is looked up on PATH; Deno is preferred like upstream's provider preference): the pinned Deno without permissions, or Node.js 22+ under its permission model (`--permission`, or `--experimental-permission --no-warnings=ExperimentalWarning` before 23.5.0) reading the solver from stdin, as upstream's `NodeJCP` runs it; `bun` and `quickjs`, `--extractor-args` for extractors other than `generic`, unported YouTube arguments and `youtubetab` arguments other than `skip`/`approximate_date`, `--plugin-dirs`, `--legacy-server-connect` and `--bidi-workaround` warn that they are not supported natively. `--encoding` follows upstream `write_string` for `utf-8`, `ascii`, `latin-1`, `cp1252`, `utf-16-le`/`-be`, `utf-32-le`/`-be` and the BOM codecs `utf-16`/`utf-32` (a little-endian BOM before every message, as CPython writes on little-endian hosts; with Python's aliases): every message, `--print`, JSON and listing line is encoded with `errors='ignore'`, while progress lines, the `[debug] Encodings:` line (whose `pref` names the encoding) and child processes' output are not; other codecs warn and keep UTF-8 (upstream raises `LookupError` for unknown names). `--impersonate` reports upstream's unavailable-target error and `--list-impersonate-targets` its table of unavailable `curl_cffi` targets; `--ap-list-mso` lists no providers |
+| Accepted tuning and environment options | `--file-access-retries`, `--throttled-rate`, `--no-update`, `--no-plugin-dirs`, `--remote-components`, `--prefer-insecure`/`--prefer-unsecure`, `--allow-dynamic-mpd`/`--no-ignore-dynamic-mpd`/`--ignore-dynamic-mpd`/`--no-allow-dynamic-mpd`, `--geo-verification-proxy` are validated with upstream's messages (`buffer size "0" must be positive`, `invalid file access retry count "X" given`, `invalid time range to wait for video "X" given`, ...) and otherwise have no effect; `--wait-for-video` applies to YouTube (see below). `--mark-watched` applies to YouTube when cookies are passed (`--cookies`/`--cookies-from-browser`), like upstream `_mark_watched`: `Marking watched` and `Marking fully watched` requests to the player response's videostats URLs with upstream's query updates (a random `cpn`), `Unable to mark [fully ]watched` warnings otherwise (`youtube-watched`). `--cache-dir DIR`/`--no-cache-dir` (the last wins) and `--rm-cache-dir` follow upstream `Cache` (`src/cache.rs`, `tests/cache.rs`): entries are `SECTION/KEY.json` (the key `quote`d with `%` as `,`) holding upstream's `{"yt-dlp_version": ..., "data": ...}` envelope, written atomically, read with `min_ver` checks (unversioned entries count as 2022.08.19), with upstream's `Saving`/`Loading SECTION.KEY` and `Discarding old cache from version V (needs M)` debug lines and `Cache retrieval from PATH failed (SIZE)` warning (a failed write warns with the OS error instead of a Python traceback). The default directory is `${XDG_CACHE_HOME:-~/.cache}/yt-dlp-rs`, this port's own like its configuration files, so `--rm-cache-dir` never removes upstream's cache; the format is upstream's, so `--cache-dir` may point at an upstream cache. Entries record the pinned upstream version `2026.10.21`. `--rm-cache-dir` prints `Removing cache dir DIR ...` (`..` when missing) and refuses a path without `cache` or `tmp` (`ERROR: Not removing directory DIR - this does not look like a cache dir`, exit 1, where upstream raises). Cached data: the SoundCloud `client_id` (cleared and refreshed after a 401/403), the Brightcove policy key per `ACCOUNT_PLAYER` (an `INVALID_POLICY_KEY` answer to a cached key clears it and extracts a new one) and YouTube's `youtube-sigfuncs` signature specs per player and length (`min_ver` 2025.07.21; an empty signature request still runs when every spec is cached, like upstream). Other upstream cache users (EJS script cache, logins, tokens) belong to unported features. `-U`/`--update`/`--update-to` are errors (no self-update). `--js-runtimes deno|node|quickjs|bun[:PATH]` enable YouTube challenge runtimes (the last value per name; a bare name is looked up on PATH, a directory holds `deno`/`node`/`qjs`/`bun`); the most preferred one (deno, node, quickjs, bun) whose version upstream's `JsRuntime` accepts solves: Deno 2.3+ without permissions, Node.js 22+ under its permission model (`--permission`, or `--experimental-permission --no-warnings=ExperimentalWarning` before 23.5.0), Bun 1.2.11+ as `bun --bun run --no-addons --prefer-offline --no-install -` (with `[jsc:bun] bun support has been deprecated...` once, or upstream's unsupported-version warning after 1.3.14) and QuickJS 2023-12-09+ or QuickJS-ng (version from `qjs --help`) as `qjs --script FILE.js` (with upstream's slow-version warning before 2025-04-26/0.12.0), each with upstream's stderr cleaning. Runtimes run with a cleared environment in a private directory, so Bun's npm auto-install, proxies and `youtube-ejs:jitless` are not supported. `--extractor-args` for extractors other than `generic`, unported YouTube arguments and `youtubetab` arguments other than `skip`/`approximate_date`, `--plugin-dirs`, `--legacy-server-connect` and `--bidi-workaround` warn that they are not supported natively. `--encoding` follows upstream `write_string` for `utf-8`, `ascii`, `latin-1`, `cp1252`, `utf-16-le`/`-be`, `utf-32-le`/`-be` and the BOM codecs `utf-16`/`utf-32` (a little-endian BOM before every message, as CPython writes on little-endian hosts; with Python's aliases): every message, `--print`, JSON and listing line is encoded with `errors='ignore'`, while progress lines, the `[debug] Encodings:` line (whose `pref` names the encoding) and child processes' output are not; other codecs warn and keep UTF-8 (upstream raises `LookupError` for unknown names). `--ap-list-mso` prints upstream's TV provider table |
+| `-u`/`--username`, `-p`/`--password`, `-2`/`--twofactor`, `-n`/`--netrc`, `--netrc-location`, `--netrc-cmd`, `--video-password` | Upstream `validate_options` errors (`.netrc, netrc command and username/password are mutually exclusive options`, `account username missing`) and `Type account password and press [Return]: ` for `-u` without `-p` (read from the terminal without echo through `stty`; without a terminal from stdin after `Warning: Password input may be echoed.`). Extractors follow `InfoExtractor.initialize`: once per extractor per run (a failed login is retried by the next URL) `_initialize_pre_login`, `_perform_login` when `_get_login_info` finds credentials, and `_real_initialize`, before `Extracting URL`. `_get_login_info` takes `--username`/`--password`, else the extractor's netrc machine from `--netrc-cmd` (`{}` replaced by the machine, `Executing command: CMD`, run through `/bin/sh -c` (`%COMSPEC% /c` on Windows), a nonzero exit is `Command returned error code N`) or from `--netrc` with `--netrc-location` (default `~`; a leading `~` or `~/` expands to the home directory, a directory means its `.netrc`), parsed like Python 3.11+'s `netrc` module (`machine`/`default` entries with `login`/`user`, `account` and `password`, `macdef` macros, quoted and backslash-escaped tokens, `#` comments, `NetrcParseError` texts with file and line; like upstream no permission check). Failures are `WARNING: [EXTRACTOR] Failed to parse .netrc: ERR` (Python's `[Errno N] ...: 'PATH'` for unreadable files) and a missing machine without a `default` is `No authenticators for MACHINE`. `_get_tfa_info` uses `--twofactor`, else prompts `Type NOTE and press [Return]: ` like the password. With `--username`, extractors without a netrc machine warn `Login with password is not supported for this website. Use --cookies-from-browser or --cookies for the authentication. ...` once (not the generic, `href.li`, `FacebookRedirectURL` and YouTube ones, like upstream). Logins are implemented for Niconico (form, MFA), Dailymotion (password-grant token), Twitch (all Twitch extractors; form JSON and two-factor token), VK (VK videos, wall posts and user videos; cp1251 form), Tumblr (OAuth password grant), SoundCloud (`--username oauth --password TOKEN` and `oauth_token` cookies) and YouTube (upstream's warning, or its OAuth error), each compared with pinned upstream through `tests/fixtures/sites/*-login/` (request bodies and headers are part of the routes) including wrong-password errors; Vimeo credentials are an unsupported native error (unless a `vimeo` cookie is set) because extraction as the logged-in web client is not ported. `--video-password` is used by the extractors noting it below. Adobe Pass (`--ap-*`, which also reads `-n`/`--netrc-location`/`--netrc-cmd` for the TV provider's machine) is described below; Python's locale-encoding retry for non-UTF-8 netrc files is replaced by lossy UTF-8 decoding, `~user` paths are not expanded and VK credentials outside cp1251 are an explicit error (upstream's `UnicodeEncodeError`) |
+| `--impersonate CLIENT[:OS]`, `--list-impersonate-targets` | Upstream `ImpersonateTarget` parsing (lowercased; `Invalid impersonate target "X"` usage errors), containment and `str()`. Targets come only from the optional `impersonate` cargo feature (`cargo build --features impersonate`): a `wreq` transport on BoringSSL whose `wreq-util` emulations send the browser's TLS ClientHello, HTTP/2 SETTINGS and default headers (Chrome 145-149 on `windows-10`/`macos`/`linux`/`android`, Edge 146-148 on `windows-10`/`macos`, Firefox 149-151 on `windows-10`/`macos`/`linux`, Safari 18.5-26.4 on `macos` and three iOS Safari profiles; OS versions are left open except where the user agent names one), ordered like `CurlCFFIRH` (desktop first, then `edge < firefox < safari < chrome`, newest version, OS name). `--list-impersonate-targets` renders upstream's table with `wreq` as the Source (least preferred first); without the feature it lists Chrome, Safari, Firefox and Edge as `wreq (unavailable)` (upstream's `tor` row is omitted: no backend of this port provides it). An unavailable `--impersonate` target is upstream's `Impersonate target "TARGET" is not available. ...` error (exit 1); an available one is an error too, since this port cannot impersonate every request like upstream. Extractor requests marked `impersonate=` (`_request_webpage`) use the first available requested target resolved like upstream (`impersonate=True` takes the most preferred target, ignoring `--impersonate`), or warn with upstream's `The extractor is attempting impersonation, but ...` text; `require_impersonation=True` gives upstream's error text. Impersonated requests use the global proxy, `--no-check-certificate`, source address, socket timeout and the session cookie jar, at most 5 redirects (`curl_cffi`'s limit), and drop header values equal to upstream's `std_headers` (the random User-Agent, Accept, Accept-Language, Sec-Fetch-Mode) and this port's `Accept-Encoding: identity`, so the target's headers apply (an explicit `--user-agent` is kept, as upstream). Impersonated: TikTok webpages (the `Impersonation target:` debug line names the resolved target), Kick API calls, Vimeo HTTPS pages, the Mixcloud GraphQL lookup, Mir24Tv pages and Dailymotion's Chrome/Firefox m3u8 retries. Not supported: `--client-certificate` with impersonation (an error), format/download `impersonate` fields, Instagram's and Bandcamp's impersonated requests, Vimeo's `Got HTTP Error N when using impersonate target` mapping and `curl_cffi` target names |
+| `--xff VALUE`, `--geo-bypass`, `--no-geo-bypass`, `--geo-bypass-country CODE`, `--geo-bypass-ip-block IP_BLOCK` | Upstream's shared `geo_bypass` destination (the last option wins) and `validate_options`: `default`, `never`, a two-letter country code (unknown codes give no address, `Using fake IP None (ZZ)`) or a CIDR block read like `inet_aton`/`int`, else `Unsupported --xff "VALUE"`. See "Geo restriction bypass" |
+| `--ignore-no-formats-error`, `--no-ignore-no-formats-error` | Upstream `ignore_no_formats_error`: a result without formats warns `No video formats found!` and `Requested format is not available`, `-j`/`--print`/`-F` (`ID has no formats`) and the info JSON/sidecars use its metadata (`formats: []`, no format fields), and a download then fails with `[EXTRACTOR] ID: No video formats found!`; extractors' expected `raise_no_formats` errors and `raise_geo_restricted(metadata_available=True)` warn instead (see "Geo restriction bypass") |
 | `--client-certificate CERTFILE`, `--client-certificate-key KEYFILE`, `--client-certificate-password PASSWORD` | TLS client authentication for every request: a PEM certificate (optionally containing its key) plus an optional separate PEM key. Encrypted keys and `--client-certificate-password` are an explicit native error, because the rustls transport needs unencrypted keys |
 | `--enable-file-urls`, `file:` URLs | Upstream refuses `file:` URLs after `[generic] Extracting URL`/`Downloading webpage` with `file:// URLs are disabled by default in yt-dlp for security reasons. Use --enable-file-urls to enable at your own risk.`; with the option, local media files are direct links like urllib's file handler gives upstream (guessed Content-Type, mtime timestamp, protocol `file`) and are copied with progress. Local HTML pages and manifests remain an explicit native error |
 | `--http-chunk-size SIZE`, `--test` | Upstream `HttpFD` chunking for whole-file HTTP media: each request asks for `bytes=START-END` of a randomized 95-100% chunk (`--http-chunk-size`, else the format's `downloader_options.http_chunk_size`, which YouTube HTTPS formats set to 10 MiB like upstream); a matching `206` continues with the next chunk, other responses restart as a whole download (`Unable to resume` past the start), and the size limits compare against each response's end like upstream. Hidden `--test` keeps the first 10241 bytes (one `bytes=0-10240` request, even if Range is ignored). Request patterns compared with pinned upstream; fragments and FFmpeg downloads ignore `--test` |
@@ -445,9 +450,14 @@ client ID from the home page's JS assets (last first; refreshed after a
 transcoding's (`http`/`hls` × `aac`/`opus`/`mp3`) stream URL (`abr` and DRM
 transcodings skipped, previews deprioritized, `hls-aes` as m3u8), artwork
 thumbnails with the HEAD-checked original, and the track's metadata. DRM-only
-and geo-blocked tracks are upstream's errors. Original downloads, logins,
-comments, sets, users, stations and search are not supported.
-`tests/fixtures/sites/soundcloud/` is compared with pinned upstream output.
+and geo-blocked tracks are upstream's errors. `--username oauth --password
+TOKEN` (or an `oauth_token` cookie) is verified like upstream
+(`Verifying login token...`, `Logging in`, an invalid token's warnings) and
+then authorizes the API requests; other usernames are upstream's
+unsupported-login error. Original downloads, comments, sets, users, stations
+and search are not supported. `tests/fixtures/sites/soundcloud/` and
+`tests/fixtures/sites/soundcloud-login/` are compared with pinned upstream
+output.
 
 StreetVoice songs (`[SUB.]streetvoice.com/USER/songs/ID`) follow upstream
 `StreetVoiceIE`: the v4 song API's metadata (the `name` is required, else
@@ -458,6 +468,50 @@ whose HTTP errors and empty bodies are upstream's warnings, as `mp3` audio
 formats (`m3u8_native` for HLS; `.mp3.NNNk` URLs give the ABR/TBR). Format
 responses whose body is not empty but fails to parse remain explicit native
 errors, since this port does not reproduce Python's `JSONDecodeError` text.
+
+SVT Play and Öppet arkiv videos (`svtplay.se`/`oppetarkiv.se`
+`/video|klipp|kanaler/ID[...?modalId=|id=SVT_ID]`, Barnplay
+`svt.se/barnkanalen/barnplay/SLUG/SVT_ID`) follow upstream `SVTPlayIE`: the
+page (non-fatal when the URL carries the SVT ID: an HTTP error is a warning
+and the page is empty), else its `URQL_DATA` store's
+`detailsPageByPath.smartStart.videoSvtId` (`Unable to extract json data` /
+`Unable to extract SVT ID` errors), and the `videoplayer-api/video/ID` JSON
+through `SVTBaseIE._extract_video`: each `videoReferences` entry
+(`playerType` or `format` as the ID) as non-fatal HLS (`mp4`, master
+playlist only, `m3u8` protocol for live/simulcast videos) or DASH formats or
+a plain format; manifest subtitles merged without duplicate URLs, then
+`subtitles`/`subtitleReferences` tracks (`sv` by default, `vtt` for `.m3u8`
+URLs), with `text-open` tracks moved to `LANG-forced`; the Sweden-only geo
+error when no format is found and `geoBlockedSweden` is set; title (else the
+episode, else the series, else the OpenGraph title without its `| ...`
+suffix, upstream's `TypeError` text when missing), series, season/episode
+numbers, `validFrom` timestamp, duration, age limit and `is_live`, with the
+OpenGraph description and thumbnail (a warning when missing). `svt:ID`
+pseudo-URLs reproduce pinned upstream's failure (its non-fatal page request
+raises `Unable to handle request: Unsupported url scheme: "svt" (urllib)`,
+the handler list of the capture environment), which also makes resolved
+series entries fail. `f4m` video references are explicit native errors.
+
+SVT Play series (`svtplay.se/SLUG[?...tab=SEASON_ID]`, not an `SVTPlayIE`
+URL) follow upstream `SVTSeriesIE`: the `contento/graphql` listable query
+(`Downloading series page`, the query encoded like `urlencode`), every (or the
+selected season's) episode `videoSvtId` as an `svt:ID` `url` result for
+`svt:play`, and the playlist ID (the season ID, else the series ID), title
+(`NAME - SEASON`, else the season ID) and long (else short) description.
+Missing `data`, `listablesBySlug` and `associatedContent` keys are upstream's
+`KeyError`; other unexpected shapes are explicit native errors.
+
+svt.se articles (`svt.se/.../SLUG`, not an `SVTPlayIE` URL) follow upstream
+`SVTPageIE`: the OpenGraph title (a warning when missing), the page's
+`urqlState` JSON (fatal), the first `data` JSON string's `page.topMedia` and
+`page.body[].video` `svtId`s, each `api.svt.se/video/ID` JSON through
+`_extract_video` with the page title, as a playlist. Upstream iterates the
+IDs as a Python `set` (hash order); this port keeps their first-seen page
+order, so only single-video ordering is compared. The live svt.se site no
+longer serves `urqlState` (upstream's extractor fails there too); its
+fixtures follow the upstream code's shapes. `tests/fixtures/sites/svt/` is
+compared with pinned upstream output (the video CDN is geo-blocked outside
+Sweden, so its manifests are constructed).
 
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
@@ -596,6 +650,41 @@ item's dict; several make a playlist. Wayback Machine YouTube captures
 (`web.archive:youtube`) are not supported. `tests/fixtures/sites/archiveorg/`
 is compared with pinned upstream output.
 
+Arte videos (`arte.tv/LANG/videos/ID`, `api.arte.tv/api/player/vN/config/LANG/ID`,
+`arte://program/ID`, including `LIVE`) follow upstream `ArteTVIE`: the player
+config API (`x-validated-age: 18`; an `arte://` URL requests the `None`
+language like upstream), the `Video restricted to 'CODE'` error for a
+geoblocked area and the broadcast-rights error without `rights`. Each stream's
+first version gives the `VERSION-LABEL [SHORT-LABEL]` `format_note` and the
+`_VERSION_CODE_RE` `language_preference` (six preference digits as a decimal
+`int`, `-1` for unmatched codes); HLS streams are non-fatal master playlists
+with the version code as `m3u8_id` (`cc`/`OGsub` short labels sorted after the
+others), HTTPS and RTMP streams are direct formats and other protocols warn
+`Skipping stream with unknown protocol`. Duplicate format URLs are removed;
+manifest subtitles get upstream's `-acc` (`-MAL.m3u8`) and `-forced` (no
+`_VO`) locales and merge without duplicate URLs. Metadata, captioned
+thumbnails and `chapters.elements` follow upstream's dict. A geoblocked video
+is upstream's `GeoRestrictedError` with the `_COUNTRIES_MAP` countries (`DE`
+and `FR` for other codes): without `--xff`, extraction is retried once with a
+fake `X-Forwarded-For` address from one of them (the random-IP warning), then
+the error lists the countries' names (see "Geo restriction bypass").
+
+Arte embeds (`arte.tv/player/vN/index.php?...json_url=URL`) follow
+`ArteTVEmbedIE`: the `json_url` config URL is followed as an `ArteTV` result.
+Generic-page embed detection (`_EMBED_REGEX`) is not ported. Collections
+(`arte.tv/LANG/videos/RC-NNNNNN`) follow `ArteTVPlaylistIE`: the OPA programs
+API's first program (title and short description), then each `SEASON` child's
+player playlist items with a provider ID and link as `url_transparent` entries
+(title, subtitle as `alt_title`, duration, age rating), else the `SHOW`
+videos as `ArteTV` URL entries. Category pages (`arte.tv/LANG/videos/PATH`, not
+a video or collection) follow `ArteTVCategoryIE`: absolute links to this
+language's videos and collections (the page itself skipped, duplicates
+dropped) with the OpenGraph or `<title>` title before its last `|` and the
+OpenGraph description. `tests/fixtures/sites/arte/` (a saved config and
+master playlist, saved collection and season responses, and synthetic
+multi-stream, playlist and category responses) is compared with pinned
+upstream output.
+
 AudioBoom posts (`audioboom.com/posts|boos/ID`) follow upstream `AudioBoomIE`:
 the post page's `V5DetailPagePlayer` React props (`_search_json` with
 `unescapeHTML`) for the clip URL, title, description (else its cleaned
@@ -692,11 +781,46 @@ captions text tracks, the nine resized poster thumbnails and the
 name/description/tags/published_at/account_id metadata. Generic pages with
 player iframes or `<video data-video-id>` tags followed by a player script
 are followed (one) or listed (several) with the page smuggled as the
-`referrer`. Playlists, TV Everywhere (Adobe Pass) videos, RTMP sources,
+`referrer`. TV Everywhere videos (a `TVE_AUTH` API error) with a smuggled
+`source_url` and `software_statement` authenticate through Adobe Pass (below)
+with the API's `bcadobepassrequestorid`/`bcadobepassresourceid` custom fields
+and request the API again with the media token as `tveToken` (without them,
+upstream's `Missing fields in smuggled data` error). Playlists, RTMP sources,
 `<video>` tags without a player script (upstream probes them with
 `_is_valid_url`) and `BrightcoveLegacyIE` URLs are not supported; the policy
 key is not cached between runs. `tests/fixtures/sites/brightcove/` is compared
 with pinned upstream output.
+
+Adobe Pass TV provider authentication follows upstream `AdobePassIE`
+(`src/extractor/adobepass/`, for extractors calling `_extract_mvpd_auth`;
+Brightcove TV Everywhere videos are the ported consumer). `MSO_INFO` is
+generated from the pinned checkout by `tools/generate_adobepass_mso_info.py`
+(`--check` verifies it); `--ap-list-mso` prints upstream's table and an
+unknown `--ap-mso` or `--ap-password` without `--ap-username` are upstream's
+usage errors. Without `--ap-mso`, or without credentials from
+`--ap-username`/`--ap-password` or the MSO's netrc machine (`--netrc`,
+`--netrc-location`, `--netrc-cmd`, parsed like CPython's `netrc`, with
+upstream's `No authenticators for MSO` and `Failed to parse .netrc`
+messages), extraction fails with upstream's `This video is only available for
+users of participating TV providers...` error. Otherwise the device, client,
+access token and registration code requests, the `authenticate/saml` provider
+redirect page and the MSO's login follow upstream with its notes, request
+bodies and headers: the generic flow (meta refresh redirects, `post_form` of
+each page's form with its hidden inputs, `_eventId_proceed` for Cablevision
+and AlticeOne, no confirmation for Rogers), and the special-cased
+`Comcast_SSO`, `Verizon`, `Spectrum`/`Charter_Direct`, `slingtv` and
+`Suddenlink` flows; credential posts check the MSO's `login_hostname`
+(upstream's `Unexpected login URL hostname` error) and are upgraded to https.
+The session, authorization (an `<error>` reports its details) and short media
+token requests carry upstream's `ap_*` headers, and `<pendingLogout` answers
+restart once. The authentication and authorization tokens are kept in memory
+for the rest of the run (upstream stores them in its `ap-mvpd` cache, which
+this port does not have). `Philo` (an interactive code prompt) and `Fubo`
+logins, `--ap-username` without `--ap-password` (upstream prompts for it),
+`--geo-verification-proxy` headers and `_get_mvpd_resource` are not ported.
+`tests/fixtures/sites/adobepass/` (synthetic Adobe and MSO pages; nothing is
+compared with live providers) is compared with pinned upstream output, and
+`tests/adobepass.rs` checks the request sequences.
 
 DrTalks videos (`drtalks.com/videos/SLUG`) follow upstream `DrTalksIE`: the
 page's Next.js `video` data (missing keys are upstream's `KeyError`) as a
@@ -766,6 +890,44 @@ with the API's non-`None` `title`, `description` and `parse_duration`d
 `metadata.duration`. Non-string titles or descriptions are rejected.
 `tests/fixtures/sites/wimbledon/` is compared with pinned upstream output.
 
+Wistia media (`wistia:ID`, `*.wistia.net|com/[embed/]iframe|medias/ID`)
+follow upstream `WistiaIE`: the `http://fast.wistia.net/embed/medias/ID.json`
+config (Referer the input URL if it is HTTP, else the config's base URL;
+`--video-password` as the `password` query), its truthy `error` (`Error while
+getting the playlist: ...`) and the `passwordProtectedVideo` plugin errors,
+then the `media` dict's `KeyError`s (`media`, `hashedId`, `name`, `assets`).
+Assets with a URL and status 2 (or none) that are not previews or
+storyboards are formats (`TYPE-DISPLAY_NAME` IDs for `*_video` types, int
+`tbr`, `quality` 1 for the original, audio-only `Audio` assets, else
+width/height/codec; `container`/`ext`/`filesize`, or for HLS assets the
+`m3u8_native` mp4 format after its `ts-` `.ts` copy); `still`/`still_image`
+assets are thumbnails with `.bin` replaced by the real extension. An asset
+without an `ext` (and every thumbnail with a `.bin` URL) gets upstream's
+`Checking media extension` HEAD request (`urlhandle_detect_ext`, `mov` as
+`mp4`; a failed request warns `HEAD request returned error` and keeps `bin`).
+Captions are `captions/ID.vtt?language=LANG` subtitles (a repeated language
+replaces the earlier URL in place). `WistiaPlaylistIE`
+(`.../playlists/ID`) is a playlist of the first playlist's `medias`
+`embed_config` media dicts. `WistiaChannelIE` (`wistiachannel:ID`,
+`.../channel/ID`) follows `wistia:MEDIA` for a `wmediaid`/`wvideo[id]` query
+under `--no-playlist` (else `Downloading channel ...`), and otherwise is a
+playlist of `url` entries (`title` from `name`) of the first series' sections'
+`videos`/`episodes` with a truthy `hashedId`, with the series title and
+description; any API failure warns and falls back to the channel page's
+base64 `wchanneljsonp` data (upstream's regex default makes a missing value
+the channel ID, whose decoding fails with upstream's `Incorrect padding`
+JSON error). Non-string asset fields, unusual base64 padding and channel data
+that is not UTF-8 JSON are explicit native errors. On generic pages the
+`WistiaChannelIE` (`wistia_channel wistia_async_ID` classes, as
+`wistiachannel:ID` with the page URL's query) and `WistiaIE` embeds
+(`_EMBED_REGEX` iframe/script/meta URLs, other `wistia_async_ID` classes,
+`data-wistia-id`, `Wistia.embed(...)` and `id="wistia_..."`) are detected in
+that order; upstream's media-ID fallback never runs (it tests a generator).
+Pages that TeachableIE claims (its `teachableTracker` check on
+`/courses`/`/p` URLs) report no Wistia embeds, as upstream, but TeachableIE
+itself is not ported. `tests/fixtures/sites/wistia/` is compared with pinned
+upstream output.
+
 Screen9 videos (`*.screen9.tv|com/embed|media/ID`, `play.su.se/...`) follow
 upstream `Screen9IE`: the `api.screen9.com/embed/ID` page's fatal
 `var config` JSON, its first `application/x-mpegURL` source's HLS formats
@@ -815,6 +977,44 @@ CozyTV replays (`cozy.tv/USER/replays/ID`) follow upstream `CozyTVIE`: the
 `USER-ID` ID, the cached replay JSON's title (else the generic title), `user`
 (else the URL user) uploader, `unified_strdate` date, raw duration and
 `was_live`, with the CDN `index.m3u8` as fatal HLS formats and subtitles.
+
+PeerTube videos follow upstream `PeerTubeIE` on its listed instances
+(`_INSTANCES_RE`, generated into `src/extractor/peertube/instances.rs` from
+the pinned checkout by `tools/generate_peertube_instances.py`; matched
+case-sensitively like upstream) at `/videos/watch/ID`, `/videos/embed/ID`,
+`/api/vN/videos/ID` and `/w/ID` (a UUID or 22-character short ID), and on any
+host through `peertube:HOST:ID`. The `/api/v1/videos/ID/` JSON (fatal, with
+upstream's `Unable to download webpage` error text) gives the formats: every
+streaming playlist's `playlistUrl` as non-fatal live-style HLS formats (only
+the master playlist read, variants numbered; manifest subtitles dropped with
+upstream's warning), then the `files` and the playlists' `files` as
+`resolution.label` formats (`parse_resolution` width/height, `int_or_none`
+size, `fps`, or `vcodec: none` for `0p`). `is_live` is set by a playlist URL
+and cleared by any file format, as upstream. A description of 250 characters
+or more is replaced by the non-fatal `description` endpoint's; `--write-subs`/
+`--list-subs` read the non-fatal `captions` endpoint (`captionPath` joined to
+the host, `en` without a language). The metadata is upstream's: thumbnail,
+`publishedAt` timestamp, account and channel names, integer IDs and URLs,
+language, licence, duration and counts, list tags, category, the canonical
+`/videos/watch/ID` `webpage_url`, and `age_limit` always `None` (upstream's
+`nsfw is bool` check). `--video-password` is sent as
+`x-peertube-video-password` with the API and manifest requests and becomes the
+result's `http_headers`.
+
+PeerTube accounts (`/a/NAME`), video channels (`/c/NAME`) and video playlists
+(`/w/p/ID`) on the same instances follow upstream `PeerTubePlaylistIE`: the
+non-fatal `/api/v1/TYPE/ID` information (a failed request is upstream's
+`'bool' object has no attribute 'get'` error) gives the `displayName` title,
+description, `createdAt` timestamp, owner account name and ID (else the
+item's own) as `channel`/`channel_id` and the `https://HOST` +
+`thumbnailPath` thumbnail (else `''`); the `/videos?sort=-createdAt` pages of
+30 give `url` entries for `https://HOST/w/SHORT_UUID` with their names. Pages
+are fetched up front until one is shorter than 30 entries; upstream's
+`OnDemandPagedList` fetches only the pages `--playlist-items` needs, so a
+partial selection may make more requests here (the selected entries are the
+same). Not ported: PeerTube detection on other hosts (GenericIE's
+`_EMBED_REGEX` iframes and `og:platform` page check), which stays the
+generic extractor's unsupported-URL path.
 
 peer.tv videos (`peer.tv/de|it|en/ID`) follow upstream `PeerTVIE`: the page's
 `player.peer.tv/js/KEY` script (fetched with the `www.peer.tv` Referer) gives
@@ -913,6 +1113,32 @@ std < dvd < hd, the `original` upload (quality 3, width/height), and the title
 (else a `KeyError`), description, poster, millisecond duration, upload
 timestamp and `parse_age_limit` rating.
 
+Vidyard videos (`*.vidyard.com|*.hubs.vidyard.com/watch/ID`,
+`embed|share.vidyard.com/share/ID`, `play.vidyard.com/[player/]ID`) follow
+upstream `VidyardIE`: the `play.vidyard.com/player/ID.json` `payload` (missing
+`payload`/`chapters`/`sources`/`facadeUuid` keys are upstream's `KeyError`s),
+one chapter as a video and several (or none) as a playlist of the processed
+chapters with the `str(playerUuid)` ID and the player `name`. Each chapter's
+`sources.hls` `auto` master (else, when it gives no formats, every variant
+URL) is read non-fatally with the `Referer: https://play.vidyard.com/` header
+as `hls` formats and subtitles; the other source lists' valid URLs become
+`http-TYPE-PROFILE` formats with `mimetype2ext` extensions and
+`parse_resolution` sizes, without duplicate URLs. `vttUrl` captions are
+merged by language (else `und`) with their names. The non-fatal
+`play.vidyard.com/video/FACADE` metadata (title, integer duration, thumbnail
+list and `videoSections` chapters in seconds) is overlaid in upstream's dict
+order by the chapter's ID, integer `videoId` as `display_id`, title,
+unescaped non-empty description, millisecond (else integer second) duration,
+small/normal thumbnails and tag names, with the Referer as `http_headers`.
+On generic pages `_extract_embed_urls` finds `play.vidyard.com` iframes
+(joined to the page URL), `vidyard-player-embed` `<img>`/`<div>` `data-uuid`s
+and `vidyard_embed_code_ID` scripts, after Streamable's in the embed order.
+Not ported: upstream builds the playlist entries lazily, so a chapter's
+`KeyError` there is an uncaught Python exception; this port extracts every
+chapter first and reports the extractor error. Non-string source profiles,
+caption languages/names and player names are explicit native errors (upstream
+would raise a `TypeError` or format them with `str`).
+
 SAPO videos (`videos.sapo.pt|cv|ao|mz|tl/ID`) follow upstream `SapoIE`: the
 `rd3.videos.sapo.pt/ID/rss2` item's title, `sapo:synopse`, `media:content`
 URL, `parse_duration` time, author, `unified_strdate` date, integer view and
@@ -943,14 +1169,18 @@ and the truthy small/large thumbnails with their preferences.
 
 Dailymotion videos (`dailymotion.TLD/video/ID`, `dai.ly/ID`, embed, swf and
 player URLs, `lequipe.fr`) follow upstream `DailymotionIE`: the family-filter
-cookie, a client-credentials token, the GraphQL media object (its errors are
+cookie, a client-credentials token (a `password` grant with credentials from
+`--username`/`--netrc`, whose 400 answer is its `error_description`), the
+GraphQL media object (its errors are
 upstream's), the player metadata (geo and other errors), the qualities' HLS
-manifests requested with upstream's randomized headers (the impersonated
-retries are unavailable, as upstream without `curl_cffi`), including
+manifests requested with upstream's randomized headers, then upstream's
+Chrome and Firefox impersonated retries (which need the `impersonate`
+feature; without it, upstream's error text), including
 `PROGRESSIVE-URI` `http-` formats, and progressive H264 URLs with sizes and
 `@60` frame rates, plus subtitles, posters and metadata. Playlist URLs (and
 `?playlist=` without `--no-playlist`) are not supported.
-`tests/fixtures/sites/dailymotion/` is compared with pinned upstream output.
+`tests/fixtures/sites/dailymotion/` and `tests/fixtures/sites/dailymotion-login/`
+are compared with pinned upstream output.
 
 EbaumsWorld videos (`ebaumsworld.com/videos/SLUG/ID`) follow upstream
 `EbaumsWorldIE`: the player config XML (`Downloading XML`) as an untyped
@@ -1050,8 +1280,8 @@ CDN `poster.jpg` thumbnail.
 
 TikTok videos (`www.tiktok[v].com/@USER/video/ID`, `/embed/ID`,
 `/share/video/ID`) follow upstream `TikTokIE`'s webpage path (no app API
-without `app_info`): upstream's impersonation warning (this port cannot
-impersonate a browser, like upstream without `curl_cffi`), the webpage's
+without `app_info`): the webpage impersonated with the `impersonate`
+feature, else upstream's impersonation warning, the webpage's
 `__UNIVERSAL_DATA_FOR_REHYDRATION__`, else the page's proof-of-work challenge
 solved natively (SHA-256 over up to a million candidates, as
 `_solve_challenge_and_set_cookies`) and the page refetched with its cookie.
@@ -1187,8 +1417,13 @@ upstream's unprefixed `Channel "NAME" not found`), with upstream's
 `url_transparent` entries (float durations included). Collections
 (`twitch.tv/collections/ID`) follow `TwitchCollectionIE`. A page whose edges
 yield no entries ends a list here; upstream would request it again
-endlessly. Login (`--username`/`--netrc`) and the `client_id` extractor
-argument are not supported; an `auth-token` cookie is sent like upstream. VOD
+endlessly. Every Twitch extractor logs in like `TwitchBaseIE._perform_login`
+(the login page's hidden inputs and credentials posted as JSON to its form
+action, Twitch's `error`/`error_description`/`error_code` as `Unable to
+login. Twitch said: ...`, the redirect page and its two-factor
+`authy_token` step), compared with pinned upstream through
+`tests/fixtures/sites/twitch-login/`; the `client_id` extractor argument is
+not supported; an `auth-token` cookie is sent like upstream. VOD
 rechat subtitles no longer exist upstream. The usher URL's random `p`
 parameter makes VOD and stream `-J` output non-deterministic upstream too, so
 `tests/fixtures/sites/twitch/` compares them through `--print` and `-F`
@@ -1259,8 +1494,11 @@ usable videos is upstream's `No video formats found!`. API values that are not
 objects or lists remain explicit native errors.
 
 Vimeo videos (`vimeo.com/ID`, `player.vimeo.com/video/ID`, channel and
-`user` clip URLs) follow upstream `VimeoIE` as it runs without login or
-impersonation (with upstream's impersonation warning): player pages'
+`user` clip URLs) follow upstream `VimeoIE` as it runs without login
+(`--username`/`--netrc` credentials are an unsupported native error unless a
+`vimeo` cookie is set, as logged-in extraction is not ported) or
+impersonation (HTTPS pages impersonated with the `impersonate` feature,
+else upstream's impersonation warning): player pages'
 `playerConfig`, and vimeo.com pages' clip page config (or a channel page's
 `data-config-url`) with its config JSON, through `_parse_config`
 (progressive `http-QUALITY` formats, per-CDN HLS formats with audio
@@ -1281,8 +1519,20 @@ the embed page's error messages, security check and known error pages,
 (`dash*`) and RTMP formats, subtitles, chapters (`time_codes` with int
 times), the info page's date and view count and `_format_sort_fields`.
 A YouTube embed is followed; Vimeo, Rutube, Dailymotion, Odnoklassniki and
-Sibnet embeds and VK's JS challenge (which needs upstream's
-`JSInterpreter`) are unsupported errors, and logins are not supported.
+Sibnet embeds are unsupported errors.
+VK's JS challenge (`VKBaseIE._download_webpage_handle`, for the payload
+POSTs, embed pages and user video pages) is solved like upstream: a response
+ending on `/challenge.html` has its `salt` function run by the native
+JavaScript interpreter (below), `key=md5(hash429:salt)` is requested with
+`Submitting JS challenge solution` (`Unable to solve JS challenge` on
+failure) and the original request is made again with the cookie it sets. A
+missing `hash429`, a missing salt function and interpreter errors are
+upstream's errors; `tests/fixtures/sites/vk/` covers them (logins solve it too).
+VK videos, wall posts and user
+videos log in like `VKBaseIE._perform_login` (the home page's hidden inputs
+with the cp1251 `email`/`pass`, its first `remixlhk` cookie, `onLoginFailed`
+as `Unable to login, incorrect username and/or password`), compared with
+pinned upstream through `tests/fixtures/sites/vk-login/`.
 
 VK wall posts (`vk.com/wall-1_2`, `?w=wall-1_2`, `m.`/`new.`) follow
 upstream `VKWallPostIE`: the `wkview.php` `show` payload's HTML as a
@@ -1561,7 +1811,8 @@ native error.
 Kick (`kick.com`) follows upstream's five reworked extractors (yt-dlp
 `fe84bef`, release 2026.10.21), each requesting the site APIs (`kick.com/api/v2`,
 `web.kick.com/api/v1`, a `session_token` cookie as bearer token) with
-upstream's per-extraction impersonation warning: `kick:vod`
+impersonation (with the `impersonate` feature; else upstream's
+per-extraction impersonation warning): `kick:vod`
 (`CHANNEL/videos/UUID`: the playback endpoint's HLS URL, its `type: details`
 error responses, metadata from the creator's video list; a subscriber-only VOD
 without a playback URL checks the subscription and needs cookies),
@@ -1701,9 +1952,11 @@ for `DRM` licences, and the joined `pmd.netzkino-seite.netzkino.de` video URL
 as an untyped result with the original title, FSK age limit, cast, creators,
 categories, synopsis, runtime, country, year and cover image (`clean_html`
 and empty-value filtering as upstream), plus the generic title and
-`No video formats found!` error for pages without a movie. Upstream's
-`_GEO_COUNTRIES` fake `X-Forwarded-For` header is not sent natively, so the
-fixture's `-j` cases use `--no-geo-bypass`.
+`No video formats found!` error for pages without a movie. Like upstream's
+`_GEO_COUNTRIES = ['DE']`, requests and formats carry a random German
+`X-Forwarded-For` address unless `--xff`/`--no-geo-bypass` say otherwise, so
+the fixture's `-j` cases use `--no-geo-bypass` or a fixed `/32` block. The
+DRM error is a warning with `--ignore-no-formats-error`.
 `tests/fixtures/sites/netzkino/` is compared with pinned upstream output.
 
 Pear Video pages (`pearvideo.com/video_ID`) follow upstream `PearVideoIE`: the
@@ -1970,8 +2223,12 @@ iframe's `<source>` and `data-crt-options` HD URL (with upstream's JSON parse
 warning and the post-media fallback), external provider embeds as `url`
 results, and the post's title, description, uploader and tags. Posts with
 several videos form a playlist and dashboard-only posts report upstream's
-errors, but neither is covered by fixtures yet; logins are not supported.
-`tests/fixtures/sites/tumblr/` is compared with pinned upstream output.
+errors, but neither is covered by fixtures yet. Logins use the OAuth
+password grant with the API token (`--twofactor` as `tfa_token`, asked for
+when the API answers `tfa_required`; API errors are upstream's `API returned
+error ...`, other failures its `Login failed` warning).
+`tests/fixtures/sites/tumblr/` and `tests/fixtures/sites/tumblr-login/` are
+compared with pinned upstream output.
 
 Odysee/LBRY streams (`odysee.com`, `lbry.tv` and `lbry://` claim URLs,
 `$/embed/` and `$/download/` paths) follow upstream `LBRYIE`: the API
@@ -2019,8 +2276,9 @@ its `application/x-mpegURL` sources as fatal `mp4` HLS formats with merged
 subtitles (no sources is the expected `No video found` error), the title (else
 the ID), a show's `unified_timestamp` of its date and hour, channel (a missing
 one warns with the video ID as the field name, like upstream), poster thumbnail
-and presenter, or a product's poster and brand name. Upstream's `DE`
-geo-bypass `X-Forwarded-For` header is not sent; the fixtures compare with
+and presenter, or a product's poster and brand name. Like upstream's
+`_GEO_COUNTRIES = ['DE']`, requests and formats carry a random German
+`X-Forwarded-For` address by default; the fixtures compare with
 `--no-geo-bypass`.
 
 INA media (`ina.fr/.../ID`) follow upstream `InaIE`: the page's fatal
@@ -2106,7 +2364,8 @@ feed URL (else `Unable to extract video URL`) with `/feed/` replaced by
 `Матч ТВ - Прямой эфир` title and `is_live`.
 
 mir24.tv news videos (`mir24.tv/news/ID/SLUG`) follow upstream `Mir24TvIE`:
-the page (requested with upstream's no-impersonate-target warning), its fatal
+the page (impersonated with the `impersonate` feature, else requested with
+upstream's no-impersonate-target warning), its fatal
 `mir24.tv/players/` iframe URL, that URL's last non-blank `source` query
 value made protocol-relative `https:` (else upstream's `Unable to extract m3u8
 URL`) as fatal `hls` formats and subtitles, the `og:title` (else the
@@ -2114,7 +2373,8 @@ URL`) as fatal `hls` formats and subtitles, the `og:title` (else the
 thumbnail.
 
 Mixcloud shows (`mixcloud.com/USER/SLUG`) follow upstream `MixcloudIE`: the
-GraphQL cloudcast lookup (with upstream's impersonation warning), its
+GraphQL cloudcast lookup (impersonated with the `impersonate` feature, else
+with upstream's impersonation warning), its
 XOR-encrypted progressive (5 MiB chunks), HLS and DASH stream URLs, the
 restriction and exclusive-content errors, comments and metadata. User
 uploads, playlists and favorites are not supported.
@@ -2152,15 +2412,69 @@ bitrate, sampling rate, ID and quality; variants sorted by rate, deduplicated
 by URL, named after their playlists, with the lowest audio bitrate
 subtracted), thumbnails with lenient resolutions, and the owner/channel,
 genre, tag and count fields. The comment "subtitles" (inline JSON data)
-are an unsupported error with `--write-subs`/`--list-subs`; logins,
-playlists, series, search, live and user pages are not supported.
-`tests/fixtures/sites/niconico/` is compared with pinned upstream output.
+are an unsupported error with `--write-subs`/`--list-subs`. Logins follow
+`NiconicoBaseIE._perform_login` (session cookies, the `mail_tel`/`password`
+form, its notice error, the MFA one-time password with its error messages,
+upstream's unexpected-login error). Playlists, series, search, live and user
+pages are not supported. `tests/fixtures/sites/niconico/` and
+`tests/fixtures/sites/niconico-login/` are compared with pinned upstream
+output.
 
 Nobel Prize media (`[www.|mediaplayer.]nobelprize.org/mediaplayer/?id|qid=ID`)
 follow upstream `NobelPrizeIE`: the integer `id` (else `qid`) query value (no
 ID is upstream's `Unsupported URL`), the `mediaplayer.nobelprize.org` page's
 fatal JSON-LD as an untyped result overlaid with the `caption` meta title, the
 `itemprop="description"` span and the `duration` meta.
+
+NRK programs, clips, podcast episodes and channels (`nrk:ID`,
+`nrk:KIND/ID`, `nrk.no/video/PS*ID`, `nrk.no/video/SLUG_ID`,
+`v8[-.]psapi.nrk.no/mediaelement/ID`) follow upstream `NRKIE`: psapi
+`playback/manifest/program/ID?preferredCdn=akamai` and
+`playback/metadata/program/ID` (upstream's `Accept: application/vnd.nrk.psapi+json;
+version=9; player=tv-player; device=player-core` header; an HTTP 400 retries
+`playback/ITEM/ID`, whose redirects lead to `clip/`, `podcast/` or
+`channel/`), the manifest `id`, `nonPlayable` errors (`NRK said:
+endUserMessage` or upstream's message table, `IsGeoBlocked` types and
+`usageRights.isGeoBlocked` as upstream's geo-restriction error), the
+unencrypted assets' HLS master playlists (`adap` removed, `s=0`, the
+`bw_low`/`bw_high`/`no_audio_only` parameters stripped, the Telenor/ip-only
+CDN URLs retried once on a random `nrk-od-NN.akamaized.net` host when no
+format was found) and MP3 assets as `vcodec: none` formats, WebVTT
+`subtitles` keyed `LANGUAGE[-TYPE]` (`nb` without a language), the preplay
+title, subtitle as `alt_title`, `\r`-to-`\n` description, poster thumbnails
+(`url`, `width`, `height`), `parse_duration` of the manifest or metadata
+duration, the legal-age rating (`A` is 0), the on-demand `from` timestamp and,
+for `_links.series.name == 'series'`, the non-fatal `programs/ID` series,
+season and episode fields with upstream's title, `Sesong N`, `N.` and `(N:M)`
+fallbacks. Akamai HD (`akamaihd.net/i/`) assets, upstream's
+`_extract_akamai_formats`, are an explicit native error. NRK TV/Radio
+program URLs (`NRKTVIE`, `tv|radio.nrk[super].no/.../ABCD12345678`),
+`NRKTVDirekteIE` channels and `NRKRadioPodkastIE` episodes are `url`
+results of `nrk:ID`. `NRKTVEpisodeIE` (`tv.nrk.no/serie/S/sesong/N/episode/M`)
+follows the page's redirect to a program URL, else the `pageData` script's
+`initialState.selectedEpisodePrfId` (upstream's `Unable to extract page
+data` and `Unable to extract NRK ID` errors); like upstream's `url` result
+its season and episode numbers are not passed on. `NRKTVSeasonIE` and
+`NRKTVSeriesIE` read the `tv|radio/catalog/series|podcast/...` catalog
+(`pageSize=50`, `embeddedInstalmentsPageSize=50` for TV series) with
+upstream's `_embedded` episode/instalment lookups and non-fatal `next`
+pages (read eagerly rather than lazily), as playlists of `nrk:ID` entries
+(the series' embedded seasons and extra material, or `url` entries of the
+linked seasons when they outnumber the embedded ones, titled from
+`titles`, `TYPE.titles` or `seriesType.titles`). `NRKPlaylistIE` article
+pages (`nrk.no/SECTION/.../ID`, not `video` or `skole`) list the
+`class="... rich ..." data-video-id` items with the OpenGraph title and
+description. Linked-season entries are only listed with `--flat-playlist`:
+extracting them reaches the nested-playlist limitation of `url_transparent`
+entries (upstream itself does not match the catalog season links it
+builds). `NRKIE`, `NRKTVSeasonIE` and `NRKTVSeriesIE` send upstream's
+geo-bypass `X-Forwarded-For` header (a random Norwegian address for
+`_GEO_COUNTRIES = ['NO']`, also in the formats' `http_headers`); the
+fixtures compare with `--no-geo-bypass` or a fixed `--xff` block, and the
+geo-blocked error lists `Norway` with upstream's VPN hint. `NRKSkoleIE` and `NRKTVEpisodesIE` are not ported:
+their endpoints (`nrkno-skole-prod.kube.nrk.no`, `tv.nrk.no/program/episodes`)
+no longer answer, so no real responses could be saved.
+`tests/fixtures/sites/nrk/` is compared with pinned upstream output.
 
 OK.ru (Odnoklassniki) videos (`ok.ru`/`odnoklassniki.ru` `video`,
 `videoembed`, `live`, `web-api/video/moviePlayer` and `dk?...st.mvId=`
@@ -2268,14 +2582,14 @@ information of song ID`) as an untyped `mp3` audio-only result with the artist
 as `uploader`/`uploader_id`, and `thumbnail`/`image` thumbnails ranked like
 `qualities`; a missing `name`/`url` is upstream's `KeyError` extractor error.
 
-On generic pages, the embeds of Blogger, JW Platform, Megaphone, Streamable and YouTube
+On generic pages, the embeds of Blogger, JW Platform, Megaphone, Streamable, Wistia (above) and YouTube
 (`YoutubeIE._EMBED_REGEX`: iframe/embed/object/SWFObject/`data-video-url`
 `youtube[-nocookie].com/embed|v|p/ID` URLs and lazy-load watch links, kept when
 this port's YouTube extractor accepts them), in
 upstream extractor order (each HTML-unescaped, joined to the page URL,
 suitable and unique, with `Identified N NAME embed(s)` debug lines), are `url`
 results like upstream `_extract_embeds`: one is followed (`original_url` stays
-the page), several form the page's playlist (`--flat-playlist` keeps
+the page, also ahead of a followed playlist's `webpage_url`), several form the page's playlist (`--flat-playlist` keeps
 `ie_key`/`extractor` entries with the `_match_id` temporary ID). A page with
 both HTML5 media and these embeds is an unsupported error; other sites' embeds
 are not detected.
@@ -2429,7 +2743,10 @@ requests carry `generate_api_headers`' session headers (`Authorization`
 SAPISIDHASH values, `X-Origin`, `X-Goog-AuthUser`/`X-Goog-PageId` from the
 session index and data-sync ID, `X-Youtube-Bootstrap-Logged-In`). The
 `youtube-auth` fixture (with a `copy`-ed cookies file) compares these against
-pinned upstream. A player response's pre-roll ads (`adPlacements` starting the
+pinned upstream. Credentials (`--username` or the `youtube` netrc machine)
+give each YouTube extractor upstream's `Login with password is not supported
+for YouTube` warning once, and `oauth*` usernames its `Login with OAuth is no
+longer supported` error (`youtube-login` fixture). A player response's pre-roll ads (`adPlacements` starting the
 video and `adSlots` before content, by length or skip offset) set its formats'
 `available_at` like `_get_available_at_timestamp` (`Detected a 15s ad skippable
 after 5s for CLIENT` with `-v`), and the download of each stream first sleeps
@@ -2557,6 +2874,39 @@ simulation diagnostics, or sequential downloads; it exposes no playlist wrapper
 JSON option, playlist selection, nested playlists, or unresolved URL results.
 
 MIME checks identify supported responses; they do not verify media containers.
+
+## JavaScript interpreter
+
+`src/jsinterp/` ports upstream's `yt_dlp/jsinterp.py` (`JSInterpreter`) for
+extractors that run small page scripts natively (VK's challenge salt). It
+follows upstream's string-rewriting evaluator rather than JavaScript:
+`extract_function`/`extract_function_code`/`extract_object`/`call_function`,
+statements split by `_separate`, `var`/`let`/`const` scoping in
+`LocalNameSpace` chains (a function's first scope persists between calls),
+`if`/`else` (no `else if`), `for`, `switch`, `try`/`catch`/`finally`,
+`break`/`continue`/`throw`, comma and ternary expressions, `void`, `new Date`
+(`unified_timestamp`), regex literals as `PATTERN/FLAGS` strings, the
+`_OPERATORS` table over Python semantics (the `_js_*` helpers, ToInt32
+bitwise operators, `===` as Python `is`, `%` with the divisor's sign), the
+`String.fromCharCode`, `Math.pow`, `prototype.call`/`apply` and the
+string/array methods upstream implements (`split`, `join`, `reverse`,
+`slice`, `splice`, `unshift`, `pop`, `push`, `forEach`, `indexOf`,
+`charCodeAt`), Python's `str`/`repr`/`json.dumps` forms of its values and
+upstream's error messages (`Unsupported JS expression`, `Could not find JS
+function "NAME"`, `Could not find object NAME`, `Failed to evaluate`, `Cannot
+get index`, `Uncaught exception`, ...). `int_to_int32` and
+`js_number_to_string` are shared (X/Twitter's syndication token uses the
+latter).
+
+Every `test/test_jsinterp.py` case is a Rust test (upstream's skipped ones
+are ignored), and `tests/fixtures/jsinterp/` holds a corpus of over 400
+snippets whose pinned upstream results (`tools/capture_jsinterp.py`; Python
+exceptions compared by class) this port matches. Not kept: Python's
+unbounded integers (past `i64` this uses floats), complex results of
+negative bases to fractional powers, `str % value` formatting, and object
+identity of floats (`===` on floats is false, as for separate literals
+upstream) and of ints outside CPython's small-int cache (`-5..=1024` on the
+Python 3.15 the corpus was captured with).
 
 ## Download retries
 
@@ -4684,3 +5034,50 @@ Native boundaries: processed downloads use a private workspace, so they never
 resume an existing part file or destination (upstream resumes them before
 processing); nonregular and dangling-symlink destinations are refused instead
 of written through.
+
+## Geo restriction bypass
+
+Upstream `InfoExtractor._initialize_geo_bypass`, `__maybe_fake_ip_and_retry`
+and `GeoUtils` (`src/geo.rs`): before an extractor announces
+`Extracting URL`, a fake `X-Forwarded-For` address is chosen from
+`--geo-bypass-ip-block` (`[debug] [EXTRACTOR] Using fake IP IP as
+X-Forwarded-For`), else `--geo-bypass-country` or the extractor's
+`_GEO_COUNTRIES` (`[debug] Using fake IP IP (CC) as X-Forwarded-For`, from
+upstream's 240-country block table), unless `--xff never`/`--no-geo-bypass`;
+extractors' countries and blocks apply only when `_GEO_BYPASS` is true. The
+address is kept per extractor for the run, sent with every extraction
+request (`headers.setdefault`), and copied to each format's `http_headers`
+(`_calc_headers`, after the other headers) and so to `-j` and to native,
+fragment, subtitle and external downloads. Ported `_GEO_COUNTRIES`/
+`_GEO_BYPASS` values: NRK (`NRKIE`, `NRKTVSeasonIE`, `NRKTVSeriesIE`: `NO`),
+HSE (`DE`), Netzkino (`DE`), SVT (`SE`, no bypass), Niconico (`JP`, no
+bypass), and no bypass for YouTube, BitChute and Dailymotion. A
+`GeoRestrictedError` with countries (Arte's `_COUNTRIES_MAP`, NRK, YouTube,
+Dailymotion, Niconico) retries the extraction once with an address from one
+of them (`WARNING: [EXTRACTOR] Video is geo restricted. Retrying extraction
+with fake IP IP (CC) as X-Forwarded-For.`) unless an address is already set,
+a country is given, or bypassing is off; the reported error appends `This
+video is available in NAMES.` and upstream's VPN hint (also for Twitter
+broadcasts, BitChute, Brightcove `CLIENT_GEO` and SoundCloud). With
+`--ignore-no-formats-error` (or `--wait-for-video`), SVT's and SoundCloud's
+`metadata_available=True` restrictions warn instead. Random addresses are
+volatile, so the site fixtures pin them with `/32` blocks
+(`tests/fixtures/sites/{nrk,netzkino,arte}`) and `tests/geo_bypass.rs`
+checks the requests, debug lines, option precedence and the Arte retry
+against local servers.
+
+`--ignore-no-formats-error` turns these extractors' expected
+`raise_no_formats` errors into `[EXTRACTOR] [ID: ]MESSAGE` warnings and
+continues with their metadata: Netzkino and SoundCloud DRM, GoodGame offline
+channels, RTRFM expired episodes, Instagram posts without video, Twitter
+broadcasts/Spaces that have not started or have no replay and tweets without
+video, Tumblr posts without video, Reddit posts without media or still
+processing, BitChute unavailable videos, Dailymotion player errors,
+Odnoklassniki paid videos, Imgur plain images and Brightcove API errors
+(compared with pinned upstream output for Netzkino, GoodGame, RTRFM,
+Instagram, Twitter, NRK, SVT, Arte and Niconico). Not ported: YouTube's
+unplayable videos still raise their reason (upstream warns and lists the
+metadata), WebcameraPL's missing stream stays an error (upstream crashes
+after the warning), LBRY's offline livestreams and Vimeo/LinkedIn/archive.org
+paths are not wired, and Brightcove/JWPlatform smuggled `geo_countries`
+are not read. `--geo-verification-proxy` is accepted without effect.

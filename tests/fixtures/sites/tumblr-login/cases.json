@@ -1,0 +1,8 @@
+[
+ {"url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd", "args": ["-s", "-u", "user@example.com", "-p", "s3cret"]},
+ {"url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd", "args": ["-s", "-u", "user@example.com", "-p", "wrong"]},
+ {"url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd", "args": ["-s", "-u", "tfa", "-p", "pw", "-2", "123456"]},
+ {"url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd", "args": ["-s", "-u", "tfa", "-p", "pw", "-2", "000000"]},
+ {"url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd", "args": ["-s", "-u", "down", "-p", "pw"]},
+ {"url": "http://tatiana.tumblr.com/post/54196191430/orphan-black-dvd", "args": ["-s", "--netrc-cmd", "printf 'machine tumblr login user@example.com password s3cret'"]}
+]

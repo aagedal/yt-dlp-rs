@@ -113,6 +113,64 @@
    "files": {
     "vid1abc.mp4": 26
    }
+  },
+  {
+   "url": "https://www.reddit.com/r/pics/comments/img123/pictures/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Reddit] img123: No media found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.reddit.com/r/pics/comments/img123/pictures/",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"thumbnails\": [], \"age_limit\": 0, \"title\": \"Pictures only\", \"alt_title\": \"Pictures only\", \"description\": \"No videos here\", \"timestamp\": 1700000300.0, \"uploader\": \"painter\", \"channel_id\": \"pics\", \"like_count\": 4, \"dislike_count\": 0, \"comment_count\": 1, \"id\": \"img123\", \"webpage_url\": \"https://www.reddit.com/r/pics/comments/img123/pictures/\", \"original_url\": \"https://www.reddit.com/r/pics/comments/img123/pictures/\", \"webpage_url_basename\": \"pictures\", \"webpage_url_domain\": \"reddit.com\", \"extractor\": \"Reddit\", \"extractor_key\": \"Reddit\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"img123\", \"fulltitle\": \"Pictures only\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"formats\": [], \"_filename\": \"Pictures only [img123].NA\", \"filename\": \"Pictures only [img123].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Reddit] img123: No media found",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.reddit.com/r/videos/comments/prc123/fresh/",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Reddit] prc123: This video is processing"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.reddit.com/r/videos/comments/prc123/fresh/",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"thumbnails\": [], \"age_limit\": 0, \"title\": \"Fresh upload\", \"alt_title\": \"Fresh upload\", \"timestamp\": 1700000400.0, \"uploader\": \"uploader\", \"channel_id\": \"videos\", \"like_count\": 1, \"dislike_count\": 0, \"comment_count\": 0, \"id\": \"proc1abc\", \"display_id\": \"prc123\", \"webpage_url\": \"https://www.reddit.com/r/videos/comments/prc123/fresh/\", \"original_url\": \"https://www.reddit.com/r/videos/comments/prc123/fresh/\", \"webpage_url_basename\": \"fresh\", \"webpage_url_domain\": \"reddit.com\", \"extractor\": \"Reddit\", \"extractor_key\": \"Reddit\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Fresh upload\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"formats\": [], \"_filename\": \"Fresh upload [proc1abc].NA\", \"filename\": \"Fresh upload [proc1abc].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Reddit] prc123: This video is processing",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
   }
  ]
 }

@@ -1048,7 +1048,12 @@ impl Extractor for Instagram {
                     .and_then(Value::as_array)
                     .is_none_or(|formats| formats.is_empty());
             if no_video {
-                return Err(fail(&video_id, "There is no video in this post"));
+                crate::no_formats::raise_expected(
+                    NAME,
+                    None,
+                    Some(&video_id),
+                    "There is no video in this post",
+                )?;
             }
         }
         let media = media.unwrap_or(Value::Null);

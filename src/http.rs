@@ -38,9 +38,9 @@ pub struct HttpOptions {
 #[derive(Clone, Default)]
 pub(crate) struct TransportConfig {
     pub(crate) proxy: ProxyConfig,
-    timeout: Option<Duration>,
-    insecure: bool,
-    source_address: Option<IpAddr>,
+    pub(crate) timeout: Option<Duration>,
+    pub(crate) insecure: bool,
+    pub(crate) source_address: Option<IpAddr>,
     identity: Option<reqwest::Identity>,
 }
 

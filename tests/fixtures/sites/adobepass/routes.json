@@ -1,0 +1,737 @@
+{
+ "routes": [
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/config.json",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpkTVEKEY\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/7777777777001/videos/6400000000001",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"errors\": [{\"error_code\": \"ACCESS_DENIED\", \"error_subcode\": \"TVE_AUTH\", \"message\": \"This video requires TV Everywhere authentication\"}], \"custom_fields\": {\"bcadobepassrequestorid\": \"fixturerequestor\", \"bcadobepassresourceid\": \"fixtureresource\"}}",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkTVEKEY"
+   }
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/7777777777001/videos/6400000000002",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"errors\": [{\"error_code\": \"ACCESS_DENIED\", \"error_subcode\": \"TVE_AUTH\", \"message\": \"This video requires TV Everywhere authentication\"}], \"custom_fields\": {\"bcadobepassrequestorid\": \"deniedrequestor\", \"bcadobepassresourceid\": \"fixtureresource\"}}",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkTVEKEY"
+   }
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/7777777777001/videos/6400000000003",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"errors\": [{\"error_code\": \"ACCESS_DENIED\", \"error_subcode\": \"TVE_AUTH\", \"message\": \"This video requires TV Everywhere authentication\"}], \"custom_fields\": {\"bcadobepassrequestorid\": \"badhostrequestor\", \"bcadobepassresourceid\": \"fixtureresource\"}}",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkTVEKEY"
+   }
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/7777777777001/videos/6400000000001?tveToken=fixture%2Bmedia%2Ftoken%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"6400000000001\", \"account_id\": \"7777777777001\", \"name\": \"TV Everywhere fixture\", \"duration\": 60000, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"width\": 1280, \"height\": 720, \"avg_bitrate\": 2000000, \"src\": \"https://house-fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/pmp4/static/clear/7777777777001/tve/high.mp4\"}]}",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkTVEKEY"
+   }
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/7777777777001/videos/6400000000001?tveToken=cached-media-token",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"6400000000001\", \"account_id\": \"7777777777001\", \"name\": \"TV Everywhere fixture\", \"duration\": 60000, \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"width\": 1280, \"height\": 720, \"avg_bitrate\": 2000000, \"src\": \"https://house-fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/pmp4/static/clear/7777777777001/tve/high.mp4\"}]}",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkTVEKEY"
+   }
+  },
+  {
+   "url": "https://sp.auth.adobe.com/indiv/devices",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json",
+    "pass_sfp": "fixture-sfp"
+   },
+   "body": "{\"deviceId\": \"fixture-device\"}",
+   "request_headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "request_body": [
+    "{\"fingerprint\": \""
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/o/client/register",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"client_id\": \"fixture-client\", \"client_secret\": \"fixture-secret\"}",
+   "request_headers": {
+    "Content-Type": "application/json; charset=UTF-8"
+   },
+   "request_body": [
+    "{\"software_statement\": \"fixture-software-statement\"}"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/o/client/token",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"access_token\": \"fixture-access\"}",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+   },
+   "request_body": [
+    "grant_type=client_credentials&client_id=fixture-client&client_secret=fixture-secret"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/reggie/v1/fixturerequestor/regcode",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": \"FIXTURECODE\"}",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+    "Authorization": "Bearer fixture-access"
+   },
+   "request_body": [
+    "requestor=fixturerequestor&deviceId=fixture-device&format=json"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/reggie/v1/deniedrequestor/regcode",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": \"FIXTURECODE\"}",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+    "Authorization": "Bearer fixture-access"
+   },
+   "request_body": [
+    "requestor=deniedrequestor&deviceId=fixture-device&format=json"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/reggie/v1/badhostrequestor/regcode",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"code\": \"FIXTURECODE\"}",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+    "Authorization": "Bearer fixture-access"
+   },
+   "request_body": [
+    "requestor=badhostrequestor&deviceId=fixture-device&format=json"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/session",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<session><authnToken>&lt;simpleAuthenticationToken&gt;&lt;simpleTokenMsoID&gt;FIXTUREMSO&lt;/simpleTokenMsoID&gt;&lt;simpleTokenExpires&gt;2099/01/01 00:00:00 GMT&lt;/simpleTokenExpires&gt;&lt;simpleSamlNameID&gt;fixture-name-id&lt;/simpleSamlNameID&gt;&lt;simpleSamlSessionIndex&gt;fixture-session-index&lt;/simpleSamlSessionIndex&gt;&lt;simpleTokenAuthenticationGuid&gt;fixture-guid&lt;/simpleTokenAuthenticationGuid&gt;&lt;/simpleAuthenticationToken&gt;</authnToken></session>",
+   "request_headers": {
+    "ap_42": "anonymous",
+    "ap_11": "Linux i686",
+    "ap_z": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "pass_sfp": "fixture-sfp",
+    "Ap_21": "fixture-device",
+    "Authorization": "Bearer fixture-access"
+   },
+   "request_body": [
+    "_method=GET&requestor_id=fixturerequestor&reg_code=FIXTURECODE"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/session",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<session><authnToken>&lt;simpleAuthenticationToken&gt;&lt;simpleTokenMsoID&gt;FIXTUREMSO&lt;/simpleTokenMsoID&gt;&lt;simpleTokenExpires&gt;2099/01/01 00:00:00 GMT&lt;/simpleTokenExpires&gt;&lt;simpleSamlNameID&gt;fixture-name-id&lt;/simpleSamlNameID&gt;&lt;simpleSamlSessionIndex&gt;fixture-session-index&lt;/simpleSamlSessionIndex&gt;&lt;simpleTokenAuthenticationGuid&gt;fixture-guid&lt;/simpleTokenAuthenticationGuid&gt;&lt;/simpleAuthenticationToken&gt;</authnToken></session>",
+   "request_headers": {
+    "ap_42": "anonymous",
+    "ap_11": "Linux i686",
+    "ap_z": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "pass_sfp": "fixture-sfp",
+    "Ap_21": "fixture-device",
+    "Authorization": "Bearer fixture-access"
+   },
+   "request_body": [
+    "_method=GET&requestor_id=deniedrequestor&reg_code=FIXTURECODE"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/session",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<session><authnToken>&lt;simpleAuthenticationToken&gt;&lt;simpleTokenMsoID&gt;FIXTUREMSO&lt;/simpleTokenMsoID&gt;&lt;simpleTokenExpires&gt;2099/01/01 00:00:00 GMT&lt;/simpleTokenExpires&gt;&lt;simpleSamlNameID&gt;fixture-name-id&lt;/simpleSamlNameID&gt;&lt;simpleSamlSessionIndex&gt;fixture-session-index&lt;/simpleSamlSessionIndex&gt;&lt;simpleTokenAuthenticationGuid&gt;fixture-guid&lt;/simpleTokenAuthenticationGuid&gt;&lt;/simpleAuthenticationToken&gt;</authnToken></session>",
+   "request_headers": {
+    "ap_42": "anonymous",
+    "ap_11": "Linux i686",
+    "ap_z": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "pass_sfp": "fixture-sfp",
+    "Ap_21": "fixture-device",
+    "Authorization": "Bearer fixture-access"
+   },
+   "request_body": [
+    "_method=GET&requestor_id=badhostrequestor&reg_code=FIXTURECODE"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authorize",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<authorization><authzToken>&lt;simpleAuthorizationToken&gt;&lt;simpleTokenTTL&gt;2099/01/01 00:00:00 GMT&lt;/simpleTokenTTL&gt;&lt;/simpleAuthorizationToken&gt;</authzToken></authorization>",
+   "request_headers": {
+    "ap_42": "anonymous",
+    "ap_11": "Linux i686",
+    "ap_z": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "pass_sfp": "fixture-sfp",
+    "Ap_21": "fixture-device",
+    "Authorization": "Bearer fixture-access"
+   },
+   "request_body": [
+    "resource_id=fixtureresource&requestor_id=fixturerequestor&authentication_token=%3CsimpleAuthenticationToken%3E%3CsimpleTokenMsoID%3EFIXTUREMSO%3C%2FsimpleTokenMsoID%3E%3CsimpleTokenExpires%3E2099%2F01%2F01+00%3A00%3A00+GMT%3C%2FsimpleTokenExpires%3E%3CsimpleSamlNameID%3Efixture-name-id%3C%2FsimpleSamlNameID%3E%3CsimpleSamlSessionIndex%3Efixture-session-index%3C%2FsimpleSamlSessionIndex%3E%3CsimpleTokenAuthenticationGuid%3Efixture-guid%3C%2FsimpleTokenAuthenticationGuid%3E%3C%2FsimpleAuthenticationToken%3E&mso_id=FIXTUREMSO&userMeta=1"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authorize",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/xml"
+   },
+   "body": "<error><status>403</status><details>User not Authorized Error</details></error>",
+   "request_headers": {
+    "ap_42": "anonymous",
+    "ap_11": "Linux i686",
+    "ap_z": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "pass_sfp": "fixture-sfp",
+    "Ap_21": "fixture-device",
+    "Authorization": "Bearer fixture-access"
+   },
+   "request_body": [
+    "requestor_id=deniedrequestor"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/shortAuthorize",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "fixture+media/token==",
+   "request_headers": {
+    "ap_42": "anonymous",
+    "ap_11": "Linux i686",
+    "ap_z": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "pass_sfp": "fixture-sfp",
+    "Ap_21": "fixture-device",
+    "Authorization": "Bearer fixture-access",
+    "ap_19": "fixture-name-id",
+    "ap_23": "fixture-session-index"
+   },
+   "request_body": [
+    "authz_token=%3CsimpleAuthorizationToken%3E%3CsimpleTokenTTL%3E2099%2F01%2F01+00%3A00%3A00+GMT%3C%2FsimpleTokenTTL%3E%3C%2FsimpleAuthorizationToken%3E&requestor_id=fixturerequestor&session_guid=fixture-guid&hashed_guid=false"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/shortAuthorize",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "cached-media-token",
+   "request_headers": {
+    "ap_42": "anonymous",
+    "ap_11": "Linux i686",
+    "ap_z": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux i686; rv:47.0) Gecko/20100101 Firefox/47.0",
+    "ap_19": "fixture-name-id",
+    "ap_23": "fixture-session-index"
+   },
+   "request_body": [
+    "authz_token=%3CsimpleAuthorizationToken%3E%3CsimpleTokenTTL%3E2099%2F01%2F01+00%3A00%3A00+GMT%3C%2FsimpleTokenTTL%3E%3C%2FsimpleAuthorizationToken%3E&requestor_id=fixturerequestor&session_guid=fixture-guid&hashed_guid=false"
+   ]
+  },
+  {
+   "url": "https://players.brightcove.net/8888888888001/default_default/config.json",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"video_cloud\": {\"policy_key\": \"BCpkOTHERKEY\"}}"
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/8888888888001/videos/6500000000001",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"errors\": [{\"error_code\": \"ACCESS_DENIED\", \"error_subcode\": \"TVE_AUTH\"}], \"custom_fields\": {\"bcadobepassrequestorid\": \"fixturerequestor\", \"bcadobepassresourceid\": \"fixtureresource\"}}",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkOTHERKEY"
+   }
+  },
+  {
+   "url": "https://edge.api.brightcove.com/playback/v1/accounts/8888888888001/videos/6500000000001?tveToken=fixture%2Bmedia%2Ftoken%3D%3D",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"id\": \"6500000000001\", \"account_id\": \"8888888888001\", \"name\": \"Cached TV Everywhere fixture\", \"sources\": [{\"container\": \"MP4\", \"type\": \"video/mp4\", \"width\": 640, \"height\": 360, \"src\": \"https://house-fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/pmp4/static/clear/8888888888001/tve/low.mp4\"}]}",
+   "request_headers": {
+    "Accept": "application/json;pk=BCpkOTHERKEY"
+   }
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=RCN&requestor_id=deniedrequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://idp.rcn.example/sso/saml\"><input type=\"hidden\" name=\"SAMLRequest\" value=\"rcn-request\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=RCN&requestor_id=fixturerequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta http-equiv=\"refresh\" content=\"0; url=https://idp.rcn.example/sso/start?a=1&amp;b=2\"></head></html>"
+  },
+  {
+   "url": "https://idp.rcn.example/sso/start?a=1&b=2",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"/sso/saml\"><input type=\"hidden\" name=\"SAMLRequest\" value=\"rcn-request\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://idp.rcn.example/sso/saml",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://idp.rcn.example/sso/login\"><input type=\"hidden\" name=\"csrf\" value=\"rcn-csrf\"><input type=\"text\" name=\"ignored\"></form></body></html>",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+   },
+   "request_body": [
+    "SAMLRequest=rcn-request"
+   ]
+  },
+  {
+   "url": "https://idp.rcn.example/sso/login",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?rcn\"><input type=\"hidden\" name=\"SAMLResponse\" value=\"rcn-response\"><input type=\"text\" name=\"ignored\"></form></body></html>",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+   },
+   "request_body": [
+    "csrf=rcn-csrf&username=fixture-user&password=fixture-pass"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?rcn",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>ok</html>",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+   },
+   "request_body": [
+    "SAMLResponse=rcn-response"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=Rogers&requestor_id=fixturerequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://idp.rogers.example/saml\"><input type=\"hidden\" name=\"SAMLRequest\" value=\"rogers-request\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://idp.rogers.example/saml",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://idp.rogers.example/login\"><input type=\"text\" name=\"ignored\"></form></body></html>",
+   "request_body": [
+    "SAMLRequest=rogers-request"
+   ]
+  },
+  {
+   "url": "https://idp.rogers.example/login",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?rogers\"><input type=\"hidden\" name=\"SAMLResponse\" value=\"never\"><input type=\"text\" name=\"ignored\"></form></body></html>",
+   "request_body": [
+    "UserName=fixture-user&UserPassword=fixture-pass"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=Cablevision&requestor_id=fixturerequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://idp.optimum.example/saml\"><input type=\"hidden\" name=\"SAMLRequest\" value=\"cv-request\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://idp.optimum.example/saml",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"http://idp.optimum.example/login\"><input type=\"hidden\" name=\"execution\" value=\"e1s1\"><input type=\"text\" name=\"ignored\"></form></body></html>",
+   "request_body": [
+    "SAMLRequest=cv-request"
+   ]
+  },
+  {
+   "url": "https://idp.optimum.example/login",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?cablevision\"><input type=\"hidden\" name=\"SAMLResponse\" value=\"cv-response\"><input type=\"text\" name=\"ignored\"></form></body></html>",
+   "request_body": [
+    "execution=e1s1&j_username=fixture-user&j_password=fixture-pass&_eventId_proceed="
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?cablevision",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>ok</html>",
+   "request_body": [
+    "SAMLResponse=cv-response"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=Comcast_SSO&requestor_id=fixturerequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><form name=\"signin\" method=\"post\" action=\"https://login.xfinity.com/login\"><input type=\"hidden\" name=\"r\" value=\"comcast\"><input type=\"hidden\" name=\"s\" value=\"1\"></form></html>"
+  },
+  {
+   "url": "https://login.xfinity.com/login",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><form method=\"post\" action=\"https://oauth.xfinity.com/resume\"><input type=\"hidden\" name=\"state\" value=\"resume-state\"><button class=\"submit\" value=\"Resume\">Resume</button></form></html>",
+   "request_body": [
+    "r=comcast&s=1&user=fixture-user&passwd=fixture-pass"
+   ]
+  },
+  {
+   "url": "https://oauth.xfinity.com/resume",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>ok</html>",
+   "request_body": [
+    "state=resume-state"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=Comcast_SSO&requestor_id=badhostrequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><form name=\"signin\" method=\"post\" action=\"https://login.evil.example/login\"></form></html>"
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=Spectrum&requestor_id=fixturerequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://idp.spectrum.example/saml\"><input type=\"hidden\" name=\"SAMLRequest\" value=\"sp-request\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://idp.spectrum.example/saml",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>var RelayState = \"spectrum-relay\"; var SAMLRequest = \"spectrum-saml\";</script>",
+   "request_body": [
+    "SAMLRequest=sp-request"
+   ]
+  },
+  {
+   "url": "https://tveauthn.spectrum.net/tveauthentication/api/v1/manualAuth",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"SAMLRedirectUri\": \"https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?spectrum\", \"SAMLResponse\": \"spectrum-response\"}",
+   "request_headers": {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+   },
+   "request_body": [
+    "{\"IDToken1\": \"fixture-user\", \"IDToken2\": \"fixture-pass\", \"RelayState\": \"spectrum-relay\", \"SAMLRequest\": \"spectrum-saml\"}"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?spectrum",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>ok</html>",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+   },
+   "request_body": [
+    "SAMLResponse=spectrum-response&RelayState=spectrum-relay"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=Verizon&requestor_id=fixturerequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><title>Verizon FiOS - sign in</title><form method=\"post\" action=\"https://ssoauth.verizon.com/login\"><input type=\"hidden\" name=\"goto\" value=\"vz\"></form></html>"
+  },
+  {
+   "url": "https://ssoauth.verizon.com/login",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>xmlHttp.open(\"POST\", \"https://ssoauth.verizon.com/saml/response\", true);</script>",
+   "request_body": [
+    "goto=vz&IDToken1=fixture-user&IDToken2=fixture-pass"
+   ]
+  },
+  {
+   "url": "https://ssoauth.verizon.com/saml/response",
+   "status": 200,
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"targetValue\": \"https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?verizon\", \"SAMLResponse\": \"vz-response\", \"RelayState\": \"vz-relay\"}",
+   "request_headers": {
+    "Content-Type": "text/xml"
+   }
+  },
+  {
+   "url": "https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?verizon",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>ok</html>",
+   "request_headers": {
+    "Content-Type": "application/x-www-form-urlencoded"
+   },
+   "request_body": [
+    "SAMLResponse=vz-response&RelayState=vz-relay"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=slingtv&requestor_id=fixturerequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 302,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8",
+    "Location": "https://identity.sling.com/bookend?start=1"
+   },
+   "body": ""
+  },
+  {
+   "url": "https://identity.sling.com/bookend?start=1",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><input type=\"hidden\" name=\"flow\" value=\"first\"></html>"
+  },
+  {
+   "url": "https://identity.sling.com/bookend?start=1&flow=first&history=1",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://identity.sling.com/login\"><input type=\"hidden\" name=\"flow\" value=\"login\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://identity.sling.com/login",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><meta http-equiv=\"refresh\" content=\"0; url=/associate?step=2\"></html>",
+   "request_body": [
+    "flow=login&username=fixture-user&password=fixture-pass"
+   ]
+  },
+  {
+   "url": "https://identity.sling.com/associate?step=2",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><input type=\"hidden\" name=\"flow\" value=\"last\"></html>"
+  },
+  {
+   "url": "https://identity.sling.com/associate?step=2&flow=last&history=3",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?sling\"><input type=\"hidden\" name=\"SAMLResponse\" value=\"sling-response\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?sling",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>ok</html>",
+   "request_body": [
+    "SAMLResponse=sling-response"
+   ]
+  },
+  {
+   "url": "https://sp.auth.adobe.com/adobe-services/authenticate/saml?noflash=true&mso_id=Suddenlink&requestor_id=fixturerequestor&no_iframe=false&domain_name=adobe.com&redirect_url=https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture&reg_code=FIXTURECODE",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://authorize.suddenlink.net/continue\"><input type=\"hidden\" name=\"go\" value=\"on\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://authorize.suddenlink.net/continue",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><input type=\"hidden\" name=\"AuthState\" value=\"state-1\"></html>",
+   "request_body": [
+    "go=on"
+   ]
+  },
+  {
+   "url": "https://authorize.suddenlink.net/continue?AuthState=state-1&history_val=1",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<script>$.ajax({url: 'https://authorize.suddenlink.net/tryauth'});</script>"
+  },
+  {
+   "url": "https://authorize.suddenlink.net/tryauth?AuthState=state-1&history_val=1",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/plain"
+   },
+   "body": "synacor-state"
+  },
+  {
+   "url": "https://authorize.suddenlink.net/saml/module.php/authSynacor/login.php?AuthState=state-1&history_val=1",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://authorize.suddenlink.net/saml/login\"><input type=\"hidden\" name=\"AuthState\" value=\"state-2\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://authorize.suddenlink.net/saml/login",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><meta http-equiv=\"refresh\" content=\"0; url=https://authorize.suddenlink.net/assoc\"></html>",
+   "request_body": [
+    "AuthState=state-2&username=fixture-user&password=fixture-pass"
+   ]
+  },
+  {
+   "url": "https://authorize.suddenlink.net/assoc",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><input type=\"hidden\" name=\"AuthState\" value=\"state-3\"></html>"
+  },
+  {
+   "url": "https://authorize.suddenlink.net/assoc?AuthState=state-3&history_val=3",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><body><form method=\"post\" action=\"https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?suddenlink\"><input type=\"hidden\" name=\"SAMLResponse\" value=\"suddenlink-response\"><input type=\"text\" name=\"ignored\"></form></body></html>"
+  },
+  {
+   "url": "https://sp.auth.adobe.com/sp/saml/SAMLAssertionConsumer?suddenlink",
+   "status": 200,
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html>ok</html>",
+   "request_body": [
+    "SAMLResponse=suddenlink-response"
+   ]
+  }
+ ]
+}

@@ -3,5 +3,6 @@
  {"url": "https://goodgame.ru/TGW", "args": ["-F"]},
  {"url": "https://goodgame.ru/Mr.Gray", "args": ["--print", "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(channel)s|%(channel_id)s|%(channel_url)s|%(uploader)s|%(uploader_id)s|%(thumbnail)s|%(concurrent_view_count)s|%(channel_follower_count)s|%(age_limit)s|%(format_id)s|%(ext)s|%(protocol)s|%(url)s"]},
  {"url": "https://goodgame.ru/Offline", "args": ["-j"]},
- {"url": "https://goodgame.ru/NoKey", "args": ["-j"]}
+ {"url": "https://goodgame.ru/NoKey", "args": ["-j"]},
+ {"url": "https://goodgame.ru/Offline", "args": ["--ignore-no-formats-error", "-j"]}
 ]

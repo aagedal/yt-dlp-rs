@@ -34,6 +34,7 @@ impl Reporter<'_> {
             attempt: self.attempt,
             downloaded_bytes: bytes,
             total_bytes: None,
+            total_bytes_estimate: None,
             phase,
             stream_index: None,
             stream_count: None,
@@ -874,6 +875,9 @@ fn fetch(
     if !info.is_direct() {
         request = request.header(REFERER, info.webpage_url.as_str());
     }
+    if let Some(ip) = crate::geo::forwarded_for(info) {
+        request = request.header("X-Forwarded-For", ip);
+    }
     if let Some(range) = &fragment.byte_range {
         request = request.header(
             RANGE,
@@ -1106,6 +1110,9 @@ fn fetch_key(
     let mut request = client.get(url.clone()).header(ACCEPT_ENCODING, "identity");
     if !info.is_direct() {
         request = request.header(REFERER, info.webpage_url.as_str());
+    }
+    if let Some(ip) = crate::geo::forwarded_for(info) {
+        request = request.header("X-Forwarded-For", ip);
     }
     let mut response = request
         .send()

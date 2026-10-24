@@ -47,6 +47,9 @@ tractable for future agents.
 - `src/hls.rs` and `src/extractor/hls.rs`: pure VOD HLS parsing and generic/HTML5 manifest acquisition.
 - `src/dash.rs` and `src/extractor/dash.rs`: bounded static single-period MPD parsing and generic/HTML5 acquisition.
 - `src/fragment.rs`: ordered native fragment/range transport and atomic publication.
+- `src/rtmp_fd.rs` and `src/websocket_fd.rs`: upstream's RtmpFD (`rtmpdump`) and
+  WebSocketFragmentFD (a websocket client piped into FFmpegFD's stdin, reusable by
+  the unported niconico/FC2 live downloaders).
 - `src/playlist.rs`: playlist item/range parsing, ordered index deduplication and fully extracted entry selection.
 - `src/subtitles.rs`: ordered subtitle metadata, language/format selection and sidecar name planning; `src/output/subtitles.rs` renders inventories.
 - `src/subtitle_convert.rs`: subtitle conversion publication/retention; nested
@@ -55,6 +58,7 @@ tractable for future agents.
   its bounded FFmpeg runner feeds the final stage of `src/postprocess.rs`.
 - `src/info_json.rs`: cleaned video/playlist info JSON values, `.info.json` naming and keep-existing or replacing atomic writes.
 - `src/archive.rs`: UTF-8 archive identity cache, bounded file locks and deduplicated transactional append.
+- `src/cache.rs`: upstream `Cache` (`--cache-dir`, own `yt-dlp-rs` root, upstream JSON envelope and `min_ver` checks).
 - `src/merge.rs`: bounded explicit FFmpeg stream-copy execution.
 - `src/audio.rs`, `src/audio/ffmpeg.rs`: pure audio plans and bounded local
   inspection/conversion; `src/audio_download.rs` adapts the audio-only API.
@@ -146,6 +150,9 @@ remain outside the current result contract.
    request-specific precedence. Shared in-memory cookies and explicit Netscape
    file persistence now cover the native HTTP clients; browser-cookie extraction,
    account-specific authentication and broader request configuration remain open.
+   The `InfoExtractor` login lifecycle (credentials, netrc files and commands,
+   two-factor codes) is ported, with logins for the extractors listed in
+   docs/COMPATIBILITY.md; Vimeo and Adobe Pass logins remain open.
    Explicit HTTP/HTTPS/SOCKS proxies and direct overrides now route all native
    clients, including verified HTTPS proxy/CONNECT transport. SOCKS4 user IDs,
    full upstream environment discovery/bypass and per-extractor proxy policies remain open.

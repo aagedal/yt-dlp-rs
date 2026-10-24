@@ -5,5 +5,6 @@
  {"url": "https://sp.nicovideo.jp/watch/so5", "args": ["--print", "id"]},
  {"url": "https://www.nicovideo.jp/watch/sm500", "args": ["--print", "id"]},
  {"url": "https://www.nicovideo.jp/watch/sm9", "args": ["-F"]},
- {"url": "https://www.nicovideo.jp/watch/sm9", "args": ["--no-progress", "-f", "audio-aac-64kbps", "-o", "%(id)s.%(ext)s"]}
+ {"url": "https://www.nicovideo.jp/watch/sm9", "args": ["--no-progress", "-f", "audio-aac-64kbps", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.nicovideo.jp/watch/sm400", "args": ["--ignore-no-formats-error", "--print", "id"]}
 ]

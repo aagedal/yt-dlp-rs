@@ -90,6 +90,10 @@ pub enum Error {
         source: reqwest::Error,
         retry_after: std::time::Duration,
     },
+    /// A transport failure of an impersonated request (upstream's
+    /// `TransportError` from `curl_cffi`).
+    #[error("HTTP request failed: {0}")]
+    Impersonate(String),
     #[error("extraction response body failed: {0}")]
     ExtractionRead(#[source] std::io::Error),
     #[error("server returned an unsolicited partial response; full media was requested")]

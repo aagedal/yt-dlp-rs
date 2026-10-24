@@ -1,0 +1,34 @@
+{
+ "svtId": "jXvk42E",
+ "programVersionId": "NJMHM2ZUGJCQ9999",
+ "contentDuration": 80,
+ "blockedForChildren": false,
+ "live": false,
+ "liveStatus": null,
+ "hasVodReferences": true,
+ "programTitle": "Lokala Nyheter Skåne",
+ "episodeTitle": "Försvarsmakten om trafikkaoset på E22: Kunde inte varit där snabbare",
+ "rights": {
+  "preventExternalEmbed": false,
+  "validFrom": "2024-01-04T13:06:49.193+01:00",
+  "validTo": "2060-01-01T00:00:00+01:00",
+  "drmCopyProtection": false,
+  "blockedForMobile": false,
+  "geoBlockedSweden": false,
+  "subtitleType": "burnedIn"
+ },
+ "videoReferences": [
+  {
+   "url": "https://svt-vod-8m.akamaized.net/d0/world/20240104/318a109c-6653-4e8b-9b11-f22073a10d33/hls-ts-avc.m3u8",
+   "resolve": "https://switcher.cdn.svt.se/resolve/318a109c-6653-4e8b-9b11-f22073a10d33/hls-ts-avc.m3u8",
+   "redirect": "https://switcher.cdn.svt.se/redirect/318a109c-6653-4e8b-9b11-f22073a10d33/hls-ts-avc.m3u8",
+   "format": "hls"
+  }
+ ],
+ "subtitleReferences": [],
+ "imageId": 0,
+ "uhd": false,
+ "liveManifestExists": null,
+ "mergeableVariants": false,
+ "firstFrame": null
+}

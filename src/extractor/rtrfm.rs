@@ -71,15 +71,36 @@ impl Extractor for Rtrfm {
                 )));
             }
         };
-        // An MP4 URL is the only sign of an expired episode.
-        if media.contains(".mp4") {
-            return Err(Error::Reported(format!(
-                "[{NAME}] {display_id}: Expired or no episode on this date"
-            )));
+        // An MP4 URL is the only sign of an expired episode
+        // (`raise_no_formats(..., expected=True)` and `'url': None`).
+        let expired = media.contains(".mp4");
+        if expired {
+            crate::no_formats::raise_expected(
+                NAME,
+                None,
+                Some(&display_id),
+                "Expired or no episode on this date",
+            )?;
         }
         let description = crate::html::og_search_property(&webpage, "description");
         if description.is_none() {
             search_warning(NAME, "OpenGraph description");
+        }
+        if expired {
+            let fields = vec![
+                ("id", format!("{show}-{date}").into()),
+                ("title", format!("{title} {date}").into()),
+                ("series", title.into()),
+                ("url", Value::Null),
+                ("release_date", date.into()),
+                ("description", description.map_or(Value::Null, Value::from)),
+            ];
+            return Ok(Some(super::dict_info(
+                url,
+                (NAME, NAME),
+                fields,
+                Vec::new(),
+            )));
         }
         let media = Url::parse(&media)?;
         let ext =

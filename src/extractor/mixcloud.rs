@@ -135,15 +135,17 @@ impl Extractor for Mixcloud {
             "[{NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())
         ));
-        crate::screen::warning_once(&format!(
-            "[{NAME}] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
-        ));
         let query = format!(
             "{{\n  cloudcastLookup(lookup: {{username: \"{username}\", slug: \"{slug}\"}}) {{\n    {CLOUDCAST_FIELDS}\n  }}\n}}"
         );
         let mut api = Url::parse("https://app.mixcloud.com/graphql")?;
         api.query_pairs_mut().append_pair("query", &query);
-        let response = super::download_json(client, &api, NAME, &track_id)?;
+        let response = {
+            let _impersonate = crate::impersonate::attempt(crate::impersonate::ANY, |message| {
+                crate::screen::warning_once(&format!("[{NAME}] {message}"));
+            });
+            super::download_json(client, &api, NAME, &track_id)?
+        };
         let cloudcast = response
             .pointer("/data/cloudcastLookup")
             .filter(|value| !value.is_null())

@@ -32,11 +32,12 @@ Kuaishou have no upstream extractor.
 | LinkedIn | posts | learning courses not ported |
 | XiaoHongShu (RedNote) | video notes | |
 | Bilibili | videos | bangumi, spaces and audio not ported |
-| VK | videos, clips, wall posts, user videos, VK Play | VK's JS challenge is unsupported |
+| VK | videos, clips, wall posts, user videos, VK Play, logins | other embedded players are unsupported |
 
 Tumblr, Twitch (VODs, clips, live, channel lists), Bluesky and Kick are
-supported too. Sites that need browser impersonation upstream (for example
-Dailymotion) are limited: impersonation is not available.
+supported too. Browser impersonation (TLS/HTTP2 fingerprints for the
+requests extractors mark, as upstream with `curl_cffi`) needs the optional
+`impersonate` build feature; default builds have no impersonate targets.
 
 Pre-release binaries for Linux, macOS and Windows are attached to the
 [GitHub releases](https://github.com/aagedal/yt-dlp-rs/releases): pushing a
@@ -79,6 +80,10 @@ either binary or its containing directory.
 The example URLs illustrate syntax; replace them with actual media or supported HTML5 page URLs.
 Install locally with `cargo install --locked --path .` to use `yt-dlp-rs` directly.
 
+The default build uses rustls only. `cargo build --locked --features impersonate`
+adds the `wreq` impersonation transport (BoringSSL, built from source: it needs
+CMake and a C/C++ compiler) and its targets in `--list-impersonate-targets`.
+
 Supported today:
 
 - HTTP(S) media identified by recognized audio/video MIME types, with a known
@@ -115,7 +120,7 @@ Supported today:
   Megaphone players (`player.megaphone.fm/ID`) through their page,
   ReverbNation songs through the song API, Hypem tracks through their page
   and served source, HistoricFilms tapes through their page, Livestreamfails
-  clips through the clip API, Il Post podcast episodes through the podcast endpoint, Kickstarter native project videos through their page, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
+  clips through the clip API, Arte videos, embeds, collections and category pages through the player config and programs APIs, Il Post podcast episodes through the podcast endpoint, Kickstarter native project videos through their page, INA videos and audio through the asset API, HSE TV shows and product videos through their Redux data, Gronkh streams through the video API, LNK videos through the video-config API, EbaumsWorld and tv.dfb.de videos through the player XML,
   Glide messages through their share page, GodTube videos through their
   player XML, FC Zenit videos through the player API, BehindKink posts
   QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and
@@ -124,12 +129,12 @@ Supported today:
   (and Filmweb articles that embed them), FILMARCHIV ON videos, Kaltura entries (`kaltura:` URLs, players and embeds) and the KTH Play, UN Web TV and Inc pages that delegate to them, Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Project Veritas videos, tele-TASK lectures, Universal Music Deutschland videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Match TV live, mir24.tv news videos, Mocha videos, Sen videos, Kankanews videos, Kommunetv archives,
-  Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, SAPO Vídeos, VideoPress embeds, uStudio videos and embeds, 3Speak videos and users, TV Noe programmes, Telegraaf videos, Premiership Rugby videos, PressTV videos, CJSW episodes,
+  Graspop concerts, CozyTV replays, peer.tv videos, webcamera.pl live cameras, SAPO Vídeos, VideoPress embeds, Vidyard videos, playlists and generic-page embeds through the player JSON, uStudio videos and embeds, 3Speak videos and users, TV Noe programmes, Telegraaf videos, Premiership Rugby videos, PressTV videos, CJSW episodes, PeerTube videos, accounts, channels and playlists on upstream's listed instances (and `peertube:HOST:ID` URLs) through the instance API,
   Player.fm episodes, RTRFM shows, Roya TV live streams, HitRecord records, href.li redirects, Culture Unplugged films,
-  Zhihu videos, CRTVG programmes, Breitbart videos, Brightcove players (and their embeds), DrTalks videos, Toronto Star videos, The Sun article videos, TVA Nouvelles videos and articles, Wimbledon videos, Screen9 embeds, The HighWire videos, The Guardian podcast episodes, Sky News Australia videos, European Tour videos, Māori Television shows, Formula 1 videos, NZ On Screen titles, 1News articles, Mediaite articles, Rotten Tomatoes trailers and movie pages, 9News videos and articles, CGTN news videos, JoVE
+  Zhihu videos, CRTVG programmes, Breitbart videos, Brightcove players (and their embeds, including TV Everywhere videos through Adobe Pass TV provider logins), DrTalks videos, Toronto Star videos, The Sun article videos, TVA Nouvelles videos and articles, Wimbledon videos, Wistia media, playlists and channels (and their embeds), Screen9 embeds, The HighWire videos, The Guardian podcast episodes, Sky News Australia videos, European Tour videos, Māori Television shows, Formula 1 videos, NZ On Screen titles, 1News articles, Mediaite articles, Rotten Tomatoes trailers and movie pages, 9News videos and articles, CGTN news videos, JoVE
   videos, ParlView videos, The Epoch Times videos, eBay items, Bitmovin
   streams and Crooks and Liars videos (and their embeds), Huajiao lives,
-  ScreenRec shares, Ku6 shows, GoodGame live streams, Fuyin TV videos, GameStar and GamePro videos, Golem videos, Moving Image Archive films, MyVidster links, ETTU TV matches, Erocast tracks, Caltrans traffic cameras, Bigo live rooms, CAM4 live channels, Université de Strasbourg UTV videos, Veo matches, Nobel   Prize media, webcamera.pl and SkylineWebcams live cameras, JoVE   videos, Bitmovin   streams and Crooks and Liars videos (and their embeds), Soundgasm sounds and profiles, StreetVoice songs, Ivoox audios, Amadeus TV library videos, Whyp tracks, TRT Çocuk videos, WorldStarHipHop videos, Xbox clips, HellPorno videos, Toypics videos, MATCHi TV streams, BongaCams live rooms, Daystar clips, Newsy stories, TRT World videos, Pinkbike videos, NTS episodes, Netzkino films, Pear Video videos, Podbay episodes and channels, Rinse FM episodes and shows, Democracy Now! shows and stories, DLive past broadcasts and live streams, Cloudflare Stream videos, CloudyCDN/Backscreen embeds, Dumpert items, Clyp audio clips, Elonet films, Dropbox shared videos, Boston Globe article videos, Beacon TV content, Clipchamp shares, media.ccc.de events, Internazionale videos, Gab posts, iHeartRadio podcast episodes and podcasts, Libsyn episodes, hearthis.at tracks, Freesound sounds, Mux videos,
+  ScreenRec shares, Ku6 shows, GoodGame live streams, Fuyin TV videos, GameStar and GamePro videos, Golem videos, Moving Image Archive films, MyVidster links, ETTU TV matches, Erocast tracks, Caltrans traffic cameras, Bigo live rooms, CAM4 live channels, Université de Strasbourg UTV videos, Veo matches, Nobel   Prize media, webcamera.pl and SkylineWebcams live cameras, JoVE   videos, Bitmovin   streams and Crooks and Liars videos (and their embeds), Soundgasm sounds and profiles, StreetVoice songs, SVT Play and Öppet arkiv videos through the videoplayer API (with SVT Play series and svt.se article playlists), Ivoox audios, Amadeus TV library videos, Whyp tracks, TRT Çocuk videos, WorldStarHipHop videos, Xbox clips, HellPorno videos, Toypics videos, MATCHi TV streams, BongaCams live rooms, Daystar clips, Newsy stories, TRT World videos, Pinkbike videos, NTS episodes, Netzkino films, Pear Video videos, Podbay episodes and channels, Rinse FM episodes and shows, Democracy Now! shows and stories, DLive past broadcasts and live streams, Cloudflare Stream videos, CloudyCDN/Backscreen embeds, Dumpert items, Clyp audio clips, Elonet films, Dropbox shared videos, Boston Globe article videos, Beacon TV content, Clipchamp shares, media.ccc.de events, Internazionale videos, Gab posts, iHeartRadio podcast episodes and podcasts, Libsyn episodes, hearthis.at tracks, Freesound sounds, Mux videos, NRK TV and NRK Radio programs, seasons, series and article playlists through the psapi playback API,
   Fathom shares, Maariv players (and their embeds), Harpodeon films,
   Yorkshire Film Archive pages, GodResource videos, PopcornTV videos, Reddit
   posts (hosted videos, text-post videos and followed links), X/Twitter posts
@@ -157,9 +162,10 @@ Supported today:
 - YouTube single-video watch, short-link, Shorts, embed and live URL shapes,
   extracted like upstream from the watch page plus one player API request per
   default InnerTube client. With a JS runtime (deno, enabled by default as
-  upstream does, or `--js-runtimes node`) the clients are `tv_samsung`,
+  upstream does, or `--js-runtimes node`, `quickjs` or `bun`) the clients are `tv_samsung`,
   `visionos` and `web`, and `n`/signature challenges are solved through the
-  bundled pinned EJS release. Without one, only `visionos` is used, with
+  bundled pinned EJS release (signature solutions are cached in
+  `~/.cache/yt-dlp-rs` in upstream's format, see `--cache-dir`). Without one, only `visionos` is used, with
   upstream's warning. HTTPS, HLS and DASH formats follow upstream's
   `_extract_formats_and_subtitles`: PO-token policies skip token-requiring
   formats unless a `po_token` is configured; HTTPS formats download in 10 MiB
@@ -281,6 +287,14 @@ Supported today:
   keyring are not implemented.
 - `--socket-timeout`, `--source-address`, `-4`/`-6` and `--no-check-certificates`
   configure every native HTTP client.
+- Account logins with `-u`/`-p`, `-2`, `--netrc`/`--netrc-location` and
+  `--netrc-cmd` (a native netrc parser) for Niconico, Dailymotion, Twitch, VK,
+  Tumblr and SoundCloud (OAuth tokens), with upstream's YouTube warnings and
+  unsupported-login warnings elsewhere; Vimeo logins are not supported.
+- Geo restriction bypass: `--xff` (and `--geo-bypass*`) or an extractor's
+  upstream `_GEO_COUNTRIES` give a fake `X-Forwarded-For` address for its
+  requests, formats and downloads, with upstream's geo-restricted retry.
+  `--ignore-no-formats-error` keeps results without formats (metadata only).
 - Explicit `--proxy URL` for HTTP/HTTPS or SOCKS4/4a/5/5h routing across the
   native HTTP clients. `--proxy ''` forces direct connections. Pinned SOCKS5
   compatibility uses proxy-side DNS; SOCKS4 user-ID credentials remain unsupported.

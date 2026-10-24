@@ -264,8 +264,16 @@ fn extract_policy_key(
         })
 }
 
-/// The Playback API JSON; 401/403 bodies are upstream's errors.
-fn call_api(client: &Client, api: &Url, id: &str, headers: &[(&str, &str)]) -> Result<Value> {
+/// The Playback API JSON; 401/403 bodies are upstream's errors, except
+/// that `None` asks for a fresh policy key (`INVALID_POLICY_KEY` for a
+/// cached key, when `retry_key`).
+fn call_api(
+    client: &Client,
+    api: &Url,
+    id: &str,
+    headers: &[(&str, &str)],
+    retry_key: bool,
+) -> Result<Option<Value>> {
     crate::screen::screen(&format!("[{NAME}] {id}: Downloading JSON metadata"));
     let mut response = super::direct::request_expecting(client, api, headers, &[401, 403])
         .map_err(|error| match error {
@@ -297,15 +305,23 @@ fn call_api(client: &Client, api: &Url, id: &str, headers: &[(&str, &str)]) -> R
             .or_else(|| error.get("error_code"))
             .and_then(Value::as_str)
             .ok_or_else(|| unsupported("API errors without a message"))?;
-        // `raise_geo_restricted(msg=message)` and `ExtractorError(message)`;
-        // a policy key is never cached here, so `INVALID_POLICY_KEY` is
-        // not retried.
+        // `raise_geo_restricted(msg=message)` for `CLIENT_GEO`, else
+        // `ExtractorError(message)`; a cached policy key the API rejects is
+        // extracted again.
+        if error.get("error_subcode").and_then(Value::as_str) == Some("CLIENT_GEO") {
+            return Err(crate::geo::restricted(&format!("[{NAME}] {message}"), &[]));
+        }
+        if error.get("error_code").and_then(Value::as_str) == Some("INVALID_POLICY_KEY")
+            && retry_key
+        {
+            return Ok(None);
+        }
         return Err(Error::Reported(format!("[{NAME}] {message}")));
     }
     crate::screen::expect_page(id, None, None);
     crate::screen::page_read(&page_url, &body)?;
     let text = super::decode_webpage(&body, response.headers());
-    crate::json::from_str(&text).map_err(|error| {
+    crate::json::from_str(&text).map(Some).map_err(|error| {
         Error::Reported(format!(
             "[{NAME}] {id}: Failed to parse JSON  (caused by {error})"
         ))
@@ -466,7 +482,7 @@ fn parse_metadata(
             .find(|value| truthy(value))
             .and_then(Value::as_str)
             .ok_or_else(|| unsupported("API errors without a message"))?;
-        return Err(Error::Reported(format!("[{NAME}] {message}")));
+        crate::no_formats::raise_expected(NAME, None, None, message)?;
     }
     for format in &mut formats {
         let own = format.http_headers.get_or_insert_with(Map::new);
@@ -687,13 +703,36 @@ impl Extractor for BrightcoveNew {
             headers.push(("Referer".into(), referrer));
             headers.push(("Origin".into(), origin));
         }
-        let policy_key = extract_policy_key(client, account_id, player_id, embed, &video_id)?;
-        headers.push(("Accept".into(), format!("application/json;pk={policy_key}")));
-        let request_headers: Vec<(&str, &str)> = headers
-            .iter()
-            .map(|(name, value)| (name.as_str(), value.as_str()))
-            .collect();
-        let data = call_api(client, &api, &video_id, &request_headers)?;
+        // The policy key is cached as `brightcove` / `ACCOUNT_PLAYER`; a
+        // cached key the API rejects is cleared and extracted again.
+        let cache_key = format!("{account_id}_{player_id}");
+        let mut policy_key = crate::cache::load("brightcove", &cache_key, None).and_then(|key| {
+            key.as_str()
+                .filter(|key| !key.is_empty())
+                .map(str::to_owned)
+        });
+        let mut extracted = false;
+        let (data, policy_key) = loop {
+            let key = match policy_key.take() {
+                Some(key) => key,
+                None => {
+                    let key = extract_policy_key(client, account_id, player_id, embed, &video_id)?;
+                    extracted = true;
+                    crate::cache::store("brightcove", &cache_key, &Value::from(key.as_str()));
+                    key
+                }
+            };
+            headers.retain(|(name, _)| name != "Accept");
+            headers.push(("Accept".into(), format!("application/json;pk={key}")));
+            let request_headers: Vec<(&str, &str)> = headers
+                .iter()
+                .map(|(name, value)| (name.as_str(), value.as_str()))
+                .collect();
+            match call_api(client, &api, &video_id, &request_headers, !extracted)? {
+                Some(data) => break (data, key),
+                None => crate::cache::store("brightcove", &cache_key, &Value::Null),
+            }
+        };
         let Value::Object(data) = data else {
             return Err(unsupported("API responses that are not objects"));
         };
@@ -714,7 +753,50 @@ impl Extractor for BrightcoveNew {
                     missing.join(", ")
                 )));
             }
-            return Err(unsupported("TV Everywhere (Adobe Pass) videos"));
+            // `get_temp_id` is None: errors have no video id.
+            let key_error = |key: &str| {
+                Error::Reported(format!(
+                    "[{NAME}] An extractor error has occurred. (caused by KeyError('{key}')); {}",
+                    crate::BUG_REPORTS_MESSAGE
+                ))
+            };
+            let custom_fields = data
+                .get("custom_fields")
+                .ok_or_else(|| key_error("custom_fields"))?;
+            let custom = |key: &str| -> Result<String> {
+                match custom_fields.get(key) {
+                    Some(Value::String(text)) => Ok(text.clone()),
+                    Some(_) => Err(unsupported("Adobe Pass custom fields that are not strings")),
+                    None => Err(key_error(key)),
+                }
+            };
+            let source_url = smuggled_text("source_url")
+                .ok_or_else(|| unsupported("smuggled source URLs that are not strings"))?;
+            let tve_token = super::adobepass::extract_mvpd_auth(
+                client,
+                &super::adobepass::Caller {
+                    extractor: NAME,
+                    id: &video_id,
+                    prefix: format!("[{NAME}] "),
+                },
+                &source_url,
+                &custom("bcadobepassrequestorid")?,
+                &custom("bcadobepassresourceid")?,
+                &smuggled["software_statement"],
+            )?;
+            let accept = format!("application/json;pk={policy_key}");
+            let data = super::download_json_headers(
+                client,
+                &super::update_url_query(&api, &[("tveToken", &tve_token)]),
+                NAME,
+                &video_id,
+                &[("Accept", &accept)],
+            )?;
+            let Value::Object(data) = data else {
+                return Err(unsupported("API responses that are not objects"));
+            };
+            headers.retain(|(name, _)| name != "Authorization");
+            return parse_metadata(client, &data, &video_id, &headers, url).map(Some);
         }
         // `headers.pop('Authorization')` before the formats get them.
         headers.retain(|(name, _)| name != "Authorization");

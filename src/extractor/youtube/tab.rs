@@ -2635,6 +2635,7 @@ impl super::super::Extractor for YoutubeTab {
             return Ok(None);
         };
         crate::screen::set_extractor(NAME);
+        super::login(NAME, "")?;
         super::initialize();
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",

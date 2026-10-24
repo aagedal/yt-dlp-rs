@@ -1,0 +1,521 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://tv.nrk.no/program/MDDP12000117",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MDDP12000117\", \"title\": \"Alarm Trolltunga\", \"alt_title\": \"Str\\u00f8mmen av turister mot Trolltunga eksploderer. R\\u00f8de Kors-mannskaper m\\u00e5 rykke ut dag og natt for \\u00e5 redde turister i n\\u00f8d.\", \"description\": \"Str\\u00f8mmen av turister mot Trolltunga eksploderer. R\\u00f8de Kors-mannskaper m\\u00e5 rykke ut dag og natt for \\u00e5 redde turister i n\\u00f8d.\", \"duration\": 2223.44, \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwiA75H4o4RMNl9B7icZFgzA\", \"width\": 300, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwW6MfdjhIJPVl9B7icZFgzA\", \"width\": 600, \"height\": null, \"id\": \"1\"}, {\"url\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwQVRlZaOE0cll9B7icZFgzA\", \"width\": 960, \"height\": null, \"id\": \"2\"}], \"age_limit\": 6, \"formats\": [{\"format_id\": \"aud1-Undetermined\", \"format_note\": \"Undetermined\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/A0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"language\": \"und\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"aud1-Undetermined - audio only (Undetermined)\"}, {\"format_id\": \"268\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 268.273, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 180, \"vcodec\": \"avc1.42c00c\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 268.273, \"resolution\": \"320x180\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"268 - 320x180\"}, {\"format_id\": \"442\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V1_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 442.536, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"vcodec\": \"avc1.42c015\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 442.536, \"resolution\": \"480x270\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"442 - 480x270\"}, {\"format_id\": \"687\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V2_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 687.294, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 687.294, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"687 - 640x360\"}, {\"format_id\": \"1387\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V3_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 1387.202, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1387.202, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1387 - 960x540\"}, {\"format_id\": \"2368\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 2368.435, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2368.435, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2368 - 1280x720\"}], \"subtitles\": {\"nb-nor\": [{\"url\": \"https://undertekst.nrk.no/MDDP12/00/MDDP12000117/NOR/MDDP12000117.vtt\", \"ext\": \"vtt\"}], \"nb-ttv\": [{\"url\": \"https://undertekst.nrk.no/MDDP12/00/MDDP12000117/TTV/MDDP12000117.vtt\", \"ext\": \"vtt\"}]}, \"timestamp\": 1498591822, \"original_url\": \"https://tv.nrk.no/program/MDDP12000117\", \"webpage_url\": \"nrk:MDDP12000117\", \"webpage_url_basename\": \"MDDP12000117\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwQVRlZaOE0cll9B7icZFgzA\", \"display_id\": \"MDDP12000117\", \"fulltitle\": \"Alarm Trolltunga\", \"duration_string\": \"37:03\", \"upload_date\": \"20170627\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_formats\": [{\"format_id\": \"2368\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 2368.435, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2368.435, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2368 - 1280x720\"}, {\"format_id\": \"aud1-Undetermined\", \"format_note\": \"Undetermined\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/A0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"language\": \"und\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"aud1-Undetermined - audio only (Undetermined)\"}], \"format\": \"2368 - 1280x720+aud1-Undetermined - audio only (Undetermined)\", \"format_id\": \"2368+aud1-Undetermined\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"und\", \"format_note\": \"Undetermined\", \"filesize_approx\": null, \"tbr\": 2368.435, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": 25.0, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.64001f\", \"vbr\": 2368.435, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": null, \"asr\": null, \"audio_channels\": null, \"_filename\": \"Alarm Trolltunga [MDDP12000117].mp4\", \"filename\": \"Alarm Trolltunga [MDDP12000117].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/program/MDDP12000117",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(duration)s|%(age_limit)s|%(upload_date)s|%(format_id)s|%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "MDDP12000117|Alarm Trolltunga|NRK|nrk:MDDP12000117|2223.44|6|20170627|2368+aud1-Undetermined|mp4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nrk:MDDP12000117",
+   "args": [
+    "--no-geo-bypass",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[NRK] Extracting URL: nrk:MDDP12000117",
+    "[NRK] MDDP12000117: Downloading manifest JSON",
+    "[NRK] MDDP12000117: Downloading m3u8 information",
+    "[NRK] MDDP12000117: Downloading metadata JSON",
+    "[info] Available subtitles for MDDP12000117:",
+    "Language Formats",
+    "nb-nor   vtt",
+    "nb-ttv   vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nrk:MDDP12000117",
+   "args": [
+    "--no-geo-bypass",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[NRK] Extracting URL: nrk:MDDP12000117",
+    "[NRK] MDDP12000117: Downloading manifest JSON",
+    "[NRK] MDDP12000117: Downloading m3u8 information",
+    "[NRK] MDDP12000117: Downloading metadata JSON",
+    "[info] Available formats for MDDP12000117:",
+    "ID                EXT RESOLUTION FPS |   FILESIZE   TBR PROTO | VCODEC        VBR ACODEC     MORE INFO",
+    "---------------------------------------------------------------------------------------------------------------",
+    "aud1-Undetermined mp4 audio only     |                  m3u8  | audio only        unknown    [und] Undetermined",
+    "268               mp4 320x180     25 | ~ 71.11MiB  268k m3u8  | avc1.42c00c  268k video only",
+    "442               mp4 480x270     25 | ~117.30MiB  443k m3u8  | avc1.42c015  443k video only",
+    "687               mp4 640x360     25 | ~182.17MiB  687k m3u8  | avc1.4d401e  687k video only",
+    "1387              mp4 960x540     25 | ~367.68MiB 1387k m3u8  | avc1.4d401f 1387k video only",
+    "2368              mp4 1280x720    25 | ~627.76MiB 2368k m3u8  | avc1.64001f 2368k video only"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nrk:program/MDDP12000117",
+   "args": [
+    "--no-geo-bypass",
+    "--write-subs",
+    "--all-subs",
+    "--skip-download",
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[NRK] Extracting URL: nrk:program/MDDP12000117",
+    "[NRK] MDDP12000117: Downloading manifest JSON",
+    "[NRK] MDDP12000117: Downloading m3u8 information",
+    "[NRK] MDDP12000117: Downloading metadata JSON",
+    "[info] MDDP12000117: Downloading subtitles: nb-nor, nb-ttv",
+    "[info] MDDP12000117: Downloading 1 format(s): 2368+aud1-Undetermined",
+    "[info] Writing video subtitles to: MDDP12000117.nb-nor.vtt",
+    "[download] Destination: MDDP12000117.nb-nor.vtt",
+    "[download] Download completed",
+    "[info] Writing video subtitles to: MDDP12000117.nb-ttv.vtt",
+    "[download] Destination: MDDP12000117.nb-ttv.vtt",
+    "[download] Download completed"
+   ],
+   "stderr": [],
+   "files": {
+    "MDDP12000117.nb-nor.vtt": 205,
+    "MDDP12000117.nb-ttv.vtt": 205
+   }
+  },
+  {
+   "url": "https://tv.nrk.no/serie/20-spoersmaal-tv/MUHH48000314/23-05-2014",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MUHH48000314\", \"title\": \"20 sp\\u00f8rsm\\u00e5l - 23. mai 2014\", \"alt_title\": \"23. mai 2014\", \"description\": \"Sp\\u00f8rrekonkurranse for de munnrappe.Medvirkende: Siri Kristiansen, Hel\\u00e9n Vikstvedt og Gustav Nilsen. Programleder er Trond-Viggo Torgersen.(3)\", \"duration\": 1741, \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/u7uCe79SEfPVGRAGVp2_uArN0COfhEOOXXg6Bgek8lMQ\", \"width\": 300, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://gfx.nrk.no/u7uCe79SEfPVGRAGVp2_uA999_ZFwqX83Xg6Bgek8lMQ\", \"width\": 600, \"height\": null, \"id\": \"1\"}, {\"url\": \"https://gfx.nrk.no/u7uCe79SEfPVGRAGVp2_uAQVeEx81I75_Xg6Bgek8lMQ\", \"width\": 960, \"height\": null, \"id\": \"2\"}], \"age_limit\": 0, \"formats\": [{\"format_id\": \"aud1-Undetermined\", \"format_note\": \"Undetermined\", \"format_index\": null, \"url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/sc-gaFEQg/A0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/cmaf.m3u8?s=0\", \"language\": \"und\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"aud1-Undetermined - audio only (Undetermined)\"}, {\"format_id\": \"268\", \"format_index\": null, \"url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/sc-gaFEQg/V0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/cmaf.m3u8?s=0\", \"tbr\": 268.642, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 180, \"vcodec\": \"avc1.42c00c\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 268.642, \"resolution\": \"320x180\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"268 - 320x180\"}, {\"format_id\": \"443\", \"format_index\": null, \"url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/sc-gaFEQg/V1_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/cmaf.m3u8?s=0\", \"tbr\": 443.24, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"vcodec\": \"avc1.42c015\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 443.24, \"resolution\": \"480x270\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"443 - 480x270\"}, {\"format_id\": \"689\", \"format_index\": null, \"url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/sc-gaFEQg/V2_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/cmaf.m3u8?s=0\", \"tbr\": 689.088, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 689.088, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"689 - 640x360\"}, {\"format_id\": \"1391\", \"format_index\": null, \"url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/sc-gaFEQg/V3_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/cmaf.m3u8?s=0\", \"tbr\": 1391.054, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1391.054, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1391 - 960x540\"}, {\"format_id\": \"2373\", \"format_index\": null, \"url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/cmaf.m3u8?s=0\", \"tbr\": 2373.959, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2373.959, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2373 - 1280x720\"}], \"subtitles\": {\"nb-ttv\": [{\"url\": \"https://undertekst.nrk.no/MUHH48/00/MUHH48000314/TTV/MUHH48000314.vtt\", \"ext\": \"vtt\"}]}, \"timestamp\": 1584593700, \"series\": \"20 sp\\u00f8rsm\\u00e5l\", \"season_id\": \"126936\", \"season_number\": 2014, \"episode\": \"23. mai 2014\", \"episode_number\": 3, \"original_url\": \"https://tv.nrk.no/serie/20-spoersmaal-tv/MUHH48000314/23-05-2014\", \"webpage_url\": \"nrk:MUHH48000314\", \"webpage_url_basename\": \"MUHH48000314\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/u7uCe79SEfPVGRAGVp2_uAQVeEx81I75_Xg6Bgek8lMQ\", \"display_id\": \"MUHH48000314\", \"fulltitle\": \"20 sp\\u00f8rsm\\u00e5l - 23. mai 2014\", \"duration_string\": \"29:01\", \"upload_date\": \"20200319\", \"release_year\": null, \"season\": \"Season 2014\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_formats\": [{\"format_id\": \"2373\", \"format_index\": null, \"url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/cmaf.m3u8?s=0\", \"tbr\": 2373.959, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2373.959, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2373 - 1280x720\"}, {\"format_id\": \"aud1-Undetermined\", \"format_note\": \"Undetermined\", \"format_index\": null, \"url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/sc-gaFEQg/A0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-84.akamaized.net/open/ps/muhh/muhh48000314/a16d3271-9.smil/cmaf.m3u8?s=0\", \"language\": \"und\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"aud1-Undetermined - audio only (Undetermined)\"}], \"format\": \"2373 - 1280x720+aud1-Undetermined - audio only (Undetermined)\", \"format_id\": \"2373+aud1-Undetermined\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"und\", \"format_note\": \"Undetermined\", \"filesize_approx\": null, \"tbr\": 2373.959, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": 25.0, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.64001f\", \"vbr\": 2373.959, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": null, \"asr\": null, \"audio_channels\": null, \"_filename\": \"20 sp\\u00f8rsm\\u00e5l - 23. mai 2014 [MUHH48000314].mp4\", \"filename\": \"20 sp\\u00f8rsm\\u00e5l - 23. mai 2014 [MUHH48000314].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nrk:clip/150533",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"150533\", \"title\": \"Dompap og andre fugler i Piip-Show\", \"alt_title\": \"Rett som det er stikker dompap, gr\\u00f8nnfink og andre fugler innom i baren til NRKs direktesendte Piip-Show.\", \"description\": \"Rett som det er stikker dompap, gr\\u00f8nnfink og andre fugler innom i baren til NRKs direktesendte Piip-Show.\", \"duration\": 262, \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/0mZgeckEzRU6qTWrbQHD2QJjOE20-k77EwBvh-K-AtAQ\", \"width\": 300, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://gfx.nrk.no/0mZgeckEzRU6qTWrbQHD2QK9dJB5OLk5kwBvh-K-AtAQ\", \"width\": 600, \"height\": null, \"id\": \"1\"}, {\"url\": \"https://gfx.nrk.no/0mZgeckEzRU6qTWrbQHD2Q5kpqvkNjBXAwBvh-K-AtAQ\", \"width\": 960, \"height\": null, \"id\": \"2\"}], \"age_limit\": null, \"formats\": [{\"format_id\": \"293\", \"format_index\": null, \"url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/sc-gaFEAA/m001_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/muxed.m3u8?aco=aac&s=0\", \"tbr\": 293.328, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 180, \"vcodec\": \"avc1.428015\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x180\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"293 - 320x180\"}, {\"format_id\": \"468\", \"format_index\": null, \"url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/sc-gaFEAA/m101_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/muxed.m3u8?aco=aac&s=0\", \"tbr\": 468.612, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"vcodec\": \"avc1.42801e\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"480x270\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"468 - 480x270\"}, {\"format_id\": \"712\", \"format_index\": null, \"url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/sc-gaFEAA/m201_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/muxed.m3u8?aco=aac&s=0\", \"tbr\": 712.712, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"712 - 640x360\"}, {\"format_id\": \"1417\", \"format_index\": null, \"url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/sc-gaFEAA/m301_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/muxed.m3u8?aco=aac&s=0\", \"tbr\": 1417.795, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1417 - 960x540\"}, {\"format_id\": \"2389\", \"format_index\": null, \"url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/sc-gaFEAA/m401_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/muxed.m3u8?aco=aac&s=0\", \"tbr\": 2389.038, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640029\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2389 - 1280x720\"}], \"subtitles\": {}, \"timestamp\": 1395751833, \"webpage_url\": \"nrk:clip/150533\", \"original_url\": \"nrk:clip/150533\", \"webpage_url_basename\": \"150533\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/0mZgeckEzRU6qTWrbQHD2Q5kpqvkNjBXAwBvh-K-AtAQ\", \"display_id\": \"150533\", \"fulltitle\": \"Dompap og andre fugler i Piip-Show\", \"duration_string\": \"4:22\", \"upload_date\": \"20140325\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"2389\", \"format_index\": null, \"url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/sc-gaFEAA/m401_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-33.akamaized.net/open/potion/d50f/d50f76ffc4fc4ef98cf9155fcd052b5c/f3de9b19-0.smil/muxed.m3u8?aco=aac&s=0\", \"tbr\": 2389.038, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.640029\", \"acodec\": \"mp4a.40.2\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2389 - 1280x720\", \"_filename\": \"Dompap og andre fugler i Piip-Show [150533].mp4\", \"filename\": \"Dompap og andre fugler i Piip-Show [150533].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.nrk.no/video/PS*150533",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(title)s|%(alt_title)s|%(age_limit)s|%(timestamp)s|%(duration)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "150533|Dompap og andre fugler i Piip-Show|Rett som det er stikker dompap, grønnfink og andre fugler innom i baren til NRKs direktesendte Piip-Show.|NA|1395751833|262"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nrk:l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8\", \"title\": \"Jeg er sinna og det m\\u00e5 du t\\u00e5le!\", \"alt_title\": \"Jeg har alltid v\\u00e6rt en sint jente. Og jeg har f\\u00e5tt h\\u00f8re det. Sintere enn tvillings\\u00f8steren min. Upassende sint i klasserommet. For sint selv p\\u00e5 fotballbanen. Hvorfor kan det aldri v\\u00e6re positivt?Pappa kaller sinnet mitt temperament. Mamma kaller det kraft. Hvorfor kan ikke flere se p\\u00e5 det slik som henne? \", \"description\": \"\", \"duration\": 1682, \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/CEDlVkEKxLYiBZ-CXjxSxg-jgr61UkBZTZlar9AoJFOA\", \"width\": 300, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://gfx.nrk.no/CEDlVkEKxLYiBZ-CXjxSxgKZReVyxsu4fZlar9AoJFOA\", \"width\": 600, \"height\": null, \"id\": \"1\"}, {\"url\": \"https://gfx.nrk.no/CEDlVkEKxLYiBZ-CXjxSxgkCXi3S5oTcTZlar9AoJFOA\", \"width\": 960, \"height\": null, \"id\": \"2\"}], \"age_limit\": 0, \"formats\": [{\"url\": \"https://podkast.nrk.no/fil/ulrikkes_univers/ulrikkes_univers_2018-04-05_0300_637.MP3\", \"format_id\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\"}], \"subtitles\": {}, \"timestamp\": 1522897200, \"webpage_url\": \"nrk:l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8\", \"original_url\": \"nrk:l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8\", \"webpage_url_basename\": \"l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/CEDlVkEKxLYiBZ-CXjxSxgkCXi3S5oTcTZlar9AoJFOA\", \"display_id\": \"l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8\", \"fulltitle\": \"Jeg er sinna og det m\\u00e5 du t\\u00e5le!\", \"duration_string\": \"28:02\", \"upload_date\": \"20180405\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://podkast.nrk.no/fil/ulrikkes_univers/ulrikkes_univers_2018-04-05_0300_637.MP3\", \"format_id\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\", \"_filename\": \"Jeg er sinna og det m\\u00e5 du t\\u00e5le! [l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8].mp3\", \"filename\": \"Jeg er sinna og det m\\u00e5 du t\\u00e5le! [l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://radio.nrk.no/podkast/ulrikkes_univers/l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(extractor)s|%(ext)s|%(vcodec)s|%(format_id)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8|NRK|mp3|none|mp3|nrk:l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8|https://radio.nrk.no/podkast/ulrikkes_univers/l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/anno/KMTE50001317/sesong-3/episode-13",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NRK] KMTE50001317: NRK said: Ikke tilgjengelig lenger"
+   ],
+   "files": {}
+  },
+  {
+   "url": "nrk:program/KMTE50001317",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NRK] program/KMTE50001317: NRK said: Ikke tilgjengelig lenger"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/tour-de-ski/MSPO40010515/06-01-2015",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NRK] MSPO40010515: NRK har ikke rettigheter til å vise dette programmet utenfor Norge"
+   ],
+   "files": {}
+  },
+  {
+   "url": "nrk:ABCD12345678",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ABCD12345678\", \"title\": \"Anno - 13. episode\", \"alt_title\": \"13. episode\", \"description\": \"Sesong 3 av Anno.\\n\\nDeltakerne bor p\\u00e5 g\\u00e5rden (13:20)\", \"duration\": 2340.5, \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/abcd-300\", \"width\": 300, \"height\": 169, \"id\": \"0\", \"resolution\": \"300x169\"}, {\"url\": \"https://gfx.nrk.no/abcd-960\", \"width\": 960, \"height\": null, \"id\": \"1\"}], \"age_limit\": 12, \"formats\": [{\"url\": \"https://podkast.nrk.no/fil/abcd/abcd.MP3\", \"format_id\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\"}], \"subtitles\": {\"nb\": [{\"url\": \"https://undertekst.nrk.no/ABCD/ABCD12345678.vtt\", \"ext\": \"vtt\"}], \"nn-ttv\": [{\"url\": \"https://undertekst.nrk.no/ABCD/TTV/ABCD12345678.vtt\", \"ext\": \"vtt\"}], \"nn-nor\": [{\"url\": \"https://undertekst.nrk.no/ABCD/NOR/ABCD12345678.vtt\", \"ext\": \"vtt\"}, {\"url\": \"https://undertekst.nrk.no/ABCD/NOR2/ABCD12345678.vtt\", \"ext\": \"vtt\"}]}, \"timestamp\": 1614834367, \"series\": \"Anno\", \"season_id\": null, \"season_number\": 3, \"episode\": \"13. episode\", \"episode_number\": 13, \"webpage_url\": \"nrk:ABCD12345678\", \"original_url\": \"nrk:ABCD12345678\", \"webpage_url_basename\": \"ABCD12345678\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/abcd-960\", \"display_id\": \"ABCD12345678\", \"fulltitle\": \"Anno - 13. episode\", \"duration_string\": \"39:00\", \"upload_date\": \"20210304\", \"release_year\": null, \"season\": \"Season 3\", \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://podkast.nrk.no/fil/abcd/abcd.MP3\", \"format_id\": \"mp3\", \"vcodec\": \"none\", \"protocol\": \"https\", \"ext\": \"mp3\", \"audio_ext\": \"mp3\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"acodec\": \"mp3\", \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp3 - audio only\", \"_filename\": \"Anno - 13. episode [ABCD12345678].mp3\", \"filename\": \"Anno - 13. episode [ABCD12345678].mp3\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [NRK] ABCD12345678: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [NRK] ABCD12345678: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [NRK] ABCD12345678: Unable to download JSON metadata: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "nrk:ABCD12345678",
+   "args": [
+    "--no-geo-bypass",
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[NRK] Extracting URL: nrk:ABCD12345678",
+    "[NRK] ABCD12345678: Downloading manifest JSON",
+    "[NRK] ABCD12345678: Downloading m3u8 information",
+    "[NRK] ABCD12345678: Downloading m3u8 information",
+    "[NRK] ABCD12345678: Downloading metadata JSON",
+    "[NRK] ABCD12345678: Downloading programs JSON",
+    "[info] Available subtitles for ABCD12345678:",
+    "Language Formats",
+    "nb       vtt",
+    "nn-ttv   vtt",
+    "nn-nor   vtt, vtt"
+   ],
+   "stderr": [
+    "WARNING: [NRK] ABCD12345678: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [NRK] ABCD12345678: Failed to download m3u8 information: HTTP Error 404: Not Found",
+    "WARNING: [NRK] ABCD12345678: Unable to download JSON metadata: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/direkte/nrk1",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NRK] nrk1: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/hellums-kro/sesong/1/episode/2",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MUHH36005220\", \"title\": \"Hellums kro - 2. Kro, krig og kj\\u00e6rlighet\", \"alt_title\": \"2. Kro, krig og kj\\u00e6rlighet\", \"description\": \"Jan tviholder p\\u00e5 sine prinsipper. Oddbj\\u00f8rn er skeptisk til Jans evne til \\u00e5 lede dem og bestemmer seg for \\u00e5 ta saken i egne hender.\", \"duration\": 1563.92, \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/2_4mhU2JhR-8IYRC_OMmAQKEZiP2U-TkEi2sBrNrsjkg\", \"width\": 300, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://gfx.nrk.no/2_4mhU2JhR-8IYRC_OMmAQIUYf83Nzng8i2sBrNrsjkg\", \"width\": 600, \"height\": null, \"id\": \"1\"}, {\"url\": \"https://gfx.nrk.no/2_4mhU2JhR-8IYRC_OMmAQomOILcG9Oc8i2sBrNrsjkg\", \"width\": 960, \"height\": null, \"id\": \"2\"}], \"age_limit\": 6, \"formats\": [{\"format_id\": \"aud1-Norsk\", \"format_note\": \"Norsk, low\", \"format_index\": null, \"url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/sc-gaFEQg/A0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/cmaf.m3u8?s=0\", \"language\": \"no\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": 0, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"aud1-Norsk - audio only (Norsk, low)\"}, {\"format_id\": \"aud2-Norsk\", \"format_note\": \"Norsk, high\", \"format_index\": null, \"url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/sc-gaFEQg/A1_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/cmaf.m3u8?s=0\", \"language\": \"no\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": 1, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"aud2-Norsk - audio only (Norsk, high)\"}, {\"format_id\": \"415\", \"format_index\": null, \"url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/sc-gaFEQg/V0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/cmaf.m3u8?s=0\", \"tbr\": 415.741, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"vcodec\": \"avc1.42c015\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 415.741, \"resolution\": \"480x270\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"415 - 480x270\"}, {\"format_id\": \"642\", \"format_index\": null, \"url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/sc-gaFEQg/V1_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/cmaf.m3u8?s=0\", \"tbr\": 642.614, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 642.614, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"642 - 640x360\"}, {\"format_id\": \"1295\", \"format_index\": null, \"url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/sc-gaFEQg/V2_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/cmaf.m3u8?s=0\", \"tbr\": 1295.771, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1295.771, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1295 - 960x540\"}, {\"format_id\": \"2178\", \"format_index\": null, \"url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/sc-gaFEQg/V3_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/cmaf.m3u8?s=0\", \"tbr\": 2178.622, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2178.622, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"2178 - 1280x720\"}, {\"format_id\": \"4127\", \"format_index\": null, \"url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/cmaf.m3u8?s=0\", \"tbr\": 4127.695, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 4127.695, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"4127 - 1920x1080\"}], \"subtitles\": {\"nb-ttv\": [{\"url\": \"https://undertekst.nrk.no/prod/v2/MUHH36/00/MUHH36005220/MUHH36005220-prod-no-sdh-170002-v52.vtt\", \"ext\": \"vtt\"}]}, \"timestamp\": 1572584520, \"series\": \"Hellums kro\", \"season_id\": \"124163\", \"season_number\": 1, \"episode\": \"2. Kro, krig og kj\\u00e6rlighet\", \"episode_number\": 2, \"original_url\": \"https://tv.nrk.no/serie/hellums-kro/sesong/1/episode/2\", \"webpage_url\": \"nrk:MUHH36005220\", \"webpage_url_basename\": \"MUHH36005220\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/2_4mhU2JhR-8IYRC_OMmAQomOILcG9Oc8i2sBrNrsjkg\", \"display_id\": \"MUHH36005220\", \"fulltitle\": \"Hellums kro - 2. Kro, krig og kj\\u00e6rlighet\", \"duration_string\": \"26:03\", \"upload_date\": \"20191101\", \"release_year\": null, \"season\": \"Season 1\", \"requested_subtitles\": null, \"_has_drm\": null, \"requested_formats\": [{\"format_id\": \"4127\", \"format_index\": null, \"url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/cmaf.m3u8?s=0\", \"tbr\": 4127.695, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1920, \"height\": 1080, \"vcodec\": \"avc1.640028\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 4127.695, \"resolution\": \"1920x1080\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"4127 - 1920x1080\"}, {\"format_id\": \"aud2-Norsk\", \"format_note\": \"Norsk, high\", \"format_index\": null, \"url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/sc-gaFEQg/A1_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-09.akamaized.net/open/ps/muhh/muhh36005220/1b2359b4-21.smil/cmaf.m3u8?s=0\", \"language\": \"no\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": 1, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"aud2-Norsk - audio only (Norsk, high)\"}], \"format\": \"4127 - 1920x1080+aud2-Norsk - audio only (Norsk, high)\", \"format_id\": \"4127+aud2-Norsk\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"no\", \"format_note\": \"Norsk, high\", \"filesize_approx\": null, \"tbr\": 4127.695, \"width\": 1920, \"height\": 1080, \"resolution\": \"1920x1080\", \"fps\": 25.0, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.640028\", \"vbr\": 4127.695, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": null, \"asr\": null, \"audio_channels\": null, \"_filename\": \"Hellums kro - 2. Kro, krig og kj\\u00e6rlighet [MUHH36005220].mp4\", \"filename\": \"Hellums kro - 2. Kro, krig og kj\\u00e6rlighet [MUHH36005220].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/anno/sesong/3/episode/13",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NRK] KMTE50001317: NRK said: Ikke tilgjengelig lenger"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/bad/sesong/1/episode/1",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NRKTVEpisode] bad/sesong/1/episode/1: Unable to extract NRK ID; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/none/sesong/1/episode/1",
+   "args": [
+    "--no-geo-bypass",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NRKTVEpisode] none/sesong/1/episode/1: Unable to extract page data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/backstage/sesong/1",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"backstage/1\", \"title\": \"Sesong 1\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"NRK\", \"id\": \"MSUI14000116\", \"_type\": \"url\", \"url\": \"nrk:MSUI14000116\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"id\": \"MSUI14000216\", \"_type\": \"url\", \"url\": \"nrk:MSUI14000216\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"id\": \"MSUI14000316\", \"_type\": \"url\", \"url\": \"nrk:MSUI14000316\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"id\": \"MSUI14000416\", \"_type\": \"url\", \"url\": \"nrk:MSUI14000416\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://tv.nrk.no/serie/backstage/sesong/1\", \"original_url\": \"https://tv.nrk.no/serie/backstage/sesong/1\", \"webpage_url_basename\": \"1\", \"webpage_url_domain\": \"tv.nrk.no\", \"extractor\": \"NRKTVSeason\", \"extractor_key\": \"NRKTVSeason\", \"release_year\": null, \"playlist_count\": 4, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/backstage/sesong/1",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "MSUI14000116|nrk:MSUI14000116|NRK|backstage/1|Sesong 1|1|4",
+    "MSUI14000216|nrk:MSUI14000216|NRK|backstage/1|Sesong 1|2|4",
+    "MSUI14000316|nrk:MSUI14000316|NRK|backstage/1|Sesong 1|3|4",
+    "MSUI14000416|nrk:MSUI14000416|NRK|backstage/1|Sesong 1|4|4"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://radio.nrk.no/podkast/hele_historien/sesong/diagnose-kverulant",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [NRKTVSeason] hele_historien/diagnose-kverulant: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/backstage",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"backstage\", \"title\": \"Backstage\", \"description\": \"Kanadisk dramaserie. Backstage f\\u00f8lger talentfulle ten\\u00e5ringer som gjennomg\\u00e5r oppturer og nedturer p\\u00e5 den prestisjetunge Keaton School of the Arts. Fra angst og nederlag, til nye vennskap og premierte prestasjoner. Gjennom dagboklignende bekjennelser og dramatiske spenningsmomenter, vil Backstage lette p\\u00e5 sl\\u00f8ret til de kommende stjernene, mens de jager etter dr\\u00f8mmer og takler daglige utfordringer.\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"NRK\", \"id\": \"MSUI14000116\", \"_type\": \"url\", \"url\": \"nrk:MSUI14000116\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"id\": \"MSUI14000216\", \"_type\": \"url\", \"url\": \"nrk:MSUI14000216\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"id\": \"MSUI13006117\", \"_type\": \"url\", \"url\": \"nrk:MSUI13006117\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"id\": \"MSUI13006217\", \"_type\": \"url\", \"url\": \"nrk:MSUI13006217\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://tv.nrk.no/serie/backstage\", \"original_url\": \"https://tv.nrk.no/serie/backstage\", \"webpage_url_basename\": \"backstage\", \"webpage_url_domain\": \"tv.nrk.no\", \"extractor\": \"NRKTVSeries\", \"extractor_key\": \"NRKTVSeries\", \"release_year\": null, \"playlist_count\": 4, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://radio.nrk.no/serie/dickie-dick-dickens",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"dickie-dick-dickens\", \"title\": \"Dickie Dick Dickens\", \"description\": \"Dickie Dick Dickens var den farligste mann p\\u00e5 det amerikanske kontinent og konge i Chicagos underverden. Kriminaldrama av Rolf og Alexandra Becker.\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"NRKTVSeason\", \"title\": \"Sesong 1\", \"_type\": \"url\", \"url\": \"https://radio.nrk.no/radio/catalog/series/dickie-dick-dickens/seasons/1\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRKTVSeason\", \"title\": \"Sesong 2\", \"_type\": \"url\", \"url\": \"https://radio.nrk.no/radio/catalog/series/dickie-dick-dickens/seasons/2\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRKTVSeason\", \"title\": \"Sesong 3\", \"_type\": \"url\", \"url\": \"https://radio.nrk.no/radio/catalog/series/dickie-dick-dickens/seasons/3\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRKTVSeason\", \"title\": \"Sesong 4\", \"_type\": \"url\", \"url\": \"https://radio.nrk.no/radio/catalog/series/dickie-dick-dickens/seasons/4\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRKTVSeason\", \"title\": \"Sesong 5\", \"_type\": \"url\", \"url\": \"https://radio.nrk.no/radio/catalog/series/dickie-dick-dickens/seasons/5\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRKTVSeason\", \"title\": \"Sesong 6\", \"_type\": \"url\", \"url\": \"https://radio.nrk.no/radio/catalog/series/dickie-dick-dickens/seasons/6\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRKTVSeason\", \"title\": \"Sesong 7\", \"_type\": \"url\", \"url\": \"https://radio.nrk.no/radio/catalog/series/dickie-dick-dickens/seasons/7\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRKTVSeason\", \"title\": \"Sesong 8\", \"_type\": \"url\", \"url\": \"https://radio.nrk.no/radio/catalog/series/dickie-dick-dickens/seasons/8\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://radio.nrk.no/serie/dickie-dick-dickens\", \"original_url\": \"https://radio.nrk.no/serie/dickie-dick-dickens\", \"webpage_url_basename\": \"dickie-dick-dickens\", \"webpage_url_domain\": \"radio.nrk.no\", \"extractor\": \"NRKTVSeries\", \"extractor_key\": \"NRKTVSeries\", \"release_year\": null, \"playlist_count\": 8, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://radio.nrk.no/podkast/ulrikkes_univers",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"ulrikkes_univers\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"NRK\", \"id\": \"l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8\", \"_type\": \"url\", \"url\": \"nrk:l_96f4f1b0-de54-4e6a-b4f1-b0de54fe6af8\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"id\": \"l_cb084042-d86f-4cf7-8840-42d86f8cf7a9\", \"_type\": \"url\", \"url\": \"nrk:l_cb084042-d86f-4cf7-8840-42d86f8cf7a9\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"id\": \"l_3296fb55-2419-4893-96fb-552419a89323\", \"_type\": \"url\", \"url\": \"nrk:l_3296fb55-2419-4893-96fb-552419a89323\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://radio.nrk.no/podkast/ulrikkes_univers\", \"original_url\": \"https://radio.nrk.no/podkast/ulrikkes_univers\", \"webpage_url_basename\": \"ulrikkes_univers\", \"webpage_url_domain\": \"radio.nrk.no\", \"extractor\": \"NRKTVSeries\", \"extractor_key\": \"NRKTVSeries\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nrk.no/troms/gjenopplev-den-historiske-solformorkelsen-1.12270763",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"gjenopplev-den-historiske-solformorkelsen-1.12270763\", \"title\": \"Gjenopplev den historiske solform\\u00f8rkelsen\", \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://www.nrk.no/troms/gjenopplev-den-historiske-solformorkelsen-1.12270763\", \"original_url\": \"https://www.nrk.no/troms/gjenopplev-den-historiske-solformorkelsen-1.12270763\", \"webpage_url_basename\": \"gjenopplev-den-historiske-solformorkelsen-1.12270763\", \"webpage_url_domain\": \"nrk.no\", \"extractor\": \"NRKPlaylist\", \"extractor_key\": \"NRKPlaylist\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [NRKPlaylist] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nrk.no/kultur/bok/rivertonprisen-til-karin-fossum-1.12266449",
+   "args": [
+    "--no-geo-bypass",
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"rivertonprisen-til-karin-fossum-1.12266449\", \"title\": \"Rivertonprisen til Karin Fossum\", \"description\": \"F\\u00f8rste kvinne p\\u00e5 15 \\u00e5r til \\u00e5 vinne krimlitteraturprisen & mer.\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"NRK\", \"_type\": \"url\", \"url\": \"nrk:150533\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"_type\": \"url\", \"url\": \"nrk:1\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"NRK\", \"_type\": \"url\", \"url\": \"nrk:MDDP12000117\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.nrk.no/kultur/bok/rivertonprisen-til-karin-fossum-1.12266449\", \"original_url\": \"https://www.nrk.no/kultur/bok/rivertonprisen-til-karin-fossum-1.12266449\", \"webpage_url_basename\": \"rivertonprisen-til-karin-fossum-1.12266449\", \"webpage_url_domain\": \"nrk.no\", \"extractor\": \"NRKPlaylist\", \"extractor_key\": \"NRKPlaylist\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nrk.no/kultur/bok/rivertonprisen-til-karin-fossum-1.12266449",
+   "args": [
+    "--no-geo-bypass",
+    "--print",
+    "%(id)s|%(title)s|%(playlist_id)s|%(playlist_index)s"
+   ],
+   "exit": 1,
+   "stdout": [
+    "150533|Dompap og andre fugler i Piip-Show|rivertonprisen-til-karin-fossum-1.12266449|1",
+    "MDDP12000117|Alarm Trolltunga|rivertonprisen-til-karin-fossum-1.12266449|3"
+   ],
+   "stderr": [
+    "ERROR: [NRK] 1: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/direkte/nrk1",
+   "args": [
+    "--no-geo-bypass",
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"nrk1\", \"title\": \"NRK1\", \"alt_title\": \"\", \"description\": \"\", \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/3v8jiEz2V1O8jLUkavef9A9-KL23EAnNFhJHRAEc971A\", \"width\": 300, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://gfx.nrk.no/3v8jiEz2V1O8jLUkavef9AhWLtSBbLc1lhJHRAEc971A\", \"width\": 600, \"height\": null, \"id\": \"1\"}], \"age_limit\": null, \"formats\": [], \"subtitles\": {}, \"timestamp\": null, \"original_url\": \"https://tv.nrk.no/direkte/nrk1\", \"webpage_url\": \"nrk:nrk1\", \"webpage_url_basename\": \"nrk1\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/3v8jiEz2V1O8jLUkavef9AhWLtSBbLc1lhJHRAEc971A\", \"display_id\": \"nrk1\", \"fulltitle\": \"NRK1\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"_filename\": \"NRK1 [nrk1].NA\", \"filename\": \"NRK1 [nrk1].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/serie/tour-de-ski/MSPO40010515/06-01-2015",
+   "args": [
+    "--xff",
+    "203.0.113.9/32",
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [NRK] MSPO40010515: NRK har ikke rettigheter til å vise dette programmet utenfor Norge"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://tv.nrk.no/program/MDDP12000117",
+   "args": [
+    "--xff",
+    "203.0.113.9/32",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"MDDP12000117\", \"title\": \"Alarm Trolltunga\", \"alt_title\": \"Str\\u00f8mmen av turister mot Trolltunga eksploderer. R\\u00f8de Kors-mannskaper m\\u00e5 rykke ut dag og natt for \\u00e5 redde turister i n\\u00f8d.\", \"description\": \"Str\\u00f8mmen av turister mot Trolltunga eksploderer. R\\u00f8de Kors-mannskaper m\\u00e5 rykke ut dag og natt for \\u00e5 redde turister i n\\u00f8d.\", \"duration\": 2223.44, \"thumbnails\": [{\"url\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwiA75H4o4RMNl9B7icZFgzA\", \"width\": 300, \"height\": null, \"id\": \"0\"}, {\"url\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwW6MfdjhIJPVl9B7icZFgzA\", \"width\": 600, \"height\": null, \"id\": \"1\"}, {\"url\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwQVRlZaOE0cll9B7icZFgzA\", \"width\": 960, \"height\": null, \"id\": \"2\"}], \"age_limit\": 6, \"formats\": [{\"format_id\": \"aud1-Undetermined\", \"format_note\": \"Undetermined\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/A0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"language\": \"und\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"aud1-Undetermined - audio only (Undetermined)\"}, {\"format_id\": \"268\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 268.273, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 320, \"height\": 180, \"vcodec\": \"avc1.42c00c\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 268.273, \"resolution\": \"320x180\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"268 - 320x180\"}, {\"format_id\": \"442\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V1_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 442.536, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 480, \"height\": 270, \"vcodec\": \"avc1.42c015\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 442.536, \"resolution\": \"480x270\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"442 - 480x270\"}, {\"format_id\": \"687\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V2_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 687.294, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 640, \"height\": 360, \"vcodec\": \"avc1.4d401e\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 687.294, \"resolution\": \"640x360\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"687 - 640x360\"}, {\"format_id\": \"1387\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V3_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 1387.202, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 960, \"height\": 540, \"vcodec\": \"avc1.4d401f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 1387.202, \"resolution\": \"960x540\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"1387 - 960x540\"}, {\"format_id\": \"2368\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 2368.435, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2368.435, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"2368 - 1280x720\"}], \"subtitles\": {\"nb-nor\": [{\"url\": \"https://undertekst.nrk.no/MDDP12/00/MDDP12000117/NOR/MDDP12000117.vtt\", \"ext\": \"vtt\"}], \"nb-ttv\": [{\"url\": \"https://undertekst.nrk.no/MDDP12/00/MDDP12000117/TTV/MDDP12000117.vtt\", \"ext\": \"vtt\"}]}, \"timestamp\": 1498591822, \"original_url\": \"https://tv.nrk.no/program/MDDP12000117\", \"webpage_url\": \"nrk:MDDP12000117\", \"webpage_url_basename\": \"MDDP12000117\", \"webpage_url_domain\": null, \"extractor\": \"NRK\", \"extractor_key\": \"NRK\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://gfx.nrk.no/myRSc4vuFlahB60P3n6swwQVRlZaOE0cll9B7icZFgzA\", \"display_id\": \"MDDP12000117\", \"fulltitle\": \"Alarm Trolltunga\", \"duration_string\": \"37:03\", \"upload_date\": \"20170627\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_formats\": [{\"format_id\": \"2368\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/V4_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"tbr\": 2368.435, \"ext\": \"mp4\", \"fps\": 25.0, \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"width\": 1280, \"height\": 720, \"vcodec\": \"avc1.64001f\", \"acodec\": \"none\", \"dynamic_range\": \"SDR\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"abr\": 0, \"vbr\": 2368.435, \"resolution\": \"1280x720\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"2368 - 1280x720\"}, {\"format_id\": \"aud1-Undetermined\", \"format_note\": \"Undetermined\", \"format_index\": null, \"url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/sc-gaFEQg/A0_index.m3u8\", \"manifest_url\": \"https://nrk-od-world-62.akamaized.net/open/ps/mddp/mddp12000117/73feaf50-3.smil/cmaf.m3u8?s=0\", \"language\": \"und\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"preference\": null, \"quality\": null, \"has_drm\": false, \"vcodec\": \"none\", \"source_preference\": null, \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": null, \"tbr\": null, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\", \"X-Forwarded-For\": \"203.0.113.9\"}, \"format\": \"aud1-Undetermined - audio only (Undetermined)\"}], \"format\": \"2368 - 1280x720+aud1-Undetermined - audio only (Undetermined)\", \"format_id\": \"2368+aud1-Undetermined\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native+m3u8_native\", \"language\": \"und\", \"format_note\": \"Undetermined\", \"filesize_approx\": null, \"tbr\": 2368.435, \"width\": 1280, \"height\": 720, \"resolution\": \"1280x720\", \"fps\": 25.0, \"dynamic_range\": \"SDR\", \"vcodec\": \"avc1.64001f\", \"vbr\": 2368.435, \"stretched_ratio\": null, \"aspect_ratio\": 1.78, \"acodec\": null, \"abr\": null, \"asr\": null, \"audio_channels\": null, \"_filename\": \"Alarm Trolltunga [MDDP12000117].mp4\", \"filename\": \"Alarm Trolltunga [MDDP12000117].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "nrk:MDDP12000117",
+   "args": [
+    "--geo-bypass-ip-block",
+    "203.0.113.10/32",
+    "--print",
+    "%(http_headers)j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "NA"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

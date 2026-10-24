@@ -1,6 +1,8 @@
+pub mod adobepass;
 mod amadeustv;
 mod angel;
 mod archiveorg;
+mod arte;
 mod audioboom;
 mod bandcamp;
 mod beacon;
@@ -107,6 +109,7 @@ mod libsyn;
 mod linkedin;
 mod livestreamfails;
 mod lnk;
+pub mod login;
 mod loom;
 mod maariv;
 mod maoritv;
@@ -126,6 +129,7 @@ mod newsy;
 mod niconico;
 mod ninenews;
 mod nobelprize;
+mod nrk;
 mod nts;
 pub mod nuxt;
 mod nzonscreen;
@@ -135,6 +139,7 @@ mod onenewsnz;
 mod oneplace;
 mod parlview;
 mod pearvideo;
+mod peertube;
 mod peertv;
 mod periscope;
 mod photobucket;
@@ -170,6 +175,7 @@ mod soundgasm;
 mod spiegel;
 mod streamable;
 mod streetvoice;
+mod svt;
 mod sztvhu;
 mod ted;
 mod telegraaf;
@@ -199,6 +205,7 @@ mod unitednations;
 mod ustudio;
 mod veo;
 mod videopress;
+pub(crate) mod vidyard;
 mod vimeo;
 mod vk;
 mod vkplay;
@@ -207,6 +214,7 @@ mod webcamerapl;
 mod weibo;
 mod whyp;
 mod wimbledon;
+mod wistia;
 mod worldstarhiphop;
 mod xboxclips;
 mod xiaohongshu;
@@ -218,6 +226,11 @@ mod zhihu;
 pub use amadeustv::{AmadeusTv, suitable as amadeustv_suitable};
 pub use angel::{Angel, suitable as angel_suitable};
 pub use archiveorg::{ArchiveOrg, suitable as archiveorg_suitable};
+pub use arte::{
+    ArteTv, ArteTvCategory, ArteTvEmbed, ArteTvPlaylist,
+    category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,
+    playlist_suitable as artetv_playlist_suitable, suitable as artetv_suitable,
+};
 pub use audioboom::{AudioBoom, suitable as audioboom_suitable};
 pub use bandcamp::{Bandcamp, suitable as bandcamp_suitable};
 pub use beacon::{BeaconTv, suitable as beacon_suitable};
@@ -365,6 +378,13 @@ pub use newsy::{Newsy, suitable as newsy_suitable};
 pub use niconico::{Niconico, suitable as niconico_suitable};
 pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
+pub use nrk::{
+    Nrk, NrkPlaylist, NrkRadioPodkast, NrkTv, NrkTvDirekte, NrkTvEpisode, NrkTvSeason, NrkTvSeries,
+    direkte_suitable as nrk_tv_direkte_suitable, episode_suitable as nrk_tv_episode_suitable,
+    playlist_suitable as nrk_playlist_suitable, podkast_suitable as nrk_radio_podkast_suitable,
+    season_suitable as nrk_tv_season_suitable, series_suitable as nrk_tv_series_suitable,
+    suitable as nrk_suitable, tv_suitable as nrk_tv_suitable,
+};
 pub use nts::{NtsLive, suitable as nts_suitable};
 pub use nzonscreen::{NzOnScreen, suitable as nzonscreen_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
@@ -373,6 +393,10 @@ pub use onenewsnz::{OneNewsNz, suitable as onenewsnz_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use pearvideo::{PearVideo, suitable as pearvideo_suitable};
+pub use peertube::{
+    PeerTube, PeerTubePlaylist, playlist_suitable as peertube_playlist_suitable,
+    suitable as peertube_suitable,
+};
 pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};
@@ -415,6 +439,10 @@ pub use soundgasm::{
 pub use spiegel::{Spiegel, suitable as spiegel_suitable};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
+pub use svt::{
+    SvtPage, SvtPlay, SvtSeries, page_suitable as svt_page_suitable,
+    series_suitable as svt_series_suitable, suitable as svt_suitable,
+};
 pub use sztvhu::{SztvHu, suitable as sztvhu_suitable};
 pub use ted::{
     TedEmbed, TedPlaylist, TedSeries, TedTalk, embed_suitable as ted_embed_suitable,
@@ -476,6 +504,7 @@ pub use ustudio::{Ustudio, suitable as ustudio_suitable};
 pub use ustudio::{UstudioEmbed, embed_suitable as ustudio_embed_suitable};
 pub use veo::{Veo, suitable as veo_suitable};
 pub use videopress::{VideoPress, suitable as videopress_suitable};
+pub use vidyard::{Vidyard, suitable as vidyard_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
     Vk, VkUserVideos, VkWallPost, suitable as vk_suitable,
@@ -491,6 +520,10 @@ pub use weibo::{
 };
 pub use whyp::{Whyp, suitable as whyp_suitable};
 pub use wimbledon::{Wimbledon, suitable as wimbledon_suitable};
+pub use wistia::{
+    Wistia, WistiaChannel, WistiaPlaylist, channel_suitable as wistia_channel_suitable,
+    playlist_suitable as wistia_playlist_suitable, suitable as wistia_suitable,
+};
 pub use worldstarhiphop::{WorldStarHipHop, suitable as worldstarhiphop_suitable};
 pub use xboxclips::{XboxClips, suitable as xboxclips_suitable};
 pub use xiaohongshu::{XiaoHongShu, suitable as xiaohongshu_suitable};
@@ -509,8 +542,8 @@ pub use youtube::search::{
 pub use youtube::tab::suitable as youtube_tab_suitable;
 pub(crate) use youtube::tab::{YoutubeTab, fetch_pages as fetch_youtube_tab_pages};
 pub use youtube::{
-    WaitForVideo, Youtube, YoutubeOptions, extractor_suitable as youtube_extractor_suitable,
-    suitable as youtube_suitable,
+    JsRuntime, JsRuntimeName, WaitForVideo, Youtube, YoutubeOptions,
+    extractor_suitable as youtube_extractor_suitable, js_runtimes, suitable as youtube_suitable,
 };
 pub use zhihu::{Zhihu, suitable as zhihu_suitable};
 
@@ -529,6 +562,51 @@ pub trait Extractor: Send + Sync {
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
         Ok(self.extract(client, url)?.map(ExtractResult::Video))
     }
+
+    /// Upstream `_NETRC_MACHINE`: set by extractors supporting password
+    /// logins (`--username`, `--netrc`); others warn about `--username`.
+    fn netrc_machine(&self) -> Option<&'static str> {
+        None
+    }
+
+    /// Whether the extractor defines `_perform_login` (only then are the
+    /// credentials looked up while initializing).
+    fn performs_login(&self) -> bool {
+        false
+    }
+
+    /// Upstream `_initialize_pre_login`.
+    fn initialize_pre_login(&self, _client: &Client, _session: &login::Session) -> Result<()> {
+        Ok(())
+    }
+
+    /// Upstream `_perform_login(username, password)`.
+    fn perform_login(
+        &self,
+        _client: &Client,
+        _session: &login::Session,
+        _username: &str,
+        _password: &str,
+    ) -> Result<()> {
+        Ok(())
+    }
+
+    /// Upstream `_real_initialize`.
+    fn real_initialize(&self, _client: &Client, _session: &login::Session) -> Result<()> {
+        Ok(())
+    }
+
+    /// Upstream `initialize()` (call it once the URL matched, before the
+    /// `Extracting URL` line): the login lifecycle once per run, `ie` being
+    /// the extractor's name and `id` the URL's ID for errors.
+    fn initialize(&self, client: &Client, ie: &'static str, id: &str) -> Result<()> {
+        login::initialize(self, client, ie, id)
+    }
+
+    /// Upstream `_GEO_BYPASS`, `_GEO_COUNTRIES` and `_GEO_IP_BLOCKS`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::NONE
+    }
 }
 
 /// `[EXTRACTOR] ID: Unable to download WHAT: ERR (caused by REPR)`.
@@ -536,6 +614,17 @@ pub(crate) fn request_error_text(
     extractor: &str,
     id: &str,
     what: &str,
+    error: &crate::Error,
+) -> String {
+    request_errnote_text(extractor, id, &format!("Unable to download {what}"), error)
+}
+
+/// [`request_error_text`] for a request's own `errnote`:
+/// `[EXTRACTOR] ID: ERRNOTE: ERR (caused by REPR)`.
+pub(crate) fn request_errnote_text(
+    extractor: &str,
+    id: &str,
+    errnote: &str,
     error: &crate::Error,
 ) -> String {
     let text = crate::upstream_error_text(error);
@@ -547,7 +636,7 @@ pub(crate) fn request_error_text(
         Some(_) => format!("<{}>", text.replacen("HTTP Error ", "HTTPError ", 1)),
         None => format!("TransportError({})", crate::batch::py_repr(&text)),
     };
-    format!("[{extractor}] {id}: Unable to download {what}: {text} (caused by {cause})")
+    format!("[{extractor}] {id}: {errnote}: {text} (caused by {cause})")
 }
 
 /// Upstream `_report_ignoring_subs(NAME)` for `_extract_m3u8_formats` and
@@ -873,17 +962,55 @@ pub(crate) fn extract_m3u8_master_optional_headers(
     id: &str,
     headers: &[(&str, &str)],
 ) -> Option<crate::VideoInfo> {
+    extract_m3u8_master_optional_headers_id(client, manifest, extractor, id, None, headers)
+}
+
+/// [`extract_m3u8_master_optional_headers`] with an `m3u8_id`.
+pub(crate) fn extract_m3u8_master_optional_headers_id(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    m3u8_id: Option<&str>,
+    headers: &[(&str, &str)],
+) -> Option<crate::VideoInfo> {
     extract_manifest_optional_note_headers(
         client,
         manifest,
         extractor,
         id,
         true,
-        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        &|response| hls::from_response_with(client, response, manifest, None, true, m3u8_id, true),
         ("m3u8 information", "HLS"),
         "Downloading m3u8 information",
         headers,
     )
+}
+
+/// `_extract_m3u8_formats(url, id, live=True, headers=HEADERS,
+/// fatal=False)`: only the master playlist is read, its variants keep no
+/// bitrate IDs, and the manifest's subtitles are dropped with upstream's
+/// warning; the `headers` are sent with the manifest request alone.
+pub(crate) fn extract_m3u8_live_optional_headers(
+    client: &Client,
+    manifest: &Url,
+    extractor: &'static str,
+    id: &str,
+    headers: &[(&str, &str)],
+) -> Option<crate::VideoInfo> {
+    let mut stream = extract_manifest_optional_note_headers(
+        client,
+        manifest,
+        extractor,
+        id,
+        false,
+        &|response| hls::from_response_with(client, response, manifest, None, true, None, true),
+        ("m3u8 information", "HLS"),
+        "Downloading m3u8 information",
+        headers,
+    )?;
+    hls::live_format_ids(&mut stream.formats, None);
+    Some(stream)
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -1418,12 +1545,18 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("kaltura:") && kaltura::suitable(url))
         || youtube::search::suitable(url)
         || (url.starts_with("at://") && bluesky::suitable(url))
+        || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("nrk:") && nrk::suitable(url))
+        || (url.starts_with("peertube:") && peertube::suitable(url))
+        || (url.starts_with("svt:") && svt::suitable(url))
         || (url.starts_with("iheartradio:") && iheart::suitable(url))
         || instagram::ios_suitable(url)
         || (url.starts_with("tco:") && twitter::shortener_suitable(url))
         || (url.starts_with("tiktokuser:") && tiktok::user_suitable(url))
+        || (url.starts_with("wistia:") && wistia::suitable(url))
+        || (url.starts_with("wistiachannel:") && wistia::channel_suitable(url))
         || youtube::redirect::user_suitable(url)
 }
 
@@ -1487,6 +1620,8 @@ pub(crate) fn user_agent() -> String {
         .map(|agent| agent.clone())
         .unwrap_or_default()
 }
+
+pub use login::{Credentials, set_credentials};
 
 /// Upstream `params['videopassword']` (`--video-password`).
 static VIDEO_PASSWORD: std::sync::RwLock<Option<String>> = std::sync::RwLock::new(None);
@@ -1582,7 +1717,7 @@ pub(crate) fn proto_relative(url: &str) -> String {
 }
 
 /// An upstream `{'url': ..., ...}` format dict in its key order (`None`
-/// values keep their keys); `ext` is processing's `determine_ext(url)`
+/// values keep their keys); `ext` is processing's `determine_ext(url).lower()`
 /// unless given.
 pub(crate) fn dict_format(
     fields: Vec<(&str, serde_json::Value)>,
@@ -1602,7 +1737,8 @@ pub(crate) fn dict_format(
             .get("url")
             .and_then(serde_json::Value::as_str)
             .and_then(direct::determine_ext)
-            .unwrap_or_else(|| "unknown_video".into());
+            .unwrap_or_else(|| "unknown_video".into())
+            .to_lowercase();
         map.insert("ext".into(), ext.into());
     }
     // Processing numbers formats without a `format_id`.

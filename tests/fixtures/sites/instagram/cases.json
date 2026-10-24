@@ -25,5 +25,6 @@
  {"url": "https://www.instagram.com/stories/highlights/", "args": ["-j"]},
  {"url": "https://instagram.com/porsche", "args": ["-J", "--flat-playlist"]},
  {"url": "https://instagram.com/porsche", "args": ["--playlist-items", "1", "-j"]},
- {"url": "https://instagram.com/explore/tags/lolcats", "args": ["-J", "--flat-playlist"]}
+ {"url": "https://instagram.com/explore/tags/lolcats", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.instagram.com/p/PhotoOnly1/", "args": ["--ignore-no-formats-error", "-j"]}
 ]

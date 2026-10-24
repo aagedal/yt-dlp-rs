@@ -1,5 +1,5 @@
-//! Upstream `js_to_json(code, vars={})` (not strict): JavaScript object
-//! literals as JSON text, and `_parse_json(..., ignore_extra=True)`'s
+//! Upstream `js_to_json(code, vars={}, strict=False)`: JavaScript object
+//! literals as JSON text (`strict` for `JSInterpreter`'s literals), and `_parse_json(..., ignore_extra=True)`'s
 //! `raw_decode(s.lstrip())` of its first value.
 //!
 //! The final substitution is upstream's single verbose regex; its
@@ -152,8 +152,9 @@ fn token_at(bytes: &[u8], index: usize) -> Option<usize> {
 }
 
 /// `process_escape` over `(")|\\(.)`, with raw control characters as
-/// `\u00XX` (Python's `strict=False` decoder accepts them raw).
-fn escape_string(text: &str) -> String {
+/// `\u00XX` (Python's `strict=False` decoder accepts them raw; they stay raw
+/// for `strict` callers, whose `json.loads` rejects them).
+fn escape_string(text: &str, strict: bool) -> String {
     let mut out = String::with_capacity(text.len() + 2);
     let mut chars = text.chars();
     while let Some(c) = chars.next() {
@@ -166,43 +167,47 @@ fn escape_string(text: &str) -> String {
                 }
                 Some('x') => out.push_str("\\u00"),
                 Some('\n') => {}
-                Some(other) => push_char(&mut out, other),
+                Some(other) => push_char(&mut out, other, strict),
                 // `\\(.)` needs a character; a lone backslash stays.
                 None => out.push('\\'),
             },
-            other => push_char(&mut out, other),
+            other => push_char(&mut out, other, strict),
         }
     }
     out
 }
 
-fn push_char(out: &mut String, c: char) {
-    if (c as u32) < 0x20 {
+fn push_char(out: &mut String, c: char, strict: bool) {
+    if (c as u32) < 0x20 && !strict {
         out.push_str(&format!("\\u{:04x}", c as u32));
     } else {
         out.push(c);
     }
 }
 
-/// `fix_kv` for one matched token.
-fn fix_kv(token: &str, vars: &Vars) -> String {
+/// `fix_kv` for one matched token; `Err` for strict mode's `Unknown value`.
+fn fix_kv(token: &str, vars: &Vars, strict: bool) -> Result<String, ()> {
     match token {
-        "true" | "false" | "null" => return token.to_owned(),
-        "undefined" | "void 0" => return "null".into(),
-        "," => return String::new(),
+        "true" | "false" | "null" => return Ok(token.to_owned()),
+        "undefined" | "void 0" => return Ok("null".into()),
+        "," => return Ok(String::new()),
         _ => {}
     }
     if token.starts_with("/*") || token.starts_with("//") || token.starts_with('!') {
-        return String::new();
+        return Ok(String::new());
     }
     let first = token.as_bytes()[0];
     if QUOTES.contains(&first) {
         let inner = &token[1..token.len() - 1];
         let inner = if first == b'`' {
             static TEMPLATE: LazyLock<Regex> = LazyLock::new(|| regex(r"(?s)\$\{([^}]+)\}"));
-            TEMPLATE
+            let mut failed = false;
+            let inner = TEMPLATE
                 .replace_all(inner, |captures: &regex::Captures<'_>| {
-                    let evaluated = js_to_json_vars(&captures[1], vars);
+                    let Ok(evaluated) = convert(&captures[1], vars, strict) else {
+                        failed = true;
+                        return String::new();
+                    };
                     if evaluated.starts_with('"')
                         && let Ok(Value::String(text)) = serde_json::from_str::<Value>(&evaluated)
                     {
@@ -210,11 +215,15 @@ fn fix_kv(token: &str, vars: &Vars) -> String {
                     }
                     evaluated
                 })
-                .into_owned()
+                .into_owned();
+            if failed {
+                return Err(());
+            }
+            inner
         } else {
             inner.to_owned()
         };
-        return format!("\"{}\"", escape_string(&inner));
+        return Ok(format!("\"{}\"", escape_string(&inner, strict)));
     }
     // `INTEGER_TABLE`: hex and octal literals (keys keep their colon).
     let key = token.ends_with(':');
@@ -243,20 +252,25 @@ fn fix_kv(token: &str, vars: &Vars) -> String {
                 .trim()
                 .is_empty())
     {
-        return if key {
+        return Ok(if key {
             format!("\"{value}\":")
         } else {
             value.to_string()
-        };
+        });
     }
     // `vars[v]` when it is JSON text, else `json.dumps(vars[v])`.
     if let Some((_, value)) = vars.iter().rev().find(|(name, _)| name == token) {
-        if crate::json::from_str::<Value>(value).is_ok() {
-            return value.clone();
+        if strict || crate::json::from_str::<Value>(value).is_ok() {
+            return Ok(value.clone());
         }
-        return crate::output::python_json_dumps(&Value::String(value.clone()));
+        return Ok(crate::output::python_json_dumps(&Value::String(
+            value.clone(),
+        )));
     }
-    format!("\"{token}\"")
+    if strict {
+        return Err(());
+    }
+    Ok(format!("\"{token}\""))
 }
 
 /// `vars`: names and the JSON text substituted for them.
@@ -269,6 +283,16 @@ pub fn js_to_json(code: &str) -> String {
 
 /// Upstream `js_to_json(code, vars)`.
 pub fn js_to_json_vars(code: &str, vars: &Vars) -> String {
+    convert(code, vars, false).expect("only strict conversions fail")
+}
+
+/// Upstream `js_to_json(code, strict=True)`: `None` for its `ValueError`
+/// (an unknown identifier, or a `new Map` that is not JSON).
+pub fn js_to_json_strict(code: &str) -> Option<String> {
+    convert(code, &[], true).ok()
+}
+
+fn convert(code: &str, vars: &Vars, strict: bool) -> Result<String, ()> {
     static ARRAY: LazyLock<Regex> = LazyLock::new(|| regex(r"(?:new\s+)?Array\((.*?)\)"));
     static MAP: LazyLock<Regex> = LazyLock::new(|| regex(r"new Map\((\[.*?\])?\)"));
     static DATE: LazyLock<Regex> = LazyLock::new(|| {
@@ -280,28 +304,38 @@ pub fn js_to_json_vars(code: &str, vars: &Vars) -> String {
         regex(r#"\(function\([^)]*\)\s*\{[^}]*\}\s*\)\s*\(\s*(["'][^)]*["'])\s*\)"#)
     });
     let code = ARRAY.replace_all(code, "[$1]");
+    let mut failed = false;
     let code = MAP.replace_all(&code, |captures: &regex::Captures<'_>| {
         let pairs = js_to_json_vars(captures.get(1).map_or("[]", |found| found.as_str()), vars);
-        let map: serde_json::Map<String, Value> =
-            serde_json::from_str::<Vec<(Value, Value)>>(&pairs)
-                .unwrap_or_default()
-                .into_iter()
-                .map(|(key, value)| {
-                    let key = match key {
-                        Value::String(text) => text,
-                        other => other.to_string(),
-                    };
-                    (key, value)
-                })
-                .collect();
+        let pairs = serde_json::from_str::<Vec<(Value, Value)>>(&pairs);
+        // Its `json.loads` raising is a `ValueError` (seen by strict callers).
+        failed |= pairs.is_err();
+        let map: serde_json::Map<String, Value> = pairs
+            .unwrap_or_default()
+            .into_iter()
+            .map(|(key, value)| {
+                let key = match key {
+                    Value::String(text) => text,
+                    other => other.to_string(),
+                };
+                (key, value)
+            })
+            .collect();
         crate::output::python_json_dumps(&Value::Object(map))
     });
-    let code = DATE.replace_all(&code, "$1");
-    let code = NEW.replace_all(&code, |captures: &regex::Captures<'_>| {
-        crate::output::python_json_dumps(&Value::String(captures[0].to_owned()))
-    });
-    let code = PARSE_INT.replace_all(&code, "$1");
-    let code = IIFE.replace_all(&code, "$1");
+    if failed && strict {
+        return Err(());
+    }
+    let code = if strict {
+        code.into_owned()
+    } else {
+        let code = DATE.replace_all(&code, "$1");
+        let code = NEW.replace_all(&code, |captures: &regex::Captures<'_>| {
+            crate::output::python_json_dumps(&Value::String(captures[0].to_owned()))
+        });
+        let code = PARSE_INT.replace_all(&code, "$1");
+        IIFE.replace_all(&code, "$1").into_owned()
+    };
     let bytes = code.as_bytes();
     let mut out = String::with_capacity(code.len());
     let mut index = 0;
@@ -310,7 +344,7 @@ pub fn js_to_json_vars(code: &str, vars: &Vars) -> String {
         match token_at(bytes, index) {
             Some(length) => {
                 out.push_str(&code[copied..index]);
-                out.push_str(&fix_kv(&code[index..index + length], vars));
+                out.push_str(&fix_kv(&code[index..index + length], vars, strict)?);
                 index += length;
                 copied = index;
             }
@@ -324,7 +358,7 @@ pub fn js_to_json_vars(code: &str, vars: &Vars) -> String {
         }
     }
     out.push_str(&code[copied..]);
-    out
+    Ok(out)
 }
 
 /// `_parse_json(text, transform_source=js_to_json, ignore_extra=True)`:

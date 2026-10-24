@@ -448,6 +448,23 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://www.instagram.com/p/PhotoOnly1/",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"PhotoOnly1\", \"title\": \"Video by naomipq\", \"description\": \"Sunset at the beach #summer\", \"channel\": \"naomipq\", \"uploader_id\": \"2815873\", \"uploader\": \"Naomi Q\", \"timestamp\": 1371748545, \"like_count\": 120, \"comment_count\": 2, \"http_headers\": {\"Referer\": \"https://www.instagram.com/\"}, \"formats\": [], \"thumbnails\": [{\"url\": \"https://scontent.cdninstagram.com/v/p1-320.jpg\", \"width\": 320, \"height\": 400, \"id\": \"0\", \"resolution\": \"320x400\"}, {\"url\": \"https://scontent.cdninstagram.com/v/p1-640.jpg\", \"width\": 640, \"height\": 800, \"id\": \"1\", \"resolution\": \"640x800\"}], \"comments\": [{\"author\": \"fan1\", \"author_id\": \"991\", \"id\": \"17900000000000001\", \"text\": \"Lovely!\", \"timestamp\": 1371748600, \"like_count\": 3}], \"webpage_url\": \"https://www.instagram.com/p/PhotoOnly1/\", \"original_url\": \"https://www.instagram.com/p/PhotoOnly1/\", \"webpage_url_basename\": \"PhotoOnly1\", \"webpage_url_domain\": \"instagram.com\", \"extractor\": \"Instagram\", \"extractor_key\": \"Instagram\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://scontent.cdninstagram.com/v/p1-640.jpg\", \"display_id\": \"PhotoOnly1\", \"fulltitle\": \"Video by naomipq\", \"upload_date\": \"20130620\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"_filename\": \"Video by naomipq [PhotoOnly1].NA\", \"filename\": \"Video by naomipq [PhotoOnly1].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Instagram] There is no video in this post",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
   }
  ]
 }

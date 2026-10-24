@@ -1,0 +1,46 @@
+{
+ "svtId": "8zVbDPA",
+ "title": "Designdrömmar i Stenungsund",
+ "programTitle": "Husdrömmar",
+ "season": "8",
+ "episodeTitle": "Designdrömmar i Stenungsund",
+ "episodeNumber": 3,
+ "materialLength": 3519,
+ "contentDuration": 0,
+ "inappropriateForChildren": true,
+ "blockedForChildren": false,
+ "live": false,
+ "rights": {
+  "validFrom": "2021-03-15T03:00:00+01:00",
+  "geoBlockedSweden": false
+ },
+ "videoReferences": [
+  {
+   "playerType": "ios",
+   "format": "hls-ignored",
+   "url": "https://svt-vod-8m.akamaized.net/d0/world/8zVbDPA/video.mp4"
+  },
+  {
+   "format": "flv",
+   "url": "https://svt-vod-8m.akamaized.net/d0/world/8zVbDPA/video"
+  }
+ ],
+ "subtitles": [
+  {
+   "url": "https://svt-vod-8m.akamaized.net/d0/world/8zVbDPA/text/sub.m3u8"
+  },
+  {
+   "url": "",
+   "language": "en"
+  },
+  {
+   "url": "https://svt-vod-8m.akamaized.net/d0/world/8zVbDPA/text/text-open-en.vtt",
+   "language": "en"
+  }
+ ],
+ "subtitleReferences": [
+  {
+   "url": "https://example.invalid/ignored.vtt"
+  }
+ ]
+}

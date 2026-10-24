@@ -81,6 +81,35 @@
    "files": {
     "123998367.mp3": 18
    }
+  },
+  {
+   "url": "https://api.soundcloud.com/tracks/777",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [soundcloud] This video is not available from your location due to geo restriction"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://api.soundcloud.com/tracks/777",
+   "args": [
+    "--ignore-no-formats-error",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"uploader\": \"ethmusic\", \"uploader_id\": \"52984226\", \"timestamp\": 1388631845, \"title\": \"Blocked here\", \"track\": \"Blocked here\", \"duration\": 1.0, \"webpage_url\": \"https://soundcloud.com/ethmusic/blocked\", \"id\": \"777\", \"thumbnails\": null, \"formats\": [], \"original_url\": \"https://api.soundcloud.com/tracks/777\", \"webpage_url_basename\": \"blocked\", \"webpage_url_domain\": \"soundcloud.com\", \"extractor\": \"soundcloud\", \"extractor_key\": \"Soundcloud\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"777\", \"fulltitle\": \"Blocked here\", \"duration_string\": \"1\", \"upload_date\": \"20140102\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"_filename\": \"Blocked here [777].NA\", \"filename\": \"Blocked here [777].NA\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [soundcloud] This video is not available from your location due to geo restriction",
+    "WARNING: No video formats found!",
+    "WARNING: Requested format is not available"
+   ],
+   "files": {}
   }
  ]
 }

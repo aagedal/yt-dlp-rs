@@ -1,0 +1,557 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [brightcove:new] This video is only available for users of participating TV providers. Use --ap-mso to specify Adobe Pass Multiple-system operator Identifier and --ap-username and --ap-password or --netrc to provide account credentials."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-j",
+    "--ap-mso",
+    "RCN"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [brightcove:new] This video is only available for users of participating TV providers. Use --ap-mso to specify Adobe Pass Multiple-system operator Identifier and --ap-username and --ap-password or --netrc to provide account credentials."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "RCN",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page (meta refresh)",
+    "[brightcove:new] 6400000000001: Downloading Provider Login Page",
+    "[brightcove:new] 6400000000001: Logging in",
+    "[brightcove:new] 6400000000001: Confirming Login",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-j",
+    "--ap-mso",
+    "RCN",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"6400000000001\", \"thumbnails\": null, \"duration\": 60.0, \"formats\": [{\"tbr\": 2000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": null, \"url\": \"https://house-fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/pmp4/static/clear/7777777777001/tve/high.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkTVEKEY\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 15000000, \"format\": \"http-2000k-720p - 1280x720\"}], \"subtitles\": {}, \"is_live\": false, \"title\": \"TV Everywhere fixture\", \"uploader_id\": \"7777777777001\", \"webpage_url\": \"https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D\", \"original_url\": \"https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D\", \"webpage_url_basename\": \"index.html\", \"webpage_url_domain\": \"players.brightcove.net\", \"extractor\": \"brightcove:new\", \"extractor_key\": \"BrightcoveNew\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"6400000000001\", \"fulltitle\": \"TV Everywhere fixture\", \"duration_string\": \"1:00\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"tbr\": 2000.0, \"filesize\": null, \"container\": \"MP4\", \"ext\": \"mp4\", \"width\": 1280, \"height\": 720, \"vcodec\": null, \"url\": \"https://house-fastly-signed-us-east-1-prod.brightcovecdn.com/media/v1/pmp4/static/clear/7777777777001/tve/high.mp4\", \"format_id\": \"http-2000k-720p\", \"source_preference\": 0, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"application/json;pk=BCpkTVEKEY\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 15000000, \"format\": \"http-2000k-720p - 1280x720\", \"_filename\": \"TV Everywhere fixture [6400000000001].mp4\", \"filename\": \"TV Everywhere fixture [6400000000001].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "RCN",
+    "--netrc",
+    "--netrc-location",
+    "netrc"
+   ],
+   "copy": [
+    "netrc"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page (meta refresh)",
+    "[brightcove:new] 6400000000001: Downloading Provider Login Page",
+    "[brightcove:new] 6400000000001: Logging in",
+    "[brightcove:new] 6400000000001: Confirming Login",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "Rogers",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Downloading Provider Login Page",
+    "[brightcove:new] 6400000000001: Logging in",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "Cablevision",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Downloading Provider Login Page",
+    "[brightcove:new] 6400000000001: Logging in",
+    "[brightcove:new] 6400000000001: Confirming Login",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "Comcast_SSO",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Logging in",
+    "[brightcove:new] 6400000000001: Confirming Login",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "Spectrum",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Downloading Provider Login Page",
+    "[brightcove:new] 6400000000001: Downloading SAML Response",
+    "[brightcove:new] 6400000000001: Confirming Login",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "Verizon",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Logging in",
+    "[brightcove:new] 6400000000001: Downloading SAML Response",
+    "[brightcove:new] 6400000000001: Confirming Login",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "slingtv",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Sending first bookend",
+    "[brightcove:new] 6400000000001: Logging in",
+    "[brightcove:new] 6400000000001: Downloading Auth Association Redirect Page",
+    "[brightcove:new] 6400000000001: Sending final bookend",
+    "[brightcove:new] 6400000000001: Confirming Login",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "Suddenlink",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Pressing Continue...",
+    "[brightcove:new] 6400000000001: Sending First Bookend",
+    "[brightcove:new] 6400000000001: Submitting TryAuth",
+    "[brightcove:new] 6400000000001: Getting Login Page",
+    "[brightcove:new] 6400000000001: Logging in",
+    "[brightcove:new] 6400000000001: Downloading Auth Association Redirect Page",
+    "[brightcove:new] 6400000000001: Sending Final Bookend",
+    "[brightcove:new] 6400000000001: Confirming Login",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000002#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "RCN",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000002#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000002: Downloading JSON metadata",
+    "[brightcove:new] 6400000000002: Downloading JSON metadata",
+    "[brightcove:new] 6400000000002: Registering device with Adobe",
+    "[brightcove:new] 6400000000002: Registering client with Adobe",
+    "[brightcove:new] 6400000000002: Obtaining access token",
+    "[brightcove:new] 6400000000002: Obtaining registration code",
+    "[brightcove:new] 6400000000002: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000002: Downloading Provider Login Page",
+    "[brightcove:new] 6400000000002: Logging in",
+    "[brightcove:new] 6400000000002: Confirming Login",
+    "[brightcove:new] 6400000000002: Retrieving Session",
+    "[brightcove:new] 6400000000002: Retrieving Authorization Token"
+   ],
+   "stderr": [
+    "ERROR: [brightcove:new] User not Authorized Error"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000003#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "Comcast_SSO",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000003#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000003: Downloading JSON metadata",
+    "[brightcove:new] 6400000000003: Downloading JSON metadata",
+    "[brightcove:new] 6400000000003: Registering device with Adobe",
+    "[brightcove:new] 6400000000003: Registering client with Adobe",
+    "[brightcove:new] 6400000000003: Obtaining access token",
+    "[brightcove:new] 6400000000003: Obtaining registration code",
+    "[brightcove:new] 6400000000003: Downloading Provider Redirect Page"
+   ],
+   "stderr": [
+    "ERROR: [brightcove:new] Unexpected login URL hostname; expected \"login.xfinity.com\" but got \"login.evil.example\". Aborting before submitting credentials; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "RCN",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata"
+   ],
+   "stderr": [
+    "ERROR: [brightcove:new] Missing fields in smuggled data: source_url, software_statement. This video can be only extracted from the webpage where it is embedded. Pass the URL of the embedding webpage instead of the Brightcove URL"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "RCN",
+    "--netrc-cmd",
+    "printf 'machine RCN login fixture-user password fixture-pass'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] Executing command: printf 'machine RCN login fixture-user password fixture-pass'",
+    "[brightcove:new] 6400000000001: Registering device with Adobe",
+    "[brightcove:new] 6400000000001: Registering client with Adobe",
+    "[brightcove:new] 6400000000001: Obtaining access token",
+    "[brightcove:new] 6400000000001: Obtaining registration code",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6400000000001: Downloading Provider Redirect Page (meta refresh)",
+    "[brightcove:new] 6400000000001: Downloading Provider Login Page",
+    "[brightcove:new] 6400000000001: Logging in",
+    "[brightcove:new] 6400000000001: Confirming Login",
+    "[brightcove:new] 6400000000001: Retrieving Session",
+    "[brightcove:new] 6400000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "RCN",
+    "--netrc",
+    "--netrc-location",
+    "missing-netrc"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata"
+   ],
+   "stderr": [
+    "WARNING: [brightcove:new] Failed to parse .netrc: [Errno 2] No such file or directory: 'missing-netrc'",
+    "ERROR: [brightcove:new] This video is only available for users of participating TV providers. Use --ap-mso to specify Adobe Pass Multiple-system operator Identifier and --ap-username and --ap-password or --netrc to provide account credentials."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "Rogers",
+    "--netrc",
+    "--netrc-location",
+    "netrc"
+   ],
+   "copy": [
+    "netrc"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] No authenticators for Rogers"
+   ],
+   "stderr": [
+    "ERROR: [brightcove:new] This video is only available for users of participating TV providers. Use --ap-mso to specify Adobe Pass Multiple-system operator Identifier and --ap-username and --ap-password or --netrc to provide account credentials."
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+   "args": [
+    "-s",
+    "--ap-mso",
+    "RCN",
+    "--ap-username",
+    "fixture-user",
+    "--ap-password",
+    "fixture-pass",
+    "https://players.brightcove.net/8888888888001/default_default/index.html?videoId=6500000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/8888888888001/default_default/index.html?videoId=6500000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6500000000001: Downloading JSON metadata",
+    "[brightcove:new] 6500000000001: Downloading JSON metadata",
+    "[brightcove:new] 6500000000001: Registering device with Adobe",
+    "[brightcove:new] 6500000000001: Registering client with Adobe",
+    "[brightcove:new] 6500000000001: Obtaining access token",
+    "[brightcove:new] 6500000000001: Obtaining registration code",
+    "[brightcove:new] 6500000000001: Downloading Provider Redirect Page",
+    "[brightcove:new] 6500000000001: Downloading Provider Redirect Page (meta refresh)",
+    "[brightcove:new] 6500000000001: Downloading Provider Login Page",
+    "[brightcove:new] 6500000000001: Logging in",
+    "[brightcove:new] 6500000000001: Confirming Login",
+    "[brightcove:new] 6500000000001: Retrieving Session",
+    "[brightcove:new] 6500000000001: Retrieving Authorization Token",
+    "[brightcove:new] 6500000000001: Retrieving Media Token",
+    "[brightcove:new] 6500000000001: Downloading JSON metadata",
+    "[info] 6500000000001: Downloading 1 format(s): http-360p",
+    "[brightcove:new] Extracting URL: https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__y...ware-statement%22%7D",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[brightcove:new] 6400000000001: Retrieving Media Token",
+    "[brightcove:new] 6400000000001: Downloading JSON metadata",
+    "[info] 6400000000001: Downloading 1 format(s): http-2000k-720p"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

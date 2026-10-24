@@ -12,6 +12,7 @@ use url::Url;
 pub struct Dailymotion;
 
 const NAME: &str = "dailymotion";
+const MACHINE: &str = "dailymotion";
 const KEY: &str = "Dailymotion";
 const COMMON_MEDIA_FIELDS: &str =
     "description\n      geoblockedCountries {\n        allowed\n      }\n      xid";
@@ -119,44 +120,81 @@ fn post_json(
     })
 }
 
-/// `_get_token(xid)`: a cookie's token, else a client-credentials token.
-fn token(client: &Client) -> Result<String> {
+/// `_get_token(xid)`: a cookie's token, else a token for the account
+/// (`_get_login_info`: a `password` grant) or the client (a
+/// `client_credentials` grant). A 400 answer is its `error_description`.
+fn token(client: &Client, xid: &str) -> Result<String> {
     for name in ["access_token", "client_token"] {
         if let Some(token) = crate::cookies::get_cookie("https://www.dailymotion.com/", name) {
             return Ok(token);
         }
     }
     let url = Url::parse("https://graphql.api.dailymotion.com/oauth/token")?;
-    let body = url::form_urlencoded::Serializer::new(String::new())
-        .append_pair("client_id", "f1a362d288c1b98099c7")
-        .append_pair("client_secret", "eea605b96e01c796ff369935357eca920c5da4c5")
-        .append_pair("grant_type", "client_credentials")
-        .finish();
-    let response = post_json(
+    let mut form = vec![
+        ("client_id", "f1a362d288c1b98099c7"),
+        ("client_secret", "eea605b96e01c796ff369935357eca920c5da4c5"),
+    ];
+    let login = super::login::get_login_info(NAME, Some(MACHINE))?
+        .filter(|(username, _)| !username.is_empty());
+    match &login {
+        Some((username, password)) => form.extend([
+            ("grant_type", "password"),
+            ("password", password.as_str()),
+            ("username", username.as_str()),
+        ]),
+        None => form.push(("grant_type", "client_credentials")),
+    }
+    let session = super::login::Session {
+        ie: NAME,
+        id: xid.to_owned(),
+        machine: Some(MACHINE),
+    };
+    let page = session.request(
         client,
         &url,
-        "",
-        "Downloading Access Token",
+        (
+            Some("Downloading Access Token"),
+            "Unable to download JSON metadata",
+        ),
         &[("Content-Type", "application/x-www-form-urlencoded")],
-        body,
+        Some(super::login::urlencode(&form)),
+        &[400],
     )?;
+    let response: Value = crate::json::from_str(&page.text).map_err(|error| {
+        Error::Reported(format!(
+            "[{NAME}] {xid}: Failed to parse JSON  (caused by {error})"
+        ))
+    })?;
+    let key_error = |key: &str| {
+        Error::Reported(format!(
+            "[{NAME}] {xid}: An extractor error has occurred. (caused by KeyError('{key}')); {}",
+            crate::BUG_REPORTS_MESSAGE
+        ))
+    };
+    if page.status == 400 {
+        let description = response
+            .get("error_description")
+            .and_then(Value::as_str)
+            .ok_or_else(|| key_error("error_description"))?;
+        return Err(session.error(description));
+    }
     let token = response
         .get("access_token")
         .and_then(Value::as_str)
-        .ok_or_else(|| {
-            Error::Reported(format!(
-                "[{NAME}] An extractor error has occurred. (caused by KeyError('access_token')); {}",
-                crate::BUG_REPORTS_MESSAGE
-            ))
-        })?
+        .ok_or_else(|| key_error("access_token"))?
         .to_owned();
-    crate::cookies::set_cookie("www.dailymotion.com", "client_token", &token);
+    let cookie = if login.is_some() {
+        "access_token"
+    } else {
+        "client_token"
+    };
+    crate::cookies::set_cookie("www.dailymotion.com", cookie, &token);
     Ok(token)
 }
 
 /// `_call_api('media', xid, fields, note)`.
 fn media(client: &Client, xid: &str) -> Result<Value> {
-    let token = token(client)?;
+    let token = token(client, xid)?;
     let fields = format!(
         "... on Video {{\n      {COMMON_MEDIA_FIELDS}\n      stats {{\n        likes {{\n          total\n        }}\n        views {{\n          total\n        }}\n      }}\n    }}\n    ... on Live {{\n      {COMMON_MEDIA_FIELDS}\n      audienceCount\n      isOnAir\n    }}"
     );
@@ -188,7 +226,9 @@ fn media(client: &Client, xid: &str) -> Result<Value> {
 }
 
 /// `_extract_dailymotion_m3u8_formats_and_subtitles`: a request with
-/// randomized headers (the impersonated retries are unavailable here).
+/// randomized headers, then retries requiring Chrome and Firefox
+/// impersonation; the last error is returned when it is about
+/// impersonation, and warned about otherwise.
 fn m3u8_formats(
     client: &Client,
     url: &str,
@@ -197,44 +237,62 @@ fn m3u8_formats(
     let Ok(manifest) = Url::parse(url) else {
         return (Vec::new(), Default::default(), None);
     };
-    crate::screen::screen(&format!(
-        "[{NAME}] {id}: Downloading m3u8 information with randomized headers"
-    ));
     let headers = blockbuster_headers();
     let headers: Vec<(&str, &str)> = headers
         .iter()
         .map(|(name, value)| (name.as_str(), value.as_str()))
         .collect();
-    let parsed = super::direct::request_with_headers(client, &manifest, None, &headers).and_then(
-        |response| super::hls::from_response(client, response, &manifest, None, true, Some("hls")),
-    );
-    match parsed {
-        Ok(Some(stream)) => (stream.formats, stream.subtitles, None),
-        Ok(None) => (Vec::new(), Default::default(), None),
-        Err(error) => {
-            crate::screen::debug(&format!(
-                "{id}: Unable to download m3u8 information: {}",
-                crate::upstream_error_text(&error)
-            ));
-            // Both impersonated retries fail without an impersonate target.
-            for target in ["chrome", "firefox"] {
-                let note = if target == "chrome" {
-                    "Retrying m3u8 download with Chrome impersonation"
-                } else {
-                    "Retrying m3u8 download with Firefox impersonation"
+    let failed = |error: Error| {
+        format!(
+            "Unable to download m3u8 information: {}",
+            crate::upstream_error_text(&error)
+        )
+    };
+    let mut last_error = String::new();
+    for (note, target) in [
+        ("Downloading m3u8 information with randomized headers", None),
+        (
+            "Retrying m3u8 download with Chrome impersonation",
+            Some("chrome"),
+        ),
+        (
+            "Retrying m3u8 download with Firefox impersonation",
+            Some("firefox"),
+        ),
+    ] {
+        crate::screen::screen(&format!("[{NAME}] {id}: {note}"));
+        let response = match target {
+            None => super::direct::request_with_headers(client, &manifest, None, &headers)
+                .map_err(failed),
+            Some(target) => crate::impersonate::require(&[target]).and_then(|_impersonate| {
+                super::direct::request(client, &manifest, None).map_err(failed)
+            }),
+        };
+        match response {
+            Ok(response) => {
+                return match super::hls::from_response(
+                    client,
+                    response,
+                    &manifest,
+                    None,
+                    true,
+                    Some("hls"),
+                ) {
+                    Ok(Some(stream)) => (stream.formats, stream.subtitles, None),
+                    _ => (Vec::new(), Default::default(), None),
                 };
-                crate::screen::screen(&format!("[{NAME}] {id}: {note}"));
-                crate::screen::debug(&format!(
-                    "{id}: The extractor is attempting impersonation, but none of these impersonate targets are available: {target}. See  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
-                ));
             }
-            (
-                Vec::new(),
-                Default::default(),
-                Some("The extractor is attempting impersonation, but none of these impersonate targets are available: firefox. See  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies".into()),
-            )
+            Err(message) => {
+                crate::screen::debug(&format!("{id}: {message}"));
+                last_error = message;
+            }
         }
     }
+    if !last_error.contains("impersonation") {
+        crate::screen::warning(&format!("[{NAME}] {id}: {last_error}"));
+        return (Vec::new(), Default::default(), None);
+    }
+    (Vec::new(), Default::default(), Some(last_error))
 }
 
 impl Extractor for Dailymotion {
@@ -242,8 +300,18 @@ impl Extractor for Dailymotion {
         KEY
     }
 
+    /// `_GEO_BYPASS = False`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&[])
+    }
+
     fn extract(&self, _client: &Client, _url: &Url) -> Result<Option<VideoInfo>> {
         Ok(None)
+    }
+
+    /// `DailymotionBaseInfoExtractor` logs in while requesting its token.
+    fn netrc_machine(&self) -> Option<&'static str> {
+        Some(MACHINE)
     }
 
     fn extract_result(&self, client: &Client, url: &Url) -> Result<Option<ExtractResult>> {
@@ -251,6 +319,7 @@ impl Extractor for Dailymotion {
             return Ok(None);
         };
         crate::screen::set_extractor(NAME);
+        self.initialize(client, NAME, &video_id)?;
         // `_real_initialize`: no `ff` cookie and no age limit turn the family
         // filter off.
         let family = crate::cookies::get_cookie("https://www.dailymotion.com/", "ff");
@@ -316,8 +385,16 @@ impl Extractor for Dailymotion {
                 .or_else(|| error.get("raw_message").and_then(Value::as_str))
                 .unwrap_or_default();
             if error.get("code").and_then(Value::as_str) == Some("DM007") {
-                // `raise_geo_restricted(msg=title)`.
-                return Err(fail(&xid, title));
+                // `raise_geo_restricted(msg=title, countries=allowed)`.
+                let allowed: Vec<&str> = media
+                    .pointer("/geoblockedCountries/allowed")
+                    .and_then(Value::as_array)
+                    .map(|allowed| allowed.iter().filter_map(Value::as_str).collect())
+                    .unwrap_or_default();
+                return Err(crate::geo::restricted(
+                    &fail(&xid, title).to_string(),
+                    &allowed,
+                ));
             }
             return Err(fail(&xid, &format!("{NAME} said: {title}")));
         }
@@ -402,7 +479,7 @@ impl Extractor for Dailymotion {
         if formats.is_empty()
             && let Some(error) = expected_error
         {
-            return Err(fail(&video_id, &error));
+            crate::no_formats::raise_expected(NAME, None, Some(&video_id), &error)?;
         }
         for format in &mut formats {
             if let Some((url, _)) = format.url.as_str().split_once('#')

@@ -191,6 +191,7 @@ fn checkpoint(
         attempt: 1,
         downloaded_bytes: bytes,
         total_bytes: Some(bytes),
+        total_bytes_estimate: None,
         phase,
         stream_index: None,
         stream_count: None,

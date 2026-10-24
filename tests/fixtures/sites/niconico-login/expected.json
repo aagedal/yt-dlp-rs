@@ -1,0 +1,355 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "-u",
+    "user@example.com",
+    "-p",
+    "s3cret&pw"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "-u",
+    "user@example.com",
+    "-p",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [niconico] sm9: Unable to login: Incorrect email or password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "-u",
+    "mfa@example.com",
+    "-p",
+    "pw",
+    "-2",
+    "123456"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in",
+    "[niconico] Performing MFA",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "-u",
+    "mfa@example.com",
+    "-p",
+    "pw",
+    "--twofactor",
+    "000000"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in",
+    "[niconico] Performing MFA"
+   ],
+   "stderr": [
+    "ERROR: [niconico] sm9: Unable to login: Incorrect code"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "-u",
+    "odd@example.com",
+    "-p",
+    "pw"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [niconico] sm9: Unable to login: Unexpected login error; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "--netrc-cmd",
+    "printf 'machine niconico login user@example.com password s3cret&pw'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Executing command: printf 'machine niconico login user@example.com password s3cret&pw'",
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "--netrc-cmd",
+    "printf 'machine {} login user@example.com password wrong'"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[niconico] Executing command: printf 'machine niconico login user@example.com password wrong'",
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [niconico] sm9: Unable to login: Incorrect email or password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "--netrc-cmd",
+    "printf 'machine other login x password y'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Executing command: printf 'machine other login x password y'",
+    "[niconico] No authenticators for niconico",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "--netrc-cmd",
+    "printf 'default login user@example.com password wrong'"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[niconico] Executing command: printf 'default login user@example.com password wrong'",
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [niconico] sm9: Unable to login: Incorrect email or password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "--netrc-cmd",
+    "exit 3"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Executing command: exit 3",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [
+    "WARNING: [niconico] Failed to parse .netrc: Command returned error code 3"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "--netrc-cmd",
+    "printf 'machine niconico port 1'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Executing command: printf 'machine niconico port 1'",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [
+    "WARNING: [niconico] Failed to parse .netrc: bad follower token 'port' (-, line 1)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "--netrc",
+    "--netrc-location",
+    "."
+   ],
+   "copy": [
+    ".netrc"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "--netrc",
+    "--netrc-location",
+    "logins.netrc",
+    "-2",
+    "123456"
+   ],
+   "copy": [
+    "logins.netrc"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in",
+    "[niconico] Performing MFA",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "--netrc",
+    "--netrc-location",
+    "missing.netrc"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [
+    "WARNING: [niconico] Failed to parse .netrc: [Errno 2] No such file or directory: 'missing.netrc'"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "-u",
+    "user@example.com",
+    "-p",
+    "s3cret&pw",
+    "https://www.nicovideo.jp/watch/sm9"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps",
+    "[niconico] Extracting URL: https://www.nicovideo.jp/watch/sm9",
+    "[niconico] sm9: Downloading API JSON",
+    "[niconico] sm9: Downloading JSON metadata",
+    "[niconico] sm9: Downloading m3u8 information",
+    "[info] sm9: Downloading 1 format(s): video-h264-1080p+audio-aac-192kbps"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.nicovideo.jp/watch/sm9",
+   "args": [
+    "-s",
+    "-i",
+    "-u",
+    "user@example.com",
+    "-p",
+    "wrong",
+    "https://www.nicovideo.jp/watch/sm9"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in",
+    "[niconico] Requesting session cookies",
+    "[niconico] Logging in"
+   ],
+   "stderr": [
+    "ERROR: [niconico] sm9: Unable to login: Incorrect email or password",
+    "ERROR: [niconico] sm9: Unable to login: Incorrect email or password"
+   ],
+   "files": {}
+  }
+ ]
+}

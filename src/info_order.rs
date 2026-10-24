@@ -946,6 +946,9 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    // `--ignore-no-formats-error`: `info_dict['formats'] = []` after
+    // `_has_drm`, and no format is merged.
+    let no_formats = map.shift_remove(crate::info::FORMATS_IGNORED).is_some();
     let followed = map.shift_remove(FOLLOWED).is_some();
     let section_update = map
         .shift_remove(SECTION_UPDATE)
@@ -1901,10 +1904,19 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         ],
         _ => &[],
     };
-    if untyped {
-        // Upstream has no `formats`: the info dict is the only format.
-        replay.ours.shift_remove("formats");
-    }
+    // Upstream has no `formats`: the info dict is the only format (or,
+    // without formats, they are assigned after `_has_drm` unless the
+    // extractor's dict has them).
+    let own_formats = extractor.iter().any(|(key, _)| *key == "formats")
+        || ["dict;", "untyped-dict;"].iter().any(|prefix| {
+            shape
+                .strip_prefix(prefix)
+                .and_then(|spec| spec.split(';').next())
+                .is_some_and(|keys| keys.split(',').any(|key| key == "formats"))
+        });
+    let held_formats = (untyped || (no_formats && !own_formats))
+        .then(|| replay.ours.shift_remove("formats"))
+        .flatten();
     if untitled {
         let titled: Vec<(&str, Set)> = extractor
             .iter()
@@ -2059,6 +2071,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         let mut parts = spec.split(';');
         let keys = parts.next().unwrap_or_default();
         let mut thumbnail_keys = None;
+        let mut thumbnail_all_set = false;
         let mut subtitle_keys = None;
         let mut chapter_keys = None;
         for part in parts {
@@ -2067,6 +2080,10 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             }
             if let Some(found) = part.strip_prefix("thumbnail=") {
                 thumbnail_keys = Some(found);
+            } else if let Some(found) = part.strip_prefix("thumbnail!=") {
+                // Every listed key is set, `None` values kept.
+                thumbnail_keys = Some(found);
+                thumbnail_all_set = true;
             } else if let Some(found) = part.strip_prefix("subtitle=") {
                 subtitle_keys = Some(found);
             }
@@ -2085,14 +2102,29 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         if let Some(chapter_keys) = chapter_keys
             && let Some(Value::Array(chapters)) = replay.out.get_mut("chapters")
         {
-            for chapter in chapters.iter_mut().filter_map(Value::as_object_mut) {
+            for (index, chapter) in chapters
+                .iter_mut()
+                .filter_map(Value::as_object_mut)
+                .enumerate()
+            {
+                // Processing's `<Untitled Chapter N>` title is added last.
+                let untitled = format!("<Untitled Chapter {}>", index + 1);
+                let generated = chapter
+                    .get("title")
+                    .is_some_and(|title| title.as_str() == Some(untitled.as_str()));
                 let mut ordered = Map::new();
                 for key in chapter_keys.split(',') {
+                    if generated && key == "title" {
+                        continue;
+                    }
                     if let Some(value) = chapter.shift_remove(key) {
                         ordered.insert(key.to_owned(), value);
                     }
                 }
                 ordered.append(chapter);
+                if generated && let Some(title) = ordered.shift_remove("title") {
+                    ordered.insert("title".into(), title);
+                }
                 *chapter = ordered;
             }
         }
@@ -2134,6 +2166,8 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
                 for key in thumbnail_keys.split(',') {
                     if let Some(value) = thumbnail.shift_remove(key) {
                         ordered.insert(key.to_owned(), value);
+                    } else if thumbnail_all_set {
+                        ordered.insert(key.to_owned(), Value::Null);
                     }
                 }
                 ordered.append(thumbnail);
@@ -2275,7 +2309,14 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     replay.assign("requested_subtitles");
     replay.assign("_has_drm");
-    if untyped {
+    if no_formats {
+        match held_formats {
+            Some(formats) => {
+                replay.out.insert("formats".into(), formats);
+            }
+            None => replay.take("formats"),
+        }
+    } else if untyped {
         replay.format_steps();
     }
     // The first `prepare_outtmpl` sets `epoch` before format selection.
@@ -2329,6 +2370,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         replay
             .out
             .insert("requested_downloads".into(), Value::Array(downloads));
+    }
+    // `process_video_result`: `info_dict.pop('duration', None)` for a
+    // missing duration, before the format's keys are merged.
+    for map in [&mut replay.out, &mut replay.ours] {
+        if map.get("duration").is_some_and(Value::is_null) {
+            map.shift_remove("duration");
+        }
     }
     // `info_dict.update(format)` (or `_merge`'s dict, whose keys are all
     // assigned): the format's values, including its `None`s.
@@ -2524,6 +2572,8 @@ fn youtube_tab_playlist(
         replay.take(old);
         replay.take(new);
     }
+    // `_sanitize_thumbnails`: `thumbnails` from a lone `thumbnail`.
+    replay.take("thumbnails");
     for key in ["requested_entries", "playlist_count", "epoch"] {
         replay.take(key);
     }
@@ -2532,7 +2582,28 @@ fn youtube_tab_playlist(
     replay.finish()
 }
 
+/// One playlist dict (`-J`) in upstream order. A playlist reached by
+/// following a `url` result ([`FOLLOWED`]) has the result's `original_url`
+/// (passed on as extra info) ahead of its `webpage_url`.
 pub(crate) fn playlist(mut map: Map<String, Value>) -> Map<String, Value> {
+    let followed = map.shift_remove(FOLLOWED).is_some();
+    let map = shaped_playlist(map);
+    if !followed || !map.contains_key("original_url") {
+        return map;
+    }
+    let mut out = Map::new();
+    for (key, value) in &map {
+        if key == "webpage_url" {
+            out.insert("original_url".into(), map["original_url"].clone());
+        }
+        if key != "original_url" || !out.contains_key("original_url") {
+            out.insert(key.clone(), value.clone());
+        }
+    }
+    out
+}
+
+fn shaped_playlist(mut map: Map<String, Value>) -> Map<String, Value> {
     let Some(Value::String(shape)) = map.shift_remove(INFO_SHAPE) else {
         return map;
     };

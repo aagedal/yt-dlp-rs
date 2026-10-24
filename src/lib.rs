@@ -3,6 +3,7 @@ mod audio;
 mod audio_download;
 pub mod batch;
 pub mod browser_cookies;
+pub mod cache;
 pub mod codecs;
 pub mod config;
 pub mod container;
@@ -25,16 +26,20 @@ mod fixup;
 pub mod format_select;
 pub mod format_sort;
 mod fragment;
+pub mod geo;
+pub mod getpass;
 mod hls;
 mod html;
 mod html_elements;
 mod http;
+pub mod impersonate;
 mod info;
 mod info_json;
 mod info_order;
 mod interrupt;
 mod ism_fd;
 pub mod js_to_json;
+pub mod jsinterp;
 mod json;
 mod live_dash;
 pub mod manifest_args;
@@ -44,11 +49,14 @@ mod merge;
 pub mod metadata_parser;
 mod mhtml;
 mod modify_chapters;
+pub mod netrc;
+pub mod no_formats;
 pub mod output;
 mod playlist;
 mod postprocess;
 pub mod pp_args;
 mod retry;
+mod rtmp_fd;
 pub mod screen;
 pub mod sections;
 mod sha1;
@@ -59,6 +67,7 @@ mod subtitles;
 mod thumbnail_process;
 mod traffic;
 mod video;
+mod websocket_fd;
 mod webvtt;
 pub mod xattr;
 
@@ -134,7 +143,7 @@ pub struct YoutubeDl {
     /// `--live-from-start`.
     live_from_start: bool,
     /// The YouTube JavaScript runtime, for live-from-start refetches.
-    youtube_runtime: Option<PathBuf>,
+    youtube_runtime: Vec<extractor::JsRuntime>,
     format_sort: FormatSortOptions,
     prefer_best: bool,
     /// Global request headers and proxy for FFmpeg network inputs.
@@ -334,6 +343,10 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "AmadeusTV",
     "Angel",
     "archive.org",
+    "ArteTVCategory",
+    "ArteTVEmbed",
+    "ArteTV",
+    "ArteTVPlaylist",
     "AudioBoom",
     "Bandcamp",
     "BeaconTv",
@@ -466,6 +479,14 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Newsy",
     "niconico",
     "NobelPrize",
+    "NRK",
+    "NRKPlaylist",
+    "NRKRadioPodkast",
+    "NRKTV",
+    "NRKTVDirekte",
+    "NRKTVEpisode",
+    "NRKTVSeason",
+    "NRKTVSeries",
     "nts.live",
     "NZOnScreen",
     "Odnoklassniki",
@@ -473,6 +494,8 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "OnePlacePodcast",
     "Parlview",
     "PearVideo",
+    "PeerTube",
+    "PeerTube:Playlist",
     "peer.tv",
     "periscope",
     "Photobucket",
@@ -511,6 +534,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Spiegel",
     "Streamable",
     "StreetVoice",
+    "svt:page",
+    "svt:play",
+    "svt:play:series",
     "SztvHu",
     "TedEmbed",
     "TedPlaylist",
@@ -561,6 +587,7 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "ustudio:embed",
     "Veo",
     "VideoPress",
+    "Vidyard",
     "vimeo",
     "vk",
     "vk:uservideos",
@@ -574,6 +601,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "WeiboVideo",
     "Whyp",
     "Wimbledon",
+    "Wistia",
+    "WistiaChannel",
+    "WistiaPlaylist",
     "WorldStarHipHop",
     "XboxClips",
     "XiaoHongShu",
@@ -690,7 +720,7 @@ impl YoutubeDl {
         let headers = http.header_map()?;
         let proxy_url = http.proxy.clone();
         let proxy = http.transport_config()?;
-        let cookies = http.cookies.unwrap_or_default();
+        let cookies = http.cookies.clone().unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
         extractor::GET_COMMENTS.store(youtube.get_comments, std::sync::atomic::Ordering::Relaxed);
@@ -718,7 +748,8 @@ impl YoutubeDl {
             traffic::enable();
         }
         let client = proxy.apply(builder)?.build()?;
-        let youtube_runtime = youtube.js_runtime.clone();
+        impersonate::configure(&http, &cookies)?;
+        let youtube_runtime = youtube.runtimes();
         Ok(Self {
             client,
             ffmpeg: None,
@@ -818,6 +849,14 @@ impl YoutubeDl {
                 Box::new(extractor::Internazionale),
                 Box::new(extractor::MatchiTv),
                 Box::new(extractor::Pinkbike),
+                Box::new(extractor::Nrk),
+                Box::new(extractor::NrkTv),
+                Box::new(extractor::NrkPlaylist),
+                Box::new(extractor::NrkRadioPodkast),
+                Box::new(extractor::NrkTvDirekte),
+                Box::new(extractor::NrkTvEpisode),
+                Box::new(extractor::NrkTvSeason),
+                Box::new(extractor::NrkTvSeries),
                 Box::new(extractor::NtsLive),
                 Box::new(extractor::Netzkino),
                 Box::new(extractor::PearVideo),
@@ -845,6 +884,7 @@ impl YoutubeDl {
                 Box::new(extractor::Ustudio),
                 Box::new(extractor::UstudioEmbed),
                 Box::new(extractor::VideoPress),
+                Box::new(extractor::Vidyard),
                 Box::new(extractor::Sapo),
                 Box::new(extractor::Clyp),
                 Box::new(extractor::Elonet),
@@ -879,6 +919,10 @@ impl YoutubeDl {
                 Box::new(extractor::Rutube),
                 Box::new(extractor::LinkedIn),
                 Box::new(extractor::ArchiveOrg),
+                Box::new(extractor::ArteTvCategory),
+                Box::new(extractor::ArteTvEmbed),
+                Box::new(extractor::ArteTv),
+                Box::new(extractor::ArteTvPlaylist),
                 Box::new(extractor::BitChute),
                 Box::new(extractor::Coub),
                 Box::new(extractor::Loom),
@@ -1001,6 +1045,8 @@ impl YoutubeDl {
                 Box::new(extractor::OneFootball),
                 Box::new(extractor::OnePlacePodcast),
                 Box::new(extractor::Parlview),
+                Box::new(extractor::PeerTube),
+                Box::new(extractor::PeerTubePlaylist),
                 Box::new(extractor::PeerTv),
                 Box::new(extractor::Photobucket),
                 Box::new(extractor::PlayerFm),
@@ -1020,6 +1066,9 @@ impl YoutubeDl {
                 Box::new(extractor::Spiegel),
                 Box::new(extractor::Streamable),
                 Box::new(extractor::StreetVoice),
+                Box::new(extractor::SvtPage),
+                Box::new(extractor::SvtPlay),
+                Box::new(extractor::SvtSeries),
                 Box::new(extractor::SztvHu),
                 Box::new(extractor::TelegramEmbed),
                 Box::new(extractor::TeleTask),
@@ -1049,6 +1098,9 @@ impl YoutubeDl {
                 Box::new(extractor::Vocaroo),
                 Box::new(extractor::Webcamerapl),
                 Box::new(extractor::Whyp),
+                Box::new(extractor::WistiaChannel),
+                Box::new(extractor::Wistia),
+                Box::new(extractor::WistiaPlaylist),
                 Box::new(extractor::WorldStarHipHop),
                 Box::new(extractor::XboxClips),
                 Box::new(extractor::XiaoHongShu),
@@ -1272,7 +1324,7 @@ impl YoutubeDl {
         // Other fixups skip FFmpegFD downloads and merges.
         let ffmpeg_fd = self.uses_ffmpeg_fd(info);
         if !info.requested_formats.is_empty() || options.converted || (ffmpeg_fd && !live_m3u8) {
-            return Ok(());
+            return self.fixup_websocket(info, path, shown, policy);
         }
         let m3u8 = live_m3u8
             || (!ffmpeg_fd
@@ -1322,6 +1374,67 @@ impl YoutubeDl {
             } else {
                 screen::postprocess("FixupM4a", || self.fixup_m4a_as(path, shown))?;
             }
+        }
+        self.fixup_websocket(info, path, shown, policy)
+    }
+
+    /// The last fixups, after any conversion too: `FFmpegFixupTimestampPP`
+    /// and `FFmpegFixupDurationPP` for WebSocketFragmentFD downloads.
+    fn fixup_websocket(
+        &self,
+        info: &VideoInfo,
+        path: &Path,
+        shown: &Path,
+        policy: &str,
+    ) -> Result<()> {
+        if !info.requested_formats.is_empty() || info.protocol.as_deref() != Some("websocket_frag")
+        {
+            return Ok(());
+        }
+        let setts = std::cell::OnceCell::new();
+        for (message, pp) in [
+            ("Malformed timestamps detected", "FixupTimestamp"),
+            ("Malformed duration detected", "FixupDuration"),
+        ] {
+            let Some(ffmpeg) = self.ffmpeg.as_deref().filter(|_| policy != "warn") else {
+                let hint = if policy == "warn" {
+                    ""
+                } else {
+                    ". Install ffmpeg to fix this automatically"
+                };
+                screen::warning(&format!("{}: {message}{hint}", info.id));
+                continue;
+            };
+            screen::postprocess(pp, || {
+                // `_restrict_to(images=False)`.
+                if info.vcodec.as_deref() == Some("none") && info.acodec.as_deref() == Some("none")
+                {
+                    screen::screen(&format!("[{pp}] Skipping images"));
+                    return Ok(());
+                }
+                let container = crate::container::sniff(path).unwrap_or(info.ext.as_str());
+                let ext = info.ext.to_lowercase();
+                let mut proceed = || std::ops::ControlFlow::Continue(());
+                if pp == "FixupTimestamp" {
+                    let setts = *setts.get_or_init(|| fixup::has_setts(ffmpeg));
+                    if !setts {
+                        screen::warning(
+                            "A re-encode is needed to fix timestamps in older versions of ffmpeg. Please install ffmpeg 4.4 or later to fixup without re-encoding",
+                        );
+                    }
+                    screen::screen(&format!(
+                        "[{pp}] Fixing frame timestamp of \"{}\"",
+                        shown.display()
+                    ));
+                    fixup::fix_timestamps(ffmpeg, path, container, &ext, setts, &mut proceed)
+                } else {
+                    screen::screen(&format!(
+                        "[{pp}] Fixing video duration of \"{}\"",
+                        shown.display()
+                    ));
+                    fixup::copy_stream(pp, ffmpeg, path, container, &ext, &mut proceed)
+                }
+            })?;
         }
         Ok(())
     }
@@ -1558,6 +1671,10 @@ impl YoutubeDl {
             "dashsegments"
         } else if let Some(external) = &external {
             external.basename()
+        } else if matches!(info.protocol.as_deref(), Some("rtmp" | "rtmpe")) {
+            "rtmp"
+        } else if info.protocol.as_deref() == Some("websocket_frag") {
+            "web_socket_fragment"
         } else if info.protocol.as_deref() == Some("f4m") {
             "f4m"
         } else if info.protocol.as_deref() == Some("ism") {
@@ -1638,12 +1755,13 @@ impl YoutubeDl {
         merged: bool,
         callback: &mut dyn FnMut(DownloadProgress) -> std::ops::ControlFlow<()>,
     ) -> Result<Vec<u64>> {
-        let feed = extractor::LiveFeed::new(&self.client, info, self.youtube_runtime.as_deref())
-            .ok_or_else(|| {
+        let feed = extractor::LiveFeed::new(&self.client, info, &self.youtube_runtime).ok_or_else(
+            || {
                 Error::Reported(
                     "the stream needs to be re-extracted to download it from the start".into(),
                 )
-            })?;
+            },
+        )?;
         let mut jobs = Vec::new();
         for (stream, path) in streams {
             screen::screen("[dashsegments] Total fragments: unknown (live)");
@@ -1812,13 +1930,15 @@ impl YoutubeDl {
     }
 
     /// Whether a selected format has the `m3u8` protocol, which upstream
-    /// downloads with FFmpegFD unless `--downloader native` is given.
+    /// downloads with FFmpegFD unless `--downloader native` is given, or
+    /// `rtmp_ffmpeg` (`PROTOCOL_MAP`'s FFmpegFD for any downloader).
     fn forced_ffmpeg_hls(&self, info: &VideoInfo) -> bool {
         let forced = |protocol: &str| {
-            protocol == "m3u8"
-                && !self
-                    .downloader_name(protocol)
-                    .is_some_and(|name| name.eq_ignore_ascii_case("native"))
+            protocol == "rtmp_ffmpeg"
+                || (protocol == "m3u8"
+                    && !self
+                        .downloader_name(protocol)
+                        .is_some_and(|name| name.eq_ignore_ascii_case("native")))
         };
         if info.requested_formats.is_empty() {
             info.protocol.as_deref().is_some_and(forced)
@@ -1875,9 +1995,11 @@ impl YoutubeDl {
                 .map(VideoFormat::determine_protocol)
                 .collect()
         };
-        protocols
-            .iter()
-            .all(|protocol| self.downloader_name(protocol).is_some_and(is_ffmpeg_name))
+        // `FFmpegFD.supports`: its `SUPPORTED_PROTOCOLS` only.
+        protocols.iter().all(|protocol| {
+            ffmpeg_fd::SUPPORTED_PROTOCOLS.contains(&protocol.as_str())
+                && self.downloader_name(protocol).is_some_and(is_ffmpeg_name)
+        })
     }
 
     /// Upstream `check_formats`.
@@ -1921,6 +2043,7 @@ impl YoutubeDl {
     /// `--test`: download only the first 10241 bytes of HTTP media.
     pub fn with_test(mut self, test: bool) -> Self {
         self.test = test;
+        self.ffmpeg_settings.test = test;
         self
     }
 
@@ -1961,11 +2084,6 @@ impl YoutubeDl {
         }
         // A playlist's entries report their sort order as each is processed.
         let playlist = matches!(result, ExtractResult::Playlist(_));
-        if let ExtractResult::Playlist(playlist) = result
-            && let Some(serde_json::Value::Array(thumbnails)) = playlist.extra.get_mut("thumbnails")
-        {
-            info::sanitize_thumbnail_values(thumbnails);
-        }
         // `_fill_common_fields(final=False)`: a playlist's `upload_date`.
         if let ExtractResult::Playlist(playlist) = result
             && !playlist.extra.contains_key("upload_date")
@@ -2003,11 +2121,28 @@ impl YoutubeDl {
                 }
             }
         }
+        // `_sanitize_thumbnails`, after `_fill_common_fields`: a lone
+        // truthy `thumbnail` becomes the `thumbnails` list.
+        if let ExtractResult::Playlist(playlist) = result {
+            if !playlist.extra.contains_key("thumbnails")
+                && let Some(serde_json::Value::String(thumbnail)) = playlist.extra.get("thumbnail")
+                && !thumbnail.is_empty()
+            {
+                let thumbnails = serde_json::json!([{"url": thumbnail}]);
+                playlist.extra.insert("thumbnails".into(), thumbnails);
+            }
+            if let Some(serde_json::Value::Array(thumbnails)) = playlist.extra.get_mut("thumbnails")
+            {
+                info::sanitize_thumbnail_values(thumbnails);
+            }
+        }
         let entries = match result {
             ExtractResult::Video(video) => std::slice::from_mut(video),
             ExtractResult::Playlist(playlist) => playlist.entries.as_mut_slice(),
         };
         for entry in entries {
+            // `__x_forwarded_for_ip`, copied to the formats' `http_headers`.
+            let fake_ip = entry.extra.shift_remove(geo::FAKE_IP_FIELD);
             // `_fill_common_fields`: a generic title for a missing or empty one.
             let missing = entry.extra.shift_remove(info::TITLE_MISSING).is_some();
             if missing {
@@ -2049,17 +2184,25 @@ impl YoutubeDl {
             // `process_video_result`: `raise_no_formats` for a result
             // without formats.
             if entry.extra.shift_remove(info::NO_FORMATS).is_some() {
-                let message = format!(
-                    "[{}] {}: No video formats found!; {}",
-                    entry.extractor, entry.id, BUG_REPORTS_MESSAGE
-                );
-                // A playlist entry's error is reported when the entry is
-                // processed; the other entries continue.
-                if playlist {
-                    entry.extra.insert(ENTRY_ERROR.into(), message.into());
-                    continue;
+                if no_formats::ignore() {
+                    // `--ignore-no-formats-error`: processing continues.
+                    screen::warning("No video formats found!");
+                    entry
+                        .extra
+                        .insert(info::FORMATS_IGNORED.into(), serde_json::Value::Bool(true));
+                } else {
+                    let message = format!(
+                        "[{}] {}: No video formats found!; {}",
+                        entry.extractor, entry.id, BUG_REPORTS_MESSAGE
+                    );
+                    // A playlist entry's error is reported when the entry is
+                    // processed; the other entries continue.
+                    if playlist {
+                        entry.extra.insert(ENTRY_ERROR.into(), message.into());
+                        continue;
+                    }
+                    return Err(Error::Reported(message));
                 }
-                return Err(Error::Reported(message));
             }
             // `process_video_result`: `display_id` defaults to the ID.
             // (a `None` value too, in its place).
@@ -2287,6 +2430,11 @@ impl YoutubeDl {
                         Some(entry) => entry.1 = value,
                         None => merged.push((name, value)),
                     }
+                }
+                if let Some(ip) = &fake_ip
+                    && !merged.iter().any(|(name, _)| name == "X-Forwarded-For")
+                {
+                    merged.push(("X-Forwarded-For".into(), ip.clone()));
                 }
                 format.http_headers = (!merged.is_empty()).then(|| merged.into_iter().collect());
                 // Cookies for the format URL become its `cookies` field.
@@ -2519,6 +2667,12 @@ impl YoutubeDl {
     /// Upstream `formats_to_download`: one result per selected format, each
     /// downloaded on its own by `process_info`.
     pub fn select_videos(&self, info: &VideoInfo, format: Option<&str>) -> Result<Vec<VideoInfo>> {
+        // `--ignore-no-formats-error`: "Process what we can, even without
+        // any available formats" (`formats_to_download = [{}]`).
+        if info.has_no_formats() {
+            screen::warning("Requested format is not available");
+            return Ok(vec![info.clone()]);
+        }
         // A playlist entry's `sort_formats` report (see `process_result`).
         if info.playlist_index.is_some() && !info.formats.is_empty() && screen::verbose() {
             for line in self.sorter(info)?.verbose_info() {
@@ -3025,7 +3179,19 @@ impl YoutubeDl {
             }
         };
         for extractor in extractors {
-            if let Some(mut info) = extractor.extract_result(&self.client, url)? {
+            geo::begin(extractor.key(), extractor.geo());
+            let mut extracted = extractor.extract_result(&self.client, url);
+            // `extract`: a geo restriction may retry with a fake IP.
+            if extracted.is_err() && geo::retry_with_fake_ip() {
+                geo::restart();
+                extracted = extractor.extract_result(&self.client, url);
+            }
+            let extracted = extracted?;
+            if extracted.is_none() {
+                geo::abandon();
+            }
+            if let Some(mut info) = extracted {
+                geo::attach(&mut info);
                 if let ExtractResult::Video(video) = &info
                     && let Some(marker) = video.extra.get(FOLLOW_TRANSPARENT).cloned()
                 {
@@ -3041,6 +3207,8 @@ impl YoutubeDl {
                         })
                         .unwrap_or_default();
                     let outer = url.clone();
+                    // The outer result's fake IP is among its forced fields.
+                    let outer_ip = geo::fake_ip();
                     let merge = |result: &mut ExtractResult| -> Result<()> {
                         let ExtractResult::Video(inner) = result else {
                             return Err(Error::UnsupportedHtml5(
@@ -3060,6 +3228,11 @@ impl YoutubeDl {
                             }
                         }
                         inner.webpage_url = outer.clone();
+                        if let Some(ip) = &outer_ip {
+                            inner
+                                .extra
+                                .insert(geo::FAKE_IP_FIELD.into(), ip.clone().into());
+                        }
                         let keys: Vec<&str> = fields.iter().map(|(key, _)| key.as_str()).collect();
                         inner.extra.insert(
                             info_order::INFO_SHAPE.into(),
@@ -3199,6 +3372,43 @@ impl YoutubeDl {
                 &params,
                 info,
                 destination.as_ref(),
+                &mut callback,
+            );
+        }
+        // Upstream `PROTOCOL_MAP`'s RtmpFD and WebSocketFragmentFD.
+        if info.requested_formats.is_empty()
+            && matches!(info.protocol.as_deref(), Some("rtmp" | "rtmpe"))
+        {
+            let params = rtmp_fd::Params {
+                options: &options,
+                continue_download: self.external_settings.continue_download,
+                test: self.test,
+            };
+            return rtmp_fd::download(&params, info, destination.as_ref(), &mut callback);
+        }
+        if info.requested_formats.is_empty() && info.protocol.as_deref() == Some("websocket_frag") {
+            let network = ffmpeg_fd::Network {
+                headers: &self.headers,
+                cookies: &self.cookies,
+                proxy: self.proxy.as_deref(),
+            };
+            // `_calc_headers`: the defaults updated by the format's own.
+            let mut headers = self.info_headers.clone();
+            for (name, value) in external_fd::http_headers(info) {
+                let name = ffmpeg_fd::py_title(&name);
+                match headers.iter_mut().find(|(existing, _)| *existing == name) {
+                    Some(entry) => entry.1 = value,
+                    None => headers.push((name, value)),
+                }
+            }
+            return websocket_fd::download(
+                self.ffmpeg.as_deref(),
+                headers,
+                &network,
+                &self.ffmpeg_settings,
+                info,
+                destination.as_ref(),
+                &options,
                 &mut callback,
             );
         }
@@ -3543,6 +3753,7 @@ impl YoutubeDl {
                     attempt: 1,
                     downloaded_bytes: bytes,
                     total_bytes: Some(bytes),
+                    total_bytes_estimate: None,
                     phase: DownloadPhase::Publishing,
                     stream_index: Some(index as u8 + 1),
                     stream_count: Some(count),
@@ -3703,6 +3914,7 @@ impl YoutubeDl {
                 attempt: 1,
                 downloaded_bytes: stored,
                 total_bytes: Some(stored),
+                total_bytes_estimate: None,
                 phase: DownloadPhase::Merging,
                 stream_index: None,
                 stream_count: Some(count),
@@ -3721,6 +3933,7 @@ impl YoutubeDl {
             attempt: 1,
             downloaded_bytes: bytes,
             total_bytes: Some(bytes),
+            total_bytes_estimate: None,
             phase: DownloadPhase::Publishing,
             stream_index: None,
             stream_count: Some(count),

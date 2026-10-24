@@ -508,7 +508,7 @@ struct Args {
     /// Default HTTP Referer (extractor request headers can override it)
     #[arg(long, value_name = "URL", overrides_with = "referer")]
     referer: Option<String>,
-    /// Explicit path to Deno 2.3+ or Node.js 22+ for YouTube player challenges (no runtime discovery or installation)
+    /// Explicit path to Deno 2.3+ or Node.js 22+ for YouTube player challenges, replacing --js-runtimes
     #[arg(long, value_name = "PATH")]
     youtube_js_runtime: Option<PathBuf>,
     /// Extract audio with local ffmpeg/ffprobe after downloading
@@ -894,15 +894,16 @@ struct Args {
     no_update: bool,
     #[arg(long, hide = true, value_name = "[CHANNEL]@[TAG]")]
     update_to: Option<String>,
-    /// Location in the filesystem where cached data is stored (this port caches nothing)
-    #[arg(long, value_name = "DIR")]
+    /// Location in the filesystem where some downloaded information (such as client ids and signatures) is stored permanently. By default ${XDG_CACHE_HOME}/yt-dlp-rs
+    #[arg(long, value_name = "DIR", overrides_with = "no_cache_dir")]
     cache_dir: Option<String>,
-    #[arg(long, hide = true)]
+    /// Disable filesystem caching
+    #[arg(long, overrides_with = "cache_dir")]
     no_cache_dir: bool,
     /// Delete the cache directory
     #[arg(long)]
     rm_cache_dir: bool,
-    /// JavaScript runtimes (RUNTIME[:PATH]; deno and node are supported)
+    /// Additional JavaScript runtime to enable, with an optional location (the binary or its directory); deno, node, quickjs, bun in order of priority, only deno by default
     #[arg(long, value_name = "RUNTIME[:PATH]")]
     js_runtimes: Vec<String>,
     #[arg(long, hide = true)]
@@ -921,7 +922,8 @@ struct Args {
     /// Extractor arguments (not supported natively)
     #[arg(long, value_name = "IE_KEY:ARGS")]
     extractor_args: Vec<String>,
-    /// Client to impersonate (no impersonation targets are available)
+    /// Client to impersonate for requests (only targets from the optional
+    /// `impersonate` build feature are available)
     #[arg(long, value_name = "CLIENT[:OS]")]
     impersonate: Option<String>,
     /// List available clients to impersonate
@@ -942,7 +944,7 @@ struct Args {
     /// Download all formats (unsupported: equivalent to -f all)
     #[arg(long)]
     all_formats: bool,
-    /// Account credentials (unused by the supported extractors)
+    /// Account credentials (for the extractors supporting logins)
     #[arg(short = 'u', long, value_name = "USERNAME")]
     username: Option<String>,
     #[arg(short = 'p', long, value_name = "PASSWORD")]
@@ -966,9 +968,10 @@ struct Args {
     /// List all supported multiple-system operators
     #[arg(long)]
     ap_list_mso: bool,
-    /// Geo-restriction options (unused by the supported extractors)
+    /// Proxy to verify the IP address for some geo-restricted sites (unused by the supported extractors)
     #[arg(long, value_name = "URL")]
     geo_verification_proxy: Option<String>,
+    /// How to fake the X-Forwarded-For header to try bypassing geographic restriction: "default", "never", an IP block in CIDR notation or a two-letter country code
     #[arg(long, value_name = "VALUE")]
     xff: Option<String>,
     #[arg(long, hide = true)]
@@ -1624,6 +1627,32 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         }
     }
     validate_accepted_options(&args)?;
+    // `--xff` and its hidden aliases share upstream's `geo_bypass`
+    // destination: the last one given wins.
+    let xff = [
+        ("xff", None),
+        ("geo_bypass", Some("default")),
+        ("no_geo_bypass", Some("never")),
+        ("geo_bypass_country", None),
+        ("geo_bypass_ip_block", None),
+    ]
+    .into_iter()
+    .filter(|(id, _)| matches.value_source(id) == Some(clap::parser::ValueSource::CommandLine))
+    .filter_map(|(id, constant)| {
+        let index = matches.indices_of(id)?.max()?;
+        let value = match constant {
+            Some(constant) => constant.to_owned(),
+            None => matches.get_one::<String>(id)?.clone(),
+        };
+        Some((index, value))
+    })
+    .max_by_key(|(index, _)| *index)
+    .map_or_else(|| "default".to_owned(), |(_, value)| value);
+    yt_dlp_rs::geo::set_options(yt_dlp_rs::geo::GeoOptions::parse(&xff).map_err(usage)?);
+    yt_dlp_rs::no_formats::set(
+        args.ignore_no_formats_error,
+        args.wait_for_video.is_some() && !args.no_wait_for_video,
+    );
     // `--extractor-args`: GenericIE's, YouTube's, YoutubeTabIE's and TwitterIE's ported
     // arguments are used; other extractors' are not.
     let extractor_args =
@@ -1688,6 +1717,36 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     yt_dlp_rs::manifest_args::set_extractor_args(extractor_args);
     yt_dlp_rs::extractor::set_video_password(args.video_password.clone());
+    if args.ap_username.is_some() && args.ap_password.is_none() {
+        // Upstream prompts `Type TV provider account password and press
+        // [Return]: ` (getpass).
+        report_error!(
+            "ERROR: --ap-username without --ap-password needs an interactive password prompt, which is not supported natively"
+        );
+        return Ok(false);
+    }
+    yt_dlp_rs::extractor::adobepass::set_options(yt_dlp_rs::extractor::adobepass::Options {
+        mso: args.ap_mso.clone(),
+        login: yt_dlp_rs::extractor::adobepass::LoginOptions {
+            username: args.ap_username.clone(),
+            password: args.ap_password.clone(),
+        },
+    });
+    // Upstream asks for the account password of `-u` without `-p`.
+    let password = match (&args.username, &args.password) {
+        (Some(_), None) => Some(yt_dlp_rs::getpass::getpass(
+            "Type account password and press [Return]: ",
+        )?),
+        _ => args.password.clone(),
+    };
+    yt_dlp_rs::extractor::set_credentials(yt_dlp_rs::extractor::Credentials {
+        username: args.username.clone(),
+        password,
+        twofactor: args.twofactor.clone(),
+        usenetrc: args.netrc,
+        netrc_location: args.netrc_location.clone(),
+        netrc_cmd: args.netrc_cmd.clone(),
+    });
     yt_dlp_rs::extractor::set_youtube_tab_playlist_items(args.playlist_items.as_deref());
     // HttpFD's initial block size and resizing.
     if let Some(size) = args.buffer_size.as_deref().and_then(parse_bytes) {
@@ -2419,7 +2478,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         .map_err(usage)?;
     let mut http_options = HttpOptions::from_cli(args.user_agent, args.referer, &args.add_headers)?;
     // Upstream `std_headers` precede `--add-headers` (which override them).
-    http_options.headers.splice(0..0, std_headers());
+    let std = std_headers();
+    yt_dlp_rs::impersonate::set_std_headers(std.clone());
+    http_options.headers.splice(0..0, std);
     let args_proxy = args.proxy.clone();
     http_options.proxy = args.proxy;
     http_options.socket_timeout = args.socket_timeout;
@@ -2450,35 +2511,19 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
     }
     let mut downloader = YoutubeDl::with_options(
         YoutubeOptions {
-            // `--js-runtimes deno[:PATH]`/`node[:PATH]` (`deno` is enabled by
-            // default; `--no-js-runtimes` clears it): the last value for each,
-            // a bare name looked up on PATH. Upstream prefers Deno's provider
-            // to Node.js's.
-            js_runtime: args.youtube_js_runtime.or_else(|| {
+            // `--js-runtimes NAME[:PATH]` (`deno` is enabled by default;
+            // `--no-js-runtimes` clears it); upstream's provider preference
+            // picks among the available runtimes.
+            js_runtime: args.youtube_js_runtime,
+            js_runtimes: {
                 let mut enabled: Vec<&str> = if args.no_js_runtimes {
                     Vec::new()
                 } else {
                     vec!["deno"]
                 };
                 enabled.extend(args.js_runtimes.iter().map(String::as_str));
-                ["deno", "node"].into_iter().find_map(|runtime| {
-                    let value = enabled.iter().rev().find(|value| {
-                        let name = value.split_once(':').map_or(**value, |(name, _)| name);
-                        name.eq_ignore_ascii_case(runtime)
-                    })?;
-                    let path = value.split_once(':').map_or("", |(_, path)| path);
-                    if !path.is_empty() {
-                        return Some(PathBuf::from(path));
-                    }
-                    std::env::var_os("PATH").and_then(|paths| {
-                        std::env::split_paths(&paths)
-                            .map(|dir| {
-                                dir.join(format!("{runtime}{}", std::env::consts::EXE_SUFFIX))
-                            })
-                            .find(|candidate| candidate.is_file())
-                    })
-                })
-            }),
+                yt_dlp_rs::extractor::js_runtimes(&enabled)
+            },
             include_translated_subtitles: args.write_auto_subs || args.list_subs,
             subtitles_wanted: args.write_subs || args.write_auto_subs || args.list_subs,
             no_playlist: args.no_playlist,
@@ -3049,31 +3094,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         report_error!("ERROR: yt-dlp-rs cannot update itself; install a newer release instead");
         return Ok(false);
     }
-    // Upstream `Cache.remove` (this port stores no cache).
+    // `cachedir`: `--cache-dir DIR` or `--no-cache-dir`, whichever is last.
+    if args.no_cache_dir {
+        yt_dlp_rs::cache::configure(None);
+    } else if let Some(directory) = &args.cache_dir {
+        yt_dlp_rs::cache::configure(Some(directory));
+    }
     if args.rm_cache_dir {
-        if args.no_cache_dir {
-            screen!("Cache is disabled (Did you combine --no-cache-dir and --rm-cache-dir?)");
-        } else {
-            let directory = args
-                .cache_dir
-                .clone()
-                .map(PathBuf::from)
-                .unwrap_or_else(|| {
-                    std::env::var_os("XDG_CACHE_HOME")
-                        .map(PathBuf::from)
-                        .or_else(|| {
-                            std::env::var_os("HOME").map(|home| PathBuf::from(home).join(".cache"))
-                        })
-                        .unwrap_or_default()
-                        .join("yt-dlp-rs")
-                });
-            let mut line = format!("Removing cache dir {} .", directory.display());
-            if directory.is_dir() {
-                std::fs::remove_dir_all(&directory)?;
-                line.push('.');
-            }
-            line.push('.');
-            screen!("{line}");
+        if let Err(error) = yt_dlp_rs::cache::remove() {
+            report_error!("ERROR: {error}");
+            return Ok(false);
         }
         if urls.is_empty() && args.load_info_json.is_none() {
             return Ok(true);
@@ -3083,26 +3113,35 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         screen!("[info] Available impersonate targets");
         writeln!(
             io::stdout().lock(),
-            "Client    OS   Source\n--------------------------------------------\n\
-             Tor       -    curl_cffi>=0.11 (unavailable)\nEdge      -    curl_cffi (unavailable)\n\
-             Firefox   -    curl_cffi>=0.10 (unavailable)\nSafari    -    curl_cffi (unavailable)\n\
-             Chrome    -    curl_cffi (unavailable)"
+            "{}",
+            yt_dlp_rs::impersonate::targets_table()
         )?;
         return Ok(true);
     }
     if args.ap_list_mso {
-        // No supported extractor uses Adobe Pass.
-        writeln!(
+        write!(
             io::stdout().lock(),
-            "Supported TV Providers:\nmso  mso name"
+            "{}",
+            yt_dlp_rs::extractor::adobepass::list_mso_text()
         )?;
         return Ok(true);
     }
     if let Some(target) = &args.impersonate {
-        report_error!(
-            "ERROR: Impersonate target \"{}\" is not available. Use --list-impersonate-targets to see available targets. You may be missing dependencies required to support this target.",
-            target.split(':').next().unwrap_or(target).to_lowercase()
-        );
+        // Validated by `validate_accepted_options`.
+        let target = yt_dlp_rs::impersonate::ImpersonateTarget::parse(&target.to_lowercase())
+            .unwrap_or_default();
+        if !yt_dlp_rs::impersonate::target_available(&target) {
+            report_error!(
+                "ERROR: Impersonate target \"{target}\" is not available. Use --list-impersonate-targets to see available targets. You may be missing dependencies required to support this target."
+            );
+        } else {
+            // Upstream impersonates every request; this port's extractors
+            // and downloaders share a plain client, and only the requests
+            // extractors mark for impersonation use the `wreq` transport.
+            report_error!(
+                "ERROR: --impersonate (impersonating every request) is not supported natively; extractors that request impersonation use an available target automatically"
+            );
+        }
         return Ok(false);
     }
     // Upstream `print_extractor_information`, for this port's extractors
@@ -3120,6 +3159,16 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("AmadeusTV", yt_dlp_rs::extractor::amadeustv_suitable),
             ("Angel", yt_dlp_rs::extractor::angel_suitable),
             ("archive.org", yt_dlp_rs::extractor::archiveorg_suitable),
+            ("ArteTV", yt_dlp_rs::extractor::artetv_suitable),
+            (
+                "ArteTVCategory",
+                yt_dlp_rs::extractor::artetv_category_suitable,
+            ),
+            ("ArteTVEmbed", yt_dlp_rs::extractor::artetv_embed_suitable),
+            (
+                "ArteTVPlaylist",
+                yt_dlp_rs::extractor::artetv_playlist_suitable,
+            ),
             ("AudioBoom", yt_dlp_rs::extractor::audioboom_suitable),
             ("Bandcamp", yt_dlp_rs::extractor::bandcamp_suitable),
             ("BeaconTv", yt_dlp_rs::extractor::beacon_suitable),
@@ -3311,6 +3360,23 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("Newsy", yt_dlp_rs::extractor::newsy_suitable),
             ("niconico", yt_dlp_rs::extractor::niconico_suitable),
             ("NobelPrize", yt_dlp_rs::extractor::nobelprize_suitable),
+            ("NRK", yt_dlp_rs::extractor::nrk_suitable),
+            ("NRKPlaylist", yt_dlp_rs::extractor::nrk_playlist_suitable),
+            (
+                "NRKRadioPodkast",
+                yt_dlp_rs::extractor::nrk_radio_podkast_suitable,
+            ),
+            ("NRKTV", yt_dlp_rs::extractor::nrk_tv_suitable),
+            (
+                "NRKTVDirekte",
+                yt_dlp_rs::extractor::nrk_tv_direkte_suitable,
+            ),
+            (
+                "NRKTVEpisode",
+                yt_dlp_rs::extractor::nrk_tv_episode_suitable,
+            ),
+            ("NRKTVSeason", yt_dlp_rs::extractor::nrk_tv_season_suitable),
+            ("NRKTVSeries", yt_dlp_rs::extractor::nrk_tv_series_suitable),
             ("nts.live", yt_dlp_rs::extractor::nts_suitable),
             ("NZOnScreen", yt_dlp_rs::extractor::nzonscreen_suitable),
             (
@@ -3322,6 +3388,11 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("Parlview", yt_dlp_rs::extractor::parlview_suitable),
             ("PearVideo", yt_dlp_rs::extractor::pearvideo_suitable),
             ("peer.tv", yt_dlp_rs::extractor::peertv_suitable),
+            ("PeerTube", yt_dlp_rs::extractor::peertube_suitable),
+            (
+                "PeerTube:Playlist",
+                yt_dlp_rs::extractor::peertube_playlist_suitable,
+            ),
             ("periscope", yt_dlp_rs::extractor::periscope_suitable),
             ("Photobucket", yt_dlp_rs::extractor::photobucket_suitable),
             ("Pinkbike", yt_dlp_rs::extractor::pinkbike_suitable),
@@ -3380,6 +3451,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("Spiegel", yt_dlp_rs::extractor::spiegel_suitable),
             ("Streamable", yt_dlp_rs::extractor::streamable_suitable),
             ("StreetVoice", yt_dlp_rs::extractor::streetvoice_suitable),
+            ("svt:page", yt_dlp_rs::extractor::svt_page_suitable),
+            ("svt:play", yt_dlp_rs::extractor::svt_suitable),
+            ("svt:play:series", yt_dlp_rs::extractor::svt_series_suitable),
             ("SztvHu", yt_dlp_rs::extractor::sztvhu_suitable),
             ("TedEmbed", yt_dlp_rs::extractor::ted_embed_suitable),
             ("TedPlaylist", yt_dlp_rs::extractor::ted_playlist_suitable),
@@ -3483,6 +3557,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ),
             ("Veo", yt_dlp_rs::extractor::veo_suitable),
             ("VideoPress", yt_dlp_rs::extractor::videopress_suitable),
+            ("Vidyard", yt_dlp_rs::extractor::vidyard_suitable),
             ("vimeo", yt_dlp_rs::extractor::vimeo_suitable),
             ("vk", yt_dlp_rs::extractor::vk_suitable),
             (
@@ -3499,6 +3574,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             ("WeiboVideo", yt_dlp_rs::extractor::weibo_video_suitable),
             ("Whyp", yt_dlp_rs::extractor::whyp_suitable),
             ("Wimbledon", yt_dlp_rs::extractor::wimbledon_suitable),
+            ("Wistia", yt_dlp_rs::extractor::wistia_suitable),
+            (
+                "WistiaChannel",
+                yt_dlp_rs::extractor::wistia_channel_suitable,
+            ),
+            (
+                "WistiaPlaylist",
+                yt_dlp_rs::extractor::wistia_playlist_suitable,
+            ),
             (
                 "WorldStarHipHop",
                 yt_dlp_rs::extractor::worldstarhiphop_suitable,
@@ -3602,7 +3686,7 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
         // Upstream writes the joined descriptions without a final newline.
         write!(
             io::stdout().lock(),
-            "1News\n23video\n9News\nAmadeusTV\nAngel\narchive.org: archive.org video and audio\nAudioBoom\nBandcamp\nBeaconTv\nBigo\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBongaCams\nBostonGlobe\nBreitBart\nbrightcove:new\nBundesliga\nCaltrans\nCAM4\nCGTN\nCJSW\nClipchamp\nCloudflareStream\nCloudyCDN\nClyp\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\ndaystar:clip\ndemocracynow\ndlive:stream\ndlive:vod\nDouyin\nDropbox\nDrTalks\nDumpert\nEbaumsWorld\nEbay\nElonet\nEpoch\nErocast\nEttuTv\nEuropeanTour\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmArchiv: FILMARCHIV ON\nFilmweb\nFormula1\nFreesound\nFuyinTV\nGab\nGameStar\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGolem\ngoodgame:stream\nGraspop\nGronkh\nHarpodeon\nHearThisAt\nHellPorno\nHistoricFilms\nHitRecord\nHSEProduct\nHSEShow\nhtml5\nHuajiao: 花椒直播\nHypem\niheartradio\niheartradio:podcast\nIlPost\nIltalehti\nImgur\nimgur:album\nimgur:gallery\nIna\nInc\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nInternazionale\nIsraelNationalNews\nIvoox\nJove\nJWPlatform\nKaltura\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKickStarter\nKommunetv\nKTH\nKu6\nlbry: odysee.com\nLibsyn\nLinkedIn\nLivestreamfails\nLnk\nloom\nmaariv.co.il\nMaoriTV\nMasters\nMatchiTV\nMatchTV\nmedia.ccc.de\nMediaite\nmegaphone.fm: megaphone.fm embedded players\nmir24.tv\nmixcloud\nMochaVideo\nMovingImage\nMux\nMyVidster\nNetzkino\nNewsy\nniconico: [niconico] ニコニコ動画\nNobelPrize\nnts.live\nNZOnScreen\nOdnoklassniki\nOneFootball\nOnePlacePodcast\nParlview\nPearVideo\npeer.tv\nperiscope: Periscope\nPhotobucket\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPopcornTV\nPremiershipRugby\nPressTV\nQingTing\nRadioZetPodcast\nReddit\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRottenTomatoes\nRoyaLive\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nSapo: SAPO Vídeos\nScreen9\nScreenRec\nSen\nSkyNewsAU\nSnapchatSpotlight\nsoundcloud: [soundcloud]\nsoundgasm\nsoundgasm:profile\nSpiegel\nStreamable\nStreetVoice\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTelegraaf\ntelegram:embed\nTheGuardianPodcast\nTheHighWire\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nThreeSpeak\nThreeSpeakUser\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nTrtCocukVideo\nTrtWorld\nTumblr: [tumblr]\ntv.dfb.de\nTVANouvelles\nTVANouvellesArticle\ntvnoe: Televize Noe\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nustudio\nustudio:embed\nVeo\nVideoPress\nvimeo: [vimeo]\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nWebcamerapl\nWeibo\nWeiboVideo\nWhyp\nWimbledon\nWorldStarHipHop\nXboxClips\nXiaoHongShu: 小红书\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nZhihu\ngeneric: Generic downloader that works on some sites"
+            "1News\n23video\n9News\nAmadeusTV\nAngel\narchive.org: archive.org video and audio\nArteTV\nArteTVCategory\nArteTVEmbed\nArteTVPlaylist\nAudioBoom\nBandcamp\nBeaconTv\nBigo\nBild\nBiliBili\nBitChute\nBitmovin\nblogger.com\nBluesky\nBongaCams\nBostonGlobe\nBreitBart\nbrightcove:new\nBundesliga\nCaltrans\nCAM4\nCGTN\nCJSW\nClipchamp\nCloudflareStream\nCloudyCDN\nClyp\nCoub\nCozyTV\nCrooksAndLiars\nCrtvg\nCultureUnplugged\ndailymotion: [dailymotion]\ndaystar:clip\ndemocracynow\ndlive:stream\ndlive:vod\nDouyin\nDropbox\nDrTalks\nDumpert\nEbaumsWorld\nEbay\nElonet\nEpoch\nErocast\nEttuTv\nEuropeanTour\nfacebook\nfacebook:ads\nfacebook:reel\nFacebookPluginsVideo\nFathom\nFczenit\nFilmArchiv: FILMARCHIV ON\nFilmweb\nFormula1\nFreesound\nFuyinTV\nGab\nGameStar\nGlide: Glide mobile video messages (glide.me)\nGodResource\nGolem\ngoodgame:stream\nGraspop\nGronkh\nHarpodeon\nHearThisAt\nHellPorno\nHistoricFilms\nHitRecord\nHSEProduct\nHSEShow\nhtml5\nHuajiao: 花椒直播\nHypem\niheartradio\niheartradio:podcast\nIlPost\nIltalehti\nImgur\nimgur:album\nimgur:gallery\nIna\nInc\nInstagram\ninstagram:story\ninstagram:tag: Instagram hashtag search URLs\nInstagramIOS: IOS instagram:// URL\nInternazionale\nIsraelNationalNews\nIvoox\nJove\nJWPlatform\nKaltura\nkick:clip\nkick:clips\nkick:live\nkick:videos\nkick:vod\nKicker\nKickStarter\nKommunetv\nKTH\nKu6\nlbry: odysee.com\nLibsyn\nLinkedIn\nLivestreamfails\nLnk\nloom\nmaariv.co.il\nMaoriTV\nMasters\nMatchiTV\nMatchTV\nmedia.ccc.de\nMediaite\nmegaphone.fm: megaphone.fm embedded players\nmir24.tv\nmixcloud\nMochaVideo\nMovingImage\nMux\nMyVidster\nNetzkino\nNewsy\nniconico: [niconico] ニコニコ動画\nNobelPrize\nNRK\nNRKPlaylist\nNRKRadioPodkast\nNRKTV: NRK TV and NRK Radio\nNRKTVDirekte: NRK TV Direkte and NRK Radio Direkte\nNRKTVEpisode\nNRKTVSeason\nNRKTVSeries\nnts.live\nNZOnScreen\nOdnoklassniki\nOneFootball\nOnePlacePodcast\nParlview\nPearVideo\npeer.tv\nPeerTube\nPeerTube:Playlist\nperiscope: Periscope\nPhotobucket\nPinkbike\nPinterest\nPlayerFm\nPodbayFM\nPodbayFMChannel\nPopcornTV\nPremiershipRugby\nPressTV\nQingTing\nRadioZetPodcast\nReddit\nReverbNation\nRinseFM\nRinseFMArtistPlaylist\nRottenTomatoes\nRoyaLive\nRTRFM\nRumble\nRumbleEmbed\nrutube: Rutube videos\nrutube:embed: Rutube embedded videos\nSapo: SAPO Vídeos\nScreen9\nScreenRec\nSen\nSkyNewsAU\nSnapchatSpotlight\nsoundcloud: [soundcloud]\nsoundgasm\nsoundgasm:profile\nSpiegel\nStreamable\nStreetVoice\nsvt:page\nsvt:play: SVT Play and Öppet arkiv\nsvt:play:series\nSztvHu\nTedEmbed\nTedPlaylist\nTedSeries\nTedTalk\nTelegraaf\ntelegram:embed\nTheGuardianPodcast\nTheHighWire\nTheIntercept\nTheStar\nTheSun\nThisAmericanLife\nThreeSpeak\nThreeSpeakUser\nTikTok\ntiktok:collection\ntiktok:live\ntiktok:user\nTrtCocukVideo\nTrtWorld\nTumblr: [tumblr]\ntv.dfb.de\nTVANouvelles\nTVANouvellesArticle\ntvnoe: Televize Noe\nTweakers\ntwitch:clips: [twitch]\ntwitch:collection: [twitch]\ntwitch:stream: [twitch]\ntwitch:videos: [twitch]\ntwitch:videos:clips: [twitch]\ntwitch:videos:collections: [twitch]\ntwitch:vod: [twitch]\ntwitter\ntwitter:amplify\ntwitter:broadcast\ntwitter:card\ntwitter:shortener\ntwitter:spaces\numg:de: Universal Music Deutschland\nUnistra\nUnitedNationsWebTv\nustudio\nustudio:embed\nVeo\nVideoPress\nVidyard\nvimeo: [vimeo]\nvk: [vk] VK\nvk:uservideos: [vk] VK - User's Videos\nvk:wallpost: [vk]\nVKPlay\nVKPlayLive\nvm.tiktok\nVocaroo\nWebcamerapl\nWeibo\nWeiboVideo\nWhyp\nWimbledon\nWistia\nWistiaChannel\nWistiaPlaylist\nWorldStarHipHop\nXboxClips\nXiaoHongShu: 小红书\nyfanefa\nyoutube: [youtube] YouTube\nyoutube:clip: [youtube]\nyoutube:favorites: [youtube] YouTube liked videos; \":ytfav\" keyword (requires cookies)\nyoutube:history: [youtube] Youtube watch history; \":ythis\" keyword (requires cookies)\nyoutube:music:search_url: [youtube] YouTube music search URLs with selectable sections, e.g. #songs\nyoutube:notif: [youtube] YouTube notifications; \":ytnotif\" keyword (requires cookies)\nyoutube:playlist: [youtube] YouTube playlists\nyoutube:recommended: [youtube] YouTube recommended videos; \":ytrec\" keyword\nyoutube:search: [youtube] YouTube search; \"ytsearch:\" prefix (e.g. \"ytsearch{count}:{example}\")\nyoutube:search_url: [youtube] YouTube search URLs with sorting and filter support\nyoutube:shorts:pivot:audio: [youtube] YouTube Shorts audio pivot (Shorts using audio of a given video)\nyoutube:subscriptions: [youtube] YouTube subscriptions feed; \":ytsubs\" keyword (requires cookies)\nyoutube:tab: [youtube] YouTube Tabs\nyoutube:user: [youtube] YouTube user videos; \"ytuser:\" prefix\nyoutube:watchlater: [youtube] Youtube watch later list; \":ytwatchlater\" keyword (requires cookies)\nYoutubeLivestreamEmbed: [youtube] YouTube livestream embeds\nYoutubeYtBe: [youtube] youtu.be\nZhihu\ngeneric: Generic downloader that works on some sites"
         )?;
         return Ok(true);
     }
@@ -4090,7 +4174,18 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
             let result = (|| -> Result<(), Box<dyn std::error::Error>> {
                 // A `url_transparent` entry (RSS items) is extracted now.
                 if YoutubeDl::is_transparent(&info) {
-                    info = downloader.resolve_entry(info.clone())?;
+                    info = downloader.resolve_entry(info.clone()).map_err(
+                        |error| -> Box<dyn std::error::Error> {
+                            // An entry's extractor request error is reported
+                            // as is, like other entry extraction errors.
+                            match error {
+                                error @ yt_dlp_rs::Error::ExtractorRequest { .. } => {
+                                    Box::new(EntryExtractionError(error.to_string()))
+                                }
+                                error => error.into(),
+                            }
+                        },
+                    )?;
                 }
                 if let Some(error) = YoutubeDl::entry_error(&info) {
                     return Err(EntryExtractionError(error.to_owned()).into());
@@ -4277,13 +4372,17 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                 if requested.is_empty() {
                     return Ok(());
                 }
-                screen!(
-                    "[info] {}: Downloading {} format(s): {}",
-                    info.id,
-                    format_ids.len(),
-                    format_ids.join(", ")
-                );
-                if requested != [None] {
+                // `if best_format and requested_ranges`: not for the empty
+                // format of a result without formats.
+                if !info.has_no_formats() {
+                    screen!(
+                        "[info] {}: Downloading {} format(s): {}",
+                        info.id,
+                        format_ids.len(),
+                        format_ids.join(", ")
+                    );
+                }
+                if requested != [None] && !info.has_no_formats() {
                     screen!(
                         "[info] {}: Downloading {} time ranges: {}",
                         info.id,
@@ -4863,6 +4962,15 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                                 }
                                 force_record(&info)?;
                                 return Ok(());
+                            }
+                            // `dl`: `raise_no_formats(info, forced=True)` for a
+                            // result without formats (`--ignore-no-formats-error`).
+                            if info.has_no_formats() {
+                                return Err(EntryExtractionError(format!(
+                                    "[{}] {}: No video formats found!",
+                                    info.extractor, info.id
+                                ))
+                                .into());
                             }
                             // Upstream `FileDownloader.download` reuses a single file
                             // found under its own name only with --no-overwrites
@@ -6180,6 +6288,24 @@ fn hls_use_mpegts(args: &Args) -> Option<bool> {
 }
 
 fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
+    // Upstream `validate_options`: usernames and passwords.
+    let given = |value: &Option<String>| value.as_deref().is_some_and(|value| !value.is_empty());
+    if [args.netrc, given(&args.netrc_cmd), given(&args.username)]
+        .into_iter()
+        .filter(|given| *given)
+        .count()
+        > 1
+    {
+        return Err(usage(
+            ".netrc, netrc command and username/password are mutually exclusive options",
+        ));
+    }
+    if args.password.is_some() && args.username.is_none() {
+        return Err(usage("account username missing"));
+    }
+    if let Some(target) = &args.impersonate {
+        yt_dlp_rs::impersonate::ImpersonateTarget::parse(&target.to_lowercase()).map_err(usage)?;
+    }
     // `--encoding`: messages are encoded with `errors='ignore'`.
     if let Some(name) = &args.encoding {
         match yt_dlp_rs::output::encoding::Encoding::lookup(name) {
@@ -6188,6 +6314,17 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
                 warning!("WARNING: --encoding {name} is not supported natively; output is UTF-8")
             }
         }
+    }
+    // Upstream's TV provider (Adobe Pass) account validation.
+    if args.ap_password.is_some() && args.ap_username.is_none() {
+        return Err(usage("TV Provider account username missing"));
+    }
+    if let Some(mso) = &args.ap_mso
+        && !yt_dlp_rs::extractor::adobepass::supported_mso(mso)
+    {
+        return Err(usage(format!(
+            "Unsupported TV Provider \"{mso}\", use --ap-list-mso to get a list of supported TV Providers"
+        )));
     }
     for (name, value, strict) in [
         ("buffer size", &args.buffer_size, true),
@@ -6245,10 +6382,6 @@ fn validate_accepted_options(args: &Args) -> Result<(), UsageError> {
         if !matches!(name.as_str(), "deno" | "node" | "bun" | "quickjs") {
             warning!(
                 "WARNING: Ignoring unsupported JavaScript runtime(s): {name}. Supported runtimes: deno, node, bun, quickjs."
-            );
-        } else if !matches!(name.as_str(), "deno" | "node") {
-            warning!(
-                "WARNING: JavaScript runtime {name} is not supported natively; use deno or node"
             );
         }
     }
@@ -7783,7 +7916,10 @@ impl<'a> ProgressReporter<'a> {
                 (Some(index.saturating_sub(1)), estimate)
             }
             (Some(index), _) => (Some(index.saturating_sub(1)), None),
-            _ => (None, None),
+            _ => (
+                None,
+                progress.total_bytes_estimate.map(|total| total as f64),
+            ),
         };
         let remaining = progress
             .total_bytes

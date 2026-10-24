@@ -18,6 +18,19 @@ use std::{
     time::Duration,
 };
 
+/// Upstream `FFmpegFD.SUPPORTED_PROTOCOLS`.
+pub(crate) const SUPPORTED_PROTOCOLS: [&str; 9] = [
+    "http",
+    "https",
+    "ftp",
+    "ftps",
+    "m3u8",
+    "m3u8_native",
+    "rtmp",
+    "rtmp_ffmpeg",
+    "http_dash_segments",
+];
+
 /// Upstream `EXT_TO_OUT_FORMATS`.
 fn out_format(ext: &str) -> &str {
     match ext {
@@ -66,6 +79,8 @@ pub(crate) struct Settings {
     pub quiet: bool,
     /// `--hls-use-mpegts`: MPEG-TS instead of MP4 for HLS inputs.
     pub hls_use_mpegts: Option<bool>,
+    /// `--test`: `-fs _TEST_FILE_SIZE`.
+    pub test: bool,
 }
 
 /// The `-headers` value for one input (title-cased names): the defaults, a User-Agent,
@@ -128,6 +143,7 @@ fn arguments(
     settings: &Settings,
     info: &VideoInfo,
     temporary: &Path,
+    piped: bool,
 ) -> Result<Vec<OsString>> {
     let mut args: Vec<OsString> = vec!["-y".into()];
     let verbose = crate::screen::verbose();
@@ -166,7 +182,8 @@ fn arguments(
     let mut protocol = String::new();
     for (input, (format, _)) in formats.iter().enumerate() {
         protocol = format.protocol.clone().unwrap_or_default();
-        if matches!(format.url.scheme(), "http" | "https") {
+        // FFmpegSinkFD's input is `-` (FFmpeg's stdin), not an HTTP URL.
+        if !piped && matches!(format.url.scheme(), "http" | "https") {
             let headers = header_lines(network, format, &format.url);
             if !headers.is_empty() {
                 args.extend(["-headers".into(), headers.into()]);
@@ -178,16 +195,27 @@ fn arguments(
         if let Some(end) = end {
             args.extend(["-t".into(), py_str(difference(end, start)).into()]);
         }
+        if protocol == "rtmp" {
+            let fields = crate::rtmp_fd::Fields::from_extra(&format.extra);
+            args.extend(fields.ffmpeg_args().into_iter().map(OsString::from));
+        }
         // `_configuration_args(('_i1', '_i'))` before each input.
         let keys = [format!("ffmpeg_i{}", input + 1), "ffmpeg_i".into()];
         args.extend(configured(settings, &keys).iter().map(OsString::from));
-        args.extend(["-i".into(), format.url.as_str().into()]);
+        let url = if piped { "-" } else { format.url.as_str() };
+        args.extend(["-i".into(), url.into()]);
     }
     args.extend(["-c".into(), "copy".into()]);
     if !info.requested_formats.is_empty() || protocol == "http_dash_segments" {
         for (index, (_, number)) in formats.iter().enumerate() {
             args.extend(["-map".into(), format!("{index}:{number}").into()]);
         }
+    }
+    if settings.test {
+        args.extend([
+            "-fs".into(),
+            crate::download::TEST_FILE_SIZE.to_string().into(),
+        ]);
     }
     let format = if protocol.starts_with("m3u8") {
         // `use_mpegts`: `--hls-use-mpegts`, else whether the stream is live.
@@ -199,6 +227,8 @@ fn arguments(
         } else {
             "mp4"
         }
+    } else if protocol == "rtmp" {
+        "flv"
     } else {
         out_format(&info.ext)
     };
@@ -213,6 +243,10 @@ fn arguments(
     Ok(args)
 }
 
+/// FFmpegSinkFD's connection: writes the stream into FFmpeg's stdin
+/// (`real_connection(sink, info_dict)`) until it ends.
+pub(crate) type Connection = Box<dyn FnOnce(&mut dyn std::io::Write) + Send>;
+
 /// `ExternalFD.real_download` with `FFmpegFD`: run FFmpeg into the
 /// temporary name, then publish it and report one finished status.
 pub(crate) fn download(
@@ -224,6 +258,61 @@ pub(crate) fn download(
     options: &DownloadOptions,
     callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
 ) -> Result<u64> {
+    run(
+        ffmpeg,
+        network,
+        settings,
+        info,
+        destination,
+        options,
+        None,
+        callback,
+    )
+}
+
+/// Upstream `FFmpegSinkFD.real_download`: FFmpegFD reading `-` while
+/// `connection` feeds its stdin on another thread. The connection's end
+/// interrupts the download like upstream's `SIGINT` (a live download is
+/// then complete); unlike upstream, FFmpeg is not killed then but reads the
+/// closed stdin to its end, so its output is finished.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn download_piped(
+    ffmpeg: &Path,
+    network: &Network<'_>,
+    settings: &Settings,
+    info: &VideoInfo,
+    destination: &Path,
+    options: &DownloadOptions,
+    connection: Connection,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    run(
+        ffmpeg,
+        network,
+        settings,
+        info,
+        destination,
+        options,
+        Some(connection),
+        callback,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn run(
+    ffmpeg: &Path,
+    network: &Network<'_>,
+    settings: &Settings,
+    info: &VideoInfo,
+    destination: &Path,
+    options: &DownloadOptions,
+    connection: Option<Connection>,
+    callback: &mut dyn FnMut(DownloadProgress) -> ControlFlow<()>,
+) -> Result<u64> {
+    use std::sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    };
     crate::download::check_destination(destination, options)?;
     let parent = destination
         .parent()
@@ -248,12 +337,14 @@ pub(crate) fn download(
             path
         }
     };
-    let args = arguments(network, settings, info, &temporary)?;
+    let piped = connection.is_some();
+    let args = arguments(network, settings, info, &temporary, piped)?;
     let progress = |phase, downloaded_bytes| DownloadProgress {
         attempt: 1,
         phase,
         downloaded_bytes,
         total_bytes: None,
+        total_bytes_estimate: None,
         stream_index: None,
         stream_count: None,
         fragment_index: None,
@@ -274,21 +365,39 @@ pub(crate) fn download(
         };
         command.env("HTTP_PROXY", &proxy).env("http_proxy", &proxy);
     }
-    // Upstream `real_download`: interrupting a live download completes it.
-    let interrupt = crate::is_live(info).then(crate::interrupt::Guard::install);
+    // Upstream `real_download`: interrupting a live download completes it
+    // (FFmpegSinkFD always handles the interrupt its connection raises).
+    let interrupt = (crate::is_live(info) || piped).then(crate::interrupt::Guard::install);
     let mut child = command.spawn()?;
     // Upstream keeps FFmpeg's stdin open (a pipe) so it never reads the terminal.
     let mut stdin = child.stdin.take();
+    // `on_process_started`: the connection writes FFmpeg's stdin.
+    let ended = Arc::new(AtomicBool::new(false));
+    if let Some(connection) = connection
+        && let Some(mut input) = stdin.take()
+    {
+        let ended = Arc::clone(&ended);
+        std::thread::spawn(move || {
+            connection(&mut input);
+            drop(input);
+            ended.store(true, Ordering::SeqCst);
+        });
+    }
     let mut interrupted = false;
     let status = loop {
         if let Some(status) = child.try_wait()? {
             break status;
         }
-        if !interrupted
-            && interrupt
-                .as_ref()
-                .is_some_and(crate::interrupt::Guard::interrupted)
-        {
+        let signalled = interrupt
+            .as_ref()
+            .is_some_and(crate::interrupt::Guard::interrupted);
+        if piped && !interrupted && signalled {
+            // A piped FFmpeg is killed (`proc.kill`).
+            interrupted = true;
+            let _ = child.kill();
+        } else if piped && ended.load(Ordering::SeqCst) {
+            interrupted = true;
+        } else if !piped && !interrupted && signalled {
             // `proc.communicate_or_kill(b'q')`: FFmpeg finishes the file.
             interrupted = true;
             if let Some(mut input) = stdin.take() {
@@ -305,9 +414,20 @@ pub(crate) fn download(
         std::thread::sleep(Duration::from_millis(50));
     };
     drop(interrupt);
+    // The connection may end while FFmpeg exits.
+    interrupted |= piped && ended.load(Ordering::SeqCst);
+    if interrupted && !crate::is_live(info) {
+        // Upstream's `KeyboardInterrupt` propagates for other downloads.
+        if private.is_some() {
+            let _ = std::fs::remove_file(&temporary);
+        }
+        return Err(Error::Reported("Interrupted by user".into()));
+    }
     if interrupted {
         // `retval = 0`: postprocessing follows as for a finished download.
-        crate::output::encoding::write_message(true, "\n");
+        if !piped {
+            crate::output::encoding::write_message(true, "\n");
+        }
         crate::screen::screen("[ffmpeg] Interrupted by user");
     } else if !status.success() {
         if private.is_some() {
@@ -359,6 +479,7 @@ mod tests {
             &Settings::default(),
             &info,
             Path::new("o.mp4.part"),
+            false,
         )
         .unwrap();
         let args: Vec<_> = args
@@ -399,6 +520,7 @@ mod tests {
             },
             &info,
             Path::new("o"),
+            false,
         )
         .unwrap();
         let args: Vec<_> = args
@@ -431,7 +553,7 @@ mod tests {
             .insert("ffmpeg_i1".into(), vec!["-ss".into(), "1".into()]);
         settings.args.insert("default".into(), vec!["-x".into()]);
         settings.args.insert("ffmpeg".into(), vec!["-y2".into()]);
-        let args: Vec<_> = arguments(&network, &settings, &info, Path::new("o"))
+        let args: Vec<_> = arguments(&network, &settings, &info, Path::new("o"), false)
             .unwrap()
             .iter()
             .map(|arg| arg.to_string_lossy().into_owned())
@@ -464,7 +586,7 @@ mod tests {
             proxy: None,
         };
         let render = |info: &VideoInfo| -> Vec<String> {
-            arguments(&network, &Settings::default(), info, Path::new("o"))
+            arguments(&network, &Settings::default(), info, Path::new("o"), false)
                 .unwrap()
                 .iter()
                 .map(|arg| arg.to_string_lossy().into_owned())

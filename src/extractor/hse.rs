@@ -153,6 +153,11 @@ impl Extractor for HseShow {
         SHOW
     }
 
+    /// `_GEO_COUNTRIES = ['DE']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["DE"])
+    }
+
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let Some(id) = start(url, &SHOW_URL, SHOW) else {
             return Ok(None);
@@ -213,6 +218,11 @@ impl Extractor for HseShow {
 impl Extractor for HseProduct {
     fn key(&self) -> &'static str {
         PRODUCT
+    }
+
+    /// `_GEO_COUNTRIES = ['DE']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["DE"])
     }
 
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {

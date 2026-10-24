@@ -1,0 +1,222 @@
+[
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-j",
+   "--ap-mso",
+   "RCN"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "RCN",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-j",
+   "--ap-mso",
+   "RCN",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "RCN",
+   "--netrc",
+   "--netrc-location",
+   "netrc"
+  ],
+  "copy": [
+   "netrc"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "Rogers",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "Cablevision",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "Comcast_SSO",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "Spectrum",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "Verizon",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "slingtv",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "Suddenlink",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000002#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "RCN",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000003#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "Comcast_SSO",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "RCN",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "RCN",
+   "--netrc-cmd",
+   "printf 'machine RCN login fixture-user password fixture-pass'"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "RCN",
+   "--netrc",
+   "--netrc-location",
+   "missing-netrc"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "Rogers",
+   "--netrc",
+   "--netrc-location",
+   "netrc"
+  ],
+  "copy": [
+   "netrc"
+  ]
+ },
+ {
+  "url": "https://players.brightcove.net/7777777777001/default_default/index.html?videoId=6400000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D",
+  "args": [
+   "-s",
+   "--ap-mso",
+   "RCN",
+   "--ap-username",
+   "fixture-user",
+   "--ap-password",
+   "fixture-pass",
+   "https://players.brightcove.net/8888888888001/default_default/index.html?videoId=6500000000001#__youtubedl_smuggle=%7B%22source_url%22%3A+%22https%3A%2F%2Fwww.tvsite.example%2Fwatch%2Ffixture%22%2C+%22software_statement%22%3A+%22fixture-software-statement%22%7D"
+  ]
+ }
+]

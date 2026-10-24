@@ -249,7 +249,7 @@ struct FeedState {
 pub(crate) struct LiveFeed {
     client: Client,
     video_id: String,
-    runtime: Option<std::path::PathBuf>,
+    runtimes: Vec<super::JsRuntime>,
     live_start_time: Option<i64>,
     /// `extractor_retries` (upstream's default 3) for `url_feed`'s
     /// `RetryManager`.
@@ -284,7 +284,7 @@ impl LiveFeed {
     pub(crate) fn new(
         client: &Client,
         info: &VideoInfo,
-        runtime: Option<&std::path::Path>,
+        runtimes: &[super::JsRuntime],
     ) -> Option<std::sync::Arc<Self>> {
         let mut sources: Vec<(&serde_json::Map<String, Value>, &url::Url)> = info
             .formats
@@ -310,7 +310,7 @@ impl LiveFeed {
         Some(std::sync::Arc::new(Self {
             client: client.clone(),
             video_id: info.id.clone(),
-            runtime: runtime.map(std::path::Path::to_path_buf),
+            runtimes: runtimes.to_vec(),
             live_start_time: marker["live_start_time"].as_i64(),
             retries: 3,
             state: std::sync::Mutex::new(FeedState {
@@ -337,11 +337,8 @@ impl LiveFeed {
             let error = {
                 let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
                 if now() > state.start_time + delay {
-                    let refetched = super::refetch_live_formats(
-                        &self.client,
-                        &self.video_id,
-                        self.runtime.as_deref(),
-                    )?;
+                    let refetched =
+                        super::refetch_live_formats(&self.client, &self.video_id, &self.runtimes)?;
                     state.formats = refetched.formats;
                     state.is_live = refetched.is_live;
                     state.start_time = now();

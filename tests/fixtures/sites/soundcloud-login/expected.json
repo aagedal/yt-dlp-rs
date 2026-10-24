@@ -1,0 +1,121 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy",
+   "args": [
+    "-s",
+    "-u",
+    "oauth",
+    "-p",
+    "GOODTOKEN"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[soundcloud] Downloading main page",
+    "[soundcloud] Downloading JS asset",
+    "[soundcloud] Verifying login token...",
+    "[soundcloud] Logging in",
+    "[soundcloud] Extracting URL: https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy",
+    "[soundcloud] ethmusic/lostin-powers-she-so-heavy: Downloading info JSON",
+    "[soundcloud] 123998367: Downloading hls_mp3 format info JSON",
+    "[soundcloud] 123998367: Downloading http_mp3 format info JSON",
+    "[soundcloud] 123998367: Downloading hls_aac format info JSON",
+    "[soundcloud] 123998367: Downloading hls_opus format info JSON",
+    "[soundcloud] 123998367: Checking thumbnail extension",
+    "[info] 123998367: Downloading 1 format(s): hls_aac_160k"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s",
+    "-u",
+    "oauth",
+    "-p",
+    "GOODTOKEN"
+   ],
+   "exit": 0,
+   "stdout": [
+    "123998367|Seen by the account"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s",
+    "-u",
+    "oauth",
+    "-p",
+    "BADTOKEN"
+   ],
+   "exit": 0,
+   "stdout": [
+    "123998367|Lostin Powers - She so Heavy"
+   ],
+   "stderr": [
+    "WARNING: [soundcloud] Unable to download webpage: HTTP Error 401: OK",
+    "WARNING: [soundcloud] Provided authorization token is invalid. Continuing as guest"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy",
+   "args": [
+    "-s",
+    "-u",
+    "someone",
+    "-p",
+    "pw"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[soundcloud] Downloading main page",
+    "[soundcloud] Downloading JS asset"
+   ],
+   "stderr": [
+    "ERROR: [soundcloud] Login using username and password is not currently supported. Use \"--username oauth --password <oauth_token>\" to login using an oauth token, or else Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s",
+    "--cookies",
+    "cookies.txt"
+   ],
+   "copy": [
+    "cookies.txt"
+   ],
+   "exit": 0,
+   "stdout": [
+    "123998367|Seen by the account"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://soundcloud.com/ethmusic/lostin-powers-she-so-heavy",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s",
+    "--netrc-cmd",
+    "printf 'machine soundcloud login oauth password GOODTOKEN'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "123998367|Seen by the account"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

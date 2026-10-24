@@ -2,7 +2,7 @@
 //! `__NEXT_DATA__` dehydrated `CmsMovie` query (DRM licences refused) and its
 //! PMD video URL as an untyped result with the movie's metadata.
 use super::{Extractor, download_webpage};
-use crate::{Error, Result, VideoInfo};
+use crate::{Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::{Map, Value};
@@ -67,6 +67,11 @@ impl Extractor for Netzkino {
         NAME
     }
 
+    /// `_GEO_COUNTRIES = ['DE']`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::countries(&["DE"])
+    }
+
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let Some(found) = VALID_URL.captures(url.as_str()) else {
             return Ok(None);
@@ -101,9 +106,13 @@ impl Extractor for Netzkino {
             .filter_map(|node| node.get("properties")?.as_str())
             .any(|property| property == "DRM");
         if drm {
-            return Err(Error::Reported(format!(
-                "[{NAME}] {video_id}: This video is DRM protected"
-            )));
+            // `report_drm`: `raise_no_formats(..., expected=True)`.
+            crate::no_formats::raise_expected(
+                NAME,
+                Some(&video_id),
+                None,
+                "This video is DRM protected",
+            )?;
         }
         let title = movie
             .get("originalTitle")

@@ -325,6 +325,8 @@ fn field<'a>(name: &str, source: Source<'a>) -> Result<Option<Value<'a>>> {
         }
     };
     Ok(match name {
+        // A result without formats (`--ignore-no-formats-error`).
+        "ext" | "url" if info.has_no_formats() => None,
         "id" => Some(Text(&info.id)),
         "title" => Some(Text(&info.title)),
         "ext" => Some(Text(&info.ext)),
@@ -1324,7 +1326,7 @@ pub(super) fn render_kind(
     if let Some(ext) = kind.and_then(super::filename::forced_extension) {
         let real = match info {
             Source::Video(info) | Source::Print { info, .. } | Source::Exec { info, .. } => {
-                Some(info.ext.as_str())
+                (!info.has_no_formats()).then_some(info.ext.as_str())
             }
             Source::Playlist { .. }
             | Source::Json(_)

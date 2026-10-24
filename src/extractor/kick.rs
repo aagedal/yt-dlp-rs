@@ -210,12 +210,6 @@ fn insert_all(dict: &mut Map<String, Value>, fields: Vec<(&str, Option<Value>)>)
     }
 }
 
-fn impersonation_warning(name: &str) {
-    crate::screen::extractor_warning_once(&format!(
-        "[{name}] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
-    ));
-}
-
 /// An `ExtractorError` with `expected=True`.
 fn expected(name: &str, id: &str, message: &str) -> Error {
     Error::Reported(format!("[{name}] {id}: {message}"))
@@ -258,7 +252,9 @@ impl<'a> ApiCall<'a> {
 /// on `kick.com`, with the `session_token` cookie as a bearer token.
 fn call_api(client: &Client, name: &'static str, call: ApiCall<'_>) -> Result<Value> {
     use std::io::Read;
-    impersonation_warning(name);
+    let _impersonate = crate::impersonate::attempt(crate::impersonate::ANY, |message| {
+        crate::screen::extractor_warning_once(&format!("[{name}] {message}"));
+    });
     let domain = match call.path.split('/').next() {
         Some("v1") => "web.kick.com",
         _ => "kick.com",

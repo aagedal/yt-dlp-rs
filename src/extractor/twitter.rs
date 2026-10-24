@@ -525,82 +525,11 @@ fn graphql_to_legacy(data: &Value, id: &str) -> Result<Map<String, Value>> {
     Ok(status)
 }
 
-/// `jsinterp.js_number_to_string(val, radix)`: JavaScript's
-/// `Number.prototype.toString(radix)` for a radix other than 10.
-fn js_number_to_string(value: f64, radix: u32) -> String {
-    if value.is_nan() {
-        return "NaN".into();
-    }
-    if value == 0.0 {
-        return "0".into();
-    }
-    if value.is_infinite() {
-        return if value < 0.0 { "-Infinity" } else { "Infinity" }.into();
-    }
-    const ALPHABET: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyz";
-    // Digits, with `-2` for `.` and `-1` for `-`.
-    let mut result: std::collections::VecDeque<i64> = std::collections::VecDeque::new();
-    let sign = value < 0.0;
-    let value = value.abs();
-    let mut integer = value.trunc();
-    let mut fraction = value - integer;
-    let radix_f = f64::from(radix);
-    // `max(math.nextafter(.0, math.inf), math.ulp(val) / 2)`.
-    let ulp = f64::from_bits(value.to_bits() + 1) - value;
-    let mut delta = f64::max(f64::from_bits(1), ulp / 2.0);
-    if fraction >= delta {
-        result.push_back(-2);
-    }
-    while fraction >= delta {
-        delta *= radix_f;
-        let scaled = fraction * radix_f;
-        let digit = scaled.trunc();
-        fraction = scaled - digit;
-        let digit = digit as i64;
-        result.push_back(digit);
-        let needs_rounding = fraction > 0.5 || (fraction == 0.5 && digit & 1 == 1);
-        if needs_rounding && fraction + delta > 1.0 {
-            let mut carried = false;
-            for index in (1..result.len()).rev() {
-                if result[index] + 1 < i64::from(radix) {
-                    result[index] += 1;
-                    carried = true;
-                    break;
-                }
-                result.pop_back();
-            }
-            if !carried {
-                integer += 1.0;
-            }
-            break;
-        }
-    }
-    let mut integer = integer as u128;
-    let radix = u128::from(radix);
-    result.push_front((integer % radix) as i64);
-    integer /= radix;
-    while integer > 0 {
-        result.push_front((integer % radix) as i64);
-        integer /= radix;
-    }
-    if sign {
-        result.push_front(-1);
-    }
-    result
-        .into_iter()
-        .map(|digit| match digit {
-            -2 => '.',
-            -1 => '-',
-            digit => char::from(ALPHABET[digit as usize]),
-        })
-        .collect()
-}
-
 /// `_generate_syndication_token(twid)`:
 /// `((Number(twid) / 1e15) * Math.PI).toString(36).replace(/(0+|\.)/g, '')`.
 fn syndication_token(twid: &str) -> String {
     let number = twid.parse::<u128>().unwrap_or_default() as f64;
-    js_number_to_string((number / 1e15) * std::f64::consts::PI, 36)
+    crate::jsinterp::js_number_to_string((number / 1e15) * std::f64::consts::PI, Some(36))
         .chars()
         .filter(|c| !matches!(c, '0' | '.'))
         .collect()
@@ -1312,7 +1241,21 @@ impl Extractor for Twitter {
                 // `url_result(expanded_url, display_id=twid, **info)`: a
                 // `url` result, whose fields processing does not keep.
                 Some(expanded) if expanded != url.as_str() => follow(&expanded).map(Some),
-                _ => Err(fail(&twid, "No video could be found in this tweet")),
+                // `raise_no_formats(..., expected=True)`, then `return info`.
+                _ => {
+                    crate::no_formats::raise_expected(
+                        NAME,
+                        None,
+                        Some(&twid),
+                        "No video could be found in this tweet",
+                    )?;
+                    Ok(Some(ExtractResult::Video(video(
+                        url,
+                        info,
+                        Vec::new(),
+                        Default::default(),
+                    ))))
+                }
             };
         }
         if selected_entries.len() == 1
@@ -1628,11 +1571,20 @@ impl Extractor for TwitterBroadcast {
                 .into(),
         );
         if info.get("live_status").and_then(Value::as_str) == Some("is_upcoming") {
-            return Err(fail_as(
+            // `raise_no_formats(..., expected=True)`, then `return info`.
+            crate::no_formats::raise_expected(
                 BROADCAST_NAME,
-                &display_id,
+                None,
+                Some(&display_id),
                 "This live broadcast has not yet started",
-            ));
+            )?;
+            return Ok(Some(ExtractResult::Video(periscope::build(
+                url,
+                (BROADCAST_NAME, "TwitterBroadcast"),
+                info,
+                Vec::new(),
+                "url",
+            ))));
         }
         let media_key = broadcast
             .get("media_key")
@@ -1657,10 +1609,14 @@ impl Extractor for TwitterBroadcast {
             .or_else(|| source.get("location")?.as_str().map(str::to_owned))
             .ok_or_else(|| key_error(BROADCAST_NAME, &display_id, "location"))?;
         if m3u8_url.contains("/live_video_stream/geoblocked/") {
-            return Err(fail_as(
-                BROADCAST_NAME,
-                &display_id,
-                "This video is not available from your location due to geo restriction",
+            return Err(crate::geo::restricted(
+                &fail_as(
+                    BROADCAST_NAME,
+                    &display_id,
+                    "This video is not available from your location due to geo restriction",
+                )
+                .to_string(),
+                &[],
             ));
         }
         let manifest = Url::parse(&m3u8_url)?;
@@ -1735,17 +1691,19 @@ impl Extractor for TwitterSpaces {
         const REFERER: &str = "https://twitter.com/";
         let mut formats = Vec::new();
         if live_status == Some("is_upcoming") {
-            return Err(fail_as(
+            crate::no_formats::raise_expected(
                 SPACES_NAME,
-                &space_id,
+                None,
+                Some(&space_id),
                 "Twitter Space not started yet",
-            ));
+            )?;
         } else if !is_live && !truthy(metadata.get("is_space_available_for_replay")) {
-            return Err(fail_as(
+            crate::no_formats::raise_expected(
                 SPACES_NAME,
-                &space_id,
+                None,
+                Some(&space_id),
                 "Twitter Space ended and replay is disabled",
-            ));
+            )?;
         } else if let Some(media_key) = metadata.get("media_key").filter(|key| truthy(Some(key))) {
             let media_key = str_or_none(Some(media_key)).unwrap_or_default();
             let stream = call_api(
@@ -1804,11 +1762,12 @@ impl Extractor for TwitterSpaces {
             participants.join(", ")
         };
         if formats.is_empty() && live_status == Some("post_live") {
-            return Err(fail_as(
+            crate::no_formats::raise_expected(
                 SPACES_NAME,
-                &space_id,
+                None,
+                Some(&space_id),
                 "Twitter Space ended but not downloadable yet",
-            ));
+            )?;
         }
         let mut dict = Map::new();
         dict.insert("id".into(), space_id.clone().into());
@@ -1948,7 +1907,13 @@ mod tests {
         ] {
             assert_eq!(syndication_token(twid), token, "{twid}");
         }
-        assert_eq!(js_number_to_string(255.5, 16), "ff.8");
-        assert_eq!(js_number_to_string(-0.25, 2), "-0.01");
+        assert_eq!(
+            crate::jsinterp::js_number_to_string(255.5, Some(16)),
+            "ff.8"
+        );
+        assert_eq!(
+            crate::jsinterp::js_number_to_string(-0.25, Some(2)),
+            "-0.01"
+        );
     }
 }

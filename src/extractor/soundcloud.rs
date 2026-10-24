@@ -128,6 +128,8 @@ fn update_client_id(client: &Client) -> Result<String> {
         match script {
             Ok(script) => {
                 if let Some(found) = CLIENT_ID.captures(&script) {
+                    // `_store_client_id`.
+                    crate::cache::store("soundcloud", "client_id", &Value::from(&found[1]));
                     return Ok(found[1].to_owned());
                 }
             }
@@ -143,14 +145,54 @@ fn update_client_id(client: &Client) -> Result<String> {
     )))
 }
 
-/// The cached (per run) client ID.
+/// `_HEADERS['Authorization']`: `OAuth TOKEN` once a token was verified.
+static OAUTH: Mutex<Option<String>> = Mutex::new(None);
+
+/// `_verify_oauth_token(token)`: a session for the token, which then
+/// authorizes API requests; a failed request is a warning.
+fn verify_oauth_token(client: &Client, session: &super::login::Session, token: &str) -> Result<()> {
+    let client_id = client_id(client)?;
+    let url = Url::parse(&format!(
+        "https://api-auth.soundcloud.com/connect/session?client_id={client_id}"
+    ))?;
+    let body = crate::output::python_json_dumps(&json!({"session": {"access_token": token}}));
+    let verified = session.request_optional(
+        client,
+        &url,
+        (
+            Some("Verifying login token..."),
+            "Unable to download webpage",
+        ),
+        &[],
+        Some(body),
+        &[],
+    )?;
+    if verified.is_some() {
+        if let Ok(mut slot) = OAUTH.lock() {
+            *slot = Some(format!("OAuth {token}"));
+        }
+        session.report_login();
+    } else {
+        session.warning("Provided authorization token is invalid. Continuing as guest");
+    }
+    Ok(())
+}
+
+/// The client ID for this run.
 static CLIENT: Mutex<Option<String>> = Mutex::new(None);
 
+/// `_initialize_pre_login`: the cached `soundcloud` / `client_id`, else a
+/// new one.
 fn client_id(client: &Client) -> Result<String> {
     if let Some(id) = CLIENT.lock().ok().and_then(|id| id.clone()) {
         return Ok(id);
     }
-    let id = update_client_id(client)?;
+    let cached = crate::cache::load("soundcloud", "client_id", None)
+        .and_then(|id| id.as_str().filter(|id| !id.is_empty()).map(str::to_owned));
+    let id = match cached {
+        Some(id) => id,
+        None => update_client_id(client)?,
+    };
     if let Ok(mut slot) = CLIENT.lock() {
         *slot = Some(id.clone());
     }
@@ -171,7 +213,13 @@ fn call_api(
         let mut updates: Vec<(&str, &str)> = query.to_vec();
         updates.push(("client_id", &client_id));
         let url = super::update_url_query(&Url::parse(url)?, &updates);
-        match super::download_json_note(client, &url, NAME, id, note) {
+        let authorization = OAUTH.lock().ok().and_then(|token| token.clone());
+        let headers: Vec<(&str, &str)> = authorization
+            .as_deref()
+            .map(|value| ("Authorization", value))
+            .into_iter()
+            .collect();
+        match super::download_json_note_headers(client, &url, NAME, id, note, &headers) {
             Ok(value) => return Ok(value),
             Err(Error::ExtractorRequest { source, .. })
                 if first
@@ -180,8 +228,11 @@ fn call_api(
                         Error::Http(error) if error.status().is_some_and(|status| matches!(status.as_u16(), 401 | 403))
                     ) =>
             {
+                // `_store_client_id(None)`, then `_update_client_id`.
+                crate::cache::store("soundcloud", "client_id", &Value::Null);
+                let id = update_client_id(client)?;
                 if let Ok(mut slot) = CLIENT.lock() {
-                    *slot = None;
+                    *slot = Some(id);
                 }
             }
             Err(error) => return Err(error),
@@ -407,13 +458,23 @@ fn info_dict(
     }
     if formats.is_empty() {
         if has_drm {
-            return Err(fail(&track_id, "This video is DRM protected"));
+            // `report_drm`: `raise_no_formats(..., expected=True)`.
+            crate::no_formats::raise_expected(
+                NAME,
+                Some(&track_id),
+                None,
+                "This video is DRM protected",
+            )?;
         }
         if info.get("policy").and_then(Value::as_str) == Some("BLOCK") {
-            return Err(fail(
-                &track_id,
-                "This video is not available from your location due to geo restriction. You might want to use a VPN or a proxy server (with --proxy) to workaround.",
-            ));
+            // `raise_geo_restricted(metadata_available=True)` (no
+            // `temp_id`: the URL patterns have no `id` group).
+            crate::geo::restricted_metadata_available(
+                NAME,
+                &format!("[{NAME}] "),
+                "This video is not available from your location due to geo restriction",
+                &[],
+            )?;
         }
     }
     let text = |key: &str| info.get(key).and_then(Value::as_str);
@@ -584,6 +645,54 @@ impl Extractor for Soundcloud {
         KEY
     }
 
+    fn netrc_machine(&self) -> Option<&'static str> {
+        Some("soundcloud")
+    }
+
+    fn performs_login(&self) -> bool {
+        true
+    }
+
+    /// `_initialize_pre_login`: the client ID.
+    fn initialize_pre_login(
+        &self,
+        client: &Client,
+        _session: &super::login::Session,
+    ) -> Result<()> {
+        client_id(client).map(drop)
+    }
+
+    /// `_perform_login`: only `--username oauth --password TOKEN`.
+    fn perform_login(
+        &self,
+        client: &Client,
+        session: &super::login::Session,
+        username: &str,
+        password: &str,
+    ) -> Result<()> {
+        if username != "oauth" {
+            return Err(session.error(&format!(
+                "Login using username and password is not currently supported. Use \"--username oauth --password <oauth_token>\" to login using an oauth token, or else {}",
+                super::login::login_hint(None, Some(super::login::Hint::Cookies))
+            )));
+        }
+        if OAUTH.lock().is_ok_and(|token| token.is_some()) {
+            return Ok(());
+        }
+        verify_oauth_token(client, session, password)
+    }
+
+    /// `_real_initialize`: an `oauth_token` cookie is verified.
+    fn real_initialize(&self, client: &Client, session: &super::login::Session) -> Result<()> {
+        if OAUTH.lock().is_ok_and(|token| token.is_some()) {
+            return Ok(());
+        }
+        if let Some(token) = crate::cookies::get_cookie("https://soundcloud.com/", "oauth_token") {
+            verify_oauth_token(client, session, &token)?;
+        }
+        Ok(())
+    }
+
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let (info_url, full_title, token) = if let Some(found) = API_URL.captures(url.as_str()) {
             let track_id = found["track_id"].to_owned();
@@ -610,7 +719,8 @@ impl Extractor for Soundcloud {
             return Ok(None);
         };
         crate::screen::set_extractor(NAME);
-        client_id(client)?;
+        // `get_temp_id`: the URL pattern has no `id` group.
+        self.initialize(client, NAME, "")?;
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())

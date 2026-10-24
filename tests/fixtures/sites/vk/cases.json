@@ -20,5 +20,11 @@
  {"url": "https://vkplay.live/zitsmann/record/f5e6e3b5-dc52-4d14-965d-0680dd2882da", "args": ["-J"]},
  {"url": "https://live.vkplay.ru/lebwa/record/33a4e4ce-e3ef-49db-bb14-f006cc6fabc9/records", "args": ["-j"]},
  {"url": "https://live.vkvideo.ru/panterka", "args": ["--print", "%(id)s|%(fulltitle)s|%(is_live)s|%(live_status)s|%(format_id)s|%(release_timestamp)s|%(concurrent_view_count)s|%(view_count)s|%(like_count)s|%(uploader)s|%(uploader_id)s|%(categories)s|%(thumbnail)s|%(duration)s"]},
- {"url": "https://vkplay.live/bayda", "args": ["--print", "id"]}
+ {"url": "https://vkplay.live/bayda", "args": ["--print", "id"]},
+ {"url": "https://vk.com/video-5_100", "args": ["-J"]},
+ {"url": "https://vk.com/video-5_100", "args": ["--no-progress", "-f", "url720", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://vk.com/video_ext.php?oid=-5&id=101&hash=h", "args": ["--print", "%(id)s|%(title)s|%(url)s"]},
+ {"url": "https://vk.com/video-5_102", "args": ["--print", "id"]},
+ {"url": "https://vk.com/video-5_103", "args": ["--print", "id"]},
+ {"url": "https://vk.com/video_ext.php?oid=-5&id=104", "args": ["--print", "id"]}
 ]

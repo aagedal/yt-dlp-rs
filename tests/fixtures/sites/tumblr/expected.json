@@ -50,6 +50,35 @@
    "files": {
     "54196191430.mp4": 19
    }
+  },
+  {
+   "url": "https://writer.tumblr.com/post/2222",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [Tumblr] 2222: No video could be found in this post"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://writer.tumblr.com/post/2222",
+   "args": [
+    "--ignore-no-formats-error",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"2222\", \"title\": \"Only words\", \"description\": \"Just text\", \"uploader_id\": \"writer\", \"uploader_url\": \"https://writer.tumblr.com/\", \"timestamp\": 1372531999, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [], \"webpage_url\": \"https://writer.tumblr.com/post/2222\", \"original_url\": \"https://writer.tumblr.com/post/2222\", \"webpage_url_basename\": \"2222\", \"webpage_url_domain\": \"writer.tumblr.com\", \"extractor\": \"Tumblr\", \"extractor_key\": \"Tumblr\", \"upload_date\": \"20130629\", \"release_year\": null, \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [Tumblr] 2222: No video could be found in this post"
+   ],
+   "files": {}
   }
  ]
 }

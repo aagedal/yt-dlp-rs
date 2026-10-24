@@ -1,0 +1,21 @@
+[
+ {"url": "https://vyexample03.hubs.vidyard.com/watch/oTDMPlUv--51Th455G5u7Q", "args": ["-j"]},
+ {"url": "https://embed.vidyard.com/share/oTDMPlUv--51Th455G5u7Q", "args": ["-F"]},
+ {"url": "https://play.vidyard.com/oTDMPlUv--51Th455G5u7Q/type/standalone", "args": ["-f", "http-mp4-360p", "--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://share.vidyard.com/watch/wL237MtNgZUHo6e8WPiJbF", "args": ["-j"]},
+ {"url": "https://play.vidyard.com/wL237MtNgZUHo6e8WPiJbF.html", "args": ["--print", "%(id)s|%(display_id)s|%(title)s|%(duration)s|%(thumbnail)s|%(chapters)s|%(format_id)s"]},
+ {"url": "https://play.vidyard.com/player/wL237MtNgZUHo6e8WPiJbF.json?disable_analytics=0", "args": ["--write-subs", "--skip-download", "--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://play.vidyard.com/wL237MtNgZUHo6e8WPiJbF", "args": ["--list-subs"]},
+ {"url": "https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE", "args": ["-J"]},
+ {"url": "https://thelink.hubs.vidyard.com/watch/pwu7pCYWSwAnPxs8nDoFrE", "args": ["--flat-playlist", "--print", "%(id)s|%(title)s|%(playlist_id)s|%(playlist_title)s"]},
+ {"url": "https://play.vidyard.com/NOPAYLOAD1", "args": ["-j"]},
+ {"url": "https://play.vidyard.com/NOTFOUND1", "args": ["-j"]},
+ {"url": "https://play.vidyard.com/ERROR1", "args": ["-j"]},
+ {"url": "https://play.vidyard.com/EMPTY1", "args": ["-J"]},
+ {"url": "https://play.vidyard.com/NOSRC1", "args": ["-j"]},
+ {"url": "https://play.vidyard.com/MINIMAL1", "args": ["-j"]},
+ {"url": "https://example.test/iframe", "args": ["-j"]},
+ {"url": "http://example.test/proto", "args": ["--print", "%(id)s|%(extractor)s|%(webpage_url)s|%(original_url)s"]},
+ {"url": "https://example.test/many", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://example.test/many", "args": ["--print", "%(id)s|%(title)s|%(playlist_id)s|%(playlist_index)s"]}
+]

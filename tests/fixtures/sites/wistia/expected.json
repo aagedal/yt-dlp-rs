@@ -1,0 +1,495 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "wistia:a6ndpko1wg",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a6ndpko1wg\", \"title\": \"BXO-S02-E02-Boxed_Water-v4.mp4\", \"description\": \"a Boxed Out Folder video\", \"formats\": [{\"format_id\": \"mp4-224p\", \"url\": \"http://embed.wistia.com/deliveries/d4691b4cf27e763bd71d2a4e0ab2121ad8f76f40.bin\", \"tbr\": 304, \"quality\": null, \"width\": 400, \"height\": 224, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 37671311, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"400x224\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.79, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-224p - 400x224\"}, {\"format_id\": \"iphone-360p\", \"url\": \"http://embed.wistia.com/deliveries/cfe8960eb1b01f116f7852187a7f2fdd7be8d277.bin\", \"tbr\": 528, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 65406891, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"iphone-360p - 640x360\"}, {\"format_id\": \"md_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/84e3a9421baee4518546c76024e7d7f470b8d177.bin\", \"tbr\": 841, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 104069555, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"md_mp4-540p - 960x540\"}, {\"format_id\": \"hd_mp4-720p\", \"url\": \"http://embed.wistia.com/deliveries/71685079c6752e73d2ba770e7c3fc17eac10aece.bin\", \"tbr\": 1306, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 161572665, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-720p - 1280x720\"}, {\"format_id\": \"hd_mp4-1080p\", \"url\": \"http://embed.wistia.com/deliveries/de4e3fd8b8dc58ac1ae02b3bd6faf823a991d8e5.bin\", \"tbr\": 2754, \"quality\": null, \"width\": 1920, \"height\": 1080, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 340621502, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-1080p - 1920x1080\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin\", \"tbr\": 15558, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 1923901495, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\"}], \"thumbnails\": [{\"url\": \"http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.png\", \"width\": 1920, \"height\": 1080, \"filesize\": 1566026, \"id\": \"0\", \"resolution\": \"1920x1080\"}], \"duration\": 966.0, \"timestamp\": 1616614369, \"subtitles\": {}, \"webpage_url\": \"wistia:a6ndpko1wg\", \"original_url\": \"wistia:a6ndpko1wg\", \"webpage_url_basename\": \"a6ndpko1wg\", \"webpage_url_domain\": null, \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.png\", \"display_id\": \"a6ndpko1wg\", \"fulltitle\": \"BXO-S02-E02-Boxed_Water-v4.mp4\", \"duration_string\": \"16:06\", \"upload_date\": \"20210324\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin\", \"tbr\": 15558, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 1923901495, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\", \"_filename\": \"BXO-S02-E02-Boxed_Water-v4.mp4 [a6ndpko1wg].mp4\", \"filename\": \"BXO-S02-E02-Boxed_Water-v4.mp4 [a6ndpko1wg].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "wistia:a6ndpko1wg",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Wistia] Extracting URL: wistia:a6ndpko1wg",
+    "[Wistia] a6ndpko1wg: Downloading JSON metadata",
+    "[Wistia] Checking media extension",
+    "[Wistia] Checking media extension",
+    "[info] Available formats for a6ndpko1wg:",
+    "ID           EXT RESOLUTION |   FILESIZE    TBR PROTO | VCODEC  ACODEC",
+    "-----------------------------------------------------------------------",
+    "mp4-224p     mp4 400x224    |   35.93MiB   304k http  | h264    unknown",
+    "iphone-360p  mp4 640x360    |   62.38MiB   528k http  | h264    unknown",
+    "md_mp4-540p  mp4 960x540    |   99.25MiB   841k http  | h264    unknown",
+    "hd_mp4-720p  mp4 1280x720   |  154.09MiB  1306k http  | h264    unknown",
+    "hd_mp4-1080p mp4 1920x1080  |  324.84MiB  2754k http  | h264    unknown",
+    "original     mp4 1920x1080  |    1.79GiB 15558k http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "wistia:a6ndpko1wg",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(ext)s|%(format_id)s|%(upload_date)s|%(duration)s|%(description)s|%(thumbnail)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "a6ndpko1wg|BXO-S02-E02-Boxed_Water-v4.mp4|mp4|original|20210324|966.0|a Boxed Out Folder video|http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.png"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://fast.wistia.net/embed/iframe/5vd7p4bct5",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"5vd7p4bct5\", \"title\": \"paywall_north-american-exploration-failed-colonies-of-spain-france-england\", \"description\": \"Between 1497 and 1607, the rulers and leading citizens of European nations fought to establish their own empires in North America, as Spain had been doing for 100 years in South America. Learn about influential explorers and their failed attempts to estab \", \"formats\": [{\"format_id\": \"mp4-224p\", \"url\": \"http://embed.wistia.com/deliveries/96222c3c8ac69112411045d6a493c7f8f5b55fd7.bin\", \"tbr\": 177, \"quality\": null, \"width\": 400, \"height\": 224, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 14184779, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"400x224\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.79, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-224p - 400x224\"}, {\"format_id\": \"iphone-360p\", \"url\": \"http://embed.wistia.com/deliveries/6378ec58079ecb39511858fa0d350c1f7d1bd9d8.bin\", \"tbr\": 231, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 18477302, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"iphone-360p - 640x360\"}, {\"format_id\": \"md_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/19bf6a178a4408bf407d50eadf18ee0d9cba4ec9.bin\", \"tbr\": 323, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 25776334, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"md_mp4-540p - 960x540\"}, {\"format_id\": \"hd_mp4-720p\", \"url\": \"http://embed.wistia.com/deliveries/27a07e5033c9c9e775cbe392cd9e7f081e16334f.bin\", \"tbr\": 449, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 35820600, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-720p - 1280x720\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/0b5ac32a7b795b91180891d14a673f47.bin\", \"tbr\": 373, \"quality\": 1, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 29798093, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\"}], \"thumbnails\": [{\"url\": \"http://embed.wistia.com/deliveries/83e6ec693e2c05a0ce65809cbaead86a.jpg\", \"width\": 715, \"height\": 402, \"filesize\": 75540, \"id\": \"0\", \"resolution\": \"715x402\"}], \"duration\": 623.019, \"timestamp\": 1663258727, \"subtitles\": {\"eng\": [{\"url\": \"http://fast.wistia.net/embed/captions/5vd7p4bct5.vtt?language=eng\", \"ext\": \"vtt\"}]}, \"webpage_url\": \"http://fast.wistia.net/embed/iframe/5vd7p4bct5\", \"original_url\": \"http://fast.wistia.net/embed/iframe/5vd7p4bct5\", \"webpage_url_basename\": \"5vd7p4bct5\", \"webpage_url_domain\": \"fast.wistia.net\", \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://embed.wistia.com/deliveries/83e6ec693e2c05a0ce65809cbaead86a.jpg\", \"display_id\": \"5vd7p4bct5\", \"fulltitle\": \"paywall_north-american-exploration-failed-colonies-of-spain-france-england\", \"duration_string\": \"10:23\", \"upload_date\": \"20220915\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/0b5ac32a7b795b91180891d14a673f47.bin\", \"tbr\": 373, \"quality\": 1, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 29798093, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\", \"_filename\": \"paywall_north-american-exploration-failed-colonies-of-spain-france-england [5vd7p4bct5].mp4\", \"filename\": \"paywall_north-american-exploration-failed-colonies-of-spain-france-england [5vd7p4bct5].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://fast.wistia.net/embed/iframe/5vd7p4bct5",
+   "args": [
+    "--list-subs"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Wistia] Extracting URL: http://fast.wistia.net/embed/iframe/5vd7p4bct5",
+    "[Wistia] 5vd7p4bct5: Downloading JSON metadata",
+    "[Wistia] Checking media extension",
+    "[Wistia] Checking media extension",
+    "[info] Available subtitles for 5vd7p4bct5:",
+    "Language Formats",
+    "eng      vtt"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.com/embed/medias/hlsmedia01.json",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"hlsmedia01\", \"title\": \"HLS and audio assets\", \"description\": null, \"formats\": [{\"format_id\": \"mp4_alternate_audio\", \"url\": \"https://embed-ssl.wistia.com/deliveries/audio.m4a\", \"tbr\": 128, \"quality\": null, \"vcodec\": \"none\", \"container\": \"mp4\", \"ext\": \"m4a\", \"filesize\": 3000, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4_alternate_audio - audio only\"}, {\"format_id\": \"hls-Audio\", \"url\": \"https://embed-ssl.wistia.com/deliveries/hlsaudio.bin\", \"tbr\": 96, \"quality\": null, \"vcodec\": \"none\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 150000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-Audio - audio only\"}, {\"format_id\": \"ts-Audio\", \"url\": \"https://embed-ssl.wistia.com/deliveries/hlsaudio.ts\", \"tbr\": 96, \"quality\": null, \"vcodec\": \"none\", \"ext\": \"ts\", \"protocol\": \"https\", \"audio_ext\": \"ts\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 150000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ts-Audio - audio only\"}, {\"format_id\": \"flash_video\", \"url\": \"https://embed-ssl.wistia.com/deliveries/flash.flv\", \"tbr\": null, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": null, \"container\": null, \"ext\": \"flv\", \"filesize\": null, \"protocol\": \"https\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flash_video - 640x360\"}, {\"format_id\": \"hls-720p\", \"url\": \"https://embed-ssl.wistia.com/deliveries/hls720.bin\", \"tbr\": 1300, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 2031250, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-720p - 1280x720\"}, {\"format_id\": \"ts-720p\", \"url\": \"https://embed-ssl.wistia.com/deliveries/hls720.ts\", \"tbr\": 1300, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"ext\": \"ts\", \"protocol\": \"https\", \"video_ext\": \"ts\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 2031250, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ts-720p - 1280x720\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/hlsoriginal.bin\", \"tbr\": null, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mov\", \"filesize\": 1000, \"protocol\": \"http\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\"}], \"thumbnails\": [{\"url\": \"https://embed-ssl.wistia.com/deliveries/named.jpg\", \"width\": 320, \"height\": 180, \"filesize\": null, \"id\": \"0\", \"resolution\": \"320x180\"}, {\"url\": \"https://embed-ssl.wistia.com/deliveries/still.webp?image_crop_resized=640x360\", \"width\": 640, \"height\": 360, \"filesize\": 1234, \"id\": \"1\", \"resolution\": \"640x360\"}, {\"url\": \"https://embed-ssl.wistia.com/deliveries/missing.bin\", \"width\": 1920, \"height\": 1080, \"filesize\": null, \"id\": \"2\", \"resolution\": \"1920x1080\"}], \"duration\": 12.5, \"timestamp\": 1700000000, \"subtitles\": {\"eng\": [{\"url\": \"http://fast.wistia.net/embed/captions/hlsmedia01.vtt?language=eng\", \"ext\": \"vtt\"}], \"spa\": [{\"url\": \"http://fast.wistia.net/embed/captions/hlsmedia01.vtt?language=spa\", \"ext\": \"vtt\"}]}, \"webpage_url\": \"https://fast.wistia.com/embed/medias/hlsmedia01.json\", \"original_url\": \"https://fast.wistia.com/embed/medias/hlsmedia01.json\", \"webpage_url_basename\": \"hlsmedia01.json\", \"webpage_url_domain\": \"fast.wistia.com\", \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://embed-ssl.wistia.com/deliveries/missing.bin\", \"display_id\": \"hlsmedia01\", \"fulltitle\": \"HLS and audio assets\", \"duration_string\": \"12\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/hlsoriginal.bin\", \"tbr\": null, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mov\", \"filesize\": 1000, \"protocol\": \"http\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\", \"_filename\": \"HLS and audio assets [hlsmedia01].mov\", \"filename\": \"HLS and audio assets [hlsmedia01].mov\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found",
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.com/embed/medias/hlsmedia01.json",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Wistia] Extracting URL: https://fast.wistia.com/embed/medias/hlsmedia01.json",
+    "[Wistia] hlsmedia01: Downloading JSON metadata",
+    "[Wistia] Checking media extension",
+    "[Wistia] Checking media extension",
+    "[Wistia] Checking media extension",
+    "[info] Available formats for hlsmedia01:",
+    "ID                  EXT RESOLUTION |   FILESIZE   TBR PROTO | VCODEC     ACODEC   ABR MORE INFO",
+    "-----------------------------------------------------------------------------------------------",
+    "mp4_alternate_audio m4a audio only |    2.93KiB  128k https | audio only unknown 128k mp4",
+    "hls-Audio           mp4 audio only | ≈146.48KiB   96k m3u8  | audio only unknown  96k",
+    "ts-Audio            ts  audio only | ≈146.48KiB   96k https | audio only unknown  96k",
+    "flash_video         flv 640x360    |                  https | unknown    unknown",
+    "hls-720p            mp4 1280x720   | ≈  1.94MiB 1300k m3u8  | h264       unknown",
+    "ts-720p             ts  1280x720   | ≈  1.94MiB 1300k https | h264       unknown",
+    "original            mov 1920x1080  |   1000.00B       http  | unknown    unknown"
+   ],
+   "stderr": [
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found",
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.com/embed/medias/hlsmedia01.json",
+   "args": [
+    "--list-thumbnails"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Wistia] Extracting URL: https://fast.wistia.com/embed/medias/hlsmedia01.json",
+    "[Wistia] hlsmedia01: Downloading JSON metadata",
+    "[Wistia] Checking media extension",
+    "[Wistia] Checking media extension",
+    "[Wistia] Checking media extension",
+    "[info] Available thumbnails for hlsmedia01:",
+    "ID Width Height URL",
+    "0  320   180    https://embed-ssl.wistia.com/deliveries/named.jpg",
+    "1  640   360    https://embed-ssl.wistia.com/deliveries/still.webp?image_crop_resized=640x360",
+    "2  1920  1080   https://embed-ssl.wistia.com/deliveries/missing.bin"
+   ],
+   "stderr": [
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found",
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wistia:errmedia01",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Wistia] errmedia01: Error while getting the playlist: True"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wistia:passwrdvid",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Wistia] passwrdvid: This content is password-protected. Use the --video-password option"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wistia:passwrdvid",
+   "args": [
+    "-j",
+    "--video-password",
+    "letmein"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Wistia] passwrdvid: Invalid video password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wistia:missingid1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Wistia] missingid1: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wistia:nonamemed1",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nonamemed1: An extractor error has occurred. (caused by KeyError('name')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wistia:noassets01",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: noassets01: An extractor error has occurred. (caused by KeyError('assets')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "wistia:emptymedia",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Wistia] emptymedia: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.net/embed/playlists/aodt9etokc",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"aodt9etokc\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"cmst5825to\", \"title\": \"Playlists Overview\", \"description\": \"a Mkt Site - Playlist Pg video\", \"formats\": [{\"format_id\": \"iphone-360p\", \"url\": \"http://embed.wistia.com/deliveries/99bd1579d12011df60b4a7fd4e8e777e6f21d497.bin\", \"tbr\": 774, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 3481725, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"iphone-360p - 640x360\"}, {\"format_id\": \"hd_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/38080cb8b31a4b2fd45eb37f06ec4792a4ea6331.bin\", \"tbr\": 1112, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 4997682, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-540p - 960x540\"}, {\"format_id\": \"md_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/53cada306463cb71af67d0758a6ca5426d9596b9.bin\", \"tbr\": 1309, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 5879919, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"md_mp4-540p - 960x540\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/6dd00f68ca28907cc35a9159fa894efd95186aad.bin\", \"tbr\": 9672, \"quality\": 1, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 43427280, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\"}], \"thumbnails\": [{\"url\": \"http://embed.wistia.com/deliveries/3edc7b8b5d638393b68168c8cc1e035db6827040.jpg\", \"width\": 960, \"height\": 540, \"filesize\": 47759, \"id\": \"0\", \"resolution\": \"960x540\"}], \"duration\": 35.077, \"timestamp\": 1343830501, \"subtitles\": {\"eng\": [{\"url\": \"http://fast.wistia.net/embed/captions/cmst5825to.vtt?language=eng\", \"ext\": \"vtt\"}]}, \"playlist_count\": 2, \"playlist\": \"aodt9etokc\", \"playlist_id\": \"aodt9etokc\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://fast.wistia.net/embed/playlists/aodt9etokc\", \"n_entries\": 2, \"webpage_url\": \"https://fast.wistia.net/embed/playlists/aodt9etokc\", \"webpage_url_basename\": \"aodt9etokc\", \"webpage_url_domain\": \"fast.wistia.net\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"WistiaPlaylist\", \"extractor_key\": \"WistiaPlaylist\", \"playlist_autonumber\": 1, \"thumbnail\": \"http://embed.wistia.com/deliveries/3edc7b8b5d638393b68168c8cc1e035db6827040.jpg\", \"display_id\": \"cmst5825to\", \"fulltitle\": \"Playlists Overview\", \"duration_string\": \"35\", \"upload_date\": \"20120801\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/6dd00f68ca28907cc35a9159fa894efd95186aad.bin\", \"tbr\": 9672, \"quality\": 1, \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"filesize\": 43427280, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\", \"_filename\": \"Playlists Overview [cmst5825to].mp4\", \"filename\": \"Playlists Overview [cmst5825to].mp4\", \"__write_download_archive\": false}], \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/6dd00f68ca28907cc35a9159fa894efd95186aad.bin\", \"tbr\": 9672, \"quality\": 1, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 43427280, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\"}, {\"id\": \"y6d7vtkvf2\", \"title\": \"Creating and Updating Playlists\", \"description\": \"a Mkt Site - Playlist Pg video\", \"formats\": [{\"format_id\": \"iphone-360p\", \"url\": \"http://embed.wistia.com/deliveries/4763704585372469e37e0c5d8fec7f2395760c52.bin\", \"tbr\": 765, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 2169933, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"iphone-360p - 640x360\"}, {\"format_id\": \"hd_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/d222b8e6bcfe58657a85984ed8dc5fb903f07ddc.bin\", \"tbr\": 1109, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 3146900, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-540p - 960x540\"}, {\"format_id\": \"md_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/28852763d47871467ce8347326dab4690cf5a273.bin\", \"tbr\": 1306, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 3696975, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"md_mp4-540p - 960x540\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/39e9e120bf4cd67550acd767de85b29f020bef31.bin\", \"tbr\": 10174, \"quality\": 1, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 28787695, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\"}], \"thumbnails\": [{\"url\": \"http://embed.wistia.com/deliveries/f92713f591a772658bc0f4589611a86d5e20a7b5.jpg\", \"width\": 960, \"height\": 540, \"filesize\": 70993, \"id\": \"0\", \"resolution\": \"960x540\"}], \"duration\": 22.106, \"timestamp\": 1343830502, \"subtitles\": {\"eng\": [{\"url\": \"http://fast.wistia.net/embed/captions/y6d7vtkvf2.vtt?language=eng\", \"ext\": \"vtt\"}]}, \"playlist_count\": 2, \"playlist\": \"aodt9etokc\", \"playlist_id\": \"aodt9etokc\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://fast.wistia.net/embed/playlists/aodt9etokc\", \"n_entries\": 2, \"webpage_url\": \"https://fast.wistia.net/embed/playlists/aodt9etokc\", \"webpage_url_basename\": \"aodt9etokc\", \"webpage_url_domain\": \"fast.wistia.net\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"WistiaPlaylist\", \"extractor_key\": \"WistiaPlaylist\", \"playlist_autonumber\": 2, \"thumbnail\": \"http://embed.wistia.com/deliveries/f92713f591a772658bc0f4589611a86d5e20a7b5.jpg\", \"display_id\": \"y6d7vtkvf2\", \"fulltitle\": \"Creating and Updating Playlists\", \"duration_string\": \"22\", \"upload_date\": \"20120801\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/39e9e120bf4cd67550acd767de85b29f020bef31.bin\", \"tbr\": 10174, \"quality\": 1, \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"filesize\": 28787695, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\", \"_filename\": \"Creating and Updating Playlists [y6d7vtkvf2].mp4\", \"filename\": \"Creating and Updating Playlists [y6d7vtkvf2].mp4\", \"__write_download_archive\": false}], \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/39e9e120bf4cd67550acd767de85b29f020bef31.bin\", \"tbr\": 10174, \"quality\": 1, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 28787695, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\"}], \"webpage_url\": \"https://fast.wistia.net/embed/playlists/aodt9etokc\", \"original_url\": \"https://fast.wistia.net/embed/playlists/aodt9etokc\", \"webpage_url_basename\": \"aodt9etokc\", \"webpage_url_domain\": \"fast.wistia.net\", \"extractor\": \"WistiaPlaylist\", \"extractor_key\": \"WistiaPlaylist\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.net/embed/playlists/aodt9etokc",
+   "args": [
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(playlist_id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|cmst5825to|Playlists Overview|aodt9etokc|2",
+    "2|y6d7vtkvf2|Creating and Updating Playlists|aodt9etokc|2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.net/embed/playlists/errplaylst",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [WistiaPlaylist] errplaylst: Error while getting the playlist: Playlist not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.net/embed/channel/sapab9p6qd",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"sapab9p6qd\", \"title\": \"Credo: An RCIA Program\", \"description\": \"\\n\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"1. Knowing and Desiring God (Lesson)\", \"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:bya9o0wjbr\", \"__x_forwarded_for_ip\": null}, {\"title\": \"1. Knowing and Desiring God (Witness to Conversion)\", \"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:du3drxcnfo\", \"__x_forwarded_for_ip\": null}, {\"title\": \"An Introduction to Catholic Liturgy\", \"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:2ln3fnbdqq\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://fast.wistia.net/embed/channel/sapab9p6qd\", \"original_url\": \"https://fast.wistia.net/embed/channel/sapab9p6qd\", \"webpage_url_basename\": \"sapab9p6qd\", \"webpage_url_domain\": \"fast.wistia.net\", \"extractor\": \"WistiaChannel\", \"extractor_key\": \"WistiaChannel\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.net/embed/channel/sapab9p6qd",
+   "args": [
+    "--flat-playlist",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"title\": \"1. Knowing and Desiring God (Lesson)\", \"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:bya9o0wjbr\", \"__x_forwarded_for_ip\": null, \"id\": \"bya9o0wjbr\", \"webpage_url\": \"wistia:bya9o0wjbr\", \"original_url\": \"wistia:bya9o0wjbr\", \"webpage_url_basename\": \"bya9o0wjbr\", \"webpage_url_domain\": null, \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist_count\": 3, \"playlist\": \"Credo: An RCIA Program\", \"playlist_id\": \"sapab9p6qd\", \"playlist_title\": \"Credo: An RCIA Program\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://fast.wistia.net/embed/channel/sapab9p6qd\", \"n_entries\": 3, \"playlist_index\": 1, \"__last_playlist_index\": 3, \"playlist_autonumber\": 1, \"release_year\": null}",
+    "{\"title\": \"1. Knowing and Desiring God (Witness to Conversion)\", \"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:du3drxcnfo\", \"__x_forwarded_for_ip\": null, \"id\": \"du3drxcnfo\", \"webpage_url\": \"wistia:du3drxcnfo\", \"original_url\": \"wistia:du3drxcnfo\", \"webpage_url_basename\": \"du3drxcnfo\", \"webpage_url_domain\": null, \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist_count\": 3, \"playlist\": \"Credo: An RCIA Program\", \"playlist_id\": \"sapab9p6qd\", \"playlist_title\": \"Credo: An RCIA Program\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://fast.wistia.net/embed/channel/sapab9p6qd\", \"n_entries\": 3, \"playlist_index\": 2, \"__last_playlist_index\": 3, \"playlist_autonumber\": 2, \"release_year\": null}",
+    "{\"title\": \"An Introduction to Catholic Liturgy\", \"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:2ln3fnbdqq\", \"__x_forwarded_for_ip\": null, \"id\": \"2ln3fnbdqq\", \"webpage_url\": \"wistia:2ln3fnbdqq\", \"original_url\": \"wistia:2ln3fnbdqq\", \"webpage_url_basename\": \"2ln3fnbdqq\", \"webpage_url_domain\": null, \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist_count\": 3, \"playlist\": \"Credo: An RCIA Program\", \"playlist_id\": \"sapab9p6qd\", \"playlist_title\": \"Credo: An RCIA Program\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://fast.wistia.net/embed/channel/sapab9p6qd\", \"n_entries\": 3, \"playlist_index\": 3, \"__last_playlist_index\": 3, \"playlist_autonumber\": 3, \"release_year\": null}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.net/embed/channel/sapab9p6qd?wchannelid=sapab9p6qd&wmediaid=a6ndpko1wg",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(url)s|%(playlist_title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|bya9o0wjbr|1. Knowing and Desiring God (Lesson)|wistia:bya9o0wjbr|Credo: An RCIA Program",
+    "2|du3drxcnfo|1. Knowing and Desiring God (Witness to Conversion)|wistia:du3drxcnfo|Credo: An RCIA Program",
+    "3|2ln3fnbdqq|An Introduction to Catholic Liturgy|wistia:2ln3fnbdqq|Credo: An RCIA Program"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://fast.wistia.net/embed/channel/sapab9p6qd?wchannelid=sapab9p6qd&wmediaid=a6ndpko1wg",
+   "args": [
+    "--no-playlist",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a6ndpko1wg\", \"title\": \"BXO-S02-E02-Boxed_Water-v4.mp4\", \"description\": \"a Boxed Out Folder video\", \"formats\": [{\"format_id\": \"mp4-224p\", \"url\": \"http://embed.wistia.com/deliveries/d4691b4cf27e763bd71d2a4e0ab2121ad8f76f40.bin\", \"tbr\": 304, \"quality\": null, \"width\": 400, \"height\": 224, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 37671311, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"400x224\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.79, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-224p - 400x224\"}, {\"format_id\": \"iphone-360p\", \"url\": \"http://embed.wistia.com/deliveries/cfe8960eb1b01f116f7852187a7f2fdd7be8d277.bin\", \"tbr\": 528, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 65406891, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"iphone-360p - 640x360\"}, {\"format_id\": \"md_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/84e3a9421baee4518546c76024e7d7f470b8d177.bin\", \"tbr\": 841, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 104069555, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"md_mp4-540p - 960x540\"}, {\"format_id\": \"hd_mp4-720p\", \"url\": \"http://embed.wistia.com/deliveries/71685079c6752e73d2ba770e7c3fc17eac10aece.bin\", \"tbr\": 1306, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 161572665, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-720p - 1280x720\"}, {\"format_id\": \"hd_mp4-1080p\", \"url\": \"http://embed.wistia.com/deliveries/de4e3fd8b8dc58ac1ae02b3bd6faf823a991d8e5.bin\", \"tbr\": 2754, \"quality\": null, \"width\": 1920, \"height\": 1080, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 340621502, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-1080p - 1920x1080\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin\", \"tbr\": 15558, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 1923901495, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\"}], \"thumbnails\": [{\"url\": \"http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.png\", \"width\": 1920, \"height\": 1080, \"filesize\": 1566026, \"id\": \"0\", \"resolution\": \"1920x1080\"}], \"duration\": 966.0, \"timestamp\": 1616614369, \"subtitles\": {}, \"original_url\": \"https://fast.wistia.net/embed/channel/sapab9p6qd?wchannelid=sapab9p6qd&wmediaid=a6ndpko1wg\", \"webpage_url\": \"wistia:a6ndpko1wg\", \"webpage_url_basename\": \"a6ndpko1wg\", \"webpage_url_domain\": null, \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.png\", \"display_id\": \"a6ndpko1wg\", \"fulltitle\": \"BXO-S02-E02-Boxed_Water-v4.mp4\", \"duration_string\": \"16:06\", \"upload_date\": \"20210324\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin\", \"tbr\": 15558, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 1923901495, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\", \"_filename\": \"BXO-S02-E02-Boxed_Water-v4.mp4 [a6ndpko1wg].mp4\", \"filename\": \"BXO-S02-E02-Boxed_Water-v4.mp4 [a6ndpko1wg].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "wistiachannel:fallbackch",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"fallbackch\", \"title\": \"Fallback Channel\", \"description\": \"From the page\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"a6ndpko1wg\", \"title\": \"BXO-S02-E02-Boxed_Water-v4.mp4\", \"description\": \"a Boxed Out Folder video\", \"formats\": [{\"format_id\": \"mp4-224p\", \"url\": \"http://embed.wistia.com/deliveries/d4691b4cf27e763bd71d2a4e0ab2121ad8f76f40.bin\", \"tbr\": 304, \"quality\": null, \"width\": 400, \"height\": 224, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 37671311, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"400x224\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.79, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-224p - 400x224\"}, {\"format_id\": \"iphone-360p\", \"url\": \"http://embed.wistia.com/deliveries/cfe8960eb1b01f116f7852187a7f2fdd7be8d277.bin\", \"tbr\": 528, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 65406891, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"iphone-360p - 640x360\"}, {\"format_id\": \"md_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/84e3a9421baee4518546c76024e7d7f470b8d177.bin\", \"tbr\": 841, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 104069555, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"md_mp4-540p - 960x540\"}, {\"format_id\": \"hd_mp4-720p\", \"url\": \"http://embed.wistia.com/deliveries/71685079c6752e73d2ba770e7c3fc17eac10aece.bin\", \"tbr\": 1306, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 161572665, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-720p - 1280x720\"}, {\"format_id\": \"hd_mp4-1080p\", \"url\": \"http://embed.wistia.com/deliveries/de4e3fd8b8dc58ac1ae02b3bd6faf823a991d8e5.bin\", \"tbr\": 2754, \"quality\": null, \"width\": 1920, \"height\": 1080, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 340621502, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-1080p - 1920x1080\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin\", \"tbr\": 15558, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 1923901495, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\"}], \"thumbnails\": [{\"url\": \"http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.png\", \"width\": 1920, \"height\": 1080, \"filesize\": 1566026, \"id\": \"0\", \"resolution\": \"1920x1080\"}], \"duration\": 966.0, \"timestamp\": 1616614369, \"subtitles\": {}, \"webpage_url\": \"wistia:a6ndpko1wg\", \"original_url\": \"wistia:a6ndpko1wg\", \"webpage_url_basename\": \"a6ndpko1wg\", \"webpage_url_domain\": null, \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist_count\": 2, \"playlist\": \"Fallback Channel\", \"playlist_id\": \"fallbackch\", \"playlist_title\": \"Fallback Channel\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"wistiachannel:fallbackch\", \"n_entries\": 2, \"playlist_index\": 1, \"__last_playlist_index\": 2, \"playlist_autonumber\": 1, \"thumbnail\": \"http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.png\", \"display_id\": \"a6ndpko1wg\", \"fulltitle\": \"BXO-S02-E02-Boxed_Water-v4.mp4\", \"duration_string\": \"16:06\", \"upload_date\": \"20210324\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin\", \"tbr\": 15558, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"ext\": \"mp4\", \"filesize\": 1923901495, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\", \"_filename\": \"BXO-S02-E02-Boxed_Water-v4.mp4 [a6ndpko1wg].mp4\", \"filename\": \"BXO-S02-E02-Boxed_Water-v4.mp4 [a6ndpko1wg].mp4\", \"__write_download_archive\": false}], \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin\", \"tbr\": 15558, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 1923901495, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\"}, {\"id\": \"5vd7p4bct5\", \"title\": \"paywall_north-american-exploration-failed-colonies-of-spain-france-england\", \"description\": \"Between 1497 and 1607, the rulers and leading citizens of European nations fought to establish their own empires in North America, as Spain had been doing for 100 years in South America. Learn about influential explorers and their failed attempts to estab \", \"formats\": [{\"format_id\": \"mp4-224p\", \"url\": \"http://embed.wistia.com/deliveries/96222c3c8ac69112411045d6a493c7f8f5b55fd7.bin\", \"tbr\": 177, \"quality\": null, \"width\": 400, \"height\": 224, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 14184779, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"400x224\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.79, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-224p - 400x224\"}, {\"format_id\": \"iphone-360p\", \"url\": \"http://embed.wistia.com/deliveries/6378ec58079ecb39511858fa0d350c1f7d1bd9d8.bin\", \"tbr\": 231, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 18477302, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"iphone-360p - 640x360\"}, {\"format_id\": \"md_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/19bf6a178a4408bf407d50eadf18ee0d9cba4ec9.bin\", \"tbr\": 323, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 25776334, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"md_mp4-540p - 960x540\"}, {\"format_id\": \"hd_mp4-720p\", \"url\": \"http://embed.wistia.com/deliveries/27a07e5033c9c9e775cbe392cd9e7f081e16334f.bin\", \"tbr\": 449, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 35820600, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-720p - 1280x720\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/0b5ac32a7b795b91180891d14a673f47.bin\", \"tbr\": 373, \"quality\": 1, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 29798093, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\"}], \"thumbnails\": [{\"url\": \"http://embed.wistia.com/deliveries/83e6ec693e2c05a0ce65809cbaead86a.jpg\", \"width\": 715, \"height\": 402, \"filesize\": 75540, \"id\": \"0\", \"resolution\": \"715x402\"}], \"duration\": 623.019, \"timestamp\": 1663258727, \"subtitles\": {\"eng\": [{\"url\": \"http://fast.wistia.net/embed/captions/5vd7p4bct5.vtt?language=eng\", \"ext\": \"vtt\"}]}, \"webpage_url\": \"wistia:5vd7p4bct5\", \"original_url\": \"wistia:5vd7p4bct5\", \"webpage_url_basename\": \"5vd7p4bct5\", \"webpage_url_domain\": null, \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist_count\": 2, \"playlist\": \"Fallback Channel\", \"playlist_id\": \"fallbackch\", \"playlist_title\": \"Fallback Channel\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"wistiachannel:fallbackch\", \"n_entries\": 2, \"playlist_index\": 2, \"__last_playlist_index\": 2, \"playlist_autonumber\": 2, \"thumbnail\": \"http://embed.wistia.com/deliveries/83e6ec693e2c05a0ce65809cbaead86a.jpg\", \"display_id\": \"5vd7p4bct5\", \"fulltitle\": \"paywall_north-american-exploration-failed-colonies-of-spain-france-england\", \"duration_string\": \"10:23\", \"upload_date\": \"20220915\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/0b5ac32a7b795b91180891d14a673f47.bin\", \"tbr\": 373, \"quality\": 1, \"width\": 1280, \"height\": 720, \"ext\": \"mp4\", \"filesize\": 29798093, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\", \"_filename\": \"paywall_north-american-exploration-failed-colonies-of-spain-france-england [5vd7p4bct5].mp4\", \"filename\": \"paywall_north-american-exploration-failed-colonies-of-spain-france-england [5vd7p4bct5].mp4\", \"__write_download_archive\": false}], \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/0b5ac32a7b795b91180891d14a673f47.bin\", \"tbr\": 373, \"quality\": 1, \"width\": 1280, \"height\": 720, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 29798093, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1280x720\"}], \"webpage_url\": \"wistiachannel:fallbackch\", \"original_url\": \"wistiachannel:fallbackch\", \"webpage_url_basename\": \"fallbackch\", \"webpage_url_domain\": null, \"extractor\": \"WistiaChannel\", \"extractor_key\": \"WistiaChannel\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [WistiaChannel] Failed to download channel data from API, falling back to webpage."
+   ],
+   "files": {}
+  },
+  {
+   "url": "wistiachannel:fallbackch",
+   "args": [
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(playlist_title)s|%(playlist_id)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1|a6ndpko1wg|BXO-S02-E02-Boxed_Water-v4.mp4|Fallback Channel|fallbackch",
+    "2|5vd7p4bct5|paywall_north-american-exploration-failed-colonies-of-spain-france-england|Fallback Channel|fallbackch"
+   ],
+   "stderr": [
+    "WARNING: [WistiaChannel] Failed to download channel data from API, falling back to webpage."
+   ],
+   "files": {}
+  },
+  {
+   "url": "wistiachannel:errchannel",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "WARNING: [WistiaChannel] Failed to download channel data from API, falling back to webpage.",
+    "ERROR: [WistiaChannel] errchannel: Failed to parse JSON (caused by Error('Incorrect padding')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.example.test/one",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"a6ndpko1wg\", \"title\": \"BXO-S02-E02-Boxed_Water-v4.mp4\", \"description\": \"a Boxed Out Folder video\", \"formats\": [{\"format_id\": \"mp4-224p\", \"url\": \"http://embed.wistia.com/deliveries/d4691b4cf27e763bd71d2a4e0ab2121ad8f76f40.bin\", \"tbr\": 304, \"quality\": null, \"width\": 400, \"height\": 224, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 37671311, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"400x224\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.79, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-224p - 400x224\"}, {\"format_id\": \"iphone-360p\", \"url\": \"http://embed.wistia.com/deliveries/cfe8960eb1b01f116f7852187a7f2fdd7be8d277.bin\", \"tbr\": 528, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 65406891, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"iphone-360p - 640x360\"}, {\"format_id\": \"md_mp4-540p\", \"url\": \"http://embed.wistia.com/deliveries/84e3a9421baee4518546c76024e7d7f470b8d177.bin\", \"tbr\": 841, \"quality\": null, \"width\": 960, \"height\": 540, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 104069555, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"960x540\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"md_mp4-540p - 960x540\"}, {\"format_id\": \"hd_mp4-720p\", \"url\": \"http://embed.wistia.com/deliveries/71685079c6752e73d2ba770e7c3fc17eac10aece.bin\", \"tbr\": 1306, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 161572665, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-720p - 1280x720\"}, {\"format_id\": \"hd_mp4-1080p\", \"url\": \"http://embed.wistia.com/deliveries/de4e3fd8b8dc58ac1ae02b3bd6faf823a991d8e5.bin\", \"tbr\": 2754, \"quality\": null, \"width\": 1920, \"height\": 1080, \"vcodec\": \"h264\", \"container\": \"mp4\", \"ext\": \"mp4\", \"filesize\": 340621502, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hd_mp4-1080p - 1920x1080\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin\", \"tbr\": 15558, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 1923901495, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\"}], \"thumbnails\": [{\"url\": \"http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.png\", \"width\": 1920, \"height\": 1080, \"filesize\": 1566026, \"id\": \"0\", \"resolution\": \"1920x1080\"}], \"duration\": 966.0, \"timestamp\": 1616614369, \"subtitles\": {}, \"original_url\": \"https://www.example.test/one\", \"webpage_url\": \"https://fast.wistia.net/embed/iframe/a6ndpko1wg\", \"webpage_url_basename\": \"a6ndpko1wg\", \"webpage_url_domain\": \"fast.wistia.net\", \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://embed.wistia.com/deliveries/53dc60239348dc9b9fba3755173ea4c2.png\", \"display_id\": \"a6ndpko1wg\", \"fulltitle\": \"BXO-S02-E02-Boxed_Water-v4.mp4\", \"duration_string\": \"16:06\", \"upload_date\": \"20210324\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/846f660288feb24e129d3d202be69c2a.bin\", \"tbr\": 15558, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mp4\", \"filesize\": 1923901495, \"protocol\": \"http\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\", \"_filename\": \"BXO-S02-E02-Boxed_Water-v4.mp4 [a6ndpko1wg].mp4\", \"filename\": \"BXO-S02-E02-Boxed_Water-v4.mp4 [a6ndpko1wg].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.example.test/many",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"many\", \"title\": \"Many embeds\", \"timestamp\": null, \"description\": \"Several Wistia players\", \"thumbnail\": null, \"age_limit\": null, \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"WistiaChannel\", \"_type\": \"url\", \"url\": \"wistiachannel:sapab9p6qd\", \"extractor\": \"WistiaChannel\", \"extractor_key\": \"WistiaChannel\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"https://fast.wistia.com/embed/medias/hlsmedia01\", \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:5vd7p4bct5\", \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:a6ndpko1wg\", \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.example.test/many\", \"original_url\": \"https://www.example.test/many\", \"webpage_url_basename\": \"many\", \"webpage_url_domain\": \"example.test\", \"extractor\": \"generic\", \"extractor_key\": \"Generic\", \"release_year\": null, \"playlist_count\": 4, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.example.test/many",
+   "args": [
+    "--flat-playlist",
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"ie_key\": \"WistiaChannel\", \"_type\": \"url\", \"url\": \"wistiachannel:sapab9p6qd\", \"extractor\": \"WistiaChannel\", \"extractor_key\": \"WistiaChannel\", \"__x_forwarded_for_ip\": null, \"id\": \"sapab9p6qd\", \"webpage_url\": \"wistiachannel:sapab9p6qd\", \"original_url\": \"wistiachannel:sapab9p6qd\", \"webpage_url_basename\": \"sapab9p6qd\", \"webpage_url_domain\": null, \"playlist_count\": 4, \"playlist\": \"Many embeds\", \"playlist_id\": \"many\", \"playlist_title\": \"Many embeds\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.example.test/many\", \"n_entries\": 4, \"playlist_index\": 1, \"__last_playlist_index\": 4, \"playlist_autonumber\": 1, \"release_year\": null}",
+    "{\"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"https://fast.wistia.com/embed/medias/hlsmedia01\", \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"__x_forwarded_for_ip\": null, \"id\": \"hlsmedia01\", \"webpage_url\": \"https://fast.wistia.com/embed/medias/hlsmedia01\", \"original_url\": \"https://fast.wistia.com/embed/medias/hlsmedia01\", \"webpage_url_basename\": \"hlsmedia01\", \"webpage_url_domain\": \"fast.wistia.com\", \"playlist_count\": 4, \"playlist\": \"Many embeds\", \"playlist_id\": \"many\", \"playlist_title\": \"Many embeds\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.example.test/many\", \"n_entries\": 4, \"playlist_index\": 2, \"__last_playlist_index\": 4, \"playlist_autonumber\": 2, \"release_year\": null}",
+    "{\"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:5vd7p4bct5\", \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"__x_forwarded_for_ip\": null, \"id\": \"5vd7p4bct5\", \"webpage_url\": \"wistia:5vd7p4bct5\", \"original_url\": \"wistia:5vd7p4bct5\", \"webpage_url_basename\": \"5vd7p4bct5\", \"webpage_url_domain\": null, \"playlist_count\": 4, \"playlist\": \"Many embeds\", \"playlist_id\": \"many\", \"playlist_title\": \"Many embeds\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.example.test/many\", \"n_entries\": 4, \"playlist_index\": 3, \"__last_playlist_index\": 4, \"playlist_autonumber\": 3, \"release_year\": null}",
+    "{\"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:a6ndpko1wg\", \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"__x_forwarded_for_ip\": null, \"id\": \"a6ndpko1wg\", \"webpage_url\": \"wistia:a6ndpko1wg\", \"original_url\": \"wistia:a6ndpko1wg\", \"webpage_url_basename\": \"a6ndpko1wg\", \"webpage_url_domain\": null, \"playlist_count\": 4, \"playlist\": \"Many embeds\", \"playlist_id\": \"many\", \"playlist_title\": \"Many embeds\", \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.example.test/many\", \"n_entries\": 4, \"playlist_index\": 4, \"__last_playlist_index\": 4, \"playlist_autonumber\": 4, \"release_year\": null}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.example.test/many",
+   "args": [
+    "-I",
+    "2:4",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(playlist_title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|hlsmedia01|HLS and audio assets|Wistia|https://fast.wistia.com/embed/medias/hlsmedia01|Many embeds",
+    "3|5vd7p4bct5|paywall_north-american-exploration-failed-colonies-of-spain-france-england|Wistia|wistia:5vd7p4bct5|Many embeds",
+    "4|a6ndpko1wg|BXO-S02-E02-Boxed_Water-v4.mp4|Wistia|wistia:a6ndpko1wg|Many embeds"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found",
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.example.test/channel?wmediaid=a6ndpko1wg&wchannelid=sapab9p6qd",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"sapab9p6qd\", \"title\": \"Credo: An RCIA Program\", \"description\": \"\\n\", \"_type\": \"playlist\", \"entries\": [{\"title\": \"1. Knowing and Desiring God (Lesson)\", \"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:bya9o0wjbr\", \"__x_forwarded_for_ip\": null}, {\"title\": \"1. Knowing and Desiring God (Witness to Conversion)\", \"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:du3drxcnfo\", \"__x_forwarded_for_ip\": null}, {\"title\": \"An Introduction to Catholic Liturgy\", \"ie_key\": \"Wistia\", \"_type\": \"url\", \"url\": \"wistia:2ln3fnbdqq\", \"__x_forwarded_for_ip\": null}], \"original_url\": \"https://www.example.test/channel?wmediaid=a6ndpko1wg&wchannelid=sapab9p6qd\", \"webpage_url\": \"wistiachannel:sapab9p6qd?wmediaid=a6ndpko1wg&wchannelid=sapab9p6qd\", \"webpage_url_basename\": \"sapab9p6qd\", \"webpage_url_domain\": null, \"extractor\": \"WistiaChannel\", \"extractor_key\": \"WistiaChannel\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.example.test/channel?wmediaid=a6ndpko1wg&wchannelid=sapab9p6qd",
+   "args": [
+    "--no-playlist",
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "a6ndpko1wg|BXO-S02-E02-Boxed_Water-v4.mp4|Wistia|wistia:a6ndpko1wg|https://www.example.test/channel?wmediaid=a6ndpko1wg&wchannelid=sapab9p6qd"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.example.test/school",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"hlsmedia01\", \"title\": \"HLS and audio assets\", \"description\": null, \"formats\": [{\"format_id\": \"mp4_alternate_audio\", \"url\": \"https://embed-ssl.wistia.com/deliveries/audio.m4a\", \"tbr\": 128, \"quality\": null, \"vcodec\": \"none\", \"container\": \"mp4\", \"ext\": \"m4a\", \"filesize\": 3000, \"protocol\": \"https\", \"audio_ext\": \"m4a\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 128, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4_alternate_audio - audio only\"}, {\"format_id\": \"hls-Audio\", \"url\": \"https://embed-ssl.wistia.com/deliveries/hlsaudio.bin\", \"tbr\": 96, \"quality\": null, \"vcodec\": \"none\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"audio_ext\": \"mp4\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 150000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-Audio - audio only\"}, {\"format_id\": \"ts-Audio\", \"url\": \"https://embed-ssl.wistia.com/deliveries/hlsaudio.ts\", \"tbr\": 96, \"quality\": null, \"vcodec\": \"none\", \"ext\": \"ts\", \"protocol\": \"https\", \"audio_ext\": \"ts\", \"video_ext\": \"none\", \"vbr\": 0, \"abr\": 96, \"resolution\": \"audio only\", \"aspect_ratio\": null, \"filesize_approx\": 150000, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ts-Audio - audio only\"}, {\"format_id\": \"flash_video\", \"url\": \"https://embed-ssl.wistia.com/deliveries/flash.flv\", \"tbr\": null, \"quality\": null, \"width\": 640, \"height\": 360, \"vcodec\": null, \"container\": null, \"ext\": \"flv\", \"filesize\": null, \"protocol\": \"https\", \"video_ext\": \"flv\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"flash_video - 640x360\"}, {\"format_id\": \"hls-720p\", \"url\": \"https://embed-ssl.wistia.com/deliveries/hls720.bin\", \"tbr\": 1300, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"ext\": \"mp4\", \"protocol\": \"m3u8_native\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 2031250, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"hls-720p - 1280x720\"}, {\"format_id\": \"ts-720p\", \"url\": \"https://embed-ssl.wistia.com/deliveries/hls720.ts\", \"tbr\": 1300, \"quality\": null, \"width\": 1280, \"height\": 720, \"vcodec\": \"h264\", \"ext\": \"ts\", \"protocol\": \"https\", \"video_ext\": \"ts\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 2031250, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"ts-720p - 1280x720\"}, {\"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/hlsoriginal.bin\", \"tbr\": null, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mov\", \"filesize\": 1000, \"protocol\": \"http\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\"}], \"thumbnails\": [{\"url\": \"https://embed-ssl.wistia.com/deliveries/named.jpg\", \"width\": 320, \"height\": 180, \"filesize\": null, \"id\": \"0\", \"resolution\": \"320x180\"}, {\"url\": \"https://embed-ssl.wistia.com/deliveries/still.webp?image_crop_resized=640x360\", \"width\": 640, \"height\": 360, \"filesize\": 1234, \"id\": \"1\", \"resolution\": \"640x360\"}, {\"url\": \"https://embed-ssl.wistia.com/deliveries/missing.bin\", \"width\": 1920, \"height\": 1080, \"filesize\": null, \"id\": \"2\", \"resolution\": \"1920x1080\"}], \"duration\": 12.5, \"timestamp\": 1700000000, \"subtitles\": {\"eng\": [{\"url\": \"http://fast.wistia.net/embed/captions/hlsmedia01.vtt?language=eng\", \"ext\": \"vtt\"}], \"spa\": [{\"url\": \"http://fast.wistia.net/embed/captions/hlsmedia01.vtt?language=spa\", \"ext\": \"vtt\"}]}, \"original_url\": \"https://www.example.test/school\", \"webpage_url\": \"wistia:hlsmedia01\", \"webpage_url_basename\": \"hlsmedia01\", \"webpage_url_domain\": null, \"extractor\": \"Wistia\", \"extractor_key\": \"Wistia\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"https://embed-ssl.wistia.com/deliveries/missing.bin\", \"display_id\": \"hlsmedia01\", \"fulltitle\": \"HLS and audio assets\", \"duration_string\": \"12\", \"upload_date\": \"20231114\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"original\", \"url\": \"http://embed.wistia.com/deliveries/hlsoriginal.bin\", \"tbr\": null, \"quality\": 1, \"width\": 1920, \"height\": 1080, \"vcodec\": null, \"container\": null, \"ext\": \"mov\", \"filesize\": 1000, \"protocol\": \"http\", \"video_ext\": \"mov\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1920x1080\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"original - 1920x1080\", \"_filename\": \"HLS and audio assets [hlsmedia01].mov\", \"filename\": \"HLS and audio assets [hlsmedia01].mov\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [generic] Falling back on generic information extractor",
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found",
+    "WARNING: [Wistia] HEAD request returned error: HTTP Error 404: Not Found"
+   ],
+   "files": {}
+  }
+ ]
+}

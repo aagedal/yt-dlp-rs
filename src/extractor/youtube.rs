@@ -2,6 +2,7 @@
 //! Bounded WEB API fallback, native HLS VOD and explicit offline JS runtime.
 mod args;
 mod challenge;
+pub use challenge::{JsRuntime, JsRuntimeName, js_runtimes};
 mod chapters;
 pub(crate) mod clip;
 pub(crate) mod comments;
@@ -35,7 +36,11 @@ pub struct Youtube;
 pub struct YoutubeOptions {
     /// Explicit Deno 2.3+ or Node.js 22+ executable path; never discovered or installed.
     /// Inspected only when an eligible format has a supported URL challenge.
+    /// It replaces [`Self::js_runtimes`].
     pub js_runtime: Option<PathBuf>,
+    /// `--js-runtimes` runtimes ([`js_runtimes`]), tried in upstream's
+    /// provider preference order.
+    pub js_runtimes: Vec<JsRuntime>,
     /// Include translated manual captions in automatic-caption metadata.
     /// Original ASR captions/translations are always discovered without fetching.
     pub include_translated_subtitles: bool,
@@ -77,6 +82,19 @@ struct ConfiguredYoutube {
     live_from_start: bool,
 }
 
+impl YoutubeOptions {
+    /// The configured challenge runtimes.
+    pub fn runtimes(&self) -> Vec<JsRuntime> {
+        match &self.js_runtime {
+            Some(path) => vec![JsRuntime {
+                name: JsRuntimeName::Detect,
+                path: path.clone(),
+            }],
+            None => self.js_runtimes.clone(),
+        }
+    }
+}
+
 impl Youtube {
     pub fn with_options(options: YoutubeOptions) -> impl Extractor {
         // The player JS and player API requests use the extraction client,
@@ -88,7 +106,7 @@ impl Youtube {
             wait_for_video: options.wait_for_video,
             get_comments: options.get_comments,
             mark_watched: options.mark_watched,
-            runtime: options.js_runtime.map(challenge::Runtime::new),
+            runtime: challenge::Runtime::new(options.runtimes()),
             live_from_start: options.live_from_start,
         }
     }
@@ -137,10 +155,30 @@ pub(crate) fn request_lang() -> String {
 /// (accept all; otherwise EU requests are redirected to consent.youtube.com).
 /// An unsupported `youtube:lang` fails like upstream's `ExtractorError`
 /// (`[EXTRACTOR] ID: ...`).
-pub(crate) fn initialize_for(extractor: &str, id: &str) -> Result<()> {
+pub(crate) fn initialize_for(extractor: &'static str, id: &str) -> Result<()> {
     preferred_lang().map_err(|error| Error::Reported(format!("[{extractor}] {id}: {error}")))?;
+    login(extractor, id)?;
     initialize();
     Ok(())
+}
+
+/// `YoutubeBaseInfoExtractor._perform_login` (once per extractor, with
+/// `--username` or the `youtube` netrc machine): OAuth logins are an
+/// error, password logins a warning; only cookies authenticate.
+pub(crate) fn login(extractor: &'static str, id: &str) -> Result<()> {
+    super::login::initialize_login(extractor, id, "youtube", |session, username, _| {
+        if username.starts_with("oauth") {
+            return Err(session.error(&format!(
+                "Login with OAuth is no longer supported. {}",
+                watch::LOGIN_HINT
+            )));
+        }
+        session.warning(&format!(
+            "Login with password is not supported for YouTube. {}",
+            watch::LOGIN_HINT
+        ));
+        Ok(())
+    })
 }
 
 /// [`initialize_for`] after the language was checked.
@@ -834,6 +872,26 @@ impl streams::Solver for JsSolver<'_> {
     ) {
         let mut n_results = std::collections::HashMap::new();
         let mut sig_results = std::collections::HashMap::new();
+        // `_load_player_data_from_cache('sigfuncs', ..., use_disk_cache=True)`
+        // before solving: cached specs are not requested again.
+        let cache_key = self
+            .player_url
+            .as_deref()
+            .and_then(watch::player_js_cache_key);
+        let mut unsolved = std::collections::BTreeSet::new();
+        for length in sig {
+            match cache_key
+                .as_deref()
+                .and_then(|key| sigfuncs::load(key, *length))
+            {
+                Some(spec) => {
+                    sig_results.insert(*length, spec);
+                }
+                None => {
+                    unsolved.insert(*length);
+                }
+            }
+        }
         let (Some(runtime), Some(player_url)) = (self.runtime, self.player_url.as_deref()) else {
             return (n_results, sig_results);
         };
@@ -844,7 +902,7 @@ impl streams::Solver for JsSolver<'_> {
             return (n_results, sig_results);
         };
         // Signature specs are solved as `chr(0..LENGTH)` permutations.
-        let identities: Vec<(usize, String)> = sig
+        let identities: Vec<(usize, String)> = unsolved
             .iter()
             .map(|length| {
                 (
@@ -864,7 +922,14 @@ impl streams::Solver for JsSolver<'_> {
                 .iter()
                 .map(|(_, identity)| (challenge::Kind::Sig, identity.as_str())),
         );
-        let Ok(batch) = challenge::Batch::new(&player, &inputs) else {
+        // Upstream still sends a (then empty) signature request when every
+        // spec was cached.
+        let required: &[challenge::Kind] = if sig.is_empty() {
+            &[]
+        } else {
+            &[challenge::Kind::Sig]
+        };
+        let Ok(batch) = challenge::Batch::with_kinds(&player, &inputs, required) else {
             return (n_results, sig_results);
         };
         let name = runtime.name();
@@ -881,10 +946,67 @@ impl streams::Solver for JsSolver<'_> {
         }
         for (length, identity) in &identities {
             if let Some(result) = solutions.get(challenge::Kind::Sig, identity) {
-                sig_results.insert(*length, result.chars().map(|c| c as usize).collect());
+                let spec: Vec<usize> = result.chars().map(|c| c as usize).collect();
+                if let Some(key) = &cache_key {
+                    sigfuncs::store(key, *length, &spec);
+                }
+                sig_results.insert(*length, spec);
             }
         }
         (n_results, sig_results)
+    }
+}
+
+/// `_load_player_data_from_cache`/`_store_player_data_to_cache` for
+/// `sigfuncs`: per process, and on disk as `youtube-sigfuncs` /
+/// `PLAYER_ID-VARIANT-LENGTH` (the spec's code points), accepted from
+/// yt-dlp 2025.07.21 on.
+mod sigfuncs {
+    use std::collections::HashMap;
+    use std::sync::{LazyLock, Mutex};
+
+    /// Specs by player cache key and signature length.
+    type Specs = HashMap<(String, usize), Vec<usize>>;
+    static MEMORY: LazyLock<Mutex<Specs>> = LazyLock::new(Default::default);
+
+    pub(super) fn load(player: &str, length: usize) -> Option<Vec<usize>> {
+        let id = (player.to_owned(), length);
+        if let Some(spec) = MEMORY.lock().ok()?.get(&id) {
+            return Some(spec.clone());
+        }
+        let data = crate::cache::load(
+            "youtube-sigfuncs",
+            &format!("{player}-{length}"),
+            Some("2025.07.21"),
+        )?;
+        // An empty or malformed spec is not a usable cache entry.
+        let spec: Vec<usize> = data
+            .as_array()?
+            .iter()
+            .map(|index| index.as_u64().map(|index| index as usize))
+            .collect::<Option<_>>()?;
+        if spec.is_empty() {
+            return None;
+        }
+        MEMORY.lock().ok()?.insert(id, spec.clone());
+        Some(spec)
+    }
+
+    pub(super) fn store(player: &str, length: usize, spec: &[usize]) {
+        let id = (player.to_owned(), length);
+        let Ok(mut memory) = MEMORY.lock() else {
+            return;
+        };
+        if memory.contains_key(&id) {
+            return;
+        }
+        memory.insert(id, spec.to_vec());
+        drop(memory);
+        crate::cache::store(
+            "youtube-sigfuncs",
+            &format!("{player}-{length}"),
+            &serde_json::Value::from(spec),
+        );
     }
 }
 
@@ -927,9 +1049,9 @@ fn live_status_of(details: &Value) -> Option<&'static str> {
 pub(crate) fn refetch_live_formats(
     client: &Client,
     id: &str,
-    runtime: Option<&std::path::Path>,
+    runtimes: &[JsRuntime],
 ) -> Result<live::Refetched> {
-    let runtime = runtime.map(|path| challenge::Runtime::new(path.to_path_buf()));
+    let runtime = challenge::Runtime::new(runtimes.to_vec());
     let acquired = watch::acquire(client, id, runtime.as_ref(), false)?;
     let details = acquired
         .player_responses
@@ -1527,6 +1649,11 @@ impl Extractor for Youtube {
     fn key(&self) -> &'static str {
         "Youtube"
     }
+
+    /// `_GEO_BYPASS = False`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&[])
+    }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         video_only(self.extract_result(client, url)?)
     }
@@ -1577,6 +1704,11 @@ impl Extraction {
 impl Extractor for ConfiguredYoutube {
     fn key(&self) -> &'static str {
         "Youtube"
+    }
+
+    /// `_GEO_BYPASS = False`.
+    fn geo(&self) -> crate::geo::GeoContext {
+        crate::geo::GeoContext::no_bypass(&[])
     }
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         video_only(self.extract_result(client, url)?)

@@ -69,6 +69,11 @@ fn site_extractors_match_saved_upstream_output() {
                 .iter()
                 .map(|arg| arg.as_str().unwrap())
                 .collect();
+            // `--netrc-cmd` commands are captured as POSIX shell; upstream
+            // runs them with cmd.exe on Windows, where they differ.
+            if cfg!(windows) && args.contains(&"--netrc-cmd") {
+                continue;
+            }
             // `copy`: input files (such as a cookies file), not compared.
             let copied: Vec<&str> = case["copy"]
                 .as_array()
@@ -79,6 +84,8 @@ fn site_extractors_match_saved_upstream_output() {
             for name in &copied {
                 std::fs::copy(directory.join(name), work.path().join(name)).unwrap();
             }
+            // A fresh cache per case, like the capture's.
+            let cache = tempfile::tempdir().unwrap();
             let output = Command::new(env!("CARGO_BIN_EXE_yt-dlp-rs"))
                 .args([
                     "--ignore-config",
@@ -86,7 +93,8 @@ fn site_extractors_match_saved_upstream_output() {
                     &proxy.url,
                     "--no-check-certificate",
                 ])
-                .args(["--user-agent", "fixture"])
+                .args(["--user-agent", "fixture", "--cache-dir"])
+                .arg(cache.path())
                 .args(&args)
                 .arg(case["url"].as_str().unwrap())
                 .current_dir(work.path())
@@ -116,6 +124,21 @@ fn site_extractors_match_saved_upstream_output() {
                 "stderr": stderr,
                 "files": files,
             });
+            // Upstream was captured without impersonate targets; with the
+            // `impersonate` feature the extractors impersonate instead of
+            // warning (through the same fixture proxy).
+            #[cfg(feature = "impersonate")]
+            let case = &{
+                let mut case = case.clone();
+                if let Some(lines) = case["stderr"].as_array_mut() {
+                    lines.retain(|line| {
+                        !line.as_str().is_some_and(|line| {
+                            line.contains("The extractor is attempting impersonation, but no impersonate target is available")
+                        })
+                    });
+                }
+                case
+            };
             for key in ["exit", "stdout", "stderr", "files"] {
                 if actual[key] != case[key] {
                     failures.push(format!(

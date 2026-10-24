@@ -1,0 +1,113 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "-s",
+    "-u",
+    "someone",
+    "-p",
+    "pw",
+    "https://www.youtube.com/watch?v=BaW_jenozKc"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Extracting URL: https://www.youtube.com/watch?v=BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] BaW_jenozKc: Downloading 1 format(s): 137+140",
+    "[youtube] Extracting URL: BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] BaW_jenozKc: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Login with password is not supported for YouTube. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies",
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one",
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "-s",
+    "-u",
+    "oauth2",
+    "-p",
+    "x"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [youtube] BaW_jenozKc: Login with OAuth is no longer supported. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re",
+   "args": [
+    "--no-js-runtimes",
+    "--flat-playlist",
+    "--print",
+    "id",
+    "-u",
+    "someone",
+    "-p",
+    "pw"
+   ],
+   "exit": 0,
+   "stdout": [
+    "BaW_jenozKc",
+    "YYYYYYYYYYY",
+    "ZZZZZZZZZZZ"
+   ],
+   "stderr": [
+    "WARNING: [youtube:tab] Login with password is not supported for YouTube. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+   ],
+   "files": {}
+  },
+  {
+   "url": "BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "-s",
+    "--netrc-cmd",
+    "printf 'machine youtube login someone password pw'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[youtube] Executing command: printf 'machine youtube login someone password pw'",
+    "[youtube] Extracting URL: BaW_jenozKc",
+    "[youtube] BaW_jenozKc: Downloading webpage",
+    "[youtube] BaW_jenozKc: Downloading visionos player API JSON",
+    "[info] BaW_jenozKc: Downloading 1 format(s): 137+140"
+   ],
+   "stderr": [
+    "WARNING: [youtube] Login with password is not supported for YouTube. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies",
+    "WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one"
+   ],
+   "files": {}
+  },
+  {
+   "url": "BaW_jenozKc",
+   "args": [
+    "--no-js-runtimes",
+    "-s",
+    "--netrc-cmd",
+    "printf 'machine {} login oauth password x'"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[youtube] Executing command: printf 'machine youtube login oauth password x'"
+   ],
+   "stderr": [
+    "ERROR: [youtube] BaW_jenozKc: Login with OAuth is no longer supported. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+   ],
+   "files": {}
+  }
+ ]
+}

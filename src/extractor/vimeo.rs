@@ -1,5 +1,6 @@
-//! Upstream `VimeoIE` (`yt_dlp/extractor/vimeo.py`) without login or
-//! browser impersonation: player pages' `playerConfig` and vimeo.com
+//! Upstream `VimeoIE` (`yt_dlp/extractor/vimeo.py`) without logging in
+//! (credentials are an unsupported error, as logged-in extraction is not
+//! ported) or browser impersonation: player pages' `playerConfig` and vimeo.com
 //! pages' clip page config through `_parse_config` (progressive, per-CDN
 //! HLS/DASH formats, text tracks, thumbnails, chapters and live status).
 use super::Extractor;
@@ -89,12 +90,6 @@ fn int(value: Option<&Value>) -> Option<i64> {
 
 fn fail(id: &str, message: &str) -> Error {
     Error::Reported(format!("[{NAME}] {id}: {message}"))
-}
-
-fn impersonation_warning() {
-    crate::screen::warning_once(&format!(
-        "[{NAME}] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
-    ));
 }
 
 /// `_parse_config(config, video_id)`: the info dict and its formats.
@@ -497,11 +492,38 @@ impl Extractor for Vimeo {
         KEY
     }
 
+    fn netrc_machine(&self) -> Option<&'static str> {
+        Some("vimeo")
+    }
+
+    fn performs_login(&self) -> bool {
+        true
+    }
+
+    /// `VimeoBaseInfoExtractor._perform_login` without a `vimeo` cookie
+    /// would log in through the viewer token and then extract as the
+    /// account (the web client), which this port does not support.
+    fn perform_login(
+        &self,
+        _client: &Client,
+        _session: &super::login::Session,
+        _username: &str,
+        _password: &str,
+    ) -> Result<()> {
+        if crate::cookies::get_cookie("https://vimeo.com", "vimeo").is_some() {
+            return Ok(());
+        }
+        Err(Error::UnsupportedHtml5(
+            "Vimeo logins (--username/--netrc) are not supported natively".into(),
+        ))
+    }
+
     fn extract(&self, client: &Client, url: &Url) -> Result<Option<VideoInfo>> {
         let Some((video_id, unlisted_hash)) = match_url(url.as_str()) else {
             return Ok(None);
         };
         crate::screen::set_extractor(NAME);
+        self.initialize(client, NAME, &video_id)?;
         crate::screen::screen(&format!(
             "[{NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())
@@ -525,9 +547,12 @@ impl Extractor for Vimeo {
         {
             page = Url::parse(&format!("https://vimeo.com/{video_id}"))?;
         }
-        if page.scheme() == "https" {
-            impersonation_warning();
-        }
+        // `impersonate=is_secure`.
+        let impersonate = (page.scheme() == "https").then(|| {
+            crate::impersonate::attempt(crate::impersonate::ANY, |message| {
+                crate::screen::warning_once(&format!("[{NAME}] {message}"));
+            })
+        });
         let referer = url.as_str().to_owned();
         crate::screen::screen(&format!("[{NAME}] {video_id}: Downloading webpage"));
         let response =
@@ -548,6 +573,7 @@ impl Extractor for Vimeo {
             response
                 .read_to_end(&mut body)
                 .map_err(Error::ExtractionRead)?;
+            drop(impersonate);
             String::from_utf8_lossy(&body).into_owned()
         };
         if page.host_str() == Some("player.vimeo.com") {

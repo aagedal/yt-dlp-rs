@@ -1,0 +1,132 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.dailymotion.com/video/x8abc",
+   "args": [
+    "--print",
+    "%(id)s|%(description)s|%(like_count)s",
+    "-u",
+    "user@example.com",
+    "-p",
+    "s3cret&pw"
+   ],
+   "exit": 0,
+   "stdout": [
+    "x8abc|Seen by the account|1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/video/x8abc",
+   "args": [
+    "-s",
+    "-u",
+    "user@example.com",
+    "-p",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[dailymotion] Extracting URL: https://www.dailymotion.com/video/x8abc",
+    "[dailymotion] Downloading Access Token"
+   ],
+   "stderr": [
+    "ERROR: [dailymotion] x8abc: Invalid username or password"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/video/x8abc",
+   "args": [
+    "--print",
+    "%(id)s|%(description)s|%(like_count)s",
+    "--netrc-cmd",
+    "printf 'machine dailymotion login user@example.com password s3cret&pw'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "x8abc|Seen by the account|1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/video/x8abc",
+   "args": [
+    "-s",
+    "-u",
+    "nobody",
+    "-p",
+    "x"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[dailymotion] Extracting URL: https://www.dailymotion.com/video/x8abc",
+    "[dailymotion] Downloading Access Token"
+   ],
+   "stderr": [
+    "ERROR: [dailymotion] x8abc: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/video/x8abc",
+   "args": [
+    "--print",
+    "%(id)s|%(description)s|%(like_count)s",
+    "--netrc",
+    "--netrc-location",
+    "dm.netrc"
+   ],
+   "copy": [
+    "dm.netrc"
+   ],
+   "exit": 0,
+   "stdout": [
+    "x8abc|Seen by the account|1"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/video/x8abc",
+   "args": [
+    "-s",
+    "--netrc-cmd",
+    "printf 'machine vimeo login a password b'"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[dailymotion] Extracting URL: https://www.dailymotion.com/video/x8abc",
+    "[dailymotion] Executing command: printf 'machine vimeo login a password b'",
+    "[dailymotion] No authenticators for dailymotion",
+    "[dailymotion] Downloading Access Token",
+    "[dailymotion] x8abc: Downloading media JSON metadata",
+    "[dailymotion] x8abc: Downloading metadata JSON",
+    "[dailymotion] x8abc: Downloading m3u8 information with randomized headers",
+    "[info] x8abc: Downloading 1 format(s): http-1080@60"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/video/x8abc",
+   "args": [
+    "-s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[dailymotion] Extracting URL: https://www.dailymotion.com/video/x8abc",
+    "[dailymotion] Downloading Access Token",
+    "[dailymotion] x8abc: Downloading media JSON metadata",
+    "[dailymotion] x8abc: Downloading metadata JSON",
+    "[dailymotion] x8abc: Downloading m3u8 information with randomized headers",
+    "[info] x8abc: Downloading 1 format(s): http-1080@60"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

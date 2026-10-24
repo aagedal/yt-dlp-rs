@@ -1,0 +1,3 @@
+# Netscape HTTP Cookie File
+
+.soundcloud.com	TRUE	/	TRUE	4102444800	oauth_token	COOKIETOKEN

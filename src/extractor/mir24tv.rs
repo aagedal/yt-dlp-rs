@@ -58,11 +58,12 @@ impl Extractor for Mir24Tv {
             "[{NAME}] Extracting URL: {}",
             crate::screen::extracting_url(url.as_str())
         ));
-        // `impersonate=True` without an available target.
-        crate::screen::warning_once(&format!(
-            "[{NAME}] The extractor is attempting impersonation, but no impersonate target is available. If you encounter errors, then see  https://github.com/yt-dlp/yt-dlp#impersonation  for information on installing the required dependencies"
-        ));
-        let webpage = download_webpage(client, url, NAME, &id)?;
+        let webpage = {
+            let _impersonate = crate::impersonate::attempt(crate::impersonate::ANY, |message| {
+                crate::screen::warning_once(&format!("[{NAME}] {message}"));
+            });
+            download_webpage(client, url, NAME, &id)?
+        };
         let iframe = IFRAME
             .captures(&webpage)
             .map(|found| found[1].to_owned())

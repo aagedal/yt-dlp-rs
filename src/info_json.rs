@@ -191,6 +191,30 @@ pub fn upstream_shape(value: &mut Value) {
     if let Some(Value::Array(downloads)) = map.get_mut("requested_downloads") {
         downloads.iter_mut().for_each(upstream_shape);
     }
+    // A result without formats has none of a format's fields, except those
+    // its extractor's dict set (this port's top-level URL and extension
+    // are placeholders: the dict's are `None`).
+    if map.contains_key(crate::info::FORMATS_IGNORED) {
+        let own: Vec<String> = map
+            .get(crate::info_order::INFO_SHAPE)
+            .and_then(Value::as_str)
+            .and_then(|shape| {
+                shape
+                    .strip_prefix("dict;")
+                    .or_else(|| shape.strip_prefix("dict-untitled;"))
+            })
+            .and_then(|rest| rest.split(['|', ';']).next())
+            .map(|keys| keys.split(',').map(str::to_owned).collect())
+            .unwrap_or_default();
+        for key in crate::info::FORMAT_FIELDS {
+            if !own.iter().any(|own| own == key) {
+                map.shift_remove(key);
+            } else if matches!(key, "url" | "ext") || !map.contains_key(key) {
+                map.insert(key.into(), Value::Null);
+            }
+        }
+        map.insert("formats".into(), Value::Array(Vec::new()));
+    }
     // The top level is the merged selected format.
     format(map);
     for key in ["formats", "requested_formats"] {

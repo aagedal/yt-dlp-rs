@@ -55,6 +55,20 @@
     "Content-Type": "video/mp4"
    },
    "body": "0000ftypisom-tumblr"
+  },
+  {
+   "url": "http://writer.tumblr.com/post/2222",
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<html><title>Words | Tumblr</title></html>"
+  },
+  {
+   "url": "https://www.tumblr.com/api/v2/blog/writer/posts/2222/permalink",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{\"response\": {\"timeline\": {\"elements\": [{\"summary\": \"Only words\", \"blog_name\": \"writer\", \"timestamp\": 1372531999, \"content\": [{\"type\": \"text\", \"text\": \"Just text\"}]}]}}}"
   }
  ]
 }
