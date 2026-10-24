@@ -1436,6 +1436,14 @@ extension), the `sourceSystemId` ID with the slug as `display_id`, hero title
 (else the generic title), thumbnail, `int_or_none(msDuration, scale=1000)`
 duration, raw tags and category texts, with upstream's `KeyError` messages.
 
+PressTV videos (`presstv.ir/SECTION/Y/M/D/ID[/SLUG]`) follow upstream
+`PressTVIE`: the page's `_hidden_inputs` (comments removed; `hidden`/`submit`
+inputs by `name` or `id`) `inpPlayback` path (else upstream's `KeyError`)
+without its last four characters as the fixed `180p`/`360p`/`720p`/`1080p`
+MP4 formats, the fatal `title` meta without a `PressTV-` prefix, the
+OpenGraph thumbnail and description (each warning when absent), the slug (else
+the ID) as `display_id` and the URL date as `upload_date`.
+
 QingTing programs (`qingting.fm`/`qtfm.cn` `[v]channels/C/programs/P`) follow
 upstream `QingTingIE`: the mobile program page's `window.__initStores` JSON
 (`_search_json`) with the program title and audio URL, channel title and

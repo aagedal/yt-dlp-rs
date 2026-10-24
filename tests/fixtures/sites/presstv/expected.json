@@ -1,0 +1,88 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.presstv.ir/Detail/2016/04/09/459911/Australian-sewerage-treatment-facility-/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"459911\", \"display_id\": \"Australian-sewerage-treatment-facility-\", \"title\": \"Organic mattresses used to clean waste water\", \"formats\": [{\"url\": \"http://192.99.219.222:82/presstv/Detail/2016/04/09/459911_low200.mp4\", \"format_id\": \"180p\", \"height\": 180, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"180p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"180p - 180p\"}, {\"url\": \"http://192.99.219.222:82/presstv/Detail/2016/04/09/459911_low400.mp4\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\"}, {\"url\": \"http://192.99.219.222:82/presstv/Detail/2016/04/09/459911_low800.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\"}, {\"url\": \"http://192.99.219.222:82/presstv/Detail/2016/04/09/459911.mp4\", \"format_id\": \"1080p\", \"height\": 1080, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1080p\"}], \"thumbnail\": \"http://cdn.presstv.ir/photo/2016/04/09/a.jpg?x=1&y=2\", \"upload_date\": \"20160409\", \"description\": \"Organic mattresses & waste water.\", \"webpage_url\": \"http://www.presstv.ir/Detail/2016/04/09/459911/Australian-sewerage-treatment-facility-/\", \"original_url\": \"http://www.presstv.ir/Detail/2016/04/09/459911/Australian-sewerage-treatment-facility-/\", \"webpage_url_basename\": \"Australian-sewerage-treatment-facility-\", \"webpage_url_domain\": \"presstv.ir\", \"extractor\": \"PressTV\", \"extractor_key\": \"PressTV\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://cdn.presstv.ir/photo/2016/04/09/a.jpg?x=1&y=2\", \"id\": \"0\"}], \"fulltitle\": \"Organic mattresses used to clean waste water\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://192.99.219.222:82/presstv/Detail/2016/04/09/459911.mp4\", \"format_id\": \"1080p\", \"height\": 1080, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1080p\", \"_filename\": \"Organic mattresses used to clean waste water [459911].mp4\", \"filename\": \"Organic mattresses used to clean waste water [459911].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://www.presstv.ir/Detail/2016/04/09/459911/Australian-sewerage-treatment-facility-/",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[PressTV] Extracting URL: http://www.presstv.ir/Detail/2016/04/09/459911/Australian-sewerage-treatment-facility-/",
+    "[PressTV] Australian-sewerage-treatment-facility-: Downloading webpage",
+    "[info] Available formats for 459911:",
+    "ID    EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "----------------------------------------------",
+    "180p  mp4 180p       | http  | unknown unknown",
+    "360p  mp4 360p       | http  | unknown unknown",
+    "720p  mp4 720p       | http  | unknown unknown",
+    "1080p mp4 1080p      | http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.presstv.ir/Detail/2016/4/9/1/",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1\", \"display_id\": \"1\", \"title\": \"Plain title\", \"formats\": [{\"url\": \"http://192.99.219.222:82/presstv/v/1_low200.mp4\", \"format_id\": \"180p\", \"height\": 180, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"180p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"180p - 180p\"}, {\"url\": \"http://192.99.219.222:82/presstv/v/1_low400.mp4\", \"format_id\": \"360p\", \"height\": 360, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"360p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"360p - 360p\"}, {\"url\": \"http://192.99.219.222:82/presstv/v/1_low800.mp4\", \"format_id\": \"720p\", \"height\": 720, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"720p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"720p - 720p\"}, {\"url\": \"http://192.99.219.222:82/presstv/v/1.mp4\", \"format_id\": \"1080p\", \"height\": 1080, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1080p\"}], \"thumbnail\": null, \"upload_date\": \"20160409\", \"description\": null, \"webpage_url\": \"https://www.presstv.ir/Detail/2016/4/9/1/\", \"original_url\": \"https://www.presstv.ir/Detail/2016/4/9/1/\", \"webpage_url_basename\": \"1\", \"webpage_url_domain\": \"presstv.ir\", \"extractor\": \"PressTV\", \"extractor_key\": \"PressTV\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Plain title\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://192.99.219.222:82/presstv/v/1.mp4\", \"format_id\": \"1080p\", \"height\": 1080, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1080p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"1080p - 1080p\", \"_filename\": \"Plain title [1].mp4\", \"filename\": \"Plain title [1].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [PressTV] unable to extract thumbnail URL; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [PressTV] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.presstv.ir/Detail/2016/04/09/2/no-title",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [PressTV] 2: Unable to extract title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.presstv.ir/Detail/2016/04/09/3/no-input",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: 3: An extractor error has occurred. (caused by KeyError('inpPlayback')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.presstv.ir/Detail/2016/04/09/4/gone",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [PressTV] gone: Unable to download webpage: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}

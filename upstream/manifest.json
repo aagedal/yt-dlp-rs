@@ -1089,6 +1089,18 @@
       "scope": "PremiershipRugbyIE article CMS hero media (fatal ext-less HLS formats and subtitles, ID/title/thumbnail/duration/tags/categories, KeyError messages) compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "presstv",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/presstv.py"
+      ],
+      "rust": [
+        "src/extractor/presstv.rs",
+        "tests/fixtures/sites/presstv/"
+      ],
+      "scope": "PressTVIE hidden-input playback path as fixed-height MP4 formats, KeyError and fatal meta title messages, PressTV- prefix removal, OpenGraph thumbnail/description warnings, display_id and URL upload_date compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "projectveritas",
       "status": "partial",
       "upstream": [
