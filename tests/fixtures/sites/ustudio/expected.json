@@ -1,0 +1,128 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://ustudio.com/video/Uxu2my9bgSph/san_francisco_golden_gate_bridge",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"Uxu2my9bgSph\", \"display_id\": \"san_francisco_golden_gate_bridge\", \"title\": \"San Francisco: Golden Gate Bridge\", \"description\": \"The Golden Gate Bridge & the bay.\", \"thumbnails\": [{\"url\": \"http://v1.ustudio.com/media/Uxu2my9bgSph/720.jpg\", \"width\": null, \"height\": null, \"id\": \"0\"}, {\"url\": \"http://v1.ustudio.com/media/Uxu2my9bgSph/480.jpg\", \"width\": 640, \"height\": 480, \"id\": \"1\", \"resolution\": \"640x480\"}], \"upload_date\": \"20111107\", \"uploader\": \"Tony Farley\", \"formats\": [{\"url\": \"http://v1.ustudio.com/media/Uxu2my9bgSph/480.mp4?a=1&b=2\", \"width\": 640, \"height\": 480, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x480\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.33, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 640x480\"}, {\"url\": \"http://v1.ustudio.com/media/Uxu2my9bgSph/720.mp4\", \"width\": 1280, \"height\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x?\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x?\"}], \"webpage_url\": \"http://ustudio.com/video/Uxu2my9bgSph/san_francisco_golden_gate_bridge\", \"original_url\": \"http://ustudio.com/video/Uxu2my9bgSph/san_francisco_golden_gate_bridge\", \"webpage_url_basename\": \"san_francisco_golden_gate_bridge\", \"webpage_url_domain\": \"ustudio.com\", \"extractor\": \"ustudio\", \"extractor_key\": \"Ustudio\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://v1.ustudio.com/media/Uxu2my9bgSph/480.jpg\", \"fulltitle\": \"San Francisco: Golden Gate Bridge\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://v1.ustudio.com/media/Uxu2my9bgSph/720.mp4\", \"width\": 1280, \"height\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x?\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x?\", \"_filename\": \"San Francisco\\uff1a Golden Gate Bridge [Uxu2my9bgSph].mp4\", \"filename\": \"San Francisco\\uff1a Golden Gate Bridge [Uxu2my9bgSph].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://ustudio.com/video/Uxu2my9bgSph/san_francisco_golden_gate_bridge",
+   "args": [
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ustudio] Extracting URL: http://ustudio.com/video/Uxu2my9bgSph/san_francisco_golden_gate_bridge",
+    "[ustudio] san_francisco_golden_gate_bridge: Downloading XML",
+    "[ustudio] san_francisco_golden_gate_bridge: Downloading webpage",
+    "[info] Available formats for Uxu2my9bgSph:",
+    "ID EXT RESOLUTION | PROTO | VCODEC  ACODEC",
+    "-------------------------------------------",
+    "0  mp4 640x480    | http  | unknown unknown",
+    "1  mp4 1280x?     | http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.ustudio.com/video/bare1/bare",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"bare1\", \"display_id\": \"bare\", \"title\": \"Bare\", \"description\": null, \"thumbnails\": [], \"upload_date\": null, \"uploader\": null, \"formats\": [{\"url\": \"http://v1.ustudio.com/media/bare1/a.mp4\", \"width\": null, \"height\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://www.ustudio.com/video/bare1/bare\", \"original_url\": \"https://www.ustudio.com/video/bare1/bare\", \"webpage_url_basename\": \"bare\", \"webpage_url_domain\": \"ustudio.com\", \"extractor\": \"ustudio\", \"extractor_key\": \"Ustudio\", \"playlist\": null, \"playlist_index\": null, \"fulltitle\": \"Bare\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"http://v1.ustudio.com/media/bare1/a.mp4\", \"width\": null, \"height\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Bare [bare1].mp4\", \"filename\": \"Bare [bare1].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: [ustudio] unable to extract upload date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ustudio] unable to extract uploader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ustudio] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://ustudio.com/video/notitle/x",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "WARNING: [ustudio] unable to extract OpenGraph title; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ustudio] unable to extract upload date; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ustudio] unable to extract uploader; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: [ustudio] unable to extract OpenGraph description; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+    "WARNING: Extractor failed to obtain \"title\". Creating a generic title instead",
+    "ERROR: [ustudio] notitle: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://ustudio.com/video/gone/x",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [ustudio] x: Unable to download XML: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "http://app.ustudio.com/embed/DeN7VdYRDKhP/Uw7G1kMCe65T",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"Uw7G1kMCe65T\", \"title\": \"5 Things IT Should Know About Video\", \"description\": \"What IT should know.\", \"duration\": 232, \"uploader_id\": \"DeN7VdYRDKhP\", \"tags\": [\"video\", \"it\"], \"thumbnails\": [{\"url\": \"http://app.ustudio.com/media/Uw7G1kMCe65T/poster.jpg\", \"id\": \"0\"}], \"formats\": [{\"format_id\": \"webm-480p\", \"url\": \"http://app.ustudio.com/media/Uw7G1kMCe65T/480.webm\", \"width\": null, \"height\": 480, \"protocol\": \"http\", \"ext\": \"webm\", \"video_ext\": \"webm\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"480p\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"webm-480p - 480p\"}, {\"format_id\": \"mp4\", \"url\": \"http://app.ustudio.com/media/Uw7G1kMCe65T/sd.mp4\", \"width\": 640, \"height\": null, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"640x?\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4 - 640x?\"}, {\"format_id\": \"mp4-720p\", \"url\": \"http://app.ustudio.com/media/Uw7G1kMCe65T/720.mp4\", \"width\": 1280, \"height\": 720, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\"}], \"webpage_url\": \"http://app.ustudio.com/embed/DeN7VdYRDKhP/Uw7G1kMCe65T\", \"original_url\": \"http://app.ustudio.com/embed/DeN7VdYRDKhP/Uw7G1kMCe65T\", \"webpage_url_basename\": \"Uw7G1kMCe65T\", \"webpage_url_domain\": \"app.ustudio.com\", \"extractor\": \"ustudio:embed\", \"extractor_key\": \"UstudioEmbed\", \"playlist\": null, \"playlist_index\": null, \"thumbnail\": \"http://app.ustudio.com/media/Uw7G1kMCe65T/poster.jpg\", \"display_id\": \"Uw7G1kMCe65T\", \"fulltitle\": \"5 Things IT Should Know About Video\", \"duration_string\": \"3:52\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-720p\", \"url\": \"http://app.ustudio.com/media/Uw7G1kMCe65T/720.mp4\", \"width\": 1280, \"height\": 720, \"protocol\": \"http\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"tbr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-720p - 1280x720\", \"_filename\": \"5 Things IT Should Know About Video [Uw7G1kMCe65T].mp4\", \"filename\": \"5 Things IT Should Know About Video [Uw7G1kMCe65T].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://app.ustudio.com/embed/DeN7VdYRDKhP/Uw7G1kMCe65T",
+   "args": [
+    "--list-thumbnails",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[ustudio:embed] Extracting URL: http://app.ustudio.com/embed/DeN7VdYRDKhP/Uw7G1kMCe65T",
+    "[ustudio:embed] Uw7G1kMCe65T: Downloading JSON metadata",
+    "[info] Available thumbnails for Uw7G1kMCe65T:",
+    "ID Width   Height  URL",
+    "0  unknown unknown http://app.ustudio.com/media/Uw7G1kMCe65T/poster.jpg",
+    "[info] Available formats for Uw7G1kMCe65T:",
+    "ID        EXT  RESOLUTION | PROTO | VCODEC  ACODEC",
+    "---------------------------------------------------",
+    "webm-480p webm 480p       | http  | unknown unknown",
+    "mp4       mp4  640x?      | http  | unknown unknown",
+    "mp4-720p  mp4  1280x720   | http  | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "http://app.ustudio.com/embed/DeN7VdYRDKhP/noname",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: noname: An extractor error has occurred. (caused by KeyError('name')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

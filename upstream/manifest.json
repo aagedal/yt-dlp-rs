@@ -2208,6 +2208,18 @@
       "scope": "UnitedNationsWebTvIE page partnerId and kentryID as a kaltura: url result compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "ustudio",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ustudio.py"
+      ],
+      "rust": [
+        "src/extractor/ustudio.rs",
+        "tests/fixtures/sites/ustudio/"
+      ],
+      "scope": "UstudioIE config XML video/image qualities with OpenGraph title/description, upload date and uploader warnings, and UstudioEmbedIE config JSON transcodes, images and metadata compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "veo",
       "status": "partial",
       "upstream": [

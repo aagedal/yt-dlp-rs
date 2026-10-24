@@ -1,0 +1,10 @@
+[
+ {"url": "http://ustudio.com/video/Uxu2my9bgSph/san_francisco_golden_gate_bridge", "args": ["-j"]},
+ {"url": "http://ustudio.com/video/Uxu2my9bgSph/san_francisco_golden_gate_bridge", "args": ["-F"]},
+ {"url": "https://www.ustudio.com/video/bare1/bare", "args": ["-j"]},
+ {"url": "http://ustudio.com/video/notitle/x", "args": ["-j"]},
+ {"url": "http://ustudio.com/video/gone/x", "args": ["-j"]},
+ {"url": "http://app.ustudio.com/embed/DeN7VdYRDKhP/Uw7G1kMCe65T", "args": ["-j"]},
+ {"url": "http://app.ustudio.com/embed/DeN7VdYRDKhP/Uw7G1kMCe65T", "args": ["--list-thumbnails", "-F"]},
+ {"url": "http://app.ustudio.com/embed/DeN7VdYRDKhP/noname", "args": ["-j"]}
+]

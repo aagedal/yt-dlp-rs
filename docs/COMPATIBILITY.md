@@ -894,6 +894,16 @@ warning) and `ipfs` HLS master playlists with subtitles, the original
 date. User pages (`3speak.tv/user/USER`) follow `ThreeSpeakUserIE`: each
 `data-payout` video as a `ThreeSpeak` URL entry.
 
+uStudio videos (`ustudio.com/video/ID/DISPLAY_ID`) follow upstream
+`UstudioIE`: the `v1.ustudio.com` `config.xml` `qualities/quality/video` and
+`image` entries with a `url` (unescaped again, with integer width/height) as
+formats and thumbnails, then the page's OpenGraph title and description,
+`Uploaded by ... on` date and uploader, each warning when absent. Embeds
+(`app|embed.ustudio.com/embed/UID/ID`) follow `UstudioEmbedIE`: the first
+`config.json` video's `name` (else a `KeyError`), `transcodes` as
+`EXT[-HEIGHTp]` formats, image thumbnails, description, duration, keywords and
+the URL's uploader ID.
+
 Crooks and Liars embeds (`embed.crooksandliars.com/embed|v/ID`) follow upstream
 `CrooksAndLiarsIE`: the `http:` embed page's fatal `var manifest` JSON, its
 `video/` flavors as formats ranked by `qualities(webm_low, mp4_low, webm_high,
