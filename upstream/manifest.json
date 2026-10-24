@@ -17,6 +17,18 @@
       "scope": "FreesoundIE og:audio song URL/title (fatal, upstream errors), non-fatal description, uploader and channels warnings, duration, sound_date upload date and tags, the doubled-host URL fix and the lq/hq MP3 preview formats compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "gab",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/gab.py"
+      ],
+      "rust": [
+        "src/extractor/gab.rs",
+        "tests/fixtures/sites/gab/"
+      ],
+      "scope": "GabIE api/v1 status JSON: video/gifv attachments (indexed POST-N IDs) with original/playable formats (width, height, int tbr, parse_codecs acodec and its unknown-codec warning, asr, fps), display-name title, created_at timestamp, cleaned content, duration or length, counts and account fields, and the multi-video playlist compared with pinned upstream output through the fixture proxy; posts without videos (upstream's IndexError) and fields of unexpected types remain explicit native errors, and --print renders the int tbr as a float"
+    },
+    {
       "name": "generic-extraction",
       "status": "partial",
       "upstream": [

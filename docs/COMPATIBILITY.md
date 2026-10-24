@@ -1617,6 +1617,18 @@ for the playlist title and description. Non-string titles, media URLs and
 descriptions remain explicit native errors. `tests/fixtures/sites/iheart/`
 is compared with pinned upstream output.
 
+Gab posts (`gab.com/USER/posts/ID`) follow upstream `GabIE`: the
+`gab.com/api/v1/statuses/ID` JSON, each video or gifv attachment (numbered by
+its attachment index) with its original and playable MP4s as formats (their
+size, integer kbit/s `tbr`, the `parse_codecs` audio codec with its
+unknown-codec warning, sample rate and fps), the `DISPLAY_NAME on Gab`
+title, `created_at` timestamp, cleaned content, duration (or parsed length),
+like/comment/repost counts and the account's user name, ID and URL; posts with
+several videos are playlists. Posts without videos (upstream's `IndexError`)
+and fields of unexpected types remain explicit native errors, and output
+templates show the integer `tbr` as a float. `tests/fixtures/sites/gab/` is
+compared with pinned upstream output.
+
 Tumblr posts (`BLOG.tumblr.com/post|video/ID` and `www.tumblr.com/BLOG/ID`
 shapes) follow upstream `TumblrIE`: the anonymous API token from the login
 page, the post page and its permalink API JSON, Tumblr-hosted video from the

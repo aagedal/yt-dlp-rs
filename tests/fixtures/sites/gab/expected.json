@@ -1,0 +1,80 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://gab.com/ACT1TV/posts/107163961867310434",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"107163961867310434-0\", \"title\": \"ACT1TV on Gab\", \"timestamp\": 1635443463, \"formats\": [{\"url\": \"https://media.gab.com/system/media_attachments/files/playable/video.mp4\", \"width\": 640, \"height\": 360, \"tbr\": 500, \"acodec\": null, \"asr\": 44100, \"fps\": 30, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"640x360\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 2064375, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 640x360\"}, {\"url\": \"https://media.gab.com/system/media_attachments/files/original/video.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 2546, \"acodec\": null, \"asr\": 44100, \"fps\": 30, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 10511797, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\"}], \"description\": \"Wouldn't it be cool if there was a Gab TV?\", \"duration\": 33.03, \"like_count\": 5, \"comment_count\": 2, \"repost_count\": 1, \"uploader\": \"ACT1TV\", \"uploader_id\": \"1\", \"uploader_url\": \"https://gab.com/ACT1TV\", \"webpage_url\": \"https://gab.com/ACT1TV/posts/107163961867310434\", \"original_url\": \"https://gab.com/ACT1TV/posts/107163961867310434\", \"webpage_url_basename\": \"107163961867310434\", \"webpage_url_domain\": \"gab.com\", \"extractor\": \"Gab\", \"extractor_key\": \"Gab\", \"playlist\": null, \"playlist_index\": null, \"display_id\": \"107163961867310434-0\", \"fulltitle\": \"ACT1TV on Gab\", \"duration_string\": \"33\", \"upload_date\": \"20211028\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"url\": \"https://media.gab.com/system/media_attachments/files/original/video.mp4\", \"width\": 1280, \"height\": 720, \"tbr\": 2546, \"acodec\": null, \"asr\": 44100, \"fps\": 30, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"filesize_approx\": 10511797, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"1\", \"format\": \"1 - 1280x720\", \"_filename\": \"ACT1TV on Gab [107163961867310434-0].mp4\", \"filename\": \"ACT1TV on Gab [107163961867310434-0].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [
+    "WARNING: Unknown codec aac (lc) (mp4a / 0x6134706d)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://gab.com/ACT1TV/posts/107163961867310434",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(timestamp)s|%(upload_date)s|%(description)s|%(duration)s|%(like_count)s|%(comment_count)s|%(repost_count)s|%(uploader)s|%(uploader_id)s|%(uploader_url)s|%(format_id)s|%(width)s|%(height)s|%(acodec)s|%(asr)s|%(fps)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "107163961867310434-0|ACT1TV on Gab|1635443463|20211028|Wouldn't it be cool if there was a Gab TV?|33.03|5|2|1|ACT1TV|1|https://gab.com/ACT1TV|1|1280|720|NA|44100|30"
+   ],
+   "stderr": [
+    "WARNING: Unknown codec aac (lc) (mp4a / 0x6134706d)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://gab.com/ACT1TV/posts/107163961867310434",
+   "args": [
+    "--no-progress",
+    "-o",
+    "%(id)s.%(ext)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[Gab] Extracting URL: https://gab.com/ACT1TV/posts/107163961867310434",
+    "[Gab] 107163961867310434: Downloading JSON metadata",
+    "[info] 107163961867310434-0: Downloading 1 format(s): 1",
+    "[download] Destination: 107163961867310434-0.mp4",
+    "[download] Download completed"
+   ],
+   "stderr": [
+    "WARNING: Unknown codec aac (lc) (mp4a / 0x6134706d)"
+   ],
+   "files": {
+    "107163961867310434-0.mp4": 9
+   }
+  },
+  {
+   "url": "https://www.gab.com/someone/posts/200",
+   "args": [
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"200\", \"_type\": \"playlist\", \"entries\": [{\"id\": \"200-1\", \"title\": \"Someone on Gab\", \"timestamp\": 1641092645, \"formats\": [{\"url\": \"https://media.gab.com/a.mp4\", \"width\": 320, \"height\": null, \"tbr\": null, \"acodec\": null, \"asr\": null, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x?\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 320x?\"}], \"description\": \"Two videos\", \"duration\": 5.5, \"like_count\": null, \"comment_count\": null, \"repost_count\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"playlist_count\": 2, \"playlist\": \"200\", \"playlist_id\": \"200\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.gab.com/someone/posts/200\", \"n_entries\": 2, \"webpage_url\": \"https://www.gab.com/someone/posts/200\", \"webpage_url_basename\": \"200\", \"webpage_url_domain\": \"gab.com\", \"playlist_index\": 1, \"__last_playlist_index\": 2, \"extractor\": \"Gab\", \"extractor_key\": \"Gab\", \"playlist_autonumber\": 1, \"display_id\": \"200-1\", \"fulltitle\": \"Someone on Gab\", \"duration_string\": \"5\", \"upload_date\": \"20220102\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.gab.com/a.mp4\", \"width\": 320, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"resolution\": \"320x?\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 320x?\", \"_filename\": \"Someone on Gab [200-1].mp4\", \"filename\": \"Someone on Gab [200-1].mp4\", \"__write_download_archive\": false}], \"url\": \"https://media.gab.com/a.mp4\", \"width\": 320, \"height\": null, \"tbr\": null, \"acodec\": null, \"asr\": null, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"320x?\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - 320x?\"}, {\"id\": \"200-2\", \"title\": \"Someone on Gab\", \"timestamp\": 1641092645, \"formats\": [{\"url\": \"https://media.gab.com/b.mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"acodec\": \"mp4a.40.2\", \"asr\": null, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"description\": \"Two videos\", \"like_count\": null, \"comment_count\": null, \"repost_count\": null, \"uploader\": null, \"uploader_id\": null, \"uploader_url\": null, \"playlist_count\": 2, \"playlist\": \"200\", \"playlist_id\": \"200\", \"playlist_title\": null, \"playlist_uploader\": null, \"playlist_uploader_id\": null, \"playlist_channel\": null, \"playlist_channel_id\": null, \"playlist_webpage_url\": \"https://www.gab.com/someone/posts/200\", \"n_entries\": 2, \"webpage_url\": \"https://www.gab.com/someone/posts/200\", \"webpage_url_basename\": \"200\", \"webpage_url_domain\": \"gab.com\", \"playlist_index\": 2, \"__last_playlist_index\": 2, \"extractor\": \"Gab\", \"extractor_key\": \"Gab\", \"playlist_autonumber\": 2, \"display_id\": \"200-2\", \"fulltitle\": \"Someone on Gab\", \"upload_date\": \"20220102\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"requested_downloads\": [{\"url\": \"https://media.gab.com/b.mp4\", \"acodec\": \"mp4a.40.2\", \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"dynamic_range\": \"SDR\", \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\", \"_filename\": \"Someone on Gab [200-2].mp4\", \"filename\": \"Someone on Gab [200-2].mp4\", \"__write_download_archive\": false}], \"url\": \"https://media.gab.com/b.mp4\", \"width\": null, \"height\": null, \"tbr\": null, \"acodec\": \"mp4a.40.2\", \"asr\": null, \"fps\": null, \"protocol\": \"https\", \"ext\": \"mp4\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": null, \"dynamic_range\": \"SDR\", \"aspect_ratio\": null, \"filesize_approx\": null, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format_id\": \"0\", \"format\": \"0 - unknown\"}], \"webpage_url\": \"https://www.gab.com/someone/posts/200\", \"original_url\": \"https://www.gab.com/someone/posts/200\", \"webpage_url_basename\": \"200\", \"webpage_url_domain\": \"gab.com\", \"extractor\": \"Gab\", \"extractor_key\": \"Gab\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://gab.com/x/posts/404",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Gab] 404: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  }
+ ]
+}
