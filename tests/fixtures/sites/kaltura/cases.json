@@ -1,0 +1,75 @@
+[
+ {
+  "url": "kaltura:1926081:0_c03e1b5g",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "kaltura:1926081:0_c03e1b5g",
+  "args": [
+   "-F"
+  ]
+ },
+ {
+  "url": "kaltura:1926081:0_c03e1b5g",
+  "args": [
+   "--list-subs"
+  ]
+ },
+ {
+  "url": "https://cdnapisec.kaltura.com/html5/html5lib/v2.30.2/mwEmbedFrame.php/p/1337/uiconf_id/20540612/entry_id/1_kw?wid=_243342&flashvars[ks]=KSX",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "kaltura:1926081:0_missing",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "kaltura:1926081:0_gone",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "kaltura:1926081:0_c03e1b5g:flash",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kaltura.com/index.php/kwidget",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kaltura.com/index.php/kwidget/uiconf_id/1/entry_id/0_x",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.kaltura.com/index.php/extwidget/preview/partner_id/1337/uiconf_id/9/flashvars[referenceId]/ref1",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://news.example.test/kwidget",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s|%(format_id)s"
+  ]
+ },
+ {
+  "url": "https://news.example.test/iframe",
+  "args": [
+   "-j"
+  ]
+ }
+]

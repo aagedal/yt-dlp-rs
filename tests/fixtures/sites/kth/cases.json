@@ -1,0 +1,15 @@
+[
+ {
+  "url": "https://play.kth.se/media/Lunch+breakA+De+nya+aff%C3%A4rerna+inom+Fordonsdalen/0_uoop6oz9",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://play.kth.se/media/x/0_uoop6oz9",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+  ]
+ }
+]

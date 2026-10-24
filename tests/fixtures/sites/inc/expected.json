@@ -1,0 +1,54 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "http://www.inc.com/tip-sheet/bill-gates-says-these-5-books-will-make-you-smarter.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"1_wqig47aq\", \"title\": \"Bill Gates Says These 5 Books Will Make You Smarter\", \"formats\": [{\"format_id\": \"mp4-900\", \"ext\": \"mp4\", \"tbr\": 900, \"fps\": 25, \"filesize_approx\": 26325000, \"container\": null, \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/1034971/sp/103497100/serveFlavor/entryId/1_wqig47aq/v/1/flavorId/1_wqig47aq_f\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-900 - 1280x720\"}], \"subtitles\": {\"en\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/1_wqig47aq_c\", \"ext\": \"vtt\"}]}, \"description\": null, \"thumbnail\": \"http://cfvod.kaltura.com/p/1034971/thumbnail/entry_id/1_wqig47aq\", \"duration\": 234, \"timestamp\": 1750430976, \"uploader_id\": \"user@example.com\", \"view_count\": 3, \"original_url\": \"http://www.inc.com/tip-sheet/bill-gates-says-these-5-books-will-make-you-smarter.html\", \"webpage_url\": \"kaltura:1034971:1_wqig47aq\", \"webpage_url_basename\": \"1034971:1_wqig47aq\", \"webpage_url_domain\": null, \"extractor\": \"Kaltura\", \"extractor_key\": \"Kaltura\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://cfvod.kaltura.com/p/1034971/thumbnail/entry_id/1_wqig47aq\", \"id\": \"0\"}], \"display_id\": \"1_wqig47aq\", \"fulltitle\": \"Bill Gates Says These 5 Books Will Make You Smarter\", \"duration_string\": \"3:54\", \"upload_date\": \"20250620\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-900\", \"ext\": \"mp4\", \"tbr\": 900, \"fps\": 25, \"filesize_approx\": 26325000, \"container\": null, \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/1034971/sp/103497100/serveFlavor/entryId/1_wqig47aq/v/1/flavorId/1_wqig47aq_f\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-900 - 1280x720\", \"_filename\": \"Bill Gates Says These 5 Books Will Make You Smarter [1_wqig47aq].mp4\", \"filename\": \"Bill Gates Says These 5 Books Will Make You Smarter [1_wqig47aq].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.inc.com/oscar-raymundo/richard-branson-young-entrepeneurs.html",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "1_kqs38cgm|Branson|Kaltura|kaltura:1111:1_kqs38cgm|https://www.inc.com/oscar-raymundo/richard-branson-young-entrepeneurs.html"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.inc.com/video/nokey.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: nokey: An extractor error has occurred. (caused by KeyError('vid_kaltura_id')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.inc.com/video/none.html",
+   "args": [
+    "-j"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: [Inc] none: Unable to extract kaltura id; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  }
+ ]
+}

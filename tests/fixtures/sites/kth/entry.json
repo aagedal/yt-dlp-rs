@@ -1,0 +1,43 @@
+[
+ {
+  "partnerId": 308,
+  "ks": "KS",
+  "objectType": "KalturaStartWidgetSessionResponse"
+ },
+ {
+  "objects": [
+   {
+    "id": "0_uoop6oz9",
+    "name": "Lunch break",
+    "userId": "user@example.com",
+    "dataUrl": "https://cdnapisec.kaltura.com/p/308/sp/30800/serveFlavor/entryId/0_uoop6oz9/v/1",
+    "plays": 3,
+    "duration": 234,
+    "createdAt": 1750430976,
+    "thumbnailUrl": "http://cfvod.kaltura.com/p/308/thumbnail/entry_id/0_uoop6oz9"
+   }
+  ]
+ },
+ [
+  {
+   "id": "0_uoop6oz9_f",
+   "status": 2,
+   "fileExt": "mp4",
+   "bitrate": 900,
+   "width": 1280,
+   "height": 720,
+   "frameRate": 25,
+   "videoCodecId": "avc1"
+  }
+ ],
+ {
+  "objects": [
+   {
+    "id": "0_uoop6oz9_c",
+    "status": 2,
+    "languageCode": "en",
+    "format": 3
+   }
+  ]
+ }
+]

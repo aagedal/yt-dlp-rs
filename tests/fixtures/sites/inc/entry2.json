@@ -1,0 +1,43 @@
+[
+ {
+  "partnerId": 1111,
+  "ks": "KS",
+  "objectType": "KalturaStartWidgetSessionResponse"
+ },
+ {
+  "objects": [
+   {
+    "id": "1_kqs38cgm",
+    "name": "Branson",
+    "userId": "user@example.com",
+    "dataUrl": "https://cdnapisec.kaltura.com/p/1111/sp/111100/serveFlavor/entryId/1_kqs38cgm/v/1",
+    "plays": 3,
+    "duration": 234,
+    "createdAt": 1750430976,
+    "thumbnailUrl": "http://cfvod.kaltura.com/p/1111/thumbnail/entry_id/1_kqs38cgm"
+   }
+  ]
+ },
+ [
+  {
+   "id": "1_kqs38cgm_f",
+   "status": 2,
+   "fileExt": "mp4",
+   "bitrate": 900,
+   "width": 1280,
+   "height": 720,
+   "frameRate": 25,
+   "videoCodecId": "avc1"
+  }
+ ],
+ {
+  "objects": [
+   {
+    "id": "1_kqs38cgm_c",
+    "status": 2,
+    "languageCode": "en",
+    "format": 3
+   }
+  ]
+ }
+]

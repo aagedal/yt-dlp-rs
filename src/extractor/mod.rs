@@ -59,6 +59,7 @@ mod huajiao;
 mod hypem;
 mod iltalehti;
 mod imgur;
+mod inc;
 mod instagram;
 pub(crate) mod ism;
 mod israelnationalnews;
@@ -67,10 +68,12 @@ mod jove;
 mod json_ld;
 mod jwplatform;
 mod jwplayer;
+mod kaltura;
 mod kankanews;
 mod kick;
 mod kicker;
 mod kommunetv;
+mod kth;
 mod ku6;
 mod kvs;
 mod lbry;
@@ -138,6 +141,7 @@ mod twitch;
 mod twitter;
 mod umg;
 mod unistra;
+mod unitednations;
 mod veo;
 mod vimeo;
 mod vk;
@@ -222,6 +226,7 @@ pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
     gallery_suitable as imgur_gallery_suitable, suitable as imgur_suitable,
 };
+pub use inc::{Inc, suitable as inc_suitable};
 pub(crate) use instagram::post_extract as instagram_comments;
 pub use instagram::{
     Instagram, InstagramIos, InstagramStory, InstagramTag, InstagramUser,
@@ -233,6 +238,7 @@ pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_
 pub use ivoox::{Ivoox, suitable as ivoox_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
+pub use kaltura::{Kaltura, suitable as kaltura_suitable};
 pub use kankanews::{KankaNews, suitable as kankanews_suitable};
 pub use kick::{
     KickClip, KickClips, KickLive, KickVideos, KickVod, clip_suitable as kick_clip_suitable,
@@ -241,6 +247,7 @@ pub use kick::{
 };
 pub use kicker::{Kicker, suitable as kicker_suitable};
 pub use kommunetv::{Kommunetv, suitable as kommunetv_suitable};
+pub use kth::{Kth, suitable as kth_suitable};
 pub use ku6::{Ku6, suitable as ku6_suitable};
 pub use lbry::{Lbry, suitable as lbry_suitable};
 pub use linkedin::{LinkedIn, suitable as linkedin_suitable};
@@ -338,6 +345,7 @@ pub use twitter::{
 };
 pub use umg::{UmgDe, suitable as umg_suitable};
 pub use unistra::{Unistra, suitable as unistra_suitable};
+pub use unitednations::{UnitedNationsWebTv, suitable as unitednations_suitable};
 pub use veo::{Veo, suitable as veo_suitable};
 pub use vimeo::{Vimeo, suitable as vimeo_suitable};
 pub use vk::{
@@ -1208,6 +1216,7 @@ pub(crate) fn search_nextjs_data(
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url))
+        || (url.starts_with("kaltura:") && kaltura::suitable(url))
         || youtube::search::suitable(url)
         || (url.starts_with("at://") && bluesky::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))

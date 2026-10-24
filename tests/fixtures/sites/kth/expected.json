@@ -1,0 +1,30 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://play.kth.se/media/Lunch+breakA+De+nya+aff%C3%A4rerna+inom+Fordonsdalen/0_uoop6oz9",
+   "args": [
+    "-j"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"0_uoop6oz9\", \"title\": \"Lunch break\", \"formats\": [{\"format_id\": \"mp4-900\", \"ext\": \"mp4\", \"tbr\": 900, \"fps\": 25, \"filesize_approx\": 26325000, \"container\": null, \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/308/sp/30800/serveFlavor/entryId/0_uoop6oz9/v/1/flavorId/0_uoop6oz9_f\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-900 - 1280x720\"}], \"subtitles\": {\"en\": [{\"url\": \"http://cdnapi.kaltura.com/api_v3/service/caption_captionasset/action/serve/captionAssetId/0_uoop6oz9_c\", \"ext\": \"vtt\"}]}, \"description\": null, \"thumbnail\": \"http://cfvod.kaltura.com/p/308/thumbnail/entry_id/0_uoop6oz9\", \"duration\": 234, \"timestamp\": 1750430976, \"uploader_id\": \"user@example.com\", \"view_count\": 3, \"original_url\": \"https://play.kth.se/media/Lunch+breakA+De+nya+aff%C3%A4rerna+inom+Fordonsdalen/0_uoop6oz9\", \"webpage_url\": \"kaltura:308:0_uoop6oz9#__youtubedl_smuggle=%7B%22service_url%22%3A+%22https%3A%2F%2Fapi.kaltura.nordu.net%22%7D\", \"webpage_url_basename\": \"308:0_uoop6oz9\", \"webpage_url_domain\": null, \"extractor\": \"Kaltura\", \"extractor_key\": \"Kaltura\", \"playlist\": null, \"playlist_index\": null, \"thumbnails\": [{\"url\": \"http://cfvod.kaltura.com/p/308/thumbnail/entry_id/0_uoop6oz9\", \"id\": \"0\"}], \"display_id\": \"0_uoop6oz9\", \"fulltitle\": \"Lunch break\", \"duration_string\": \"3:54\", \"upload_date\": \"20250620\", \"release_year\": null, \"requested_subtitles\": null, \"_has_drm\": null, \"format_id\": \"mp4-900\", \"ext\": \"mp4\", \"tbr\": 900, \"fps\": 25, \"filesize_approx\": 26325000, \"container\": null, \"vcodec\": \"avc1\", \"height\": 720, \"width\": 1280, \"url\": \"https://cdnapisec.kaltura.com/p/308/sp/30800/serveFlavor/entryId/0_uoop6oz9/v/1/flavorId/0_uoop6oz9_f\", \"protocol\": \"https\", \"video_ext\": \"mp4\", \"audio_ext\": \"none\", \"vbr\": null, \"abr\": null, \"resolution\": \"1280x720\", \"dynamic_range\": \"SDR\", \"aspect_ratio\": 1.78, \"http_headers\": {\"User-Agent\": \"fixture\", \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"Accept-Language\": \"en-us,en;q=0.5\", \"Sec-Fetch-Mode\": \"navigate\"}, \"format\": \"mp4-900 - 1280x720\", \"_filename\": \"Lunch break [0_uoop6oz9].mp4\", \"filename\": \"Lunch break [0_uoop6oz9].mp4\", \"_type\": \"video\"}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://play.kth.se/media/x/0_uoop6oz9",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "0_uoop6oz9|Lunch break|Kaltura|kaltura:308:0_uoop6oz9#__youtubedl_smuggle=%7B%22service_url%22%3A+%22https%3A%2F%2Fapi.kaltura.nordu.net%22%7D|https://play.kth.se/media/x/0_uoop6oz9"
+   ],
+   "stderr": [],
+   "files": {}
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+[
+ {
+  "url": "http://www.inc.com/tip-sheet/bill-gates-says-these-5-books-will-make-you-smarter.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.inc.com/oscar-raymundo/richard-branson-young-entrepeneurs.html",
+  "args": [
+   "--print",
+   "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(original_url)s"
+  ]
+ },
+ {
+  "url": "https://www.inc.com/video/nokey.html",
+  "args": [
+   "-j"
+  ]
+ },
+ {
+  "url": "https://www.inc.com/video/none.html",
+  "args": [
+   "-j"
+  ]
+ }
+]
