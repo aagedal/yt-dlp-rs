@@ -459,6 +459,50 @@ formats (`m3u8_native` for HLS; `.mp3.NNNk` URLs give the ABR/TBR). Format
 responses whose body is not empty but fails to parse remain explicit native
 errors, since this port does not reproduce Python's `JSONDecodeError` text.
 
+SVT Play and Öppet arkiv videos (`svtplay.se`/`oppetarkiv.se`
+`/video|klipp|kanaler/ID[...?modalId=|id=SVT_ID]`, Barnplay
+`svt.se/barnkanalen/barnplay/SLUG/SVT_ID`) follow upstream `SVTPlayIE`: the
+page (non-fatal when the URL carries the SVT ID: an HTTP error is a warning
+and the page is empty), else its `URQL_DATA` store's
+`detailsPageByPath.smartStart.videoSvtId` (`Unable to extract json data` /
+`Unable to extract SVT ID` errors), and the `videoplayer-api/video/ID` JSON
+through `SVTBaseIE._extract_video`: each `videoReferences` entry
+(`playerType` or `format` as the ID) as non-fatal HLS (`mp4`, master
+playlist only, `m3u8` protocol for live/simulcast videos) or DASH formats or
+a plain format; manifest subtitles merged without duplicate URLs, then
+`subtitles`/`subtitleReferences` tracks (`sv` by default, `vtt` for `.m3u8`
+URLs), with `text-open` tracks moved to `LANG-forced`; the Sweden-only geo
+error when no format is found and `geoBlockedSweden` is set; title (else the
+episode, else the series, else the OpenGraph title without its `| ...`
+suffix, upstream's `TypeError` text when missing), series, season/episode
+numbers, `validFrom` timestamp, duration, age limit and `is_live`, with the
+OpenGraph description and thumbnail (a warning when missing). `svt:ID`
+pseudo-URLs reproduce pinned upstream's failure (its non-fatal page request
+raises `Unable to handle request: Unsupported url scheme: "svt" (urllib)`,
+the handler list of the capture environment), which also makes resolved
+series entries fail. `f4m` video references are explicit native errors.
+
+SVT Play series (`svtplay.se/SLUG[?...tab=SEASON_ID]`, not an `SVTPlayIE`
+URL) follow upstream `SVTSeriesIE`: the `contento/graphql` listable query
+(`Downloading series page`, the query encoded like `urlencode`), every (or the
+selected season's) episode `videoSvtId` as an `svt:ID` `url` result for
+`svt:play`, and the playlist ID (the season ID, else the series ID), title
+(`NAME - SEASON`, else the season ID) and long (else short) description.
+Missing `data`, `listablesBySlug` and `associatedContent` keys are upstream's
+`KeyError`; other unexpected shapes are explicit native errors.
+
+svt.se articles (`svt.se/.../SLUG`, not an `SVTPlayIE` URL) follow upstream
+`SVTPageIE`: the OpenGraph title (a warning when missing), the page's
+`urqlState` JSON (fatal), the first `data` JSON string's `page.topMedia` and
+`page.body[].video` `svtId`s, each `api.svt.se/video/ID` JSON through
+`_extract_video` with the page title, as a playlist. Upstream iterates the
+IDs as a Python `set` (hash order); this port keeps their first-seen page
+order, so only single-video ordering is compared. The live svt.se site no
+longer serves `urqlState` (upstream's extractor fails there too); its
+fixtures follow the upstream code's shapes. `tests/fixtures/sites/svt/` is
+compared with pinned upstream output (the video CDN is geo-blocked outside
+Sweden, so its manifests are constructed).
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file

@@ -1,0 +1,152 @@
+{
+ "routes": [
+  {
+   "url": "https://www.svtplay.se/video/eXYgwZb/sverige-och-kriget/1-utbrottet",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.svtplay.se/video/nostart",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nostart.html"
+  },
+  {
+   "url": "https://www.oppetarkiv.se/video/nostore",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "nostore.html"
+  },
+  {
+   "url": "https://www.svt.se/barnkanalen/barnplay/kar/8zVbDPA/",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "barnplay.html"
+  },
+  {
+   "url": "https://api.svt.se/videoplayer-api/video/ePBvGRq",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video.json"
+  },
+  {
+   "url": "https://api.svt.se/videoplayer-api/video/8zVbDPA",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "video2.json"
+  },
+  {
+   "url": "https://api.svt.se/videoplayer-api/video/ch-svt1",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "live.json"
+  },
+  {
+   "url": "https://api.svt.se/videoplayer-api/video/geoOnly",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "geo.json"
+  },
+  {
+   "url": "https://api.svt.se/videoplayer-api/video/noVideo",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "empty.json"
+  },
+  {
+   "url": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/hls-ts-full.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/hls-ts-avc.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  },
+  {
+   "url": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/dash-avc.mpd",
+   "headers": {
+    "Content-Type": "application/dash+xml"
+   },
+   "body_file": "manifest.mpd"
+  },
+  {
+   "url": "https://svt-live.akamaized.net/svt1/live.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "live.m3u8"
+  },
+  {
+   "url": "https://svt-vod-3p.akamaized.net/geo/hls.m3u8",
+   "status": 403,
+   "headers": {
+    "Content-Type": "text/html"
+   },
+   "body": "<H1>Access Denied</H1>"
+  },
+  {
+   "url": "https://api.svt.se/contento/graphql?query=%7B%0A++listablesBySlug%28slugs%3A+%5B%22rederiet%22%5D%29+%7B%0A++++associatedContent%28include%3A+%5BproductionPeriod%2C+season%5D%29+%7B%0A++++++items+%7B%0A++++++++item+%7B%0A++++++++++...+on+Episode+%7B%0A++++++++++++videoSvtId%0A++++++++++%7D%0A++++++++%7D%0A++++++%7D%0A++++++id%0A++++++name%0A++++%7D%0A++++id%0A++++longDescription%0A++++name%0A++++shortDescription%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "series.json"
+  },
+  {
+   "url": "https://api.svt.se/contento/graphql?query=%7B%0A++listablesBySlug%28slugs%3A+%5B%22tiny%22%5D%29+%7B%0A++++associatedContent%28include%3A+%5BproductionPeriod%2C+season%5D%29+%7B%0A++++++items+%7B%0A++++++++item+%7B%0A++++++++++...+on+Episode+%7B%0A++++++++++++videoSvtId%0A++++++++++%7D%0A++++++++%7D%0A++++++%7D%0A++++++id%0A++++++name%0A++++%7D%0A++++id%0A++++longDescription%0A++++name%0A++++shortDescription%0A++%7D%0A%7D",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "tiny.json"
+  },
+  {
+   "url": "https://www.svt.se/nyheter/lokalt/skane/forsvarsmakten-om-trafikkaoset",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "article.html"
+  },
+  {
+   "url": "https://www.svt.se/nyheter/utan-video",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body_file": "article2.html"
+  },
+  {
+   "url": "https://www.svt.se/sport/ingen-data",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><head><meta property=\"og:title\" content=\"Ingen data\"/></head></html>"
+  },
+  {
+   "url": "https://api.svt.se/video/jXvk42E",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "article_video.json"
+  },
+  {
+   "url": "https://svt-vod-8m.akamaized.net/d0/world/20240104/318a109c-6653-4e8b-9b11-f22073a10d33/hls-ts-avc.m3u8",
+   "headers": {
+    "Content-Type": "application/vnd.apple.mpegurl"
+   },
+   "body_file": "master.m3u8"
+  }
+ ]
+}

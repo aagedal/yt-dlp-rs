@@ -1,0 +1,22 @@
+[
+ {"url": "https://www.svtplay.se/video/eXYgwZb/sverige-och-kriget/1-utbrottet", "args": ["-j"]},
+ {"url": "https://www.svtplay.se/video/eXYgwZb/sverige-och-kriget/1-utbrottet", "args": ["--print", "%(id)s|%(title)s|%(ext)s|%(format_id)s|%(upload_date)s|%(duration)s|%(age_limit)s|%(series)s|%(episode)s"]},
+ {"url": "svt:ePBvGRq", "args": ["-j"]},
+ {"url": "https://www.svtplay.se/video/30479064/husdrommar/husdrommar-sasong-8-designdrommar-i-stenungsund?modalId=8zVbDPA", "args": ["-j"]},
+ {"url": "https://www.svt.se/barnkanalen/barnplay/kar/8zVbDPA/", "args": ["-j"]},
+ {"url": "https://www.svtplay.se/kanaler/svt1?id=ch-svt1", "args": ["--print", "%(id)s|%(is_live)s|%(live_status)s|%(protocol)s|%(format_id)s|%(ext)s|%(series)s|%(age_limit)s|%(duration)s|%(timestamp)s"]},
+ {"url": "https://www.oppetarkiv.se/video/5219710/trollflojten?modalId=geoOnly", "args": ["-j"]},
+ {"url": "https://www.svt.se/barnkanalen/barnplay/kar/geoOnly/", "args": ["-j"]},
+ {"url": "https://www.svtplay.se/klipp/1/x?modalId=noVideo", "args": ["-j"]},
+ {"url": "https://www.svtplay.se/video/1?modalId=missing", "args": ["-j"]},
+ {"url": "https://www.svtplay.se/video/nostart", "args": ["-j"]},
+ {"url": "https://www.oppetarkiv.se/video/nostore", "args": ["-j"]},
+ {"url": "https://www.svtplay.se/rederiet", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.svtplay.se/rederiet?tab=season-2-jpmQYgn", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.svtplay.se/rederiet?tab=season-9-gone", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.svtplay.se/tiny", "args": ["-J"]},
+ {"url": "https://www.svtplay.se/tiny?tab=season-1-tiny", "args": ["-J", "--flat-playlist"]},
+ {"url": "https://www.svt.se/nyheter/lokalt/skane/forsvarsmakten-om-trafikkaoset", "args": ["-J"]},
+ {"url": "https://www.svt.se/nyheter/utan-video", "args": ["-J"]},
+ {"url": "https://www.svt.se/sport/ingen-data", "args": ["-J"]}
+]

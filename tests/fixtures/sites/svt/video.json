@@ -1,0 +1,70 @@
+{
+ "svtId": "ePBvGRq",
+ "programVersionId": "1410491-001A",
+ "contentDuration": 3585,
+ "blockedForChildren": false,
+ "live": false,
+ "liveStatus": null,
+ "hasVodReferences": true,
+ "programTitle": "Sverige och kriget",
+ "episodeTitle": "1. Utbrottet",
+ "rights": {
+  "preventExternalEmbed": false,
+  "validFrom": "2025-05-11T02:00:00+02:00",
+  "validTo": "2027-05-11T23:59:59+02:00",
+  "drmCopyProtection": false,
+  "blockedForMobile": false,
+  "geoBlockedSweden": true,
+  "subtitleType": "selectable"
+ },
+ "videoReferences": [
+  {
+   "url": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/hls-ts-full.m3u8",
+   "resolve": "https://switcher.cdn.svt.se/resolve/f12a2b4d-64eb-4064-8428-e2251cb642d6/hls-ts-full.m3u8",
+   "redirect": "https://switcher.cdn.svt.se/redirect/f12a2b4d-64eb-4064-8428-e2251cb642d6/hls-ts-full.m3u8",
+   "format": "hls-ts-full"
+  },
+  {
+   "url": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/dash-avc.mpd",
+   "resolve": "https://switcher.cdn.svt.se/resolve/f12a2b4d-64eb-4064-8428-e2251cb642d6/dash-avc.mpd",
+   "redirect": "https://switcher.cdn.svt.se/redirect/f12a2b4d-64eb-4064-8428-e2251cb642d6/dash-avc.mpd",
+   "format": "dash-avc"
+  },
+  {
+   "url": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/dash-avc.mpd",
+   "resolve": "https://switcher.cdn.svt.se/resolve/f12a2b4d-64eb-4064-8428-e2251cb642d6/dash-avc.mpd",
+   "redirect": "https://switcher.cdn.svt.se/redirect/f12a2b4d-64eb-4064-8428-e2251cb642d6/dash-avc.mpd",
+   "format": "dash"
+  },
+  {
+   "url": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/hls-ts-avc.m3u8",
+   "resolve": "https://switcher.cdn.svt.se/resolve/f12a2b4d-64eb-4064-8428-e2251cb642d6/hls-ts-avc.m3u8",
+   "redirect": "https://switcher.cdn.svt.se/redirect/f12a2b4d-64eb-4064-8428-e2251cb642d6/hls-ts-avc.m3u8",
+   "format": "hls"
+  }
+ ],
+ "subtitleReferences": [
+  {
+   "url": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/text/text-closed.vtt",
+   "format": "webvtt",
+   "language": "sv",
+   "languageName": "Svenska",
+   "languageDescription": "svenska undertexter",
+   "type": "caption-sdh",
+   "label": "Svenska (allt tal)"
+  },
+  {
+   "url": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/text/text-open.vtt",
+   "format": "webvtt",
+   "language": "sv",
+   "languageName": "Svenska",
+   "languageDescription": "svenska undertexter",
+   "type": "subtitle",
+   "label": "Svenska"
+  }
+ ],
+ "uhd": false,
+ "liveManifestExists": null,
+ "mergeableVariants": true,
+ "firstFrame": "https://svt-vod-3p.akamaized.net/d0/se/20250516/f12a2b4d-64eb-4064-8428-e2251cb642d6/PG-1410491-001A-SVERIGEOCHKRIG-05_thumb00.jpg"
+}

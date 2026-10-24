@@ -2072,6 +2072,18 @@
       "scope": "StreetVoiceIE v4 song API metadata and non-fatal POSTed HLS/HTTP/original file URLs as mp3 formats, with KeyError, HTTP warning and empty-body warning paths compared with pinned upstream output through the fixture proxy; other unparsable format responses remain explicit native errors"
     },
     {
+      "name": "svt",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/svt.py"
+      ],
+      "rust": [
+        "src/extractor/svt.rs",
+        "tests/fixtures/sites/svt/"
+      ],
+      "scope": "SVTPlayIE (svtplay.se/oppetarkiv.se video/klipp/kanaler pages via URQL_DATA smartStart, modalId/id queries and Barnplay IDs with non-fatal page warnings; videoplayer-api SVTBaseIE._extract_video HLS/DASH/plain videoReferences, live m3u8 protocol, deduplicated manifest subtitles plus subtitleReferences with the -forced fixup, Sweden geo error, title/series/episode/season/timestamp/duration/age_limit/is_live metadata and OpenGraph title fallback, description and thumbnail; svt: pseudo-URLs reproduce upstream's Unsupported url scheme failure), SVTSeriesIE (contento GraphQL seasons as svt:ID url results with season selection, title and description) and SVTPageIE (urqlState topMedia/body svtIds through api.svt.se/video, page title; first-seen order instead of upstream's set order). f4m references are explicit native errors. Compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "sztvhu",
       "status": "partial",
       "upstream": [
