@@ -1,0 +1,29 @@
+{
+ "routes": [
+  {
+   "url": "https://www.iltalehti.fi/ulkomaat/a/9fbd067f-94e4-46cd-8748-9d958eb4dae2",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body_file": "page.html"
+  },
+  {
+   "url": "https://www.iltalehti.fi/politiikka/a/1ce49d85-1670-428b-8db8-d2479b9950a4",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html><body><script>window.App = {\"state\": {\"articles\": [{\"items\": {\"main_media\": {\"properties\": {\"provider\": \"image\"}}, \"body\": []}}]}}</script></body></html>"
+  },
+  {
+   "url": "https://www.iltalehti.fi/kotimaa/a/2022",
+   "headers": {"Content-Type": "text/html; charset=utf-8"},
+   "body": "<html><body><p>No app state</p></body></html>"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/gYjjaf1L",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"title\": \"Sensuroimaton P\\u00e4iv\\u00e4rinta\", \"playlist\": [{\"title\": \"Sensuroimaton P\\u00e4iv\\u00e4rinta\", \"mediaid\": \"gYjjaf1L\", \"description\": \"\", \"duration\": 2089, \"pubdate\": 1664360878, \"image\": \"https://cdn.jwplayer.com/v2/media/gYjjaf1L/poster.jpg\", \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/gYjjaf1L-1.mp4\", \"type\": \"video/mp4\", \"height\": 720, \"width\": 1280, \"label\": \"720p\"}]}]}"
+  },
+  {
+   "url": "https://cdn.jwplayer.com/v2/media/18R6zkLi",
+   "headers": {"Content-Type": "application/json"},
+   "body": "{\"title\": \"Nord Stream\", \"playlist\": [{\"title\": \"Nord Stream\", \"mediaid\": \"18R6zkLi\", \"duration\": 165, \"pubdate\": 1664435867, \"sources\": [{\"file\": \"https://cdn.jwplayer.com/videos/18R6zkLi-1.mp4\", \"type\": \"video/mp4\", \"height\": 360, \"width\": 640, \"label\": \"360p\"}]}]}"
+  }
+ ]
+}

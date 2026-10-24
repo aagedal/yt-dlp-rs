@@ -10,6 +10,7 @@ mod bitmovin;
 mod blogger;
 mod bluesky;
 mod breitbart;
+mod bundesliga;
 mod cgtn;
 mod cjsw;
 mod coub;
@@ -44,9 +45,11 @@ mod hrefli;
 pub(crate) mod html5;
 mod huajiao;
 mod hypem;
+mod iltalehti;
 mod imgur;
 mod instagram;
 pub(crate) mod ism;
+mod israelnationalnews;
 mod jove;
 mod json_ld;
 mod jwplatform;
@@ -68,6 +71,7 @@ mod movingimage;
 mod niconico;
 mod nobelprize;
 mod odnoklassniki;
+mod onefootball;
 mod oneplace;
 mod parlview;
 mod peertv;
@@ -127,6 +131,7 @@ pub use bitmovin::{Bitmovin, suitable as bitmovin_suitable};
 pub use blogger::{Blogger, suitable as blogger_suitable};
 pub use bluesky::{Bluesky, suitable as bluesky_suitable};
 pub use breitbart::{BreitBart, suitable as breitbart_suitable};
+pub use bundesliga::{Bundesliga, suitable as bundesliga_suitable};
 pub use cgtn::{Cgtn, suitable as cgtn_suitable};
 pub use cjsw::{Cjsw, suitable as cjsw_suitable};
 pub use coub::{Coub, suitable as coub_suitable};
@@ -165,6 +170,7 @@ pub use hrefli::{HrefLiRedirect, suitable as hrefli_suitable};
 pub use html5::GenericHttp;
 pub use huajiao::{Huajiao, suitable as huajiao_suitable};
 pub use hypem::{Hypem, suitable as hypem_suitable};
+pub use iltalehti::{Iltalehti, suitable as iltalehti_suitable};
 pub use imgur::{
     Imgur, ImgurAlbum, ImgurGallery, album_suitable as imgur_album_suitable,
     gallery_suitable as imgur_gallery_suitable, suitable as imgur_suitable,
@@ -176,6 +182,7 @@ pub use instagram::{
     suitable as instagram_suitable, tag_suitable as instagram_tag_suitable,
     user_suitable as instagram_user_suitable,
 };
+pub use israelnationalnews::{IsraelNationalNews, suitable as israelnationalnews_suitable};
 pub use jove::{Jove, suitable as jove_suitable};
 pub use jwplatform::{JwPlatform, suitable as jwplatform_suitable};
 pub use kankanews::{KankaNews, suitable as kankanews_suitable};
@@ -198,6 +205,7 @@ pub use movingimage::{MovingImage, suitable as movingimage_suitable};
 pub use niconico::{Niconico, suitable as niconico_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use odnoklassniki::{Odnoklassniki, suitable as odnoklassniki_suitable};
+pub use onefootball::{OneFootball, suitable as onefootball_suitable};
 pub use oneplace::{OnePlacePodcast, suitable as oneplace_suitable};
 pub use parlview::{Parlview, suitable as parlview_suitable};
 pub use peertv::{PeerTv, suitable as peertv_suitable};

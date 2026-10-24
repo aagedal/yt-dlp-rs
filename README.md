@@ -120,7 +120,7 @@ Supported today:
   player XML, FC Zenit videos through the player API, BehindKink posts
   QingTing programs, Radio ZET podcasts, OnePlace episodes, SzTV videos, Photobucket media and
   This American Life episodes through their pages, JW Platform media through
-  the media API (and The Intercept posts and Spiegel articles that embed it), 23video players
+  the media API (and The Intercept posts, Spiegel articles, OneFootball videos, Bundesliga videos and Iltalehti articles that embed it), Israel National News articles (as playlists of their YouTube embeds), 23video players
   (and Filmweb articles that embed them), FILMARCHIV ON videos, Vocaroo recordings, AudioBoom posts,
   Tweakers videos, Angel episodes, Blogger videos (and their embeds), Nobel
   Prize media, Bild clips, Masters videos, Sen videos, Kankanews videos, Kommunetv archives,

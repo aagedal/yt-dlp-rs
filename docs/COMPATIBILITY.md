@@ -492,6 +492,30 @@ else upstream's `Unable to extract media id`) as a `url_transparent` result of
 `jwplatform:MEDIA` overlaid with the URL ID as `display_id` and the
 `og:title` when present.
 
+OneFootball videos (`onefootball.com/LL/video/SLUG-ID`) follow upstream
+`OneFootballIE`: the page's fatal `cdn.jwplayer.com/manifests/ID.m3u8` URL as
+a `url_transparent` result (extracted by the JW Platform extractor) overlaid
+with `_old_archive_ids` and the non-fatal JSON-LD fields without `url`; a page
+without JSON-LD warns `unable to extract JSON-LD` like upstream.
+
+Bundesliga videos (`bundesliga.com/LL/bundesliga/videos[/...]?vid=ID`) follow
+upstream `BundesligaIE`: a `url` result of `jwplatform:ID`, extracted by the
+JW Platform extractor (so its `webpage_url` is the `jwplatform:` URL).
+
+Iltalehti articles (`iltalehti.fi/SECTION/a/ID`, with upstream's
+single-character ID) follow upstream `IltalehtiIE`: the fatal `window.App`
+state through `js_to_json`, the articles' main media and body properties with
+`provider` `jwplayer` as a playlist of unique `jwplatform:ID` results
+(extracted by the JW Platform extractor), titled by the first
+`canonical_title` (else `None`). App state that does not parse remains an
+explicit native error.
+
+Israel National News articles (`israelnationalnews.com/news/ID`) follow
+upstream `IsraelNationalNewsIE`: the `Generic/NewAPI/Item` JSON's `Content2`
+blocks' `content` `attrs.src` URLs as a playlist of unique `Youtube` URL
+results (resolved by the YouTube extractor); none is upstream's expected
+`This article does not have any videos`.
+
 This American Life episodes (`thisamericanlife.org/radio-archives/episode/ID`,
 `play_full.php?play=ID`) follow upstream `ThisAmericanLifeIE`: the episode
 page's fatal `twitter:title`, description meta and OpenGraph image, with the

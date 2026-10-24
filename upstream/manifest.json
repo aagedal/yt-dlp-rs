@@ -341,6 +341,18 @@
       "scope": "BreitBartIE JW Player manifest as fatal HLS formats, generic title, OpenGraph warnings and RTA age limit compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "bundesliga",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/bundesliga.py"
+      ],
+      "rust": [
+        "src/extractor/bundesliga.rs",
+        "tests/fixtures/sites/bundesliga/"
+      ],
+      "scope": "BundesligaIE vid query as a jwplatform: url result followed by the JWPlatform extractor compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "cgtn",
       "status": "partial",
       "upstream": [
@@ -678,6 +690,18 @@
       "scope": "HypemIE _VALID_URL, displayList-data JSON (clean_html before parsing), serve/source JSON URL as an untyped mp3 result, error messages, compared with pinned upstream output through the fixture proxy"
     },
     {
+      "name": "iltalehti",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/iltalehti.py"
+      ],
+      "rust": [
+        "src/extractor/iltalehti.rs",
+        "tests/fixtures/sites/iltalehti/"
+      ],
+      "scope": "IltalehtiIE window.App state (js_to_json), main media and body jwplayer items as a playlist of jwplatform: results with the canonical title compared with pinned upstream output through the fixture proxy"
+    },
+    {
       "name": "imgur",
       "status": "partial",
       "upstream": [
@@ -700,6 +724,18 @@
         "tests/fixtures/sites/instagram/"
       ],
       "scope": "InstagramIE without impersonation: logged-out LSD session token, accessibility check warnings/errors and post page prefetched media; logged-in (sessionid cookie) media info API with the stale-cookie fallback, app_id extractor argument and --write-comments comments API; _extract_product formats, inline DASH manifests (direct BaseURL representations), thumbnails, metadata, comments and carousel playlists; InstagramIOSIE; InstagramStoryIE (stories/highlights page user and reels_media API, --no-playlist); InstagramTagIE and InstagramUserIE (broken upstream) sharedData and GIS-signed GraphQL timeline pages; no GraphQL post query (needs impersonation), embeds or comments of logged-in carousels; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "israelnationalnews",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/israelnationalnews.py"
+      ],
+      "rust": [
+        "src/extractor/israelnationalnews.rs",
+        "tests/fixtures/sites/israelnationalnews/"
+      ],
+      "scope": "IsraelNationalNewsIE article API Content2 embed sources as a playlist of Youtube url results and the no-videos error compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "jove",
@@ -919,6 +955,18 @@
         "tests/fixtures/sites/odnoklassniki/"
       ],
       "scope": "OdnoklassnikiIE player options, flashvars or POSTed metadata, progressive/HLS/DASH/RTMP formats, subtitles, errors and url/url_transparent results; no embedded DASH manifests; compared with pinned upstream output through the fixture proxy"
+    },
+    {
+      "name": "onefootball",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/onefootball.py"
+      ],
+      "rust": [
+        "src/extractor/onefootball.rs",
+        "tests/fixtures/sites/onefootball/"
+      ],
+      "scope": "OneFootballIE JW Player manifest URL as a url_transparent JWPlatform result with the old archive ID and non-fatal JSON-LD fields compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "oneplace",

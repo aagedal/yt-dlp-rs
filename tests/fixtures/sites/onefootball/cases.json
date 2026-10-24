@@ -1,0 +1,6 @@
+[
+ {"url": "https://onefootball.com/en/video/highlights-fc-zuerich-3-3-fc-basel-34012334", "args": ["-j"]},
+ {"url": "https://onefootball.com/en/video/klopp-fumes-at-var-decisions-in-west-ham-defeat-34041020", "args": ["-j"]},
+ {"url": "https://onefootball.com/en/video/klopp-fumes-at-var-decisions-in-west-ham-defeat-34041020", "args": ["--print", "%(id)s|%(title)s|%(extractor)s|%(webpage_url)s|%(_old_archive_ids)s|%(tags)s"]},
+ {"url": "https://onefootball.com/de/video/no-player-here-1", "args": ["-j"]}
+]

@@ -1,0 +1,6 @@
+[
+ {"url": "https://www.israelnationalnews.com/news/354520", "args": ["--flat-playlist", "-J"]},
+ {"url": "https://www.israelnationalnews.com/news/354520", "args": ["--flat-playlist", "--print", "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s"]},
+ {"url": "https://www.israelnationalnews.com/news/1", "args": ["-J"]},
+ {"url": "https://www.israelnationalnews.com/news/2/some-slug", "args": ["-J"]}
+]

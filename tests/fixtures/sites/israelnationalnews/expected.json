@@ -1,0 +1,61 @@
+{
+ "upstream_commit": "6ccd977303412151ee23352c6257dd658ffc1987",
+ "cases": [
+  {
+   "url": "https://www.israelnationalnews.com/news/354520",
+   "args": [
+    "--flat-playlist",
+    "-J"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"354520\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/embed/jA84wQhVvg8\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Youtube\", \"_type\": \"url\", \"url\": \"https://www.youtube.com/embed/BaW_jenozKc\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.israelnationalnews.com/news/354520\", \"original_url\": \"https://www.israelnationalnews.com/news/354520\", \"webpage_url_basename\": \"354520\", \"webpage_url_domain\": \"israelnationalnews.com\", \"extractor\": \"IsraelNationalNews\", \"extractor_key\": \"IsraelNationalNews\", \"release_year\": null, \"playlist_count\": 2, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.israelnationalnews.com/news/354520",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(id)s|%(url)s|%(ie_key)s|%(playlist_id)s|%(playlist_index)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "jA84wQhVvg8|https://www.youtube.com/embed/jA84wQhVvg8|Youtube|354520|1",
+    "BaW_jenozKc|https://www.youtube.com/embed/BaW_jenozKc|Youtube|354520|2"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.israelnationalnews.com/news/1",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [IsraelNationalNews] 1: This article does not have any videos"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.israelnationalnews.com/news/2/some-slug",
+   "args": [
+    "-J"
+   ],
+   "exit": 1,
+   "stdout": [
+    "null"
+   ],
+   "stderr": [
+    "ERROR: [IsraelNationalNews] 2: This article does not have any videos"
+   ],
+   "files": {}
+  }
+ ]
+}
