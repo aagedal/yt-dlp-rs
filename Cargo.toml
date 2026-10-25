@@ -1,6 +1,6 @@
 [package]
 name = "yt-dlp-rs"
-version = "0.3.0-beta.1"
+version = "0.4.0-beta.1"
 edition = "2024"
 license = "Unlicense"
 description = "An incremental, native Rust adaptation of yt-dlp"
