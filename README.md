@@ -181,7 +181,19 @@ Supported today:
   the selection needs them; a channel URL without a tab is a playlist of its
   tab playlists, as upstream. `ytsearch[N|all]:QUERY` and `/results?search_query=`
   searches work like upstream's `youtube:search`, and `/clip/` URLs download
-  their section like upstream's `youtube:clip`. `--write-comments`
+  their section like upstream's `youtube:clip`. `--download-sections` of
+  adaptive HTTPS formats is a port extension: instead of FFmpeg reading the
+  whole URLs (about twice playback speed), the format's `initRange`/`indexRange`
+  (MP4 `sidx` or WebM `Cues`) select the segments covering the section, which
+  are fetched in parallel 10 MiB ranges and cut locally with the same FFmpeg
+  arguments (checked packet-identical to upstream's output for MP4 and WebM).
+  Formats without a usable index, servers without ranged responses and
+  `--downloader ffmpeg` keep upstream's behavior. `--section-timecode`
+  (also an extension) gives a section the timecode its first frame has in the
+  whole video (frame N is N at the nominal rate, non-drop-frame; the frame
+  rate comes from ffprobe), so clips line up with full downloads in editors.
+  It needs an MP4/MOV result: WebM/MKV sections are warned about unless
+  `--remux-video mp4` (or `--recode-video`) converts them. `--write-comments`
   extracts comments and replies like upstream. Live chat, MHTML storyboards,
   post-live videos, `--live-from-start`, multifeed videos, `--mark-watched`,
   the `youtube`/`youtubetab` `--extractor-args` (including a configured

@@ -363,6 +363,7 @@ pub(crate) fn from_response_with(
         } => {
             // A media playlist is returned as one format (per section).
             let format = VideoFormat {
+                byte_index: None,
                 http_headers: None,
                 extra: hls_extra(None, "hls-media"),
                 protocol: Some("m3u8_native".into()),
@@ -495,6 +496,7 @@ pub(crate) fn from_response_with(
                 let codecs = variant.codecs.unwrap_or_default();
                 let known = |codec: String| (!codec.is_empty()).then_some(codec);
                 let format = VideoFormat {
+                    byte_index: None,
                     http_headers: None,
                     extra: hls_extra(Some(&manifest_url), "hls-variant"),
                     protocol: Some("m3u8_native".into()),
@@ -577,6 +579,7 @@ pub(crate) fn from_response_with(
                     ));
                 }
                 let format = VideoFormat {
+                    byte_index: None,
                     http_headers: None,
                     extra: hls_extra(Some(&manifest_url), "hls-rendition"),
                     protocol: Some("m3u8_native".into()),

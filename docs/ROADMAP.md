@@ -50,6 +50,13 @@ tractable for future agents.
 - `src/rtmp_fd.rs` and `src/websocket_fd.rs`: upstream's RtmpFD (`rtmpdump`) and
   WebSocketFragmentFD (a websocket client piped into FFmpegFD's stdin, reusable by
   the unported niconico/FC2 live downloaders).
+- `src/media_index.rs`, `src/indexed_fd.rs`: port extension for `--download-sections`
+  of indexed single-file streams (YouTube `initRange`/`indexRange`): parse the MP4
+  `sidx`/WebM `Cues`, fetch only the section's segments, then run `FFmpegFD`'s
+  arguments over local files (`ffmpeg_fd::LocalInput`, `-seek_timestamp 1`).
+- `src/section_timecode.rs`: port extension `--section-timecode`: ffprobe's frame
+  rate and the first shown frame (edit-list start for MP4/MOV cuts, the sought
+  keyframe otherwise) become the cut's `-timecode`.
 - `src/playlist.rs`: playlist item/range parsing, ordered index deduplication and fully extracted entry selection.
 - `src/subtitles.rs`: ordered subtitle metadata, language/format selection and sidecar name planning; `src/output/subtitles.rs` renders inventories.
 - `src/subtitle_convert.rs`: subtitle conversion publication/retention; nested

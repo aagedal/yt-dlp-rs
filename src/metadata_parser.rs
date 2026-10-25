@@ -556,6 +556,22 @@ pub fn set_field(info: &mut VideoInfo, key: &str, value: Value) {
     if let Ok(mut updated) = serde_json::from_value::<VideoInfo>(Value::Object(map)) {
         updated.last_playlist_index = last_playlist_index;
         updated.extra = std::mem::take(&mut extra);
+        // Format fields outside the info dict (`byte_index`) survive unless
+        // `formats` itself was set.
+        if key != "formats" {
+            for (format, previous) in updated.formats.iter_mut().zip(&info.formats) {
+                format.byte_index = previous.byte_index;
+            }
+        }
+        if key != "requested_formats" {
+            for (format, previous) in updated
+                .requested_formats
+                .iter_mut()
+                .zip(&info.requested_formats)
+            {
+                format.byte_index = previous.byte_index;
+            }
+        }
         let represented = serde_json::to_value(&updated)
             .ok()
             .and_then(|dict| dict.get(key).cloned())

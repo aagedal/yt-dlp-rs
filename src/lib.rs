@@ -33,6 +33,7 @@ mod html;
 mod html_elements;
 mod http;
 pub mod impersonate;
+mod indexed_fd;
 mod info;
 mod info_json;
 mod info_order;
@@ -45,6 +46,7 @@ mod live_dash;
 pub mod manifest_args;
 mod match_filter;
 mod md5;
+mod media_index;
 mod merge;
 pub mod metadata_parser;
 mod mhtml;
@@ -58,6 +60,7 @@ pub mod pp_args;
 mod retry;
 mod rtmp_fd;
 pub mod screen;
+mod section_timecode;
 pub mod sections;
 mod sha1;
 pub mod sponsorblock;
@@ -85,7 +88,7 @@ pub use extractor::YoutubeOptions;
 pub use format_sort::FormatSorter;
 pub use http::HttpOptions;
 pub use info::{
-    ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
+    ByteIndex, ByteRange, Chapter, DownloaderOptions, ExtractResult, Fragment, HlsAes128, Metadata,
     PlaylistInfo, PyNumber, StreamKind, Thumbnail, VideoFormat, VideoInfo,
 };
 pub use info::{COMPAT_FORMAT_SPEC, COMPAT_MANIFEST_FILESIZE_APPROX, NESTED_INDEX, PendingEntries};
@@ -137,6 +140,9 @@ pub struct YoutubeDl {
     extractors: Vec<Box<dyn Extractor>>,
     ffmpeg: Option<PathBuf>,
     ffprobe: Option<PathBuf>,
+    /// `--section-timecode` (port extension), with the remux/recode mapping
+    /// that decides the final container.
+    section_timecode: Option<Option<VideoOptions>>,
     merge_output_format: Option<Vec<String>>,
     /// `--video-multistreams`/`--audio-multistreams`.
     multistreams: (bool, bool),
@@ -784,6 +790,7 @@ impl YoutubeDl {
             downloaders: Default::default(),
             external_settings: Default::default(),
             ffprobe: None,
+            section_timecode: None,
             cookies: cookies.clone(),
             extractors: vec![
                 Box::new(extractor::YoutubeTab {
@@ -1719,6 +1726,32 @@ impl YoutubeDl {
     pub fn with_ffprobe(mut self, executable: impl Into<PathBuf>) -> Self {
         self.ffprobe = Some(executable.into());
         self
+    }
+
+    /// `--section-timecode` (port extension): give partial downloads the
+    /// timecode their first frame has in the whole video. `video` is the
+    /// `--remux-video`/`--recode-video` mapping applied afterwards; only
+    /// MP4/MOV results carry the timecode, others are warned about.
+    pub fn with_section_timecode(mut self, video: Option<VideoOptions>) -> Self {
+        self.section_timecode = Some(video);
+        self
+    }
+
+    /// The timecode settings for a download of `info`.
+    fn timecode_request(&self, info: &VideoInfo) -> Option<section_timecode::Request> {
+        let video = self.section_timecode.as_ref()?;
+        let final_ext = video
+            .as_ref()
+            .and_then(|video| video.plan(&info.ext).ok())
+            .filter(|plan| !plan.skip)
+            .map_or_else(|| info.ext.clone(), |plan| plan.extension);
+        let ffprobe = self.ffprobe.clone().or_else(|| {
+            self.ffmpeg
+                .as_ref()?
+                .parent()
+                .map(|dir| dir.join(format!("ffprobe{}", std::env::consts::EXE_SUFFIX)))
+        });
+        Some(section_timecode::Request { ffprobe, final_ext })
     }
 
     /// Upstream's `prefer_best` default (`best/bestvideo+bestaudio`, no
@@ -3350,11 +3383,51 @@ impl YoutubeDl {
                 cookies: &self.cookies,
                 proxy: self.proxy.as_deref(),
             };
+            // Indexed single-file streams fetch only the section's segments,
+            // unless `--downloader ffmpeg` names FFmpeg for them.
+            let ffmpeg_named = |protocol: &str| {
+                self.downloader_name(protocol)
+                    .is_some_and(|name| name.eq_ignore_ascii_case("ffmpeg"))
+            };
+            let named = if info.requested_formats.is_empty() {
+                ffmpeg_named(
+                    &info
+                        .protocol
+                        .clone()
+                        .unwrap_or_else(|| info.url.scheme().to_owned()),
+                )
+            } else {
+                info.requested_formats
+                    .iter()
+                    .any(|format| ffmpeg_named(&format.determine_protocol()))
+            };
+            let timecode = self.timecode_request(info);
+            if !named && indexed_fd::supported(info) {
+                let params = indexed_fd::Params {
+                    client: &self.client,
+                    ffmpeg,
+                    network: &network,
+                    settings: &self.ffmpeg_settings,
+                    chunk: self.http_chunk_size,
+                    timecode: timecode.as_ref(),
+                };
+                if let Some(size) = indexed_fd::download(
+                    &params,
+                    info,
+                    destination.as_ref(),
+                    &options,
+                    &mut callback,
+                )? {
+                    return Ok(size);
+                }
+            }
             return ffmpeg_fd::download(
                 ffmpeg,
                 &network,
                 &self.ffmpeg_settings,
                 info,
+                None,
+                timecode.as_ref(),
                 destination.as_ref(),
                 &options,
                 &mut callback,

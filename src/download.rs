@@ -1139,6 +1139,119 @@ fn chunked_attempt(
     }
 }
 
+/// One inclusive byte span of a resource, fetched like chunked `HttpFD`
+/// downloading: `bytes=START-END` requests of at most `chunk` bytes
+/// (randomized to 95-100%), each a matching `206`.
+pub(crate) struct ByteSpan<'a> {
+    pub url: &'a url::Url,
+    pub referrer: Option<&'a url::Url>,
+    pub start: u64,
+    pub end: u64,
+    pub chunk: u64,
+    pub rate_limit: Option<u64>,
+}
+
+/// Write `span` to `output`. Transient failures retry from the bytes already
+/// written; `progress` sees the bytes written so far and may cancel. Returns
+/// the resource's total length from `Content-Range`, when given.
+pub(crate) fn fetch_span(
+    client: &Client,
+    span: &ByteSpan<'_>,
+    options: &DownloadOptions,
+    output: &mut dyn Write,
+    progress: &mut dyn FnMut(u64) -> Result<()>,
+) -> Result<Option<u64>> {
+    let mut position = span.start;
+    let mut total = None;
+    let mut attempt = 0;
+    let mut limiter = RateLimit::new(span.rate_limit);
+    let mut blocks = Blocks::new();
+    while position <= span.end {
+        // The rest of a span shorter than a chunk is one request.
+        let end = if span.end - position < span.chunk {
+            span.end
+        } else {
+            let size = randint((span.chunk as f64 * 0.95) as u64, span.chunk).max(1);
+            span.end.min(position.saturating_add(size - 1))
+        };
+        let result = (|| -> std::result::Result<(), AttemptFailure> {
+            let mut request = client
+                .get(span.url.clone())
+                .header(ACCEPT_ENCODING, "identity")
+                .header(RANGE, format!("bytes={position}-{end}"));
+            if let Some(referrer) = span.referrer {
+                request = request.header(REFERER, referrer.as_str());
+            }
+            crate::screen::load_cookies().map_err(AttemptFailure::from)?;
+            let mut response = request
+                .send()
+                .inspect(|_| crate::screen::flush_traffic())
+                .map_err(Error::Http)
+                .and_then(crate::retry::check_response)
+                .map_err(AttemptFailure::request)?;
+            let range = (response.status() == reqwest::StatusCode::PARTIAL_CONTENT)
+                .then(|| content_range_span(&response))
+                .flatten()
+                .filter(|(start, range_end, _)| *start == position && *range_end == end)
+                .ok_or(Error::InvalidRangeResponse)?;
+            total = range.2;
+            loop {
+                let limit = end + 1 - position;
+                if limit == 0 {
+                    return Ok(());
+                }
+                let block = match blocks.read(&mut response, Some(limit)) {
+                    Ok([]) => {
+                        return Err(AttemptFailure::retry(Error::IncompleteDownload {
+                            expected: end + 1 - span.start,
+                            actual: position - span.start,
+                        }));
+                    }
+                    Ok(block) => block,
+                    Err(error) => return Err(AttemptFailure::retry(Error::Io(error))),
+                };
+                let count = block.len();
+                output.write_all(block)?;
+                position += count as u64;
+                limiter.consume(count);
+                blocks.finished(count);
+                progress(position - span.start)?;
+            }
+        })();
+        match result {
+            Ok(()) => attempt = 0,
+            Err(failure) if failure.retryable && attempt < options.retries => {
+                let delay = crate::retry::announce_retry(
+                    &failure.error,
+                    attempt,
+                    options.retries,
+                    None,
+                    options.retry_sleep.http,
+                )
+                .map_or_else(
+                    || crate::retry::delay(attempt, failure.retry_after),
+                    |delay| delay.max(failure.retry_after),
+                );
+                attempt += 1;
+                let started = Instant::now();
+                while started.elapsed() < delay {
+                    progress(position - span.start)?;
+                    std::thread::sleep(
+                        delay
+                            .saturating_sub(started.elapsed())
+                            .min(Duration::from_millis(100)),
+                    );
+                }
+            }
+            Err(failure) if failure.retryable => {
+                return Err(crate::retry::exhausted(failure.error, options.retries));
+            }
+            Err(failure) => return Err(failure.error),
+        }
+    }
+    Ok(total)
+}
+
 #[allow(clippy::too_many_arguments)]
 fn download_attempt(
     client: &Client,

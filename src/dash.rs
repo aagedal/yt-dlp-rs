@@ -1011,6 +1011,7 @@ pub(crate) fn parse_with_subtitles(
             }
             extra.insert("is_dash_periods".into(), true.into());
             formats.push(VideoFormat {
+                byte_index: None,
                 http_headers: None,
                 extra,
                 protocol: direct.is_none().then(|| "http_dash_segments".into()),

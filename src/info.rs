@@ -406,6 +406,19 @@ pub struct VideoFormat {
     /// Format keys this port does not model (loaded info JSON, `cookies`).
     #[serde(flatten, default)]
     pub extra: serde_json::Map<String, serde_json::Value>,
+    /// The single-file stream's segment index location (YouTube's
+    /// `initRange`/`indexRange`), for fast partial downloads. Not part of
+    /// the info dict.
+    #[serde(skip)]
+    pub byte_index: Option<ByteIndex>,
+}
+
+/// Inclusive byte ranges of a single-file stream's initialization and its
+/// segment index (MP4 `sidx` or WebM `Cues`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ByteIndex {
+    pub init: (u64, u64),
+    pub index: (u64, u64),
 }
 
 /// One upstream thumbnail dictionary.
@@ -1577,6 +1590,7 @@ mod tests {
     ) -> VideoFormat {
         // Like extracted formats, separate streams name their missing codec.
         VideoFormat {
+            byte_index: None,
             http_headers: None,
             extra: Default::default(),
             protocol: None,
