@@ -929,7 +929,7 @@
         "src/extractor/steam.rs",
         "tests/fixtures/sites/steam/"
       ],
-      "scope": "SteamIE age-check cookies, carousel data-props trailers as an eagerly extracted playlist (master-only HLS, DASH, duplicate removal, parse_resolution thumbnails), SteamCommunityIE YouTube follows and No video found, and SteamCommunityBroadcastIE live HLS with uploader fields compared with pinned upstream output through the fixture proxy"
+      "scope": "SteamIE age-check cookies, carousel data-props trailers as a lazily extracted playlist (pending entries processed as fetched) (master-only HLS, DASH, duplicate removal, parse_resolution thumbnails), SteamCommunityIE YouTube follows and No video found, and SteamCommunityBroadcastIE live HLS with uploader fields compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "tv2",

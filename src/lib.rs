@@ -1881,11 +1881,30 @@ impl YoutubeDl {
                 extractor::fetch_tiktok_pages
             } else if extractor::zdf_pending_state(&pending.state) {
                 extractor::fetch_zdf_pages
+            } else if extractor::steam_pending_state(&pending.state) {
+                extractor::fetch_steam_trailers
             } else {
                 extractor::fetch_youtube_tab_pages
             };
+            // Steam's generator yields extracted videos (not `url` entries),
+            // processed as they are fetched.
+            let resolved = extractor::steam_pending_state(&pending.state);
+            let before = playlist.entries.len();
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });
+            if resolved && playlist.entries.len() > before {
+                let mut fetched = ExtractResult::Playlist(PlaylistInfo {
+                    entries: playlist.entries.split_off(before),
+                    nested: Vec::new(),
+                    pending: None,
+                    extra: serde_json::Map::new(),
+                    ..playlist.clone()
+                });
+                self.process_result(&mut fetched)?;
+                if let ExtractResult::Playlist(fetched) = fetched {
+                    playlist.entries.extend(fetched.entries);
+                }
+            }
         }
         Ok(())
     }

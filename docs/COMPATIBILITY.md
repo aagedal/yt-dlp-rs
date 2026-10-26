@@ -2346,8 +2346,9 @@ element's `data-props` (app name and trailers with an `id`), each trailer's
 non-fatal master-only HLS and DASH manifests with duplicate formats removed
 (by URL, or by fragment URLs), poster/thumbnail thumbnails with
 `parse_resolution` sizes, as a playlist (`APP-MOVIE` IDs, `APP video MOVIE`
-titles, series fields). Upstream yields the trailers from a generator; they
-are extracted eagerly, so their manifest messages precede the playlist's.
+titles, series fields). Like upstream's generator, trailers are extracted as
+the playlist is processed (`--playlist-items` stops further manifest
+requests).
 `SteamCommunityIE` shared files follow the flashvars' `YOUTUBE_VIDEO_ID` (or
 the `movieFrame modal` element's ID) to the YouTube extractor, else
 `No video found`. `SteamCommunityBroadcastIE` broadcasts give the fatal

@@ -3,8 +3,8 @@
 //! age-check cookies) as a playlist of HLS/DASH trailers, a community file's
 //! YouTube video as a `url` result, and a community broadcast's live HLS.
 //!
-//! Upstream yields the app's trailers from a generator; they are extracted
-//! eagerly here (their manifest requests precede the playlist's messages).
+//! The app's trailers are pending entries, extracted as the playlist is
+//! processed like upstream's generator.
 use super::{Extractor, dict_info, download_json, download_webpage};
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
@@ -167,107 +167,21 @@ impl Extractor for Steam {
             .and_then(|props| props.get("appName"))
             .and_then(Value::as_str)
             .map(crate::html::clean_html);
-        let trailers = data_props
+        let trailers: Vec<Value> = data_props
             .as_ref()
             .and_then(|props| props.get("trailers"))
             .and_then(Value::as_array)
             .cloned()
             .unwrap_or_default();
-        let mut entries = Vec::new();
-        for trailer in &trailers {
-            // `lambda _, v: str_or_none(v['id'])`.
-            let Some(movie_id) = trailer
-                .as_object()
-                .and_then(|trailer| str_or_none(trailer.get("id")))
-                .filter(|id| !id.is_empty())
-            else {
-                continue;
-            };
-            let mut thumbnails = Vec::new();
-            for key in ["poster", "thumbnail"] {
-                let Some(thumbnail) = trailer
-                    .get(key)
-                    .and_then(Value::as_str)
-                    .and_then(super::json_ld::url_or_none)
-                else {
-                    continue;
-                };
-                let mut entry = Map::new();
-                entry.insert("url".into(), thumbnail.clone().into());
-                let (width, height) = super::html5::parse_resolution(&url_basename(&thumbnail));
-                if let Some(width) = width {
-                    entry.insert("width".into(), width.into());
-                }
-                if let Some(height) = height {
-                    entry.insert("height".into(), height.into());
-                }
-                thumbnails.push(Value::Object(entry));
-            }
-            let mut formats = Vec::new();
-            if let Some(manifest) = trailer
-                .get("hlsManifest")
-                .and_then(Value::as_str)
-                .and_then(super::json_ld::url_or_none)
-            {
-                let manifest = Url::parse(&manifest)?;
-                if let Some(stream) = super::extract_m3u8_master_optional(
-                    client,
-                    &manifest,
-                    NAME,
-                    &app_id,
-                    Some("hls"),
-                    false,
-                    false,
-                ) {
-                    formats.extend(stream.formats);
-                }
-            }
-            for manifest in trailer
-                .get("dashManifests")
-                .and_then(Value::as_array)
-                .into_iter()
-                .flatten()
-                .filter_map(Value::as_str)
-                .filter_map(super::json_ld::url_or_none)
-            {
-                let manifest = Url::parse(&manifest)?;
-                if let Some(stream) = super::extract_mpd_optional_note(
-                    client,
-                    &manifest,
-                    NAME,
-                    &app_id,
-                    Some("dash"),
-                    "Downloading MPD manifest",
-                ) {
-                    formats.extend(stream.formats);
-                }
-            }
-            remove_duplicate_formats(&mut formats);
-            let mut info = dict_info(
-                url,
-                (NAME, NAME),
-                vec![
-                    (
-                        "id",
-                        join_nonempty(&[Some(&app_id), Some(&movie_id)], "-").into(),
-                    ),
-                    (
-                        "title",
-                        join_nonempty(&[app_name.as_deref(), Some("video"), Some(&movie_id)], " ")
-                            .into(),
-                    ),
-                    ("formats", Value::Null),
-                    ("series", app_name.clone().map_or(Value::Null, Value::from)),
-                    ("series_id", app_id.clone().into()),
-                    ("thumbnails", Value::Array(thumbnails)),
-                ],
-                formats,
-            );
-            if let Some(Value::String(shape)) = info.extra.get_mut(crate::info_order::INFO_SHAPE) {
-                shape.push_str(";thumbnail=url,width,height");
-            }
-            entries.push(info);
-        }
+        // Upstream's `_entries` generator: trailers are extracted as the
+        // playlist is processed (see `fetch_trailers`).
+        let state = json!({
+            "kind": "steam",
+            "url": url.as_str(),
+            "app_id": app_id,
+            "app_name": app_name,
+            "trailers": trailers,
+        });
         let title = app_name.filter(|name| !name.is_empty()).unwrap_or_default();
         let keys = if title.is_empty() { "id" } else { "id,title" };
         let mut extra = Map::new();
@@ -282,11 +196,154 @@ impl Extractor for Steam {
             extractor: NAME.into(),
             extractor_key: NAME.into(),
             nested: Vec::new(),
-            pending: None,
-            entries,
+            pending: Some(crate::PendingEntries { state }),
+            entries: Vec::new(),
             extra,
         })))
     }
+}
+
+/// Whether a playlist's pending state is a Steam app's trailers.
+pub(crate) fn is_pending_state(state: &Value) -> bool {
+    state["kind"] == "steam"
+}
+
+/// The pending trailers of a Steam app playlist, extracted in order until
+/// `limit` entries exist (upstream's `_entries` generator).
+pub(crate) fn fetch_trailers(
+    client: &Client,
+    state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let Value::Object(mut state) = state else {
+        return Ok(None);
+    };
+    let url = Url::parse(state["url"].as_str().unwrap_or_default())?;
+    let app_id = state["app_id"].as_str().unwrap_or_default().to_owned();
+    let app_name = state["app_name"].as_str().map(str::to_owned);
+    let mut trailers: std::collections::VecDeque<Value> = match state.remove("trailers") {
+        Some(Value::Array(trailers)) => trailers.into(),
+        _ => Default::default(),
+    };
+    while let Some(trailer) = trailers.pop_front() {
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            trailers.push_front(trailer);
+            break;
+        }
+        if let Some(entry) = trailer_entry(client, &url, &app_id, app_name.as_deref(), &trailer)? {
+            entries.push(entry);
+        }
+    }
+    if trailers.is_empty() {
+        return Ok(None);
+    }
+    state.insert("trailers".into(), Value::Array(trailers.into()));
+    Ok(Some(Value::Object(state)))
+}
+
+/// One trailer of `_entries`: `None` without an `id`.
+fn trailer_entry(
+    client: &Client,
+    url: &Url,
+    app_id: &str,
+    app_name: Option<&str>,
+    trailer: &Value,
+) -> Result<Option<VideoInfo>> {
+    let app_id = app_id.to_owned();
+    let app_name = app_name.map(str::to_owned);
+
+    // `lambda _, v: str_or_none(v['id'])`.
+    let Some(movie_id) = trailer
+        .as_object()
+        .and_then(|trailer| str_or_none(trailer.get("id")))
+        .filter(|id| !id.is_empty())
+    else {
+        return Ok(None);
+    };
+    let mut thumbnails = Vec::new();
+    for key in ["poster", "thumbnail"] {
+        let Some(thumbnail) = trailer
+            .get(key)
+            .and_then(Value::as_str)
+            .and_then(super::json_ld::url_or_none)
+        else {
+            continue;
+        };
+        let mut entry = Map::new();
+        entry.insert("url".into(), thumbnail.clone().into());
+        let (width, height) = super::html5::parse_resolution(&url_basename(&thumbnail));
+        if let Some(width) = width {
+            entry.insert("width".into(), width.into());
+        }
+        if let Some(height) = height {
+            entry.insert("height".into(), height.into());
+        }
+        thumbnails.push(Value::Object(entry));
+    }
+    let mut formats = Vec::new();
+    if let Some(manifest) = trailer
+        .get("hlsManifest")
+        .and_then(Value::as_str)
+        .and_then(super::json_ld::url_or_none)
+    {
+        let manifest = Url::parse(&manifest)?;
+        if let Some(stream) = super::extract_m3u8_master_optional(
+            client,
+            &manifest,
+            NAME,
+            &app_id,
+            Some("hls"),
+            false,
+            false,
+        ) {
+            formats.extend(stream.formats);
+        }
+    }
+    for manifest in trailer
+        .get("dashManifests")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .filter_map(Value::as_str)
+        .filter_map(super::json_ld::url_or_none)
+    {
+        let manifest = Url::parse(&manifest)?;
+        if let Some(stream) = super::extract_mpd_optional_note(
+            client,
+            &manifest,
+            NAME,
+            &app_id,
+            Some("dash"),
+            "Downloading MPD manifest",
+        ) {
+            formats.extend(stream.formats);
+        }
+    }
+    remove_duplicate_formats(&mut formats);
+    let mut info = dict_info(
+        url,
+        (NAME, NAME),
+        vec![
+            (
+                "id",
+                join_nonempty(&[Some(&app_id), Some(&movie_id)], "-").into(),
+            ),
+            (
+                "title",
+                join_nonempty(&[app_name.as_deref(), Some("video"), Some(&movie_id)], " ").into(),
+            ),
+            ("formats", Value::Null),
+            ("series", app_name.clone().map_or(Value::Null, Value::from)),
+            ("series_id", app_id.clone().into()),
+            ("thumbnails", Value::Array(thumbnails)),
+        ],
+        formats,
+    );
+    if let Some(Value::String(shape)) = info.extra.get_mut(crate::info_order::INFO_SHAPE) {
+        shape.push_str(";thumbnail=url,width,height");
+    }
+    Ok(Some(info))
 }
 
 impl Extractor for SteamCommunity {

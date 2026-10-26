@@ -475,6 +475,9 @@ pub use steam::{
     Steam, SteamCommunity, SteamCommunityBroadcast, broadcast_suitable as steam_broadcast_suitable,
     community_suitable as steam_community_suitable, suitable as steam_suitable,
 };
+pub(crate) use steam::{
+    fetch_trailers as fetch_steam_trailers, is_pending_state as steam_pending_state,
+};
 pub use streamable::{Streamable, suitable as streamable_suitable};
 pub use streetvoice::{StreetVoice, suitable as streetvoice_suitable};
 pub use svt::{
