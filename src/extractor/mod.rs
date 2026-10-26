@@ -43,6 +43,7 @@ pub(crate) mod direct;
 mod dlive;
 mod dropbox;
 mod drtalks;
+mod drtv;
 mod dumpert;
 mod ebaumsworld;
 mod ebay;
@@ -289,6 +290,11 @@ pub use dlive::{
 };
 pub use dropbox::{Dropbox, suitable as dropbox_suitable};
 pub use drtalks::{DrTalks, suitable as drtalks_suitable};
+pub use drtv::{
+    Drtv, DrtvLive, DrtvSeason, DrtvSeries, live_suitable as drtv_live_suitable,
+    season_suitable as drtv_season_suitable, series_suitable as drtv_series_suitable,
+    suitable as drtv_suitable,
+};
 pub use dumpert::{Dumpert, suitable as dumpert_suitable};
 pub use ebaumsworld::{EbaumsWorld, suitable as ebaumsworld_suitable};
 pub use ebay::{Ebay, suitable as ebay_suitable};

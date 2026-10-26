@@ -1,0 +1,21 @@
+{
+ "id": "klassen-darlig-taber-10",
+ "customId": "urn:dr:mu:programcard:00831690010",
+ "title": "Klassen - Dårlig taber (10)",
+ "description": "Klassen er tilbage.",
+ "duration": "606",
+ "season": {
+  "title": "Klassen I",
+  "seasonNumber": 1,
+  "show": {
+   "title": "Klassen"
+  }
+ },
+ "seasonId": "urn:dr:mu:bundle:57d7e8216187a4031cfd6f6b",
+ "episodeName": "Episode 10",
+ "episodeNumber": 10,
+ "releaseYear": 2016,
+ "customFields": {
+  "BroadcastTimeDK": "2018-10-09T13:50:00Z"
+ }
+}

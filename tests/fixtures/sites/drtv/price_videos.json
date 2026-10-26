@@ -1,0 +1,38 @@
+[
+ {
+  "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/master.m3u8",
+  "format": "video-hls",
+  "accessService": "StandardVideo",
+  "subtitles": [
+   {
+    "link": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/da.vtt",
+    "language": "DanishLanguageSubtitles",
+    "format": "text/vtt"
+   },
+   {
+    "link": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/foreign.vtt",
+    "language": "ForeignLanguageSubtitles"
+   },
+   {
+    "link": "not a link",
+    "language": "Broken"
+   }
+  ]
+ },
+ {
+  "url": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/sign/master.m3u8",
+  "format": "video-hls",
+  "accessService": "SignLanguage",
+  "subtitles": [
+   {
+    "link": "https://drod01-vh.akamaihd.net/i/all/clear/streaming/price/subs/sign.srt",
+    "language": "",
+    "format": "application/x-subrip"
+   }
+  ]
+ },
+ {
+  "url": "",
+  "format": "empty"
+ }
+]

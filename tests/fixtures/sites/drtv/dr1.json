@@ -1,0 +1,48 @@
+{
+ "Title": "DR1",
+ "PrimaryImageUri": "https://asset.dr.dk/imagescaler/?file=dr1.png",
+ "StreamingServers": [
+  {
+   "Server": "https://drlive01hls.akamaized.net/hls/live/572636/drlive01",
+   "LinkType": "HLS",
+   "Qualities": [
+    {
+     "Streams": [
+      {
+       "Stream": "master.m3u8"
+      },
+      {
+       "Stream": ""
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "Server": "",
+   "LinkType": "HLS",
+   "Qualities": [
+    {
+     "Streams": [
+      {
+       "Stream": "x.m3u8"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "Server": "rtmp://drlive.dr.dk/live",
+   "LinkType": "RTMP",
+   "Qualities": [
+    {
+     "Streams": [
+      {
+       "Stream": "dr1"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

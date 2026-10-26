@@ -395,6 +395,10 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Douyin",
     "Dropbox",
     "DrTalks",
+    "drtv",
+    "drtv:live",
+    "drtv:season",
+    "drtv:series",
     "Dumpert",
     "EbaumsWorld",
     "Ebay",
@@ -1133,6 +1137,10 @@ impl YoutubeDl {
                 Box::new(extractor::Toypics),
                 Box::new(extractor::Dfb),
                 Box::new(extractor::DrTalks),
+                Box::new(extractor::Drtv),
+                Box::new(extractor::DrtvLive),
+                Box::new(extractor::DrtvSeason),
+                Box::new(extractor::DrtvSeries),
                 Box::new(extractor::Tweakers),
                 Box::new(extractor::TwentyThreeVideo),
                 Box::new(extractor::UmgDe),
@@ -3138,8 +3146,14 @@ impl YoutubeDl {
         raw.insert("__x_forwarded_for_ip".into(), Value::Null);
         let mut full = raw.clone();
         if ie_key.is_some() {
-            // `ie.get_temp_id(url)`.
-            full.insert("id".into(), entry.id.clone().into());
+            // `ie.get_temp_id(url)` (`None` when the URL does not match: an
+            // empty ID).
+            let id = if entry.id.is_empty() {
+                Value::Null
+            } else {
+                entry.id.clone().into()
+            };
+            full.insert("id".into(), id);
         }
         full.insert("webpage_url".into(), shown.clone().into());
         full.insert("original_url".into(), shown.clone().into());
