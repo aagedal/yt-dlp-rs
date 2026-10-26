@@ -446,7 +446,11 @@ fn real_ffmpeg_stream_copy_preserves_video_and_audio() {
             "{}",
             String::from_utf8_lossy(&probe.stderr)
         );
-        assert!(probe.stderr.is_empty());
+        assert!(
+            probe.stderr.is_empty(),
+            "{}",
+            String::from_utf8_lossy(&probe.stderr)
+        );
         let info: serde_json::Value = serde_json::from_slice(&probe.stdout).unwrap();
         let streams = info["streams"].as_array().unwrap();
         assert_eq!(streams.len(), 2);
