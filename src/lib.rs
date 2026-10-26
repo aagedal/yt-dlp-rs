@@ -336,6 +336,12 @@ pub(crate) const ENTRY_ERROR: &str = "__yt_dlp_rs_entry_error";
 /// A fetched pending entry that was already processed (see
 /// [`YoutubeDl::fetch_pending`]).
 pub(crate) const PROCESSED_ENTRY: &str = "__yt_dlp_rs_processed_entry";
+/// A paged playlist entry whose page failed to download: upstream's `None`
+/// entry after `_handle_extraction_exceptions` reported the error (see
+/// `extractor::paged`).
+pub(crate) const FETCH_ERROR: &str = "__yt_dlp_rs_fetch_error";
+/// The paged list's length once its failed page ended it.
+pub(crate) const FETCH_ERROR_COUNT: &str = "__yt_dlp_rs_fetch_error_count";
 /// An extractor's top-level `url_transparent` result: `{url, fields}`, the
 /// target extracted through the registry and updated with the non-`None`
 /// fields (`process_ie_result`).
@@ -392,6 +398,9 @@ const EXTRACTOR_NAMES: &[&str] = &[
     "Crtvg",
     "CultureUnplugged",
     "dailymotion",
+    "dailymotion:playlist",
+    "dailymotion:search",
+    "dailymotion:user",
     "daystar:clip",
     "democracynow",
     "dlive:stream",
@@ -770,6 +779,10 @@ impl YoutubeDl {
         let cookies = http.cookies.clone().unwrap_or_default();
         cookies::register(&cookies);
         extractor::NO_PLAYLIST.store(youtube.no_playlist, std::sync::atomic::Ordering::Relaxed);
+        extractor::AGE_LIMIT.store(
+            youtube.age_limit.unwrap_or(i64::MIN),
+            std::sync::atomic::Ordering::Relaxed,
+        );
         extractor::GET_COMMENTS.store(youtube.get_comments, std::sync::atomic::Ordering::Relaxed);
         extractor::youtube::live_chat::SKIP_DOWNLOAD
             .store(youtube.skip_download, std::sync::atomic::Ordering::Relaxed);
@@ -865,6 +878,9 @@ impl YoutubeDl {
                 Box::new(extractor::FacebookAds),
                 Box::new(extractor::Vimeo),
                 Box::new(extractor::Dailymotion),
+                Box::new(extractor::DailymotionPlaylist),
+                Box::new(extractor::DailymotionSearch),
+                Box::new(extractor::DailymotionUser),
                 Box::new(extractor::Soundcloud),
                 Box::new(extractor::Soundgasm),
                 Box::new(extractor::SoundgasmProfile),
@@ -1924,6 +1940,8 @@ impl YoutubeDl {
                 extractor::fetch_bitchute_pages
             } else if extractor::niconico_pending_state(&pending.state) {
                 extractor::fetch_niconico_pages
+            } else if extractor::dailymotion_pending_state(&pending.state) {
+                extractor::fetch_dailymotion_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };
@@ -3067,6 +3085,12 @@ impl YoutubeDl {
             .and_then(serde_json::Value::as_str)
     }
 
+    /// The error of a paged playlist entry whose page failed to download
+    /// (already reported upstream; the entry is `None`).
+    pub fn fetch_error(entry: &VideoInfo) -> Option<&str> {
+        extractor::paged::fetch_error(entry)
+    }
+
     /// Whether `entry` is an unresolved `url_transparent` entry.
     pub fn is_transparent(entry: &VideoInfo) -> bool {
         entry.extra.contains_key(TRANSPARENT)
@@ -3423,11 +3447,11 @@ impl YoutubeDl {
                     // A followed `url` result passes `original_url` on as
                     // extra info (see `info_order::FOLLOWED`).
                     let followed = |result: &mut ExtractResult| -> Result<()> {
-                        if let ExtractResult::Video(video) = result {
-                            video
-                                .extra
-                                .insert(info_order::FOLLOWED.into(), serde_json::Value::Bool(true));
-                        }
+                        let extra = match result {
+                            ExtractResult::Video(video) => &mut video.extra,
+                            ExtractResult::Playlist(playlist) => &mut playlist.extra,
+                        };
+                        extra.insert(info_order::FOLLOWED.into(), serde_json::Value::Bool(true));
                         before_processing(result)
                     };
                     return self.extract_once_with(&target, &followed);

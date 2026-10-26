@@ -127,6 +127,30 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/user/someuser",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist",
+    "-u",
+    "user@example.com",
+    "-p",
+    "wrong"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[dailymotion:user] Extracting URL: https://www.dailymotion.com/user/someuser",
+    "[download] Downloading playlist: someuser",
+    "[dailymotion:user] Downloading Access Token",
+    "[dailymotion:user] Playlist someuser: Downloading 1 items",
+    "[download] Finished downloading playlist: someuser"
+   ],
+   "stderr": [
+    "ERROR: Invalid username or password"
+   ],
+   "files": {}
   }
  ]
 }

@@ -10,6 +10,156 @@
   {
    "url": "https://graphql.api.dailymotion.com/",
    "request_body": [
+    "x6hynp",
+    "allowExplicit: true",
+    "page: 1)"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist_page1.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "x6hynp",
+    "allowExplicit: true",
+    "page: 2)"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist_page2.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "x7fail",
+    "page: 1)"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist_page1.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "x7fail",
+    "page: 2)"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search_empty.json",
+   "status": 500
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "x404404"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "playlist_missing.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "channel(xid: \\\"someuser\\\"",
+    "allowExplicit: true",
+    "page: 1)"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "user_page1.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "channel(xid: \\\"familyuser\\\"",
+    "allowExplicit: false",
+    "page: 1)"
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "user_family.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "channel(xid: \\\"goneuser\\\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search_empty.json",
+   "status": 404
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "SEARCH_QUERY",
+    "\"page\": 1,",
+    "\"query\": \"king of turtles\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search_page1.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "SEARCH_QUERY",
+    "\"page\": 2,",
+    "\"query\": \"king of turtles\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search_page2.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "SEARCH_QUERY",
+    "\"page\": 3,",
+    "\"query\": \"king of turtles\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search_page3.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "SEARCH_QUERY",
+    "\"query\": \"broken\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search_error.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
+    "SEARCH_QUERY",
+    "\"query\": \"empty\""
+   ],
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body_file": "search_empty.json"
+  },
+  {
+   "url": "https://graphql.api.dailymotion.com/",
+   "request_body": [
     "x8abc"
    ],
    "headers": {

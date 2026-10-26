@@ -151,7 +151,7 @@ Supported today:
   (relay data with DASH, progressive URLs and captions; server JS, pagelet
   and tahoe player pages; watch parties; JSON-LD metadata), Facebook ad
   library ads and `flx/warn` redirects, Vimeo player and
-  clip pages, Dailymotion videos (and the kicker.de videos that embed them), SoundCloud tracks, Twitch VODs, clips, live streams,
+  clip pages, Dailymotion videos (and the kicker.de videos that embed them), playlists, channels and video searches, SoundCloud tracks, Twitch VODs, clips, live streams,
   channel video/clip/collection lists and collections,
   Bandcamp tracks, Rumble videos, Kick VODs, clips, live channels and channel video/clip lists, Bluesky
   posts, Mixcloud shows, Pinterest pins, Odysee/LBRY streams, channels and playlists,

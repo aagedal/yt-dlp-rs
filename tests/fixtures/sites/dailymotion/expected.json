@@ -98,6 +98,379 @@
    "files": {
     "x8abc.mp4": 15
    }
+  },
+  {
+   "url": "https://www.dailymotion.com/video/x8abc?playlist=x6hynp",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[dailymotion] Extracting URL: https://www.dailymotion.com/video/x8abc?playlist=x6hynp",
+    "[dailymotion] Downloading playlist x6hynp - add --no-playlist to download just the video x8abc",
+    "[dailymotion:playlist] Extracting URL: http://www.dailymotion.com/playlist/x6hynp",
+    "[download] Downloading playlist: x6hynp",
+    "[dailymotion:playlist] Downloading Access Token",
+    "[dailymotion:playlist] x6hynp: Downloading page 1",
+    "[dailymotion:playlist] Playlist x6hynp: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: x6hynp"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x6hynp",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"x6hynp\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Dailymotion\", \"id\": \"x7p001\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p002\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p002\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p003\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p003\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p004\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p004\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p005\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p005\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p006\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p006\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p007\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p007\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p008\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p008\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p009\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p009\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p010\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p010\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p011\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p011\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p012\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p012\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p013\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p013\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p014\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p014\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p015\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p015\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p016\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p016\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p017\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p017\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p018\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p018\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p019\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p019\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p020\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p020\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p021\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p021\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p022\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p022\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p023\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p023\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p024\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p024\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p025\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p025\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p026\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p026\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p027\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p027\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p028\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p028\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p029\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p029\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p030\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p030\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p031\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p031\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p032\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p032\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p033\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p033\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p034\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p034\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p035\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p035\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p036\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p036\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p037\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p037\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p038\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p038\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p039\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p039\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p040\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p040\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p041\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p041\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p042\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p042\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p043\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p043\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p044\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p044\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p045\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p045\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p046\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p046\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p047\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p047\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p048\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p048\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p049\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p049\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p050\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p050\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p051\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p051\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p052\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p052\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p053\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p053\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p054\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p054\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p055\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p055\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p056\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p056\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p057\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p057\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p058\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p058\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p059\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p059\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p060\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p060\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p061\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p061\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p062\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p062\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p063\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p063\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p064\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p064\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p065\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p065\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p066\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p066\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p067\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p067\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p068\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p068\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p069\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p069\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p070\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p070\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p071\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p071\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p072\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p072\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p073\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p073\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p074\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p074\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p075\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p075\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p076\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p076\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p077\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p077\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p078\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p078\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p079\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p079\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p080\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p080\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p081\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p081\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p082\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p082\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p083\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p083\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p084\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p084\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p085\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p085\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p086\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p086\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p087\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p087\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p088\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p088\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p089\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p089\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p090\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p090\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p091\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p091\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p092\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p092\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p093\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p093\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p094\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p094\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p095\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p095\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p096\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p096\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p097\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p097\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p098\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p098\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p099\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p099\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p100\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p100\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p101\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p101\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p102\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p102\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.dailymotion.com/playlist/x6hynp\", \"original_url\": \"https://www.dailymotion.com/playlist/x6hynp\", \"webpage_url_basename\": \"x6hynp\", \"webpage_url_domain\": \"dailymotion.com\", \"extractor\": \"dailymotion:playlist\", \"extractor_key\": \"DailymotionPlaylist\", \"release_year\": null, \"playlist_count\": 102, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x6hynp_nqtv_sport/1#video=xl8v3q",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[dailymotion:playlist] Extracting URL: https://www.dailymotion.com/playlist/x6hynp_nqtv_sport/1#video=xl8v3q",
+    "[download] Downloading playlist: x6hynp",
+    "[dailymotion:playlist] Downloading Access Token",
+    "[dailymotion:playlist] x6hynp: Downloading page 1",
+    "[dailymotion:playlist] Playlist x6hynp: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: x6hynp"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x6hynp",
+   "args": [
+    "-I",
+    "101,3",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "101|x7p101|NA",
+    "003|x7p003|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x6hynp",
+   "args": [
+    "-I",
+    "2",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "2|x7p002|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x6hynp",
+   "args": [
+    "-I",
+    "99:",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s|%(ie_key)s|%(url)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "099|x7p099|102|Dailymotion|https://www.dailymotion.com/video/x7p099",
+    "100|x7p100|102|Dailymotion|https://www.dailymotion.com/video/x7p100",
+    "101|x7p101|102|Dailymotion|https://www.dailymotion.com/video/x7p101",
+    "102|x7p102|102|Dailymotion|https://www.dailymotion.com/video/x7p102"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x404404",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"id\": \"x404404\", \"_type\": \"playlist\", \"entries\": [null], \"webpage_url\": \"https://www.dailymotion.com/playlist/x404404\", \"original_url\": \"https://www.dailymotion.com/playlist/x404404\", \"webpage_url_basename\": \"x404404\", \"webpage_url_domain\": \"dailymotion.com\", \"extractor\": \"dailymotion:playlist\", \"extractor_key\": \"DailymotionPlaylist\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: Collection not found"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/video/x8abc?playlist=x6hynp",
+   "args": [
+    "-J",
+    "--flat-playlist",
+    "-I",
+    "2"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"x6hynp\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Dailymotion\", \"id\": \"x7p002\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p002\", \"__x_forwarded_for_ip\": null}], \"original_url\": \"https://www.dailymotion.com/video/x8abc?playlist=x6hynp\", \"webpage_url\": \"http://www.dailymotion.com/playlist/x6hynp\", \"webpage_url_basename\": \"x6hynp\", \"webpage_url_domain\": \"dailymotion.com\", \"extractor\": \"dailymotion:playlist\", \"extractor_key\": \"DailymotionPlaylist\", \"release_year\": null, \"requested_entries\": [2], \"playlist_count\": null, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x7fail",
+   "args": [
+    "-I",
+    "101:103",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 1,
+   "stdout": [],
+   "stderr": [
+    "ERROR: x7fail: Unable to download JSON metadata: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x7fail",
+   "args": [
+    "-I",
+    "100:102",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[dailymotion:playlist] Extracting URL: https://www.dailymotion.com/playlist/x7fail",
+    "[download] Downloading playlist: x7fail",
+    "[dailymotion:playlist] Downloading Access Token",
+    "[dailymotion:playlist] x7fail: Downloading page 1",
+    "[dailymotion:playlist] x7fail: Downloading page 2",
+    "[dailymotion:playlist] Playlist x7fail: Downloading 2 items of 100",
+    "[download] Downloading item 1 of 2",
+    "[download] Finished downloading playlist: x7fail"
+   ],
+   "stderr": [
+    "ERROR: x7fail: Unable to download JSON metadata: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/playlist/x7fail",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"id\": \"x7fail\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Dailymotion\", \"id\": \"x7p001\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p002\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p002\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p003\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p003\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p004\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p004\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p005\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p005\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p006\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p006\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p007\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p007\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p008\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p008\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p009\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p009\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p010\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p010\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p011\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p011\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p012\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p012\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p013\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p013\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p014\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p014\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p015\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p015\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p016\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p016\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p017\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p017\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p018\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p018\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p019\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p019\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p020\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p020\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p021\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p021\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p022\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p022\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p023\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p023\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p024\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p024\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p025\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p025\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p026\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p026\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p027\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p027\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p028\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p028\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p029\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p029\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p030\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p030\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p031\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p031\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p032\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p032\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p033\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p033\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p034\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p034\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p035\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p035\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p036\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p036\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p037\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p037\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p038\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p038\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p039\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p039\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p040\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p040\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p041\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p041\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p042\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p042\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p043\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p043\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p044\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p044\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p045\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p045\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p046\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p046\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p047\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p047\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p048\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p048\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p049\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p049\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p050\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p050\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p051\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p051\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p052\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p052\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p053\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p053\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p054\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p054\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p055\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p055\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p056\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p056\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p057\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p057\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p058\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p058\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p059\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p059\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p060\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p060\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p061\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p061\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p062\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p062\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p063\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p063\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p064\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p064\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p065\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p065\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p066\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p066\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p067\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p067\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p068\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p068\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p069\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p069\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p070\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p070\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p071\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p071\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p072\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p072\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p073\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p073\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p074\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p074\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p075\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p075\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p076\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p076\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p077\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p077\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p078\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p078\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p079\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p079\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p080\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p080\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p081\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p081\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p082\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p082\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p083\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p083\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p084\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p084\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p085\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p085\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p086\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p086\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p087\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p087\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p088\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p088\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p089\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p089\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p090\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p090\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p091\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p091\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p092\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p092\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p093\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p093\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p094\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p094\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p095\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p095\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p096\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p096\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p097\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p097\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p098\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p098\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p099\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p099\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x7p100\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x7p100\", \"__x_forwarded_for_ip\": null}, null], \"webpage_url\": \"https://www.dailymotion.com/playlist/x7fail\", \"original_url\": \"https://www.dailymotion.com/playlist/x7fail\", \"webpage_url_basename\": \"x7fail\", \"webpage_url_domain\": \"dailymotion.com\", \"extractor\": \"dailymotion:playlist\", \"extractor_key\": \"DailymotionPlaylist\", \"release_year\": null, \"requested_entries\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101], \"playlist_count\": 100, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: x7fail: Unable to download JSON metadata: HTTP Error 500: OK (caused by <HTTPError 500: OK>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/user/someuser",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"someuser\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Dailymotion\", \"id\": \"x8u001\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x8u001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x8u002\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x8u002\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x8u003\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x8u003\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.dailymotion.com/user/someuser\", \"original_url\": \"https://www.dailymotion.com/user/someuser\", \"webpage_url_basename\": \"someuser\", \"webpage_url_domain\": \"dailymotion.com\", \"extractor\": \"dailymotion:user\", \"extractor_key\": \"DailymotionUser\", \"release_year\": null, \"playlist_count\": 3, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/someuser",
+   "args": [
+    "--flat-playlist",
+    "--print",
+    "%(playlist_id)s|%(playlist_title)s|%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "someuser|NA|1|x8u001|3",
+    "someuser|NA|2|x8u002|3",
+    "someuser|NA|3|x8u003|3"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/user/familyuser",
+   "args": [
+    "--age-limit",
+    "0",
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"familyuser\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Dailymotion\", \"id\": \"x8f001\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x8f001\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.dailymotion.com/user/familyuser\", \"original_url\": \"https://www.dailymotion.com/user/familyuser\", \"webpage_url_basename\": \"familyuser\", \"webpage_url_domain\": \"dailymotion.com\", \"extractor\": \"dailymotion:user\", \"extractor_key\": \"DailymotionUser\", \"release_year\": null, \"playlist_count\": 1, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/user/goneuser",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[dailymotion:user] Extracting URL: https://www.dailymotion.com/user/goneuser",
+    "[download] Downloading playlist: goneuser",
+    "[dailymotion:user] Downloading Access Token",
+    "[dailymotion:user] goneuser: Downloading page 1",
+    "[dailymotion:user] Playlist goneuser: Downloading 1 items",
+    "[download] Finished downloading playlist: goneuser"
+   ],
+   "stderr": [
+    "ERROR: goneuser: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/search/king+of+turtles/videos",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "{\"id\": \"king of turtles\", \"title\": \"king of turtles\", \"_type\": \"playlist\", \"entries\": [{\"ie_key\": \"Dailymotion\", \"id\": \"x9s001\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s001\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s002\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s002\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s003\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s003\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s004\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s004\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s005\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s005\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s006\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s006\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s007\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s007\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s008\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s008\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s009\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s009\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s010\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s010\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s011\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s011\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s012\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s012\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s013\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s013\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s014\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s014\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s015\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s015\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s016\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s016\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s017\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s017\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s018\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s018\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s019\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s019\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s020\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s020\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s021\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s021\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s022\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s022\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s023\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s023\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s024\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s024\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s025\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s025\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s026\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s026\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s027\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s027\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s028\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s028\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s029\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s029\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s030\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s030\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s031\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s031\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s032\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s032\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s033\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s033\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s034\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s034\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s035\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s035\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s036\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s036\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s037\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s037\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s038\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s038\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s039\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s039\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s040\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s040\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s041\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s041\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s042\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s042\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s043\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s043\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s044\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s044\", \"__x_forwarded_for_ip\": null}, {\"ie_key\": \"Dailymotion\", \"id\": \"x9s045\", \"_type\": \"url\", \"url\": \"https://www.dailymotion.com/video/x9s045\", \"__x_forwarded_for_ip\": null}], \"webpage_url\": \"https://www.dailymotion.com/search/king+of+turtles/videos\", \"original_url\": \"https://www.dailymotion.com/search/king+of+turtles/videos\", \"webpage_url_basename\": \"videos\", \"webpage_url_domain\": \"dailymotion.com\", \"extractor\": \"dailymotion:search\", \"extractor_key\": \"DailymotionSearch\", \"release_year\": null, \"playlist_count\": 45, \"__files_to_move\": {}}"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/search/king%20of%20turtles/videos",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[dailymotion:search] Extracting URL: https://www.dailymotion.com/search/king%20of%20turtles/videos",
+    "[download] Downloading playlist: king of turtles",
+    "[dailymotion:search] Downloading Access Token",
+    "[dailymotion:search] Searching \"king of turtles\" page 1",
+    "[dailymotion:search] Playlist king of turtles: Downloading 1 items",
+    "[download] Downloading item 1 of 1",
+    "[download] Finished downloading playlist: king of turtles"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/search/king+of+turtles/videos",
+   "args": [
+    "-I",
+    "25,3,41",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "25|x9s025|NA",
+    "03|x9s003|NA",
+    "41|x9s041|NA"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/search/king+of+turtles/videos",
+   "args": [
+    "-I",
+    "50",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s"
+   ],
+   "exit": 0,
+   "stdout": [],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/search/king+of+turtles/videos",
+   "args": [
+    "-I",
+    "-1",
+    "--flat-playlist",
+    "--print",
+    "%(playlist_index)s|%(id)s|%(playlist_count)s|%(playlist_title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "45|x9s045|45|king of turtles"
+   ],
+   "stderr": [],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/search/broken/videos",
+   "args": [
+    "-J",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "{\"id\": \"broken\", \"title\": \"broken\", \"_type\": \"playlist\", \"entries\": [null], \"webpage_url\": \"https://www.dailymotion.com/search/broken/videos\", \"original_url\": \"https://www.dailymotion.com/search/broken/videos\", \"webpage_url_basename\": \"videos\", \"webpage_url_domain\": \"dailymotion.com\", \"extractor\": \"dailymotion:search\", \"extractor_key\": \"DailymotionSearch\", \"release_year\": null, \"requested_entries\": [1], \"playlist_count\": 0, \"__files_to_move\": {}}"
+   ],
+   "stderr": [
+    "ERROR: Search is unavailable; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
+  },
+  {
+   "url": "https://www.dailymotion.com/search/empty/videos",
+   "args": [
+    "-I",
+    "1",
+    "--flat-playlist"
+   ],
+   "exit": 1,
+   "stdout": [
+    "[dailymotion:search] Extracting URL: https://www.dailymotion.com/search/empty/videos",
+    "[download] Downloading playlist: empty",
+    "[dailymotion:search] Downloading Access Token",
+    "[dailymotion:search] Searching \"empty\" page 1",
+    "[dailymotion:search] Playlist empty: Downloading 1 items",
+    "[download] Finished downloading playlist: empty"
+   ],
+   "stderr": [
+    "ERROR: Could not fetch search data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
   }
  ]
 }

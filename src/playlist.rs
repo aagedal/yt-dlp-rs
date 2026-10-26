@@ -306,7 +306,10 @@ impl PlaylistSelection {
             .and_then(serde_json::Value::as_u64)
             .filter(|count| *count != 0)
             .map(|count| count as usize)
-            .or((playlist.pending.is_none() && !unexhausted).then_some(count));
+            .or((playlist.pending.is_none() && !unexhausted).then(|| {
+                // A failed page ended a paged list: its entry is not counted.
+                crate::extractor::paged::fetch_error_count(&playlist.entries).unwrap_or(count)
+            }));
         let indices = self.indices(count);
         let requested = if self.selection_index && !self.lazy {
             Self {
