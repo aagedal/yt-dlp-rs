@@ -521,6 +521,34 @@ fixtures follow the upstream code's shapes. `tests/fixtures/sites/svt/` is
 compared with pinned upstream output (the video CDN is geo-blocked outside
 Sweden, so its manifests are constructed).
 
+France Télévisions videos (`francetv:ID`, an `@catalog` suffix ignored)
+follow upstream `FranceTVIE`: the `k7.ftven.fr/videos/ID` JSON for desktop
+Chrome and mobile Safari (non-fatal, with the smuggled page hostname, else
+`www.france.tv`, as `domain`; 422 bodies are read), where code 2009 is the
+France-only geo error, codes 2015/2017/2019 mark DRM-only videos (`This video
+is DRM protected` when no response has a video) and other codes are
+`francetv said:` warnings; title, subtitle, thumbnail and timestamp from the
+first response carrying them, while the `pre_title` `S<N> E<N>` season and
+episode numbers are re-read from every response with metadata like upstream.
+Each video URL is replaced by its signed token URL when given, then read as
+non-fatal DASH (`dash` ID by default), master-only HLS (`hls` ID by default,
+audio renditions without a bitrate get the `-audio-NAME-BITRATE` bitrate and
+`mp4a`), RTMP (`flv`) or a plain format checked with a request (`Checking ID
+URL`, skipped when invalid). Audio formats in `qtz`/`qad` get the `audio
+description` note and a lower language preference, spritesheets an `mhtml`
+storyboard format, and when nothing is found a HEAD request's `x-errortype:
+geo` gives the geo error (a warning with `--ignore-no-formats-error`). `f4m`
+(HDS) URLs are explicit native errors. france.tv pages
+(`FranceTVSiteIE`) take the first Next.js v13 flight data object's
+`options.id`, and franceinfo pages (`FranceTVInfoIE`) the
+`francetv-player-wrapper` element's `id` or upstream's older patterns, as
+`francetv:` `url` results smuggling the page hostname; franceinfo pages with
+Dailymotion embeds (upstream `DailymotionIE` embed, `DM.player` and player
+script patterns) are playlists of Dailymotion `url` results.
+`tests/fixtures/sites/francetv/` is compared with pinned upstream output
+(the API responses and manifests are constructed after the shapes upstream
+parses).
+
 Streamable (`https://streamable.com/[e/|s/]ID`) follows upstream
 `StreamableIE`: the `ajax.streamable.com` video JSON (`Downloading JSON
 metadata`), its unavailable-status error, `reddit_title`/`title`, every file

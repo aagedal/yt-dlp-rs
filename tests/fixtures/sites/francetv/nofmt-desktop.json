@@ -1,0 +1,16 @@
+{
+ "video": {
+  "format": "hls",
+  "url": "https://cloudingest.ftven.fr/nofmt/master.m3u8",
+  "token": null,
+  "duration": 1441,
+  "is_live": false
+ },
+ "meta": {
+  "title": "Foot2Rue",
+  "additional_title": "Duel au vieux port",
+  "pre_title": "S1 E1",
+  "image_url": "https://media.ftven.fr/nofmt/poster.jpg",
+  "broadcasted_at": "2022-01-21T10:36:00Z"
+ }
+}

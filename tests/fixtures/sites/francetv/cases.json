@@ -1,0 +1,22 @@
+[
+ {"url": "francetv:ec217ecc-0733-48cf-ac06-af1347b849d1", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "francetv:ec217ecc-0733-48cf-ac06-af1347b849d1", "args": ["--no-geo-bypass", "-F"]},
+ {"url": "francetv:ec217ecc-0733-48cf-ac06-af1347b849d1", "args": ["--no-geo-bypass", "--print", "%(id)s|%(title)s|%(series)s|%(episode)s|%(season_number)s|%(episode_number)s|%(timestamp)s|%(upload_date)s|%(duration)s|%(thumbnail)s|%(format_id)s|%(ext)s"]},
+ {"url": "francetv:ec217ecc-0733-48cf-ac06-af1347b849d1", "args": ["--no-geo-bypass", "--list-subs"]},
+ {"url": "francetv:SIM_France3", "args": ["--no-geo-bypass", "--print", "%(id)s|%(is_live)s|%(live_status)s|%(format_id)s|%(protocol)s|%(ext)s|%(duration)s|%(thumbnail)s"]},
+ {"url": "francetv:geo-id", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "francetv:drm-id", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "francetv:nofmt-id", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "francetv:nofmt-id", "args": ["--no-geo-bypass", "--ignore-no-formats-error", "-j"]},
+ {"url": "francetv:NI_983319@Info-web", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://www.france.tv/france-2/13h15-le-dimanche/140921-les-mysteres-de-jesus.html", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://www.france.tv/france-2/13h15-le-dimanche/140921-les-mysteres-de-jesus.html", "args": ["--no-geo-bypass", "--print", "%(id)s|%(extractor)s|%(extractor_key)s|%(webpage_url)s|%(original_url)s|%(webpage_url_domain)s|%(title)s"]},
+ {"url": "https://mobile.france.tv/france-3/regions/137347-emission.html", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://www.france.tv/france-4/direct.html", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://www.francetvinfo.fr/replay-jt/france-3/soir-3/jt-grand-soir-3-jeudi-22-aout-2019_3561461.html", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://france3-regions.francetvinfo.fr/limousin/emissions/jt-1213-limousin", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://france3-regions.francetvinfo.fr/limousin/emissions/jt-1213-limousin", "args": ["--no-geo-bypass", "--no-progress", "-o", "%(id)s.%(ext)s"]},
+ {"url": "https://www.francetvinfo.fr/politique/video-cecile-duflot_1520091.html", "args": ["--no-geo-bypass", "--flat-playlist", "-J"]},
+ {"url": "https://www.franceinfo.fr/monde/sans-video_7764542.html", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "https://www.francetvinfo.fr/culture/notre-dame_4372291.html", "args": ["--no-geo-bypass", "-J"]}
+]

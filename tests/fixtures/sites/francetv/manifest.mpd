@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT43M0S" minBufferTime="PT2S">
+ <Period id="0" start="PT0S">
+  <AdaptationSet mimeType="video/mp4" contentType="video" segmentAlignment="true" startWithSAP="1">
+   <SegmentTemplate timescale="1000" duration="4000" initialization="$RepresentationID$/init.mp4" media="$RepresentationID$/$Number$.m4s" startNumber="1"/>
+   <Representation id="video=2000000" bandwidth="2000000" width="1280" height="720" frameRate="25" codecs="avc1.4d401f"/>
+  </AdaptationSet>
+  <AdaptationSet mimeType="audio/mp4" contentType="audio" lang="fr" segmentAlignment="true" startWithSAP="1">
+   <SegmentTemplate timescale="1000" duration="4000" initialization="$RepresentationID$/init.mp4" media="$RepresentationID$/$Number$.m4s" startNumber="1"/>
+   <Representation id="audio=96000" bandwidth="96000" audioSamplingRate="48000" codecs="mp4a.40.2"/>
+  </AdaptationSet>
+  <AdaptationSet mimeType="audio/mp4" contentType="audio" lang="qtz" segmentAlignment="true" startWithSAP="1">
+   <SegmentTemplate timescale="1000" duration="4000" initialization="$RepresentationID$/init.mp4" media="$RepresentationID$/$Number$.m4s" startNumber="1"/>
+   <Representation id="audio_qtz=96000" bandwidth="96000" audioSamplingRate="48000" codecs="mp4a.40.2"/>
+  </AdaptationSet>
+ </Period>
+</MPD>

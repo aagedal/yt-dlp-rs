@@ -241,6 +241,7 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(INFO_SHAPE);
     map.shift_remove(FORMAT_SHAPE);
     map.shift_remove(INT_QUALITY);
+    map.shift_remove(INT_FRAGMENT_DURATIONS);
     map.shift_remove(FOLLOWED);
     map.shift_remove(OWN_URL);
 }
@@ -363,6 +364,34 @@ pub(crate) fn mark_int_quality(format: &mut crate::VideoFormat) {
     format.extra.insert(INT_QUALITY.into(), Value::Bool(true));
 }
 
+/// A format whose extractor gave int fragment `duration`s (stored as
+/// floats).
+const INT_FRAGMENT_DURATIONS: &str = "__yt_dlp_rs_int_fragment_durations";
+
+/// The format's whole fragment durations are ints.
+pub(crate) fn mark_int_fragment_durations(format: &mut crate::VideoFormat) {
+    format
+        .extra
+        .insert(INT_FRAGMENT_DURATIONS.into(), Value::Bool(true));
+}
+
+/// Whole fragment durations as ints, for a marked dict.
+fn int_fragment_durations(map: &mut Map<String, Value>) {
+    if map.shift_remove(INT_FRAGMENT_DURATIONS).is_none() {
+        return;
+    }
+    let Some(Value::Array(fragments)) = map.get_mut("fragments") else {
+        return;
+    };
+    for fragment in fragments {
+        if let Some(duration) = fragment.get("duration").and_then(Value::as_f64)
+            && duration.fract() == 0.0
+        {
+            fragment["duration"] = (duration as i64).into();
+        }
+    }
+}
+
 /// A format whose `preference` `FormatSorter._fill_sorting_fields` set
 /// (HEVC over FLV), after `video_ext`/`audio_ext`.
 pub(crate) const SORTER_PREFERENCE: &str = "__yt_dlp_rs_sorter_preference";
@@ -370,6 +399,7 @@ pub(crate) const SORTER_PREFERENCE: &str = "__yt_dlp_rs_sorter_preference";
 /// One format dict in upstream order (unmarked formats are unchanged).
 pub(crate) fn format(mut map: Map<String, Value>) -> Map<String, Value> {
     let sorter_preference = map.shift_remove(SORTER_PREFERENCE).is_some();
+    int_fragment_durations(&mut map);
     if map.shift_remove(INT_QUALITY).is_some()
         && let Some(quality) = map.get("quality").and_then(Value::as_f64)
         && quality.fract() == 0.0
@@ -977,6 +1007,8 @@ const MERGED_AUDIO_KEYS: &[&str] = &["acodec", "abr", "asr", "audio_channels"];
 /// Formats must already be ordered by [`format`].
 pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     map.shift_remove(FORMAT_SHAPE);
+    // The selected format's int fragment durations.
+    int_fragment_durations(&mut map);
     // `--ignore-no-formats-error`: `info_dict['formats'] = []` after
     // `_has_drm`, and no format is merged.
     let no_formats = map.shift_remove(crate::info::FORMATS_IGNORED).is_some();

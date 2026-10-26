@@ -60,6 +60,7 @@ mod filmarchiv;
 mod filmweb;
 mod flickr;
 mod formula1;
+mod francetv;
 mod freesound;
 mod fuyintv;
 mod gab;
@@ -316,6 +317,10 @@ pub use filmarchiv::{FilmArchiv, suitable as filmarchiv_suitable};
 pub use filmweb::{Filmweb, suitable as filmweb_suitable};
 pub use flickr::{Flickr, suitable as flickr_suitable};
 pub use formula1::{Formula1, suitable as formula1_suitable};
+pub use francetv::{
+    FranceTv, FranceTvInfo, FranceTvSite, info_suitable as francetv_info_suitable,
+    site_suitable as francetv_site_suitable, suitable as francetv_suitable,
+};
 pub use freesound::{Freesound, suitable as freesound_suitable};
 pub use fuyintv::{FuyinTv, suitable as fuyintv_suitable};
 pub use gab::{Gab, suitable as gab_suitable};
@@ -1584,6 +1589,125 @@ pub(crate) fn search_nextjs_data(
         })
 }
 
+/// `_search_nextjs_v13_data(webpage, video_id)` (fatal): the Next.js app
+/// router flight data's hydration objects by their hex keys, in insertion
+/// order (a repeated key keeps its first position, like a `dict`).
+pub(crate) fn search_nextjs_v13_data(
+    html: &str,
+    extractor: &str,
+    id: &str,
+) -> crate::Result<serde_json::Map<String, serde_json::Value>> {
+    use serde_json::Value;
+    static SEGMENT: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"<script\b[^>]*>self\.__next_f\.push\((\[.+?\])\)</script>")
+            .expect("static pattern")
+    });
+    static NAME: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"^\$L[0-9a-f]+$").expect("static pattern"));
+    static PREFIX: std::sync::LazyLock<regex::Regex> =
+        std::sync::LazyLock::new(|| regex::Regex::new(r"^[0-9a-f]+$").expect("static pattern"));
+
+    fn flatten(flight: Value, data: &mut serde_json::Map<String, Value>) {
+        let Value::Array(items) = flight else {
+            return;
+        };
+        if items.len() == 4 && items[0] == "$" {
+            let mut items = items;
+            let Value::Object(mut object) = items.pop().expect("four items") else {
+                return;
+            };
+            let children = object.shift_remove("children");
+            if !object.is_empty()
+                && let Some(name) = items[1].as_str()
+                && NAME.is_match(name)
+            {
+                data.insert(name[2..].to_owned(), Value::Object(object));
+            }
+            if let Some(children) = children {
+                flatten(children, data);
+            }
+            return;
+        }
+        for item in items {
+            flatten(item, data);
+        }
+    }
+
+    let mut flight_text = String::new();
+    for found in SEGMENT.captures_iter(html) {
+        let segment: Value = serde_json::from_str(&found[1]).map_err(|error| {
+            crate::Error::Reported(format!(
+                "[{extractor}] {id}: Failed to parse JSON  (caused by {error}); {}",
+                crate::BUG_REPORTS_MESSAGE
+            ))
+        })?;
+        // Only two-item segments of the data payload type (1).
+        if let Value::Array(items) = &segment
+            && items.len() == 2
+            && items[0].as_i64() == Some(1)
+            && let Some(chunk) = items[1].as_str()
+        {
+            flight_text.push_str(chunk);
+        }
+    }
+
+    let mut data = serde_json::Map::new();
+    for line in py_splitlines(&flight_text) {
+        let (prefix, body) = line
+            .trim_start()
+            .split_once(':')
+            .unwrap_or((line.trim_start(), ""));
+        if !PREFIX.is_match(prefix) {
+            continue;
+        }
+        if body.starts_with('[') && body.ends_with(']') {
+            if let Ok(parsed) = serde_json::from_str::<Value>(body) {
+                flatten(parsed, &mut data);
+            }
+        } else if body.starts_with('{')
+            && body.ends_with('}')
+            && let Ok(parsed) = serde_json::from_str::<Value>(body)
+        {
+            data.insert(prefix.to_owned(), parsed);
+        }
+    }
+    Ok(data)
+}
+
+/// Python's `str.splitlines()`: lines split at any line boundary (`\r\n`
+/// as one), without their terminators.
+fn py_splitlines(text: &str) -> Vec<&str> {
+    let mut lines = Vec::new();
+    let mut start = 0;
+    let mut chars = text.char_indices().peekable();
+    while let Some((index, c)) = chars.next() {
+        if matches!(
+            c,
+            '\n' | '\r'
+                | '\u{0b}'
+                | '\u{0c}'
+                | '\u{1c}'
+                | '\u{1d}'
+                | '\u{1e}'
+                | '\u{85}'
+                | '\u{2028}'
+                | '\u{2029}'
+        ) {
+            lines.push(&text[start..index]);
+            let mut end = index + c.len_utf8();
+            if c == '\r' && chars.peek().is_some_and(|(_, next)| *next == '\n') {
+                chars.next();
+                end += 1;
+            }
+            start = end;
+        }
+    }
+    if start < text.len() {
+        lines.push(&text[start..]);
+    }
+    lines
+}
+
 /// Whether an extractor's `_VALID_URL` takes this non-HTTP pseudo-URL.
 pub fn pseudo_url(url: &str) -> bool {
     (url.starts_with("jwplatform:") && jwplatform::suitable(url))
@@ -1593,6 +1717,7 @@ pub fn pseudo_url(url: &str) -> bool {
         || (url.starts_with("arte://") && arte::suitable(url))
         || (url.starts_with("lbry://") && lbry::suitable(url))
         || (url.starts_with("coub:") && coub::suitable(url))
+        || (url.starts_with("francetv:") && francetv::suitable(url))
         || (url.starts_with("nrk:") && nrk::suitable(url))
         || (url.starts_with("peertube:") && peertube::suitable(url))
         || (url.starts_with("svt:") && svt::suitable(url))
@@ -1943,6 +2068,21 @@ mod tests {
         assert_eq!(decode_webpage(&utf16, &HeaderMap::new()), "hi");
         let unknown = headers(&[(CONTENT_TYPE, "text/html; charset=x-unknown")]);
         assert_eq!(decode_webpage(b"ok \xff", &unknown), "ok \u{FFFD}");
+    }
+
+    #[test]
+    fn nextjs_v13_flight_data_keeps_hydration_objects_in_order() {
+        let html = concat!(
+            r#"<script>self.__next_f.push([0,"x"])</script>"#,
+            r#"<script>self.__next_f.push([1,"2:{\"a\":1}\r\n0:[\"$\",\"$L1b\",null,"#,
+            r#"{\"b\":2,\"children\":[\"$\",\"$L1c\",null,{\"c\":3}]}] zz:{\"d\":4}"])</script>"#,
+        );
+        let data = search_nextjs_v13_data(html, "test", "id").unwrap();
+        assert_eq!(
+            serde_json::Value::Object(data),
+            serde_json::json!({"2": {"a": 1}, "1b": {"b": 2}, "1c": {"c": 3}})
+        );
+        assert_eq!(py_splitlines("a\r\nb\rc\n"), ["a", "b", "c"]);
     }
 
     #[test]

@@ -1,0 +1,18 @@
+{
+ "video": {
+  "workflow": "dai",
+  "format": "hls",
+  "url": "https://live.ftven.fr/france3/master.m3u8",
+  "token": null,
+  "duration": null,
+  "is_live": true
+ },
+ "meta": {
+  "id": "SIM_France3",
+  "title": "France 3 en direct",
+  "additional_title": null,
+  "pre_title": null,
+  "image_url": null,
+  "broadcasted_at": null
+ }
+}
