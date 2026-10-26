@@ -1863,7 +1863,7 @@
         "tools/generate_peertube_instances.py",
         "tests/fixtures/sites/peertube/"
       ],
-      "scope": "PeerTubeIE _VALID_URL with the generated _INSTANCES_RE host list and peertube:HOST:ID URLs, the videos API JSON (live-style non-fatal HLS master formats, files and streaming-playlist files with parse_resolution/filesize/fps or 0p audio-only), long-description and captions endpoints, metadata, is_live and --video-password headers; PeerTubePlaylistIE accounts, video channels and video playlists as paged url playlists (pages fetched eagerly). Not ported: _EMBED_REGEX/og:platform detection on generic pages. Compared with pinned upstream output through the fixture proxy"
+      "scope": "PeerTubeIE _VALID_URL with the generated _INSTANCES_RE host list and peertube:HOST:ID URLs, the videos API JSON (live-style non-fatal HLS master formats, files and streaming-playlist files with parse_resolution/filesize/fps or 0p audio-only), long-description and captions endpoints, metadata, is_live and --video-password headers; PeerTubePlaylistIE accounts, video channels and video playlists as paged url playlists (OnDemandPagedList pages fetched lazily: only the pages of the requested entries, in request order, every page once a selection reads past the end). Not ported: _EMBED_REGEX/og:platform detection on generic pages. Compared with pinned upstream output through the fixture proxy"
     },
     {
       "name": "peertv",

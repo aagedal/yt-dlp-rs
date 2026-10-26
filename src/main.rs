@@ -3896,6 +3896,9 @@ fn run() -> Result<bool, Box<dyn std::error::Error>> {
                         .map_or("<Untitled>", |text| text.as_str());
                     screen!("[download] Downloading playlist: {title}");
                     header_printed = true;
+                    if let Some(pending) = &mut playlist.pending {
+                        pending.request_entries(&playlist_selection);
+                    }
                     downloader.fetch_pending(playlist, playlist_selection.fetch_limit())?;
                 }
                 // Nested playlists are selected like entries; archive and

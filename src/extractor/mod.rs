@@ -432,6 +432,9 @@ pub use peertube::{
     PeerTube, PeerTubePlaylist, playlist_suitable as peertube_playlist_suitable,
     suitable as peertube_suitable,
 };
+pub(crate) use peertube::{
+    fetch_pages as fetch_peertube_pages, is_pending_state as peertube_pending_state,
+};
 pub use peertv::{PeerTv, suitable as peertv_suitable};
 pub use periscope::{Periscope, suitable as periscope_suitable};
 pub use photobucket::{Photobucket, suitable as photobucket_suitable};

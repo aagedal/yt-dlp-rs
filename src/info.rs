@@ -167,6 +167,17 @@ pub struct PendingEntries {
     pub(crate) state: serde_json::Value,
 }
 
+impl PendingEntries {
+    /// A random-access paged list (upstream `PagedList`) reads only the
+    /// pages of the selection's entries, in request order; other pending
+    /// entries are fetched as a prefix and ignore this.
+    pub fn request_entries(&mut self, selection: &crate::PlaylistSelection) {
+        if self.state["random_access"] == true {
+            self.state["requests"] = selection.entry_requests().into();
+        }
+    }
+}
+
 /// A list field's `None` (`chapters: null`) as an empty list; the `null`
 /// itself stays in `extra` (see `metadata_parser::set_field`), so every
 /// later field update still round-trips the typed dict.
