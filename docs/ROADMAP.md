@@ -162,8 +162,8 @@ remain outside the current result contract.
    configuration remains open.
    The `InfoExtractor` login lifecycle (credentials, netrc files and commands,
    two-factor codes) is ported, with logins for the extractors listed in
-   docs/COMPATIBILITY.md, and Adobe Pass TV provider authentication is ported;
-   Vimeo logins remain open (credentials are an unsupported native error).
+   docs/COMPATIBILITY.md (including Vimeo's login and logged-in web API
+   client), and Adobe Pass TV provider authentication is ported.
    Explicit HTTP/HTTPS/SOCKS proxies and direct overrides now route all native
    clients, including verified HTTPS proxy/CONNECT transport. SOCKS4 user IDs,
    full upstream environment discovery/bypass and per-extractor proxy policies remain open.
