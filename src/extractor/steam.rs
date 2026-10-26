@@ -222,7 +222,7 @@ pub(crate) fn fetch_trailers(
     let url = Url::parse(state["url"].as_str().unwrap_or_default())?;
     let app_id = state["app_id"].as_str().unwrap_or_default().to_owned();
     let app_name = state["app_name"].as_str().map(str::to_owned);
-    let mut trailers: std::collections::VecDeque<Value> = match state.remove("trailers") {
+    let mut trailers: std::collections::VecDeque<Value> = match state.shift_remove("trailers") {
         Some(Value::Array(trailers)) => trailers.into(),
         _ => Default::default(),
     };
