@@ -45,6 +45,31 @@ enum Set {
 }
 use Set::*;
 
+/// An extractor's subtitle track keys (`KEY,KEY`) first, then the others
+/// (processing's `ext`); manifest tracks keep their parser's order.
+fn order_subtitle_tracks(out: &mut Map<String, Value>, subtitle_keys: &str) {
+    for key in ["subtitles", "automatic_captions"] {
+        if let Some(Value::Object(languages)) = out.get_mut(key) {
+            for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
+                for track in tracks
+                    .iter_mut()
+                    .filter_map(Value::as_object_mut)
+                    .filter(|track| !track.contains_key("manifest_url"))
+                {
+                    let mut ordered = Map::new();
+                    for key in subtitle_keys.split(',') {
+                        if let Some(value) = track.shift_remove(key) {
+                            ordered.insert(key.to_owned(), value);
+                        }
+                    }
+                    ordered.append(track);
+                    *track = ordered;
+                }
+            }
+        }
+    }
+}
+
 /// Insertion replay: keys move from this port's dict into upstream order.
 struct Replay {
     ours: Map<String, Value>,
@@ -2006,9 +2031,15 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     }
     // An extractor's own dict that is its own (only) format, built without
     // `None` values (`traverse_obj` dict templates): `untyped-dict;KEYS`.
-    if let Some(keys) = shape.strip_prefix("untyped-dict;") {
+    // (`;subtitle=KEYS` orders the extractor's subtitle track keys.)
+    if let Some(spec) = shape.strip_prefix("untyped-dict;") {
+        let mut parts = spec.split(';');
+        let keys = parts.next().unwrap_or_default();
         for key in keys.split(',').filter(|key| !key.is_empty()) {
             replay.take(key);
+        }
+        if let Some(subtitle_keys) = parts.find_map(|part| part.strip_prefix("subtitle=")) {
+            order_subtitle_tracks(&mut replay.out, subtitle_keys);
         }
     }
     // `AngelIE`: `merge_dicts(info_dict, json_ld)`.
@@ -2137,27 +2168,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         }
         // The extractor's subtitle track keys, then processing's `ext`.
         if let Some(subtitle_keys) = subtitle_keys {
-            for key in ["subtitles", "automatic_captions"] {
-                if let Some(Value::Object(languages)) = replay.out.get_mut(key) {
-                    for tracks in languages.values_mut().filter_map(Value::as_array_mut) {
-                        // Manifest tracks keep their parser's order.
-                        for track in tracks
-                            .iter_mut()
-                            .filter_map(Value::as_object_mut)
-                            .filter(|track| !track.contains_key("manifest_url"))
-                        {
-                            let mut ordered = Map::new();
-                            for key in subtitle_keys.split(',') {
-                                if let Some(value) = track.shift_remove(key) {
-                                    ordered.insert(key.to_owned(), value);
-                                }
-                            }
-                            ordered.append(track);
-                            *track = ordered;
-                        }
-                    }
-                }
-            }
+            order_subtitle_tracks(&mut replay.out, subtitle_keys);
             // `requested_subtitles` holds the same track dicts.
             if let Some(Value::Object(requested)) = match replay.out.get_mut("requested_subtitles")
             {

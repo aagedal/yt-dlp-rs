@@ -1,0 +1,20 @@
+{
+ "data": {
+  "ongoing_ondemand": {
+   "title": {
+    "fin": "Albi haluaa vessan"
+   },
+   "description": {
+    "fin": "Albi haluaa vessan."
+   },
+   "content_rating": {
+    "age_restriction": 0
+   },
+   "start_time": "2021-12-15T08:00:00Z",
+   "duration": {
+    "duration_in_seconds": 319
+   },
+   "manifest_url": "https://yleawodamd.akamaized.net/i/1-2158940/master.m3u8"
+  }
+ }
+}

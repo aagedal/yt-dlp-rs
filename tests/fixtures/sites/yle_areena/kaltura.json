@@ -1,0 +1,34 @@
+{
+ "data": {
+  "ongoing_ondemand": {
+   "title": {
+    "fin": "Vanha ohjelma"
+   },
+   "description": {
+    "fin": "Kausi 3. Arkistosta."
+   },
+   "series": {
+    "title": {
+     "fin": "Arkisto"
+    }
+   },
+   "start_time": "2010-03-01T12:00:00Z",
+   "content_rating": {
+    "age_restriction": 12
+   },
+   "duration": {
+    "duration_in_seconds": 600
+   },
+   "kaltura": {
+    "id": "0_yle1234"
+   },
+   "subtitles": [
+    {
+     "uri": "https://subtitles.api.yle.fi/1-1111/fi.srt",
+     "language": "fi",
+     "kind": "translation"
+    }
+   ]
+  }
+ }
+}

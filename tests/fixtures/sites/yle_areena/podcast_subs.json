@@ -1,0 +1,23 @@
+{
+ "data": {
+  "ongoing_ondemand": {
+   "title": {
+    "fin": "Jakso"
+   },
+   "description": "plain",
+   "episode_number": "3",
+   "media_url": "https://yleawodamd.akamaized.net/audio/1-71022853.mp3",
+   "subtitles": [
+    {
+     "uri": "https://subtitles.api.yle.fi/1-71022853/fi.srt",
+     "language": "fi"
+    },
+    {
+     "uri": "https://subtitles.api.yle.fi/1-71022853/sv.srt",
+     "language": "sv",
+     "kind": "translation"
+    }
+   ]
+  }
+ }
+}

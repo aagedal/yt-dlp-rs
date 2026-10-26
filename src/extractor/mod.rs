@@ -228,6 +228,7 @@ mod xiaohongshu;
 mod xspf;
 mod xvideos;
 mod yfanefa;
+mod yle_areena;
 pub(crate) mod youtube;
 mod zdf;
 mod zhihu;
@@ -561,6 +562,7 @@ pub use xvideos::{
     suitable as xvideos_suitable,
 };
 pub use yfanefa::{Yfanefa, suitable as yfanefa_suitable};
+pub use yle_areena::{YleAreena, suitable as yle_areena_suitable};
 pub(crate) use youtube::YoutubeUnsupported;
 pub(crate) use youtube::clip::YoutubeClip;
 pub(crate) use youtube::comments::post_extract as youtube_comments;

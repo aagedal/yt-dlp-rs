@@ -1,0 +1,43 @@
+{
+ "meta": {
+  "id": "1-4371942"
+ },
+ "data": {
+  "ongoing_ondemand": {
+   "title": {
+    "fin": "Pouchit"
+   },
+   "description": {
+    "fin": "Kausi 1. Pojat pohtivat pouchien käyttöä."
+   },
+   "series": {
+    "title": {
+     "fin": "Modernit miehet"
+    }
+   },
+   "episode_number": 2,
+   "content_rating": {
+    "age_restriction": 7
+   },
+   "start_time": "2019-01-05T22:01:00+02:00",
+   "duration": {
+    "duration_in_seconds": 1435
+   },
+   "manifest_url": "https://yleawodamd.akamaized.net/i/1-4371942/master.m3u8",
+   "subtitles": [
+    {
+     "uri": "https://subtitles.api.yle.fi/1-4371942/fi.srt",
+     "language": "fi",
+     "kind": "hardOfHearing"
+    },
+    {
+     "uri": "not a url",
+     "language": "sv"
+    },
+    {
+     "uri": "https://subtitles.api.yle.fi/1-4371942/und.srt"
+    }
+   ]
+  }
+ }
+}
