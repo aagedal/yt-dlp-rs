@@ -896,6 +896,20 @@
       "scope": "DumpertIE mobile_api info JSON, the first item's VIDEO media variants (fatal HLS with version ids or progressive URLs, qualities ranking), stills thumbnails, stats, duration and KeyError/IndexError/StopIteration paths compared with pinned upstream output through the fixture proxy; non-array item/media lists and non-string titles or URIs remain explicit native errors"
     },
     {
+      "name": "tv2",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/tv2.py"
+      ],
+      "rust": [
+        "src/extractor/tv2.rs",
+        "src/extractor/mod.rs",
+        "src/info_order.rs",
+        "tests/fixtures/sites/tv2/"
+      ],
+      "scope": "TV2IE asset metadata, POSTed HLS/DASH playback with 401 geo/login/description errors, _is_valid_url stream checks, master-only HLS, DASH, progressive and skipped ISM streams, DRM and unbound video_url errors, the leftover own url (kept in -J for merged and single selections through info_order OWN_URL), and TV2ArticleIE asset playlists compared with pinned upstream output through the fixture proxy; f4m streams are unsupported, unparsable embed JSON warns without Python's decoder message, and KatsomoIE/MTVUutisetArticleIE (broken upstream) are not ported"
+    },
+    {
       "name": "xvideos",
       "status": "partial",
       "upstream": [

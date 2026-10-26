@@ -2109,6 +2109,23 @@ requested (`Checking FORMAT video format URL`) and dropped after an HTTP error
 `#quickies/a/ID` links follow the video page. `age_limit` is 18.
 `tests/fixtures/sites/xvideos/` is compared with pinned upstream output.
 
+TV 2 videos (`tv2.no/v|video[N]/.../ID`) follow upstream `TV2IE`: the
+`sumo.tv2.no` asset metadata, then the HLS and DASH playback JSON (POSTed
+like upstream; a 401's error code is the Norway geo restriction, the
+login-required error or the error description), each new stream URL checked
+like `_is_valid_url` (`Checking PROTOCOL-TYPE URL`, dropped after an HTTP
+error), master-only HLS (skipped for DRM-protected playback), DASH with the
+stream's format ID, ISM skipped, other URLs as progressive formats, the DRM
+no-formats error, upstream's unbound `video_url` error without any stream, and
+the last stream URL as the info dict's own `url`. `TV2ArticleIE` article
+pages give their `data-assetid` (or `TV2ContentboxVideo`/`TV2.TV2Video`
+`assetId`) videos as a playlist with the OpenGraph title and description
+(` - TV2.no` removed). HDS (`f4m`) streams are an unsupported error, and an
+embed whose JSON does not parse warns without upstream's Python decoder
+message. Upstream's Katsomo and MTV Uutiset extractors are marked broken and
+not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
+output.
+
 CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
 follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`
 JSON form POST (`version=6.4.0`, `referer`), each `source.sources[].src` URL

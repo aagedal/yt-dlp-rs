@@ -24,6 +24,11 @@ pub(crate) const SECTION_UPDATE: &str = "__yt_dlp_rs_section_update";
 /// result's `original_url` on as extra info, ahead of the default keys.
 pub(crate) const FOLLOWED: &str = "__yt_dlp_rs_followed";
 
+/// An extractor dict's own top-level `url` (next to its `formats`), which
+/// `requested_downloads` are compared with; the typed `url` holds the
+/// selected format's.
+pub(crate) const OWN_URL: &str = "__yt_dlp_rs_own_url";
+
 /// How an upstream step sets a key.
 #[derive(Clone, Copy)]
 enum Set {
@@ -212,6 +217,7 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(FORMAT_SHAPE);
     map.shift_remove(INT_QUALITY);
     map.shift_remove(FOLLOWED);
+    map.shift_remove(OWN_URL);
 }
 
 /// Record the upstream code path that built an info dict.
@@ -960,6 +966,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
     {
         map.insert("quality".into(), (quality as i64).into());
     }
+    let own_url = map.shift_remove(OWN_URL);
     let Some((shape, original)) = shape_of(map.shift_remove(INFO_SHAPE)) else {
         return map;
     };
@@ -2348,6 +2355,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
             .map(|(key, value)| {
                 // A loaded dict already held its selected format's values.
                 let value = match original.as_ref().and_then(|original| original.get(key)) {
+                    _ if key == "url" && own_url.is_some() => own_url.clone().unwrap_or_default(),
                     Some(loaded) if selected.contains(key) => loaded.clone(),
                     _ if selected.contains(key) && !own_keys.contains(&key.as_str()) => Value::Null,
                     _ => value.clone(),
@@ -2498,6 +2506,13 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         {
             out.insert(key.into(), own);
         }
+    }
+    // A merge has no `url` of its own: the extractor's stays.
+    if !requested.is_empty()
+        && let Some(own_url) = own_url
+        && out.get("url").is_some_and(Value::is_null)
+    {
+        out.insert("url".into(), own_url);
     }
     out
 }

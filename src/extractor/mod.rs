@@ -196,6 +196,7 @@ mod toypics;
 mod trtcocuk;
 mod trtworld;
 mod tumblr;
+mod tv2;
 mod tvanouvelles;
 mod tvnoe;
 mod tweakers;
@@ -480,6 +481,9 @@ pub use toypics::{Toypics, suitable as toypics_suitable};
 pub use trtcocuk::{TrtCocukVideo, suitable as trtcocuk_suitable};
 pub use trtworld::{TrtWorld, suitable as trtworld_suitable};
 pub use tumblr::{Tumblr, suitable as tumblr_suitable};
+pub use tv2::{
+    Tv2, Tv2Article, article_suitable as tv2_article_suitable, suitable as tv2_suitable,
+};
 pub use tvanouvelles::{
     TvaNouvelles, TvaNouvellesArticle, article_suitable as tvanouvelles_article_suitable,
     suitable as tvanouvelles_suitable,
@@ -1858,6 +1862,11 @@ pub(crate) fn dict_info(
             "formats" => {}
             // The caller's `info.subtitles`.
             "subtitles" if value.is_null() => {}
+            "url" => {
+                info.extra
+                    .insert(crate::info_order::OWN_URL.into(), value.clone());
+                crate::metadata_parser::set_field(&mut info, name, value);
+            }
             _ => crate::metadata_parser::set_field(&mut info, name, value),
         }
     }
