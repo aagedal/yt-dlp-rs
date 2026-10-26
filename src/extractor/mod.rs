@@ -244,6 +244,7 @@ pub use ard::{
     audiothek_suitable as ard_audiothek_suitable, collection_suitable as ard_collection_suitable,
     suitable as ard_suitable,
 };
+pub(crate) use ard::{fetch_pages as fetch_ard_pages, is_pending_state as ard_pending_state};
 pub use arte::{
     ArteTv, ArteTvCategory, ArteTvEmbed, ArteTvPlaylist,
     category_suitable as artetv_category_suitable, embed_suitable as artetv_embed_suitable,

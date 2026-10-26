@@ -10,9 +10,9 @@
 //! through its GraphQL API.
 //!
 //! Not supported natively: `ARDMediathekBaseIE` (only used by other sites'
-//! extractors). Collection pages are fetched eagerly (upstream's
-//! `OnDemandPagedList` fetches them while processing), and values of
-//! unexpected types are explicit native errors.
+//! extractors), and values of unexpected types are explicit native errors.
+//! Collection pages are pending entries, fetched while processing like
+//! upstream's `OnDemandPagedList`.
 use super::{Extractor, dict_format, dict_info, download_json_headers, download_json_note};
 use crate::{Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoInfo};
 use regex::Regex;
@@ -671,6 +671,152 @@ fn playlist(
     })
 }
 
+trait WithPending {
+    fn with_pending(self, state: Value) -> Self;
+}
+
+impl WithPending for ExtractResult {
+    /// Entries fetched as the playlist is processed (`OnDemandPagedList`,
+    /// whose full count, like a generator's, is unknown unless a selection
+    /// reads past its end).
+    fn with_pending(mut self, state: Value) -> Self {
+        if let ExtractResult::Playlist(playlist) = &mut self {
+            playlist.pending = Some(crate::PendingEntries { state });
+            if let Some(Value::String(shape)) =
+                playlist.extra.get_mut(crate::info_order::INFO_SHAPE)
+            {
+                shape.push_str(crate::info_order::GENERATOR);
+            }
+        }
+        self
+    }
+}
+
+/// `call_api(page_num)` of a collection's pending state.
+fn collection_page(client: &Client, state: &Value, page: usize) -> Result<Value> {
+    let playlist_id = state["playlist_id"].as_str().unwrap_or_default();
+    let base = Url::parse(&format!(
+        "https://api.ardmediathek.de/page-gateway/{}/{playlist_id}",
+        state["api_path"].as_str().unwrap_or_default()
+    ))?;
+    let page_text = page.to_string();
+    let size = PAGE_SIZE.to_string();
+    let mut query = vec![
+        ("pageNumber", page_text.as_str()),
+        ("pageSize", size.as_str()),
+    ];
+    let version = state["version"].as_str();
+    if let Some(season) = state["season"].as_str() {
+        query.extend([
+            ("seasoned", "true"),
+            ("seasonNumber", season),
+            (
+                "withOriginalversion",
+                if version == Some("OV") {
+                    "true"
+                } else {
+                    "false"
+                },
+            ),
+            (
+                "withAudiodescription",
+                if version == Some("AD") {
+                    "true"
+                } else {
+                    "false"
+                },
+            ),
+        ]);
+    }
+    let api = super::update_url_query(&base, &query);
+    download_json_note(
+        client,
+        &api,
+        COLLECTION,
+        playlist_id,
+        &format!("Downloading playlist page {page}"),
+    )
+}
+
+/// Whether a playlist's pending state is an ARD collection's.
+pub(crate) fn is_pending_state(state: &Value) -> bool {
+    state["kind"] == "ard"
+}
+
+/// `OnDemandPagedList(fetch_page, 100)`: the collection's pages, in order,
+/// until `limit` entries exist or a page yields fewer entries than the page
+/// size.
+pub(crate) fn fetch_pages(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let playlist_id = state["playlist_id"].as_str().unwrap_or_default().to_owned();
+    loop {
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            return Ok(Some(state));
+        }
+        let page = state["page"].as_u64().unwrap_or_default() as usize;
+        let data = collection_page(client, &state, page)?;
+        let mut yielded = 0;
+        for item in branch(data.get("teasers")) {
+            if !item.is_object() {
+                continue;
+            }
+            let target = item.get("links").and_then(|links| links.get("target"));
+            let item_id = target
+                .and_then(|target| {
+                    ["urlId", "id"]
+                        .iter()
+                        .filter_map(|key| target.get(*key))
+                        .find(|value| !value.is_null())
+                })
+                .or_else(|| item.get("id").filter(|value| !value.is_null()));
+            let Some(item_id) = item_id else {
+                continue;
+            };
+            if !super::nuxt::truthy(item_id) || item_id.as_str() == Some(playlist_id.as_str()) {
+                continue;
+            }
+            let item_id = py_str(Some(item_id), "teaser IDs")?;
+            let compilation = item.get("type").and_then(Value::as_str) == Some("compilation");
+            let (mode, ie) = if compilation {
+                ("sammlung", (COLLECTION, COLLECTION))
+            } else {
+                ("video", (KEY, NAME))
+            };
+            let mut fields = Vec::new();
+            for (key, value) in [
+                (
+                    "id",
+                    str_value(item.get("id")).map_or(Value::Null, Value::from),
+                ),
+                (
+                    "title",
+                    str_value(item.get("longTitle")).map_or(Value::Null, Value::from),
+                ),
+                ("duration", int_or_none(item.get("duration"))),
+                ("timestamp", timestamp_value(item.get("broadcastedOn"))),
+            ] {
+                if !value.is_null() {
+                    fields.push((key, value));
+                }
+            }
+            entries.push(url_entry(
+                &format!("https://www.ardmediathek.de/{mode}/{item_id}"),
+                ie,
+                fields,
+            )?);
+            yielded += 1;
+        }
+        if yielded < PAGE_SIZE {
+            return Ok(None);
+        }
+        state["page"] = (page + 1).into();
+    }
+}
+
 impl Extractor for ArdMediathekCollection {
     fn key(&self) -> &'static str {
         COLLECTION
@@ -705,130 +851,38 @@ impl Extractor for ArdMediathekCollection {
         } else {
             "widgets/ard/asset"
         };
-        let call_api = |page: usize| -> Result<Value> {
-            let base = Url::parse(&format!(
-                "https://api.ardmediathek.de/page-gateway/{api_path}/{playlist_id}"
-            ))?;
-            let page_text = page.to_string();
-            let size = PAGE_SIZE.to_string();
-            let mut query = vec![
-                ("pageNumber", page_text.as_str()),
-                ("pageSize", size.as_str()),
-            ];
-            if let Some(season) = &season {
-                query.extend([
-                    ("seasoned", "true"),
-                    ("seasonNumber", season.as_str()),
-                    (
-                        "withOriginalversion",
-                        if version.as_deref() == Some("OV") {
-                            "true"
-                        } else {
-                            "false"
-                        },
-                    ),
-                    (
-                        "withAudiodescription",
-                        if version.as_deref() == Some("AD") {
-                            "true"
-                        } else {
-                            "false"
-                        },
-                    ),
-                ]);
-            }
-            let api = super::update_url_query(&base, &query);
-            download_json_note(
-                client,
-                &api,
-                COLLECTION,
-                &playlist_id,
-                &format!("Downloading playlist page {page}"),
-            )
-        };
-
-        let page_data = call_api(0)?;
+        let state = json!({
+            "kind": "ard",
+            "api_path": api_path,
+            "playlist_id": playlist_id,
+            "season": season,
+            "version": version,
+            "page": 0,
+        });
+        let page_data = collection_page(client, &state, 0)?;
         let mut full_id = playlist_id.clone();
         for part in [&season, &version].into_iter().flatten() {
             full_id.push('_');
             full_id.push_str(part);
         }
 
-        // `OnDemandPagedList(fetch_page, 100)`: pages until one yields fewer
-        // entries than the page size.
-        let mut entries = Vec::new();
-        for page in 0.. {
-            let data = call_api(page)?;
-            let mut yielded = 0;
-            for item in branch(data.get("teasers")) {
-                if !item.is_object() {
-                    continue;
-                }
-                let target = item.get("links").and_then(|links| links.get("target"));
-                let item_id = target
-                    .and_then(|target| {
-                        ["urlId", "id"]
-                            .iter()
-                            .filter_map(|key| target.get(*key))
-                            .find(|value| !value.is_null())
-                    })
-                    .or_else(|| item.get("id").filter(|value| !value.is_null()));
-                let Some(item_id) = item_id else {
-                    continue;
-                };
-                if !super::nuxt::truthy(item_id) || item_id.as_str() == Some(playlist_id.as_str()) {
-                    continue;
-                }
-                let item_id = py_str(Some(item_id), "teaser IDs")?;
-                let compilation = item.get("type").and_then(Value::as_str) == Some("compilation");
-                let (mode, ie) = if compilation {
-                    ("sammlung", (COLLECTION, COLLECTION))
-                } else {
-                    ("video", (KEY, NAME))
-                };
-                let mut fields = Vec::new();
-                for (key, value) in [
-                    (
-                        "id",
-                        str_value(item.get("id")).map_or(Value::Null, Value::from),
-                    ),
-                    (
-                        "title",
-                        str_value(item.get("longTitle")).map_or(Value::Null, Value::from),
-                    ),
-                    ("duration", int_or_none(item.get("duration"))),
-                    ("timestamp", timestamp_value(item.get("broadcastedOn"))),
-                ] {
-                    if !value.is_null() {
-                        fields.push((key, value));
-                    }
-                }
-                entries.push(url_entry(
-                    &format!("https://www.ardmediathek.de/{mode}/{item_id}"),
-                    ie,
-                    fields,
-                )?);
-                yielded += 1;
-            }
-            if yielded < PAGE_SIZE {
-                break;
-            }
-        }
-
         let title = text_field(page_data.get("title"), "playlist titles")?.unwrap_or(Value::Null);
         let description =
             text_field(page_data.get("synopsis"), "playlist synopses")?.unwrap_or(Value::Null);
-        Ok(Some(playlist(
-            url,
-            COLLECTION,
-            full_id,
-            vec![
-                ("display_id", display_id.map_or(Value::Null, Value::from)),
-                ("title", title),
-                ("description", description),
-            ],
-            entries,
-        )))
+        Ok(Some(
+            playlist(
+                url,
+                COLLECTION,
+                full_id,
+                vec![
+                    ("display_id", display_id.map_or(Value::Null, Value::from)),
+                    ("title", title),
+                    ("description", description),
+                ],
+                Vec::new(),
+            )
+            .with_pending(state),
+        ))
     }
 }
 

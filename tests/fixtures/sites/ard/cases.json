@@ -22,6 +22,8 @@
  {"url": "https://www.ardmediathek.de/serie/babylon-berlin/staffel-4-mit-audiodeskription/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu/4/AD", "args": ["--no-geo-bypass", "-J"]},
  {"url": "https://www.ardmediathek.de/serie/babylon-berlin/staffel-1/Y3JpZDovL2Rhc2Vyc3RlLmRlL2JhYnlsb24tYmVybGlu/1/", "args": ["--no-geo-bypass", "-J", "--flat-playlist"]},
  {"url": "https://www.ardmediathek.de/sendung/tatort/Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA", "args": ["--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(title)s|%(duration)s|%(timestamp)s|%(playlist_title)s|%(playlist_id)s|%(url)s"]},
+ {"url": "https://www.ardmediathek.de/sendung/tatort/Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA", "args": ["--no-geo-bypass", "-I", "1", "--flat-playlist"]},
+ {"url": "https://www.ardmediathek.de/sendung/tatort/Y3JpZDovL2Rhc2Vyc3RlLmRlL3RhdG9ydA", "args": ["--no-geo-bypass", "-I", "101", "--flat-playlist", "--print", "%(playlist_index)s|%(id)s|%(playlist_count)s"]},
  {"url": "https://www.ardmediathek.de/sammlung/die-kirche-bleibt-im-dorf/5eOHzt8XB2sqeFXbIoJlg2", "args": ["--no-geo-bypass", "-J"]},
  {"url": "https://www.ardmediathek.de/ard/sammlung/5eOHzt8XB2sqeFXbIoJlg2/", "args": ["--no-geo-bypass", "-J", "--flat-playlist"]},
  {"url": "https://www.ardmediathek.de/sammlung/GONE", "args": ["--no-geo-bypass", "-J"]},
