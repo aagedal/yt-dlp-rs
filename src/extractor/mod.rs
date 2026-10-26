@@ -1559,6 +1559,30 @@ pub(crate) fn search_json_with(
     )
 }
 
+/// [`search_json_with`] keeping a parse failure's text: `Err` holds
+/// Python's `JSONDecodeError` text for the candidate (see
+/// [`crate::json::python_raw_decode_error_text`]), when it has one.
+pub(crate) fn search_json_detailed(
+    start: &regex::Regex,
+    html: &str,
+    transform: &dyn Fn(&str) -> String,
+) -> Option<std::result::Result<serde_json::Value, Option<String>>> {
+    let found = start.find(html)?;
+    let trimmed = html[found.end()..].trim_start();
+    if !trimmed.starts_with('{') {
+        return None;
+    }
+    let end = trimmed.rfind('}')?;
+    let text = transform(&trimmed[..=end]);
+    Some(
+        serde_json::Deserializer::from_str(&crate::json::replace_lone_surrogates(&text))
+            .into_iter::<serde_json::Value>()
+            .next()
+            .and_then(std::result::Result::ok)
+            .ok_or_else(|| crate::json::python_raw_decode_error_text(&text)),
+    )
+}
+
 /// `_search_nextjs_data(webpage, video_id)` (fatal): the `__NEXT_DATA__`
 /// script's JSON (greedy to the last `}` before a `</script>`).
 pub(crate) fn search_nextjs_data(

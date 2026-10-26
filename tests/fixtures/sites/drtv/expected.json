@@ -299,6 +299,21 @@
    ],
    "stderr": [],
    "files": {}
+  },
+  {
+   "url": "https://www.dr.dk/drtv/episode/klassen-darlig-taber-10",
+   "args": [
+    "--print",
+    "%(id)s|%(title)s"
+   ],
+   "exit": 0,
+   "stdout": [
+    "00831690010|Klassen - Dårlig taber (10)"
+   ],
+   "stderr": [
+    "WARNING: [drtv] klassen-darlig-taber-10: Unable to extract data - Failed to parse JSON: klassen-darlig-taber-10: Failed to parse JSON (caused by JSONDecodeError('Expecting value in \\'{\"page\": [}, \"x\": 1}\\': line 1 column 21 (char 20)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+   ],
+   "files": {}
   }
  ]
 }

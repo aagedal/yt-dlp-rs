@@ -97,16 +97,21 @@ mod tests {
 
 /// Python's `json.loads(text, strict=False)` error, if any: the message and
 /// the character offset of its `JSONDecodeError` (CPython's decoder; nesting
-/// deeper than 1000 levels, Python's `RecursionError`, is not modeled).
-pub(crate) fn python_decode_error(text: &str) -> Option<(String, usize)> {
+/// deeper than 1000 levels, Python's `RecursionError`, is not modeled), for
+/// `decode` (whole documents), or `raw_decode` (`ignore_extra`: trailing
+/// data is not an error).
+fn decode_error(text: &str, raw: bool) -> Option<(String, usize)> {
     let chars: Vec<char> = text.chars().collect();
     let scanner = PyScanner { s: &chars };
-    let start = scanner.whitespace(0);
+    let start = if raw { 0 } else { scanner.whitespace(0) };
     let end = match scanner.scan_once(start, 0) {
         Ok(end) => end,
         Err(PyError::Stop(index)) => return Some(("Expecting value".into(), index)),
         Err(PyError::Decode(message, index)) => return Some((message, index)),
     };
+    if raw {
+        return None;
+    }
     let end = scanner.whitespace(end);
     (end != chars.len()).then(|| ("Extra data".into(), end))
 }
@@ -114,7 +119,18 @@ pub(crate) fn python_decode_error(text: &str) -> Option<(String, usize)> {
 /// `LenientJSONDecoder`'s error text, as upstream's `_parse_json` warnings
 /// show it: `MSG in 'SNIPPET': line L column C (char P)`.
 pub(crate) fn python_decode_error_text(text: &str) -> Option<String> {
-    let (message, pos) = python_decode_error(text)?;
+    error_text(text, false)
+}
+
+/// [`python_decode_error_text`] with `ignore_extra=True`: `raw_decode` of
+/// the text with leading (Python) whitespace stripped, as `_search_json`
+/// parses.
+pub(crate) fn python_raw_decode_error_text(text: &str) -> Option<String> {
+    error_text(text.trim_start_matches(crate::batch::is_py_space), true)
+}
+
+fn error_text(text: &str, raw: bool) -> Option<String> {
+    let (message, pos) = decode_error(text, raw)?;
     let chars: Vec<char> = text.chars().collect();
     // `s[pos - 10:pos + 10]` with Python's negative-index slicing.
     let len = chars.len() as isize;

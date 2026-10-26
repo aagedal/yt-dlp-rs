@@ -16,6 +16,13 @@
    "body_file": "token.json"
   },
   {
+   "url": "https://www.dr.dk/drtv/episode/klassen-darlig-taber-10",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><script>window.__data = {\"cache\": {\"page\": [}, \"x\": 1};</script></html>"
+  },
+  {
    "url": "https://www.dr.dk/drtv/se/spise-med-price_-pasta-selv_397445",
    "headers": {
     "Content-Type": "text/html; charset=utf-8"

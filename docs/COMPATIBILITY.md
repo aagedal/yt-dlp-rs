@@ -949,8 +949,8 @@ their titles, descriptions and numbers, in a playlist with `display_id`,
 title, contextual title, series (and the season number). None of the four
 is marked `_WORKING = False` upstream. Non-string IDs, titles and paths
 (where upstream would stringify or raise a `TypeError`) are explicit native
-errors, and a malformed `window.__data` JSON warns without Python's
-`JSONDecodeError` text. `tests/fixtures/sites/drtv/` (constructed responses:
+errors; a malformed `window.__data` JSON warns with upstream's text
+(Python's `JSONDecodeError` included). `tests/fixtures/sites/drtv/` (constructed responses:
 the live API is geo-restricted and the old channel API retired) is compared
 with pinned upstream output.
 

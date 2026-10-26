@@ -11,7 +11,7 @@
 //! show where upstream would stringify or fail with a Python `TypeError`.
 use super::{
     Extractor, dict_info, download_json, download_json_note, download_json_note_headers,
-    download_webpage, extract_m3u8_master_optional, search_json, search_warning, update_url_query,
+    download_webpage, extract_m3u8_master_optional, search_warning, update_url_query,
 };
 use crate::{
     Error, ExtractResult, PlaylistInfo, Result, SubtitleFormat, Subtitles, VideoFormat, VideoInfo,
@@ -416,11 +416,19 @@ impl Extractor for Drtv {
         let webpage = download_webpage(client, url, NAME, &url_slug)?;
 
         // `_search_json(r'window\.__data\s*=', ..., fatal=False) or {}`.
-        let json_data = match search_json(&DATA, &webpage, false) {
-            Some(Some(data)) => data,
-            Some(None) => {
+        let json_data = match super::search_json_detailed(&DATA, &webpage, &str::to_owned) {
+            Some(Ok(data)) => data,
+            Some(Err(error)) => {
+                // `ExtractorError(f'{id}: Failed to parse JSON', cause=e)`.
+                let cause = error.map_or_else(String::new, |error| {
+                    format!(
+                        " (caused by JSONDecodeError({}))",
+                        crate::batch::py_repr(&error)
+                    )
+                });
                 crate::screen::warning(&format!(
-                    "[{NAME}] {url_slug}: Unable to extract data - Failed to parse JSON"
+                    "[{NAME}] {url_slug}: Unable to extract data - Failed to parse JSON: {url_slug}: Failed to parse JSON{cause}; {}",
+                    crate::BUG_REPORTS_MESSAGE
                 ));
                 Value::Null
             }
