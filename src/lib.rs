@@ -333,6 +333,9 @@ pub(crate) const FOLLOW_URL: &str = "__yt_dlp_rs_follow_url";
 
 /// A playlist entry's processing error, reported with that entry.
 pub(crate) const ENTRY_ERROR: &str = "__yt_dlp_rs_entry_error";
+/// A fetched pending entry that was already processed (see
+/// [`YoutubeDl::fetch_pending`]).
+pub(crate) const PROCESSED_ENTRY: &str = "__yt_dlp_rs_processed_entry";
 /// An extractor's top-level `url_transparent` result: `{url, fields}`, the
 /// target extracted through the registry and updated with the non-`None`
 /// fields (`process_ie_result`).
@@ -1891,26 +1894,44 @@ impl YoutubeDl {
                 extractor::fetch_kick_entries
             } else if extractor::peertube_pending_state(&pending.state) {
                 extractor::fetch_peertube_pages
+            } else if extractor::podbayfm_pending_state(&pending.state) {
+                extractor::fetch_podbayfm_pages
             } else {
                 extractor::fetch_youtube_tab_pages
             };
             // Steam's generator yields extracted videos (not `url` entries),
             // processed as they are fetched.
-            let resolved = extractor::steam_pending_state(&pending.state);
-            let before = playlist.entries.len();
+            // Some generators and paged lists yield extracted videos (not
+            // `url` entries), processed once they are fetched (random-access
+            // pages may fill earlier placeholders).
+            let resolved = extractor::steam_pending_state(&pending.state)
+                || extractor::podbayfm_pending_state(&pending.state);
             playlist.pending = fetch(&self.client, pending.state, limit, &mut playlist.entries)?
                 .map(|state| PendingEntries { state });
-            if resolved && playlist.entries.len() > before {
-                let mut fetched = ExtractResult::Playlist(PlaylistInfo {
-                    entries: playlist.entries.split_off(before),
-                    nested: Vec::new(),
-                    pending: None,
-                    extra: serde_json::Map::new(),
-                    ..playlist.clone()
-                });
-                self.process_result(&mut fetched)?;
-                if let ExtractResult::Playlist(fetched) = fetched {
-                    playlist.entries.extend(fetched.entries);
+            if resolved {
+                let unprocessed: Vec<usize> = (0..playlist.entries.len())
+                    .filter(|index| !playlist.entries[*index].extra.contains_key(PROCESSED_ENTRY))
+                    .collect();
+                if !unprocessed.is_empty() {
+                    let mut fetched = ExtractResult::Playlist(PlaylistInfo {
+                        entries: unprocessed
+                            .iter()
+                            .map(|index| playlist.entries[*index].clone())
+                            .collect(),
+                        nested: Vec::new(),
+                        pending: None,
+                        extra: serde_json::Map::new(),
+                        ..playlist.clone()
+                    });
+                    self.process_result(&mut fetched)?;
+                    if let ExtractResult::Playlist(fetched) = fetched {
+                        for (index, mut entry) in unprocessed.into_iter().zip(fetched.entries) {
+                            entry
+                                .extra
+                                .insert(PROCESSED_ENTRY.into(), serde_json::Value::Bool(true));
+                            playlist.entries[index] = entry;
+                        }
+                    }
                 }
             }
         }

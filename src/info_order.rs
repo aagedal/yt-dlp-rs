@@ -246,6 +246,7 @@ pub(crate) fn strip_markers(map: &mut Map<String, Value>) {
     map.shift_remove(INT_FRAGMENT_DURATIONS);
     map.shift_remove(FOLLOWED);
     map.shift_remove(OWN_URL);
+    map.shift_remove(crate::PROCESSED_ENTRY);
 }
 
 /// Record the upstream code path that built an info dict.
@@ -1027,6 +1028,7 @@ pub(crate) fn video(mut map: Map<String, Value>) -> Map<String, Value> {
         map.insert("quality".into(), (quality as i64).into());
     }
     let own_url = map.shift_remove(OWN_URL);
+    map.shift_remove(crate::PROCESSED_ENTRY);
     let Some((shape, original)) = shape_of(map.shift_remove(INFO_SHAPE)) else {
         return map;
     };

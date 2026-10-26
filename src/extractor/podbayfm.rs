@@ -6,7 +6,7 @@ use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use base64::Engine;
 use regex::Regex;
 use reqwest::blocking::Client;
-use serde_json::{Map, Value};
+use serde_json::{Map, Value, json};
 use std::sync::LazyLock;
 use url::Url;
 
@@ -171,6 +171,64 @@ fn announce(name: &'static str, url: &Url) {
     ));
 }
 
+/// `_fetch_page(channel_id, pagenum)`: the API page's `podcast`.
+fn fetch_podcast(client: &Client, channel_id: &str, pagenum: usize) -> Result<Value> {
+    let api = super::update_url_query(
+        &Url::parse("https://podbay.fm/api/podcast")?,
+        &[
+            ("reverse", "true"),
+            ("page", &pagenum.to_string()),
+            ("slug", channel_id),
+        ],
+    );
+    // Upstream passes the note as the video ID and the ID as the note.
+    let data = download_json_note(
+        client,
+        &api,
+        CHANNEL_NAME,
+        &format!("Downloading channel JSON page {}", pagenum + 1),
+        channel_id,
+    )?;
+    data.get("podcast")
+        .cloned()
+        .ok_or_else(|| key_error(channel_id, "podcast"))
+}
+
+/// Whether a playlist's pending state is a PodbayFM channel's.
+pub(crate) fn is_pending_state(state: &Value) -> bool {
+    state["kind"] == "podbayfm"
+}
+
+/// `OnDemandPagedList(... first_page ..., 10)` read by upstream's
+/// `PlaylistEntries` (see [`super::paged`]); page 0 is the extraction's.
+pub(crate) fn fetch_pages(
+    client: &Client,
+    state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let channel_id = state["channel_id"].as_str().unwrap_or_default().to_owned();
+    let page = Url::parse(state["url"].as_str().unwrap_or_default())?;
+    let first_page = state["first_page"].clone();
+    let mut fetch = |pagenum: usize| -> Result<Vec<VideoInfo>> {
+        let podcast = if pagenum == 0 {
+            first_page.clone()
+        } else {
+            fetch_podcast(client, &channel_id, pagenum)?
+        };
+        let episodes = match podcast.get("episodes") {
+            Some(Value::Array(episodes)) => episodes,
+            _ => return Err(unsupported("channel pages without an episode list")),
+        };
+        episodes
+            .iter()
+            .map(|episode| result_from_props(episode, &page, Some(&channel_id)))
+            .collect()
+    };
+    let placeholder = || Ok(super::direct::build_at(page.clone(), &page, "mp3".into()));
+    super::paged::fetch_requested(state, limit, entries, PAGE_SIZE, &mut fetch, &placeholder)
+}
+
 impl Extractor for PodbayFm {
     fn key(&self) -> &'static str {
         NAME
@@ -210,42 +268,15 @@ impl Extractor for PodbayFmChannel {
         };
         let channel_id = found["id"].to_owned();
         announce(CHANNEL_NAME, url);
-        // `OnDemandPagedList`: pages until one is shorter than the page size.
-        let mut entries = Vec::new();
-        let mut title = None;
-        for pagenum in 0.. {
-            let api = super::update_url_query(
-                &Url::parse("https://podbay.fm/api/podcast")?,
-                &[
-                    ("reverse", "true"),
-                    ("page", &pagenum.to_string()),
-                    ("slug", &channel_id),
-                ],
-            );
-            let data = download_json_note(
-                client,
-                &api,
-                CHANNEL_NAME,
-                &format!("Downloading channel JSON page {}", pagenum + 1),
-                &channel_id,
-            )?;
-            let podcast = data
-                .get("podcast")
-                .ok_or_else(|| key_error(&channel_id, "podcast"))?;
-            if pagenum == 0 {
-                title = podcast.get("title").cloned();
-            }
-            let episodes = match podcast.get("episodes") {
-                Some(Value::Array(episodes)) => episodes,
-                _ => return Err(unsupported("channel pages without an episode list")),
-            };
-            for episode in episodes {
-                entries.push(result_from_props(episode, url, Some(&channel_id))?);
-            }
-            if episodes.len() < PAGE_SIZE {
-                break;
-            }
-        }
+        let first_page = fetch_podcast(client, &channel_id, 0)?;
+        let title = first_page.get("title").cloned();
+        let state = json!({
+            "kind": "podbayfm",
+            "channel_id": channel_id,
+            "url": url.as_str(),
+            "first_page": first_page,
+            "random_access": true,
+        });
         let mut keys = vec!["id"];
         let title = match title {
             None | Some(Value::Null) => None,
@@ -258,7 +289,12 @@ impl Extractor for PodbayFmChannel {
         let mut extra = Map::new();
         extra.insert(
             crate::info_order::INFO_SHAPE.into(),
-            format!("playlist-dict;{}", keys.join(",")).into(),
+            format!(
+                "playlist-dict;{}{}",
+                keys.join(","),
+                crate::info_order::GENERATOR
+            )
+            .into(),
         );
         Ok(Some(ExtractResult::Playlist(PlaylistInfo {
             id: channel_id,
@@ -267,8 +303,8 @@ impl Extractor for PodbayFmChannel {
             extractor: CHANNEL_NAME.into(),
             extractor_key: CHANNEL_NAME.into(),
             nested: Vec::new(),
-            pending: None,
-            entries,
+            pending: Some(crate::PendingEntries { state }),
+            entries: Vec::new(),
             extra,
         })))
     }

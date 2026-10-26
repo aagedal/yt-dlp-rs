@@ -2221,8 +2221,11 @@ page's `__NEXT_DATA__` `pageProps.episode` as an untyped MP3 result
 thumbnail URL, timestamp and duration, upstream's next.js/`KeyError` errors and
 the generic title and `No video formats found!` error for bare episodes.
 Channels (`podbay.fm/p/SLUG`) follow `PodbayFMChannelIE`: the podcast API's
-10-episode pages (fetched until a short page) as a playlist with episode page
-URLs built from their timestamps. Episodes without a string ID remain explicit
+10-episode pages as a playlist with episode page URLs built from their
+timestamps. Like upstream's `OnDemandPagedList`, page 1 is read at extraction
+(for the title, and reused) and later pages only when they hold requested
+entries (`-I 11` reads just page 2; the count is unknown unless a selection
+reads past the end). Episodes without a string ID remain explicit
 native errors. `tests/fixtures/sites/podbayfm/` is compared with pinned
 upstream output.
 

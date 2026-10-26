@@ -447,6 +447,9 @@ pub use pinterest::{Pinterest, suitable as pinterest_suitable};
 pub use playerfm::{PlayerFm, suitable as playerfm_suitable};
 pub use podbayfm::{PodbayFm, suitable as podbayfm_suitable};
 pub use podbayfm::{PodbayFmChannel, channel_suitable as podbayfm_channel_suitable};
+pub(crate) use podbayfm::{
+    fetch_pages as fetch_podbayfm_pages, is_pending_state as podbayfm_pending_state,
+};
 pub use popcorntv::{PopcornTv, suitable as popcorntv_suitable};
 pub use premiershiprugby::{PremiershipRugby, suitable as premiershiprugby_suitable};
 pub use presstv::{PressTv, suitable as presstv_suitable};
