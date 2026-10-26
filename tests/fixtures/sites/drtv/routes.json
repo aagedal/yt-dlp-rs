@@ -197,6 +197,13 @@
     "Content-Type": "application/json"
    },
    "body_file": "series.json"
+  },
+  {
+   "url": "https://drlive01hds.akamaihd.test/z/drlive_01@460595/manifest.f4m?hdcore=3.7.0",
+   "headers": {
+    "Content-Type": "application/f4m+xml"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns=\"http://ns.adobe.com/f4m/1.0\">\n <id>drlive01</id>\n <streamType>live</streamType>\n <bootstrapInfo profile=\"named\" id=\"bootstrap0\">AAAA</bootstrapInfo>\n <media streamId=\"hi\" url=\"drlive01_hi\" bitrate=\"2500\" width=\"1280\" height=\"720\" bootstrapInfoId=\"bootstrap0\"/>\n</manifest>\n"
   }
  ]
 }

@@ -7,9 +7,8 @@
 //! (HLS), and season/series pages of the dr-massive page API as `url`
 //! results.
 //!
-//! Not supported natively: live channels' HDS (`f4m`) streaming servers (an
-//! explicit error), and API values of other types than upstream's tests show
-//! where upstream would stringify or fail with a Python `TypeError`.
+//! Not supported natively: API values of other types than upstream's tests
+//! show where upstream would stringify or fail with a Python `TypeError`.
 use super::{
     Extractor, dict_info, download_json, download_json_note, download_json_note_headers,
     download_webpage, extract_m3u8_master_optional, search_json, search_warning, update_url_query,
@@ -612,7 +611,18 @@ impl Extractor for DrtvLive {
                                 formats.extend(stream.formats);
                             }
                         }
-                        Some("HDS") => return Err(unsupported("HDS (f4m) streaming servers")),
+                        Some("HDS") => {
+                            let base = Url::parse(&format!("{server}/{stream_path}"))
+                                .map_err(|_| unsupported("stream URLs that are not absolute"))?;
+                            let manifest = update_url_query(&base, &[("hdcore", "3.7.0")]);
+                            formats.extend(super::extract_f4m_optional(
+                                client,
+                                LIVE_NAME,
+                                &manifest,
+                                &channel_id,
+                                Some("HDS"),
+                            )?);
+                        }
                         _ => {}
                     }
                 }

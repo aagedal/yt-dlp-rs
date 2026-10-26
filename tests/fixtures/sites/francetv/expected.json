@@ -335,6 +335,26 @@
     "ERROR: [francetv] 7d204c9e-a2d3-11eb-9e4c-000d3a23d482: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
    ],
    "files": {}
+  },
+  {
+   "url": "francetv:hds-id",
+   "args": [
+    "--no-geo-bypass",
+    "-F"
+   ],
+   "exit": 0,
+   "stdout": [
+    "[francetv] Extracting URL: francetv:hds-id",
+    "[francetv] hds-id: Downloading desktop chrome video JSON",
+    "[francetv] hds-id: Downloading mobile safari video JSON",
+    "[francetv] hds-id: Downloading f4m manifest",
+    "[info] Available formats for hds-id:",
+    "ID       EXT RESOLUTION |  FILESIZE   TBR PROTO | VCODEC  ACODEC",
+    "-----------------------------------------------------------------",
+    "hds-1200 flv 1024x576   | ~17.17MiB 1200k f4m   | unknown unknown"
+   ],
+   "stderr": [],
+   "files": {}
   }
  ]
 }

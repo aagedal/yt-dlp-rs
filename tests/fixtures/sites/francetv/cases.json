@@ -18,5 +18,6 @@
  {"url": "https://france3-regions.francetvinfo.fr/limousin/emissions/jt-1213-limousin", "args": ["--no-geo-bypass", "--no-progress", "-o", "%(id)s.%(ext)s"]},
  {"url": "https://www.francetvinfo.fr/politique/video-cecile-duflot_1520091.html", "args": ["--no-geo-bypass", "--flat-playlist", "-J"]},
  {"url": "https://www.franceinfo.fr/monde/sans-video_7764542.html", "args": ["--no-geo-bypass", "-J"]},
- {"url": "https://www.francetvinfo.fr/culture/notre-dame_4372291.html", "args": ["--no-geo-bypass", "-J"]}
+ {"url": "https://www.francetvinfo.fr/culture/notre-dame_4372291.html", "args": ["--no-geo-bypass", "-J"]},
+ {"url": "francetv:hds-id", "args": ["--no-geo-bypass", "-F"]}
 ]

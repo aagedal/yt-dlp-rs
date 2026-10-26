@@ -224,7 +224,16 @@ impl Extractor for Tv2 {
                 let ext = super::direct::determine_ext(&video_url);
                 let drm = data.get("drmProtected").is_some_and(super::nuxt::truthy);
                 match ext.as_deref() {
-                    Some("f4m") => return Err(unsupported("HDS (f4m) streams")),
+                    Some("f4m") => {
+                        let manifest = Url::parse(&video_url)?;
+                        formats.extend(super::extract_f4m_optional(
+                            client,
+                            NAME,
+                            &manifest,
+                            &video_id,
+                            Some(&format_id),
+                        )?);
+                    }
                     Some("m3u8") => {
                         if !drm {
                             let manifest = Url::parse(&video_url)?;

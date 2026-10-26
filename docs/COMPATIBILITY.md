@@ -538,7 +538,7 @@ URL`, skipped when invalid). Audio formats in `qtz`/`qad` get the `audio
 description` note and a lower language preference, spritesheets an `mhtml`
 storyboard format, and when nothing is found a HEAD request's `x-errortype:
 geo` gives the geo error (a warning with `--ignore-no-formats-error`). `f4m`
-(HDS) URLs are explicit native errors. france.tv pages
+(HDS) URLs give non-fatal F4M formats. france.tv pages
 (`FranceTVSiteIE`) take the first Next.js v13 flight data object's
 `options.id`, and franceinfo pages (`FranceTVInfoIE`) the
 `francetv-player-wrapper` element's `id` or upstream's older patterns, as
@@ -939,8 +939,9 @@ release timestamp, duration, series, season (title, number, ID), episode
 (name, number) and release year as upstream's `traverse_obj`. DR TV live
 channels (`dr.dk/tv/live/ID`) follow `DRTVLiveIE`: the `mu-online` channel
 JSON (`Title` required), each HLS streaming server's stream paths with a
-`b=` query as live master-playlist formats (`HLS-N`); HDS servers are
-explicit native errors. Season and series pages (`drtv/saeson|serie/SLUG_ID`)
+`b=` query as live master-playlist formats (`HLS-N`) and each HDS server's
+non-fatal F4M formats (`HDS-N`, `hdcore=3.7.0`; downloading live HDS remains
+unsupported). Season and series pages (`drtv/saeson|serie/SLUG_ID`)
 follow `DRTVSeasonIE`/`DRTVSeriesIE`: the `dr-massive` page API's episodes
 (a missing `path` is upstream's `KeyError`) or seasons (a missing `path`
 gives upstream's `https://www.dr.dk/drtvNone`) as raw `url` results with
@@ -2335,7 +2336,7 @@ the last stream URL as the info dict's own `url`. `TV2ArticleIE` article
 pages give their `data-assetid` (or `TV2ContentboxVideo`/`TV2.TV2Video`
 `assetId`) videos as a playlist with the OpenGraph title and description
 (` - TV2.no` removed; an embed whose JSON does not parse warns with
-Python's decoder message). HDS (`f4m`) streams are an unsupported error. Upstream's Katsomo and MTV Uutiset extractors are marked broken and
+Python's decoder message). HDS (`f4m`) streams give non-fatal F4M formats. Upstream's Katsomo and MTV Uutiset extractors are marked broken and
 not ported. `tests/fixtures/sites/tv2/` is compared with pinned upstream
 output.
 

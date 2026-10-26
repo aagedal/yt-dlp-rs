@@ -2,7 +2,7 @@
 //! XML's video entry and, for its stream access URL and the `iphone`
 //! variant, the token manifest as optional HDS or HLS formats.
 use super::{Extractor, download_xml, extract_m3u8_optional};
-use crate::{Error, Result, VideoFormat, VideoInfo};
+use crate::{Error, Result, VideoInfo};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
@@ -57,54 +57,6 @@ fn text(node: roxmltree::Node<'_, '_>) -> Option<String> {
     (!text.is_empty()).then_some(text)
 }
 
-/// `_extract_f4m_formats(url, display_id, f4m_id='hds', fatal=False)`.
-fn f4m_formats(client: &Client, manifest: &Url, display_id: &str) -> Result<Vec<VideoFormat>> {
-    crate::screen::screen(&format!("[{NAME}] {display_id}: Downloading f4m manifest"));
-    let body = super::direct::request(client, manifest, None).and_then(|response| {
-        let final_url = response.url().clone();
-        Ok((final_url, response.text().map_err(Error::Http)?))
-    });
-    let (final_url, body) = match body {
-        Ok(found) => found,
-        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
-            crate::screen::warning(&format!(
-                "[{NAME}] {display_id}: Unable to download f4m manifest: {}",
-                crate::upstream_error_text(&error)
-            ));
-            return Ok(Vec::new());
-        }
-        Err(error) => return Err(error),
-    };
-    let formats = match super::f4m::parse(&body, final_url.as_str(), Some("hds")) {
-        Some(super::f4m::Manifest::Formats(formats)) => formats,
-        Some(super::f4m::Manifest::Nested) => {
-            return Err(Error::UnsupportedHtml5(
-                "F4M manifests referring to nested manifests are not supported natively".into(),
-            ));
-        }
-        None => {
-            return Err(Error::UnsupportedHtml5(
-                "non-F4M or malformed tv.dfb.de HDS manifests are not supported natively".into(),
-            ));
-        }
-    };
-    formats
-        .into_iter()
-        .map(|mut value| {
-            let ext = value["ext"].as_str().map(str::to_owned).unwrap_or_else(|| {
-                super::direct::determine_ext(value["url"].as_str().unwrap_or_default())
-                    .unwrap_or_else(|| "unknown_video".into())
-            });
-            value["ext"] = ext.into();
-            let mut format: VideoFormat = serde_json::from_value(value)
-                .map_err(|error| Error::UnsupportedHtml5(format!("F4M media: {error}")))?;
-            format.protocol = Some("f4m".into());
-            crate::info_order::mark_format(&mut format, "f4m");
-            Ok(format)
-        })
-        .collect()
-}
-
 impl Extractor for Dfb {
     fn key(&self) -> &'static str {
         "DFB"
@@ -154,7 +106,13 @@ impl Extractor for Dfb {
             let manifest_url = format!("{}?hdnea={}", attribute("url")?, attribute("auth")?);
             if manifest_url.contains(".f4m") {
                 let manifest = Url::parse(&format!("{manifest_url}&hdcore=3.2.0"))?;
-                formats.extend(f4m_formats(client, &manifest, &display_id)?);
+                formats.extend(super::extract_f4m_optional(
+                    client,
+                    NAME,
+                    &manifest,
+                    &display_id,
+                    Some("hds"),
+                )?);
             } else if let Some(stream) = extract_m3u8_optional(
                 client,
                 &Url::parse(&manifest_url)?,

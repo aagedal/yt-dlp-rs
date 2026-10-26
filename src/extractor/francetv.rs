@@ -7,8 +7,6 @@
 //! check), france.tv pages' Next.js flight data video IDs and franceinfo
 //! pages' player IDs as smuggled `francetv:` URL results, and franceinfo's
 //! Dailymotion embeds as a playlist of `url` results.
-//!
-//! Not supported natively: `f4m` (HDS) video URLs (an explicit error).
 use super::{
     Extractor, dict_format, dict_info, extract_m3u8_master_optional, extract_mpd_optional_note,
 };
@@ -321,7 +319,14 @@ fn extract_video(client: &Client, page: &Url, video_id: &str, hostname: &str) ->
 
         let ext = super::direct::determine_ext(&video_url).unwrap_or_default();
         if ext == "f4m" {
-            return Err(unsupported("f4m (HDS) video URLs"));
+            let f4m_id = id_or(&ext);
+            formats.extend(super::extract_f4m_optional(
+                client,
+                TV_NAME,
+                &parsed()?,
+                video_id,
+                Some(&f4m_id),
+            )?);
         } else if ext == "m3u8" {
             let m3u8_id = id_or("hls");
             if let Some(stream) = extract_m3u8_master_optional(

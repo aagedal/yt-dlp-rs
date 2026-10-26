@@ -1870,6 +1870,64 @@ pub(crate) fn search_warning(extractor: &str, name: &str) {
     ));
 }
 
+/// `_extract_f4m_formats(url, video_id, f4m_id=F4M_ID, fatal=False)`: an
+/// HTTP error is the `Unable to download f4m manifest` warning (no formats).
+/// Manifests that are not F4M, or whose media are nested manifests, are
+/// unsupported errors.
+pub(crate) fn extract_f4m_optional(
+    client: &Client,
+    extractor: &str,
+    manifest: &Url,
+    id: &str,
+    f4m_id: Option<&str>,
+) -> Result<Vec<crate::VideoFormat>> {
+    use crate::Error;
+    crate::screen::screen(&format!("[{extractor}] {id}: Downloading f4m manifest"));
+    let body = direct::request(client, manifest, None).and_then(|response| {
+        let final_url = response.url().clone();
+        Ok((final_url, response.text().map_err(Error::Http)?))
+    });
+    let (final_url, body) = match body {
+        Ok(found) => found,
+        Err(error @ (Error::Http(_) | Error::HttpRetryAfter { .. })) => {
+            crate::screen::warning(&format!(
+                "[{extractor}] {id}: Unable to download f4m manifest: {}",
+                crate::upstream_error_text(&error)
+            ));
+            return Ok(Vec::new());
+        }
+        Err(error) => return Err(error),
+    };
+    let formats = match f4m::parse(&body, final_url.as_str(), f4m_id) {
+        Some(f4m::Manifest::Formats(formats)) => formats,
+        Some(f4m::Manifest::Nested) => {
+            return Err(Error::UnsupportedHtml5(
+                "F4M manifests referring to nested manifests are not supported natively".into(),
+            ));
+        }
+        None => {
+            return Err(Error::UnsupportedHtml5(
+                "non-F4M or malformed HDS manifests are not supported natively".into(),
+            ));
+        }
+    };
+    formats
+        .into_iter()
+        .map(|mut value| {
+            let ext = value["ext"].as_str().map(str::to_owned).unwrap_or_else(|| {
+                direct::determine_ext(value["url"].as_str().unwrap_or_default())
+                    .unwrap_or_else(|| "unknown_video".into())
+            });
+            value["ext"] = ext.into();
+            let mut format: crate::VideoFormat = serde_json::from_value(value)
+                .map_err(|error| Error::UnsupportedHtml5(format!("F4M media: {error}")))?;
+            format.protocol = Some("f4m".into());
+            crate::info_order::mark_format(&mut format, "f4m");
+            Ok(format)
+        })
+        .collect()
+}
+
 /// `_is_valid_url(url, video_id, item)`: a `Checking ITEM URL` request;
 /// an HTTP error is reported as `ITEM URL is invalid, skipping` and the URL
 /// is invalid. Non-HTTP URLs are valid without a request.

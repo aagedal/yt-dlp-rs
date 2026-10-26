@@ -203,11 +203,13 @@
     "[drtv:live] Extracting URL: https://www.dr.dk/tv/live/dr1",
     "[drtv:live] dr1: Downloading JSON metadata",
     "[drtv:live] dr1: Downloading m3u8 information",
+    "[drtv:live] dr1: Downloading f4m manifest",
     "[info] Available formats for dr1:",
-    "ID    EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
-    "----------------------------------------------------------",
-    "HLS-0 mp4 640x360    |  800k m3u8  | avc1.4d401e mp4a.40.2",
-    "HLS-1 mp4 1280x720   | 3000k m3u8  | avc1.64001f mp4a.40.2"
+    "ID       EXT RESOLUTION |   TBR PROTO | VCODEC      ACODEC",
+    "-------------------------------------------------------------",
+    "HLS-0    mp4 640x360    |  800k m3u8  | avc1.4d401e mp4a.40.2",
+    "HDS-2500 flv 1280x720   | 2500k f4m   | unknown     unknown",
+    "HLS-1    mp4 1280x720   | 3000k m3u8  | avc1.64001f mp4a.40.2"
    ],
    "stderr": [],
    "files": {}

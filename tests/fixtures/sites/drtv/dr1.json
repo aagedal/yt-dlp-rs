@@ -19,6 +19,19 @@
    ]
   },
   {
+   "Server": "https://drlive01hds.akamaihd.test/z/drlive_01@460595",
+   "LinkType": "HDS",
+   "Qualities": [
+    {
+     "Streams": [
+      {
+       "Stream": "manifest.f4m"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "Server": "",
    "LinkType": "HLS",
    "Qualities": [
