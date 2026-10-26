@@ -1673,8 +1673,10 @@ VK user/club video sections (`vk.com/video/@NAME[/all][?section=S]`,
 `vkvideo.ru/@NAME`) and playlists (`.../playlist/OWNER_ID`) follow upstream
 `VKUserVideosIE`: the page's `newCur` cursor `oid` (or the playlist ID), the
 `VideoInfoPanel__title` playlist title and `al_video.php`'s
-`load_videos_silent` pages as `VKIE` `url` entries. Upstream fetches the
-pages lazily while processing entries; this port fetches them all first.
+`load_videos_silent` pages as `VKIE` `url` entries. Like upstream's
+generator, the pages (including the first) are fetched while processing the
+playlist, so `-I` stops paging early and `playlist_count` is `NA` unless
+the selection read past the end.
 VK Play Live records (`vkplay.live`/`live.vkplay.ru`/`live.vkvideo.ru`
 `USER/record/ID`) and channels follow upstream `VKPlayIE` and
 `VKPlayLiveIE`: `api.vkplay.live`'s `public_video_stream` JSON (a failure is

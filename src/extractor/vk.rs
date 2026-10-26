@@ -8,7 +8,8 @@
 //! `VKWallPostIE`: `wkview.php`'s wall post HTML as a playlist of its
 //! `data-audio` tracks and linked videos. `VKUserVideosIE`: user/club video
 //! sections and playlists through `al_video.php`'s `load_videos_silent`
-//! pages. `VKPlayIE`/`VKPlayLiveIE` are in [`super::vkplay`].
+//! pages, pending entries fetched as the playlist is processed (upstream's
+//! `_entries` generator). `VKPlayIE`/`VKPlayLiveIE` are in [`super::vkplay`].
 use super::Extractor;
 use crate::{Error, ExtractResult, PlaylistInfo, Result, VideoInfo};
 use regex::Regex;
@@ -874,8 +875,9 @@ impl Extractor for VkUserVideos {
         Ok(None)
     }
 
-    /// `VKUserVideosIE._real_extract`. Upstream's lazy `_entries` pages are
-    /// all fetched here.
+    /// `VKUserVideosIE._real_extract`. The `_entries` generator's pages are
+    /// pending entries, fetched by [`fetch_pages`] as the playlist is
+    /// processed.
     fn extract_result(&self, client: &Client, page: &Url) -> Result<Option<ExtractResult>> {
         let Some(u_id) = user_videos_id(page.as_str()) else {
             return Ok(None);
@@ -925,89 +927,14 @@ impl Extractor for VkUserVideos {
             .map(|text| crate::html::clean_html(&text))
             .filter(|title| !title.is_empty());
 
-        let load = |offset: i64| -> Result<(i64, i64, Vec<Value>)> {
-            let offset = offset.to_string();
-            let payload = download_payload(
-                client,
-                USER_VIDEOS,
-                temp,
-                "al_video",
-                &page_id,
-                &[
-                    ("act", "load_videos_silent"),
-                    ("offset", &offset),
-                    ("oid", &page_id),
-                    ("section", &section),
-                ],
-            )?;
-            let Some(first) = payload.get(0) else {
-                return Err(bug_as(
-                    USER_VIDEOS,
-                    temp,
-                    "IndexError('list index out of range')",
-                ));
-            };
-            let Some(list_json) = first.get(&section) else {
-                return Err(bug_as(USER_VIDEOS, temp, &format!("KeyError('{section}')")));
-            };
-            let field = |key: &str| {
-                list_json
-                    .get(key)
-                    .ok_or_else(|| bug_as(USER_VIDEOS, temp, &format!("KeyError('{key}')")))
-            };
-            let count = field("count")?;
-            let total = field("total")?;
-            let list = field("list")?;
-            let number = |value: &Value| {
-                value.as_i64().ok_or_else(|| {
-                    Error::UnsupportedHtml5(
-                        "VK video list counts that are not integers are not supported natively"
-                            .into(),
-                    )
-                })
-            };
-            let count = number(count)?;
-            let list = list.as_array().cloned().ok_or_else(|| {
-                Error::UnsupportedHtml5(
-                    "VK video lists that are not arrays are not supported natively".into(),
-                )
-            })?;
-            Ok((count, number(total)?, list))
-        };
-        let (mut count, total, mut list) = load(0)?;
-        let mut entries = Vec::new();
-        loop {
-            for video in &list {
-                let pair = video
-                    .as_array()
-                    .filter(|video| video.len() >= 2)
-                    .and_then(|video| Some((video[0].as_i64()?, video[1].as_i64()?)));
-                let Some((owner_id, id)) = pair else {
-                    return Err(Error::UnsupportedHtml5(
-                        "VK video list items without integer owner and video IDs are not supported natively"
-                            .into(),
-                    ));
-                };
-                let video_id = format!("{owner_id}_{id}");
-                entries.push(vk_entry(
-                    &format!("https://vk.com/video{video_id}"),
-                    Some(&video_id),
-                )?);
-            }
-            if count >= total {
-                break;
-            }
-            let (new_count, _, next) = load(count)?;
-            if new_count == 0 {
-                crate::screen::screen(&format!(
-                    "[{USER_VIDEOS}] {page_id}: Skipping {} unavailable videos",
-                    total - count
-                ));
-                break;
-            }
-            count += new_count;
-            list = next;
-        }
+        let state = json!({
+            "kind": "vk_user_videos",
+            "u_id": u_id,
+            "page_id": page_id,
+            "section": section,
+            "count": null,
+            "total": null,
+        });
 
         let mut keys = vec!["id"];
         if title.is_some() {
@@ -1016,7 +943,12 @@ impl Extractor for VkUserVideos {
         let mut extra = Map::new();
         extra.insert(
             crate::info_order::INFO_SHAPE.into(),
-            format!("playlist-dict;{}", keys.join(",")).into(),
+            format!(
+                "playlist-dict;{}{}",
+                keys.join(","),
+                crate::info_order::GENERATOR
+            )
+            .into(),
         );
         Ok(Some(ExtractResult::Playlist(PlaylistInfo {
             id: format!("{page_id}_{section}"),
@@ -1025,10 +957,132 @@ impl Extractor for VkUserVideos {
             extractor: USER_VIDEOS.into(),
             extractor_key: "VKUserVideos".into(),
             nested: Vec::new(),
-            pending: None,
-            entries,
+            pending: Some(crate::PendingEntries { state }),
+            entries: Vec::new(),
             extra,
         })))
+    }
+}
+
+/// Whether a playlist's pending state is a VK user/club video section's.
+pub(crate) fn is_pending_state(state: &Value) -> bool {
+    state["kind"] == "vk_user_videos"
+}
+
+/// One `load_videos_silent` page of a section at `offset`: its `count`,
+/// `total` and `list`.
+fn load_videos(
+    client: &Client,
+    temp: Option<&str>,
+    page_id: &str,
+    section: &str,
+    offset: i64,
+) -> Result<(i64, i64, Vec<Value>)> {
+    let offset = offset.to_string();
+    let payload = download_payload(
+        client,
+        USER_VIDEOS,
+        temp,
+        "al_video",
+        page_id,
+        &[
+            ("act", "load_videos_silent"),
+            ("offset", &offset),
+            ("oid", page_id),
+            ("section", section),
+        ],
+    )?;
+    let Some(first) = payload.get(0) else {
+        return Err(bug_as(
+            USER_VIDEOS,
+            temp,
+            "IndexError('list index out of range')",
+        ));
+    };
+    let Some(list_json) = first.get(section) else {
+        return Err(bug_as(USER_VIDEOS, temp, &format!("KeyError('{section}')")));
+    };
+    let field = |key: &str| {
+        list_json
+            .get(key)
+            .ok_or_else(|| bug_as(USER_VIDEOS, temp, &format!("KeyError('{key}')")))
+    };
+    let count = field("count")?;
+    let total = field("total")?;
+    let list = field("list")?;
+    let number = |value: &Value| {
+        value.as_i64().ok_or_else(|| {
+            Error::UnsupportedHtml5(
+                "VK video list counts that are not integers are not supported natively".into(),
+            )
+        })
+    };
+    let count = number(count)?;
+    let list = list.as_array().cloned().ok_or_else(|| {
+        Error::UnsupportedHtml5(
+            "VK video lists that are not arrays are not supported natively".into(),
+        )
+    })?;
+    Ok((count, number(total)?, list))
+}
+
+/// `VKUserVideosIE._entries(page_id, section)`: the section's
+/// `load_videos_silent` pages, in order, until `limit` entries exist or the
+/// generator ends (all `total` videos listed, or a page with no videos).
+pub(crate) fn fetch_pages(
+    client: &Client,
+    mut state: Value,
+    limit: Option<usize>,
+    entries: &mut Vec<VideoInfo>,
+) -> Result<Option<Value>> {
+    let u_id = state["u_id"].as_str().unwrap_or_default().to_owned();
+    let page_id = state["page_id"].as_str().unwrap_or_default().to_owned();
+    let section = state["section"].as_str().unwrap_or_default().to_owned();
+    let temp = Some(u_id.as_str());
+    loop {
+        if limit.is_some_and(|limit| entries.len() >= limit) {
+            return Ok(Some(state));
+        }
+        let list = match (state["count"].as_i64(), state["total"].as_i64()) {
+            (Some(count), Some(total)) => {
+                let (new_count, _, list) = load_videos(client, temp, &page_id, &section, count)?;
+                if new_count == 0 {
+                    crate::screen::screen(&format!(
+                        "[{USER_VIDEOS}] {page_id}: Skipping {} unavailable videos",
+                        total - count
+                    ));
+                    return Ok(None);
+                }
+                state["count"] = (count + new_count).into();
+                list
+            }
+            _ => {
+                let (count, total, list) = load_videos(client, temp, &page_id, &section, 0)?;
+                state["count"] = count.into();
+                state["total"] = total.into();
+                list
+            }
+        };
+        for video in &list {
+            let pair = video
+                .as_array()
+                .filter(|video| video.len() >= 2)
+                .and_then(|video| Some((video[0].as_i64()?, video[1].as_i64()?)));
+            let Some((owner_id, id)) = pair else {
+                return Err(Error::UnsupportedHtml5(
+                    "VK video list items without integer owner and video IDs are not supported natively"
+                        .into(),
+                ));
+            };
+            let video_id = format!("{owner_id}_{id}");
+            entries.push(vk_entry(
+                &format!("https://vk.com/video{video_id}"),
+                Some(&video_id),
+            )?);
+        }
+        if state["count"].as_i64() >= state["total"].as_i64() {
+            return Ok(None);
+        }
     }
 }
 
