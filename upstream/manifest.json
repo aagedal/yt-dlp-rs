@@ -896,6 +896,18 @@
       "scope": "DumpertIE mobile_api info JSON, the first item's VIDEO media variants (fatal HLS with version ids or progressive URLs, qualities ranking), stills thumbnails, stats, duration and KeyError/IndexError/StopIteration paths compared with pinned upstream output through the fixture proxy; non-array item/media lists and non-string titles or URIs remain explicit native errors"
     },
     {
+      "name": "ninegag",
+      "status": "partial",
+      "upstream": [
+        "yt_dlp/extractor/ninegag.py"
+      ],
+      "rust": [
+        "src/extractor/ninegag.rs",
+        "tests/fixtures/sites/ninegag/"
+      ],
+      "scope": "NineGagIE v1/post API with the impersonation warning, the non-animated no-formats error, mp4/webm variants and per-codec URLs as formats, jpg/png/webp thumbnails, creator, counts, age limit, section and tags compared with pinned upstream output through the fixture proxy; non-object posts/images/image maps and non-string titles remain explicit native errors"
+    },
+    {
       "name": "flickr",
       "status": "partial",
       "upstream": [

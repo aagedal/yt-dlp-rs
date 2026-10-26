@@ -128,6 +128,7 @@ mod myvidster;
 mod netzkino;
 mod newsy;
 mod niconico;
+mod ninegag;
 mod ninenews;
 mod nobelprize;
 mod nrk;
@@ -378,6 +379,7 @@ pub use myvidster::{MyVidster, suitable as myvidster_suitable};
 pub use netzkino::{Netzkino, suitable as netzkino_suitable};
 pub use newsy::{Newsy, suitable as newsy_suitable};
 pub use niconico::{Niconico, suitable as niconico_suitable};
+pub use ninegag::{NineGag, suitable as ninegag_suitable};
 pub use ninenews::{NineNews, suitable as ninenews_suitable};
 pub use nobelprize::{NobelPrize, suitable as nobelprize_suitable};
 pub use nrk::{

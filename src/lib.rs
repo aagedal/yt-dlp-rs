@@ -345,6 +345,7 @@ pub(crate) const BUG_REPORTS_MESSAGE: &str = "please report this issue on  https
 /// order (`end` is the unsupported-URL fallback).
 const EXTRACTOR_NAMES: &[&str] = &[
     "1News",
+    "9gag",
     "9News",
     "AmadeusTV",
     "Angel",
@@ -877,6 +878,7 @@ impl YoutubeDl {
                 Box::new(extractor::DLiveStream),
                 Box::new(extractor::DLiveVod),
                 Box::new(extractor::Mux),
+                Box::new(extractor::NineGag),
                 Box::new(extractor::NineNews),
                 Box::new(extractor::RottenTomatoes),
                 Box::new(extractor::Mediaite),

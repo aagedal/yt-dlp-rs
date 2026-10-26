@@ -2072,6 +2072,18 @@ errors. Like other site formats, downloads check that the response is media;
 `video/mpeg` (Flickr's `orig` MPEG files) is recognized as `mpg`.
 `tests/fixtures/sites/flickr/` is compared with pinned upstream output.
 
+9GAG posts (`[www.]9gag.com/gag/ID`) follow upstream `NineGagIE`: the
+`9gag.com/v1/post` API (requested with upstream's impersonation warning; a
+missing `data`/`post` is upstream's `KeyError`), the non-animated
+`The given url does not contain a video` no-formats error (a warning with
+`--ignore-no-formats-error`), `mp4`/`webm` image variants as formats with
+their `vp8`/`vp9`/`h265` URLs (`acodec: none` without audio) and `jpg`/`png`
+variants (plus `webpUrl`) as thumbnails, IDs from upstream's
+`key.strip('image')`, the first duration, creator, counts, NSFW age limit,
+section category and tags. Non-object posts, images or image maps and
+non-string titles remain explicit native errors.
+`tests/fixtures/sites/ninegag/` is compared with pinned upstream output.
+
 CloudyCDN and Backscreen embeds (`embed.cloudycdn.services|backscreen.com/SITE/media/ID`)
 follow upstream `CloudyCDNIE`: the `player.DOMAIN/player/SITE/media/ID/`
 JSON form POST (`version=6.4.0`, `referer`), each `source.sources[].src` URL
