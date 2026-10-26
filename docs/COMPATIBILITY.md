@@ -29,7 +29,7 @@ All extraction and downloads run in Rust. Python is development tooling only.
 | `--write-auto-subs`, `--write-automatic-subs` | Select automatic captions independently; manual tracks win shared languages when both writing flags are enabled |
 | `--no-write-auto-subs`, `--no-write-automatic-subs` | Disable automatic writing; last automatic write/no-write flag wins |
 | `--no-write-subs`, `--no-write-srt` | Disable subtitle writing; last write/no-write flag wins |
-| `--sub-langs`, `--srt-langs` | Repeated comma-separated literal tags, `all` and `-` exclusions; trimmed tokens, case-insensitive matching; no regex |
+| `--sub-langs`, `--srt-langs` | Upstream `orderedSet_from_options(..., use_regex=True)`: repeated comma-separated items (stripped, empty ones dropped; only empty items keep the default language), the `all` alias, `-` exclusions and case-insensitive regular expressions that must match a whole language tag; an invalid regex is the per-URL `Wrong regex for subtitlelangs: PATTERN` error once subtitles are available. Regex syntax follows the Rust `regex` crate (no look-around or backreferences, which are reported as invalid); unknown-language (`null`) tracks are matched only by `all` |
 | `--embed-subs`, `--no-embed-subs` | Embed selected sidecars after media processing; implied acquisition and source retention rules below; last flag wins |
 | `--convert-subs`, `--convert-sub`, `--convert-subtitles` | Convert written sidecars to one of srt/vtt/ass/lrc; `none` disables; no implied subtitle writing |
 | `--sub-format` | Ordered `/` preferences, default `best`; last matching format or last available with a warning |
@@ -4484,7 +4484,7 @@ library equivalent is `YoutubeOptions.include_translated_subtitles`. The upstrea
 `--write-subs` and `--write-auto-subs` independently enable selection. Normal tracks
 win shared language keys. Default selection searches normal exact/prefix English,
 then all exact/prefix English, then first normal/available language. Existing
-literal/all/exclusion and extension preference rules apply to the combined map.
+regex/all/exclusion and extension preference rules apply to the combined map.
 `SubtitleOptions::select_sources` exposes this explicitly to library callers.
 
 `--list-subs` prints automatic captions first when present, then normal subtitles;

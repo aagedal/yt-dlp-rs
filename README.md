@@ -249,8 +249,8 @@ Supported today:
   acquisition unless automatic writing is enabled. Explicit `--write-subs` keeps
   embedded sidecars; embed-only removes eligible sidecars after successful final
   publication. `-k` also keeps them. [Embedding policies](docs/COMPATIBILITY.md#subtitle-embedding)
-  cover automatic tracks, skipped formats and metadata. Regex languages and
-  manifest/other-site subtitles remain unsupported.
+  cover automatic tracks, skipped formats and metadata. Manifest/other-site
+  subtitles remain unsupported.
 - `--write-info-json` writes upstream-cleaned video metadata beside the media
   name (after subtitles, before media) and playlist metadata before entries.
   Names follow upstream extension replacement; existing files follow the

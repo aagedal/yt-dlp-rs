@@ -1,0 +1,9 @@
+[
+ {"url": "https://example.test/page.html", "args": ["--skip-download", "--write-subs", "--sub-langs", "en.*", "--print", "%(requested_subtitles)j"]},
+ {"url": "https://example.test/page.html", "args": ["--skip-download", "--write-subs", "--sub-langs", "EN.*,-en", "--print", "%(requested_subtitles)j"]},
+ {"url": "https://example.test/page.html", "args": ["--skip-download", "--write-subs", "--sub-langs", "all,-en.*", "--print", "%(requested_subtitles)j"]},
+ {"url": "https://example.test/page.html", "args": ["--skip-download", "--write-subs", "--sub-langs", " fr , ,en ", "--print", "%(requested_subtitles)j"]},
+ {"url": "https://example.test/page.html", "args": ["--skip-download", "--write-subs", "--sub-langs", "fr|en", "--print", "%(requested_subtitles)j"]},
+ {"url": "https://example.test/page.html", "args": ["--skip-download", "--write-subs", "--sub-langs", "(", "--print", "%(requested_subtitles)j"]},
+ {"url": "https://example.test/page.html", "args": ["--no-progress", "--skip-download", "--write-subs", "--sub-langs", "en.*", "-o", "%(id)s.%(ext)s"]}
+]

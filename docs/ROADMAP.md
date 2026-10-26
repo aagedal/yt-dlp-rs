@@ -221,7 +221,7 @@ remain outside the current result contract.
 5. **Extractor expansion and parity.** Port shared helpers based on real extractor
    needs. Add sites with deterministic fixtures and a source mapping. Expand
    authentication, cookies, subtitles, archives, and postprocessors explicitly.
-   HTML5 subtitle/caption track discovery, listing, literal language/all/exclusion
+   HTML5 subtitle/caption track discovery, listing, regex language/all/exclusion
    selection, format preferences and native HTTP sidecars are implemented.
    Skip-download permits sidecar-only writes without archive records. The supported
    YouTube WEB response subset also exposes manual/automatic captions, translations,
@@ -231,7 +231,7 @@ remain outside the current result contract.
    tools, no-clobber publication and original/intermediate retention.
    Subtitle embedding now follows audio/video processing for MP4/MOV/M4A/WebM/
    Matroska, preserving source container/language policies and sidecar retention.
-   Other-site/manifest subtitles and regex languages remain open.
+   Other-site/manifest subtitles remain open.
    Video/playlist `--write-info-json` sidecars follow upstream clean filtering,
    naming and ordering for the represented metadata subset, and
    `--load-info-json` reprocesses saved dictionaries; info JSON embedding remains open.

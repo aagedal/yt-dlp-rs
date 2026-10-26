@@ -89,7 +89,7 @@ class SubtitleComparisonTests(unittest.TestCase):
         self.assertEqual(status,0)
         self.assertEqual(run.call_count,2)
         self.assertEqual(json.loads(run.call_args.kwargs['input']),self.fixture)
-        self.assertIn('29 selection',stdout)
+        self.assertIn('36 selection',stdout)
 
     def test_wrong_revision_stops_before_worker(self):
         status,run,_,stderr = self.run_main('0'*40)

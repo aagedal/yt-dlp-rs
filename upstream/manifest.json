@@ -3064,11 +3064,12 @@
         "src/error.rs",
         "tests/subtitles.rs",
         "tests/fixtures/subtitles/",
+        "tests/fixtures/sites/html5-sub-langs/",
         "tools/compare_subtitles.py",
         "tools/test_compare_subtitles.py",
         "upstream/notes/html5-subtitles.md"
       ],
-      "scope": "Direct-child HTML5 subtitle/caption track metadata with ordered optional-language groups, pinned URL sanitation/extension completion; native listing, literal/all/exclusion language selection and ordered format preferences; sidecar-only skip-download and native HTTP identity-byte sidecars with referrers/retries/cancellation/no-clobber publication before media; sanitized collision-safe paths and explicit unknown-language errors; normal/automatic source selection with manual precedence and independent automatic write flags; no general regex, other-site/manifest subtitles, conversion/embedding, decompression or full filename/timing parity"
+      "scope": "Direct-child HTML5 subtitle/caption track metadata with ordered optional-language groups, pinned URL sanitation/extension completion; native listing, regex/all/exclusion language selection (upstream orderedSet_from_options with case-insensitive fullmatch, Rust regex syntax) and ordered format preferences; sidecar-only skip-download and native HTTP identity-byte sidecars with referrers/retries/cancellation/no-clobber publication before media; sanitized collision-safe paths and explicit unknown-language errors; normal/automatic source selection with manual precedence and independent automatic write flags; no other-site/manifest subtitles, conversion/embedding, decompression or full filename/timing parity; tests/fixtures/sites/html5-sub-langs compares --sub-langs regexes with pinned upstream"
     },
     {
       "name": "youtube-captions",

@@ -42,7 +42,7 @@ for case in fixture['html_cases']:
 for key in ('selection_cases', 'source_only_cases'):
     for case in fixture[key]:
         warnings = []
-        options = {'writesubtitles':case.get('write',True), 'subtitleslangs':case['languages'].split(',') if case['languages'] else [],
+        options = {'writesubtitles':case.get('write',True), 'subtitleslangs':[x.strip() for x in (case['languages'] or '').split(',') if x.strip()],
                    'subtitlesformat':case['formats'], 'quiet':True}
         probe = YoutubeDL(options, auto_init=False)
         probe.to_screen = lambda *args, **kwargs: None

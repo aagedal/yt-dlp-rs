@@ -652,10 +652,10 @@ fn unknown_extension_uses_unknown_video_and_unavailable_format_falls_back_with_w
 }
 
 #[test]
-fn unsupported_track_urls_and_language_regex_fail_explicitly_without_sidecar_or_download() {
+fn unsupported_track_urls_and_invalid_language_regex_fail_explicitly_without_sidecar_or_download() {
     for (path, args) in [
         ("/invalid-track.html", vec!["--write-subs"]),
-        ("/select.html", vec!["--write-subs", "--sub-langs", "en.*"]),
+        ("/select.html", vec!["--write-subs", "--sub-langs", "("]),
     ] {
         let server = Server::new();
         let directory = tempfile::tempdir().unwrap();

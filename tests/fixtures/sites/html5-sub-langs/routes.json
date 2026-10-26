@@ -1,0 +1,39 @@
+{
+ "routes": [
+  {
+   "url": "https://example.test/page.html",
+   "headers": {
+    "Content-Type": "text/html; charset=utf-8"
+   },
+   "body": "<html><title>T</title><video src=\"https://example.test/m.mp4\"><track src=\"https://example.test/en.vtt\" srclang=\"en\"><track src=\"https://example.test/enus.vtt\" srclang=\"en-US\"><track src=\"https://example.test/fr.vtt\" srclang=\"fr\"></video></html>"
+  },
+  {
+   "url": "https://example.test/m.mp4",
+   "headers": {
+    "Content-Type": "video/mp4"
+   },
+   "body": "x"
+  },
+  {
+   "url": "https://example.test/en.vtt",
+   "headers": {
+    "Content-Type": "text/vtt"
+   },
+   "body": "WEBVTT\n\n00:00.000 --> 00:01.000\nen\n"
+  },
+  {
+   "url": "https://example.test/enus.vtt",
+   "headers": {
+    "Content-Type": "text/vtt"
+   },
+   "body": "WEBVTT\n\n00:00.000 --> 00:01.000\nenus\n"
+  },
+  {
+   "url": "https://example.test/fr.vtt",
+   "headers": {
+    "Content-Type": "text/vtt"
+   },
+   "body": "WEBVTT\n\n00:00.000 --> 00:01.000\nfr\n"
+  }
+ ]
+}
